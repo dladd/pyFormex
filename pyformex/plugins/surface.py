@@ -431,61 +431,62 @@ def create_border_triangle(coords,elems):
 
 
 class TriSurface(object):
-    """A class for handling triangulated 3D surfaces."""
+    """A class representing a triangulated 3D surface.
+
+    The surface contains `ntri` triangles, each having 3 vertices with
+    3 coordinates. The surface can be initialized from one of the following:
+        
+    - a (ntri,3,3) shaped array of floats
+    - a Formex with plexitude 3
+    - a Mesh with plexitude 3
+    - an (ncoords,3) float array of vertex coordinates and
+      an (ntri,3) integer array of vertex numbers
+    - an (ncoords,3) float array of vertex coordinates,
+      an (nedges,2) integer array of vertex numbers,
+      an (ntri,3) integer array of edges numbers.
+
+    Internally, the surface is stored in a (coords,elems) tuple.
+    """
 
     def __init__(self,*args):
-        """Create a new surface.
-
-        The surface contains ntri triangles, each having 3 vertices with
-        3 coordinates.
-        The surface can be initialized from one of the following:
-        
-        - a (ntri,3,3) shaped array of floats ;
-        - a 3-plex Formex with ntri elements ;
-        - an (ncoords,3) float array of vertex coordinates and
-          an (ntri,3) integer array of vertex numbers ;
-        - an (ncoords,3) float array of vertex coordinates,
-          an (nedges,2) integer array of vertex numbers,
-          an (ntri,3) integer array of edges numbers.
-
-        Internally, the surface is stored in a (coords,edges,faces) tuple.
-        """
-        self.coords = self.edges = self.faces = None
-        self.elems = None
-        self.areas = None
-        self.normals = None
-        self.econn = None
-        self.conn = None
-        self.eadj = None
-        self.adj = None
+        """Create a new surface."""
+        self.coords = self.elems = None
+        self.p = None  # !! should be renamed prop!
+        self.edges = self.faces = None
+        self.areas = self.normals = None
+        self.econn = self.conn = self.eadj = self.adj = None
         if hasattr(self,'edglen'):
             del self.edglen
-        self.p = None
         if len(args) == 0:
-            return
+            return  # an empty surface
+        
         if len(args) == 1:
-            # a Formex/STL model
+            # argument should be a suitably structured geometry object
+            # TriSurface, Mesh, Formex, Coords, ndarray, ...
             a = args[0]
-            try:
-                nplex = a.nplex()
-            except:
-                raise ValueError,"Can not convert objects of type %s to TriSurface!" % type(a)
-            if nplex != 3:
-                raise ValueError,"Expected an object with plexitude 3!"
+
             if isinstance(a,Mesh):
-                if a.eltype != 'tri3':
-                    raise ValueError,"Only meshes with eltype 'tri3' can be converted to TriSurface!"
+                if a.nplex() != 3 or a.eltype != 'tri3':
+                    raise ValueError,"Only meshes with plexitude 3 and eltype 'tri3' can be converted to TriSurface!"
                 self.coords = a.coords
-                self.setElems(a.elems)
+                self.elems = a.elems
                 self.p = a.prop
-            elif isinstance(a,Formex):
-                self.coords,elems = a.fuse()
-                self.setElems(elems)
-                self.p = a.p
+
             else:
-                raise ValueError,"Can not convert objects of type %s to TriSurface!" % type(a)
+                # something that can be converted to a Formex
+                try:
+                    a = Formex(a)
+                except:
+                    raise ValueError,"Can not convert objects of type %s to TriSurface!" % type(a)
+                
+                if a.nplex() != 3:
+                    raise ValueError,"Expected an object with plexitude 3!"
+
+                self.coords,self.elems = a.fuse()
+                self.p = a.p
 
         else:
+            # arguments are (coords,elems) or (coords,edges,faces)
             a = Coords(args[0])
             if len(a.shape) != 2:
                 raise ValueError,"Expected a 2-dim coordinates array"
@@ -497,33 +498,26 @@ class TriSurface(object):
             if a.max() >= self.coords.shape[0]:
                 raise ValueError,"Some vertex number is too high"
             if len(args) == 2:
-                self.setElems(a)
+                self.elems = a
+                
             elif len(args) == 3:
-                self.edges = a
-
+                edges = a
                 a = asarray(args[2])
                 if not (a.dtype.kind == 'i' and a.ndim == 2 and a.shape[1] == 3):
                     raise "Got invalid third argument"
-                if a.max() >= self.edges.shape[0]:
+                if a.max() >= edges.shape[0]:
                     raise ValueError,"Some edge number is too high"
-                self.faces = a
+                faces = a
+                self.elems = Connectivity(compactElems(edges,faces))
+                # since we have the data available, keep them
+                self.edges = edges
+                self.faces = faces
 
             else:
                 raise RuntimeError,"Too many arguments"
+
+        self.elems = Connectivity(self.elems)
  
-
-    # To keep the data consistent:
-    # ANY function that uses self.elems should call self.refresh()
-    #     BEFORE using it.
-    # ANY function that changes self.elems should
-    #     - invalidate self.edges and/or self.faces by setting them to None,
-    #     - call self.refresh() AFTER changing it.
-
-    # A safer approach is to only use getElems() and setElems()
-    #
-
-    # This may (and probably will) change in future implementations
-
 
 ########## TRANSITION TO NEW IMPLEMENTATION #############################
     #
@@ -535,12 +529,14 @@ class TriSurface(object):
     #
     def getEdges(self):
         """Get the edges data."""
-        self.refresh()
+        if self.edges is None:
+            self.edges,self.faces = self.elems.expand()
         return self.edges
     
     def getFaces(self):
         """Get the faces data."""
-        self.refresh()
+        if self.faces is None:
+            self.edges,self.faces = self.elems.expand()
         return self.faces
 
     #
@@ -554,53 +550,28 @@ class TriSurface(object):
         self.refresh() # THIS LINE CAN BE REMOVED AFTER TRANSITION
         self.__init__(coords,self.elems)
 
-    # THIS WILL BECOME setElems AFTER THE TRANSITION
-    ## def setElems(self,elems):
-    ##     """Change the elems."""
-    ##     self.__init__(self.coords,elems)
+    def setElems(self,elems):
+        """Change the elems."""
+        self.__init__(self.coords,elems)
 
     def setEdgesAndFaces(self,edges,faces):
         """Change the edges and faces."""
         self.__init__(self.coords,edges,faces)
 
-########## END TRANSITION TO NEW IMPLEMENTATION ##########################
-
-
+    #
+    # self.elems should always be consistent
+    # We retain the following functions for compatibility reasons
+    #
     def getElems(self):
         """Get the elems data."""
-        self.refresh()
         return self.elems
 
-    def setElems(self,elems):
-        """Change the elems data."""
-        self.edges = self.faces = None
-        self.elems = None
-        self.areas = None
-        self.normals = None
-        self.econn = None
-        self.conn = None
-        self.eadj = None
-        self.adj = None
-        if hasattr(self,'edglen'):
-            del self.edglen
-        self.elems = Connectivity(elems)
-        self.refresh()
 
     def refresh(self):
-        """Make the internal information consistent and complete.
+        # The object should now always be consistent
+        pass
 
-        This function should be called after one of the data fields
-        have been changed.
-        """
-        if self.coords is None:
-            return
-        if type(self.coords) != Coords:
-            self.coords = Coords(self.coords)
-        if self.edges is None or self.faces is None:
-            self.edges,self.faces = self.elems.expand()
-        if self.elems is None:
-            self.elems = Connectivity(compactElems(self.edges,self.faces))
-
+ 
     def compress(self):
         """Remove all nodes which are not used.
 
@@ -609,12 +580,12 @@ class TriSurface(object):
         bounding box of the surface.
         This method will remove all the unconnected nodes.
         """
-        newnodes = unique1d(self.edges)
+        newnodes = unique1d(self.elems)
         reverse = -ones(self.ncoords(),dtype=int32)
         reverse[newnodes] = arange(newnodes.size,dtype=int32)
-        self.coords = self.coords[newnodes]
-        self.edges = reverse[self.edges]
-        self.elems = None
+        coords = self.coords[newnodes]
+        elems = reverse[self.elems]
+        self.__init__(coords,elems)
 
 
     def append(self,S):
@@ -624,8 +595,6 @@ class TriSurface(object):
         whether the surfaces intersect or are connected!
         This is intended mostly for use inside higher level functions.
         """
-        self.refresh()
-        S.refresh()
         coords = concatenate([self.coords,S.coords])
         elems = concatenate([self.elems,S.elems+self.ncoords()])
         ## What to do if one of the surfaces has properties, the other one not?
@@ -677,11 +646,7 @@ class TriSurface(object):
         return self.ncoords(),self.nedges(),self.nfaces()
        
     def copy(self):
-        """Return a (deep) copy of the surface.
-
-        If an index is given, only the specified faces are retained.
-        """
-        self.refresh()
+        """Return a (deep) copy of the surface."""
         S = TriSurface(self.coords.copy(),self.elems.copy())
         if self.p is not None:
             S.setProp(self.p)
@@ -696,7 +661,6 @@ class TriSurface(object):
         used in the selected elements.
         Setting compress==False will keep all original nodes in the surface.
         """
-        self.refresh()
         S = TriSurface(self.coords, self.elems[idx])
         if self.p is not None:
             S.setProp(self.p[idx])
@@ -907,13 +871,20 @@ class TriSurface(object):
         return TriSurface(coordsNew,self.getElems())
     
     # Data conversion
-    
+
+
+    def toFormex(self):
+        """Convert the surface to a Formex."""
+        self.refresh()
+        return Formex(self.coords[self.elems],self.p)
+
+
+    ### TO BE DELETED AFTER FULL TRANSITION #####
     def toMesh(self):
-        """Return a tuple of nodal coordinates and element connectivity."""
+        """Convert the surface to a Mesh."""
         self.refresh()
         return Mesh(self.coords,self.elems,self.p,eltype='tri3')
 
-    # retained for compatibility
     @deprecation("feModel() is deprecated. Please use toMesh() instead")
     def feModel(self):
         return self.coords,self.elems
@@ -985,12 +956,6 @@ class TriSurface(object):
             GD.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nfaces()))
         else:
             print("Cannot save TriSurface as file %s" % fname)
-
-
-    def toFormex(self):
-        """Convert the surface to a Formex."""
-        self.refresh()
-        return Formex(self.coords[self.elems],self.p)
 
 
     @coordsmethod
