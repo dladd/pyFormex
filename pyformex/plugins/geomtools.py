@@ -148,50 +148,45 @@ def segmentOrientation(vertices,vertices2=None,point=None):
     return orient
 
 
-# !! We have to merge the following two functions
-
-def rotation(x,r,angle_spec=Deg):
-    """Return a rotation as an axis + angle.
-
-    ``x`` and ``r`` are two unit vectors.
-    The return value is a tuple of:
-    
-    - a vector perpendicular to ``x`` and ``r``,
-    - the angle between both ``x`` and ``r``.
-
-    angle_spec can be set to ``Deg`` ro ``Rad`` to get the result in
-    degrees (default) or radians.
-    """
-    w = cross(x,r)
-    wl = length(w)
-    if wl == 0.0:
-        return [0.,0.,1.],0.
-    else:
-        w /= wl
-        angle = arccos(dotpr(x,r)) / angle_spec
-        return w,angle
-    
-
 def rotationAngle(A,B,angle_spec=Deg):
-    """Return rotation vector and angle for rotation of A to B.
+    """Return rotation angles and vectors for rotations of A to B.
 
-    A and B are (n,3)-shaped arrays where each line represents a vector.
+    A and B are (n,3) shaped arrays where each line represents a vector.
     This function computes the rotation from each vector of A to the
-    corresponding vector of B. Broadcasting is done if one of A or B has
-    only one row.
+    corresponding vector of B.
     The return value is a tuple of an (n,) shaped array with rotation angles
-    (by default in degrees) and an (n,3)-shaped array with unit vectors
+    (by default in degrees) and an (n,3) shaped array with unit vectors
     along the rotation axis.
     Specify angle_spec=Rad to get the angles in radians.
+    """    
+    try:
+        A = normalize(A)
+        B = normalize(B)
+    except:
+        raise ValueError,"Zero vector has no direction."
+    n = cross(A,B) # vectors perpendicular to A and B
+    try:
+        n = normalize(n)
+    except ValueError: # some vectors A and B are parallel
+        t = length(n) == 0.
+        n[t] = anyPerpendicularVector(A[t])
+        n = normalize(n)
+    c = dotpr(A,B)
+    angle = arccos(c.clip(min=-1.,max=1.)) / angle_spec
+    return angle,n
+
+
+def anyPerpendicularVector(A):
+    """Return arbitrary vectors perpendicular to vectors of A.
+    
+    A is a (n,3) shaped array of vectors.
+    The return value is a (n,3) shaped array of perpendicular vectors.
     """
-    A = normalize(A)
-    B = normalize(B)
-    N = cross(A,B)
-    L = length(N)
-    S = L / (length(A)*length(B))  # !! SEEMS SUPERFLUOUS 
-    ANG = arcsin(S.clip(min=-1.0,max=1.0)) / angle_spec
-    N = N/column_stack([L])
-    return N,ANG
+    x,y,z = hsplit(A,[1,2])
+    n = zeros(x.shape,dtype=Float)
+    t = (x!=0.)+(y!=0.)
+    B = where(t,column_stack([-y,x,n]),column_stack([-z,n,x]))
+    return B
 
 
 ################## intersection tools ###############

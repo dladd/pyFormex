@@ -68,7 +68,7 @@ D = B-A
 # vector initially normal to circle defined above
 nuc = array([0.,0.,1.])
 # rotation angles and vectors
-rot,ang = rotationAngle(nuc,D)
+ang,rot = rotationAngle(nuc,D)
 # diameters varying linearly with the |x| coordinate
 diam = 0.1*h*(2.-abs(C[:,0]))
 # finally, here are the circles:
