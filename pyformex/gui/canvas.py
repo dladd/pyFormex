@@ -505,8 +505,13 @@ class Canvas(object):
         else:
             raise RuntimeError,"Unknown rendering mode"
 
+
         if self.rendermode.endswith('wire'):
+            GL.glEnable(GL.GL_POLYGON_OFFSET_FILL)
             GL.glPolygonOffset(1.0,1.0) 
+        else:
+            GL.glDisable(GL.GL_POLYGON_OFFSET_FILL)
+            
         
 
     def glupdate(self):
