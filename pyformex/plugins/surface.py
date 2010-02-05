@@ -250,11 +250,17 @@ def write_smesh(fn,nodes,elems):
 def surface_volume(x,pt=None):
     """Return the volume inside a 3-plex Formex.
 
-    For each element of Formex, return the volume of the tetrahedron
-    formed by the point pt (default the center of x) and the 3 points
-    of the element.
+    - `x`: an (ntri,3,3) shaped float array, representing ntri triangles.
+    - `pt`: a point in space. If unspecified, it is taken equal to the
+      center() of the coordinates `x`.
+
+    Returns an (ntri) shaped array with the volume of the tetraeders formed
+    by the triangles and the point `pt`. If `x` represents a closed surface,
+    the sum of this array will represent the volume inside the surface.
     """
-    x -= x.center()
+    if pt is None:
+        pt = x.center()
+    x = x - pt
     a,b,c = [ x[:,i,:] for i in range(3) ]
     d = cross(b,c)
     e = (a*d).sum(axis=-1)
@@ -518,6 +524,48 @@ class TriSurface(object):
 
     # This may (and probably will) change in future implementations
 
+
+########## TRANSITION TO NEW IMPLEMENTATION #############################
+    #
+    # In the new implementation, TriSurface will be derived from a Mesh,
+    # thus the base information should be coords, elems.
+    # Edges and Faces should always be retrieved with getEdges() and
+    # getFaces(). coords and elems can directly be used as attributes
+    # and should always be in a consistent state.
+    #
+    def getEdges(self):
+        """Get the edges data."""
+        self.refresh()
+        return self.edges
+    
+    def getFaces(self):
+        """Get the faces data."""
+        self.refresh()
+        return self.faces
+
+    #
+    # Changes to the geometry should by preference be done through the
+    # __init__ function, to ensure consistency of the data.
+    # Convenience functions are defined to change some of the data.
+    #
+
+    def setCoords(self,coords):
+        """Change the coords."""
+        self.refresh() # THIS LINE CAN BE REMOVED AFTER TRANSITION
+        self.__init__(coords,self.elems)
+
+    # THIS WILL BECOME setElems AFTER THE TRANSITION
+    ## def setElems(self,elems):
+    ##     """Change the elems."""
+    ##     self.__init__(self.coords,elems)
+
+    def setEdgesAndFaces(self,edges,faces):
+        """Change the edges and faces."""
+        self.__init__(self.coords,edges,faces)
+
+########## END TRANSITION TO NEW IMPLEMENTATION ##########################
+
+
     def getElems(self):
         """Get the elems data."""
         self.refresh()
@@ -605,10 +653,10 @@ class TriSurface(object):
         return self.coords.shape[0]
 
     def nedges(self):
-        return self.edges.shape[0]
+        return self.getEdges().shape[0]
 
     def nfaces(self):
-        return self.faces.shape[0]
+        return self.getFaces().shape[0]
 
     # The following are defined to get a unified interface with Formex
     nelems = nfaces
@@ -625,8 +673,8 @@ class TriSurface(object):
         return self.coords
     
     def shape(self):
-        """Return the number of ;points, edges, faces of the TriSurface."""
-        return self.coords.shape[0],self.edges.shape[0],self.faces.shape[0]
+        """Return the number of points, edges, faces of the TriSurface."""
+        return self.ncoords(),self.nedges(),self.nfaces()
        
     def copy(self):
         """Return a (deep) copy of the surface.
@@ -922,7 +970,7 @@ class TriSurface(object):
 
         GD.message("Writing surface to file %s" % fname)
         if ftype == 'gts':
-            write_gts(fname,self.coords,self.edges,self.faces)
+            write_gts(fname,self.coords,self.getEdges(),self.getFaces())
             GD.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','neu','smesh']:
             self.refresh()
@@ -1019,14 +1067,14 @@ class TriSurface(object):
         principal directions.      
         """
         self.refresh()
-        curv = curvature(self.coords,self.elems,self.edges,neighbours=neighbours)
+        curv = curvature(self.coords,self.elems,self.getEdges(),neighbours=neighbours)
         return curv
 
 
     def edgeConnections(self):
         """Find the elems connected to edges."""
         if self.econn is None:
-            self.econn = reverseIndex(self.faces)
+            self.econn = reverseIndex(self.getFaces())
         return self.econn
     
 
@@ -1054,7 +1102,7 @@ class TriSurface(object):
             nfaces = self.nfaces()
             rfaces = self.edgeConnections()
             # this gives all adjacent elements including element itself
-            adj = rfaces[self.faces].reshape(nfaces,-1)
+            adj = rfaces[self.getFaces()].reshape(nfaces,-1)
             #print(adj.shape)
             fnr = arange(nfaces).reshape(nfaces,-1)
             #print(fnr.shape)
@@ -1113,7 +1161,7 @@ class TriSurface(object):
         The border nodes are the vertices belonging to the border edges.
         Returns a list of vertex numbers.
         """
-        border = self.edges[self.borderEdgeNrs()]
+        border = self.getEdges()[self.borderEdgeNrs()]
         return unique1d(border)
         
 
@@ -1128,7 +1176,7 @@ class TriSurface(object):
 
     def checkBorder(self):
         """Return the border of TriSurface as a set of segments."""
-        border = self.edges[self.borderEdges()]
+        border = self.getEdges()[self.borderEdges()]
         if len(border) > 0:
             return closedLoop(border)
         else:
@@ -1142,7 +1190,7 @@ class TriSurface(object):
         the border and connectin it with all border segments.
         This works well if the border is smooth and nearly planar.
         """
-        border = self.edges[self.borderEdges()]
+        border = self.getEdges()[self.borderEdges()]
         closed,loop = closedLoop(border)
         if closed == 0:
             if method == 0:
@@ -1156,7 +1204,7 @@ class TriSurface(object):
 
     def border(self):
         """Return the border of TriSurface as a Plex-2 Formex."""
-        return Formex(self.coords[self.edges[self.borderEdges()]])
+        return Formex(self.coords[self.getEdges()[self.borderEdges()]])
 
 
     def edgeCosAngles(self):
@@ -1186,9 +1234,9 @@ class TriSurface(object):
         if hasattr(self,'edglen'):
             return
         self.areaNormals()
-        edg = self.coords[self.edges]
+        edg = self.coords[self.getEdges()]
         edglen = length(edg[:,1]-edg[:,0])
-        facedg = edglen[self.faces]
+        facedg = edglen[self.getFaces()]
         edgmin = facedg.min(axis=-1)
         edgmax = facedg.max(axis=-1)
         altmin = 2*self.areas / edgmax
@@ -1303,7 +1351,7 @@ Total area: %s; Enclosed volume: %s
             prop += front_increment
 
             # Determine border
-            edges = unique(self.faces[elems])
+            edges = unique(self.getFaces()[elems])
             edges = edges[todo[edges]]
             if edges.size > 0:
                 # flag edges as done
@@ -1472,11 +1520,11 @@ Total area: %s; Enclosed volume: %s
         k = 0.1
         mu_value = -lambda_value/(1-k*lambda_value)
         # find adjacency
-        adj = adjacencyArray(self.edges)
+        adj = adjacencyArray(self.getEdges())
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
-        inter_vertex[unique1d(self.edges[bound_edges])] = False
+        inter_vertex[unique1d(self.getEdges()[bound_edges])] = False
         # calculate weights
         w = ones(adj.shape,dtype=float)
         w[adj<0] = 0.
@@ -1493,11 +1541,11 @@ Total area: %s; Enclosed volume: %s
     def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2):
         """Smooth the surface using a Laplace filter and HC algorithm."""
         # find adjacency
-        adj = adjacencyArray(self.edges)        
+        adj = adjacencyArray(self.getEdges())        
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
-        inter_vertex[unique1d(self.edges[bound_edges])] = False
+        inter_vertex[unique1d(self.getEdges()[bound_edges])] = False
         # calculate weights
         w = ones(adj.shape,dtype=float)
         w[adj<0] = 0.
