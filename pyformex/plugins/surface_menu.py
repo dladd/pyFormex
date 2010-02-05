@@ -522,7 +522,7 @@ def colorByFront():
             else:
                 p = S.walkEdgeFront(nsteps=nsteps,startat=startat)
             S.setProp(p/nwidth + firstprop)
-            print("Colored in %s parts (%s seconds)" % (S.p.max()+1,t.seconds()))
+            print("Colored in %s parts (%s seconds)" % (S.prop.max()+1,t.seconds()))
             selection.draw()
 
 
@@ -531,8 +531,8 @@ def partitionByConnection():
     if S:
         selection.remember()
         t = timer.Timer()
-        S.p = S.partitionByConnection()
-        print("Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds()))
+        S.prop = S.partitionByConnection()
+        print("Partitioned in %s parts (%s seconds)" % (S.prop.max()+1,t.seconds()))
         selection.draw()
 
 
@@ -544,8 +544,8 @@ def partitionByAngle():
         if res:
             selection.remember()
             t = timer.Timer()
-            S.p = S.partitionByAngle(**res)
-            print("Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds()))
+            S.prop = S.partitionByAngle(**res)
+            print("Partitioned in %s parts (%s seconds)" % (S.prop.max()+1,t.seconds()))
             selection.draw()
          
  
