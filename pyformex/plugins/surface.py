@@ -451,7 +451,7 @@ class TriSurface(object):
     def __init__(self,*args):
         """Create a new surface."""
         self.coords = self.elems = None
-        self.p = None  # !! should be renamed prop!
+        self.prop = None  # !! should be renamed prop!
         self.edges = self.faces = None
         self.areas = self.normals = None
         self.econn = self.conn = self.eadj = self.adj = None
@@ -470,20 +470,21 @@ class TriSurface(object):
                     raise ValueError,"Only meshes with plexitude 3 and eltype 'tri3' can be converted to TriSurface!"
                 self.coords = a.coords
                 self.elems = a.elems
-                self.p = a.prop
+                self.prop = a.prop
 
             else:
-                # something that can be converted to a Formex
-                try:
-                    a = Formex(a)
-                except:
-                    raise ValueError,"Can not convert objects of type %s to TriSurface!" % type(a)
+                if not isinstance(a,Formex):
+                    # something that can be converted to a Formex
+                    try:
+                        a = Formex(a)
+                    except:
+                        raise ValueError,"Can not convert objects of type %s to TriSurface!" % type(a)
                 
                 if a.nplex() != 3:
                     raise ValueError,"Expected an object with plexitude 3!"
 
                 self.coords,self.elems = a.fuse()
-                self.p = a.p
+                self.prop = a.p
 
         else:
             # arguments are (coords,elems) or (coords,edges,faces)
@@ -601,14 +602,14 @@ class TriSurface(object):
         ## The current policy is to use zero property values for the Surface
         ## without props
         prop = None
-        if self.p is not None or S.p is not None:
-            if self.p is None:
-                self.p = zeros(shape=self.nelems(),dtype=Int)
-            if S.p is None:
+        if self.prop is not None or S.prop is not None:
+            if self.prop is None:
+                self.prop = zeros(shape=self.nelems(),dtype=Int)
+            if S.prop is None:
                 p = zeros(shape=S.nelems(),dtype=Int)
             else:
-                p = S.p
-            prop = concatenate((self.p,p))
+                p = S.prop
+            prop = concatenate((self.prop,p))
         self.__init__(coords,elems)
         self.setProp(prop)
 
@@ -648,8 +649,8 @@ class TriSurface(object):
     def copy(self):
         """Return a (deep) copy of the surface."""
         S = TriSurface(self.coords.copy(),self.elems.copy())
-        if self.p is not None:
-            S.setProp(self.p)
+        if self.prop is not None:
+            S.setProp(self.prop)
         return S
     
     def select(self,idx,compress=True):
@@ -662,8 +663,8 @@ class TriSurface(object):
         Setting compress==False will keep all original nodes in the surface.
         """
         S = TriSurface(self.coords, self.elems[idx])
-        if self.p is not None:
-            S.setProp(self.p[idx])
+        if self.prop is not None:
+            S.setProp(self.prop[idx])
         if compress:
             S.compress()
         return S
@@ -682,29 +683,29 @@ class TriSurface(object):
         If a value None is given, the properties are removed from the TriSurface.
         """
         if p is None:
-            self.p = None
+            self.prop = None
         else:
             p = array(p).astype(Int)
-            self.p = resize(p,(self.nelems(),))
+            self.prop = resize(p,(self.nelems(),))
         return self
 
     def getprop(self):
         """Return the properties as a numpy array (ndarray)"""
-        return self.p
+        return self.prop
 
     def maxprop(self):
         """Return the highest property value used, or None"""
-        if self.p is None:
+        if self.prop is None:
             return None
         else:
-            return self.p.max()
+            return self.prop.max()
 
     def propSet(self):
         """Return a list with unique property values."""
-        if self.p is None:
+        if self.prop is None:
             return None
         else:
-            return unique(self.p)
+            return unique(self.prop)
 
     # The following functions get the corresponding information from
     # the underlying Coords object
@@ -876,14 +877,14 @@ class TriSurface(object):
     def toFormex(self):
         """Convert the surface to a Formex."""
         self.refresh()
-        return Formex(self.coords[self.elems],self.p)
+        return Formex(self.coords[self.elems],self.prop)
 
 
     ### TO BE DELETED AFTER FULL TRANSITION #####
     def toMesh(self):
         """Convert the surface to a Mesh."""
         self.refresh()
-        return Mesh(self.coords,self.elems,self.p,eltype='tri3')
+        return Mesh(self.coords,self.elems,self.prop,eltype='tri3')
 
     @deprecation("feModel() is deprecated. Please use toMesh() instead")
     def feModel(self):
