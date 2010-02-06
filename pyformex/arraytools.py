@@ -145,8 +145,8 @@ def normalize(A,axis=-1):
     shape = list(A.shape)
     shape[axis] = 1
     Al = length(A,axis).reshape(shape)
-    if (Al == 0.).any():
-        raise ValueError,"Normalization of zero vector."
+#    if (Al == 0.).any():
+#        raise ValueError,"Normalization of zero vector."
     return A/Al
 
 

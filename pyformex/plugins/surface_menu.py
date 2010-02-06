@@ -421,13 +421,17 @@ SelectableStatsValues = odict.ODict([
     ('Number of edge adjacent elements', (TriSurface.nEdgeAdjacent,False)),
     ('Edge angle', (TriSurface.edgeAngles,True)),
     ('Number of connected elements', (TriSurface.nEdgeConnected,True)),
+    ('Curvature', (TriSurface.curvature,False)),
     ])
+
+CurvatureValues = ['Gaussian curvature','Mean curvature','Shape index','Curvedness']
 
 def showHistogram(key,val,cumulative):
     y,x = plot2d.createHistogram(val,cumulative=cumulative)
     return plot2d.showHistogram(x,y,key)
 
 
+_stat_dia = None
 
 def showStatistics(key=None,domain=True,dist=False,cumdist=False):
     """Show the values corresponding with key in the specified mode.
@@ -439,7 +443,15 @@ def showStatistics(key=None,domain=True,dist=False,cumdist=False):
     if S:
         if key in SelectableStatsValues:
             func,onEdges = SelectableStatsValues[key]
-        val = func(S)
+        if key == 'Curvature':
+            curv_neigh = _stat_dia.results['Curvature Neighbourhood']
+            curv_val = _stat_dia.results['Curvature Value']
+            ind = CurvatureValues.index(curv_val)
+            curv = func(S,curv_neigh)
+            val = curv[ind]
+            val = val[S.elems]
+        else:
+            val = func(S)
         if domain:
             showSurfaceValue(S,key,val,onEdges)
         if dist:
@@ -447,20 +459,21 @@ def showStatistics(key=None,domain=True,dist=False,cumdist=False):
         if cumdist:
             showHistogram(key,val,cumulative=True)
 
-_stat_dia = None
-
-def _show_stats(domain,dist,cumdist):
+def _show_stats(domain,dist):
     _stat_dia.acceptData()
     res = _stat_dia.results
-    key = res['Value to display']
+    key = res['Value']
+    if dist and res['Cumulative Distribution']:
+        cumdist = True
+        dist = False
+    else:
+        cumdist = False
     showStatistics(key,domain,dist,cumdist)
 
 def _show_domain():
-    _show_stats(True,False,False)
+    _show_stats(True,False)
 def _show_dist():
-    _show_stats(False,True,False)
-def _show_cumdist():
-    _show_stats(False,False,True)
+    _show_stats(False,True)
 
 def _close_stats_dia():
     global _stat_dia
@@ -476,10 +489,19 @@ def showStatisticsDialog():
         
     dispmodes = ['On Domain','Histogram','Cumulative Histogram']
     keys = SelectableStatsValues.keys()
-    _stat_dia = widgets.InputDialog([
-        ('Value to display',None,'vradio',keys),
-        ],caption='Surface Statistics',actions=[
-        ('Close',_close_stats_dia),('Cumulative Distribution',_show_cumdist),('Distribution',_show_dist),('Show on domain',_show_domain)],default='Show on domain')
+    _stat_dia = widgets.InputDialog(
+        caption='Surface Statistics',items=[
+            ('Value',None,'vradio',keys),
+            ('Curvature Neighbourhood',1),
+            ('Curvature Value',None,'vradio',CurvatureValues),
+            ('Cumulative Distribution',False),
+            ],
+        actions=[
+            ('Close',_close_stats_dia),
+            ('Distribution',_show_dist),
+            ('Show on domain',_show_domain)],
+        default='Show on domain'
+        )
     _stat_dia.show()
     
             
@@ -509,29 +531,6 @@ def showSurfaceValue(S,txt,val,onEdges):
     CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
     GD.canvas.addDecoration(CLA)
     drawtext(txt,10,230,'hv18')
-
-
-def showCurvature():
-    S = selection.check(single=True)
-    if S:
-        dispmodes = ['On Domain','Histogram','Cumulative Histogram']
-        res  = askItems([('Neighbourhood',1),
-                         ('Select Value',None,'select',['Gaussian curvature','Mean curvature','Shape index','Curvedness']),
-                         ('Display Mode',None,'select',dispmodes)
-                         ])        
-        if res:
-            key = res['Select Value']
-            curv = S.curvature(neighbours=res['Neighbourhood'])
-            val = {'Gaussian curvature':0,'Mean curvature':1,'Shape index':2,'Curvedness':3}
-            val = curv[val[key]]
-            mode = res['Display Mode']
-            if mode == 'On Domain':
-                val = val[S.elems]
-                showSurfaceValue(S,key,val,False)
-                smoothwire()
-                lights(False)
-            else: 
-                showHistogram(key,val,cumulative= mode.startswith('Cumul'))
 
 
 def colorByFront():
@@ -1278,7 +1277,6 @@ def create_menu():
           ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
           ]),
         ("&Statistics",showStatisticsDialog),
-        ("&Show Curvature",showCurvature),
         ("---",None),
         ("&Frontal Methods",
          [("&Color By Front",colorByFront),
