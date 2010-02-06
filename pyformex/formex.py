@@ -931,6 +931,7 @@ class Formex(object):
         # data should be OK now
         self.coords = Coords(data)    # make sure coordinates are a Coords object 
         self.setProp(prop)
+        
         try:
             self.eltype = eltype.lower()
         except:

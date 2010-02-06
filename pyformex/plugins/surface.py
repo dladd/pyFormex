@@ -429,8 +429,7 @@ def create_border_triangle(coords,elems):
 ############################################################################
 # The TriSurface class
 
-
-class TriSurface(object):
+class TriSurface(Mesh):
     """A class representing a triangulated 3D surface.
 
     The surface contains `ntri` triangles, each having 3 vertices with
@@ -445,18 +444,19 @@ class TriSurface(object):
       an (nedges,2) integer array of vertex numbers,
       an (ntri,3) integer array of edges numbers.
 
-    Internally, the surface is stored in a (coords,elems) tuple.
+    Additionally, a keyword argument prop= may be specified to
+    set property values.
     """
 
-    def __init__(self,*args):
+    def __init__(self,*args,**kargs):
         """Create a new surface."""
-        self.coords = self.elems = None
-        self.prop = None  # !! should be renamed prop!
+        Mesh.__init__(self)
         self.edges = self.faces = None
         self.areas = self.normals = None
         self.econn = self.conn = self.eadj = self.adj = None
         if hasattr(self,'edglen'):
             del self.edglen
+            
         if len(args) == 0:
             return  # an empty surface
         
@@ -468,9 +468,7 @@ class TriSurface(object):
             if isinstance(a,Mesh):
                 if a.nplex() != 3 or a.eltype != 'tri3':
                     raise ValueError,"Only meshes with plexitude 3 and eltype 'tri3' can be converted to TriSurface!"
-                self.coords = a.coords
-                self.elems = a.elems
-                self.prop = a.prop
+                Mesh.__init__(self,a.coords,a.elems,a.prop,'tri3')
 
             else:
                 if not isinstance(a,Formex):
@@ -483,25 +481,29 @@ class TriSurface(object):
                 if a.nplex() != 3:
                     raise ValueError,"Expected an object with plexitude 3!"
 
-                self.coords,self.elems = a.fuse()
-                self.prop = a.p
+                coords,elems = a.fuse()
+                Mesh.__init__(self,coords,elems,a.p,'tri3')
 
         else:
             # arguments are (coords,elems) or (coords,edges,faces)
-            a = Coords(args[0])
-            if len(a.shape) != 2:
+            coords = Coords(args[0])
+            if len(coords.shape) != 2:
                 raise ValueError,"Expected a 2-dim coordinates array"
-            self.coords = a
             
             a = asarray(args[1])
             if a.dtype.kind != 'i' or a.ndim != 2 or a.shape[1]+len(args) != 5:
                 raise "Got invalid second argument"
-            if a.max() >= self.coords.shape[0]:
+            if a.max() >= coords.shape[0]:
                 raise ValueError,"Some vertex number is too high"
+            
             if len(args) == 2:
-                self.elems = a
+                # arguments are (coords,elems)
+                elems = a
+                Mesh.__init__(self,coords,elems,None,'tri3')
+                
                 
             elif len(args) == 3:
+                # arguments are (coords,edges,faces)
                 edges = a
                 a = asarray(args[2])
                 if not (a.dtype.kind == 'i' and a.ndim == 2 and a.shape[1] == 3):
@@ -509,25 +511,45 @@ class TriSurface(object):
                 if a.max() >= edges.shape[0]:
                     raise ValueError,"Some edge number is too high"
                 faces = a
-                self.elems = Connectivity(compactElems(edges,faces))
+                elems = Connectivity(compactElems(edges,faces))
+                Mesh.__init__(self,coords,elems,None,'tri3')
                 # since we have the data available, keep them
                 self.edges = edges
                 self.faces = faces
 
             else:
-                raise RuntimeError,"Too many arguments"
+                raise RuntimeError,"Too many positional arguments"
 
-        self.elems = Connectivity(self.elems)
- 
+            if 'prop' in kargs:
+                self.setProp(prop)
 
-########## TRANSITION TO NEW IMPLEMENTATION #############################
+
+###########################################################################
     #
-    # In the new implementation, TriSurface will be derived from a Mesh,
-    # thus the base information should be coords, elems.
+    #   Return information about a TriSurface
+    #
+
+    def nedges(self):
+        return self.getEdges().shape[0]
+
+    def nfaces(self):
+        return self.getFaces().shape[0]
+
+    def vertices(self):
+        return self.coords
+    
+    def shape(self):
+        """Return the number of points, edges, faces of the TriSurface."""
+        return self.ncoords(),self.nedges(),self.nfaces()
+ 
+    #
+    # In the new implementation, TriSurface is derived from a Mesh,
+    # thus the base information is (coords,elems).
     # Edges and Faces should always be retrieved with getEdges() and
     # getFaces(). coords and elems can directly be used as attributes
-    # and should always be in a consistent state.
+    # and should always be kept in a consistent state.
     #
+    
     def getEdges(self):
         """Get the edges data."""
         if self.edges is None:
@@ -548,29 +570,20 @@ class TriSurface(object):
 
     def setCoords(self,coords):
         """Change the coords."""
-        self.refresh() # THIS LINE CAN BE REMOVED AFTER TRANSITION
-        self.__init__(coords,self.elems)
+        self.__init__(coords,self.elems,prop=self.prop)
 
     def setElems(self,elems):
         """Change the elems."""
-        self.__init__(self.coords,elems)
+        self.__init__(self.coords,elems,prop=self.prop)
 
     def setEdgesAndFaces(self,edges,faces):
         """Change the edges and faces."""
-        self.__init__(self.coords,edges,faces)
-
-    #
-    # self.elems should always be consistent
-    # We retain the following functions for compatibility reasons
-    #
-    def getElems(self):
-        """Get the elems data."""
-        return self.elems
+        self.__init__(self.coords,edges,faces,prop=self.prop)
 
 
     def refresh(self):
         # The object should now always be consistent
-        pass
+        raise RuntimeError,"The implementation of TriSurface has changed!\n You should adopt your code to the new implementation, and no longer use 'refresh'"
 
  
     def compress(self):
@@ -586,7 +599,7 @@ class TriSurface(object):
         reverse[newnodes] = arange(newnodes.size,dtype=int32)
         coords = self.coords[newnodes]
         elems = reverse[self.elems]
-        self.__init__(coords,elems)
+        self.__init__(coords,elems,prop=self.prop)
 
 
     def append(self,S):
@@ -610,48 +623,16 @@ class TriSurface(object):
             else:
                 p = S.prop
             prop = concatenate((self.prop,p))
-        self.__init__(coords,elems)
-        self.setProp(prop)
+        self.__init__(coords,elems,prop=prop)
 
-
-###########################################################################
-    #
-    #   Return information about a TriSurface
-    #
-
-    def ncoords(self):
-        return self.coords.shape[0]
-
-    def nedges(self):
-        return self.getEdges().shape[0]
-
-    def nfaces(self):
-        return self.getFaces().shape[0]
-
-    # The following are defined to get a unified interface with Formex
-    nelems = nfaces
-   
-    def nplex(self):
-        return 3
-    
-    def ndim(self):
-        return 3
-
-    npoints = ncoords
-
-    def vertices(self):
-        return self.coords
-    
-    def shape(self):
-        """Return the number of points, edges, faces of the TriSurface."""
-        return self.ncoords(),self.nedges(),self.nfaces()
        
     def copy(self):
         """Return a (deep) copy of the surface."""
         S = TriSurface(self.coords.copy(),self.elems.copy())
         if self.prop is not None:
-            S.setProp(self.prop)
+            S.setProp(self.prop.copy())
         return S
+
     
     def select(self,idx,compress=True):
         """Return a TriSurface which holds only elements with numbers in ids.
@@ -668,93 +649,6 @@ class TriSurface(object):
         if compress:
             S.compress()
         return S
-    
-
-    # Properties
-    def setProp(self,p=None):
-        """Create or delete the property array for the TriSurface.
-
-        A property array is a rank-1 integer array with dimension equal
-        to the number of elements in the TriSurface.
-        You can specify a single value or a list/array of integer values.
-        If the number of passed values is less than the number of elements,
-        they wil be repeated. If you give more, they will be ignored.
-        
-        If a value None is given, the properties are removed from the TriSurface.
-        """
-        if p is None:
-            self.prop = None
-        else:
-            p = array(p).astype(Int)
-            self.prop = resize(p,(self.nelems(),))
-        return self
-
-    def getprop(self):
-        """Return the properties as a numpy array (ndarray)"""
-        return self.prop
-
-    def maxprop(self):
-        """Return the highest property value used, or None"""
-        if self.prop is None:
-            return None
-        else:
-            return self.prop.max()
-
-    def propSet(self):
-        """Return a list with unique property values."""
-        if self.prop is None:
-            return None
-        else:
-            return unique(self.prop)
-
-    # The following functions get the corresponding information from
-    # the underlying Coords object
-
-    def x(self):
-        return self.coords.x()
-    def y(self):
-        return self.coords.y()
-    def z(self):
-        return self.coords.z()
-
-    def bbox(self):
-        return self.coords.bbox()
-
-    def center(self):
-        return self.coords.center()
-
-    def centroid(self):
-        return self.coords.centroid()
-
-    def sizes(self):
-        return self.coords.sizes()
-
-    def dsize(self):
-        return self.coords.dsize()
-
-    def bsphere(self):
-        return self.coords.bsphere()
-
-
-    def centroids(self):
-        """Return the centroids of all elements of the Formex.
-
-        The centroid of an element is the point whose coordinates
-        are the mean values of all points of the element.
-        The return value is an (nfaces,3) shaped Coords array.
-        """
-        return self.toFormex().centroids()
-
-    #  Distance
-
-    def distanceFromPlane(self,*args,**kargs):
-        return self.coords.distanceFromPlane(*args,**kargs)
-
-    def distanceFromLine(self,*args,**kargs):
-        return self.coords.distanceFromLine(*args,**kargs)
-
-    def distanceFromPoint(self,*args,**kargs):
-        return self.coords.distanceFromPoint(*args,**kargs)
 
  
     # Test and clipping functions
@@ -792,7 +686,7 @@ class TriSurface(object):
         """
         if min is None and max is None:
             raise ValueError,"At least one of min or max have to be specified."
-        self.refresh()
+
         f = self.coords[self.elems]
         if type(nodes)==str:
             nod = range(f.shape[1])
@@ -870,26 +764,7 @@ class TriSurface(object):
         NPA = self.pointNormals()
         coordsNew = self.coords + NPA*distance
         return TriSurface(coordsNew,self.getElems())
-    
-    # Data conversion
-
-
-    def toFormex(self):
-        """Convert the surface to a Formex."""
-        self.refresh()
-        return Formex(self.coords[self.elems],self.prop)
-
-
-    ### TO BE DELETED AFTER FULL TRANSITION #####
-    def toMesh(self):
-        """Convert the surface to a Mesh."""
-        self.refresh()
-        return Mesh(self.coords,self.elems,self.prop,eltype='tri3')
-
-    @deprecation("feModel() is deprecated. Please use toMesh() instead")
-    def feModel(self):
-        return self.coords,self.elems
-        
+   
 
     @classmethod
     def read(clas,fn,ftype=None):
@@ -945,7 +820,6 @@ class TriSurface(object):
             write_gts(fname,self.coords,self.getEdges(),self.getFaces())
             GD.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','neu','smesh']:
-            self.refresh()
             if ftype == 'stl':
                 write_stla(fname,self.coords[self.elems])
             elif ftype == 'off':
@@ -954,31 +828,16 @@ class TriSurface(object):
                 write_gambit_neutral(fname,self.coords,self.elems)
             elif ftype == 'smesh':
                 write_smesh(fname,self.coords,self.elems)
-            GD.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nfaces()))
+            GD.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nelems()))
         else:
             print("Cannot save TriSurface as file %s" % fname)
 
 
     @coordsmethod
-    def scale(self,*args,**kargs):
-        pass
-    @coordsmethod
-    def translate(self,*args,**kargs):
-        pass
-    @coordsmethod
-    def rotate(self,*args,**kargs):
-        pass
-    @coordsmethod
-    def shear(self,*args,**kargs):
-        pass
-    @coordsmethod
     def reflect(self,*args,**kargs):
         if kargs.get('invert_normals',True) == True:
             elems = self.getElems()
             self.setElems(column_stack([elems[:,0],elems[:,2],elems[:,1]]))
-    @coordsmethod
-    def affine(self,*args,**kargs):
-        pass
 
 
 ####################### TriSurface Data ######################
@@ -986,7 +845,6 @@ class TriSurface(object):
 
     def avgVertexNormals(self):
         """Compute the average normals at the vertices."""
-        self.refresh()
         return interpolateNormals(self.coords,self.elems,atNodes=True)
 
 
@@ -999,7 +857,6 @@ class TriSurface(object):
         The values are returned and saved in the object.
         """
         if self.areas is None or self.normals is None:
-            self.refresh()
             self.areas,self.normals = areaNormals(self.coords[self.elems])
         return self.areas,self.normals
 
@@ -1019,7 +876,6 @@ class TriSurface(object):
 
         This will only be correct if the surface is a closed manifold.
         """
-        self.refresh()
         x = self.coords[self.elems]
         return surface_volume(x).sum()
 
@@ -1032,7 +888,6 @@ class TriSurface(object):
         shape index, the curvedness, the principal curvatures and the
         principal directions.      
         """
-        self.refresh()
         curv = curvature(self.coords,self.elems,self.getEdges(),neighbours=neighbours)
         return curv
 
@@ -1047,7 +902,6 @@ class TriSurface(object):
     def nodeConnections(self):
         """Find the elems connected to nodes."""
         if self.conn is None:
-            self.refresh()
             self.conn = reverseIndex(self.elems)
         return self.conn
     
@@ -1087,7 +941,6 @@ class TriSurface(object):
     def nodeAdjacency(self):
         """Find the elems adjacent to elems via one or two nodes."""
         if self.adj is None:
-            self.refresh()
             self.adj = adjacent(self.elems,self.nodeConnections())
         return self.adj
 

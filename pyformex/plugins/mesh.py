@@ -32,7 +32,6 @@ from formex import *
 from connectivity import Connectivity,reverseUniqueIndex
 import elements
 from utils import deprecation
-#from collections import defaultdict
 
 
 #################### This first section holds experimental stuff!! #####
@@ -207,23 +206,27 @@ class Mesh(object):
       values should be in the range 0 <= value < ncoords.
     - prop: array of element property numbers, default None.
     - eltype: string designing the element type, default None.
+    If eltype is None, a default eltype is deived from the plexitude.
+
+    A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
+    or by a single geometric object that provides a toMesh() method.
     """
     
     def __init__(self,coords=None,elems=None,prop=None,eltype=None):
-        """Create a new Mesh from the specified data.
+        """Initialize a new Mesh."""
+        self.coords = self.elems = self.prop = self.eltype = None
 
-        data is either a tuple of (coords,elems) arrays, or an object having
-        a 'toMesh()' method, which should return such a tuple.
-        """
-        self.coords = None
-        self.elems = None
-        self.prop = prop
+        if coords is None:
+            # Create an empty Mesh object
+            return
+        
 
         if elems is None:
             if hasattr(coords,'toMesh'):
                 # initialize from a single object
                 coords,elems = coords.toMesh()
             elif type(coords) is tuple:
+                # SHOULD WE KEEP THIS ???
                 coords,elems = coords
 
         try:
@@ -236,14 +239,57 @@ class Mesh(object):
         except:
             raise ValueError,"Invalid initialization data"
 
+        self.setProp(prop)
+
         if eltype is None:
             self.eltype = defaultEltype(self.nplex())
         else:
             self.eltype = eltype
 
 
+    def setProp(self,prop=None):
+        """Create or destroy the property array for the Mesh.
+
+        A property array is a rank-1 integer array with dimension equal
+        to the number of elements in the Mesh.
+        You can specify a single value or a list/array of integer values.
+        If the number of passed values is less than the number of elements,
+        they wil be repeated. If you give more, they will be ignored.
+        
+        If a value None is given, the properties are removed from the Mesh.
+        """
+        if prop is None:
+            self.prop = None
+        else:
+            prop = array(prop).astype(Int)
+            self.prop = resize(prop,(self.nelems(),))
+        return self
+
+
+    def getProp(self):
+        """Return the properties as a numpy array (ndarray)"""
+        return self.prop
+
+
+    def maxProp(self):
+        """Return the highest property value used, or None"""
+        if self.prop is None:
+            return None
+        else:
+            return self.prop.max()
+
+
+    def propSet(self):
+        """Return a list with unique property values."""
+        if self.prop is None:
+            return None
+        else:
+            return unique(self.prop)
+
+
     def copy(self):
         """Return a copy using the same data arrays"""
+        # SHOULD THIS RETURN A DEEP COPY?
         return Mesh(self.coords,self.elems,self.prop,self.eltype)
 
 
@@ -254,13 +300,24 @@ class Mesh(object):
         the Mesh. Node property numbers however can not be translated to
         the Formex data model.
         """
-        return Formex(self.coords[self.elems],self.prop,eltype=self.eltype)
+        return Formex(self.coords[self.elems],self.prop,self.eltype)
 
+    
+    def getCoords(self):
+        """Get the coords data."""
+        return self.coords
+    
+    def getElems(self):
+        """Get the elems data."""
+        return self.elems
 
     def data(self):
         """Return the mesh data as a tuple (coords,elems)"""
         return self.coords,self.elems
 
+    
+    def ndim(self):
+        return 3
     def nelems(self):
         return self.elems.shape[0]
     def nplex(self):
@@ -286,9 +343,51 @@ class Mesh(object):
             return self.nelems() * len(el.edges)
         except:
             return 0
+    
+
+    # The following functions get the corresponding information from
+    # the underlying Coords object
+
+    def x(self):
+        return self.coords.x()
+    def y(self):
+        return self.coords.y()
+    def z(self):
+        return self.coords.z()
+
+    def bbox(self):
+        return self.coords.bbox()
+
+    def center(self):
+        return self.coords.center()
+
+    def centroid(self):
+        return self.coords.centroid()
+
+    def sizes(self):
+        return self.coords.sizes()
+
+    def dsize(self):
+        return self.coords.dsize()
+
+    def bsphere(self):
+        return self.coords.bsphere()
+
+
+    #  Distance
+
+    def distanceFromPlane(self,*args,**kargs):
+        return self.coords.distanceFromPlane(*args,**kargs)
+
+    def distanceFromLine(self,*args,**kargs):
+        return self.coords.distanceFromLine(*args,**kargs)
+
+    def distanceFromPoint(self,*args,**kargs):
+        return self.coords.distanceFromPoint(*args,**kargs)
+
 
     def centroids(self):
-        """Return the centroids of all elements of the Formex.
+        """Return the centroids of all elements of the Mesh.
 
         The centroid of an element is the point whose coordinates
         are the mean values of all points of the element.
@@ -296,6 +395,23 @@ class Mesh(object):
         """
         return self.coords[self.elems].mean(axis=1)
         
+
+    @coordsmethod
+    def scale(self,*args,**kargs):
+        pass
+    @coordsmethod
+    def translate(self,*args,**kargs):
+        pass
+    @coordsmethod
+    def rotate(self,*args,**kargs):
+        pass
+    @coordsmethod
+    def shear(self,*args,**kargs):
+        pass
+    @coordsmethod
+    def affine(self,*args,**kargs):
+        pass
+
 
     def report(self):
         bb = self.bbox()
