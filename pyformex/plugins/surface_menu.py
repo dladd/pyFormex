@@ -411,43 +411,78 @@ def fillHoles():
 #  - function to calculate the values
 #  - domain to display: True to display on edges, False to display on elements
 
-SelectableStatsValues = {
-    'Facet Area': (TriSurface.facetArea,False),
-    'Aspect ratio': (TriSurface.aspectRatio,False),
-    'Smallest altitude': (TriSurface.smallestAltitude,False),
-    'Longest edge': (TriSurface.longestEdge,False),
-    'Shortest edge': (TriSurface.shortestEdge,False),
-    'Number of node adjacent elements': (TriSurface.nNodeAdjacent,False),
-    'Number of edge adjacent elements': (TriSurface.nEdgeAdjacent,False),
-    'Edge angle': (TriSurface.edgeAngles,True),
-    'Number of connected elements': (TriSurface.nEdgeConnected,True),
-    }
+SelectableStatsValues = odict.ODict([
+    ('Facet Area', (TriSurface.facetArea,False)),
+    ('Aspect ratio', (TriSurface.aspectRatio,False)),
+    ('Smallest altitude', (TriSurface.smallestAltitude,False)),
+    ('Longest edge', (TriSurface.longestEdge,False)),
+    ('Shortest edge', (TriSurface.shortestEdge,False)),
+    ('Number of node adjacent elements', (TriSurface.nNodeAdjacent,False)),
+    ('Number of edge adjacent elements', (TriSurface.nEdgeAdjacent,False)),
+    ('Edge angle', (TriSurface.edgeAngles,True)),
+    ('Number of connected elements', (TriSurface.nEdgeConnected,True)),
+    ])
 
 def showHistogram(key,val,cumulative):
     y,x = plot2d.createHistogram(val,cumulative=cumulative)
     return plot2d.showHistogram(x,y,key)
 
-    
-def showStatistics():
+
+
+def showStatistics(key=None,domain=True,dist=False,cumdist=False):
+    """Show the values corresponding with key in the specified mode.
+
+    key is one of the keys of SelectableStatsValues
+    mode is one of ['On Domain','Histogram','Cumulative Histogram']
+    """
     S = selection.check(single=True)
     if S:
-        dispmodes = ['On Domain','Histogram','Cumulative Histogram']
-        keys = SelectableStatsValues.keys()
-        keys.sort()
-        res  = askItems([('Select Value',None,'select',keys),
-                         ('Display Mode',None,'select',dispmodes)
-                         ])
-        GD.app.processEvents()
-        if res:
-            key = res['Select Value']
+        if key in SelectableStatsValues:
             func,onEdges = SelectableStatsValues[key]
-            val = func(S)
-            mode = res['Display Mode']
-            if mode == 'On Domain':
-                showSurfaceValue(S,key,val,onEdges)
-            else: 
-                showHistogram(key,val,cumulative= mode.startswith('Cumul'))
+        val = func(S)
+        if domain:
+            showSurfaceValue(S,key,val,onEdges)
+        if dist:
+            showHistogram(key,val,cumulative=False)
+        if cumdist:
+            showHistogram(key,val,cumulative=True)
 
+_stat_dia = None
+
+def _show_stats(domain,dist,cumdist):
+    _stat_dia.acceptData()
+    res = _stat_dia.results
+    key = res['Value to display']
+    showStatistics(key,domain,dist,cumdist)
+
+def _show_domain():
+    _show_stats(True,False,False)
+def _show_dist():
+    _show_stats(False,True,False)
+def _show_cumdist():
+    _show_stats(False,False,True)
+
+def _close_stats_dia():
+    global _stat_dia
+    if _stat_dia:
+        _stat_dia.close()
+        _stat_dia = None
+
+    
+def showStatisticsDialog():
+    global _stat_dia
+    if _stat_dia:
+        _close_stats_dia()
+        
+    dispmodes = ['On Domain','Histogram','Cumulative Histogram']
+    keys = SelectableStatsValues.keys()
+    _stat_dia = widgets.InputDialog([
+        ('Value to display',None,'vradio',keys),
+        ],caption='Surface Statistics',actions=[
+        ('Close',_close_stats_dia),('Cumulative Distribution',_show_cumdist),('Distribution',_show_dist),('Show on domain',_show_domain)],default='Show on domain')
+    _stat_dia.show()
+    
+            
 
 def showSurfaceValue(S,txt,val,onEdges):
     val = nan_to_num(val)
@@ -1242,7 +1277,7 @@ def create_menu():
           ("&AvgNormals",toggleAvgNormals,dict(checkable=True)),
           ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
           ]),
-        ("&Statistics",showStatistics),
+        ("&Statistics",showStatisticsDialog),
         ("&Show Curvature",showCurvature),
         ("---",None),
         ("&Frontal Methods",
