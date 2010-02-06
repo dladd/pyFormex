@@ -180,11 +180,14 @@ def nextFilename(fn):
 
 
 def runTetgen(fn):
-    """Run tetgen mesher on the specified file."""
+    """Run tetgen mesher on the specified file.
+
+    The input file is a closed triangulated surface.
+    tetgen will generate a volume tetraeder mesh inside the surface,
+    and create a new approximation of the surface as a by-product.
+    """
     if os.path.exists(fn):
         sta,out = utils.runCommand('tetgen -z %s' % fn)
-        #GD.message(out)
-
 
 
 if __name__ == "__main__":
