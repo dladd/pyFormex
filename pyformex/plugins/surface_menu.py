@@ -46,14 +46,14 @@ import os, timer
 def draw_edge_numbers(n):
     """Draw the edge numbers of the named surface."""
     S = named(n)
-    F = Formex(S.coords[S.edges]) 
-    return drawNumbers(F,color=colors.red)
+    F = Formex(S.coords[S.getEdges()]) 
+    return drawNumbers(F,color='green')
 
 def draw_node_numbers(n):
     """Draw the node numbers of the named surface."""
     S = named(n)
     F = Formex(S.coords) 
-    return drawNumbers(F,color=colors.blue)
+    return drawNumbers(F,color='red')
 
 def draw_normals(n):
     S = named(n)
@@ -370,7 +370,7 @@ def fillHoles():
     """Fill the holes in the selected surface."""
     S = selection.check(single=True)
     if S:
-        border_elems = S.edges[S.borderEdges()]
+        border_elems = S.getEdges()[S.borderEdges()]
         if border_elems.size != 0:
             # partition borders
             print(border_elems)

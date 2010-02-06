@@ -286,18 +286,18 @@ def createFrameModel():
     print "The structure has %s nodes, %s edges and %s faces" % (S.ncoords(),S.nedges(),S.nfaces())
 
     # Create the steel structure
-    E = Formex(nodes[S.edges])
+    E = Formex(nodes[S.getEdges()])
     clear()
     draw(E)
     
     # Get the tri elements that are part of a quadrilateral:
     prop = F.p
-    quadtri = S.faces[prop==6]
+    quadtri = S.getFaces()[prop==6]
     nquadtri = quadtri.shape[0]
     print "%s triangles are part of quadrilateral faces" % nquadtri
     if nquadtri > 0:
         # Create triangle definitions of the quadtri faces
-        tri = compactElems(S.edges,quadtri)
+        tri = compactElems(S.getEdges(),quadtri)
         D = Formex(nodes[tri])
         clear()
         flatwire()
@@ -310,14 +310,14 @@ def createFrameModel():
     internal = [ c[0] for c in conn if len(c[1]) > 1 ]
     print "Internal edges in quadrilaterals: %s" % internal
     
-    E = Formex(nodes[S.edges],1)
+    E = Formex(nodes[S.getEdges()],1)
     E.p[internal] = 6
     wireframe()
     clear()
     draw(E)
 
     # Remove internal edges
-    tubes = S.edges[E.p != 6]
+    tubes = S.getEdges()[E.p != 6]
 
     print "Number of tube elements after removing %s internals: %s" % (len(internal),tubes.shape[0])
 

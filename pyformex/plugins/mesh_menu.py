@@ -29,15 +29,11 @@ Interactive menu for Mesh type objects
 (C) 2009 Benedict Verhegghe.
 """
 import pyformex
-# WHY WAS THIS ADDED?
-#import os,sys
-#sys.path[:0] = ['.', os.path.dirname(__file__)]
 
 import simple
 from connectivity import *
 from gui import menu
 from gui.draw import *
-#from gui.actors import *
 from plugins import formex_menu
 from plugins.objects import DrawableObjects
 from plugins.fe import *
@@ -61,9 +57,11 @@ def toggleAnnotation(self,i=0,onoff=None):
     #print mesh_menu.menuitems
     toggle_menu = mesh_menu.item("toggle annotations")
     #print toggle_menu
-    action = toggle_menu.menuitems.keys()[i]
+    # This relies on the menu having the same items as the annotation list
+    action = toggle_menu.actions()[i]
+    action.setChecked(selection.hasAnnotation(i))
     #print "ACTION %s" % action
-    toggle_menu.itemAction(action).setChecked(selection.hasAnnotation(i))
+    #toggle_menu.itemAction(action)
     
 _toggleAnnotation = DrawableObjects.toggleAnnotation
 DrawableObjects.toggleAnnotation = toggleAnnotation

@@ -674,7 +674,7 @@ class TriSurfaceActor(Actor,TriSurface):
         
         Actor.__init__(self)
         self.atype = 'TriSurface'
-        TriSurface.__init__(self,S.coords,S.edges,S.faces)
+        TriSurface.__init__(self,S.coords,S.elems)
         
         self.setLineWidth(linewidth)
         self.setColor(color,colormap)

@@ -260,7 +260,7 @@ def draw_elem_numbers(n):
 
 def draw_nodes(n):
     """Draw the numbers of an object's nodes."""
-    return draw(named(n).coords)
+    return draw(named(n).coords,flat=True)
 
 def draw_node_numbers(n):
     """Draw the numbers of an object's nodes."""
@@ -330,14 +330,12 @@ class DrawableObjects(Objects):
 
 
     def toggleAnnotation(self,i=0,onoff=None):
-        """Toggle the display of number On or Off.
+        """Toggle the display of an annotaion On or Off.
 
         If given, onoff is True or False. 
         If no onoff is given, this works as a toggle. 
         """
         active = self.annotations[i][1]
-        #print("WAS")
-        #print(self.annotations)
         if onoff is None:
             active = not active
         elif onoff:
@@ -345,24 +343,19 @@ class DrawableObjects(Objects):
         else:
             active = False
         self.annotations[i][1] = active
-        #print("BECOMES")
-        #print(self.annotations)
         if active:
             self.drawAnnotation(i)
         else:
             self.removeAnnotation(i)
-        #print(self._annotations)
 
 
     def drawAnnotation(self,i=0):
         """Draw some annotation for the current selection."""
-        #print("DRAW %s" % i)
         self._annotations[i] = [ self.annotations[i][0](n) for n in self.names ]
 
 
     def removeAnnotation(self,i=0):
         """Remove the annotation i."""
-        #print("REMOVE %s" % i)
         GD.canvas.removeAnnotations(self._annotations[i])
         GD.canvas.update()
         del self._annotations[i]

@@ -1693,7 +1693,6 @@ Total area: %s; Enclosed volume: %s
         return S
 
 
-
 ##########################################################################
 ################# Non-member and obsolete functions ######################
 
@@ -1760,7 +1759,6 @@ def read_stla(fn,dtype=Float,large=False,guess=True):
     raise RuntimeError,"Incorrect stl file: read %d lines, %d facets" % (cnt,i)
         
 
-
 def read_ascii_large(fn,dtype=Float):
     """Read an ascii .stl file into an [n,3,3] float array.
 
@@ -1815,7 +1813,6 @@ def find_first_nodes(nodes,coords):
     return array([ r[0] for r in res ])
 
 
-
 def find_triangles(elems,triangles):
     """Find triangles with given node numbers in a surface mesh.
 
@@ -1847,7 +1844,6 @@ def remove_triangles(elems,remove):
     Returns a (nelems-nremove,3) integer array with the triangles of
     nelems where the triangles of remove have been removed.
     """
-    #print(elems,remove)
     GD.message("Removing %s out of %s triangles" % (remove.shape[0],elems.shape[0]))
     magic = elems.max()+1
 
