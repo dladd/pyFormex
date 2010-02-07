@@ -158,19 +158,14 @@ def rotationAngle(A,B,angle_spec=Deg):
     (by default in degrees) and an (n,3) shaped array with unit vectors
     along the rotation axis.
     Specify angle_spec=Rad to get the angles in radians.
-    """    
-    try:
-        A = normalize(A)
-        B = normalize(B)
-    except:
-        raise ValueError,"Zero vector has no direction."
+    """  
+    A = normalize(A)
+    B = normalize(B)
     n = cross(A,B) # vectors perpendicular to A and B
-    try:
-        n = normalize(n)
-    except ValueError: # some vectors A and B are parallel
-        t = length(n) == 0.
+    t = length(n) == 0.
+    if t.any(): # some vectors A and B are parallel
         n[t] = anyPerpendicularVector(A[t])
-        n = normalize(n)
+    n = normalize(n)
     c = dotpr(A,B)
     angle = arccos(c.clip(min=-1.,max=1.)) / angle_spec
     return angle,n
@@ -187,6 +182,21 @@ def anyPerpendicularVector(A):
     t = (x!=0.)+(y!=0.)
     B = where(t,column_stack([-y,x,n]),column_stack([-z,n,x]))
     return B
+
+
+def projectionVOV(A,B):
+    """Return the projection of vector of A on vector of B."""
+    L = projection(A,B)
+    B = normalize(B)
+    shape = list(L.shape)
+    shape.append(1)
+    return L.reshape(shape)*B
+
+
+def projectionVOP(A,n):
+    """Return the projection of vector of A on plane of B."""
+    Aperp = projectionVOV(A,n)
+    return A-Aperp
 
 
 ################## intersection tools ###############
