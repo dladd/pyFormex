@@ -202,6 +202,36 @@ def viewportLayout():
 #        if res['Store these settings as defaults']:
 #            GD.cfg.update()
 
+
+def openglSettings():
+    dia = None
+    def apply():
+        dia.acceptData()
+        canvas.glSettings(dia.results)
+    def close():
+        dia.close()
+        
+    dia = widgets.InputDialog(
+        caption='OpenGL Settings',
+        items=[
+            ('Line Smoothing','Off','radio',{'choices':['On','Off']}),
+            ('Polygon Mode',None,'radio',{'choices':['Fill','Line']}),
+            ('Polygon Fill',None,'radio',{'choices':['Front and Back','Front','Back']}),
+            ('Culling','Off','radio',{'choices':['On','Off']}),
+# These are currently set by the render mode
+#            ('Shading',None,'radio',{'choices':['Smooth','Flat']}),
+#            ('Lighting',None,'radio',{'choices':['On','Off']}),
+            ],
+        actions=[('Done',close),('Apply',apply)]
+        )
+    dia.show()
+
+def lineSmoothOn():
+    canvas.glLineSmooth(True)
+
+def lineSmoothOff():
+    canvas.glLineSmooth(False)
+
 MenuData = [
     (_('&Viewport'),[
         (_('&Clear'),draw.clear),
@@ -217,17 +247,20 @@ MenuData = [
         (_('&Canvas Size'),setCanvasSize), 
         (_('&All Viewport Settings'),viewportSettings),
         (_('&Global Draw Options'),draw.askDrawOptions),
-        ('&OpenGL Settings',
-         [('&Flat',canvas.glFlat),
-          ('&Smooth',canvas.glSmooth),
-          ('&Culling',canvas.glCulling),
-          ('&No Culling',canvas.glNoCulling),
-          ('&Polygon Line',canvas.glLine),
-          ('&Polygon Fill',canvas.glFill),
-          ('&Polygon Front Fill',canvas.glFrontFill),
-          ('&Polygon Back Fill',canvas.glBackFill),
-          ('&Polygon Front and Back Fill',canvas.glBothFill),
-          ]),
+        (_('&OpenGL Settings'),openglSettings),
+        ## ('&OpenGL Settings',
+        ##  [('&Flat',canvas.glFlat),
+        ##   ('&Smooth',canvas.glSmooth),
+        ##   ('&Culling',canvas.glCulling),
+        ##   ('&No Culling',canvas.glNoCulling),
+        ##   ('&Line Smoothing On',lineSmoothOn),
+        ##   ('&Line Smoothing Off',lineSmoothOff),
+        ##   ('&Polygon Line',canvas.glLine),
+        ##   ('&Polygon Fill',canvas.glFill),
+        ##   ('&Polygon Front Fill',canvas.glFrontFill),
+        ##   ('&Polygon Back Fill',canvas.glBackFill),
+        ##   ('&Polygon Front and Back Fill',canvas.glBothFill),
+        ##   ]),
         (_('&Redraw'),draw.redraw),
         (_('&Reset'),draw.reset),
         (_('&Change viewport layout'),viewportLayout), 

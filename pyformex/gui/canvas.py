@@ -64,12 +64,13 @@ def glFill():
 def glLine():
     GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
 
-## def glLight(onoff):
-##     """Toggle lights on/off."""
-##     if onoff:
-##         GL.glEnable(GL.GL_LIGHTING)
-##     else:
-##         GL.glDisable(GL.GL_LIGHTING)
+def glLineSmooth(onoff):
+    if onoff is True:
+        GL.glEnable(GL.GL_LINE_SMOOTH)
+        GL.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST)
+    elif onoff is False:
+        GL.glDisable(GL.GL_LINE_SMOOTH)
+
 
 def glSmooth():
     """Enable smooth shading"""
@@ -77,14 +78,82 @@ def glSmooth():
 def glFlat():
     """Disable smooth shading"""
     GL.glShadeModel(GL.GL_FLAT)
+    
 
-def glCulling():
-    """Enable culling"""
-    GL.glEnable(GL.GL_CULL_FACE)
+def onOff(onoff):
+    """Convert On/Off strings to a boolean"""
+    if type(onoff) is str:
+        return (onoff.lower() == 'on')
+    else:
+        if onoff:
+            return True
+        else:
+            return False
+
+
+def glEnable(facility,onoff):
+    """Enable/Disable an OpenGL facility, depending on onoff value
+
+    facility is an OpenGL facility.
+    onoff can be True or False to enable, resp. disable the facility, or
+    None to leave it unchanged.
+    """
+    print facility,onoff
+    if onOff(onoff):
+        print "ENABLE"
+        GL.glEnable(facility)
+    else:
+        print "DISABLE"
+        GL.glDisable(facility)
+        
+
+def glCulling(onoff=True):
+    glEnable(GL.GL_CULL_FACE,onoff)
 def glNoCulling():
-    """Disable culling"""
-    GL.glDisable(GL.GL_CULL_FACE)
+    glCulling(False)
 
+def glLighting(onoff):
+    print onoff
+    glEnable(GL.GL_LIGHTING,onoff)
+
+
+def glPolygonFillMode(mode):
+    if type(mode) is str:
+        mode = mode.lower()
+        if mode == 'Front and Back':
+            glBothFill()
+        elif mode == 'Front':
+            glFrontFill()
+        elif mode == 'Back':
+            glBackFill()
+
+            
+def glPolygonMode(mode):
+    if type(mode) is str:
+        mode = mode.lower()
+        if mode == 'fill':
+            glFill()
+        elif mode == 'line':
+            glLine()
+    
+
+def glShadeModel(model):
+    if type(model) is str:
+        model = model.lower()
+        if model == 'smooth':
+            glSmooth()
+        elif model == 'flat':
+            glFlat()
+        
+def glSettings(settings):
+    print "GL SETTINGS: %s" % settings
+    glCulling(settings.get('Culling',None))
+    glLighting(settings.get('Lighting',None))
+    glShadeModel(settings.get('Shading',None))
+    glLineSmooth(onOff(settings.get('Line Smoothing',None)))
+    glPolygonFillMode(settings.get('Polygon Fill',None))
+    glPolygonMode(settings.get('Polygon Mode',None))
+    GD.canvas.update()
 
     
 class ActorList(list):
