@@ -402,7 +402,7 @@ def draw(F,
     # Create the colors
     if color == 'prop':
         if hasattr(F,'p'):
-            color = F.p
+            color = F.prop
         elif hasattr(F,'prop'):
             color = F.prop
         else:

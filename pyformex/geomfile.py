@@ -121,14 +121,14 @@ class GeometryFile(object):
         """
         if sep is None:
             sep = self.sep
-        hasprop = F.p is not None
+        hasprop = F.prop is not None
         head = "# nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'" % (F.nelems(),F.nplex(),hasprop,F.eltype,sep)
         if name:
             head += "; name='%s'" % name 
         self.fil.write(head+'\n')
         self.writeData(F.coords,sep)
         if hasprop:
-            self.writeData(F.p,sep)
+            self.writeData(F.prop,sep)
 
 
     def writeMesh(self,F,name=None,sep=None):

@@ -53,7 +53,7 @@ pbc,pld = 1,6 # Properties corresponding to boundary/loaded nodes
 A = triquad().replic2(na,ma,1,1).setProp(pa)
 B = quad().replic2(nb,mb,1,1).translate([na,0,0]).setProp(pb)
 # Change every second element of B to property pb1
-B.p[arange(B.p.size) % 2 == 1] = pb1
+B.prop[arange(B.prop.size) % 2 == 1] = pb1
 C = A.rotate(90).setProp(pc)
 parts = [A,B,C]
 
@@ -80,7 +80,7 @@ def drawModel(M,nodes=True,elems=True,nodenrs=True,elemnrs=True):
     lights(False)
     transparent()
     clear()
-    print F.p
+    print F.prop
     if nodes or nodenrs:
 ##         F = Formex(M.coords)
         if nodes:
@@ -99,7 +99,7 @@ def drawModel(M,nodes=True,elems=True,nodenrs=True,elemnrs=True):
 drawModel(M)
 
 # Transfer the properties from the parts in a global set
-elemprops = concatenate([part.p for part in parts])
+elemprops = concatenate([part.prop for part in parts])
 
 # Create the property database
 P = PropertyDB()
@@ -161,8 +161,8 @@ P.nodeProp(tag='step1',set=lnodes,name='Loaded',cload=[-10.,0.,0.,0.,0.,0.])
 P.nodeProp(tag='step2',set='Loaded',cload=[-10.,10.,0.,0.,0.,0.])
 
 F.setProp(0)
-F.p[bnodes] = pbc
-F.p[lnodes] = pld
+F.prop[bnodes] = pbc
+F.prop[lnodes] = pld
 
 print "Node properties"
 for p in P.getProp('n'):

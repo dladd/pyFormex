@@ -85,9 +85,9 @@ mesh = F.toMesh()
 #Creating elemsets
 ###################
 # Remember: elements in mesh are in the same order as elements in F
-topbar = where(F.p==3)[0]
-bottombar = where(F.p==0)[0]
-diabar = where(F.p==1)[0]
+topbar = where(F.prop==3)[0]
+bottombar = where(F.prop==0)[0]
+diabar = where(F.prop==1)[0]
 
 ###############
 #Creating nodesets
@@ -141,7 +141,7 @@ NumberEquations(bcon)
 
 #materials
 mats = array([ [p.young_modulus,p.density,p.cross_section] for p in props])
-matnr = zeros_like(F.p)
+matnr = zeros_like(F.prop)
 for i,p in enumerate(props):
     matnr[p.set] = i+1
 matnod = concatenate([matnr.reshape((-1,1)),mesh.elems+1],axis=-1)

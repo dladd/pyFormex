@@ -471,7 +471,7 @@ bbox[lo] = %s
 bbox[hi] = %s
 center   = %s
 maxprop  = %s
-""" % (F.shape(),bb[0],bb[1],F.center(),F.maxprop())
+""" % (F.shape(),bb[0],bb[1],F.center(),F.maxProp())
     
 
 def printall():

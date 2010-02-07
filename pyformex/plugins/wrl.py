@@ -25,7 +25,7 @@
 from numpy import *
 from gui.draw import *
 
-p = 0
+_prop_ = 0
 _name_ = "_dummy_"
 
 
@@ -39,12 +39,12 @@ def position(*args):
 
     
 def IndexedFaceSet(coords,faces=None):
-    global p
-    p += 1
+    global _prop_
+    _prop_ += 1
     coords = asarray(coords).reshape(-1,3)
-    print(coords.shape,p)
-    F = Formex(coords,p)
-    print(F.p)
+    print(coords.shape,_prop_)
+    F = Formex(coords,_prop_)
+    print(F.prop)
     draw(F)
     export({"%s-%s" % (_name_,'coords'):F})
     if faces is None:
@@ -54,12 +54,12 @@ def IndexedFaceSet(coords,faces=None):
 def IndexedLineSet(coords,lines):
     coords = asarray(coords).reshape(-1,3)
     print(coords.shape)
-    F = Formex(coords,p)
+    F = Formex(coords,_prop_)
     draw(F)
     export({"%s-%s" % (_name_,'coords'):F})
     lines = column_stack([lines[:-1],lines[1:]])
     print(lines.shape)
-    G = Formex(coords[lines],p)
+    G = Formex(coords[lines],_prop_)
     export({_name_:G})
     draw(G)
    

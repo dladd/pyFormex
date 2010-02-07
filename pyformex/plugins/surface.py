@@ -482,7 +482,7 @@ class TriSurface(Mesh):
                     raise ValueError,"Expected an object with plexitude 3!"
 
                 coords,elems = a.fuse()
-                Mesh.__init__(self,coords,elems,a.p,'tri3')
+                Mesh.__init__(self,coords,elems,a.prop,'tri3')
 
         else:
             # arguments are (coords,elems) or (coords,edges,faces)

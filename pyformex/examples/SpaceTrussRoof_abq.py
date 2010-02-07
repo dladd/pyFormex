@@ -74,9 +74,9 @@ nodes,elems=F.feModel()
 #Creating elemsets
 ###################
 # Remember: elems are in the same order as elements in F
-topbar = where(F.p==3)[0]
-bottombar = where(F.p==0)[0]
-diabar = where(F.p==1)[0]
+topbar = where(F.prop==3)[0]
+bottombar = where(F.prop==0)[0]
+diabar = where(F.prop==1)[0]
 
 ###############
 #Creating nodesets
@@ -144,6 +144,6 @@ if not checkWorkdir():
     exit()
 
 message("Writing the Abaqus file")
-AbqData(model,P,[step],eprop=F.p,out=[out],res=res).write('SpaceTruss')
+AbqData(model,P,[step],eprop=F.prop,out=[out],res=res).write('SpaceTruss')
 
 # End

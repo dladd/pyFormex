@@ -75,7 +75,7 @@ def colorCut(F,P,N,prop):
     print(dist)
     right = any(dist>0.0,axis=1)
     print(right)
-    F.p[right] = prop
+    F.prop[right] = prop
     nright = right.sum()
     nleft = F.nelems() - nright
     print("Left part has %s elements, right part has %s elements" % (nleft,nright))
@@ -89,7 +89,7 @@ def splitProp(F,name):
     these named Formex instances.
     It the Formex has no props, the whole Formex is given the name.
     """
-    if F.p is None:
+    if F.prop is None:
         d = { name:F }
     else:
         d = dict([['%s-%s' % (name,p),F.withProp(p)] for p in F.propSet()])
@@ -132,7 +132,7 @@ def partition(Fin,prop=0):
     F = Fin.translate(initial_trl)
 
     # Store the inital properties and make all properties equal to start value
-    initial_prop = F.p
+    initial_prop = F.prop
     F.setProp(prop)
 
     # draw it
@@ -182,7 +182,7 @@ def partition(Fin,prop=0):
     QtCore.QObject.disconnect(GD.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
     clear()
     draw(F)
-    Fin.setProp(F.p)
+    Fin.setProp(F.prop)
     return array(cut_planes)
 
    

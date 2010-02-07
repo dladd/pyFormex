@@ -669,10 +669,10 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         P1 = P[w1][T1].reshape(-1,2,3)
         F1 = F[w1]
         d1 = d[w1]
-        if F.p is None:
+        if F.prop is None:
             p1 = None
         else:
-            p1 = F.p[w1]
+            p1 = F.prop[w1]
         # split problem in two cases
         w11 = where(d1[:,0]*d1[:,1]*d1[:,2] > 0.)[0] # case 1: triangle at positive side after cut
         w12 = where(d1[:,0]*d1[:,1]*d1[:,2] < 0.)[0] # case 2: quadrilateral at positive side after cut
@@ -720,10 +720,10 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         F2 = F[w2]
         d2 = d[w2]
         U2 = U[w2]
-        if F.p is None:
+        if F.prop is None:
             p2 = None
         else:
-            p2 = F.p[w2]
+            p2 = F.prop[w2]
         # split problem in three cases
         W = (d2 > atol).sum(axis=-1)
         w21 = where(W == 2)[0] # case 1: two vertices at positive side
@@ -781,7 +781,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
             K1 = (K1 - n*d3[w31][U31].reshape(-1,1)).reshape(-1,2,3) # project vertices on plane (p,n)
             K2 = F31[d3[w31]>atol].reshape(-1,1,3) # vertices with distance > atol
             E6_pos = column_stack([K1,K2])
-            F6_pos = Formex(E6_pos,get_new_prop(F.p,w31,newprops[5]))
+            F6_pos = Formex(E6_pos,get_new_prop(F.prop,w31,newprops[5]))
         # case 2: no vertices at positive side
         if w32.size > 0 and side in '-':
             F32 = F3[w32]
@@ -790,7 +790,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
             K1 = (K1 - n*d3[w32][U32].reshape(-1,1)).reshape(-1,2,3) # project vertices on plane (p,n)
             K2 = F32[d3[w32]<-atol].reshape(-1,1,3) # vertices with distance < - atol
             E6_neg = column_stack([K1,K2])
-            F6_neg = Formex(E6_neg,get_new_prop(F.p,w32,newprops[5]))
+            F6_neg = Formex(E6_neg,get_new_prop(F.prop,w32,newprops[5]))
     # Three vertices with |distance| < atol
     w4 = where(V==3)[0]
     if w4.size > 0:
@@ -801,10 +801,10 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
             K1 = F4[U4] # vertices with |distance| < atol
             K1 = (K1 - n*d4[U4].reshape(-1,1)).reshape(-1,3,3) # project vertices on plane (p,n)
             E7_pos = K1
-            F7_pos = Formex(E7_pos,get_new_prop(F.p,w4,newprops[6]))
+            F7_pos = Formex(E7_pos,get_new_prop(F.prop,w4,newprops[6]))
         if side in '-':
             E7_neg = K1
-            F7_neg = Formex(E7_neg,get_new_prop(F.p,w4,newprops[6]))
+            F7_neg = Formex(E7_neg,get_new_prop(F.prop,w4,newprops[6]))
     # join all the pieces
     if side in '+':
         cut_pos = F1_pos+F2_pos+F3_pos+F4_pos+F5_pos+F6_pos+F7_pos
@@ -836,7 +836,7 @@ def coords_transformation(f):
     """
     repl = getattr(Coords,f.__name__)
     def newf(self,*args,**kargs):
-        return Formex(repl(self.coords,*args,**kargs),self.p,self.eltype)
+        return Formex(repl(self.coords,*args,**kargs),self.prop,self.eltype)
     newf.__name__ = f.__name__
     newf.__doc__ = repl.__doc__
     return newf
@@ -1023,26 +1023,26 @@ class Formex(object):
 
 
     # Properties
-    def getprop(self,index=None):
+    def getProp(self,index=None):
         """Return the propertie numbers of the element in index"""
-        if index is None or self.p is None:
-            return self.p
+        if index is None or self.prop is None:
+            return self.prop
         else:
-            return self.p[index]
+            return self.prop[index]
 
-    def maxprop(self):
+    def maxProp(self):
         """Return the highest property value used, or None"""
-        if self.p is None:
+        if self.prop is None:
             return None
         else:
-            return self.p.max()
+            return self.prop.max()
 
     def propSet(self):
         """Return a list with unique property values on this Formex."""
-        if self.p is None:
+        if self.prop is None:
             return None
         else:
-            return unique(self.p)
+            return unique(self.prop)
 
     # The following functions get the corresponding information from
     # the underlying Coords object
@@ -1136,7 +1136,7 @@ class Formex(object):
         """
         from plugins.mesh import Mesh
         x,e = self.fuse(*args,**kargs)
-        return Mesh(x,e,prop=self.p,eltype=self.eltype)
+        return Mesh(x,e,prop=self.prop,eltype=self.eltype)
 
 
 ##############################################################################
@@ -1191,8 +1191,8 @@ class Formex(object):
         the words "with prop" and a list of the properties.
         """
         s = self.asFormex()
-        if isinstance(self.p,ndarray):
-            s += " with prop " + self.p.__str__()
+        if isinstance(self.prop,ndarray):
+            s += " with prop " + self.prop.__str__()
         else:
             s += " no prop "
         return s
@@ -1239,10 +1239,10 @@ class Formex(object):
         If a value None is given, the properties are removed from the Formex.
         """
         if p is None:
-            self.p = None
+            self.prop = None
         else:
             p = array(p).astype(Int)
-            self.p = resize(p,self.coords.shape[:1])
+            self.prop = resize(p,self.coords.shape[:1])
         return self
 
 
@@ -1260,21 +1260,21 @@ class Formex(object):
             return self
         if self.coords.size == 0:
             self.coords = F.coords
-            self.p = F.p
+            self.prop = F.prop
             return self
 
         self.coords = Coords(concatenate((self.coords,F.coords)))
         ## What to do if one of the formices has properties, the other one not?
         ## The current policy is to use zero property values for the Formex
         ## without props
-        if self.p is not None or F.p is not None:
-            if self.p is None:
-                self.p = zeros(shape=self.coords.shape[:1],dtype=Int)
-            if F.p is None:
+        if self.prop is not None or F.prop is not None:
+            if self.prop is None:
+                self.prop = zeros(shape=self.coords.shape[:1],dtype=Int)
+            if F.prop is None:
                 p = zeros(shape=F.coords.shape[:1],dtype=Int)
             else:
-                p = F.p
-            self.p = concatenate((self.p,p))
+                p = F.prop
+            self.prop = concatenate((self.prop,p))
         return self
 
 
@@ -1304,13 +1304,13 @@ class Formex(object):
         """
         sel = argsort(self.x()[:,0])
         f = self.coords[sel]
-        if self.p:
-            p = self.p[sel]
+        if self.prop:
+            p = self.prop[sel]
         return Formex(f,p,self.eltype)
        
     def copy(self):
         """Return a deep copy of itself."""
-        return Formex(self.coords,self.p,self.eltype)
+        return Formex(self.coords,self.prop,self.eltype)
         ## IS THIS CORRECT? Shouldn't this be self.coords.copy() ???
         ## In all examples it works, I think because the operations on
         ## the array data cause a copy to be made. Need to explore this.
@@ -1343,7 +1343,7 @@ class Formex(object):
         would interfere with NumPy's own concatenate function.
         """
         f = concatenate([ F.coords for F in Flist ])
-        plist = [ F.p for F in Flist ]
+        plist = [ F.prop for F in Flist ]
         hasp = [ p is not None for p in plist ]
         nhasp = sum(hasp)
         if nhasp == 0:
@@ -1363,11 +1363,11 @@ class Formex(object):
         idx can be a single element number or a list of numbers or
         any other index mechanism accepted by numpy's ndarray
         """
-        if self.p is None:
+        if self.prop is None:
             return Formex(self.coords[idx],eltype=self.eltype)
         else:
             idx = asarray(idx)
-            return Formex(self.coords[idx],self.p[idx],self.eltype)
+            return Formex(self.coords[idx],self.prop[idx],self.eltype)
 
       
     def selectNodes(self,idx):
@@ -1379,7 +1379,7 @@ class Formex(object):
         F.selectNodes([0,1]) + F.selectNodes([1,2]) + F.selectNodes([2,0])
         The returned Formex inherits the property of its parent.
         """
-        return Formex(self.coords[:,idx,:],self.p,self.eltype)
+        return Formex(self.coords[:,idx,:],self.prop,self.eltype)
 
 
     def points(self):
@@ -1423,10 +1423,10 @@ class Formex(object):
                     # element i is same as element j of F
                     flag[i] = 0
                     break
-        if self.p is None:
+        if self.prop is None:
             p = None
         else:
-            p = self.p[flag>0]
+            p = self.prop[flag>0]
         return Formex(self.coords[flag>0],p,self.eltype)
 
     
@@ -1439,11 +1439,11 @@ class Formex(object):
         
         If the Formex has no properties, a empty array is returned.
         """
-        if self.p is not None:
+        if self.prop is not None:
             if type(val) == int:
-                return where(self.p==val)[0]
+                return where(self.prop==val)[0]
             else:
-                return unique1d(concatenate([where(self.p==v)[0] for v in val]))
+                return unique1d(concatenate([where(self.prop==v)[0] for v in val]))
         return array([],dtype=Int)
 
     
@@ -1457,15 +1457,15 @@ class Formex(object):
         
         If the Formex has no properties, a copy with all elements is returned.
         """
-        if self.p is None:
+        if self.prop is None:
             return Formex(self.coords,eltype=self.eltype)
         elif type(val) == int:
-            return Formex(self.coords[self.p==val],val,self.eltype)
+            return Formex(self.coords[self.prop==val],val,self.eltype)
         else:
-            t = zeros(self.p.shape,dtype=bool)
+            t = zeros(self.prop.shape,dtype=bool)
             for v in asarray(val).flat:
-                t += (self.p == v)
-            return Formex(self.coords[t],self.p[t],self.eltype)
+                t += (self.prop == v)
+            return Formex(self.coords[t],self.prop[t],self.eltype)
             
 
     def splitProp(self):
@@ -1475,7 +1475,7 @@ class Formex(object):
         partitions as values. Each value is a Formex instance.
         It the Formex has no props, an empty dict is returned.
         """
-        if self.p is None:
+        if self.prop is None:
             return {}
         else:
             return dict([(p,self.withProp(p)) for p in self.propSet()])
@@ -1517,10 +1517,10 @@ class Formex(object):
                     # i is a duplicate node
                     flag[i] = 0
                     break
-        if self.p is None:
+        if self.prop is None:
             p = None
         else:
-            p = self.p[flag>0]
+            p = self.prop[flag>0]
         return Formex(self.coords[flag>0],p,self.eltype)
 
       
@@ -1529,7 +1529,7 @@ class Formex(object):
 
         A zero element is an element where all nodes are equal."""
         # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.coords,self.p,self.eltype)
+        return Formex(self.coords,self.prop,self.eltype)
 
 
     def reverse(self):
@@ -1537,7 +1537,7 @@ class Formex(object):
 
         Reversing an element means reversing the order of its points.
         """
-        return Formex(self.coords[:,range(self.coords.shape[1]-1,-1,-1),:],self.p,self.eltype)
+        return Formex(self.coords[:,range(self.coords.shape[1]-1,-1,-1),:],self.prop,self.eltype)
 
 
 #############################
@@ -1777,7 +1777,7 @@ class Formex(object):
         1.0 will grow the elements.
         """
         c = self.coords.mean(1).reshape((self.coords.shape[0],1,self.coords.shape[2]))
-        return Formex(factor*(self.coords-c)+c,self.p,self.eltype)
+        return Formex(factor*(self.coords-c)+c,self.prop,self.eltype)
 
 
 ##############################################################################
@@ -1795,7 +1795,7 @@ class Formex(object):
             f[i,:,:,dir] += i*step
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         ## the replication of the properties is automatic!
-        return Formex(f,self.p,self.eltype)
+        return Formex(f,self.prop,self.eltype)
 
     
     def replic2(self,n1,n2,t1=1.0,t2=1.0,d1=0,d2=1,bias=0,taper=0):
@@ -1826,7 +1826,7 @@ class Formex(object):
             m = array(rotationMatrix(i*angle,axis))
             f[i] = dot(f[i],m)
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
-        return Formex(f + point,self.p,self.eltype)
+        return Formex(f + point,self.prop,self.eltype)
 
 
     def translatem(self,*args,**kargs):
@@ -1972,10 +1972,10 @@ class Formex(object):
         if self.nelems() % n != 0:
             raise RuntimeError,"Number of elements should be integer multiple of n"
         m = self.nelems()/n
-        if self.p is None:
+        if self.prop is None:
             return [ Formex(self.coords[n*i:n*(i+1)],self.eltype) for i in range(m) ]
         else:
-            return [ Formex(self.coords[n*i:n*(i+1)],self.p[n*i:n*(i+1)],self.eltype) for i in range(m) ]
+            return [ Formex(self.coords[n*i:n*(i+1)],self.prop[n*i:n*(i+1)],self.eltype) for i in range(m) ]
 
 
 #################### Read/Write Formex File ##################################

@@ -210,7 +210,7 @@ def assignProperties():
         sel = pickElements()
         if sel.has_key(0):
             GD.debug("PICKED NUMBERS:%s" % sel)
-            F.p[sel[0]] = p
+            F.prop[sel[0]] = p
         undraw(FA)
         FA = draw(F,view=None,bbox=None)
 
@@ -222,7 +222,7 @@ def exportProperties():
         p = res['Property Name']
         if not p.startswith('prop:'):
             p = "prop:%s" % p
-        export({p:F.p})
+        export({p:F.prop})
 
 
 def selectProperties():
@@ -239,7 +239,7 @@ def saveProperties(fn = None):
     if not fn:
         fn = askNewFilename(dirname,filter="Property files (*.prop)")
     if fn:
-        F.p.tofile(fn,sep=',')
+        F.prop.tofile(fn,sep=',')
 
         
 def readProperties(fn = None):
@@ -291,7 +291,7 @@ def createFrameModel():
     draw(E)
     
     # Get the tri elements that are part of a quadrilateral:
-    prop = F.p
+    prop = F.prop
     quadtri = S.getFaces()[prop==6]
     nquadtri = quadtri.shape[0]
     print "%s triangles are part of quadrilateral faces" % nquadtri
@@ -311,13 +311,13 @@ def createFrameModel():
     print "Internal edges in quadrilaterals: %s" % internal
     
     E = Formex(nodes[S.getEdges()],1)
-    E.p[internal] = 6
+    E.prop[internal] = 6
     wireframe()
     clear()
     draw(E)
 
     # Remove internal edges
-    tubes = S.getEdges()[E.p != 6]
+    tubes = S.getEdges()[E.prop != 6]
 
     print "Number of tube elements after removing %s internals: %s" % (len(internal),tubes.shape[0])
 

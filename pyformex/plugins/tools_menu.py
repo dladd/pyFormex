@@ -40,8 +40,8 @@ from plugins.tools import *
 def editFormex(F,name):
     """Edit a Formex"""
     items = [('coords',repr(array(F.coords)),'text')]
-    if F.p is not None:
-        items.append(('prop',repr(array(F.p)),'text'))
+    if F.prop is not None:
+        items.append(('prop',repr(array(F.prop)),'text'))
     items.append(('eltype',F.eltype))
     res = askItems(items)
     if res:
@@ -54,7 +54,7 @@ def editFormex(F,name):
         print(x)
         print(p)
         print(e)
-        F.__init__(x,F.p,e)
+        F.__init__(x,F.prop,e)
 
 Formex.edit = editFormex
 
@@ -347,15 +347,15 @@ def setpropCollection(K,prop):
                 if O:
                     O.setProp(prop)
             elif hasattr(o,'setProp'):
-                if not hasattr(o,'p') or o.p is None:
+                if not hasattr(o,'prop') or o.prop is None:
                     o.setProp(0)
-                print("PROP %s ?= %s" % (o.p,O.p))
-                o.p[K[k]] = prop
-                o.setColor(o.p)
+                print("PROP %s ?= %s" % (o.prop,O.prop))
+                o.prop[K[k]] = prop
+                o.setColor(o.prop)
                 o.redraw(mode=GD.canvas.rendermode)
-                if O and id(O.p) != id(o.p):
-                    O.setProp(o.p)
-                print("PROP %s ?= %s" % (o.p,O.p))
+                if O and id(O.prop) != id(o.prop):
+                    O.setProp(o.prop)
+                print("PROP %s ?= %s" % (o.prop,O.prop))
 
 
 def setprop_selection():

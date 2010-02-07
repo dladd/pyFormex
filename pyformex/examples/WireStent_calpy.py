@@ -105,7 +105,7 @@ print "After adding a node for orientation: %s" % nnod
 # (remember props are 1,2,3, so are OK)
 
 thirdnode = nnod*ones(shape=(nel,1),dtype=int)
-matnr = reshape(stent.p,(nel,1))
+matnr = reshape(stent.prop,(nel,1))
 elements = concatenate([elems+1,thirdnode,matnr],1)
 
 # Create endnode sets (with calpy numbering)

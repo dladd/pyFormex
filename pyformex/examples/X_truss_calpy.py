@@ -68,7 +68,7 @@ truss.top.setProp(0)
 truss.vert.setProp(2)
 truss.dia1.setProp(1)
 truss.dia2.setProp(1)
-for p in [ truss.bot.p, truss.top.p ]:
+for p in [ truss.bot.prop, truss.top.prop ]:
     p[0] = p[n-1] = 3 
 
 # define member properties
@@ -92,7 +92,7 @@ def getmat(key):
 # create model for structural analysis
 model = truss.allBars()
 coords,elems = model.fuse()
-props = model.p
+props = model.prop
 propset = model.propSet()
 
 clear()

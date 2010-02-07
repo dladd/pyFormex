@@ -179,7 +179,7 @@ Coords.isopar = isopar
 
 def _isopar_F(self,eltype,coords,oldcoords):
     X = isopar(self.coords,eltype,coords,oldcoords)
-    return Formex(X,self.p,self.eltype)
+    return Formex(X,self.prop,self.eltype)
 
 Formex.isopar = _isopar_F
 
