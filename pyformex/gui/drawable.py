@@ -713,7 +713,7 @@ class Drawable(object):
     def __init__(self):
         self.trans = False
         self.list = None
-        self.atype = 'unknown'
+        ## self.atype = 'unknown'
 
     def drawGL(self,**kargs):
         """Perform the OpenGL drawing functions to display the actor."""

@@ -403,8 +403,7 @@ def partition_selection():
         warning("You need to pick actors or elements.")
         return
     for A in GD.canvas.actors:
-        print A.atype
-        if not A.atype == 'TriSurface':
+        if not A.data.getType() == 'TriSurface':
             warning("Currently I can only partition TriSurfaces." )
             return
     partitionCollection(selection)

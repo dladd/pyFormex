@@ -310,6 +310,14 @@ class Mesh(object):
     def getElems(self):
         """Get the elems data."""
         return self.elems
+    
+    def getEdges(self):
+        """Get the edges data.
+
+        This is currently not implemented on the generic Mesh object,
+        only in some derived classes.
+        """
+        return None
 
     def data(self):
         """Return the mesh data as a tuple (coords,elems)"""

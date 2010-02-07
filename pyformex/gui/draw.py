@@ -434,11 +434,7 @@ def draw(F,
         elif isinstance(F,mesh.Mesh):
             if F.nelems() == 0:
                 return None
-            actor = actors.GeomActor(F.coords,F.elems,F.eltype,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth)
-        elif isinstance(F,surface.TriSurface):
-            if F.nelems() == 0:
-                return None
-            actor = actors.TriSurfaceActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth)
+            actor = actors.GeomActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
         elif isinstance(F,tools.Plane):
             return drawPlane(F.point(),F.normal(),F.size())
         actor.object = obj
@@ -549,7 +545,7 @@ def _shrink(F,factor):
     A shrinked object is one where each element is shrinked with a factor
     around its own center.
     """
-    if isinstance(F,surface.TriSurface):
+    if not isinstance(F,Formex):
         F = F.toFormex()
     return F.shrink(factor)
 
@@ -1065,12 +1061,8 @@ def highlightActors(K):
     for i in K.get(-1,[]):
         print("%s/%s" % (i,len(GD.canvas.actors)))
         actor = GD.canvas.actors[i]
-        if isinstance(actor,actors.GeomActor):
-            FA = actors.GeomActor(actor,color=GD.canvas.settings.slcolor)
-            GD.canvas.addHighlight(FA)
-        elif isinstance(actor,actors.TriSurfaceActor):
-            SA = actors.TriSurfaceActor(actor,color=GD.canvas.settings.slcolor)
-            GD.canvas.addHighlight(SA)
+        FA = actors.GeomActor(actor,color=GD.canvas.settings.slcolor)
+        GD.canvas.addHighlight(FA)
     GD.canvas.update()
 
 
@@ -1085,12 +1077,8 @@ def highlightElements(K):
     for i in K.keys():
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
-        if isinstance(actor,actors.GeomActor):
-            FA = actors.GeomActor(actor.select(K[i]),color=GD.canvas.settings.slcolor,linewidth=3)
-            GD.canvas.addHighlight(FA)
-        elif isinstance(actor,actors.TriSurfaceActor):
-            SA = actors.TriSurfaceActor(actor.select(K[i]),color=GD.canvas.settings.slcolor)
-            GD.canvas.addHighlight(SA)
+        FA = actors.GeomActor(actor.select(K[i]),color=GD.canvas.settings.slcolor,linewidth=3)
+        GD.canvas.addHighlight(FA)
     GD.canvas.update()
 
 
@@ -1105,12 +1093,8 @@ def highlightEdges(K):
     for i in K.keys():
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
-        if isinstance(actor,actors.TriSurfaceActor):
-            FA = actors.GeomActor(Formex(actor.coords[actor.edges[K[i]]]),color=GD.canvas.settings.slcolor,linewidth=3)
-            GD.canvas.addHighlight(FA)
-        elif isinstance(actor,actors.GeomActor):
-            FA = actors.GeomActor(Formex(actor.coords[actor.edges()[K[i]]]),color=GD.canvas.settings.slcolor,linewidth=3)
-            GD.canvas.addHighlight(FA)
+        FA = actors.GeomActor(Formex(actor.coords[actor.data.getEdges()[K[i]]]),color=GD.canvas.settings.slcolor,linewidth=3)
+        GD.canvas.addHighlight(FA)
             
     GD.canvas.update()
 
@@ -1140,14 +1124,9 @@ def highlightPartitions(K):
     for i in K.keys():
         GD.debug("Actor %s: Partitions %s" % (i,K[i][0]))
         actor = GD.canvas.actors[i]
-        if isinstance(actor,actors.GeomActor):
-            for j in K[i][0].keys():           
-                FA = actors.GeomActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))
-                GD.canvas.addHighlight(FA)
-        elif isinstance(actor,actors.TriSurfaceActor):
-            for j in K[i][0].keys():
-                SA = actors.TriSurfaceActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))
-                GD.canvas.addHighlight(SA)
+        for j in K[i][0].keys():           
+            FA = actors.GeomActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))
+            GD.canvas.addHighlight(FA)
     GD.canvas.update()
 
 

@@ -94,7 +94,7 @@ def reportActors(K):
     s += "Actors %s\n" % v
     for k in v:
         A = GD.canvas.actors[k]
-        t = A.atype
+        t = A.getType()
         s += "  Actor %s (type %s)\n" % (k,t)
     return s
 
@@ -104,7 +104,7 @@ def reportElements(K):
     for k in K.keys():
         v = K[k]
         A = GD.canvas.actors[k]
-        t = A.atype
+        t = A.getType()
         s += "Actor %s (type %s); Elements %s\n" % (k,t,v)
         if t == 'Formex':
             e = A
@@ -120,7 +120,7 @@ def reportPoints(K):
     for k in K.keys():
         v = K[k]
         A = GD.canvas.actors[k]
-        s += "Actor %s (type %s); Points %s\n" % (k,A.atype,v)
+        s += "Actor %s (type %s); Points %s\n" % (k,A.getType(),v)
         x = A.vertices()
         for p in v:
             s += "  Point %s: %s\n" % (p,x[p]) 
@@ -132,7 +132,7 @@ def reportEdges(K):
     for k in K.keys():
         v = K[k]
         A = GD.canvas.actors[k]
-        s += "Actor %s (type %s); Edges %s\n" % (k,A.atype,v)
+        s += "Actor %s (type %s); Edges %s\n" % (k,A.getType(),v)
         e = A.edges()
         for p in v:
             s += "  Edge %s: %s\n" % (p,e[p]) 
@@ -143,7 +143,7 @@ def reportPartitions(K):
     for k in K.keys():
         P = K[k][0]
         A = GD.canvas.actors[k]
-        t = A.atype
+        t = A.getType()
         for l in P.keys():
             v = P[l]
             s += "Actor %s (type %s); Partition %s; Elements %s\n" % (k,t,l,v)

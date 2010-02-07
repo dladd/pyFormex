@@ -89,9 +89,8 @@ def glNoCulling():
     
 class ActorList(list):
 
-    def __init__(self,canvas,atype):
+    def __init__(self,canvas):
         self.canvas = canvas
-        self.atype = atype
         list.__init__(self)
         
     def add(self,actor):
@@ -100,16 +99,8 @@ class ActorList(list):
 
     def delete(self,actor):
         """Remove an actor from an actorlist."""
-##         if self.atype == 'annotation':
-##             print("DELETE")
-##             print(self)
-##             print(actor)
         if actor in self:
-##             if self.atype == 'annotation':
-##                 print("REMOVE %s" % actor)
             self.remove(actor)
-##             if self.atype == 'annotation':
-##                 print(self)
 
     def redraw(self):
         """Redraw (some) actors in the scene.
@@ -234,10 +225,10 @@ class Canvas(object):
 
     def __init__(self):
         """Initialize an empty canvas with default settings."""
-        self.actors = ActorList(self,'actor')
-        self.highlights = ActorList(self,'highlight')
-        self.annotations = ActorList(self,'annotation')
-        self.decorations = ActorList(self,'decoration')
+        self.actors = ActorList(self)
+        self.highlights = ActorList(self)
+        self.annotations = ActorList(self)
+        self.decorations = ActorList(self)
         self.triade = None
         self.background = None
         self.bbox = None

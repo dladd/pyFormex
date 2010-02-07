@@ -32,6 +32,7 @@ from formex import *
 import elements
 
 from connectivity import reverseIndex
+from plugins.mesh import Mesh
 from plugins.surface import TriSurface
 
 import timer
@@ -391,23 +392,29 @@ class GeomActor(Actor):
         """
         Actor.__init__(self)
 
-        if isinstance(data,GeomActor):
-            self.coords,self.elems,self.eltype = data.coords,data.elems,data.eltype
+        self.data = data
+        
+        if isinstance(data,GeomActor) or isinstance(data,Mesh):
+            self.coords = data.coords
+            self.elems = data.elems
+            self.eltype = data.eltype
+            
         elif isinstance(data,Formex):
             self.coords = data.coords
-            #print "%s -> %s" % (id(data.coords),id(self.coords))
             self.elems = None
             self.eltype = data.eltype
+
         else:
             self.coords = data
-            #print "%s -> %s" % (id(data),id(self.coords))
             self.elems = elems
             self.eltype = eltype
             
-        if self.elems is None:
-            self.atype = 'Formex'
-        else:
-            self.atype = 'Mesh'
+        ## if self.elems is None:
+        ##     self.atype = 'Formex'
+        ## else:
+        ##     self.atype = 'Mesh'
+        ##     if isinstance(data,TriSurface):
+        ##         self.atype = 'TriSurface'
             
         self.mode = mode
         self.setLineWidth(linewidth)
@@ -423,6 +430,9 @@ class GeomActor(Actor):
             self.setMarkSize(marksize)
         self.list = None
 
+
+    def getType(self):
+        return sel.data.__class__
 
     def nplex(self):
         return self.shape()[1]
@@ -443,7 +453,7 @@ class GeomActor(Actor):
         """Return the vertives as a 2-dim array."""
         return self.coords.reshape(-1,3)
 
-    # This should probably go th Mesh
+    # This should probably go to Mesh
     def nedges(self):
         try:
             el = getattr(elements,self.eltype.capitalize())
@@ -474,8 +484,6 @@ class GeomActor(Actor):
         """Set the Actors alpha value."""
         self.alpha = float(alpha)
         self.trans = self.alpha < 1.0
-        #if self.trans:
-        #    GD.debug("Setting Actor's ALPHA value to %f" % alpha)
 
 
     def setMarkSize(self,marksize):
@@ -631,7 +639,8 @@ class GeomActor(Actor):
             pickPolygons(self.coords,self.elems)
 
         elif mode == 'edge':
-            edges = self.edges()
+            print self.data
+            edges = self.data.getEdges()
             if edges is not None:
                 pickPolygons(self.coords,edges)
                 
@@ -663,106 +672,6 @@ class FormexActor(GeomActor,Formex):
             #print "COPYIN SPECULAR"
             self.specular = F.specular
         
-
-#############################################################################
-
-
-class TriSurfaceActor(Actor,TriSurface):
-    """Draws a triangulated surface specified by points and connectivity."""
-
-    def __init__(self,S,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,alpha=1.0,mode=None):
-        
-        Actor.__init__(self)
-        self.atype = 'TriSurface'
-        TriSurface.__init__(self,S.coords,S.elems)
-        
-        self.setLineWidth(linewidth)
-        self.setColor(color,colormap)
-        self.setBkColor(bkcolor,bkcolormap)
-        self.setAlpha(alpha)
-
-        self.list = None
-
-    nelems = TriSurface.nelems
-    npoints = TriSurface.npoints
-
-    def setColor(self,color=None,colormap=None):
-        """Set the color of the Actor."""
-        self.color,self.colormap = saneColorSet(color,colormap,(self.nelems(),3)) 
-
-
-    def setBkColor(self,color=None,colormap=None):
-        """Set the backside color of the Actor."""
-        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,(self.nelems(),3))
-
-    def setAlpha(self,alpha):
-        """Set the Actors alpha value."""
-        self.alpha = float(alpha)
-        self.trans = self.alpha < 1.0
-
-
-    # override the defaults
-    # (no longer needed as we removed the defaults from Drawable)
-    #bbox = TriSurface.bbox
-    #nelems = TriSurface.nelems
-
-
-    def drawGL(self,mode='wireframe',color=None,colormap=None,alpha=None):
-        """Draw the surface."""
-
-        if mode.endswith('wire'):
-            self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
-            self.drawGL(mode=mode[:-4],color=color,colormap=colormap,alpha=alpha)
-            return
-
-        if alpha is None:
-            alpha = self.alpha           
-
-        if color is None:  
-            color,colormap = self.color,self.colormap
-        else:
-            color,colormap = saneColorSet(color,colormap,self.nelems())
-        
-        if color is None:  # no color
-            pass
-        
-        elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
-            GL.glColor(append(color,alpha))
-            color = None
-
-        elif color.dtype.kind == 'i': # color index
-            color = colormap[color]
-
-        else: # a full color array : use as is
-            pass
-
-        if self.linewidth is not None:
-            GL.glLineWidth(self.linewidth)
-
-        t = timer.Timer()
-        if mode=='wireframe' :
-            rev = reverseIndex(self.faces)
-            if color is not None:
-                color = color[rev[:,-1]]
-            drawLines(self.coords,self.edges,color)
-        else:
-            self.refresh()
-            drawPolygons(self.coords,self.elems,mode,color,alpha)
-        GD.debug("Drawing time: %s seconds" % t.seconds())
-    
-
-    def pickGL(self,mode):
-        """ Allow picking of parts of the actor.
-
-        mode can be 'element', 'edge' or 'point'
-        """
-        if mode == 'element':
-            self.refresh()
-            pickPolygons(self.coords,self.elems)
-        elif mode == 'edge':
-            pickPolygons(self.coords,self.edges)
-        elif mode == 'point':
-            pickPoints(self.coords)
 
 
 # End
