@@ -529,7 +529,7 @@ class TriSurface(Mesh):
                 raise RuntimeError,"Too many positional arguments"
 
             if 'prop' in kargs:
-                self.setProp(prop)
+                self.setProp(kargs['prop'])
 
 
 ###########################################################################
