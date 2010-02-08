@@ -165,6 +165,7 @@ try:
 except:
     LinksMenuData = []
 
+
 try:
     MenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] + [
         ('---',None),

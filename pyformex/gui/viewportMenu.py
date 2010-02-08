@@ -29,22 +29,6 @@ import widgets
 import draw
 from gettext import gettext as _
 
-        
-
-def set_near_clip(v):
-    dist = GD.canvas.camera.getDist()
-    GD.canvas.camera.setClip(10**v*dist,100.*dist)
-    GD.canvas.update()
-    
-    
-def setClip():
-    items = [
-        ('near',-2.0,'slider',{'min':-100,'max':100,'scale':0.01,'func': set_near_clip}),
-        ]
-    res = draw.askItems(items)
-    ## if res:
-    ##     updateSettings(res,GD.cfg)
-
 
 def setTriadeParams():
     try:
@@ -203,9 +187,32 @@ def viewportLayout():
 #            GD.cfg.update()
 
 
+def canvasSettings():
+    dia = None
+    def apply_():
+        dia.acceptData()
+        set_near_clip(dia.results['near'])
+    def close():
+        dia.close()
+        
+    def set_near_clip(v):
+        dist = GD.canvas.camera.getDist()
+        GD.canvas.camera.setClip(10**v*dist,10.*dist)
+        GD.canvas.update()
+        
+    dia = widgets.InputDialog(
+        caption='Canvas Settings',
+        items=[
+            ('near',-1.0,'slider',{'min':-100,'max':100,'scale':0.01,'func': set_near_clip,'text':'Near clipping plane'}),
+            ],
+        actions=[('Done',close),('Apply',apply_)]
+        )
+    dia.show()
+
+
 def openglSettings():
     dia = None
-    def apply():
+    def apply_():
         dia.acceptData()
         canvas.glSettings(dia.results)
     def close():
@@ -222,7 +229,7 @@ def openglSettings():
 #            ('Shading',None,'radio',{'choices':['Smooth','Flat']}),
 #            ('Lighting',None,'radio',{'choices':['On','Off']}),
             ],
-        actions=[('Done',close),('Apply',apply)]
+        actions=[('Done',close),('Apply',apply_)]
         )
     dia.show()
 
@@ -237,7 +244,6 @@ MenuData = [
         (_('&Clear'),draw.clear),
         (_('Toggle &Axes Triade'),draw.setTriade), 
         (_('Set &Axes Triade Properties'),setTriadeParams), 
-        (_('Set Near and Far Clipping Planes'),setClip), 
 #        (_('&Transparency'),setOpacity), 
         (_('&Background Color'),setBgColor), 
         (_('&Background 2Color'),setBgColor2), 
@@ -247,6 +253,7 @@ MenuData = [
         (_('&Canvas Size'),setCanvasSize), 
         (_('&All Viewport Settings'),viewportSettings),
         (_('&Global Draw Options'),draw.askDrawOptions),
+        (_('&Canvas Settings'),canvasSettings),
         (_('&OpenGL Settings'),openglSettings),
         ## ('&OpenGL Settings',
         ##  [('&Flat',canvas.glFlat),

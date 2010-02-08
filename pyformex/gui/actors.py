@@ -34,6 +34,7 @@ import elements
 from connectivity import reverseIndex
 from plugins.mesh import Mesh
 from plugins.surface import TriSurface
+from marks import TextMark
 
 import timer
 
@@ -176,10 +177,18 @@ class BboxActor(Actor):
             
 
 class TriadeActor(Actor):
-    """An OpenGL actor representing a triade of global axes."""
+    """An OpenGL actor representing a triade of global axes.
 
-    def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue,cyan,magenta,yellow]):
+    pat: shape to be drawn in the coordinate planes. Default is a square.
+         '16' givec a triangle. '' disables the planes.
+    legend: text symbols to plot at the end of the axes.
+    """
+
+    def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue,cyan,magenta,yellow],relative=False,pat='12-34',legend='xyz'):
         Actor.__init__(self)
+        self.relative = relative
+        self.pat = pat
+        self.legend = legend
         self.color = color
         self.setPos(pos)
         self.setSize(size)
@@ -198,16 +207,9 @@ class TriadeActor(Actor):
         if size > 0.0:
             self.size = size
         self.delete_list()
-
-    def drawGL(self,mode='wireframe',color=None):
-        """Draw the triade."""
-        # When entering here, the modelview matrix has been set
-        # We should make sure it is unchanged on exit
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPushMatrix()
-        GL.glTranslatef (*self.pos) 
-        GL.glScalef (self.size,self.size,self.size) 
-        # Coord axes of size 1.0
+ 
+    def _draw_me(self):
+        """Draw the triade components."""
         GL.glBegin(GL.GL_LINES)
         pts = Formex(pattern('1')).coords.reshape(-1,3)
         GL.glColor3f(*black)
@@ -217,17 +219,70 @@ class TriadeActor(Actor):
                 GL.glVertex3f(*x)
             pts = pts.rollAxes(1)
         GL.glEnd()
-        # Coord plane triangles of size 0.5
-        GL.glBegin(GL.GL_TRIANGLES)
-        pts = Formex(mpattern('16')).scale(0.5).coords.reshape(-1,3)
-        for i in range(3):
-            pts = pts.rollAxes(1)
-            GL.glColor(*self.color[i])
-            for x in pts:
-                GL.glVertex3f(*x)
-        GL.glEnd()
+        # Coord planes
+        if self.pat:
+            GL.glBegin(GL.GL_TRIANGLES)
+            pts = Formex(mpattern(self.pat))
+            pts += pts.reverse()
+            pts = pts.scale(0.5).coords.reshape(-1,3)
+            for i in range(3):
+                pts = pts.rollAxes(1)
+                GL.glColor3f(*self.color[i])
+                for x in pts:
+                    GL.glVertex3f(*x)
+            GL.glEnd()
+        # Coord axes denomination
+        for i,x in enumerate(self.legend):
+            p = unitVector(i)*1.1
+            t = TextMark(p,x)
+            t.drawGL()
+
+ 
+    def _draw_relative(self):
+        """Draw the triade in the origin and with the size of the 3D space."""
+        # When entering here, the modelview matrix has been set
+        # We should make sure it is unchanged on exit
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        GL.glTranslatef (*self.pos) 
+        GL.glScalef (self.size,self.size,self.size)
+        self._draw_me()
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
+
+
+    def _draw_absolute(self):
+        """Draw the triade in the lower left corner."""
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
+        GL.glViewport(0,0,100,100)
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glPushMatrix()
+        GL.glLoadIdentity()
+        fovy = 45.
+        fv = tand(fovy*0.5)
+        fv *= 3.
+        fh = fv
+        frustum = (-fh,fh,-fv,fv,-1.e20,1.e20)
+        GL.glOrtho(*frustum)
+
+        GL.glDisable(GL.GL_LIGHTING)
+        GL.glDepthMask (GL.GL_TRUE)
+        GL.glDisable (GL.GL_BLEND)
+        GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
+        self._draw_me()
+        GL.glViewport(*vp)
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glPopMatrix()
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPopMatrix()
+
+    def drawGL(self,mode='wireframe',color=None):
+        if self.relative:
+            self._draw_relative()
+        else:
+            self._draw_absolute()
 
   
 class GridActor(Actor):
@@ -392,7 +447,8 @@ class GeomActor(Actor):
         """
         Actor.__init__(self)
 
-        self.data = data
+        # Store a reference to the drawn object
+        self.object = data
         
         if isinstance(data,GeomActor) or isinstance(data,Mesh):
             self.coords = data.coords
@@ -432,7 +488,7 @@ class GeomActor(Actor):
 
 
     def getType(self):
-        return sel.data.__class__
+        return self.object.__class__
 
     def nplex(self):
         return self.shape()[1]
@@ -452,23 +508,6 @@ class GeomActor(Actor):
     def vertices(self):
         """Return the vertives as a 2-dim array."""
         return self.coords.reshape(-1,3)
-
-    # This should probably go to Mesh
-    def nedges(self):
-        try:
-            el = getattr(elements,self.eltype.capitalize())
-            return self.nelems() * len(el.edges)
-        except:
-            return 0
-
-    def edges(self):
-        try:
-            el = getattr(elements,self.eltype.capitalize())
-            edg = asarray(el.edges)
-            edges = self.elems[:,edg]
-            return edges.reshape(-1,2)
-        except:
-            return None
 
  
     def setColor(self,color=None,colormap=None):
@@ -639,8 +678,7 @@ class GeomActor(Actor):
             pickPolygons(self.coords,self.elems)
 
         elif mode == 'edge':
-            print self.data
-            edges = self.data.getEdges()
+            edges = self.object.getEdges()
             if edges is not None:
                 pickPolygons(self.coords,edges)
                 

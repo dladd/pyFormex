@@ -765,8 +765,9 @@ class Canvas(object):
 
     def removeAnnotation(self,actor):
         """Remove an annotation from the 3D scene."""
-##         if actor == self.triade:
-##             self.triade = None
+        if actor == self.triade:
+            GD.debug("REMOVING TRIADE")
+            self.triade = None
         self.annotations.delete(actor)
          
     def addDecoration(self,actor):
@@ -798,8 +799,6 @@ class Canvas(object):
         if actorlist == None:
             actorlist = self.actors[:]
         for actor in actorlist:
-            if actor is self.triade:
-                self.triade == None
             self.removeActor(actor)
         self.setBbox()
         
@@ -813,14 +812,10 @@ class Canvas(object):
 
 
     def removeAnnotations(self,actorlist=None):
-        """Remove all actors in actorlist (default = all) from the scene."""
-        GD.debug("REMOVING ALL ACTORS")
+        """Remove all annotations in actorlist (default = all) from the scene."""
         if actorlist == None:
             actorlist = self.annotations[:]
         for actor in actorlist:
-            if actor == self.triade:
-                GD.debug("REMOVING TRIADE")
-                self.triade = None
             self.removeAnnotation(actor)
 
 
@@ -838,7 +833,6 @@ class Canvas(object):
         self.removeHighlights()
         self.removeAnnotations()
         self.removeDecorations()
-        self.triade = None
 
 
     def redrawAll(self):

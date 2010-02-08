@@ -275,7 +275,7 @@ message = printMessage
 
 def draw(F,
          view=None,bbox=None,
-         color='prop',colormap=None,alpha=0.5,
+         color='prop',colormap=None,alpha=None,
          mode=None,linewidth=None,shrink=None,marksize=None,
          wait=True,clear=None,allviews=False,
          highlight=False,flat=False):
@@ -339,13 +339,14 @@ def draw(F,
     mechanism for all subsequent draw statements (until set >0 again).
     """
 
-    # Facilities for drawing database objects
-    
+    # Facility for drawing database objects by name
     if type(F) == str:
         F = named(F)
         if F is None:
             return None
 
+    # We need to get the default for bbox before processing a list,
+    # because bbox should be set only once for the whole list of objects
     if bbox is None:
         bbox = GD.canvas.options.get('bbox','auto')
         
@@ -373,8 +374,7 @@ def draw(F,
             
 
     # We now should have a single object to draw
-
-    obj = F
+    # Check if it is something we can draw
 
     if isinstance(F,Formex):
         pass
@@ -393,11 +393,15 @@ def draw(F,
         # Don't know how to draw this object
         raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
 
+    # Fill in the remaining defaults
     if shrink is None:
         shrink = GD.canvas.options.get('shrink',None)
  
     if marksize is None:
         marksize = GD.canvas.options.get('marksize',GD.cfg.get('marksize',5.0))
+
+    if alpha is None:
+        alpha = GD.canvas.options.get('alpha',0.5)
        
     # Create the colors
     if color == 'prop':
@@ -427,17 +431,17 @@ def draw(F,
         F = _shrink(F,shrink)
 
     try:
-        if isinstance(F,Formex):
-            if F.nelems() == 0:
-                return None
-            actor = actors.FormexActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
-        elif isinstance(F,mesh.Mesh):
-            if F.nelems() == 0:
-                return None
-            actor = actors.GeomActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
-        elif isinstance(F,tools.Plane):
+        if isinstance(F,tools.Plane):
             return drawPlane(F.point(),F.normal(),F.size())
-        actor.object = obj
+        ## if isinstance(F,Formex):
+        ##     if F.nelems() == 0:
+        ##         return None
+        ##     actor = actors.FormexActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+        ## elif isinstance(F,mesh.Mesh):
+
+        if F.nelems() == 0:
+            return None
+        actor = actors.GeomActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
         if flat:
             actor.specular = 0.
         if highlight:
@@ -805,9 +809,9 @@ def flatwire():
 def smooth_avg():
     renderMode("smooth",True)
 
-def opacity(alpha):
-    """Set the viewports transparency."""
-    GD.canvas.alpha = float(alpha)
+## def opacity(alpha):
+##     """Set the viewports transparency."""
+##     GD.canvas.alpha = float(alpha)
 
 def lights(onoff):
     """Set the lights on or off"""

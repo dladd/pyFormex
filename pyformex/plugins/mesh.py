@@ -310,15 +310,26 @@ class Mesh(object):
     def getElems(self):
         """Get the elems data."""
         return self.elems
-    
+
     def getEdges(self):
         """Get the edges data.
 
-        This is currently not implemented on the generic Mesh object,
-        only in some derived classes.
+        For element types defined in the elements module, the
+        edges array can be constructed in a generic way.
+        The edges are not fused: common edges will be counted twice.
+        If the eltype is not defined, None is returned.
+        
+        Subclasses can override this method.
         """
-        return None
+        try:
+            el = getattr(elements,self.eltype.capitalize())
+            edg = asarray(el.edges)
+            edges = self.elems[:,edg]
+            return edges.reshape(-1,2)
+        except:
+            return None
 
+    # WE SHOULD GET RID OF THIS ONE
     def data(self):
         """Return the mesh data as a tuple (coords,elems)"""
         return self.coords,self.elems
@@ -340,11 +351,13 @@ class Mesh(object):
         return self.coords.bbox()
     def center(self):
         return self.coords.center()
-    
+
     def nedges(self):
         """Return the number of edges.
 
-        Currently, the edges are not fused!
+        This returns the number of rows that would be in getEdges(),
+        without actually constructing the edges.
+        The edges are not fused!
         """
         try:
             el = getattr(elements,self.eltype.capitalize())

@@ -73,6 +73,7 @@ class BaseMenu(object):
         pyformex.debug("Creating menu %s" % title)
         self.parent = parent
         self.separators = odict.ODict()
+        self._actions_ = []
         if items:
             self.insertItems(items)
         if parent and isinstance(parent,BaseMenu):
@@ -195,11 +196,14 @@ class BaseMenu(object):
         if before:
             return self.insertAction(before,action)
         else:
+            #print ("ADDING SAVED ACTION %s" % action)
+            self._actions_.append(action)
             return self.addAction(action)
 
     def create_insert_action(self,str,val,before=None):
         """Create and insert an action.""" 
         if before:
+            raise RuntimeError,"THIS CAN NOT WORK"
             return self.insertAction(before,str,val)
         else:
             return self.addAction(str,val)
@@ -254,6 +258,9 @@ class BaseMenu(object):
                     QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
                     self.insert_action(a,before)
                 else:
+                    if before is not None:
+                        raise RuntimeError,"I can not insert a QAction menu item before an existing one."
+                    #print ("CREATE %s,%s,%s" % (txt,val,before))
                     a = self.create_insert_action(txt,val,before)
                 for k,v in options.items():                        
                     if k == 'icon':

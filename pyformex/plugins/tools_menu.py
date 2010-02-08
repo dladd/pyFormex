@@ -335,13 +335,13 @@ def setpropCollection(K,prop):
             
     elif K.obj_type in ['element','point']:
         for k in K.keys():
-            o = GD.canvas.actors[k]
+            o = GD.canvas.actors[k].data
             print "SETPROP ACTOR %s" % type(o)
             n =  drawable.names[k]
             print "SETPROP DRAWABLE %s" % n
             O = named(n)
             if O is not None:
-                print "ALSO SETTING OBECT PROPERTIES"
+                print "ALSO SETTING OBJECT PROPERTIES to %s" % prop
             if prop is None:
                 o.setProp(prop)
                 if O:

@@ -349,6 +349,7 @@ class Camera:
             self.trl = copy.deepcopy(self.rot[3,0:3])
             #print("Translation: %s" % self.trl)
             self.rot[3,0:3] = [0.,0.,0.]
+            #print "Rotation: %s" % self.rot
 
 
     def loadMatrix (self):
@@ -567,6 +568,7 @@ class Camera:
                 GL.glOrtho(*frustum)
         if not keepmode:
             GL.glMatrixMode(GL.GL_MODELVIEW)     
+
 
 
 if __name__ == "__main__":

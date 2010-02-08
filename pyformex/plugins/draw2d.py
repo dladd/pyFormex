@@ -89,7 +89,7 @@ def highlightDrawing(points,mode):
     """
     GD.canvas.removeHighlights()
     print points[-1]
-    PA = actors.FormexActor(Formex(points))
+    PA = actors.GeomActor(Formex(points))
     PA.specular=0.0
     GD.canvas.addHighlight(PA)
     obj = drawnObject(points,mode=mode)
@@ -98,7 +98,7 @@ def highlightDrawing(points,mode):
             F = obj.toFormex()
         else:
             F = Formex(obj)
-        OA = actors.FormexActor(F,color=GD.canvas.settings.slcolor)
+        OA = actors.GeomActor(F,color=GD.canvas.settings.slcolor)
         OA.specular=0.0
         GD.canvas.addHighlight(OA)
     GD.canvas.update()

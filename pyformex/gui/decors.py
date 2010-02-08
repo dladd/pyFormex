@@ -336,5 +336,60 @@ class LineDrawing(Decoration):
             GL.glVertex2fv(e[1])
         GL.glEnd()
 
+            
+
+class Triade(Decoration):
+    """An OpenGL canvas decoration representing a triade of global axes."""
+
+    def __init__(self,size=1.0,pos=[100,100],color=[red,green,blue,cyan,magenta,yellow]):
+        Decoration.__init__(self,pos[0],pos[1])
+        self.color = color
+        self.setPos(pos)
+        self.setSize(size)
+
+    def bbox(self):
+        return self.size * array([[0.,0.,0.],[1.,1.,1.]])
+
+    def setPos(self,pos):
+        pos = Coords(pos)
+        if pos.shape == (3,):
+            self.pos = pos
+        self.delete_list()
+
+    def setSize(self,size):
+        size = float(size)
+        if size > 0.0:
+            self.size = size
+        self.delete_list()
+
+    def drawGL(self,mode='wireframe',color=None):
+        """Draw the triade."""
+        # When entering here, the modelview matrix has been set
+        # We should make sure it is unchanged on exit
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        GL.glTranslatef (*self.pos) 
+        GL.glScalef (self.size,self.size,self.size) 
+        # Coord axes of size 1.0
+        GL.glBegin(GL.GL_LINES)
+        pts = Formex(pattern('1')).coords.reshape(-1,3)
+        GL.glColor3f(*black)
+        for i in range(3):
+            #GL.glColor(*self.color[i])
+            for x in pts:
+                GL.glVertex3f(*x)
+            pts = pts.rollAxes(1)
+        GL.glEnd()
+        ## # Coord plane triangles of size 0.5
+        ## GL.glBegin(GL.GL_TRIANGLES)
+        ## pts = Formex(mpattern('16')).scale(0.5).coords.reshape(-1,3)
+        ## for i in range(3):
+        ##     pts = pts.rollAxes(1)
+        ##     GL.glColor(*self.color[i])
+        ##     for x in pts:
+        ##         GL.glVertex3f(*x)
+        ## GL.glEnd()
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPopMatrix()
 
 # End
