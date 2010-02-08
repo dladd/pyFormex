@@ -35,6 +35,7 @@ from formex import *
 from gui.draw import *
 from plugins import objects
 from plugins.tools import *
+from plugins.surface import TriSurface
 
 
 def editFormex(F,name):
@@ -403,7 +404,7 @@ def partition_selection():
         warning("You need to pick actors or elements.")
         return
     for A in GD.canvas.actors:
-        if not A.data.getType() == 'TriSurface':
+        if not A.getType() == TriSurface:
             warning("Currently I can only partition TriSurfaces." )
             return
     partitionCollection(selection)

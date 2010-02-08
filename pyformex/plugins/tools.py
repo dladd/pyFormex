@@ -190,10 +190,10 @@ def reportAngles(K):
 def getObjectItems(obj,items,mode):
     """Get the specified items from object."""
     if mode == 'actor':
-        return [ obj[i] for i in items ]
+        return [ obj[i].object for i in items if hasattr(obj[i],'object') ]
     elif mode in ['element','partition']:
-        if hasattr(obj,'select'):
-            return obj.select(items)
+        if hasattr(obj,'object') and hasattr(obj.object,'select'):
+            return obj.object.select(items)        
     elif mode == 'point':
         if hasattr(obj,'vertices'):
             return obj.vertices()[items]
@@ -203,7 +203,7 @@ def getObjectItems(obj,items,mode):
 def getCollection(K):
     """Returns a collection."""
     if K.obj_type == 'actor':
-        return [ GD.canvas.actors[int(i)] for i in K.get(-1,[]) ]
+        return [ GD.canvas.actors[int(i)].object for i in K.get(-1,[]) if hasattr(GD.canvas.actors[int(i)],'object') ]
     elif K.obj_type in ['element','point']:
         return [ getObjectItems(GD.canvas.actors[k],K[k],K.obj_type) for k in K.keys() ]
     elif K.obj_type == 'partition':
