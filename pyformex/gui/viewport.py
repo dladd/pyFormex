@@ -542,7 +542,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                         elif self.mod == CTRL:
                             self.selection.remove(self.picked)
                         if self.mod == NONE or self.mod == SHIFT:
-                            conn_elems = self.actors[closest_actor].connectedElements(closest_elem,self.selection.get(closest_actor))
+                            conn_elems = self.actors[closest_actor].data.connectedElements(closest_elem,self.selection.get(closest_actor))
                             self.selection.set(conn_elems,closest_actor)
                     if func:
                         func(self.selection)
