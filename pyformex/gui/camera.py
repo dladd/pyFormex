@@ -363,6 +363,13 @@ class Camera:
             else:
                 GL.glLoadMatrixf(self.m)
 
+
+    def loadCurrentRotation (self):
+        """Load the current ModelView matrix with translations canceled out."""
+        rot = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+        rot[3,0:3] = [0.,0.,0.]
+        GL.glLoadMatrixf(rot)
+
  
     def translate(self,vx,vy,vz,local=True):
         if not self.locked:

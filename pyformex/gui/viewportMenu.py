@@ -30,16 +30,20 @@ import draw
 from gettext import gettext as _
 
 
-def setTriadeParams():
+def setTriade():
     try:
-        size = GD.canvas.triade.size
-        pos = GD.canvas.triade.pos.tolist()
+        pos = GD.canvas.triade.pos
+        siz = GD.canvas.triade.siz
     except:
-        size = 1.0
-        pos = [0.,0.,0.]
-    res = draw.askItems([('size',size),('pos',pos)])
+        pos = 'lb'
+        siz = 100
+    res = draw.askItems([
+        ('triade',True),
+        ('pos',pos,'select',{'choices':['lt','lc','lb','ct','cc','cb','rt','rc','rb']}),
+        ('size',siz),
+        ])
     if res:
-        draw.setTriade(True,res['size'],res['pos'])
+        draw.setTriade(res['triade'],res['pos'],res['size'])
         
 
 def setRenderMode():
@@ -242,8 +246,7 @@ def lineSmoothOff():
 MenuData = [
     (_('&Viewport'),[
         (_('&Clear'),draw.clear),
-        (_('Toggle &Axes Triade'),draw.setTriade), 
-        (_('Set &Axes Triade Properties'),setTriadeParams), 
+        (_('&Axes Triade'),setTriade), 
 #        (_('&Transparency'),setOpacity), 
         (_('&Background Color'),setBgColor), 
         (_('&Background 2Color'),setBgColor2), 

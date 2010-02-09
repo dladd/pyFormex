@@ -494,7 +494,7 @@ class Canvas(object):
         self.lights[nr].disable()
 
 
-    def setTriade(self,on=None,size=1.0,pos=[0.0,0.0,0.0]):
+    def setTriade(self,on=None,pos='lb',siz=100):
         """Toggle the display of the global axes on or off.
 
         If on is True, a triade of global axes is displayed, if False it is
@@ -507,7 +507,7 @@ class Canvas(object):
             self.removeAnnotation(self.triade)
             self.triade = None
         if on:
-            self.triade = actors.TriadeActor(size,pos)
+            self.triade = decors.Triade(pos,siz)
             self.addAnnotation(self.triade)
     
 

@@ -28,7 +28,7 @@ from PyQt4 import QtOpenGL
 
 from drawable import *
 from text import *
-from actors import Actor
+from marks import TextMark
 
 import colors
 import gluttext
@@ -336,41 +336,33 @@ class LineDrawing(Decoration):
             GL.glVertex2fv(e[1])
         GL.glEnd()
 
-            
 
-class Triade(Decoration):
-    """An OpenGL canvas decoration representing a triade of global axes."""
+# Not really a decoration, though it could be made into one
 
-    def __init__(self,size=1.0,pos=[100,100],color=[red,green,blue,cyan,magenta,yellow]):
-        Decoration.__init__(self,pos[0],pos[1])
+class Triade(Drawable):
+    """An OpenGL actor representing a triade of global axes.
+
+    - `pos`: position on the canvas: two charaters, of which first sets
+       horizontal position ('l', 'c' or 'r') and second sets vertical
+       position ('b', 'c' or 't').
+    - `size`: size in pixels of the zone displaying the triade.
+    - `pat`: shape to be drawn in the coordinate planes. Default is a square.
+      '16' givec a triangle. '' disables the planes.
+    - `legend`: text symbols to plot at the end of the axes. A 3-character
+      string or a tuple of 3 strings.
+    """
+
+    def __init__(self,pos='lb',siz=100,pat='12-34',legend='xyz',color=[red,green,blue,cyan,magenta,yellow]):
+        Drawable.__init__(self)
+        self.pos = pos
+        self.siz = siz
+        self.pat = pat
+        self.legend = legend
         self.color = color
-        self.setPos(pos)
-        self.setSize(size)
 
-    def bbox(self):
-        return self.size * array([[0.,0.,0.],[1.,1.,1.]])
-
-    def setPos(self,pos):
-        pos = Coords(pos)
-        if pos.shape == (3,):
-            self.pos = pos
-        self.delete_list()
-
-    def setSize(self,size):
-        size = float(size)
-        if size > 0.0:
-            self.size = size
-        self.delete_list()
-
-    def drawGL(self,mode='wireframe',color=None):
-        """Draw the triade."""
-        # When entering here, the modelview matrix has been set
-        # We should make sure it is unchanged on exit
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPushMatrix()
-        GL.glTranslatef (*self.pos) 
-        GL.glScalef (self.size,self.size,self.size) 
-        # Coord axes of size 1.0
+ 
+    def _draw_me(self):
+        """Draw the triade components."""
         GL.glBegin(GL.GL_LINES)
         pts = Formex(pattern('1')).coords.reshape(-1,3)
         GL.glColor3f(*black)
@@ -380,16 +372,87 @@ class Triade(Decoration):
                 GL.glVertex3f(*x)
             pts = pts.rollAxes(1)
         GL.glEnd()
-        ## # Coord plane triangles of size 0.5
-        ## GL.glBegin(GL.GL_TRIANGLES)
-        ## pts = Formex(mpattern('16')).scale(0.5).coords.reshape(-1,3)
-        ## for i in range(3):
-        ##     pts = pts.rollAxes(1)
-        ##     GL.glColor(*self.color[i])
-        ##     for x in pts:
-        ##         GL.glVertex3f(*x)
-        ## GL.glEnd()
+        # Coord planes
+        if self.pat:
+            GL.glBegin(GL.GL_TRIANGLES)
+            pts = Formex(mpattern(self.pat))
+            #pts += pts.reverse()
+            pts = pts.scale(0.5).coords.reshape(-1,3)
+            for i in range(3):
+                pts = pts.rollAxes(1)
+                GL.glColor3f(*self.color[i])
+                for x in pts:
+                    GL.glVertex3f(*x)
+            GL.glEnd()
+        # Coord axes denomination
+        for i,x in enumerate(self.legend):
+            p = unitVector(i)*1.1
+            t = TextMark(p,x)
+            t.drawGL()
+
+ 
+    def _draw_relative(self):
+        """Draw the triade in the origin and with the size of the 3D space."""
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        GL.glTranslatef (*self.pos) 
+        GL.glScalef (self.size,self.size,self.size)
+        self._draw_me()
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
+
+
+    def _draw_absolute(self):
+        """Draw the triade in the lower left corner."""
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        # Cancel the translations
+        rot = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+        rot[3,0:3] = [0.,0.,0.]
+        GL.glLoadMatrixf(rot)
+        vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
+        x,y,w,h = vp
+        w0,h0 = self.siz,self.siz # we force aspect ratio 1
+        if self.pos[0] == 'l':
+            x0 = x
+        elif self.pos[0] =='r':
+            x0 = x + w-w0
+        else:
+            x0 = x + (w-w0)/2     
+        if self.pos[1] == 'b':
+            y0 = y
+        elif self.pos[1] =='t':
+            y0 = y + h-h0
+        else:
+            y0 = y + (h-h0)/2
+        GL.glViewport(x0,y0,w0,h0)
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glPushMatrix()
+        GL.glLoadIdentity()
+        fovy = 45.
+        fv = tand(fovy*0.5)
+        fv *= 4.
+        fh = fv
+        # BEWARE: near/far should be larger than size, but not very large
+        # or the depth sort will fail
+        frustum = (-fh,fh,-fv,fv,-3.,100.)
+        GL.glOrtho(*frustum)
+        GL.glDisable(GL.GL_LIGHTING)
+        GL.glDisable (GL.GL_BLEND)
+        GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
+        GL.glDisable(GL.GL_CULL_FACE)
+        GL.glClearDepth(1.0)
+        GL.glDepthMask (GL.GL_TRUE)
+        GL.glDepthFunc(GL.GL_LESS)
+        GL.glEnable(GL.GL_DEPTH_TEST)
+        self._draw_me()
+        GL.glViewport(*vp)
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glPopMatrix()
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPopMatrix()
+
+    def draw(self,mode='wireframe',color=None):
+        self._draw_absolute()
 
 # End

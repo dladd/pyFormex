@@ -676,13 +676,13 @@ def view(v,wait=False):
         GD.GUI.drawlock.lock()
 
 
-def setTriade(on=None,size=1.0,pos=[0.0,0.0,0.0]):
+def setTriade(on=None,pos='lb',siz=100):
     """Toggle the display of the global axes on or off.
 
     If on is True, the axes triade is displayed, if False it is
     removed. The default (None) toggles between on and off.
     """
-    GD.canvas.setTriade(on,size,pos)
+    GD.canvas.setTriade(on,pos,siz)
     GD.canvas.update()
     GD.app.processEvents()
 
