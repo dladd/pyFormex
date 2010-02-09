@@ -264,13 +264,19 @@ class TriadeActor(Actor):
         fv = tand(fovy*0.5)
         fv *= 3.
         fh = fv
-        frustum = (-fh,fh,-fv,fv,-1.e20,1.e20)
+        # BEWARE: near/far should be large than size, but not very large
+        # or the depth sorting will fail
+        frustum = (-fh,fh,-fv,fv,-10.,10.)
         GL.glOrtho(*frustum)
 
         GL.glDisable(GL.GL_LIGHTING)
-        GL.glDepthMask (GL.GL_TRUE)
         GL.glDisable (GL.GL_BLEND)
         GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
+        GL.glDisable(GL.GL_CULL_FACE)
+        GL.glClearDepth(1.0)
+        GL.glDepthMask (GL.GL_TRUE)
+        GL.glDepthFunc(GL.GL_LESS)
+        GL.glEnable(GL.GL_DEPTH_TEST)
         self._draw_me()
         GL.glViewport(*vp)
         GL.glMatrixMode(GL.GL_PROJECTION)

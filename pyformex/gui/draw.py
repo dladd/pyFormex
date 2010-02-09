@@ -370,8 +370,7 @@ def draw(F,
             GD.canvas.setCamera(bbox,view)
             GD.canvas.update()
                 
-        return actor
-            
+        return actor           
 
     # We now should have a single object to draw
     # Check if it is something we can draw
@@ -433,15 +432,12 @@ def draw(F,
     try:
         if isinstance(F,tools.Plane):
             return drawPlane(F.point(),F.normal(),F.size())
-        ## if isinstance(F,Formex):
-        ##     if F.nelems() == 0:
-        ##         return None
-        ##     actor = actors.FormexActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
-        ## elif isinstance(F,mesh.Mesh):
 
         if F.nelems() == 0:
             return None
+        
         actor = actors.GeomActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+        
         if flat:
             actor.specular = 0.
         if highlight:

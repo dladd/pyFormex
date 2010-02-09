@@ -145,6 +145,10 @@ _cookies = [
     "It's all in the code.",
     "Python is the universal glue.",
     "Intellectual Property Is A Mental Illness.",
+    "Programmers are tools for converting caffeine into code.",
+    "There are 10 types of people in the world: those who understand binary, and those who don't.",
+    "Linux: the choice of a GNU generation",
+    
     ]    
 random.shuffle(_cookies)
 
