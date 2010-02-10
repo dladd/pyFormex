@@ -39,6 +39,7 @@ import tempfile
 from numpy import *
 from gui.drawable import interpolateNormals
 from plugins.geomtools import projectionVOP,rotationAngle
+from plugins import inertia
 
 hasExternal('admesh')
 hasExternal('tetgen')
@@ -898,6 +899,18 @@ class TriSurface(Mesh):
         """
         curv = curvature(self.coords,self.elems,self.getEdges(),neighbours=neighbours)
         return curv
+    
+    
+    def inertia(self):
+        """Return inertia related quantities of the surface.
+        
+        This returns the center of gravity, the principal axes of inertia, the principal
+        moments of inertia and the inertia tensor.
+        """
+        ctr,I = inertia.inertia(self.centroids(),mass=self.facetArea().reshape(-1,1))
+        Iprin,Iaxes = inertia.principal(I,sort=True,right_handed=True)
+        data = (ctr,Iaxes,Iprin,I)
+        return data
 
 
     def edgeConnections(self):
