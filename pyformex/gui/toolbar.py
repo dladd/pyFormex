@@ -71,8 +71,8 @@ def addButton(toolbar,text,icon,func,repeat=False,toggle=False,checked=False,ico
         iconset.addPixmap(icon_off,QtGui.QIcon.Normal,QtGui.QIcon.Off)
                                  
     a = toolbar.addAction(iconset,text,func)
-    b =  toolbar.children()[-1] # Get the QToolButton for the last action
-
+    b = toolbar.widgetForAction(a)
+    
     if repeat:
         b.setAutoRepeat(True)
         b.setAutoRepeatDelay(500)
@@ -85,8 +85,12 @@ def addButton(toolbar,text,icon,func,repeat=False,toggle=False,checked=False,ico
 
     b.setToolTip(text)
 
-    return b
-    
+    return a
+
+
+def removeButton(toolbar,button):
+    """Remove a button from a toolbar."""
+    toolbar.removeAction(button)
 
 
 ################# Camera action toolbar ###############
@@ -270,25 +274,32 @@ def setShrink(mode):
 timeout_button = None # the toggle timeout button
 
 def toggleTimeout(onoff=None):
-    #print "TOGGLETIMEOUT"
     if onoff is None:
         onoff = widgets.input_timeout < 0
     if onoff:
-        widgets.setInputTimeout(GD.cfg.get('input/timeout',-1))
+        widgets.setInputTimeout(GD.cfg.get('gui/timeoutvalue',-1))
     else:
         widgets.setInputTimeout(-1)
     onoff = widgets.input_timeout > 0
-    #print "TIMEOUT IS NOW %s" % widgets.input_timeout
     return onoff
 
 
 def addTimeoutButton(toolbar):
+    """Add or remove the timeout button,depending on cfg."""
     global timeout_button
-    timeout_button = addButton(toolbar,'Toggle Timeout','clock',toggleTimeout,
-                               toggle=True,checked=False)
+    if GD.cfg['gui/timeoutbutton']:
+        if timeout_button is None:
+            timeout_button = addButton(toolbar,'Toggle Timeout','clock',toggleTimeout,toggle=True,checked=False)
+    else:
+        if timeout_button is not None:
+            removeButton(toolbar,timeout_button)
+            timeout_button = None
+            
 
 def timeout(onoff=None):
-    timeout_button.setChecked( toggleTimeout(onoff) )
+    """Programmatically toggle the timeout button"""
+    if timeout_button is not None:
+        timeout_button.setChecked(toggleTimeout(onoff))
 
 
 

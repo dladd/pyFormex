@@ -56,8 +56,17 @@ warnings.filterwarnings('ignore','.*return_index.*',UserWarning,'numpy')
 
 def refLookup(key):
     """Lookup a key in the reference configuration."""
-    return pyformex.refcfg[key]
+    try:
+        return pyformex.refcfg[key]
+    except:
+        pyformex.debug("!There is no key '%s' in the reference config!"%key)
+        return None
 
+
+def prefLookup(key):
+    """Lookup a key in the reference configuration."""
+    return pyformex.prefcfg[key]
+    
 
 def printcfg(key):
     try:
@@ -71,7 +80,6 @@ def setRevision():
     sta,out = utils.runCommand('cd %s && svnversion' % pyformex.cfg['pyformexdir'],quiet=True)
     if sta == 0 and not out.startswith('exported'):
         pyformex.__revision__ = "$Rev: %s $" % out.strip()
-
 
 
 def remove_pyFormex(pyformexdir,scriptdir):
@@ -115,16 +123,17 @@ def savePreferences():
     if pyformex.preffile is None:
         return
     
-    del pyformex.cfg['__ref__']
+    del pyformex.prefcfg['__ref__']
 
     # Dangerous to set permanently!
-    del pyformex.cfg['input/timeout']
+    del pyformex.prefcfg['gui/timeoutvalue']
     
-    pyformex.debug("!!!Saving config:\n%s" % pyformex.cfg)
+    pyformex.debug("="*60)
+    pyformex.debug("!!!Saving config:\n%s" % pyformex.prefcfg)
 
     try:
         fil = file(pyformex.preffile,'w')
-        fil.write("%s" % pyformex.cfg)
+        fil.write("%s" % pyformex.prefcfg)
         fil.close()
         res = "Saved"
     except:
@@ -339,14 +348,25 @@ def run(argv=[]):
         pyformex.debug("Reading config file %s" % f)
         pyformex.cfg.read(f)
     pyformex.refcfg = pyformex.cfg
+    pyformex.debug("="*60)
     pyformex.debug("RefConfig: %s" % pyformex.refcfg)
 
     # Use the last as place to save preferences
-    pyformex.cfg = Config(default=refLookup)
+    pyformex.prefcfg = Config(default=refLookup)
     if os.path.exists(pyformex.preffile):
         pyformex.debug("Reading config file %s" % pyformex.preffile)
-        pyformex.cfg.read(pyformex.preffile)
-    pyformex.debug("Config: %s" % pyformex.cfg)
+        pyformex.prefcfg.read(pyformex.preffile)
+    pyformex.debug("="*60)
+    pyformex.debug("Config: %s" % pyformex.prefcfg)
+
+    # Fix incompatible changes in configuration
+    if type(pyformex.prefcfg['gui/dynazoom']) is str:
+        pyfomrex.prefcfg['gui/dynazoom'] = [ pyformex.prefcfg['gui/dynazoom'], '' ]
+    if 'input/timeout' in pyformex.prefcfg:
+        del pyformex.prefcfg['input/timeout']
+
+    # Create an empty one for the session settings
+    pyformex.cfg = Config(default=prefLookup)
 
     # Set option from config if it was not explicitely given
     if pyformex.options.uselib is None:

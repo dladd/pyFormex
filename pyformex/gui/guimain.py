@@ -128,11 +128,6 @@ class GUI(QtGui.QMainWindow):
         on top, and a statusbar at the bottom.
         """
 
-        # Fix GUI configuration on incompatible changes
-
-        if type(GD.cfg['gui/dynazoom']) is str:
-            GD.cfg['gui/dynazoom'] = [ GD.cfg['gui/dynazoom'], '' ]
-
         
         self.on_exit = [fileMenu.askCloseProject] 
         QtGui.QMainWindow.__init__(self)
@@ -196,8 +191,7 @@ class GUI(QtGui.QMainWindow):
         self.actions = toolbar.addActionButtons(self.toolbar)
 
         # timeout button 
-        if GD.cfg.get('gui/timeoutbutton',False):
-            toolbar.addTimeoutButton(self.toolbar)
+        toolbar.addTimeoutButton(self.toolbar)
 
         self.menu.show()
 
@@ -667,7 +661,7 @@ You should seriously consider to bail out now!!!
     GD.GUI = GUI(windowname,
                  GD.cfg.get('gui/size',(800,600)),
                  GD.cfg.get('gui/pos',(0,0)),
-                 GD.cfg.get('gui/bdsize',(800,600))
+                 GD.cfg.get('gui/bdsize',(800,600)),
                  )
 
     # set the appearance

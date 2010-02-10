@@ -50,9 +50,10 @@ StartTime = datetime.datetime.now()
 options = None     # the options found on the command line
 print_help = None  # the function to print(the pyformex help text (pyformex -h))
 
-cfg = None         # the current configuration
+cfg = None         # the current session configuration
+prefcfg = None     # the preferenced configuration 
 refcfg = None      # the reference configuration 
-preffile = None    # the file where current configuration will be saved
+preffile = None    # the file where the preferenced configuration will be saved
 
 PF = {}            # explicitely exported globals
 _PF_ = {}          # globals that will be offered to scripts

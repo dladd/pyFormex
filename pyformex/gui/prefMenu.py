@@ -24,33 +24,77 @@
 """Functions for the Pref menu."""
 
 import pyformex as GD
+from pyformex.main import savePreferences
 import os
 
 from gettext import gettext as _
 import utils
 import widgets
+import toolbar
 import draw
 import imageViewer
 
+def updateSettings(res):
+    """Update the current settings (store) with the values in res.
+
+    res is a dictionary with configuration values.
+    The current settings will be update with the values in res.
+
+    If res contains a key 'Save changes' and its value is True, the
+    preferences will also be saved to the user's preference file.
+    Else, the user will be asked whether he wants to save the changes.
+    """
+    GD.debug("Accepted settings:",res)
+    save = res.get('Save changes',None)
+    if save is None:
+        save = draw.ack("Save the changes to your configuration file?")
+    # Do not use 'GD.cfg.update(res)' here!
+    # It will not work with our Config class!
+    for k in res:
+        #print ">>",k,res[k],GD.cfg[k],GD.prefcfg[k]
+        GD.cfg[k] = res[k]
+        if save and GD.prefcfg[k] != GD.cfg[k]:
+            GD.prefcfg[k] = GD.cfg[k]
+
+        if k in _activate_settings:
+            _activate_settings[k]()
+
+    GD.debug("New settings:",GD.cfg)
+    GD.debug("New preferences:",GD.cfg)
+
+
+def settings():
+    dia = None
+
+    def close():
+        dia.close()
+        
+    def accept(save=False):
+        dia.acceptData()
+        res = dia.results
+        res['Save changes'] = save
+        updateSettings(res)
+        GD.cfg.update(res)
+
+    def acceptAndSave():
+        accept(save=True)
+                
+    dia = widgets.InputDialog(
+        caption='pyFormex Settings',items={'GUI':[
+            ('gui/timeoutbutton',GD.cfg['gui/timeoutbutton']),
+            ('gui/timeoutvalue',GD.cfg['gui/timeoutvalue']),
+            ('gui/showfocus',GD.cfg['gui/showfocus']),
+            ('gui/coordsbox',GD.cfg['gui/coordsbox']),
+            ]},actions=[
+            ('Close',close),
+            ('Accept and Save',acceptAndSave),
+            ('Accept',accept),
+            ])
+    dia.show()
+                                 
 
 def nextOnly():
     draw.warning("Changes to this setting will only become effective after restarting the program.")
-
-def updateSettings(res,store):
-    """Update the current settings (store) with the values in res.
-
-    store and res are both dictionaries
-    This asks the users to confirm that he wants to update the settings.
-    """
-    GD.debug(res)
-    if res.get('Save changes',None) or draw.ack("Save the changes to your configuration file?\n\nCurrently, the changes will be rejected if you do not save them!\n"):
-        # Do not use 'store.update(res)' here!
-        # It will not work with our Config class!
-        for k,v in res.items():
-            store[k] = v
-        GD.debug(store)
-        return True
-    return False
 
 
 def askConfigPreferences(items,prefix=None,store=None):
@@ -65,14 +109,14 @@ def askConfigPreferences(items,prefix=None,store=None):
     will be in accordance.
     If no store is specified, the global config GD.cfg is used.
     """
-    if not store:
+    if store is None:
         store = GD.cfg
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
     res = widgets.InputDialog(itemlist+[('Save changes',True)],'Config Dialog',GD.GUI).getResult()
-    if res:
-        updateSettings(res,store)
+    if res and store==GD.cfg:
+        updateSettings(res)
     return res
 
 
@@ -104,12 +148,10 @@ def setToolbarPlacement(store=None):
                 store[s] = val
         GD.debug(store)
 
-def setTimeoutButton():
-    askConfigPreferences(['gui/timeoutbutton'])
-    nextOnly()
-    
-def setShowFocus():
-    askConfigPreferences(['gui/showfocus'])
+ 
+def setDrawWait():
+    askConfigPreferences(['draw/wait'])
+    GD.GUI.drawwait = GD.cfg['draw/wait']
     
 
 def setHelp():
@@ -120,13 +162,6 @@ def setCommands():
 
 def setSysPath():
     askConfigPreferences(['syspath'])
-
-def setInputTimeout():
-    askConfigPreferences(['input/timeout'])
-
-def setDrawWait():
-    askConfigPreferences(['draw/wait'])
-    GD.GUI.drawwait = GD.cfg['draw/wait']
 
 def setLinewidth():
     askConfigPreferences(['draw/linewidth'])
@@ -153,14 +188,14 @@ def setRenderMode():
         rendermode = res['render/mode']
         if hasattr(draw,rendermode):
             getattr(draw,rendermode)()
-        updateSettings(res,GD.cfg)
+        updateSettings(res)
             
     
 def setRender():
     items = [ ('render/%s'%a,getattr(GD.canvas,a),'slider',{'min':0,'max':100,'scale':0.01,'func':getattr(draw,'set_%s'%a)}) for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
     res = draw.askItems(items)
     if res:
-        updateSettings(res,GD.cfg)
+        updateSettings(res)
 
 
 def setLight(light=0):
@@ -198,7 +233,7 @@ def setPlugins():
     print "Activated plugins: %s" % res.keys()
     if res:
         ok_plugins = [ name for name in res if res[name] ]
-        GD.cfg['gui/plugins'] = ok_plugins
+        updateSettings({'gui/plugins':ok_plugins})
         
 
 
@@ -289,48 +324,34 @@ def moveUp():
 ##     error('You can not edit the config file while pyFormex is running!') 
     
 
-def savePreferences():
-    """Save the preferences.
 
-    The name of the preferences file was set in GD.preffile.
-    If a local preferences file was read, it will be saved there.
-    Otherwise, it will be saved as the user preferences, possibly
-    creating that file.
-    If GD.preffile is None, preferences are not saved.
-    """
-    f = GD.preffile
-    if not f:
-        return
-    
-    del GD.cfg['__ref__']
-
-    # Dangerous to set permanently!
-    del GD.cfg['input/timeout']
-    
-    GD.debug("!!!Saving config:\n%s" % GD.cfg)
-
-    try:
-        fil = file(f,'w')
-        fil.write("%s" % GD.cfg)
-        fil.close()
-        res = "Saved"
-    except:
-        res = "Could not save"
-    GD.debug("%s preferences to file %s" % (res,f))
-
-
+# Functions defined to delay binding
 def coordsbox():
     """Toggle the coordinate display box onor off"""
-    GD.GUI.toggleCoordsTracker()
+    GD.GUI.coordsbox.setVisible(GD.cfg['gui/coordsbox'])
     
+def timeoutbutton():
+    """Toggle the timeout button on or off"""
+    toolbar.addTimeoutButton(GD.GUI.toolbar)
+
+def updateCanvas():
+    GD.canvas.update()
+    
+# This sets the functions that should be called when a setting has changed
+_activate_settings = {
+    'gui/coordsbox':coordsbox,
+    'gui/timeoutbutton':timeoutbutton,
+    'gui/showfocus':updateCanvas,
+    }
+   
 
 MenuData = [
     (_('&Settings'),[
+        (_('&Settings Dialog'),settings), 
+        ('---',None),
         (_('&Appearance'),setAppearance), 
         (_('&Font'),setFont), 
         (_('&Toolbar Placement'),setToolbarPlacement), 
-        (_('&Show Timeout Button'),setTimeoutButton),
-        (_('&Input Timeout'),setInputTimeout), 
         (_('&Draw Wait Time'),setDrawWait), 
         (_('Avg&Normal Treshold'),setAvgNormalTreshold), 
         (_('Avg&Normal Size'),setAvgNormalSize), 
@@ -340,7 +361,6 @@ MenuData = [
         (_('&ZoomFactor'),setZoomFactor),
         (_('&AutoZoomFactor'),setAutoZoomFactor),
         (_('&ZoomActions'),setZoomActions),
-        (_('&Show Focus'),setShowFocus),
         (_('&Render Mode'),setRenderMode),
         (_('&Rendering'),setRender),
         (_('&Light0'),setLight0),
@@ -354,9 +374,8 @@ MenuData = [
         (_('&Help'),setHelp),
         ('---',None),
 ##         (_('&Edit Preferences'),editPreferences),
-        (_('&Save Preferences'),savePreferences),
-        (_('Toggle Timeout'),draw.timeout),
-        (_('Toggle CoordsBox'),coordsbox),
+        (_('&Save Preferences Now'),savePreferences),
+#        (_('&Make current settings the defaults'),savePreferences),
         ]),
     ]
 
