@@ -1139,6 +1139,16 @@ class Formex(object):
         return Mesh(x,e,prop=self.prop,eltype=self.eltype)
 
 
+    def info(self):
+        """Return formatted information about a Formex."""
+        bb = self.bbox()
+        return """shape    = %s
+bbox[lo] = %s
+bbox[hi] = %s
+center   = %s
+maxprop  = %s
+""" % (self.shape(),bb[0],bb[1],self.center(),self.maxProp())
+
 ##############################################################################
 # Create string representations of a Formex
 #

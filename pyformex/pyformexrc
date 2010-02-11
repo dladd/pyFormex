@@ -170,4 +170,4 @@ save = 'F2'
 
 
 [surface]
-stlread = '.gts'
+stlread = '.off'

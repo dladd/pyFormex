@@ -45,6 +45,13 @@ image_formats_qtr = []
 image_formats_gl2ps = []
 image_formats_fromeps = []
 
+def imageFormats(type='w'):
+    if type == 'r':
+        return image_formats_qtr
+    else:
+        return image_formats_qt + image_formats_gl2ps + image_formats_fromeps
+        
+
 # global parameters for multisave mode
 multisave = None
 
@@ -137,7 +144,7 @@ def imageFormatFromExt(ext):
 
 ##### LOW LEVEL FUNCTIONS ##########
 
-def save_canvas(canvas,fn,fmt='png',options=None):
+def save_canvas(canvas,fn,fmt='png',quality=-1,options=None):
     """Save the rendering on canvas as an image file.
 
     canvas specifies the qtcanvas rendering window.
@@ -158,7 +165,8 @@ def save_canvas(canvas,fn,fmt='png',options=None):
         GD.debug("Image format can be saved by Qt")
         GL.glFlush()
         qim = canvas.grabFrameBuffer()
-        if qim.save(fn,fmt):
+        print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
+        if qim.save(fn,fmt,quality):
             sta = 0
         else:
             sta = 1
@@ -238,7 +246,7 @@ if gl2ps:
 
 
 
-def save_window(filename,format,windowname=None):
+def save_window(filename,format,quality=-1,windowname=None):
     """Save a window as an image file.
 
     This function needs a filename AND format.
@@ -260,7 +268,7 @@ def save_window(filename,format,windowname=None):
     return sta
 
 
-def save_main_window(filename,format,border=False):
+def save_main_window(filename,format,quality=-1,border=False):
     """Save the main pyFormex window as an image file.
 
     This function needs a filename AND format.
@@ -278,10 +286,10 @@ def save_main_window(filename,format,border=False):
     else:
         geom = GD.GUI.geometry()
     x,y,w,h = geom.getRect()
-    return save_rect(x,y,w,h,filename,format)
+    return save_rect(x,y,w,h,filename,format,quality)
 
 
-def save_rect(x,y,w,h,filename,format):
+def save_rect(x,y,w,h,filename,format,quality=-1):
     """Save a rectangular part of the screen to a an image file."""
     cmd = 'import -window root -crop "%sx%s+%s+%s" %s:%s' % (w,h,x,y,format,filename)
     sta,out = utils.runCommand(cmd)
@@ -290,7 +298,7 @@ def save_rect(x,y,w,h,filename,format):
 
 #### USER FUNCTIONS ################
 
-def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,verbose=False):
+def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,quality=-1,verbose=False):
     """Saves an image to file or Starts/stops multisave mode.
 
     With a filename and multi==False (default), the current viewport rendering
@@ -326,6 +334,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
     this function is called from the GUI.
     
     """
+    print "SAVE: quality=%s" % quality
     global multisave
 
     # Leave multisave mode if no filename or starting new multisave mode
@@ -355,18 +364,18 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
              QtCore.QObject.connect(GD.GUI,QtCore.SIGNAL("Save"),saveNext)
              if verbose:
                  GD.warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % GD.cfg['keys/save'])
-        multisave = (names,format,window,border,hotkey,autosave,rootcrop)
+        multisave = (names,format,quality,window,border,hotkey,autosave,rootcrop)
         print("MULTISAVE %s "% str(multisave))
         return multisave is None
 
     else: # Save the image
         if window:
             if rootcrop:
-                sta = save_main_window(filename,format,border=border)
+                sta = save_main_window(filename,format,quality,border=border)
             else:
-                sta = save_window(filename,format)
+                sta = save_window(filename,format,quality)
         else:
-            sta = save_canvas(GD.canvas,filename,format)
+            sta = save_canvas(GD.canvas,filename,format,quality)
         if sta:
             GD.debug("Error while saving image %s" % filename)
         else:
@@ -387,9 +396,9 @@ def saveNext():
     or not.
     """
     if multisave:
-        names,format,window,border,hotkey,autosave,rootcrop = multisave
+        names,format,quality,window,border,hotkey,autosave,rootcrop = multisave
         name = names.next()
-        save(name,window,False,hotkey,autosave,border,rootcrop,format,False)
+        save(name,window,False,hotkey,autosave,border,rootcrop,format,quality,False)
 
 
 def saveIcon(fn,size=32):
@@ -416,7 +425,7 @@ def createMovie():
         GD.warning('You need to start multisave mode first!')
         return
 
-    names,format,window,border,hotkey,autosave,rootcrop = multisave
+    names,format,quality,window,border,hotkey,autosave,rootcrop = multisave
     glob = names.glob()
     if glob.split('.')[-1] != 'jpg':
         GD.warning("Currently you need to save in 'jpg' format to create movies")

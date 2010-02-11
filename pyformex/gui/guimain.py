@@ -728,11 +728,12 @@ See Help->License or the file COPYING for details.
 
     # PLugin menus
     import plugins
-    filemenu = GD.GUI.menu.item('file')
-    GD.gui.saveobj = plugins.create_plugin_menus(filemenu,before='options')
-    # Load configured plugins, ignore if not found
-    for p in GD.cfg.get('gui/plugins',[]):
-        plugins.load(p)
+    ## filemenu = GD.GUI.menu.item('file')
+    ## GD.gui.saveobj = plugins.create_plugin_menus(filemenu,before='options')
+    ## # Load configured plugins, ignore if not found
+    plugins.loadConfiguredPlugins()
+    #for p in GD.cfg['gui/plugins']:
+    #    plugins.load(p)
     
     # Set interaction functions
     GD.message = draw.message
@@ -755,7 +756,7 @@ See Help->License or the file COPYING for details.
         os.chdir(GD.cfg['workdir'])
     else:
         # Save the current dir as workdir
-        GD.cfg['workdir'] = os.getcwd()
+        prefMenu.updateSettings({'workdir':os.getcwd(),'Save changes':True})
     GD.app_started = True
     GD.app.processEvents()
     return 0

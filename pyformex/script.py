@@ -459,19 +459,29 @@ def processArgs(args):
             pyformex.message("Error during execution of script %s" % fn)
         
     return res
+        
+
+def setPrefs(res,save=False):
+    """Update the current settings (store) with the values in res.
+
+    res is a dictionary with configuration values.
+    The current settings will be update with the values in res.
+
+    If save is True, the changes will be stored to the user's
+    configuration file.
+    """
+    pyformex.debug("Accepted settings:",res)
+    for k in res:
+        pyformex.cfg[k] = res[k]
+        if save and pyformex.prefcfg[k] != pyformex.cfg[k]:
+            pyformex.prefcfg[k] = pyformex.cfg[k]
+
+    pyformex.debug("New settings:",pyformex.cfg)
+    if save:
+        pyformex.debug("New preferences:",pyformex.prefcfg)
 
 
 ########################## print information ################################
-    
-def formatInfo(F):
-    """Return formatted information about a Formex."""
-    bb = F.bbox()
-    return """shape    = %s
-bbox[lo] = %s
-bbox[hi] = %s
-center   = %s
-maxprop  = %s
-""" % (F.shape(),bb[0],bb[1],F.center(),F.maxProp())
     
 
 def printall():
@@ -482,6 +492,7 @@ def printall():
 def printglobals():
     print(globals())
 
+
 def printglobalnames():
     a = globals().keys()
     a.sort()
@@ -490,8 +501,9 @@ def printglobalnames():
     
 def printconfig():
     print("Reference Configuration: " + str(pyformex.refcfg))
+    print("Preference Configuration: " + str(pyformex.prefcfg))
     print("User Configuration: " + str(pyformex.cfg))
-        
+
 
 def printdetected():
     print(utils.reportDetected())
@@ -508,7 +520,7 @@ def chdir(fn):
     If fn is a directory name, the current directory is set to fn.
     If fn is a file name, the current directory is set to the directory
     holding fn.
-    In either case, the current dirctory is stored in pyformex.cfg['workdir']
+    In either case, the current directory is stored in the user's preferences
     for persistence between pyFormex invocations.
     
     If fn does not exist, nothing is done.
@@ -517,7 +529,7 @@ def chdir(fn):
         if not os.path.isdir(fn):
             fn = os.path.dirname(os.path.abspath(fn))
         os.chdir(fn)
-        pyformex.cfg['workdir'] = fn
+        setPrefs({'workdir':fn},save=True)
         pyformex.message("Your current workdir is %s" % os.getcwd())
 
 

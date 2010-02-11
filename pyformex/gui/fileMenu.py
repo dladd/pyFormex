@@ -333,8 +333,14 @@ def saveImage(multi=False):
     dia = widgets.SaveImageDialog(GD.cfg['workdir'],pat,multi=multi)
     opt = dia.getResult()
     if opt:
+        if opt.fm == 'From Extension':
+            opt.fm = None
+        if opt.qu < 0:
+            opt.qu = -1
         GD.cfg['workdir'] = os.path.dirname(opt.fn)
         image.save(filename=opt.fn,
+                   format=opt.fm,
+                   quality=opt.qu,
                    window=opt.wi,
                    multi=opt.mu,
                    hotkey=opt.hk,
@@ -372,19 +378,6 @@ def showImage():
     if fn:
         viewer = ImageViewer(GD.app,fn)
         viewer.show()
-        
-
-def setOptions():
-    options = ['test','debug','uselib','safelib','fastencode']
-    options = [ o for o in options if hasattr(GD.options,o) ]
-    items = [ (o,getattr(GD.options,o)) for o in options ]
-    res = draw.askItems(items)
-    if res:
-        for o in options:
-            setattr(GD.options,o,res[o])
-            print(GD.options)
-            ## if o == 'debug':
-            ##     GD.setDebugFunc()
 
 
 MenuData = [
@@ -414,10 +407,6 @@ MenuData = [
     (_('&Save as Icon'),saveIcon),
     (_('&Show Image'),showImage),
     (_('---2'),None),
-#    plugins.LoadMenu,
-#    plugins.ReloadMenu,
-    (_('&Options'),setOptions),
-    (_('---3'),None),
     (_('E&xit'),draw.closeGui),
 ]
 

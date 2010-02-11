@@ -28,6 +28,7 @@ Currently, this does nothing. The file should be kept though, because it is
 needed to flag this directory as a Python module.
 """
 
+import pyformex as GD
 from types import ModuleType
 from gettext import gettext as _
 
@@ -43,6 +44,7 @@ def load(plugin):
     import jobs_menu
     import postproc_menu
     module = globals().get(plugin,None)
+    reload(module)
     if type(module) is ModuleType and hasattr(module,'show_menu'):
         module.show_menu()
 
@@ -74,6 +76,7 @@ plugin_menus = [
     (_('Postproc menu'),'postproc_menu'),
     ]
 
+
 def create_plugin_menus(parent=None,before=None):
     plugin_text =  [ k for k,v in plugin_menus ]
     plugin_names = [ v for k,v in plugin_menus ]
@@ -93,6 +96,18 @@ def create_plugin_menus(parent=None,before=None):
     return loadactions,reloadactions
 
 
+def loadConfiguredPlugins(ok_plugins=None):
+    if ok_plugins is None:
+        ok_plugins = GD.cfg['gui/plugins']
+    for n,p in plugin_menus:
+        if p in ok_plugins:
+            load(p)
+        else:
+            module = globals().get(p,None)
+            if hasattr(module,'close_menu'):
+                module.close_menu()
+
+#################### EXPERIMENTAL STUFF BELOW !! ################
 import odict
 
 _registered_plugins = odict.ODict() 
@@ -104,6 +119,8 @@ def show_menu(name,before='help'):
 
 def close_menu(name):
     """Close the menu."""
+    name.replace('_menu','')
+    print "CLOSING MENU %s" % name 
     GD.GUI.menu.removeItem(name)
 
 
@@ -128,6 +145,5 @@ def reload_menu(name):
     show_menu(before=before)
     setDrawOptions({'bbox':'last'})
     print GD.GUI.menu.actionList()
-
 
 # End
