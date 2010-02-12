@@ -336,9 +336,18 @@ class GUI(QtGui.QMainWindow):
         self.coordsbox.setVisible(onoff)
             
 
+    def currentStyle(self):
+        return GD.app.style().metaObject().className()[1:-5]
+
+
+    def getStyles(self):
+        return map(str,QtGui.QStyleFactory().keys())
+
+
     def setStyle(self,style):
         """Set the main application style."""
         GD.debug('Setting new style: %s' % style)
+        style = QtGui.QStyleFactory().create(style)
         GD.app.setStyle(style)
         self.update()
 

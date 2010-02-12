@@ -351,15 +351,12 @@ class AppearenceDialog(QtGui.QDialog):
         styleLabel = QtGui.QLabel('Style')
         self.styleCombo = QtGui.QComboBox()
         styles = map(str,QtGui.QStyleFactory().keys())
-        GD.debug("Available styles : %s" % styles)
         style = GD.app.style().objectName()
-        GD.debug("Current style : %s" % style)
         self.styleCombo.addItems(styles)
         self.styleCombo.setCurrentIndex([i.lower() for i in styles].index(style))
         # Font
         fontLabel = QtGui.QLabel('Font')
         font = GD.app.font().toString()
-        GD.debug("Current font : %s" % font)
         self.fontButton = QtGui.QPushButton(font)
         self.connect(self.fontButton,QtCore.SIGNAL("clicked()"),self.setFont)
         # Accept/Cancel Buttons
@@ -379,6 +376,17 @@ class AppearenceDialog(QtGui.QDialog):
         grid.addWidget(cancelButton,2,4)
         self.setLayout(grid)
 
+        
+    def acceptData(self,result=ACCEPTED):
+        self.results = odict.ODict([
+            ('style',self.styleCombo.currentText()),
+            ('font',self.font)
+            ])
+        if result == TIMEOUT:
+            self.done(result)
+        else:
+            self.setResult(result)
+
 
     def setFont(self):
         font = selectFont()
@@ -388,12 +396,18 @@ class AppearenceDialog(QtGui.QDialog):
 
 
     def getResult(self):
+        self.results = odict.ODict()
+        self.setResult(0)
+        ## if self._pos is not None:
+        ##     self.restoreGeometry(self._pos)
+            
+        ## self.show(timeout,modal=True)
         self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
-            style = QtGui.QStyleFactory().create(self.styleCombo.currentText())
-            return style,self.font 
-        else:
-            return None,None
+        self.activateWindow()
+        self.raise_()
+        GD.app.processEvents()
+        ## self._pos = self.saveGeometry()
+        return self.results
 
 
 class DockedSelection(QtGui.QDockWidget):
@@ -1131,17 +1145,56 @@ class InputColor(InputItem):
         self.setValue(color)
         self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setColor)
         self.insertWidget(1,self.input)
-        
+
+    
     def setColor(self):
         color = getColor(self.input.text())
         if color:
             self.setValue(color)
+
 
     def setValue(self,value):
         """Change the widget's value."""
         rgb = QtGui.QColor(value).getRgb()
         self.input.setStyleSheet("* { background-color: rgb(%s,%s,%s) }" % rgb[:3])
         self.input.setText(str(value))
+
+
+class InputWidget(InputItem):
+    """An input item containing any other widget.
+
+    The widget should have:
+    - a results attribute that is set to
+      a dict with the resulting input values when the widget's
+      acceptData() is called.
+    - an acceptData() method, that sets the widgets results dict.
+    - a setValue(dict) method that sets the widgets values to those
+      specified in the dict.
+
+    The return value of this item is an ODict.
+    """
+    
+    def __init__(self,name,value,*args,**kargs):
+        """Creates a new InputWidget."""
+        
+        kargs['text'] = '' # Force no label
+        InputItem.__init__(self,name,*args,**kargs)
+        self.input = value
+        self.insertWidget(1,self.input)
+
+    def text(self):
+        """Return the displayed text."""
+        return ''
+
+    def value(self):
+        """Return the widget's value."""
+        self.item.acceptData()
+        return self.results
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        if val:
+            self.input.setValue(val)
 
 
 def inputAny(name,value,itemtype=str,**options):

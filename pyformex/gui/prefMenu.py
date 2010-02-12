@@ -23,7 +23,7 @@
 ##
 """Functions for the Pref menu."""
 
-import pyformex
+import pyformex as GD
 from pyformex.main import savePreferences
 import os
 
@@ -46,29 +46,29 @@ def updateSettings(res,save=None):
     preferences will also be saved to the user's preference file.
     Else, the user will be asked whether he wants to save the changes.
     """
-    pyformex.debug("Accepted settings:",res)
+    GD.debug("Accepted settings:",res)
     if save is None:
         save = res.get('Save changes',None)
     if save is None:
         save = ack("Save the current changes to your configuration file?")
 
-    # Do not use 'pyformex.cfg.update(res)' here!
+    # Do not use 'GD.cfg.update(res)' here!
     # It will not work with our Config class!
 
     for k in res:
         if k.startswith('_'): # skip temporary variables
             continue
         
-        pyformex.cfg[k] = res[k]
-        if save and pyformex.prefcfg[k] != pyformex.cfg[k]:
-            pyformex.prefcfg[k] = pyformex.cfg[k]
+        GD.cfg[k] = res[k]
+        if save and GD.prefcfg[k] != GD.cfg[k]:
+            GD.prefcfg[k] = GD.cfg[k]
 
-        if pyformex.GUI:
+        if GD.GUI:
             if k in _activate_settings:
                 _activate_settings[k]()
 
-    pyformex.debug("New settings:",pyformex.cfg)
-    pyformex.debug("New preferences:",pyformex.prefcfg)
+    GD.debug("New settings:",GD.cfg)
+    GD.debug("New preferences:",GD.prefcfg)
 
 
 def settings():
@@ -88,35 +88,37 @@ def settings():
         #print ok_plugins
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
         updateSettings(res)
-        pyformex.cfg.update(res)
+        GD.cfg.update(res)
         plugins.loadConfiguredPlugins()
 
     def acceptAndSave():
         accept(save=True)
 
     def autoSettings(keylist):
-        return [(k,pyformex.cfg[k]) for k in keylist]
+        return [(k,GD.cfg[k]) for k in keylist]
 
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
 
-    plugin_items = [ ('_plugins/'+name,name in pyformex.cfg['gui/plugins'],{'text':label}) for (label,name) in plugins.plugin_menus ]
+    plugin_items = [ ('_plugins/'+name,name in GD.cfg['gui/plugins'],{'text':label}) for (label,name) in plugins.plugin_menus ]
+
+    appearence = widgets.AppearenceDialog()
 
     dia = widgets.InputDialog(
         caption='pyFormex Settings',items={
             'General':[
-                ('syspath',pyformex.cfg['syspath']),
-                ('editor',pyformex.cfg['editor']),
-                ('viewer',pyformex.cfg['viewer']),
-                ('browser',pyformex.cfg['browser']),
-                ('help/docs',pyformex.cfg['help/docs']),
-                ('autorun',pyformex.cfg['autorun'],{'text':'Startup script','tooltip':'This script will automatically be run at pyFormex startup'}),
+                ('syspath',GD.cfg['syspath']),
+                ('editor',GD.cfg['editor']),
+                ('viewer',GD.cfg['viewer']),
+                ('browser',GD.cfg['browser']),
+                ('help/docs',GD.cfg['help/docs']),
+                ('autorun',GD.cfg['autorun'],{'text':'Startup script','tooltip':'This script will automatically be run at pyFormex startup'}),
                 ],
             'Mouse': mouse_settings,
             'GUI':[
-                ('gui/coordsbox',pyformex.cfg['gui/coordsbox']),
-                ('gui/showfocus',pyformex.cfg['gui/showfocus']),
-                ('gui/timeoutbutton',pyformex.cfg['gui/timeoutbutton']),
-                ('gui/timeoutvalue',pyformex.cfg['gui/timeoutvalue']),
+                ('gui/coordsbox',GD.cfg['gui/coordsbox']),
+                ('gui/showfocus',GD.cfg['gui/showfocus']),
+                ('gui/timeoutbutton',GD.cfg['gui/timeoutbutton']),
+                ('gui/timeoutvalue',GD.cfg['gui/timeoutvalue']),
                 ],
             'Plugins': plugin_items,
             },
@@ -138,15 +140,15 @@ def askConfigPreferences(items,prefix=None,store=None):
     If a prefix is given, actual keys will be 'prefix/key'. 
     The current values are retrieved from the store, and the type returned
     will be in accordance.
-    If no store is specified, the global config pyformex.cfg is used.
+    If no store is specified, the global config GD.cfg is used.
     """
     if store is None:
-        store = pyformex.cfg
+        store = GD.cfg
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
-    res = widgets.InputDialog(itemlist+[('Save changes',True)],'Config Dialog',pyformex.GUI).getResult()
-    if res and store==pyformex.cfg:
+    res = widgets.InputDialog(itemlist+[('Save changes',True)],'Config Dialog',GD.GUI).getResult()
+    if res and store==GD.cfg:
         updateSettings(res)
     return res
 
@@ -157,17 +159,17 @@ def setToolbarPlacement(store=None):
     Items in list should be existing toolbar widgets.
     """
     if store is None:
-        store = pyformex.cfg
-    toolbar = pyformex.GUI.toolbardefs
+        store = GD.cfg
+    toolbar = GD.GUI.toolbardefs
     label = [ i[0] for i in toolbar ]
     setting = [ 'gui/%s' % i[1] for i in toolbar ]
     options = [ None, 'default', 'left', 'right', 'top', 'bottom' ]
     current = [ store[s] for s in setting ]
     itemlist = [(l, options[1], 'select', options) for (l,c) in zip(label,setting)]
     itemlist.append(('Store these settings as defaults', False))
-    res = widgets.InputDialog(itemlist,'Config Dialog',pyformex.GUI).getResult()
+    res = widgets.InputDialog(itemlist,'Config Dialog',GD.GUI).getResult()
     if res:
-        pyformex.debug(res)
+        GD.debug(res)
         if res['Store these settings as defaults']:
             # The following  does not work for our Config class!
             #    store.update(res)
@@ -177,12 +179,12 @@ def setToolbarPlacement(store=None):
                 if val == "None":
                     val = None
                 store[s] = val
-        pyformex.debug(store)
+        GD.debug(store)
 
  
 def setDrawWait():
     askConfigPreferences(['draw/wait'])
-    pyformex.GUI.drawwait = pyformex.cfg['draw/wait']
+    GD.GUI.drawwait = GD.cfg['draw/wait']
 
 def setLinewidth():
     askConfigPreferences(['draw/linewidth'])
@@ -194,12 +196,12 @@ def setAvgNormalSize():
     askConfigPreferences(['mark/avgnormalsize'])
 
 def setSize():
-    pyformex.GUI.resize(800,600)
+    GD.GUI.resize(800,600)
 
 def setPickSize():
-    w,h = pyformex.cfg['pick/size']
+    w,h = GD.cfg['pick/size']
     res = draw.askItems([['w',w],['h',h]])
-    pyformex.cfg['pick/size'] = (int(res['w']),int(res['h']))
+    GD.cfg['pick/size'] = (int(res['w']),int(res['h']))
         
     
 def setRenderMode():
@@ -213,7 +215,7 @@ def setRenderMode():
             
     
 def setRender():
-    items = [ ('render/%s'%a,getattr(pyformex.canvas,a),'slider',{'min':0,'max':100,'scale':0.01,'func':getattr(draw,'set_%s'%a)}) for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
+    items = [ ('render/%s'%a,getattr(GD.canvas,a),'slider',{'min':0,'max':100,'scale':0.01,'func':getattr(draw,'set_%s'%a)}) for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
     res = draw.askItems(items)
     if res:
         updateSettings(res)
@@ -223,9 +225,9 @@ def setLight(light=0):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     tgt = 'render/light%s'%light
     localcopy = {}
-    localcopy.update(pyformex.cfg[tgt])
+    localcopy.update(GD.cfg[tgt])
     if askConfigPreferences(keys,store=localcopy):
-        pyformex.cfg[tgt] = localcopy
+        GD.cfg[tgt] = localcopy
         draw.smooth()
 
 def setLight0():
@@ -241,58 +243,64 @@ def setFont(font=None):
     if font is None:
         font = widgets.selectFont()
     if font:
-        pyformex.cfg['gui/font'] = str(font.toString())
-        pyformex.cfg['gui/fontfamily'] = str(font.family())
-        pyformex.cfg['gui/fontsize'] = font.pointSize()
-        pyformex.GUI.setFont(font)
+        GD.cfg['gui/font'] = str(font.toString())
+        GD.cfg['gui/fontfamily'] = str(font.family())
+        GD.cfg['gui/fontsize'] = font.pointSize()
+        GD.GUI.setFont(font)
 
 
-def setAppearance():
+
+def setAppearance(style=None,font=None):
     """Ask and set the main application appearence."""
-    style,font = widgets.AppearenceDialog().getResult()
-    if style:
-        # Get style name, strip off the leading 'Q' and trailing 'Style'
-        stylename = style.metaObject().className()[1:-5]
-        pyformex.cfg['gui/style'] = stylename
-        pyformex.GUI.setStyle(stylename)
-    if font:
-        setFont(font)
+    if style is None:
+        res = widgets.InputDialog(
+            caption = "Appearence Settings",
+            items = [
+                ('style',GD.GUI.currentStyle(),'select',{'choices':GD.GUI.getStyles()}),
+                ],
+            ).getResult()
+        print res
+    GD.GUI.setStyle(res['style'])
+    ##     GD.cfg['gui/style'] = stylename
+    ##     GD.GUI.setStyle(stylename)
+    ## if font:
+    ##     setFont(font)
 
 
 def setSplash():
     """Open an image file and set it as the splash screen."""
-    cur = pyformex.cfg['gui/splash']
+    cur = GD.cfg['gui/splash']
     if not cur:
-        cur = pyformex.cfg.get('icondir','.')
+        cur = GD.cfg.get('icondir','.')
     w = widgets.ImageViewerDialog(path=cur)
     fn = w.getFilename()
     w.close()
     if fn:
-        pyformex.cfg['gui/splash'] = fn
+        GD.cfg['gui/splash'] = fn
 
 w=None
 
 def setScriptDirs():
     global w
     from scriptMenu import reloadScriptMenu
-    scr = pyformex.cfg['scriptdirs']
+    scr = GD.cfg['scriptdirs']
     w = widgets.Dialog([widgets.Table(scr,chead=['Label','Path'])],
                        title='Script paths',
                        actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadScriptMenu),('OK',)])
     w.show()
 
 def insertRow():
-    ww = widgets.FileSelection(pyformex.cfg['workdir'],'*',exist=True,dir=True)
+    ww = widgets.FileSelection(GD.cfg['workdir'],'*',exist=True,dir=True)
     fn = ww.getFilename()
     if fn:
-        scr = pyformex.cfg['scriptdirs']
+        scr = GD.cfg['scriptdirs']
         w.table.model().insertRows()
         scr[-1] = ['New',fn]
     w.table.update()
     
 def editRow():
     row = w.table.currentIndex().row()
-    scr = pyformex.cfg['scriptdirs']
+    scr = GD.cfg['scriptdirs']
     item = scr[row]
     res = draw.askItems([('Label',item[0]),('Path',item[1])])
     if res:
@@ -306,7 +314,7 @@ def removeRow():
 
 def moveUp():
     row = w.table.currentIndex().row()
-    scr = pyformex.cfg['scriptdirs']
+    scr = GD.cfg['scriptdirs']
     if row > 0:
         a,b = scr[row-1:row+1]
         scr[row-1] = b
@@ -322,29 +330,29 @@ def moveUp():
 
 def setOptions():
     options = ['test','debug','uselib','safelib','fastencode']
-    options = [ o for o in options if hasattr(pyformex.options,o) ]
-    items = [ (o,getattr(pyformex.options,o)) for o in options ]
+    options = [ o for o in options if hasattr(GD.options,o) ]
+    items = [ (o,getattr(GD.options,o)) for o in options ]
     res = draw.askItems(items)
     if res:
         for o in options:
-            setattr(pyformex.options,o,res[o])
-            print(pyformex.options)
+            setattr(GD.options,o,res[o])
+            print(GD.options)
             ## if o == 'debug':
-            ##     pyformex.setDebugFunc()
+            ##     GD.setDebugFunc()
     
 
 
 # Functions defined to delay binding
 def coordsbox():
     """Toggle the coordinate display box onor off"""
-    pyformex.GUI.coordsbox.setVisible(pyformex.cfg['gui/coordsbox'])
+    GD.GUI.coordsbox.setVisible(GD.cfg['gui/coordsbox'])
     
 def timeoutbutton():
     """Toggle the timeout button on or off"""
-    toolbar.addTimeoutButton(pyformex.GUI.toolbar)
+    toolbar.addTimeoutButton(GD.GUI.toolbar)
 
 def updateCanvas():
-    pyformex.canvas.update()
+    GD.canvas.update()
 
     
 # This sets the functions that should be called when a setting has changed
