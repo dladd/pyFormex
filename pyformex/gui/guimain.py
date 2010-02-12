@@ -506,13 +506,15 @@ class GUI(QtGui.QMainWindow):
 
 
     def setFont(self,font):
-        """Set the main application font."""
-        print type(font)
-        if type(font) == str:
+        """Set the main application font.
+
+        font is either a QFont or a string resulting from the
+        QFont.toString() method
+        """
+        if not isinstance(font,QtGui.QFont):
             f = QtGui.QFont()
             f.fromString(font)
             font = f
-        print font
         GD.app.setFont(font)
         self.update()
 
@@ -521,16 +523,14 @@ class GUI(QtGui.QMainWindow):
         """Set the main application font family to the given family."""
         font = GD.app.font()
         font.setFamily(family)
-        GD.app.setFont(font)
-        self.update()
+        self.setFont(font)
 
 
     def setFontSize(self,size):
         """Set the main application font size to the given point size."""
         font = GD.app.font()
         font.setPointSize(int(size))
-        GD.app.setFont(font)
-        self.update()
+        self.setFont(font)
 
 
     def setAppearence(self):
@@ -538,7 +538,6 @@ class GUI(QtGui.QMainWindow):
         font = GD.cfg['gui/font']
         family = GD.cfg['gui/fontfamily']
         size = GD.cfg['gui/fontsize']
-        print style,font,family,size
         if style:
             self.setStyle(style)
         if font:

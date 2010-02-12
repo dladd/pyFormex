@@ -59,13 +59,15 @@ def updateSettings(res,save=None):
         if k.startswith('_'): # skip temporary variables
             continue
         
-        GD.cfg[k] = res[k]
-        if save and GD.prefcfg[k] != GD.cfg[k]:
-            GD.prefcfg[k] = GD.cfg[k]
+        if GD.cfg[k] != res[k]:
+            GD.cfg[k] = res[k]
+            
+            if save and GD.prefcfg[k] != GD.cfg[k]:
+                GD.prefcfg[k] = GD.cfg[k]
 
-        if GD.GUI:
-            if k in _activate_settings:
-                _activate_settings[k]()
+            if GD.GUI:
+                if k in _activate_settings:
+                    _activate_settings[k]()
 
     GD.debug("New settings:",GD.cfg)
     GD.debug("New preferences:",GD.prefcfg)
@@ -73,6 +75,7 @@ def updateSettings(res,save=None):
 
 def settings():
     import plugins
+    from widgets import simpleInputItem as I, compatInputItem as C
     
     dia = None
 
@@ -83,15 +86,9 @@ def settings():
         dia.acceptData()
         res = dia.results
         res['Save changes'] = save
-        print res
+        GD.debug(res)
         ok_plugins = utils.subDict(res,'_plugins/')
-        #print ok_plugins
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
-        ## font = QtGui.QFont()
-        ## font.fromString(res['gui/font'])
-        ## res['gui/font'] = str(font.toString())
-        ## res['gui/fontfamily'] = str(font.family())
-        ## res['gui/fontsize'] = font.pointSize()
         updateSettings(res)
         plugins.loadConfiguredPlugins()
 
@@ -99,45 +96,50 @@ def settings():
         accept(save=True)
 
     def autoSettings(keylist):
-        return [(k,GD.cfg[k]) for k in keylist]
+        return [I(k,GD.cfg[k]) for k in keylist]
 
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
 
-    plugin_items = [ ('_plugins/'+name,name in GD.cfg['gui/plugins'],{'text':label}) for (label,name) in plugins.plugin_menus ]
+    plugin_items = [ I('_plugins/'+name,name in GD.cfg['gui/plugins'],text=label) for (label,name) in plugins.plugin_menus ]
+    print plugin_items
 
     appearence = [
-        ('gui/style',GD.GUI.currentStyle(),'select',{'choices':GD.GUI.getStyles()}),
-        ('gui/font',GD.app.font().toString(),'font'),
+        I('gui/style',GD.GUI.currentStyle(),choices=GD.GUI.getStyles()),
+        I('gui/font',GD.app.font().toString(),'font'),
         ]
 
-    dia = widgets.InputDialog(
-        caption='pyFormex Settings',items={
-            'General':[
-                ('syspath',GD.cfg['syspath']),
-                ('editor',GD.cfg['editor']),
-                ('viewer',GD.cfg['viewer']),
-                ('browser',GD.cfg['browser']),
-                ('help/docs',GD.cfg['help/docs']),
-                ('autorun',GD.cfg['autorun'],{'text':'Startup script','tooltip':'This script will automatically be run at pyFormex startup'}),
+    dia = widgets.NewInputDialog(
+        caption='pyFormex Settings',
+        store=GD.cfg,
+        items=[
+            ('General',[
+                I('syspath'),
+                I('editor'),
+                I('viewer'),
+                I('browser'),
+                I('help/docs'),
+                I('autorun',text='Startup script',tooltip='This script will automatically be run at pyFormex startup'),
+                I('scriptdirs',text='Script Paths',tooltip='pyFormex will look for scripts in these directories'),
                 ],
-            'Mouse': mouse_settings,
-            'GUI':{
-                'Appearence':appearence,
-                'Components': [
-                    ('gui/coordsbox',GD.cfg['gui/coordsbox']),
-                    ('gui/showfocus',GD.cfg['gui/showfocus']),
-                    ('gui/timeoutbutton',GD.cfg['gui/timeoutbutton']),
-                    ('gui/timeoutvalue',GD.cfg['gui/timeoutvalue']),
-                    ],
-                },
-            'Plugins': plugin_items,
-            },
+             ),
+            ('Mouse',mouse_settings),
+            ## 'GUI':
+            ('Appearence',appearence),
+            ('Components',[
+                I('gui/coordsbox',GD.cfg['gui/coordsbox']),
+                I('gui/showfocus',GD.cfg['gui/showfocus']),
+                I('gui/timeoutbutton',GD.cfg['gui/timeoutbutton']),
+                I('gui/timeoutvalue',GD.cfg['gui/timeoutvalue']),
+                ],
+             ),
+            ('Plugins',plugin_items),
+            ],
         actions=[
             ('Close',close),
             ('Accept and Save',acceptAndSave),
             ('Accept',accept),
         ])
-    dia.resize(400,400)
+    dia.resize(600,400)
     dia.show()
 
 
@@ -345,6 +347,7 @@ _activate_settings = {
     'gui/timeoutbutton':timeoutbutton,
     'gui/showfocus':updateCanvas,
     'gui/style':updateStyle,
+    'gui/font':updateStyle,
     }
    
 
