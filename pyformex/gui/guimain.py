@@ -536,11 +536,13 @@ class GUI(QtGui.QMainWindow):
     def setAppearence(self):
         style = GD.cfg['gui/style']
         font = GD.cfg['gui/font']
-        family = GD.cfg.get('gui/fontfamily',None)
-        size = GD.cfg.get('gui/fontsize',None)
+        family = GD.cfg['gui/fontfamily']
+        size = GD.cfg['gui/fontsize']
         print style,font,family,size
-        self.setStyle(style)
-        self.setFont(font)
+        if style:
+            self.setStyle(style)
+        if font:
+            self.setFont(font)
         if family:
             self.setFontFamily(family)
         if size:
