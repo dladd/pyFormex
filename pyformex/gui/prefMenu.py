@@ -83,12 +83,16 @@ def settings():
         dia.acceptData()
         res = dia.results
         res['Save changes'] = save
-        #print res
+        print res
         ok_plugins = utils.subDict(res,'_plugins/')
         #print ok_plugins
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
+        ## font = QtGui.QFont()
+        ## font.fromString(res['gui/font'])
+        ## res['gui/font'] = str(font.toString())
+        ## res['gui/fontfamily'] = str(font.family())
+        ## res['gui/fontsize'] = font.pointSize()
         updateSettings(res)
-        GD.cfg.update(res)
         plugins.loadConfiguredPlugins()
 
     def acceptAndSave():
@@ -101,7 +105,10 @@ def settings():
 
     plugin_items = [ ('_plugins/'+name,name in GD.cfg['gui/plugins'],{'text':label}) for (label,name) in plugins.plugin_menus ]
 
-    appearence = widgets.AppearenceDialog()
+    appearence = [
+        ('gui/style',GD.GUI.currentStyle(),'select',{'choices':GD.GUI.getStyles()}),
+        ('gui/font',GD.app.font().toString(),'font'),
+        ]
 
     dia = widgets.InputDialog(
         caption='pyFormex Settings',items={
@@ -114,12 +121,15 @@ def settings():
                 ('autorun',GD.cfg['autorun'],{'text':'Startup script','tooltip':'This script will automatically be run at pyFormex startup'}),
                 ],
             'Mouse': mouse_settings,
-            'GUI':[
-                ('gui/coordsbox',GD.cfg['gui/coordsbox']),
-                ('gui/showfocus',GD.cfg['gui/showfocus']),
-                ('gui/timeoutbutton',GD.cfg['gui/timeoutbutton']),
-                ('gui/timeoutvalue',GD.cfg['gui/timeoutvalue']),
-                ],
+            'GUI':{
+                'Appearence':appearence,
+                'Components': [
+                    ('gui/coordsbox',GD.cfg['gui/coordsbox']),
+                    ('gui/showfocus',GD.cfg['gui/showfocus']),
+                    ('gui/timeoutbutton',GD.cfg['gui/timeoutbutton']),
+                    ('gui/timeoutvalue',GD.cfg['gui/timeoutvalue']),
+                    ],
+                },
             'Plugins': plugin_items,
             },
         actions=[
@@ -127,6 +137,7 @@ def settings():
             ('Accept and Save',acceptAndSave),
             ('Accept',accept),
         ])
+    dia.resize(400,400)
     dia.show()
 
 
@@ -235,38 +246,7 @@ def setLight0():
 
 def setLight1():
     setLight(1)
-        
-
-
-def setFont(font=None):
-    """Ask and set the main application font."""
-    if font is None:
-        font = widgets.selectFont()
-    if font:
-        GD.cfg['gui/font'] = str(font.toString())
-        GD.cfg['gui/fontfamily'] = str(font.family())
-        GD.cfg['gui/fontsize'] = font.pointSize()
-        GD.GUI.setFont(font)
-
-
-
-def setAppearance(style=None,font=None):
-    """Ask and set the main application appearence."""
-    if style is None:
-        res = widgets.InputDialog(
-            caption = "Appearence Settings",
-            items = [
-                ('style',GD.GUI.currentStyle(),'select',{'choices':GD.GUI.getStyles()}),
-                ],
-            ).getResult()
-        print res
-    GD.GUI.setStyle(res['style'])
-    ##     GD.cfg['gui/style'] = stylename
-    ##     GD.GUI.setStyle(stylename)
-    ## if font:
-    ##     setFont(font)
-
-
+ 
 def setSplash():
     """Open an image file and set it as the splash screen."""
     cur = GD.cfg['gui/splash']
@@ -354,12 +334,17 @@ def timeoutbutton():
 def updateCanvas():
     GD.canvas.update()
 
+def updateStyle():
+    print "UPDATING"
+    GD.GUI.setAppearence()
+
     
 # This sets the functions that should be called when a setting has changed
 _activate_settings = {
     'gui/coordsbox':coordsbox,
     'gui/timeoutbutton':timeoutbutton,
     'gui/showfocus':updateCanvas,
+    'gui/style':updateStyle,
     }
    
 
@@ -368,8 +353,6 @@ MenuData = [
         (_('&Settings Dialog'),settings), 
         (_('&Options'),setOptions),
         ('---',None),
-        (_('&Appearance'),setAppearance), 
-        (_('&Font'),setFont), 
         (_('&Toolbar Placement'),setToolbarPlacement), 
         (_('&Draw Wait Time'),setDrawWait), 
         (_('Avg&Normal Treshold'),setAvgNormalTreshold), 

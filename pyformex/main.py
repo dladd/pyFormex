@@ -386,18 +386,9 @@ def run(argv=[]):
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if pyformex.options.gui:
-        if pyformex.options.fpbug:
-            print "WILL NOW IMPORT GUI"
         from gui import guimain
-        if pyformex.options.fpbug:
-            print "GUI IMPORTED"
-            print dir(guimain)
         pyformex.debug("GUI version")
-        if pyformex.options.fpbug:
-            print "STARTING GUI"
         res = guimain.startGUI(args)
-        if pyformex.options.fpbug:
-            print "GUI STARTED"
         if res != 0:
             print("Could not start the pyFormex GUI: %s" % res)
             return res # EXIT

@@ -334,46 +334,6 @@ class GUI(QtGui.QMainWindow):
         for vp in self.viewports.all:
             vp.trackfunc = func
         self.coordsbox.setVisible(onoff)
-            
-
-    def currentStyle(self):
-        return GD.app.style().metaObject().className()[1:-5]
-
-
-    def getStyles(self):
-        return map(str,QtGui.QStyleFactory().keys())
-
-
-    def setStyle(self,style):
-        """Set the main application style."""
-        GD.debug('Setting new style: %s' % style)
-        style = QtGui.QStyleFactory().create(style)
-        GD.app.setStyle(style)
-        self.update()
-
-
-    def setFont(self,font):
-        """Set the main application font."""
-        if type(font) == str:
-            f = QtGui.QFont()
-            f.fromString(font)
-            font = f
-        GD.app.setFont(font)
-        self.update()
-
-
-    def setFontFamily(self,family):
-        """Set the main application font size to the given point size."""
-        font = GD.app.font()
-        font.setFamily(family)
-        self.setFont(font)
-
-
-    def setFontSize(self,size):
-        """Set the main application font size to the given point size."""
-        font = GD.app.font()
-        font.setPointSize(int(size))
-        self.setFont(font)
          
     
     def resizeCanvas(self,wd,ht):
@@ -527,6 +487,65 @@ class GUI(QtGui.QMainWindow):
     def onExit(self,func):
         """Register a function for execution on exit"""
         self.on_exit.append(func)
+            
+# THESE FUNCTION SHOULD BECOME app FUNCTIONS
+
+    def currentStyle(self):
+        return GD.app.style().metaObject().className()[1:-5]
+
+
+    def getStyles(self):
+        return map(str,QtGui.QStyleFactory().keys())
+
+
+    def setStyle(self,style):
+        """Set the main application style."""
+        style = QtGui.QStyleFactory().create(style)
+        GD.app.setStyle(style)
+        self.update()
+
+
+    def setFont(self,font):
+        """Set the main application font."""
+        print type(font)
+        if type(font) == str:
+            f = QtGui.QFont()
+            f.fromString(font)
+            font = f
+        print font
+        GD.app.setFont(font)
+        self.update()
+
+
+    def setFontFamily(self,family):
+        """Set the main application font family to the given family."""
+        font = GD.app.font()
+        font.setFamily(family)
+        GD.app.setFont(font)
+        self.update()
+
+
+    def setFontSize(self,size):
+        """Set the main application font size to the given point size."""
+        font = GD.app.font()
+        font.setPointSize(int(size))
+        GD.app.setFont(font)
+        self.update()
+
+
+    def setAppearence(self):
+        style = GD.cfg['gui/style']
+        font = GD.cfg['gui/font']
+        family = GD.cfg.get('gui/fontfamily',None)
+        size = GD.cfg.get('gui/fontsize',None)
+        print style,font,family,size
+        self.setStyle(style)
+        self.setFont(font)
+        if family:
+            self.setFontFamily(family)
+        if size:
+            self.setFontSize(size)
+        
 
 
 def xwininfo(windowid):
@@ -574,9 +593,6 @@ def startGUI(args):
     A (possibly empty) list of command line options should be provided.
     QT4 wil remove the recognized QT4 and X11 options.
     """
-    if GD.options.fpbug:
-        print "startGUI"
-
     # This seems to be the only way to make sure the numeric conversion is
     # always correct
     #
@@ -609,9 +625,6 @@ def startGUI(args):
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("aboutToQuit()"),quit)
         
-       
-    if GD.options.fpbug:
-        print "SPLASH"
     # Load the splash image
     splash = None
     if os.path.exists(GD.cfg['gui/splash']):
@@ -623,14 +636,10 @@ def startGUI(args):
         splash.showMessage(GD.Version,QtCore.Qt.AlignHCenter,QtCore.Qt.red)
         splash.show()
 
-    if GD.options.fpbug:
-        print "OPENGL FORMAT"
     # create GUI, show it, run it
     viewport.setOpenGLFormat()
     dri = viewport.opengl_format.directRendering()
 
-    if GD.options.fpbug:
-        print "CHECK WINDOWS"
     windowname = GD.Version
     count = 0
     while windowExists(windowname):
@@ -665,8 +674,6 @@ You should seriously consider to bail out now!!!
         if answer != 'Really Continue':
             return -1
 
-    if GD.options.fpbug:
-        print "CREATE WINDOW"
     GD.GUI = GUI(windowname,
                  GD.cfg.get('gui/size',(800,600)),
                  GD.cfg.get('gui/pos',(0,0)),
@@ -674,29 +681,21 @@ You should seriously consider to bail out now!!!
                  )
 
     # set the appearance
-    if GD.options.fpbug:
-        print "APPEARANCE"
-    GD.GUI.setStyle(GD.cfg.get('gui/style','Plastique'))
-    font = GD.cfg.get('gui/font',None)
-    if GD.options.fpbug:
-       print "SET FONT"
-    if font:
-        GD.GUI.setFont(font)
-    else:
-        fontfamily = GD.cfg.get('gui/fontfamily',None)
-        if fontfamily:
-            GD.GUI.setFontFamily(fontfamily)
-        fontsize =  GD.cfg.get('gui/fontsize',None)
-        if fontsize:
-            GD.GUI.setFontSize(fontsize)
-    if GD.options.fpbug:
-       print "SET VIEWPORTS"
+    GD.GUI.setAppearence()
+    ## GD.GUI.setStyle(GD.cfg.get('gui/style','Plastique'))
+    ## font = GD.cfg.get('gui/font',None)
+    ## if font:
+    ##     GD.GUI.setFont(font)
+    ## else:
+    ##     fontfamily = GD.cfg.get('gui/fontfamily',None)
+    ##     if fontfamily:
+    ##         GD.GUI.setFontFamily(fontfamily)
+    ##     fontsize =  GD.cfg.get('gui/fontsize',None)
+    ##     if fontsize:
+    ##         GD.GUI.setFontSize(fontsize)
+    # THIS OCCASIONALLy CAUSE fpbug ON bumper
     GD.GUI.viewports.changeLayout(1)
-    if GD.options.fpbug:
-       print "SET CURRENT VIEWPORT"
     GD.GUI.viewports.setCurrent(0)
-    if GD.options.fpbug:
-       print "WRITE WELCOME"
     GD.board = GD.GUI.board
     GD.board.write("""%s  (C) Benedict Verhegghe
 
@@ -705,14 +704,10 @@ and you are welcome to redistribute it under the conditions of the
 GNU General Public License, version 3 or later.
 See Help->License or the file COPYING for details.
 """ % GD.Version)
-    if GD.options.fpbug:
-       print "STATUS BAR WIDGETS"
     GD.GUI.addInputBox()
     GD.GUI.toggleInputBox(False)
     GD.GUI.addCoordsTracker()
     GD.GUI.toggleCoordsTracker(GD.cfg.get('gui/coordsbox',False))
-    if GD.options.fpbug:
-        print "SHOW THE GUI"
     GD.GUI.show()
     GD.debug("Using window name %s" % GD.GUI.windowTitle())
     

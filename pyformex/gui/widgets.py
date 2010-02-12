@@ -335,80 +335,6 @@ def selectFont():
     else:
         return None
 
-        
-class AppearenceDialog(QtGui.QDialog):
-    """A dialog for setting the GUI appearance.
-
-    The dialog lets you select one of the Qt styles.
-    """
-    
-    def __init__(self):
-        """Create the Appearance dialog."""
-        self.font = None
-        QtGui.QDialog.__init__(self)
-        self.setWindowTitle('Appearance Settings')
-        # Style
-        styleLabel = QtGui.QLabel('Style')
-        self.styleCombo = QtGui.QComboBox()
-        styles = map(str,QtGui.QStyleFactory().keys())
-        style = GD.app.style().objectName()
-        self.styleCombo.addItems(styles)
-        self.styleCombo.setCurrentIndex([i.lower() for i in styles].index(style))
-        # Font
-        fontLabel = QtGui.QLabel('Font')
-        font = GD.app.font().toString()
-        self.fontButton = QtGui.QPushButton(font)
-        self.connect(self.fontButton,QtCore.SIGNAL("clicked()"),self.setFont)
-        # Accept/Cancel Buttons
-        acceptButton = QtGui.QPushButton('OK')
-        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,Accept)
-        cancelButton = QtGui.QPushButton('Cancel')
-        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,Reject)
-        # Putting it all together
-        grid = QtGui.QGridLayout()
-        grid.setColumnStretch(1,1)
-        grid.setColumnMinimumWidth(1,250)
-        grid.addWidget(styleLabel,0,0)
-        grid.addWidget(self.styleCombo,0,1,1,2)
-        grid.addWidget(fontLabel,1,0)
-        grid.addWidget(self.fontButton,1,1,1,-1)
-        grid.addWidget(acceptButton,2,3)
-        grid.addWidget(cancelButton,2,4)
-        self.setLayout(grid)
-
-        
-    def acceptData(self,result=ACCEPTED):
-        self.results = odict.ODict([
-            ('style',self.styleCombo.currentText()),
-            ('font',self.font)
-            ])
-        if result == TIMEOUT:
-            self.done(result)
-        else:
-            self.setResult(result)
-
-
-    def setFont(self):
-        font = selectFont()
-        if font:
-            self.fontButton.setText(font.toString())
-            self.font = font
-
-
-    def getResult(self):
-        self.results = odict.ODict()
-        self.setResult(0)
-        ## if self._pos is not None:
-        ##     self.restoreGeometry(self._pos)
-            
-        ## self.show(timeout,modal=True)
-        self.exec_()
-        self.activateWindow()
-        self.raise_()
-        GD.app.processEvents()
-        ## self._pos = self.saveGeometry()
-        return self.results
-
 
 class DockedSelection(QtGui.QDockWidget):
     """A widget that is docked in the main window and contains a modeless
@@ -652,7 +578,7 @@ class InputItem(QtGui.QHBoxLayout):
 
     def setValue(self,val):
         """Change the widget's value."""
-        pass
+        self.input.setText(str(val))
 
 
 class InputInfo(InputItem):
@@ -673,10 +599,6 @@ class InputInfo(InputItem):
     def value(self):
         """Return the widget's value."""
         return self._value_
-
-    def setValue(self,val):
-        """Change the widget's value."""
-        self.input.setText(str(val))
 
 
 class InputString(InputItem):
@@ -710,10 +632,6 @@ class InputString(InputItem):
             return s
         else:
             return eval(s)
-
-    def setValue(self,val):
-        """Change the widget's value."""
-        self.input.setText(str(val))
 
 
 class InputText(InputItem):
@@ -1160,6 +1078,25 @@ class InputColor(InputItem):
         self.input.setText(str(value))
 
 
+class InputFont(InputItem):
+    """An input item to select a font."""
+    def __init__(self,name,value,*args,**kargs):
+        """Creates a new font input field."""
+        InputItem.__init__(self,name,*args,**kargs)
+        if value is None:
+            value = GD.app.font().toString()
+        self.input = QtGui.QPushButton(value)
+        self.setValue(value)
+        self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setFont)
+        self.insertWidget(1,self.input)
+
+
+    def setFont(self):
+        font = selectFont()
+        if font:
+            self.setValue(font.toString())
+    
+
 class InputWidget(InputItem):
     """An input item containing any other widget.
 
@@ -1212,7 +1149,10 @@ def inputAny(name,value,itemtype=str,**options):
     - min,max: limits for range types
     - validator: customized validation function
     """
-    if itemtype == bool:
+    if itemtype is None:
+        line = InputItem(name,**options)
+        
+    elif itemtype == bool:
         line = InputBool(name,value,**options)
 
     elif itemtype == int:
@@ -1247,6 +1187,9 @@ def inputAny(name,value,itemtype=str,**options):
     elif itemtype in ['push','hpush','vpush']:
         options['direction'] = itemtype[0]
         line = InputPush(name,value,**options)
+
+    elif itemtype == 'font':
+        line = InputFont(name,value,**options)
 
     else: # Anything else is handled as a string
         #itemtype = str:
@@ -1424,22 +1367,24 @@ class InputDialog(QtGui.QDialog):
                 f = QtGui.QVBoxLayout()
                 if isinstance(items[page],dict):
                     for box in items[page].keys():
-                        f1 = QtGui.QVBoxLayout()
+                        fi = QtGui.QVBoxLayout()
                         g = QtGui.QGroupBox()
                         g.setTitle(box)
-                        g.setLayout(f1)
+                        g.setLayout(fi)
                         f.addWidget(g)
                         # add the items to the tab page
-                        for item in items[page][box]:
-                            line = inputAnyOld(item,parent=self)
-                            f1.addLayout(line)
-                            self.fields.append(line)
+                        self.add_input_items(items[page][box],fi)
+                        ## for item in items[page][box]:
+                        ##     line = inputAnyOld(item,parent=self)
+                        ##     fi.addLayout(line)
+                        ##     self.fields.append(line)
                 else:
                     # add the items to the tab page
-                    for item in items[page]:
-                        line = inputAnyOld(item,parent=self)
-                        f.addLayout(line)
-                        self.fields.append(line)
+                    self.add_input_items(items[page],f)
+                    ## for item in items[page]:
+                    ##     line = inputAnyOld(item,parent=self)
+                    ##     f.addLayout(line)
+                    ##     self.fields.append(line)
                 f.addStretch()
                 w.setLayout(f)
                 tab.addTab(w,page)
@@ -1447,10 +1392,11 @@ class InputDialog(QtGui.QDialog):
 
         else:
             # add the items directly
-            for item in items:
-                line = inputAnyOld(item,parent=self)
-                form.addLayout(line)
-                self.fields.append(line)
+            self.add_input_items(items,form)
+            ## for item in items:
+            ##     line = inputAnyOld(item,parent=self)
+            ##     form.addLayout(line)
+            ##     self.fields.append(line)
 
         # add the action buttons
         if actions is None:
@@ -1469,7 +1415,24 @@ class InputDialog(QtGui.QDialog):
         else:
             self.setLayout(form)
         self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
+
         
+
+    def add_input_items(self,items,layout):
+        """Add input items.
+
+        items is a list of input item data
+        layout is the widget layout where the input widgets will be added
+        """
+        for item in items:
+            ## try:
+            ##     line = inputAny(item,parent=self)
+            ## except:
+            ##     print "inputAny ERROR for %s" % str(item)
+            line = inputAnyOld(item,parent=self)
+            layout.addLayout(line)
+            self.fields.append(line)
+
 
     def __getitem__(self,name):
         """Return the input item with specified name."""
