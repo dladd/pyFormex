@@ -446,18 +446,18 @@ class GUI(QtGui.QMainWindow):
 
 
     def writeSettings(self):
-        """Store th GUI settings"""
+        """Store the GUI settings"""
         # FIX QT4 BUG
         # Make sure QT4 has position right
         self.move(*self.XPos())
 
         # store the history and main window size/pos
-        GD.cfg['history'] = GD.GUI.history.files
+        GD.prefcfg['history'] = GD.GUI.history.files
 
-        GD.cfg.update({'size':Size(GD.GUI),
-                       'pos':Pos(GD.GUI),
-                       'bdsize':Size(GD.GUI.board),
-                       },name='gui')
+        GD.prefcfg.update({'size':Size(GD.GUI),
+                           'pos':Pos(GD.GUI),
+                           'bdsize':Size(GD.GUI.board),
+                           },name='gui')
 
 
     def cleanup(self):

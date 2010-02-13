@@ -451,8 +451,7 @@ def closedLoop(elems):
       - 2: the segments form multiple not connected paths
       
     - a new connection table which is equivalent to the input if it forms
-    
-    a closed loop. The new table has the elements in order of the loop.
+      a closed loop. The new table has the elements in order of the loop.
     """
     def reverse_table(tbl,nrows):
         """Reverse the table of a connected line
@@ -506,7 +505,7 @@ def connectedLineElems(elems):
     The input argument is a (nelems,2) shaped array of integers.
     Each row holds the two vertex numbers of a single line segment.
 
-    The return value ia a list of (nsegi,2) shaped array of integers. 
+    The return value is a list of (nsegi,2) shaped array of integers. 
     """
     parts = []
     while elems.size != 0:

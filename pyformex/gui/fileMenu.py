@@ -34,6 +34,7 @@ import image
 import plugins
 
 from gettext import gettext as _
+from prefMenu import updateSettings
 
 
 ##################### handle project files ##########################
@@ -114,7 +115,7 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
 
     # OK, we have all data, now create/open the project
         
-    GD.cfg['workdir'] = os.path.dirname(fn)
+    updateSettings({'workdir':os.path.dirname(fn)},save=True)
     sig = GD.Version[:GD.Version.rfind('-')]
     if ignoresig:
         sig = ''
@@ -296,7 +297,7 @@ def openScript(fn=None,exist=True,create=False):
             template = GD.cfg['scripttemplate']
             if (os.path.exists(template)):
                 shutil.copyfile(template,fn)
-        GD.cfg['workdir'] = os.path.dirname(fn)
+        updateSettings({'workdir':os.path.dirname(fn)},save=True)
         GD.GUI.setcurfile(fn)
         GD.GUI.history.add(fn)
         if create:
@@ -341,7 +342,7 @@ def saveImage(multi=False):
             opt.fm = None
         if opt.qu < 0:
             opt.qu = -1
-        GD.cfg['workdir'] = os.path.dirname(opt.fn)
+        updateSettings({'workdir':os.path.dirname(opt.fn)},save=True)
         image.save(filename=opt.fn,
                    format=opt.fm,
                    quality=opt.qu,

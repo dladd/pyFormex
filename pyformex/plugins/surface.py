@@ -1073,12 +1073,12 @@ Total area: %s; Enclosed volume: %s
         startat is an element number or list of numbers of the starting front.
         On first call, this function returns the starting front.
         Each next() call returns the next front.
-        front_increment determines haw the property increases at each
+        front_increment determines how the property increases at each
         frontal step. There is an extra increment +1 at each start of
         a new part. Thus, the start of a new part can always be detected
         by a front not having the property of the previous plus front_increment.
         """
-        print("FRONT_INCREMENT %s" % front_increment)
+        #print("FRONT_INCREMENT %s" % front_increment)
         p = -ones((self.nfaces()),dtype=int)
         if self.nfaces() <= 0:
             return
@@ -1120,7 +1120,7 @@ Total area: %s; Enclosed volume: %s
                     continue
 
             # No more elements in this part: start a new one
-            print("NO MORE ELEMENTS")
+            #print("NO MORE ELEMENTS")
             elems = where(p<0)[0]
             if elems.size > 0:
                 # Start a new part
@@ -1168,8 +1168,6 @@ Total area: %s; Enclosed volume: %s
 
     def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
         for p in self.edgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
-            #print("NSTEPS=%d"%nsteps)
-            #print(p)
             if nsteps > 0:
                 nsteps -= 1
             elif nsteps == 0:
@@ -1253,8 +1251,6 @@ Total area: %s; Enclosed volume: %s
     cutAtPlane = cutWithPlane  # DEPRECATED
 
 
-
-
     def connectedElements(self,target,elemlist=None):
         """Return the elements from list connected with target"""
         if elemlist is None:
@@ -1268,6 +1264,67 @@ Total area: %s; Enclosed volume: %s
         p = A.partitionByConnection()
         prop = p[elemlist == target]
         return elemlist[p==prop]
+
+    
+    def intersectionWithPlane(self,p,n,atol=0.):
+        """Return the intersection lines with plane (p,n).
+
+        Returns a plex-2 mesh with the line segments obtained by cutting
+        all triangles of the surface with the plane (p,n)
+        p is a point specified by 3 coordinates.
+        n is the normal vector to a plane, specified by 3 components.
+        atol is a tolerance factor defining whether an edge is intersected by the plane.
+
+        The return value is a Coords object and a list of plex-2 connectivities
+        representing simply connected intersection lines.
+        """
+        n = asarray(n)
+        p = asarray(p)
+        t = self.test(nodes='any',dir=n,min=p,atol=atol)
+        u = self.test(nodes='any',dir=n,max=p,atol=atol)
+        S = self.clip(t*u)
+        if S.nelems() == 0:
+            return Coords(),[]
+
+        #draw(S,color=prop)
+        eadj = S.edgeAdjacency()
+        edg = S.getEdges()
+        F = Formex(S.coords[edg])
+        t = F.test(nodes='any',dir=n,min=p,atol=atol)
+        u = F.test(nodes='any',dir=n,max=p,atol=atol)
+        w = t*u
+        ind = where(w)[0]
+        #print "INDEX:",ind
+        rev = reverseUniqueIndex(ind)
+        #print "REVINDEX:",rev
+        F = F.clip(w)
+        #draw(F,color=green)
+        P = F.intersectionPointsWithPlane(p,n)
+        #draw(P)
+
+        fac = S.getFaces()
+        cut = w[fac]
+        ncut = cut.sum(axis=1)
+        cut2 = where(ncut==2)[0]
+
+        if len(cut2) < len(cut):
+            raise RuntimeError,"Some triangles were not cut in 2 points: %s" % ncut 
+
+        #print cut[cut2]
+        cutedg = fac[cut[cut2]].reshape(-1,2)
+        #print cutedg
+
+        seg = rev[cutedg]
+        #print seg
+        parts = connectedLineElems(seg)
+        #print seg.shape
+        #print P.coords.shape
+        x = P.coords.reshape(-1,3)
+        #print x.shape
+        G = [ Formex(x[p]) for p in parts ]
+        #draw(G)
+        
+        return x,parts
 
 
 ##################  Smooth a surface #############################

@@ -889,10 +889,12 @@ def intersectWithPlane():
         name = res['Name']
         P = res['Point']
         N = res['Normal']
-#        G = [F.toFormex().intersectionLinesWithPlane(P,N) for F in FL]
-        G = [ F.intersectionWithPlane(P,N) for F in FL]
-        draw(G,color='red',linewidth=3)
-        export(dict([('%s/%s' % (n,name),g) for n,g in zip(selection,G)])) 
+        for n,F in zip(selection,FL):
+            x,parts = F.intersectionWithPlane(P,N)
+            M = [ Mesh(x,p) for p in parts ]
+            draw(M,color='red',linewidth=3)
+            export({'%s/%s' % (n,name):M})
+            draw(M)
 
 
 def sliceIt():

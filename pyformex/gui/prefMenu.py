@@ -50,7 +50,7 @@ def updateSettings(res,save=None):
     if save is None:
         save = res.get('Save changes',None)
     if save is None:
-        save = ack("Save the current changes to your configuration file?")
+        save = draw.ack("Save the current changes to your configuration file?")
 
     # Do not use 'GD.cfg.update(res)' here!
     # It will not work with our Config class!
@@ -214,7 +214,7 @@ def setSize():
 def setPickSize():
     w,h = GD.cfg['pick/size']
     res = draw.askItems([['w',w],['h',h]])
-    GD.cfg['pick/size'] = (int(res['w']),int(res['h']))
+    GD.prefcfg['pick/size'] = (int(res['w']),int(res['h']))
         
     
 def setRenderMode():
@@ -240,7 +240,7 @@ def setLight(light=0):
     localcopy = {}
     localcopy.update(GD.cfg[tgt])
     if askConfigPreferences(keys,store=localcopy):
-        GD.cfg[tgt] = localcopy
+        GD.prefcfg[tgt] = localcopy
         draw.smooth()
 
 def setLight0():
@@ -258,7 +258,7 @@ def setSplash():
     fn = w.getFilename()
     w.close()
     if fn:
-        GD.cfg['gui/splash'] = fn
+        GD.prefcfg['gui/splash'] = fn
 
 w=None
 
