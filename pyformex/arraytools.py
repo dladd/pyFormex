@@ -32,6 +32,7 @@ everything from this module::
 """
 
 from numpy import *
+from utils import deprecation
 
 
 ###########################################################################
@@ -181,31 +182,8 @@ def norm(v,n=2):
     return
 
 
-def determinant(A):
-    """Compute the determinants for an n-dimensional array.
-    
-    A is a (M,M,...) shaped array.
-    
-    This computes the determinant for all items A[:,:,i].
-    """
-    if A.shape[0] != A.shape[1]:
-        raise RuntimeError,"First and second axis dimension should be the same."
-    n = A.shape[0]
-    # permutations
-    a = range(n)
-    b = asarray(list(permutations(a)))
-    # sign of permutations = (-1)^nt
-    # nt = number of transpositions = number of pairs (x,y) such that x<y and b(x) > b(y)
-    nt = column_stack([ b[:,i:i+1] > b[:,i+1:] for i in range(n) ]).sum(-1) # (n!)
-    s = (-1.)**(nt)
-    s = s.reshape(insert(ones(len(A.shape)-2,dtype=int),0,-1))
-    # product over matrix entries
-    p = A[a,b].prod(1) #(n!,...)
-    return (s*p).sum(0)
-
-
-def solveCramer(A,b):
-    """Solve n-dimensional linear matrix equations or systems of linear scalar equations.
+def solveMany(A,b):
+    """Solve many systems of linear equations.
     
     A is a (M,M,...) shaped array.
     b is a (M,...) shaped array.
@@ -213,14 +191,18 @@ def solveCramer(A,b):
     This solves all equations A[:,:,i].x = b[:,i].
     The return value is a (M,...) shaped array.
     """
-    x = []
-    detA = determinant(A)
-    for i in range(b.shape[0]):
-        Ai = A.copy()
-        Ai[:,i] = b
-        detAi = determinant(Ai)
-        x.append(detAi/detA)
-    return x
+    shape = b.shape
+    n = shape[0]
+    if A.shape != (n,)+shape:
+        raise ValueError,"A(%s) and b(%s) have incompatible shape" % (A.shape,b.shape)
+    A = A.reshape(n,n,-1)
+    b = b.reshape(n)
+    x = column_stack([ linalg.solve(A[:,:,i],b[:,i]) for i in range(b.shape[1])])
+    return x.reshape(shape)
+
+@deprecation("Use solveMany instead")
+def solveCramer(A,b):
+    return solveMany(A,b)
 
 
 # Build-in function for Python 2.6

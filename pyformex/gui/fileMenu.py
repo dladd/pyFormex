@@ -282,7 +282,11 @@ def openScript(fn=None,exist=True,create=False):
     openScript() to open existing scripts.
     """
     if fn is None:
-        cur = GD.cfg.get('curfile',GD.cfg.get('workdir','.'))
+        cur = GD.cfg['curfile']
+        if cur is None:
+            cur = GD.cfg['workdir']
+        if cur is None:
+            cur  = '.'
         typ = utils.fileDescription('pyformex')
         fn = widgets.FileSelection(cur,typ,exist=exist).getFilename()
     if fn:
