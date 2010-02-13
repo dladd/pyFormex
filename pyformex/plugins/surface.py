@@ -502,12 +502,13 @@ class TriSurface(Mesh):
             a = asarray(args[1])
             if a.dtype.kind != 'i' or a.ndim != 2 or a.shape[1]+len(args) != 5:
                 raise "Got invalid second argument"
-            if a.max() >= coords.shape[0]:
+            if a.size > 0 and a.max() >= coords.shape[0]:
                 raise ValueError,"Some vertex number is too high"
             
             if len(args) == 2:
                 # arguments are (coords,elems)
                 elems = a
+                print elems
                 Mesh.__init__(self,coords,elems,None,'tri3')
                 
                 
@@ -658,93 +659,6 @@ class TriSurface(Mesh):
         if compress:
             S.compress()
         return S
-
- 
-    # Test and clipping functions
-    
-
-    def test(self,nodes='all',dir=0,min=None,max=None):
-        """Flag elements having nodal coordinates between min and max.
-
-        This function is very convenient in clipping a TriSurface in a specified
-        direction. It returns a 1D integer array flagging (with a value 1 or
-        True) the elements having nodal coordinates in the required range.
-        Use where(result) to get a list of element numbers passing the test.
-        Or directly use clip() or cclip() to create the clipped TriSurface
-        
-        The test plane can be defined in two ways, depending on the value of dir.
-        If dir == 0, 1 or 2, it specifies a global axis and min and max are
-        the minimum and maximum values for the coordinates along that axis.
-        Default is the 0 (or x) direction.
-
-        Else, dir should be compaitble with a (3,) shaped array and specifies
-        the direction of the normal on the planes. In this case, min and max
-        are points and should also evaluate to (3,) shaped arrays.
-        
-        nodes specifies which nodes are taken into account in the comparisons.
-        It should be one of the following:
-        
-        - a single (integer) point number (< the number of points in the Formex)
-        - a list of point numbers
-        - one of the special strings: 'all', 'any', 'none'
-        
-        The default ('all') will flag all the elements that have all their
-        nodes between the planes x=min and x=max, i.e. the elements that
-        fall completely between these planes. One of the two clipping planes
-        may be left unspecified.
-        """
-        if min is None and max is None:
-            raise ValueError,"At least one of min or max have to be specified."
-
-        f = self.coords[self.elems]
-        if type(nodes)==str:
-            nod = range(f.shape[1])
-        else:
-            nod = nodes
-
-        if type(dir) == int:
-            if not min is None:
-                T1 = f[:,nod,dir] > min
-            if not max is None:
-                T2 = f[:,nod,dir] < max
-        else:
-            if not min is None:
-                T1 = f.distanceFromPlane(min,dir) > 0
-            if not max is None:
-                T2 = f.distanceFromPlane(max,dir) < 0
-
-        if min is None:
-            T = T2
-        elif max is None:
-            T = T1
-        else:
-            T = T1 * T2
-        if len(T.shape) == 1:
-            return T
-        if nodes == 'any':
-            T = T.any(1)
-        elif nodes == 'none':
-            T = (1-T.any(1)).astype(bool)
-        else:
-            T = T.all(1)
-        return T
-
-
-    def clip(self,t):
-        """Return a TriSurface with all the elements where t>0.
-
-        t should be a 1-D integer array with length equal to the number
-        of elements of the TriSurface.
-        The resulting TriSurface will contain all elements where t > 0.
-        """
-        return self.select(t>0)
-
-
-    def cclip(self,t):
-        """This is the complement of clip, returning a TriSurface where t<=0.
-        """
-        return self.select(t<=0)
-
 
     # Some functions for offsetting a surface
     
@@ -1337,6 +1251,9 @@ Total area: %s; Enclosed volume: %s
         self.__init__(self.toFormex().cutWithPlane(*args,**kargs))
 
     cutAtPlane = cutWithPlane  # DEPRECATED
+
+
+
 
     def connectedElements(self,target,elemlist=None):
         """Return the elements from list connected with target"""

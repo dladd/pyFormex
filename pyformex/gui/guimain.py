@@ -221,11 +221,11 @@ class GUI(QtGui.QMainWindow):
         # Add the toggle type buttons
         if self.modebar:
             toolbar.addTransparencyButton(self.modebar)
-        if self.modebar and GD.cfg.get('gui/lightbutton',False):
+        if self.modebar and GD.cfg['gui/lightbutton']:
             toolbar.addLightButton(self.modebar)
-        if self.modebar and GD.cfg.get('gui/normalsbutton',False):
+        if self.modebar and GD.cfg['gui/normalsbutton']:
             toolbar.addNormalsButton(self.modebar)
-        if self.modebar and GD.cfg.get('gui/shrinkbutton',False):
+        if self.modebar and GD.cfg['gui/shrinkbutton']:
             toolbar.addShrinkButton(self.modebar)
          
         if mmenu:
@@ -235,7 +235,7 @@ class GUI(QtGui.QMainWindow):
 
         ###############  VIEWS menu and toolbar ################
         self.viewsMenu = None
-        if GD.cfg.get('gui/viewmenu',True):
+        if GD.cfg['gui/viewmenu']:
             self.viewsMenu = menu.Menu('&Views',parent=self.menu,before='help')
         self.viewbar = self.activateToolBar('Views ToolBar','viewbar')
 
@@ -372,9 +372,10 @@ class GUI(QtGui.QMainWindow):
         but it can not be played as a pyFormex script.
         """
         if filename:
-            GD.cfg['curfile'] = filename
+            # We always set it to be saved in the prefs
+            GD.prefcfg['curfile'] = filename
         else:
-            filename = GD.cfg.get('curfile','')
+            filename = GD.cfg['curfile']
         if filename:
             self.canPlay = utils.isPyFormex(filename) or filename.endswith('.pye')
             self.curfile.setText(os.path.basename(filename))

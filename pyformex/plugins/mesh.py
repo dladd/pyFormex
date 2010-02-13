@@ -219,7 +219,6 @@ class Mesh(object):
         if coords is None:
             # Create an empty Mesh object
             return
-        
 
         if elems is None:
             if hasattr(coords,'toMesh'):
@@ -231,13 +230,15 @@ class Mesh(object):
 
         try:
             self.coords = Coords(coords)
+            if self.coords.ndim != 2:
+                raise ValueError,"\nExpected 2D coordinate array, got %s" % self.coords.ndim
             self.elems = Connectivity(elems)
-            if coords.ndim != 2 or coords.shape[-1] != 3 or elems.ndim != 2 or \
-                   elems.max() >= coords.shape[0] or elems.min() < 0:
-                raise ValueError,"Invalid mesh data"
-
+            if self.elems.size > 0 and (
+                self.elems.max() >= self.coords.shape[0] or
+                self.elems.min() < 0):
+                raise ValueError,"\nInvalid connectivity data: some node number(s) not in coords array"
         except:
-            raise ValueError,"Invalid initialization data"
+            raise
 
         self.setProp(prop)
 
@@ -691,6 +692,95 @@ Size: %s
         elems = concatenate(elems,axis=0)
         #print coords,elems,prop,eltype
         return Mesh(coords,elems,prop,eltype)
+
+ 
+    # Test and clipping functions
+    
+
+    def test(self,nodes='all',dir=0,min=None,max=None,atol=0.):
+        """Flag elements having nodal coordinates between min and max.
+
+        This function is very convenient in clipping a TriSurface in a specified
+        direction. It returns a 1D integer array flagging (with a value 1 or
+        True) the elements having nodal coordinates in the required range.
+        Use where(result) to get a list of element numbers passing the test.
+        Or directly use clip() or cclip() to create the clipped TriSurface
+        
+        The test plane can be defined in two ways, depending on the value of dir.
+        If dir == 0, 1 or 2, it specifies a global axis and min and max are
+        the minimum and maximum values for the coordinates along that axis.
+        Default is the 0 (or x) direction.
+
+        Else, dir should be compaitble with a (3,) shaped array and specifies
+        the direction of the normal on the planes. In this case, min and max
+        are points and should also evaluate to (3,) shaped arrays.
+        
+        nodes specifies which nodes are taken into account in the comparisons.
+        It should be one of the following:
+        
+        - a single (integer) point number (< the number of points in the Formex)
+        - a list of point numbers
+        - one of the special strings: 'all', 'any', 'none'
+        
+        The default ('all') will flag all the elements that have all their
+        nodes between the planes x=min and x=max, i.e. the elements that
+        fall completely between these planes. One of the two clipping planes
+        may be left unspecified.
+        """
+        if min is None and max is None:
+            raise ValueError,"At least one of min or max have to be specified."
+
+        f = self.coords[self.elems]
+        if type(nodes)==str:
+            nod = range(f.shape[1])
+        else:
+            nod = nodes
+
+        if type(dir) == int:
+            if not min is None:
+                T1 = f[:,nod,dir] > min
+            if not max is None:
+                T2 = f[:,nod,dir] < max
+        else:
+            if min is not None:
+                T1 = f.distanceFromPlane(min,dir) > -atol
+            if max is not None:
+                T2 = f.distanceFromPlane(max,dir) < atol
+
+        if min is None:
+            T = T2
+        elif max is None:
+            T = T1
+        else:
+            T = T1 * T2
+
+        if len(T.shape) == 1:
+            return T
+        
+        if nodes == 'any':
+            T = T.any(axis=1)
+        elif nodes == 'none':
+            T = (1-T.any(1)).astype(bool)
+        else:
+            T = T.all(axis=1)
+        return T
+
+
+    def clip(self,t):
+        """Return a TriSurface with all the elements where t>0.
+
+        t should be a 1-D integer array with length equal to the number
+        of elements of the TriSurface.
+        The resulting TriSurface will contain all elements where t > 0.
+        """
+        return self.select(t>0)
+
+
+    def cclip(self,t):
+        """This is the complement of clip, returning a TriSurface where t<=0.
+        """
+        return self.select(t<=0)
+
  
 ########### Functions #####################
 

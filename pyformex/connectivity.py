@@ -151,7 +151,7 @@ class Connectivity(ndarray):
         nodsel = asarray(nodsel)
         nplex = nodsel.shape[-1]
 
-        print "NPLEX = %s" % nplex
+        #print "NPLEX = %s" % nplex
         nodsel = nodsel.reshape(-1,nplex)
         return Connectivity(self[:,nodsel].reshape(-1,nplex))
 

@@ -163,6 +163,8 @@ class GeometryFile(object):
             exec(s[pos+1:].strip())
         else:
             version = None
+            raise RuntimeError,"This does not look like a pyFormex geometry file, or it is a very old version."
+            
         self._version_ = version
         self.sep = sep
         self.objname = utils.NameSequence('%s_000' % utils.projectName(self.fil.name))

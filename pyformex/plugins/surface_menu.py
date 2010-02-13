@@ -793,6 +793,41 @@ def cutAtPlane():
             selection.drawChanges()
 
 
+def clipAtPlane():
+    """Clip the selection with a plane."""
+    FL = selection.check()
+    if not FL:
+        return
+    
+    dsize = bbox(FL).dsize()
+    esize = 10 ** (niceLogSize(dsize)-5)
+
+    res = askItems([['Point',(0.0,0.0,0.0)],
+                    ['Normal',(1.0,0.0,0.0)],
+                    ['Keep side','positive', 'radio', ['positive','negative']],
+                    ['Nodes','all','radio',['all','any','none']],
+                    ['Tolerance',esize],
+                    ['Property',1],
+                    ],caption = 'Define the clipping plane')
+    if res:
+        P = res['Point']
+        N = res['Normal']
+        side = res['Keep side']
+        nodes = res['Nodes']
+        atol = res['Tolerance']
+        prop = res['Property']
+        selection.remember(True)
+        if side == 'positive':
+            func = TriSurface.clip
+        else:
+            func = TriSurface.cclip
+        FL = [ func(F,F.test(nodes=nodes,dir=N,min=P,atol=atol)) for F in FL]
+        FL = [ F.setProp(prop) for F in FL ]
+        export(dict([('%s/clip' % n,F) for n,F in zip(selection,FL)]))
+        selection.set(['%s/clip' % n for n in selection])
+        selection.draw()
+
+
 def cutSelectionByPlanes():
     """Cut the selection with one or more planes, which are already created."""
     S = selection.check(single=True)
@@ -854,7 +889,8 @@ def intersectWithPlane():
         name = res['Name']
         P = res['Point']
         N = res['Normal']
-        G = [F.toFormex().intersectionLinesWithPlane(P,N) for F in FL]
+#        G = [F.toFormex().intersectionLinesWithPlane(P,N) for F in FL]
+        G = [ F.intersectionWithPlane(P,N) for F in FL]
         draw(G,color='red',linewidth=3)
         export(dict([('%s/%s' % (n,name),g) for n,g in zip(selection,G)])) 
 
@@ -1300,6 +1336,7 @@ def create_menu():
           ]),
         ("&Clip/Cut",
          [("&Clip",clipSelection),
+          ("&Clip At Plane",clipAtPlane),
           ("&Cut At Plane",cutAtPlane),
           ("&Multiple Cut",cutSelectionByPlanes),
           ("&Slicer",sliceIt),
