@@ -35,6 +35,7 @@ from plugins.curve import *
 from odict import ODict
 from gui import widgets
 
+
 def BezierCurve(X,curl=None,closed=False):
     """Create a Bezier curve give 4 points
 
@@ -69,7 +70,7 @@ TA = None
 
 
 
-def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,drawtype):
+def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False):
     global TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -96,9 +97,15 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
         PL = S.approx(ndiv=ndiv)
         
     im = method.keys().index(ctype)
-    draw(PL, color=method_color[im])
+    if cutWP:
+        PC = PL.cutWithPlane([0.,0.42,0.],[0.,1.,0.])
+        draw(PC[0],color=red)
+        draw(PC[1],color=green)
+    else:
+        draw(PL, color=method_color[im])
     draw(PL.pointsOn(),color=black,marksize=4)
 
+    
 
 dataset = [
     Coords([[1., 0., 0.],[0., 1., 0.],[-1., 0., 0.],  [0., -1., 0.]]),

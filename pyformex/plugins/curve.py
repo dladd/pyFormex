@@ -38,6 +38,7 @@ but special cases may be created for handling plane curves.
 from numpy import *
 from formex import *
 from plugins.geomtools import triangleCircumCircle
+from plugins.mesh import Mesh
 
 
 ##############################################################################
@@ -221,11 +222,28 @@ class PolyLine(Curve):
         self.closed = closed
     
 
+    def nelems(self):
+        return self.nparts
+    
+
     def toFormex(self):
         """Return the polyline as a Formex."""
         x = self.coords
         F = connect([x,x],bias=[0,1],loop=self.closed)
         return F
+
+    
+    def toMesh(self):
+        """Convert the polyLine to a plex-2 Mesh.
+
+        This returned mesh is equivalent with the PolyLine, but does
+        not guarantee the sequential order.
+        """
+        e1 = arange(self.ncoords())
+        elems = column_stack([e1,roll(e1,-1)])
+        if not self.closed:
+            elems = elems[:-1]
+        return Mesh(self.coords,elems,eltype='line2')
 
 
     def sub_points(self,t,j):
@@ -338,6 +356,67 @@ class PolyLine(Curve):
             if i < len(self.coords):
                 res.append(PolyLine(self.coords[i:]))
         return res
+
+
+    def cutWithPlane(self,p,n,side=''):
+        """Return the parts of the polyline at one or both sides of a plane.
+
+        If side is '+' or '-', return a list of PolyLines with the parts at
+        the positive or negative side of the plane.
+
+        For any other value, returns a tuple of two lists of PolyLines,
+        the first one being the parts at the positive side.
+
+        p is a point specified by 3 coordinates.
+        n is the normal vector to a plane, specified by 3 components.
+        """
+        n = asarray(n)
+        p = asarray(p)
+
+        d = self.coords.distanceFromPlane(p,n)
+        t = d > 0.0
+        cut = t != roll(t,-1)
+        if not self.closed:
+            cut = cut[:-1]
+        w = where(cut)[0]
+
+        res = [[],[]]
+        i = 0
+        if t[0]:
+            sid = 0
+        else:
+            sid = 1
+        Q = Coords()
+
+        for j in w:
+            #print "%s -- %s" % (i,j)
+            P = Formex([self.coords[j:j+2]]).intersectionPointsWithPlane(p,n)
+            P = P.coords.reshape(1,3)
+            #print "%s -- %s cuts at %s" % (j,j+1,P)
+            x = Coords.concatenate([Q,self.coords[i:j+1],P])
+            #print "%s + %s + %s = %s" % (Q.shape[0],j-i,P.shape[0],x.shape[0])
+            res[sid].append(PolyLine(x))
+            sid = 1-sid
+            i = j+1
+            Q = P
+
+        x = Coords.concatenate([Q,self.coords[i:]])
+        #print "%s + %s = %s" % (Q.shape[0],j-i,x.shape[0])
+        res[sid].append(PolyLine(x))
+        if self.closed:
+            if len(res[sid]) > 1:
+                x = Coords.concatenate([res[sid][-1].coords,res[sid][0].coords])
+                res[sid] = res[sid][1:-1]
+                res[sid].append(PolyLine(x))
+            #print [len(r) for r in res]
+            if len(res[sid]) == 1 and len(res[1-sid]) == 0:
+                res[sid][0].closed = True
+
+        # DO not use side in '+-', because '' in '+-' returns True
+        if side in ['+','-']:
+            return res['+-'.index(side)]
+        else:
+            return res
 
 
 ##############################################################################

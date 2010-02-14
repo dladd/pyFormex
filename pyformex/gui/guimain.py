@@ -732,6 +732,9 @@ See Help->License or the file COPYING for details.
     # Scripts menu
     GD.GUI.scriptmenu = scriptMenu.createScriptMenu(GD.GUI.menu,before='help')
 
+    # Create databases
+    createDatabases()
+ 
     # PLugin menus
     import plugins
     ## filemenu = GD.GUI.menu.item('file')
@@ -756,7 +759,7 @@ See Help->License or the file COPYING for details.
 
     GD.GUI.setBusy(False)
     GD.GUI.update()
-    
+   
     if os.path.isdir(GD.cfg['workdir']):
         # Make the workdir the current dir
         os.chdir(GD.cfg['workdir'])
@@ -767,6 +770,12 @@ See Help->License or the file COPYING for details.
     GD.app.processEvents()
     return 0
 
+
+def createDatabases():
+    """Create unified database objects for all menus."""
+    from plugins import objects
+    GD.GUI.database = objects.Objects()
+    GD.GUI.drawable = objects.DrawableObjects()
 
 
 def runGUI():

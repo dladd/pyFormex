@@ -76,6 +76,7 @@ def draw_avg_normals(n):
     return draw(F,color='orange')
     
 selection = DrawableObjects(clas=TriSurface)
+
 ntoggles = len(selection.annotations)
 def toggleEdgeNumbers():
     selection.toggleAnnotation(0+ntoggles)
@@ -889,8 +890,8 @@ def intersectWithPlane():
         name = res['Name']
         P = res['Point']
         N = res['Normal']
-        for n,F in zip(selection,FL):
-            x,parts = F.intersectionWithPlane(P,N)
+        for n,S in zip(selection,FL):
+            x,parts = S.intersectionWithPlane(P,N)
             M = [ Mesh(x,p) for p in parts ]
             draw(M,color='red',linewidth=3)
             export({'%s/%s' % (n,name):M})

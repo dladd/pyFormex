@@ -508,7 +508,7 @@ class TriSurface(Mesh):
             if len(args) == 2:
                 # arguments are (coords,elems)
                 elems = a
-                print elems
+                #print elems
                 Mesh.__init__(self,coords,elems,None,'tri3')
                 
                 
@@ -1286,7 +1286,6 @@ Total area: %s; Enclosed volume: %s
         if S.nelems() == 0:
             return Coords(),[]
 
-        #draw(S,color=prop)
         eadj = S.edgeAdjacency()
         edg = S.getEdges()
         F = Formex(S.coords[edg])
@@ -1294,13 +1293,9 @@ Total area: %s; Enclosed volume: %s
         u = F.test(nodes='any',dir=n,max=p,atol=atol)
         w = t*u
         ind = where(w)[0]
-        #print "INDEX:",ind
         rev = reverseUniqueIndex(ind)
-        #print "REVINDEX:",rev
         F = F.clip(w)
-        #draw(F,color=green)
         P = F.intersectionPointsWithPlane(p,n)
-        #draw(P)
 
         fac = S.getFaces()
         cut = w[fac]
@@ -1310,19 +1305,11 @@ Total area: %s; Enclosed volume: %s
         if len(cut2) < len(cut):
             raise RuntimeError,"Some triangles were not cut in 2 points: %s" % ncut 
 
-        #print cut[cut2]
         cutedg = fac[cut[cut2]].reshape(-1,2)
-        #print cutedg
-
         seg = rev[cutedg]
-        #print seg
         parts = connectedLineElems(seg)
-        #print seg.shape
-        #print P.coords.shape
         x = P.coords.reshape(-1,3)
-        #print x.shape
         G = [ Formex(x[p]) for p in parts ]
-        #draw(G)
         
         return x,parts
 

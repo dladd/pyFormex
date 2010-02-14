@@ -70,8 +70,8 @@ def command():
 
 ##################### database tools ##########################
 
-database = objects.Objects()
-drawable = objects.DrawableObjects()
+database = GD.GUI.database
+drawable = GD.GUI.drawable
 
 
 def printall():
@@ -91,7 +91,7 @@ def printbbox():
     database.printbbox()
     
 
-def forget():
+def forget_():
     """Forget global variables."""
     database.ask()
     database.forget()
@@ -140,7 +140,7 @@ def edit():
                 GD.PF.update(res)
 
 
-def rename():
+def rename_():
     """Rename a global variable."""
     database.ask(mode='single')
     F = database.check(single=True)
@@ -181,7 +181,6 @@ def readGeometry():
         drawable.draw()
         zoomAll()
         print drawable.names
-
 
 def dos2unix():
     fn = askFilename(multi=True)
@@ -467,8 +466,8 @@ def create_menu():
         ('  &Draw',drawable.ask),
         ('  &Create',create),
         ('  &Change Value',edit),
-        ('  &Rename',rename),
-        ('  &Delete',forget),
+        ('  &Rename',rename_),
+        ('  &Delete',forget_),
         ('  &Delete All',deleteAll),
         ("---",None),
         ('&Execute pyFormex command',command),

@@ -88,7 +88,7 @@ def highlightDrawing(points,mode):
     pts is an array of points.
     """
     GD.canvas.removeHighlights()
-    print points[-1]
+    #print points[-1]
     PA = actors.GeomActor(Formex(points))
     PA.specular=0.0
     GD.canvas.addHighlight(PA)

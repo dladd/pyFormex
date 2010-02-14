@@ -31,6 +31,7 @@ This is a support module for other pyFormex plugins.
 import pyformex as GD
 
 from coords import bbox
+from script import named
 import geomfile
 import odict
 
@@ -174,7 +175,7 @@ class Objects(object):
     def odict(self):
         """Return the currently selected items as a dictionary.
 
-        Returns an ODict with the currently selected object in the order
+        Returns an ODict with the currently selected objects in the order
         of the selection.names.
         """
         return odict.ODict(zip(self.names,self.check(warn=False)))

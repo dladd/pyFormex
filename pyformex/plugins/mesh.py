@@ -482,6 +482,8 @@ Size: %s
           `elems` array, e.g. a list of element numbers.
         The coords are not compacted, unless compact=True is specify
         """
+        if len(self.elems) == 0:
+            return self
         prop = self.prop
         if prop:
             prop = prop[selected]
@@ -778,9 +780,20 @@ Size: %s
 
     def cclip(self,t):
         """This is the complement of clip, returning a TriSurface where t<=0.
+        
         """
         return self.select(t<=0)
 
+
+    def clipAtPlane(self,p,n,nodes='any',side='+'):
+        """Return the Mesh clipped at plane (p,n).
+
+        This is a convenience function returning the part of the Mesh
+        at one side of the plane (p,n)
+        """
+        if side == '-':
+            n = -n
+        return self.clip(self.test(nodes=nodes,dir=n,min=p))
  
 ########### Functions #####################
 
