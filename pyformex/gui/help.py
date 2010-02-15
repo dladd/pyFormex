@@ -163,9 +163,12 @@ def cookie():
 
 def links(link):
     help('http://'+link)
-    
+
+
+print GD.cfg['help/links']
+print GD.cfg['help/docs']
 try:
-    LinksMenuData = [ (k,links,{'data':v}) for k,v in GD.cfg['help/links'].items() ]
+    LinksMenuData = [ (k,links,{'data':v}) for k,v in GD.cfg['help/links'] ]
 except:
     LinksMenuData = []
 
