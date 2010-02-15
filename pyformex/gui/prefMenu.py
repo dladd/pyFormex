@@ -260,51 +260,59 @@ def setSplash():
     if fn:
         GD.prefcfg['gui/splash'] = fn
 
-w=None
+_dia=None
+_table=None
 
 def setScriptDirs():
-    global w
+    global _dia,_table
     from scriptMenu import reloadScriptMenu
     scr = GD.cfg['scriptdirs']
-    w = widgets.Dialog([widgets.Table(scr,chead=['Label','Path'])],
-                       title='Script paths',
-                       actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadScriptMenu),('OK',)])
-    w.show()
+    _table = widgets.Table(scr,chead=['Label','Path'])
+    _dia = widgets.Dialog(
+        widgets=[_table],
+        title='Script paths',
+        actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadScriptMenu),('Save',saveTable),('OK',)],
+        )
+    _dia.show()
 
 def insertRow():
     ww = widgets.FileSelection(GD.cfg['workdir'],'*',exist=True,dir=True)
     fn = ww.getFilename()
     if fn:
         scr = GD.cfg['scriptdirs']
-        w.table.model().insertRows()
+        _table.model().insertRows()
         scr[-1] = ['New',fn]
-    w.table.update()
+    _table.update()
     
 def editRow():
-    row = w.table.currentIndex().row()
+    row = _table.currentIndex().row()
     scr = GD.cfg['scriptdirs']
     item = scr[row]
     res = draw.askItems([('Label',item[0]),('Path',item[1])])
     if res:
         scr[row] = [res['Label'],res['Path']]
-    w.table.update()
+    _table.update()
 
 def removeRow():
     row = w.table.currentIndex().row()
-    w.table.model().removeRows(row,1)
-    w.table.update()
+    _table.model().removeRows(row,1)
+    _table.update()
 
 def moveUp():
-    row = w.table.currentIndex().row()
+    row = _table.currentIndex().row()
     scr = GD.cfg['scriptdirs']
     if row > 0:
         a,b = scr[row-1:row+1]
         scr[row-1] = b
         scr[row] = a
-    w.table.setFocus() # For some unkown reason, this seems needed to
+    _table.setFocus() # For some unkown reason, this seems needed to
                        # immediately update the widget
-    w.table.update()
-    
+    _table.update()
+    GD.app.processEvents()
+
+def saveTable():
+    print GD.cfg['scriptdirs']
+    GD.prefcfg['scriptdirs'] = GD.cfg['scriptdirs']
 
 ## def editConfig():
 ##     error('You can not edit the config file while pyFormex is running!') 

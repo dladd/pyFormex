@@ -539,8 +539,8 @@ def reloadScriptMenu():
     menu = GD.GUI.menu.item('scripts')
     if menu is not None:
         before = GD.GUI.menu.nextitem('scripts')
+        GD.GUI.menu.removeItem('scripts')
         newmenu = createScriptMenu(GD.GUI.menu,before)
-        menu.replace(newmenu)
  
     
 # End
