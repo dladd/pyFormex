@@ -234,6 +234,7 @@ def setRender():
         updateSettings(res)
 
 
+
 def setLight(light=0):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     tgt = 'render/light%s'%light
@@ -241,6 +242,7 @@ def setLight(light=0):
     localcopy.update(GD.cfg[tgt])
     if askConfigPreferences(keys,store=localcopy):
         GD.prefcfg[tgt] = localcopy
+        GD.canvas.resetLights()
         draw.smooth()
 
 def setLight0():
@@ -373,6 +375,7 @@ MenuData = [
         (_('&Rendering'),setRender),
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),
+#        (_('&Lights'),createLightDialog),
         (_('&Splash Image'),setSplash),
         (_('&Script Paths'),setScriptDirs),
         ('---',None),

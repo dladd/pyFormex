@@ -138,6 +138,7 @@ data_items = [
 #    ['FreeSpaced',[-0.1,0.0,0.1,0.25,1.5,2.75]],
     ['DrawAs',None,'hradio',{'choices':['Curve','Polyline']}],
     ['Clear',True],
+    ['CutWithPlane',False],
     ]
 globals().update([i[:2] for i in data_items])
 if GD.PF.has_key('_Curves_data_'):
@@ -178,7 +179,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs)
+        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane)
         setDrawOptions({'bbox':None})
 
 def showAll():
@@ -188,7 +189,11 @@ def timeOut():
     showAll()
     close()
     
-dialog = widgets.InputDialog(data_items,caption='Curve parameters',actions = [('Close',close),('Show All',showAll),('Show',show)],default='Show')
+dialog = widgets.InputDialog(
+    data_items,
+    caption='Curve parameters',
+    actions = [('Close',close),('Show All',showAll),('Show',show)],
+    default='Show')
 dialog.timeout = timeOut
 dialog.show()
        

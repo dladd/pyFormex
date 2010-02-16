@@ -1174,7 +1174,7 @@ class NewInputDialog(QtGui.QDialog):
     The input dialog can be modal or non-modal dialog.
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,autoprefix=False):
         """Create a dialog asking the user for the value of items.
 
         `items` is either a list of items, or a dict where each value is a
@@ -1267,6 +1267,8 @@ class NewInputDialog(QtGui.QDialog):
         self._pos = None
         self.store = store
         self.autoname = utils.NameSequence('input-')
+        self.prefix = ''
+        self.autoprefix = autoprefix
 
         # create the form with the input fields
         self.tab = None
@@ -1303,6 +1305,8 @@ class NewInputDialog(QtGui.QDialog):
         for item in items:
 
             if isinstance(item,dict):
+                if self.prefix:
+                    item['name'] = self.prefix + item['name']
                 line = self.inputAny(item)
                 form.addLayout(line)
                 self.fields.append(line)
@@ -1326,7 +1330,11 @@ class NewInputDialog(QtGui.QDialog):
             
         w = QtGui.QWidget()
         self.tabform = QtGui.QVBoxLayout()
+        if self.autoprefix:
+            self.prefix = name+'/'
         self.add_items(items,self.tabform)
+        if self.autoprefix:
+            self.prefix = ''
         self.tabform.addStretch()
         w.setLayout(self.tabform)
         self.tab.addTab(w,name)

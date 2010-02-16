@@ -282,6 +282,7 @@ class Light(object):
         GL.glDisable(self.light)
 
 
+
 ##################################################################
 #
 #  The Canvas
