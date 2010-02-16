@@ -98,6 +98,16 @@ def settings():
     def autoSettings(keylist):
         return [I(k,GD.cfg[k]) for k in keylist]
 
+    def changeScriptDirs():
+        setScriptDirs()
+        print "SCRIPTDIRS NOW " % GD.cfg['scriptdirs']
+        dia.updateData({'scriptdirs':GD.cfg['scriptdirs']})
+
+    def changeSplash():
+        setSplash()
+        dia.updateData({'gui/splash':GD.cfg['gui/splash']})
+
+
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
 
     plugin_items = [ I('_plugins/'+name,name in GD.cfg['gui/plugins'],text=label) for (label,name) in plugins.plugin_menus ]
@@ -119,19 +129,22 @@ def settings():
                 I('browser'),
                 I('help/docs'),
                 I('autorun',text='Startup script',tooltip='This script will automatically be run at pyFormex startup'),
-                I('scriptdirs',text='Script Paths',tooltip='pyFormex will look for scripts in these directories'),
+                I('scriptdirs',text='Script Paths',tooltip='pyFormex will look for scripts in these directories',buttons=[('Edit',changeScriptDirs)]),
+                ],
+             ),
+            ('GUI',[
+                ('Appearence',appearence),
+                ('Components',[
+                    I('gui/coordsbox',GD.cfg['gui/coordsbox']),
+                    I('gui/showfocus',GD.cfg['gui/showfocus']),
+                    I('gui/timeoutbutton',GD.cfg['gui/timeoutbutton']),
+                    I('gui/timeoutvalue',GD.cfg['gui/timeoutvalue']),
+                    ],
+                 ),
+                I('Splash image',GD.cfg['gui/splash'],buttons=[('Change',changeSplash)]),
                 ],
              ),
             ('Mouse',mouse_settings),
-            ## 'GUI':
-            ('Appearence',appearence),
-            ('Components',[
-                I('gui/coordsbox',GD.cfg['gui/coordsbox']),
-                I('gui/showfocus',GD.cfg['gui/showfocus']),
-                I('gui/timeoutbutton',GD.cfg['gui/timeoutbutton']),
-                I('gui/timeoutvalue',GD.cfg['gui/timeoutvalue']),
-                ],
-             ),
             ('Plugins',plugin_items),
             ],
         actions=[
@@ -139,7 +152,7 @@ def settings():
             ('Accept and Save',acceptAndSave),
             ('Accept',accept),
         ])
-    dia.resize(600,400)
+    dia.resize(800,400)
     dia.show()
 
 
@@ -234,7 +247,6 @@ def setRender():
         updateSettings(res)
 
 
-
 def setLight(light=0):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     tgt = 'render/light%s'%light
@@ -250,6 +262,7 @@ def setLight0():
 
 def setLight1():
     setLight(1)
+
  
 def setSplash():
     """Open an image file and set it as the splash screen."""
@@ -262,11 +275,56 @@ def setSplash():
     if fn:
         GD.prefcfg['gui/splash'] = fn
 
-_dia=None
-_table=None
 
 def setScriptDirs():
-    global _dia,_table
+    dia = createScriptDirsDialog()
+    dia.exec_()
+
+    
+def createScriptDirsDialog():
+    _dia=None
+    _table=None
+
+    def insertRow():
+        ww = widgets.FileSelection(GD.cfg['workdir'],'*',exist=True,dir=True)
+        fn = ww.getFilename()
+        if fn:
+            scr = GD.cfg['scriptdirs']
+            _table.model().insertRows()
+            scr[-1] = ['New',fn]
+        _table.update()
+
+    def editRow():
+        row = _table.currentIndex().row()
+        scr = GD.cfg['scriptdirs']
+        item = scr[row]
+        res = draw.askItems([('Label',item[0]),('Path',item[1])])
+        if res:
+            scr[row] = [res['Label'],res['Path']]
+        _table.update()
+
+    def removeRow():
+        row = _table.currentIndex().row()
+        _table.model().removeRows(row,1)
+        _table.update()
+
+    def moveUp():
+        row = _table.currentIndex().row()
+        scr = GD.cfg['scriptdirs']
+        if row > 0:
+            a,b = scr[row-1:row+1]
+            scr[row-1] = b
+            scr[row] = a
+        _table.setFocus() # For some unkown reason, this seems needed to
+                           # immediately update the widget
+        _table.update()
+        GD.app.processEvents()
+
+    def saveTable():
+        print GD.cfg['scriptdirs']
+        GD.prefcfg['scriptdirs'] = GD.cfg['scriptdirs']
+
+    #global _dia,_table
     from scriptMenu import reloadScriptMenu
     scr = GD.cfg['scriptdirs']
     _table = widgets.Table(scr,chead=['Label','Path'])
@@ -275,49 +333,8 @@ def setScriptDirs():
         title='Script paths',
         actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadScriptMenu),('Save',saveTable),('OK',)],
         )
-    _dia.show()
-
-def insertRow():
-    ww = widgets.FileSelection(GD.cfg['workdir'],'*',exist=True,dir=True)
-    fn = ww.getFilename()
-    if fn:
-        scr = GD.cfg['scriptdirs']
-        _table.model().insertRows()
-        scr[-1] = ['New',fn]
-    _table.update()
     
-def editRow():
-    row = _table.currentIndex().row()
-    scr = GD.cfg['scriptdirs']
-    item = scr[row]
-    res = draw.askItems([('Label',item[0]),('Path',item[1])])
-    if res:
-        scr[row] = [res['Label'],res['Path']]
-    _table.update()
-
-def removeRow():
-    row = w.table.currentIndex().row()
-    _table.model().removeRows(row,1)
-    _table.update()
-
-def moveUp():
-    row = _table.currentIndex().row()
-    scr = GD.cfg['scriptdirs']
-    if row > 0:
-        a,b = scr[row-1:row+1]
-        scr[row-1] = b
-        scr[row] = a
-    _table.setFocus() # For some unkown reason, this seems needed to
-                       # immediately update the widget
-    _table.update()
-    GD.app.processEvents()
-
-def saveTable():
-    print GD.cfg['scriptdirs']
-    GD.prefcfg['scriptdirs'] = GD.cfg['scriptdirs']
-
-## def editConfig():
-##     error('You can not edit the config file while pyFormex is running!') 
+    return _dia
         
 
 def setOptions():
@@ -347,7 +364,6 @@ def updateCanvas():
     GD.canvas.update()
 
 def updateStyle():
-    print "UPDATING"
     GD.GUI.setAppearence()
 
     
@@ -375,13 +391,10 @@ MenuData = [
         (_('&Rendering'),setRender),
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),
-#        (_('&Lights'),createLightDialog),
-        (_('&Splash Image'),setSplash),
-        (_('&Script Paths'),setScriptDirs),
         ('---',None),
-##         (_('&Edit Preferences'),editPreferences),
         (_('&Save Preferences Now'),savePreferences),
 #        (_('&Make current settings the defaults'),savePreferences),
+#        (_('&Reset current settings to the saved defaults'),savePreferences),
         ]),
     ]
 

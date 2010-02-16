@@ -578,7 +578,10 @@ class InputItem(QtGui.QHBoxLayout):
 
     def setValue(self,val):
         """Change the widget's value."""
+        #print "CHANGING THE VALUE OF FIELD %s" % self.name()
+        #print "TO: %s" % str(val)
         self.input.setText(str(val))
+        #print "TO: %s" % self.value()
 
 
 class InputInfo(InputItem):
@@ -1331,10 +1334,11 @@ class NewInputDialog(QtGui.QDialog):
         w = QtGui.QWidget()
         self.tabform = QtGui.QVBoxLayout()
         if self.autoprefix:
-            self.prefix = name+'/'
+            saveprefix = self.prefix
+            self.prefix += name+'/'
         self.add_items(items,self.tabform)
         if self.autoprefix:
-            self.prefix = ''
+            self.prefix = saveprefix
         self.tabform.addStretch()
         w.setLayout(self.tabform)
         self.tab.addTab(w,name)
@@ -1342,17 +1346,19 @@ class NewInputDialog(QtGui.QDialog):
 
 
     def add_group(self,name,items):
-            form.addWidget(tab)
-            for page in items.keys():
-                if isinstance(items[page],dict):
-                    for box in items[page].keys():
-                        fi = QtGui.QVBoxLayout()
-                        g = QtGui.QGroupBox()
-                        g.setTitle(box)
-                        g.setLayout(fi)
-                        f.addWidget(g)
-                        # add the items to the tab page
-                        self.add_input_items(items[page][box],fi)
+        w = QtGui.QGroupBox()
+        self.groupform = QtGui.QVBoxLayout()
+        if self.autoprefix:
+            saveprefix = self.prefix
+            self.prefix += name+'/'
+        self.add_items(items,self.groupform)
+        if self.autoprefix:
+            self.prefix = saveprefix
+        #self.groupform.addStretch()
+        w.setLayout(self.groupform)
+        w.setTitle(name)
+        self.tabform.addWidget(w)
+        self.groupform = None
 
                 
 
@@ -1424,7 +1430,6 @@ class NewInputDialog(QtGui.QDialog):
         results without having to raise the accepted() signal (which
         would close the dialog).
         """
-        #GD.debug("ACCEPTING DATA WITH RESULT %s"%result)
         self.results = odict.ODict()
         self.results.update([ (fld.name(),fld.value()) for fld in self.fields ])
         ## if self.report_pos:
@@ -1498,6 +1503,7 @@ def inputAny(name,value,itemtype=str,**options):
     - min,max: limits for range types
     - validator: customized validation function
     """
+    #print name,value,itemtype,options
     if itemtype is None:
         line = InputItem(name,**options)
         
@@ -1543,6 +1549,7 @@ def inputAny(name,value,itemtype=str,**options):
     else: # Anything else is handled as a string
         #itemtype = str:
         line = InputString(name,value,**options)
+        
     return line
 
                 
