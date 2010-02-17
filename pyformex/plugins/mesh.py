@@ -218,6 +218,7 @@ class Mesh(object):
 
         if coords is None:
             # Create an empty Mesh object
+            #print "EMPTY MESH"
             return
 
         if elems is None:
@@ -246,6 +247,8 @@ class Mesh(object):
             self.eltype = defaultEltype(self.nplex())
         else:
             self.eltype = eltype
+
+        #print "NORMAL MESH: %s coords, %s elems" % (self.ncoords(),self.nelems())
 
 
     def setProp(self,prop=None):
@@ -444,6 +447,9 @@ Size: %s
 """ % (self.ncoords(),self.nelems(),self.nplex(),bb[1],bb[0],bb[1]-bb[0])
 
 
+    def __str__(self):
+        return self.report() + "Coords:\n" + self.coords.__str__() +  "Elems:\n" + self.elems.__str__()
+
     def fuse(self,**kargs):
         """Fuse the nodes of a Meshes.
 
@@ -459,12 +465,8 @@ Size: %s
 
     def compact(self):
         """Remove unconnected nodes and renumber the mesh."""
-        #print "Compacting mesh with %s nodes and %s elems" % (self.ncoords(),self.nelems())
-        #print self.elems
         nodes = unique1d(self.elems)
-        #print nodes
         if nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
-            #print "Leaving %s nodes after compaction" % nodes.shape[0]
             coords = self.coords[nodes]
             if nodes[-1] >= nodes.size:
                 elems = reverseUniqueIndex(nodes)[self.elems]

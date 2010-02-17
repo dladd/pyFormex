@@ -46,6 +46,9 @@ hasExternal('tetgen')
 hasExternal('gts')
 
 
+
+
+
 def areaNormals(x):
     """Compute the area and normal vectors of a collection of triangles.
 
@@ -682,7 +685,6 @@ class TriSurface(Mesh):
         
         All the nodes of the surface are translated over a specified distance
         along their normal vector.
-        This creates a new congruent surface.
         """
         NPA = self.pointNormals()
         coordsNew = self.coords + NPA*distance
@@ -1266,7 +1268,23 @@ Total area: %s; Enclosed volume: %s
         return elemlist[p==prop]
 
     
-    def intersectionWithPlane(self,p,n,atol=0.):
+    def intersectionPointsWithPlane(self,p,n,atol=0.):
+        """Return the intersection points with plane (p,n).
+
+        Returns a Coords object with the intersection points of the edges
+        of the surface with the plane (p,n).
+        p is a point specified by 3 coordinates.
+        n is the normal vector to a plane, specified by 3 components.
+        atol is a tolerance factor defining whether an edge is intersected by the plane.
+
+        The return value is a list of plex-2 meshes with the connected
+        components of the intersection. All meshes share the same Coords
+        object with all the points in the section.
+        """
+        return intersectionWithPlane(self,p,n,atol=0.,returnPoints=True)
+    
+    
+    def intersectionWithPlaneOLD(self,p,n,atol=0.,returnPoints=False):
         """Return the intersection lines with plane (p,n).
 
         Returns a plex-2 mesh with the line segments obtained by cutting
@@ -1275,43 +1293,216 @@ Total area: %s; Enclosed volume: %s
         n is the normal vector to a plane, specified by 3 components.
         atol is a tolerance factor defining whether an edge is intersected by the plane.
 
-        The return value is a Coords object and a list of plex-2 connectivities
-        representing simply connected intersection lines.
+        The return value is a list of plex-2 meshes with the connected
+        components of the intersection. All meshes share the same Coords
+        object with all the points in the section.
         """
         n = asarray(n)
         p = asarray(p)
-        t = self.test(nodes='any',dir=n,min=p,atol=atol)
-        u = self.test(nodes='any',dir=n,max=p,atol=atol)
-        S = self.clip(t*u)
+        ## t = self.test(nodes='any',dir=n,min=p,atol=atol)
+        ## u = self.test(nodes='any',dir=n,max=p,atol=atol)
+        ## S = self.clip(t*u)
+        t = self.test(nodes='all',dir=n,min=p,atol=atol)
+        u = self.test(nodes='all',dir=n,max=p,atol=atol)
+        S = self.cclip(t+u)
         if S.nelems() == 0:
-            return Coords(),[]
+            if returnPoints:
+                return Coords()
+            else:
+                return []
 
-        eadj = S.edgeAdjacency()
+        from gui.draw import draw,zoomall
+        #draw(S,color='yellow')
+
         edg = S.getEdges()
-        F = Formex(S.coords[edg])
-        t = F.test(nodes='any',dir=n,min=p,atol=atol)
-        u = F.test(nodes='any',dir=n,max=p,atol=atol)
-        w = t*u
+        M = Mesh(S.coords,edg)
+        t = M.test(nodes='all',dir=n,min=p,atol=atol)
+        u = M.test(nodes='all',dir=n,max=p,atol=atol)
+        w = (t+u) == 0
         ind = where(w)[0]
         rev = reverseUniqueIndex(ind)
-        F = F.clip(w)
-        P = F.intersectionPointsWithPlane(p,n)
+        M = M.clip(w)
+        draw(M,color='cyan')
+        x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
+        draw(x,color='magenta',bbox='last',view=None)
+        
+        if returnPoints:
+            return x
 
         fac = S.getFaces()
         cut = w[fac]
         ncut = cut.sum(axis=1)
-        cut2 = where(ncut==2)[0]
+        icut = [ where(ncut==i)[0] for i in range(4) ]
+        GD.debug("Number of cutting triangles: %s %s" % (len(w),icut))
+        cut0,cut1,cut2,cut3 = icut
+        print cut0,cut1,cut2,cut3
 
-        if len(cut2) < len(cut):
-            raise RuntimeError,"Some triangles were not cut in 2 points: %s" % ncut 
-
+        print cut3.size
+        if cut3.size > 0:
+            # Try first two edges:
+            cutedg = fac[cut[cut3]]
+            seg = rev[cutedg]
+            print "THESE ARE THE 3-cutters"
+            print x[seg]
+        
         cutedg = fac[cut[cut2]].reshape(-1,2)
         seg = rev[cutedg]
         parts = connectedLineElems(seg)
-        x = P.coords.reshape(-1,3)
-        G = [ Formex(x[p]) for p in parts ]
+        print parts
+        print [p.shape for p in parts]
+        return [ Mesh(x,p) for p in parts ]
+    
+
+    def slice(self,dir=0,nplanes=20,ignoreErrors=False):
+        """Intersect a surface with a sequence of planes.
+
+        A sequence of nplanes planes with normal dir is constructed
+        at equal distances spread over the bbox of the surface.
+
+        The return value is a list of intersectionWithPlanes() return
+        values, i.e. a list of list of meshes.
+        """
+        xmin,xmax = self.bbox()
+        if type(dir) is int:
+            dir = unitVector(dir)
+
+        x = arange(nplanes+1).reshape(-1,1)/float(nplanes)
+        P = xmin * (1.-x) + xmax * x
+
+        return [ self.intersectionWithPlane(p,dir,ignoreErrors=ignoreErrors) for i,p in enumerate(P) ]
+
+
+
+    def intersectionWithPlane(self,p,n,atol=0.,ignoreErrors=False):
+        """Return the intersection lines with plane (p,n).
+
+        Returns a plex-2 mesh with the line segments obtained by cutting
+        all triangles of the surface with the plane (p,n)
+        p is a point specified by 3 coordinates.
+        n is the normal vector to a plane, specified by 3 components.
+        atol is a tolerance factor defining whether an edge is intersected by the plane.
+
+        The return value is a list of plex-2 meshes with the connected
+        components of the intersection. All meshes share the same Coords
+        object with all the points in the section.
+        """
+        # First, reduce the surface to the part interseting with the plane
+        n = asarray(n)
+        p = asarray(p)
+        t = self.test(nodes='all',dir=n,min=p,atol=atol)
+        u = self.test(nodes='all',dir=n,max=p,atol=atol)
+        S = self.cclip(t+u)
+
+        # If there is no intersection, we're done
+        if S.nelems() == 0:
+            return Mesh(Coords(),[])
+
+        # Now, take the mesh with the edges, and intersect them
+        edg = S.getEdges()
+        fac = S.getFaces()
+        M = Mesh(S.coords,edg)
+        t = M.test(nodes='all',dir=n,min=p,atol=atol)
+        u = M.test(nodes='all',dir=n,max=p,atol=atol)
+        v = t*u
+        w = ((t+u) == 0) * (v == 0)
+        ##print "w = %s" % w
+        ind = where(w)[0]
+        #print "ind %s" % ind
+        rev = reverseUniqueIndex(ind)
+        #print "rev %s" % rev
+        M = M.clip(w)
+        x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
+
+        # edges returning NaN as intersection are inside the cutting plane
+        inside = isnan(x).any(axis=1)
+        cutins = edg[ind[inside]]
+        if len(cutins) > 0:
+            # Keep this edges in the return value
+            M1 = Mesh(M.coords,cutins).compact()
+            #print M1.coords
+            #print M1.elems
+            #print "Keeping %s edges that are in the plane: %s" % (M1.nelems(),where(inside)[0])
+
+            # Mark these edges as non-cutting, to avoid other triangles
+            # to pick them up again
+            w[ind[inside]] = False
+
+        else:
+            M1 = None
+
+        # Split the triangles based on the number of cutting edges
+        # 0 : should not occur: filtered at beginning
+        # 1 : currently ignored: does not generate a line segment
+        # 2 : the normal case
+        # 3 : either the triangle is completely in the plane (handled above)
+        #     or two cutting points will coincide with the same vertex.
+        #     The latter is currently unhandled: an error is raised.
+        cut = w[fac]
+        ncut = cut.sum(axis=1)
+        #print "ncut = %s" % ncut
+        icut = [ where(ncut==i)[0] for i in range(4) ]
+        cut0,cut1,cut2,cut3 = icut
+        #print "NCUTS",cut0,cut1,cut2,cut3
+
+        if cut3.size > 0:
+            # This case should already be handled
+            #print cut3.size
+            cutedg = fac[cut[cut3]]
+            #print cutedg
+            seg = rev[cutedg]
+            #print seg
+            if not ignoreErrors:
+                raise ValueError,"Some triangles cut at all 3 edges in a situation that can not be handled yet by the current implementation. Ask the developers for help."
+
+        if cut2.size > 0:
+            # Create line elements between each pair of intersection points
+            cutedg = fac[cut2][cut[cut2]].reshape(-1,2)
+            seg = rev[cutedg]
+            M2 = Mesh(x,seg).compact()
+        else:
+            M2 = None
+
+        if M1 is not None and M2 is not None:
+            M = Mesh.concatenate([M1,M2])
+            #print "M1",M1
+            #print "M2",M2
+            #print "M",M
+
+        elif M1 is not None:
+            M = M1
+
+        elif M2 is not None:
+            M = M2
+        else:
+            return Mesh(Coords(),[])
+  
         
-        return x,parts
+        #print "Remouving doubles"
+        magic = M.elems.max()+1
+        mag = enmagic2(M.elems,magic)
+        #print mag
+        mag = unique1d(mag)
+        #print mag
+        elems = demagic2(mag,magic)
+        M = Mesh(M.coords,elems)
+        #print M
+
+        #print "Removing degenerate"
+        notdegen = M.elems[:,0] != M.elems[:,1]
+        M = Mesh(M.coords,M.elems[notdegen])
+        #print M
+            
+        #print "Split in connected loops"
+    
+        parts = connectedLineElems(M.elems)
+        #print parts
+        #print [p.shape for p in parts]
+        prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
+        #print prop
+        elems = concatenate(parts,axis=0)
+
+        return Mesh(M.coords,elems,prop=prop)
+
 
 
 ##################  Smooth a surface #############################
@@ -1658,8 +1849,8 @@ def find_triangles(elems,triangles):
     """
     magic = elems.max()+1
 
-    mag1 = magic_numbers(elems,magic)
-    mag2 = magic_numbers(triangles,magic)
+    mag1 = enmagic3(elems,magic)
+    mag2 = enmagic3(triangles,magic)
 
     nelems = elems.shape[0]
     srt = mag1.argsort()
@@ -1682,8 +1873,8 @@ def remove_triangles(elems,remove):
     GD.message("Removing %s out of %s triangles" % (remove.shape[0],elems.shape[0]))
     magic = elems.max()+1
 
-    mag1 = magic_numbers(elems,magic)
-    mag2 = magic_numbers(remove,magic)
+    mag1 = enmagic3(elems,magic)
+    mag2 = enmagic3(remove,magic)
 
     mag1.sort()
     mag2.sort()
@@ -1694,7 +1885,7 @@ def remove_triangles(elems,remove):
     mag1[pos] = -1
     mag1 = mag1[mag1 >= 0]
 
-    elems = demagic(mag1,magic)
+    elems = demagic3(mag1,magic)
     GD.message("Actually removed %s triangles, leaving %s" % (nelems-mag1.shape[0],elems.shape[0]))
 
     return elems

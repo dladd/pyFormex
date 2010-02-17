@@ -39,25 +39,21 @@ lights(True)
 S = TriSurface.read(getcfg('datadir')+'/horse.off')
 SA = draw(S)
 
-xmin,xmax = S.bbox()
-print "BBOX %s,%s" % (xmin,xmax)
-
-N = [1.,0.,0.]
-
-res = askItems([('Number of sections',20)]) 
+res = askItems([
+    ('direction',[1.,0.,0.]),
+    ('number of sections',20),
+    ('color','red'),
+    ]) 
 if not res:
     exit()
-    
-n = res['Number of sections']
-x = arange(n+1).reshape(-1,1)/float(n)
-P = xmin * (1.-x) + xmax * x
 
-for i,p in enumerate(P):
-    print "PLANE %s,%s" % (p,N)
-    x,parts = S.intersectionWithPlane(p,N)
-    print parts
-    m = [ Mesh(x,p,prop=i) for p in parts ]
-    draw(m,color=red,view=None,bbox='last')
+d = res['direction']
+n = res['number of sections']
+c = res['color']
+
+slices = S.slice(dir=d,nplanes=n)
+print [ len(s) for s in slices ]
+draw(slices,color=c,view=None,bbox='last')
 
 undraw(SA)
 zoomAll()

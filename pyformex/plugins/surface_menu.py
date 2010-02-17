@@ -891,34 +891,33 @@ def intersectWithPlane():
         P = res['Point']
         N = res['Normal']
         for n,S in zip(selection,FL):
-            x,parts = S.intersectionWithPlane(P,N)
-            M = [ Mesh(x,p) for p in parts ]
-            draw(M,color='red',linewidth=3)
+            #clear()
+            #GD.options.debug = True
+            M = S.intersectionWithPlane(P,N,ignoreErrors=True)
+            #GD.options.debug = False
+            #e = concatenate([m.elems for m in M])
+            #print e.shape
+            #M = Mesh(M[0].coords,e)
+            #draw([m.coords for m in M],color='blue')
+            #print M
+            draw(M,color='red')
             export({'%s/%s' % (n,name):M})
-            draw(M)
-
+            #zoomall()
+            
 
 def sliceIt():
     """Slice the surface to a sequence of cross sections."""
     S = selection.check(single=True)
-    res = askItems([['Direction',0],
-                    ['# slices',10],
+    res = askItems([['Direction',[1.,0.,0.]],
+                    ['# slices',20],
                    ],caption = 'Define the slicing planes')
     if res:
         axis = res['Direction']
         nslices = res['# slices']
-        bb = S.bbox()
-        xmin,xmax = bb[:,axis]
-        dx =  (xmax-xmin) / nslices
-        x = arange(nslices+1) * dx
-        N = unitVector(axis)
-        #print(N)
-        P = [ bb[0]+N*s for s in x ]
-        G = [S.toFormex().intersectionLinesWithPlane(Pi,N) for Pi in P]
-        #[ G.setProp(i) for i,G in enumerate(G) ]
-        G = Formex.concatenate(G)
-        draw(G,color='red',linewidth=3)
-        export({'%s/slices%s' % (selection[0],axis):G}) 
+        slices = S.slice(dir=axis,nplanes=nslices,ignoreErrors=True)
+        print [ s.nelems() for s in slices ]
+        draw([ s for s in slices if s.nelems() > 0],color='red',bbox='last',view=None)
+        export({'%s/slices' % selection[0]:slices}) 
 
 
 ##################  Smooth the selected surface #############################
@@ -1342,8 +1341,8 @@ def create_menu():
           ("&Clip At Plane",clipAtPlane),
           ("&Cut At Plane",cutAtPlane),
           ("&Multiple Cut",cutSelectionByPlanes),
-          ("&Slicer",sliceIt),
           ("&Intersection With Plane",intersectWithPlane),
+          ("&Slicer",sliceIt),
            ]),
         ("&Smoothing",
          [("&Low-pass filter",smoothLowPass),

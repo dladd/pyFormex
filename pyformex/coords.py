@@ -48,7 +48,7 @@ def bbox(objects):
     The result is the eclosing bbox of all the objects in the list.
     Objects returning a None bbox are ignored.
     """
-    bboxes = [f.bbox() for f in objects]
+    bboxes = [f.bbox() for f in objects if hasattr(f,'bbox') and not isnan(f.bbox()).any()]
     bboxes = [bb for bb in bboxes if bb is not None]
     if len(bboxes) == 0:
         o = origin()

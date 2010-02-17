@@ -33,6 +33,7 @@ techniques = ['colors']
 from elements import Hex8
 from formex import *
 
+# This could be obtained from a Mesh conversion
 def cube_tri(color=None):
     """Create a cube with triangles."""
     back = Formex(mpattern('12-34'))

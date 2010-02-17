@@ -34,19 +34,49 @@ adjacency of elements can easily be detected from common node numbers.
 
 import pyformex as GD
 from arraytools import *
+from utils import deprecation
+
+@deprecation("\n Use 'enmagic3' instead")
+def magic_numbers(*args,**kargs):
+    return enmagic3(*args,**kargs)
+
+@deprecation("\n Use 'demagic3' instead")
+def demagic(*args,**kargs):
+    return enmagic3(*args,**kargs)
 
 
-def magic_numbers(elems,magic):
+def enmagic2(edges,magic):
+    if GD.options.fastencode:
+        edg = edges.reshape((-1,2))
+        codes = edg.view(int64)
+    else:
+        edg = edges.astype(int64).reshape((-1,2))
+        codes = edg[:,0] * magic + edg[:,1]
+    return codes
+
+        
+def demagic2(mag,magic):
+    if GD.options.fastencode:
+        edges = mag.view(int32).reshape(-1,2)
+    else:
+        edges = column_stack([mag/magic,mag%magic])
+    return edges
+
+
+def enmagic3(elems,magic):
     elems = elems.astype(int64)
     elems.sort(axis=1)
     mag = ( elems[:,0] * magic + elems[:,1] ) * magic + elems[:,2]
     return mag
 
 
-def demagic(mag,magic):
+def demagic3(mag,magic):
     first2,third = mag / magic, mag % magic
     first,second = first2 / magic, first2 % magic
     return column_stack([first,second,third]).astype(int32)
+
+
+
 
 ############################################################################
 ##
