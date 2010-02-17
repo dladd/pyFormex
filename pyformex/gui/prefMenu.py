@@ -34,7 +34,6 @@ import toolbar
 import draw
 import imageViewer
 
-        
 
 def updateSettings(res,save=None):
     """Update the current settings (store) with the values in res.
@@ -118,6 +117,11 @@ def settings():
         I('gui/font',GD.app.font().toString(),'font'),
         ]
 
+    cur = GD.cfg['gui/splash']
+    if not cur:
+        cur = GD.cfg.get('icondir','.')
+    w = widgets.ImageViewerDialog(path=cur)
+
     dia = widgets.NewInputDialog(
         caption='pyFormex Settings',
         store=GD.cfg,
@@ -142,6 +146,7 @@ def settings():
                     ],
                  ),
                 I('Splash image',GD.cfg['gui/splash'],buttons=[('Change',changeSplash)]),
+                w,
                 ],
              ),
             ('Mouse',mouse_settings),

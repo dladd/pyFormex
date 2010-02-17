@@ -1314,6 +1314,9 @@ class NewInputDialog(QtGui.QDialog):
                 form.addLayout(line)
                 self.fields.append(line)
 
+            elif isinstance(item,QtGui.QWidget):
+                form.addWidget(item)
+
             elif type(item) is tuple:
 
                 if form == self.form:
