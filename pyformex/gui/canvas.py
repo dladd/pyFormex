@@ -911,27 +911,41 @@ class Canvas(object):
             self.camera.dolly(f)
 
 
-    def project(self,x,y,z):
-        "Map the object coordinates (x,y,z) to window coordinates."""
+    def lockProjection(self):
+        "Store the current transformation matrices for subsequent (un)project."""
         self.makeCurrent()
         self.camera.loadProjection()
         model = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
         proj = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
         view = GL.glGetIntegerv(GL.GL_VIEWPORT)
+        self.projection_matrices = [model,proj,view]
+
+
+    def project(self,x,y,z,locked=False):
+        "Map the object coordinates (x,y,z) to window coordinates."""
+        if locked:
+            model,proj,view = self.projection_matrices
+        else:
+            self.makeCurrent()
+            self.camera.loadProjection()
+            model = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
+            proj = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
+            view = GL.glGetIntegerv(GL.GL_VIEWPORT)
         winx,winy,winz = GLU.gluProject(x,y,z,model,proj,view)
-        #GD.debug("Object coordinates: ",x,y,z," map to ",winx,winy,winz)
         return winx,winy,winz
 
 
-    def unProject(self,x,y,z):
+    def unProject(self,x,y,z,locked=False):
         "Map the window coordinates (x,y,z) to object coordinates."""
-        self.makeCurrent()
-        self.camera.loadProjection()
-        model = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
-        proj = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
-        view = GL.glGetIntegerv(GL.GL_VIEWPORT)
+        if locked:
+            model,proj,view = self.projection_matrices
+        else:
+            self.makeCurrent()
+            self.camera.loadProjection()
+            model = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
+            proj = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
+            view = GL.glGetIntegerv(GL.GL_VIEWPORT)
         objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
-        #GD.debug("Window coordinates: ",x,y,z," map to ",objx,objy,objz)
         return (objx,objy,objz)
 
 

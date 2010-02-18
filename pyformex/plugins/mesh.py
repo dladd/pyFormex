@@ -487,7 +487,7 @@ Size: %s
         if len(self.elems) == 0:
             return self
         prop = self.prop
-        if prop:
+        if prop is not None:
             prop = prop[selected]
         elems = self.elems[selected]
         return Mesh(self.coords,elems,prop,self.eltype)
@@ -582,8 +582,42 @@ Size: %s
 
         return mesh
 
+    
+    def withProp(self,val):
+        """Return a Mesh which holds only the elements with property val.
 
-    def randomSplit(self,n):
+        val is either a single integer, or a list/array of integers.
+        The return value is a Mesh holding all the elements that
+        have the property val, resp. one of the values in val.
+        The returned Mesh inherits the matching properties.
+        
+        If the Mesh has no properties, a copy with all elements is returned.
+        """
+        if self.prop is None:
+            return Mesh(self.coords,self.elems,eltype=self.eltype)
+        elif type(val) == int:
+            return Mesh(self.coords,self.elems[self.prop==val],val,self.eltype)
+        else:
+            t = zeros(self.prop.shape,dtype=bool)
+            for v in asarray(val).flat:
+                t += (self.prop == v)
+            return Mesh(self.coords,self.elems[t],self.prop[t],self.eltype)
+            
+
+    def splitProp(self):
+        """Partition aMesh according to its prop values.
+
+        Returns a dict with the prop values as keys and the corresponding
+        partitions as values. Each value is a Mesh instance.
+        It the Mesh has no props, an empty dict is returned.
+        """
+        if self.prop is None:
+            return {}
+        else:
+            return dict([(p,self.withProp(p)) for p in self.propSet()])
+
+
+    def splitRandom(self,n):
         """Split a mesh in n parts, distributing the elements randomly."""
         sel = random.randint(0,n,(self.nelems()))
         return [ self.select(sel==i) for i in range(n) if i in sel ]
@@ -591,10 +625,10 @@ Size: %s
 
     def convertRandom(self,choices):
         """Convert choosing randomly between choices"""
-        ml = self.randomSplit(len(choices))
+        ml = self.splitRandom(len(choices))
         ml = [ m.convert(c) for m,c in zip(ml,choices) ]
         prop = self.prop
-        if prop:
+        if prop is not None:
             prop = concatenate([m.prop for m in ml])
         elems = concatenate([m.elems for m in ml],axis=0)
         eltype = set([m.eltype for m in ml])
