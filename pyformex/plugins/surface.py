@@ -47,8 +47,6 @@ hasExternal('gts')
 
 
 
-
-
 def areaNormals(x):
     """Compute the area and normal vectors of a collection of triangles.
 
@@ -1268,20 +1266,20 @@ Total area: %s; Enclosed volume: %s
         return elemlist[p==prop]
 
     
-    def intersectionPointsWithPlane(self,p,n,atol=0.):
-        """Return the intersection points with plane (p,n).
+    ## def intersectionPointsWithPlane(self,p,n,atol=0.):
+    ##     """Return the intersection points with plane (p,n).
 
-        Returns a Coords object with the intersection points of the edges
-        of the surface with the plane (p,n).
-        p is a point specified by 3 coordinates.
-        n is the normal vector to a plane, specified by 3 components.
-        atol is a tolerance factor defining whether an edge is intersected by the plane.
+    ##     Returns a Coords object with the intersection points of the edges
+    ##     of the surface with the plane (p,n).
+    ##     p is a point specified by 3 coordinates.
+    ##     n is the normal vector to a plane, specified by 3 components.
+    ##     atol is a tolerance factor defining whether an edge is intersected by the plane.
 
-        The return value is a list of plex-2 meshes with the connected
-        components of the intersection. All meshes share the same Coords
-        object with all the points in the section.
-        """
-        return intersectionWithPlane(self,p,n,atol=0.,returnPoints=True)
+    ##     The return value is a list of plex-2 meshes with the connected
+    ##     components of the intersection. All meshes share the same Coords
+    ##     object with all the points in the section.
+    ##     """
+    ##     return intersectionWithPlane(self,p,n,atol=0.,returnPoints=True)
     
     
     def intersectionWithPlaneOLD(self,p,n,atol=0.,returnPoints=False):
@@ -1403,29 +1401,26 @@ Total area: %s; Enclosed volume: %s
         M = Mesh(S.coords,edg)
         t = M.test(nodes='all',dir=n,min=p,atol=atol)
         u = M.test(nodes='all',dir=n,max=p,atol=atol)
-        v = t*u
-        w = ((t+u) == 0) * (v == 0)
-        ##print "w = %s" % w
+        w = ((t+u) == 0) * (t*u == 0)
         ind = where(w)[0]
-        #print "ind %s" % ind
         rev = reverseUniqueIndex(ind)
-        #print "rev %s" % rev
         M = M.clip(w)
         x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
 
         # edges returning NaN as intersection are inside the cutting plane
-        inside = isnan(x).any(axis=1)
-        cutins = edg[ind[inside]]
-        if len(cutins) > 0:
-            # Keep this edges in the return value
-            M1 = Mesh(M.coords,cutins).compact()
-            #print M1.coords
-            #print M1.elems
-            #print "Keeping %s edges that are in the plane: %s" % (M1.nelems(),where(inside)[0])
-
+        inside = ind[isnan(x).any(axis=1)]
+        if len(ind) > 0:
             # Mark these edges as non-cutting, to avoid other triangles
             # to pick them up again
-            w[ind[inside]] = False
+            w[inside] = False
+
+            # Keep these edges in the return value
+            # BUT ONLY if they occur only once: NEEDS TO BE IMPLEMENTED
+            edgcon = S.edgeConnections()[inside]
+            alledg = fac[edgcon].reshape(-1,6)
+            keep = array([ setdiff1d(two,inside).size  for two in alledg ])
+            cutins = edg[inside[keep>0]]
+            M1 = Mesh(M.coords,cutins).compact()
 
         else:
             M1 = None
