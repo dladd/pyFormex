@@ -85,7 +85,7 @@ def addButton(toolbar,text,icon,func,repeat=False,toggle=False,checked=False,ico
 
     b.setToolTip(text)
 
-    return a
+    return b
 
 
 def removeButton(toolbar,button):
