@@ -586,7 +586,11 @@ class GeomActor(Actor):
                 drawPoints(self.coords,color,alpha,self.marksize)
                 
         elif nplex == 2:
+            #save = GD.canvas.hasLight()
+            #GD.canvas.glLight(False)
             drawLines(self.coords,self.elems,color)
+            #GD.canvas.glLight(save)
+
         
         elif self.eltype == 'curve' and nplex == 3:
             GD.debug("DRAWING WITH drawQuadraticCurves")
@@ -652,13 +656,13 @@ class GeomActor(Actor):
         return GeomActor(x,e,eltype=self.eltype)
 
 
-class FormexActor(GeomActor,Formex):
-    def __init__(self,F,*args,**kargs):
-        GeomActor.__init__(self,F.coords,None,F.eltype,*args,**kargs)
-        #Formex.__init__(self,F)
-        if hasattr(F,'specular'):
-            #print "COPYIN SPECULAR"
-            self.specular = F.specular
+## class FormexActor(GeomActor,Formex):
+##     def __init__(self,F,*args,**kargs):
+##         GeomActor.__init__(self,F.coords,None,F.eltype,*args,**kargs)
+##         #Formex.__init__(self,F)
+##         if hasattr(F,'specular'):
+##             #print "COPYIN SPECULAR"
+##             self.specular = F.specular
         
 
 

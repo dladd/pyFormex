@@ -905,7 +905,7 @@ def intersectWithPlane():
             #zoomall()
             
 
-def sliceIt():
+def slicer():
     """Slice the surface to a sequence of cross sections."""
     S = selection.check(single=True)
     res = askItems([['Direction',[1.,0.,0.]],
@@ -914,10 +914,36 @@ def sliceIt():
     if res:
         axis = res['Direction']
         nslices = res['# slices']
+        GD.GUI.setBusy(True)
         slices = S.slice(dir=axis,nplanes=nslices,ignoreErrors=True)
+        GD.GUI.setBusy(False)
         print [ s.nelems() for s in slices ]
         draw([ s for s in slices if s.nelems() > 0],color='red',bbox='last',view=None)
         export({'%s/slices' % selection[0]:slices}) 
+
+
+def spliner():
+    """Slice the surface to a sequence of cross sections."""
+    import olist
+    from plugins.curve import BezierSpline
+    S = selection.check(single=True)
+    res = askItems([['Direction',[1.,0.,0.]],
+                    ['# slices',20],
+                   ],caption = 'Define the slicing planes')
+    if res:
+        axis = res['Direction']
+        nslices = res['# slices']
+        GD.GUI.setBusy(True)
+        slices = S.slice(dir=axis,nplanes=nslices,ignoreErrors=True)
+        GD.GUI.setBusy(False)
+        print [ s.nelems() for s in slices ]
+        split = [ s.splitProp().values() for s in slices if s.nelems() > 0 ]
+        split = olist.flatten(split)
+        export({'%s/split' % selection[0]:split}) 
+        draw(split,color='blue',bbox='last',view=None)
+        splines = [ BezierSpline(s.coords[s.elems[:,0]],closed=True) for s in split ]
+        draw(splines,color='red',bbox='last',view=None)
+        export({'%s/splines' % selection[0]:splines}) 
 
 
 ##################  Smooth the selected surface #############################
@@ -1342,7 +1368,8 @@ def create_menu():
           ("&Cut At Plane",cutAtPlane),
           ("&Multiple Cut",cutSelectionByPlanes),
           ("&Intersection With Plane",intersectWithPlane),
-          ("&Slicer",sliceIt),
+          ("&Slicer",slicer),
+          ("&Spliner",spliner),
            ]),
         ("&Smoothing",
          [("&Low-pass filter",smoothLowPass),

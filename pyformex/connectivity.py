@@ -96,12 +96,15 @@ class Connectivity(ndarray):
     at creation time, but a method is provided to check the uniqueness.
     """
 
-    def __new__(self,data,dtyp=None,copy=False):
+    def __new__(self,data=[],dtyp=None,copy=False,nplex=0):
         """Create a new Connectivity object.
 
         data should be integer type and evaluate to an 2-dim array.
         If copy==True, the data are copied.
         If no dtype is given, that of data are used, or int32 by default.
+        If nplex is give, the data should have matching plexitude, or an
+        error will be raised. Empty data match any plexitude, and the
+        resulting object will have the specified plexitude..
         """
         # Turn the data into an array, and copy if requested
         ar = array(data, dtype=dtyp, copy=copy, ndmin=2)
@@ -117,8 +120,11 @@ class Connectivity(ndarray):
             self.magic = ar.max() + 1
             if self.magic > 2**31 or ar.min() < 0:
                 raise ValueError,"Negative or too large positive value in data"
+            if nplex > 0 and ar.shape[1] != nplex:
+                raise ValueError,"Expected data of plexitude %s" % nplex
         else:
             self.magic = 0
+            ar = ar.reshape(0,nplex)
             
         # Transform 'subarr' from an ndarray to our new subclass.
         ar = ar.view(self)

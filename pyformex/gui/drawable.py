@@ -108,8 +108,6 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
     independent from the drawing mode.
     """
     GD.debug("drawPolygons")
-    #print normals
-    #print mode
     if e is None:
         nelems = x.shape[0]
     else:
@@ -162,7 +160,7 @@ def drawPolyLines(x,e,color):
 def drawLines(x,e,color):
     """Draw straight line segments."""
     GD.debug("drawLines")
-    drawPolygons(x,e,mode=GD.canvas.rendermode,color=color,alpha=1.0)
+    drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0)
 
 
 def color_multiplex(color,nparts):

@@ -500,31 +500,28 @@ class TriSurface(Mesh):
             if len(coords.shape) != 2:
                 raise ValueError,"Expected a 2-dim coordinates array"
             
-            a = asarray(args[1])
-            if a.dtype.kind != 'i' or a.ndim != 2 or a.shape[1]+len(args) != 5:
-                raise "Got invalid second argument"
-            if a.size > 0 and a.max() >= coords.shape[0]:
-                raise ValueError,"Some vertex number is too high"
-            
             if len(args) == 2:
                 # arguments are (coords,elems)
-                elems = a
-                #print elems
+                elems = Connectivity(args[1],nplex=3)
                 Mesh.__init__(self,coords,elems,None,'tri3')
                 
-                
+               
             elif len(args) == 3:
                 # arguments are (coords,edges,faces)
-                edges = a
-                a = asarray(args[2])
-                if not (a.dtype.kind == 'i' and a.ndim == 2 and a.shape[1] == 3):
-                    raise "Got invalid third argument"
-                if a.max() >= edges.shape[0]:
+                edges = Connectivity(args[1],nplex=2)
+                
+                if edges.size > 0 and edges.max() >= coords.shape[0]:
+                    raise ValueError,"Some vertex number is too high"
+            
+                faces = Connectivity(args[2],nplex=3)
+                
+                if faces.max() >= edges.shape[0]:
                     raise ValueError,"Some edge number is too high"
-                faces = a
+
                 elems = Connectivity(compactElems(edges,faces))
                 Mesh.__init__(self,coords,elems,None,'tri3')
-                # since we have the data available, keep them
+                
+                # since we have the extra data available, keep them
                 self.edges = edges
                 self.faces = faces
 
@@ -596,22 +593,6 @@ class TriSurface(Mesh):
         # The object should now always be consistent
         raise RuntimeError,"The implementation of TriSurface has changed!\n You should adopt your code to the new implementation, and no longer use 'refresh'"
 
- 
-    def compress(self):
-        """Remove all nodes which are not used.
-
-        Normally, the surface definition can hold nodes that are not
-        used in the edge/facet tables. They do however influence the
-        bounding box of the surface.
-        This method will remove all the unconnected nodes.
-        """
-        newnodes = unique1d(self.elems)
-        reverse = -ones(self.ncoords(),dtype=int32)
-        reverse[newnodes] = arange(newnodes.size,dtype=int32)
-        coords = self.coords[newnodes]
-        elems = reverse[self.elems]
-        self.__init__(coords,elems,prop=self.prop)
-
 
     def append(self,S):
         """Merge another surface with self.
@@ -645,7 +626,7 @@ class TriSurface(Mesh):
         return S
 
     
-    def select(self,idx,compress=True):
+    def select(self,idx,compact=True):
         """Return a TriSurface which holds only elements with numbers in ids.
 
         idx can be a single element number or a list of numbers or
@@ -657,8 +638,8 @@ class TriSurface(Mesh):
         S = TriSurface(self.coords, self.elems[idx])
         if self.prop is not None:
             S.setProp(self.prop[idx])
-        if compress:
-            S.compress()
+        if compact:
+            S.compact()
         return S
 
     # Some functions for offsetting a surface
@@ -709,12 +690,7 @@ class TriSurface(Mesh):
         if ftype == 'off':
             return TriSurface(*read_off(fn))
         elif ftype == 'gts':
-            #print("READING GTS")
-            ret = read_gts(fn)
-            #print(ret)
-            S = TriSurface(*ret)
-            #print(S.shape())
-            return S
+            return TriSurface(*read_gts(fn))
         elif ftype == 'stl':
             return TriSurface(*read_stl(fn))
         elif ftype == 'neu':
@@ -858,12 +834,7 @@ class TriSurface(Mesh):
             rfaces = self.edgeConnections()
             # this gives all adjacent elements including element itself
             adj = rfaces[self.getFaces()].reshape(nfaces,-1)
-            #print(adj.shape)
             fnr = arange(nfaces).reshape(nfaces,-1)
-            #print(fnr.shape)
-            # remove the element itself
-            #print(adj != fnr)
-            #print((adj != fnr).shape)
             self.eadj = adj[adj != fnr].reshape((nfaces,-1))
         return self.eadj
 
@@ -1265,110 +1236,6 @@ Total area: %s; Enclosed volume: %s
         prop = p[elemlist == target]
         return elemlist[p==prop]
 
-    
-    ## def intersectionPointsWithPlane(self,p,n,atol=0.):
-    ##     """Return the intersection points with plane (p,n).
-
-    ##     Returns a Coords object with the intersection points of the edges
-    ##     of the surface with the plane (p,n).
-    ##     p is a point specified by 3 coordinates.
-    ##     n is the normal vector to a plane, specified by 3 components.
-    ##     atol is a tolerance factor defining whether an edge is intersected by the plane.
-
-    ##     The return value is a list of plex-2 meshes with the connected
-    ##     components of the intersection. All meshes share the same Coords
-    ##     object with all the points in the section.
-    ##     """
-    ##     return intersectionWithPlane(self,p,n,atol=0.,returnPoints=True)
-    
-    
-    def intersectionWithPlaneOLD(self,p,n,atol=0.,returnPoints=False):
-        """Return the intersection lines with plane (p,n).
-
-        Returns a plex-2 mesh with the line segments obtained by cutting
-        all triangles of the surface with the plane (p,n)
-        p is a point specified by 3 coordinates.
-        n is the normal vector to a plane, specified by 3 components.
-        atol is a tolerance factor defining whether an edge is intersected by the plane.
-
-        The return value is a list of plex-2 meshes with the connected
-        components of the intersection. All meshes share the same Coords
-        object with all the points in the section.
-        """
-        n = asarray(n)
-        p = asarray(p)
-        ## t = self.test(nodes='any',dir=n,min=p,atol=atol)
-        ## u = self.test(nodes='any',dir=n,max=p,atol=atol)
-        ## S = self.clip(t*u)
-        t = self.test(nodes='all',dir=n,min=p,atol=atol)
-        u = self.test(nodes='all',dir=n,max=p,atol=atol)
-        S = self.cclip(t+u)
-        if S.nelems() == 0:
-            if returnPoints:
-                return Coords()
-            else:
-                return []
-
-        from gui.draw import draw,zoomall
-        #draw(S,color='yellow')
-
-        edg = S.getEdges()
-        M = Mesh(S.coords,edg)
-        t = M.test(nodes='all',dir=n,min=p,atol=atol)
-        u = M.test(nodes='all',dir=n,max=p,atol=atol)
-        w = (t+u) == 0
-        ind = where(w)[0]
-        rev = reverseUniqueIndex(ind)
-        M = M.clip(w)
-        draw(M,color='cyan')
-        x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
-        draw(x,color='magenta',bbox='last',view=None)
-        
-        if returnPoints:
-            return x
-
-        fac = S.getFaces()
-        cut = w[fac]
-        ncut = cut.sum(axis=1)
-        icut = [ where(ncut==i)[0] for i in range(4) ]
-        GD.debug("Number of cutting triangles: %s %s" % (len(w),icut))
-        cut0,cut1,cut2,cut3 = icut
-        print cut0,cut1,cut2,cut3
-
-        print cut3.size
-        if cut3.size > 0:
-            # Try first two edges:
-            cutedg = fac[cut[cut3]]
-            seg = rev[cutedg]
-            print "THESE ARE THE 3-cutters"
-            print x[seg]
-        
-        cutedg = fac[cut[cut2]].reshape(-1,2)
-        seg = rev[cutedg]
-        parts = connectedLineElems(seg)
-        print parts
-        print [p.shape for p in parts]
-        return [ Mesh(x,p) for p in parts ]
-    
-
-    def slice(self,dir=0,nplanes=20,ignoreErrors=False):
-        """Intersect a surface with a sequence of planes.
-
-        A sequence of nplanes planes with normal dir is constructed
-        at equal distances spread over the bbox of the surface.
-
-        The return value is a list of intersectionWithPlanes() return
-        values, i.e. a list of list of meshes.
-        """
-        xmin,xmax = self.bbox()
-        if type(dir) is int:
-            dir = unitVector(dir)
-
-        x = arange(nplanes+1).reshape(-1,1)/float(nplanes)
-        P = xmin * (1.-x) + xmax * x
-
-        return [ self.intersectionWithPlane(p,dir,ignoreErrors=ignoreErrors) for i,p in enumerate(P) ]
-
 
 
     def intersectionWithPlane(self,p,n,atol=0.,ignoreErrors=False):
@@ -1378,11 +1245,14 @@ Total area: %s; Enclosed volume: %s
         all triangles of the surface with the plane (p,n)
         p is a point specified by 3 coordinates.
         n is the normal vector to a plane, specified by 3 components.
-        atol is a tolerance factor defining whether an edge is intersected by the plane.
+        atol is a tolerance factor defining whether an edge is intersected
+        by the plane.
 
-        The return value is a list of plex-2 meshes with the connected
-        components of the intersection. All meshes share the same Coords
-        object with all the points in the section.
+        The return value is a plex-2 Mesh where the line segments defining
+        the intersection are sorted to form continuous lines. The Mesh has
+        property numbers such that all segments forming a single continuous
+        part have the same property value.
+        The splitProp() method can be used to get a list of Meshes.
         """
         # First, reduce the surface to the part interseting with the plane
         n = asarray(n)
@@ -1407,9 +1277,11 @@ Total area: %s; Enclosed volume: %s
         M = M.clip(w)
         x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
 
+        Mparts = []
+        
         # edges returning NaN as intersection are inside the cutting plane
         inside = ind[isnan(x).any(axis=1)]
-        if len(ind) > 0:
+        if len(inside) > 0:
             # Mark these edges as non-cutting, to avoid other triangles
             # to pick them up again
             w[inside] = False
@@ -1420,10 +1292,7 @@ Total area: %s; Enclosed volume: %s
             alledg = fac[edgcon].reshape(-1,6)
             keep = array([ setdiff1d(two,inside).size  for two in alledg ])
             cutins = edg[inside[keep>0]]
-            M1 = Mesh(M.coords,cutins).compact()
-
-        else:
-            M1 = None
+            Mparts.append(Mesh(M.coords,cutins).compact())
 
         # Split the triangles based on the number of cutting edges
         # 0 : should not occur: filtered at beginning
@@ -1434,70 +1303,79 @@ Total area: %s; Enclosed volume: %s
         #     The latter is currently unhandled: an error is raised.
         cut = w[fac]
         ncut = cut.sum(axis=1)
-        #print "ncut = %s" % ncut
         icut = [ where(ncut==i)[0] for i in range(4) ]
         cut0,cut1,cut2,cut3 = icut
-        #print "NCUTS",cut0,cut1,cut2,cut3
-
+        GD.debug("Number of triangles with 0..3 cutting edges: %s" % icut)
+        
         if cut3.size > 0:
-            # This case should already be handled
-            #print cut3.size
-            cutedg = fac[cut[cut3]]
-            #print cutedg
+            # The triangles with three vertices in the cutting plane
+            # have already been handled above, so these must be cases
+            # with one edge and the opposite vertex cutting the plane.
+            # Our strategy is to take the 3 cutting points (two of whom
+            # are coincident) and to fuse them. The fusing information
+            # then tells us which are the noncoincident vertices that
+            # define the intersection line segment.
+            cutedg = fac[cut3][cut[cut3]].reshape(-1,3)
             seg = rev[cutedg]
-            #print seg
-            if not ignoreErrors:
-                raise ValueError,"Some triangles cut at all 3 edges in a situation that can not be handled yet by the current implementation. Ask the developers for help."
+            xd,xe = x[seg].fuse()
+            # Keep the first vertex and the 2nd or 3rd, depending on which
+            # is different from the first
+            seg = column_stack([xe[:,0], where(xe[:,1] == xe[:,0],xe[:,2],xe[:,1])])
+            Mparts.append(Mesh(xd,seg))
+
 
         if cut2.size > 0:
             # Create line elements between each pair of intersection points
             cutedg = fac[cut2][cut[cut2]].reshape(-1,2)
             seg = rev[cutedg]
-            M2 = Mesh(x,seg).compact()
-        else:
-            M2 = None
+            Mparts.append(Mesh(x,seg).compact())
 
-        if M1 is not None and M2 is not None:
-            M = Mesh.concatenate([M1,M2])
-            #print "M1",M1
-            #print "M2",M2
-            #print "M",M
-
-        elif M1 is not None:
-            M = M1
-
-        elif M2 is not None:
-            M = M2
-        else:
+        # Done with getting the segments
+        if len(Mparts) ==  0:
+            # No intersection: return empty mesh
             return Mesh(Coords(),[])
-  
-        
-        #print "Remouving doubles"
+
+        if len(Mparts) == 1:
+            M = Mparts[0]
+        else:
+            M = Mesh.concatenate(Mparts)
+
+        # Remove doubles
         magic = M.elems.max()+1
         mag = enmagic2(M.elems,magic)
-        #print mag
         mag = unique1d(mag)
-        #print mag
         elems = demagic2(mag,magic)
         M = Mesh(M.coords,elems)
-        #print M
 
-        #print "Removing degenerate"
+        # Remove degenerate
         notdegen = M.elems[:,0] != M.elems[:,1]
         M = Mesh(M.coords,M.elems[notdegen])
-        #print M
             
-        #print "Split in connected loops"
-    
+        # Split in connected loops
         parts = connectedLineElems(M.elems)
-        #print parts
-        #print [p.shape for p in parts]
         prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
-        #print prop
         elems = concatenate(parts,axis=0)
 
         return Mesh(M.coords,elems,prop=prop)
 
+
+    def slice(self,dir=0,nplanes=20,ignoreErrors=False):
+        """Intersect a surface with a sequence of planes.
+
+        A sequence of nplanes planes with normal dir is constructed
+        at equal distances spread over the bbox of the surface.
+
+        The return value is a list of intersectionWithPlanes() return
+        values, i.e. a list of list of meshes.
+        """
+        xmin,xmax = self.bbox()
+        if type(dir) is int:
+            dir = unitVector(dir)
+
+        x = arange(nplanes+1).reshape(-1,1)/float(nplanes)
+        P = xmin * (1.-x) + xmax * x
+
+        return [ self.intersectionWithPlane(p,dir,ignoreErrors=ignoreErrors) for i,p in enumerate(P) ]
 
 
 ##################  Smooth a surface #############################

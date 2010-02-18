@@ -464,7 +464,10 @@ Size: %s
     
 
     def compact(self):
-        """Remove unconnected nodes and renumber the mesh."""
+        """Remove unconnected nodes and renumber the mesh.
+
+        Beware! This function changes the object in place.
+        """
         nodes = unique1d(self.elems)
         if nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
             coords = self.coords[nodes]
@@ -472,9 +475,9 @@ Size: %s
                 elems = reverseUniqueIndex(nodes)[self.elems]
             else:
                 elems = self.elems
-            return Mesh(coords,elems,prop=self.prop,eltype=self.eltype)
-        else:
-            return self
+            self.__init__(coords,elems,prop=self.prop,eltype=self.eltype)
+
+        return self
 
 
     def select(self,selected,compact=False):
