@@ -1340,16 +1340,8 @@ Total area: %s; Enclosed volume: %s
         else:
             M = Mesh.concatenate(Mparts)
 
-        # Remove doubles
-        magic = M.elems.max()+1
-        mag = enmagic2(M.elems,magic)
-        mag = unique1d(mag)
-        elems = demagic2(mag,magic)
-        M = Mesh(M.coords,elems)
-
-        # Remove degenerate
-        notdegen = M.elems[:,0] != M.elems[:,1]
-        M = Mesh(M.coords,M.elems[notdegen])
+        # Remove degenerate and doubles
+        M = Mesh(M.coords,M.elems.removeDegenerate().removeDoubles())
             
         # Split in connected loops
         parts = connectedLineElems(M.elems)
@@ -1368,14 +1360,10 @@ Total area: %s; Enclosed volume: %s
         The return value is a list of intersectionWithPlanes() return
         values, i.e. a list of list of meshes.
         """
-        xmin,xmax = self.bbox()
-        if type(dir) is int:
-            dir = unitVector(dir)
-
-        x = arange(nplanes+1).reshape(-1,1)/float(nplanes)
-        P = xmin * (1.-x) + xmax * x
-
-        return [ self.intersectionWithPlane(p,dir,ignoreErrors=ignoreErrors) for i,p in enumerate(P) ]
+        o = self.center()
+        xmin,xmax = self.coords.directionalExtremes(dir,o)
+        P = Coords.interpolate(xmin,xmax,nplanes)
+        return [ self.intersectionWithPlane(p,dir,ignoreErrors=ignoreErrors) for p in P ]
 
 
 ##################  Smooth a surface #############################

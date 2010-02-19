@@ -107,8 +107,14 @@ class Connectivity(ndarray):
         resulting object will have the specified plexitude..
         """
         # Turn the data into an array, and copy if requested
-        ar = array(data, dtype=dtyp, copy=copy, ndmin=2)
-        if len(ar.shape) != 2:
+        ar = array(data, dtype=dtyp, copy=copy)
+        if ar.ndim < 2:
+            if nplex > 0:
+                ar = ar.reshape(-1,nplex)
+            else:
+                ar = ar.reshape(-1,1)
+                
+        elif ar.ndim > 2:
             raise ValueError,"Expected 2-dim data"
 
         # Make sure dtype is an int type
@@ -155,15 +161,60 @@ class Connectivity(ndarray):
     def checkUnique(self):
         """Flag the rows which have all unique entries.
 
-        Returns an array with the value True or Falsefor each row.
+        Returns an array with the value True or False for each row.
         """
-        return array([ unique1d(el).size == self.shape[1] for el in self ])
+        if self.nplex() < 2:
+            return arange(self.nelems())
+        elif self.nplex() == 2:
+            return self[:,0] != self[:,1]
+        else:
+            return array([ unique1d(el).size == self.shape[1] for el in self ])
     
 
     def check(self):
         """Returns True if all rows have unique entries."""
         return self.checkUnique(self).all()
+
+
+    def removeDegenerate(self):
+        """Return a Connectivity table with degenerate elements removed
+
+        Degenerate elements are rows with negative values or rows with
+        the same number occurrin more than once.
+        """
+        return self[self.checkUnique()]
+
     
+    def removeDoubles(self):
+        """Remove doubles from a Connectivity list.
+
+        Doubles are elements that consist of the same set of nodes,
+        in any particular order.
+
+        Currently, this is only implemented for plexitude up to 3.
+        """
+        if self.nplex() == 0:
+            return self
+        
+        elif self.nplex() == 1:
+            return Connectivity(unique1d(self),nplex=1)
+
+        elif self.nplex() in [2,3]:
+            self.sort(axis=-1)
+            if self.nplex() == 2:
+                mag = enmagic2(self,self.magic)
+                mag = unique1d(mag)
+                elems = demagic2(mag,self.magic)
+            else:
+                mag = enmagic3(self,self.magic)
+                mag = unique1d(mag)
+                elems = demagic3(mag,self.magic)
+                
+            return Connectivity(elems)
+
+        else:
+            raise ValueError,"removeDoubles() is only inmplemented for plexitude <= 3"
+
             
     def reverseIndex(self):
         """Return a reverse index for the connectivity table.

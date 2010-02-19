@@ -266,7 +266,7 @@ class Coords(ndarray):
     #  Distance
 
     def distanceFromPlane(self,p,n):
-        """Return the distance of points f from the plane (p,n).
+        """Return the distance of all points from the plane (p,n).
 
         p is a point specified by 3 coordinates.
         n is the normal vector to a plane, specified by 3 components.
@@ -284,7 +284,7 @@ class Coords(ndarray):
 
 
     def distanceFromLine(self,p,n):
-        """Return the distance of points f from the line (p,n).
+        """Return the distance of all points from the line (p,n).
 
         p is a point on the line specified by 3 coordinates.
         n is a vector specifying the direction of the line through p.
@@ -301,7 +301,7 @@ class Coords(ndarray):
 
 
     def distanceFromPoint(self,p):
-        """Return the distance of points f from the point p.
+        """Return the distance of all points from the point p.
 
         p is a single point specified by 3 coordinates.
 
@@ -312,6 +312,67 @@ class Coords(ndarray):
         p = asarray(p).reshape((3))
         d = self-p
         return sqrt(sum(d*d,-1))
+
+
+    def directionalSize(self,n,p=None):
+        """Return the extreme distances from the plane p,n.
+
+        The direction n can be specified by a 3 component vector or by
+        a single integer 0..2 designing one of the coordinate axes.
+
+        p is any point in space. If not specified, it is taken as the
+        center() of the Coords.
+
+        The return value is a tuple of two float values specifying the
+        extreme distances from the plane p,n.
+        """
+        if type(n) is int:
+            n = unitVector(n)
+        n = normalize(Coords(n))
+
+        if p is None:
+            p = self.center()
+        p = Coords(p)
+        
+        d = self.distanceFromPlane(p,n)
+        return d.min(),d.max()
+
+
+    def directionalWidth(self,n):
+        """Return the width of a Coords in the given direction.
+
+        The direction can be specified by a 3 component vector or by
+        a single integer 0..2 designing one of the coordinate axes.
+
+        The return value is the thickness of the object in the direction n.
+        """
+        xmin,xmax = self.directionalSize(n)
+        return xmax-xmin
+
+
+    def directionalExtremes(self,n,p=None):
+        """Return extremal planes in the direction n.
+
+        The direction n can be specified by a 3 component vector or by
+        a single integer 0..2 designing one of the coordinate axes.
+
+        p is any point in space. If not specified, it is taken as the
+        center() of the Coords.
+
+        The return value is a list of two points on the line (p,n) thus
+        that the planes with normal through these points define the
+        extremal planes of the Coords.
+        """
+        if type(n) is int:
+            n = unitVector(n)
+        n = normalize(Coords(n))
+
+        if p is None:
+            p = self.center()
+        p = Coords(p)
+        
+        d = self.distanceFromPlane(p,n)
+        return [ p+dist*n for dist in [d.min(),d.max() ] ]
 
 
     # Test position

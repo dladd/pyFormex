@@ -882,32 +882,26 @@ def cutSelectionByPlanes():
 def intersectWithPlane():
     """Intersect the selection with a plane."""
     FL = selection.check()
-    res = askItems([['Name','__auto__'],
+    if not FL:
+        return
+    res = askItems([['Suffix','intersect'],
                     ['Point',(0.0,0.0,0.0)],
                     ['Normal',(1.0,0.0,0.0)],
                     ],caption = 'Define the cutting plane')
     if res:
-        name = res['Name']
+        suffix = res['Suffix']
         P = res['Point']
         N = res['Normal']
-        for n,S in zip(selection,FL):
-            #clear()
-            #GD.options.debug = True
-            M = S.intersectionWithPlane(P,N,ignoreErrors=True)
-            #GD.options.debug = False
-            #e = concatenate([m.elems for m in M])
-            #print e.shape
-            #M = Mesh(M[0].coords,e)
-            #draw([m.coords for m in M],color='blue')
-            #print M
-            draw(M,color='red')
-            export({'%s/%s' % (n,name):M})
-            #zoomall()
+        M = [ S.intersectionWithPlane(P,N,ignoreErrors=True) for S in FL ]
+        draw(M,color='red')
+        export(dict([('%s/%s' % (n,suffix), m) for (n,m) in zip(selection,M)]))
             
 
 def slicer():
     """Slice the surface to a sequence of cross sections."""
     S = selection.check(single=True)
+    if not S:
+        return
     res = askItems([['Direction',[1.,0.,0.]],
                     ['# slices',20],
                    ],caption = 'Define the slicing planes')
@@ -927,6 +921,8 @@ def spliner():
     import olist
     from plugins.curve import BezierSpline
     S = selection.check(single=True)
+    if not S:
+        return
     res = askItems([['Direction',[1.,0.,0.]],
                     ['# slices',20],
                    ],caption = 'Define the slicing planes')

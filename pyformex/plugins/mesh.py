@@ -469,7 +469,10 @@ Size: %s
         Beware! This function changes the object in place.
         """
         nodes = unique1d(self.elems)
-        if nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
+        if nodes.size == 0:
+            self.__init__([],[])
+        
+        elif nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
             coords = self.coords[nodes]
             if nodes[-1] >= nodes.size:
                 elems = reverseUniqueIndex(nodes)[self.elems]
