@@ -63,7 +63,7 @@ def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
 
 # Should probably be made a Coords method
 # But that would make the coords module dependent on a plugin
-def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,enddir=None):
+def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,enddir=None,scalex=None,scaley=None):
     """ Sweep a Coords object along a path, returning a series of copies.
 
     origin and normal define the local path position and direction on the mesh.
@@ -75,7 +75,12 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,end
     Missing end directions can explicitely be set by enddir, and are by default
     taken along the last segment.
     If the curve is closed, endpoints are treated as any intermediate point,
-    and the user should normally not specify enddir. 
+    and the user should normally not specify enddir.
+    
+    At each point of the curve, the original Coords object can be scaled in x
+    and y direction by specifying scalex and scaley. The number of values
+    specified in scalex and scaly should be equal to the number of points on
+    the curve.
 
     The return value is a sequence of the transformed Coords objects.
     """
@@ -106,10 +111,22 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,end
 
     if type(upvector) is int:
         upvector = Coords(unitVector(upvector))
-
+        
+    if scalex is not None:
+        if len(scalex) != points.shape[0]:
+            raise ValueError,"The number of scale values in x-direction differs from the number of copies that will be created."
+    else:
+        scalex = ones(points.shape[0])
+        
+    if scaley is not None:
+        if len(scaley) != points.shape[0]:
+            raise ValueError,"The number of scale values in y-direction differs from the number of copies that will be created."
+    else:
+        scaley = ones(points.shape[0])
+    
     base = self.translate(-Coords(origin))
-    sequence = [ base.rotate(vectorRotation(normal,d,upvector)).translate(p)
-                 for d,p in zip(directions,points)
+    sequence = [ base.scale([scx,scy,1.]).rotate(vectorRotation(normal,d,upvector)).translate(p)
+                 for scx,scy,d,p in zip(scalex,scaley,directions,points)
                  ]
         
     return sequence
