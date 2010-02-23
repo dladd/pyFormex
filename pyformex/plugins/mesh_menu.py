@@ -238,6 +238,56 @@ def fromFormex(suffix=''):
     if not suffix:
         formex_menu.selection.clear()
     selection.set(meshes.keys())
+    print "Number of points before fusing: %s" % before
+
+
+def splitProp():
+    """Split the mesh based on property values"""
+    from plugins import partition
+    
+    F = selection.check(single=True)
+    if not F:
+        return
+
+    name = selection[0]
+    partition.splitProp(F,name)
+    
+
+def fuseMesh():
+    """Fuse the nodes of a Mesh"""
+    if not selection.check():
+        selection.ask()
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    res = askItems([
+        ('Relative Tolerance',1.e-5),
+        ('Absolute Tolerance',1.e-5),
+        ('Shift',0.5),
+        ('Nodes per box',1)])
+
+    if not res:
+        return
+
+    before = [ m.ncoords() for m in meshes ]
+    meshes = [ m.fuse(
+        atol = res['Relative Tolerance'],
+        rtol = res['Absolute Tolerance'],
+        atol = res['Shift'],
+        atol = res['Nodes per box'],
+        ) for m in meshes ]
+    after = [ m.ncoords() for m in meshes ]
+    print "Number of points before fusing: %s" % before
+    print "Number of points after fusing: %s" % after
+
+    names = [ "%s_fused" % n for n in selection.names ]
+    export2(names,meshes)
+    selection.set(names)
+    clear()
+    selection.draw()
+
 
 
 def divideMesh():
@@ -329,6 +379,8 @@ def create_menu():
         ("&Convert to Formex",toFormex),
         ("&Convert from Formex",fromFormex),
         ("---",None),
+        ("&Split on Property Value",splitProp),
+        ("&Fuse Nodes",fuseMesh),
         ("&Divide Mesh",divideMesh),
         ("&Convert Mesh Eltype",convertMesh),
         ("---",None),

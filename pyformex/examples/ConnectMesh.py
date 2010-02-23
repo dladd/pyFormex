@@ -32,42 +32,33 @@ techniques = ['colors']
 """
 
 import simple
-from connectivity import reverseUniqueIndex
-from plugins.mesh import *
-        
-def drawMesh(mesh,ncolor='blue',ecolor='red'):
-    if ncolor:
-        draw(mesh.coords,color=ncolor)
-    if ecolor:
-        draw(mesh,color=ecolor,bbox='last')
+from plugins.mesh import Mesh,connectMesh
+
+clear()
+smoothwire()
 
 nx = 4
 ny = 3
 nz = 7
-F = simple.rectangle(nx,ny).setProp(1)
 
-c1,e1 = F.feModel()
-c2 = c1.rotate(45,0).translate([1.,-1.,nz])
-
-G = Formex(c2[e1]).setProp(3)
-draw([F,G])
-
-
-e1 = e1[1:-2]
-
-m1 = Mesh(c1,e1)
-m2 = Mesh(c2,e1)
-
-clear()
-drawMesh(m1)
-drawMesh(m2)
+# A rectangular mesh
+M1 = simple.rectangle(nx,ny).toMesh().setProp(1)
+# Same mesh, rotated and translated
+M2 = M1.rotate(45,0).translate([1.,-1.,nz]).setProp(3)
+draw([M1,M2])
 sleep(1)
 
-m = connectMesh(m1,m2,nz)
-
-m.eltype = 'hex8'
-
+# leave out the first and the last two elements
+e1 = M1.elems[1:-2]
+m1 = Mesh(M1.coords,e1)
+m2 = Mesh(M2.coords,e1)
 clear()
-drawMesh(m)
+draw([m1,m2],view=None)
+sleep(1)
+
+# Connect both meshes to a hexaeder mesh
+m = connectMesh(m1,m2,nz)
+clear()
+draw(m,view=None)
 
 # End

@@ -32,8 +32,11 @@ from connectivity import *
 from mydict import Dict
 from numpy import *
 from plugins.mesh import mergeNodes,mergeMeshes
+from utils import deprecation
+import warnings
 
 
+@deprecation("\nUse Mesh instances and mesh.mergeMeshes instead.")
 def mergeModels(femodels,**kargs):
     """Merge all the nodes of a list of FE models.
 
@@ -47,10 +50,7 @@ def mergeModels(femodels,**kargs):
     The merging operation can be tuned by specifying extra arguments
     that will be passed to :meth:`Coords:fuse`.
     """
-    coords = [ x for x,e in femodels ]
-    elems = [ e for x,e in femodels ]
-    coords,index = mergeNodes(coords,**kargs)
-    return coords,[i[e] for i,e in zip(index,elems)]
+    return mergeMeshes([Mesh(m) for m in femodels])
               
 
 def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
@@ -218,13 +218,13 @@ class Model(Dict):
         return oldnew,newold
 
         
-def mergedModel(*args):
+def mergedModel(meshes,**kargs):
     """Returns the fe Model obtained from merging individual models.
 
     The input arguments are (coords,elems) tuples.
     The return value is a merged fe Model.
     """
-    return Model(*mergeModels(args))
+    return Model(*mergeMeshes(meshes,**kargs))
 
 
 if __name__ == "__main__":

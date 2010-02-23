@@ -68,7 +68,7 @@ clear();linewidth(1);draw(F,view='myview1')
 #Creating FE-model
 ###################
 
-nodes,elems=F.feModel()
+M = F.toMesh()
 
 ###############
 #Creating elemsets
@@ -82,10 +82,10 @@ diabar = where(F.prop==1)[0]
 #Creating nodesets
 ###################
 
-nnod=nodes.shape[0]
+nnod=M.nodes.shape[0]
 nlist=arange(nnod)
 count = zeros(nnod)
-for n in elems.flat:
+for n in M.elems.flat:
     count[n] += 1
 field = nlist[count==8]
 topedge = nlist[count==7]
@@ -138,7 +138,7 @@ out = Output(type='field',variable='preselect')
 res = [ Result(kind='element',keys=['S']),
 	Result(kind='node',keys=['U'])
 	]
-model = Model(nodes,elems)
+model = Model(M.nodes,M.elems)
 
 if not checkWorkdir():
     exit()

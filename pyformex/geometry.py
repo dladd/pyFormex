@@ -52,8 +52,7 @@ class Geometry(object):
         coords_func = getattr(Coords,func.__name__)
         def newf(self,*args,**kargs):
             """Performs the Coords %s transformation on the coords attribute""" 
-            self.setCoords(coords_func(self.coords,*args,**kargs))
-            return self
+            return self.setCoords(coords_func(self.coords,*args,**kargs))
         newf.__name__ = func.__name__
         newf.__doc__ = coords_func.__doc__
         return newf
@@ -69,6 +68,7 @@ class Geometry(object):
         """
         if isinstance(coords,Coords) and coords.shape == self.coords.shape:
             self.coords = coords
+            return self
         else:
             raise ValueError,"Invalid reinitialization of Geometry coords"
         

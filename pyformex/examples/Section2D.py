@@ -34,6 +34,7 @@ techniques = []
 """
 
 from plugins.section2d import *
+from plugins.mesh import Mesh
 import simple,connectivity,mydict
 
 
@@ -55,24 +56,20 @@ def circle_example():
 def close_loop_example():
     # one more example, originally not a closed loop curve
     F = Formex(pattern('11')).replic(2,1,1) + Formex(pattern('2')).replic(2,2,0)
-    nodes,elems = F.feModel()
+    M = F.toMesh()
+    draw(M,color='green')
+    drawNumbers(M,color=red)
+    drawNumbers(M.coords,color=blue)
 
-    FN = Formex(nodes)
-    drawNumbers(FN,color=blue)
-
-    F = Formex(nodes[elems])
-    draw(F,color='green')
-    drawNumbers(F,color=red)
-
-    print "Original elements:",elems
-    ret, sorted = connectivity.closedLoop(elems)
+    print "Original elements:",M.elems
+    ret, sorted = connectivity.closedLoop(M.elems)
     print "Sorted elements:",sorted
 
     showInfo('Click to continue')
     clear()
-    F = Formex(nodes[sorted])
-    drawNumbers(F)
-    return F
+    M = Mesh(M.coords,sorted)
+    drawNumbers(M)
+    return M.toFormex()
 
 
 clear()

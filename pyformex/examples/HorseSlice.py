@@ -52,8 +52,7 @@ n = res['number of sections']
 c = res['color']
 
 slices = S.slice(dir=d,nplanes=n)
-print [ len(s) for s in slices ]
-draw(slices,color=c,view=None,bbox='last')
+draw(slices,color=c,view=None,bbox='last',flat=True)
 
 undraw(SA)
 zoomAll()

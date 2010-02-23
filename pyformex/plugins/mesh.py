@@ -268,6 +268,20 @@ class Mesh(Geometry):
 
         #print "NORMAL MESH: %s coords, %s elems" % (self.ncoords(),self.nelems())
 
+    def setCoords(self,coords):
+        """Replace the current coords with new ones.
+
+        The default implementation imposes the restriction that the
+        new coordinate array should have the same shape. It also overwrites
+        the coords of the current object. Derived classes can change this
+        behavior, but should nake sure to keep the data consistent.
+        The new coords structure should have the same
+        """
+        if isinstance(coords,Coords) and coords.shape == self.coords.shape:
+            return Mesh(coords,self.elems,self.prop,self.eltype)
+        else:
+            raise ValueError,"Invalid reinitialization of Geometry coords"
+
 
     def setProp(self,prop=None):
         """Create or destroy the property array for the Mesh.

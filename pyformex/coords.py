@@ -1052,7 +1052,7 @@ class Coords(ndarray):
 ##############################################################################
 
 
-    def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5,fusemeth=0):
+    def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
         """Find (almost) identical nodes and return a compressed set.
 
         This method finds the points that are very close and replaces them

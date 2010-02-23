@@ -23,6 +23,13 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
+"""WedgeHex
+
+level = 'advanced'
+topics = ['FEA']
+techniques = ['meshing'] 
+"""
+
 import simple
 import elements
 from plugins.mesh import *

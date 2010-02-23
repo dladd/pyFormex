@@ -34,6 +34,7 @@ from plugins.fe import *
 from plugins.properties import *
 from plugins.fe_abq import *
 
+
 def quad():
     """Return a unit quadrilateral Formex."""
     return Formex(mpattern('123'))
@@ -59,7 +60,7 @@ parts = [A,B,C]
 
 # Create the finite element model
 # A model contains a single set of nodes and one or more sets of elements
-M = mergedModel(*[p.feModel() for p in parts])
+M = mergedModel([p.toMesh() for p in parts])
 
 # Create a Formex with the nodes, mostly for drawing
 F = Formex(M.coords)
