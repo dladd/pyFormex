@@ -32,6 +32,7 @@ from formex import *
 from connectivity import Connectivity,reverseUniqueIndex
 import elements
 from utils import deprecation
+from geometry import Geometry
 
 
 #################### This first section holds experimental stuff!! #####
@@ -195,7 +196,7 @@ _conversions_ = {
 
 ##############################################################
 
-class Mesh(object):
+class Mesh(Geometry):
     """A mesh is a discrete geometrical model defined by nodes and elements.
 
     In the Mesh geometrical data model, coordinates of all points are gathered
@@ -438,21 +439,21 @@ class Mesh(object):
         return self.coords[self.elems].mean(axis=1)
         
 
-    @coordsmethod
-    def scale(self,*args,**kargs):
-        pass
-    @coordsmethod
-    def translate(self,*args,**kargs):
-        pass
-    @coordsmethod
-    def rotate(self,*args,**kargs):
-        pass
-    @coordsmethod
-    def shear(self,*args,**kargs):
-        pass
-    @coordsmethod
-    def affine(self,*args,**kargs):
-        pass
+    ## @coordsmethod
+    ## def scale(self,*args,**kargs):
+    ##     pass
+    ## @coordsmethod
+    ## def translate(self,*args,**kargs):
+    ##     pass
+    ## @coordsmethod
+    ## def rotate(self,*args,**kargs):
+    ##     pass
+    ## @coordsmethod
+    ## def shear(self,*args,**kargs):
+    ##     pass
+    ## @coordsmethod
+    ## def affine(self,*args,**kargs):
+    ##     pass
 
 
     def report(self):

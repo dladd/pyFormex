@@ -46,7 +46,7 @@ class Objects(object):
     objects can be changed and the changes can be undone.
     """
 
-    def __init__(self,clas=None,filter=None,namelist=[]): 
+    def __init__(self,clas=None,like=None,filter=None,namelist=[]): 
         """Create a new selection of objects.
 
         If a filter is given, only objects passing it will be accepted.
@@ -56,6 +56,7 @@ class Objects(object):
         those names (provided they are in the dictionary).
         """
         self.clas = clas
+        self.like = like
         self.filter = filter
         self.names = []
         self.values = []
@@ -114,7 +115,7 @@ class Objects(object):
         This lists all the global names in pyformex.PF that match
         the class and/or filter (if specified).
         """
-        return listAll(clas=self.clas)
+        return listAll(clas=self.clas,like=self.like,filter=self.filter)
 
 
     def selectAll(self):
@@ -188,7 +189,7 @@ class Objects(object):
         This sets the current selection to the selected names.
         Return a list with the selected names or None.
         """
-        res = widgets.Selection(listAll(clas=self.clas),
+        res = widgets.Selection(self.listAll(),
                                 'Known %sobjects' % self.object_type(),
                                 mode,sort=True,selected=self.names
                                 ).getResult()

@@ -102,12 +102,38 @@ def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
     The line is split up in n segments.
     """
     return Formex([[p1,p2]]).divide(n)
+ 
+
+def rect(p1=[0.,0.,0.],p2=[1.,0.,0.],nx=1,ny=1):
+    """Return a Formex which is a the circumference of a rectangle.
+
+    p1 and p2 are two opposite corner points of the rectangle.
+    The edges of the rectangle are in planes parallel to the z-axis.
+    There will always be two opposite edges that are parallel with the x-axis.
+    The other two will only be parallel with the y-axis if both points
+    have the same z-value, but in any case they will be parallel with the
+    y-z plane.
+
+    The edges parallel with the x-axis are divide in nx parts, the other
+    ones in ny parts.
+    """
+    p1 = Coords(p1)
+    p2 = Coords(p2)
+    p12 = Coords([p2[0],p1[1],p1[2]])
+    p21 = Coords([p1[0],p2[1],p2[2]])
+    return Formex.concatenate([
+        line(p1,p12,nx),
+        line(p12,p2,ny),
+        line(p2,p21,nx),
+        line(p21,p1,ny)
+        ])
 
 
 def rectangle(nx,ny,b=None,h=None,bias=0.,diag=None):
-    """Return a Formex representing a rectangle of size(b,h) with (nx,ny) cells.
+    """Return a Formex representing a rectangluar surface.
 
-    This is a convenience function to create a rectangle with given size.
+    The rectangle has a size(b,h) divivded into (nx,ny) cells.
+
     The default b/h values are equal to nx/ny, resulting in a modular grid.
     The rectangle lies in the (x,y) plane, with one corner at [0,0,0].
     By default, the elements are quads. By setting diag='u','d' of 'x',

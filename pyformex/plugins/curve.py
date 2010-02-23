@@ -57,8 +57,9 @@ from plugins.mesh import Mesh
 #    pointsOn(): the defining points situated on the curve
 #    pointsOff(): the defining points situated off the curve (control points)
 
+from geometry import Geometry
 
-class Curve(object):
+class Curve(Geometry):
     """Base class for curve type classes.
 
     This is a virtual class intended to be subclassed.
@@ -171,7 +172,7 @@ class Curve(object):
         return self.lengths().sum()
 
 
-    def approx(self,ndiv=N_approx,ntot=None):
+    def approx(self,ndiv=None,ntot=None):
         """Return a PolyLine approximation of the curve
 
         If no `ntot` is given, the curve is approximated by `ndiv`
@@ -180,6 +181,8 @@ class Curve(object):
         straight segments over the total curve. This is based on a
         first approximation with ndiv segments over each part.
         """
+        if ndiv is None:
+            ndiv = self.N_approx
         PL = PolyLine(self.subPoints(ndiv),closed=self.closed)
         if ntot is not None:
             at = PL.atLength(ntot)
@@ -188,11 +191,16 @@ class Curve(object):
         return PL
 
 
+    def toFormex(self,*args,**kargs):
+        """Convert a curve to a Formex.
 
-    # This allows us to draw approximations of curves that do not specify
-    # their own (hopefully better) Formex representation
-    def toFormex(self):
-        return self.approx().toFormex()
+        This creates a polyline approximation as a plex-2 Formex.
+        This is mainly used for drawing curves that do not implement
+        their own drawing routines.
+
+        The method can be passed the same arguments as the `approx` method.
+        """
+        return self.approx(*args,**kargs).toFormex()
   
 
 ##############################################################################
@@ -441,41 +449,70 @@ class BezierSpline(Curve):
     def __init__(self,coords,deriv=None,curl=0.5,control=None,closed=False):
         """Create a cubic spline curve through the given points.
 
-        The curve is defined by the points and the directions at these points.
-        If no directions are specified, the average of the segments ending
-        in that point is used, and in the end points of an open curve, the
-        direction of the end segment.
-        The curl parameter can be set to influence the curliness of the curve.
-        curl=0.0 results in straight segments.
+        - coords: an (npoints,3) array with ordered points on the curve
+        - deriv: an (npoints,3) or (2,3) array with the directions at all
+          the points or at the two endpoints only.
+          For points where the direction is left unspecified or where the
+          specified direction contains a `NaN` value, the direction
+          is calculated as the average direction of the two
+          line segments ending in the point. This will also be used
+          for points where the specified direction contains a value `NaN`.
+          In the two endpoints of an open curve however, this average
+          direction can not be calculated: the two control points in these
+          parts are set coincident.
+          
+          The curl parameter can be set to influence the curliness of the curve
+          in between two subsequent points. A value curl=0.0 results in
+          straight segments.
         
-        The control points can also be specified directly. If they are, they
-        override the deriv and curl parameters. Since each segment of the curve
-        needs two control points, the control array has shape (npts-1, 2, 3).
+        - control: an (nparts,2,3) array of control points, two for each
+          curve segemetn between two consecutive points. For a closed curve,
+          nparts = npoints, while for an open curve nparts = npoints-1.
+          If the control points are specified directly, they override
+          the deriv and curl parameters.
+        - closed: if True, the curve will be continued from the last point
+          to the first to create a closed curve.
         """
         coords = Coords(coords)
-        nparts = coords.shape[0]
+        ncoords = nparts = coords.shape[0]
         if not closed:
             nparts -= 1
-            
+
         if control is None:
-            if nparts < 2:
-                control = coords
+            P = PolyLine(coords,closed=closed)
+            ampl = P.lengths().reshape(-1,1)
+            if deriv is None:
+                deriv = array([[nan,nan,nan]]*ncoords)
             else:
-                P = PolyLine(coords,closed=closed)
-                if deriv is None:
-                    deriv = P.avgDirections()
-                ampl = P.lengths().reshape(-1,1)
-                if closed:
-                    p1 = coords + deriv*curl*ampl
-                    p2 = coords - deriv*curl*roll(ampl,1,axis=0)
-                    p2 = roll(p2,-1,axis=0)
-                else:
-                    p1 = coords[1:-1] + deriv*curl*ampl[1:]
-                    p2 = coords[1:-1] - deriv*curl*ampl[:-1]
-                    p1 = concatenate([p2[:1],p1],axis=0)
-                    p2 = concatenate([p2,p1[-1:]],axis=0)
-                control = concatenate([p1,p2],axis=1)
-                    
+                deriv = Coords(deriv)
+                nderiv = deriv.shape[0]
+                if nderiv < ncoords:
+                    if nderiv != 2:
+                        raise ValueError,"Either all or 2 directions expected (got %s)" % nderiv
+                    deriv = concatenate([
+                        deriv[:1],
+                        [[nan,nan,nan]]*(ncoords-2),
+                        deriv[-1:]])
+            if closed:
+                autoderiv = deriv
+            else:
+                autoderiv = deriv[1:-1]
+            undefined = isnan(autoderiv).any(axis=-1)
+            if undefined.any():
+                autoderiv[undefined] = P.avgDirections()[undefined]
+                
+            if closed:
+                p1 = coords + deriv*curl*ampl
+                p2 = coords - deriv*curl*roll(ampl,1,axis=0)
+                p2 = roll(p2,-1,axis=0)
+            else:
+                p1 = coords[:-1] + deriv[:-1]*curl*ampl
+                p2 = coords[1:] - deriv[1:]*curl*ampl
+                if isnan(p1[0]).any():
+                    p1[0] = p2[0]
+                if isnan(p2[-1]).any():
+                    p2[-1] = p1[-1]
+            control = concatenate([p1,p2],axis=1)
                 
         control = asarray(control).reshape(-1,2,3)
         control = Coords(control)

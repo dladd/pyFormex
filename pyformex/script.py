@@ -108,20 +108,30 @@ def rename(oldnames,newnames):
             del g[oldname]
 
 
-def listAll(clas=None,dic=None):
-    """Return a list of all objects in dic that are of given clas.
+def listAll(clas=None,like=None,filter=None,dic=None):
+    """Return a list of all objects in dictionay that match criteria.
 
-    If no class is given, Formex objects are sought.
-    If no dict is given, the objects from both pyformex.PF and locals()
-    are returned.
+    - dic: a dictionary object, defaults to pyformex.PF
+    - clas: a class name: if specified, only instances of this class will be
+      returned
+    - like: a string: if given, only object names starting with this string
+      will be returned
+    - filter: a function taking an object name as parameter and returning True
+      or False. If specified, onnly objects passing the test will be returned.
+
+    The return value is a list of keys from dic.
     """
     if dic is None:
         dic = pyformex.PF
 
-    if clas is None:
-        return dic.keys()
-    else:
-        return [ k for k in dic.keys() if isinstance(dic[k],clas) ]
+    names = dic.keys()
+    if clas is not None:
+        names = [ n for n in names if isinstance(dic[n],clas) ]
+    if like is not None:
+        names = [ n for n in names if n.startswith(like) ]
+    if filter is not None:
+        names = [ n for n in names if filter(n) ]
+    return names
 
 
 def named(name):

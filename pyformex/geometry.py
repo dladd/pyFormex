@@ -30,57 +30,156 @@ Coords class to the derived classes.
 .. warning:: This is experimental stuff!
 """
 
-from pyformex.coords import *
-
-def coords_transformation(func):
-    """Perform a transformation on the .coords attribute of the object
-
-    """
-    repl = getattr(Coords,func.__name__)
-    def newf(self,*args,**kargs):
-        """Performs the Coords %s transformation on the coords attribute""" 
-        self.coords = repl(self.coords,*args,**kargs)
-        return self
-    newf.__name__ = func.__name__
-    newf.__doc__ = repl.__doc__
-    return newf
+from coords import Coords
+from formex import Formex
 
 
 class Geometry(object):
+    """A generic geometry object allowing transformation of coords sets.
 
-    def transform(self,funcname,*args,**kargs):
-        """Transform the coordinates of the object using the function
-        func(*args,**kargs), where func is a transformation method of the
-        Coords class.
+    The Geometry class is a generic parent class for all geometric classes,
+    intended to make the Coords transformations available without explicit
+    declaration.
+    A Geometry contains a single attribute, coords, which is a Coords object.
+    All the Coords transformation methods are inherited by the Geometry
+    class.
+    """
+
+    def _coords_transform(func):
+        """Perform a transformation on the .coords attribute of the object
+
         """
-        func = getattr(self.coords,funcname)
-        self.coords = func(self.coords,*args,**kargs)
+        coords_func = getattr(Coords,func.__name__)
+        def newf(self,*args,**kargs):
+            """Performs the Coords %s transformation on the coords attribute""" 
+            self.setCoords(coords_func(self.coords,*args,**kargs))
+            return self
+        newf.__name__ = func.__name__
+        newf.__doc__ = coords_func.__doc__
+        return newf
+
+    def setCoords(self,coords):
+        """Replace the current coords with new ones.
+
+        The default implementation imposes the restriction that the
+        new coordinate array should have the same shape. It also overwrites
+        the coords of the current object. Derived classes can change this
+        behavior, but should nake sure to keep the data consistent.
+        The new coords structure should have the same
+        """
+        if isinstance(coords,Coords) and coords.shape == self.coords.shape:
+            self.coords = coords
+        else:
+            raise ValueError,"Invalid reinitialization of Geometry coords"
+        
 
     def __str__(self):
         return self.coords.__str__()
 
  
-    @coords_transformation
+    @_coords_transform
     def scale(self,*args,**kargs):
         pass
-    @coords_transformation
+    @_coords_transform
     def translate(self,*args,**kargs):
         pass
+    @_coords_transform
+    def rotate(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def shear(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def reflect(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def affine(self,*args,**kargs):
+        pass
 
-    def draw(self,color='red'):
-        print self.coords
-        draw(Formex(self.coords),color=color)
+
+    @_coords_transform
+    def cylindrical(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def hyperCylindrical(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def toCylindrical(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def spherical(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def superSpherical(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def toSpherical(self,*args,**kargs):
+        pass
+    @_coords_transform
+
+    def bump(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def bump1(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def bump2(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def flare(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def map(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def map1(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def mapd(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def newmap(self,*args,**kargs):
+        pass
+
+    @_coords_transform
+    def replace(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def swapAxes(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def rollAxes(self,*args,**kargs):
+        pass
+
+    @_coords_transform
+    def projectOnSphere(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def projectOnCylinder(self,*args,**kargs):
+        pass
+
+    rot = rotate
+    trl = translate
+
 
 
 if __name__ == "draw":
 
+    from gui.draw import draw
+
+    def draw(self,*args,**kargs):
+        draw(self.coords,*args,**kargs)
+
+
+    clear()
+    print "hallo"
     F = Formex(mpattern('123'))
 
     G = Geometry()
-    G.coords = F.f
-    G.draw()
+    G.coords = F.coords
+    G.draw(color='red')
 
-    G1 = G.scale(2)
+    G1 = G.scale(2).trl([0.2,0.7,0.])
     G1.draw(color='green')
 
     G2 = G.translate([0.5,0.5,0.5])

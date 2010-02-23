@@ -33,6 +33,7 @@ from gui import menu
 import utils
 from formex import *
 from gui.draw import *
+from gui.widgets import simpleInputItem as I, compatInputItem as C
 from plugins import objects
 from plugins.tools import *
 from plugins.surface import TriSurface
@@ -318,6 +319,31 @@ def report_selection():
     print(report(selection))
 
 
+def edit_point(pt):
+    x,y,z = pt
+    dia = None
+    def close():
+        dia.close()
+    def accept():
+        dia.acceptData()
+        res = dia.results
+        return [ res[i] for i in 'xyz' ]
+        
+    dia = widgets.NewInputDialog(
+        items = [I(x=x,y=y,z=z),]
+        )
+    dia.show()
+    
+
+def edit_points(K):
+    if K.obj_type == 'point':
+        for k in K.keys():
+            o = GD.canvas.actors[k].object
+            n =  drawable.names[k]
+            ind = K[k]
+            print "CHANGING points %s of object %s" % (ind,n)
+            print o[ind]
+        
    
 def setpropCollection(K,prop):
     """Set the property of a collection.
@@ -335,7 +361,7 @@ def setpropCollection(K,prop):
             
     elif K.obj_type in ['element','point']:
         for k in K.keys():
-            o = GD.canvas.actors[k].data
+            o = GD.canvas.actors[k].object
             print "SETPROP ACTOR %s" % type(o)
             n =  drawable.names[k]
             print "SETPROP DRAWABLE %s" % n
@@ -345,6 +371,7 @@ def setpropCollection(K,prop):
             if prop is None:
                 o.setProp(prop)
                 if O:
+                    print id(o),id(O)
                     O.setProp(prop)
             elif hasattr(o,'setProp'):
                 if not hasattr(o,'prop') or o.prop is None:
@@ -493,6 +520,7 @@ def create_menu():
           ("&Points",pick_points),
           ("&Edges",pick_edges),
           ]),
+        ('&Edit Points',edit_points),
         ("&Remove Highlights",removeHighlights),
         ("---",None),
         ('&Selection',

@@ -14,6 +14,7 @@ from odict import ODict
 from plugins.geomtools import triangleCircumCircle
 from plugins.curve import *
 from plugins.tools_menu import *
+from plugins import objects
 
 draw_mode_2d = ['point','polyline','spline','circle']
 autoname = ODict([ (obj,utils.NameSequence(obj)) for obj in draw_mode_2d ])
@@ -118,6 +119,15 @@ def drawObject2D(mode,npoints=-1,zvalue=0.,coords=None):
     points = drawPoints2D(mode,npoints=npoints,zvalue=zvalue,coords=coords)
     return drawnObject(points,mode=mode)
 
+
+
+def selectObject(mode=None):
+    selection = objects.drawAble(like=mode+'-')
+    res = widgets.Selection(
+        selection.listAll(),
+        'Known %ss' % mode,
+        sort=True).getResult()
+    # UNFINISHED
 
 ###################################
 
