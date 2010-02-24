@@ -140,7 +140,7 @@ def askItems(items,caption=None,timeout=None,**kargs):
 Using a dict as items argument will now result in a tabbed InputDialog.
 See gui.widgets.InputDialog for details.""")
         #items = items.items()
-    w = widgets.InputDialog(items,caption,**kargs)
+    w = widgets.OldInputDialog(items,caption,**kargs)
     _dialog_widget = w
     _dialog_result = None
     res = w.getResult(timeout)

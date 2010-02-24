@@ -1912,7 +1912,12 @@ def updateDialogItems(data,newdata):
 class InputDialog(OldInputDialog):
     def __init__(self,*args,**kargs):
         import warnings
-        warnings.warn("\n"+'*'*60+"\nThe syntax of InputDialog items will change in version 0.9.\nThe new syntax is already available with the classname 'NewInputDialog'\nAfter the change, the old syntax will still be available for some time as 'OldInputDialog'.\n We advice you to move to the new syntax as soon as possible.")
+        warnings.warn("""
+=========== WARNING! ========
+The InputDialog will change in the near future.
+See the related help item for more info.
+=============================
+""")
         OldInputDialog.__init__(self,*args,**kargs)
 
 

@@ -47,7 +47,7 @@ def draw2D(mode='point',npoints=-1,zplane=0.,coords=None,func=None):
     The drawing can be edited using the methods 'undo', 'clear' and 'close', which
     are presented in a combobox.
     """
-    if GD.canvas.drawing_mode is not None:
+    if GD.canvas.drawmode is not None:
         warning("You need to finish the previous drawing operation first!")
         return
     if func == None:
@@ -110,8 +110,7 @@ def drawPoints2D(mode,npoints=-1,zvalue=0.,coords=None):
     if mode not in draw_mode_2d:
         return
     x,y,z = GD.canvas.project(0.,0.,zvalue)
-    points = draw2D(mode,npoints=npoints,zplane=z,coords=coords)
-    return points
+    return draw2D(mode,npoints=npoints,zplane=z,coords=coords)
 
     
 def drawObject2D(mode,npoints=-1,zvalue=0.,coords=None):
@@ -136,16 +135,20 @@ _zvalue = 0.
 def draw_object(mode,npoints=-1):
     print "z value = %s" % _zvalue
     points = drawPoints2D(mode,npoints=-1,zvalue=_zvalue)
+    if points is None:
+        return
+    print "POINTS %s" % points
     obj = drawnObject(points,mode=mode)
     if obj is None:
         GD.canvas.removeHighlights()
         return
+    print "OBJECT IS %s" % obj
     res = askItems([
         ('name',autoname[mode].peek(),{'text':'Name for storing the object'}),
         ('color','blue','color',{'text':'Color for the object'}),
         ])
     if not res:
-        return None
+        return
     
     name = res['name']
     color = res['color']

@@ -163,6 +163,7 @@ webdoc = website+"/doc"
 oldmanual = website+"/manual"
 links = [('pyFormex','pyformex.org'),('pyFormex-dev','developer.berlios.de/projects/pyformex'),('Python','www.python.org'),('IBiTech-bioMMeda','www.ibitech.ugent.be'),('stent-boys@bioMMeda','www.stent-ibitech.ugent.be'),('FEops','www.feops.com')]
 docs = [('&Local documentation',localdoc),('&Reference Manual',refman),('&Module Index',modindex),('&Index',index),('&Online documentation',webdoc),('Old manual (online)',oldmanual),]
+docs2 = [('&Readme',readme),('&ReleaseNotes',notes),('&License',license),('New InputDialog',os.path.join(pyformexdir,"doc","InputDialog.rst")),]
 
 
 [keys]

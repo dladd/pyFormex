@@ -383,11 +383,6 @@ class Mesh(Geometry):
         except:
             return None
 
-    # WE SHOULD GET RID OF THIS ONE
-    def data(self):
-        """Return the mesh data as a tuple (coords,elems)"""
-        return self.coords,self.elems
-
     
     def ndim(self):
         return 3

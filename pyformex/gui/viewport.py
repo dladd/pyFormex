@@ -295,6 +295,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             'number' : self.pick_numbers,
             }
         self.pickable = None
+        self.drawmode = None
         self.drawing_mode = None
         self.drawing = None
         # Drawing options
@@ -373,7 +374,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.update()
             if self.trackfunc:
                 print "PRESS",self.trackfunc,GD.canvas.camera.ctr
-                GD.canvas.lockProjection()
+                GD.canvas.camera.setTracking(True)
                 x,y,z = GD.canvas.camera.ctr
                 self.zplane = GD.canvas.project(x,y,z,True)[2]
                 print 'ZPLANE',self.zplane
@@ -667,6 +668,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         if action == PRESS:
             self.makeCurrent()
             self.update()
+            if self.trackfunc:
+                print "ENABLE TRACKING"
+                GD.canvas.camera.setTracking(True)
 
         elif action == MOVE:
             if GD.app.hasPendingEvents():
@@ -814,7 +818,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     # their values.
     # On a mouse button RELEASE, self.button is cleared, to avoid further
     # move actions.
-    # Functions that change the camera settings should call saveMatrix()
+    # Functions that change the camera settings should call saveModelView()
     # when they are done.
     # ATTENTION! The y argument is positive upwards, as in normal OpenGL
     # operations!
@@ -862,7 +866,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == RELEASE:
             self.update()
-            self.camera.saveMatrix()
+            self.camera.saveModelView()
 
             
     def dynapan(self,x,y,action):
@@ -883,7 +887,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == RELEASE:
             self.update()
-            self.camera.saveMatrix()          
+            self.camera.saveModelView()          
 
             
     def dynazoom(self,x,y,action):
@@ -913,7 +917,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == RELEASE:
             self.update()
-            self.camera.saveMatrix()
+            self.camera.saveModelView()
 
     def wheel_zoom(self,delta):
         """Zoom by rotating a wheel over an angle delta"""
@@ -991,7 +995,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def pick_actors(self):
         """Set the list of actors inside the pick_window."""
         self.camera.loadProjection(pick=self.pick_window)
-        self.camera.loadMatrix()
+        self.camera.loadModelView()
         stackdepth = 1
         npickable = len(self.actors)
         selbuf = GL.glSelectBuffer(npickable*(3+stackdepth))
@@ -1035,7 +1039,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.message("No such objects to be picked!")
             return
         self.camera.loadProjection(pick=self.pick_window)
-        self.camera.loadMatrix()
+        self.camera.loadModelView()
         stackdepth = 2
         selbuf = GL.glSelectBuffer(max_objects*(3+stackdepth))
         GL.glRenderMode(GL.GL_SELECT)
@@ -1099,7 +1103,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def pick_numbers(self):
         """Return the numbers inside the pick_window."""
         self.camera.loadProjection(pick=self.pick_window)
-        self.camera.loadMatrix()
+        self.camera.loadModelView()
         self.picked = [0,1,2,3]
         if self.numbers:
             self.picked = self.numbers.drawpick()
@@ -1108,7 +1112,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def draw_state_line(self,x,y):
         """Store the pos and draw a line to it."""
         self.state = x,y
-        #GD.debug("Rect (%s,%s) - (%s,%s)" % (self.statex,self.statey,x,y))
         decors.drawLine(self.statex,self.statey,x,y)
 
 

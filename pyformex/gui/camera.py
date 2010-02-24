@@ -22,7 +22,7 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""camera 0.1 (C) Benedict Verhegghe"""
+"""OpenGL camera handling"""
 
 from numpy import *
 
@@ -140,6 +140,8 @@ class Camera:
         self.keep_aspect = True
         self.setPerspective(True)
         self.viewChanged = True
+        self.tracking = False
+        self.m = self.p = self.v = None
 
     # Use only these access functions to make implementation changes easier
         
@@ -294,54 +296,29 @@ class Camera:
 ##        self.viewChanged = True
 
 
-        
-    def setMatrix(self):
-        """Set the ModelView matrix from camera parameters.
-
-        These are the transformations applied on the model space.
-        Rotations and translations need be taken negatively.
-        """
-        if not self.locked:
-            # The operations on the model space
-            # arguments should be taken negative and applied in backwards order
-            GL.glMatrixMode(GL.GL_MODELVIEW)
-            GL.glLoadIdentity()
-            #printModelviewMatrix("Identity:\n%s")
-            # translate over camera distance
-            GL.glTranslate(0,0,-self.dist)
-            #printModelviewMatrix("Camera distance:\n%s")
-            # rotate
-            GL.glMultMatrixf(self.rot)
-            #printModelviewMatrix("Rotation:\n%s")
-            # translate to center
-            dx,dy,dz = self.getCenter()
-            GL.glTranslatef(-dx,-dy,-dz)
-            #printModelviewMatrix("Translation:\n%s")
-
-
     def lookAt(self,eye,center,up):
         if not self.locked:
             GL.glMatrixMode(GL.GL_MODELVIEW)
             GL.glLoadIdentity()
             GLU.gluLookAt(*concatenate([eye,center,up]))
-            self.saveMatrix()
+            self.saveModelView()
 
 
     def rotate(self,val,vx,vy,vz):
         """Rotate the camera around current camera axes."""
         if not self.locked:
             GL.glMatrixMode(GL.GL_MODELVIEW)
-            self.saveMatrix()
+            self.saveModelView()
             GL.glLoadIdentity()
             GL.glTranslatef(0,0,-self.dist)
             GL.glRotatef(val,vx,vy,vz)
             GL.glMultMatrixf(self.rot)
             dx,dy,dz = self.getCenter()
             GL.glTranslatef(-dx,-dy,-dz)
-            self.saveMatrix()
+            self.saveModelView()
 
 
-    def saveMatrix (self):
+    def saveModelView (self):
         """Save the ModelView matrix."""
         if not self.locked:
             self.m = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
@@ -352,13 +329,32 @@ class Camera:
             #print "Rotation: %s" % self.rot
 
 
-    def loadMatrix (self):
+        
+    def setModelView(self):
+        """Set the ModelView matrix from camera parameters.
+
+        """
+        if not self.locked:
+            # The camera operations are applied on the model space
+            # Arguments should be taken negative and applied in backwards order
+            GL.glMatrixMode(GL.GL_MODELVIEW)
+            GL.glLoadIdentity()
+            # translate over camera distance
+            GL.glTranslate(0,0,-self.dist)
+            # rotate according to current rotation matrix
+            GL.glMultMatrixf(self.rot)
+            # translate to center
+            dx,dy,dz = self.getCenter()
+            GL.glTranslatef(-dx,-dy,-dz)
+
+
+    def loadModelView (self):
         """Load the saved ModelView matrix."""
         if not self.locked:
             GL.glMatrixMode(GL.GL_MODELVIEW)
             if self.viewChanged:
-                self.setMatrix()
-                self.saveMatrix()
+                self.setModelView()
+                self.saveModelView()
                 self.viewChanged = False
             else:
                 GL.glLoadMatrixf(self.m)
@@ -577,6 +573,39 @@ class Camera:
             GL.glMatrixMode(GL.GL_MODELVIEW)     
 
 
+    #### global manipulation ###################
+
+    def set3DMatrices(self):
+        self.loadProjection()
+        self.loadModelView()
+        # this is saved by loadModelView
+        #self.m = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
+        ##!!! self.p and self.v should be saved as we do with self.m
+        self.p = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
+        self.v = GL.glGetIntegerv(GL.GL_VIEWPORT)
+
+
+    def project(self,x,y,z):
+        "Map the object coordinates (x,y,z) to window coordinates."""
+        self.set3DMatrices()
+        return GLU.gluProject(x,y,z,self.m,self.p,self.v)
+
+
+    def unProject(self,x,y,z):
+        "Map the window coordinates (x,y,z) to object coordinates."""
+        self.set3DMatrices()
+        return GLU.gluUnProject(x,y,z,self.m,self.p,self.v)
+
+
+    def setTracking(self,onoff=True):
+        """Enable/disable coordinate tracking using the camera"""
+        if onoff:
+            self.tracking = True
+            self.set3DMatrices()
+        else:
+            self.tracking = False
+        
+
 
 if __name__ == "__main__":
     
@@ -593,7 +622,7 @@ if __name__ == "__main__":
         GL.glColor3f (1.0, 1.0, 1.0)
         GL.glLoadIdentity ()             # clear the matrix
         cam.loadProjection()
-        cam.loadMatrix()
+        cam.loadModelView()
         glutWireCube (1.0)
         GL.glFlush ()
 

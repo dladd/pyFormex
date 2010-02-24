@@ -954,7 +954,7 @@ class TriSurface(Mesh):
         return arccos(self.edgeCosAngles()) / Deg
 
 
-    def data(self):
+    def _compute_data(self):
         """Compute data for all edges and faces."""
         if hasattr(self,'edglen'):
             return
@@ -970,22 +970,22 @@ class TriSurface(Mesh):
 
 
     def aspectRatio(self):
-        self.data()
+        self._compute_data()
         return self.aspect
 
  
     def smallestAltitude(self):
-        self.data()
+        self._compute_data()
         return self.altmin
 
 
     def longestEdge(self):
-        self.data()
+        self._compute_data()
         return self.edgmax
 
 
     def shortestEdge(self):
-        self.data()
+        self._compute_data()
         return self.edgmin
 
    
@@ -993,7 +993,7 @@ class TriSurface(Mesh):
         """Return a text with full statistics."""
         bbox = self.bbox()
         manifold,closed,mincon,maxcon = self.surfaceType()
-        self.data()
+        self._compute_data()
         angles = self.edgeAngles()
         area = self.area()
         if manifold and closed:

@@ -29,6 +29,8 @@ import widgets
 import draw
 from gettext import gettext as _
 
+from widgets import compatInputItem as C
+
 
 def setTriade():
     try:
@@ -44,16 +46,6 @@ def setTriade():
         ])
     if res:
         draw.setTriade(res['triade'],res['pos'],res['size'])
-        
-
-def setRenderMode():
-    """Change the rendering mode."""
-    mode = GD.canvas.rendermode
-    modes = canvas.Canvas.rendermodes
-    itemlist = [('Render Mode', mode, 'select', modes)]
-    res = widgets.InputDialog(itemlist,'Select Render Mode').getResult()
-    if res:
-        GD.canvas.setRenderMode(res['Render Mode'])
 
 
 _the_dialog = None
@@ -89,10 +81,10 @@ def setBgColor2():
     color2 = GD.canvas.settings.bgcolor2
     if color2 is None:
         color2 = color
-    itemlist = [('top',color,'color',{'text':'Top background color'}),
-                ('bottom',color2,'color',{'text':'Bottom background color'}),
+    itemlist = [C('top',color,'color',{'text':'Top background color'}),
+                C('bottom',color2,'color',{'text':'Bottom background color'}),
                 ]
-    _the_dialog = widgets.InputDialog(itemlist,'Config Dialog')
+    _the_dialog = widgets.NewInputDialog(itemlist,'Config Dialog')
     res = _the_dialog.getResult()
     GD.debug(res)
     if res:
@@ -121,20 +113,17 @@ def setSlColor():
 def setLineWidth():
     """Change the default line width."""
     lw = GD.canvas.settings.linewidth
-    itemlist = [('Line Width', lw, 'float')]
-    res = widgets.InputDialog(itemlist,'Choose default line width').getResult()
+    itemlist = [C('Line Width', lw, 'float')]
+    res = widgets.NewInputDialog(itemlist,'Choose default line width').getResult()
     if res:
         GD.canvas.setLineWidth(res['Line Width'])
     
 def setCanvasSize():
     """Save the current viewport size"""
-    itemlist = [('w',GD.canvas.width()),('h',GD.canvas.height())]
-    res = widgets.InputDialog(itemlist,'Set Canvas Size').getResult()
+    itemlist = [C('w',GD.canvas.width()),('h',GD.canvas.height())]
+    res = widgets.NewInputDialog(itemlist,'Set Canvas Size').getResult()
     if res:
         GD.canvas.resize(int(res['w']),int(res['h']))
-
-
-
 
 
 def viewportSettings():
@@ -144,15 +133,15 @@ def viewportSettings():
     s = GD.canvas.settings
     if s.bgcolor2 is None:
         s.bgcolor2 = s.bgcolor
-    itemlist = [('rendermode', mode, 'select', modes),
-                ('linewidth', s.linewidth, 'float'),
-                ('bgcolor', s.bgcolor, 'color'),
-                ('bgcolor2', s.bgcolor2, 'color'),
-                ('fgcolor', s.fgcolor, 'color'),
-                ('slcolor', s.slcolor, 'color'),
-                ('Store these settings as defaults', False),
+    itemlist = [C('rendermode', mode, 'select', modes),
+                C('linewidth', s.linewidth, 'float'),
+                C('bgcolor', s.bgcolor, 'color'),
+                C('bgcolor2', s.bgcolor2, 'color'),
+                C('fgcolor', s.fgcolor, 'color'),
+                C('slcolor', s.slcolor, 'color'),
+                C('Store these settings as defaults', False),
                 ]
-    res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
+    res = widgets.NewInputDialog(itemlist,'Config Dialog').getResult()
     if res:
         GD.debug(res)
         GD.canvas.updateSettings(res)
@@ -171,11 +160,11 @@ def viewportLayout():
         current = directions[0]
     else:
         current = directions[1]
-    itemlist = [('Number of viewports',len(GD.GUI.viewports.all)),
-                ('Viewport layout direction',current,'select',directions),
-                ('Number of viewports per row/column',GD.GUI.viewports.ncols),
+    itemlist = [C('Number of viewports',len(GD.GUI.viewports.all)),
+                C('Viewport layout direction',current,'select',directions),
+                C('Number of viewports per row/column',GD.GUI.viewports.ncols),
                 ]
-    res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
+    res = widgets.NewInputDialog(itemlist,'Config Dialog').getResult()
     if res:
         GD.debug(res)
         nvps = res['Number of viewports']
@@ -204,10 +193,10 @@ def canvasSettings():
         GD.canvas.camera.setClip(10**v*dist,10.*dist)
         GD.canvas.update()
         
-    dia = widgets.InputDialog(
+    dia = widgets.NewInputDialog(
         caption='Canvas Settings',
         items=[
-            ('near',-1.0,'slider',{'min':-100,'max':100,'scale':0.01,'func': set_near_clip,'text':'Near clipping plane'}),
+            C('near',-1.0,'slider',{'min':-100,'max':100,'scale':0.01,'func': set_near_clip,'text':'Near clipping plane'}),
             ],
         actions=[('Done',close),('Apply',apply_)]
         )
@@ -222,13 +211,13 @@ def openglSettings():
     def close():
         dia.close()
         
-    dia = widgets.InputDialog(
+    dia = widgets.NewInputDialog(
         caption='OpenGL Settings',
         items=[
-            ('Line Smoothing','Off','radio',{'choices':['On','Off']}),
-            ('Polygon Mode',None,'radio',{'choices':['Fill','Line']}),
-            ('Polygon Fill',None,'radio',{'choices':['Front and Back','Front','Back']}),
-            ('Culling','Off','radio',{'choices':['On','Off']}),
+            C('Line Smoothing','Off','radio',{'choices':['On','Off']}),
+            C('Polygon Mode',None,'radio',{'choices':['Fill','Line']}),
+            C('Polygon Fill',None,'radio',{'choices':['Front and Back','Front','Back']}),
+            C('Culling','Off','radio',{'choices':['On','Off']}),
 # These are currently set by the render mode
 #            ('Shading',None,'radio',{'choices':['Smooth','Flat']}),
 #            ('Lighting',None,'radio',{'choices':['On','Off']}),

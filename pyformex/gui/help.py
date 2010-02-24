@@ -74,6 +74,7 @@ def cmdline():
 ##     qtversion = '.'.join(qtversion.split('.')[:2])
 ##     link = "http://doc.trolltech.com/%s/qapplication.html#QApplication" % qtversion
 ##     help(link)
+    
 
 def readme():
     """Display the pyFormex description."""
@@ -172,15 +173,16 @@ try:
 except:
     LinksMenuData = []
 
-
+print GD.cfg['help/docs2']
 try:
     MenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] + [
         ('---',None),
-        (_('&Command line options'),cmdline),
+        (_('&Command line options'),cmdline),] + [
+        (k,draw.showFile,{'data':v}) for k,v in GD.cfg['help/docs2']] + [
         ## (_('&Qt application arguments'),qappargs),
-        (_('&Readme'),readme), 
+        (_('&Readme'),draw.showFile,{'data':GD.cfg['help/readme']}), 
         (_('&ReleaseNotes'),releasenotes), 
-        (_('&License'),license), 
+        (_('&License'),license),
         (_('&Detected Software'),detected), 
         (_('&OpenGL Format'),opengl), 
         (_('&Fortune Cookie'),cookie),

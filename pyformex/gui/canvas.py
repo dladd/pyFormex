@@ -642,10 +642,11 @@ class Canvas(object):
                 self.draw_focus_rectangle(1)
                 
         self.end_2D_drawing()
+
+        # start 3D drawing
+        self.camera.set3DMatrices()
         
         # draw the highlighted actors
-        self.camera.loadProjection()
-        self.camera.loadMatrix()
         if self.highlights:
             for actor in self.highlights:
                 self.setDefaults()
@@ -671,13 +672,10 @@ class Canvas(object):
                 self.setDefaults()
                 actor.draw(mode=self.rendermode)
 
-        # annotations are drawn in 3D space
+        # annotations are decorations drawn in 3D space
         for actor in self.annotations:
             self.setDefaults()
             actor.draw(mode=self.rendermode)
-
-        # decorations are drawn in 2D mode
-        # decoration drawing was moved to the start of the drawing cycle
 
         # make sure canvas is updated
         GL.glFlush()
@@ -911,18 +909,9 @@ class Canvas(object):
             self.camera.dolly(f)
 
 
-    def lockProjection(self):
-        "Store the current transformation matrices for subsequent (un)project."""
-        self.makeCurrent()
-        self.camera.loadProjection()
-        model = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
-        proj = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
-        view = GL.glGetIntegerv(GL.GL_VIEWPORT)
-        self.projection_matrices = [model,proj,view]
-
-
     def project(self,x,y,z,locked=False):
         "Map the object coordinates (x,y,z) to window coordinates."""
+        locked=False
         if locked:
             model,proj,view = self.projection_matrices
         else:
@@ -933,10 +922,11 @@ class Canvas(object):
             view = GL.glGetIntegerv(GL.GL_VIEWPORT)
         winx,winy,winz = GLU.gluProject(x,y,z,model,proj,view)
         return winx,winy,winz
-
+        return self.camera.project(x,y,z)
 
     def unProject(self,x,y,z,locked=False):
         "Map the window coordinates (x,y,z) to object coordinates."""
+        locked=False
         if locked:
             model,proj,view = self.projection_matrices
         else:
@@ -947,6 +937,7 @@ class Canvas(object):
             view = GL.glGetIntegerv(GL.GL_VIEWPORT)
         objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
         return (objx,objy,objz)
+        return self.camera.unProject(x,y,z)
 
 
     def zoomRectangle(self,x0,y0,x1,y1):

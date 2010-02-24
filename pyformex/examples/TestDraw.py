@@ -31,6 +31,8 @@ techniques = ['widgets','dialog','random','colors']
 """
 
 from numpy.random import rand
+from widgets import compatInputItem as C
+
     
 setDrawOptions({'clear':True, 'bbox':'auto'})
 linewidth(2) # The linewidth option is not working nyet
@@ -90,10 +92,10 @@ nplex = 3
 eltype = 'auto'
 color = 'element'
 pos = None
-items = [('Geometry Model',geom,'radio',geom_mode),
-         ('Plexitude',nplex,'select',plexitude),
-         ('Element Type',eltype,'select',element_type),
-         ('Color Mode',color,'select',color_mode),
+items = [C('Geometry Model',geom,'radio',geom_mode),
+         C('Plexitude',nplex,'select',plexitude),
+         C('Element Type',eltype,'select',element_type),
+         C('Color Mode',color,'select',color_mode),
          ]
 
 dialog = None
@@ -136,7 +138,7 @@ def timeOut():
     close()
 
 # Create the non-modal dialog widget and show it
-dialog = widgets.InputDialog(items,caption='Drawing parameters',actions = [('Close',close),('Show',show)],default='Show')
+dialog = widgets.NewInputDialog(items,caption='Drawing parameters',actions = [('Close',close),('Show',show)],default='Show')
 dialog.timeout = timeOut
 dialog.show()
         
