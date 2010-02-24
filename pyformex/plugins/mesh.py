@@ -365,6 +365,24 @@ class Mesh(Geometry):
         except:
             return None
 
+    def getFaces(self):
+        """Get the faces data.
+
+        For element types defined in the elements module, the
+        faces array can be constructed in a generic way.
+        The faces are not fused: common faces will be counted twice.
+        If the eltype is not defined, None is returned.
+        
+        Subclasses can override this method.
+        """
+        try:
+            el = getattr(elements,self.eltype.capitalize())
+            fac = asarray(el.faces)
+            faces = self.elems[:,fac]
+            return faces.reshape(-1,fac.shape[1])
+        except:
+            return None
+
     # WE SHOULD GET RID OF THIS ONE
     def data(self):
         """Return the mesh data as a tuple (coords,elems)"""
