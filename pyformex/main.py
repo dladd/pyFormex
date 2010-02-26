@@ -150,6 +150,14 @@ def apply_config_changes(cfg):
     if type(cfg['gui/dynazoom']) is str:
         cfg['gui/dynazoom'] = [ cfg['gui/dynazoom'], '' ]
 
+    for i in range(8):
+        t = "render/light%s"%i
+        print t
+        try:
+            cfg[t] = dict(cfg[t])
+        except:
+            pass
+
     # Rename settings
     for old,new in [
         ('history','gui/history'),

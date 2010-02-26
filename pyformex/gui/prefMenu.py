@@ -70,6 +70,9 @@ def updateSettings(res,save=None):
 
     GD.debug("New settings:",GD.cfg)
     GD.debug("New preferences:",GD.prefcfg)
+    #print res['render/light0']
+    #print GD.cfg['render/light0']
+    #print GD.prefcfg['render/light0']
 
 
 def settings():
@@ -177,8 +180,9 @@ def askConfigPreferences(items,prefix=None,store=None):
         store = GD.cfg
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
-    itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
+    itemlist = [ [ i,store[i] ] for i in items ]
     res = widgets.InputDialog(itemlist+[('Save changes',True)],'Config Dialog',GD.GUI).getResult()
+    print res
     if res and store==GD.cfg:
         updateSettings(res)
     return res
@@ -255,12 +259,14 @@ def setRender():
 def setLight(light=0):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     tgt = 'render/light%s'%light
-    localcopy = {}
-    localcopy.update(GD.cfg[tgt])
-    if askConfigPreferences(keys,store=localcopy):
-        GD.prefcfg[tgt] = localcopy
+    val = GD.cfg[tgt]
+    items = [(k,val[k]) for k in keys]
+    res = draw.askItems(items)
+    print res
+    if res:
+        updateSettings({tgt:res})
         GD.canvas.resetLights()
-        draw.smooth()
+
 
 def setLight0():
     setLight(0)

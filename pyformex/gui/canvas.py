@@ -268,13 +268,14 @@ class Light(object):
         self.light = GL.GL_LIGHT0 + (nr % GL.GL_MAX_LIGHTS)
         self.set(**kargs)
 
-    def set(self,ambient=0.5,diffuse=0.5,specular=0.5,position=(0.,0.,1.,0.)):
+    def set(self,ambient,diffuse,specular,position):
         self.ambient = colors.GREY(ambient)
         self.diffuse = colors.GREY(diffuse)
         self.specular = colors.GREY(specular)
         self.position = position
 
     def enable(self):
+        #print(self)
         GL.glLightfv(self.light,GL.GL_POSITION,self.position)
         GL.glLightfv(self.light,GL.GL_AMBIENT,self.ambient)
         GL.glLightfv(self.light,GL.GL_DIFFUSE,self.diffuse)
@@ -283,6 +284,14 @@ class Light(object):
 
     def disable(self):
         GL.glDisable(self.light)
+
+    def __str__(self):
+        return """LIGHT %s:
+    ambient color:  %s
+    diffuse color:  %s
+    specular color: %s
+    position: %s
+""" % (self.light,self.position,self.ambient,self.diffuse,self.specular)
 
 
 
@@ -342,7 +351,8 @@ class Canvas(object):
             GL.glMatrixMode(GL.GL_MODELVIEW)
             GL.glPushMatrix()
             GL.glLoadIdentity()
-            for l in GD.canvas.lights:
+            for i,l in enumerate(GD.canvas.lights):
+                #print "enable light %s (%s)" % (i,id(l))
                 l.enable()
             GL.glPopMatrix()
         self.glMatSpec()
@@ -381,8 +391,10 @@ class Canvas(object):
         self.lights = []
         for i in range(8):
             light = GD.cfg.get('render/light%d' % i, None)
+            #print light
             if light is not None:
-                self.lights.append(Light(i,light))
+                print "Adding LIGHT %s: %s" % (i,light)
+                self.lights.append(Light(i,**light))
 
 
     def setRenderMode(self,rm):
@@ -487,8 +499,6 @@ class Canvas(object):
                 self.setSlColor(v)
         
         
-
-    
     def setLight(self,nr,ambient,diffuse,specular,position):
         """(Re)Define a light on the scene."""
         self.lights[nr].set(ambient,diffuse,specular,position)
