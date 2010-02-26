@@ -234,9 +234,17 @@ class GUI(QtGui.QMainWindow):
             pmenu.insertMenu(pmenu.item('background color'),mmenu)
 
         ###############  VIEWS menu and toolbar ################
-        self.viewsMenu = None
         if GD.cfg['gui/viewmenu']:
-            self.viewsMenu = menu.Menu('&Views',parent=self.menu,before='help')
+            if GD.cfg['gui/viewmenu'] == 'main':
+                parent = self.menu
+                before = 'help'
+            else:
+                parent = self.menu.item('camera')
+                before = parent.item('---')
+            self.viewsMenu = menu.Menu('&Views',parent=parent,before=before)
+        else:
+            self.viewsMenu = None
+            
         self.viewbar = self.activateToolBar('Views ToolBar','viewbar')
 
         defviews = GD.cfg['gui/defviews']
@@ -249,6 +257,7 @@ class GUI(QtGui.QMainWindow):
             toolbar=self.viewbar,
             icons = viewicons
             )
+    
 
         # Restore previous pos/size
         self.resize(*size)
@@ -716,9 +725,7 @@ See Help->License or the file COPYING for details.
     # Create additional menus (put them in a list to save)
     
     # History Menu
-    history = GD.cfg.get('history',None)
-    if type(history) == list:
-        GD.GUI.history = scriptMenu.ScriptMenu('History',files=history,max=20)
+    GD.GUI.history = scriptMenu.ScriptMenu('History',files=GD.cfg['gui/history'],max=GD.cfg['gui/history_max'])
 
     if GD.cfg.get('gui/history_in_main_menu',False):
         before = GD.GUI.menu.item('help')

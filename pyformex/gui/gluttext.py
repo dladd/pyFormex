@@ -145,32 +145,47 @@ def glutBitmapLength(font, text):
     return len
 
 
-def glutDrawText(text,x,y,font='hv18',gravity=''):
-    """Draw the given text at given 2D position in window.
+def glutDrawText(text,x,y,font='hv18',gravity='',spacing=1.0):
+    """Draw a text at given 2D position in window.
 
-    If adjust == 'center', the text will be horizontally centered on
-    the insertion point.
-    If adjust == 'right', the text will be right aligned on the point.
-    Any other setting will align the text left.
-    Default is to center.
+    - text: a simple string, a multiline string or a list of strings. If it is
+      a string, it will be splitted on the occurrence of '\n' characters.
+    - x,y: insertion position on the canvas
+    - gravity: a string that determines the adjusting of the text with
+      respect to the insert position. It can be a combination of one of the
+      characters 'N or 'S' to specify the vertical positon, and 'W' or 'E'
+      for the horizontal. The default(empty) string will center the text.
     """
-    # !!! Do not use GLUT.glutBitmapLength(font, text)
-    width = glutBitmapLength(font, text)
-    height = glutFontHeight(font)
-    w2,h2 = 0.5*width,0.4*height
-    x -= w2
-    y -= h2
-    if 'E' in gravity:
-        x += w2
-    elif 'W' in gravity:
-        x -= w2
-    if 'N' in gravity:
-        y += h2
-    elif 'S' in gravity:
-        y -= h2
-    GL.glRasterPos2f(float(x),float(y));
-    #GD.debug("RENDERING WITH FONT %s" % font) 
-    glutRenderText(text,font)
+    if type(text) is str:
+        text = text.split('\n')
+    nlines = len(text)
+    widths = [ glutBitmapLength(font, t) for t in text ]
+    fontheight = glutFontHeight(font)
+    spacing *= fontheight
+    width = max(widths)
+    height = spacing*nlines 
+
+    x,y = float(x),float(y)
+    if 'S' in gravity:
+        yi = y
+    elif 'N' in gravity:
+        yi = y + height
+    else:
+        yi = y + height/2
+
+    
+    for t,w in zip(text,widths):
+        if 'E' in gravity:
+            xi = x
+        elif 'W' in gravity:
+            xi = x - w
+        else:
+            xi = x - w/2
+        yi -= spacing
+        print (xi,yi)
+        GL.glRasterPos2f(float(xi),float(yi))
+        glutRenderText(t,font)
+
 
 
 # End

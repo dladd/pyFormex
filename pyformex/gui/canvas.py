@@ -191,6 +191,7 @@ class CanvasSettings(object):
     """A collection of settings for an OpenGL Canvas."""
 
     default = dict(
+        pointsize = 4.0,
         linewidth = 1.0,
         bgcolor = colors.mediumgrey,
         bgcolor2 = None,
@@ -218,6 +219,8 @@ class CanvasSettings(object):
             elif k == 'colormap':
                 ok[k] = map(colors.GLColor,v)
             elif k == 'linewidth':
+                ok[k] = float(v)
+            elif k == 'pointsize':
                 ok[k] = float(v)
             elif k == 'transparency':
                 ok[k] = max(min(float(v),1.0),0.0)
@@ -421,6 +424,10 @@ class Canvas(object):
         """Set the linewidth for line rendering."""
         self.settings.linewidth = float(lw)
 
+    def setPointSize(self,sz):
+        """Set the size for point drawing."""
+        self.settings.pointsize = float(sz)
+
 
     def setBgColor(self,color1,color2=None):
         """Set the background color.
@@ -573,7 +580,6 @@ class Canvas(object):
         else:
             GL.glDisable(GL.GL_POLYGON_OFFSET_FILL)
             
-        
 
     def glupdate(self):
         """Flush all OpenGL commands, making sure the display is updated."""
@@ -591,6 +597,7 @@ class Canvas(object):
         """Activate the canvas settings in the GL machine."""
         GL.glColor3fv(self.settings.fgcolor)
         GL.glLineWidth(self.settings.linewidth)
+        GL.glPointSize(self.settings.pointsize)
         if self.rendermode.startswith('smooth'):
             self.glMatSpec()
 

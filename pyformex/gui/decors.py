@@ -117,6 +117,53 @@ class Decoration(Drawable):
         self.y = int(y)
         Drawable.__init__(self)
 
+
+# Marks database: a dict with mark name and a function to draw
+# the mark. The 
+_marks_ = {
+    'dot':drawDot,
+    }
+
+class Mark(Decoration):
+    """A mark at a fixed position on the canvas."""
+    def __init__(self,x,y,mark='dot',color=None,linewidth=None):
+        Decoration.__init__(self,x,y)
+        self.x = x
+        self.y = y
+        if not mark in _marks_:
+            raise ValueError,"Unknown mark: %s" % mark
+        self.mark = mark
+        self.color = saneColor(color)
+        self.linewidth = saneLineWidth(linewidth)
+
+
+    def drawGL(self,mode='wireframe',color=None):
+        if self.color is not None:
+            GL.glColor3fv(self.color)
+        if self.linewidth is not None:
+            GL.glLineWidth(self.linewidth)
+        _marks_[self.mark](self.x,self.y)
+
+
+class Line(Decoration):
+    """A straight line on the canvas."""
+    def __init__(self,x1,y1,x2,y2,color=None,linewidth=None):
+        Decoration.__init__(self,x1,y1)
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+        self.color = saneColor(color)
+        self.linewidth = saneLineWidth(linewidth)
+
+
+    def drawGL(self,mode='wireframe',color=None):
+        if self.color is not None:
+            GL.glColor3fv(self.color)
+        if self.linewidth is not None:
+            GL.glLineWidth(self.linewidth)
+        drawLine(self.x1,self.y1,self.x2,self.y2)
+
         
 ## class QText(Decoration):
 ##     """A viewport decoration showing a text."""
@@ -144,23 +191,22 @@ class Decoration(Drawable):
 
 
 class GlutText(Decoration):
-    """A viewport decoration showing a text."""
+    """A viewport decoration showing a text string.
 
-    def __init__(self,text,x,y,font='9x15',size=None,gravity=None,adjust=None,color=None,zoom=None):
+    - text: a simple string, a multiline string or a list of strings. If it is
+      a string, it will be splitted on the occurrence of '\n' characters.
+    - x,y: insertion position on the canvas
+    - gravity: a string that determines the adjusting of the text with
+      respect to the insert position. It can be a combination of one of the
+      characters 'N or 'S' to specify the vertical positon, and 'W' or 'E'
+      for the horizontal. The default(empty) string will center the text.
+    """
+
+    def __init__(self,text,x,y,font='9x15',size=None,gravity=None,color=None,zoom=None):
         """Create a text actor"""
         Decoration.__init__(self,x,y)
         self.text = str(text)
         self.font = gluttext.glutSelectFont(font,size)
-        if adjust is not None:
-            import warnings
-            warnings.warn("The 'adjust' parameter should no longer be used. Use 'gravity' intead.", DeprecationWarning)
-
-            gravity = { 'left':'W',
-                        'right':'E',
-                        'center':'C',
-                        'under':'N',
-                        'above':'S',
-                        }[adjust]
 
         if gravity is None:
             gravity = 'E'
@@ -174,7 +220,7 @@ class GlutText(Decoration):
         ##     GD.canvas.zoom_2D(self.zoom)
         if self.color is not None: 
             GL.glColor3fv(self.color)
-        gluttext.glutDrawText(self.text,self.x,self.y,self.font,gravity=self.gravity)
+        gluttext.glutDrawText(self.text,self.x,self.y,font=self.font,gravity=self.gravity)
         ## if self.zoom:
         ##     GD.canvas.zoom_2D()
 
@@ -284,26 +330,6 @@ class Grid(Decoration):
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
         drawGrid(self.x1,self.y1,self.x2,self.y2,self.nx,self.ny)
-
-
-class Line(Decoration):
-    """A straight line on the canvas."""
-    def __init__(self,x1,y1,x2,y2,color=None,linewidth=None):
-        Decoration.__init__(self,x1,y1)
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-        self.color = saneColor(color)
-        self.linewidth = saneLineWidth(linewidth)
-
-
-    def drawGL(self,mode='wireframe',color=None):
-        if self.color is not None:
-            GL.glColor3fv(self.color)
-        if self.linewidth is not None:
-            GL.glLineWidth(self.linewidth)
-        drawLine(self.x1,self.y1,self.x2,self.y2)
 
 
 class LineDrawing(Decoration):

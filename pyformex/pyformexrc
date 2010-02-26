@@ -48,7 +48,6 @@ scripttemplate = os.path.join(pyformexdir,'template.py')
 # scriptdirs is a list of (title,dir) tuples
 # for 'examples', the directory will be filled in automagically
 scriptdirs = [ ('Examples','') ]
-history = []
 
 # extra paths to append tot sys.path
 syspath = []
@@ -66,6 +65,8 @@ uselib = True
 
 [gui]
 #imagesfromeps = True
+history = []
+history_max = 20
 
 splash = os.path.join(icondir,'pyformex-splash.png')
 plugins = ['formex_menu','tools_menu']

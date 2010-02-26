@@ -140,6 +140,33 @@ def savePreferences():
         res = "Could not save"
     pyformex.debug("%s preferences to file %s" % (res,pyformex.preffile))
 
+
+def apply_config_changes(cfg):
+    """Apply incompatible changes in the configuration
+
+    cfg is the user configuration that is to be saved.
+    """
+    # Adhoc changes
+    if type(cfg['gui/dynazoom']) is str:
+        cfg['gui/dynazoom'] = [ cfg['gui/dynazoom'], '' ]
+
+    # Rename settings
+    for old,new in [
+        ('history','gui/history'),
+        ]:
+        if old in cfg:
+            if new not in cfg:
+                cfg[new] = cfg[old]
+            del cfg[old]
+
+    # Delete settings
+    for key in [
+        'input/timeout',
+        ]:
+        if key in cfg:
+            del key
+
+
 ###########################  app  ################################
 
     
@@ -360,10 +387,7 @@ def run(argv=[]):
     pyformex.debug("Config: %s" % pyformex.prefcfg)
 
     # Fix incompatible changes in configuration
-    if type(pyformex.prefcfg['gui/dynazoom']) is str:
-        pyfomrex.prefcfg['gui/dynazoom'] = [ pyformex.prefcfg['gui/dynazoom'], '' ]
-    if 'input/timeout' in pyformex.prefcfg:
-        del pyformex.prefcfg['input/timeout']
+    apply_config_changes(pyformex.prefcfg)
 
     # Create an empty one for the session settings
     pyformex.cfg = Config(default=prefLookup)

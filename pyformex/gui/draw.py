@@ -687,9 +687,9 @@ def setTriade(on=None,pos='lb',siz=100):
     GD.app.processEvents()
 
 
-def drawText(text,x,y,gravity='E',font='helvetica',size=14,color=None,adjust=None,zoom=None):
+def drawText(text,x,y,gravity='E',font='helvetica',size=14,color=None,zoom=None):
     """Show a text at position x,y using font."""
-    TA = decors.Text(text,x,y,gravity=gravity,font=font,size=size,color=color,adjust=adjust,zoom=zoom)
+    TA = decors.Text(text,x,y,gravity=gravity,font=font,size=size,color=color,zoom=zoom)
     decorate(TA)
     return TA
 
@@ -845,6 +845,10 @@ timeout = toolbar.timeout
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
     GD.canvas.setLineWidth(wid)
+
+def pointsize(siz):
+    """Set the size to be used in point drawings."""
+    GD.canvas.setPointSize(siz)
 
 
 def canvasSize(width,height):

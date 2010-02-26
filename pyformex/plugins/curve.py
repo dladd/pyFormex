@@ -228,7 +228,7 @@ class PolyLine(Curve):
         if not closed:
             self.nparts -= 1
         self.closed = closed
-    
+
 
     def nelems(self):
         return self.nparts

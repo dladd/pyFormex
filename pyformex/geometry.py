@@ -39,10 +39,52 @@ class Geometry(object):
 
     The Geometry class is a generic parent class for all geometric classes,
     intended to make the Coords transformations available without explicit
-    declaration.
-    A Geometry contains a single attribute, coords, which is a Coords object.
+    declaration. This class is not intended to be used directly, only
+    through derived classes.
+
+    The derived classes should have an attribute `coords` which is
+    a Coords object containing the coordinates of all the points that should
+    get transformed under a Coords transformation.
     All the Coords transformation methods are inherited by the Geometry
-    class.
+    class and will be executed on the `coords` attribute.
+
+    Derived classes can (and in most cases should) declare a method
+    `setCoords(coords)` returning an object that is identical to the
+    original, except for its coords being replaced by new ones with the
+    same array shape.
+    
+    The Geometry class provides two possible default implementations:
+    - `setCoords_inplace` sets the coords attribute to the provided new
+      coords, thus changing the object itself, and returns itself,
+    - `setCoords_copy` creates a deep copy of the object before setting
+      the coords attribute. The original object is unchanged, the returned
+      one is the changed copy.
+
+    When using the first method, a statement like ```B = A.scale(0.5)```
+    will result in both `A` and `B` pointing to the same scaled object,
+    while with the second method, `A` would still be the untransformed
+    object. Since the latter is in line with the design philosophy of
+    pyFormex, is is
+    
+    The default `setCoords` method is `setCoords_copy`.
+    Most derived classes that are part of pyFormex however override this
+    default and implement a more efficient cop
+    Neither of both are good enough for pyFormex classes though
+      
+    the coords attribute in the object and returns the existing object::
+        
+        self.coords = coords
+        return self
+
+    While the user can stick with this default in his scripts,
+    it is not in line with the default scripting language design of
+    pyFormex, which is to not change an existing object inplace, but rather
+    have the transformation return a changed object.
+    * Therefore, derived classes that are part of pyFormex should always
+    define their own implementation of setCoords(coords) *.
+    
+    
+    A Geometry contains a single attribute, coords, which is a Coords object.
     """
 
     def _coords_transform(func):
@@ -57,21 +99,32 @@ class Geometry(object):
         newf.__doc__ = coords_func.__doc__
         return newf
 
-    def setCoords(self,coords):
+
+    def setCoords_inplace(self,coords):
         """Replace the current coords with new ones.
 
-        The default implementation imposes the restriction that the
-        new coordinate array should have the same shape. It also overwrites
-        the coords of the current object. Derived classes can change this
-        behavior, but should nake sure to keep the data consistent.
-        The new coords structure should have the same
         """
         if isinstance(coords,Coords) and coords.shape == self.coords.shape:
             self.coords = coords
             return self
         else:
             raise ValueError,"Invalid reinitialization of Geometry coords"
-        
+
+
+    def setCoords_copy(self,coords):
+        """Return a copy of the object with new coordinates replacing the old.
+
+        """
+        return self.copy().setCoords_inplace(coords)
+
+    setCoords = setCoords_copy
+
+
+    def copy(self):
+        """Return a deep copy of the object."""
+        from copy import deepcopy
+        return deepcopy(self)
+    
 
     def __str__(self):
         return self.coords.__str__()
