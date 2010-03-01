@@ -243,7 +243,7 @@ class Connectivity(ndarray):
         return Connectivity(self[:,nodsel].reshape(-1,nplex))
 
 
-    def expand(self):
+    def expand(self,edg=None):
         """Transform elems to edges and faces.
 
         Return a tuple edges,faces where
@@ -259,8 +259,14 @@ class Connectivity(ndarray):
         The inverse operation can be obtained from function compactElems.
         """
         nelems,nplex = self.shape
-        n = arange(nplex)
-        edg = column_stack([n,roll(n,-1)])
+        if edg is None:
+            n = arange(nplex)
+            edg = column_stack([n,roll(n,-1)])
+        else:
+            edg = asarray(edg)
+            if edg.ndim != 2 or edg.shape[-1] != 2:
+                raise ValueError,"edg should be a (n,2) shaped array!"
+            
         alledges = self[:,edg].astype(int32)
         # sort edge nodes with lowest number first
         alledges.sort()
