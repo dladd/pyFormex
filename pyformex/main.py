@@ -125,9 +125,24 @@ def savePreferences():
     
     del pyformex.prefcfg['__ref__']
 
-    # Dangerous to set permanently!
-    del pyformex.prefcfg['gui/timeoutvalue']
+    # BEWARE !
+    # DELETING WITH FULLNAME ('gui/timeoutvalue') DOES NOT WORK
+    # SHOULD BE FIXED IN config
+    # BECAUSE WE USE del cfg in other places
     
+    # Dangerous to set permanently!
+    del pyformex.prefcfg['gui']['timeoutvalue']
+
+    # Current erroroneously processed, therfore not saved
+    del pyformex.prefcfg['render']['light0']
+    del pyformex.prefcfg['render']['light1']
+    del pyformex.prefcfg['render']['light2']
+    del pyformex.prefcfg['render']['light3']
+
+    pyformex.options.debug = 1
+    print pyformex.options
+    print pyformex.debug
+    print pyformex.prefcfg
     pyformex.debug("="*60)
     pyformex.debug("!!!Saving config:\n%s" % pyformex.prefcfg)
 
@@ -170,9 +185,11 @@ def apply_config_changes(cfg):
     # Delete settings
     for key in [
         'input/timeout',
+        'render/ambient','render/diffuse','render/specular','render/emission',
         ]:
         if key in cfg:
-            del key
+            print "DELETING CONFIG VARIABLE %s" % key
+            del cfg[key]
 
 
 ###########################  app  ################################

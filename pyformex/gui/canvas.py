@@ -334,6 +334,15 @@ class Canvas(object):
     rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
                    'smooth_avg']
 
+    light_model = {
+        'ambient': GL.GL_AMBIENT,
+        'diffuse': GL.GL_DIFFUSE,
+        'ambient and diffuse': GL.GL_AMBIENT_AND_DIFFUSE,
+        'emission': GL.GL_EMISSION,
+        'specular': GL.GL_SPECULAR,
+        }
+    
+
     def __init__(self):
         """Initialize an empty canvas with default settings."""
         self.actors = ActorList(self)
@@ -367,27 +376,23 @@ class Canvas(object):
         return self.width(),self.height()
     
 
-    def glMatSpec(self):
-        #print "GLMATSPEC %s,%s,%s" % (self.specular,self.emission,self.shininess)
-        GL.glMaterialfv(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE,colors.GREY(self.ambient))
-        GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
-        GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
-        GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
-
-
     def glLightSpec(self):
-        #print "GLLIGHTSPEC"
         GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
         GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
         GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glLoadIdentity()
-        #print self.lights
         self.lights.enable()
         GL.glPopMatrix()
-        self.glMatSpec()
-        GL.glColorMaterial(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE)
+        
+        GL.glMaterialfv(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE,colors.GREY(self.ambient))
+        GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
+        GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
+        GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
+
+        # What component to drive by color commands
+        GL.glColorMaterial(fill_mode,self.light_model[self.lightmodel])
         GL.glEnable(GL.GL_COLOR_MATERIAL)
 
 
@@ -413,18 +418,17 @@ class Canvas(object):
 
 
     def resetLighting(self):
-        self.ambient = GD.cfg['render/ambient']
-        self.specular = GD.cfg['render/specular']
-        self.emission = GD.cfg['render/emission']
-        self.shininess = GD.cfg['render/shininess']
+        self.lightmodel = GD.cfg['render/lightmodel']
+        self.ambient = GD.cfg['render/material/ambient']
+        self.specular = GD.cfg['render/material/specular']
+        self.emission = GD.cfg['render/material/emission']
+        self.shininess = GD.cfg['render/material/shininess']
 
         
     def resetLights(self):
         for i in range(8):
             light = GD.cfg.get('render/light%d' % i, None)
             if light is not None:
-                #print "Setting LIGHT %s: %s" % (i,light)
-                light['enabled'] = True
                 self.lights.set(i,**light)
 
 
@@ -639,7 +643,7 @@ class Canvas(object):
         GL.glLineWidth(self.settings.linewidth)
         GL.glPointSize(self.settings.pointsize)
         if self.rendermode.startswith('smooth'):
-            self.glMatSpec()
+            self.glLightSpec()
 
     
     def setSize (self,w,h):

@@ -281,14 +281,28 @@ def createLightDialogItems(light=0):
     return items
 
 
-def setLighting():
-    mat_items = [ {'name':a,'text':a,'value':getattr(GD.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value} for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
+def showLighting():
+    print "ACCORDING TO CANVAS:"
+    print GD.canvas.lights
+    print "ACCORDING TO CFG:"
+    print GD.cfg['render']
 
-    
-    items = [ ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(3) ]
+
+def setLighting():
+    mat_items = [
+        {'name':a,'text':a,'value':getattr(GD.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value} for a in [ 'ambient', 'specular', 'emission'] ] + [
+        {'name':a,'text':a,'value':getattr(GD.canvas,a),'itemtype':'slider','min':0,'max':128,'scale':1.,'func':set_mat_value} for a in ['shininess'] ]
+
+    enabled = [ GD.cfg['render/light%s'%light] is not None and GD.cfg['render/light%s'%light]['enabled']  for light in range(8) ]
+    print "ENABLED LIGHTS"
+
+    #items = [ ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
+
+    items = [ {'name':'lightmodel','value':GD.canvas.lightmodel,'choices':GD.canvas.light_model.keys()}, ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
     print items
 
-    dia = None 
+    dia = None
+    
     def close():
         dia.close()
         
@@ -297,6 +311,9 @@ def setLighting():
         res = dia.results
         res['Save changes'] = save
         GD.debug(res)
+        GD.cfg['render/lightmodel'] = res['render/lightmodel']
+        GD.canvas.resetLighting()
+        GD.app.processEvents()
         return
         ok_plugins = utils.subDict(res,'_plugins/')
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
@@ -308,7 +325,8 @@ def setLighting():
         store=GD.cfg,
         items=items,
         prefix='render/',
-        autoprefix=True
+        autoprefix=True,
+        actions=[('Close',close),('Apply',accept)]
         )
     dia.show()
     #if res:
@@ -441,6 +459,7 @@ MenuData = [
         (_('&Pick Size'),setPickSize), 
         (_('&Render Mode'),setRenderMode),
         (_('&Lighting'),setLighting),
+        (_('&Show Lighting'),showLighting),
         ('---',None),
         (_('&Save Preferences Now'),savePreferences),
 #        (_('&Make current settings the defaults'),savePreferences),

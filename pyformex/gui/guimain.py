@@ -461,7 +461,7 @@ class GUI(QtGui.QMainWindow):
         self.move(*self.XPos())
 
         # store the history and main window size/pos
-        GD.prefcfg['history'] = GD.GUI.history.files
+        GD.prefcfg['gui/history'] = GD.GUI.history.files
 
         GD.prefcfg.update({'size':Size(GD.GUI),
                            'pos':Pos(GD.GUI),
