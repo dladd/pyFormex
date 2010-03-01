@@ -113,7 +113,7 @@ def glNoCulling():
     glCulling(False)
 
 def glLighting(onoff):
-    print onoff
+    #print onoff
     glEnable(GL.GL_LIGHTING,onoff)
 
 
@@ -264,18 +264,20 @@ class CanvasSettings(object):
 
 class Light(object):
 
-    def __init__(self,nr,*args,**kargs):
+    def __init__(self,nr,**kargs):
         self.light = GL.GL_LIGHT0 + (nr % GL.GL_MAX_LIGHTS)
-        self.set(**kargs)
+        self.set(ambient=0.5,diffuse=0.5,specular=0.5,position=[0.,0.,1.,0.],enabled=False)
 
-    def set(self,ambient,diffuse,specular,position):
-        self.ambient = colors.GREY(ambient)
-        self.diffuse = colors.GREY(diffuse)
-        self.specular = colors.GREY(specular)
-        self.position = position
+    def set(self,**kargs):
+        for k in kargs:
+            self.set_value(k,kargs[k])
+
+    def set_value(self,key,value):
+        if key in [ 'ambient','diffuse','specular' ]:
+            value = colors.GREY(value)
+        setattr(self,key,value)
 
     def enable(self):
-        #print(self)
         GL.glLightfv(self.light,GL.GL_POSITION,self.position)
         GL.glLightfv(self.light,GL.GL_AMBIENT,self.ambient)
         GL.glLightfv(self.light,GL.GL_DIFFUSE,self.diffuse)
@@ -291,7 +293,34 @@ class Light(object):
     diffuse color:  %s
     specular color: %s
     position: %s
-""" % (self.light,self.position,self.ambient,self.diffuse,self.specular)
+""" % (self.light-GL.GL_LIGHT0,self.ambient,self.diffuse,self.specular,self.position)
+    
+
+class Lights(object):
+    """An array of OpenGL lights.
+
+    """
+    def __init__(self,nlights):
+        self.lights = [ Light(i) for i in range(nlights) ]
+
+    def set_value(self,i,key,value):
+        """Set an attribute of light i"""
+        self.lights[i].set_value(key,value)
+        
+    def set(self,i,**kargs):
+        """Set all attributes of light i"""
+        self.lights[i].set(**kargs)
+
+    def enable(self):
+        """Enable the lights"""
+        [ i.enable() for i in self.lights if i.enabled ]
+
+    def disable(self):
+        [ i.disable() for i in self.lights ]
+
+    def __str__(self):
+        return ''.join([i.__str__() for i in self.lights if i.enabled ])
+
 
 
 
@@ -315,6 +344,7 @@ class Canvas(object):
         self.background = None
         self.bbox = None
         self.resetLighting()
+        self.lights = Lights(8)
         self.resetLights()
         self.setBbox()
         self.settings = CanvasSettings()
@@ -338,23 +368,24 @@ class Canvas(object):
     
 
     def glMatSpec(self):
+        #print "GLMATSPEC %s,%s,%s" % (self.specular,self.emission,self.shininess)
+        GL.glMaterialfv(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE,colors.GREY(self.ambient))
         GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
         GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
         GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
 
 
     def glLightSpec(self):
+        #print "GLLIGHTSPEC"
         GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
         GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
         GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
-        if GD.canvas:
-            GL.glMatrixMode(GL.GL_MODELVIEW)
-            GL.glPushMatrix()
-            GL.glLoadIdentity()
-            for i,l in enumerate(GD.canvas.lights):
-                #print "enable light %s (%s)" % (i,id(l))
-                l.enable()
-            GL.glPopMatrix()
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        GL.glLoadIdentity()
+        #print self.lights
+        self.lights.enable()
+        GL.glPopMatrix()
         self.glMatSpec()
         GL.glColorMaterial(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE)
         GL.glEnable(GL.GL_COLOR_MATERIAL)
@@ -377,6 +408,7 @@ class Canvas(object):
     def resetDefaults(self,dict={}):
         """Return all the settings to their default values."""
         self.settings.reset(dict)
+        self.resetLighting()
         self.resetLights()
 
 
@@ -388,13 +420,12 @@ class Canvas(object):
 
         
     def resetLights(self):
-        self.lights = []
         for i in range(8):
             light = GD.cfg.get('render/light%d' % i, None)
-            #print light
             if light is not None:
-                print "Adding LIGHT %s: %s" % (i,light)
-                self.lights.append(Light(i,**light))
+                #print "Setting LIGHT %s: %s" % (i,light)
+                light['enabled'] = True
+                self.lights.set(i,**light)
 
 
     def setRenderMode(self,rm):
@@ -402,12 +433,10 @@ class Canvas(object):
 
         This changes the rendermode and redraws everything with the new mode.
         """
-        #GD.debug("Changing Render Mode to %s" % rm)
         if rm != self.rendermode:
             if rm not in Canvas.rendermodes:
                 rm = Canvas.rendermodes[0]
             self.rendermode = rm
-            #GD.debug("Redrawing with mode %s" % self.rendermode)
             self.glinit(self.rendermode)
             self.redrawAll()
 
@@ -499,9 +528,10 @@ class Canvas(object):
                 self.setSlColor(v)
         
         
-    def setLight(self,nr,ambient,diffuse,specular,position):
+    def setLightValue(self,nr,key,val):
         """(Re)Define a light on the scene."""
-        self.lights[nr].set(ambient,diffuse,specular,position)
+        self.lights.set_value(nr,key,val)
+        self.lights.enable(nr)
 
     def enableLight(self,nr):
         """Enable an existing light."""

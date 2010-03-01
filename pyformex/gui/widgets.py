@@ -553,6 +553,9 @@ class InputItem(QtGui.QHBoxLayout):
             self.label = QtGui.QLabel(text)
             self.addWidget(self.label)
 
+        if 'data' in kargs:
+            self.data = kargs['data']
+
         if 'tooltip' in kargs:
             self.label.setToolTip(kargs['tooltip'])
 
@@ -1018,7 +1021,9 @@ class InputFSlider(InputFloat):
     - 'scale': scale factor to compute the float value
     - 'ticks' : step for the tick marks (default range length / 10)
     - 'func' : an optional function to be called whenever the value is
-      changed. The function takes a float/integer argument.
+      changed. The function receives the input field as argument. With
+      this argument, the fields attirbutes like name, value, text, can
+      be retrieved.
     """
     
     def __init__(self,name,value,*args,**kargs):
@@ -1047,7 +1052,7 @@ class InputFSlider(InputFloat):
         value = val*self.scale
         self.input.setText(str(value))
         if self.func:
-            self.func(value)
+            self.func(self)
 
 
 class InputColor(InputItem):
@@ -1168,18 +1173,44 @@ def compatInputItem(name,value,itemtype=None,kargs={}):
 
 
 class NewInputDialog(QtGui.QDialog):
-    """A dialog widget to set the value of one or more items.
+    """A dialog widget to interactively set the value of one or more items.
 
-    While general input dialogs can be constructed from all the underlying
-    Qt classes, this widget provides a way to construct fairly complex
-    input dialogs with a minimum of effort.
-
-    The input dialog can be modal or non-modal dialog.
-    """
+    Overview
+    --------
     
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,autoprefix=False):
-        """Create a dialog asking the user for the value of items.
+    The pyFormex user has full access to the Qt4 framework on which the
+    GUI was built. Therefore he can built input dialogs as complex and
+    powerful as he can imagine. However, directly dealing with the
+    Qt4 libraries requires some skills and, for simple input widgets,
+    more effort than needed.
 
+    The InputDialog class presents a unified system for quick and easy
+    creation of common dialog types. The provided dialog can become
+    quite sophisticated with tabbed pages, groupboxes and custom widgets.
+    Both modal and modeless (non-modal) dialogs can be created.
+
+    Items
+    -----
+    Each basic input item is a dictionary, where the fields have the
+    following meaning:
+    
+    - name:  the name of the field,
+    - value: the initial or default value of the field,
+    - itemtype: the type of values the field can accept,
+    - options: a dict with options for the field.
+    - text: if specified, the text value will be displayed instead of
+      the name. The name value will remain the key in the return dict.
+      Use this field to display a more descriptive text for the user,
+      while using a short name for handling the value in your script.
+    - buttons:
+    - tooltip:
+    - min:
+    - max:
+    - scale:
+    - func:
+    
+
+        
         `items` is either a list of items, or a dict where each value is a
         list of items or another dict (where each value is then a list of items).
         If `items` is a dict, a tabbed widget will be created
@@ -1188,12 +1219,7 @@ class NewInputDialog(QtGui.QDialog):
         that subdict.
 
         Each item in an `items` list is a list or tuple of the form
-        (name,value,type,options), where the fields have the following meaning:
-    
-        - name:  the name of the field,
-        - value: the initial or default value of the field,
-        - type:  the type of values the field can accept,
-        - options: a dict with options for the field.
+        (name,value,type,options), where 
 
         At least the name and initial value need to be specified. The type
         can often be determined from the initial value. Some types set the
@@ -1211,13 +1237,6 @@ class NewInputDialog(QtGui.QDialog):
         to it.
 
         The following options are applicable to all item types:
-
-        - text: if specified, the text value will be displayed instead of
-          the name. The name value will remain the key in the return dict.
-          Use this field to display a more descriptive text for the user,
-          while using a short name for handling the value in your script.
-        - buttons:
-        - tooltip:
 
         Currently, the following item types are available:
 
@@ -1256,6 +1275,22 @@ class NewInputDialog(QtGui.QDialog):
           A variant 'vpush' aligns the options vertically. 
         - [ 'name', 'red', 'color' ] will present a color selection widget,
           with 'red' as the initial choice.
+
+    Other arguments
+    ---------------
+
+    caption: the window title to be shown in the window decoration
+    actions: a list of action buttons to be added at the bottom of the
+      input form. By default, a Cancel and Ok button will be added, to either
+      reject or accept the input values.
+    parent: the parent widget (by default, this is the pyFomrex main window)
+    flags:
+    modal:
+          
+    """
+    
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,modal=None):
+        """Create a dialog asking the user for the value of items.
         """
         if parent is None:
             parent = GD.GUI
@@ -1265,12 +1300,15 @@ class NewInputDialog(QtGui.QDialog):
         if caption is None:
             caption = 'pyFormex-dialog'
         self.setWindowTitle(str(caption))
+        if modal is not None:
+            self.setModal(modal)
+
         self.fields = []
         self.results = odict.ODict()
         self._pos = None
         self.store = store
         self.autoname = utils.NameSequence('input-')
-        self.prefix = ''
+        self.prefix = prefix
         self.autoprefix = autoprefix
 
         # create the form with the input fields
@@ -1372,6 +1410,7 @@ class NewInputDialog(QtGui.QDialog):
         if not 'name' in item:
             item['name'] = self.autoname.next()
         if not 'value' in item:
+            print self.store
             try:
                 item['value'] = self.store[item['name']]
             except:
@@ -1525,6 +1564,9 @@ def inputAny(name,value,itemtype=str,**options):
             
         elif type(value) == float:
             line = InputFSlider(name,value,**options)
+
+        else:
+            raise ValueError,"Invalid value type for slider: %s" % value
 
     elif itemtype == 'info':
         line = InputInfo(name,value,**options)

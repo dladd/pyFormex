@@ -604,9 +604,9 @@ def splitEndDigits(s):
 
 
 def splitStartDigits(s):
-    """Split a string in any prefix and a numerical end sequence.
+    """Split a string in a numerical sequence and any suffix.
 
-    A string like 'abc-0123' will be split in 'abc-' and '0123'.
+    A string like '0123-abc' will be split in '0123' and '-abc'.
     Any of both can be empty.
     """
     return digits_string.match(s).groups()

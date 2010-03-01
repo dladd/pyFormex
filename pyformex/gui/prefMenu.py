@@ -30,6 +30,7 @@ import os
 from gettext import gettext as _
 import utils
 import widgets
+from widgets import simpleInputItem as I, compatInputItem as C
 import toolbar
 import draw
 import imageViewer
@@ -77,7 +78,6 @@ def updateSettings(res,save=None):
 
 def settings():
     import plugins
-    from widgets import simpleInputItem as I, compatInputItem as C
     
     dia = None
 
@@ -248,31 +248,72 @@ def setRenderMode():
             getattr(draw,rendermode)()
         updateSettings(res)
             
+
+def set_mat_value(field):
+    key = field.text()
+    val = field.value()
+    print key,val
+    draw.set_material_value(key,val)
+
+
+def set_light_value(field):
+    light = field.data
+    key = field.text()
+    val = field.value()
+    print light,key,val
+    draw.set_light_value(light,key,val)
     
-def setRender():
-    items = [ ('render/%s'%a,getattr(GD.canvas,a),'slider',{'min':0,'max':100,'scale':0.01,'func':getattr(draw,'set_%s'%a)}) for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
-    res = draw.askItems(items)
-    if res:
-        updateSettings(res)
 
-
-def setLight(light=0):
+def createLightDialogItems(light=0):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     tgt = 'render/light%s'%light
     val = GD.cfg[tgt]
-    items = [(k,val[k]) for k in keys]
-    res = draw.askItems(items)
-    print res
-    if res:
-        updateSettings({tgt:res})
-        GD.canvas.resetLights()
+    print "LIGHT %s" % light
+    print "CFG %s " % val
+    print "DICT %s" % GD.canvas.lights.lights[light].__dict__
+    print "DICT %s" % dir(GD.canvas.lights.lights[light])
+    
+    items = [
+        { 'name': 'enabled','text':'enabled' } ] + [
+        I(name=k,text=k,itemtype='slider',min=0,max=100,scale=0.01,func=set_light_value,data=light)  for k in [ 'ambient', 'diffuse',  'specular' ] ] + [
+        {'name': 'position','text':'position'}
+        ]
+    return items
 
 
-def setLight0():
-    setLight(0)
+def setLighting():
+    mat_items = [ {'name':a,'text':a,'value':getattr(GD.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value} for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
 
-def setLight1():
-    setLight(1)
+    
+    items = [ ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(3) ]
+    print items
+
+    dia = None 
+    def close():
+        dia.close()
+        
+    def accept(save=False):
+        dia.acceptData()
+        res = dia.results
+        res['Save changes'] = save
+        GD.debug(res)
+        return
+        ok_plugins = utils.subDict(res,'_plugins/')
+        res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
+        updateSettings(res)
+        plugins.loadConfiguredPlugins()
+
+    dia = widgets.NewInputDialog(
+        caption='pyFormex Settings',
+        store=GD.cfg,
+        items=items,
+        prefix='render/',
+        autoprefix=True
+        )
+    dia.show()
+    #if res:
+    #    updateSettings({tgt:res})
+    #    GD.canvas.resetLights()
 
  
 def setSplash():
@@ -399,9 +440,7 @@ MenuData = [
         (_('Avg&Normal Size'),setAvgNormalSize), 
         (_('&Pick Size'),setPickSize), 
         (_('&Render Mode'),setRenderMode),
-        (_('&Rendering'),setRender),
-        (_('&Light0'),setLight0),
-        (_('&Light1'),setLight1),
+        (_('&Lighting'),setLighting),
         ('---',None),
         (_('&Save Preferences Now'),savePreferences),
 #        (_('&Make current settings the defaults'),savePreferences),

@@ -116,7 +116,7 @@ def showFile(filename):
 _dialog_widget = None
 _dialog_result = None
 
-def askItems(items,caption=None,timeout=None,**kargs):
+def askItems(items,caption=None,timeout=None,legacy=True,**kargs):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -134,19 +134,27 @@ def askItems(items,caption=None,timeout=None,**kargs):
     Sets the dialog timeout and accepted status in global variables.
     """
     global _dialog_widget,_dialog_result
-    if type(items) == dict:
-        import warnings
-        warnings.warn("""The syntax of the askItems function has changed!
-Using a dict as items argument will now result in a tabbed InputDialog.
-See gui.widgets.InputDialog for details.""")
-        #items = items.items()
-    w = widgets.OldInputDialog(items,caption,**kargs)
+    import warnings
+    warnings.warn("""
+The default operation of the askItems function will change in version 0.9!
+It will then use the new InputDialog, meaning that the input items have
+to be dicts.
+Though te old InputDialog will still be available for some time when using the
+'legacy = True' argument, we advice you to switch to the newer InputItem
+format as soon as possible.
+""")
+    if legacy:
+        w = widgets.OldInputDialog(items,caption,**kargs)
+    else:
+        w = widgets.NewInputDialog(items,caption,**kargs)
+        
     _dialog_widget = w
     _dialog_result = None
     res = w.getResult(timeout)
     _dialog_widget = None
     _dialog_result = w.result()
     return res
+
 
 def currentDialog():
     """Returns the current dialog widget.
@@ -814,28 +822,31 @@ def lights(onoff):
     toolbar.setLight(onoff)
 
 
-def set_light_value(typ,val):
-    """Set the value of one of the lighting parameters for the currrent view
+def set_material_value(typ,val):
+    """Set the value of one of the material lighting parameters
 
     typ is one of 'ambient','specular','emission','shininess'
     val is a value between 0.0 and 1.0
     """
+    print "SETMATVAL %s = %s" % (typ,val)
     setattr(GD.canvas,typ,val)
     GD.canvas.setLighting(True)
     GD.canvas.update()
     GD.app.processEvents()
 
-def set_ambient(i):
-    set_light_value('ambient',i)
+def set_light(light,**args):
+    light = int(light)
+    GD.canvas.lights.set(light,**args)
+    GD.canvas.setLighting(True)
+    GD.canvas.update()
+    GD.app.processEvents()
 
-def set_specular(i):
-    set_light_value('specular',i)
-
-def set_emission(i):
-    set_light_value('emission',i)
-
-def set_shininess(i):
-    set_light_value('shininess',i)
+def set_light_value(light,key,val):
+    light = int(light)
+    GD.canvas.lights.set_value(light,key,val)
+    GD.canvas.setLighting(True)
+    GD.canvas.update()
+    GD.app.processEvents()
 
 transparent = toolbar.setTransparency
 perspective = toolbar.setPerspective
