@@ -609,6 +609,84 @@ def connectedLineElems(elems):
 
 partitionSegmentedCurve = connectedLineElems
 
+
+#######################################
+####new encoding and decoding scheme#######
+def true_encode(toenc):
+    """toenc a 2 columns-array to encode into a single columns. (2D array of integers to encode on the axis=1). It takes the highest int+1 as base for encoding and returns the encoded array and the base. This is a true encoding that works with many columns 2,3 etc.. However, the limit of 2**63 is easily reached. This should be used only for encoding 2 numbers. For 3 and more, a serial encoding based on the position index and renumbering should be used. Thus, this function should not be used by the user."""
+    toen=array(toenc)
+    ben=toen.max()+1#base of encoding
+    xben=range(toen.shape[1])#digits
+    encx=sum(toen*ben**xben, axis=1)
+    #print encx.max()
+    #print 2**63-1
+    if encx.max() > 2**63-1 or encx.min() < 0 :raise ValueError,"too large positive value in data"
+    return encx, ben
+
+def true_decode2(mag,magic):
+    """this a True decoding of 1 column into 2columns"""
+    #print mag.max()
+    if mag.max() > 2**62-1 or mag.min() < 0 :raise ValueError,"too large positive value in data"# it seems not working up to 2*63 but 2*62 only. Needs to pay attention to the overflow control"
+    if GD.options.fastencode:
+        edges = mag.view(int32).reshape(-1,2)
+    else:
+        edges = column_stack([mag/magic,mag%magic])
+    return edges[:, ::-1]#seems needed to chenge the order
+
+def enc2(x):
+    """x is a -1,2 array of positive or null integers to encode (each row of 2 numbers is encoded into 1 single number). The encoding is performed on the position (pos0, pos1) instead of the numbers themselfs in order to reduce the number of digits. Thus, next to encoded list and the magic number, also the renumbering lists are returned."""
+    xa, xb=zip(*x)
+    uniqa, posa= unique1d(xa, return_inverse=True)
+    uniqb, posb= unique1d(xb, return_inverse=True)
+    rt=array(zip(posa, posb))#renumaration pos table
+    xenc, xmagic= true_encode(rt)
+    return xenc,xmagic,uniqa,uniqb
+
+def dec2(xenc,xmagic,uniqa,uniqb):
+    """xenc is 1D array of numbers to decoded. The decoding operation returns the positions, which are then converted into the original numbers using the uniq0 and uniq1."""
+    dec= true_decode2(xenc, xmagic)
+    posa, posb=asarray(zip(*dec))
+    return asarray(zip(uniqa[posa],uniqb[posb] ))
+
+################
+#now, a general function that uses enc2 and dec2 for an arbitrary numbers of columns should be implemented, in order to avoid to do the series of enc2 and dec2 manually.##########
+################
+
+####example with 4 columns####
+#origdata=array([[6, 20,101, 2000 ],[20, 6, 120, 2020], [6, 20, 101, 2000], [4, 36, 200, 3002], [50, 2, 100, 2001], [4, 36, 430, 6004], [6, 20, 101, 2000], ])
+#
+##encode t0 and t1 into tenc0
+#t0, t1, t2, t3=zip(*origdata)
+#tx=zip(t0, t1)
+#tenc0,tmagic0,tuniqa0,tuniqb0= enc2(tx)
+##encode tenc0 and t2 into tenc1
+#tx=zip(tenc0, t2)
+#tenc1,tmagic1,tuniqa1,tuniqb1= enc2(tx)
+##encode tenc0 and t2 into tenc2
+#tx=zip(tenc1, t3)
+#tenc2,tmagic2,tuniqa2,tuniqb2= enc2(tx)
+#
+##elaborate (if you need to remove double etc...)
+#print tenc2
+#tenc2=unique1d(tenc2)
+#
+##first decode
+#tdec=tenc2
+#td2= dec2(tdec,tmagic2,tuniqa2,tuniqb2)
+#data3=td2[:, 1]#last column of data
+##second decode
+#tdec=td2[:, 0]
+#td1= dec2(tdec,tmagic1,tuniqa1,tuniqb1)
+#data2=td1[:, 1]#last column of data
+##third decode
+#tdec=td1[:, 0]
+#td0=dec2(tdec,tmagic0,tuniqa0,tuniqb0)
+#print origdata
+#print asarray(zip(td0[:, 0],td0[:, 1],  data2, data3))
+
+#############
+
+
 ############################################################################
 #
 # Testing
