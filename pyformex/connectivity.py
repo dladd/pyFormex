@@ -627,10 +627,7 @@ def true_decode2(mag,magic):
     """this a True decoding of 1 column into 2columns"""
     #print mag.max()
     if mag.max() > 2**62-1 or mag.min() < 0 :raise ValueError,"too large positive value in data"# it seems not working up to 2*63 but 2*62 only. Needs to pay attention to the overflow control"
-    if GD.options.fastencode:
-        edges = mag.view(int32).reshape(-1,2)
-    else:
-        edges = column_stack([mag/magic,mag%magic])
+    edges = column_stack([mag/magic,mag%magic])
     return edges[:, ::-1]#seems needed to chenge the order
 
 def enc2(x):
@@ -652,40 +649,116 @@ def dec2(xenc,xmagic,uniqa,uniqb):
 #now, a general function that uses enc2 and dec2 for an arbitrary numbers of columns should be implemented, in order to avoid to do the series of enc2 and dec2 manually.##########
 ################
 
-####example with 4 columns####
-#origdata=array([[6, 20,101, 2000 ],[20, 6, 120, 2020], [6, 20, 101, 2000], [4, 36, 200, 3002], [50, 2, 100, 2001], [4, 36, 430, 6004], [6, 20, 101, 2000], ])
-#
-##encode t0 and t1 into tenc0
-#t0, t1, t2, t3=zip(*origdata)
-#tx=zip(t0, t1)
-#tenc0,tmagic0,tuniqa0,tuniqb0= enc2(tx)
-##encode tenc0 and t2 into tenc1
-#tx=zip(tenc0, t2)
-#tenc1,tmagic1,tuniqa1,tuniqb1= enc2(tx)
-##encode tenc0 and t2 into tenc2
-#tx=zip(tenc1, t3)
-#tenc2,tmagic2,tuniqa2,tuniqb2= enc2(tx)
-#
-##elaborate (if you need to remove double etc...)
-#print tenc2
-#tenc2=unique1d(tenc2)
-#
-##first decode
-#tdec=tenc2
-#td2= dec2(tdec,tmagic2,tuniqa2,tuniqb2)
-#data3=td2[:, 1]#last column of data
-##second decode
-#tdec=td2[:, 0]
-#td1= dec2(tdec,tmagic1,tuniqa1,tuniqb1)
-#data2=td1[:, 1]#last column of data
-##third decode
-#tdec=td1[:, 0]
-#td0=dec2(tdec,tmagic0,tuniqa0,tuniqb0)
-#print origdata
-#print asarray(zip(td0[:, 0],td0[:, 1],  data2, data3))
-
 #############
 
+
+def encode2(cols,magic=0):
+    """Encode two integer values into a single integer.
+
+    cols is a (n,2) array of non-negative integers smaller than 2**31.
+    The result is an (n) array of type int64, where each value is
+    unique for each row of values in the input.
+    The original input can be restored with decode2.
+
+    If a magic value larger than the maximum integer in the table is
+    given, it will be used. If not, it will be taken as the maximum+1.
+    A negative magic value triggers a fastencode scheme.
+
+    The return value is the 
+    """
+    cmax = cols.max()
+    if cmax >= 2**31 or cols.min() < 0:
+        raise ValueError,"Integer value too high (>= 2**31) in encode2"
+        
+    if cols.ndim != 2 or cols.shape[1] != 2:
+        raise ValueError,"Invalid array (type %s, shape %s) in encode2" % (cols.dtype,cols.shape)
+    
+    if magic < 0:
+        magic = -1
+        cols = array(cols,copy=True,dtype=int32,order='C')
+        codes = cols.view(int64)
+    else:
+        if magic <= cmax:
+            magic = cmax + 1
+        codes = cols[:,0].astype(int64) * magic + cols[:,1]
+    return codes,magic
+
+        
+def decode2(codes,magic):
+    """Decode an integer number into two integers.
+
+    codes and magic are the result of an encode2() operation.
+    This will restore the original two values for the codes.
+
+    A negative magic value flags the fastencode option.
+    """
+    if magic < 0:
+        cols = codes.view(int32).reshape(-1,2)
+    else:
+        cols = column_stack([codes/magic,codes%magic]).astype(int32)
+    return cols
+
+
+def compact_encode2(x):
+    """Encode two columns of integers into a single column.
+
+    This is like encode2 but results in smaller encoded values, because
+    the original values are first replaced by indices into the sets of unique
+    values.
+    This encoding scheme is therefore usable for repeated application
+    on multiple columns.
+
+    The return value is the list of codes, the magic value used in encoding,
+    and the two sets of uniq values for the columns, needed to restore the
+    original data. Decoding can be done with compact_decode2.
+    """
+    # We could use a single compaction vector?
+    uniqa, posa = unique1d(x[:,0], return_inverse=True)
+    uniqb, posb = unique1d(x[:,1], return_inverse=True)
+    # We could insert the encoding directly here,
+    # or use an encoding function with 2 arguments
+    # to avoid the column_stack operation
+    rt = column_stack([posa, posb])
+    xenc, xmagic = encode2(rt)
+    return xenc,xmagic,uniqa,uniqb
+
+
+def compact_decode2(xenc,xmagic,uniqa,uniqb):
+    """Decodes a single integer value into the original 2 values.
+
+    This is the inverse operation of compact_encode2.
+    Thus compact_decode2(*compact_encode(data)) will return data.
+
+    xenc can be a subset of the encoded values, but the other 3 arguments
+    should be exactly those from the compact_encode2 result.
+    """
+    # decoding returns the indices into the uniq numberings
+    pos = decode2(xenc, xmagic)
+    return column_stack([uniqa[pos[:,0]],uniqb[pos[:,1]]])
+
+
+def encode(data):
+    magic = []
+    codes = data[:,-1]
+    # process in reverse direction
+    for i in range(data.shape[1]-1,-1,-1):
+        cols = column_stack([codes,data[:,i]])
+        codes,mag,uniqa,uniqb = compact_encode2(cols)
+        magic.append((mag,uniqa,uniqb))
+    return codes,magic
+
+
+def decode(codes,magic):
+    data = []
+    # process in reverse direction
+    for i in range(len(magic)-1,-1,-1):
+        mag = magic[i]
+        cols = compact_decode2(codes,mag[0],mag[1],mag[2])
+        data.append(cols[:,1])
+        codes = cols[:,0]
+    return column_stack(data)
+    
+        
 
 ############################################################################
 #
@@ -694,11 +767,90 @@ def dec2(xenc,xmagic,uniqa,uniqb):
 
 if __name__ == "__main__":
 
+    import sys
+    
     c = Connectivity([[0,2,3],[2,4,5]])
     print(c)
     print(c.magic)
     print(c.nelems())
     print(c.nplex())
-    print(c.revIndex())
+    print(c.reverseIndex())
+
+    a = array([2**31-1, 2**31])
+    print a
+    print a.astype(int32)
+
+    n = 10
+    m = 9
+    a = array(arange(n))
+    cols = column_stack([a,a**m])
+
+    #cols = array([[0,0],[1,1]],dtype=int32,order='C')
+    print cols
+    #print cols.strides
+    #print cols.dtype
+    #print 2**31
+    codes,magic = encode2(cols,-1)
+    print codes
+    print magic
+    cols = decode2(codes,magic)
+    print cols
+    codes,magic = encode2(cols,0)
+    print codes
+    print magic
+    cols = decode2(codes,magic)
+    print cols
+    
+    #### example with 4 columns ####
+    print "testing encode/decode"
+    data = array([[6, 20,101, 2000 ],[20, 6, 120, 2020], [6, 20, 101, 2000], [4, 36, 200, 3002], [50, 2, 100, 2001], [4, 36, 430, 6004], [6, 20, 101, 2000], ])
+    print data
+    
+    # encode t0 and t1 into tenc0
+    tx = data[:,:2]
+    print tx
+    tenc0,tmagic0,tuniqa0,tuniqb0 = enc2(tx)
+    print tenc0,tmagic0,tuniqa0,tuniqb0
+    print dec2(tenc0,tmagic0,tuniqa0,tuniqb0)
+
+    tenc0,tmagic0,tuniqa0,tuniqb0 = compact_encode2(tx)
+    print tenc0,tmagic0,tuniqa0,tuniqb0
+    print compact_decode2(tenc0,tmagic0,tuniqa0,tuniqb0)
+
+    #sys.exit()
+    
+    # encode tenc0 and t2 into tenc1
+    tx=zip(tenc0, data[:,2])
+    tenc1,tmagic1,tuniqa1,tuniqb1= enc2(tx)
+    # encode tenc0 and t2 into tenc2
+    tx=zip(tenc1,data[:,3])
+    tenc2,tmagic2,tuniqa2,tuniqb2= enc2(tx)
+    
+    # elaborate (if you need to remove double etc...)
+    print tenc2
+    #tenc2=unique1d(tenc2)
+    #print tenc2
+
+    print "ENCODING"
+    codes = encode(data)
+    print codes
+    print "DECODING"
+    decoded = decode(*codes)
+    print decoded
+    print data-decoded
+          
+    # first decode
+    tdec=tenc2
+    td2= dec2(tdec,tmagic2,tuniqa2,tuniqb2)
+    data3=td2[:, 1]#last column of data
+    # second decode
+    tdec=td2[:, 0]
+    td1= dec2(tdec,tmagic1,tuniqa1,tuniqb1)
+    data2=td1[:, 1]#last column of data
+    # third decode
+    tdec=td1[:, 0]
+    td0=dec2(tdec,tmagic0,tuniqa0,tuniqb0)
+    print data
+    print asarray(zip(td0[:, 0],td0[:, 1],  data2, data3))
  
 # End
