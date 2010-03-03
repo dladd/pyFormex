@@ -560,7 +560,9 @@ class TriSurface(Mesh):
     
     def getEdges(self):
         """Get the edges data."""
+        print "GETEDGES"
         if self.edges is None:
+            print "COMPUTING EDGES"
             self.edges,self.faces = self.elems.expand()
         return self.edges
     

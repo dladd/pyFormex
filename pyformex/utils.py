@@ -444,6 +444,25 @@ def mtime(fn):
     """Return the (UNIX) time of last change of file fn."""
     return os.stat(fn).st_mtime
 
+def timeEval(s):
+    """Return the time needed for evaluating a string.
+
+    s is a string with a valid Python instructions.
+    The string is evaluated using Python's eval() and the difference
+    in seconds between the current time before and after the evaluation
+    is returned.
+
+    This is a simple method to measure the time spent in some operation.
+    It should not be used for microlevel instructions though, because
+    the overhead of the time calls. Use Python's timeit module to measure
+    microlevel execution time.
+    """
+    import time
+    start = time.time()
+    eval(s)
+    stop = time.time()
+    return stop-start
+
 
 def countLines(fn):
     """Return the number of lines in a text file."""

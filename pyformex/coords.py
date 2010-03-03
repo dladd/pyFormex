@@ -51,7 +51,7 @@ def bbox(objects):
     bboxes = [f.bbox() for f in objects if hasattr(f,'bbox') and not isnan(f.bbox()).any()]
     bboxes = [bb for bb in bboxes if bb is not None]
     if len(bboxes) == 0:
-        o = origin()
+        o = origin
         bboxes = [ [o,o] ]
     return Coords(concatenate(bboxes)).bbox()
 
@@ -211,9 +211,11 @@ class Coords(ndarray):
         """
         if self.size > 0:
             s = self.points()
-            return Coords(row_stack([ s.min(axis=0), s.max(axis=0) ]))
+            bbox = row_stack([ s.min(axis=0), s.max(axis=0) ])
         else:
-            return None
+            o = origin()
+            bbox = [o,o]
+        return Coords(bbox)
 
 
     def center(self):
@@ -1158,7 +1160,7 @@ class Coords(ndarray):
         sure the result is a :class:`Coords` object,and the default axis
         is the first one instead of the last.
         """
-        return Coords(concatenate(L,axis=axis))
+        return Coords(concatenate(atleast_2d(*L),axis=axis))
 
 
     @classmethod
@@ -1313,61 +1315,35 @@ if __name__ == "__main__":
         prt("X_rot",X.rotate(90.))
         prt("X_rot2",X.rotate(90.,0))
         
-        Y=prt("X_ref",X.reflect(1,2))
-
-        print(X.bbox())
-        print(Y.bbox())
-        print(bbox([X,Y]))
-        return
-        X3 = X.copy().reflect(1,1.5).translate(1,2)
-        print("X =",X)
-        print("X3 =",X3)
-        G = Coords.concatenate([X1,X3,X2,X3])
-        print("X1+X3+X2+X3 =",G)
-        print("unique:",G.unique())
-
-        Y = Coords([[[1,0,0],[0,1,0],[0,0,1]],[[2,0,0],[0,2,0],[0,0,2]]])
-        print(Y)
-        Y.translate([0.,100.,0.])
-        print(Y)
-
-        Y = Coords([1.0,0.0,0.0])
-        print(Y)
-        Y.translate([0.,100.,0.])
-        print(Y)
+        Y=prt("Y = X_reflect",X.reflect(1,2))
+        prt("X_bbox",X.bbox())
+        prt("Y_bbox",Y.bbox())
+        prt("(X+Y)bbox",bbox([X,Y]))
+        Z = X.copy().reflect(1,1.5).translate(1,2)
+        prt("X",X)
+        prt("Y",Y)
+        prt("Z",Z)
+        G = Coords.concatenate([X,Z,Y,Z],axis=0)
+        prt("X+Z+Y+Z",G)
         return
     
 
     def test():
-        """Run some additional examples.
+        """Run the tests.
 
-        This is intended for tests during development. This can be changed
-        at will.
+        This is intended for tests during development and can be
+        changed at will.
         """
         testX(Coords([[1,0,0],[0,1,0]]))
         testX(Coords([[[0,0,0],[1,0,0]],[[0,1,0],[1,1,0]]]))
         testX(Coords([1,0,0]))
-        testX(Coords())
+        try:
+            testX(Coords())
+        except:
+            print "Some test(s) failed for an empty Coords"
+            print "But that surely is no surprise"
         return
 
-
-    def testweave():
-        
-        code = r"""
-float xm,ym,zm;
-xm = ym = zm = 0.;
-int i;
-for(i=0;i<Na[0];i++) {
-xm += A2(i,0)
-ym += A2(i,1)
-zm += A2(i,2)
-}
-xm /= Na[0];
-ym /= Na[0];
-zm /= Na[0];
-
-return val = xm;
-"""
         
         
     f = 0

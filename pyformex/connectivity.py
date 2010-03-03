@@ -36,6 +36,53 @@ import pyformex as GD
 from arraytools import *
 from utils import deprecation
 
+def encode2(cols,magic=0):
+    """Encode two integer values into a single integer.
+
+    cols is a (n,2) array of non-negative integers smaller than 2**31.
+    The result is an (n) array of type int64, where each value is
+    unique for each row of values in the input.
+    The original input can be restored with decode2.
+
+    If a magic value larger than the maximum integer in the table is
+    given, it will be used. If not, it will be taken as the maximum+1.
+    A negative magic value triggers a fastencode scheme.
+
+    The return value is a tuple with the codes and the magic used.
+    """
+    cmax = cols.max()
+    if cmax >= 2**31 or cols.min() < 0:
+        raise ValueError,"Integer value too high (>= 2**31) in encode2"
+        
+    if cols.ndim != 2 or cols.shape[1] != 2:
+        raise ValueError,"Invalid array (type %s, shape %s) in encode2" % (cols.dtype,cols.shape)
+    
+    if magic < 0:
+        magic = -1
+        cols = array(cols,copy=True,dtype=int32,order='C')
+        codes = cols.view(int64)
+    else:
+        if magic <= cmax:
+            magic = cmax + 1
+        codes = cols[:,0].astype(int64) * magic + cols[:,1]
+    return codes,magic
+
+        
+def decode2(codes,magic):
+    """Decode an integer number into two integers.
+
+    codes and magic are the result of an encode2() operation.
+    This will restore the original two values for the codes.
+
+    A negative magic value flags the fastencode option.
+    """
+    if magic < 0:
+        cols = codes.view(int32).reshape(-1,2)
+    else:
+        cols = column_stack([codes/magic,codes%magic]).astype(int32)
+    return cols
+
+
 @deprecation("\n Use 'enmagic3' instead")
 def magic_numbers(*args,**kargs):
     return enmagic3(*args,**kargs)
@@ -43,24 +90,6 @@ def magic_numbers(*args,**kargs):
 @deprecation("\n Use 'demagic3' instead")
 def demagic(*args,**kargs):
     return enmagic3(*args,**kargs)
-
-
-def enmagic2(edges,magic):
-    if GD.options.fastencode:
-        edg = edges.reshape((-1,2))
-        codes = edg.view(int64)
-    else:
-        edg = edges.astype(int64).reshape((-1,2))
-        codes = edg[:,0] * magic + edg[:,1]
-    return codes
-
-        
-def demagic2(mag,magic):
-    if GD.options.fastencode:
-        edges = mag.view(int32).reshape(-1,2)
-    else:
-        edges = column_stack([mag/magic,mag%magic])
-    return edges
 
 
 def enmagic3(elems,magic):
@@ -90,22 +119,31 @@ class Connectivity(ndarray):
 
     A connectivity object is a 2-dimensional integer array with all
     non-negative values.
-    In this implementation, all values should be lower than 2**31.
+    In this implementation, all values should be smaller than 2**31.
     
     Furthermore, all values in a row should be unique. This is not enforced
     at creation time, but a method is provided to check the uniqueness.
+
+    Create a new Connectivity object
+    --------------------------------
+    Connectivity(data=[],dtyp=None,copy=False,nplex=0)
+    
+    - data: should be integer type and evaluate to an 2-dim array.
+    - dtype: can be specified to force an integer type.
+      By default set from data.
+    - copy: can be set True to force copying the data. By default, the
+      specified data will be used without copying, if possible.
+    - nplex: can be specified to force a check on the plexitude of the
+      data, or to set the plexitude for an empty Connectivity.
+      An error will be raised if the specified data do not match the
+      specified plexitude.
+
+    A Connectivity object stores its maximum value found at creation time
+    in an attribute _max.
     """
 
     def __new__(self,data=[],dtyp=None,copy=False,nplex=0):
-        """Create a new Connectivity object.
-
-        data should be integer type and evaluate to an 2-dim array.
-        If copy==True, the data are copied.
-        If no dtype is given, that of data are used, or int32 by default.
-        If nplex is give, the data should have matching plexitude, or an
-        error will be raised. Empty data match any plexitude, and the
-        resulting object will have the specified plexitude..
-        """
+        """Create a new Connectivity object."""
         # Turn the data into an array, and copy if requested
         ar = array(data, dtype=dtyp, copy=copy)
         if ar.ndim < 2:
@@ -123,13 +161,13 @@ class Connectivity(ndarray):
  
         # Check values
         if ar.size > 0:
-            self.magic = ar.max() + 1
-            if self.magic > 2**31 or ar.min() < 0:
+            self._max = ar.max()
+            if self._max > 2**31-1 or ar.min() < 0:
                 raise ValueError,"Negative or too large positive value in data"
             if nplex > 0 and ar.shape[1] != nplex:
                 raise ValueError,"Expected data of plexitude %s" % nplex
         else:
-            self.magic = 0
+            self._max = -1
             ar = ar.reshape(0,nplex)
             
         # Transform 'subarr' from an ndarray to our new subclass.
@@ -142,47 +180,71 @@ class Connectivity(ndarray):
 
 
     def nelems(self):
+        """Return the number of elements in the Connectivity table."""
         return self.shape[0]
     
     def nplex(self):
+        """Return the plexitude of the elements in the Connectivity table."""
         return self.shape[1]
 
-    def Max(self):
-        if self.magic is None:
-            self.magic = self.max() + 1
-        return self.magic - 1
 
+    def encode(self,permutations=True,compact=True):
+        """Encode the element connectivities into single integer numbers.
 
-    def unique(self):
-        """Return a list of arrays with the unique values for each row."""
-        return [ unique1d(el) for el in self ]
+        Each row of numbers is encoded into a single integer value, so that
+        equal rows result in the same number and different rows yield
+        different numbers. Furthermore, enough information is kept to
+        restore the original rows from these single integer numbers.
 
+        - permutations: if True, two rows are considered equal if they contain
+          contain the same numbers regardless of their order. If False, two
+          rows are only equal if they contain the same number at the same
+          position.
+        - comapct: if True, the resulting numbering scheme will be the
+          lowest available numbers: 0..nelems-1. Else, a non-compact
+          number set may be returned.
 
-    def checkUnique(self):
-        """Flag the rows which have all unique entries.
-
-        Returns an array with the value True or False for each row.
+        Returns a tuple codes,magic:
+        - codes is an (nelems,) shaped array with the element code numbers,
+        - magic is the information needed to restore the original rows from
+          the codes. See Connectivity.decode() 
         """
-        if self.nplex() < 2:
-            return arange(self.nelems())
-        elif self.nplex() == 2:
-            return self[:,0] != self[:,1]
-        else:
-            return array([ unique1d(el).size == self.shape[1] for el in self ])
-    
+        if permutations or compact:
+            raise ValueError,"Permutations and compact are not yet implemented"
+        return encode(self)
+        
 
-    def check(self):
-        """Returns True if all rows have unique entries."""
-        return self.checkUnique(self).all()
+    def testDegenerate(self):
+        """Flag the degenerate elements (rows).
+
+        A degenerate element is a row which contains at least two
+        equal values. 
+
+        This function returns an array with the value True or False
+        for each row. The True values flag the degenerate rows.
+        """
+        srt = self.copy()
+        srt.sort(axis=1)
+        return (srt[:,:-1] == srt[:,1:]).any(axis=1)
+        
+
+    def listDegenerate(self):
+        """Return a list with the numbers of the degenerate elements."""
+        return arange(self.nelems())[self.testDegenerate()]
+
+
+    def listNonDegenerate(self):
+        """Return a list with the numbers of the non-degenerate elements."""
+        return arange(self.nelems())[~self.testDegenerate()]
 
 
     def removeDegenerate(self):
-        """Return a Connectivity table with degenerate elements removed
+        """Remove the degenerate elements from a Connectivity table.
 
-        Degenerate elements are rows with negative values or rows with
-        the same number occurrin more than once.
+        Degenerate elements are rows with repeating values.
+        Returns a Connectivity with the degenerate elements removed.
         """
-        return self[self.checkUnique()]
+        return self[~self.testDegenerate()]
 
     
     def removeDoubles(self):
@@ -202,13 +264,13 @@ class Connectivity(ndarray):
         elif self.nplex() in [2,3]:
             self.sort(axis=-1)
             if self.nplex() == 2:
-                mag = enmagic2(self,self.magic)
+                mag,magic = encode2(self)
                 mag = unique1d(mag)
-                elems = demagic2(mag,self.magic)
+                elems = decode2(mag,magic)
             else:
-                mag = enmagic3(self,self.magic)
+                mag = enmagic3(self,self._max+1)
                 mag = unique1d(mag)
-                elems = demagic3(mag,self.magic)
+                elems = demagic3(mag,self._max+1)
                 
             return Connectivity(elems)
 
@@ -258,6 +320,7 @@ class Connectivity(ndarray):
 
         The inverse operation can be obtained from function compactElems.
         """
+        print "EXPAND"
         nelems,nplex = self.shape
         if edg is None:
             n = arange(nplex)
@@ -267,23 +330,15 @@ class Connectivity(ndarray):
             if edg.ndim != 2 or edg.shape[-1] != 2:
                 raise ValueError,"edg should be a (n,2) shaped array!"
             
-        alledges = self[:,edg].astype(int32)
+        alledges = self[:,edg].astype(int32).reshape(-1,2)
         # sort edge nodes with lowest number first
         alledges.sort()
-        if GD.options.fastencode:
-            edg = alledges.reshape((-1,2))
-            codes = edg.view(int64)
-        else:
-            edg = alledges.astype(int64).reshape((-1,2))
-            codes = edg[:,0] * self.magic + edg[:,1]
+        codes,magic = encode2(alledges,self._max+1)
         # keep the unique edge numbers
         uniq,uniqid = unique1d(codes,True)
         # uniq is sorted 
         uedges = uniq.searchsorted(codes)
-        if GD.options.fastencode:
-            edges = uniq.view(int32).reshape(-1,2)
-        else:
-            edges = column_stack([uniq/self.magic,uniq%self.magic])
+        edges = decode2(uniq,magic)
         faces = uedges.reshape((nelems,nplex))
         return edges,faces
 
@@ -614,52 +669,15 @@ partitionSegmentedCurve = connectedLineElems
 ####new encoding and decoding scheme#######
 
 
-def encode2(cols,magic=0):
-    """Encode two integer values into a single integer.
-
-    cols is a (n,2) array of non-negative integers smaller than 2**31.
-    The result is an (n) array of type int64, where each value is
-    unique for each row of values in the input.
-    The original input can be restored with decode2.
-
-    If a magic value larger than the maximum integer in the table is
-    given, it will be used. If not, it will be taken as the maximum+1.
-    A negative magic value triggers a fastencode scheme.
-
-    The return value is the 
-    """
-    cmax = cols.max()
-    if cmax >= 2**31 or cols.min() < 0:
-        raise ValueError,"Integer value too high (>= 2**31) in encode2"
-        
-    if cols.ndim != 2 or cols.shape[1] != 2:
-        raise ValueError,"Invalid array (type %s, shape %s) in encode2" % (cols.dtype,cols.shape)
+# THINGS TO DO:
+#
+# - RETURN SINGLE MAGIC INFORMATION ON ENCODING ? (codes,magic)
+# - COMPACT THE WHOLE ARRAY AT ONCE ?
+# - SORT VALUES IN THE axis=1 DIRECTION
+# - CREATE A Connectivity.unique() method based on the encoding
+# - REPLACE magic2, magic3, ...
+# - DO A FINAL RENUMBERING
     
-    if magic < 0:
-        magic = -1
-        cols = array(cols,copy=True,dtype=int32,order='C')
-        codes = cols.view(int64)
-    else:
-        if magic <= cmax:
-            magic = cmax + 1
-        codes = cols[:,0].astype(int64) * magic + cols[:,1]
-    return codes,magic
-
-        
-def decode2(codes,magic):
-    """Decode an integer number into two integers.
-
-    codes and magic are the result of an encode2() operation.
-    This will restore the original two values for the codes.
-
-    A negative magic value flags the fastencode option.
-    """
-    if magic < 0:
-        cols = codes.view(int32).reshape(-1,2)
-    else:
-        cols = column_stack([codes/magic,codes%magic]).astype(int32)
-    return cols
-
 
 def compact_encode2(data):
     """Encode two columns of integers into a single column.
@@ -699,16 +717,6 @@ def compact_decode2(codes,magic,uniqa,uniqb):
     return column_stack([uniqa[pos[:,0]],uniqb[pos[:,1]]])
 
 
-# THINGS TO DO:
-#
-# - RETURN SINGLE MAGIC INFORMATION ON ENCODING ? (codes,magic)
-# - COMPACT THE WHOLE ARRAY AT ONCE ?
-# - SORT VALUES IN THE axis=1 DIRECTION
-# - CREATE A Connectivity.unique() method based on the encoding
-# - REPLACE magic2, magic3, ...
-# - DO A FINAL RENUMBERING
-
-
 def encode(data):
     magic = []
     codes = data[:,-1]
@@ -729,7 +737,6 @@ def decode(codes,magic):
         data.append(cols[:,1])
         codes = cols[:,0]
     return column_stack(data)
-    
         
 
 ############################################################################
@@ -743,7 +750,7 @@ if __name__ == "__main__":
     
     c = Connectivity([[0,2,3],[2,4,5]])
     print(c)
-    print(c.magic)
+    print(c._max)
     print(c.nelems())
     print(c.nplex())
     print(c.reverseIndex())
@@ -808,5 +815,24 @@ if __name__ == "__main__":
     decoded = decode(*codes)
     print decoded
     print "%s ERRORS" % (data-decoded).sum()
-  
+
+
+    a = random.randint(10,size=(200,3))
+    C = Connectivity(a)
+    print C
+    C.sort(axis=1)
+    codes,magic = C.encode(False,False)
+    print codes.shape
+    ucodes = unique1d(codes)
+    print ucodes.shape
+
+    
+
+    ## print C.listDegenerate()
+    ## print C.listNonDegenerate()
+    ## D = C.removeDegenerate()
+    ## print D
+    ## D.sort(axis=1)
+    ## print D.shape()
+
 # End

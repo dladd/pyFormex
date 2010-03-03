@@ -51,29 +51,6 @@ def mergeModels(femodels,**kargs):
     that will be passed to :meth:`Coords:fuse`.
     """
     return mergeMeshes([Mesh(m) for m in femodels])
-              
-
-def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
-    """Check that an array contains a set of unique integers in range.
-
-    nrs is an integer array with any shape.
-    All integers should be unique and in the range(nmin,nmax).
-    Beware: this means that    nmin <= i < nmax  !
-    Default nmax is unlimited. Set nmin to None to
-    error is the value to return if the tests are not passed.
-    By default, a ValueError is raised.
-    On success, None is returned
-    """
-    nrs = asarray(nrs)
-    new = unique1d(nrs)
-    if new.size != nrs.size or \
-           (nmin is not None and new.min() < nmin) or \
-           (nmax is not None and new.max() > nmax):
-        if error is None:
-            raise ValueError,"Values not unique or not in range"
-        else:
-            return error
-    return None
 
 
 ######################## Finite Element Model ##########################

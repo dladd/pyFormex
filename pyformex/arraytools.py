@@ -421,28 +421,28 @@ def checkArray1D(a,size=None,kind=None,allow=None):
     except:
         print("Expected size %s, kind %s, got: %s" % (size,kind,a))
     raise ValueError
+              
 
-   
-def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
-    """Check that an array contains a set of uniqe integers in range.
+def checkUniqueNumbers(nrs,nmin=0,nmax=None):
+    """Check that an array contains a set of unique integers in a given range.
 
-    nrs is an integer array with any shape.
-    All integers should be unique and in the range(nmin,nmax).
-    Beware: this means that    nmin <= i < nmax  !
-    Default nmax is unlimited. Set nmin to None to
-    error is the value to return if the tests are not passed.
-    By default, a ValueError is raised.
-    On success, None is returned
+    This functions tests that all integer numbers in the array are within the
+    range math:`nmin <= i < nmax`
+    
+    nrs: an integer array of any shape.
+    nmin: minimum allowed value. If set to None, the test is skipped.
+    nmax: maximum allowed value + 1! If set to None, the test is skipped.
+    Default range is [0,unlimited].
+
+    If the numbers are no unique or one of the limits is passed, an error
+    is raised. Else, the sorted list of unique values is returned.
     """
     nrs = asarray(nrs)
     uniq = unique1d(nrs)
     if uniq.size != nrs.size or \
            (nmin is not None and uniq.min() < nmin) or \
            (nmax is not None and uniq.max() > nmax):
-        if error is None:
-            raise ValueError,"Values not unique or not in range"
-        else:
-            return error
+        raise ValueError,"Values not unique or not in range"
     return uniq
 
 
