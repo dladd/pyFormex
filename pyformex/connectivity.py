@@ -36,13 +36,23 @@ import pyformex as GD
 from arraytools import *
 from utils import deprecation
 
-def encode2(cols,magic=0):
+
+# THINGS TO DO:
+#
+# - RETURN SINGLE MAGIC INFORMATION ON ENCODING ? (codes,magic)
+# - COMPACT THE WHOLE ARRAY AT ONCE ?
+# - SORT VALUES IN THE axis=1 DIRECTION
+# - REPLACE magic3, ...
+# - ADD A FINAL RENUMBERING
+
+ 
+def enmagic2(cols,magic=0):
     """Encode two integer values into a single integer.
 
     cols is a (n,2) array of non-negative integers smaller than 2**31.
     The result is an (n) array of type int64, where each value is
     unique for each row of values in the input.
-    The original input can be restored with decode2.
+    The original input can be restored with demagic2.
 
     If a magic value larger than the maximum integer in the table is
     given, it will be used. If not, it will be taken as the maximum+1.
@@ -52,10 +62,10 @@ def encode2(cols,magic=0):
     """
     cmax = cols.max()
     if cmax >= 2**31 or cols.min() < 0:
-        raise ValueError,"Integer value too high (>= 2**31) in encode2"
+        raise ValueError,"Integer value too high (>= 2**31) in enmagic2"
         
     if cols.ndim != 2 or cols.shape[1] != 2:
-        raise ValueError,"Invalid array (type %s, shape %s) in encode2" % (cols.dtype,cols.shape)
+        raise ValueError,"Invalid array (type %s, shape %s) in enmagic2" % (cols.dtype,cols.shape)
     
     if magic < 0:
         magic = -1
@@ -68,10 +78,10 @@ def encode2(cols,magic=0):
     return codes,magic
 
         
-def decode2(codes,magic):
+def demagic2(codes,magic):
     """Decode an integer number into two integers.
 
-    codes and magic are the result of an encode2() operation.
+    codes and magic are the result of an enmagic2() operation.
     This will restore the original two values for the codes.
 
     A negative magic value flags the fastencode option.
@@ -92,6 +102,9 @@ def demagic(*args,**kargs):
     return enmagic3(*args,**kargs)
 
 
+# THESE SHOULD GET SOME OVERFLOW CHECKS
+# We keep this function because the have the benefit over encode/decode
+# that the result is independent from the other values in the set.
 def enmagic3(elems,magic):
     elems = elems.astype(int64)
     elems.sort(axis=1)
@@ -186,30 +199,70 @@ class Connectivity(ndarray):
         return self.shape[1]
 
 
-    def encode(self,permutations=True,compact=True):
+    def encode(self,permutations=True,return_magic=False):
         """Encode the element connectivities into single integer numbers.
 
         Each row of numbers is encoded into a single integer value, so that
         equal rows result in the same number and different rows yield
-        different numbers. Furthermore, enough information is kept to
+        different numbers. Furthermore, enough information can be kept to
         restore the original rows from these single integer numbers.
+        This is seldom needed however, because the original data are
+        available from the Connectivity table itself.
 
-        - permutations: if True, two rows are considered equal if they contain
-          contain the same numbers regardless of their order. If False, two
-          rows are only equal if they contain the same number at the same
-          position.
-        - comapct: if True, the resulting numbering scheme will be the
-          lowest available numbers: 0..nelems-1. Else, a non-compact
-          number set may be returned.
-
-        Returns a tuple codes,magic:
-        - codes is an (nelems,) shaped array with the element code numbers,
-        - magic is the information needed to restore the original rows from
+        - permutations: if True(default), two rows are considered equal if
+          they contain the same numbers regardless of their order.
+          If False, two rows are only equal if they contain the same
+          numbers at the same position.
+        - return_magic: if True, return a codes,magic tuple. The default is
+          to return only the codes.
+          
+        Return value(s):
+        - codes: an (nelems,) shaped array with the element code numbers,
+        - magic: the information needed to restore the original rows from
           the codes. See Connectivity.decode() 
         """
-        if permutations or compact:
-            raise ValueError,"Permutations and compact are not yet implemented"
-        return encode(self)
+        def compact_encode2(data):
+            """Encode two columns of integers into a single column.
+
+            This is like enmagic2 but results in smaller encoded values, because
+            the original values are first replaced by indices into the sets of unique
+            values.
+            This encoding scheme is therefore usable for repeated application
+            on multiple columns.
+
+            The return value is the list of codes, the magic value used in encoding,
+            and the two sets of uniq values for the columns, needed to restore the
+            original data. Decoding can be done with compact_decode2.
+            """
+            # We could use a single compaction vector?
+            uniqa, posa = unique1d(data[:,0], return_inverse=True)
+            uniqb, posb = unique1d(data[:,1], return_inverse=True)
+            # We could insert the encoding directly here,
+            # or use an encoding function with 2 arguments
+            # to avoid the column_stack operation
+            rt = column_stack([posa, posb])
+            codes, magic = enmagic2(rt)
+            return codes,magic,uniqa,uniqb
+        
+        
+        if permutations:
+            data = self.copy()
+            data.sort(axis=1)
+        else:
+            data = self
+            
+        magic = []
+        codes = data[:,0]
+        for i in range(1,data.shape[1]):
+            cols = column_stack([codes,data[:,i]])
+            codes,mag,uniqa,uniqb = compact_encode2(cols)
+            # insert at the front so we can process in order
+            magic.insert(0,(mag,uniqa,uniqb))
+
+        if return_magic:
+            return codes,magic
+        else:
+            return codes
 
 
     @staticmethod
@@ -223,11 +276,35 @@ class Connectivity(ndarray):
         ```Connectivity.decode(codes,magic)```.
         - codes: code numbers as returned by Connectivity.encode, or a subset
           thereof.
-        - magic: the magic information as returned by Connectivity.encode.
+        - magic: the magic information as returned by Connectivity.encode,
+          with argument return_magic=True.
 
         Returns a Connectivity table.
         """
-        return Connectivity(decode(codes,magic))
+
+        def compact_decode2(codes,magic,uniqa,uniqb):
+            """Decodes a single integer value into the original 2 values.
+
+            This is the inverse operation of compact_encode2.
+            Thus compact_decode2(*compact_encode(data)) will return data.
+
+            codes can be a subset of the encoded values, but the other 3 arguments
+            should be exactly those from the compact_encode2 result.
+            """
+            # decoding returns the indices into the uniq numberings
+            pos = demagic2(codes,magic)
+            return column_stack([uniqa[pos[:,0]],uniqb[pos[:,1]]])
+        
+
+
+
+        data = []
+        for mag in magic:
+            cols = compact_decode2(codes,mag[0],mag[1],mag[2])
+            data.insert(0,cols[:,1])
+            codes = cols[:,0]
+        data.insert(0,codes)
+        return Connectivity(column_stack(data))
 
 
     def testDegenerate(self):
@@ -263,25 +340,21 @@ class Connectivity(ndarray):
         return self[~self.testDegenerate()]
 
     
-    def removeDoubles(self):
+    def removeDoubles(self,permutations=True):
         """Remove doubles from a Connectivity list.
 
-        Doubles are elements that consist of the same set of nodes,
-        in any particular order.
-
-        Currently, this is only implemented for plexitude up to 3.
+        By default, doubles are elements that consist of the same set of
+        nodes, in any particular order. Setting permutations to False
+        will only remove the double rows that have matchin values at
+        matching positions.
         """
         if self.nplex() == 0:
             return self
-        
-#        elif self.nplex() == 1:
-#            return Connectivity(unique1d(self),nplex=1)
 
         else:
-            codes,magic = self.encode(False,False)
+            codes = self.encode(False)
             ucodes,pos = unique1d(codes,True)
             return self[pos]
-            
 
             
     def reverseIndex(self):
@@ -340,12 +413,12 @@ class Connectivity(ndarray):
         alledges = self[:,edg].astype(int32).reshape(-1,2)
         # sort edge nodes with lowest number first
         alledges.sort()
-        codes,magic = encode2(alledges,self._max+1)
+        codes,magic = enmagic2(alledges,self._max+1)
         # keep the unique edge numbers
         uniq,uniqid = unique1d(codes,True)
         # uniq is sorted 
         uedges = uniq.searchsorted(codes)
-        edges = decode2(uniq,magic)
+        edges = demagic2(uniq,magic)
         faces = uedges.reshape((nelems,nplex))
         return edges,faces
 
@@ -688,90 +761,8 @@ def connectedLineElems(elems):
 
 partitionSegmentedCurve = connectedLineElems
 
+   
 
-#######################################
-####new encoding and decoding scheme#######
-
-
-# THINGS TO DO:
-#
-# - RETURN SINGLE MAGIC INFORMATION ON ENCODING ? (codes,magic)
-# - COMPACT THE WHOLE ARRAY AT ONCE ?
-# - SORT VALUES IN THE axis=1 DIRECTION
-# - REPLACE magic3, ...
-# - ADD A FINAL RENUMBERING
-    
-
-def compact_encode2(data):
-    """Encode two columns of integers into a single column.
-
-    This is like encode2 but results in smaller encoded values, because
-    the original values are first replaced by indices into the sets of unique
-    values.
-    This encoding scheme is therefore usable for repeated application
-    on multiple columns.
-
-    The return value is the list of codes, the magic value used in encoding,
-    and the two sets of uniq values for the columns, needed to restore the
-    original data. Decoding can be done with compact_decode2.
-    """
-    # We could use a single compaction vector?
-    uniqa, posa = unique1d(data[:,0], return_inverse=True)
-    uniqb, posb = unique1d(data[:,1], return_inverse=True)
-    # We could insert the encoding directly here,
-    # or use an encoding function with 2 arguments
-    # to avoid the column_stack operation
-    rt = column_stack([posa, posb])
-    codes, magic = encode2(rt)
-    return codes,magic,uniqa,uniqb
-
-
-def compact_decode2(codes,magic,uniqa,uniqb):
-    """Decodes a single integer value into the original 2 values.
-
-    This is the inverse operation of compact_encode2.
-    Thus compact_decode2(*compact_encode(data)) will return data.
-
-    codes can be a subset of the encoded values, but the other 3 arguments
-    should be exactly those from the compact_encode2 result.
-    """
-    # decoding returns the indices into the uniq numberings
-    pos = decode2(codes,magic)
-    return column_stack([uniqa[pos[:,0]],uniqb[pos[:,1]]])
-
-
-def encode(data,compact=True):
-    """Encode multiple columns of integer data into a single column.
-
-    The preferable way to use this function is via
-    Connectivity.encode()
-    """
-    magic = []
-    codes = data[:,0]
-    for i in range(1,data.shape[1]):
-        cols = column_stack([codes,data[:,i]])
-        codes,mag,uniqa,uniqb = compact_encode2(cols)
-        # insert at the front so we can process in order
-        magic.insert(0,(mag,uniqa,uniqb))
-
-    return codes,magic
-
-
-def decode(codes,magic):
-    """Decode multiple columns from a single column of codes and the magic.
-
-    The preferable way to use this function is via
-    Connectivity.decode()
-    """
-    data = []
-    # process in reverse direction
-    for mag in magic:
-        cols = compact_decode2(codes,mag[0],mag[1],mag[2])
-        data.insert(0,cols[:,1])
-        codes = cols[:,0]
-    data.insert(0,codes)
-    return column_stack(data)
-        
 
 ############################################################################
 #
@@ -798,69 +789,31 @@ if __name__ == "__main__":
     a = array(arange(n))
     cols = column_stack([a,a**m])
 
-    #cols = array([[0,0],[1,1]],dtype=int32,order='C')
     print cols
-    #print cols.strides
-    #print cols.dtype
-    #print 2**31
-    codes,magic = encode2(cols,-1)
+    codes,magic = enmagic2(cols,-1)
     print codes
     print magic
-    cols = decode2(codes,magic)
+    cols = demagic2(codes,magic)
     print cols
-    codes,magic = encode2(cols,0)
+    codes,magic = enmagic2(cols,0)
     print codes
     print magic
-    cols = decode2(codes,magic)
+    cols = demagic2(codes,magic)
     print cols
-    
-    #### example with 4 columns ####
-    print "======== testing new encode/decode ============="
-    data = array([[6, 20,101, 2000 ],[20, 6, 120, 2020], [6, 20, 101, 2000], [4, 36, 200, 3002], [50, 2, 100, 2001], [4, 36, 430, 6004], [6, 20, 101, 2000], ])
-    print data
-    print "ENCODING"
-    codes = encode(data)
-    print codes[0]
-    print "DECODING"
-    decoded = decode(*codes)
-    print decoded
-    print "%s ERRORS" % (data-decoded).sum()
-
-    print "======== using rolled data ============="
-  
-    for i in range(data.shape[0]):
-        data[i] = roll(data[i],i)
-    print data
-    print "ENCODING"
-    codes = encode(data)
-    print codes[0]
-    print "DECODING"
-    decoded = decode(*codes)
-    print decoded
-    print "%s ERRORS" % (data-decoded).sum()
-
-    print "======== using sorted data ============="
-    data.sort(axis=1)
-    print data
-    print "ENCODING"
-    codes = encode(data)
-    print codes[0]
-    print "DECODING"
-    decoded = decode(*codes)
-    print decoded
-    print "%s ERRORS" % (data-decoded).sum()
 
     print "========== test encoding and decoding =========="
-    C = Connectivity(random.randint(10,size=(200,1)))
-    D = C.copy()     
-    print C
-    C.sort(axis=1)
-    codes,magic = C.encode(False,False)
-    print "%s ERRORS" % (Connectivity.decode(codes,magic) - C).sum()
+    for nplex in range(1,5):
+        print "PLEXITUDE %s" % nplex
+        C = Connectivity(random.randint(10,size=(200,nplex)))
+        D = C.copy()     
+        #print C
+        C.sort(axis=1)
+        codes,magic = C.encode(return_magic=True)
+        print "  %s ERRORS" % (Connectivity.decode(codes,magic) - C).sum()
 
-    D = C.removeDoubles()
-    print "%s UNIQUE ELEMENTS" % D.shape[0]
-    print D
+        D = C.removeDoubles()
+        print "  %s UNIQUE ELEMENTS" % D.shape[0]
+        #print D
     
 
 
