@@ -518,7 +518,7 @@ class TriSurface(Mesh):
                 if faces.max() >= edges.shape[0]:
                     raise ValueError,"Some edge number is too high"
 
-                elems = Connectivity(compactElems(edges,faces))
+                elems = Connectivity.compress(faces,edges)
                 Mesh.__init__(self,coords,elems,None,'tri3')
                 
                 # since we have the extra data available, keep them

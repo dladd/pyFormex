@@ -105,8 +105,6 @@ def demagic3(mag,magic):
     return column_stack([first,second,third]).astype(int32)
 
 
-
-
 ############################################################################
 ##
 ##   class Connectivity
@@ -212,7 +210,25 @@ class Connectivity(ndarray):
         if permutations or compact:
             raise ValueError,"Permutations and compact are not yet implemented"
         return encode(self)
-        
+
+
+    @staticmethod
+    def decode(codes,magic):
+        """Decode element codes into a Connectivity table.
+
+        This is the inverse operation of the Connectivity.encode() method.
+        It recreates a Connectivity table from the (codes,magic) information.
+
+        This is a static method, and should be invoked as
+        ```Connectivity.decode(codes,magic)```.
+        - codes: code numbers as returned by Connectivity.encode, or a subset
+          thereof.
+        - magic: the magic information as returned by Connectivity.encode.
+
+        Returns a Connectivity table.
+        """
+        return Connectivity(decode(codes,magic))
+
 
     def testDegenerate(self):
         """Flag the degenerate elements (rows).
@@ -258,24 +274,14 @@ class Connectivity(ndarray):
         if self.nplex() == 0:
             return self
         
-        elif self.nplex() == 1:
-            return Connectivity(unique1d(self),nplex=1)
-
-        elif self.nplex() in [2,3]:
-            self.sort(axis=-1)
-            if self.nplex() == 2:
-                mag,magic = encode2(self)
-                mag = unique1d(mag)
-                elems = decode2(mag,magic)
-            else:
-                mag = enmagic3(self,self._max+1)
-                mag = unique1d(mag)
-                elems = demagic3(mag,self._max+1)
-                
-            return Connectivity(elems)
+#        elif self.nplex() == 1:
+#            return Connectivity(unique1d(self),nplex=1)
 
         else:
-            raise ValueError,"removeDoubles() is only inmplemented for plexitude <= 3"
+            codes,magic = self.encode(False,False)
+            ucodes,pos = unique1d(codes,True)
+            return self[pos]
+            
 
             
     def reverseIndex(self):
@@ -295,7 +301,7 @@ class Connectivity(ndarray):
         array. Examples are a tuple of local node numbers, or a list
         of such tuples all having the same length.
         Each row of `nodsel` holds a list of local node numbers that
-        should be retained in the new connectivity table.
+        should be retained in the new Connectivity table.
         """
         nodsel = asarray(nodsel)
         nplex = nodsel.shape[-1]
@@ -305,6 +311,7 @@ class Connectivity(ndarray):
         return Connectivity(self[:,nodsel].reshape(-1,nplex))
 
 
+    # THIS SHOULD BE GENERALIZED FOR intermediate plexitude > 2
     def expand(self,edg=None):
         """Transform elems to edges and faces.
 
@@ -318,9 +325,9 @@ class Connectivity(ndarray):
         nodes 0-1.
         The node numbering in the edges is always lowest node number first.
 
-        The inverse operation can be obtained from function compactElems.
+        The inverse operation is available as the static method
+        Connectivity.compress().
         """
-        print "EXPAND"
         nelems,nplex = self.shape
         if edg is None:
             n = arange(nplex)
@@ -343,25 +350,42 @@ class Connectivity(ndarray):
         return edges,faces
 
 
+    # THIS SHOULD BE GENERALIZED
+    @staticmethod
+    def compress(hi,lo):
+        """Compress two hierarchical Connectiovity levels to a single one.
+
+        hi and lo are two hierarchical Connectivity tables, representing
+        higher and lower level respecively. This means that the elements
+        of hi hold numbers which point into lo to obtain the lowest level
+        items.
+
+        As an example, in a structure of triangles, hi could represent
+        triangles defined by 3 edges and lo could represent edges defined
+        by 2 vertices. The compress method will then result in a table
+        with plexitude 3 defining the triangles in function of the vertices.
+
+        This is the inverse operation of expandElems.
+        The algorithm only works if all vertex numbers of an element are
+        unique.
+        """
+        elems = lo[hi]
+        elems1 = roll(elems,-1,axis=1)
+        for i in range(elems.shape[1]):
+            flags = (elems[:,i,1] != elems1[:,i,0]) * (elems[:,i,1] != elems1[:,i,1])
+            elems[flags,i] = roll(elems[flags,i],1,axis=1)
+        return Connectivity(elems[:,:,0])
+
+
 ############################################################################
 
+@deprecation("\n Use 'Connectivity.expand()' instead")
 def expandElems(elems):
     return Connectivity(elems).expand()
     
-
+@deprecation("\n Use 'Connectivity.compress()' instead")
 def compactElems(edges,faces):
-    """Return compacted elems from edges and faces.
-
-    This is the inverse operation of expandElems.
-    The algorithm only works if all vertex numbers of an element are
-    unique.
-    """
-    elems = edges[faces]
-    elems1 = roll(elems,-1,axis=1)
-    for i in range(elems.shape[1]):
-        flags = (elems[:,i,1] != elems1[:,i,0]) * (elems[:,i,1] != elems1[:,i,1])
-        elems[flags,i] = roll(elems[flags,i],1,axis=1)
-    return elems[:,:,0]
+    return Connectivity.compress(faces,edges)
 
 
 
@@ -674,9 +698,8 @@ partitionSegmentedCurve = connectedLineElems
 # - RETURN SINGLE MAGIC INFORMATION ON ENCODING ? (codes,magic)
 # - COMPACT THE WHOLE ARRAY AT ONCE ?
 # - SORT VALUES IN THE axis=1 DIRECTION
-# - CREATE A Connectivity.unique() method based on the encoding
-# - REPLACE magic2, magic3, ...
-# - DO A FINAL RENUMBERING
+# - REPLACE magic3, ...
+# - ADD A FINAL RENUMBERING
     
 
 def compact_encode2(data):
@@ -709,7 +732,7 @@ def compact_decode2(codes,magic,uniqa,uniqb):
     This is the inverse operation of compact_encode2.
     Thus compact_decode2(*compact_encode(data)) will return data.
 
-    xenc can be a subset of the encoded values, but the other 3 arguments
+    codes can be a subset of the encoded values, but the other 3 arguments
     should be exactly those from the compact_encode2 result.
     """
     # decoding returns the indices into the uniq numberings
@@ -717,25 +740,36 @@ def compact_decode2(codes,magic,uniqa,uniqb):
     return column_stack([uniqa[pos[:,0]],uniqb[pos[:,1]]])
 
 
-def encode(data):
+def encode(data,compact=True):
+    """Encode multiple columns of integer data into a single column.
+
+    The preferable way to use this function is via
+    Connectivity.encode()
+    """
     magic = []
-    codes = data[:,-1]
-    # process in reverse direction
-    for i in range(data.shape[1]-1,-1,-1):
+    codes = data[:,0]
+    for i in range(1,data.shape[1]):
         cols = column_stack([codes,data[:,i]])
         codes,mag,uniqa,uniqb = compact_encode2(cols)
-        magic.append((mag,uniqa,uniqb))
+        # insert at the front so we can process in order
+        magic.insert(0,(mag,uniqa,uniqb))
+
     return codes,magic
 
 
 def decode(codes,magic):
+    """Decode multiple columns from a single column of codes and the magic.
+
+    The preferable way to use this function is via
+    Connectivity.decode()
+    """
     data = []
     # process in reverse direction
-    for i in range(len(magic)-1,-1,-1):
-        mag = magic[i]
+    for mag in magic:
         cols = compact_decode2(codes,mag[0],mag[1],mag[2])
-        data.append(cols[:,1])
+        data.insert(0,cols[:,1])
         codes = cols[:,0]
+    data.insert(0,codes)
     return column_stack(data)
         
 
@@ -816,23 +850,18 @@ if __name__ == "__main__":
     print decoded
     print "%s ERRORS" % (data-decoded).sum()
 
-
-    a = random.randint(10,size=(200,3))
-    C = Connectivity(a)
+    print "========== test encoding and decoding =========="
+    C = Connectivity(random.randint(10,size=(200,1)))
+    D = C.copy()     
     print C
     C.sort(axis=1)
     codes,magic = C.encode(False,False)
-    print codes.shape
-    ucodes = unique1d(codes)
-    print ucodes.shape
+    print "%s ERRORS" % (Connectivity.decode(codes,magic) - C).sum()
 
+    D = C.removeDoubles()
+    print "%s UNIQUE ELEMENTS" % D.shape[0]
+    print D
     
 
-    ## print C.listDegenerate()
-    ## print C.listNonDegenerate()
-    ## D = C.removeDegenerate()
-    ## print D
-    ## D.sort(axis=1)
-    ## print D.shape()
 
 # End
