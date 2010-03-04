@@ -2363,9 +2363,17 @@ class TextBox(QtGui.QDialog):
     The function returns True if the OK button was clicked or 'ENTER'
     was pressed, False if the 'CANCEL' button was pressed or ESC was pressed.
     """
-    def __init__(self,text,format=None,actions=['OK',None]):
-        QtGui.QDialog.__init__(self)
+    def __init__(self,text,format=None,actions=['OK',None],modal=None,parent=None,caption=None,flags=None):
+        if parent is None:
+            parent = GD.GUI
+        QtGui.QDialog.__init__(self,parent)
+        if flags is not None:
+            self.setWindowFlags(flags)
+        if caption is None:
+            caption = 'pyFormex-dialog'
         self.setWindowTitle('pyFormex Text Display')
+        if modal is not None:
+            self.setModal(modal)
         self._t = QtGui.QTextEdit()
         self._t.setReadOnly(True)
         updateText(self._t,text,format)

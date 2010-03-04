@@ -95,12 +95,16 @@ def ack(question,**kargs):
     return ask(question,['No','Yes'],**kargs) == 'Yes'
 
 
-def showText(text,type=None,actions=[('OK',None)]):
+def showText(text,type=None,actions=[('OK',None)],modal=True):
     """Display a text and wait for user response.
 
     This can display a large text and will add scrollbars when needed.
     """
-    return widgets.TextBox(text,type,actions).getResult()
+    w = widgets.TextBox(text,type,actions,modal=modal)
+    if modal:
+        w.getResult()
+    else:
+        w.show()
 
 
 def showFile(filename):
@@ -110,7 +114,6 @@ def showFile(filename):
         return
     showText(f.read())
     f.close()
-
 
 # widget and result status of the widget in askItems() function
 _dialog_widget = None

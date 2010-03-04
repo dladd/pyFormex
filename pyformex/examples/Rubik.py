@@ -253,7 +253,8 @@ clear()
 #GD.canvas.setBgColor('#333366','#acacc0')
 #GD.GUI.drawwait = 1.
 renderMode('flatwire')
-toolbar.setProjection()
+view('iso')
+#toolbar.setProjection()
 l,r,b,t = [-1,0,-1],[-1,2,-1],[0,-1,-1],[2,-1,-1]
 li,ri,bi,ti = [-1,0,0],[-1,2,0],[0,-1,0],[2,-1,0]
 global neighbours # List of the neighbouring planes, clockwise starting from right
@@ -355,7 +356,7 @@ def algorithm6():
 
 def howToSolve():
     """Shows the steps you can follow to easily solve the cube"""
-    showText(expl)
+    showText(expl,modal=False)
 
 def new():
     """Create a new (solved) cube"""
@@ -423,12 +424,13 @@ data_items1 = [b1,b2,b3]
 data_items2 = [b4]
 
 dia = widgets.NewInputDialog(
-    caption='Rubik\'s Cube',
+    caption="Rubik's Cube",
     items=[
         ('Cube transformations',data_items1),
-        ('Help',data_items2),
+#        ('Help',data_items2),
     ],
     actions=[
+        ('How to solve the cube',howToSolve),
         ('New',new),
         ('Randomize',randomize),
         ('Undo',undo),
