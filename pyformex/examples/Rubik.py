@@ -250,7 +250,7 @@ def alg6(self):
 
 # Main program
 clear()
-GD.canvas.setBgColor('#333366','#acacc0')
+#GD.canvas.setBgColor('#333366','#acacc0')
 #GD.GUI.drawwait = 1.
 renderMode('flatwire')
 toolbar.setProjection()
