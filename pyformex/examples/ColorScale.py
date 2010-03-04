@@ -114,12 +114,11 @@ def getData():
 
 def drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,grid,linewidth,lefttext,font,x,y,w,h):
     """Draw a color scale with the specified parameters"""
-    draw(Formex([[[-1,0,1],[0,0,0]]]))
     CS = ColorScale(palet,minval,maxval,midval=medval,exp=maxexp,exp2=minexp)
     CL = ColorLegend(CS,ncolors)
     CLA = decors.ColorLegend(CL,x,y,w,h,grid=grid,font=font,dec=dec,scale=scale,linewidth=linewidth,lefttext=lefttext) 
     decorate(CLA)
-    draw(Formex([[[0,0,1],[0,0,0]]]))
+    
 
 if __name__ == 'draw':
     flat()

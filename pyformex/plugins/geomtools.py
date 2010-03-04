@@ -180,7 +180,6 @@ def anyPerpendicularVector(A):
     x,y,z = hsplit(A,[1,2])
     n = zeros(x.shape,dtype=Float)
     t = (x!=0.)+(y!=0.)
-    t = vstack((t,t,t)).reshape(-1,3)
     B = where(t,column_stack([-y,x,n]),column_stack([-z,n,x]))
     return B
 

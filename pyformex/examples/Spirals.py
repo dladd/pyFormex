@@ -33,7 +33,7 @@ See also the Sweep example for a more sophisticated Spirals application
 from plugins import curve
 
 m = 100 # number of cells along spiral
-a = 4. # number of 360 degree turns
+a = 1. # number of 360 degree turns
 
 linewidth(2)
 clear()

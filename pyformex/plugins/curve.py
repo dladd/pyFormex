@@ -57,9 +57,9 @@ from plugins.mesh import Mesh
 #    pointsOn(): the defining points situated on the curve
 #    pointsOff(): the defining points situated off the curve (control points)
 
-#from geometry import Geometry
+from geometry import Geometry
 
-class Curve():
+class Curve(Geometry):
     """Base class for curve type classes.
 
     This is a virtual class intended to be subclassed.

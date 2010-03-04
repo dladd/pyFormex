@@ -228,8 +228,7 @@ class GUI(QtGui.QMainWindow):
         if self.modebar and GD.cfg['gui/shrinkbutton']:
             toolbar.addShrinkButton(self.modebar)
          
-        #if mmenu:              TEMPORARY DISABLED BY TOMAS
-        if False:  
+        if mmenu:
             # insert the mode menu in the viewport menu
             pmenu = self.menu.item('viewport')
             pmenu.insertMenu(pmenu.item('background color'),mmenu)
