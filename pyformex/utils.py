@@ -30,37 +30,26 @@ from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
 
 
-def procInfo(title):
-    print(title)
-    print('module name: %s' %  __name__)
-    print('parent process: %s' % os.getppid())
-    print('process id: %s' % os.getpid())
-
-
 # versions of detected modules/external commands
-the_version = {'pyformex':pyformex.__version__}
+the_version = {
+    'pyformex':pyformex.__version__,
+    'python':sys.version.split()[0],
+    }
 the_external = {}
 
+known_modules = [ 'python','numpy','pyopengl','pyqt4','pyqt4gl','calpy',
+                  'gnuplot','gl2ps' ]
 
-def strNorm(s):
-    """Normalize a string.
-
-    Text normalization removes all '&' characters and converts it to lower case.
-    """
-    return str(s).replace('&','').lower()
-
-
-def _congratulations(name,version,typ='module',fatal=False,quiet=True):
-    """Report a detected module/program."""
-    if version and not quiet:
-        pyformex.message("Congratulations! You have %s (%s)" % (name,version))
-    if not version:
-        if not quiet or fatal:
-            pyformex.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
-        if fatal:
-            pyformex.message("Sorry, I'm out of here....")
-            sys.exit()
-
+known_externals = {
+    'Python': ('python --version','Python (\\S+)'),
+    'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
+    'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
+    'calpy': ('calpy --version','Calpy (\S+)'), 
+    'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
+    'units': ('units --version','GNU Units version (\S+)'),
+    'ffmpeg': ('ffmpeg -version','FFmpeg version (\\S+)'),
+    'gts': ('gtsset -h','Usage(:) set'),
+    }
 
 def checkVersion(name,version,external=False):
     """Checks a version of a program/module.
@@ -84,8 +73,46 @@ def checkVersion(name,version,external=False):
     else:
         return -1
 
-known_modules = [ 'numpy','pyopengl','pyqt4','pyqt4gl','calpy',
-                  'gnuplot','gl2ps' ]
+
+if checkVersion('python','2.5') < 0:
+    print """
+This version of pyFormex was developed for Python 2.5.
+We advice you to upgrade your Python version.
+Getting pyFormex to run on Python 2.4 should be possible with a
+a few adjustements. Make it run on a lower version is problematic.
+"""
+    sys.exit()
+    
+if checkVersion('python','2.6') >= 0:
+    print """
+This version of pyFormex was developed for Python 2.5.
+There should not be any major problem with running on version 2.6,
+but if you encounter some problems, please contact the developers at
+pyformex.berlios.de.
+"""
+    from itertools import combinations
+else:
+    def combinations(iterable, r):
+        # combinations('ABCD', 2) --> AB AC AD BC BD CD
+        # combinations(range(4), 3) --> 012 013 023 123
+        pool = tuple(iterable)
+        n = len(pool)
+        if r > n:
+            return
+        indices = range(r)
+        yield tuple(pool[i] for i in indices)
+        while True:
+            for i in reversed(range(r)):
+                if indices[i] != i + n - r:
+                    break
+            else:
+                return
+            indices[i] += 1
+            for j in range(i+1, r):
+                indices[j] = indices[j-1] + 1
+            yield tuple(pool[i] for i in indices)
+
+    
 
 def checkModule(name=None):
     """Check if the named Python module is available, and record its version.
@@ -150,18 +177,6 @@ def hasModule(name,check=False):
     else:
         return checkModule(name)
 
-            
-# tetgen -v no longer works in 1.4.2: use -h !!
-known_externals = {
-    'Python': ('python --version','Python (\\S+)'),
-    'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
-    'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
-    'calpy': ('calpy --version','Calpy (\S+)'), 
-    'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
-    'units': ('units --version','GNU Units version (\S+)'),
-    'ffmpeg': ('ffmpeg -version','FFmpeg version (\\S+)'),
-    'gts': ('gtsset -h','Usage(:) set'),
-    }
 
 
 def checkExternal(name=None,command=None,answer=None):
@@ -235,6 +250,33 @@ def reportDetected():
         #    v = 'Not Found'
         s += "%s (%s)\n" % ( k,v)
     return s
+
+
+    
+def procInfo(title):
+    print(title)
+    print('module name: %s' %  __name__)
+    print('parent process: %s' % os.getppid())
+    print('process id: %s' % os.getpid())
+
+def strNorm(s):
+    """Normalize a string.
+
+    Text normalization removes all '&' characters and converts it to lower case.
+    """
+    return str(s).replace('&','').lower()
+
+
+def _congratulations(name,version,typ='module',fatal=False,quiet=True):
+    """Report a detected module/program."""
+    if version and not quiet:
+        pyformex.message("Congratulations! You have %s (%s)" % (name,version))
+    if not version:
+        if not quiet or fatal:
+            pyformex.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
+        if fatal:
+            pyformex.message("Sorry, I'm out of here....")
+            sys.exit()
 
 
 def prefix(prefix,files):
@@ -444,13 +486,14 @@ def mtime(fn):
     """Return the (UNIX) time of last change of file fn."""
     return os.stat(fn).st_mtime
 
-def timeEval(s):
+
+def timeEval(s,glob=None):
     """Return the time needed for evaluating a string.
 
     s is a string with a valid Python instructions.
     The string is evaluated using Python's eval() and the difference
     in seconds between the current time before and after the evaluation
-    is returned.
+    is printed. The result of the evaluation is returned.
 
     This is a simple method to measure the time spent in some operation.
     It should not be used for microlevel instructions though, because
@@ -459,9 +502,10 @@ def timeEval(s):
     """
     import time
     start = time.time()
-    eval(s)
+    res = eval(s,glob)
     stop = time.time()
-    return stop-start
+    print "Timed evaluation: %s seconds" % (stop-start)
+    return res
 
 
 def countLines(fn):

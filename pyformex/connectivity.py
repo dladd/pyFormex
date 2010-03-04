@@ -93,30 +93,40 @@ def demagic2(codes,magic):
     return cols
 
 
-@deprecation("\n Use 'enmagic3' instead")
-def magic_numbers(*args,**kargs):
-    return enmagic3(*args,**kargs)
+# These are the equivalents for enmagic2 en demagic2 for any plexitude
+# The -2 versions however have a fastencode option
 
-@deprecation("\n Use 'demagic3' instead")
-def demagic(*args,**kargs):
-    return enmagic3(*args,**kargs)
-
-
-# THESE SHOULD GET SOME OVERFLOW CHECKS
-# We keep this function because the have the benefit over encode/decode
-# that the result is independent from the other values in the set.
-def enmagic3(elems,magic):
-    elems = elems.astype(int64)
+def enmagic(elems):
     elems.sort(axis=1)
-    mag = ( elems[:,0] * magic + elems[:,1] ) * magic + elems[:,2]
-    return mag
+    magic = elems.max(axis=0) + 1
+    prod = magic.prod()
+    print "magic = %s" % magic
+    print "product = %s" % prod
+    print "2**63   = %s" % 2**63
+    #if prod >= 2**63 or prod < 0:
+    #    raise RuntimeError,"There may be overflow in enmagic! Use encode instead" 
+    codes = elems[:,0].astype(int64)
+    i = 0
+    for m in magic[1:]:
+        codes = codes * m
+        i += 1
+        codes = codes + elems[:,i]
+    return codes,magic
 
+def demagic(codes,magic):
+    nelems = len(codes)
+    nplex = len(magic)
+    elems = zeros((nelems,nplex),int32)
+    i = nplex-1
+    while i > 0:
+        m = magic[i]
+        elems[:,i] = codes % m
+        codes /= m
+        i -= 1
+    elems[:,0] = codes
+    return elems
 
-def demagic3(mag,magic):
-    first2,third = mag / magic, mag % magic
-    first,second = first2 / magic, first2 % magic
-    return column_stack([first,second,third]).astype(int32)
-
+    
 
 ############################################################################
 ##
@@ -340,7 +350,7 @@ class Connectivity(ndarray):
         return self[~self.testDegenerate()]
 
     
-    def removeDoubles(self,permutations=True):
+    def removeDoublesOld(self,permutations=True):
         """Remove doubles from a Connectivity list.
 
         By default, doubles are elements that consist of the same set of
@@ -355,6 +365,33 @@ class Connectivity(ndarray):
             codes = self.encode(False)
             ucodes,pos = unique1d(codes,True)
             return self[pos]
+
+
+    #    This algorithm is faster than the removeDoublesOld, based on encode,
+    #    but for nplex=2 a direct application of enmagic2 would probably
+    #    still be faster.
+    
+    def removeDoubles(self,permutations=True):
+        """Remove doubles from a Connectivity list.
+
+        By default, doubles are elements that consist of the same set of
+        nodes, in any particular order. Setting permutations to False
+        will only remove the double rows that have matching values at
+        matching positions.
+        """
+        if permutations:
+            C = self.copy()
+            C.sort(axis=1)
+        else:
+            C = self
+
+        indices = sortByColumns(C)
+        ## keys = [C[:,i] for i in range(C.shape[1]-1,-1,-1)]
+        ## indices = lexsort(keys)
+                  
+        C = C.take(indices,axis=0)
+        ok = (C != roll(C,1,axis=0)).any(axis=1)
+        return self[indices[ok]]
 
             
     def reverseIndex(self):
@@ -409,7 +446,7 @@ class Connectivity(ndarray):
             edg = asarray(edg)
             if edg.ndim != 2 or edg.shape[-1] != 2:
                 raise ValueError,"edg should be a (n,2) shaped array!"
-            
+        
         alledges = self[:,edg].astype(int32).reshape(-1,2)
         # sort edge nodes with lowest number first
         alledges.sort()
@@ -420,28 +457,32 @@ class Connectivity(ndarray):
         uedges = uniq.searchsorted(codes)
         edges = demagic2(uniq,magic)
         faces = uedges.reshape((nelems,nplex))
-        return edges,faces
+        return Connectivity(faces),Connectivity(edges)
 
 
     # THIS SHOULD BE GENERALIZED
     @staticmethod
     def compress(hi,lo):
-        """Compress two hierarchical Connectiovity levels to a single one.
+        """Compress two hierarchical Connectivity levels to a single one.
 
         hi and lo are two hierarchical Connectivity tables, representing
-        higher and lower level respecively. This means that the elements
+        higher and lower level respectively. This means that the elements
         of hi hold numbers which point into lo to obtain the lowest level
         items.
+
+        In the current implementation, the plexitude of lo should be 2!
 
         As an example, in a structure of triangles, hi could represent
         triangles defined by 3 edges and lo could represent edges defined
         by 2 vertices. The compress method will then result in a table
         with plexitude 3 defining the triangles in function of the vertices.
 
-        This is the inverse operation of expandElems.
+        This is the inverse operation of expand (without specifying edg).
         The algorithm only works if all vertex numbers of an element are
         unique.
         """
+        if lo.shape[1] != 2:
+            raise ValueError,"Expected plexitude 2 for second argument"
         elems = lo[hi]
         elems1 = roll(elems,-1,axis=1)
         for i in range(elems.shape[1]):
@@ -457,7 +498,7 @@ def expandElems(elems):
     return Connectivity(elems).expand()
     
 @deprecation("\n Use 'Connectivity.compress()' instead")
-def compactElems(edges,faces):
+def compactElems(faces,edges):
     return Connectivity.compress(faces,edges)
 
 
@@ -772,49 +813,139 @@ partitionSegmentedCurve = connectedLineElems
 if __name__ == "__main__":
 
     import sys
+    import utils
     
-    c = Connectivity([[0,2,3],[2,4,5]])
-    print(c)
-    print(c._max)
-    print(c.nelems())
-    print(c.nplex())
-    print(c.reverseIndex())
+    ## c = Connectivity([[0,2,3],[2,4,5]])
+    ## print(c)
+    ## print(c._max)
+    ## print(c.nelems())
+    ## print(c.nplex())
+    ## print(c.reverseIndex())
 
-    a = array([2**31-1, 2**31])
-    print a
-    print a.astype(int32)
-
-    n = 10
-    m = 9
-    a = array(arange(n))
-    cols = column_stack([a,a**m])
-
-    print cols
-    codes,magic = enmagic2(cols,-1)
-    print codes
-    print magic
-    cols = demagic2(codes,magic)
-    print cols
-    codes,magic = enmagic2(cols,0)
-    print codes
-    print magic
-    cols = demagic2(codes,magic)
-    print cols
-
-    print "========== test encoding and decoding =========="
-    for nplex in range(1,5):
-        print "PLEXITUDE %s" % nplex
-        C = Connectivity(random.randint(10,size=(200,nplex)))
-        D = C.copy()     
-        #print C
-        C.sort(axis=1)
-        codes,magic = C.encode(return_magic=True)
-        print "  %s ERRORS" % (Connectivity.decode(codes,magic) - C).sum()
-
-        D = C.removeDoubles()
-        print "  %s UNIQUE ELEMENTS" % D.shape[0]
-        #print D
+    C = Connectivity(random.randint(100000,size=(1000000,4)))
+    C.sort(axis=1)
+    
+    D = utils.timeEval("C.removeDoubles()",globals())
+    print "%s UNIQUE ELEMENTS" % D.shape[0]
     
 
+    E = utils.timeEval("C.removeDoublesOld()",globals())
+    print "%s UNIQUE ELEMENTS" % D.shape[0]
+    
+    print "%s NONMATCHING results" % (D-E).any(axis=1).sum()
+    
+    
+    ## C = Connectivity(random.randint(2**28,size=(10000,nplex)))
+    ## print C.min(),C.max()
+
+    ## C = Connectivity([[2**10-1,2**24-1,2**29-2]])
+
+    ## if nplex == 2:
+    ##     print "enmagic2 FASTENCODE"
+    ##     codes,magic = utils.timeEval("enmagic2(C,-1)",globals())
+    ##     print "  %s ERRORS" % (demagic2(codes,magic) - C).sum()
+
+    ##     print "enmagic2"
+    ##     codes,magic = utils.timeEval("enmagic2(C,0)",globals())
+    ##     print "  %s ERRORS" % (demagic2(codes,magic) - C).sum()
+
+    ## print "enmagic"
+    ## codes,magic = utils.timeEval("enmagic(C)",globals())
+    ## print "  %s ERRORS" % (demagic(codes,magic) - C).sum()
+
+    ## print "encode"
+    ## res = utils.timeEval("C.encode(return_magic=True)",globals())
+    ## print "  %s ERRORS" % (Connectivity.decode(*res) - C).sum()
+
+    ## print C.min(),C.max()
+    
+    ## print "========== test encoding and decoding =========="
+    ## for nplex in range(1,5):
+    ##     print "PLEXITUDE %s" % nplex
+    ##     C = Connectivity(random.randint(10,size=(200,nplex)))
+    ##     #print C
+    ##     D = C.copy()     
+    ##     C.sort(axis=1)
+    ##     codes,magic = C.encode(return_magic=True)
+    ##     print "  %s ERRORS" % (Connectivity.decode(codes,magic) - C).sum()
+
+    ##     D = C.removeDoubles()
+    ##     print "  %s UNIQUE ELEMENTS" % D.shape[0]
+    ##     #print D
+
+    ## # THIS SHOULD BE GENERALIZED FOR intermediate plexitude > 2
+    ## def untangle(self,ind=None):
+    ##     """Untangle a Connectivity into lower plexitude tables.
+
+    ##     There is no point in untangling a plexitude 2 structure.
+    ##     Plexitudes lower than 2 can not be untangled.
+    ##     Default is to untangle to plex-2 data (as in polygon to line segment).
+        
+    ##     Return a tuple edges,faces where
+        
+    ##     - edges is an (nedges,2) int array of edges connecting two node numbers.
+    ##     - faces is an (nelems,nplex) int array with the edge numbers connecting
+    ##       each pair os subsequent nodes in the elements of elems.
+
+    ##     The order of the edges respects the node order, and starts with
+    ##     nodes 0-1.
+    ##     The node numbering in the edges is always lowest node number first.
+
+    ##     For untangled Connectivities obtained with the default indices,
+    ##     an inverse operation is available as hi.tangle(lo).
+    ##     Degenerate rows may come back as a permutation!
+    ##     """
+    ##     nelems,nplex = self.shape
+        
+    ##     if ind is None:
+    ##         # Default is to untangle to a 2-plex structure
+    ##         if nplex > 2:
+    ##             n = arange(nplex)
+    ##             ind = column_stack([n,roll(n,-1)])
+    ##         elif nplex == 2:
+    ##             print "There is no point in untangling a 2-plex Connectivity"
+    ##             print "I'll go ahead anyway"
+    ##             ind = array([[0,1]])
+    ##         else:
+    ##             raise RuntimeError,"Can not untangle a Connectivity with plexitude < 2"
+    ##     else:
+    ##         ind = asarray(ind)
+    ##         if ind.ndim != 2 or ind.shape[-1] != 2:
+    ##             raise ValueError,"ind should be a (n,2) shaped array!"
+
+    ##     items = Connectivity(self[:,ind].reshape(-1,ind.shape[-1]))
+    ##     # sort edge nodes with lowest number first
+    ##     items.sort(axis=-1)
+    ##     codes,magic = enmagic2(items,self._max+1)
+    ##     # keep the unique edge numbers
+    ##     uniq,uniqid = unique1d(codes,True)
+    ##     # uniq is sorted 
+    ##     uedges = uniq.searchsorted(codes)
+    ##     edges = demagic2(uniq,magic)
+    ##     faces = uedges.reshape((nelems,ind.shape[0]))
+    ##     return Connectivity(faces),Connectivity(edges)
+    
+
+    ## print "========== test expanding and compressing =========="
+    ## for nplex in range(2,5):
+    ##     print "PLEXITUDE %s" % nplex
+    ##     C = Connectivity(random.randint(10,size=(10,nplex))).removeDegenerate()
+    ##     print C
+    ##     D,E = untangle(C)
+    ##     print D
+    ##     print E
+    ##     F = Connectivity.compress(D,E)
+    ##     print F
+    ##     print "  %s ERRORS" % (F - C).sum()
+
+    ## for nplex in range(2,5):
+    ##     print "PLEXITUDE %s" % nplex
+    ##     C = Connectivity(random.randint(10,size=(10,nplex))).removeDegenerate()
+    ##     print C
+    ##     codes,magic = enmagic(C)
+    ##     print codes
+    ##     print magic
+    ##     print  demagic(codes,magic)
+        
 
 # End

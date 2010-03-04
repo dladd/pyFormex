@@ -31,7 +31,7 @@ techniques = ['menu', 'dialog', 'persistence', 'colors']
 """
 
 import simple,utils
-from connectivity import compactElems
+from connectivity import Connectivity
 from plugins.surface import TriSurface
 from plugins.properties import *
 from plugins.fe_abq import *
@@ -297,7 +297,7 @@ def createFrameModel():
     print "%s triangles are part of quadrilateral faces" % nquadtri
     if nquadtri > 0:
         # Create triangle definitions of the quadtri faces
-        tri = compactElems(S.getEdges(),quadtri)
+        tri = Connectivity.compact(quadtri,S.getEdges())
         D = Formex(nodes[tri])
         clear()
         flatwire()

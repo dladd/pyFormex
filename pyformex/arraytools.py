@@ -585,6 +585,18 @@ def cubicEquation(a,b,c,d):
 ##     itemgrps = [ olist.select(items,i) for i in itemnrs ]
 ##     itemcnt = [ len(i) for i in itemnrs ]
 ##     return itemgrps,itemnrs,itemcnt,itemlen
-    
+
+
+def sortByColumns(A):
+    """Sort an array on all its columns, from left to right.
+
+    The rows of a 2-dimensional array are sorted, first on the first
+    column, then on the second to resolve ties, etc..
+
+    The result value is an index returning the order in which the rows
+    have to be taken to obtain the sorted array.
+    """
+    keys = [A[:,i] for i in range(A.shape[1]-1,-1,-1)]
+    return lexsort(keys)
 
 # End

@@ -561,13 +561,13 @@ class TriSurface(Mesh):
     def getEdges(self):
         """Get the edges data."""
         if self.edges is None:
-            self.edges,self.faces = self.elems.expand()
+            self.faces,self.edges = self.elems.expand()
         return self.edges
     
     def getFaces(self):
         """Get the faces data."""
         if self.faces is None:
-            self.edges,self.faces = self.elems.expand()
+            self.faces,self.edges = self.elems.expand()
         return self.faces
 
     #
