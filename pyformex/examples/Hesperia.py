@@ -793,7 +793,7 @@ def runCalpyAnalysis():
         print "Calpy.Loads"
         print loads
     # Perform analysis
-    # OK, that is really everything there is to it. Now just run the
+    ## OK, that is really everything there is to it. Now just run the
     # analysis, and hope for the best ;)
     # Enabling the Echo will print out the data.
     # The result consists of nodal displacements and stress resultants.

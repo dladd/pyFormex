@@ -457,7 +457,7 @@ def run(argv=[]):
     # with reading and writing files (formats become incompatible!)
     # we put it back to a sane setting
     #
-    utils.setSaneLocale()
+    #utils.setSaneLocale()
 
     # Initialize the libraries
     #print("NOW LOAIDNG LIBS")

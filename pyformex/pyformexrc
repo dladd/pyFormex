@@ -71,9 +71,9 @@ history_max = 20
 splash = os.path.join(icondir,'pyformex-splash.png')
 plugins = ['formex_menu','tools_menu']
 style = "Plastique"
-size=(800,600)
+size=(1440,900)
 pos=(0,0)
-fullscreen = False
+fullscreen = True
 icontype = '.xpm'
 
 prefsmenu = True     # add settins menu menu
@@ -90,7 +90,7 @@ viewbar = True       # add views toolbar
 normalsbutton = True  # add normals button to toolbar
 lightbutton = True    # add light button to toolbar
 shrinkbutton = False  # add shrink button to toolbar
-timeoutbutton = False # add timeout button to toolbar
+timeoutbutton = True # add timeout button to toolbar
 timeoutvalue = -1     # never timeout
 coordsbox = False     # add coords display widget to toolbar
 
@@ -115,8 +115,8 @@ showfocus = True
 
 # Default canvas settings
 [canvas]
-bgcolor = 'lightgrey'
-bgcolor2 = None
+bgcolor = '#333366'
+bgcolor2 = '#acacc0'
 fgcolor = 'black'
 slcolor = 'magenta'
 linewidth = 1.0
@@ -142,9 +142,9 @@ avgnormaltreshold = 0.5
 
 lightmodel = 'ambient and diffuse'
 material = {'ambient':0.3,'diffuse':0.3,'specular':0.6,'emission':0.2,'shininess':1.}
-light0 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(1.,1.,1.,0.)}
-light1 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(-1.,1.,1.,0.)}
-light2 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(0.,0.,1.,0.)}
+light0 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.8,'position':(1.,1.,1.,0.)}
+light1 = {'enabled':True,'ambient':0.3,'diffuse':0.8,'specular':0.4,'position':(-1.,-1.,-1.,0.)}
+light2 = {'enabled':False,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(0.,0.,1.,0.)}
 light3 = {'enabled':False,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(1.,-1.,1.,0.)}
 ## light4 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(1.,1.,-1.,0.)}
 ## light5 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(-1.,1.,-1.,0.)}

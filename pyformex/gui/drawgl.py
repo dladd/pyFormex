@@ -249,7 +249,12 @@ def draw_polygon_elems(x,e,n,c,alpha,objtype):
     alpha : float
     objtype : GL Object type (-1 = auto)
     """
+<<<<<<< .mine
+    #drawPolygons(x[e],n,c,alpha)
+    draw_polygons(x[e],n,c,alpha)
+=======
     draw_polygons(x[e],n,c,alpha,objtype)
+>>>>>>> .r1209
     
 
 def pick_polygon_elems(x,e,objtype):

@@ -298,6 +298,7 @@ def curvature(coords,elems,edges,neighbours=1):
     vn[adjNotOk] = 0.
     # calculate unit length projection of vp onto the tangent plane
     t = projectionVOP(vp,n[:,newaxis])
+    print shape(t),t
     t = normalize(t)
     # calculate normal curvature
     k = dotpr(vp,vn)/dotpr(vp,vp)
