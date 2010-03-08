@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>9. simple — Predefined geometries with a simple shape. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>9. simple — Predefined geometries with a simple shape. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="10. project — project.py" href="project.html" />
     <link rel="prev" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" /> 
@@ -100,11 +100,25 @@ The line is split up in n segments.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="simple.rect">
+<tt class="descclassname">simple.</tt><tt class="descname">rect</tt><big>(</big><em>p1=</em><span class="optional">[</span>, <em>0.</em>, <em>0.</em>, <em>0.</em><span class="optional">]</span>, <em>p2=</em><span class="optional">[</span>, <em>1.</em>, <em>0.</em>, <em>0.</em><span class="optional">]</span>, <em>nx=1</em>, <em>ny=1</em><big>)</big><a class="headerlink" href="#simple.rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex which is a the circumference of a rectangle.</p>
+<p>p1 and p2 are two opposite corner points of the rectangle.
+The edges of the rectangle are in planes parallel to the z-axis.
+There will always be two opposite edges that are parallel with the x-axis.
+The other two will only be parallel with the y-axis if both points
+have the same z-value, but in any case they will be parallel with the
+y-z plane.</p>
+<p>The edges parallel with the x-axis are divide in nx parts, the other
+ones in ny parts.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="simple.rectangle">
 <tt class="descclassname">simple.</tt><tt class="descname">rectangle</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>b=None</em>, <em>h=None</em>, <em>bias=0.</em>, <em>diag=None</em><big>)</big><a class="headerlink" href="#simple.rectangle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Formex representing a rectangle of size(b,h) with (nx,ny) cells.</p>
-<p>This is a convenience function to create a rectangle with given size.
-The default b/h values are equal to nx/ny, resulting in a modular grid.
+<dd><p>Return a Formex representing a rectangluar surface.</p>
+<p>The rectangle has a size(b,h) divivded into (nx,ny) cells.</p>
+<p>The default b/h values are equal to nx/ny, resulting in a modular grid.
 The rectangle lies in the (x,y) plane, with one corner at [0,0,0].
 By default, the elements are quads. By setting diag=&#8217;u&#8217;,&#8217;d&#8217; of &#8216;x&#8217;,
 diagonals are added in /, resp. and both directions, to form triangles.</p>
@@ -174,7 +188,7 @@ in n segments.</p>
 
 <dl class="function">
 <dt id="simple.sphere2">
-<tt class="descclassname">simple.</tt><tt class="descname">sphere2</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=-90</em>, <em>top=90</em><big>)</big><a class="headerlink" href="#simple.sphere2" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">simple.</tt><tt class="descname">sphere2</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=90</em>, <em>top=90</em><big>)</big><a class="headerlink" href="#simple.sphere2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a sphere consisting of line elements.</p>
 <p>A sphere with radius r is modeled by a regular grid of nx
 longitude circles, ny latitude circles and their diagonals.</p>
@@ -186,7 +200,7 @@ angles (measured in degrees from 0 at north pole to 180 at south pole.</p>
 
 <dl class="function">
 <dt id="simple.sphere3">
-<tt class="descclassname">simple.</tt><tt class="descname">sphere3</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=-90</em>, <em>top=90</em><big>)</big><a class="headerlink" href="#simple.sphere3" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">simple.</tt><tt class="descname">sphere3</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=90</em>, <em>top=90</em><big>)</big><a class="headerlink" href="#simple.sphere3" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a sphere consisting of surface triangles</p>
 <p>A sphere with radius r is modeled by the triangles fromed by a regular
 grid of nx longitude circles, ny latitude circles and their diagonals.</p>
@@ -232,6 +246,11 @@ By default, the elements are quads. Put in a diagonal (&#8216;u&#8217; or &#8216
 to create triangles.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="simple.cuboid">
+<tt class="descclassname">simple.</tt><tt class="descname">cuboid</tt><big>(</big><em>xmin=</em><span class="optional">[</span>, <em>0.</em>, <em>0.</em>, <em>0.</em><span class="optional">]</span>, <em>xmax=</em><span class="optional">[</span>, <em>1.</em>, <em>1.</em>, <em>1.</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#simple.cuboid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 
 
@@ -246,10 +265,10 @@ to create triangles.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="connectivity.html"
-                                  title="previous chapter">8. <tt class="docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+                                  title="previous chapter">8. <tt class="docutils literal docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="project.html"
-                                  title="next chapter">10. <tt class="docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
+                                  title="next chapter">10. <tt class="docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/simple.txt"

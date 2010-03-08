@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>29. surface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>29. surface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="30. geomtools — Basic geometrical operations." href="geomtools.html" />
     <link rel="prev" title="28. curve — Definition of curves in pyFormex." href="curve.html" /> 
@@ -62,65 +62,24 @@ Any surface in space, no matter how complex, can be approximated with
 a triangulated surface.</p>
 <dl class="class">
 <dt id="surface.TriSurface">
-<em class="property">class </em><tt class="descclassname">surface.</tt><tt class="descname">TriSurface</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#surface.TriSurface" title="Permalink to this definition">¶</a></dt>
-<dd><p>A class for handling triangulated 3D surfaces.</p>
-<p>Create a new surface.</p>
-<p>The surface contains ntri triangles, each having 3 vertices with
-3 coordinates.
-The surface can be initialized from one of the following:</p>
+<em class="property">class </em><tt class="descclassname">surface.</tt><tt class="descname">TriSurface</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#surface.TriSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a triangulated 3D surface.</p>
+<p>The surface contains <cite>ntri</cite> triangles, each having 3 vertices with
+3 coordinates. The surface can be initialized from one of the following:</p>
 <ul class="simple">
-<li>a (ntri,3,3) shaped array of floats ;</li>
-<li>a 3-plex Formex with ntri elements ;</li>
+<li>a (ntri,3,3) shaped array of floats</li>
+<li>a Formex with plexitude 3</li>
+<li>a Mesh with plexitude 3</li>
 <li>an (ncoords,3) float array of vertex coordinates and
-an (ntri,3) integer array of vertex numbers ;</li>
+an (ntri,3) integer array of vertex numbers</li>
 <li>an (ncoords,3) float array of vertex coordinates,
 an (nedges,2) integer array of vertex numbers,
 an (ntri,3) integer array of edges numbers.</li>
 </ul>
-<p>Internally, the surface is stored in a (coords,edges,faces) tuple.</p>
+<p>Additionally, a keyword argument prop= may be specified to
+set property values.</p>
+<p>Create a new surface.</p>
 <p>TriSurface objects have the following methods:</p>
-<dl class="method">
-<dt id="surface.TriSurface.getElems">
-<tt class="descname">getElems</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.getElems" title="Permalink to this definition">¶</a></dt>
-<dd>Get the elems data.</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.setElems">
-<tt class="descname">setElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#surface.TriSurface.setElems" title="Permalink to this definition">¶</a></dt>
-<dd>Change the elems data.</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.refresh">
-<tt class="descname">refresh</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.refresh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make the internal information consistent and complete.</p>
-<p>This function should be called after one of the data fields
-have been changed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.compress">
-<tt class="descname">compress</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.compress" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all nodes which are not used.</p>
-<p>Normally, the surface definition can hold nodes that are not
-used in the edge/facet tables. They do however influence the
-bounding box of the surface.
-This method will remove all the unconnected nodes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.append">
-<tt class="descname">append</tt><big>(</big><em>S</em><big>)</big><a class="headerlink" href="#surface.TriSurface.append" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge another surface with self.</p>
-<p>This just merges the data sets, and does not check
-whether the surfaces intersect or are connected!
-This is intended mostly for use inside higher level functions.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.ncoords">
-<tt class="descname">ncoords</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.ncoords" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="method">
 <dt id="surface.TriSurface.nedges">
 <tt class="descname">nedges</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.nedges" title="Permalink to this definition">¶</a></dt>
@@ -132,16 +91,6 @@ This is intended mostly for use inside higher level functions.</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="surface.TriSurface.nplex">
-<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.nplex" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.ndim">
-<tt class="descname">ndim</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.ndim" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="surface.TriSurface.vertices">
 <tt class="descname">vertices</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.vertices" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -149,18 +98,55 @@ This is intended mostly for use inside higher level functions.</p>
 <dl class="method">
 <dt id="surface.TriSurface.shape">
 <tt class="descname">shape</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.shape" title="Permalink to this definition">¶</a></dt>
-<dd>Return the number of ;points, edges, faces of the TriSurface.</dd></dl>
+<dd>Return the number of points, edges, faces of the TriSurface.</dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.getEdges">
+<tt class="descname">getEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.getEdges" title="Permalink to this definition">¶</a></dt>
+<dd>Get the edges data.</dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.getFaces">
+<tt class="descname">getFaces</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.getFaces" title="Permalink to this definition">¶</a></dt>
+<dd>Get the faces data.</dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.setCoords">
+<tt class="descname">setCoords</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#surface.TriSurface.setCoords" title="Permalink to this definition">¶</a></dt>
+<dd>Change the coords.</dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.setElems">
+<tt class="descname">setElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#surface.TriSurface.setElems" title="Permalink to this definition">¶</a></dt>
+<dd>Change the elems.</dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.setEdgesAndFaces">
+<tt class="descname">setEdgesAndFaces</tt><big>(</big><em>edges</em>, <em>faces</em><big>)</big><a class="headerlink" href="#surface.TriSurface.setEdgesAndFaces" title="Permalink to this definition">¶</a></dt>
+<dd>Change the edges and faces.</dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.refresh">
+<tt class="descname">refresh</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.refresh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.append">
+<tt class="descname">append</tt><big>(</big><em>S</em><big>)</big><a class="headerlink" href="#surface.TriSurface.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge another surface with self.</p>
+<p>This just merges the data sets, and does not check
+whether the surfaces intersect or are connected!
+This is intended mostly for use inside higher level functions.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.copy">
 <tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a (deep) copy of the surface.</p>
-<p>If an index is given, only the specified faces are retained.</p>
-</dd></dl>
+<dd>Return a (deep) copy of the surface.</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.select">
-<tt class="descname">select</tt><big>(</big><em>idx</em>, <em>compress=True</em><big>)</big><a class="headerlink" href="#surface.TriSurface.select" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">select</tt><big>(</big><em>idx</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#surface.TriSurface.select" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a TriSurface which holds only elements with numbers in ids.</p>
 <p>idx can be a single element number or a list of numbers or
 any other index mechanism accepted by numpy&#8217;s ndarray
@@ -168,145 +154,6 @@ By default, the vertex list will be compressed to hold only those
 used in the selected elements.
 Setting compress==False will keep all original nodes in the surface.</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.setProp">
-<tt class="descname">setProp</tt><big>(</big><em>p=None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.setProp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create or delete the property array for the TriSurface.</p>
-<p>A property array is a rank-1 integer array with dimension equal
-to the number of elements in the TriSurface.
-You can specify a single value or a list/array of integer values.
-If the number of passed values is less than the number of elements,
-they wil be repeated. If you give more, they will be ignored.</p>
-<p>If a value None is given, the properties are removed from the TriSurface.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.getprop">
-<tt class="descname">getprop</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.getprop" title="Permalink to this definition">¶</a></dt>
-<dd>Return the properties as a numpy array (ndarray)</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.maxprop">
-<tt class="descname">maxprop</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.maxprop" title="Permalink to this definition">¶</a></dt>
-<dd>Return the highest property value used, or None</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.propSet">
-<tt class="descname">propSet</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.propSet" title="Permalink to this definition">¶</a></dt>
-<dd>Return a list with unique property values.</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.x">
-<tt class="descname">x</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.x" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.y">
-<tt class="descname">y</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.y" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.z">
-<tt class="descname">z</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.z" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.bbox">
-<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.bbox" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.center">
-<tt class="descname">center</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.center" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.centroid">
-<tt class="descname">centroid</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.centroid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.sizes">
-<tt class="descname">sizes</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.sizes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.dsize">
-<tt class="descname">dsize</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.dsize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.bsphere">
-<tt class="descname">bsphere</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.bsphere" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.centroids">
-<tt class="descname">centroids</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.centroids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the centroids of all elements of the Formex.</p>
-<p>The centroid of an element is the point whose coordinates
-are the mean values of all points of the element.
-The return value is an (nfaces,3) shaped Coords array.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.distanceFromPlane">
-<tt class="descname">distanceFromPlane</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.distanceFromPlane" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.distanceFromLine">
-<tt class="descname">distanceFromLine</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.distanceFromLine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.distanceFromPoint">
-<tt class="descname">distanceFromPoint</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.distanceFromPoint" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.test">
-<tt class="descname">test</tt><big>(</big><em>nodes='all'</em>, <em>dir=0</em>, <em>min=None</em>, <em>max=None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.test" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flag elements having nodal coordinates between min and max.</p>
-<p>This function is very convenient in clipping a TriSurface in a specified
-direction. It returns a 1D integer array flagging (with a value 1 or
-True) the elements having nodal coordinates in the required range.
-Use where(result) to get a list of element numbers passing the test.
-Or directly use clip() or cclip() to create the clipped TriSurface</p>
-<p>The test plane can be defined in two ways, depending on the value of dir.
-If dir == 0, 1 or 2, it specifies a global axis and min and max are
-the minimum and maximum values for the coordinates along that axis.
-Default is the 0 (or x) direction.</p>
-<p>Else, dir should be compaitble with a (3,) shaped array and specifies
-the direction of the normal on the planes. In this case, min and max
-are points and should also evaluate to (3,) shaped arrays.</p>
-<p>nodes specifies which nodes are taken into account in the comparisons.
-It should be one of the following:</p>
-<ul class="simple">
-<li>a single (integer) point number (&lt; the number of points in the Formex)</li>
-<li>a list of point numbers</li>
-<li>one of the special strings: &#8216;all&#8217;, &#8216;any&#8217;, &#8216;none&#8217;</li>
-</ul>
-<p>The default (&#8216;all&#8217;) will flag all the elements that have all their
-nodes between the planes x=min and x=max, i.e. the elements that
-fall completely between these planes. One of the two clipping planes
-may be left unspecified.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.clip">
-<tt class="descname">clip</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#surface.TriSurface.clip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a TriSurface with all the elements where t&gt;0.</p>
-<p>t should be a 1-D integer array with length equal to the number
-of elements of the TriSurface.
-The resulting TriSurface will contain all elements where t &gt; 0.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.cclip">
-<tt class="descname">cclip</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#surface.TriSurface.cclip" title="Permalink to this definition">¶</a></dt>
-<dd>This is the complement of clip, returning a TriSurface where t&lt;=0.</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.pointNormals">
@@ -322,19 +169,8 @@ The normal vectors are normalized.</p>
 <tt class="descname">offset</tt><big>(</big><em>distance=1.</em><big>)</big><a class="headerlink" href="#surface.TriSurface.offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Offset a surface with a certain distance.</p>
 <p>All the nodes of the surface are translated over a specified distance
-along their normal vector.
-This creates a new congruent surface.</p>
+along their normal vector.</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.toMesh">
-<tt class="descname">toMesh</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.toMesh" title="Permalink to this definition">¶</a></dt>
-<dd>Return a tuple of nodal coordinates and element connectivity.</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.feModel">
-<tt class="descname">feModel</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.feModel" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="classmethod">
 <dt id="surface.TriSurface.read">
@@ -361,83 +197,11 @@ If the filename has no extension, the &#8216;gts&#8217; file type is used.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="surface.TriSurface.toFormex">
-<tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.toFormex" title="Permalink to this definition">¶</a></dt>
-<dd>Convert the surface to a Formex.</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.scale">
-<tt class="descname">scale</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy scaled with scale[i] in direction i.</p>
-<p>The scale should be a list of 3 scaling factors for the 3 axis
-directions, or a single scaling factor.
-In the latter case, dir (a single axis number or a list) may be given
-to specify the direction(s) to scale. The default is to produce a
-homothetic scaling.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.translate">
-<tt class="descname">translate</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.translate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translate a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object.</p>
-<p>The translation vector can be specified in one of the following ways:</p>
-<ul class="simple">
-<li>an axis number (0,1,2),</li>
-<li>a single translation vector,</li>
-<li>an array of translation vectors.</li>
-</ul>
-<p>If an axis number is given, a unit vector in the direction of the
-specified axis will be used.
-If an array of translation vectors is given, it should be
-broadcastable to the size of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> array.
-If a distance value is given, the translation vector is multiplied
-with this value before it is added to the coordinates.</p>
-<p>Thus, the following lines are all equivalent:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
-<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">)</span>
-<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
-<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.rotate">
-<tt class="descname">rotate</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.rotate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy rotated over angle around axis.</p>
-<p>The angle is specified in degrees.
-The axis is either one of (0,1,2) designating the global axes,
-or a vector specifying an axis through the origin.
-If no axis is specified, rotation is around the 2(z)-axis. This is
-convenient for working on 2D-structures.</p>
-<p>As a convenience, the user may also specify a 3x3 rotation matrix,
-in which case the function rotate(mat) is equivalent to affine(mat).</p>
-<p>All rotations are performed around the point [0,0,0], unless a
-rotation origin is specified in the argument &#8216;around&#8217;.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.shear">
-<tt class="descname">shear</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.shear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
-<p>The coordinate dir is replaced with (dir + skew * dir1).</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="surface.TriSurface.reflect">
 <tt class="descname">reflect</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.reflect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
 <p>Default position of the plane is through the origin.
 Default mirror direction is the z-direction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="surface.TriSurface.affine">
-<tt class="descname">affine</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.affine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a general affine transform of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object.</p>
-<p><cite>mat</cite>: a 3x3 float matrix</p>
-<p><cite>vec</cite>: a length 3 list or array of floats</p>
-<p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -479,6 +243,14 @@ The area is always positive.</p>
 Eight values are returned: the Gaussian and mean curvature, the
 shape index, the curvedness, the principal curvatures and the
 principal directions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.inertia">
+<tt class="descname">inertia</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.inertia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return inertia related quantities of the surface.</p>
+<p>This returns the center of gravity, the principal axes of inertia, the principal
+moments of inertia and the inertia tensor.</p>
 </dd></dl>
 
 <dl class="method">
@@ -590,11 +362,6 @@ Edges with only one element get angles = 1.0.</p>
 <dd>Return the angles over all edges (in degrees).</dd></dl>
 
 <dl class="method">
-<dt id="surface.TriSurface.data">
-<tt class="descname">data</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.data" title="Permalink to this definition">¶</a></dt>
-<dd>Compute data for all edges and faces.</dd></dl>
-
-<dl class="method">
 <dt id="surface.TriSurface.aspectRatio">
 <tt class="descname">aspectRatio</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.aspectRatio" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -626,7 +393,7 @@ Edges with only one element get angles = 1.0.</p>
 <p>startat is an element number or list of numbers of the starting front.
 On first call, this function returns the starting front.
 Each next() call returns the next front.
-front_increment determines haw the property increases at each
+front_increment determines how the property increases at each
 frontal step. There is an extra increment +1 at each start of
 a new part. Thus, the start of a new part can always be detected
 by a front not having the property of the previous plus front_increment.</p>
@@ -643,12 +410,12 @@ Each next() call returns the next front.</p>
 
 <dl class="method">
 <dt id="surface.TriSurface.walkEdgeFront">
-<tt class="descname">walkEdgeFront</tt><big>(</big><em>startat=0</em>, <em>nsteps=-1</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.walkEdgeFront" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">walkEdgeFront</tt><big>(</big><em>startat=0</em>, <em>nsteps=1</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.walkEdgeFront" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.walkNodeFront">
-<tt class="descname">walkNodeFront</tt><big>(</big><em>startat=0</em>, <em>nsteps=-1</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.walkNodeFront" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">walkNodeFront</tt><big>(</big><em>startat=0</em>, <em>nsteps=1</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.walkNodeFront" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -708,6 +475,33 @@ firstprop</p>
 <dt id="surface.TriSurface.connectedElements">
 <tt class="descname">connectedElements</tt><big>(</big><em>target</em>, <em>elemlist=None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.connectedElements" title="Permalink to this definition">¶</a></dt>
 <dd>Return the elements from list connected with target</dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.intersectionWithPlane">
+<tt class="descname">intersectionWithPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>atol=0.</em>, <em>ignoreErrors=False</em><big>)</big><a class="headerlink" href="#surface.TriSurface.intersectionWithPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection lines with plane (p,n).</p>
+<p>Returns a plex-2 mesh with the line segments obtained by cutting
+all triangles of the surface with the plane (p,n)
+p is a point specified by 3 coordinates.
+n is the normal vector to a plane, specified by 3 components.
+atol is a tolerance factor defining whether an edge is intersected
+by the plane.</p>
+<p>The return value is a plex-2 Mesh where the line segments defining
+the intersection are sorted to form continuous lines. The Mesh has
+property numbers such that all segments forming a single continuous
+part have the same property value.
+The splitProp() method can be used to get a list of Meshes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="surface.TriSurface.slice">
+<tt class="descname">slice</tt><big>(</big><em>dir=0</em>, <em>nplanes=20</em>, <em>ignoreErrors=False</em><big>)</big><a class="headerlink" href="#surface.TriSurface.slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersect a surface with a sequence of planes.</p>
+<p>A sequence of nplanes planes with normal dir is constructed
+at equal distances spread over the bbox of the surface.</p>
+<p>The return value is a list of intersectionWithPlanes() return
+values, i.e. a list of list of meshes.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.smoothLowPass">
@@ -849,9 +643,14 @@ Returns a nodes,elems tuple.</p>
 <dt id="surface.surface_volume">
 <tt class="descclassname">surface.</tt><tt class="descname">surface_volume</tt><big>(</big><em>x</em>, <em>pt=None</em><big>)</big><a class="headerlink" href="#surface.surface_volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the volume inside a 3-plex Formex.</p>
-<p>For each element of Formex, return the volume of the tetrahedron
-formed by the point pt (default the center of x) and the 3 points
-of the element.</p>
+<ul class="simple">
+<li><cite>x</cite>: an (ntri,3,3) shaped float array, representing ntri triangles.</li>
+<li><cite>pt</cite>: a point in space. If unspecified, it is taken equal to the
+center() of the coordinates <cite>x</cite>.</li>
+</ul>
+<p>Returns an (ntri) shaped array with the volume of the tetraeders formed
+by the triangles and the point <cite>pt</cite>. If <cite>x</cite> represents a closed surface,
+the sum of this array will represent the volume inside the surface.</p>
 </dd></dl>
 
 <dl class="function">

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>15. actors — OpenGL actors for populating the 3D scene. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>15. actors — OpenGL actors for populating the 3D scene. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="16. decors — 2D decorations for the OpenGL canvas." href="decors.html" />
     <link rel="prev" title="14. colorscale — Color mapping of a range of values." href="colorscale.html" /> 
@@ -54,8 +54,365 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="actors-opengl-actors-for-populating-the-3d-scene">
-<span id="sec-ref-actors"></span><h1>15. <tt class="xref docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.<a class="headerlink" href="#actors-opengl-actors-for-populating-the-3d-scene" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-actors">
+<span id="sec-ref-actors"></span><h1>15. <tt class="xref docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.<a class="headerlink" href="#module-actors" title="Permalink to this headline">¶</a></h1>
+<p>OpenGL actors for populating the 3D scene.</p>
+<dl class="class">
+<dt id="actors.Actor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">Actor</tt><a class="headerlink" href="#actors.Actor" title="Permalink to this definition">¶</a></dt>
+<dd><p>An Actor is anything that can be drawn in an OpenGL 3D Scene.</p>
+<p>The visualisation of the Scene Actors is dependent on camera position and
+angles, clipping planes, rendering mode and lighting.</p>
+<p>An Actor subclass should minimally reimplement the following methods:</p>
+<ul class="simple">
+<li><cite>bbox()</cite>: return the actors bounding box.</li>
+<li><cite>drawGL(mode)</cite>: to draw the actor. Takes a mode argument so the
+drawing function can act differently depending on the mode. There are
+currently 5 modes: wireframe, flat, smooth, flatwire, smoothwire.
+drawGL should only contain OpenGL calls that are allowed inside a
+display list. This may include calling the display list of another
+actor but <em>not</em> creating a new display list.</li>
+</ul>
+<p>The interactive picking functionality requires the following methods,
+for which we porvide do-nothing defaults here:</p>
+<ul class="simple">
+<li><cite>npoints()</cite>:</li>
+<li><cite>nelems()</cite>:</li>
+<li><cite>pickGL()</cite>:</li>
+</ul>
+<p>Actor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.Actor.npoints">
+<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.Actor.npoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.Actor.nelems">
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.Actor.nelems" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.Actor.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>mode</em><big>)</big><a class="headerlink" href="#actors.Actor.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="actors.TranslatedActor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">TranslatedActor</tt><big>(</big><em>A</em>, <em>trl=(0.0</em>, <em>0.0</em>, <em>0.0)</em><big>)</big><a class="headerlink" href="#actors.TranslatedActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>An Actor translated to another position.</p>
+<p>TranslatedActor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.TranslatedActor.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.TranslatedActor.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.TranslatedActor.redraw">
+<tt class="descname">redraw</tt><big>(</big><em>mode</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.TranslatedActor.redraw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.TranslatedActor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.TranslatedActor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="actors.RotatedActor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">RotatedActor</tt><big>(</big><em>A</em>, <em>rot=(1.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>twist=0.0</em><big>)</big><a class="headerlink" href="#actors.RotatedActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>An Actor rotated to another position.</p>
+<p>Created a new rotated actor.</p>
+<p>If rot is an array with shape (3,), the rotation is specified
+by the direction of the local 0 axis of the actor.
+If rot is an array with shape (4,4), the rotation is specified
+by the direction of the local 0, 1 and 2 axes of the actor.</p>
+<p>RotatedActor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.RotatedActor.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.RotatedActor.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.RotatedActor.redraw">
+<tt class="descname">redraw</tt><big>(</big><em>mode</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.RotatedActor.redraw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.RotatedActor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.RotatedActor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="actors.CubeActor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">CubeActor</tt><big>(</big><em>size</em>, <em>color=</em><span class="optional">[</span>, <em>(1.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>0.0)</em>, <em>(1.0</em>, <em>0.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>0.0</em>, <em>1.0)</em>, <em>(1.0</em>, <em>1.0</em>, <em>0.0)</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#actors.CubeActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>An OpenGL actor with cubic shape and 6 colored sides.</p>
+<p>CubeActor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.CubeActor.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.CubeActor.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.CubeActor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode='wireframe'</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.CubeActor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd>Draw the cube.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="actors.BboxActor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">BboxActor</tt><big>(</big><em>bbox</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#actors.BboxActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws a bbox.</p>
+<p>BboxActor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.BboxActor.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.BboxActor.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.BboxActor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.BboxActor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd>Always draws a wireframe model of the bbox.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="actors.TriadeActor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">TriadeActor</tt><big>(</big><em>size=1.0</em>, <em>pos=</em><span class="optional">[</span>, <em>0.0</em>, <em>0.0</em>, <em>0.0</em><span class="optional">]</span>, <em>color=</em><span class="optional">[</span>, <em>(1.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>0.0)</em>, <em>(0.0</em>, <em>0.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>(1.0</em>, <em>0.0</em>, <em>1.0)</em>, <em>(1.0</em>, <em>1.0</em>, <em>0.0)</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#actors.TriadeActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>An OpenGL actor representing a triade of global axes.</p>
+<p>TriadeActor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.TriadeActor.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.TriadeActor.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.TriadeActor.setPos">
+<tt class="descname">setPos</tt><big>(</big><em>pos</em><big>)</big><a class="headerlink" href="#actors.TriadeActor.setPos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.TriadeActor.setSize">
+<tt class="descname">setSize</tt><big>(</big><em>size</em><big>)</big><a class="headerlink" href="#actors.TriadeActor.setSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.TriadeActor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode='wireframe'</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.TriadeActor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd>Draw the triade.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="actors.GridActor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GridActor</tt><big>(</big><em>nx=(1</em>, <em>1</em>, <em>1)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>dx=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.20000000000000001</em>, <em>lines=True</em>, <em>planes=True</em><big>)</big><a class="headerlink" href="#actors.GridActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws a (set of) grid(s) in one of the coordinate planes.</p>
+<p>GridActor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.GridActor.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GridActor.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.GridActor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.GridActor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd>Draw the grid.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="actors.CoordPlaneActor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">CoordPlaneActor</tt><big>(</big><em>nx=(1</em>, <em>1</em>, <em>1)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>dx=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.5</em>, <em>lines=True</em>, <em>planes=True</em><big>)</big><a class="headerlink" href="#actors.CoordPlaneActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws a set of 3 coordinate planes.</p>
+<p>CoordPlaneActor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.CoordPlaneActor.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.CoordPlaneActor.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.CoordPlaneActor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.CoordPlaneActor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd>Draw the grid.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="actors.PlaneActor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">PlaneActor</tt><big>(</big><em>nx=(2</em>, <em>2</em>, <em>2)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>size=((0.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>1.0))</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.5</em>, <em>lines=True</em>, <em>planes=True</em><big>)</big><a class="headerlink" href="#actors.PlaneActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A plane in a 3D scene.</p>
+<p>A plane perpendicular to the x-axis at the origin.</p>
+<p>PlaneActor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.PlaneActor.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.PlaneActor.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.PlaneActor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#actors.PlaneActor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd>Draw the grid.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="actors.GeomActor">
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GeomActor</tt><big>(</big><em>data</em>, <em>elems=None</em>, <em>eltype=None</em>, <em>color=None</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=1.0</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>marksize=None</em><big>)</big><a class="headerlink" href="#actors.GeomActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>An OpenGL actor representing a geometrical model.</p>
+<p>The model can either be in Formex or Mesh format.</p>
+<p>Create a geometry actor.</p>
+<p>The geometry is either in Formex model: a coordinate block with
+shape (nelems,nplex,3), or in Mesh format: a coordinate block
+with shape (npoints,3) and an elems block with shape (nelems,nplex).</p>
+<p>In both cases, an eltype may be specified if the default is not
+suitable. Default eltypes are Point for plexitude 1, Line for
+plexitude 2 and Triangle for plexitude 3 and Polygon for all higher
+plexitudes. Actually, Triangle is just a special case of Polygon.</p>
+<p>Here is a list of possible eltype values (which should match the
+corresponding plexitude):</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="17%" />
+<col width="69%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">plexitude</th>
+<th class="head"><cite>eltype</cite></th>
+<th class="head">element type</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>1</td>
+<td><tt class="docutils literal"><span class="pre">point3d</span></tt></td>
+<td><div class="first last line-block">
+<div class="line">a 3D cube with 6 differently colored faces
+is drawn at each point</div>
+</div>
+</td>
+</tr>
+<tr><td>4</td>
+<td><tt class="docutils literal"><span class="pre">tet4</span></tt></td>
+<td>a tetrahedron</td>
+</tr>
+<tr><td>6</td>
+<td><tt class="docutils literal"><span class="pre">wedge6</span></tt></td>
+<td>a wedge (triangular prism)</td>
+</tr>
+<tr><td>8</td>
+<td><tt class="docutils literal"><span class="pre">hex8</span></tt></td>
+<td>a hexahedron</td>
+</tr>
+</tbody>
+</table>
+<p>The colors argument specifies a list of OpenGL colors for each
+of the property values in the Formex. If the list has less
+values than the PropSet, it is wrapped around. It can also be
+a single OpenGL color, which will be used for all elements.
+For surface type elements, a bkcolor color can be given for
+the backside (inside) of the surface. Default will be the same
+as the front color.
+The user can specify a linewidth to be used when drawing
+in wireframe mode.</p>
+<p>GeomActor objects have the following methods:</p>
+<dl class="method">
+<dt id="actors.GeomActor.getType">
+<tt class="descname">getType</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.getType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.nplex">
+<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.nplex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.nelems">
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.nelems" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.shape">
+<tt class="descname">shape</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.shape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.npoints">
+<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.npoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.vertices">
+<tt class="descname">vertices</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.vertices" title="Permalink to this definition">¶</a></dt>
+<dd>Return the vertives as a 2-dim array.</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd>Set the color of the Actor.</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.setBkColor">
+<tt class="descname">setBkColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setBkColor" title="Permalink to this definition">¶</a></dt>
+<dd>Set the backside color of the Actor.</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.setAlpha">
+<tt class="descname">setAlpha</tt><big>(</big><em>alpha</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setAlpha" title="Permalink to this definition">¶</a></dt>
+<dd>Set the Actors alpha value.</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.setMarkSize">
+<tt class="descname">setMarkSize</tt><big>(</big><em>marksize</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setMarkSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the mark size.</p>
+<p>The mark size is currently only used with plex-1 Formices.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.setMark">
+<tt class="descname">setMark</tt><big>(</big><em>size</em>, <em>type</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setMark" title="Permalink to this definition">¶</a></dt>
+<dd>Create a symbol for drawing 3D points.</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode='wireframe'</em>, <em>color=None</em>, <em>colormap=None</em>, <em>alpha=None</em><big>)</big><a class="headerlink" href="#actors.GeomActor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the formex.</p>
+<p>if color is None, it is drawn with the color specified on creation.
+if color == &#8216;prop&#8217; and a colormap was installed, props define color.
+else, color should be an array of RGB values, either with shape
+(3,) for a single color, or (nelems,3) for differently colored
+elements</p>
+<p>if mode ends with wire (smoothwire or flatwire), two drawing
+operations are done: one with wireframe and color black, and
+one with mode[:-4] and self.color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>mode</em><big>)</big><a class="headerlink" href="#actors.GeomActor.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow picking of parts of the actor.</p>
+<p>mode can be &#8216;element&#8217;, &#8216;edge&#8217; or &#8216;point&#8217;</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.select">
+<tt class="descname">select</tt><big>(</big><em>sel</em><big>)</big><a class="headerlink" href="#actors.GeomActor.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a GeomActor with a selection of this actor&#8217;s elements</p>
+<p>Currently, the resulting Actor will not inherit the properties
+of its parent, but the eltype will be retained.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

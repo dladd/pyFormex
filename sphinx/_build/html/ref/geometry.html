@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>7. geometry — A generic interface to the Coords transformation methods &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>7. geometry — A generic interface to the Coords transformation methods &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
     <link rel="prev" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" /> 
@@ -67,13 +67,125 @@ Coords class to the derived classes.</p>
 <dl class="class">
 <dt id="geometry.Geometry">
 <em class="property">class </em><tt class="descclassname">geometry.</tt><tt class="descname">Geometry</tt><a class="headerlink" href="#geometry.Geometry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Geometry objects have the following methods:</p>
+<dd><p>A generic geometry object allowing transformation of coords sets.</p>
+<p>The Geometry class is a generic parent class for all geometric classes,
+intended to make the Coords transformations available without explicit
+declaration. This class is not intended to be used directly, only
+through derived classes.</p>
+<p>The derived classes should have an attribute <cite>coords</cite> which is
+a Coords object containing the coordinates of all the points that should
+get transformed under a Coords transformation.
+All the Coords transformation methods are inherited by the Geometry
+class and will be executed on the <cite>coords</cite> attribute.</p>
+<p>Derived classes can (and in most cases should) declare a method
+<cite>setCoords(coords)</cite> returning an object that is identical to the
+original, except for its coords being replaced by new ones with the
+same array shape.</p>
+<p>The Geometry class provides two possible default implementations:
+- <cite>setCoords_inplace</cite> sets the coords attribute to the provided new</p>
+<blockquote>
+coords, thus changing the object itself, and returns itself,</blockquote>
+<ul class="simple">
+<li><cite>setCoords_copy</cite> creates a deep copy of the object before setting
+the coords attribute. The original object is unchanged, the returned
+one is the changed copy.</li>
+</ul>
+<p>When using the first method, a statement like <tt class="docutils literal"><span class="pre">`B</span> <span class="pre">=</span> <span class="pre">A.scale(0.5)`</span></tt>
+will result in both <cite>A</cite> and <cite>B</cite> pointing to the same scaled object,
+while with the second method, <cite>A</cite> would still be the untransformed
+object. Since the latter is in line with the design philosophy of
+pyFormex, is is</p>
+<p>The default <cite>setCoords</cite> method is <cite>setCoords_copy</cite>.
+Most derived classes that are part of pyFormex however override this
+default and implement a more efficient cop
+Neither of both are good enough for pyFormex classes though</p>
+<p>the coords attribute in the object and returns the existing object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span>
+<span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+</div>
+<p>While the user can stick with this default in his scripts,
+it is not in line with the default scripting language design of
+pyFormex, which is to not change an existing object inplace, but rather
+have the transformation return a changed object.
+* Therefore, derived classes that are part of pyFormex should always
+define their own implementation of setCoords(coords) <a href="#id1"><span class="problematic" id="id2">*</span></a>.</p>
+<p>A Geometry contains a single attribute, coords, which is a Coords object.</p>
+<p>Geometry objects have the following methods:</p>
 <dl class="method">
-<dt id="geometry.Geometry.transform">
-<tt class="descname">transform</tt><big>(</big><em>funcname</em>, <em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.transform" title="Permalink to this definition">¶</a></dt>
-<dd>Transform the coordinates of the object using the function
-func(<a href="#id1"><span class="problematic" id="id2">*</span></a>args,**kargs), where func is a transformation method of the
-Coords class.</dd></dl>
+<dt id="geometry.Geometry.x">
+<tt class="descname">x</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.y">
+<tt class="descname">y</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.z">
+<tt class="descname">z</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.center">
+<tt class="descname">center</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.center" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.centroid">
+<tt class="descname">centroid</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.centroid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.sizes">
+<tt class="descname">sizes</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.sizes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.dsize">
+<tt class="descname">dsize</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.dsize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.bsphere">
+<tt class="descname">bsphere</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.bsphere" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.distanceFromPlane">
+<tt class="descname">distanceFromPlane</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.distanceFromPlane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.distanceFromLine">
+<tt class="descname">distanceFromLine</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.distanceFromLine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.distanceFromPoint">
+<tt class="descname">distanceFromPoint</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.distanceFromPoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.copy" title="Permalink to this definition">¶</a></dt>
+<dd>Return a deep copy of the object.</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.setCoords_inplace">
+<tt class="descname">setCoords_inplace</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#geometry.Geometry.setCoords_inplace" title="Permalink to this definition">¶</a></dt>
+<dd>Replace the current coords with new ones.</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.setCoords_copy">
+<tt class="descname">setCoords_copy</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#geometry.Geometry.setCoords_copy" title="Permalink to this definition">¶</a></dt>
+<dd>Return a copy of the object with new coordinates replacing the old.</dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.scale">
@@ -112,20 +224,282 @@ with this value before it is added to the coordinates.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="geometry.Geometry.draw">
-<tt class="descname">draw</tt><big>(</big><em>color='red'</em><big>)</big><a class="headerlink" href="#geometry.Geometry.draw" title="Permalink to this definition">¶</a></dt>
+<dt id="geometry.Geometry.rotate">
+<tt class="descname">rotate</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.shear">
+<tt class="descname">shear</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.shear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
+<p>The coordinate dir is replaced with (dir + skew * dir1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.reflect">
+<tt class="descname">reflect</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
+<p>Default position of the plane is through the origin.
+Default mirror direction is the z-direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.affine">
+<tt class="descname">affine</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a general affine transform of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p><cite>mat</cite>: a 3x3 float matrix</p>
+<p><cite>vec</cite>: a length 3 list or array of floats</p>
+<p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.cylindrical">
+<tt class="descname">cylindrical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.cylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cylindrical to cartesian after scaling.</p>
+<p>dir specifies which coordinates are interpreted as resp.
+distance(r), angle(theta) and height(z). Default order is [r,theta,z].
+scale will scale the coordinate values prior to the transformation.
+(scale is given in order r,theta,z).
+The resulting angle is interpreted in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.hyperCylindrical">
+<tt class="descname">hyperCylindrical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.toCylindrical">
+<tt class="descname">toCylindrical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to cylindrical coordinates.</p>
+<p>dir specifies which coordinates axes are parallel to respectively the
+cylindrical axes distance(r), angle(theta) and height(z). Default
+order is [x,y,z].
+The angle value is given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.spherical">
+<tt class="descname">spherical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from spherical to cartesian after scaling.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).</li>
+<li><cite>scale</cite> will scale the coordinate values prior to the transformation.</li>
+</ul>
+<p>Angles are interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.</p>
+<p>If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.superSpherical">
+<tt class="descname">superSpherical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.superSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a superspherical transformation.</p>
+<p>superSpherical is much like spherical, but adds some extra
+parameters to enable the creation of virtually any surface.</p>
+<p>Just like with spherical(), the input coordinates are interpreted as
+the longitude, latitude and distance in a spherical coordinate system.</p>
+<p><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).
+Angles are then interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.
+If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+<p><cite>scale</cite> will scale the coordinate values prior to the transformation.</p>
+<p>The <cite>n</cite> and <cite>e</cite> parameters define exponential transformations of the
+north_south (latitude), resp. the east_west (longitude) coordinates.
+Default values of 1 result in a circle.</p>
+<p><cite>k</cite> adds &#8216;eggness&#8217; to the shape: a difference between the northern and
+southern hemisphere. Values &gt; 0 enlarge the southern hemishpere and
+shrink the northern.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.toSpherical">
+<tt class="descname">toSpherical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.toSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to spherical coordinates.</p>
+<p><cite>dir</cite> specifies which coordinates axes are parallel to respectively
+the spherical axes distance(r), longitude(theta) and latitude(phi).
+Latitude is the elevation angle measured from equator in direction
+of north pole(90). South pole is -90.
+Default order is [0,1,2], thus the equator plane is the (x,y)-plane.</p>
+<p>The returned angle values are given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.bump">
+<tt class="descname">bump</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.bump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> with a bump.</p>
+<p>A bump is a modification of a set of coordinates by a non-matching
+point. It can produce various effects, but one of the most common
+uses is to force a surface to be indented by some point.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+(!! func(0) should be different from 0)
+dist is the direction in which the distance is measured : this can
+be one of the axes, or a list of one or more axes.
+If only 1 axis is specified, the effect is like function bump1
+If 2 axes are specified, the effect is like bump2
+This function can take 3 axes however.
+Default value is the set of 3 axes minus the direction of modification.
+This function is then equivalent to bump2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.bump1">
+<tt class="descname">bump1</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.bump1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> with a one-dimensional bump.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies the axis of the modified coordinates;</li>
+<li><cite>a</cite> is the point that forces the bumping;</li>
+<li><cite>dist</cite> specifies the direction in which the distance is measured;</li>
+<li><cite>func</cite> is a function that calculates the bump intensity from distance
+and should be such that <tt class="docutils literal"><span class="pre">func(0)</span> <span class="pre">!=</span> <span class="pre">0</span></tt>.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.bump2">
+<tt class="descname">bump2</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.bump2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> with a two-dimensional bump.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+!! func(0) should be different from 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.flare">
+<tt class="descname">flare</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.flare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a flare at the end of a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> block.</p>
+<p>The flare extends over a distance <tt class="docutils literal"><span class="pre">xf</span></tt> at the start (<tt class="docutils literal"><span class="pre">end=0</span></tt>)
+or end (<tt class="docutils literal"><span class="pre">end=1</span></tt>) in direction <tt class="docutils literal"><span class="pre">dir[0]</span></tt> of the coords block,
+and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f</span></tt> in the <tt class="docutils literal"><span class="pre">dir[1]</span></tt> direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.map">
+<tt class="descname">map</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> mapped by a 3-D function.</p>
+<p>This is one of the versatile mapping functions.
+func is a numerical function which takes three arguments and produces
+a list of three output values. The coordinates [x,y,z] will be
+replaced by func(x,y,z).
+The function must be applicable to arrays, so it should
+only include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map1 and mapd.
+Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
+is equivalent with E.scale([2,3,4])</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.map1">
+<tt class="descname">map1</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.map1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> where coordinate i is mapped by a 1-D function.</p>
+<p><cite>func</cite> is a numerical function which takes one argument and produces
+one result. The coordinate dir will be replaced by func(coord[x]).
+If no x is specified, x is taken equal to dir. 
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map and mapd.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.mapd">
+<tt class="descname">mapd</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.mapd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps one coordinate by a function of the distance to a point.</p>
+<p><cite>func</cite> a numerical function which takes one argument and produces
+one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
+where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+<tt class="xref docutils literal"><span class="pre">numpy</span></tt> module.
+By default, the distance d is calculated in 3-D, but one can specify
+a limited set of axes to calculate a 2-D or 1-D distance.
+This method is one of several mapping methods. See also
+<tt class="xref docutils literal"><span class="pre">map3()</span></tt> and <a title="geometry.Geometry.map1" class="reference internal" href="#geometry.Geometry.map1"><tt class="xref docutils literal"><span class="pre">map1()</span></tt></a>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">10</span><span class="o">**</span><span class="mf">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mf">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.newmap">
+<tt class="descname">newmap</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.newmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> mapped by a 3-D function.</p>
+<p>This is one of the versatile mapping functions.
+func is a numerical function which takes three arguments and produces
+a list of three output values. The coordinates [x,y,z] will be
+replaced by func(x,y,z).
+The function must be applicable to arrays, so it should
+only include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map1 and mapd.
+Example: <tt class="docutils literal"><span class="pre">E.map(lambda</span> <span class="pre">x,y,z:</span> <span class="pre">[2*x,3*y,4*z])</span></tt>
+is equivalent with <tt class="docutils literal"><span class="pre">E.scale([2,3,4])</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.replace">
+<tt class="descname">replace</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the coordinates along the axes i by those along j.</p>
+<p>i and j are lists of axis numbers or single axis numbers.
+replace ([0,1,2],[1,2,0]) will roll the axes by 1.
+replace ([0,1],[1,0]) will swap axes 0 and 1.
+An optionally third argument may specify another <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object to take
+the coordinates from. It should have the same dimensions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.swapAxes">
+<tt class="descname">swapAxes</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.swapAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swap coordinate axes i and j.</p>
+<p>Beware! This is different from numpy&#8217;s swapaxes() method !</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.rollAxes">
+<tt class="descname">rollAxes</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.rollAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roll the axes over the given amount.</p>
+<p>Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
+2 becomes 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.projectOnSphere">
+<tt class="descname">projectOnSphere</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <tt class="xref docutils literal"><span class="pre">Coords</span></tt> on a sphere.</p>
+<p>The default sphere is a unit sphere at the origin.
+The center of the sphere should not be part of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.projectOnCylinder">
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <tt class="xref docutils literal"><span class="pre">Coords</span></tt> on a cylinder with axis parallel to a global axis.</p>
+<p>The default cylinder has its axis along the x-axis and a unit radius.
+No points of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> should belong to the axis..</p>
+</dd></dl>
 
 </dd></dl>
 
-<p><strong>Functions defined in the module geometry</strong></p>
-<blockquote>
-<dl class="function">
-<dt id="geometry.coords_transformation">
-<tt class="descclassname">geometry.</tt><tt class="descname">coords_transformation</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#geometry.coords_transformation" title="Permalink to this definition">¶</a></dt>
-<dd>Perform a transformation on the .coords attribute of the object</dd></dl>
-
-</blockquote>
 </div>
 
 
@@ -140,7 +514,7 @@ with this value before it is added to the coordinates.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="colors.html"
-                                  title="previous chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+                                  title="previous chapter">6. <tt class="docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="connectivity.html"
                                   title="next chapter">8. <tt class="docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>

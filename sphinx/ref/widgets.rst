@@ -50,14 +50,6 @@
 
       .. automethod:: getFilename()
 
-   .. autoclass:: AppearenceDialog
-
-
-      AppearenceDialog objects have the following methods:
-
-      .. automethod:: setFont()
-      .. automethod:: getResult()
-
    .. autoclass:: DockedSelection
 
 
@@ -98,7 +90,6 @@
       InputInfo objects have the following methods:
 
       .. automethod:: value()
-      .. automethod:: setValue(val)
 
    .. autoclass:: InputString
 
@@ -107,7 +98,6 @@
 
       .. automethod:: show()
       .. automethod:: value()
-      .. automethod:: setValue(val)
 
    .. autoclass:: InputText
 
@@ -171,6 +161,15 @@
       .. automethod:: value()
       .. automethod:: setValue(val)
 
+   .. autoclass:: InputFloatTable
+
+
+      InputFloatTable objects have the following methods:
+
+      .. automethod:: show()
+      .. automethod:: value()
+      .. automethod:: setValue(val)
+
    .. autoclass:: InputSlider
 
 
@@ -193,11 +192,31 @@
       .. automethod:: setColor()
       .. automethod:: setValue(value)
 
-   .. autoclass:: InputDialog
+   .. autoclass:: InputFont
 
 
-      InputDialog objects have the following methods:
+      InputFont objects have the following methods:
 
+      .. automethod:: setFont()
+
+   .. autoclass:: InputWidget
+
+
+      InputWidget objects have the following methods:
+
+      .. automethod:: text()
+      .. automethod:: value()
+      .. automethod:: setValue(val)
+
+   .. autoclass:: NewInputDialog
+
+
+      NewInputDialog objects have the following methods:
+
+      .. automethod:: add_items(items,form)
+      .. automethod:: add_tab(name,items)
+      .. automethod:: add_group(name,items)
+      .. automethod:: inputAny(item)
       .. automethod:: timeout()
       .. automethod:: timedOut()
       .. automethod:: show(timeout=None,timeoutfunc=None,modal=False)
@@ -205,17 +224,46 @@
       .. automethod:: updateData(d)
       .. automethod:: getResult(timeout=None)
 
+   .. autoclass:: OldInputDialog
+
+
+      OldInputDialog objects have the following methods:
+
+      .. automethod:: add_input_items(items,layout)
+      .. automethod:: timeout()
+      .. automethod:: timedOut()
+      .. automethod:: show(timeout=None,timeoutfunc=None,modal=False)
+      .. automethod:: acceptData(result=ACCEPTED)
+      .. automethod:: updateData(d)
+      .. automethod:: getResult(timeout=None)
+
+   .. autoclass:: InputDialog
+
+
+      InputDialog objects have the following methods:
+
+
    .. autoclass:: TableModel
 
 
       TableModel objects have the following methods:
 
+      .. automethod:: makeEditable(edit=True)
       .. automethod:: rowCount(parent=None)
       .. automethod:: columnCount(parent=None)
       .. automethod:: data(index,role)
       .. automethod:: headerData(col,orientation,role)
       .. automethod:: insertRows(row=None,count=None)
       .. automethod:: removeRows(row=None,count=None)
+      .. automethod:: flags(index)
+      .. automethod:: setData(index,value,role=_EDITROLE)
+
+   .. autoclass:: ArrayModel
+
+
+      ArrayModel objects have the following methods:
+
+      .. automethod:: setData(index,value,role=_EDITROLE)
 
    .. autoclass:: Table
 
@@ -223,10 +271,29 @@
       Table objects have the following methods:
 
 
+   .. autoclass:: Tabs
+
+
+      Tabs objects have the following methods:
+
+
+   .. autoclass:: Dialog
+
+
+      Dialog objects have the following methods:
+
+      .. automethod:: add(widgets,pos=1)
+
    .. autoclass:: TableDialog
 
 
       TableDialog objects have the following methods:
+
+
+   .. autoclass:: OldTableDialog
+
+
+      OldTableDialog objects have the following methods:
 
 
    .. autoclass:: MessageBox
@@ -235,6 +302,7 @@
       MessageBox objects have the following methods:
 
       .. automethod:: getResult()
+      .. automethod:: updateText(text,format='')
 
    .. autoclass:: TextBox
 
@@ -242,6 +310,13 @@
       TextBox objects have the following methods:
 
       .. automethod:: getResult()
+      .. automethod:: updateText(text,format='')
+
+   .. autoclass:: InputBox
+
+
+      InputBox objects have the following methods:
+
 
    .. autoclass:: ButtonBox
 
@@ -271,11 +346,14 @@
    .. autofunction:: addTimeOut(widget,timeout=None,timeoutfunc=None)
    .. autofunction:: selectFont()
    .. autofunction:: getColor(col=None,caption=None)
+   .. autofunction:: defaultItemType(item)
+   .. autofunction:: simpleInputItem(name,value=None,itemtype=None)
+   .. autofunction:: compatInputItem(name,value,itemtype=None,kargs={})
    .. autofunction:: inputAny(name,value,itemtype=str)
    .. autofunction:: inputAnyOld(item,parent=None)
    .. autofunction:: updateDialogItems(data,newdata)
-   .. autofunction:: dialogButtons(dialog,actions,default=None)
    .. autofunction:: updateText(widget,text,format='')
+   .. autofunction:: dialogButtons(dialog,actions,default=None)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

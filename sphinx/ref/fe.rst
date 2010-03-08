@@ -1,3 +1,6 @@
+.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"\\nUse Mesh instances and mesh.mergeMeshes instead."'))))))))))))))))), (8, ')'), (4, '')))
+.. MATCHING (259, (50, '@'), (287, (1, 'deprecation')))
+.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"\\nUse Mesh instances and mesh.mergeMeshes instead."'))))))))))))))))), (8, ')'), (4, '')))
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- fe
 .. CREATED WITH py2rst.py: DO NOT EDIT
@@ -32,8 +35,7 @@
 **Functions defined in the module fe**
 
    .. autofunction:: mergeModels(femodels)
-   .. autofunction:: checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None)
-   .. autofunction:: mergedModel()
+   .. autofunction:: mergedModel(meshes)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

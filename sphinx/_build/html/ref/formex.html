@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
     <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" /> 
@@ -169,13 +169,13 @@ Formex and ndarray instances. The results is always an ndarray.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="formex.Formex.getprop">
-<tt class="descname">getprop</tt><big>(</big><em>index=None</em><big>)</big><a class="headerlink" href="#formex.Formex.getprop" title="Permalink to this definition">¶</a></dt>
+<dt id="formex.Formex.getProp">
+<tt class="descname">getProp</tt><big>(</big><em>index=None</em><big>)</big><a class="headerlink" href="#formex.Formex.getProp" title="Permalink to this definition">¶</a></dt>
 <dd>Return the propertie numbers of the element in index</dd></dl>
 
 <dl class="method">
-<dt id="formex.Formex.maxprop">
-<tt class="descname">maxprop</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.maxprop" title="Permalink to this definition">¶</a></dt>
+<dt id="formex.Formex.maxProp">
+<tt class="descname">maxProp</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.maxProp" title="Permalink to this definition">¶</a></dt>
 <dd>Return the highest property value used, or None</dd></dl>
 
 <dl class="method">
@@ -280,6 +280,11 @@ In the Mesh model, all points with nearly identical coordinates
 are fused into a single point, and elements are defined by a
 connectivity table with integers pointing to the corresponding vertex.</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.info">
+<tt class="descname">info</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.info" title="Permalink to this definition">¶</a></dt>
+<dd>Return formatted information about a Formex.</dd></dl>
 
 <dl class="classmethod">
 <dt id="formex.Formex.point2str">
@@ -1057,7 +1062,7 @@ Valid Formex file formats are described in the manual.</p>
 
 <dl class="classmethod">
 <dt id="formex.Formex.fromstring">
-<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="headerlink" href="#formex.Formex.fromstring" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em>, <em>ndim=3</em>, <em>count=1</em><big>)</big><a class="headerlink" href="#formex.Formex.fromstring" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a title="formex.Formex" class="reference internal" href="#formex.Formex"><tt class="xref docutils literal"><span class="pre">Formex</span></tt></a> from coodinates in a string.</p>
 <p>This uses the <tt class="xref docutils literal"><span class="pre">Coords.fromstring()</span></tt> method to read coordinates
 from a string and restructures them into a Formex of the specified
@@ -1399,7 +1404,7 @@ interpolations.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="coords.html"
-                                  title="previous chapter">1. <tt class="docutils literal docutils literal"><span class="pre">coords</span></tt> &#8212; A structured collection of 3D coordinates.</a></p>
+                                  title="previous chapter">1. <tt class="docutils literal"><span class="pre">coords</span></tt> &#8212; A structured collection of 3D coordinates.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="arraytools.html"
                                   title="next chapter">3. <tt class="docutils literal docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></p>

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>21. camera — camera 0.1 (C) Benedict Verhegghe &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>21. camera — OpenGL camera handling &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="22. image — Saving OpenGL renderings to image files." href="image.html" />
     <link rel="prev" title="20. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" /> 
@@ -55,8 +55,8 @@
           <div class="body">
             
   <div class="section" id="module-camera">
-<span id="sec-ref-camera"></span><h1>21. <tt class="xref docutils literal"><span class="pre">camera</span></tt> &#8212; camera 0.1 (C) Benedict Verhegghe<a class="headerlink" href="#module-camera" title="Permalink to this headline">¶</a></h1>
-<p>camera 0.1 (C) Benedict Verhegghe</p>
+<span id="sec-ref-camera"></span><h1>21. <tt class="xref docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling<a class="headerlink" href="#module-camera" title="Permalink to this headline">¶</a></h1>
+<p>OpenGL camera handling</p>
 <dl class="class">
 <dt id="camera.ViewAngles">
 <em class="property">class </em><tt class="descclassname">camera.</tt><tt class="descname">ViewAngles</tt><big>(</big><em>data={'right': (90.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'bottom': (0.0</em>, <em>-90.0</em>, <em>0.0)</em>, <em>'top': (0.0</em>, <em>90.0</em>, <em>0.0)</em>, <em>'back': (180.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'iso': (45.0</em>, <em>45.0</em>, <em>0.0)</em>, <em>'front': (0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'left': (270.0</em>, <em>0.0</em>, <em>0.0)}</em><big>)</big><a class="headerlink" href="#camera.ViewAngles" title="Permalink to this definition">¶</a></dt>
@@ -136,6 +136,11 @@ to MODELVIEW.</p>
 <dd>Return the camera distance.</dd></dl>
 
 <dl class="method">
+<dt id="camera.Camera.lock">
+<tt class="descname">lock</tt><big>(</big><em>onoff=True</em><big>)</big><a class="headerlink" href="#camera.Camera.lock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="camera.Camera.setCenter">
 <tt class="descname">setCenter</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="headerlink" href="#camera.Camera.setCenter" title="Permalink to this definition">¶</a></dt>
 <dd>Set the center of the camera in global cartesian coordinates.</dd></dl>
@@ -213,14 +218,6 @@ vector. This has the effect of moving the scene in opposite direction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="camera.Camera.setMatrix">
-<tt class="descname">setMatrix</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.setMatrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the ModelView matrix from camera parameters.</p>
-<p>These are the transformations applied on the model space.
-Rotations and translations need be taken negatively.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="camera.Camera.lookAt">
 <tt class="descname">lookAt</tt><big>(</big><em>eye</em>, <em>center</em>, <em>up</em><big>)</big><a class="headerlink" href="#camera.Camera.lookAt" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -231,14 +228,24 @@ Rotations and translations need be taken negatively.</p>
 <dd>Rotate the camera around current camera axes.</dd></dl>
 
 <dl class="method">
-<dt id="camera.Camera.saveMatrix">
-<tt class="descname">saveMatrix</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.saveMatrix" title="Permalink to this definition">¶</a></dt>
+<dt id="camera.Camera.saveModelView">
+<tt class="descname">saveModelView</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.saveModelView" title="Permalink to this definition">¶</a></dt>
 <dd>Save the ModelView matrix.</dd></dl>
 
 <dl class="method">
-<dt id="camera.Camera.loadMatrix">
-<tt class="descname">loadMatrix</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.loadMatrix" title="Permalink to this definition">¶</a></dt>
+<dt id="camera.Camera.setModelView">
+<tt class="descname">setModelView</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.setModelView" title="Permalink to this definition">¶</a></dt>
+<dd>Set the ModelView matrix from camera parameters.</dd></dl>
+
+<dl class="method">
+<dt id="camera.Camera.loadModelView">
+<tt class="descname">loadModelView</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.loadModelView" title="Permalink to this definition">¶</a></dt>
 <dd>Load the saved ModelView matrix.</dd></dl>
+
+<dl class="method">
+<dt id="camera.Camera.loadCurrentRotation">
+<tt class="descname">loadCurrentRotation</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.loadCurrentRotation" title="Permalink to this definition">¶</a></dt>
+<dd>Load the current ModelView matrix with translations canceled out.</dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.translate">
@@ -320,6 +327,26 @@ pick defines the picking region center and size (x,y,w,h).</p>
 settings, and will only reload the matrix if such changes are
 detected. You can optionally force loading the matrix.</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="camera.Camera.set3DMatrices">
+<tt class="descname">set3DMatrices</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.set3DMatrices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="camera.Camera.project">
+<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="headerlink" href="#camera.Camera.project" title="Permalink to this definition">¶</a></dt>
+<dd>Map the object coordinates (x,y,z) to window coordinates.</dd></dl>
+
+<dl class="method">
+<dt id="camera.Camera.unProject">
+<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="headerlink" href="#camera.Camera.unProject" title="Permalink to this definition">¶</a></dt>
+<dd>Map the window coordinates (x,y,z) to object coordinates.</dd></dl>
+
+<dl class="method">
+<dt id="camera.Camera.setTracking">
+<tt class="descname">setTracking</tt><big>(</big><em>onoff=True</em><big>)</big><a class="headerlink" href="#camera.Camera.setTracking" title="Permalink to this definition">¶</a></dt>
+<dd>Enable/disable coordinate tracking using the camera</dd></dl>
 
 </dd></dl>
 

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>40. fe_post — A postprocessor for ABAQUS output files. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>40. fe_post — A postprocessor for ABAQUS output files. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="41. postproc — Postprocessing functions" href="postproc.html" />
     <link rel="prev" title="39. fe_abq — An interface to write Finite Element models in Abaqus input file format." href="fe_abq.html" /> 
@@ -54,153 +54,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-fe_post">
-<span id="sec-ref-fe-post"></span><h1>40. <tt class="xref docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.<a class="headerlink" href="#module-fe_post" title="Permalink to this headline">¶</a></h1>
-<p>A postprocessor for ABAQUS output files.</p>
-<p>The ABAQUS .fil output file can be scanned and translated into a pyFormex
-script with the &#8216;postabq&#8217; command. Use it as follows:</p>
-<div class="highlight-python"><pre>postabq job.fil &gt; job.py</pre>
-</div>
-<p>Then execute the created script from inside pyFormex.</p>
-<dl class="class">
-<dt id="fe_post.FeResult">
-<em class="property">class </em><tt class="descclassname">fe_post.</tt><tt class="descname">FeResult</tt><big>(</big><em>name='__FePost__'</em><big>)</big><a class="headerlink" href="#fe_post.FeResult" title="Permalink to this definition">¶</a></dt>
-<dd><p>FeResult objects have the following methods:</p>
-<dl class="method">
-<dt id="fe_post.FeResult.datasize">
-<tt class="descname">datasize</tt><big>(</big><em>key</em>, <em>data</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.datasize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Abqver">
-<tt class="descname">Abqver</tt><big>(</big><em>version</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Abqver" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Date">
-<tt class="descname">Date</tt><big>(</big><em>date</em>, <em>time</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Date" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Size">
-<tt class="descname">Size</tt><big>(</big><em>nelems</em>, <em>nnodes</em>, <em>length</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Size" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Dofs">
-<tt class="descname">Dofs</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Dofs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Heading">
-<tt class="descname">Heading</tt><big>(</big><em>head</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Heading" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Node">
-<tt class="descname">Node</tt><big>(</big><em>nr</em>, <em>coords</em>, <em>normal=None</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Node" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Element">
-<tt class="descname">Element</tt><big>(</big><em>nr</em>, <em>typ</em>, <em>conn</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Element" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Nodeset">
-<tt class="descname">Nodeset</tt><big>(</big><em>key</em>, <em>data</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Nodeset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.NodesetAdd">
-<tt class="descname">NodesetAdd</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.NodesetAdd" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Elemset">
-<tt class="descname">Elemset</tt><big>(</big><em>key</em>, <em>data</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Elemset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.ElemsetAdd">
-<tt class="descname">ElemsetAdd</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.ElemsetAdd" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Finalize">
-<tt class="descname">Finalize</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.Finalize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Increment">
-<tt class="descname">Increment</tt><big>(</big><em>step</em>, <em>inc</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Increment" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.EndIncrement">
-<tt class="descname">EndIncrement</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.EndIncrement" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Label">
-<tt class="descname">Label</tt><big>(</big><em>tag</em>, <em>value</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.Label" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.NodeOutput">
-<tt class="descname">NodeOutput</tt><big>(</big><em>key</em>, <em>nodid</em>, <em>data</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.NodeOutput" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.ElemHeader">
-<tt class="descname">ElemHeader</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.ElemHeader" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.ElemOutput">
-<tt class="descname">ElemOutput</tt><big>(</big><em>key</em>, <em>data</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.ElemOutput" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.Export">
-<tt class="descname">Export</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.Export" title="Permalink to this definition">¶</a></dt>
-<dd>Align on the last increment and export results</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.do_nothing">
-<tt class="descname">do_nothing</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.do_nothing" title="Permalink to this definition">¶</a></dt>
-<dd>A do nothing function to stand in for as yet undefined functions.</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.setStepInc">
-<tt class="descname">setStepInc</tt><big>(</big><em>step</em>, <em>inc</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.setStepInc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.getSteps">
-<tt class="descname">getSteps</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.getSteps" title="Permalink to this definition">¶</a></dt>
-<dd>Return all the step keys.</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.getIncs">
-<tt class="descname">getIncs</tt><big>(</big><em>step</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.getIncs" title="Permalink to this definition">¶</a></dt>
-<dd>Return all the incs for given step.</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.getres">
-<tt class="descname">getres</tt><big>(</big><em>key</em>, <em>domain='nodes'</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.getres" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the results of the current step/inc for given key.</p>
-<p>The key may include a component to return only a single column
-of a multicolumn value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.printSteps">
-<tt class="descname">printSteps</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.printSteps" title="Permalink to this definition">¶</a></dt>
-<dd>Print the steps/increments/resultcodes for which we have results.</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="fe-post-a-postprocessor-for-abaqus-output-files">
+<span id="sec-ref-fe-post"></span><h1>40. <tt class="xref docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.<a class="headerlink" href="#fe-post-a-postprocessor-for-abaqus-output-files" title="Permalink to this headline">¶</a></h1>
 </div>
 
 

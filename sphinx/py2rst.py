@@ -205,12 +205,13 @@ def match(pattern, data, vars=None):
     if type(pattern) is not TupleType:
         return (pattern == data), vars
     if len(data) != len(pattern):
+        #print "%s != %s" %  (len(data), len(pattern))
         return 0, vars
     for pattern, data in map(None, pattern, data):
         same, vars = match(pattern, data, vars)
         if not same:
-#            print "BREAK AT PATTERN "+str(pattern)
-#            print "BREAK WITH DATA  "+str(data)
+            #print "BREAK AT PATTERN "+str(pattern)
+            #print "BREAK WITH DATA  "+str(data)
             break
     return same, vars
 
@@ -269,11 +270,24 @@ PARAMETER_VALUE_PATTERN = (
               (symbol.factor,
                (symbol.power,['parvalue'])
                  ))))))))))))
-#                (symbol.atom,['parvalue'])
-#                 )))))))))))))
-#                (symbol.atom,
-#                 (token.NAME, ['parvalue'])
-#                 ))))))))))))))
+
+# The previous does not allow parameters of type DD.bb.cc
+# The following does, but rebuildAtom can not yet restore it
+
+PARAMETER_VALUE_PATTERN1 = (
+    symbol.test,
+    (symbol.or_test,
+     (symbol.and_test,
+      (symbol.not_test,
+       (symbol.comparison,
+        (symbol.expr,
+         (symbol.xor_expr,
+          (symbol.and_expr,
+           (symbol.shift_expr,
+            (symbol.arith_expr,
+             (symbol.term,
+              (symbol.factor,['parvalue'])
+                 )))))))))))
 
 PARAMETER_VALUE_PATTERN2 = (
     symbol.test,
@@ -347,16 +361,24 @@ def rebuildAtom(node):
 def findParameterValue(data):
     debug("VALUE TO MATCH " + str(data))
     s = ''
-    found,vars = match(PARAMETER_VALUE_PATTERN, data)    
+
+    for i,pattern in enumerate([
+        PARAMETER_VALUE_PATTERN,
+#        PARAMETER_VALUE_PATTERN1,
+        PARAMETER_VALUE_PATTERN2,
+        ]):
+        debug("TRYING PATTERN %s: %s" %(i,pattern))
+        found,vars = match(pattern,data)
+        if found:
+            if i == 2:
+                s += '-'
+            break
+
     if not found:
-        debug("TRYING PATTERN2" + str(PARAMETER_VALUE_PATTERN2))
-        found,vars = match(PARAMETER_VALUE_PATTERN2, data)
-        if not found:
-            if options.error:
-                raise RuntimeError,"ALAS, CAN NOT CONTINUE!"
-            else:
-                print ".. HELP "+str(data)
-        s += '-'
+        if options.error:
+            raise RuntimeError,"ALAS, CAN NOT CONTINUE!"
+        else:
+            print ".. HELP "+str(data)
 
     return s+rebuildAtom(vars['parvalue'])
     

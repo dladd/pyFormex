@@ -30,15 +30,17 @@
       .. automethod:: pointsAt(t)
       .. automethod:: subPoints(div=10,extend=[0.,0.])
       .. automethod:: length()
-      .. automethod:: approx(ndiv=N_approx,ntot=None)
-      .. automethod:: toFormex()
+      .. automethod:: approx(ndiv=None,ntot=None)
+      .. automethod:: toFormex(None)
 
    .. autoclass:: PolyLine
 
 
       PolyLine objects have the following methods:
 
+      .. automethod:: nelems()
       .. automethod:: toFormex()
+      .. automethod:: toMesh()
       .. automethod:: sub_points(t,j)
       .. automethod:: sub_points2(t,j)
       .. automethod:: vectors()
@@ -48,6 +50,7 @@
       .. automethod:: atLength(div)
       .. automethod:: reverse()
       .. automethod:: split(i)
+      .. automethod:: cutWithPlane(p,n,side='')
 
    .. autoclass:: Polygon
 

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyFormex tutorial &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>pyFormex tutorial &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="index.html" />
     <link rel="next" title="pyFormex user guide" href="user-guide.html" />
     <link rel="prev" title="Installing pyFormex" href="install.html" /> 
   </head>
@@ -400,12 +400,12 @@ basics.</p>
 <p>If you have ever used some other matrix language, you will find a lot of similar
 concepts in NumPy.</p>
 <p>To do: Introduce the (for users) most important NumPy concepts.</p>
-<p id="index-7">pyFormex uses the NumPy <tt class="xref docutils literal"><span class="pre">ndarray</span></tt> as implementation of fast
+<p id="index-17">pyFormex uses the NumPy <tt class="xref docutils literal"><span class="pre">ndarray</span></tt> as implementation of fast
 numerical arrays in Python.</p>
 </div>
 <div class="section" id="the-formex-data-model">
 <span id="sec-formex"></span><h2>The Formex data model<a class="headerlink" href="#the-formex-data-model" title="Permalink to this headline">¶</a></h2>
-<p id="index-8">The most important geometrical object in pyFormex is the
+<p id="index-18">The most important geometrical object in pyFormex is the
 <tt class="xref docutils literal"><span class="pre">Formex</span></tt> class. A <tt class="xref docutils literal"><span class="pre">Formex</span></tt> (plural:Formices) can
 describe a variety of geometrical objects: points, lines, surfaces,
 volumes. The most simple geometrical object is the point, which in
@@ -414,7 +414,7 @@ which are numbered <tt class="docutils literal"><span class="pre">(0,1,2)</span>
 Python and NumPy indexing.  Higher order geometrical objects are
 defined as a collection of points.  The number of points of an object
 is called the <em>plexitude</em> of the object.</p>
-<p id="index-9">A Formex is a collection of geometrical objects of the same plexitude. The
+<p id="index-19">A Formex is a collection of geometrical objects of the same plexitude. The
 objects in the collection are called the <em>elements</em> of the <tt class="xref docutils literal"><span class="pre">Formex</span></tt>. A
 <tt class="xref docutils literal"><span class="pre">Formex</span></tt> whose elements have plexitude <img class="math" src="_images/math/174fadd07fd54c9afe288e96558c92e0c1da733a.png" alt="n"/> is also called an
 <img class="math" src="_images/math/174fadd07fd54c9afe288e96558c92e0c1da733a.png" alt="n"/>-plex <tt class="xref docutils literal"><span class="pre">Formex</span></tt>. Internally, the coordinates of the points are

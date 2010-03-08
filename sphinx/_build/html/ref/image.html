@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>22. image — Saving OpenGL renderings to image files. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>22. image — Saving OpenGL renderings to image files. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,10 +20,10 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="23. imagearray — Convert bitmap images into numpy arrays." href="imagearray.html" />
-    <link rel="prev" title="21. camera — camera 0.1 (C) Benedict Verhegghe" href="camera.html" /> 
+    <link rel="prev" title="21. camera — OpenGL camera handling" href="camera.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,7 +39,7 @@
           <a href="imagearray.html" title="23. imagearray — Convert bitmap images into numpy arrays."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="camera.html" title="21. camera — camera 0.1 (C) Benedict Verhegghe"
+          <a href="camera.html" title="21. camera — OpenGL camera handling"
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -62,17 +62,17 @@ OpenGL rendering and the pyFormex GUI to image files. There are even
 provisions for automatic saving to a series of files and creating
 a movie from these images.</p>
 <dl class="function">
-<dt id="image.initialize">
-<tt class="descclassname">image.</tt><tt class="descname">initialize</tt><big>(</big><big>)</big><a class="headerlink" href="#image.initialize" title="Permalink to this definition">¶</a></dt>
-<dd>Initialize the image module.</dd></dl>
-
-<dl class="function">
 <dt id="image.imageFormats">
 <tt class="descclassname">image.</tt><tt class="descname">imageFormats</tt><big>(</big><big>)</big><a class="headerlink" href="#image.imageFormats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of the valid image formats.</p>
 <p>image formats are lower case strings as &#8216;png&#8217;, &#8216;gif&#8217;, &#8216;ppm&#8217;, &#8216;eps&#8217;, etc.
 The available image formats are derived from the installed software.</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="image.initialize">
+<tt class="descclassname">image.</tt><tt class="descname">initialize</tt><big>(</big><big>)</big><a class="headerlink" href="#image.initialize" title="Permalink to this definition">¶</a></dt>
+<dd>Initialize the image module.</dd></dl>
 
 <dl class="function">
 <dt id="image.checkImageFormat">
@@ -92,7 +92,7 @@ If the supplied extension is empty, the default format &#8216;png&#8217; is retu
 
 <dl class="function">
 <dt id="image.save_canvas">
-<tt class="descclassname">image.</tt><tt class="descname">save_canvas</tt><big>(</big><em>canvas</em>, <em>fn</em>, <em>fmt='png'</em>, <em>options=None</em><big>)</big><a class="headerlink" href="#image.save_canvas" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save_canvas</tt><big>(</big><em>canvas</em>, <em>fn</em>, <em>fmt='png'</em>, <em>quality=1</em>, <em>options=None</em><big>)</big><a class="headerlink" href="#image.save_canvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the rendering on canvas as an image file.</p>
 <p>canvas specifies the qtcanvas rendering window.
 fn is the name of the file
@@ -101,7 +101,7 @@ fmt is the image file format</p>
 
 <dl class="function">
 <dt id="image.save_window">
-<tt class="descclassname">image.</tt><tt class="descname">save_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>windowname=None</em><big>)</big><a class="headerlink" href="#image.save_window" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=1</em>, <em>windowname=None</em><big>)</big><a class="headerlink" href="#image.save_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a window as an image file.</p>
 <p>This function needs a filename AND format.
 If a window is specified, the named window is saved.
@@ -110,7 +110,7 @@ Else, the main pyFormex window is saved.</p>
 
 <dl class="function">
 <dt id="image.save_main_window">
-<tt class="descclassname">image.</tt><tt class="descname">save_main_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>border=False</em><big>)</big><a class="headerlink" href="#image.save_main_window" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save_main_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=1</em>, <em>border=False</em><big>)</big><a class="headerlink" href="#image.save_main_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the main pyFormex window as an image file.</p>
 <p>This function needs a filename AND format.
 This is an alternative for save_window, by grabbin it from the root
@@ -120,12 +120,12 @@ This allows us to grab the border as well.</p>
 
 <dl class="function">
 <dt id="image.save_rect">
-<tt class="descclassname">image.</tt><tt class="descname">save_rect</tt><big>(</big><em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>filename</em>, <em>format</em><big>)</big><a class="headerlink" href="#image.save_rect" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save_rect</tt><big>(</big><em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>filename</em>, <em>format</em>, <em>quality=1</em><big>)</big><a class="headerlink" href="#image.save_rect" title="Permalink to this definition">¶</a></dt>
 <dd>Save a rectangular part of the screen to a an image file.</dd></dl>
 
 <dl class="function">
 <dt id="image.save">
-<tt class="descclassname">image.</tt><tt class="descname">save</tt><big>(</big><em>filename=None</em>, <em>window=False</em>, <em>multi=False</em>, <em>hotkey=True</em>, <em>autosave=False</em>, <em>border=False</em>, <em>rootcrop=False</em>, <em>format=None</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#image.save" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save</tt><big>(</big><em>filename=None</em>, <em>window=False</em>, <em>multi=False</em>, <em>hotkey=True</em>, <em>autosave=False</em>, <em>border=False</em>, <em>rootcrop=False</em>, <em>format=None</em>, <em>quality=1</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#image.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves an image to file or Starts/stops multisave mode.</p>
 <p>With a filename and multi==False (default), the current viewport rendering
 is saved to the named file.</p>
@@ -200,7 +200,7 @@ or not.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="camera.html"
-                                  title="previous chapter">21. <tt class="docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; camera 0.1 (C) Benedict Verhegghe</a></p>
+                                  title="previous chapter">21. <tt class="docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="imagearray.html"
                                   title="next chapter">23. <tt class="docutils literal"><span class="pre">imagearray</span></tt> &#8212; Convert bitmap images into numpy arrays.</a></p>
@@ -239,7 +239,7 @@ or not.</p>
           <a href="imagearray.html" title="23. imagearray — Convert bitmap images into numpy arrays."
              >next</a> |</li>
         <li class="right" >
-          <a href="camera.html" title="21. camera — camera 0.1 (C) Benedict Verhegghe"
+          <a href="camera.html" title="21. camera — OpenGL camera handling"
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     

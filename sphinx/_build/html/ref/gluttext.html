@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>18. gluttext — 2D text decorations using GLUT fonts &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>18. gluttext — 2D text decorations using GLUT fonts &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="19. canvas — This implements an OpenGL drawing widget for painting 3D scenes." href="canvas.html" />
     <link rel="prev" title="17. marks — OpenGL marks for annotating 3D actors." href="marks.html" /> 
@@ -113,13 +113,25 @@ has a bug.</p>
 
 <dl class="function">
 <dt id="gluttext.glutDrawText">
-<tt class="descclassname">gluttext.</tt><tt class="descname">glutDrawText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>font='hv18'</em>, <em>gravity=''</em><big>)</big><a class="headerlink" href="#gluttext.glutDrawText" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw the given text at given 2D position in window.</p>
-<p>If adjust == &#8216;center&#8217;, the text will be horizontally centered on
-the insertion point.
-If adjust == &#8216;right&#8217;, the text will be right aligned on the point.
-Any other setting will align the text left.
-Default is to center.</p>
+<tt class="descclassname">gluttext.</tt><tt class="descname">glutDrawText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>font='hv18'</em>, <em>gravity=''</em>, <em>spacing=1.0</em><big>)</big><a class="headerlink" href="#gluttext.glutDrawText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a text at given 2D position in window.</p>
+<blockquote>
+<ul class="simple">
+<li>text: a simple string, a multiline string or a list of strings. If it is
+a string, it will be splitted on the occurrence of &#8216;</li>
+</ul>
+</blockquote>
+<dl class="docutils">
+<dt>&#8216; characters.</dt>
+<dd><ul class="first last simple">
+<li>x,y: insertion position on the canvas</li>
+<li>gravity: a string that determines the adjusting of the text with
+respect to the insert position. It can be a combination of one of the
+characters &#8216;N or &#8216;S&#8217; to specify the vertical positon, and &#8216;W&#8217; or &#8216;E&#8217;
+for the horizontal. The default(empty) string will center the text.</li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

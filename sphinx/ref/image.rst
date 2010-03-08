@@ -14,15 +14,15 @@
    :synopsis: Saving OpenGL renderings to image files.
 
 
-   .. autofunction:: initialize()
    .. autofunction:: imageFormats()
+   .. autofunction:: initialize()
    .. autofunction:: checkImageFormat(fmt,verbose=False)
    .. autofunction:: imageFormatFromExt(ext)
-   .. autofunction:: save_canvas(canvas,fn,fmt='png',options=None)
-   .. autofunction:: save_window(filename,format,windowname=None)
-   .. autofunction:: save_main_window(filename,format,border=False)
-   .. autofunction:: save_rect(x,y,w,h,filename,format)
-   .. autofunction:: save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,verbose=False)
+   .. autofunction:: save_canvas(canvas,fn,fmt='png',quality=1,options=None)
+   .. autofunction:: save_window(filename,format,quality=1,windowname=None)
+   .. autofunction:: save_main_window(filename,format,quality=1,border=False)
+   .. autofunction:: save_rect(x,y,w,h,filename,format,quality=1)
+   .. autofunction:: save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,quality=1,verbose=False)
    .. autofunction:: saveNext()
    .. autofunction:: saveIcon(fn,size=32)
    .. autofunction:: autoSaveOn()

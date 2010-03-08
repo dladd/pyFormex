@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="4. script — Basic pyFormex script functions" href="script.html" />
     <link rel="prev" title="2. formex — Formex algebra in Python" href="formex.html" /> 
@@ -99,28 +99,28 @@ by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</spa
 
 <dl class="function">
 <dt id="arraytools.dotpr">
-<tt class="descclassname">arraytools.</tt><tt class="descname">dotpr</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.dotpr" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">dotpr</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#arraytools.dotpr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the dot product of vectors of A and B in the direction of axis.</p>
 <p>The default axis is the last.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.length">
-<tt class="descclassname">arraytools.</tt><tt class="descname">length</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.length" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">length</tt><big>(</big><em>A</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#arraytools.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the length of the vectors of A in the direction of axis.</p>
 <p>The default axis is the last.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.normalize">
-<tt class="descclassname">arraytools.</tt><tt class="descname">normalize</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.normalize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">normalize</tt><big>(</big><em>A</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#arraytools.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the vectors of A in the direction of axis.</p>
 <p>The default axis is the last.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.projection">
-<tt class="descclassname">arraytools.</tt><tt class="descname">projection</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.projection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">projection</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#arraytools.projection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the (signed) length of the projection of vector of A on B.</p>
 <p>The default axis is the last.</p>
 </dd></dl>
@@ -133,6 +133,26 @@ by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</spa
 <cite>n == 1</cite> returns the sum.
 <tt class="docutils literal"><span class="pre">n</span> <span class="pre">&lt;=</span> <span class="pre">0</span></tt> returns the max absolute value.</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="arraytools.solveMany">
+<tt class="descclassname">arraytools.</tt><tt class="descname">solveMany</tt><big>(</big><em>A</em>, <em>b</em><big>)</big><a class="headerlink" href="#arraytools.solveMany" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve many systems of linear equations.</p>
+<p>A is a (M,M,...) shaped array.
+b is a (M,...) shaped array.</p>
+<p>This solves all equations A[:,:,i].x = b[:,i].
+The return value is a (M,...) shaped array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.solveCramer">
+<tt class="descclassname">arraytools.</tt><tt class="descname">solveCramer</tt><big>(</big><em>A</em>, <em>b</em><big>)</big><a class="headerlink" href="#arraytools.solveCramer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="arraytools.permutations">
+<tt class="descclassname">arraytools.</tt><tt class="descname">permutations</tt><big>(</big><em>iterable</em>, <em>r=None</em><big>)</big><a class="headerlink" href="#arraytools.permutations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="arraytools.inside">
@@ -194,12 +214,12 @@ Return either a 3x3(default) or 4x4(if n==4) rotation matrix.</p>
 
 <dl class="function">
 <dt id="arraytools.growAxis">
-<tt class="descclassname">arraytools.</tt><tt class="descname">growAxis</tt><big>(</big><em>a</em>, <em>size</em>, <em>axis=-1</em>, <em>fill=0</em><big>)</big><a class="headerlink" href="#arraytools.growAxis" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">growAxis</tt><big>(</big><em>a</em>, <em>size</em>, <em>axis=1</em>, <em>fill=0</em><big>)</big><a class="headerlink" href="#arraytools.growAxis" title="Permalink to this definition">¶</a></dt>
 <dd>Grow a single array axis to the given size and fill with given value.</dd></dl>
 
 <dl class="function">
 <dt id="arraytools.reverseAxis">
-<tt class="descclassname">arraytools.</tt><tt class="descname">reverseAxis</tt><big>(</big><em>a</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.reverseAxis" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">reverseAxis</tt><big>(</big><em>a</em>, <em>axis=1</em><big>)</big><a class="headerlink" href="#arraytools.reverseAxis" title="Permalink to this definition">¶</a></dt>
 <dd>Reverse the elements along axis.</dd></dl>
 
 <dl class="function">
@@ -228,15 +248,16 @@ Else, an error is raised.</p>
 
 <dl class="function">
 <dt id="arraytools.checkUniqueNumbers">
-<tt class="descclassname">arraytools.</tt><tt class="descname">checkUniqueNumbers</tt><big>(</big><em>nrs</em>, <em>nmin=0</em>, <em>nmax=None</em>, <em>error=None</em><big>)</big><a class="headerlink" href="#arraytools.checkUniqueNumbers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check that an array contains a set of uniqe integers in range.</p>
-<p>nrs is an integer array with any shape.
-All integers should be unique and in the range(nmin,nmax).
-Beware: this means that    nmin &lt;= i &lt; nmax  !
-Default nmax is unlimited. Set nmin to None to
-error is the value to return if the tests are not passed.
-By default, a ValueError is raised.
-On success, None is returned</p>
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkUniqueNumbers</tt><big>(</big><em>nrs</em>, <em>nmin=0</em>, <em>nmax=None</em><big>)</big><a class="headerlink" href="#arraytools.checkUniqueNumbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that an array contains a set of unique integers in a given range.</p>
+<p>This functions tests that all integer numbers in the array are within the
+range math:<cite>nmin &lt;= i &lt; nmax</cite></p>
+<p>nrs: an integer array of any shape.
+nmin: minimum allowed value. If set to None, the test is skipped.
+nmax: maximum allowed value + 1! If set to None, the test is skipped.
+Default range is [0,unlimited].</p>
+<p>If the numbers are no unique or one of the limits is passed, an error
+is raised. Else, the sorted list of unique values is returned.</p>
 </dd></dl>
 
 <dl class="function">
@@ -254,6 +275,72 @@ The sep parameter can be specified as in fromfile.</p>
 <dd><p>Write an array to an open file.</p>
 <p>This uses <tt class="xref docutils literal"><span class="pre">numpy.tofile()</span></tt> to write an array to an open file.
 The sep parameter can be specified as in tofile.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.cubicEquation">
+<tt class="descclassname">arraytools.</tt><tt class="descname">cubicEquation</tt><big>(</big><em>a</em>, <em>b</em>, <em>c</em>, <em>d</em><big>)</big><a class="headerlink" href="#arraytools.cubicEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve a cubiq equation using a direct method.</p>
+<p>a,b,c,d are the (floating point) coefficients of a third degree
+polynomial equation:</p>
+<div class="highlight-python"><pre> 3         2
+a . x  +  b . x  +  c . x  +  d   =   0</pre>
+</div>
+<p>This function computes the three roots (real and complex) of this equation
+and returns full information about their kind, sorting order, occurrence
+of double roots. It uses scaling of the variables to enhance the accuracy.</p>
+<p>The return value is a tuple (r1,r2,r3,kind), where r1,r2 and r3 are three
+float values and kind is an integer specifying the kind of roots.</p>
+<p>Depending on the value of <cite>kind</cite>, the roots are defined as follows:</p>
+<p>kind      roots
+====      ========================
+0         three real roots r1 &lt; r2 &lt; r3
+1         three real roots r1 &lt; r2 = r3
+2         three real roots r1 = r2 &lt; r3
+3         three real roots r1 = r2 = r3
+4         one real root r1 and two complex conjugate roots with real part</p>
+<blockquote>
+r2 and imaginary part r3: the complex roots are thus :
+r2+i*r3 en r2-i*r3, where i = sqrt(-1).</blockquote>
+<p>If the coefficient a==0, a ValueError is raised.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.inverseIndex">
+<tt class="descclassname">arraytools.</tt><tt class="descname">inverseIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.inverseIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse an index.</p>
+<p>index is a one-dimensional integer array with unique non-negative values.</p>
+<p>The return value is the inverse index: each value shows the position
+of its index in the index array. The length of the inverse index is
+equal to maximum value in index plus one. Values not occurring in index
+get a value -1 in the inverse index.</p>
+<p>Remark that inverseIndex(index)[index] == arange(1+index.max()).
+The inverse index thus translates the unique index numbers in a
+sequential index.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.sortByColumns">
+<tt class="descclassname">arraytools.</tt><tt class="descname">sortByColumns</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#arraytools.sortByColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort an array on all its columns, from left to right.</p>
+<p>The rows of a 2-dimensional array are sorted, first on the first
+column, then on the second to resolve ties, etc..</p>
+<p>The result value is an index returning the order in which the rows
+have to be taken to obtain the sorted array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.uniqueRows">
+<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueRows</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#arraytools.uniqueRows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return (the indices of) the unique rows of an 2-d array.</p>
+<p>The input is an (nr,nc) shaped array.
+The return value is a tuple of two indices:
+- uniq: an (nuniq) shaped array with the numbers of the unique rows from A
+- uniqid: an (nr) shaped array with the numbers of uniq corresponding to</p>
+<blockquote>
+all the rows of the input array A.</blockquote>
+<p>The order of the rows in uniq is determined by the sorting procedure.
+Currently, this is sortByColumns.</p>
 </dd></dl>
 
 </div>

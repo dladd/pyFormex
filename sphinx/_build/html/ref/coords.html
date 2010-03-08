@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="2. formex — Formex algebra in Python" href="formex.html" />
     <link rel="prev" title="pyFormex reference manual" href="../refman.html" /> 
@@ -185,7 +185,7 @@ are lying outside the sphere.</p>
 <dl class="method">
 <dt id="coords.Coords.distanceFromPlane">
 <tt class="descname">distanceFromPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#coords.Coords.distanceFromPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the distance of points f from the plane (p,n).</p>
+<dd><p>Return the distance of all points from the plane (p,n).</p>
 <p>p is a point specified by 3 coordinates.
 n is the normal vector to a plane, specified by 3 components.</p>
 <p>The return value is a [...] shaped array with the distance of
@@ -197,7 +197,7 @@ plane indicated by the positive normal.</p>
 <dl class="method">
 <dt id="coords.Coords.distanceFromLine">
 <tt class="descname">distanceFromLine</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#coords.Coords.distanceFromLine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the distance of points f from the line (p,n).</p>
+<dd><p>Return the distance of all points from the line (p,n).</p>
 <p>p is a point on the line specified by 3 coordinates.
 n is a vector specifying the direction of the line through p.</p>
 <p>The return value is a [...] shaped array with the distance of
@@ -208,11 +208,45 @@ All distance values are positive or zero.</p>
 <dl class="method">
 <dt id="coords.Coords.distanceFromPoint">
 <tt class="descname">distanceFromPoint</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#coords.Coords.distanceFromPoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the distance of points f from the point p.</p>
+<dd><p>Return the distance of all points from the point p.</p>
 <p>p is a single point specified by 3 coordinates.</p>
 <p>The return value is a [...] shaped array with the distance of
 each point to point p.
 All distance values are positive or zero.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.directionalSize">
+<tt class="descname">directionalSize</tt><big>(</big><em>n</em>, <em>p=None</em><big>)</big><a class="headerlink" href="#coords.Coords.directionalSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the extreme distances from the plane p,n.</p>
+<p>The direction n can be specified by a 3 component vector or by
+a single integer 0..2 designing one of the coordinate axes.</p>
+<p>p is any point in space. If not specified, it is taken as the
+center() of the Coords.</p>
+<p>The return value is a tuple of two float values specifying the
+extreme distances from the plane p,n.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.directionalWidth">
+<tt class="descname">directionalWidth</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#coords.Coords.directionalWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the width of a Coords in the given direction.</p>
+<p>The direction can be specified by a 3 component vector or by
+a single integer 0..2 designing one of the coordinate axes.</p>
+<p>The return value is the thickness of the object in the direction n.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.directionalExtremes">
+<tt class="descname">directionalExtremes</tt><big>(</big><em>n</em>, <em>p=None</em><big>)</big><a class="headerlink" href="#coords.Coords.directionalExtremes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return extremal planes in the direction n.</p>
+<p>The direction n can be specified by a 3 component vector or by
+a single integer 0..2 designing one of the coordinate axes.</p>
+<p>p is any point in space. If not specified, it is taken as the
+center() of the Coords.</p>
+<p>The return value is a list of two points on the line (p,n) thus
+that the planes with normal through these points define the
+extremal planes of the Coords.</p>
 </dd></dl>
 
 <dl class="method">
@@ -586,7 +620,7 @@ Raises an error if self.ndim &lt; 2.</p>
 
 <dl class="method">
 <dt id="coords.Coords.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1.e-5</em>, <em>atol=1.e-5</em>, <em>fusemeth=0</em><big>)</big><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1.e-5</em>, <em>atol=1.e-5</em><big>)</big><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find (almost) identical nodes and return a compressed set.</p>
 <p>This method finds the points that are very close and replaces them
 with a single point. The return value is a tuple of two arrays:</p>
@@ -639,7 +673,7 @@ is the first one instead of the last.</p>
 
 <dl class="classmethod">
 <dt id="coords.Coords.fromstring">
-<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="headerlink" href="#coords.Coords.fromstring" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>ndim=3</em>, <em>count=1</em><big>)</big><a class="headerlink" href="#coords.Coords.fromstring" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a> object with data from a string.</p>
 <p>This convenience function uses the <tt class="xref docutils literal"><span class="pre">numpy.fromstring()</span></tt>
 function to read coordinates from a string.</p>

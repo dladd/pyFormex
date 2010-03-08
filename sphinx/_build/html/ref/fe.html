@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>37. fe — Finite Element Models in pyFormex. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>37. fe — Finite Element Models in pyFormex. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="38. properties — General framework for attributing properties to geometrical elements." href="properties.html" />
     <link rel="prev" title="36. mesh — mesh.py" href="mesh.html" /> 
@@ -151,34 +151,11 @@ old ones.</p>
 <dl class="function">
 <dt id="fe.mergeModels">
 <tt class="descclassname">fe.</tt><tt class="descname">mergeModels</tt><big>(</big><em>femodels</em><big>)</big><a class="headerlink" href="#fe.mergeModels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge all the nodes of a list of FE models.</p>
-<p>Each item in femodels is a (coords,elems) tuple.
-The return value is a tuple with:</p>
-<ul class="simple">
-<li>the coordinates of all unique nodes,</li>
-<li>a list of elems corresponding to the input list,
-but with numbers referring to the new coordinates.</li>
-</ul>
-<p>The merging operation can be tuned by specifying extra arguments
-that will be passed to <tt class="xref docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="fe.checkUniqueNumbers">
-<tt class="descclassname">fe.</tt><tt class="descname">checkUniqueNumbers</tt><big>(</big><em>nrs</em>, <em>nmin=0</em>, <em>nmax=None</em>, <em>error=None</em><big>)</big><a class="headerlink" href="#fe.checkUniqueNumbers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check that an array contains a set of unique integers in range.</p>
-<p>nrs is an integer array with any shape.
-All integers should be unique and in the range(nmin,nmax).
-Beware: this means that    nmin &lt;= i &lt; nmax  !
-Default nmax is unlimited. Set nmin to None to
-error is the value to return if the tests are not passed.
-By default, a ValueError is raised.
-On success, None is returned</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="fe.mergedModel">
-<tt class="descclassname">fe.</tt><tt class="descname">mergedModel</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.mergedModel" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe.</tt><tt class="descname">mergedModel</tt><big>(</big><em>meshes</em><big>)</big><a class="headerlink" href="#fe.mergedModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the fe Model obtained from merging individual models.</p>
 <p>The input arguments are (coords,elems) tuples.
 The return value is a merged fe Model.</p>
@@ -199,7 +176,7 @@ The return value is a merged fe Model.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="mesh.html"
-                                  title="previous chapter">36. <tt class="docutils literal docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py</a></p>
+                                  title="previous chapter">36. <tt class="docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="properties.html"
                                   title="next chapter">38. <tt class="docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>

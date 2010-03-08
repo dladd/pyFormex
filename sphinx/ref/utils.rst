@@ -26,14 +26,14 @@
 
 **Functions defined in the module utils**
 
-   .. autofunction:: procInfo(title)
-   .. autofunction:: strNorm(s)
    .. autofunction:: checkVersion(name,version,external=False)
    .. autofunction:: checkModule(name=None)
    .. autofunction:: hasModule(name,check=False)
    .. autofunction:: checkExternal(name=None,command=None,answer=None)
    .. autofunction:: hasExternal(name)
    .. autofunction:: reportDetected()
+   .. autofunction:: procInfo(title)
+   .. autofunction:: strNorm(s)
    .. autofunction:: prefix(prefix,files)
    .. autofunction:: matchMany(regexps,target)
    .. autofunction:: matchCount(regexps,target)
@@ -52,9 +52,11 @@
    .. autofunction:: splitme(s)
    .. autofunction:: mergeme(s1,s2)
    .. autofunction:: mtime(fn)
+   .. autofunction:: timeEval(s,glob=None)
    .. autofunction:: countLines(fn)
    .. autofunction:: runCommand(cmd,RaiseError=True,quiet=False)
    .. autofunction:: spawn(cmd)
+   .. autofunction:: killProcesses(pids,signal)
    .. autofunction:: changeExt(fn,ext)
    .. autofunction:: tildeExpand(fn)
    .. autofunction:: isPyFormex(filename)

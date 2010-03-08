@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>31. isopar — Isoparametric transformations &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>31. isopar — Isoparametric transformations &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="32. section2d — Some functions operating on 2D structures." href="section2d.html" />
     <link rel="prev" title="30. geomtools — Basic geometrical operations." href="geomtools.html" /> 
@@ -84,37 +84,32 @@ specified transformation type</p>
 <p>Returns a Coords array with same shape as X</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="isopar.Isopar.transformFormex">
-<tt class="descname">transformFormex</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#isopar.Isopar.transformFormex" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <p><strong>Functions defined in the module isopar</strong></p>
 <blockquote>
 <dl class="function">
-<dt id="isopar.build_matrix">
-<tt class="descclassname">isopar.</tt><tt class="descname">build_matrix</tt><big>(</big><em>atoms</em>, <em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big><a class="headerlink" href="#isopar.build_matrix" title="Permalink to this definition">¶</a></dt>
+<dt id="isopar.evaluate">
+<tt class="descclassname">isopar.</tt><tt class="descname">evaluate</tt><big>(</big><em>atoms</em>, <em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big><a class="headerlink" href="#isopar.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build a matrix of functions of coords.</p>
-<p>Atoms is a list of text strings representing some function of
-x(,y)(,z). x is a list of x-coordinats of the nodes, y and z can be set
-to lists of y,z coordinates of the nodes.
-Each line of the returned matrix contains the atoms evaluated at a
-node.</p>
+<ul class="simple">
+<li><cite>atoms</cite>: a list of text strings representing a mathematical function of
+<cite>x</cite>, and possibly of <cite>y</cite> and <cite>z</cite>.</li>
+<li><cite>x</cite>, <cite>y</cite>, <cite>z</cite>: a list of x- (and optionally y-, z-) values at which the
+<cite>atoms</cite> will be evaluated. The lists should have the same length.</li>
+</ul>
+<p>Returns a matrix with <cite>nvalues</cite> rows and <cite>natoms</cite> colums.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="isopar.transformFormex">
-<tt class="descclassname">isopar.</tt><tt class="descname">transformFormex</tt><big>(</big><em>F</em>, <em>trf</em><big>)</big><a class="headerlink" href="#isopar.transformFormex" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="isopar.isopar">
-<tt class="descclassname">isopar.</tt><tt class="descname">isopar</tt><big>(</big><em>F</em>, <em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="headerlink" href="#isopar.isopar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform an isoparametric transformation on a Formex.</p>
-<p>This is a convenience function that creates and uses an iosprametric
-transformation in a single line.</p>
+<tt class="descclassname">isopar.</tt><tt class="descname">isopar</tt><big>(</big><em>X</em>, <em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="headerlink" href="#isopar.isopar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an isoparametric transformation on a Coords.</p>
+<p>This is a convenience function that creates and uses an isoparametric
+transformation in a single line. It is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </blockquote>

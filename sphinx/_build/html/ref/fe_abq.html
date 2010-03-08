@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>39. fe_abq — An interface to write Finite Element models in Abaqus input file format. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>39. fe_abq — An interface to write Finite Element models in Abaqus input file format. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="40. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
     <link rel="prev" title="38. properties — General framework for attributing properties to geometrical elements." href="properties.html" /> 
@@ -633,6 +633,20 @@ easily call it with a Results dict as arguments</p>
 <dt id="fe_abq.writeModelProps">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">writeModelProps</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeModelProps" title="Permalink to this definition">¶</a></dt>
 <dd>Write model props for this step</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.exportMesh">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">exportMesh</tt><big>(</big><em>filename</em>, <em>mesh</em>, <em>eltype=None</em>, <em>header=''</em><big>)</big><a class="headerlink" href="#fe_abq.exportMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a finite element mesh in Abaqus .inp format.</p>
+<p>This is a convenience function to quickly export a mesh to Abaqus
+without having to go through the whole setup of a complete
+finite element model.
+This just writes the nodes and elements specified in the mesh to
+the file with the specified name. The resulting file  can then be
+imported in Abaqus/CAE or manual be edited to create a full model.
+If an eltype is specified, it will oerride the value stored in the mesh.
+This should be used to set a correct Abaqus element type matchin the mesh.</p>
+</dd></dl>
 
 </blockquote>
 </div>

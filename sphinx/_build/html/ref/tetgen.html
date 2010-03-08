@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>46. tetgen — read/write tetgen format files. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>46. tetgen — read/write tetgen format files. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a1',
+        VERSION:     '0.8.2-a2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="47. tools — tools.py" href="tools.html" />
     <link rel="prev" title="45. export — Classes and functions for exporting geometry in various formats." href="export.html" /> 
@@ -138,7 +138,11 @@ Nodes should be written independently to a .node file.</p>
 <dl class="function">
 <dt id="tetgen.runTetgen">
 <tt class="descclassname">tetgen.</tt><tt class="descname">runTetgen</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#tetgen.runTetgen" title="Permalink to this definition">¶</a></dt>
-<dd>Run tetgen mesher on the specified file.</dd></dl>
+<dd><p>Run tetgen mesher on the specified file.</p>
+<p>The input file is a closed triangulated surface.
+tetgen will generate a volume tetraeder mesh inside the surface,
+and create a new approximation of the surface as a by-product.</p>
+</dd></dl>
 
 </div>
 
