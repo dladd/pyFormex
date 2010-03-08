@@ -587,6 +587,26 @@ def cubicEquation(a,b,c,d):
 ##     return itemgrps,itemnrs,itemcnt,itemlen
 
 
+def inverseIndex(index):
+    """Inverse an index.
+
+    index is a one-dimensional integer array with unique non-negative values.
+
+    The return value is the inverse index: each value shows the position
+    of its index in the index array. The length of the inverse index is
+    equal to maximum value in index plus one. Values not occurring in index
+    get a value -1 in the inverse index.
+
+    Remark that inverseIndex(index)[index] == arange(1+index.max()).
+    The inverse index thus translates the unique index numbers in a
+    sequential index.
+    """
+    index = asarray(index)
+    inv = zeros(1+index.max(),dtype=index.dtype) - 1
+    inv[index] = arange(index.size,dtype=inv.dtype)
+    return inv
+
+
 def sortByColumns(A):
     """Sort an array on all its columns, from left to right.
 
@@ -599,4 +619,51 @@ def sortByColumns(A):
     keys = [A[:,i] for i in range(A.shape[1]-1,-1,-1)]
     return lexsort(keys)
 
+
+def uniqueRows(A):
+    """Return (the indices of) the unique rows of an 2-d array.
+
+    The input is an (nr,nc) shaped array.
+    The return value is a tuple of two indices:
+    - uniq: an (nuniq) shaped array with the numbers of the unique rows from A
+    - uniqid: an (nr) shaped array with the numbers of uniq corresponding to
+      all the rows of the input array A.
+
+    The order of the rows in uniq is determined by the sorting procedure.
+    Currently, this is sortByColumns.
+    """
+    srt = sortByColumns(A)
+    inv = inverseIndex(srt)
+    A = A.take(srt,axis=0)
+    ok = (A != roll(A,1,axis=0)).any(axis=1)
+    w = where(ok)[0]
+    uniqid = w.searchsorted(inv,side='right')-1
+    uniq = srt[ok]
+    return uniq,uniqid
+
+
+if __name__ == "__main__":
+
+    A = array([
+        [1,2,3],
+        [2,3,4],
+        [5,6,7],
+        [3,4,5],
+        [1,2,3],
+        [2,3,4],
+        [3,4,5],
+        [5,6,7],
+        [1,2,3],
+        [2,3,4],
+        ])
+
+    uniq,uniqid = uniqueRows(A)
+    B = A[uniq]
+    print B
+
+    print uniqid
+    AB = B.take(uniqid,axis=0)
+    print A-AB
+    
+    
 # End

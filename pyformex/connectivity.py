@@ -210,7 +210,7 @@ class Connectivity(ndarray):
     at creation time, but a method is provided to check the uniqueness.
 
     Create a new Connectivity object
-    --------------------------------
+        
     Connectivity(data=[],dtyp=None,copy=False,nplex=0)
     
     - data: should be integer type and evaluate to an 2-dim array.
@@ -478,10 +478,43 @@ class Connectivity(ndarray):
         """
         nodsel = asarray(nodsel)
         nplex = nodsel.shape[-1]
-
-        #print "NPLEX = %s" % nplex
         nodsel = nodsel.reshape(-1,nplex)
         return Connectivity(self[:,nodsel].reshape(-1,nplex))
+
+
+    def insertLevel(self,nodsel):
+        """Insert an extra hierarchical level in a Connectivity table.
+
+        A Connectivity table identifies higher hierchical entities in function
+        of lower ones. This function will insert an extra hierarchical level.
+        For example, if you have volumes defined in function of points,
+        you can insert an intermediate level of edges, or faces.
+        The return value is a tuple of two Connectivities (hi,lo), where:
+        - hi: defines the original elements in function of the intermediate
+          level ones,
+        - lo: defines the intermediate level items in function of the lowest
+          level ones.
+        Intermediate level items that consist of the same items in any
+        permutation order are collapsed to single items.
+        The low level items respect the numbering order inside the
+        original elements, but it is undefined which of the collapsed
+        sequences is returned.
+
+        There is currently no inverse operation, because the precise order
+        of the items in the collapsed rows is lost.
+        """
+        #print nodsel
+        nmult,nplex = nodsel.shape
+        #print nmult,nplex
+        lo = self.selectNodes(nodsel)
+        srt = lo.copy()
+        srt.sort(axis=1)
+        uniq,uniqid = uniqueRows(srt)
+        #print uniq.shape
+        #print uniqid.shape
+        hi = Connectivity(uniqid.reshape(-1,nmult))
+        lo = lo[uniq]
+        return hi,lo
 
 
     # THIS SHOULD BE GENERALIZED FOR intermediate plexitude > 2
@@ -569,26 +602,9 @@ def expandElems(elems):
 def compactElems(faces,edges):
     return Connectivity.compress(faces,edges)
 
-
-
-def reverseUniqueIndex(index):
-    """Reverse an index.
-
-    index is a one-dimensional integer array with unique non-negative values.
-
-    The return value is the reverse index: each value shows the position
-    of its index in the index array. The length of the reverse index is
-    equal to maximum value in index plus one. Values not occurring in index
-    get a value -1 in the reverse index.
-
-    Remark that reverseUniqueIndex(index)[index] == arange(1+index.max()).
-    The reverse index thus translates the unique index numbers in a
-    sequential index.
-    """
-    index = asarray(index)
-    rev = zeros(1+index.max(),dtype=index.dtype) - 1
-    rev[index] = arange(index.size,dtype=rev.dtype)
-    return rev
+@deprecation("\n Use 'arraytools.inverseIndex()' instead")
+def reverseUniqueIndex(*args):
+    return arraytools.inverseIndex(*args)
 
 
 def adjacencyList(elems):

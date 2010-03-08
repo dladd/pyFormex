@@ -1965,6 +1965,7 @@ See the related help item for more info.
 
 ########################### Table widgets ###########################
 
+_EDITROLE = QtCore.Qt.EditRole
 
 class TableModel(QtCore.QAbstractTableModel):
     """A table model that represent data as a two-dimensional array of items.
@@ -2029,7 +2030,8 @@ class TableModel(QtCore.QAbstractTableModel):
         """Return the TableModel flags."""
         return self._flags
 
-    def setData(self,index,value,role=QtCore.Qt.EditRole):
+    
+    def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
             print "Setting items at %s to %s" % (str(index),str(value))
             try:
@@ -2069,7 +2071,7 @@ class ArrayModel(TableModel):
         TableModel.__init__(self,data,rhead=rhead,chead=chead,edit=edit)
 
 
-    def setData(self,index,value,role=QtCore.Qt.EditRole):
+    def setData(self,index,value,role=_EDITROLE):
         if self.edit and role == QtCore.Qt.EditRole:
             print "Setting items at %s to %s" % (str(index),str(value))
             try:

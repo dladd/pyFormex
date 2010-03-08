@@ -424,9 +424,9 @@ class Mesh(Geometry):
         if level < 0 or level > 3:
             return None
 
-        attr = ['points', 'edges', 'faces', 'cells' ][level]
-        sub = asarray(getattr(el,attr))
-        ent = self.elems[:,sub].reshape(-1,sub.shape[1])
+        attr = ['points', 'edges', 'faces', 'cells'][level]
+        selector = getattr(el,attr)
+        ent = self.elems.selectNodes(selector)
         if unique:
             ent = ent.removeDoubles()
 
