@@ -87,6 +87,56 @@ class Geometry(object):
     A Geometry contains a single attribute, coords, which is a Coords object.
     """
 
+    ########### Return information about the coords #################
+
+    def x(self):
+        return self.coords.x()
+    def y(self):
+        return self.coords.y()
+    def z(self):
+        return self.coords.z()
+
+    def bbox(self):
+        return self.coords.bbox()
+
+    def center(self):
+        return self.coords.center()
+
+    def centroid(self):
+        return self.coords.centroid()
+
+    def sizes(self):
+        return self.coords.sizes()
+
+    def dsize(self):
+        return self.coords.dsize()
+
+    def bsphere(self):
+        return self.coords.bsphere()
+
+    def distanceFromPlane(self,*args,**kargs):
+        return self.coords.distanceFromPlane(*args,**kargs)
+
+    def distanceFromLine(self,*args,**kargs):
+        return self.coords.distanceFromLine(*args,**kargs)
+
+    def distanceFromPoint(self,*args,**kargs):
+        return self.coords.distanceFromPoint(*args,**kargs)
+
+
+    def __str__(self):
+        return self.coords.__str__()
+
+    ########### Return a copy #################
+
+    def copy(self):
+        """Return a deep copy of the object."""
+        from copy import deepcopy
+        return deepcopy(self)
+    
+
+    ########### Change the coords #################
+
     def _coords_transform(func):
         """Perform a transformation on the .coords attribute of the object
 
@@ -118,16 +168,6 @@ class Geometry(object):
         return self.copy().setCoords_inplace(coords)
 
     setCoords = setCoords_copy
-
-
-    def copy(self):
-        """Return a deep copy of the object."""
-        from copy import deepcopy
-        return deepcopy(self)
-    
-
-    def __str__(self):
-        return self.coords.__str__()
 
  
     @_coords_transform

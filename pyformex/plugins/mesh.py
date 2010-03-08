@@ -339,6 +339,45 @@ class Mesh(Geometry):
         return Formex(self.coords[self.elems],self.prop,self.eltype)
 
     
+    def ndim(self):
+        return 3
+    def nelems(self):
+        return self.elems.shape[0]
+    def nplex(self):
+        return self.elems.shape[1]
+    def ncoords(self):
+        return self.coords.shape[0]
+    nnodes = ncoords
+    npoints = ncoords
+    def shape(self):
+        return self.elems.shape
+
+    def nedges(self):
+        """Return the number of edges.
+
+        This returns the number of rows that would be in getEdges(),
+        without actually constructing the edges.
+        The edges are not fused!
+        """
+        try:
+            el = getattr(elements,self.eltype.capitalize())
+            return self.nelems() * len(el.edges)
+        except:
+            return 0
+    
+
+
+    def centroids(self):
+        """Return the centroids of all elements of the Mesh.
+
+        The centroid of an element is the point whose coordinates
+        are the mean values of all points of the element.
+        The return value is a Coords object with nelems points.
+        """
+        return self.coords[self.elems].mean(axis=1)
+        
+
+    
     def getCoords(self):
         """Get the coords data."""
         return self.coords
@@ -412,113 +451,18 @@ class Mesh(Geometry):
         return self.getLowerEntities(2,unique)
 
 
-    ## def getBorder(self):
-    ##     """Return the border of the elements.
+    # THIS IS NOT FINISHED YET!
+    def getBorder(self):
+        """Return the border of the elements.
 
-    ##     This is a convenient function to create a table with the border
-    ##     elementfaces. It is equivalent to
-    ##     ```self.getLowerEntities(-1,unique=True)```
-    ##     """
-    ##     return self.getLowerEntities(-1,unique=True)
-
-    
-    def ndim(self):
-        return 3
-    def nelems(self):
-        return self.elems.shape[0]
-    def nplex(self):
-        return self.elems.shape[1]
-    def ncoords(self):
-        return self.coords.shape[0]
-    nnodes = ncoords
-    npoints = ncoords
-    def shape(self):
-        return self.elems.shape
-    def bbox(self):
-        return self.coords.bbox()
-    def center(self):
-        return self.coords.center()
-
-    def nedges(self):
-        """Return the number of edges.
-
-        This returns the number of rows that would be in getEdges(),
-        without actually constructing the edges.
-        The edges are not fused!
+        This is a convenient function to create a table with the border
+        elementfaces. It is equivalent to
+        ```self.getLowerEntities(-1,unique=True)```
         """
-        try:
-            el = getattr(elements,self.eltype.capitalize())
-            return self.nelems() * len(el.edges)
-        except:
-            return 0
-    
-
-    # The following functions get the corresponding information from
-    # the underlying Coords object
-
-    def x(self):
-        return self.coords.x()
-    def y(self):
-        return self.coords.y()
-    def z(self):
-        return self.coords.z()
-
-    def bbox(self):
-        return self.coords.bbox()
-
-    def center(self):
-        return self.coords.center()
-
-    def centroid(self):
-        return self.coords.centroid()
-
-    def sizes(self):
-        return self.coords.sizes()
-
-    def dsize(self):
-        return self.coords.dsize()
-
-    def bsphere(self):
-        return self.coords.bsphere()
-
-
-    #  Distance
-
-    def distanceFromPlane(self,*args,**kargs):
-        return self.coords.distanceFromPlane(*args,**kargs)
-
-    def distanceFromLine(self,*args,**kargs):
-        return self.coords.distanceFromLine(*args,**kargs)
-
-    def distanceFromPoint(self,*args,**kargs):
-        return self.coords.distanceFromPoint(*args,**kargs)
-
-
-    def centroids(self):
-        """Return the centroids of all elements of the Mesh.
-
-        The centroid of an element is the point whose coordinates
-        are the mean values of all points of the element.
-        The return value is a Coords object with nelems points.
-        """
-        return self.coords[self.elems].mean(axis=1)
-        
-
-    ## @coordsmethod
-    ## def scale(self,*args,**kargs):
-    ##     pass
-    ## @coordsmethod
-    ## def translate(self,*args,**kargs):
-    ##     pass
-    ## @coordsmethod
-    ## def rotate(self,*args,**kargs):
-    ##     pass
-    ## @coordsmethod
-    ## def shear(self,*args,**kargs):
-    ##     pass
-    ## @coordsmethod
-    ## def affine(self,*args,**kargs):
-    ##     pass
+        ent = self.getLowerEntities(-1,unique=True)
+        rev = ent.inverse()
+        ncon = (rev >= 0).sum(axis=-1)
+        return ent[ncon <= 1]
 
 
     def report(self):
@@ -532,6 +476,7 @@ Size: %s
 
     def __str__(self):
         return self.report() + "Coords:\n" + self.coords.__str__() +  "Elems:\n" + self.elems.__str__()
+
 
     def fuse(self,**kargs):
         """Fuse the nodes of a Meshes.

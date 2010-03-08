@@ -126,7 +126,71 @@ def demagic(codes,magic):
     elems[:,0] = codes
     return elems
 
+
+def inverseIndex(index,maxcon=4):
+    """Return an inverse index.
+
+    Index is an (nr,nc) array of integers, where only non-negative
+    integers are meaningful, and negative values are silently ignored.
+    A Connectivity is a suitable argument.
+
+    The inverse index is an integer array,
+    where row i contains all the row numbers of index that contain
+    the number i. Because the number of rows containing the number i
+    is usually not a constant, the resulting array will have a number
+    of columns mr corresponding to the highest row-occurrence of any
+    single number. Shorter rows are padded with -1 values to flag
+    non-existing entries.
+
+    Negative numbers in index are disregarded.
+    The return value is an (mr,mc) shaped integer array where:
+    - mr will be equal to the highest positive value in index, +1.
+    - mc will be equal to the highest multiplicity of any number in index.
     
+    On entry, maxcon is an estimate for this value. The procedure will
+    automatically change it if needed.
+
+    Each row of the reverse index for a number that occurs less than mc
+    times in index, will be filled up with -1 values.
+
+    mult is the highest possible multiplicity of any number in a single
+    column of index.
+    """
+    if len(index.shape) != 2:
+        raise ValueError,"Index should be an integer array with dimension 2"
+    nr,nc = index.shape
+    mr = index.max() + 1
+    mc = maxcon*nc
+    # start with all -1 flags, maxcon*nc columns (because in each column
+    # of index, some number might appear with multiplicity maxcon)
+    reverse = zeros((mr,mc),dtype=index.dtype) - 1
+    i = 0 # column in reverse where we will store next result
+    c = 0 # column in index from which to process data
+    for c in range(nc):
+        col = index[:,c].copy()  # make a copy, because we will change it
+        while(col.max() >= 0):
+            # we still have values to process in this column
+            uniq,pos = unique1d(col,True)
+            #put the unique values at a unique position in reverse index
+            ok = uniq >= 0
+            if i >= reverse.shape[1]:
+                # no more columns available, expand it
+                reverse = concatenate([reverse,zeros_like(reverse)-1],axis=-1)
+            reverse[uniq[ok],i] = pos[ok]
+            i += 1
+            # remove the stored values from index
+            col[pos[ok]] = -1
+
+    reverse.sort(axis=-1)
+    maxc = reverse.max(axis=0)
+    reverse = reverse[:,maxc>=0]
+    return reverse
+
+
+@deprecation("\n Use 'Connectivity.inverseIndex()' instead")
+def reverseIndex(*args,**kargs):
+   return inverseIndex(*args,**kargs)
+
 
 ############################################################################
 ##
@@ -403,16 +467,6 @@ class Connectivity(ndarray):
         return self[ind[ok]]
 
 
-    def reverseIndex(self):
-        """Return a reverse index for the connectivity table.
-
-        This is equivalent to the function reverseIndex()
-        """
-        if self.rev is None:
-            self.rev = reverseIndex(self)
-        return self.rev
-
-
     def selectNodes(self,nodsel):
         """Return a connectivity table with a subset of the nodes.
 
@@ -500,6 +554,11 @@ class Connectivity(ndarray):
         return Connectivity(elems[:,:,0])
 
 
+    def inverse(self):
+        """Return the inverse index of a Connectivity table"""
+        return inverseIndex(self)
+
+
 ############################################################################
 
 @deprecation("\n Use 'Connectivity.expand()' instead")
@@ -530,57 +589,6 @@ def reverseUniqueIndex(index):
     rev = zeros(1+index.max(),dtype=index.dtype) - 1
     rev[index] = arange(index.size,dtype=rev.dtype)
     return rev
-
-    
-def reverseIndex(index,maxcon=3):
-    """Reverse an index.
-
-    index is a (nr,nc) shaped integer array.
-
-    The result is a (mr,mc) shaped integer array, where row i contains
-    all the row numbers of index containing i.
-
-    Negative numbers in index are disregarded.
-    mr will be equal to the highest positive value in index, +1.
-    mc will be equal to the highest multiplicity of any number in index.
-    On entry, maxcon is an estimate for this value. The procedure will
-    automatically change it if needed.
-
-    Each row of the reverse index for a number that occurs less than mc
-    times in index, will be filled up with -1 values.
-
-    mult is the highest possible multiplicity of any number in a single
-    column of index.
-    """
-    if len(index.shape) != 2:
-        raise ValueError,"Index should be an integer array with dimension 2"
-    nr,nc = index.shape
-    mr = index.max() + 1
-    mc = maxcon*nc
-    # start with all -1 flags, maxcon*nc columns (because in each column
-    # of index, some number might appear with multiplicity maxcon)
-    reverse = zeros((mr,mc),dtype=index.dtype) - 1
-    i = 0 # column in reverse where we will store next result
-    c = 0 # column in index from which to process data
-    for c in range(nc):
-        col = index[:,c].copy()  # make a copy, because we will change it
-        while(col.max() >= 0):
-            # we still have values to process in this column
-            uniq,pos = unique1d(col,True)
-            #put the unique values at a unique position in reverse index
-            ok = uniq >= 0
-            if i >= reverse.shape[1]:
-                # no more columns available, expand it
-                reverse = concatenate([reverse,zeros_like(reverse)-1],axis=-1)
-            reverse[uniq[ok],i] = pos[ok]
-            i += 1
-            # remove the stored values from index
-            col[pos[ok]] = -1
-
-    reverse.sort(axis=-1)
-    maxc = reverse.max(axis=0)
-    reverse = reverse[:,maxc>=0]
-    return reverse
 
 
 def adjacencyList(elems):
