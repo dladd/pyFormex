@@ -541,6 +541,16 @@ def spawn(cmd):
     return pid
 
 
+def killProcesses(pids,signal):
+    """Send the specified signal to the processes in list"""
+    for pid in pids:
+        try:
+            os.kill(pid,signal)
+        except:
+            pyformex.debug("Error in killing of process '%s'" % pid)
+            
+
+
 def changeExt(fn,ext):
     """Change the extension of a file name.
 

@@ -32,7 +32,7 @@ if not ( utils.hasModule('numpy') and
          utils.hasModule('pyqt4') ):
     sys.exit()
 
-import time,os.path,string,re
+import os.path
 
 from PyQt4 import QtCore, QtGui
 
@@ -559,26 +559,61 @@ class GUI(QtGui.QMainWindow):
         
 
 
-def xwininfo(windowid):
+def xwininfo(windowid=None,name=None):
     """Returns the X window info parsed as a dict.
 
-    windowid is the unique integer window identifier
+    Either the windowid or the window name has to be specified.
     """
-    sta,out = utils.runCommand('xwininfo -id %d' % windowid,quiet=True)
+    import re
+    cmd = 'xwininfo %s 2> /dev/null'
+    if windowid is not None:
+        args = " -id %s" % windowid
+    elif name is not None:
+        args = " -name '%s'" % name
+    else:
+        raise ValueError,"Either windowid or name have to be specified"
+
+    sta,out = utils.runCommand(cmd % args,RaiseError=False,quiet=True)
     res = {}
-    for line in out.split('\n'):
-        s = line.split(':')
-        if len(s) < 2:
-            s = s[0].strip().split(' ')
-        if len(s) < 2:
-            continue
-        elif len(s) > 2:
-            if s[0] == 'xwininfo':
-                s = s [-2:]
-        if s[0][0] == '-':
-            s[0] = s[0][1:]
-        res[s[0].strip()] = s[1].strip()
+    if not sta:
+        for line in out.split('\n'):
+            s = line.split(':')
+            if len(s) < 2:
+                s = s[0].strip().split(' ')
+            if len(s) < 2:
+                continue
+            elif len(s) > 2:
+                if s[0] == 'xwininfo':
+                    s = s[-2:] # remove the xwininfo string
+                    t = s[1].split()
+                    s[1] = t[0] # windowid
+                    name = ' '.join(t[1:]).strip().strip('"')
+                    res['Window name'] = name
+            if s[0][0] == '-':
+                s[0] = s[0][1:]
+            res[s[0].strip()] = s[1].strip()
+
     return res
+
+
+def pidofxwin(windowid):
+    """Returns the PID of the process that has created the window.
+
+    Remark: Not all processes store the PID information in the way
+    it is retrieved here. In many cases (X over network) the PID can
+    not be retrieved. However, the intent of this function is just to
+    find a dangling pyFormex process, and should probably work on
+    a normal desktop configuration.
+    """
+    import re
+    sta,out = utils.runCommand('xprop -id %s _NET_WM_PID' % windowid,quiet=True)
+    m = re.match("_NET_WM_PID\(.*\)\s*=\s*(?P<pid>\d+)",out)
+    if m:
+        pid = m.group('pid')
+        #print "Found PID %s" % pid
+        return int(pid)
+    
+    return None
 
 
 def windowExists(windowname):
@@ -588,6 +623,70 @@ def windowExists(windowname):
     a window with the specified name exists.
     """
     return not os.system('xwininfo -name "%s" > /dev/null 2>&1' % windowname)
+
+
+def findOldProcesses(max=16):
+    """Find old pyFormex GUI processes still running.
+
+    There is a maximum to the number of processes taht can be detected.
+    16 will suffice laregley, because there is no sane reason to open that many
+    pyFormex GUI's on the same screen.
+
+    Returns the next available main window name, and a list of
+    running pyFormex GUI processes, if any.
+    """
+    windowname = GD.Version
+    count = 0
+    running = []
+
+    while count < max:
+        info = xwininfo(name=windowname)
+        if info:
+            name = info['Window name']
+            windowid = info['Window id']
+            if name == windowname:
+                pid = pidofxwin(windowid)
+            else:
+                pid = None
+
+            running.append((windowid,name,pid))
+            count += 1
+            windowname = '%s (%s)' % (GD.Version,count)
+        else:
+            break
+
+    return windowname,running
+        
+
+def killProcesses(pids):
+    """Kill the processes in the pids list."""
+    warning = """..
+
+Killing processes
+-----------------
+I will now try to kill the following processes::
+
+    %s
+
+You can choose the signal to be sent to the processes:
+
+- KILL (9)
+- TERM (15)
+
+We advice you to first try the TERM(15) signal, and only if that
+does not seem to work, use the KILL(9) signal.
+""" % pids
+    actions = ['Cancel the operation','KILL(9)','TERM(15)']
+
+    answer = draw.ask(warning,actions)
+
+    if answer == 'TERM(15)':
+        print "KILLING WITH SIGNAL 15"
+        utils.killProcesses(pids,15)
+    elif answer == 'KILL(9)':
+        print "KILLING WITH SIGNAL 9"
+        utils.killProcesses(pids,9)
+
 
 
 def quit():
@@ -635,6 +734,75 @@ def startGUI(args):
     
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("aboutToQuit()"),quit)
+
+    # Check if we have DRI
+    viewport.setOpenGLFormat()
+    dri = viewport.opengl_format.directRendering()
+
+
+    # Check for existing pyFormex processes
+    windowname,running = findOldProcesses()
+
+    while len(running) > 0:
+        if len(running) >= 16:
+            print("Too many open pyFormex windows --- bailing out")
+            return -1
+
+        pids = [ i[2] for i in running if i[2] is not None ]
+        warning = """..
+
+pyFormex is already running on this screen
+------------------------------------------
+A main pyFormex window already exists on your screen. 
+
+If you really intended to start another instance of pyFormex, you
+can just continue now.
+
+The window might however be a leftover from a previously crashed pyFormex
+session, in which case you might not even see the window anymore, nor be able
+to shut down that running process. In that case, you would better bail out now
+and try to fix the problem by killing the related process(es).
+
+If you think you have already killed those processes, you may check it by
+rerunning the tests.
+"""
+        actions = ['Really Continue','Rerun the tests','Bail out and fix the problem']
+        if pids:
+            warning += """
+
+I have identified the process(es) by their PID as::
+
+%s
+
+If you trust me enough, you can also have me kill this processes for you.
+""" % pids
+            actions[2:2] = ['Kill the running processes']
+            
+        if dri:
+            answer = draw.ask(warning,actions)
+        else:
+            warning += """
+I have detected that the Direct Rendering Infrastructure
+is not activated on your system. Continuing with a second
+instance of pyFormex may crash your XWindow system.
+You should seriously consider to bail out now!!!
+"""
+            answer = draw.warning(warning,actions)
+
+
+        if answer == 'Really Continue':
+            break # OK, Go ahead
+
+        elif answer == 'Rerun the tests':
+            windowname,running = findOldProcesses() # try again
+        
+        elif answer == 'Kill the running processes':
+            killProcesses(pids)
+            windowname,running = findOldProcesses() # try again
+            
+        else:
+            return -1 # I'm out of here!
+
         
     # Load the splash image
     splash = None
@@ -648,42 +816,6 @@ def startGUI(args):
         splash.show()
 
     # create GUI, show it, run it
-    viewport.setOpenGLFormat()
-    dri = viewport.opengl_format.directRendering()
-
-    windowname = GD.Version
-    count = 0
-    while windowExists(windowname):
-        if count > 255:
-            print("Can not open the main window --- bailing out")
-            return -1
-        count += 1
-        windowname = '%s (%s)' % (GD.Version,count)
-
-    if count > 0:
-        warning = """..
-        
-Another instance of pyFormex is already running
-on this screen. This may be a leftover from a
-previously crashed program. In that case you should
-bail out now and first kill the crashed program.
-
-On the other hand, if you really want to run another
-pyFormex in parallel, you can just continue now.
-"""
-        actions = ['Really Continue','Bail out and fix the problem']
-        if dri:
-            answer = draw.ask(warning,actions)
-        if not dri:
-            warning += """
-I have detected that the Direct Rendering Infrastructure
-is not activated on your system. Continuing with a second
-instance of pyFormex may crash you XWindow system.
-You should seriously consider to bail out now!!!
-"""
-            answer = draw.warning(warning,actions)
-        if answer != 'Really Continue':
-            return -1
 
     GD.GUI = GUI(windowname,
                  GD.cfg.get('gui/size',(800,600)),

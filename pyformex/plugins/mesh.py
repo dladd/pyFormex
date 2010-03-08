@@ -349,59 +349,77 @@ class Mesh(Geometry):
         return self.elems
 
 
-    def getEdges(self,unique=False):
-        """Get the edges of the elements.
+    def getLowerEntities(self,level=-1,unique=False):
+        """Get the entities of a lower dimensionality.
 
         If the element type is defined in the :module:`elements` module,
-        this returns a Connectivity table with the edges of the elements.
-        By default, all edges for all elements are returned and common
-        edges will appear multiple times. Specifying unique=True will 
+        this returns a Connectivity table with the entities of a lower
+        dimensionality. The full list of entities with increasing
+        dimensionality  0,1,2,3 is::
+
+            ['points', 'edges', 'faces', 'cells' ]
+
+        If level is negative, the dimensionality returned is relative
+        to that of the caller. If it is positive, it is taken absolute.
+        Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
+        returns the faces, while for a 2D element type, it returns the edges.
+        For bothe meshes however,  getLowerEntities(+1) returns the edges.
+
+        By default, all entities for all elements are returned and common
+        entities will appear multiple times. Specifying unique=True will 
         return only the unique ones.
 
         The return value may be an empty table, if the element type does
-        not define any edges (e.g. the 'point' type).
-        If the eltype is not defined, the return value is None.
-        
-        Subclasses can override this method.
+        not have the requested entities (e.g. the 'point' type).
+        If the eltype is not defined, or the requested entity level is
+        outside the range 0..3, the return value is None.
         """
         try:
             el = getattr(elements,self.eltype.capitalize())
         except:
             return None
-        
-        edg = asarray(el.edges)
-        edges = self.elems[:,edg].reshape(-1,2)
-        if unique:
-            edges = edges.removeDoubles()
 
-        return edges
+        if level < 0:
+            level = el.ndim + level
+
+        if level < 0 or level > 3:
+            return None
+
+        attr = ['points', 'edges', 'faces', 'cells' ][level]
+        sub = asarray(getattr(el,attr))
+        ent = self.elems[:,sub].reshape(-1,sub.shape[1])
+        if unique:
+            ent = ent.removeDoubles()
+
+        return ent
+
+
+    def getEdges(self,unique=False):
+        """Return the edges of the elements.
+
+        This is a convenient function to create a table with the element
+        edges. It is equivalent to  ```self.getLowerEntities(1,unique)```
+        """
+        return self.getLowerEntities(1,unique)
 
 
     def getFaces(self,unique=False):
-        """Get the faces of the elements.
+        """Return the faces of the elements.
 
-        If the element type is defined in the :module:`elements` module,
-        this returns a Connectivity table with the faces of the elements.
-        By default, all faces for all elements are returned and common
-        faces will appear multiple times. Specifying unique=True will 
-        return only the unique ones.
-
-        The return value may be an empty table, if the element type does
-        not define any faces (e.g. the 'point' and 'line' types).
-        If the eltype is not defined, the return value is None.
-        
-        Subclasses can override this method.
+        This is a convenient function to create a table with the element
+        faces. It is equivalent to ```self.getLowerEntities(2,unique)```
         """
-        try:
-            el = getattr(elements,self.eltype.capitalize())
-        except:
-            return None
-        
-        fac = asarray(el.faces)
-        faces = self.elems[:,fac].reshape(-1,fac.shape[1])
-        if unique:
-            faces = faces.removeDoubles()
-        return faces
+        return self.getLowerEntities(2,unique)
+
+
+    ## def getBorder(self):
+    ##     """Return the border of the elements.
+
+    ##     This is a convenient function to create a table with the border
+    ##     elementfaces. It is equivalent to
+    ##     ```self.getLowerEntities(-1,unique=True)```
+    ##     """
+    ##     return self.getLowerEntities(-1,unique=True)
 
     
     def ndim(self):
