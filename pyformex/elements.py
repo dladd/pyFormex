@@ -65,7 +65,8 @@ class Element(object):
     numbered in a consecutive order spinning positively around the outward
     normal on the face.
     """
-    
+
+    ndim = 0
     vertices = []
     edges = []
     faces = []
@@ -84,9 +85,38 @@ class Element(object):
 
 
 
+class Point(Element):
+    """A single node element"""
+    ndim = 0
+    
+    vertices = [ ( 0.0, 0.0, 0.0 ) ]
+
+    edges = [ ]
+
+    faces = [ ]
+
+    element = vertices[0]
+    
+
+class Line2(Element):
+    """A 2-node line segment"""
+    ndim = 1
+    
+    vertices = [ ( 0.0, 0.0, 0.0 ),
+                 ( 1.0, 0.0, 0.0 ),
+                 ]
+
+    edges = [ (0,1) ]
+
+    faces = [ ]
+
+    element = edges[0]
+
 
 class Tri3(Element):
     """A 3-node triangle"""
+    ndim = 2
+    
     vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
@@ -101,6 +131,8 @@ class Tri3(Element):
 
 class Tri6(Element):
     """A 6-node triangle"""
+    ndim = 2
+    
     vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
@@ -120,16 +152,17 @@ class Tri6(Element):
 
 class Quad4(Element):
     """A 4-node quadrilateral"""
-    vertices = array([
-        (  0.0,  0.0, 0.0 ),
-        (  1.0,  0.0, 0.0 ),
-        (  1.0,  1.0, 0.0 ),
-        (  0.0,  1.0, 0.0 ),
-        ])
+    ndim = 2
+    
+    vertices = [ (  0.0,  0.0, 0.0 ),
+                 (  1.0,  0.0, 0.0 ),
+                 (  1.0,  1.0, 0.0 ),
+                 (  0.0,  1.0, 0.0 ),
+                 ]
 
-    edges = array([ (0,1), (1,2), (2,3), (3,0) ])
+    edges = [ (0,1), (1,2), (2,3), (3,0) ]
 
-    faces = array([ (0,1,2,3), ])
+    faces = [ (0,1,2,3), ]
 
     element = faces[0]
 
@@ -138,34 +171,17 @@ class Quad4(Element):
         }
 
 
-
-class Quad9(Element):
-    """A 4-node quadrilateral"""
-    vertices = [ (  0.0,  0.0, 0.0 ),
-                 (  1.0,  0.0, 0.0 ),
-                 (  1.0,  1.0, 0.0 ),
-                 (  0.0,  1.0, 0.0 ),
-                 (  0.5,  0.0, 0.0 ),
-                 (  1.0,  0.5, 0.0 ),
-                 (  0.5,  1.0, 0.0 ),
-                 (  0.0,  0.5, 0.0 ),
-                 (  0.5,  0.5, 0.0 ),
-                 ]
-
-    edges = [ (0,1), (1,2), (2,3), (3,0) ]
-
-    faces = [ (0,1,2,3,4,5,6,7,8), ]
-
-    element = faces[0]
-
-    drawfaces = Quad4.faces
-
-
 class Quad8(Element):
     """A 8-node quadrilateral"""
-    vertices = Quad9.vertices[:8]
+    ndim = 2
+    
+    vertices = Quad4.vertices + [ (  0.5,  0.0, 0.0 ),
+                                  (  1.0,  0.5, 0.0 ),
+                                  (  0.5,  1.0, 0.0 ),
+                                  (  0.0,  0.5, 0.0 ),
+                                  ]
 
-    edges = Quad9.edges
+    edges = [ (0,1), (1,2), (2,3), (3,0) ]
 
     faces = [ (0,1,2,3,4,5,6,7), ]
 
@@ -174,8 +190,25 @@ class Quad8(Element):
     drawfaces = Quad4.faces
 
 
+class Quad9(Element):
+    """A 9-node quadrilateral"""
+    ndim = 2
+    
+    vertices = Quad8.vertices + [ (  0.5,  0.5, 0.0 ), ]
+
+    edges = Quad8.edges
+
+    faces = [ (0,1,2,3,4,5,6,7,8), ]
+
+    element = faces[0]
+
+    drawfaces = Quad4.faces
+
+
 class Tet4(Element):
     """A 4-node tetrahedron"""
+    ndim = 3
+    
     vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
@@ -193,6 +226,8 @@ class Tet4(Element):
 
 class Wedge6(Element):
     """A 6-node wedge element"""
+    ndim = 3
+    
     vertices = [ ( 0.0, 0.0, 1.0 ),
                  ( 1.0, 0.0, 1.0 ),
                  ( 0.0, 1.0, 1.0 ),
@@ -210,7 +245,8 @@ class Wedge6(Element):
 
 class Hex8(Element):
     """An 8-node hexahedron"""
-
+    ndim = 3
+    
     vertices = [ ( 0.0, 0.0, 0.0 ),  
                  ( 1.0, 0.0, 0.0 ),
                  ( 1.0, 1.0, 0.0 ),
@@ -237,6 +273,8 @@ class Icosa(Element):
 
     nfaces = 20, nedges = 30, nvertices = 12
     """
+    ndim = 3
+    
     phi = golden_ratio
     
     vertices = [ ( 0.0, 1.0, phi ),

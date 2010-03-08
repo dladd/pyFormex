@@ -342,46 +342,66 @@ class Mesh(Geometry):
     def getCoords(self):
         """Get the coords data."""
         return self.coords
+
     
     def getElems(self):
         """Get the elems data."""
         return self.elems
 
-    def getEdges(self):
-        """Get the edges data.
 
-        For element types defined in the elements module, the
-        edges array can be constructed in a generic way.
-        The edges are not fused: common edges will be counted twice.
-        If the eltype is not defined, None is returned.
+    def getEdges(self,unique=False):
+        """Get the edges of the elements.
+
+        If the element type is defined in the :module:`elements` module,
+        this returns a Connectivity table with the edges of the elements.
+        By default, all edges for all elements are returned and common
+        edges will appear multiple times. Specifying unique=True will 
+        return only the unique ones.
+
+        The return value may be an empty table, if the element type does
+        not define any edges (e.g. the 'point' type).
+        If the eltype is not defined, the return value is None.
         
         Subclasses can override this method.
         """
         try:
             el = getattr(elements,self.eltype.capitalize())
-            edg = asarray(el.edges)
-            edges = self.elems[:,edg]
-            return edges.reshape(-1,2)
         except:
             return None
+        
+        edg = asarray(el.edges)
+        edges = self.elems[:,edg].reshape(-1,2)
+        if unique:
+            edges = edges.removeDoubles()
 
-    def getFaces(self):
-        """Get the faces data.
+        return edges
 
-        For element types defined in the elements module, the
-        faces array can be constructed in a generic way.
-        The faces are not fused: common faces will be counted twice.
-        If the eltype is not defined, None is returned.
+
+    def getFaces(self,unique=False):
+        """Get the faces of the elements.
+
+        If the element type is defined in the :module:`elements` module,
+        this returns a Connectivity table with the faces of the elements.
+        By default, all faces for all elements are returned and common
+        faces will appear multiple times. Specifying unique=True will 
+        return only the unique ones.
+
+        The return value may be an empty table, if the element type does
+        not define any faces (e.g. the 'point' and 'line' types).
+        If the eltype is not defined, the return value is None.
         
         Subclasses can override this method.
         """
         try:
             el = getattr(elements,self.eltype.capitalize())
-            fac = asarray(el.faces)
-            faces = self.elems[:,fac]
-            return faces.reshape(-1,fac.shape[1])
         except:
             return None
+        
+        fac = asarray(el.faces)
+        faces = self.elems[:,fac].reshape(-1,fac.shape[1])
+        if unique:
+            faces = faces.removeDoubles()
+        return faces
 
     
     def ndim(self):

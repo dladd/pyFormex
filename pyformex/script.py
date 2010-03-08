@@ -35,6 +35,12 @@ import formex
 import geomfile
 import utils
 
+########################
+# Imported here only to make it available in scripts
+from plugins.mesh import Mesh
+
+########################
+
 import threading,os,commands,copy,re,time
 
 ######################### Exceptions #########################################
