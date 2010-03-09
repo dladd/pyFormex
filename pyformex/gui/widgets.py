@@ -2316,8 +2316,12 @@ class MessageBox(QtGui.QMessageBox):
     If you want a modeless dialog, allowing the user to continue while the
     message stays open, use the :meth:`show()` mehod to display it.
     """
-    def __init__(self,text,format='',level='info',actions=['OK'],default=None,timeout=None):
-        QtGui.QMessageBox.__init__(self)
+    def __init__(self,text,format='',level='info',actions=['OK'],default=None,timeout=None,modal=None,parent=None):
+        if parent is None:
+            parent = GD.GUI
+        QtGui.QMessageBox.__init__(self,parent)
+        if modal is not None:
+            self.setModal(modal)
         if default is None:
             default = actions[-1]
         updateText(self,text,format)
@@ -2336,6 +2340,11 @@ class MessageBox(QtGui.QMessageBox):
 
         addTimeOut(self,timeout,"accept()")
 
+        
+    def show(self,modal=False):
+        self.setModal(modal)
+        QtGui.QMessageBox.show(self)
+ 
 
     def getResult(self):
         """Display the message box and wait for user to click a button.
@@ -2345,6 +2354,7 @@ class MessageBox(QtGui.QMessageBox):
         Returns the text of the button that was clicked or
         an empty string if ESC was hit.
         """
+        self.show(modal=True)
         self.exec_()
         b = self.clickedButton()
         if not b:  # b == 0 or b is None

@@ -57,7 +57,7 @@ def closeGui():
     GD.GUI.close()
 
 
-def showMessage(text,actions=['OK'],level='info',**kargs):
+def showMessage(text,actions=['OK'],level='info',modal=True):
     """Show a short message widget and wait for user acknowledgement.
 
     There are three levels of messages: 'info', 'warning' and 'error'.
@@ -66,11 +66,17 @@ def showMessage(text,actions=['OK'],level='info',**kargs):
     The dialog is closed if the user clicks a button.
     The return value is the button text. 
     """
-    return widgets.MessageBox(text,level=level,actions=actions,**kargs).getResult()
+    w = widgets.MessageBox(text,level=level,actions=actions)
+    if modal:
+        return w.getResult()
+    else:
+        w.show()
+        return None
+        
 
-def showInfo(text,actions=['OK']):
+def showInfo(text,actions=['OK'],modal=True):
     """Show an informational message and wait for user acknowledgement."""
-    return showMessage(text,actions,'info')
+    return showMessage(text,actions,'info',modal)
     
 def warning(text,actions=['OK']):
     """Show a warning message and wait for user acknowledgement."""
@@ -102,9 +108,10 @@ def showText(text,type=None,actions=[('OK',None)],modal=True):
     """
     w = widgets.TextBox(text,type,actions,modal=modal)
     if modal:
-        w.getResult()
+        return w.getResult()
     else:
         w.show()
+        return None
 
 
 def showFile(filename):
