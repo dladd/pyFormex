@@ -376,7 +376,6 @@ class Mesh(Geometry):
         """
         return self.coords[self.elems].mean(axis=1)
         
-
     
     def getCoords(self):
         """Get the coords data."""
@@ -388,7 +387,7 @@ class Mesh(Geometry):
         return self.elems
 
 
-    def getLowerEntities(self,level=-1,unique=False):
+    def getLowerEntitiesSelector(self,level=-1,unique=False):
         """Get the entities of a lower dimensionality.
 
         If the element type is defined in the :module:`elements` module,
@@ -425,8 +424,36 @@ class Mesh(Geometry):
             return None
 
         attr = ['points', 'edges', 'faces', 'cells'][level]
-        selector = getattr(el,attr)
-        ent = self.elems.selectNodes(selector)
+        return array(getattr(el,attr))
+
+
+    def getLowerEntities(self,level=-1,unique=False):
+        """Get the entities of a lower dimensionality.
+
+        If the element type is defined in the :module:`elements` module,
+        this returns a Connectivity table with the entities of a lower
+        dimensionality. The full list of entities with increasing
+        dimensionality  0,1,2,3 is::
+
+            ['points', 'edges', 'faces', 'cells' ]
+
+        If level is negative, the dimensionality returned is relative
+        to that of the caller. If it is positive, it is taken absolute.
+        Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
+        returns the faces, while for a 2D element type, it returns the edges.
+        For bothe meshes however,  getLowerEntities(+1) returns the edges.
+
+        By default, all entities for all elements are returned and common
+        entities will appear multiple times. Specifying unique=True will 
+        return only the unique ones.
+
+        The return value may be an empty table, if the element type does
+        not have the requested entities (e.g. the 'point' type).
+        If the eltype is not defined, or the requested entity level is
+        outside the range 0..3, the return value is None.
+        """
+        sel = self.getLowerEntitiesSelector(level)
+        ent = self.elems.selectNodes(sel)
         if unique:
             ent = ent.removeDoubles()
 
@@ -451,18 +478,18 @@ class Mesh(Geometry):
         return self.getLowerEntities(2,unique)
 
 
-    # THIS IS NOT FINISHED YET!
     def getBorder(self):
         """Return the border of the elements.
 
-        This is a convenient function to create a table with the border
-        elementfaces. It is equivalent to
-        ```self.getLowerEntities(-1,unique=True)```
         """
-        ent = self.getLowerEntities(-1,unique=True)
-        rev = ent.inverse()
-        ncon = (rev >= 0).sum(axis=-1)
-        return ent[ncon <= 1]
+        sel = self.getLowerEntitiesSelector(-1)
+        hi,lo = self.elems.insertLevel(sel)
+        hiinv = hi.inverse()
+        ncon = (hiinv>=0).sum(axis=1)
+        brd = (ncon<=1)
+        brd = lo[brd]
+        return brd
+
 
 
     def report(self):
