@@ -1,134 +1,134 @@
-# 	-*- html -*-
+.. This may look like plain text, but is really -*- rst -*-
+.. $Id$
+
 restindex	
     crumb: Geometry
-    format: html
+    format: rest
     page-title: Create 3D Geometry
     encoding: utf-8
     output-encoding: None
+    initialheaderlevel: 2
 /restindex
   
-  <h2>Creating spatial structures</h2>
+Creating spatial structures
+===========================
   
-  <h3>Hesperia dome</h3>
-  The Hesperia dome is a enormous construction made of glass on top of a hotel in Barcelona. A parametric 3D model of this dome was created with pyFormex, which allows to evaluate geometric variations changing one or more parameters (e.g. the span or height of a dome, the amount of secondary triangles, etc.) as shown in the figure below. As illustrated, geometries can be displayed in several ways (e.g. wireframe, flat, smooth, transparent). Automated generation of finite element input files can be incorporated in pyFormex. 
-  <table align="center">
-    <tr>
-      <td>
-      <div align="center"><img src="<% path_to_root %>images/hesperia3.jpg" alt="Dome of the Hesperia hotel, Barcelona" border="0" vspace="20"/></div>
-      </td>
-      <td>
-      <div align="center"><img src="<% path_to_root %>images/hesperia_var.png" alt="Variants of the Hesperia dome" border="0" hspace="5" vspace="20"/></div>
-      </td>
-     </tr>
-  </table>
+Hesperia dome
+-------------
+
+The Hesperia dome is a enormous construction made of glass on top of a
+hotel in Barcelona. A parametric 3D model of this dome was created
+with pyFormex, which allows to evaluate geometric variations changing
+one or more parameters (e.g. the span or height of a dome, the amount
+of secondary triangles, etc.) as shown in the figure below. As
+illustrated, geometries can be displayed in several ways
+(e.g. wireframe, flat, smooth, transparent). Automated generation of
+finite element input files can be incorporated in pyFormex.
+
+.. image:: ../images/hesperia3.jpg
+   :align: center
+
   
-  <h3>Hyparcap</h3>
-  A space frame in the form of a five-pointed star of hypars.
-  <br/>
-  <br/>
-  <br/>
-<div align ="center"><img src="<% path_to_root %>images/Hyparcap.png" alt="Hypar Cap" border="0"/></div>
-<br/>
-<br/>
+Hyparcap
+--------
 
-<h3>Scallop dome</h3>
-Example showing the parametric capabilities of pyFormex. Both domes are createdby the same small script, by only changing two parameters.
-<table align="center">
-  <tr>
-    <td>
-    <div align="center"><img src="<% path_to_root %>images/scallop8.png" alt="Scallop dome variant" border="0" hspace="5" vspace="20"/></div>
-    </td>
-    <td>
-    <div align="center"><img src="<% path_to_root %>images/scallop12.png" alt="Another scallop dome variant" border="0" hspace="5" vspace="20"/></div>
-    </td>
-  </tr>
-</table>
+A space frame in the form of a five-pointed star of hypars.
 
-<h3>SpaceTrussRoof</h3>
-A space truss used for the roof of an industrial building. Click on the picture to view a large size animated gif.
-<br/>
-<br/>
-<br/>
-<div align ="center"><a href="<% path_to_root %>images/roof-movie.gif"><img src="<% path_to_root %>images/SpaceTrussRoof.png" alt="Space Truss Roof" border="0"/></a></div>
-<br/>
-<br/>
+.. image:: ../images/Hyparcap.png
+   :align: center
 
 
-<h3>Geodesic Dome</h3>
-This example illustrates the use of surface elements. It shows four steps in the creation of a geodesic dome.
-<table align="center">
-  <tr>
-    <td>
-    <div align="center"><img src="<% path_to_root %>images/Geodesic-1.png" alt="Geodesic dome step 1" border="0" hspace="15" vspace="20"/></div>
-    </td>
-    <td>
-      First we create two triangles. We give them different colors so that they are easy to distinguish.<br/><br/>
-      <pre>
-v=0.5*sqrt(3.)
-a = Formex([[[0,0],[1,0],[0.5,v]]],1)
-aa = Formex([[[1,0],[1.5,v],[0.5,v]]],2)
-      </pre>
-    </td>
-  </tr>
-  <tr>
-    <td>
-    <div align="center"><img src="<% path_to_root %>images/Geodesic-2.png" alt="Geodesic dome step 2" border="0" hspace="15" vspace="20"/></div>
-    </td>
-    <td>
-      Next we copy the triangles a number of times in two directions, generating the triangular pattern at the left.<br/><br/>
-      <pre>
-m=5; n=5;
-d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1)
-dd = aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1)
-      </pre>
-    </td>
-    
-  </tr>
-  <tr>
-    <td>
-    <div align="center"><img src="<% path_to_root %>images/Geodesic-3.png" alt="Geodesic dome step 3" border="0" hspace="15" vspace="20"/></div>
-    </td>
-    <td>
-      Then we copy-rotate the pattern into a hexagon.<br/><br/>
-      <pre>
-e = (d+dd).rosette(6,60,point=[m*0.5,m*v,0])
-</pre>
-    </td>
-    
-  </tr>
-  <tr>
-    <td>
-    <div align="center"><img src="<% path_to_root %>images/Geodesic-4.png" alt="Geodesic dome completed" border="0" hspace="15" vspace="20"/></div>
-    </td>
-    <td>
-      Lastly the pattern is mapped on a sphere, resulting in a geodesic dome from which we give a perspective view.<br/><br/>
-      <pre>
-f = e.mapd(2,lambda d:0.8*sqrt((m+1)**2-d**2),e.center(),[0,1])
-</pre>
-    </td>
-    
-  </tr>
-  
-</table>
+Scallop dome
+------------
+
+Example showing the parametric capabilities of pyFormex. Both domes
+are createdby the same small script, by only changing two parameters.
+
+.. image:: ../images/scallop8.png
+   :align: center
+
+.. image:: ../images/scallop12.png
+   :align: center
 
 
-<h2>Creating stent geometries</h2>
+SpaceTrussRoof
+--------------
 
-<h3>Wire stent</h3>
-A single layered (top) and a double layered (bottom) wire stent. Both are generated by the script below.
-<div align="center"><img src="<% path_to_root %>images/WireStent.png" alt="Wire Stent" border="0" hspace="15" vspace="20"/></div>
+A space truss used for the roof of an industrial building. Click on
+the picture to view a large size animated gif.
+
+.. image:: ../images/roof-movie.gif
+   :align: center
+
+
+Geodesic Dome
+-------------
+
+This example illustrates the use of surface elements. It shows four
+steps in the creation of a geodesic dome.
+
+.. image:: ../images/Geodesic-1.png
+   :align: center
+
+First we create two triangles. We give them different colors so that
+they are easy to distinguish::
+
+   v=0.5*sqrt(3.)
+   a = Formex([[[0,0],[1,0],[0.5,v]]],1)
+   aa = Formex([[[1,0],[1.5,v],[0.5,v]]],2)
+
+.. image:: ../images/Geodesic-2.png
+   :align: center
+
+Next we copy the triangles a number of times in two directions,
+generating the triangular pattern at the left::
+
+   m=5; n=5; d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1) dd =
+   aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1) </pre> </td>
+
+.. image:: ../images/Geodesic-3.png
+   :align: center
+
+Then we copy-rotate the pattern into a hexagon::
+
+    e = (d+dd).rosette(6,60,point=[m*0.5,m*v,0])
+
+.. image:: ../images/Geodesic-4.png
+   :align: center
+
+Lastly the pattern is mapped on a sphere, resulting in a geodesic dome
+from which we give a perspective view::
+
+   f = e.mapd(2,lambda d:0.8*sqrt((m+1)**2-d**2),e.center(),[0,1]) 
+
+
+Creating stent geometries
+=========================
+
+Wire stent
+----------
+
+A single layered (top) and a double layered (bottom) wire stent. Both
+are generated by the script below.
+
+.. image:: ../images/WireStent.png
+   :align: center
+
+
 {colorize;../scripts/wirestent.py} 
 
 
-<h3>Balloon expandable stent</h3>
-pyFormex can be used for the parametric design of balloon expandable stents. As illustrated below, both the geometric design and the mesh can easily be modified.
-<table align="center">
-  <tr>
-    <td>
-    <div align ="center"><img src="<% path_to_root %>images/BalloonExpandableStent1.png" alt="Balloon Expandable Stent 1" border="0"/></div>
-    </td>
-    <td>
-    <div align ="center"><img src="<% path_to_root %>images/BalloonExpandableStent2.png" alt="Balloon Expandable Stent 2" border="0"/></div>
-    </td>
-  </tr>
-</table>
+Balloon expandable stent
+------------------------
+
+pyFormex can be used for the parametric design of balloon expandable
+stents. As illustrated below, both the geometric design and the mesh
+can easily be modified.
+
+.. image:: ../images/BalloonExpandableStent1.png
+   :align: center
+
+.. image:: ../images/BalloonExpandableStent2.png
+   :align: center
+
+.. End

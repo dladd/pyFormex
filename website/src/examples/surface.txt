@@ -1,29 +1,70 @@
-# 	-*- html -*-
+.. This may look like plain text, but is really -*- rst -*-
+.. $Id$
+
 restindex	
     crumb: Surface
-    format: html
+    format: rest
     page-title: Surface Examples
     encoding: utf-8
     output-encoding: None
+    initialheaderlevel: 2
 /restindex
  
-  <h2>Operations on surface meshes</h2>
+Operations on surface meshes
+============================
   
-  <h3>Approximating geometry</h3>
-  <p align="justify">An artery with a kink was imported as a triangulated surface, reconstructed from medical CT scan images. The arterial wall surface was then approximated by a sequence of circles with varying diameters and non collinear center points. The figure below shows part of the triangulated surface (yellow), a subset of the approximating circles (blue) and the line connecting the centers of the circles (red). The view is taken from inside the artery. Click on the image for a larger view.</p>
-<div align="center"><a href="<% path_to_root %>images/tata-0114.jpg"><img src="<% path_to_root %>images/tata-0114_small.png" alt="Artery approximated with circles" border="0" vspace="20"/></a></div>
+Approximating geometry
+----------------------
+
+An artery with a kink
+was imported as a triangulated surface, reconstructed from medical CT
+scan images. The arterial wall surface was then approximated by a
+sequence of circles with varying diameters and non collinear center
+points. The figure below shows part of the triangulated surface
+(yellow), a subset of the approximating circles (blue) and the line
+connecting the centers of the circles (red). The view is taken from
+inside the artery. Click on the image for a larger view.
+
+.. image:: ../images/tata-0114.jpg
+   :align: center
 
 
-<h3>Stent geometry evaluation</h3>
-<p align="justify">The next figures show four stages in the evaluation of the geometry of a stent device. The first figure is the imported 3D surface, reconstructed from CT scan images. In pyFormex, the tubular stent is unrolled to a planar structure (second figure). This is cut with a plane, producing the circumference, from which the basic cell is taken which is shown in the third figure. Finally, the fourth figure shows the resulting circumference of the opening between the stent material.</p>
+Stent geometry evaluation
+-------------------------
+
+The next figures show four stages in the evaluation of the geometry of
+a stent device. The first figure is the imported 3D surface,
+reconstructed from CT scan images. In pyFormex, the tubular stent is
+unrolled to a planar structure (second figure). This is cut with a
+plane, producing the circumference, from which the basic cell is taken
+which is shown in the third figure. Finally, the fourth figure shows
+the resulting circumference of the opening between the stent
+material.
+
+.. image:: ../images/cypher_orig.png
+   :align: center
+.. image:: ../images/cypher_unroll.png
+   :align: center
+.. image:: ../images/cypher_unroll_cell.png
+   :align: center
+.. image:: ../images/cypher_unroll_cell2.png
+   :align: center
 
 
-<div align="center"><img src="<% path_to_root %>images/cypher_orig.png" alt="A stent device" border="0" hspace="5" vspace="5"/></div>
-<div align="center"><img src="<% path_to_root %>images/cypher_unroll.png" alt="The stent unrolled" border="0" hspace="5" vspace="5"/></div>
-<div align="center"><img src="<% path_to_root %>images/cypher_unroll_cell.png" alt="Cut with a plane" border="0" hspace="5" vspace="5"/></div>
-<div align="center"><img src="<% path_to_root %>images/cypher_unroll_cell2.png" alt="Basic cell" border="0" hspace="5" vspace="5"/></div>
 
+Human skeleton
+--------------
 
-<h3>Human skeleton</h3>
-The individual bones, reconstructed from CT scans, of the lower human skeleton were obtained from the <a href="http://www.ulb.ac.be/project/vakhum/">VAKHUM</a> project. The original .STL files were converted to <a href="http://gts.sourceforge.net/">GTS</a> format, coarsened, and read into pyFormex, where they were aligned to recreate the skeleton. Colors were added to distinct the bones.
-<img src="<% path_to_root %>images/skelet1.png" alt="A stent device" border="0" hspace="5" vspace="5"/>
+.. _VAKHUM: http://www.ulb.ac.be/project/vakhum
+.. _GTS: http://gts.sourceforge.net
+
+The individual bones, reconstructed from CT scans, of the lower human
+skeleton were obtained from the VAKHUM_ project. The
+original STL files were converted to GTS_ format, coarsened, and read
+into pyFormex, where they were aligned to recreate the
+skeleton. Colors were added to distinct the bones. 
+
+.. image:: ../images/skelet1.png
+   :align: center
+
+.. End
