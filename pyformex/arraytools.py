@@ -587,7 +587,7 @@ def cubicEquation(a,b,c,d):
 ##     return itemgrps,itemnrs,itemcnt,itemlen
 
 
-def inverseIndex(index):
+def inverseUniqueIndex(index):
     """Inverse an index.
 
     index is a one-dimensional integer array with unique non-negative values.
@@ -597,7 +597,7 @@ def inverseIndex(index):
     equal to maximum value in index plus one. Values not occurring in index
     get a value -1 in the inverse index.
 
-    Remark that inverseIndex(index)[index] == arange(1+index.max()).
+    Remark that inverseUniqueIndex(index)[index] == arange(1+index.max()).
     The inverse index thus translates the unique index numbers in a
     sequential index.
     """
@@ -633,7 +633,7 @@ def uniqueRows(A):
     Currently, this is sortByColumns.
     """
     srt = sortByColumns(A)
-    inv = inverseIndex(srt)
+    inv = inverseUniqueIndex(srt)
     A = A.take(srt,axis=0)
     ok = (A != roll(A,1,axis=0)).any(axis=1)
     w = where(ok)[0]

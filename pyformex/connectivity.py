@@ -602,9 +602,9 @@ def expandElems(elems):
 def compactElems(faces,edges):
     return Connectivity.compress(faces,edges)
 
-@deprecation("\n Use 'arraytools.inverseIndex()' instead")
+@deprecation("\n Use 'arraytools.inverseUniqueIndex()' instead")
 def reverseUniqueIndex(*args):
-    return arraytools.inverseIndex(*args)
+    return inverseUniqueIndex(*args)
 
 
 def adjacencyList(elems):
