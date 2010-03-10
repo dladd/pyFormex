@@ -32,7 +32,7 @@ import os
 import pyformex as GD
 from plugins import tetgen
 from plugins.mesh import Mesh
-from connectivity import *
+from connectivity import Connectivity,inverseIndex,connectedLineElems
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
@@ -651,7 +651,7 @@ class TriSurface(Mesh):
         the neighbouring triangles.
         The normal vectors are normalized.
         """
-        con = reverseIndex(self.getElems())
+        con = inverseIndex(self.getElems())
         NP = self.areaNormals()[1][con] #self.normal doesn't work here???
         w = where(con == -1)
         NP[w] = 0.
@@ -806,14 +806,14 @@ class TriSurface(Mesh):
     def edgeConnections(self):
         """Find the elems connected to edges."""
         if self.econn is None:
-            self.econn = reverseIndex(self.getFaces())
+            self.econn = inverseIndex(self.getFaces())
         return self.econn
     
 
     def nodeConnections(self):
         """Find the elems connected to nodes."""
         if self.conn is None:
-            self.conn = reverseIndex(self.elems)
+            self.conn = inverseIndex(self.elems)
         return self.conn
     
 
@@ -1254,7 +1254,7 @@ Total area: %s; Enclosed volume: %s
         part have the same property value.
         The splitProp() method can be used to get a list of Meshes.
         """
-        # First, reduce the surface to the part interseting with the plane
+        # First, reduce the surface to the part intersecting with the plane
         n = asarray(n)
         p = asarray(p)
         t = self.test(nodes='all',dir=n,min=p,atol=atol)
@@ -1273,7 +1273,7 @@ Total area: %s; Enclosed volume: %s
         u = M.test(nodes='all',dir=n,max=p,atol=atol)
         w = ((t+u) == 0) * (t*u == 0)
         ind = where(w)[0]
-        rev = reverseUniqueIndex(ind)
+        rev = inverseUniqueIndex(ind)
         M = M.clip(w)
         x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
 

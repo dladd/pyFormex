@@ -250,7 +250,7 @@ def removeTriangles(elems):
     Triangles appearing in the centerline are removed by this function.
     Both input and output are the connectivity of the centerline.
     """
-    rev = connectivity.reverseIndex(elems)
+    rev = connectivity.inverseIndex(elems)
     if rev.shape[1] > 2:
         w =  where(rev[:,-3] != -1)[0]
         for i in w:

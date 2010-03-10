@@ -33,9 +33,8 @@ Then execute the created script from inside pyFormex.
 """
 
 import pyformex as GD
-from numpy import *
-from gui.draw import export
-import connectivity
+from arraytools import *
+from script import export
 from odict import ODict
 
 import re
@@ -125,7 +124,7 @@ class FeResult(object):
         self.eset[self.esetkey] = union1d(self.eset[self.esetkey],asarray(data))
 
     def Finalize(self):
-        self.nid = connectivity.reverseUniqueIndex(self.nodid)
+        self.nid = inverseUniqueIndex(self.nodid)
         for k in self.elems.iterkeys():
             v = asarray(self.elems[k])
             self.elems[k] = asarray(self.nid[v])

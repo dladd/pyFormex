@@ -714,11 +714,11 @@ def adjacent(index,rev=None):
     The result of this method provides the same information as repeated calls
     of connected(index,i), but may be more efficient if nr becomes large.
 
-    The reverse index may be specified, if it was already computed.
+    The inverse index may be specified, if it was already computed.
     """
     n = index.shape[0]
     if rev is None:
-        rev = reverseIndex(index)
+        rev = inverseIndex(index)
     adj = rev[index].reshape((n,-1))
     #print(adj)
     k =arange(n)
@@ -853,7 +853,7 @@ if __name__ == "__main__":
     ## print(c._max)
     ## print(c.nelems())
     ## print(c.nplex())
-    ## print(c.reverseIndex())
+    ## print(c.inverse())
 
     C = Connectivity(random.randint(8,size=(20,3)))
     

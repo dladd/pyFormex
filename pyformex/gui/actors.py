@@ -31,7 +31,6 @@ from drawable import *
 from formex import *
 import elements
 
-from connectivity import reverseIndex
 from plugins.mesh import Mesh
 from plugins.surface import TriSurface
 from marks import TextMark

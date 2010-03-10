@@ -29,7 +29,7 @@ And some useful meshing functions to create such models.
 """
 
 from formex import *
-from connectivity import Connectivity,reverseUniqueIndex
+from connectivity import Connectivity
 import elements
 from utils import deprecation
 from geometry import Geometry
@@ -530,7 +530,7 @@ Size: %s
         elif nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
             coords = self.coords[nodes]
             if nodes[-1] >= nodes.size:
-                elems = reverseUniqueIndex(nodes)[self.elems]
+                elems = inverseUniqueIndex(nodes)[self.elems]
             else:
                 elems = self.elems
             self.__init__(coords,elems,prop=self.prop,eltype=self.eltype)
