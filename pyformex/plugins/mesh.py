@@ -1106,3 +1106,32 @@ def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
 
 
 # End
+
+
+
+def structuredHexGrid(dx, dy, dz, isophex='hex64'):
+    """it builds a structured hexahedral grid with nodes and elements both numbered in a structured way: first along z, then along y,and then along x. The resulting hex cells are oriented along z. This function is the equivalent of simple.rectangularGrid but for a mesh. Additionally, dx,dy,dz can be either integers or div (1D list or array). In case of list/array, first and last numbers should be 0.0 and 1.0 if the desired grid has to be inside the region 0.,0.,0. to 1.,1.,1.
+    If isopHex is specified, a convenient set of control points for the isoparametric transformation hex64 is also returned.
+    TODO: include other options to get the control points for other isoparametric transformation for hex."""
+    sgx, sgy, sgz=dx, dy, dz
+    if type(dx)!=int:sgx=len(dx)-1
+    if type(dy)!=int:sgy=len(dy)-1
+    if type(dz)!=int:sgz=len(dz)-1
+    n3=regularGrid([0., 0., 0.],[1., 1., 1.],[sgx, sgy, sgz])
+    if type(dx)!=int:n3[..., 0]=array(dx).reshape(-1, 1, 1)
+    if type(dy)!=int:n3[..., 1]=array(dy).reshape(-1,  1)
+    if type(dz)!=int:n3[..., 2]=array(dz).reshape(-1)
+    nyz=(sgy+1)*(sgz+1)
+    xh0= array([0, nyz, nyz+sgz+1,0+sgz+1 ])
+    xh0= concatenate([xh0, xh0+1], axis=1)#first cell
+    hz= array([xh0+j for j in range(sgz)])#z column
+    hzy= array([hz+(sgz+1)*j for j in range(sgy)])#zy 2D rectangle
+    hzyx=array([hzy+nyz*k for k in range(sgx)]).reshape(-1, 8)#zyx 3D
+    if isophex=='hex64': return Coords(n3.reshape(-1, 3)), hzyx.reshape(-1, 8), regularGrid([0., 0., 0.], [1., 1., 1.], [3, 3, 3]).reshape(-1, 3)#control points for the hex64 applied to a basic struct hex grid
+    else: return Coords(n3.reshape(-1, 3)), hzyx.reshape(-1, 8)
+
+
+
+
+
+
