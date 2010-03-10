@@ -31,7 +31,7 @@ from coords import *
 from connectivity import *
 from mydict import Dict
 from numpy import *
-from plugins.mesh import mergeNodes,mergeMeshes
+from plugins.mesh import Mesh,mergeMeshes
 from utils import deprecation
 import warnings
 
