@@ -191,6 +191,9 @@ _conversions_ = {
         'tri3-x' : [ ('s', [ (0,4,8),(4,1,8),(1,5,8),(5,2,8),
                       (2,6,8),(6,3,8),(3,7,8),(7,0,8) ]), ],
         },
+    'hex8': {
+        'tet4'  : [ ('s', [ (0,1,2,5),(2,3,0,7),(5,7,6,2),(7,5,4,0),(0,5,2,7) ]), ],
+        },
     }
    
 
@@ -479,8 +482,13 @@ class Mesh(Geometry):
 
 
     def getBorder(self):
-        """Return the border of the elements.
+        """Return the border of the Mesh.
 
+        This returns a Connectivity table with the border of the Mesh.
+        The border entities are of a lower jierarchical level than the
+        mesh itself. This Connectivity can be used together with the
+        Mesh coords to construct a Mesh of the border geometry.
+        See also getBorderMesh.
         """
         sel = self.getLowerEntitiesSelector(-1)
         hi,lo = self.elems.insertLevel(sel)
@@ -490,6 +498,14 @@ class Mesh(Geometry):
         brd = lo[brd]
         return brd
 
+
+    def getBorderMesh(self):
+        """Return a Mesh with the border elements.
+
+        Returns a Mesh representing the border of the Mesh.
+        The new Mesh is of the next lower hierarchical level.
+        """
+        return Mesh(self.coords,self.getBorder())
 
 
     def report(self):

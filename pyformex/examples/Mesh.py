@@ -78,6 +78,8 @@ draw(m)
 drawNumbers(m)
 print "%s elements" % m.nelems()
 
+#export({'mesh':m})
+
 pause('')
 flat()
 e = Mesh(m.coords,m.getEdges()).setProp(2)

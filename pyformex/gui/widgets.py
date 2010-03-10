@@ -1165,11 +1165,22 @@ def simpleInputItem(name,value=None,itemtype=None,**kargs):
 
 
 def compatInputItem(name,value,itemtype=None,kargs={}):
-    """A convenience function to create an InputItem dictionary"""
-    kargs['name'] = name
-    kargs['value'] = value
-    kargs['itemtype'] = itemtype
-    return kargs
+    """A convenience function to create an InputItem dictionary
+
+    This function accepts InputItem data in the old format:
+    ( name, value, [ itemtype, [ optionsdict ] ] )
+    and turns them into a dictionary as required by the new
+    InputItem format.
+    """
+    # Create a new dict item!
+    # Do not be tempted to change kargs directly like in simpleInputItem,
+    # or you will end up permanently changing the value of the empty dict!
+    item = {}
+    item.update(kargs)
+    item['name'] = name
+    item['value'] = value
+    item['itemtype'] = itemtype
+    return item
 
 
 class NewInputDialog(QtGui.QDialog):
@@ -1415,7 +1426,7 @@ class NewInputDialog(QtGui.QDialog):
                 item['value'] = self.store[item['name']]
             except:
                 raise ValueError,"No value specified for item '%s'" % item['name']
-        if not 'itemtype' in item:
+        if not 'itemtype' in item or item['itemtype'] is None:
             item['itemtype'] = defaultItemType(item)
 
         item['parent'] = self

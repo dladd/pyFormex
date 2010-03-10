@@ -25,7 +25,7 @@
 """Barrel Vault
 
 level = 'beginner'
-topics = ['geometry']
+topics = ['structure']
 techniques = ['dialog']
 
 """

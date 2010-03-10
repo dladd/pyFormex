@@ -25,7 +25,7 @@
 """DoubleLayer
 
 level = 'beginner'
-topics = ['geometry']
+topics = ['structure']
 techniques = ['colors']
 
 """

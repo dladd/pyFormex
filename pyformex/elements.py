@@ -221,8 +221,6 @@ class Tet4(Element):
 
     element = [ 0,1,2,3 ]
 
-    drawfaces = Quad4.faces
-
 
 class Wedge6(Element):
     """A 6-node wedge element"""

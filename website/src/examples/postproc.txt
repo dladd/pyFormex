@@ -13,12 +13,18 @@ restindex
 
 Postprocessing
 ==============
-The pyFormex rendering machine can be used to render any scalar value on a given geomatry. Thus pyFormex can be used as a postprocessor for numerical simulation codes such as FEA or CFD. The image below shows the result of such a rendering in an alpha version of pyFormex 0.6.1.
+
+The pyFormex rendering machine can be used to render any scalar value
+on a given geomatry. Thus pyFormex can be used as a postprocessor for
+numerical simulation codes such as FEA or CFD. The image below shows
+the result of such a rendering in an alpha version of pyFormex 0.6.1.
 
 
 Distance
 --------
-This image renders the distance of all points of the geometry to a single fixed point.
+
+This image renders the distance of all points of the
+geometry to a single fixed point.
 
 .. image:: ../images/postproc.png
    :align: center

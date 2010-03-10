@@ -161,7 +161,7 @@ def viewportLayout():
     else:
         current = directions[1]
     itemlist = [C('Number of viewports',len(GD.GUI.viewports.all)),
-                C('Viewport layout direction',current,'select',directions),
+                C('Viewport layout direction',current,'select',{'choices':directions}),
                 C('Number of viewports per row/column',GD.GUI.viewports.ncols),
                 ]
     res = widgets.NewInputDialog(itemlist,'Config Dialog').getResult()

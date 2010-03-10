@@ -25,7 +25,7 @@
 """Diamatic dome
 
 level = 'beginner'
-topics = ['geometry','domes']
+topics = ['structure','domes']
 techniques = ['colors']
 
 """

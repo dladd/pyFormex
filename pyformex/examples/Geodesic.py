@@ -25,7 +25,7 @@
 """Geodesic Dome
 
 level = 'normal'
-topics = ['geometry','surface','domes']
+topics = ['structure','surface','domes']
 techniques = ['dialog', 'colors']
 
 """
