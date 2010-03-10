@@ -44,7 +44,7 @@ def load(plugin):
     import jobs_menu
     import postproc_menu
     module = globals().get(plugin,None)
-    reload(module)
+    #reload(module)
     if type(module) is ModuleType and hasattr(module,'show_menu'):
         module.show_menu()
 
