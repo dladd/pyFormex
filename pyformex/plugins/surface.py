@@ -32,7 +32,7 @@ import os
 import pyformex as GD
 from plugins import tetgen
 from plugins.mesh import Mesh
-from connectivity import Connectivity,inverseIndex,connectedLineElems
+from connectivity import Connectivity,inverseIndex,connectedLineElems,adjacencyArray
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
