@@ -125,14 +125,13 @@ Demos
   And not just the original font, but all kinds of transformations of
   such fonts.
 
+- pyFormex as special purpose mesher: from STL surfaces of a vessel 
+  bifurcation to Hexaeder mesh. Benedict added a user-friendly menu
+  to Gianluca's meshing tools, resulting in a splendid meshing tool.
+  Parts of it will be included in future pyFormex versions.
 
-From STL surfaces of a vessel bifurcation to Hex mesh
-------------
-- pyFormex potentials as mesher have been shown by  Benedict,
-  who has taken some meshing tools from Gianluca and incorporated into
-  a user-friendly menu. The result is terrific and will be partially distributed.
-  - interactive drawing tools (currently under development), applied
-    to hexahedral meshing of bifurcations.
+- interactive drawing tools (currently under development), applied
+  to hexahedral meshing of bifurcations. Expect more from this in future.
   
 
 Varia

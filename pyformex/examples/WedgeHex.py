@@ -171,7 +171,9 @@ def detectHex2Wedge(W):
     we, he=array(we), array(he)
     print('detecting degenerated HEX: there are %d hex and %d wedge'%(he.shape[0], we.shape[0]))
     return array(we), array(he)
-def revolve_QuadMesh(n0, e0, nr, ang=None):
+
+
+def revolve_QuadMesh(M, nr, ang=None):
     """it takes a Quad mesh on xy and revolve it along the z axis nr times by ang. If ang==None, then it is calculated in order to fill 360 degrees with the nr revolutions."""
     if ang==None: ang=360./nr
     for i in range(int(nr)):
@@ -183,20 +185,59 @@ def revolve_QuadMesh(n0, e0, nr, ang=None):
     nodes,elems = mergeModels(femodels)
     elems=concatenate([elems], 0).reshape(-1, 8)
     return nodes, elems
+
+
+def revolve(self,n,axis=0,angle=360.,around=None,autofix=True):
+    """Revolve a Mesh around an axis.
+
+    Returns a new Mesh obtained by revolving the given Mesh
+    over an angle around an axis in n steps, while extruding
+    the mesh from one step to the next.
+
+    This function is usually used to extrude points into lines,
+    lines into surfaces and surfaces into volumes.
+    By default it will try to fix the connectivity ordering where
+    appropriate. If autofix is switched off, the connectivities
+    are merely stacked, and the user may have to fix it himself.
+
+    Currently, this function correctly transforms: point1 to line2,
+    line2 to quad4, tri3 to wedge6, quad4 to hex8.
+    """
+    nplex = self.nplex()
+    angles = arange(n+1) * angle / n
+    coordL = [ self.coords.rotate(angle=a,axis=axis,around=around) for a in angles ]
+    ML = [ Mesh(x,self.elems) for x in coordL ]
+
+    n1 = n2 = eltype = None
+    
+    if autofix and nplex == 2:
+        # fix node ordering for line2 to quad4 revolutions
+        n1 = [0,1]
+        n2 = [1,0]
+
+    if autofix:
+        eltype = defaultEltype(2*self.nplex())
+    
+    CL = [ connectMesh(m1,m2,1,n1,n2,eltype) for (m1,m2) in zip(ML[:-1],ML[1:]) ]
+    return Mesh.concatenate(CL)
+
+
+Mesh.revolve = revolve
+
 clear()
 #create a 2D xy mesh
-n=4
-G=simple.rectangle(1,1,1.,1.).replic(n,1.,dir=1).replic(n,1.,dir=0)
-draw(G, color='red')
+n = 4
+G = simple.rectangle(1,1,1.,1.).replic(n,1.,dir=1).replic(n,1.,dir=0)
+M = G.toMesh()
+draw(M, color='red')
 view('front')
-sleep(1)
+
 #create a 3D axial-symmetric mesh by REVOLVING
-n0, e0=G.feModel()
 parts=[]
 
-
-
-n, e=revolve_QuadMesh(n0, e0, nr=4, ang=20)
+R = M.revolve(n=4, angle=20)
+draw(R,color='yellow')
+exit()
 C=Formex(n[e], eltype='Hex8')
 
 #check if there are Wedge elements in the global Hex mesh
@@ -204,6 +245,7 @@ w, h= detectHex2Wedge(C)
 W=Formex(w, eltype='Wedge6')
 H=Formex(h, eltype='Hex8')
 
+sleep(1)
 view('iso')
 WE=draw(W, color='blue')
 sleep(2)

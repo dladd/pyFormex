@@ -51,7 +51,7 @@ def bbox(objects):
     bboxes = [f.bbox() for f in objects if hasattr(f,'bbox') and not isnan(f.bbox()).any()]
     bboxes = [bb for bb in bboxes if bb is not None]
     if len(bboxes) == 0:
-        o = origin
+        o = origin()
         bboxes = [ [o,o] ]
     return Coords(concatenate(bboxes)).bbox()
 

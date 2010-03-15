@@ -338,7 +338,6 @@ class ScriptMenu(QtGui.QMenu):
     def runScript(self,filename):
         """Run the specified script."""
         self.current = filename
-        #print("CURRENT=%s" % self.current)
         selected = self.fileName(filename)
         GD.debug("Playing script %s" % selected)
         GD.GUI.setcurfile(selected)
@@ -351,11 +350,11 @@ class ScriptMenu(QtGui.QMenu):
     def runNext(self):
         """Run the next script."""
         try:
-            #print("CURRENT FOUND=%s" % self.current)
-            #print(self.files)
             i = self.files.index(self.current) + 1
         except ValueError:
             i = 0
+            print("You should first run a script from the menu, to define the next")
+            return
         GD.debug("This is script %s out of %s" % (i,len(self.files)))
         if i < len(self.files):
             self.runScript(self.files[i])
@@ -364,12 +363,11 @@ class ScriptMenu(QtGui.QMenu):
     def runAllNext(self):
         """Run the current and all following scripts."""
         try:
-            #print("CURRENT FOUND=%s" % self.current)
-            #print(self.files)
             i = self.files.index(self.current)
         except ValueError:
             i = 0
-            raise
+            print("You should first run a script from the menu, to define the following")
+            return
         GD.debug("Running scripts %s-%s" % (i,len(self.files)))
         self.runAllFiles(self.files[i:])
         GD.debug("Exiting runAllNext")

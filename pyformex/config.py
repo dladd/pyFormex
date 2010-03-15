@@ -292,6 +292,17 @@ class Config(Dict):
                 return self._default_(key)
 
 
+    def __delitem__(self,key):
+        """Allows items to be delete with del self[section/key].
+
+        """
+        i = key.rfind('/')
+        if i == -1:
+            Dict.__delitem__(self,key)
+        else:
+            del self[key[:i]][key[i+1:]]
+
+
     def __str__(self):
         """Format the Config in a way that can be read back."""
         s = "# Config written by pyFormex    -*- PYTHON -*-\n\n"
@@ -304,6 +315,20 @@ class Config(Dict):
                 s += formatDict(v)
         s += "\n# End of config\n"
         return s
+
+
+    def keys(self,descend=True):
+        """Return the keys in the config.
+
+        By default this descends one level of Dicts.
+        """
+        keys = Dict.keys(self)
+        if descend:
+            for k,v in self.iteritems():
+                if isinstance(v,Dict):
+                    keys += ['%s/%s' % (k,ki) for ki in v.keys()]
+                
+        return keys
 
 
 if __name__ == '__main__':
@@ -352,10 +377,22 @@ rng = range(_n)
     print("BUT!!!!")
     show("D['cc']")
 
-    # THis should give an error
+    # This should give an error
     show("D['ee']")
     show("D.get('ee','NO Error')")
     show("D.get('cc/ee','NO Error')")
+
+    D['cc/bb'] = 'ok'
+    show("D.keys()")
+    del D['aa']
+    del D['cc/aa']
+    show("D.keys()")
+    del D['cc']
+    show("D.keys()")
+
+
+# End
+   
     
     
     

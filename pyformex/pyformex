@@ -54,8 +54,8 @@ try:
     pyformex.scriptdir = _scriptdir
     # we could remove the sys.path[0] again?
 except:
-    print "Could not import pyformex."
-    print "This probably means that pyFormex was not properly installed."
+    print("Could not import pyformex.")
+    print("This probably means that pyFormex was not properly installed.")
 
 # Put the pyformex path in front.
 sys.path = [ pyformex.__path__[0] ] + sys.path

@@ -31,6 +31,7 @@ Therefore, it can also be used as a standalone extension module in Python.
 
 from coords import *
 from utils import deprecation,functionWasRenamed,functionBecameMethod
+from geometry import Geometry
 
 
 def vectorLength(vec):
@@ -826,23 +827,23 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
 #########################
 #
 
-def coords_transformation(f):
-    """Define a Formex transformation as the equivalent Coords transformation.
+## def coords_transformation(f):
+##     """Define a Formex transformation as the equivalent Coords transformation.
 
-    This decorator replaces a Formex method with the equally named
-    Coords method applied on the Formex coordinates attribute (.coords).
-    The return value is a Formex with changed coordinates but unchanged
-    properties.
-    """
-    repl = getattr(Coords,f.__name__)
-    def newf(self,*args,**kargs):
-        return Formex(repl(self.coords,*args,**kargs),self.prop,self.eltype)
-    newf.__name__ = f.__name__
-    newf.__doc__ = repl.__doc__
-    return newf
+##     This decorator replaces a Formex method with the equally named
+##     Coords method applied on the Formex coordinates attribute (.coords).
+##     The return value is a Formex with changed coordinates but unchanged
+##     properties.
+##     """
+##     repl = getattr(Coords,f.__name__)
+##     def newf(self,*args,**kargs):
+##         return Formex(repl(self.coords,*args,**kargs),self.prop,self.eltype)
+##     newf.__name__ = f.__name__
+##     newf.__doc__ = repl.__doc__
+##     return newf
 
 
-class Formex(object):
+class Formex(Geometry):
     """A Formex is a numpy array of order 3 (axes 0,1,2) and type Float.
     A scalar element represents a coordinate (F:uniple).
 
@@ -928,6 +929,7 @@ class Formex(object):
                 if data.shape[-1] == 2:
                     z = zeros((data.shape[0],data.shape[1],1),dtype=Float)
                     data = concatenate([data,z],axis=-1)
+                    
         # data should be OK now
         self.coords = Coords(data)    # make sure coordinates are a Coords object 
         self.setProp(prop)
@@ -936,6 +938,18 @@ class Formex(object):
             self.eltype = eltype.lower()
         except:
             self.eltype = None
+
+
+    def setCoords(self,coords):
+        """Replace the current coords with new ones.
+
+        """
+        coords = Coords(coords)
+        if coords.shape == self.coords.shape:
+            return Formex(coords,self.prop,self.eltype)
+        else:
+            raise ValueError,"Invalid reinitialization of Formex coords"
+            
 
     def __getitem__(self,i):
         """Return element i of the Formex.
@@ -1047,31 +1061,43 @@ class Formex(object):
     # The following functions get the corresponding information from
     # the underlying Coords object
 
-    def x(self):
-        return self.coords.x()
-    def y(self):
-        return self.coords.y()
-    def z(self):
-        return self.coords.z()
+    ## def x(self):
+    ##     return self.coords.x()
+    ## def y(self):
+    ##     return self.coords.y()
+    ## def z(self):
+    ##     return self.coords.z()
 
-    def bbox(self):
-        return self.coords.bbox()
+    ## def bbox(self):
+    ##     return self.coords.bbox()
 
-    def center(self):
-        return self.coords.center()
+    ## def center(self):
+    ##     return self.coords.center()
 
-    def centroid(self):
-        return self.coords.centroid()
+    ## def centroid(self):
+    ##     return self.coords.centroid()
 
-    def sizes(self):
-        return self.coords.sizes()
+    ## def sizes(self):
+    ##     return self.coords.sizes()
 
-    def dsize(self):
-        return self.coords.dsize()
+    ## def dsize(self):
+    ##     return self.coords.dsize()
 
-    def bsphere(self):
-        return self.coords.bsphere()
+    ## def bsphere(self):
+    ##     return self.coords.bsphere()
 
+
+    ## #  Distance
+
+    ## def distanceFromPlane(self,*args,**kargs):
+    ##     return self.coords.distanceFromPlane(*args,**kargs)
+
+    ## def distanceFromLine(self,*args,**kargs):
+    ##     return self.coords.distanceFromLine(*args,**kargs)
+
+
+    ## def distanceFromPoint(self,*args,**kargs):
+    ##     return self.coords.distanceFromPoint(*args,**kargs)
 
     def centroids(self):
         """Return the centroids of all elements of the Formex.
@@ -1081,18 +1107,6 @@ class Formex(object):
         The return value is a Coords object with nelems points.
         """
         return self.coords.mean(axis=1)
-
-    #  Distance
-
-    def distanceFromPlane(self,*args,**kargs):
-        return self.coords.distanceFromPlane(*args,**kargs)
-
-    def distanceFromLine(self,*args,**kargs):
-        return self.coords.distanceFromLine(*args,**kargs)
-
-
-    def distanceFromPoint(self,*args,**kargs):
-        return self.coords.distanceFromPoint(*args,**kargs)
  
 
     # Data conversion
@@ -1305,25 +1319,25 @@ maxprop  = %s
 # Create copies, concatenations, subtractions, connections, ...
 #
  
-    def sort(self):
-        """Sorts the elements of a Formex.
+    ## def sort(self):
+    ##     """Sorts the elements of a Formex.
 
-        Sorting is done according to the bbox of the elements.
-        !! NOT FULLY IMPLEMENTED: CURRENTLY ONLY SORTS ACCORDING TO
-        !! THE 0-direction OF NODE 0
-        """
-        sel = argsort(self.x()[:,0])
-        f = self.coords[sel]
-        if self.prop:
-            p = self.prop[sel]
-        return Formex(f,p,self.eltype)
+    ##     Sorting is done according to the bbox of the elements.
+    ##     !! NOT FULLY IMPLEMENTED: CURRENTLY ONLY SORTS ACCORDING TO
+    ##     !! THE 0-direction OF NODE 0
+    ##     """
+    ##     sel = argsort(self.x()[:,0])
+    ##     f = self.coords[sel]
+    ##     if self.prop:
+    ##         p = self.prop[sel]
+    ##     return Formex(f,p,self.eltype)
        
-    def copy(self):
-        """Return a deep copy of itself."""
-        return Formex(self.coords,self.prop,self.eltype)
-        ## IS THIS CORRECT? Shouldn't this be self.coords.copy() ???
-        ## In all examples it works, I think because the operations on
-        ## the array data cause a copy to be made. Need to explore this.
+    ## def copy(self):
+    ##     """Return a deep copy of itself."""
+    ##     return Formex(self.coords,self.prop,self.eltype)
+    ##     ## IS THIS CORRECT? Shouldn't this be self.coords.copy() ???
+    ##     ## In all examples it works, I think because the operations on
+    ##     ## the array data cause a copy to be made. Need to explore this.
 
 
     def __add__(self,other):
@@ -1534,20 +1548,23 @@ maxprop  = %s
         return Formex(self.coords[flag>0],p,self.eltype)
 
       
-    def nonzero(self):
-        """Return a Formex which holds only the nonzero elements.
+    ## def nonzero(self):
+    ##     """Return a Formex which holds only the nonzero elements.
 
-        A zero element is an element where all nodes are equal."""
-        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.coords,self.prop,self.eltype)
+    ##     A zero element is an element where all nodes are equal."""
+    ##     # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
+    ##     return Formex(self.coords,self.prop,self.eltype)
+
 
 
     def reverse(self):
         """Return a Formex where all elements have been reversed.
 
         Reversing an element means reversing the order of its points.
+        This is equivalent to
+        self.selectNodes(range(self.nplex()-1,-1,-1))
         """
-        return Formex(self.coords[:,range(self.coords.shape[1]-1,-1,-1),:],self.prop,self.eltype)
+        return self.selectNodes(range(self.coords.shape[1]-1,-1,-1))
 
 
 #############################
@@ -1645,24 +1662,24 @@ maxprop  = %s
 #   coords attribute.
 
  
-    @coords_transformation
-    def scale(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def translate(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def rotate(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def shear(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def reflect(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def affine(self,*args,**kargs):
-        pass
+    ## @coords_transformation
+    ## def scale(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def translate(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def rotate(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def shear(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def reflect(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def affine(self,*args,**kargs):
+    ##     pass
 
     def mirror(self,dir=2,pos=0,keep_orig=True):
         """Reflect a Formex in one of the coordinate directions
@@ -1690,66 +1707,66 @@ maxprop  = %s
         return self.scale(size/s)
 
 
-    @coords_transformation
-    def cylindrical(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def hyperCylindrical(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def toCylindrical(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def spherical(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def superSpherical(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def toSpherical(self,*args,**kargs):
-        pass
-    @coords_transformation
+    ## @coords_transformation
+    ## def cylindrical(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def hyperCylindrical(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def toCylindrical(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def spherical(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def superSpherical(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def toSpherical(self,*args,**kargs):
+    ##     pass
 
-    def bump(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def bump1(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def bump2(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def flare(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def map(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def map1(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def mapd(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def newmap(self,*args,**kargs):
-        pass
+    ## @coords_transformation
+    ## def bump(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def bump1(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def bump2(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def flare(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def map(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def map1(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def mapd(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def newmap(self,*args,**kargs):
+    ##     pass
 
-    @coords_transformation
-    def replace(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def swapAxes(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def rollAxes(self,*args,**kargs):
-        pass
+    ## @coords_transformation
+    ## def replace(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def swapAxes(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def rollAxes(self,*args,**kargs):
+    ##     pass
 
-    @coords_transformation
-    def projectOnSphere(self,*args,**kargs):
-        pass
-    @coords_transformation
-    def projectOnCylinder(self,*args,**kargs):
-        pass
+    ## @coords_transformation
+    ## def projectOnSphere(self,*args,**kargs):
+    ##     pass
+    ## @coords_transformation
+    ## def projectOnCylinder(self,*args,**kargs):
+    ##     pass
 
     def circulize(self,angle):
         """Transform a linear sector into a circular one.
@@ -2082,8 +2099,8 @@ maxprop  = %s
     # Convenience short notations and aliases
     rep = replic
     ros = rosette
-    rot = rotate
-    trl = translate
+    ## rot = rotate
+    ## trl = translate
     
 
 

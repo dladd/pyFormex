@@ -91,7 +91,7 @@ normalsbutton = True  # add normals button to toolbar
 lightbutton = True    # add light button to toolbar
 shrinkbutton = False  # add shrink button to toolbar
 timeoutbutton = False # add timeout button to toolbar
-timeoutvalue = -1     # never timeout
+timeoutvalue = 2      # timeout after this number of seconds
 coordsbox = False     # add coords display widget to toolbar
 
 defviews = [('front','view-xr-yu'),('back','view-xl-yu'),\

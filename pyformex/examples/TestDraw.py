@@ -31,7 +31,7 @@ techniques = ['widgets','dialog','random','colors']
 """
 
 from numpy.random import rand
-from widgets import compatInputItem as C
+from gui.widgets import simpleInputItem as I
 
     
 setDrawOptions({'clear':True, 'bbox':'auto'})
@@ -92,11 +92,12 @@ nplex = 3
 eltype = 'auto'
 color = 'element'
 pos = None
-items = [C('Geometry Model',geom,'radio',geom_mode),
-         C('Plexitude',nplex,'select',plexitude),
-         C('Element Type',eltype,'select',element_type),
-         C('Color Mode',color,'select',color_mode),
-         ]
+items = [
+    I('geom',geom,'radio',choices=geom_mode,text='Geometry Model'),
+    I('nplex',nplex,'select',choices=plexitude,text='Plexitude'),
+    I('eltype',eltype,'select',choices=element_type,text='Element Type'),
+    I('color',color,'select',choices=color_mode,text='Color Mode'),
+    ]
 
 dialog = None
 
@@ -105,12 +106,8 @@ def show():
     """Accept the data and draw according to them"""
     dialog.acceptData()
     res = dialog.results
-    globals().update(dict(
-        geom = res[items[0][0]],
-        nplex = int(res[items[1][0]]),
-        eltype = res[items[2][0]],
-        color = res[items[3][0]],
-        ))
+    res['nplex'] = int(res['nplex'])
+    globals().update(res)
 
     G = select_geom(geom,nplex,eltype)
     print "GEOM: nelems=%s, nplex=%s" % (G.nelems(),G.nplex())

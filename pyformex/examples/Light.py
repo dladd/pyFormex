@@ -31,7 +31,6 @@ techniques = ['dialog', 'colors', 'persistence']
 
 """
 
-from gui.prefMenu import setRender
 
 smooth()
 
@@ -44,7 +43,6 @@ color3 = resize(color2,F.shape())
 draw(F,color=color3)
 
 
-setRender()
 
 for a in [ 'ambient', 'specular', 'emission', 'shininess' ]:
     v = getattr(GD.canvas,a)

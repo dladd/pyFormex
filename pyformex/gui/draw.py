@@ -57,7 +57,7 @@ def closeGui():
     GD.GUI.close()
 
 
-def showMessage(text,actions=['OK'],level='info',modal=True):
+def showMessage(text,actions=['OK'],level='info',modal=True,**kargs):
     """Show a short message widget and wait for user acknowledgement.
 
     There are three levels of messages: 'info', 'warning' and 'error'.
@@ -66,7 +66,7 @@ def showMessage(text,actions=['OK'],level='info',modal=True):
     The dialog is closed if the user clicks a button.
     The return value is the button text. 
     """
-    w = widgets.MessageBox(text,level=level,actions=actions)
+    w = widgets.MessageBox(text,level=level,actions=actions,**kargs)
     if modal:
         return w.getResult()
     else:
@@ -149,7 +149,7 @@ def askItems(items,caption=None,timeout=None,legacy=True,**kargs):
 The default operation of the askItems function will change in version 0.9!
 It will then use the new InputDialog, meaning that the input items have
 to be dicts.
-Though te old InputDialog will still be available for some time when using the
+Though the old InputDialog will still be available for some time when using the
 'legacy = True' argument, we advice you to switch to the newer InputItem
 format as soon as possible.
 """)

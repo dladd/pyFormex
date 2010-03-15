@@ -31,7 +31,6 @@ Coords class to the derived classes.
 """
 
 from coords import Coords
-from formex import Formex
 
 
 class Geometry(object):
@@ -42,11 +41,15 @@ class Geometry(object):
     declaration. This class is not intended to be used directly, only
     through derived classes.
 
-    The derived classes should have an attribute `coords` which is
-    a Coords object containing the coordinates of all the points that should
-    get transformed under a Coords transformation.
-    All the Coords transformation methods are inherited by the Geometry
-    class and will be executed on the `coords` attribute.
+    There is no initialization to be done when constructing a new instance of
+    this class. The class just defines a set of methods which operate on
+    the attribute `coords` which is be a Coords object.
+    Most of the transformation methods of the Coords class are thus exported
+    through the Geometry class to its derived classes, and when called, will
+    get executed on the `coords` attribute. 
+    The derived class should make sure this attribute exists and contains
+    the coordinates of all the points that should get transformed under a
+    Coords transformation. 
 
     Derived classes can (and in most cases should) declare a method
     `setCoords(coords)` returning an object that is identical to the
@@ -64,27 +67,10 @@ class Geometry(object):
     will result in both `A` and `B` pointing to the same scaled object,
     while with the second method, `A` would still be the untransformed
     object. Since the latter is in line with the design philosophy of
-    pyFormex, is is
-    
-    The default `setCoords` method is `setCoords_copy`.
+    pyFormex, it is set as the default `setCoords` method.
     Most derived classes that are part of pyFormex however override this
-    default and implement a more efficient cop
-    Neither of both are good enough for pyFormex classes though
-      
-    the coords attribute in the object and returns the existing object::
-        
-        self.coords = coords
-        return self
-
-    While the user can stick with this default in his scripts,
-    it is not in line with the default scripting language design of
-    pyFormex, which is to not change an existing object inplace, but rather
-    have the transformation return a changed object.
-    * Therefore, derived classes that are part of pyFormex should always
-    define their own implementation of setCoords(coords) *.
+    default and implement a more efficient copy method.
     
-    
-    A Geometry contains a single attribute, coords, which is a Coords object.
     """
 
     ########### Return information about the coords #################
@@ -95,34 +81,25 @@ class Geometry(object):
         return self.coords.y()
     def z(self):
         return self.coords.z()
-
     def bbox(self):
         return self.coords.bbox()
-
     def center(self):
         return self.coords.center()
-
     def centroid(self):
         return self.coords.centroid()
-
     def sizes(self):
         return self.coords.sizes()
-
     def dsize(self):
         return self.coords.dsize()
-
     def bsphere(self):
         return self.coords.bsphere()
 
     def distanceFromPlane(self,*args,**kargs):
         return self.coords.distanceFromPlane(*args,**kargs)
-
     def distanceFromLine(self,*args,**kargs):
         return self.coords.distanceFromLine(*args,**kargs)
-
     def distanceFromPoint(self,*args,**kargs):
         return self.coords.distanceFromPoint(*args,**kargs)
-
 
     def __str__(self):
         return self.coords.__str__()
@@ -280,3 +257,5 @@ if __name__ == "draw":
 
     print Geometry.scale.__doc__
     print Coords.scale.__doc__
+
+# End

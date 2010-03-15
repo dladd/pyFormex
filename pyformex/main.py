@@ -124,27 +124,28 @@ def savePreferences():
         return
     
     del pyformex.prefcfg['__ref__']
-
-    # BEWARE !
-    # DELETING WITH FULLNAME ('gui/timeoutvalue') DOES NOT WORK
-    # SHOULD BE FIXED IN config
-    # BECAUSE WE USE del cfg in other places
     
-    # Dangerous to set permanently!
-    del pyformex.prefcfg['gui']['timeoutvalue']
+    # Currently dangerous to set permanently!
+    # Not anymore, default value changed to 2 seconds!
+    #del pyformex.prefcfg['gui']['timeoutvalue']
 
-    # Current erroroneously processed, therfore not saved
+    # Currently erroroneously processed, therefore not saved
     del pyformex.prefcfg['render']['light0']
     del pyformex.prefcfg['render']['light1']
     del pyformex.prefcfg['render']['light2']
     del pyformex.prefcfg['render']['light3']
 
     pyformex.options.debug = 1
-    print pyformex.options
-    print pyformex.debug
-    print pyformex.prefcfg
+    #print pyformex.options
+    #print pyformex.debug
+    #print pyformex.prefcfg
     pyformex.debug("="*60)
     pyformex.debug("!!!Saving config:\n%s" % pyformex.prefcfg)
+
+    ## print "YOUR SAVE CONFIG NOW HAS KEYS: "
+    ## k = pyformex.prefcfg.keys()
+    ## k.sort()
+    ## print k
 
     try:
         fil = file(pyformex.preffile,'w')
@@ -167,7 +168,7 @@ def apply_config_changes(cfg):
 
     for i in range(8):
         t = "render/light%s"%i
-        print t
+        #print t
         try:
             cfg[t] = dict(cfg[t])
         except:
@@ -177,8 +178,8 @@ def apply_config_changes(cfg):
     for old,new in [
         ('history','gui/history'),
         ]:
-        if old in cfg:
-            if new not in cfg:
+        if old in cfg.keys():
+            if new not in cfg.keys():
                 cfg[new] = cfg[old]
             del cfg[old]
 
@@ -187,9 +188,14 @@ def apply_config_changes(cfg):
         'input/timeout',
         'render/ambient','render/diffuse','render/specular','render/emission',
         ]:
-        if key in cfg:
+        if key in cfg.keys():
             print "DELETING CONFIG VARIABLE %s" % key
             del cfg[key]
+
+    ## print "YOUR SAVED CONFIG NOW HAS KEYS: "
+    ## k = cfg.keys()
+    ## k.sort()
+    ## print k
 
 
 ###########################  app  ################################

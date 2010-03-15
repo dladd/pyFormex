@@ -280,7 +280,7 @@ def _congratulations(name,version,typ='module',fatal=False,quiet=True):
 
 
 def prefix(prefix,files):
-    """Prepend a prefix to a list of filename."""
+    """Prepend a prefix to a list of filenames."""
     return [ os.path.join(prefix,f) for f in files ]
 
 

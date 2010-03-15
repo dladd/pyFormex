@@ -113,7 +113,7 @@ def settings():
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
 
     plugin_items = [ I('_plugins/'+name,name in GD.cfg['gui/plugins'],text=label) for (label,name) in plugins.plugin_menus ]
-    print plugin_items
+    #print plugin_items
 
     appearence = [
         I('gui/style',GD.GUI.currentStyle(),choices=GD.GUI.getStyles()),
@@ -299,7 +299,7 @@ def setLighting():
     #items = [ ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
 
     items = [ {'name':'lightmodel','value':GD.canvas.lightmodel,'choices':GD.canvas.light_model.keys()}, ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
-    print items
+    #print items
 
     dia = None
     

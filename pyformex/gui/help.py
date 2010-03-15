@@ -74,19 +74,6 @@ def cmdline():
 ##     qtversion = '.'.join(qtversion.split('.')[:2])
 ##     link = "http://doc.trolltech.com/%s/qapplication.html#QApplication" % qtversion
 ##     help(link)
-    
-
-def readme():
-    """Display the pyFormex description."""
-    draw.showText(file(GD.cfg['help/readme']).read())
-
-def releasenotes():
-    """Display the pyFormex release notes."""
-    draw.showText(file(GD.cfg['help/notes']).read())
-
-def license():
-    """Display the pyFormex description."""
-    draw.showText(file(GD.cfg['help/license']).read())
 
 def opengl():
     """Display the OpenGL format description."""
@@ -160,29 +147,19 @@ def cookie():
     draw.showInfo(_cookies[0],["OK"])
     roll(_cookies)
 
-
-
 def links(link):
     help('http://'+link)
 
 
-print GD.cfg['help/links']
-print GD.cfg['help/docs']
-try:
-    LinksMenuData = [ (k,links,{'data':v}) for k,v in GD.cfg['help/links'] ]
-except:
-    LinksMenuData = []
+DocsMenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] 
+Docs2MenuData = [(k,draw.showFile,{'data':v}) for k,v in GD.cfg['help/docs2']]
+LinksMenuData = [(k,links,{'data':v}) for k,v in GD.cfg['help/links']]
 
-print GD.cfg['help/docs2']
 try:
-    MenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] + [
+    MenuData = DocsMenuData + [
         ('---',None),
-        (_('&Command line options'),cmdline),] + [
-        (k,draw.showFile,{'data':v}) for k,v in GD.cfg['help/docs2']] + [
-        ## (_('&Qt application arguments'),qappargs),
-        (_('&Readme'),draw.showFile,{'data':GD.cfg['help/readme']}), 
-        (_('&ReleaseNotes'),releasenotes), 
-        (_('&License'),license),
+        (_('&Command line options'),cmdline),
+        ] + Docs2MenuData + [
         (_('&Detected Software'),detected), 
         (_('&OpenGL Format'),opengl), 
         (_('&Fortune Cookie'),cookie),

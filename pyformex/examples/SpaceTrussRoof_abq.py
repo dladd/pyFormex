@@ -82,7 +82,7 @@ diabar = where(F.prop==1)[0]
 #Creating nodesets
 ###################
 
-nnod=M.nodes.shape[0]
+nnod=M.ncoords()
 nlist=arange(nnod)
 count = zeros(nnod)
 for n in M.elems.flat:
@@ -138,7 +138,7 @@ out = Output(type='field',variable='preselect')
 res = [ Result(kind='element',keys=['S']),
 	Result(kind='node',keys=['U'])
 	]
-model = Model(M.nodes,M.elems)
+model = Model(M.coords,M.elems)
 
 if not checkWorkdir():
     exit()

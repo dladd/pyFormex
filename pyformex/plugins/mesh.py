@@ -274,16 +274,13 @@ class Mesh(Geometry):
     def setCoords(self,coords):
         """Replace the current coords with new ones.
 
-        The default implementation imposes the restriction that the
-        new coordinate array should have the same shape. It also overwrites
-        the coords of the current object. Derived classes can change this
-        behavior, but should nake sure to keep the data consistent.
-        The new coords structure should have the same
+        Returns a Mesh exactly like the current except for the position
+        of the coordinates.
         """
         if isinstance(coords,Coords) and coords.shape == self.coords.shape:
             return Mesh(coords,self.elems,self.prop,self.eltype)
         else:
-            raise ValueError,"Invalid reinitialization of Geometry coords"
+            raise ValueError,"Invalid reinitialization of Mesh coords"
 
 
     def setProp(self,prop=None):
@@ -743,6 +740,41 @@ Size: %s
             M.eltype = defaultEltype(M.nplex())
 
         return M
+
+
+    def revolve(self,n,axis=0,angle=360.,around=None,autofix=True):
+        """Revolve a Mesh around an axis.
+
+        Returns a new Mesh obtained by revolving the given Mesh
+        over an angle around an axis in n steps, while extruding
+        the mesh from one step to the next.
+
+        This function is usually used to extrude points into lines,
+        lines into surfaces and surfaces into volumes.
+        By default it will try to fix the connectivity ordering where
+        appropriate. If autofix is switched off, the connectivities
+        are merely stacked, and the user may have to fix it himself.
+
+        Currently, this function correctly transforms: point1 to line2,
+        line2 to quad4, tri3 to wedge6, quad4 to hex8.
+        """
+        nplex = self.nplex()
+        angles = arange(n+1) * angle / n
+        coordL = [ self.coords.rotate(angle=a,axis=axis,around=around) for a in angles ]
+        ML = [ Mesh(x,self.elems) for x in coordL ]
+
+        n1 = n2 = eltype = None
+
+        if autofix and nplex == 2:
+            # fix node ordering for line2 to quad4 revolutions
+            n1 = [0,1]
+            n2 = [1,0]
+
+        if autofix:
+            eltype = defaultEltype(2*self.nplex())
+
+        CL = [ connectMesh(m1,m2,1,n1,n2,eltype) for (m1,m2) in zip(ML[:-1],ML[1:]) ]
+        return Mesh.concatenate(CL)
 
 
     def sweep(self,path,autofix=True,**kargs):
