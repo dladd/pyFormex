@@ -154,7 +154,7 @@ def defaultEltype(nplex):
 ## Mesh conversions ##
 ######################
 
-_conversions_ = {
+_conversions = {
     'tri3': {
         'tri3-4' : [ ('v', 'tri6'), ],
         'tri6'   : [ ('m', [ (0,1), (1,2), (2,0) ]), ],
@@ -195,6 +195,26 @@ _conversions_ = {
         'tet4'  : [ ('s', [ (0,1,2,5),(2,3,0,7),(5,7,6,2),(7,5,4,0),(0,5,2,7) ]), ],
         },
     }
+
+
+_reductions_ = {
+    'hex8': {
+        'wedge6' : [
+            ([[0,1],[4,5]], [0,2,3,4,6,7]),
+            ([[1,2],[5,6]], [0,1,3,4,5,7]),
+            ([[2,3],[6,7]], [0,1,2,4,5,6]),
+            ([[3,0],[7,4]], [0,1,2,4,5,6]),
+            ([[0,1],[3,2]], [0,4,5,3,7,6]),
+            ([[1,5],[2,6]], [0,4,5,3,7,6]),
+            ([[5,4],[6,7]], [0,4,1,3,7,2]),
+            ([[4,0],[7,3]], [0,5,1,3,6,2]),
+            ([[0,3],[1,2]], [0,7,4,1,6,5]),
+            ([[3,7],[2,6]], [0,3,4,1,2,5]),
+            ([[7,4],[6,5]], [0,3,4,1,2,5]),
+            ([[4,0],[5,1]], [0,3,7,1,2,6]),
+            ],
+        },
+    }
    
 
 ##############################################################
@@ -232,7 +252,6 @@ class Mesh(Geometry):
     A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
     or by a single geometric object that provides a toMesh() method.
     """
-    
     def __init__(self,coords=None,elems=None,prop=None,eltype=None):
         """Initialize a new Mesh."""
         self.coords = self.elems = self.prop = self.eltype = None
@@ -269,7 +288,6 @@ class Mesh(Geometry):
         else:
             self.eltype = eltype
 
-        #print "NORMAL MESH: %s coords, %s elems" % (self.ncoords(),self.nelems())
 
     def setCoords(self,coords):
         """Replace the current coords with new ones.
@@ -619,6 +637,40 @@ Size: %s
         if prop is not None:
             prop = column_stack([prop]*len(nodsel)).reshape(-1)
         return Mesh(self.coords,elems,prop=prop,eltype=eltype)   
+
+    
+    def withProp(self,val):
+        """Return a Mesh which holds only the elements with property val.
+
+        val is either a single integer, or a list/array of integers.
+        The return value is a Mesh holding all the elements that
+        have the property val, resp. one of the values in val.
+        The returned Mesh inherits the matching properties.
+        
+        If the Mesh has no properties, a copy with all elements is returned.
+        """
+        if self.prop is None:
+            return Mesh(self.coords,self.elems,eltype=self.eltype)
+        elif type(val) == int:
+            return Mesh(self.coords,self.elems[self.prop==val],val,self.eltype)
+        else:
+            t = zeros(self.prop.shape,dtype=bool)
+            for v in asarray(val).flat:
+                t += (self.prop == v)
+            return Mesh(self.coords,self.elems[t],self.prop[t],self.eltype)
+            
+
+    def splitProp(self):
+        """Partition aMesh according to its prop values.
+
+        Returns a dict with the prop values as keys and the corresponding
+        partitions as values. Each value is a Mesh instance.
+        It the Mesh has no props, an empty dict is returned.
+        """
+        if self.prop is None:
+            return {}
+        else:
+            return dict([(p,self.withProp(p)) for p in self.propSet()])
     
 
     def convert(self,totype):
@@ -658,40 +710,6 @@ Size: %s
 
         return mesh
 
-    
-    def withProp(self,val):
-        """Return a Mesh which holds only the elements with property val.
-
-        val is either a single integer, or a list/array of integers.
-        The return value is a Mesh holding all the elements that
-        have the property val, resp. one of the values in val.
-        The returned Mesh inherits the matching properties.
-        
-        If the Mesh has no properties, a copy with all elements is returned.
-        """
-        if self.prop is None:
-            return Mesh(self.coords,self.elems,eltype=self.eltype)
-        elif type(val) == int:
-            return Mesh(self.coords,self.elems[self.prop==val],val,self.eltype)
-        else:
-            t = zeros(self.prop.shape,dtype=bool)
-            for v in asarray(val).flat:
-                t += (self.prop == v)
-            return Mesh(self.coords,self.elems[t],self.prop[t],self.eltype)
-            
-
-    def splitProp(self):
-        """Partition aMesh according to its prop values.
-
-        Returns a dict with the prop values as keys and the corresponding
-        partitions as values. Each value is a Mesh instance.
-        It the Mesh has no props, an empty dict is returned.
-        """
-        if self.prop is None:
-            return {}
-        else:
-            return dict([(p,self.withProp(p)) for p in self.propSet()])
-
 
     def splitRandom(self,n):
         """Split a mesh in n parts, distributing the elements randomly."""
@@ -712,6 +730,97 @@ Size: %s
             raise RuntimeError,"Invalid choices for random conversions"
         eltype = eltype.pop()
         return Mesh(self.coords,elems,prop,eltype)
+
+
+    def reduceDegenerate(self,eltype=None):
+        """Reduce degenerate elements to lower plexitude elements.
+
+        This will try to reduce the degenerate elements of the mesh to elements
+        of a lower plexitude. If a target element type is given, only the matching
+        recuce scheme is tried. Else, all the target element types for which
+        a reduce scheme from the Mesh eltype is available, will be tried.
+
+        The result is a list of Meshes of which the last one contains the
+        elements that could not be reduced and may be empty.
+        Property numbers propagate to the children. 
+        """
+        strategies = _reductions_.get(self.eltype,{})
+        if eltype is not None:
+            s = strategies.get(eltype,[])
+            if s:
+                strategies = {eltype:s}
+            else:
+                strategies = {}
+        if not strategies:
+            return [self]
+
+        m = self
+        ML = []
+
+        for eltype in strategies:
+            #print "REDUCE TO %s" % eltype
+
+            elems = []
+            prop = []
+            for conditions,selector in strategies[eltype]:
+                e = m.elems
+                cond = array(conditions)
+                #print "TRYING",cond
+                #print e
+                w = (e[:,cond[:,0]] == e[:,cond[:,1]]).all(axis=1)
+                #print "Matching elems: %s" % where(w)[0]
+                sel = where(w)[0]
+                if len(sel) > 0:
+                    elems.append(e[sel][:,selector])
+                    if m.prop is not None:
+                        prop.append(m.prop[sel])
+                    # remove the reduced elems from m
+                    m = m.select(~w)
+
+                    if m.nelems() == 0:
+                        break
+
+            if elems:
+                elems = concatenate(elems)
+                if prop:
+                    prop = concatenate(prop)
+                else:
+                    prop = None
+                #print elems
+                #print prop
+                ML.append(Mesh(m.coords,elems,prop,eltype))
+
+            if m.nelems() == 0:
+                break
+
+        ML.append(m)
+
+        return ML
+
+
+    def splitDegenerate(self,autofix=True):
+        """Split a Mesh in degenerate and non-degenerate elements.
+
+        If autofix is True, the degenerate elements will be tested against
+        known degeneration patterns, and the matching elements will be
+        transformed to non-degenerate elements of a lower plexitude.
+
+        The return value is a list of Meshes. The first holds the
+        non-degenerate elements of the original Mesh. The last holds
+        the remaining degenerate elements.
+        The intermediate Meshes, if any, hold elements
+        of a lower plexitude than the original. These may still contain
+        degenerate elements.
+        """
+        deg = self.elems.testDegenerate()
+        M0 = self.select(~deg)
+        M1 = self.select(deg)
+        if autofix:
+            ML = [M0] + M1.reduceDegenerate()
+        else:
+            ML = [M0,M1]
+            
+        return ML
  
 
     def extrude(self,n,step=1.,dir=0,autofix=True):

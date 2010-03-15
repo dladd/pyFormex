@@ -25,123 +25,34 @@
 
 """WedgeHex
 
-level = 'advanced'
-topics = ['FEA']
-techniques = ['meshing'] 
+level = 'normal'
+topics = ['mesh']
+techniques = ['revolve','degenerate'] 
 """
 
 import simple
-import elements
-from plugins.mesh import *
-from plugins.fe import *
-
-
-_degen_hex8_wedge6 = [
-    ([[0,1],[4,5]], [0,2,3,4,6,7]),
-    ([[1,2],[5,6]], [0,1,3,4,5,7]),
-    ([[2,3],[6,7]], [0,1,2,4,5,6]),
-    ([[3,0],[7,4]], [0,1,2,4,5,6]),
-    ([[0,1],[3,2]], [0,4,5,3,7,6]),
-    ([[1,5],[2,6]], [0,4,5,3,7,6]),
-    ([[5,4],[6,7]], [0,4,1,3,7,2]),
-    ([[4,0],[7,3]], [0,5,1,3,6,2]),
-    ([[0,3],[1,2]], [0,7,4,1,6,5]),
-    ([[3,7],[2,6]], [0,3,4,1,2,5]),
-    ([[7,4],[6,5]], [0,3,4,1,2,5]),
-    ([[4,0],[5,1]], [0,3,7,1,2,6]),
-    ]
-
-
-def degenerate_hex8_wedge6(e):
-    print e
-    for conditions,selector in _degen_hex8_wedge6:
-        cond = array(conditions)
-        print cond
-        print e[cond[:,0]]
-        print e[cond[:,1]]
-        if (e[cond[:,0]] == e[cond[:,1]]).all():
-            print "MATCH"
-            return e[selector]
-    return None
-
-def degenerate_hex8(m):
-    """Test for a degenerate element that yields another non-degenerate."""
-    faces = m.getFaces()
-    deg = faces.testDegenerate().reshape(m.nelems(),6)
-    faces = faces.reshape(m.nelems(),6,4)
-    print faces
-    degsum = deg.sum(axis=1)
-    # the ones we can fix
-    ok = degsum==3
-    #
-    okmesh = []
-    wedge6 = []
-    for i in where(ok)[0]:
-        print "FIXIN %s" % i
-        print "elems",m.elems[i]
-        print "faces",faces[i]
-        print "deg",deg[i]
-        
-        fixed = degenerate_hex8_wedge6(m.elems[i])
-        if fixed is not None:
-            wedge6.append(fixed)
-            print "OK"
-
-
-    if len(wedge6) > 0:
-        w = array(wedge6)
-        print w.shape
-        print w
-        print m.coords.shape
-        okmesh.append(Mesh(m.coords,w,eltype='wedge6'))
-    return okmesh
-        
-
-def splitDegenerate(self,autofix=True):
-    """Split a Mesh in degenerate and non-degenerate elements.
-
-    If autofix is True, the degenerate elements will be tested against
-    known degeneration patterns, and the matching elements will be transformed
-    to non-degenerate elements of a lower plexitude.
-
-    The return value is a list of Meshes. The first holds the non-degenerate
-    elements of the original Mesh. The last holds the remaining degenerate
-    elements. The intermediate Meshes, if any, hold non-degenerate elements
-    of a lower plexitude than the original.
-    """
-    deg = self.elems.testDegenerate()
-    M0 = self.select(~deg)
-    M1 = self.select(deg)
-
-    print M1
-    e = M1.elems[0]
-    print e
-    w6 = degenerate_hex8(M1)
-    
-    ML = [M0] + w6
-    return ML
-
-Mesh.splitDegenerate = splitDegenerate
 
 clear()
 smoothwire()
 
-#create a 2D xy mesh
-n = 4
-G = simple.rectangle(1,1,1.,1.).replic2(n,n)
+# create a 2D xy mesh
+nx,ny = 6,2
+G = simple.rectangle(1,1,1.,1.).replic2(nx,ny)
 M = G.toMesh()
 draw(M, color='red')
-view('front')
+view('iso')
 
-#create a 3D axial-symmetric mesh by REVOLVING
-parts=[]
-
-R = M.revolve(n=8, angle=40)
+# create a 3D axial-symmetric mesh by REVOLVING
+n,a = 8,45.
+R = M.revolve(n,angle=a,axis=1,around=[1.,0.,0.])
+sleep(2)
 draw(R,color='yellow')
 
-
-sleep(5)
+# reduce the degenerate elements to WEDGE6
+sleep(2)
 clear()
 ML = R.splitDegenerate()
 ML = [ Mi.setProp(i) for i,Mi in enumerate(ML) ]
 draw(ML)
+
+# End
