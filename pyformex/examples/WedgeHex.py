@@ -35,199 +35,100 @@ import elements
 from plugins.mesh import *
 from plugins.fe import *
 
-# there are 3 basic functions: 
-#A) generate a mesh by revolving a 2D mesh (currently it support only Quad, but can be easily extend to Tri)
-#B)check a HEX mesh and if there are degenereted HEX transform them into WEDGES
-#C)check a HEX grid: if the HEX has a negative volume re-numbers its node to get a positive volume (negative volume appears 1-by reflecting, 2-by revolving a mesh by a negative angle, 3-by extruding or sweeping a mesh backwards).
+
+_degen_hex8_wedge6 = [
+    ([[0,1],[4,5]], [0,2,3,4,6,7]),
+    ([[1,2],[5,6]], [0,1,3,4,5,7]),
+    ([[2,3],[6,7]], [0,1,2,4,5,6]),
+    ([[3,0],[7,4]], [0,1,2,4,5,6]),
+    ([[0,1],[3,2]], [0,4,5,3,7,6]),
+    ([[1,5],[2,6]], [0,4,5,3,7,6]),
+    ([[5,4],[6,7]], [0,4,1,3,7,2]),
+    ([[4,0],[7,3]], [0,5,1,3,6,2]),
+    ([[0,3],[1,2]], [0,7,4,1,6,5]),
+    ([[3,7],[2,6]], [0,3,4,1,2,5]),
+    ([[7,4],[6,5]], [0,3,4,1,2,5]),
+    ([[4,0],[5,1]], [0,3,7,1,2,6]),
+    ]
 
 
+def degenerate_hex8_wedge6(e):
+    print e
+    for conditions,selector in _degen_hex8_wedge6:
+        cond = array(conditions)
+        print cond
+        print e[cond[:,0]]
+        print e[cond[:,1]]
+        if (e[cond[:,0]] == e[cond[:,1]]).all():
+            print "MATCH"
+            return e[selector]
+    return None
 
-def Hex2Wedge(v):
-    """it takes the vertices of an Hex and if it detects a null area it transform the Hex into a Wedge"""
-    f=array(elements.Hex8().faces)
-    def areaTri(x):#from surface plugin
-       return 0.5*vectorPairAreaNormals([x[1]-x[0]],[x[2]-x[1]])[0]
-    def areaQuad(x):
-        return areaTri(x[[0, 1, 2]])+areaTri(x[[0, 2,3]])
-    
-    degfac=None
-    for i in range(f.shape[0]):
-        if areaQuad(v[f[i]])==0:
-            #print('Hex with degenerated face %d'%i)
-            degfac=i
-    if degfac==None:return v#it is a real Hex8
-
-    de= f[degfac]#degen vert
-    
-    p0=v[de[0]]
-    for i in range(3):
-        if all(v[de][i+1]==p0)==False:pde=[0, i]
-    
-    v0=v[de[pde][0]]
-    v1=v[de[pde][1]]
-    
-    SideQuad=[]
-    for indf in range(6):
-        inside0, inside1=False, False
-        for iv in range(4):
-           if  all(v[f[indf][iv]]==v0)==True:
-               inside0=True
-        for iv in range(4):
-            if  all(v[f[indf][iv]]==v1)==True:
-                inside1=True
-        if (inside0, inside1)==(True, True):SideQuad.append(indf)
-    
-    if degfac%2==0:opposfac=degfac+1
-    else: opposfac=degfac-1
-    faceTri=[]
-    for i in range(6):
-        if i not in SideQuad: 
-            if i!=opposfac: faceTri.append(i)
-    w0, w1=[], []
-    for i in range(4):
-        if f[faceTri[0]][i]!=de[pde][0]:
-            if f[faceTri[0]][i]!=de[pde][1]:w0.append(f[faceTri[0]][i])
-            
-        if f[faceTri[1]][i]!=de[pde][0]:
-            if f[faceTri[1]][i]!=de[pde][1]:w1.append(f[faceTri[1]][i])
-    
-    
-    
-    l0=array([ length(v[w1[i]]-v[w0[0]]) for i in range(3)])
-    l1=array([ length(v[w1[i]]-v[w0[1]]) for i in range(3)])
-    l2=array([ length(v[w1[i]]-v[w0[2]]) for i in range(3)])
-    w1t=array([where(l0==l0.min())[0]])
-    w1t=append(w1t, where(l1==l1.min())[0])
-    w1t=append(w1t, where(l2==l2.min())[0])
-    
-    w1=array(w1)[w1t]
-    w= append(w0 , w1)
-    w=v[w]
-    clear()
-    W=Formex([w], eltype='Wedge6')
-    #drawNumbers(W.points())
-    #draw(W)
-    W=correctWedgeDirection(W[:].reshape(-1, 3))[0]
-
-    return W
-    #W=Formex([W], eltype='Wedge6')
-    #return W#it is not an Hex8, but a Wedge 6
-
-
-
-def triplescalarproduct(u, v, w):
-    n= cross(u, v)
-    return dot(n,w )
-def correctHexDirection(h):
-    """it takes a -1,3 array with the 8 points of an hexahedron as defined in pyformex and, if the convention of pyformex does not match the convention of Abaqus, reorder the vertices for Abaqus. False is returned if the elements has been corrected, False if it zas already correct"""
-    tsp=triplescalarproduct(h[1]-h[0], h[2]-h[1], h[4]-h[0])
-    if tsp>0:
-        return h, False
-    if tsp<0:
-        return h[[3, 2, 1, 0, 7, 6, 5, 4]], True
+def degenerate_hex8(m):
+    """Test for a degenerate element that yields another non-degenerate."""
+    faces = m.getFaces()
+    deg = faces.testDegenerate().reshape(m.nelems(),6)
+    faces = faces.reshape(m.nelems(),6,4)
+    print faces
+    degsum = deg.sum(axis=1)
+    # the ones we can fix
+    ok = degsum==3
+    #
+    okmesh = []
+    wedge6 = []
+    for i in where(ok)[0]:
+        print "FIXIN %s" % i
+        print "elems",m.elems[i]
+        print "faces",faces[i]
+        print "deg",deg[i]
         
-def correctHexMeshDirection(M, drawit=False):
-    """it takes a -1,8,3 Formex (Hex mesh) from pyformex and, if the convention of pyformex does not match the convention of Abaqus, reorder the vertices for Abaqus. Returns the corresponding Hex mesh. It also return the list of the modified element. If drawit==True it also draws red points around the modifiend elements."""
-    m=M[:].copy()
-    cor_el_list=zeros([M[:].shape[0]])
-    for i in range(m.shape[0]):
-        m[i], modified=correctHexDirection(m[i])
-        if modified==True:cor_el_list[i]=1.
-    modified_indices=where(cor_el_list==1)[0]
-    if drawit==True: draw(Formex(M[:][modified_indices].reshape(-1, 1, 3)), marksize=10, color='red')
-    print('correcting HEX :%d HEX have been corrected'%modified_indices.shape[0])
-    return Formex(m.reshape(-1, 8, 3), eltype='Hex8')
+        fixed = degenerate_hex8_wedge6(m.elems[i])
+        if fixed is not None:
+            wedge6.append(fixed)
+            print "OK"
 
 
-
-def correctWedgeDirection(h):
-    """it takes a -1,3 array with the 8 points of an hexahedron as defined in pyformex and, if the convention of pyformex does not match the convention of Abaqus, reorder the vertices for Abaqus. False is returned if the elements has been corrected, False if it zas already correct"""
-    tsp=triplescalarproduct(h[1]-h[0], h[2]-h[1], h[5]-h[0])
-    if tsp>0:
-        return h, False
-    if tsp<0:
-        return h[[3, 4, 5, 0, 1,2]], True
+    if len(wedge6) > 0:
+        w = array(wedge6)
+        print w.shape
+        print w
+        print m.coords.shape
+        okmesh.append(Mesh(m.coords,w,eltype='wedge6'))
+    return okmesh
         
-def correctWedgeMeshDirection(M, drawit=False):
-    """it takes a -1,6,3 Formex (Hex mesh) from pyformex and, if the convention of pyformex does not match the convention of Abaqus, reorder the vertices for Abaqus. Returns the corresponding Wedge mesh. It also return the list of the modified element. If drawit==True it also draws red points around the modifiend elements."""
-    m=M[:].copy()
-    cor_el_list=zeros([M[:].shape[0]])
-    for i in range(m.shape[0]):
-        m[i], modified=correctWedgeDirection(m[i])
-        if modified==True:cor_el_list[i]=1.
-    modified_indices=where(cor_el_list==1)[0]
-    if drawit==True: draw(Formex(M[:][modified_indices].reshape(-1, 1, 3)), marksize=10, color='red')
-    #print('the number of uncorrect Wedges was %d'%modified_indices.shape)
-    return Formex(m.reshape(-1, 6, 3), eltype='Wedge6')
 
-def detectHex2Wedge(W):
-    w=W[:].copy()
-    we=[]
-    he=[]
-    for i in range(w.shape[0]):
-        current_el=Hex2Wedge(w[i])[:]
-        if current_el.shape[0]==6:we.append(current_el)#it is wedge6
-        if current_el.shape[0]==8:he.append(current_el)#it is wedge6
-    we, he=array(we), array(he)
-    print('detecting degenerated HEX: there are %d hex and %d wedge'%(he.shape[0], we.shape[0]))
-    return array(we), array(he)
+def splitDegenerate(self,autofix=True):
+    """Split a Mesh in degenerate and non-degenerate elements.
 
+    If autofix is True, the degenerate elements will be tested against
+    known degeneration patterns, and the matching elements will be transformed
+    to non-degenerate elements of a lower plexitude.
 
-def revolve_QuadMesh(M, nr, ang=None):
-    """it takes a Quad mesh on xy and revolve it along the z axis nr times by ang. If ang==None, then it is calculated in order to fill 360 degrees with the nr revolutions."""
-    if ang==None: ang=360./nr
-    for i in range(int(nr)):
-        n1=Formex(n0).rotate(-ang, 1)[:].reshape(-1, 3)
-        n, e=connectMesh(n0,n1,e0)
-        n0=n1.copy()
-        parts.append(Formex(n[e], eltype='Hex8'))
-    femodels = [part.feModel() for part in parts]
-    nodes,elems = mergeModels(femodels)
-    elems=concatenate([elems], 0).reshape(-1, 8)
-    return nodes, elems
-
-
-def revolve(self,n,axis=0,angle=360.,around=None,autofix=True):
-    """Revolve a Mesh around an axis.
-
-    Returns a new Mesh obtained by revolving the given Mesh
-    over an angle around an axis in n steps, while extruding
-    the mesh from one step to the next.
-
-    This function is usually used to extrude points into lines,
-    lines into surfaces and surfaces into volumes.
-    By default it will try to fix the connectivity ordering where
-    appropriate. If autofix is switched off, the connectivities
-    are merely stacked, and the user may have to fix it himself.
-
-    Currently, this function correctly transforms: point1 to line2,
-    line2 to quad4, tri3 to wedge6, quad4 to hex8.
+    The return value is a list of Meshes. The first holds the non-degenerate
+    elements of the original Mesh. The last holds the remaining degenerate
+    elements. The intermediate Meshes, if any, hold non-degenerate elements
+    of a lower plexitude than the original.
     """
-    nplex = self.nplex()
-    angles = arange(n+1) * angle / n
-    coordL = [ self.coords.rotate(angle=a,axis=axis,around=around) for a in angles ]
-    ML = [ Mesh(x,self.elems) for x in coordL ]
+    deg = self.elems.testDegenerate()
+    M0 = self.select(~deg)
+    M1 = self.select(deg)
 
-    n1 = n2 = eltype = None
+    print M1
+    e = M1.elems[0]
+    print e
+    w6 = degenerate_hex8(M1)
     
-    if autofix and nplex == 2:
-        # fix node ordering for line2 to quad4 revolutions
-        n1 = [0,1]
-        n2 = [1,0]
+    ML = [M0] + w6
+    return ML
 
-    if autofix:
-        eltype = defaultEltype(2*self.nplex())
-    
-    CL = [ connectMesh(m1,m2,1,n1,n2,eltype) for (m1,m2) in zip(ML[:-1],ML[1:]) ]
-    return Mesh.concatenate(CL)
-
-
-Mesh.revolve = revolve
+Mesh.splitDegenerate = splitDegenerate
 
 clear()
+smoothwire()
+
 #create a 2D xy mesh
 n = 4
-G = simple.rectangle(1,1,1.,1.).replic(n,1.,dir=1).replic(n,1.,dir=0)
+G = simple.rectangle(1,1,1.,1.).replic2(n,n)
 M = G.toMesh()
 draw(M, color='red')
 view('front')
@@ -235,39 +136,12 @@ view('front')
 #create a 3D axial-symmetric mesh by REVOLVING
 parts=[]
 
-R = M.revolve(n=4, angle=20)
+R = M.revolve(n=8, angle=40)
 draw(R,color='yellow')
-exit()
-C=Formex(n[e], eltype='Hex8')
 
-#check if there are Wedge elements in the global Hex mesh
-w, h= detectHex2Wedge(C)
-W=Formex(w, eltype='Wedge6')
-H=Formex(h, eltype='Hex8')
 
-sleep(1)
-view('iso')
-WE=draw(W, color='blue')
-sleep(2)
-undraw(WE)
-draw(H, color='red')
-sleep(2)
-draw(W, color='blue')
-draw(H, color='red')
-
-sleep(2)
-
+sleep(5)
 clear()
-#demonstration of negative HEX volumes : need to correct their orientation
-Hr=H.reflect()
-H2=H+Hr
-H=correctHexMeshDirection(H2, True)
-draw(H2)
-sleep(2)
-clear()
-n, e=revolve_QuadMesh(n0, e0, nr=4, ang=-20)#negative angle
-Crev=Formex(n[e], eltype='Hex8')
-w, hrev= detectHex2Wedge(Crev)
-Hrev=Formex(hrev, eltype='Hex8')
-Hok=correctHexMeshDirection(Hrev, True)
-draw(Hok, color='gren')
+ML = R.splitDegenerate()
+ML = [ Mi.setProp(i) for i,Mi in enumerate(ML) ]
+draw(ML)

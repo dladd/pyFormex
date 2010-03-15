@@ -551,12 +551,14 @@ Size: %s
         return self
 
 
-    def select(self,selected,compact=False):
+    def select(self,selected):
         """Return a mesh with selected elements from the original.
 
         - `selected`: an object that can be used as an index in the
           `elems` array, e.g. a list of element numbers.
-        The coords are not compacted, unless compact=True is specify
+          
+        Returns a Mesh with only the selected elements.
+        The returned mesh is not compacted.
         """
         if len(self.elems) == 0:
             return self
