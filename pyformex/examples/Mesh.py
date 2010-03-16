@@ -78,7 +78,7 @@ draw(m)
 drawNumbers(m)
 print "%s elements" % m.nelems()
 
-#export({'mesh':m})
+export({'mesh':m})
 
 pause('')
 flat()
@@ -116,5 +116,9 @@ clear()
 draw(e)
 drawNumbers(e)
 print "%s border elements" % e.nelems()
+
+
+export({'border':e})
+
 
 showInfo("Done")
