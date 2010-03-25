@@ -84,6 +84,10 @@ class Board(QtGui.QTextEdit):
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.cursor = self.textCursor()
         #self.buffer = ''
+        font = QtGui.QFont("DejaVu Sans Mono")
+        #font.setStyle(QtGui.QFont.StyleNormal)
+        self.setFont(font)
+        
 
     def write(self,s):
         """Write a string to the message board."""

@@ -435,7 +435,6 @@ def create_border_triangle(coords,elems):
     return elems,triangle
 
 
-
 ############################################################################
 # The TriSurface class
 
@@ -518,7 +517,7 @@ class TriSurface(Mesh):
                 if faces.max() >= edges.shape[0]:
                     raise ValueError,"Some edge number is too high"
 
-                elems = Connectivity.compress(faces,edges)
+                elems = faces.tangle(edges)
                 Mesh.__init__(self,coords,elems,None,'tri3')
                 
                 # since we have the extra data available, keep them
@@ -561,13 +560,13 @@ class TriSurface(Mesh):
     def getEdges(self):
         """Get the edges data."""
         if self.edges is None:
-            self.faces,self.edges = self.elems.expand()
+            self.faces,self.edges = self.elems.untangle()
         return self.edges
     
     def getFaces(self):
         """Get the faces data."""
         if self.faces is None:
-            self.faces,self.edges = self.elems.expand()
+            self.faces,self.edges = self.elems.untangle()
         return self.faces
 
     #

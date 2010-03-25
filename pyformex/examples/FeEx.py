@@ -155,18 +155,28 @@ def addPart(F):
     export({partname:part})
     mesh_menu.selection.names.append(partname)
     mesh_menu.selection.draw()
+
+
+def convertQuadratic():
+    """Convert the parts to quadratic"""
+    global parts
+    parts = [ p.convert('quad9') for p in parts ]
+    mesh_menu.selection.changeValues(parts)
+    drawParts()
     
 
 def drawParts():
     """Draw all parts"""
     clear()
-    draw(parts)
-    [ drawNumbers(p) for p in parts ]
-    [ drawNumbers(p.coords) for p in parts ]
-    zoomAll()
+    ## draw(parts)
+    ## [ drawNumbers(p,color=blue) for p in parts ]
+    ## [ drawNumbers(p.coords,color=red) for p in parts ]
+    ## zoomAll()
+    mesh_menu.selection.draw()
 
 
 ######################## the model ####################
+    
 
 def createModel():
     """Merge all the parts into a Finite Element model."""
@@ -404,7 +414,15 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     # Load the needed calpy modules    
     from plugins import calpy_itf
     calpy_itf.check()
+
+    # Load development version
+    import sys
+    sys.path.insert(0,'/home/bene/prj/calpy')
+    print sys.path
     import calpy
+    reload(calpy)
+    print calpy.__path__
+    
     calpy.options.optimize=True
     from calpy import femodel,fe_util,plane
     from calpy.arrayprint import aprint
@@ -435,7 +453,13 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     calpyModel = femodel.FeModel(2,"elast","Plane_Stress")
     calpyModel.nnodes = model.coords.shape[0]
     calpyModel.nelems = model.celems[-1]
-    calpyModel.nnodel = 4
+    print [ e.shape for e in model.elems ]
+    nplex = [ e.shape[1] for e in model.elems ]
+    if min(nplex) != max(nplex):
+        warning("All parts should have same element type")
+        return
+    
+    calpyModel.nnodel = nplex[0]
 
     # 2D model in calpy needs 2D coordinates
     coords = model.coords[:,:2]
@@ -669,6 +693,7 @@ def autoRun():
     clear()
     createRectPart(dict(x0=0.,x1=1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
     createRectPart(dict(x0=0.,x1=-1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
+    convertQuadratic()
     createModel()
     nodenrs = arange(model.coords.shape[0])
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
@@ -705,6 +730,7 @@ def create_menu():
         ("&Delete All",deleteAll),
         ("&Create Rectangular Part",createRectPart),
         ("&Create QuadrilateralPart",createQuadPart),
+        ("&Convert to Quadratic",convertQuadratic),
         ("&Show All",drawParts),
         ("---",None),
         ("&Merge Parts into Model",createModel),
