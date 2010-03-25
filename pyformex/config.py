@@ -304,8 +304,16 @@ class Config(Dict):
 
 
     def __str__(self):
-        """Format the Config in a way that can be read back."""
-        s = "# Config written by pyFormex    -*- PYTHON -*-\n\n"
+        """Format the Config in a way that can be read back.
+
+        This function is mostly used to format the data for writing it to
+        a configuration file. See the write() method.
+
+        The return value is a multiline string with Python statements that can
+        be read back through Python to recreate the Config data. Usually
+        this is done with the Config.read() method.
+        """
+        s = ''
         for k,v in self.iteritems():
             if not isinstance(v,Dict):
                 s += formatDict({k:v})
@@ -313,9 +321,27 @@ class Config(Dict):
             if isinstance(v,Dict):
                 s += "\n[%s]\n" % k
                 s += formatDict(v)
-        s += "\n# End of config\n"
         return s
 
+
+    def write(self,filename,header="# Config written by pyFormex    -*- PYTHON -*-\n\n",trailer="\n# End of config\n"):
+        """Write the config to the given file
+
+        The configuration data will be written to the file with the given name
+        in a text format that is both readable by humans and by the
+        Config.read() method.
+        
+        The header and trailer arguments are strings that will be added at
+        the start and end of the outputfile. Make sure they are valid
+        Python statements (or comments) and that they contain the needed
+        line separators, if you want to be able to read it back.
+        """
+        fil = file(filename,'w')
+        fil.write(header)
+        fil.write("%s" % self)
+        fil.write(trailer)
+        fil.close()
+        
 
     def keys(self,descend=True):
         """Return the keys in the config.

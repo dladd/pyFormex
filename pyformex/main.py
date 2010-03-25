@@ -148,9 +148,7 @@ def savePreferences():
     ## print k
 
     try:
-        fil = file(pyformex.preffile,'w')
-        fil.write("%s" % pyformex.prefcfg)
-        fil.close()
+        pyformex.prefcfg.write(pyformex.preffile)
         res = "Saved"
     except:
         res = "Could not save"
