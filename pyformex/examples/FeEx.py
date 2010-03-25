@@ -415,13 +415,13 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     from plugins import calpy_itf
     calpy_itf.check()
 
-    # Load development version
-    import sys
-    sys.path.insert(0,'/home/bene/prj/calpy')
-    print sys.path
-    import calpy
-    reload(calpy)
-    print calpy.__path__
+    ## # Load development version
+    ## import sys
+    ## sys.path.insert(0,'/home/bene/prj/calpy')
+    ## print sys.path
+    ## import calpy
+    ## reload(calpy)
+    ## print calpy.__path__
     
     calpy.options.optimize=True
     from calpy import femodel,fe_util,plane
@@ -685,21 +685,32 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     name = feresult_name.next()
     export({name:DB})
     showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name)
-    #postproc_menu.selection.set(name)
-    #postproc_menu.open_results_dialog()
+    postproc_menu.selection.set(name)
+    postproc_menu.selectDB(DB)
+    postproc_menu.open_results_dialog()
     
 
-def autoRun():
+def autoRun(quad=False):
     clear()
-    createRectPart(dict(x0=0.,x1=1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
-    createRectPart(dict(x0=0.,x1=-1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
-    convertQuadratic()
+    if quad:
+        nx,ny = 2,2
+    else:
+        nx,ny = 4,4
+    createRectPart(dict(x0=0.,x1=1.,y0=0.,y1=1.,nx=nx,ny=ny,eltype='quad'))
+    createRectPart(dict(x0=0.,x1=-1.,y0=0.,y1=1.,nx=nx,ny=ny,eltype='quad'))
+    if quad:
+        convertQuadratic()
     createModel()
     nodenrs = arange(model.coords.shape[0])
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
+    if quad:
+        ny *= 2
     PDB.nodeProp(set=nodenrs[:ny+1],bound=[1,1,0,0,0,0])
     PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[10.,0.,0.,0.,0.,0.])
     runCalpyAnalysis('FeEx',verbose=True)
+
+def autoRun2():
+    autoRun(quad=True)
 
 def autoConv():
     clear()
@@ -754,6 +765,7 @@ def create_menu():
         ("&Import all",importAll),
         ("&Export all",exportAll),
         ("&Autorun example",autoRun),
+        ("&Autorun quadratic example",autoRun2),
         ("&Autoconv example",autoConv),
         ("---",None),
         ("&Close Menu",close_menu),

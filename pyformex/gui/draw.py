@@ -1325,8 +1325,8 @@ def setGlobalAxes(mode=True):
 
 
 #  deprecated alternative spellings
-#zoomall = zoomAll
-#drawtext = drawText
+zoomall = zoomAll
+drawtext = drawText
 
 
 #### End

@@ -213,12 +213,12 @@ def named_item(items,name):
 
 
 def showModel(nodes=True,elems=True):
+    print DB.elems
+    M = [ Mesh(DB.nodes,el,eltype='quad%d'%el.shape[1],prop=i) for i,el in enumerate(DB.elems.itervalues()) ]
     if nodes:
-        Fn = Formex(DB.nodes)
-        draw(Fn)
+        draw([m.coords for m in M])
     if elems:
-        Fe = [ Formex(DB.nodes[e],i+1) for i,e in enumerate(DB.elems.itervalues()) ]
-        draw(Fe)
+        draw(M)
     smoothwire()
     lights(False)
     transparent(True)
@@ -245,7 +245,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
     # draw undeformed structure
     if showref:
-        ref = [ Formex(nodes[el]) for el in elems ]
+        ref = [ Mesh(nodes,el,eltype='quad%d'%el.shape[1]) for el in elems ]
         draw(ref,bbox=None,color='green',linewidth=1,mode='wireframe')
 
     # compute the colors according to the values
@@ -278,7 +278,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     if text:
         if multiplier != 0:
             text += ' (* 10**%s)' % -multiplier
-        drawtext(text,200,30)
+        drawText(text,200,30)
 
     smooth()
     lights(False)
@@ -287,16 +287,15 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     # create the frames while displaying them
     dscale = array(dscale)
     frames = []   # a place to store the drawn frames
-    bbox = []
+    bboxes = []
     for dsc in dscale.flat:
 
         #print(dsc)
         #print(nodes.shape)
         #print(displ.shape)
         dnodes = nodes + dsc * displ
-        deformed = [ Formex(dnodes[el]) for el in elems ]
-        bboxes = [ df.bbox() for df in deformed ]
-        bbox.append(Formex(bboxes).bbox())
+        deformed = [ Mesh(dnodes,el,eltype='quad%d'%el.shape[1]) for el in elems ]
+        bboxes.append(bbox(deformed))
         # We store the changing parts of the display, so that we can
         # easily remove/redisplay them
         #print(val)
@@ -304,7 +303,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
             F = [ draw(df,color='blue',view=None,bbox='last',wait=None) for df in deformed ]
         else:
             F = [ draw(df,color=cval[el],view=None,bbox='last',wait=None) for df,el in zip(deformed,elems) ]
-        T = drawtext('Deformation scale = %s' % dsc,200,10)
+        T = drawText('Deformation scale = %s' % dsc,200,10)
 
         # remove the last frame
         # This is a clever trick: we remove the old drawings only after
@@ -320,7 +319,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
             GD.app.processEvents()
             sleep(sleeptime)
 
-    zoomBbox(Formex(bbox).bbox())
+    zoomBbox(bbox(bboxes))
     
     # display the remaining cycles
     count -= 1
