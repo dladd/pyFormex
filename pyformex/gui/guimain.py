@@ -185,8 +185,8 @@ class GUI(QtGui.QMainWindow):
         #self.splitter.setSizes([(800,200),(800,600)])
         self.box.setLayout(self.boxlayout)
         # Create the top menu
-        menu.createMenuData()
-        self.menu.insertItems(menu.MenuData)
+        menudata = menu.createMenuData()
+        self.menu.insertItems(menudata)
         # ... and the toolbar
         self.actions = toolbar.addActionButtons(self.toolbar)
 

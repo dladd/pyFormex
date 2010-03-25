@@ -21,7 +21,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Toolbars for pyformex GUI."""
+"""Toolbars for the pyFormex GUI.
+
+This module defines the functions for creating the pyFormex window toolbars.
+"""
 
 import pyformex as GD
 import os
@@ -31,7 +34,7 @@ import widgets
 import draw
 import utils
 
-
+ 
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""
@@ -50,18 +53,19 @@ def addActionButtons(toolbar):
 
 ################### General Button Functions ###########
 
-def addButton(toolbar,text,icon,func,repeat=False,toggle=False,checked=False,icon0=None):
+def addButton(toolbar,tooltip,icon,func,repeat=False,toggle=False,checked=False,icon0=None):
     """Add a button to a toolbar.
 
-    toolbar is where the button will be added, 
-    text appears as tooltip,
-    icon is the name of the icon to be displayed on the button,
-    func is called when button is pressed,
-
-    repeat == True: func will repeatedly be called if button is held down.
-    toggle == True: button is a toggle (stays in pressed state).
-    If the button is a toggle, checked is the initial state and icon1 may
-    specify an icon that will be displayed when button is not checked.
+    - `toolbar`:  the toolbar where the button will be added
+    - `tooltip`: the text to appears as tooltip
+    - `icon`: name of the icon to be displayed on the button,
+    - `func`: function to be called when the button is pressed,
+    - `repeat`: if True, the `func` will repeatedly be called if button is
+      held down.
+    - `toggle`: if True, the button is a toggle and stays in depressed state
+      until pressed again.
+    - `checked`: initial state for a toggle buton.
+    - `icon1`: for a toggle button, icon to display when button is not checked.
     """
     iconset = QtGui.QIcon()
     icon_on = QtGui.QPixmap(utils.findIcon(icon))
@@ -83,7 +87,7 @@ def addButton(toolbar,text,icon,func,repeat=False,toggle=False,checked=False,ico
         b.connect(b,QtCore.SIGNAL("clicked()"),QtCore.SLOT("toggle()"))
         b.setChecked(checked)
 
-    b.setToolTip(text)
+    b.setToolTip(tooltip)
 
     return b
 

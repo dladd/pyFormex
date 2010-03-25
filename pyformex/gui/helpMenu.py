@@ -151,25 +151,28 @@ def links(link):
     help('http://'+link)
 
 
-DocsMenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] 
-Docs2MenuData = [(k,draw.showFile,{'data':v}) for k,v in GD.cfg['help/docs2']]
-LinksMenuData = [(k,links,{'data':v}) for k,v in GD.cfg['help/links']]
+def createMenuData():
+    """Returns the help menu data"""
+    DocsMenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] 
+    Docs2MenuData = [(k,draw.showFile,{'data':v}) for k,v in GD.cfg['help/docs2']]
+    LinksMenuData = [(k,links,{'data':v}) for k,v in GD.cfg['help/links']]
 
-try:
-    MenuData = DocsMenuData + [
-        ('---',None),
-        (_('&Command line options'),cmdline),
-        ] + Docs2MenuData + [
-        (_('&Detected Software'),detected), 
-        (_('&OpenGL Format'),opengl), 
-        (_('&Fortune Cookie'),cookie),
-        (_('&Favourite Links'),LinksMenuData),
-        (_('&Developers'),developers), 
-        (_('&About'),about), 
-        ]
-except:
-    MenuData = []
+    try:
+        MenuData = DocsMenuData + [
+            ('---',None),
+            (_('&Command line options'),cmdline),
+            ] + Docs2MenuData + [
+            (_('&Detected Software'),detected), 
+            (_('&OpenGL Format'),opengl), 
+            (_('&Fortune Cookie'),cookie),
+            (_('&Favourite Links'),LinksMenuData),
+            (_('&Developers'),developers), 
+            (_('&About'),about), 
+            ]
+    except:
+        MenuData = []
 
+    return MenuData
 
 
 # End

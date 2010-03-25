@@ -29,7 +29,7 @@ import widgets
 import utils
 import project
 import draw
-from script import processArgs
+from script import processArgs,play
 import image
 import plugins
 
@@ -400,7 +400,7 @@ MenuData = [
     ('---',None),
     (_('&Create new script'),createScript),
     (_('&Open existing script'),openScript),
-    (_('&Play script'),draw.play),
+    (_('&Play script'),play),
     (_('&Edit script'),editScript),
     (_('&Change workdir'),draw.askDirname),
     (_('---1'),None),

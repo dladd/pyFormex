@@ -36,7 +36,6 @@ import colors
 import odict
 import imageViewer
 import utils
-from menu import *
 
 # timeout value for all widgets providing timeout feature
 #  (currently: InputDialog, MessageBox)
@@ -95,8 +94,8 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
 
 
 
-class Options:
-    pass
+## class Options:
+##     pass
 
 ###################### File Selection Dialog #########################
 
@@ -232,7 +231,12 @@ class SaveImageDialog(FileSelection):
     """A dialog for saving to an image file.
 
     The dialog contains the normal file selection widget plus some
-    extra fields to set the Save Image parameters.
+    extra fields to set the Save Image parameters:
+
+    - Whole Window: If checked, the whole pyFormex main window will be
+      saved. If unchecked, only the current OpenGL viewport is saved.
+
+    
     """
     def __init__(self,path=None,pattern=None,exist=False,multi=False):
         """Create the dialog."""
@@ -494,6 +498,7 @@ def getColor(col=None,caption=None):
         return str(col.name())
     else:
         return None
+
 
 #####################################################################
 ########### General Input Dialog ####################################
@@ -1110,6 +1115,7 @@ class InputWidget(InputItem):
     """An input item containing any other widget.
 
     The widget should have:
+    
     - a results attribute that is set to
       a dict with the resulting input values when the widget's
       acceptData() is called.
@@ -1187,7 +1193,6 @@ class NewInputDialog(QtGui.QDialog):
     """A dialog widget to interactively set the value of one or more items.
 
     Overview
-    --------
     
     The pyFormex user has full access to the Qt4 framework on which the
     GUI was built. Therefore he can built input dialogs as complex and
@@ -1201,7 +1206,7 @@ class NewInputDialog(QtGui.QDialog):
     Both modal and modeless (non-modal) dialogs can be created.
 
     Items
-    -----
+    
     Each basic input item is a dictionary, where the fields have the
     following meaning:
     
@@ -1219,84 +1224,16 @@ class NewInputDialog(QtGui.QDialog):
     - max:
     - scale:
     - func:
-    
-
-        
-        `items` is either a list of items, or a dict where each value is a
-        list of items or another dict (where each value is then a list of items).
-        If `items` is a dict, a tabbed widget will be created
-        with a tab for each (key,value) pair in the dict. If the value is
-        again a dict, then a box will be created for each (key,value) pair in
-        that subdict.
-
-        Each item in an `items` list is a list or tuple of the form
-        (name,value,type,options), where 
-
-        At least the name and initial value need to be specified. The type
-        can often be determined from the initial value. Some types set the
-        initial value from an option if it was an empty string or None.
-        The options dictionary has both generic options, available for all
-        item types, and type specific options.
-
-        Each item specifies a single input field, and its value will be
-        contained in the results dictionary using the field name as a key.
-        
-        For each item a single input line is created in the dialog.
-        This line by default consists of a label displaying the field
-        name and a LineEdit widget where the initial value is displayed
-        and can be changed. Where appropriate, a validator function is attached
-        to it.
-
-        The following options are applicable to all item types:
-
-        Currently, the following item types are available:
-
-        The item specific options:
-        - min
-        - max
-        - range: the range of values the field can accept,
-        - choices
-
-        The first two fields are mandatory. In many cases the type can be
-        determined from the value and no other fields are required. Thus:
-
-        - [ 'name', 'value' ] will accept any string (initial string = 'value'),
-        - [ 'name', True ] will show a checkbox with the item checked,
-        - [ 'name', 10 ] will accept any integer,
-        - [ 'name', 1.5 ] will accept any float.
-
-        Range settings for int and float types:
-
-        - [ 'name', 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive
-        - [ 'name', 1, float, 0.0, 1.0, 2 ] will accept a float in the range
-          from 0.0 to 1.0 with a maximum of two decimals.
-
-        Composed types:
-
-        - [ 'name', 'option1', 'select', ['option0','option1','option2']] will
-          present a combobox to select between one of the options.
-          The initial and default value is 'option1'.
-        - [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
-          present a group of radiobuttons to select between one of the options.
-          The initial and default value is 'option1'.
-          A variant 'vradio' aligns the options vertically. 
-        - [ 'name', 'option1', 'push', ['option0','option1','option2']] will
-          present a group of pushbuttons to select between one of the options.
-          The initial and default value is 'option1'.
-          A variant 'vpush' aligns the options vertically. 
-        - [ 'name', 'red', 'color' ] will present a color selection widget,
-          with 'red' as the initial choice.
 
     Other arguments
-    ---------------
-
-    caption: the window title to be shown in the window decoration
-    actions: a list of action buttons to be added at the bottom of the
+   
+    - caption: the window title to be shown in the window decoration
+    - actions: a list of action buttons to be added at the bottom of the
       input form. By default, a Cancel and Ok button will be added, to either
       reject or accept the input values.
-    parent: the parent widget (by default, this is the pyFomrex main window)
-    flags:
-    modal:
+    - parent: the parent widget (by default, this is the pyFomrex main window)
+    - flags:
+    - modal:
           
     """
     

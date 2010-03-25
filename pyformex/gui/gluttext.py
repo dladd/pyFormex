@@ -22,7 +22,11 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""2D text decorations using GLUT fonts"""
+"""2D text decorations using GLUT fonts
+
+This module provides the basic functions for using the GLUT library in the
+rendering of text on an OpenGL canvas.
+"""
 
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
@@ -55,11 +59,12 @@ GLUTFONTALIAS = {
     'sans'  : ('helvetica','hv10','hv12','hv18'),
     }
 
+
 def glutSelectFont(font=None,size=None):
     """Select one of the glut fonts using a font + size description.
 
-    font is one of: 'fixed', 'serif', 'sans'
-    size is an int that will be rounded to the nearest available size.
+    - font: 'fixed', 'serif' or 'sans'
+    - size: an int that will be rounded to the nearest available size.
 
     The return value is a 4-character string representing one of the
     GLUT fonts.
@@ -102,7 +107,7 @@ def glutFont(font):
     - times-roman: 'tr10', 'tr24'
     - helvetica:   'hv10', 'hv12',  'hv18'
     
-    If an unrecognized string is  given, the default is 'hv18'.
+    If an unrecognized string is given, the default is 'hv18'.
     """
     return GLUTFONTS.get(font,GLUTFONTS['hv18'])
 
@@ -155,6 +160,7 @@ def glutDrawText(text,x,y,font='hv18',gravity='',spacing=1.0):
       respect to the insert position. It can be a combination of one of the
       characters 'N or 'S' to specify the vertical positon, and 'W' or 'E'
       for the horizontal. The default(empty) string will center the text.
+      
     """
     if type(text) is str:
         text = text.split('\n')
@@ -182,7 +188,6 @@ def glutDrawText(text,x,y,font='hv18',gravity='',spacing=1.0):
         else:
             xi = x - w/2
         yi -= spacing
-        print (xi,yi)
         GL.glRasterPos2f(float(xi),float(yi))
         glutRenderText(t,font)
 

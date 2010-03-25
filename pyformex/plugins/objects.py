@@ -39,7 +39,7 @@ from copy import deepcopy
 
 
 class Objects(object):
-    """A selection of objects from the globals().
+    """A selection of objects from the pyFormex Globals().
 
     The class provides facilities to filter the global objects by their type
     and select one or more objects by their name(s). The values of these

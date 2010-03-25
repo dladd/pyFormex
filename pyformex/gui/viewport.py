@@ -749,12 +749,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Interactively draw lines on the canvas.
 
         - single: if True, the function returns as soon as the user ends
-        a drawing operation. The default is to let the user
-        draw multiple lines and only to return after an explicit
-        cancel (ESC or right mouse button).
+          a drawing operation. The default is to let the user
+          draw multiple lines and only to return after an explicit
+          cancel (ESC or right mouse button).
         - func: if specified, this function will be called after each
-        atomic drawing operation. The current drawing is passed as
-        an argument. This can e.g. be used to show the drawing.
+          atomic drawing operation. The current drawing is passed as
+          an argument. This can e.g. be used to show the drawing.
+
         When the drawing operation is finished, the drawing is returned.
         The return value is a (n,2,2) shaped array.
         """

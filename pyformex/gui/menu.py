@@ -35,7 +35,7 @@ import prefMenu
 import viewportMenu
 import scriptMenu
 import toolbar
-import help
+import helpMenu
 import image
 import draw
 import script
@@ -79,20 +79,6 @@ class BaseMenu(object):
         if parent and isinstance(parent,BaseMenu):
             before = parent.action(before)
             parent.insert_menu(self,before)
-
-
-    ## def itemAction(self,item):
-    ##     """Return the action corresponding to item.
-
-    ##     item is either one of the menu's item texts, or one of its
-    ##     values. This method guarantees that the return value is either the
-    ##     corresponding Action, or None.
-    ##     """
-    ##     if item not in self.menuitems.values():
-    ##         item = self.item(item)
-    ##     if isinstance(item,QtGui.QMenu):
-    ##         item = item.menuAction()
-    ##     return item
 
 
     def actionList(self):
@@ -442,7 +428,7 @@ class ActionList(object):
         return [ i[0] for i in self.actions ]
 
 
-###########################################################################
+## ###########################################################################
 
 # pyFormex main menus
 
@@ -450,13 +436,13 @@ class ActionList(object):
 save = NotImplemented
 saveAs = NotImplemented
 
-def editor():
-    if pyformex.GUI.editor:
-        print("Close editor")
-        pyformex.GUI.closeEditor()
-    else:
-        print("Open editor")
-        pyformex.GUI.showEditor()
+## def editor():
+##     if pyformex.GUI.editor:
+##         print("Close editor")
+##         pyformex.GUI.closeEditor()
+##     else:
+##         print("Open editor")
+##         pyformex.GUI.showEditor()
 
  
 def resetGUI():
@@ -474,36 +460,6 @@ def resetGUI():
     pyformex.GUI.actions['Continue'].setEnabled(False)
     pyformex.GUI.actions['Stop'].setEnabled(False)
 
-
-## def resetPick():
-##     """This function can be called to reset the GUI picking state.
-
-##     It might be useful if an exception was raised during a picking operation.
-##     Calling this function will restore the GUI components to non-picking mode.
-##     """
-##     if pyformex.canvas.selection_mode is not None:
-##         pyformex.canvas.finish_selection()
-##     pyformex.GUI.statusbar.removeWidget(pyformex.GUI.pick_buttons)
-##     pyformex.GUI.statusbar.removeWidget(pyformex.GUI.filter_combo)
-
-  
-
-def addViewport():
-    """Add a new viewport."""
-    n = len(pyformex.GUI.viewports.all)
-    if n < 4:
-        pyformex.GUI.viewports.addView(n/2,n%2)
-
-def removeViewport():
-    """Remove a new viewport."""
-    n = len(pyformex.GUI.viewports.all)
-    if n > 1:
-        pyformex.GUI.viewports.removeView()
-
-
-def viewportSettings():
-    """Interactively set the viewport settings."""
-    pass
 
             
 # The menu actions can be simply function names instead of strings, if the
@@ -539,41 +495,41 @@ def openLogFile():
     if fn:
         closeLogFile()
         draw.logfile = file(fn,'w')
-        
-
-ActionMenuData = [
-    (_('&Step'),draw.step),
-    (_('&Continue'),draw.fforward), 
-    ## (_('&Reset Picking Mode'),resetPick),
-    (_('&Reset GUI'),resetGUI),
-    (_('&Force Finish Script'),draw.force_finish),
-    ## (_('&Execute single statement'),command),
-    (_('&Open Log File'),openLogFile),
-    (_('&Close Log File'),closeLogFile),
-    (_('&ListFormices'),script.printall),
-    (_('&PrintGlobalNames'),script.printglobalnames),
-    (_('&PrintGlobals'),script.printglobals),
-    (_('&PrintConfig'),script.printconfig),
-    (_('&Print Detected Software'),script.printdetected),
-    (_('&PrintBbox'),draw.printbbox),
-    (_('&Print Viewport Settings'),draw.printviewportsettings),
-    (_('&Print Window Geometry'),printwindow),
-    (_('&Correct the Qt4 Geometry'),moveCorrect),
-    (_('&Save Geometry'),saveGeometry),
-    (_('&Restore Geometry'),restoreGeometry),
-    (_('&Toggle Input Timeout'),toolbar.timeout),
-    ]
-             
-
-MenuData = [
-    (_('&File'),fileMenu.MenuData),
-    (_('&Actions'),ActionMenuData),
-    (_('&Help'),help.MenuData)
-    ]
 
 
 def createMenuData():
-    """Returns the full data menu."""
+    """Returns the default pyFormex GUI menu data."""
+
+    ActionMenuData = [
+        (_('&Step'),draw.step),
+        (_('&Continue'),draw.fforward), 
+        ## (_('&Reset Picking Mode'),resetPick),
+        (_('&Reset GUI'),resetGUI),
+        (_('&Force Finish Script'),draw.force_finish),
+        ## (_('&Execute single statement'),command),
+        (_('&Open Log File'),openLogFile),
+        (_('&Close Log File'),closeLogFile),
+        (_('&ListFormices'),script.printall),
+        (_('&PrintGlobalNames'),script.printglobalnames),
+        (_('&PrintGlobals'),script.printglobals),
+        (_('&PrintConfig'),script.printconfig),
+        (_('&Print Detected Software'),script.printdetected),
+        (_('&PrintBbox'),draw.printbbox),
+        (_('&Print Viewport Settings'),draw.printviewportsettings),
+        (_('&Print Window Geometry'),printwindow),
+        (_('&Correct the Qt4 Geometry'),moveCorrect),
+        (_('&Save Geometry'),saveGeometry),
+        (_('&Restore Geometry'),restoreGeometry),
+        (_('&Toggle Input Timeout'),toolbar.timeout),
+        ]
+             
+
+    MenuData = [
+        (_('&File'),fileMenu.MenuData),
+        (_('&Actions'),ActionMenuData),
+        (_('&Help'),helpMenu.createMenuData())
+        ]
+    
     # Insert configurable menus
     if pyformex.cfg.get('gui/prefsmenu','True'):
         MenuData[1:1] = prefMenu.MenuData
@@ -581,5 +537,10 @@ def createMenuData():
         MenuData[2:2] = viewportMenu.MenuData
     if pyformex.cfg.get('gui/cameramenu','True'):
         MenuData[3:3] = [(_('&Camera'),cameraMenu.MenuData)]
+
+    return MenuData
+
+
+__all__ = [ 'BaseMenu', 'Menu', 'MenuBar', 'DAction', 'ActionList' ]
     
 # End

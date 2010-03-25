@@ -35,7 +35,6 @@ import numpy
 import utils
 import widgets
 import toolbar
-import drawable
 import actors
 import decors
 import marks
@@ -49,6 +48,8 @@ from script import *
 from signals import *
 
 from plugins import surface,tools,mesh,fe
+
+
         
 #################### Interacting with the user ###############################
 
@@ -104,7 +105,11 @@ def ack(question,**kargs):
 def showText(text,type=None,actions=[('OK',None)],modal=True):
     """Display a text and wait for user response.
 
-    This can display a large text and will add scrollbars when needed.
+    This opens a TextBox widget and displays the text in the widget.
+    Scrollbars will be added if the text is too large to display at once.
+
+    The text can be plain text format. Some rich text formats will be 
+    recognized and rendered appropriately. See widgets.TextBox.
     """
     w = widgets.TextBox(text,type,actions,modal=modal)
     if modal:
@@ -115,12 +120,18 @@ def showText(text,type=None,actions=[('OK',None)],modal=True):
 
 
 def showFile(filename):
+    """Display a text file.
+
+    This will use the showText() function to display a text read from a
+    file. 
+    """
     try:
         f = file(filename,'r')
     except IOError:
         return
     showText(f.read())
     f.close()
+
 
 # widget and result status of the widget in askItems() function
 _dialog_widget = None
@@ -832,6 +843,14 @@ def lights(onoff):
     toolbar.setLight(onoff)
 
 
+def transparent(state=None):
+    toolbar.setTransparency(state)
+def perspective(state=None):
+    toolbar.setPerspective(state)
+def timeout(state=None):
+    toolbar.timeout(state)
+
+
 def set_material_value(typ,val):
     """Set the value of one of the material lighting parameters
 
@@ -857,10 +876,6 @@ def set_light_value(light,key,val):
     GD.canvas.setLighting(True)
     GD.canvas.update()
     GD.app.processEvents()
-
-transparent = toolbar.setTransparency
-perspective = toolbar.setPerspective
-timeout = toolbar.timeout
 
 
 def linewidth(wid):
@@ -1041,7 +1056,7 @@ def updateGUI():
 def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
     """Fly through the current scene along the flypath.
 
-    - `flypath': a PolyLine or plex-2 Formex.
+    - `flypath`: a PolyLine or plex-2 Formex.
     """
     from plugins.curve import PolyLine
     
@@ -1310,8 +1325,8 @@ def setGlobalAxes(mode=True):
 
 
 #  deprecated alternative spellings
-zoomall = zoomAll
-drawtext = drawText
+#zoomall = zoomAll
+#drawtext = drawText
 
 
 #### End
