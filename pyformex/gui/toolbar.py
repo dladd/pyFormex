@@ -74,7 +74,7 @@ def addButton(toolbar,tooltip,icon,func,repeat=False,toggle=False,checked=False,
         icon_off = QtGui.QPixmap(utils.findIcon(icon0))
         iconset.addPixmap(icon_off,QtGui.QIcon.Normal,QtGui.QIcon.Off)
                                  
-    a = toolbar.addAction(iconset,text,func)
+    a = toolbar.addAction(iconset,tooltip,func)
     b = toolbar.widgetForAction(a)
     
     if repeat:

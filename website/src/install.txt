@@ -13,7 +13,12 @@ restindex
 
 How to install pyFormex?
 ------------------------
-You can get pyFormex from one of the following sources:
+
+Please refer to the `Installing pyFormex`_ guide in the `pyFormex
+documentation`_ for detailed installation instructions. 
+
+Here we only give a short overview of some popular ways to
+obtain pyFormex:
 
 - `Official releases`_ are distributed from the developer site. For
   most users this is the prefered way to get pyFormex.
@@ -46,7 +51,5 @@ You can get pyFormex from one of the following sources:
   If creating the USB stick is too big a hurdle, we can provide
   ready-made sticks at the cost of production and mailing. For more
   information or a quotation, `email us`_ or ask in the `Forums`_.
-
-The `pyFormex documentation`_ contains detailed installation instructions. 
 
 .. End
