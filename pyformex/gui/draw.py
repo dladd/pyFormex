@@ -843,9 +843,9 @@ def lights(onoff):
     toolbar.setLight(onoff)
 
 
-def transparent(state=None):
+def transparent(state=True):
     toolbar.setTransparency(state)
-def perspective(state=None):
+def perspective(state=True):
     toolbar.setPerspective(state)
 def timeout(state=None):
     toolbar.timeout(state)
