@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>36. mesh — mesh.py &mdash; pyFormex v0.8.2-a2 documentation</title>
+    <title>30. mesh — mesh.py &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,8 +22,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="37. fe — Finite Element Models in pyFormex." href="fe.html" />
-    <link rel="prev" title="35. datareader — Numerical data reader" href="datareader.html" /> 
+    <link rel="next" title="31. surface — Operations on triangulated surfaces." href="surface.html" />
+    <link rel="prev" title="29. curve — Definition of curves in pyFormex." href="curve.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,10 +36,10 @@
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="fe.html" title="37. fe — Finite Element Models in pyFormex."
+          <a href="surface.html" title="31. surface — Operations on triangulated surfaces."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="datareader.html" title="35. datareader — Numerical data reader"
+          <a href="curve.html" title="29. curve — Definition of curves in pyFormex."
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -55,7 +55,7 @@
           <div class="body">
             
   <div class="section" id="module-mesh">
-<span id="sec-ref-mesh"></span><h1>36. <tt class="xref docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py<a class="headerlink" href="#module-mesh" title="Permalink to this headline">¶</a></h1>
+<span id="sec-ref-mesh"></span><h1>30. <tt class="xref docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py<a class="headerlink" href="#module-mesh" title="Permalink to this headline">¶</a></h1>
 <p>mesh.py</p>
 <p>Definition of the Mesh class for describing discrete geometrical models.
 And some useful meshing functions to create such models.</p>
@@ -96,11 +96,8 @@ or by a single geometric object that provides a toMesh() method.</p>
 <dt id="mesh.Mesh.setCoords">
 <tt class="descname">setCoords</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#mesh.Mesh.setCoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replace the current coords with new ones.</p>
-<p>The default implementation imposes the restriction that the
-new coordinate array should have the same shape. It also overwrites
-the coords of the current object. Derived classes can change this
-behavior, but should nake sure to keep the data consistent.
-The new coords structure should have the same</p>
+<p>Returns a Mesh exactly like the current except for the position
+of the coordinates.</p>
 </dd></dl>
 
 <dl class="method">
@@ -198,10 +195,35 @@ The return value is a Coords object with nelems points.</p>
 <dd>Get the elems data.</dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.getLowerEntitiesSelector">
+<tt class="descname">getLowerEntitiesSelector</tt><big>(</big><em>level=1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getLowerEntitiesSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the entities of a lower dimensionality.</p>
+<p>If the element type is defined in the <a title="Element local coordinates and numbering." class="reference external" href="elements.html#module-elements"><tt class="xref docutils literal"><span class="pre">elements</span></tt></a> module,
+this returns a Connectivity table with the entities of a lower
+dimensionality. The full list of entities with increasing
+dimensionality  0,1,2,3 is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>If level is negative, the dimensionality returned is relative
+to that of the caller. If it is positive, it is taken absolute.
+Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
+returns the faces, while for a 2D element type, it returns the edges.
+For bothe meshes however,  getLowerEntities(+1) returns the edges.</p>
+<p>By default, all entities for all elements are returned and common
+entities will appear multiple times. Specifying unique=True will 
+return only the unique ones.</p>
+<p>The return value may be an empty table, if the element type does
+not have the requested entities (e.g. the &#8216;point&#8217; type).
+If the eltype is not defined, or the requested entity level is
+outside the range 0..3, the return value is None.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.getLowerEntities">
 <tt class="descname">getLowerEntities</tt><big>(</big><em>level=1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getLowerEntities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the entities of a lower dimensionality.</p>
-<p>If the element type is defined in the <a href="#id1"><span class="problematic" id="id2">:module:`elements`</span></a> module,
+<p>If the element type is defined in the <a title="Element local coordinates and numbering." class="reference external" href="elements.html#module-elements"><tt class="xref docutils literal"><span class="pre">elements</span></tt></a> module,
 this returns a Connectivity table with the entities of a lower
 dimensionality. The full list of entities with increasing
 dimensionality  0,1,2,3 is:</p>
@@ -241,10 +263,20 @@ faces. It is equivalent to <tt class="docutils literal"><span class="pre">`self.
 <dl class="method">
 <dt id="mesh.Mesh.getBorder">
 <tt class="descname">getBorder</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the border of the elements.</p>
-<p>This is a convenient function to create a table with the border
-elementfaces. It is equivalent to
-<tt class="docutils literal"><span class="pre">`self.getLowerEntities(-1,unique=True)`</span></tt></p>
+<dd><p>Return the border of the Mesh.</p>
+<p>This returns a Connectivity table with the border of the Mesh.
+The border entities are of a lower jierarchical level than the
+mesh itself. This Connectivity can be used together with the
+Mesh coords to construct a Mesh of the border geometry.
+See also getBorderMesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getBorderMesh">
+<tt class="descname">getBorderMesh</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorderMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with the border elements.</p>
+<p>Returns a Mesh representing the border of the Mesh.
+The new Mesh is of the next lower hierarchical level.</p>
 </dd></dl>
 
 <dl class="method">
@@ -271,13 +303,14 @@ that will be passed to <tt class="xref docutils literal"><span class="pre">Coord
 
 <dl class="method">
 <dt id="mesh.Mesh.select">
-<tt class="descname">select</tt><big>(</big><em>selected</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.select" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">select</tt><big>(</big><em>selected</em><big>)</big><a class="headerlink" href="#mesh.Mesh.select" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a mesh with selected elements from the original.</p>
 <ul class="simple">
 <li><cite>selected</cite>: an object that can be used as an index in the
 <cite>elems</cite> array, e.g. a list of element numbers.</li>
 </ul>
-<p>The coords are not compacted, unless compact=True is specify</p>
+<p>Returns a Mesh with only the selected elements.
+The returned mesh is not compacted.</p>
 </dd></dl>
 
 <dl class="method">
@@ -320,11 +353,6 @@ should be retained in the new connectivity table.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.convert">
-<tt class="descname">convert</tt><big>(</big><em>totype</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="mesh.Mesh.withProp">
 <tt class="descname">withProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#mesh.Mesh.withProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh which holds only the elements with property val.</p>
@@ -345,6 +373,11 @@ It the Mesh has no props, an empty dict is returned.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.convert">
+<tt class="descname">convert</tt><big>(</big><em>totype</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.splitRandom">
 <tt class="descname">splitRandom</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitRandom" title="Permalink to this definition">¶</a></dt>
 <dd>Split a mesh in n parts, distributing the elements randomly.</dd></dl>
@@ -355,12 +388,56 @@ It the Mesh has no props, an empty dict is returned.</p>
 <dd>Convert choosing randomly between choices</dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.reduceDegenerate">
+<tt class="descname">reduceDegenerate</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reduceDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce degenerate elements to lower plexitude elements.</p>
+<p>This will try to reduce the degenerate elements of the mesh to elements
+of a lower plexitude. If a target element type is given, only the matching
+recuce scheme is tried. Else, all the target element types for which
+a reduce scheme from the Mesh eltype is available, will be tried.</p>
+<p>The result is a list of Meshes of which the last one contains the
+elements that could not be reduced and may be empty.
+Property numbers propagate to the children.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.splitDegenerate">
+<tt class="descname">splitDegenerate</tt><big>(</big><em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a Mesh in degenerate and non-degenerate elements.</p>
+<p>If autofix is True, the degenerate elements will be tested against
+known degeneration patterns, and the matching elements will be
+transformed to non-degenerate elements of a lower plexitude.</p>
+<p>The return value is a list of Meshes. The first holds the
+non-degenerate elements of the original Mesh. The last holds
+the remaining degenerate elements.
+The intermediate Meshes, if any, hold elements
+of a lower plexitude than the original. These may still contain
+degenerate elements.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.extrude">
 <tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.</em>, <em>dir=0</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.extrude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extrude a Mesh in one of the axes directions.</p>
 <p>Returns a new Mesh obtained by extruding the given Mesh
 over n steps of length step in direction of axis dir.
 The returned Mesh has double plexitude of the original.</p>
+<p>This function is usually used to extrude points into lines,
+lines into surfaces and surfaces into volumes.
+By default it will try to fix the connectivity ordering where
+appropriate. If autofix is switched off, the connectivities
+are merely stacked, and the user may have to fix it himself.</p>
+<p>Currently, this function correctly transforms: point1 to line2,
+line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.revolve">
+<tt class="descname">revolve</tt><big>(</big><em>n</em>, <em>axis=0</em>, <em>angle=360.</em>, <em>around=None</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.revolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revolve a Mesh around an axis.</p>
+<p>Returns a new Mesh obtained by revolving the given Mesh
+over an angle around an axis in n steps, while extruding
+the mesh from one step to the next.</p>
 <p>This function is usually used to extrude points into lines,
 lines into surfaces and surfaces into volumes.
 By default it will try to fix the connectivity ordering where
@@ -534,14 +611,11 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="mesh.createWedgeElements">
-<tt class="descclassname">mesh.</tt><tt class="descname">createWedgeElements</tt><big>(</big><em>S1</em>, <em>S2</em>, <em>div=1</em><big>)</big><a class="headerlink" href="#mesh.createWedgeElements" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="mesh.sweepGrid">
-<tt class="descclassname">mesh.</tt><tt class="descname">sweepGrid</tt><big>(</big><em>nodes</em>, <em>elems</em>, <em>path</em>, <em>scale=1.</em>, <em>angle=0.</em>, <em>a1=None</em>, <em>a2=None</em><big>)</big><a class="headerlink" href="#mesh.sweepGrid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="mesh.structuredHexGrid">
+<tt class="descclassname">mesh.</tt><tt class="descname">structuredHexGrid</tt><big>(</big><em>dx</em>, <em>dy</em>, <em>dz</em>, <em>isophex='hex64'</em><big>)</big><a class="headerlink" href="#mesh.structuredHexGrid" title="Permalink to this definition">¶</a></dt>
+<dd>it builds a structured hexahedral grid with nodes and elements both numbered in a structured way: first along z, then along y,and then along x. The resulting hex cells are oriented along z. This function is the equivalent of simple.rectangularGrid but for a mesh. Additionally, dx,dy,dz can be either integers or div (1D list or array). In case of list/array, first and last numbers should be 0.0 and 1.0 if the desired grid has to be inside the region 0.,0.,0. to 1.,1.,1.
+If isopHex is specified, a convenient set of control points for the isoparametric transformation hex64 is also returned.
+TODO: include other options to get the control points for other isoparametric transformation for hex.</dd></dl>
 
 </blockquote>
 </div>
@@ -557,11 +631,11 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
-            <p class="topless"><a href="datareader.html"
-                                  title="previous chapter">35. <tt class="docutils literal"><span class="pre">datareader</span></tt> &#8212; Numerical data reader</a></p>
+            <p class="topless"><a href="curve.html"
+                                  title="previous chapter">29. <tt class="docutils literal"><span class="pre">curve</span></tt> &#8212; Definition of curves in pyFormex.</a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="fe.html"
-                                  title="next chapter">37. <tt class="docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
+            <p class="topless"><a href="surface.html"
+                                  title="next chapter">31. <tt class="docutils literal"><span class="pre">surface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/mesh.txt"
@@ -594,10 +668,10 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fe.html" title="37. fe — Finite Element Models in pyFormex."
+          <a href="surface.html" title="31. surface — Operations on triangulated surfaces."
              >next</a> |</li>
         <li class="right" >
-          <a href="datareader.html" title="35. datareader — Numerical data reader"
+          <a href="curve.html" title="29. curve — Definition of curves in pyFormex."
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     

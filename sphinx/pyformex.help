@@ -1,34 +1,39 @@
-Usage: pyformex [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]
+Usage
+=====
+  pyformex [<options>] [[ scriptname [scriptargs]] ...]
 
-Options:
-  --gui              start the GUI (default if no scriptfile argument is
-                     given)
-  --nogui            do not load the GUI (default if a scriptfile argument is
-                     given)
-  -i, --interactive  go into interactive mode after processing the command
-                     line parameters. This is implied by the --gui option.
-  --force-dri        Force use of Direct Rendering
-  --force-nodri      Disables the Direct Rendering
-  --uselib           Use the pyFormex C lib if available. This is the default.
-  --nouselib         Do not use the pyFormex C-lib.
-  --safelib          Convert data types to match C-lib. This is the default.
-  --unsafelib        Do not convert data types to match C-lib. BEWARE: this
-                     may make the C-lib calls impossible. Use only for
-                     debugging purposes.
-  --fastencode       Use a fast algorithm to encode edges.
-  --config=CONFIG    Use file CONFIG for settings
-  --nodefaultconfig  Skip the default site and user config files. This option
-                     can only be used in conjunction with the --config option.
-  --redirect         Redirect standard output to the message board (ignored
-                     with --nogui)
-  --detect           Detect helper software and print report.
-  --debug            display debugging info to sys.stdout
-  --classify         classify the examples in categories
-  --whereami         show where the pyformex package is located
-  --remove           remove the pyformex installation
-  --test             testing mode: only for developers!
-  --oldfuse          use old fuse algorithm
-  --testhighlight    highlight testing mode: only for developers!
-  --executor         test alternate executor: only for developers!
-  --version          show program's version number and exit
-  -h, --help         show this help message and exit
+pyFormex is a tool for generating, manipulating and transforming large
+geometrical models of 3D structures by sequences of mathematical
+transformations.
+
+Options
+=======
+--gui               start the GUI (default if no scriptfile argument is given)
+--nogui             do not load the GUI (default if a scriptfile argument is
+                    given)
+--interactive, -i   go into interactive mode after processing the command line
+                    parameters. This is implied by the --gui option.
+--force-dri         Force use of Direct Rendering
+--force-nodri       Disables the Direct Rendering
+--uselib            Use the pyFormex C lib if available. This is the default.
+--nouselib          Do not use the pyFormex C-lib.
+--safelib           Convert data types to match C-lib. This is the default.
+--unsafelib         Do not convert data types to match C-lib. BEWARE: this may
+                    make the C-lib calls impossible. Use only for debugging
+                    purposes.
+--fastencode        Use a fast algorithm to encode edges.
+--config=CONFIG     Use file CONFIG for settings
+--nodefaultconfig   Skip the default site and user config files. This option
+                    can only be used in conjunction with the --config option.
+--redirect          Redirect standard output to the message board (ignored
+                    with --nogui)
+--debug             display debugging info to sys.stdout
+--debuglevel=DEBUG  display debugging info to sys.stdout
+--test              testing mode: only for developers!
+--testfpbug         testing mode: only for developers!
+--testexecutor      test alternate executor: only for developers!
+--remove            remove the pyformex installation and exit
+--whereami          show where the pyformex package is installed and exit
+--detect            show detected helper software and exit
+--version           show program's version number and exit
+--help, -h          show this help message and exit

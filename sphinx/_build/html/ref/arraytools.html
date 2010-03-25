@@ -306,15 +306,15 @@ r2+i*r3 en r2-i*r3, where i = sqrt(-1).</blockquote>
 </dd></dl>
 
 <dl class="function">
-<dt id="arraytools.inverseIndex">
-<tt class="descclassname">arraytools.</tt><tt class="descname">inverseIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.inverseIndex" title="Permalink to this definition">¶</a></dt>
+<dt id="arraytools.inverseUniqueIndex">
+<tt class="descclassname">arraytools.</tt><tt class="descname">inverseUniqueIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.inverseUniqueIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inverse an index.</p>
 <p>index is a one-dimensional integer array with unique non-negative values.</p>
 <p>The return value is the inverse index: each value shows the position
 of its index in the index array. The length of the inverse index is
 equal to maximum value in index plus one. Values not occurring in index
 get a value -1 in the inverse index.</p>
-<p>Remark that inverseIndex(index)[index] == arange(1+index.max()).
+<p>Remark that inverseUniqueIndex(index)[index] == arange(1+index.max()).
 The inverse index thus translates the unique index numbers in a
 sequential index.</p>
 </dd></dl>

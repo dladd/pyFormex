@@ -94,6 +94,7 @@ These modules are located under pyformex/gui.
    :numbered: 12
 
    ref/widgets
+   ref/menu
    ref/colorscale
    ref/actors
    ref/decors
@@ -106,7 +107,7 @@ These modules are located under pyformex/gui.
    ref/imagearray
    ref/imagecolor
    ref/imageViewer
-   ref/scriptsMenu
+   ref/scriptMenu
    ref/toolbar
 
 
@@ -118,9 +119,10 @@ path, these modules are in no way different from other pyFormex modules.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 27
+   :numbered: 28
 
    ref/curve
+   ref/mesh
    ref/surface
    ref/geomtools
    ref/isopar
@@ -128,9 +130,8 @@ path, these modules are in no way different from other pyFormex modules.
    ref/inertia
    ref/units
    ref/datareader
-   ref/mesh
-   ref/fe
    ref/properties
+   ref/fe
    ref/fe_abq
    ref/fe_post
    ref/postproc
@@ -156,7 +157,7 @@ elsewhere.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 48
+   :numbered: 49
 
    ref/olist
    ref/mydict

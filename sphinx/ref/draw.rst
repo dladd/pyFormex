@@ -15,8 +15,8 @@
 
 
    .. autofunction:: closeGui()
-   .. autofunction:: showMessage(text,actions=['OK'],level='info')
-   .. autofunction:: showInfo(text,actions=['OK'])
+   .. autofunction:: showMessage(text,actions=['OK'],level='info',modal=True)
+   .. autofunction:: showInfo(text,actions=['OK'],modal=True)
    .. autofunction:: warning(text,actions=['OK'])
    .. autofunction:: error(text,actions=['OK'])
    .. autofunction:: ask(question,choices=None)
@@ -82,6 +82,9 @@
    .. autofunction:: flatwire()
    .. autofunction:: smooth_avg()
    .. autofunction:: lights(onoff)
+   .. autofunction:: transparent(state=None)
+   .. autofunction:: perspective(state=None)
+   .. autofunction:: timeout(state=None)
    .. autofunction:: set_material_value(typ,val)
    .. autofunction:: set_light(light)
    .. autofunction:: set_light_value(light,key,val)

@@ -20,7 +20,6 @@ sys.path.insert(0,os.path.abspath('../pyformex/examples'))
 sys.path.insert(0,os.path.abspath('../pyformex/plugins'))
 sys.path.insert(0,os.path.abspath('../pyformex/gui'))
 sys.path.insert(0,os.path.abspath('../pyformex'))
-## sys.path = [os.path.abspath('../pyformex'+subdir) for subdir in ['','/gui','/plugins','/examples']]
 
 # -- General configuration -----------------------------------------------------
 

@@ -72,11 +72,15 @@ Coords class to the derived classes.</p>
 intended to make the Coords transformations available without explicit
 declaration. This class is not intended to be used directly, only
 through derived classes.</p>
-<p>The derived classes should have an attribute <cite>coords</cite> which is
-a Coords object containing the coordinates of all the points that should
-get transformed under a Coords transformation.
-All the Coords transformation methods are inherited by the Geometry
-class and will be executed on the <cite>coords</cite> attribute.</p>
+<p>There is no initialization to be done when constructing a new instance of
+this class. The class just defines a set of methods which operate on
+the attribute <cite>coords</cite> which is be a Coords object.
+Most of the transformation methods of the Coords class are thus exported
+through the Geometry class to its derived classes, and when called, will
+get executed on the <cite>coords</cite> attribute. 
+The derived class should make sure this attribute exists and contains
+the coordinates of all the points that should get transformed under a
+Coords transformation.</p>
 <p>Derived classes can (and in most cases should) declare a method
 <cite>setCoords(coords)</cite> returning an object that is identical to the
 original, except for its coords being replaced by new ones with the
@@ -94,23 +98,9 @@ one is the changed copy.</li>
 will result in both <cite>A</cite> and <cite>B</cite> pointing to the same scaled object,
 while with the second method, <cite>A</cite> would still be the untransformed
 object. Since the latter is in line with the design philosophy of
-pyFormex, is is</p>
-<p>The default <cite>setCoords</cite> method is <cite>setCoords_copy</cite>.
+pyFormex, it is set as the default <cite>setCoords</cite> method.
 Most derived classes that are part of pyFormex however override this
-default and implement a more efficient cop
-Neither of both are good enough for pyFormex classes though</p>
-<p>the coords attribute in the object and returns the existing object:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span>
-<span class="k">return</span> <span class="bp">self</span>
-</pre></div>
-</div>
-<p>While the user can stick with this default in his scripts,
-it is not in line with the default scripting language design of
-pyFormex, which is to not change an existing object inplace, but rather
-have the transformation return a changed object.
-* Therefore, derived classes that are part of pyFormex should always
-define their own implementation of setCoords(coords) <a href="#id1"><span class="problematic" id="id2">*</span></a>.</p>
-<p>A Geometry contains a single attribute, coords, which is a Coords object.</p>
+default and implement a more efficient copy method.</p>
 <p>Geometry objects have the following methods:</p>
 <dl class="method">
 <dt id="geometry.Geometry.x">
@@ -514,7 +504,7 @@ No points of the <tt class="xref docutils literal"><span class="pre">Coords</spa
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="colors.html"
-                                  title="previous chapter">6. <tt class="docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+                                  title="previous chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="connectivity.html"
                                   title="next chapter">8. <tt class="docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>

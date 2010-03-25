@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>53. config — A general yet simple configuration class. &mdash; pyFormex v0.8.2-a2 documentation</title>
+    <title>54. config — A general yet simple configuration class. &mdash; pyFormex v0.8.2-a2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,8 +22,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="54. flatkeydb — Flat Text File Database." href="flatkeydb.html" />
-    <link rel="prev" title="52. collection — Tools for handling collections of elements belonging to multiple parts." href="collection.html" /> 
+    <link rel="next" title="55. flatkeydb — Flat Text File Database." href="flatkeydb.html" />
+    <link rel="prev" title="53. collection — Tools for handling collections of elements belonging to multiple parts." href="collection.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,10 +36,10 @@
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="flatkeydb.html" title="54. flatkeydb — Flat Text File Database."
+          <a href="flatkeydb.html" title="55. flatkeydb — Flat Text File Database."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="collection.html" title="52. collection — Tools for handling collections of elements belonging to multiple parts."
+          <a href="collection.html" title="53. collection — Tools for handling collections of elements belonging to multiple parts."
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -55,7 +55,7 @@
           <div class="body">
             
   <div class="section" id="module-config">
-<span id="sec-ref-config"></span><h1>53. <tt class="xref docutils literal"><span class="pre">config</span></tt> &#8212; A general yet simple configuration class.<a class="headerlink" href="#module-config" title="Permalink to this headline">¶</a></h1>
+<span id="sec-ref-config"></span><h1>54. <tt class="xref docutils literal"><span class="pre">config</span></tt> &#8212; A general yet simple configuration class.<a class="headerlink" href="#module-config" title="Permalink to this headline">¶</a></h1>
 <p>A general yet simple configuration class.</p>
 <div class="line-block">
 <div class="line">(C) 2005 Benedict Verhegghe</div>
@@ -179,6 +179,26 @@ opened.</p>
 <p>The function returns self, so that you can write: cfg = Config().</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="config.Config.write">
+<tt class="descname">write</tt><big>(</big><em>filename</em>, <em>header=&quot;# Config written by pyFormex    -*- PYTHON -*-nn&quot;</em>, <em>trailer=&quot;n# End of confign&quot;</em><big>)</big><a class="headerlink" href="#config.Config.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the config to the given file</p>
+<p>The configuration data will be written to the file with the given name
+in a text format that is both readable by humans and by the
+Config.read() method.</p>
+<p>The header and trailer arguments are strings that will be added at
+the start and end of the outputfile. Make sure they are valid
+Python statements (or comments) and that they contain the needed
+line separators, if you want to be able to read it back.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="config.Config.keys">
+<tt class="descname">keys</tt><big>(</big><em>descend=True</em><big>)</big><a class="headerlink" href="#config.Config.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the keys in the config.</p>
+<p>By default this descends one level of Dicts.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><strong>Functions defined in the module config</strong></p>
@@ -210,10 +230,10 @@ dict.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="collection.html"
-                                  title="previous chapter">52. <tt class="docutils literal docutils literal"><span class="pre">collection</span></tt> &#8212; Tools for handling collections of elements belonging to multiple parts.</a></p>
+                                  title="previous chapter">53. <tt class="docutils literal"><span class="pre">collection</span></tt> &#8212; Tools for handling collections of elements belonging to multiple parts.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="flatkeydb.html"
-                                  title="next chapter">54. <tt class="docutils literal"><span class="pre">flatkeydb</span></tt> &#8212; Flat Text File Database.</a></p>
+                                  title="next chapter">55. <tt class="docutils literal"><span class="pre">flatkeydb</span></tt> &#8212; Flat Text File Database.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/config.txt"
@@ -246,10 +266,10 @@ dict.</p>
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="flatkeydb.html" title="54. flatkeydb — Flat Text File Database."
+          <a href="flatkeydb.html" title="55. flatkeydb — Flat Text File Database."
              >next</a> |</li>
         <li class="right" >
-          <a href="collection.html" title="52. collection — Tools for handling collections of elements belonging to multiple parts."
+          <a href="collection.html" title="53. collection — Tools for handling collections of elements belonging to multiple parts."
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     

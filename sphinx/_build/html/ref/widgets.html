@@ -22,7 +22,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.2-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="14. colorscale — Color mapping of a range of values." href="colorscale.html" />
+    <link rel="next" title="14. menu — Menus for the pyFormex GUI." href="menu.html" />
     <link rel="prev" title="12. elements — Element local coordinates and numbering." href="elements.html" /> 
   </head>
   <body>
@@ -36,7 +36,7 @@
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="colorscale.html" title="14. colorscale — Color mapping of a range of values."
+          <a href="menu.html" title="14. menu — Menus for the pyFormex GUI."
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="elements.html" title="12. elements — Element local coordinates and numbering."
@@ -54,10 +54,1287 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="widgets-a-collection-of-custom-widgets-used-in-the-pyformex-gui">
-<span id="sec-ref-widgets"></span><h1>13. <tt class="xref docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI<a class="headerlink" href="#widgets-a-collection-of-custom-widgets-used-in-the-pyformex-gui" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-widgets">
+<span id="sec-ref-widgets"></span><h1>13. <tt class="xref docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI<a class="headerlink" href="#module-widgets" title="Permalink to this headline">¶</a></h1>
+<p>A collection of custom widgets used in the pyFormex GUI</p>
+<p>The widgets in this module were primarily created in function of the
+pyFormex GUI. The user can apply them to change the GUI or to add
+interactive widgets to his scripts. Of course he can also use all the
+Qt widgets directly.</p>
+<dl class="class">
+<dt id="widgets.FileSelection">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">FileSelection</tt><big>(</big><em>path='.'</em>, <em>pattern='*.*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em><big>)</big><a class="headerlink" href="#widgets.FileSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A file selection dialog.</p>
+<p>You can specify a default path/filename that will be suggested initially.
+If a pattern is specified, only matching files will be shown.
+A pattern can be something like <tt class="docutils literal"><span class="pre">Images</span> <span class="pre">(*.png</span> <span class="pre">*.jpg)</span></tt> or a list
+of such strings.
+Default mode is to accept any filename. You can specify exist=True
+to accept only existing files. Or set exist=True and multi=True to
+accept multiple files.
+If dir==True, a single existing directory is asked.</p>
+<p>The constructor shows the widget.</p>
+<p>FileSelection objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.FileSelection.show">
+<tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big><a class="headerlink" href="#widgets.FileSelection.show" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.FileSelection.getFilename">
+<tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#widgets.FileSelection.getFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask for a filename by user interaction.</p>
+<p>Return the filename selected by the user.
+If the user hits CANCEL or ESC, None is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.ProjectSelection">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ProjectSelection</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>compression=4</em>, <em>ignore_signature=True</em><big>)</big><a class="headerlink" href="#widgets.ProjectSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A file selection dialog specialized for opening projects.</p>
+<p>Create the dialog.</p>
+<p>ProjectSelection objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.ProjectSelection.getResult">
+<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ProjectSelection.getResult" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.SaveImageDialog">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">SaveImageDialog</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>multi=False</em><big>)</big><a class="headerlink" href="#widgets.SaveImageDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dialog for saving to an image file.</p>
+<p>The dialog contains the normal file selection widget plus some
+extra fields to set the Save Image parameters:</p>
+<ul class="simple">
+<li>Whole Window: If checked, the whole pyFormex main window will be
+saved. If unchecked, only the current OpenGL viewport is saved.</li>
+</ul>
+<p>Create the dialog.</p>
+<p>SaveImageDialog objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.SaveImageDialog.getResult">
+<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.SaveImageDialog.getResult" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.ImageViewerDialog">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ImageViewerDialog</tt><big>(</big><em>path=None</em><big>)</big><a class="headerlink" href="#widgets.ImageViewerDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dialog to select an image file.</p>
+<p>The dialog helps selecting the correct image by displaying the
+image in an image viewer widget.</p>
+<p>ImageViewerDialog objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.ImageViewerDialog.getFilename">
+<tt class="descname">getFilename</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ImageViewerDialog.getFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask for a filename by user interaction.</p>
+<p>Return the filename selected by the user.
+If the user hits CANCEL or ESC, None is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.DockedSelection">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">DockedSelection</tt><big>(</big><em>slist=</em><span class="optional">[</span><span class="optional">]</span>, <em>title='Selection Dialog'</em>, <em>mode=None</em>, <em>sort=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#widgets.DockedSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A widget that is docked in the main window and contains a modeless
+dialog for selecting items.</p>
+<p>DockedSelection objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.DockedSelection.setSelected">
+<tt class="descname">setSelected</tt><big>(</big><em>selected</em>, <em>bool</em><big>)</big><a class="headerlink" href="#widgets.DockedSelection.setSelected" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.DockedSelection.getResult">
+<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.DockedSelection.getResult" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.ModelessSelection">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ModelessSelection</tt><big>(</big><em>slist=</em><span class="optional">[</span><span class="optional">]</span>, <em>title='Selection Dialog'</em>, <em>mode=None</em>, <em>sort=False</em>, <em>func=None</em>, <em>width=None</em>, <em>height=None</em><big>)</big><a class="headerlink" href="#widgets.ModelessSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A modeless dialog for selecting one or more items from a list.</p>
+<p>Create the SelectionList dialog.</p>
+<p>ModelessSelection objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.ModelessSelection.setSelected">
+<tt class="descname">setSelected</tt><big>(</big><em>selected</em>, <em>bool</em><big>)</big><a class="headerlink" href="#widgets.ModelessSelection.setSelected" title="Permalink to this definition">¶</a></dt>
+<dd>Mark the specified items as selected.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.ModelessSelection.getResult">
+<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ModelessSelection.getResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of selected values.</p>
+<p>If the user cancels the selection operation, the return value is None.
+Else, the result is always a list, possibly empty or with a single
+value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.Selection">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Selection</tt><big>(</big><em>slist=</em><span class="optional">[</span><span class="optional">]</span>, <em>title='Selection Dialog'</em>, <em>mode=None</em>, <em>sort=False</em>, <em>selected=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#widgets.Selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dialog for selecting one or more items from a list.</p>
+<p>Create the SelectionList dialog.</p>
+<p>selected is a list of items that are initially selected.</p>
+<p>Selection objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.Selection.setSelected">
+<tt class="descname">setSelected</tt><big>(</big><em>selected</em><big>)</big><a class="headerlink" href="#widgets.Selection.setSelected" title="Permalink to this definition">¶</a></dt>
+<dd>Mark the specified items as selected.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.Selection.getResult">
+<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.Selection.getResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of selected values.</p>
+<p>If the user cancels the selection operation, the return value is None.
+Else, the result is always a list, possibly empty or with a single
+value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputItem">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputItem</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>A single input item, usually with a label in front.</p>
+<p>The created widget is a QHBoxLayout which can be embedded in the vertical
+layout of a dialog.</p>
+<p>This is a super class for all input items. It just creates a label.
+The input field(s) should be added by the dedicated subclass.</p>
+<p>The constructor has one required argument: <tt class="docutils literal"><span class="pre">name</span></tt>. It is the name used
+to identify the item and should be unique for all InputItems in the same
+dialog. 
+Other (optional) positional parameters are passed to the QHBoxLayout
+constructor.</p>
+<p>By default the constructor adds a label to the QHBoxLayout, with text set
+by the <tt class="docutils literal"><span class="pre">text</span></tt> keyword argument or (by default) by the name of the item.
+Use the <tt class="docutils literal"><span class="pre">text</span></tt> argument if you want the displayed text to be different
+from the items name.
+A <tt class="docutils literal"><span class="pre">text=''</span></tt> parameter will suppress the label. This is e.g. used in the
+InputBoolean constructor, where the text is displayed by the input field.</p>
+<p>The superclass also defines default values for the text(), value() and
+setValue() methods.</p>
+<p>Subclasses should initialize the superclass as follows:
+<tt class="docutils literal"><span class="pre">InputItem.__init__(self,name,*args,**kargs)</span></tt></p>
+<p>Subclasses should override:</p>
+<ul class="simple">
+<li>text(): if they called the superclass __init__() method with <tt class="docutils literal"><span class="pre">text=''</span></tt>;</li>
+<li>value(): if they did not create a self.input widget who&#8217;s text() is
+the return value of the item.</li>
+<li>setValue(): always, unless the field is readonly.</li>
+</ul>
+<p>Subclasses can set validators on the input, like
+<tt class="docutils literal"><span class="pre">input.setValidator(QtGui.QIntValidator(input))</span></tt></p>
+<p>Subclasses can define a show() method e.g. to select the data in the
+input field on display of the dialog.</p>
+<p>Creates a horizontal box layout and puts the label in it.</p>
+<p>InputItem objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputItem.name">
+<tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputItem.name" title="Permalink to this definition">¶</a></dt>
+<dd>Return the name of the InputItem.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputItem.text">
+<tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputItem.text" title="Permalink to this definition">¶</a></dt>
+<dd>Return the displayed text of the InputItem.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputItem.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputItem.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputItem.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputItem.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputInfo">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInfo</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>An unchangeable input field with a label in front.</p>
+<p>It is just like an InputString, but the text can not be edited.</p>
+<p>There are no specific options.</p>
+<p>Creates the input item.</p>
+<p>InputInfo objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputInfo.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputInfo.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputString">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputString</tt><big>(</big><em>name</em>, <em>value</em>, <em>max=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputString" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string input field with a label in front.</p>
+<p>If the type of value is not a string, the input string
+will be eval&#8217;ed before returning.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><cite>max</cite>: the maximum number of characters in the string.</li>
+</ul>
+<p>Creates the input item.</p>
+<p>InputString objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputString.show">
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputString.show" title="Permalink to this definition">¶</a></dt>
+<dd>Select all text on first display.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputString.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputString.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputText">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputText</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputText" title="Permalink to this definition">¶</a></dt>
+<dd><p>A scrollable text input field with a label in front.</p>
+<p>If the type of value is not a string, the input text
+will be eval&#8217;ed before returning.</p>
+<p>There are no specific op[tions.</p>
+<p>Creates the input item.</p>
+<p>InputText objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputText.show">
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputText.show" title="Permalink to this definition">¶</a></dt>
+<dd>Select all text on first display.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputText.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputText.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputText.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputText.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputBool">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBool</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputBool" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean input item.</p>
+<p>Creates a new checkbox for the input of a boolean value.</p>
+<p>Displays the name next to a checkbox, which will initially be set
+if value evaluates to True. (Does not use the label)
+The value is either True or False,depending on the setting
+of the checkbox.</p>
+<p>InputBool objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputBool.text">
+<tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputBool.text" title="Permalink to this definition">¶</a></dt>
+<dd>Return the displayed text.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputBool.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputBool.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputBool.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputBool.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputCombo">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputCombo</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>onselect=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputCombo" title="Permalink to this definition">¶</a></dt>
+<dd><p>A combobox InputItem.</p>
+<p>Creates a new combobox for the selection of a value from a list.</p>
+<p>choices is a list/tuple of possible values.
+default is the initial/default choice.
+If default is not in the choices list, it is prepended.
+If default is None, the first item of choices is taken as the default.</p>
+<p>The choices are presented to the user as a combobox, which will
+initially be set to the default value.</p>
+<p>An optional <cite>onselect</cite> function may be specified, which will be called
+whenever the current selection changes.</p>
+<p>InputCombo objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputCombo.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputCombo.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputCombo.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputCombo.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputRadio">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputRadio</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputRadio" title="Permalink to this definition">¶</a></dt>
+<dd><p>A radiobuttons InputItem.</p>
+<p>Creates radiobuttons for the selection of a value from a list.</p>
+<p>choices is a list/tuple of possible values.
+default is the initial/default choice.
+If default is not in the choices list, it is prepended.
+If default is None, the first item of choices is taken as the default.</p>
+<p>The choices are presented to the user as a hbox with radio buttons,
+of which the default will initially be pressed.
+If direction == &#8216;v&#8217;, the options are in a vbox.</p>
+<p>InputRadio objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputRadio.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputRadio.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputRadio.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputRadio.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputPush">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPush</tt><big>(</big><em>name</em>, <em>default=None</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputPush" title="Permalink to this definition">¶</a></dt>
+<dd><p>A pushbuttons InputItem.</p>
+<p>Creates pushbuttons for the selection of a value from a list.</p>
+<p>choices is a list/tuple of possible values.
+default is the initial/default choice.
+If default is not in the choices list, it is prepended.
+If default is None, the first item of choices is taken as the default.</p>
+<p>The choices are presented to the user as a hbox with radio buttons,
+of which the default will initially be selected.
+If direction == &#8216;v&#8217;, the options are in a vbox.</p>
+<p>InputPush objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputPush.setText">
+<tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big><a class="headerlink" href="#widgets.InputPush.setText" title="Permalink to this definition">¶</a></dt>
+<dd>Change the text on button index.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputPush.setIcon">
+<tt class="descname">setIcon</tt><big>(</big><em>icon</em>, <em>index=0</em><big>)</big><a class="headerlink" href="#widgets.InputPush.setIcon" title="Permalink to this definition">¶</a></dt>
+<dd>Change the icon on button index.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputPush.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputPush.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputPush.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputPush.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputInteger">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInteger</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer input item.</p>
+<p>Options:</p>
+<ul class="simple">
+<li>&#8216;min, &#8216;max&#8217;: range of the scale (integer)</li>
+</ul>
+<p>Creates a new integer input field with a label in front.</p>
+<p>InputInteger objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputInteger.show">
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputInteger.show" title="Permalink to this definition">¶</a></dt>
+<dd>Select all text on first display.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputInteger.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputInteger.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputInteger.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputInteger.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputFloat">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloat</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>An float input item.</p>
+<p>Creates a new float input field with a label in front.</p>
+<p>InputFloat objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputFloat.show">
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloat.show" title="Permalink to this definition">¶</a></dt>
+<dd>Select all text on first display.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputFloat.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloat.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputFloat.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputFloat.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputFloatTable">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloatTable</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFloatTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>A table of floats input item.</p>
+<p>Creates a new float table input field.</p>
+<p>InputFloatTable objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputFloatTable.show">
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloatTable.show" title="Permalink to this definition">¶</a></dt>
+<dd>Select all text on first display.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputFloatTable.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloatTable.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputFloatTable.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputFloatTable.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputSlider">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputSlider" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer input item using a slider.</p>
+<p>Options:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">min</span></tt>, <tt class="docutils literal"><span class="pre">max</span></tt>: range of the scale (integer)</li>
+<li><tt class="docutils literal"><span class="pre">ticks</span></tt> : step for the tick marks (default range length / 10)</li>
+<li><tt class="docutils literal"><span class="pre">func</span></tt> : an optional function to be called whenever the value is
+changed. The function takes a float/integer argument.</li>
+</ul>
+<p>Creates a new integer input slider.</p>
+<p>InputSlider objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputSlider.set_value">
+<tt class="descname">set_value</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputSlider.set_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputFSlider">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFSlider" title="Permalink to this definition">¶</a></dt>
+<dd><p>A float input item using a slider.</p>
+<p>Options:</p>
+<ul class="simple">
+<li>&#8216;min&#8217;, &#8216;max&#8217;: range of the scale (integer)</li>
+<li>&#8216;scale&#8217;: scale factor to compute the float value</li>
+<li>&#8216;ticks&#8217; : step for the tick marks (default range length / 10)</li>
+<li>&#8216;func&#8217; : an optional function to be called whenever the value is
+changed. The function receives the input field as argument. With
+this argument, the fields attirbutes like name, value, text, can
+be retrieved.</li>
+</ul>
+<p>Creates a new integer input slider.</p>
+<p>InputFSlider objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputFSlider.set_value">
+<tt class="descname">set_value</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputFSlider.set_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputColor">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputColor</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A color input item.</p>
+<p>Creates a new color input field with a label in front.</p>
+<p>The color input field is a button displaying the current color.
+Clicking on the button opens a color dialog, and the returned
+value is set in the button.</p>
+<p>InputColor objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputColor.setColor">
+<tt class="descname">setColor</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputColor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputColor.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#widgets.InputColor.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputFont">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFont</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFont" title="Permalink to this definition">¶</a></dt>
+<dd><p>An input item to select a font.</p>
+<p>Creates a new font input field.</p>
+<p>InputFont objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputFont.setFont">
+<tt class="descname">setFont</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFont.setFont" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputWidget">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputWidget</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>An input item containing any other widget.</p>
+<p>The widget should have:</p>
+<ul class="simple">
+<li>a results attribute that is set to
+a dict with the resulting input values when the widget&#8217;s
+acceptData() is called.</li>
+<li>an acceptData() method, that sets the widgets results dict.</li>
+<li>a setValue(dict) method that sets the widgets values to those
+specified in the dict.</li>
+</ul>
+<p>The return value of this item is an ODict.</p>
+<p>Creates a new InputWidget.</p>
+<p>InputWidget objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputWidget.text">
+<tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputWidget.text" title="Permalink to this definition">¶</a></dt>
+<dd>Return the displayed text.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputWidget.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputWidget.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputWidget.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputWidget.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.NewInputDialog">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">NewInputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>scroll=False</em>, <em>store=None</em>, <em>prefix=''</em>, <em>autoprefix=False</em>, <em>modal=None</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dialog widget to interactively set the value of one or more items.</p>
+<p>Overview</p>
+<p>The pyFormex user has full access to the Qt4 framework on which the
+GUI was built. Therefore he can built input dialogs as complex and
+powerful as he can imagine. However, directly dealing with the
+Qt4 libraries requires some skills and, for simple input widgets,
+more effort than needed.</p>
+<p>The InputDialog class presents a unified system for quick and easy
+creation of common dialog types. The provided dialog can become
+quite sophisticated with tabbed pages, groupboxes and custom widgets.
+Both modal and modeless (non-modal) dialogs can be created.</p>
+<p>Items</p>
+<p>Each basic input item is a dictionary, where the fields have the
+following meaning:</p>
+<ul class="simple">
+<li>name:  the name of the field,</li>
+<li>value: the initial or default value of the field,</li>
+<li>itemtype: the type of values the field can accept,</li>
+<li>options: a dict with options for the field.</li>
+<li>text: if specified, the text value will be displayed instead of
+the name. The name value will remain the key in the return dict.
+Use this field to display a more descriptive text for the user,
+while using a short name for handling the value in your script.</li>
+<li>buttons:</li>
+<li>tooltip:</li>
+<li>min:</li>
+<li>max:</li>
+<li>scale:</li>
+<li>func:</li>
+</ul>
+<p>Other arguments</p>
+<ul class="simple">
+<li>caption: the window title to be shown in the window decoration</li>
+<li>actions: a list of action buttons to be added at the bottom of the
+input form. By default, a Cancel and Ok button will be added, to either
+reject or accept the input values.</li>
+<li>parent: the parent widget (by default, this is the pyFomrex main window)</li>
+<li>flags:</li>
+<li>modal:</li>
+</ul>
+<p>Create a dialog asking the user for the value of items.</p>
+<p>NewInputDialog objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.NewInputDialog.add_items">
+<tt class="descname">add_items</tt><big>(</big><em>items</em>, <em>form</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.add_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add input items to form.</p>
+<p>items is a list of input item data
+layout is the widget layout where the input widgets will be added</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.NewInputDialog.add_tab">
+<tt class="descname">add_tab</tt><big>(</big><em>name</em>, <em>items</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.add_tab" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.NewInputDialog.add_group">
+<tt class="descname">add_group</tt><big>(</big><em>name</em>, <em>items</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.add_group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.NewInputDialog.inputAny">
+<tt class="descname">inputAny</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.inputAny" title="Permalink to this definition">¶</a></dt>
+<dd>Create an InputItem with the new data style.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.NewInputDialog.timeout">
+<tt class="descname">timeout</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.timeout" title="Permalink to this definition">¶</a></dt>
+<dd>Hide the dialog and set the result code to TIMEOUT</dd></dl>
+
+<dl class="method">
+<dt id="widgets.NewInputDialog.timedOut">
+<tt class="descname">timedOut</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.timedOut" title="Permalink to this definition">¶</a></dt>
+<dd>Returns True if the result code was set to TIMEOUT</dd></dl>
+
+<dl class="method">
+<dt id="widgets.NewInputDialog.show">
+<tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the dialog.</p>
+<p>For a non-modal dialog, the user has to call this function to
+display the dialog. 
+For a modal dialog, this is implicitely executed by getResult().</p>
+<p>If a timeout is given, start the timeout timer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.NewInputDialog.acceptData">
+<tt class="descname">acceptData</tt><big>(</big><em>result=ACCEPTED</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.acceptData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the dialog&#8217;s return value from the field values.</p>
+<p>This function is connected to the &#8216;accepted()&#8217; signal.
+Modal dialogs should normally not need to call it.
+In non-modal dialogs however, you can call it to update the
+results without having to raise the accepted() signal (which
+would close the dialog).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.NewInputDialog.updateData">
+<tt class="descname">updateData</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.updateData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a dialog from the data in given dictionary.</p>
+<p>d is a dictionary where the keys are field names in the dialog.
+The values will be set in the corresponding input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.NewInputDialog.getResult">
+<tt class="descname">getResult</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.getResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the results from the input dialog.</p>
+<p>This fuction is used to present a modal dialog to the user (i.e. a
+dialog that must be ended before the user can continue with the
+program. The dialog is shown and user interaction is processed.
+The user ends the interaction either by accepting the data (e.g. by
+pressing the OK button or the ENTER key) or by rejecting them (CANCEL
+button or ESC key).
+On accept, a dictionary with all the fields and their values is
+returned. On reject, an empty dictionary is returned.</p>
+<p>If a timeout (in seconds) is given, a timer will be started and if no
+user input is detected during this period, the input dialog returns
+with the default values set.
+A value 0 will timeout immediately, a negative value will never timeout.
+The default is to use the global variable input_timeout.</p>
+<p>The result() method can be used to find out how the dialog was ended.
+Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.OldInputDialog">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">OldInputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>scroll=False</em><big>)</big><a class="headerlink" href="#widgets.OldInputDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dialog widget to set the value of one or more items.</p>
+<p>While general input dialogs can be constructed from all the underlying
+Qt classes, this widget provides a way to construct fairly complex
+input dialogs with a minimum of effort.</p>
+<p>The input dialog can be modal or non-modal dialog.</p>
+<p>Create a dialog asking the user for the value of items.</p>
+<p><cite>items</cite> is either a list of items, or a dict where each value is a
+list of items or another dict (where each value is then a list of items).
+If <cite>items</cite> is a dict, a tabbed widget will be created
+with a tab for each (key,value) pair in the dict. If the value is
+again a dict, then a box will be created for each (key,value) pair in
+that subdict.</p>
+<p>Each item in an <cite>items</cite> list is a list or tuple of the form
+(name,value,type,options), where the fields have the following meaning:</p>
+<ul class="simple">
+<li>name:  the name of the field,</li>
+<li>value: the initial or default value of the field,</li>
+<li>type:  the type of values the field can accept,</li>
+<li>options: a dict with options for the field.</li>
+</ul>
+<p>At least the name and initial value need to be specified. The type
+can often be determined from the initial value. Some types set the
+initial value from an option if it was an empty string or None.
+The options dictionary has both generic options, available for all
+item types, and type specific options.</p>
+<p>Each item specifies a single input field, and its value will be
+contained in the results dictionary using the field name as a key.</p>
+<p>For each item a single input line is created in the dialog.
+This line by default consists of a label displaying the field
+name and a LineEdit widget where the initial value is displayed
+and can be changed. Where appropriate, a validator function is attached
+to it.</p>
+<p>The following options are applicable to all item types:</p>
+<ul class="simple">
+<li>text: if specified, the text value will be displayed instead of
+the name. The name value will remain the key in the return dict.
+Use this field to display a more descriptive text for the user,
+while using a short name for handling the value in your script.</li>
+<li>buttons:</li>
+<li>tooltip:</li>
+</ul>
+<p>Currently, the following item types are available:</p>
+<p>The item specific options:
+- min
+- max
+- range: the range of values the field can accept,
+- choices</p>
+<p>The first two fields are mandatory. In many cases the type can be
+determined from the value and no other fields are required. Thus:</p>
+<ul class="simple">
+<li>[ &#8216;name&#8217;, &#8216;value&#8217; ] will accept any string (initial string = &#8216;value&#8217;),</li>
+<li>[ &#8216;name&#8217;, True ] will show a checkbox with the item checked,</li>
+<li>[ &#8216;name&#8217;, 10 ] will accept any integer,</li>
+<li>[ &#8216;name&#8217;, 1.5 ] will accept any float.</li>
+</ul>
+<p>Range settings for int and float types:</p>
+<ul class="simple">
+<li>[ &#8216;name&#8217;, 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive</li>
+<li>[ &#8216;name&#8217;, 1, float, 0.0, 1.0, 2 ] will accept a float in the range
+from 0.0 to 1.0 with a maximum of two decimals.</li>
+</ul>
+<p>Composed types:</p>
+<ul class="simple">
+<li>[ &#8216;name&#8217;, &#8216;option1&#8217;, &#8216;select&#8217;, [&#8216;option0&#8217;,&#8217;option1&#8217;,&#8217;option2&#8217;]] will
+present a combobox to select between one of the options.
+The initial and default value is &#8216;option1&#8217;.</li>
+<li>[ &#8216;name&#8217;, &#8216;option1&#8217;, &#8216;radio&#8217;, [&#8216;option0&#8217;,&#8217;option1&#8217;,&#8217;option2&#8217;]] will
+present a group of radiobuttons to select between one of the options.
+The initial and default value is &#8216;option1&#8217;.
+A variant &#8216;vradio&#8217; aligns the options vertically.</li>
+<li>[ &#8216;name&#8217;, &#8216;option1&#8217;, &#8216;push&#8217;, [&#8216;option0&#8217;,&#8217;option1&#8217;,&#8217;option2&#8217;]] will
+present a group of pushbuttons to select between one of the options.
+The initial and default value is &#8216;option1&#8217;.
+A variant &#8216;vpush&#8217; aligns the options vertically.</li>
+<li>[ &#8216;name&#8217;, &#8216;red&#8217;, &#8216;color&#8217; ] will present a color selection widget,
+with &#8216;red&#8217; as the initial choice.</li>
+</ul>
+<p>OldInputDialog objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.OldInputDialog.add_input_items">
+<tt class="descname">add_input_items</tt><big>(</big><em>items</em>, <em>layout</em><big>)</big><a class="headerlink" href="#widgets.OldInputDialog.add_input_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add input items.</p>
+<p>items is a list of input item data
+layout is the widget layout where the input widgets will be added</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.OldInputDialog.timeout">
+<tt class="descname">timeout</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.OldInputDialog.timeout" title="Permalink to this definition">¶</a></dt>
+<dd>Hide the dialog and set the result code to TIMEOUT</dd></dl>
+
+<dl class="method">
+<dt id="widgets.OldInputDialog.timedOut">
+<tt class="descname">timedOut</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.OldInputDialog.timedOut" title="Permalink to this definition">¶</a></dt>
+<dd>Returns True if the result code was set to TIMEOUT</dd></dl>
+
+<dl class="method">
+<dt id="widgets.OldInputDialog.show">
+<tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big><a class="headerlink" href="#widgets.OldInputDialog.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the dialog.</p>
+<p>For a non-modal dialog, the user has to call this function to
+display the dialog. 
+For a modal dialog, this is implicitely executed by getResult().</p>
+<p>If a timeout is given, start the timeout timer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.OldInputDialog.acceptData">
+<tt class="descname">acceptData</tt><big>(</big><em>result=ACCEPTED</em><big>)</big><a class="headerlink" href="#widgets.OldInputDialog.acceptData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the dialog&#8217;s return value from the field values.</p>
+<p>This function is connected to the &#8216;accepted()&#8217; signal.
+Modal dialogs should normally not need to call it.
+In non-modal dialogs however, you can call it to update the
+results without having to raise the accepted() signal (which
+would close the dialog).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.OldInputDialog.updateData">
+<tt class="descname">updateData</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#widgets.OldInputDialog.updateData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a dialog from the data in given dictionary.</p>
+<p>d is a dictionary where the keys are field names in the dialog.
+The values will be set in the corresponding input items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.OldInputDialog.getResult">
+<tt class="descname">getResult</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#widgets.OldInputDialog.getResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the results from the input dialog.</p>
+<p>This fuction is used to present a modal dialog to the user (i.e. a
+dialog that must be ended before the user can continue with the
+program. The dialog is shown and user interaction is processed.
+The user ends the interaction either by accepting the data (e.g. by
+pressing the OK button or the ENTER key) or by rejecting them (CANCEL
+button or ESC key).
+On accept, a dictionary with all the fields and their values is
+returned. On reject, an empty dictionary is returned.</p>
+<p>If a timeout (in seconds) is given, a timer will be started and if no
+user input is detected during this period, the input dialog returns
+with the default values set.
+A value 0 will timeout immediately, a negative value will never timeout.
+The default is to use the global variable input_timeout.</p>
+<p>The result() method can be used to find out how the dialog was ended.
+Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputDialog">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputDialog</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputDialog" title="Permalink to this definition">¶</a></dt>
+<dd>InputDialog objects have the following methods:</dd></dl>
+
+<dl class="class">
+<dt id="widgets.TableModel">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big><a class="headerlink" href="#widgets.TableModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A table model that represent data as a two-dimensional array of items.</p>
+<p>data is any tabular data organized in a fixed number of rows and colums.
+This means that an item at row i and column j can be addressed as
+data[i][j].
+Optional lists of column and row headers can be specified.</p>
+<p>TableModel objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.TableModel.makeEditable">
+<tt class="descname">makeEditable</tt><big>(</big><em>edit=True</em><big>)</big><a class="headerlink" href="#widgets.TableModel.makeEditable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.rowCount">
+<tt class="descname">rowCount</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel.rowCount" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.columnCount">
+<tt class="descname">columnCount</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel.columnCount" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.data">
+<tt class="descname">data</tt><big>(</big><em>index</em>, <em>role</em><big>)</big><a class="headerlink" href="#widgets.TableModel.data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.headerData">
+<tt class="descname">headerData</tt><big>(</big><em>col</em>, <em>orientation</em>, <em>role</em><big>)</big><a class="headerlink" href="#widgets.TableModel.headerData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.insertRows">
+<tt class="descname">insertRows</tt><big>(</big><em>row=None</em>, <em>count=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel.insertRows" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.removeRows">
+<tt class="descname">removeRows</tt><big>(</big><em>row=None</em>, <em>count=None</em><big>)</big><a class="headerlink" href="#widgets.TableModel.removeRows" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.flags">
+<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#widgets.TableModel.flags" title="Permalink to this definition">¶</a></dt>
+<dd>Return the TableModel flags.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.TableModel.setData">
+<tt class="descname">setData</tt><big>(</big><em>index</em>, <em>value</em>, <em>role=_EDITROLE</em><big>)</big><a class="headerlink" href="#widgets.TableModel.setData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.ArrayModel">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ArrayModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A TableModel specialized for represents 2D array data.</p>
+<ul class="simple">
+<li><cite>data</cite>: a numpy array with two dimensions.</li>
+<li><cite>chead</cite>, <cite>rhead</cite>: column and row headers. The default will show column
+and row numbers.</li>
+<li><cite>edit</cite>: if True (default), the data can be edited. Set to False to make
+the data readonly.</li>
+</ul>
+<p>ArrayModel objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.ArrayModel.setData">
+<tt class="descname">setData</tt><big>(</big><em>index</em>, <em>value</em>, <em>role=_EDITROLE</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel.setData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.Table">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>label=None</em>, <em>edit=True</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.Table" title="Permalink to this definition">¶</a></dt>
+<dd><p>A widget to show/edit a two-dimensional array of items.</p>
+<ul class="simple">
+<li><cite>data</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns. If
+<cite>data</cite> is an ndarray instance, the Table will use an ArrayModel,
+else a TableModel. The difference is important when editing the table.
+Also, an ArrayModel has default row and column headers, while a
+TableModel doesn&#8217;t.</li>
+<li><cite>chead</cite>: an optional list of <cite>ncol</cite> column headers.</li>
+<li><cite>rhead</cite>: an optional list of <cite>nrow</cite> row headers.</li>
+<li><cite>label</cite>: currently unused (intended to display an optional label
+in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are specified.</li>
+</ul>
+<p>Initialize the Table widget.</p>
+<p>Table objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.Tabs">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Tabs</tt><big>(</big><em>items</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.Tabs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Present a list of widgets as a single tabbed widget.</p>
+<ul class="simple">
+<li><cite>items</cite>: a list of (header,widget) tuples.</li>
+<li><cite>caption</cite>:</li>
+<li><cite>parent</cite>:</li>
+</ul>
+<p>Create the TabWidget.</p>
+<p>Tabs objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.Dialog">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Dialog</tt><big>(</big><em>widgets</em>, <em>title=None</em>, <em>parent=None</em>, <em>actions=</em><span class="optional">[</span>, <em>('OK'</em>, <em>)</em><span class="optional">]</span>, <em>default='OK'</em><big>)</big><a class="headerlink" href="#widgets.Dialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generic dialog widget.</p>
+<p>The dialog if formed by a number of widgets stacked in a vertical box
+layout. At the bottom is a horizontal button box with possible actions.</p>
+<ul class="simple">
+<li><cite>widgets</cite>: a list of widgets to include in the dialog</li>
+<li><cite>title</cite>: the window title for the dialog</li>
+<li><cite>parent</cite>: the parent widget. If None, it is set to GD.GUI.</li>
+<li><cite>actions</cite>: the actions to include in the bottom button box. By default,
+an &#8216;OK&#8217; button is displayed to close the dialog. Can be set to None
+to avoid creation of a button box.</li>
+<li><cite>default</cite>: the default action, &#8216;OK&#8217; by default.</li>
+</ul>
+<p>Create the Dialog</p>
+<p>Dialog objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.Dialog.add">
+<tt class="descname">add</tt><big>(</big><em>widgets</em>, <em>pos=1</em><big>)</big><a class="headerlink" href="#widgets.Dialog.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.TableDialog">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableDialog</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>title=None</em>, <em>parent=None</em>, <em>actions=</em><span class="optional">[</span>, <em>('OK'</em>, <em>)</em><span class="optional">]</span>, <em>default='OK'</em><big>)</big><a class="headerlink" href="#widgets.TableDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dialog widget to show/edit a two-dimensional array of items.</p>
+<p>A convenience class representing a Table within a dialog.</p>
+<p>Create the Table dialog.</p>
+<p>data is a 2-D array of items, with nrow rows and ncol columns.
+chead is an optional list of ncol column headers.
+rhead is an optional list of nrow row headers.</p>
+<p>TableDialog objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.OldTableDialog">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">OldTableDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>tab=False</em><big>)</big><a class="headerlink" href="#widgets.OldTableDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dialog widget to show two-dimensional arrays of items.</p>
+<p>Create the Table dialog.</p>
+<p>If tab = False, a dialog with one table is created and items
+should be a list [table_header,table_data].
+If tab = True, a dialog with multiple pages is created and items
+should be a list of pages [page_header,table_header,table_data].</p>
+<p>OldTableDialog objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.MessageBox">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">MessageBox</tt><big>(</big><em>text</em>, <em>format=''</em>, <em>level='info'</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em><span class="optional">]</span>, <em>default=None</em>, <em>timeout=None</em>, <em>modal=None</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.MessageBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>A message box is a widget displaying a short text for the user.</p>
+<p>The message box displays a text, an optional icon depending on the level
+and a number of push buttons.</p>
+<ul class="simple">
+<li><cite>text</cite>: the text to be shown. This can be either plain text or html
+or reStructuredText.</li>
+<li><cite>format</cite>: the text format: either &#8216;plain&#8217;, &#8216;html&#8217; or &#8216;rest&#8217;.
+Any other value will try automatic recognition.
+Recognition of plain text and html is automatic.
+A text is autorecognized to be reStructuredText if its first
+line starts with &#8216;..&#8217; and is followed by a blank line.</li>
+<li><cite>level</cite>: defines the icon that will be shown together with the text.
+If one of &#8216;question&#8217;, &#8216;info&#8217;, &#8216;warning&#8217; or &#8216;error&#8217;, a matching icon
+will be shown to hint the user about the type of message. Any other
+value will suppress the icon.</li>
+<li><cite>actions</cite>: a list of strings. For each string a pushbutton will be
+created which can be used to exit the dialog and remove the message.
+By default there is a single button labeled &#8216;OK&#8217;.</li>
+</ul>
+<p>When the MessageBox is displayed with the <a title="widgets.MessageBox.getResult" class="reference internal" href="#widgets.MessageBox.getResult"><tt class="xref docutils literal"><span class="pre">getResult()</span></tt></a> method,
+a modal
+dialog is created, i.e. the user will have to click a button or hit the
+ESC key before he can continue.</p>
+<p>If you want a modeless dialog, allowing the user to continue while the
+message stays open, use the <a title="widgets.MessageBox.show" class="reference internal" href="#widgets.MessageBox.show"><tt class="xref docutils literal"><span class="pre">show()</span></tt></a> mehod to display it.</p>
+<p>MessageBox objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.MessageBox.show">
+<tt class="descname">show</tt><big>(</big><em>modal=False</em><big>)</big><a class="headerlink" href="#widgets.MessageBox.show" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.MessageBox.getResult">
+<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.MessageBox.getResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display the message box and wait for user to click a button.</p>
+<p>This will show the message box as a modal dialog, so that the
+user has to click a button (or hit the ESC key) before he can continue.
+Returns the text of the button that was clicked or
+an empty string if ESC was hit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.MessageBox.updateText">
+<tt class="descname">updateText</tt><big>(</big><em>text</em>, <em>format=''</em><big>)</big><a class="headerlink" href="#widgets.MessageBox.updateText" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.TextBox">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TextBox</tt><big>(</big><em>text</em>, <em>format=None</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em>, <em>None</em><span class="optional">]</span>, <em>modal=None</em>, <em>parent=None</em>, <em>caption=None</em>, <em>flags=None</em><big>)</big><a class="headerlink" href="#widgets.TextBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a text and wait for user response.</p>
+<p>Possible choices are &#8216;OK&#8217; and &#8216;CANCEL&#8217;.
+The function returns True if the OK button was clicked or &#8216;ENTER&#8217;
+was pressed, False if the &#8216;CANCEL&#8217; button was pressed or ESC was pressed.</p>
+<p>TextBox objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.TextBox.getResult">
+<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.TextBox.getResult" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.TextBox.updateText">
+<tt class="descname">updateText</tt><big>(</big><em>text</em>, <em>format=''</em><big>)</big><a class="headerlink" href="#widgets.TextBox.updateText" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputBox">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBox</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#widgets.InputBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>A widget accepting a line of input.</p>
+<p>InputBox objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.ButtonBox">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ButtonBox</tt><big>(</big><em>name</em>, <em>actions=</em><span class="optional">[</span><span class="optional">]</span>, <em>parent=None</em>, <em>stretch=</em><span class="optional">[</span>, <em>-1</em>, <em>-1</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#widgets.ButtonBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>A box with action buttons.</p>
+<ul class="simple">
+<li><cite>name</cite>: a label to be displayed in front of the button box. An empty
+string will suppress it.</li>
+<li><cite>actions</cite>: a list of (button label, button function) tuples. The button
+function can be a normal callable function, or one of the values
+widgets.ACCEPTED or widgets.REJECTED. In the latter case, <cite>parent</cite>
+should be specified.</li>
+<li><cite>parent</cite>: the parent dialog holding this button box. It should be
+specified if one of the buttons actions is widgets.ACCEPTED or
+widgets.REJECTED.</li>
+</ul>
+<p>ButtonBox objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.ButtonBox.setText">
+<tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big><a class="headerlink" href="#widgets.ButtonBox.setText" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="widgets.ButtonBox.setIcon">
+<tt class="descname">setIcon</tt><big>(</big><em>icon</em>, <em>index=0</em><big>)</big><a class="headerlink" href="#widgets.ButtonBox.setIcon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.ComboBox">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ComboBox</tt><big>(</big><em>name</em>, <em>choices</em>, <em>func=None</em>, <em>*args</em><big>)</big><a class="headerlink" href="#widgets.ComboBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>ComboBox objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.ComboBox.setIndex">
+<tt class="descname">setIndex</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#widgets.ComboBox.setIndex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.CoordsBox">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">CoordsBox</tt><big>(</big><em>ndim=3</em>, <em>*args</em><big>)</big><a class="headerlink" href="#widgets.CoordsBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>A widget displaying the coordinates of a point.</p>
+<p>CoordsBox objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.CoordsBox.setValues">
+<tt class="descname">setValues</tt><big>(</big><em>values</em><big>)</big><a class="headerlink" href="#widgets.CoordsBox.setValues" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <p><strong>Functions defined in the module widgets</strong></p>
 <blockquote>
+<dl class="function">
+<dt id="widgets.setInputTimeout">
+<tt class="descclassname">widgets.</tt><tt class="descname">setInputTimeout</tt><big>(</big><em>timeout</em><big>)</big><a class="headerlink" href="#widgets.setInputTimeout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="widgets.addTimeOut">
+<tt class="descclassname">widgets.</tt><tt class="descname">addTimeOut</tt><big>(</big><em>widget</em>, <em>timeout=None</em>, <em>timeoutfunc=None</em><big>)</big><a class="headerlink" href="#widgets.addTimeOut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a timeout to a widget.</p>
+<ul class="simple">
+<li><cite>timeoutfunc</cite> is a callable. If None it will be set to the widget&#8217;s
+<cite>timeout</cite> method if one exists.</li>
+<li><cite>timeout</cite> is a float value. If None, it will be set to to the global
+<cite>input_timeout</cite>.</li>
+</ul>
+<p>If timeout is positive, a timer will be installed into the widget which
+will call the <cite>timeoutfunc</cite> after <cite>timeout</cite> seconds have elapsed.
+The <cite>timeoutfunc</cite> can be any callable, but usually will emit a signal
+to make the widget accept or reject the input. The timeoutfunc will not
+be called is if the widget is destructed before the timer has finished.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.selectFont">
+<tt class="descclassname">widgets.</tt><tt class="descname">selectFont</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.selectFont" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask the user to select a font.</p>
+<p>A font selection dialog widget is displayed and the user is requested
+to select a font.
+Returns a font if the user exited the dialog with the <strong>OK</strong>
+button.
+Returns None if the user clicked <strong>CANCEL</strong>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.getColor">
+<tt class="descclassname">widgets.</tt><tt class="descname">getColor</tt><big>(</big><em>col=None</em>, <em>caption=None</em><big>)</big><a class="headerlink" href="#widgets.getColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a color selection dialog and return the selected color.</p>
+<p>col is the initial selection.
+If a valid color is selected, its string name is returned, usually as
+a hex #RRGGBB string. If the dialog is canceled, None is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.defaultItemType">
+<tt class="descclassname">widgets.</tt><tt class="descname">defaultItemType</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#widgets.defaultItemType" title="Permalink to this definition">¶</a></dt>
+<dd>Guess the InputItem type from the value</dd></dl>
+
+<dl class="function">
+<dt id="widgets.simpleInputItem">
+<tt class="descclassname">widgets.</tt><tt class="descname">simpleInputItem</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>itemtype=None</em><big>)</big><a class="headerlink" href="#widgets.simpleInputItem" title="Permalink to this definition">¶</a></dt>
+<dd>A convenience function to create an InputItem dictionary</dd></dl>
+
+<dl class="function">
+<dt id="widgets.compatInputItem">
+<tt class="descclassname">widgets.</tt><tt class="descname">compatInputItem</tt><big>(</big><em>name</em>, <em>value</em>, <em>itemtype=None</em>, <em>kargs={}</em><big>)</big><a class="headerlink" href="#widgets.compatInputItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>A convenience function to create an InputItem dictionary</p>
+<p>This function accepts InputItem data in the old format:
+( name, value, [ itemtype, [ optionsdict ] ] )
+and turns them into a dictionary as required by the new
+InputItem format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.inputAny">
+<tt class="descclassname">widgets.</tt><tt class="descname">inputAny</tt><big>(</big><em>name</em>, <em>value</em>, <em>itemtype=str</em><big>)</big><a class="headerlink" href="#widgets.inputAny" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an InputItem of any type, depending on the arguments.</p>
+<p>Arguments: only name and value are required</p>
+<ul class="simple">
+<li>name: name of the item, also the key for the return value</li>
+<li>value: initial value,</li>
+<li>itemtype: one of the available itemtypes, default derived from value or
+str if value is not recognized.</li>
+<li>text: descriptive text displayed on the input dialog, default equal to
+name</li>
+<li>choices: a list of posible values (for selection types)</li>
+<li>min,max: limits for range types</li>
+<li>validator: customized validation function</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.inputAnyOld">
+<tt class="descclassname">widgets.</tt><tt class="descname">inputAnyOld</tt><big>(</big><em>item</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.inputAnyOld" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an InputItem with the old data style.</p>
+<p>This translates the data from the legacy InputItem data to the
+new style required by InputAny.
+Returns the InputItem constrctured with the data.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.updateDialogItems">
+<tt class="descclassname">widgets.</tt><tt class="descname">updateDialogItems</tt><big>(</big><em>data</em>, <em>newdata</em><big>)</big><a class="headerlink" href="#widgets.updateDialogItems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the input data fields with new data values</p>
+<p>data: a list of dialog items, as required by an InputDialog.
+newdata: a dictionary with new values for (some of) the items.
+The values in data which have a matching key in newdata will be
+replaced with the new value, unless it is None.</p>
+<p>This function requires that the dialog items are lists, not tuples.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.updateText">
+<tt class="descclassname">widgets.</tt><tt class="descname">updateText</tt><big>(</big><em>widget</em>, <em>text</em>, <em>format=''</em><big>)</big><a class="headerlink" href="#widgets.updateText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the text of a text display widget.</p>
+<ul class="simple">
+<li><cite>widget</cite>: a widget that has the <tt class="xref docutils literal"><span class="pre">setText()</span></tt>, <tt class="xref docutils literal"><span class="pre">setPlainText()</span></tt>
+and <tt class="xref docutils literal"><span class="pre">setHtml()</span></tt> methods to set the widget&#8217;s text.
+Examples are <tt class="xref docutils literal"><span class="pre">QMessageBox</span></tt> and <tt class="xref docutils literal"><span class="pre">QTextEdit</span></tt>.</li>
+<li><cite>text</cite>: a multiline string with the text to be displayed.</li>
+<li><cite>format</cite>: the format of the text. If empty, autorecognition will be
+tried. Currently available formats are: <tt class="docutils literal"><span class="pre">plain</span></tt>, <tt class="docutils literal"><span class="pre">html</span></tt> and
+<tt class="docutils literal"><span class="pre">rest</span></tt> (reStructuredText).</li>
+</ul>
+<p>This function allows to display other text formats besides the
+plain text and html supported by the widget. 
+Any format other than <tt class="docutils literal"><span class="pre">plain</span></tt> or <tt class="docutils literal"><span class="pre">html</span></tt> will be converted to one
+of these before sending it to the widget. Currently, we convert the
+following formats:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">rest</span></tt> (reStructuredText): </dt>
+<dd>If the :mod:docutils is available, <cite>rest</cite> text is converted to <cite>html</cite>,
+otherwise it will be displayed as plain text.
+A text is autorecognized as reStructuredText if its first
+line starts with &#8216;..&#8217;. Note: If you add a &#8216;..&#8217; line to your text to
+have it autorecognized as reST, be sure to have it followed with a
+blank line, or your first paragraph could be turned into comments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="widgets.dialogButtons">
+<tt class="descclassname">widgets.</tt><tt class="descname">dialogButtons</tt><big>(</big><em>dialog</em>, <em>actions</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#widgets.dialogButtons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a set of dialog buttons</p>
+<p>dia is a dialog widget
+actions is a list of tuples (name,) or (name,function).
+If a function is specified, it will be executed on pressing the button.
+If no function is specified, and name is one of &#8216;ok&#8217; or &#8216;cancel&#8217; (case
+does not matter), the button will be bound to the dialog&#8217;s &#8216;accept&#8217;
+or &#8216;reject&#8217; slot.
+default is the name of the action to set as the default.</p>
+</dd></dl>
+
 </blockquote>
 </div>
 
@@ -73,10 +1350,10 @@
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="elements.html"
-                                  title="previous chapter">12. <tt class="docutils literal docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.</a></p>
+                                  title="previous chapter">12. <tt class="docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.</a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="colorscale.html"
-                                  title="next chapter">14. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
+            <p class="topless"><a href="menu.html"
+                                  title="next chapter">14. <tt class="docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/widgets.txt"
@@ -109,7 +1386,7 @@
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="colorscale.html" title="14. colorscale — Color mapping of a range of values."
+          <a href="menu.html" title="14. menu — Menus for the pyFormex GUI."
              >next</a> |</li>
         <li class="right" >
           <a href="elements.html" title="12. elements — Element local coordinates and numbering."

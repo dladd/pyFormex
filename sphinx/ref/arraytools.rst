@@ -44,7 +44,7 @@
    .. autofunction:: readArray(file,dtype,shape,sep=' ')
    .. autofunction:: writeArray(file,array,sep=' ')
    .. autofunction:: cubicEquation(a,b,c,d)
-   .. autofunction:: inverseIndex(index)
+   .. autofunction:: inverseUniqueIndex(index)
    .. autofunction:: sortByColumns(A)
    .. autofunction:: uniqueRows(A)
 

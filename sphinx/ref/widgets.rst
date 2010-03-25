@@ -15,12 +15,6 @@
 
 
 
-   .. autoclass:: Options
-
-
-      Options objects have the following methods:
-
-
    .. autoclass:: FileSelection
 
 
@@ -301,6 +295,7 @@
 
       MessageBox objects have the following methods:
 
+      .. automethod:: show(modal=False)
       .. automethod:: getResult()
       .. automethod:: updateText(text,format='')
 
