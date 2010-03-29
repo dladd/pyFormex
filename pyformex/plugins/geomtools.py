@@ -244,7 +244,7 @@ def intersectionTimesLWL(q1,m1,q2,m2):
     A = dotpr(m[:,newaxis],m[newaxis,:]) # (2,2,nq1,nq2)
     A[:,1] = -A[:,1]
     b = dotpr(q2-q1,m) # (2,nq1,nq2)
-    t1,t2 = solveCramer(A,b)
+    t1,t2 = solveMany(A,b)
     return t1,t2
 
 
@@ -422,7 +422,7 @@ def baryCoords(S,P):
     A = repeat(A,P.shape[1],2) # (dim,dim,npts,nel)
     b = dotpr(vs,vp) # (dim,npts,nel)
     # Compute barycentric coordinates        
-    t = solveCramer(A,b) # (dim,npts,nel)
+    t = solveMany(A,b) # (dim,npts,nel)
     t = asarray(t).transpose(1,2,0) # (npts,nel,dim)
     t0 = 1.-t.sum(-1)
     return dstack([t0,t])

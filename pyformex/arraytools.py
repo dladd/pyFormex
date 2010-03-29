@@ -196,13 +196,9 @@ def solveMany(A,b):
     if A.shape != (n,)+shape:
         raise ValueError,"A(%s) and b(%s) have incompatible shape" % (A.shape,b.shape)
     A = A.reshape(n,n,-1)
-    b = b.reshape(n)
+    b = b.reshape(n,-1)
     x = column_stack([ linalg.solve(A[:,:,i],b[:,i]) for i in range(b.shape[1])])
     return x.reshape(shape)
-
-@deprecation("Use solveMany instead")
-def solveCramer(A,b):
-    return solveMany(A,b)
 
 
 # Build-in function for Python 2.6
