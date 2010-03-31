@@ -442,3 +442,69 @@ def insideSimplex(BC,bound=True):
 
 
 # End
+
+def intersectionLWTriSurface(ts, ql, ml, side='+'):
+    """"it takes a TriSurface ts and a set of lines ql,m and intersect the lines with the TriSurface.
+    It returns an array of points and 2 arrays of indices: the points of intersection of the Lines with the Trisurface and for each point the index of the line and the index of the triangle which have been intersected.
+    If side is None the intersections produced by the line are returned, while if it is + or -, only half-line (ray) are used for the intersections.
+    The side ('+' or '-')  is positive or negative depending on the sign of the scalar product of 2 vectors: the direction of the line and the normal of the surface. Therefore, side it is usefull only if the TriSurface has correct normals.
+    This function can be used to PROJECT COORDS ON A SURFACE: project the points ql on a surface ts along a direction ml.
+    It seems working also if in case of Inf and NaN, occurring with lines parallel to faces or edges. With lines passing along edges it works but the intersection points of the edges are lost (this is not a problem because there will be the points of the neightbooring edges). Should a Warning be raised?"""
+    #gets centers/normals from TriSurface
+    nts, pts= ts.areaNormals()[1], ts.coords[ts.elems].mean(axis=1)
+    #intersecting the nl lines with all the nt planes of the TriSurface returning nl*nt points
+    xall=intersectionPointsLWP(ql,ml,pts,nts)
+    ##is it necessary to remove the Inf/-Inf/NaN ? (lines parallel to planes)
+    xinf=[ xi[prod(-isinf(xi), axis=1, dtype='bool')] for xi in xall]#what is not Inf
+    #if concatenate([ -isfinite(xi) for xi in xall]).any()==True: warning('some Lines are parallel to Edges/Faces of the TriSurface so the intersectionLWTriSurface gives some Inf/NaN')
+    #transforming the nl*nt points from cartesian to barycentric coordinates
+    xbaric=baryCoords(ts.coords[ts.elems],xall)
+    #checking which points are inside the triangles, returning nl x nt booleans
+    boolx= insideSimplex(xbaric)
+    #selecting only the points inside the triangles (true intersection points)
+    xpoints= xall[boolx]
+    #for each true intersection point gets the which line and which triangle
+    ixlines, ixtriangles= where(boolx)
+    if side==None:return xpoints, ixlines, ixtriangles
+    else:
+        ntri= nts[ixtriangles]#normals of intersected-triangles
+        nlin= ml[ixlines]#normals of intersected-lines
+        proj = projection(ntri,nlin)
+        if side=='+':return xpoints[proj>0], ixlines[proj>0], ixtriangles[proj>0]
+        if side=='-':return xpoints[proj<0], ixlines[proj<0], ixtriangles[proj<0]
+
+###to try the intersectionLWTriSurface(ts, ql, ml, side='+')
+#from numpy import *
+#from plugins.geomtools import *
+#from plugins.surface import *
+#from simple import *
+#from arraytools import  *
+#clear()
+#
+#S = Formex.read(getcfg('datadir')+'/horse.formex')
+#S = S.translate(-S.center())
+#xmin,xmax = S.bbox()
+#S= S.scale(10./(xmax[0]-xmin[0])).setProp(2)
+#s=TriSurface(S)
+#draw(s)
+#q0=[[3.0, 0., 0.5],[0., 0.5, 0.5 ],  [13., 2.5, 1.5], ]
+#m0=[[1., 1., 0.]]*3
+#m0=normalize(m0)
+#q0, m0=[ array(i) for i in [q0, m0] ]
+#def drawVec(P,v,d=1.0,color='red'):
+#    v = normalize(v)
+#    F = connect([Formex(P-v*d),Formex(P+v*d)])
+#    draw(F,color=color,linewidth=2)
+#    draw(Formex(P+v*d),marksize=6)
+#drawVec(q0,m0,d=10.,color='red')
+#drawNumbers(Formex(q0),color='red')
+#xinters, x_lines,x_tris=intersectionLWTriSurface(s, q0, m0, side=None)#side can be '+'(default) or '-' or None
+#for i, j , k in zip(x_lines,x_tris, xinters):
+#    print 'line %d,triangle %d, point %f,%f,%f'%(i, j, k[0],k[1],k[2])
+#F=Formex(xinters)
+#draw(F, marksize=15, color='blue')
+#zoomAll()
+
+
+
+
