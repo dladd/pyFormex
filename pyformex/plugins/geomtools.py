@@ -397,6 +397,110 @@ def intersectionTimesPOL(p,q,m):
     return (I1-I2)/I3
 
 
+################## distance tools ###############
+
+def facetDistance(X,Fp,return_points=False):
+    """Compute the closest perpendicular distance of points X to a set of facets.
+
+    X is a (nX,3) shaped array of points.
+    Fp is a (nF,nplex,3) shaped array of facet vertices.
+
+    Note that some points may not have a normal with footpoint inside any
+    of the facets.
+
+    The return value is a tuple OKpid,OKdist,OKpoints where:
+    - OKpid is an array with the point numbers having a normal distance;
+    - OKdist is an array with the shortest distances for these points;
+    - OKpoints is an array with the closest footpoints for these points
+    and is only returned if return_points = True.
+    """
+    if not Fp.shape[1] == 3:
+        raise ValueError, "Currently this function only works for triangular faces."
+    # Compute normals on the faces
+    Fn = cross(Fp[:,1]-Fp[:,0],Fp[:,2]-Fp[:,1])
+    # Compute intersection points of perpendiculars from X on facets F
+    Y = intersectionPointsPOP(X,Fp[:,0,:],Fn)
+    # Find intersection points Y inside the facets
+    inside = insideSimplex(baryCoords(Fp,Y))
+    pid = where(inside)[0]
+    X = X[pid]
+    Y = Y[inside]
+    # Compute the distances
+    dist = length(X-Y)
+    # Get the shortest distances
+    OKpid = unique(pid)
+    OKdist = array([ dist[pid == i].min() for i in OKpid ])
+    if return_points:
+        # Get the closest footpoints matching OKpid
+        minid = array([ dist[pid == i].argmin() for i in OKpid ])
+        OKpoints = array([ Y[pid==i][j] for i,j in zip(OKpid,minid) ]).reshape(-1,3)
+        return OKpid,OKdist,OKpoints
+    return OKpid,OKdist
+
+
+def edgeDistance(X,Ep,return_points=False):
+    """Compute the closest perpendicular distance of points X to a set of edges.
+
+    X is a (nX,3) shaped array of points.
+    Ep is a (nE,2,3) shaped array of edge vertices.
+
+    Note that some points may not have a normal with footpoint inside any
+    of the edges.
+
+    The return value is a tuple OKpid,OKdist,OKpoints where:
+    - OKpid is an array with the point numbers having a normal distance;
+    - OKdist is an array with the shortest distances for these points;
+    - OKpoints is an array with the closest footpoints for these points
+    and is only returned if return_points = True.
+    """
+    # Compute vectors along the edges
+    En = Ep[:,1] - Ep[:,0]
+    # Compute intersection points of perpendiculars from X on edges E
+    t = intersectionTimesPOL(X,Ep[:,0],En)
+    Y = Ep[:,0] + t[:,:,newaxis] * En
+    # Find intersection points Y inside the edges
+    inside = (t >= 0.) * (t <= 1.)
+    pid = where(inside)[0]
+    X = X[pid]
+    Y = Y[inside]
+    # Compute the distances
+    dist = length(X-Y)
+    # Get the shortest distances
+    OKpid = unique(pid)
+    OKdist = array([ dist[pid == i].min() for i in OKpid ])
+    if return_points:
+        # Get the closest footpoints matching OKpid
+        minid = array([ dist[pid == i].argmin() for i in OKpid ])
+        OKpoints = array([ Y[pid==i][j] for i,j in zip(OKpid,minid) ]).reshape(-1,3)
+        return OKpid,OKdist,OKpoints
+    return OKpid,OKdist
+
+
+def vertexDistance(X,Vp,return_points=False):
+    """Compute the closest distance of points X to a set of vertices.
+
+    X is a (nX,3) shaped array of points.
+    Vp is a (nV,3) shaped array of vertices.
+
+    The return value is a tuple OKdist,OKpoints where:
+    - OKdist is an array with the shortest distances for the points;
+    - OKpoints is an array with the closest vertices for the points
+    and is only returned if return_points = True.
+    """
+    # Compute the distances
+    dist = length(X[:,newaxis]-Vp)
+    # Get the shortest distances
+    OKdist = dist.min(-1)
+    if return_points:
+        # Get the closest points matching X
+        minid = dist.argmin(-1)
+        OKpoints = Vp[minid]
+        return OKdist,OKpoints
+    return OKdist,
+
+
+##########################################
+
 def baryCoords(S,P):
     """Return the barycentric coordinates of points P wrt. simplexes S.
     
