@@ -38,7 +38,7 @@ from formex import *
 import tempfile
 from numpy import *
 from gui.drawable import interpolateNormals
-from plugins.geomtools import projectionVOP,rotationAngle
+from plugins.geomtools import projectionVOP,rotationAngle,facetDistance,edgeDistance,vertexDistance
 from plugins import inertia
 
 hasExternal('admesh')
@@ -1032,6 +1032,51 @@ Total area: %s; Enclosed volume: %s
             area,volume
             )
         return s
+
+
+    def distanceOfPoints(self,X,return_points=False):
+        """Find the distances of points X to the TriSurface.
+    
+        The distance of a point is either:
+        - the closest perpendicular distance to the facets;
+        - the closest perpendicular distance to the edges;
+        - the closest distance to the vertices.
+    
+        X is a (nX,3) shaped array of points.
+        If return_points = True, a second value is returned: an array with
+        the closest (foot)points matching X.
+        """
+        nX = X.shape[0]
+        dist = empty((nX))
+        if return_points:
+            points = empty((nX,3))
+        # first try facets
+        Fp = self.coords[self.elems]
+        res = facetDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
+        OKpid = res[0]
+        dist[OKpid] = res[1]
+        if return_points:
+            points[OKpid] = res[2]
+        # try edges
+        NOKpid = setdiff1d(arange(nX),OKpid)
+        if len(NOKpid) > 0:
+            Ep = self.coords[self.getEdges()]
+            res = edgeDistance(X[NOKpid],Ep,return_points) # OKpid, OKdist, (OKpoints)
+            OKpid = NOKpid[res[0]]
+            dist[OKpid] = res[1]
+            if return_points:
+                points[OKpid] = res[2]
+        # try vertices
+        NOKpid = setdiff1d(NOKpid,OKpid)
+        if len(NOKpid) > 0:
+            Vp = self.coords
+            res = vertexDistance(X[NOKpid],Vp,return_points) # OKdist, (OKpoints)
+            dist[NOKpid] = res[0]
+            if return_points:
+                points[NOKpid] = res[1]
+        if return_points:
+            return dist,points
+        return dist
 
 
 ##################  Partitioning a surface #############################
