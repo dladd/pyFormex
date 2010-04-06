@@ -20,5 +20,7 @@ Links
 - The `BuMPer cluster`_.
 - The `Vascular Modeling Toolkit`_ (vmtk) provides complimentary tools.
 - `FEops`_, a young company providing professional services with pyFormex, also offers training and support for pyFormex.  
+- `Numpy`_ is a framework for efficient numerical array operations in
+  Python. It is the most important component on which pyFormex was built.
 
 .. End
