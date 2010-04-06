@@ -39,6 +39,7 @@ from plugins.tools import Plane
 from pyformex.arraytools import niceLogSize
 
 import os, timer
+from scipy.stats.stats import scoreatpercentile
 
 ##################### selection and annotations ##########################
 
@@ -425,7 +426,7 @@ SelectableStatsValues = odict.ODict([
     ('Curvature', (TriSurface.curvature,False)),
     ])
 
-CurvatureValues = ['Gaussian curvature','Mean curvature','Shape index','Curvedness']
+CurvatureValues = ['Gaussian curvature','Mean curvature','Shape index','Curvedness','First principal curvature','Second principal curvature']
 
 def showHistogram(key,val,cumulative):
     y,x = plot2d.createHistogram(val,cumulative=cumulative)
@@ -450,6 +451,14 @@ def showStatistics(key=None,domain=True,dist=False,cumdist=False):
             ind = CurvatureValues.index(curv_val)
             curv = func(S,curv_neigh)
             val = curv[ind]
+            rem_out = _stat_dia.results['Remove Curvature Outliers']
+            if rem_out:
+                Q1 = scoreatpercentile(val,25)
+                Q3 = scoreatpercentile(val,75)
+                factor = 3
+                vmin = Q1-factor*(Q3-Q1)
+                vmax = Q3+factor*(Q3-Q1)
+                val = val.clip(vmin,vmax)
             val = val[S.elems]
         else:
             val = func(S)
@@ -466,7 +475,7 @@ def _show_stats(domain,dist):
     key = res['Value']
     if dist and res['Cumulative Distribution']:
         cumdist = True
-        dist = False
+        dist = Fals/e
     else:
         cumdist = False
     showStatistics(key,domain,dist,cumdist)
@@ -494,6 +503,7 @@ def showStatisticsDialog():
         caption='Surface Statistics',items=[
             ('Value',None,'vradio',keys),
             ('Curvature Neighbourhood',1),
+            ('Remove Curvature Outliers',False),
             ('Curvature Value',None,'vradio',CurvatureValues),
             ('Cumulative Distribution',False),
             ],

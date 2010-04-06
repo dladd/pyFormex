@@ -284,6 +284,8 @@ def curvature(coords,elems,edges,neighbours=1):
     # calculate n-ring neighbourhood of the nodes (n=neighbours)
     adj = adjacencyArray(edges,neighbours=neighbours)
     adjNotOk = adj<0
+    # for nodes that have less than three adjacent nodes, remove the adjacencies
+    adjNotOk[(adj>=0).sum(-1) <= 2] = True
     # calculate unit length average normals at the nodes p
     # a weight 1/|gi-p| could be used (gi=center of the face fi)
     p = coords
@@ -291,9 +293,10 @@ def curvature(coords,elems,edges,neighbours=1):
     # double-precision: this will allow us to check the sign of the angles    
     p = p.astype(float64)
     n = n.astype(float64)
-    vp = p[adj] - p[:,newaxis,:]
-    vn = n[adj] - n[:,newaxis,:]
+    vp = p[adj] - p[:,newaxis]
+    vn = n[adj] - n[:,newaxis]    
     # where adjNotOk, set vectors = [0.,0.,0.]
+    # this will result in NaN values
     vp[adjNotOk] = 0.
     vn[adjNotOk] = 0.
     # calculate unit length projection of vp onto the tangent plane
@@ -305,11 +308,11 @@ def curvature(coords,elems,edges,neighbours=1):
     imax = nanargmax(k,-1)
     kmax =  k[range(len(k)),imax]
     tmax = t[range(len(k)),imax]
-    e1 = tmax
-    e2 = cross(e1,n)
-    e2 = normalize(e2)
-    # calculate angles (e1,t), where adj = -1, set angle = 0
-    theta,rot = rotationAngle(repeat(e1[:,newaxis],t.shape[1],1),t,angle_spec=Rad)
+    tmax1 = tmax
+    tmax2 = cross(n,tmax1)
+    tmax2 = normalize(tmax2)
+    # calculate angles (tmax1,t)
+    theta,rot = rotationAngle(repeat(tmax1[:,newaxis],t.shape[1],1),t,angle_spec=Rad)
     # check the sign of the angles
     d =  dotpr(rot,n[:,newaxis])/(length(rot)*length(n)[:,newaxis]) # divide by length for round-off errors
     cw = isClose(d,[-1.])
@@ -325,15 +328,6 @@ def curvature(coords,elems,edges,neighbours=1):
     denom = (a11*a22-a12**2)
     b = (a13*a22-a23*a12)/denom
     c = (a11*a23-a12*a13)/denom
-    # for nodes that have only two adjacent nodes, (a11*a22-a12**2) = 0, b=c=inf
-    # the curvature of these nodes should be zero
-    zeroDenom = isClose(denom,[0.],atol=1.e-5)
-    a[zeroDenom] = 0.
-    b[zeroDenom] = 0.
-    c[zeroDenom] = 0.
-    a = nan_to_num(a)
-    b = nan_to_num(b)
-    c = nan_to_num(c)
     # calculate the Gaussian and mean curvature
     K = a*c-b**2/4
     H = (a+c)/2
@@ -343,13 +337,10 @@ def curvature(coords,elems,edges,neighbours=1):
     theta0 = 0.5*arcsin(b/(k2-k1))
     w = apply_along_axis(isClose,0,-b,2*(k2-k1)*cos(theta0)*sin(theta0))
     theta0[w] = pi-theta0[w]
-    e1 = cos(theta0)[:,newaxis]*e1+sin(theta0)[:,newaxis]*e2
-    e2 = cos(theta0)[:,newaxis]*e2-sin(theta0)[:,newaxis]*e1
-    e1 = nan_to_num(e1)
-    e2 = nan_to_num(e2)
+    e1 = cos(theta0)[:,newaxis]*tmax1+sin(theta0)[:,newaxis]*tmax2
+    e2 = cos(theta0)[:,newaxis]*tmax2-sin(theta0)[:,newaxis]*tmax1
     # calculate the shape index and curvedness
     S = 2./pi*arctan((k1+k2)/(k1-k2))
-    S = nan_to_num(S)
     C = square((k1**2+k2**2)/2)
     return K,H,S,C,k1,k2,e1,e2
 
