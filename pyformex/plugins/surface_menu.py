@@ -39,7 +39,6 @@ from plugins.tools import Plane
 from pyformex.arraytools import niceLogSize
 
 import os, timer
-from scipy.stats.stats import scoreatpercentile
 
 ##################### selection and annotations ##########################
 
@@ -453,12 +452,19 @@ def showStatistics(key=None,domain=True,dist=False,cumdist=False):
             val = curv[ind]
             rem_out = _stat_dia.results['Remove Curvature Outliers']
             if rem_out:
-                Q1 = scoreatpercentile(val,25)
-                Q3 = scoreatpercentile(val,75)
-                factor = 3
-                vmin = Q1-factor*(Q3-Q1)
-                vmax = Q3+factor*(Q3-Q1)
-                val = val.clip(vmin,vmax)
+                try:
+                    from scipy.stats.stats import scoreatpercentile
+                    Q1 = scoreatpercentile(val,25)
+                    Q3 = scoreatpercentile(val,75)
+                    factor = 3
+                    vmin = Q1-factor*(Q3-Q1)
+                    vmax = Q3+factor*(Q3-Q1)
+                    val = val.clip(vmin,vmax)
+                except:
+                    warning("""..
+
+**Remove Curvature Outliers** option is not available.
+Most likely because 'python-scipy' is not installed.""")
             val = val[S.elems]
         else:
             val = func(S)
