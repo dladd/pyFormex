@@ -427,8 +427,8 @@ class Connectivity(ndarray):
 
         This function returns a tuple with two arrays:
         - an index used to sort the elements
-        - an flags array with the value True for indices of the unique elements
-          an False for those of the doubles.
+        - a flags array with the value True for indices of the unique elements
+          and False for those of the doubles.
         """
         if permutations:
             C = self.copy()
@@ -656,25 +656,14 @@ def adjacencyArray(elems,maxcon=3,neighbours=1):
         # remove the element itself
         k =arange(n)
         adj[adj == k.reshape(n,-1)] = -1
-        # remove duplicate elements
         adj.sort(axis=-1)
-        ncols = adj.shape[1]
-        pos = (ncols-1) * ones((n,),dtype=int32)
-        j = ncols-1
-        while j > 0:
-            j -= 1
-            t = adj[:,j] < adj[k,pos]
-            w = where(t)
-            x = where(t == 0)
-            pos[w] -= 1
-            adj[w,pos[w]] = adj[w,j]
-        pmin = pos.min()
-        p = pos.max()
-        while p > pmin:
-            adj[pos==p,p] = -1
-            pos[pos==p] -= 1
-            p = pos.max()
-        adj = adj[:,pmin+1:]
+        maxc = adj.max(axis=0)
+        adj = adj[:,maxc>=0]
+        # remove duplicate elements
+        adj[adj[:,:-1] == adj[:,1:]] = -1
+        adj.sort(axis=-1)
+        maxc = adj.max(axis=0)
+        adj = adj[:,maxc>=0]
     return adj
 
 
@@ -682,7 +671,7 @@ def connected(index,i):
     """Return the list of elements connected to element i.
 
     index is a (nr,nc) shaped integer array.
-    An element j of index is said to be connected to element i, iff element j
+    An element j of index is said to be connected to element i, if element j
     has at least one (non-negative) value in common with element i.
 
     The result is a sorted list of unique element numbers, not containing
@@ -696,12 +685,12 @@ def adjacent(index,rev=None):
     """Return an index of connected elements.
 
     index is a (nr,nc) shaped integer array.
-    An element j of index is said to be connected to element i, iff element j
+    An element j of index is said to be connected to element i, if element j
     has at least one (non-negative) value in common with element i.
 
     The result is an integer array with shape (nr,mc), where row i holds
     a sorted list of the elements that are connected to element i, padded with
-    -1 values to created an equal list length for all elements.
+    -1 values to create an equal list length for all elements.
 
     The result of this method provides the same information as repeated calls
     of connected(index,i), but may be more efficient if nr becomes large.
@@ -717,33 +706,13 @@ def adjacent(index,rev=None):
     # remove the element itself
     adj[adj == k.reshape(n,-1)] = -1
     adj.sort(axis=-1)
-    #print(adj)
-    ncols = adj.shape[1]
-    pos = (ncols-1) * ones((n,),dtype=int32)
-    #pos = column_stack([arange(n),pos])    
-    j = ncols-1
-    while j > 0:
-        j -= 1
-        #print(pos)
-        #print(adj[k,pos])
-        #print(adj[:,j])
-        t = adj[:,j] < adj[k,pos]
-        w = where(t)
-        x = where(t == 0)
-        pos[w] -= 1
-        adj[w,pos[w]] = adj[w,j]
-        #print(adj)
-
-    pmin = pos.min()
-    p = pos.max()
-    while p > pmin:
-        #print(pos==p)
-        adj[pos==p,p] = -1
-        pos[pos==p] -= 1
-        p = pos.max()
-        #print(adj)
-    adj = adj[:,pmin+1:]
-    #print(adj)
+    maxc = adj.max(axis=0)
+    adj = adj[:,maxc>=0]
+    # remove duplicate elements
+    adj[adj[:,:-1] == adj[:,1:]] = -1
+    adj.sort(axis=-1)
+    maxc = adj.max(axis=0)
+    adj = adj[:,maxc>=0]
     return adj
 
 
