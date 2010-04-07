@@ -54,6 +54,7 @@ one I can use for this example.
 
 
 n = 16
+nshow = 4
 
 F = simple.line([0.,0.,0.],[0.,1.,0.],n)
 M = F.toMesh()
@@ -119,7 +120,6 @@ print a
 print a.shape
 
 nmodes = a.shape[0]
-nshow = 4
 layout(nshow,ncols=4)
 hscale = 0.5
 

@@ -16,13 +16,13 @@ Participants
 ============
 The following pyFormex developers, users and enthusiasts were present.
 
-- Benedict Verhegghe
 - Matthieu De Beule
-- Peter Mortier
-- Sofie Van Cauter
 - Gianluca De Santis, secretary
+- Peter Mortier
 - Tomas Praet
 - Koen Van Canneyt
+- Sofie Van Cauter
+- Benedict Verhegghe
 
 
 Apologies
@@ -47,8 +47,8 @@ Documentation
 - The same examples should be available both in the pyFormex release
   and on the website. On the website, a gallery of screeshots without code
   needs to be added.
-- To understand a function, the examples containing that functions
-  should be selected by keyword.
+- To help in learning the use of a function, the examples containing
+  that function should be selectable from an index.
 - Automated generation of these features may be implemented by
   specifications in the example's docstring.
 
@@ -60,7 +60,7 @@ Draw 2D: interactive drawing
   clicking with the mouse. The created objects become global
   variables.
 - Drawing is done in 2D on an x-y-plane at any z-value.
-- What further functionality should pyFormex provide:
+- What further functionality could/should pyFormex provide:
   
   - Displaying the coordinate values.
   - Entering coordinates instead of clicking.
@@ -68,7 +68,7 @@ Draw 2D: interactive drawing
   - Editing/Deleting points 
   - Transformation of the drawing plane to any position and orientation
     in space.
-  - Combining multiple viewports may even allow full 3D interactive
+  - Combining multiple viewports may even allow full 3D interactive drawing.
 
 Different menus need integration
 --------------------------------
@@ -103,8 +103,8 @@ The pyFormex rendering engine
 pyFormex on Windows
 -------------------
 - Thomas Praet, a pioneer of pyFormex on Windows platform, compiled
-  some instruction of how to get pyFormex running on Windows.. 
-  pyFormex on Windows runs slower because the compiled C-libraries are
+  some instructions of how to get pyFormex running on Windows.
+  pyForme runs slowerx on Windows because the compiled C-libraries are
   missing. Also, some of the functionality will not be available. Still, the
   basic parts are mostly running well. An announcement will be made on
   the website and a link to the install instructions.
@@ -130,14 +130,12 @@ Demos
   to Gianluca's meshing tools, resulting in a splendid meshing tool.
   Parts of it will be included in future pyFormex versions.
 
-- interactive drawing tools (currently under development), applied
+- interactive drawing tools (currently under development,see above), applied
   to hexahedral meshing of bifurcations. Expect more from this in future.
   
 
 Varia
 =====
-
-- The pyFormex meeting starts being to long. Need for time schedule.
 
 
 Date of the next meeting
