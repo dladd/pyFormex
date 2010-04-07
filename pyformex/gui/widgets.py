@@ -94,8 +94,8 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
 
 
 
-## class Options:
-##     pass
+class Options:
+    pass
 
 ###################### File Selection Dialog #########################
 
