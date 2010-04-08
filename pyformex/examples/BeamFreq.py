@@ -21,10 +21,10 @@ import simple
 _install="""
 Calix is a free program and you can install it as follows:
 
-- download calix (1.5-a3 or higher) from ftp://bumps.ugent.be/pub/calix/
+- download calix (1.5-a5 or higher) from ftp://bumps.ugent.be/pub/calix/
 - unpack, compile and install (as root)::
 
-   tar xvzf calix-1.5-a3.tar.gz
+   tar xvzf calix-1.5-a5.tar.gz
    cd calix-1.5
    make
    (sudo) make install
@@ -42,7 +42,7 @@ This probably means that calix is not installed on your system.
    exit()
 
 s = [ si for si in out.split() if si.startswith('CALIX') ]
-if (len(s) == 0) or (s[0] != 'CALIX-1.5-a3'):
+if (len(s) == 0) or (s[0] != 'CALIX-1.5-a5'):
    showText("""..
 
 Error
@@ -134,7 +134,7 @@ fil = open('temp.dta','w')
 fil.write(s)
 fil.close()
 
-#showFile('temp.dta')
+showFile('temp.dta')
 
 cmd = "calix temp.dta temp.res"
 if os.path.exists('test.out'):
@@ -144,9 +144,9 @@ import utils
 sta,out = utils.runCommand(cmd)
 
 # Uncomment these in case of errors
-#showText(out)
-#showFile('temp.res')
-#showFile('test.out')
+showText(out)
+showFile('temp.res')
+showFile('test.out')
 
 # read results from eigenvalue analysis
 fil = open('test.out','r')

@@ -1179,8 +1179,8 @@ def compatInputItem(name,value,itemtype=None,kargs={}):
     InputItem format.
     """
     # Create a new dict item!
-    # Do not be tempted to change kargs directly like in simpleInputItem,
-    # or you will end up permanently changing the value of the empty dict!
+    # We cannot change kargs directly like in simpleInputItem,
+    # that would permanently change the value of the empty dict!
     item = {}
     item.update(kargs)
     item['name'] = name

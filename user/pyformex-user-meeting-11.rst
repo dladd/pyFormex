@@ -36,16 +36,20 @@ Minutes of the previous meeting
 
 Agenda and discussion
 =====================
+- new InputDialog: rationale and strategy
+- new Geometry File Format: replaces .formex
+- new Mesh functions: see Mesh example
+- documentation: please read,correct,comment reference manual
 - example documentation: see Mesh example
 - display ReStructuredText
 - projects to screen/follow: SciPy, pygts
-- documentation: please read,correct,comment reference manual
 
 Demos
 =====
-- BeamFreq example
+- Mesh example
 - surface curvature
 - examples from student projects
+- BeamFreq example
 
 Varia
 =====
