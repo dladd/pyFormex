@@ -18,6 +18,7 @@ This example shows the first natural vibration modes of an elatic beam.
 from plugins.curve import *
 import simple
 
+
 _install="""
 Calix is a free program and you can install it as follows:
 
@@ -55,11 +56,13 @@ one I can use for this example.
 n = 16
 nshow = 4
 bcons = ['cantilever','simply supported']
+verbose = False
 
 res = askItems([
    ('n',n,{'text':'number of elements along beam'}),
    ('nshow',nshow,{'text':'number of natural modes to show'}),
-   ('bcon',bcons[0],{'text':'beam boundary conditions','choices':bcons})
+   ('bcon',bcons[0],{'text':'beam boundary conditions','choices':bcons}),
+   ('verbose',verbose,{'text':'show intermediate information'}),
    ])
 if not res:
    exit()
@@ -134,19 +137,23 @@ fil = open('temp.dta','w')
 fil.write(s)
 fil.close()
 
-showFile('temp.dta')
 
+if verbose:
+   # show calix input data
+   showFile('temp.dta')
+
+# run calix
 cmd = "calix temp.dta temp.res"
 if os.path.exists('test.out'):
    os.remove('test.out')
-   
-import utils
+ 
 sta,out = utils.runCommand(cmd)
 
-# Uncomment these in case of errors
-showText(out)
-showFile('temp.res')
-showFile('test.out')
+if verbose:
+   # show calix output
+   showText(out)
+   showFile('temp.res')
+   showFile('test.out')
 
 # read results from eigenvalue analysis
 fil = open('test.out','r')
