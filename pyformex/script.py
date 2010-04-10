@@ -45,19 +45,19 @@ import threading,os,commands,copy,re,time
 
 ######################### Exceptions #########################################
 
-class Exit(Exception):
+class _Exit(Exception):
     """Exception raised to exit from a running script."""
     pass    
 
-class ExitAll(Exception):
+class _ExitAll(Exception):
     """Exception raised to exit pyFormex from a script."""
     pass    
 
-class ExitSeq(Exception):
+class _ExitSeq(Exception):
     """Exception raised to exit from a sequence of scripts."""
     pass    
 
-class TimeOut(Exception):
+class _TimeOut(Exception):
     """Exception raised to timeout from a dialog widget."""
     pass    
 
@@ -331,9 +331,9 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             if pyformex.cfg['autoglobals']:
                 exportNames.extend(listAll(clas=formex.Formex,dic=g))
             pyformex.PF.update([(k,g[k]) for k in exportNames])
-        except Exit:
+        except _Exit:
             pass
-        except ExitAll:
+        except _ExitAll:
             exitall = True
         except:
             raise
@@ -392,7 +392,7 @@ def breakpt(msg=None):
         if msg is not None:
             pyformex.message(msg)
         exitrequested = False # reset for next time
-        raise Exit
+        raise _Exit
 
 
 def enableBreak(mode=True):
@@ -413,11 +413,13 @@ def playFile(fn,argv=[]):
     argv. This variable can be changed by the script and the resulting argv
     is returned to the caller.
     """
+    from timer import Timer
+    t = Timer()
     message("Running script (%s)" % fn)
     pyformex.debug("  Executing with arguments: %s" % argv)
     res = playScript(file(fn,'r'),fn,fn,argv,fn.endswith('.pye'))
     pyformex.debug("  Arguments left after execution: %s" % argv)
-    message("Finished script %s" % fn)
+    message("Finished script %s in %s seconds" % (fn,t.seconds()))
     return res
 
 
@@ -445,9 +447,9 @@ def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
     if scriptRunning:
         if all:
-            raise ExitAll # exit from pyformex
+            raise _ExitAll # exit from pyformex
         else:
-            raise Exit # exit from script only
+            raise _Exit # exit from script only
     if pyformex.app and pyformex.app_started: # exit from GUI
         pyformex.debug("draw.exit called while no script running")
         pyformex.app.quit() # close GUI and exit pyformex
@@ -596,8 +598,8 @@ def writeGeomFile(filename,objects,sep=' ',mode='w'):
     The format is portable over different pyFormex versions and 
     even to other software.
 
-    -`filename`: the name of the file to be written
-    -`objects`: a list or a dictionary. If it is a dictionary,
+    - `filename`: the name of the file to be written
+    - `objects`: a list or a dictionary. If it is a dictionary,
       the objects will be saved with the key values as there names.
       Objects that can not be exported to a Geometry File will be
       silently ignored.
@@ -622,7 +624,7 @@ def readGeomFile(filename):
     The format is portable over different pyFormex versions and 
     even to other software.
 
-    -`filename`: the name of an exisiting pyFormex Geometry File.
+    - `filename`: the name of an exisiting pyFormex Geometry File.
     
     Returns a dictionary with the geometric objects read from the file.
     If object names were stored in the file, they will be used as the keys.

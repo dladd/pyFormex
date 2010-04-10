@@ -1024,7 +1024,7 @@ Total area: %s; Enclosed volume: %s
             )
         return s
 
-
+    
     def distanceOfPoints(self,X,return_points=False):
         """Find the distances of points X to the TriSurface.
     
@@ -1037,37 +1037,35 @@ Total area: %s; Enclosed volume: %s
         If return_points = True, a second value is returned: an array with
         the closest (foot)points matching X.
         """
-        nX = X.shape[0]
-        dist = empty((nX))
+        # distance from vertices
+        Vp = self.coords
+        res = vertexDistance(X,Vp,return_points) # OKdist, (OKpoints)
+        dist = res[0]
         if return_points:
-            points = empty((nX,3))
-        # first try facets
+            points = res[1]
+
+        # distance from edges
+        Ep = self.coords[self.getEdges()]
+        res = edgeDistance(X,Ep,return_points) # OKpid, OKdist, (OKpoints)
+        okE,distE = res[:2]
+        closer = distE < dist[okE]
+        dist[okE[closer]] = distE[closer]
+        if return_points:
+            points[okE[closer]] = res[2][closer]
+
+        # distance from faces
         Fp = self.coords[self.elems]
         res = facetDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
-        OKpid = res[0]
-        dist[OKpid] = res[1]
+        okF,distF = res[:2]
+        closer = distF < dist[okF]
+        dist[okE[closer]] = distF[closer]
         if return_points:
-            points[OKpid] = res[2]
-        # try edges
-        NOKpid = setdiff1d(arange(nX),OKpid)
-        if len(NOKpid) > 0:
-            Ep = self.coords[self.getEdges()]
-            res = edgeDistance(X[NOKpid],Ep,return_points) # OKpid, OKdist, (OKpoints)
-            OKpid = NOKpid[res[0]]
-            dist[OKpid] = res[1]
-            if return_points:
-                points[OKpid] = res[2]
-        # try vertices
-        NOKpid = setdiff1d(NOKpid,OKpid)
-        if len(NOKpid) > 0:
-            Vp = self.coords
-            res = vertexDistance(X[NOKpid],Vp,return_points) # OKdist, (OKpoints)
-            dist[NOKpid] = res[0]
-            if return_points:
-                points[NOKpid] = res[1]
+            points[okE[closer]] = res[2][closer]
+
         if return_points:
             return dist,points
-        return dist
+        else:
+            return dist
 
 
 ##################  Partitioning a surface #############################
