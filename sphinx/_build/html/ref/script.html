@@ -61,34 +61,6 @@
 in all pyFormex scripts. These functions are available in GUI and NONGUI
 applications, without the need to explicitely importing the <tt class="xref docutils literal"><span class="pre">script</span></tt>
 module.</p>
-<dl class="class">
-<dt id="script.Exit">
-<em class="property">class </em><tt class="descclassname">script.</tt><tt class="descname">Exit</tt><a class="headerlink" href="#script.Exit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exception raised to exit from a running script.</p>
-<p>Exit objects have the following methods:</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="script.ExitAll">
-<em class="property">class </em><tt class="descclassname">script.</tt><tt class="descname">ExitAll</tt><a class="headerlink" href="#script.ExitAll" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exception raised to exit pyFormex from a script.</p>
-<p>ExitAll objects have the following methods:</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="script.ExitSeq">
-<em class="property">class </em><tt class="descclassname">script.</tt><tt class="descname">ExitSeq</tt><a class="headerlink" href="#script.ExitSeq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exception raised to exit from a sequence of scripts.</p>
-<p>ExitSeq objects have the following methods:</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="script.TimeOut">
-<em class="property">class </em><tt class="descclassname">script.</tt><tt class="descname">TimeOut</tt><a class="headerlink" href="#script.TimeOut" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exception raised to timeout from a dialog widget.</p>
-<p>TimeOut objects have the following methods:</p>
-</dd></dl>
-
 <p><strong>Functions defined in the module script</strong></p>
 <blockquote>
 <dl class="function">
@@ -359,13 +331,12 @@ comp: a string used in the comparison.</p>
 native format that can be efficiently read back into pyFormex.
 The format is portable over different pyFormex versions and 
 even to other software.</p>
-<p>-<cite>filename</cite>: the name of the file to be written
--<cite>objects</cite>: a list or a dictionary. If it is a dictionary,</p>
-<blockquote>
+<ul class="simple">
+<li><cite>filename</cite>: the name of the file to be written</li>
+<li><cite>objects</cite>: a list or a dictionary. If it is a dictionary,
 the objects will be saved with the key values as there names.
 Objects that can not be exported to a Geometry File will be
-silently ignored.</blockquote>
-<ul class="simple">
+silently ignored.</li>
 <li><cite>mode</cite>: can be set to &#8216;a&#8217; to append to an existing file.</li>
 <li><cite>sep</cite>: the string used to separate data. If set to an empty
 string, the data will be written in binary format and the resulting file
@@ -382,7 +353,9 @@ will be smaller but less portable.</li>
 native format that can be efficiently read back into pyFormex.
 The format is portable over different pyFormex versions and 
 even to other software.</p>
-<p>-<cite>filename</cite>: the name of an exisiting pyFormex Geometry File.</p>
+<ul class="simple">
+<li><cite>filename</cite>: the name of an exisiting pyFormex Geometry File.</li>
+</ul>
 <p>Returns a dictionary with the geometric objects read from the file.
 If object names were stored in the file, they will be used as the keys.
 Else, default names will be provided.</p>

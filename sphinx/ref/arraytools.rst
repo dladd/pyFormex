@@ -1,6 +1,3 @@
-.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"Use solveMany instead"'))))))))))))))))), (8, ')'), (4, '')))
-.. MATCHING (259, (50, '@'), (287, (1, 'deprecation')))
-.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"Use solveMany instead"'))))))))))))))))), (8, ')'), (4, '')))
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- arraytools
 .. CREATED WITH py2rst.py: DO NOT EDIT
@@ -28,7 +25,6 @@
    .. autofunction:: projection(A,B,axis=1)
    .. autofunction:: norm(v,n=2)
    .. autofunction:: solveMany(A,b)
-   .. autofunction:: solveCramer(A,b)
    .. autofunction:: permutations(iterable,r=None)
    .. autofunction:: inside(p,mi,ma)
    .. autofunction:: isClose(values,target,rtol=1.e-5,atol=1.e-8)

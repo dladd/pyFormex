@@ -15,6 +15,12 @@
 
 
 
+   .. autoclass:: Options
+
+
+      Options objects have the following methods:
+
+
    .. autoclass:: FileSelection
 
 

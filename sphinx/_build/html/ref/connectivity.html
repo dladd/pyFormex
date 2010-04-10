@@ -242,9 +242,12 @@ of the items in the collapsed rows is lost.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="connectivity.Connectivity.expand">
-<tt class="descname">expand</tt><big>(</big><em>edg=None</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.expand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transform elems to edges and faces.</p>
+<dt id="connectivity.Connectivity.untangle">
+<tt class="descname">untangle</tt><big>(</big><em>ind=None</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.untangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Untangle a Connectivity into lower plexitude tables.</p>
+<p>There is no point in untangling a plexitude 2 structure.
+Plexitudes lower than 2 can not be untangled.
+Default is to untangle to plex-2 data (as in polygon to line segment).</p>
 <p>Return a tuple edges,faces where</p>
 <ul class="simple">
 <li>edges is an (nedges,2) int array of edges connecting two node numbers.</li>
@@ -254,24 +257,25 @@ each pair os subsequent nodes in the elements of elems.</li>
 <p>The order of the edges respects the node order, and starts with
 nodes 0-1.
 The node numbering in the edges is always lowest node number first.</p>
-<p>The inverse operation is available as the static method
-Connectivity.compress().</p>
+<p>For untangled Connectivities obtained with the default indices,
+an inverse operation is available as hi.tangle(lo).
+Degenerate rows may come back as a permutation!</p>
 </dd></dl>
 
-<dl class="staticmethod">
-<dt id="connectivity.Connectivity.compress">
-<em class="property">static </em><tt class="descname">compress</tt><big>(</big><em>hi</em>, <em>lo</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.compress" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="connectivity.Connectivity.tangle">
+<tt class="descname">tangle</tt><big>(</big><em>lo</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.tangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compress two hierarchical Connectivity levels to a single one.</p>
-<p>hi and lo are two hierarchical Connectivity tables, representing
+<p>self and lo are two hierarchical Connectivity tables, representing
 higher and lower level respectively. This means that the elements
-of hi hold numbers which point into lo to obtain the lowest level
+of self hold numbers which point into lo to obtain the lowest level
 items.</p>
 <p>In the current implementation, the plexitude of lo should be 2!</p>
 <p>As an example, in a structure of triangles, hi could represent
 triangles defined by 3 edges and lo could represent edges defined
 by 2 vertices. The compress method will then result in a table
 with plexitude 3 defining the triangles in function of the vertices.</p>
-<p>This is the inverse operation of expand (without specifying edg).
+<p>This is the inverse operation of untangle (without specifying ind).
 The algorithm only works if all vertex numbers of an element are
 unique.</p>
 </dd></dl>
@@ -347,16 +351,6 @@ column of index.</p>
 <dl class="function">
 <dt id="connectivity.reverseIndex">
 <tt class="descclassname">connectivity.</tt><tt class="descname">reverseIndex</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#connectivity.reverseIndex" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="connectivity.expandElems">
-<tt class="descclassname">connectivity.</tt><tt class="descname">expandElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.expandElems" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="connectivity.compactElems">
-<tt class="descclassname">connectivity.</tt><tt class="descname">compactElems</tt><big>(</big><em>faces</em>, <em>edges</em><big>)</big><a class="headerlink" href="#connectivity.compactElems" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">

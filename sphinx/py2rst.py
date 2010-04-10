@@ -528,6 +528,8 @@ def do_method(info):
 
 
 def do_class(info):
+    if info._name.startswith('_'):
+        return
     ship_class(info._name,sanitize(info._docstring))
     names = info.get_method_names()
     i = None

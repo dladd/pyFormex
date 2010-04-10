@@ -69,6 +69,7 @@
       .. automethod:: longestEdge()
       .. automethod:: shortestEdge()
       .. automethod:: stats()
+      .. automethod:: distanceOfPoints(X,return_points=False)
       .. automethod:: edgeFront(startat=0,okedges=None,front_increment=1)
       .. automethod:: nodeFront(startat=0,front_increment=1)
       .. automethod:: walkEdgeFront(startat=0,nsteps=1,okedges=None,front_increment=1)

@@ -387,6 +387,19 @@ Edges with only one element get angles = 1.0.</p>
 <dd>Return a text with full statistics.</dd></dl>
 
 <dl class="method">
+<dt id="surface.TriSurface.distanceOfPoints">
+<tt class="descname">distanceOfPoints</tt><big>(</big><em>X</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#surface.TriSurface.distanceOfPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the distances of points X to the TriSurface.</p>
+<p>The distance of a point is either:
+- the closest perpendicular distance to the facets;
+- the closest perpendicular distance to the edges;
+- the closest distance to the vertices.</p>
+<p>X is a (nX,3) shaped array of points.
+If return_points = True, a second value is returned: an array with
+the closest (foot)points matching X.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="surface.TriSurface.edgeFront">
 <tt class="descname">edgeFront</tt><big>(</big><em>startat=0</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.edgeFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generator function returning the frontal elements.</p>
@@ -814,7 +827,7 @@ Beware: this may take a lot of time if level is 8 or higher.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="mesh.html"
-                                  title="previous chapter">30. <tt class="docutils literal docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py</a></p>
+                                  title="previous chapter">30. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="geomtools.html"
                                   title="next chapter">32. <tt class="docutils literal docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>

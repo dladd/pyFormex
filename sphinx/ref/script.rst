@@ -15,30 +15,6 @@
 
 
 
-   .. autoclass:: Exit
-
-
-      Exit objects have the following methods:
-
-
-   .. autoclass:: ExitAll
-
-
-      ExitAll objects have the following methods:
-
-
-   .. autoclass:: ExitSeq
-
-
-      ExitSeq objects have the following methods:
-
-
-   .. autoclass:: TimeOut
-
-
-      TimeOut objects have the following methods:
-
-
 **Functions defined in the module script**
 
    .. autofunction:: Globals()
