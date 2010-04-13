@@ -546,6 +546,7 @@ def showSurfaceValue(S,txt,val,onEdges):
         draw(F,color=cval)#,linewidth=2)
     else:
         draw(S,color=cval)
+    lights(False)
     CL = ColorLegend(CS,100)
     CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
     GD.canvas.addDecoration(CLA)
@@ -967,7 +968,7 @@ def smoothLowPass():
     S = selection.check(single=True)
     if S:
         res = askItems([('lambda_value',0.5),
-                ('n_iterations',2)],'Low-pass filter')
+                ('n_iterations',2),('neighbourhood',1)],'Low-pass filter')
         if res:
             if not 0.0 <= res['lambda_value'] <= 1.0:
                 warning("Lambda should be between 0 and 1.")
@@ -976,7 +977,7 @@ def smoothLowPass():
                 warning("An even number of iterations is required.")
                 return
             selection.remember(True)
-            S.smoothLowPass(res['n_iterations'],res['lambda_value'])
+            S.smoothLowPass(res['n_iterations'],res['lambda_value'],res['neighbourhood'])
             selection.drawChanges()
 
 
@@ -985,7 +986,7 @@ def smoothLaplaceHC():
     S = selection.check(single=True)
     if S:
         res = askItems([('lambda_value',0.5),
-                ('n_iterations',2),('alpha',0.),('beta',0.2)],'Laplace filter and HC algorithm')
+                ('n_iterations',2),('alpha',0.),('beta',0.2),('neighbourhood',1)],'Laplace filter and HC algorithm')
         if res:
             if not 0.0 <= res['lambda_value'] <= 1.0:
                 warning("Lambda should be between 0 and 1.")
@@ -997,7 +998,7 @@ def smoothLaplaceHC():
                 warning("Beta should be between 0 and 1.")
                 return            
             selection.remember(True)
-            S.smoothLaplaceHC(res['n_iterations'],res['lambda_value'],res['alpha'],res['beta'])
+            S.smoothLaplaceHC(res['n_iterations'],res['lambda_value'],res['alpha'],res['beta'],res['neighbourhood'])
             selection.drawChanges()
 
 

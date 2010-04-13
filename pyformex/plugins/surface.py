@@ -32,7 +32,7 @@ import os
 import pyformex as GD
 from plugins import tetgen
 from plugins.mesh import Mesh
-from connectivity import Connectivity,inverseIndex,closedLoop,connectedLineElems,adjacencyArray,adjacent
+from connectivity import Connectivity,inverseIndex,closedLoop,connectedLineElems,adjacencyArrays,adjacent,adjacencyArray
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
@@ -272,17 +272,18 @@ def surface_volume(x,pt=None):
 
 
 def curvature(coords,elems,edges,neighbours=1):
-    """Calculate curvature parameters
+    """Calculate curvature parameters at the nodes
     
     (according to Dong and Wang 2005;
     Koenderink and Van Doorn 1992).
-    The n-ring neighbourhood of the nodes is used (n=neighbours).
+    This uses the nodes that are connected to the node via a shortest
+    path of 'neighbours' edges.
     Eight values are returned: the Gaussian and mean curvature, the
     shape index, the curvedness, the principal curvatures and the
     principal directions.
     """
     # calculate n-ring neighbourhood of the nodes (n=neighbours)
-    adj = adjacencyArray(edges,neighbours=neighbours)
+    adj = adjacencyArrays(edges,nsteps=neighbours)[-1]
     adjNotOk = adj<0
     # for nodes that have less than three adjacent nodes, remove the adjacencies
     adjNotOk[(adj>=0).sum(-1) <= 2] = True
@@ -771,11 +772,12 @@ class TriSurface(Mesh):
 
     def curvature(self,neighbours=1):
         """Return the curvature parameters at the nodes.
-        
-        The n-ring neighbourhood of the nodes is used (n=neighbours).
+
+        This uses the nodes that are connected to the node via a shortest
+        path of 'neighbours' edges.
         Eight values are returned: the Gaussian and mean curvature, the
         shape index, the curvedness, the principal curvatures and the
-        principal directions.      
+        principal directions.
         """
         curv = curvature(self.coords,self.elems,self.getEdges(),neighbours=neighbours)
         return curv
@@ -1024,7 +1026,7 @@ Total area: %s; Enclosed volume: %s
             )
         return s
 
-    
+
     def distanceOfPoints(self,X,return_points=False):
         """Find the distances of points X to the TriSurface.
     
@@ -1037,35 +1039,37 @@ Total area: %s; Enclosed volume: %s
         If return_points = True, a second value is returned: an array with
         the closest (foot)points matching X.
         """
-        # distance from vertices
-        Vp = self.coords
-        res = vertexDistance(X,Vp,return_points) # OKdist, (OKpoints)
-        dist = res[0]
+        nX = X.shape[0]
+        dist = empty((nX))
         if return_points:
-            points = res[1]
-
-        # distance from edges
-        Ep = self.coords[self.getEdges()]
-        res = edgeDistance(X,Ep,return_points) # OKpid, OKdist, (OKpoints)
-        okE,distE = res[:2]
-        closer = distE < dist[okE]
-        dist[okE[closer]] = distE[closer]
-        if return_points:
-            points[okE[closer]] = res[2][closer]
-
-        # distance from faces
+            points = empty((nX,3))
+        # first try facets
         Fp = self.coords[self.elems]
         res = facetDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
-        okF,distF = res[:2]
-        closer = distF < dist[okF]
-        dist[okE[closer]] = distF[closer]
+        OKpid = res[0]
+        dist[OKpid] = res[1]
         if return_points:
-            points[okE[closer]] = res[2][closer]
-
+            points[OKpid] = res[2]
+        # try edges
+        NOKpid = setdiff1d(arange(nX),OKpid)
+        if len(NOKpid) > 0:
+            Ep = self.coords[self.getEdges()]
+            res = edgeDistance(X[NOKpid],Ep,return_points) # OKpid, OKdist, (OKpoints)
+            OKpid = NOKpid[res[0]]
+            dist[OKpid] = res[1]
+            if return_points:
+                points[OKpid] = res[2]
+        # try vertices
+        NOKpid = setdiff1d(NOKpid,OKpid)
+        if len(NOKpid) > 0:
+            Vp = self.coords
+            res = vertexDistance(X[NOKpid],Vp,return_points) # OKdist, (OKpoints)
+            dist[NOKpid] = res[0]
+            if return_points:
+                points[NOKpid] = res[1]
         if return_points:
             return dist,points
-        else:
-            return dist
+        return dist
 
 
 ##################  Partitioning a surface #############################
@@ -1180,7 +1184,7 @@ Total area: %s; Enclosed volume: %s
 
 
     def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
-        for p in self.nodeFront(startat=startat,front_increment=front_increment):
+        for p in self.nodeFront(startat=startat,front_increment=front_increment):   
             if nsteps > 0:
                 nsteps -= 1
             elif nsteps == 0:
@@ -1401,12 +1405,17 @@ Total area: %s; Enclosed volume: %s
 
 ##################  Smooth a surface #############################
 
-    def smoothLowPass(self,n_iterations=2,lambda_value=0.5):
-        """Smooth the surface using a low-pass filter."""
+    def smoothLowPass(self,n_iterations=2,lambda_value=0.5,neighbours=1):
+        """Smooth the surface using a low-pass filter.
+        
+        This uses the nodes that are connected to the node via a shortest
+        path of maximum 'neighbours' edges.
+        """
         k = 0.1
         mu_value = -lambda_value/(1-k*lambda_value)
         # find adjacency
-        adj = adjacencyArray(self.getEdges())
+        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)
+        adj = column_stack(adj)
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
@@ -1424,10 +1433,15 @@ Total area: %s; Enclosed volume: %s
             p[inter_vertex] = p[inter_vertex] + mu_value*(w[inter_vertex]*(p[adj[inter_vertex]]-p[inter_vertex].reshape(-1,1,3))).sum(1)
 
 
-    def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2):
-        """Smooth the surface using a Laplace filter and HC algorithm."""
+    def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2,neighbours=1):
+        """Smooth the surface using a Laplace filter and HC algorithm.
+
+        This uses the nodes that are connected to the node via a shortest
+        path of maximum 'neighbours' edges.
+        """
         # find adjacency
-        adj = adjacencyArray(self.getEdges())        
+        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)
+        adj = column_stack(adj)        
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())

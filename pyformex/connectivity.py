@@ -608,16 +608,16 @@ def adjacencyList(elems):
     return [ list(elems[w[0],1-w[1]]) for w in ok ]
 
 
-def adjacencyArray(elems,maxcon=3,neighbours=1):
+def adjacencyArray(elems,maxcon=5):
     """Create adjacency array for 2-node elements.
-    
-    The n-ring neighbourhood of the nodes is calculated (n=neighbours).
-    These are the nodes connected through maximum n elements.
+
+    elems is a (nr,2) shaped integer array.
+    The result is an integer array with shape (nr,mc), where row i holds
+    a sorted list of the nodes that are connected to node i, padded with
+    -1 values to create an equal list length for all nodes.
     """
     if len(elems.shape) != 2 or elems.shape[1] != 2:
         raise ValueError,"""Expected a set of 2-node elements."""
-    # STEP 1: calculate the one-ring neighbourhood (nodes connected
-    # through one element)
     nr,nc = elems.shape
     mr = elems.max() + 1
     mc = maxcon*nc
@@ -642,28 +642,52 @@ def adjacencyArray(elems,maxcon=3,neighbours=1):
     adj.sort(axis=-1)
     maxc = adj.max(axis=0)
     adj = adj[:,maxc>=0]
-    # STEP 2: extend with nodes connected through 2, ... , 'neighbours' elements
-    if neighbours > 1:
-        adj0 = adj # one-ring neighbourhood
-        adj1 = adj # last added neighbours
-        n = len(adj)
-        for i in range(neighbours-1):
-            t = adj1<0
-            adj1 = adj0[adj1]
-            adj1[t] = -1
-            adj1 = adj1.reshape(n,-1)
-            adj = column_stack([adj,adj1])
-        # remove the element itself
-        k =arange(n)
-        adj[adj == k.reshape(n,-1)] = -1
-        adj.sort(axis=-1)
-        maxc = adj.max(axis=0)
-        adj = adj[:,maxc>=0]
-        # remove duplicate elements
-        adj[adj[:,:-1] == adj[:,1:]] = -1
-        adj.sort(axis=-1)
-        maxc = adj.max(axis=0)
-        adj = adj[:,maxc>=0]
+    return adj
+    
+
+def adjacencyArrays(elems,nsteps=1):
+    """Create adjacency arrays for 2-node elements.
+
+    elems is a (nr,2) shaped integer array.
+    The result is a list of adjacency arrays, where row i of adjacency array j
+    holds a sorted list of the nodes that are connected to node i via a shortest
+    path of j elements, padded with -1 values to create an equal list length
+    for all nodes.
+    This is: [adj1, ..., adjj, ... , adjn] with n=nsteps.
+    """
+    if len(elems.shape) != 2 or elems.shape[1] != 2:
+        raise ValueError,"""Expected a set of 2-node elements."""    
+    # Construct table of nodes connected to each node
+    adj1 = adjacencyArray(elems)
+    m = adj1.shape[0]    
+    adj = [ adj1 ]
+    nodes = adj1
+    step = 2
+    while step <= nsteps and nodes.size > 0:
+        # Determine adjacent nodes
+        t = nodes < 0
+        nodes = adj1[nodes]
+        nodes[t] = -1
+        nodes = nodes.reshape((m,-1))
+        nodes.sort(axis=-1)
+        maxc = nodes.max(axis=0)
+        nodes = nodes[:,maxc>=0]
+        # Remove duplicate nodes
+        nodes[nodes[:,:-1] == nodes[:,1:]] = -1
+        nodes.sort(axis=-1)
+        maxc = nodes.max(axis=0)
+        nodes = nodes[:,maxc>=0]
+        # Remove nodes of lower adjacency
+        ladj = concatenate(adj[-2:],-1)
+        t = map(setmember1d,nodes,ladj)
+        t = asarray(t)
+        nodes[t] = -1
+        nodes.sort(axis=-1)
+        maxc = nodes.max(axis=0)
+        nodes = nodes[:,maxc>=0]
+        # Store current nodes
+        adj.append(nodes)
+        step += 1
     return adj
 
 
