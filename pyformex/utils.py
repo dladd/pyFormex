@@ -279,7 +279,7 @@ def _congratulations(name,version,typ='module',fatal=False,quiet=True):
             sys.exit()
 
 
-def prefix(prefix,files):
+def prefixFiles(prefix,files):
     """Prepend a prefix to a list of filenames."""
     return [ os.path.join(prefix,f) for f in files ]
 
@@ -345,7 +345,7 @@ def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],exclude
             files = [ f for f in files if matchNone(excludefiles,f) ]
         if includefiles:
             files = [ f for f in files if matchAny(includefiles,f) ]
-        filelist.extend(prefix(root,files))
+        filelist.extend(prefixFiles(root,files))
         if listdirs and not topdown:
             filelist.append(root)
     return filelist
@@ -685,12 +685,29 @@ def splitStartDigits(s):
     return digits_string.match(s).groups()
 
 
-def subDict(dic,keystart):
-    """Return a dict with the items from dic whose key starts with keystart.
+def prefixDict(d,prefix=''):
+    """Prefix all the keys of a dict with the given prefix.
 
-    This also strips the keystart form the keys.
+    - `d`: a dict where all the keys are strings.
+    - `prefix`: a string
+
+    The return value is a dict with all the items of d, but where the
+    keys have been prefixed with the given string.
     """
-    return dict([ (k.replace(keystart,'',1),v) for k,v in dic.items() if k.startswith(keystart)])
+    return dict([ (prefix+k,v) for k,v in d.items() ])
+
+
+def subDict(d,prefix=''):
+    """Return a dict with the items whose key starts with prefix.
+
+    - `d`: a dict where all the keys are strings.
+    - `prefix`: a string
+    
+    The return value is a dict with all the items from d whose key starts
+    with prefix. The keys in the returned dict will have the prefix
+    stripped off.
+    """
+    return dict([ (k.replace(prefix,'',1),v) for k,v in d.items() if k.startswith(prefix)])
 
     
 def stuur(x,xval,yval,exp=2.5):

@@ -1235,7 +1235,10 @@ class NewInputDialog(QtGui.QDialog):
     - actions: a list of action buttons to be added at the bottom of the
       input form. By default, a Cancel and Ok button will be added, to either
       reject or accept the input values.
-    - parent: the parent widget (by default, this is the pyFomrex main window)
+    - default: the default action
+    - parent: the parent widget (by default, this is the pyFormex main window)
+    - autoprefix: if True, the names of items inside tabs and group boxes will
+      get prefixed with the tab and group names, separated with a '/'. 
     - flags:
     - modal:
           

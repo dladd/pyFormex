@@ -424,12 +424,23 @@ class GUI(QtGui.QMainWindow):
         GD.canvas.view_angles[name] = angles
 
 
-    def setBusy(self,busy=True):
+    def setBusy(self,busy=True,force=False):
         if busy:
             GD.app.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         else:
             GD.app.restoreOverrideCursor()
         GD.app.processEvents()
+
+
+    def resetCursor(self):
+        """Clear the override cursor stack.
+
+        This will reset the application cursor to the initial default.
+        """
+        while GD.app.overrideCursor():
+            GD.app.restoreOverrideCursor()
+        GD.app.processEvents()
+    
 
 
     def keyPressEvent(self,e):

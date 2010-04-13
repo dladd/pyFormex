@@ -454,7 +454,7 @@ def resetGUI():
     to their default operating mode. 
     """
     ## resetPick()
-    pyformex.GUI.setBusy(False)
+    pyformex.GUI.resetCursor()
     pyformex.GUI.actions['Play'].setEnabled(True)
     pyformex.GUI.actions['Step'].setEnabled(True)
     pyformex.GUI.actions['Continue'].setEnabled(False)
