@@ -419,9 +419,10 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     ## import sys
     ## sys.path.insert(0,'/home/bene/prj/calpy')
     ## print sys.path
-    ## import calpy
-    ## reload(calpy)
-    ## print calpy.__path__
+
+    import calpy
+    reload(calpy)
+    print calpy.__path__
     
     calpy.options.optimize=True
     from calpy import femodel,fe_util,plane
@@ -710,7 +711,17 @@ def autoRun(quad=False):
     runCalpyAnalysis('FeEx',verbose=True)
 
 def autoRun2():
-    autoRun(quad=True)
+    clear()
+    nx,ny = 1,1
+    createRectPart(dict(x0=0.,x1=1.,y0=0.,y1=1.,nx=nx,ny=ny,eltype='quad'))
+    convertQuadratic()
+    createModel()
+    nodenrs = arange(model.coords.shape[0])
+    PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
+    ny *= 2
+    PDB.nodeProp(set=nodenrs[:ny+1],bound=[1,1,0,0,0,0])
+    PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[10.,0.,0.,0.,0.,0.])
+    runCalpyAnalysis('FeEx',verbose=True)
 
 def autoConv():
     clear()

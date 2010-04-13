@@ -427,6 +427,7 @@ SelectableStatsValues = odict.ODict([
 
 CurvatureValues = ['Gaussian curvature','Mean curvature','Shape index','Curvedness','First principal curvature','Second principal curvature']
 
+
 def showHistogram(key,val,cumulative):
     y,x = plot2d.createHistogram(val,cumulative=cumulative)
     return plot2d.showHistogram(x,y,key)
@@ -474,6 +475,7 @@ Most likely because 'python-scipy' is not installed.""")
             showHistogram(key,val,cumulative=False)
         if cumdist:
             showHistogram(key,val,cumulative=True)
+
 
 def _show_stats(domain,dist):
     _stat_dia.acceptData()

@@ -66,11 +66,11 @@ Core
   on an attribute .coords. This is used as a base class for other geometry
   classes: Mesh, Curve, TriSurface
 - TriSurface is derived from Mesh, and many methods from TriSurface have
-  migrated up to Mesh to becomae available on general meshes.
+  migrated up to Mesh to become available on general meshes.
 - Image saving with compressed formats can set quality.
 - Empty geometry objects are now generally well supported.
 - Connectivity: removeDegenerate and removeDoubles, new encoding/decoding, 
-  listUnique, listDouble, insertLevel
+  listUnique, listDouble, insertLevel, tangle, untangle
 
 
 Gui
@@ -128,6 +128,7 @@ Mesh
 - Better sweep function, added revolve function
 - Splitting on property values
 - GetEdges, GetFaces, GetLowerEntities, getBorder, getBorderMesh
+- reduceDegenerate
 
 
 Plugins
@@ -140,10 +141,10 @@ Plugins
   - PolyLine: split, cutWithPlane
   - BezierSpline: end directions can be set
 
-- geomtools: added intersection tools
+- geomtools: added intersection tools, distance tools
 - draw2d: new plugin with some interactive drawing functions.
 - surface: TriSurface is now derived from Mesh, added inertia function,
-  intersectionWithPlane
+  intersectionWithPlane, distanceOfPoints
 
 
 Examples
@@ -152,5 +153,6 @@ Examples
 - HorseSlice: showing use of TriSurface.intersectionWithPLane
 - Rubik: solving the cube
 - Mesh: illustrating some new Mesh methods
+- BeamFreq: calculate natural frequencies of Beams
 
 .. End

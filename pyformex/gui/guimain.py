@@ -102,6 +102,14 @@ class Board(QtGui.QTextEdit):
             self.cursor.movePosition(QtGui.QTextCursor.End)
             self.setTextCursor(self.cursor)
 
+
+    def save(self,filename):
+        """Save the contents of the board to a file"""
+        fil = open(filename,'w')
+        fil.write(self.toPlainText())
+        fil.close()
+        
+
     def flush(self):
         self.update()
 

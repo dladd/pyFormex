@@ -497,6 +497,13 @@ def openLogFile():
         draw.logfile = file(fn,'w')
 
 
+def saveBoard():
+    fn = draw.askFilename(filter=['*.txt','*'],multi=False,exist=False)
+    if fn:
+        pyformex.GUI.board.save(fn)
+    
+
+
 def createMenuData():
     """Returns the default pyFormex GUI menu data."""
 
@@ -507,6 +514,7 @@ def createMenuData():
         (_('&Reset GUI'),resetGUI),
         (_('&Force Finish Script'),draw.force_finish),
         ## (_('&Execute single statement'),command),
+        (_('&Save Message Board'),saveBoard),
         (_('&Open Log File'),openLogFile),
         (_('&Close Log File'),closeLogFile),
         (_('&ListFormices'),script.printall),

@@ -1182,6 +1182,10 @@ def compatInputItem(name,value,itemtype=None,kargs={}):
     # We cannot change kargs directly like in simpleInputItem,
     # that would permanently change the value of the empty dict!
     item = {}
+    if isinstance(itemtype,dict):
+        # in case the itemtype was missing
+        kargs = itemtype
+        itemtype = None
     item.update(kargs)
     item['name'] = name
     item['value'] = value
