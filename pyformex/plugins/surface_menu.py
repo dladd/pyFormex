@@ -548,7 +548,7 @@ def showSurfaceValue(S,txt,val,onEdges):
         draw(S,color=cval)
     lights(False)
     CL = ColorLegend(CS,100)
-    CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
+    CLA = decors.ColorLegend(CL,10,10,30,350,dec=dec) 
     GD.canvas.addDecoration(CLA)
     drawtext(txt,10,230,'hv18')
 

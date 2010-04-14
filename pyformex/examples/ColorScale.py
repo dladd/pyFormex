@@ -105,9 +105,8 @@ def getData():
     linewidth = res['Line width']
     lefttext = res['Text left of colorscale']
     font = res['Font']
-    print res['Position']
-    x,y = 200,50
-    w,h = 50,400
+    x,y = res['Position']
+    w,h = res['Size']
     # ok, now draw it
     drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,grid,linewidth,lefttext,font,x,y,w,h)     
 
