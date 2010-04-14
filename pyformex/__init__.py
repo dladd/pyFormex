@@ -69,12 +69,12 @@ warning = message
 
 def debug(s,lead="DEBUG",level=0):
     """Print a debug message"""
-    try: # to make sure that debug() can be used before options are set
-        if options.debug < 0 or (level>0 and options.debug % level > 0):
-            raise
-        pass
-    except:
-        print("%s: %s" % (lead,str(s)))
+    ## try: # to make sure that debug() can be used before options are set
+    ##     if options.debug < 0 or (level>0 and options.debug % level > 0):
+    ##         raise
+    ##     pass
+    ## except:
+    print("%s: %s" % (lead,str(s)))
 
 
 def debugt(s):

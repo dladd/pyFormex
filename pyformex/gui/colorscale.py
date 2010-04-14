@@ -78,7 +78,7 @@ class ColorScale:
         default linear. Nonlinear mappings can be obtained by specifying
         an exponent 'exp' different from 1.0. Mapping is done with the
         'stuur' function from the 'utils' module. 
-        If 2 exponents are given, mapping is done independently e with exp
+        If 2 exponents are given, mapping is done independently with exp
         in the range minval..midval and with exp2 in the range midval..maxval.
         """
         if type(palet) == str:

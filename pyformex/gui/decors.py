@@ -229,7 +229,7 @@ Text = GlutText
 
 class ColorLegend(Decoration):
     """A viewport decoration showing a colorscale legend."""
-    def __init__(self,colorlegend,x,y,w,h,font=None,size=None,dec=2,scale=0,grid=0,linewidth=None,lefttext=False):
+    def __init__(self,colorlegend,x,y,w,h,font=None,size=None,dec=2,scale=0,grid=0,linewidth=None,lefttext=False,nlabels=-1):
         Decoration.__init__(self,x,y)
         self.cl = colorlegend
         self.w = int(w)
@@ -247,13 +247,13 @@ class ColorLegend(Decoration):
     def drawGL(self,mode='wireframe',color=None):
         #from draw import drawText
         n = len(self.cl.colors)
+        GD.debug("NUMBER OF COLORS: %s" % n)
         x1 = float(self.x)
         x2 = float(self.x+self.w)
         y0 = float(self.y)
         dy = float(self.h)/n
         # colors
         y1 = y0
-        GD.debug("START COLORS AT %s" % y0)
         GL.glLineWidth(1.5)
         for i,c in enumerate(self.cl.colors):
             y2 = y0 + (i+1)*dy
@@ -271,18 +271,22 @@ class ColorLegend(Decoration):
         GD.debug("FONT HEIGHT %s" % fh)
         dh = fh + self.ygap # vert. distance between successive labels
         #y0 -= 0.25*fh  # 0.5*fh seems more logic, but character pos is biased
-        GD.debug("FIRST TEXT AT %s" % y0)
         GL.glColor3f(*colors.black)
         self.decorations = []
+
+        # FOR 3-VALUE SCALES THIS SHOULD BE DONE IN TWO PARTS,
+        # FROM THE CENTER OUTWARDS, AND THEN ADDING THE
+        # MIN AND MAX VALUES
         for i,v in enumerate(self.cl.limits):
             y2 = y0 + i*dy
-            GD.debug("next y = %s" % y2)
-            if y2 >= y1 or i == 0:
-                GD.debug("drawing at %s" % y2)
+            if y2 >= y1 or i == 0 or i == len(self.cl.limits)-1:
+                if y2 >= self.y+self.h-dh and i < len(self.cl.limits)-1:
+                    continue
                 t = Text(("%%.%df" % self.dec) % (v*self.scale),x1,y2,font=self.font,gravity=gravity)
                 self.decorations.append(t)
                 t.drawGL(mode,color)
                 y1 = y2 + dh
+
         # grid: after values, to be on top
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
