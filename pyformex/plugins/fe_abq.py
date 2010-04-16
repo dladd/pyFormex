@@ -90,6 +90,12 @@ def esetName(p):
 ## and should be written to file by the caller.
 ###############################################
 
+
+def fmtCmd(cmd='*'):
+    """Format a command."""
+    return '*'+cmd+'\n'
+
+
 def fmtHeading(text=''):
     """Format the heading of the Abaqus input file."""
     out = """**  Abaqus input file created by %s (%s)
@@ -97,6 +103,14 @@ def fmtHeading(text=''):
 *HEADING
 %s
 """ % (GD.Version,GD.Url,text)
+    return out
+
+def fmtPart(name='Part-1'):
+    """Start a new Part."""
+    out = """**  Abaqus input file created by %s (%s)
+**
+*PART
+""" % (name)
     return out
 
 
@@ -1249,12 +1263,14 @@ class AbqData(object):
         self.out = out
 
 
-    def write(self,jobname=None,group_by_eset=True,group_by_group=False,header=''):
+    def write(self,jobname=None,group_by_eset=True,group_by_group=False,header='',create_part=False):
         """Write an Abaqus input file.
 
-        jobname is the name of the inputfile, with or without '.inp' extension.
-        If None is specified, output is written to sys.stdout
-        An extra header text may be specified.
+        - `jobname` : the name of the inputfile, with or without '.inp'
+          extension. If None is specified, the output is written to sys.stdout
+          An extra header text may be specified.
+        - `create_part` : if True, the model will be created as an Abaqus Part,
+          followed by and assembly of that part.
         """
         global materialswritten
         materialswritten = []
@@ -1271,6 +1287,9 @@ class AbqData(object):
 Script: %s 
 %s
 """ % (jobname, datetime.now(), GD.scriptName, header)))
+
+        if create_part:
+            fil.write("*PART, name=Part-0\n")
         
         nnod = self.model.nnodes()
         GD.message("Writing %s nodes" % nnod)
@@ -1348,6 +1367,13 @@ Script: %s
         GD.message("Writing element sections")
         for p in self.prop.getProp('e',attr=['section','eltype']):
             writeSection(fil,p)
+
+        if create_part:
+            fil.write("*END PART\n")
+            fil.write("*ASSEMBLY, name=Assembly\n")
+            fil.write("*INSTANCE, name=Part-0-0, part=Part-0\n")
+            fil.write("*END INSTANCE\n")
+            fil.write("*END ASSEMBLY\n")
 
         GD.message("Writing global model properties")
             

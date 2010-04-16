@@ -570,6 +570,7 @@ class TriSurface(Mesh):
     def setCoords(self,coords):
         """Change the coords."""
         self.__init__(coords,self.elems,prop=self.prop)
+        return self
 
     def setElems(self,elems):
         """Change the elems."""

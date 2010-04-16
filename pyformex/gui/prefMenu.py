@@ -298,7 +298,10 @@ def setLighting():
 
     #items = [ ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
 
-    items = [ {'name':'lightmodel','value':GD.canvas.lightmodel,'choices':GD.canvas.light_model.keys()}, ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
+    choices = GD.canvas.light_model.keys()
+    # DO NOT ALLOW THE LIGHT MODEL TO BE CHANGED
+    choices = [ 'ambient and diffuse' ]
+    items = [ {'name':'lightmodel','value':GD.canvas.lightmodel,'choices':choices}, ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
     #print items
 
     dia = None
@@ -309,16 +312,20 @@ def setLighting():
     def accept(save=False):
         dia.acceptData()
         res = dia.results
-        res['Save changes'] = save
         GD.debug(res)
         GD.cfg['render/lightmodel'] = res['render/lightmodel']
         GD.canvas.resetLighting()
         GD.app.processEvents()
-        return
-        ok_plugins = utils.subDict(res,'_plugins/')
-        res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
+        mt = utils.subDict(res,'render/material/')
+        l0 = utils.subDict(res,'render/light0/')
+        res = dict([ i for i in res.items() if not (i[0].startswith('render/material/') or  i[0].startswith('render/light0/'))])
+        res['Save changes'] = save
+        res['render/material'] = mt
+        res['render/light0'] =l0
         updateSettings(res)
-        plugins.loadConfiguredPlugins()
+
+    def acceptAndSave():
+        accept(save=True)
 
     dia = widgets.NewInputDialog(
         caption='pyFormex Settings',
@@ -326,7 +333,11 @@ def setLighting():
         items=items,
         prefix='render/',
         autoprefix=True,
-        actions=[('Close',close),('Apply',accept)]
+        actions=[
+            ('Close',close),
+            ('Accept and Save',acceptAndSave),
+            ('Apply',accept),
+            ]
         )
     dia.show()
     #if res:
