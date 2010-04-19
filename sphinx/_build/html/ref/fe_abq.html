@@ -200,11 +200,15 @@ Specify a (possibly non-existing) tag to override the default.</li>
 <p>AbqData objects have the following methods:</p>
 <dl class="method">
 <dt id="fe_abq.AbqData.write">
-<tt class="descname">write</tt><big>(</big><em>jobname=None</em>, <em>group_by_eset=True</em>, <em>group_by_group=False</em>, <em>header=''</em><big>)</big><a class="headerlink" href="#fe_abq.AbqData.write" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">write</tt><big>(</big><em>jobname=None</em>, <em>group_by_eset=True</em>, <em>group_by_group=False</em>, <em>header=''</em>, <em>create_part=False</em><big>)</big><a class="headerlink" href="#fe_abq.AbqData.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an Abaqus input file.</p>
-<p>jobname is the name of the inputfile, with or without &#8216;.inp&#8217; extension.
-If None is specified, output is written to sys.stdout
-An extra header text may be specified.</p>
+<ul class="simple">
+<li><cite>jobname</cite> : the name of the inputfile, with or without &#8216;.inp&#8217;
+extension. If None is specified, the output is written to sys.stdout
+An extra header text may be specified.</li>
+<li><cite>create_part</cite> : if True, the model will be created as an Abaqus Part,
+followed by and assembly of that part.</li>
+</ul>
 </dd></dl>
 
 </dd></dl>
@@ -232,9 +236,19 @@ The abq filename is the abspath of the job with extension &#8216;.inp&#8217;</p>
 <dd>Determine the name for writing an element set property.</dd></dl>
 
 <dl class="function">
+<dt id="fe_abq.fmtCmd">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtCmd</tt><big>(</big><em>cmd='*'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtCmd" title="Permalink to this definition">¶</a></dt>
+<dd>Format a command.</dd></dl>
+
+<dl class="function">
 <dt id="fe_abq.fmtHeading">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtHeading</tt><big>(</big><em>text=''</em><big>)</big><a class="headerlink" href="#fe_abq.fmtHeading" title="Permalink to this definition">¶</a></dt>
 <dd>Format the heading of the Abaqus input file.</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtPart">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtPart</tt><big>(</big><em>name='Part-1'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtPart" title="Permalink to this definition">¶</a></dt>
+<dd>Start a new Part.</dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.fmtMaterial">

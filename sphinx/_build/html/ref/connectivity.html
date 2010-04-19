@@ -179,9 +179,9 @@ will only find the double rows that have matching values at
 every position.</p>
 <p>This function returns a tuple with two arrays:
 - an index used to sort the elements
-- an flags array with the value True for indices of the unique elements</p>
+- a flags array with the value True for indices of the unique elements</p>
 <blockquote>
-an False for those of the doubles.</blockquote>
+and False for those of the doubles.</blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -365,10 +365,24 @@ column of index.</p>
 
 <dl class="function">
 <dt id="connectivity.adjacencyArray">
-<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyArray</tt><big>(</big><em>elems</em>, <em>maxcon=3</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#connectivity.adjacencyArray" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyArray</tt><big>(</big><em>elems</em>, <em>maxcon=5</em><big>)</big><a class="headerlink" href="#connectivity.adjacencyArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create adjacency array for 2-node elements.</p>
-<p>The n-ring neighbourhood of the nodes is calculated (n=neighbours).
-These are the nodes connected through maximum n elements.</p>
+<p>elems is a (nr,2) shaped integer array.
+The result is an integer array with shape (nr,mc), where row i holds
+a sorted list of the nodes that are connected to node i, padded with
+-1 values to create an equal list length for all nodes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.adjacencyArrays">
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyArrays</tt><big>(</big><em>elems</em>, <em>nsteps=1</em><big>)</big><a class="headerlink" href="#connectivity.adjacencyArrays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create adjacency arrays for 2-node elements.</p>
+<p>elems is a (nr,2) shaped integer array.
+The result is a list of adjacency arrays, where row i of adjacency array j
+holds a sorted list of the nodes that are connected to node i via a shortest
+path of j elements, padded with -1 values to create an equal list length
+for all nodes.
+This is: [adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
 </dd></dl>
 
 <dl class="function">
@@ -376,7 +390,7 @@ These are the nodes connected through maximum n elements.</p>
 <tt class="descclassname">connectivity.</tt><tt class="descname">connected</tt><big>(</big><em>index</em>, <em>i</em><big>)</big><a class="headerlink" href="#connectivity.connected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the list of elements connected to element i.</p>
 <p>index is a (nr,nc) shaped integer array.
-An element j of index is said to be connected to element i, iff element j
+An element j of index is said to be connected to element i, if element j
 has at least one (non-negative) value in common with element i.</p>
 <p>The result is a sorted list of unique element numbers, not containing
 the element number i itself.</p>
@@ -387,11 +401,11 @@ the element number i itself.</p>
 <tt class="descclassname">connectivity.</tt><tt class="descname">adjacent</tt><big>(</big><em>index</em>, <em>rev=None</em><big>)</big><a class="headerlink" href="#connectivity.adjacent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an index of connected elements.</p>
 <p>index is a (nr,nc) shaped integer array.
-An element j of index is said to be connected to element i, iff element j
+An element j of index is said to be connected to element i, if element j
 has at least one (non-negative) value in common with element i.</p>
 <p>The result is an integer array with shape (nr,mc), where row i holds
 a sorted list of the elements that are connected to element i, padded with
--1 values to created an equal list length for all elements.</p>
+-1 values to create an equal list length for all elements.</p>
 <p>The result of this method provides the same information as repeated calls
 of connected(index,i), but may be more efficient if nr becomes large.</p>
 <p>The inverse index may be specified, if it was already computed.</p>

@@ -185,8 +185,8 @@ The result is remembered in the the_external dict.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.prefix">
-<tt class="descclassname">utils.</tt><tt class="descname">prefix</tt><big>(</big><em>prefix</em>, <em>files</em><big>)</big><a class="headerlink" href="#utils.prefix" title="Permalink to this definition">¶</a></dt>
+<dt id="utils.prefixFiles">
+<tt class="descclassname">utils.</tt><tt class="descname">prefixFiles</tt><big>(</big><em>prefix</em>, <em>files</em><big>)</big><a class="headerlink" href="#utils.prefixFiles" title="Permalink to this definition">¶</a></dt>
 <dd>Prepend a prefix to a list of filenames.</dd></dl>
 
 <dl class="function">
@@ -388,10 +388,28 @@ Any of both can be empty.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="utils.prefixDict">
+<tt class="descclassname">utils.</tt><tt class="descname">prefixDict</tt><big>(</big><em>d</em>, <em>prefix=''</em><big>)</big><a class="headerlink" href="#utils.prefixDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prefix all the keys of a dict with the given prefix.</p>
+<ul class="simple">
+<li><cite>d</cite>: a dict where all the keys are strings.</li>
+<li><cite>prefix</cite>: a string</li>
+</ul>
+<p>The return value is a dict with all the items of d, but where the
+keys have been prefixed with the given string.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="utils.subDict">
-<tt class="descclassname">utils.</tt><tt class="descname">subDict</tt><big>(</big><em>dic</em>, <em>keystart</em><big>)</big><a class="headerlink" href="#utils.subDict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a dict with the items from dic whose key starts with keystart.</p>
-<p>This also strips the keystart form the keys.</p>
+<tt class="descclassname">utils.</tt><tt class="descname">subDict</tt><big>(</big><em>d</em>, <em>prefix=''</em><big>)</big><a class="headerlink" href="#utils.subDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict with the items whose key starts with prefix.</p>
+<ul class="simple">
+<li><cite>d</cite>: a dict where all the keys are strings.</li>
+<li><cite>prefix</cite>: a string</li>
+</ul>
+<p>The return value is a dict with all the items from d whose key starts
+with prefix. The keys in the returned dict will have the prefix
+stripped off.</p>
 </dd></dl>
 
 <dl class="function">

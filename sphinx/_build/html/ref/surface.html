@@ -239,7 +239,8 @@ The area is always positive.</p>
 <dt id="surface.TriSurface.curvature">
 <tt class="descname">curvature</tt><big>(</big><em>neighbours=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.curvature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the curvature parameters at the nodes.</p>
-<p>The n-ring neighbourhood of the nodes is used (n=neighbours).
+<p>This uses the nodes that are connected to the node via a shortest
+path of &#8216;neighbours&#8217; edges.
 Eight values are returned: the Gaussian and mean curvature, the
 shape index, the curvedness, the principal curvatures and the
 principal directions.</p>
@@ -518,13 +519,19 @@ values, i.e. a list of list of meshes.</p>
 
 <dl class="method">
 <dt id="surface.TriSurface.smoothLowPass">
-<tt class="descname">smoothLowPass</tt><big>(</big><em>n_iterations=2</em>, <em>lambda_value=0.5</em><big>)</big><a class="headerlink" href="#surface.TriSurface.smoothLowPass" title="Permalink to this definition">¶</a></dt>
-<dd>Smooth the surface using a low-pass filter.</dd></dl>
+<tt class="descname">smoothLowPass</tt><big>(</big><em>n_iterations=2</em>, <em>lambda_value=0.5</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.smoothLowPass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smooth the surface using a low-pass filter.</p>
+<p>This uses the nodes that are connected to the node via a shortest
+path of maximum &#8216;neighbours&#8217; edges.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.smoothLaplaceHC">
-<tt class="descname">smoothLaplaceHC</tt><big>(</big><em>n_iterations=2</em>, <em>lambda_value=0.5</em>, <em>alpha=0.</em>, <em>beta=0.2</em><big>)</big><a class="headerlink" href="#surface.TriSurface.smoothLaplaceHC" title="Permalink to this definition">¶</a></dt>
-<dd>Smooth the surface using a Laplace filter and HC algorithm.</dd></dl>
+<tt class="descname">smoothLaplaceHC</tt><big>(</big><em>n_iterations=2</em>, <em>lambda_value=0.5</em>, <em>alpha=0.</em>, <em>beta=0.2</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.smoothLaplaceHC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smooth the surface using a Laplace filter and HC algorithm.</p>
+<p>This uses the nodes that are connected to the node via a shortest
+path of maximum &#8216;neighbours&#8217; edges.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.check">
@@ -669,10 +676,11 @@ the sum of this array will represent the volume inside the surface.</p>
 <dl class="function">
 <dt id="surface.curvature">
 <tt class="descclassname">surface.</tt><tt class="descname">curvature</tt><big>(</big><em>coords</em>, <em>elems</em>, <em>edges</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#surface.curvature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate curvature parameters</p>
+<dd><p>Calculate curvature parameters at the nodes</p>
 <p>(according to Dong and Wang 2005;
 Koenderink and Van Doorn 1992).
-The n-ring neighbourhood of the nodes is used (n=neighbours).
+This uses the nodes that are connected to the node via a shortest
+path of &#8216;neighbours&#8217; edges.
 Eight values are returned: the Gaussian and mean curvature, the
 shape index, the curvedness, the principal curvatures and the
 principal directions.</p>
