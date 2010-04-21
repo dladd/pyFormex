@@ -1438,7 +1438,7 @@ def exportMesh(filename,mesh,eltype=None,header=''):
     if eltype is None:
         eltype = mesh.eltype
     writeNodes(fil,mesh.coords)
-    writeElems(fil,mesh.elems,mesh.eltype,nofs=1)
+    writeElems(fil,mesh.elems,eltype,nofs=1)
     fil.close()
     GD.message("Abaqus file %s written." % filename)
 
