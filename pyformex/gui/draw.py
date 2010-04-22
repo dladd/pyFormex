@@ -102,7 +102,7 @@ def ack(question,**kargs):
     return ask(question,['No','Yes'],**kargs) == 'Yes'
 
 
-def showText(text,type=None,actions=[('OK',None)],modal=True):
+def showText(text,type=None,actions=[('OK',None)],modal=True,mono=False):
     """Display a text and wait for user response.
 
     This opens a TextBox widget and displays the text in the widget.
@@ -111,7 +111,7 @@ def showText(text,type=None,actions=[('OK',None)],modal=True):
     The text can be plain text format. Some rich text formats will be 
     recognized and rendered appropriately. See widgets.TextBox.
     """
-    w = widgets.TextBox(text,type,actions,modal=modal)
+    w = widgets.TextBox(text,type,actions,modal=modal,mono=mono)
     if modal:
         return w.getResult()
     else:
@@ -119,7 +119,7 @@ def showText(text,type=None,actions=[('OK',None)],modal=True):
         return None
 
 
-def showFile(filename):
+def showFile(filename,mono=False):
     """Display a text file.
 
     This will use the showText() function to display a text read from a
@@ -129,7 +129,7 @@ def showFile(filename):
         f = file(filename,'r')
     except IOError:
         return
-    showText(f.read())
+    showText(f.read(),mono=mono)
     f.close()
 
 

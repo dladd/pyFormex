@@ -4,14 +4,14 @@
 """BeamFreq
 
 level = 'normal'
-topics = ['FEA']
-techniques = ['curve','external']
+topics = ['FEA','curve','drawing']
+techniques = ['external','viewport',]
 
 .. Description
 
 BeamFreq
 --------
-This example shows the first natural vibration modes of an elatic beam.
+This example shows the first natural vibration modes of an elastic beam.
 
 """
 
@@ -43,7 +43,7 @@ This probably means that calix is not installed on your system.
    exit()
 
 s = [ si for si in out.split() if si.startswith('CALIX') ]
-if (len(s) == 0) or (s[0] != 'CALIX-1.5-a5'):
+if (len(s) == 0) or utils.SaneVersion(s[0]) < utils.SaneVersion('CALIX-1.5-a5'):
    showText("""..
 
 Error
@@ -186,6 +186,8 @@ def drawDeformed(M,u,r):
 for i in range(nshow):
    viewport(i)
    clear()
+   transparent(False)
+   lights(False)
    linewidth(2)
    draw(M)
    ai = a[i]
@@ -199,6 +201,6 @@ for i in range(nshow):
    drawDeformed(M,u,r)
    fi = freq[i]
    mi = fi/freq[0]
-   drawText('%s Hz = %.2f f0' % (fi,mi),10,10,size=20) 
+   drawText('%s Hz = %.2f f0' % (fi,mi),20,20,size=20) 
 
 # End

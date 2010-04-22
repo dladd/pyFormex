@@ -41,6 +41,10 @@ from calpy.fe_util import *
 from calpy.truss3d import *
 
 ############################
+
+if not checkWorkdir():
+    exit()
+
 import time
 
 ####
