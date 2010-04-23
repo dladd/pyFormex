@@ -32,13 +32,13 @@ import os
 import pyformex as GD
 from plugins import tetgen
 from plugins.mesh import Mesh
-from connectivity import *
+from connectivity import Connectivity,inverseIndex,closedLoop,connectedLineElems,adjacencyArrays,adjacent,adjacencyArray
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
 from numpy import *
 from gui.drawable import interpolateNormals
-from plugins.geomtools import projectionVOP,rotationAngle
+from plugins.geomtools import projectionVOP,rotationAngle,facetDistance,edgeDistance,vertexDistance
 from plugins import inertia
 
 hasExternal('admesh')
@@ -272,18 +272,21 @@ def surface_volume(x,pt=None):
 
 
 def curvature(coords,elems,edges,neighbours=1):
-    """Calculate curvature parameters
+    """Calculate curvature parameters at the nodes
     
     (according to Dong and Wang 2005;
     Koenderink and Van Doorn 1992).
-    The n-ring neighbourhood of the nodes is used (n=neighbours).
+    This uses the nodes that are connected to the node via a shortest
+    path of 'neighbours' edges.
     Eight values are returned: the Gaussian and mean curvature, the
     shape index, the curvedness, the principal curvatures and the
     principal directions.
     """
     # calculate n-ring neighbourhood of the nodes (n=neighbours)
-    adj = adjacencyArray(edges,neighbours=neighbours)
+    adj = adjacencyArrays(edges,nsteps=neighbours)[-1]
     adjNotOk = adj<0
+    # for nodes that have less than three adjacent nodes, remove the adjacencies
+    adjNotOk[(adj>=0).sum(-1) <= 2] = True
     # calculate unit length average normals at the nodes p
     # a weight 1/|gi-p| could be used (gi=center of the face fi)
     p = coords
@@ -291,9 +294,10 @@ def curvature(coords,elems,edges,neighbours=1):
     # double-precision: this will allow us to check the sign of the angles    
     p = p.astype(float64)
     n = n.astype(float64)
-    vp = p[adj] - p[:,newaxis,:]
-    vn = n[adj] - n[:,newaxis,:]
+    vp = p[adj] - p[:,newaxis]
+    vn = n[adj] - n[:,newaxis]    
     # where adjNotOk, set vectors = [0.,0.,0.]
+    # this will result in NaN values
     vp[adjNotOk] = 0.
     vn[adjNotOk] = 0.
     # calculate unit length projection of vp onto the tangent plane
@@ -305,11 +309,11 @@ def curvature(coords,elems,edges,neighbours=1):
     imax = nanargmax(k,-1)
     kmax =  k[range(len(k)),imax]
     tmax = t[range(len(k)),imax]
-    e1 = tmax
-    e2 = cross(e1,n)
-    e2 = normalize(e2)
-    # calculate angles (e1,t), where adj = -1, set angle = 0
-    theta,rot = rotationAngle(repeat(e1[:,newaxis],t.shape[1],1),t,angle_spec=Rad)
+    tmax1 = tmax
+    tmax2 = cross(n,tmax1)
+    tmax2 = normalize(tmax2)
+    # calculate angles (tmax1,t)
+    theta,rot = rotationAngle(repeat(tmax1[:,newaxis],t.shape[1],1),t,angle_spec=Rad)
     # check the sign of the angles
     d =  dotpr(rot,n[:,newaxis])/(length(rot)*length(n)[:,newaxis]) # divide by length for round-off errors
     cw = isClose(d,[-1.])
@@ -325,15 +329,6 @@ def curvature(coords,elems,edges,neighbours=1):
     denom = (a11*a22-a12**2)
     b = (a13*a22-a23*a12)/denom
     c = (a11*a23-a12*a13)/denom
-    # for nodes that have only two adjacent nodes, (a11*a22-a12**2) = 0, b=c=inf
-    # the curvature of these nodes should be zero
-    zeroDenom = isClose(denom,[0.],atol=1.e-5)
-    a[zeroDenom] = 0.
-    b[zeroDenom] = 0.
-    c[zeroDenom] = 0.
-    a = nan_to_num(a)
-    b = nan_to_num(b)
-    c = nan_to_num(c)
     # calculate the Gaussian and mean curvature
     K = a*c-b**2/4
     H = (a+c)/2
@@ -343,13 +338,10 @@ def curvature(coords,elems,edges,neighbours=1):
     theta0 = 0.5*arcsin(b/(k2-k1))
     w = apply_along_axis(isClose,0,-b,2*(k2-k1)*cos(theta0)*sin(theta0))
     theta0[w] = pi-theta0[w]
-    e1 = cos(theta0)[:,newaxis]*e1+sin(theta0)[:,newaxis]*e2
-    e2 = cos(theta0)[:,newaxis]*e2-sin(theta0)[:,newaxis]*e1
-    e1 = nan_to_num(e1)
-    e2 = nan_to_num(e2)
+    e1 = cos(theta0)[:,newaxis]*tmax1+sin(theta0)[:,newaxis]*tmax2
+    e2 = cos(theta0)[:,newaxis]*tmax2-sin(theta0)[:,newaxis]*tmax1
     # calculate the shape index and curvedness
     S = 2./pi*arctan((k1+k2)/(k1-k2))
-    S = nan_to_num(S)
     C = square((k1**2+k2**2)/2)
     return K,H,S,C,k1,k2,e1,e2
 
@@ -435,7 +427,6 @@ def create_border_triangle(coords,elems):
     return elems,triangle
 
 
-
 ############################################################################
 # The TriSurface class
 
@@ -518,7 +509,7 @@ class TriSurface(Mesh):
                 if faces.max() >= edges.shape[0]:
                     raise ValueError,"Some edge number is too high"
 
-                elems = Connectivity(compactElems(edges,faces))
+                elems = faces.tangle(edges)
                 Mesh.__init__(self,coords,elems,None,'tri3')
                 
                 # since we have the extra data available, keep them
@@ -561,13 +552,13 @@ class TriSurface(Mesh):
     def getEdges(self):
         """Get the edges data."""
         if self.edges is None:
-            self.edges,self.faces = self.elems.expand()
+            self.faces,self.edges = self.elems.untangle()
         return self.edges
     
     def getFaces(self):
         """Get the faces data."""
         if self.faces is None:
-            self.edges,self.faces = self.elems.expand()
+            self.faces,self.edges = self.elems.untangle()
         return self.faces
 
     #
@@ -579,6 +570,7 @@ class TriSurface(Mesh):
     def setCoords(self,coords):
         """Change the coords."""
         self.__init__(coords,self.elems,prop=self.prop)
+        return self
 
     def setElems(self,elems):
         """Change the elems."""
@@ -651,7 +643,7 @@ class TriSurface(Mesh):
         the neighbouring triangles.
         The normal vectors are normalized.
         """
-        con = reverseIndex(self.getElems())
+        con = inverseIndex(self.getElems())
         NP = self.areaNormals()[1][con] #self.normal doesn't work here???
         w = where(con == -1)
         NP[w] = 0.
@@ -781,11 +773,12 @@ class TriSurface(Mesh):
 
     def curvature(self,neighbours=1):
         """Return the curvature parameters at the nodes.
-        
-        The n-ring neighbourhood of the nodes is used (n=neighbours).
+
+        This uses the nodes that are connected to the node via a shortest
+        path of 'neighbours' edges.
         Eight values are returned: the Gaussian and mean curvature, the
         shape index, the curvedness, the principal curvatures and the
-        principal directions.      
+        principal directions.
         """
         curv = curvature(self.coords,self.elems,self.getEdges(),neighbours=neighbours)
         return curv
@@ -806,14 +799,14 @@ class TriSurface(Mesh):
     def edgeConnections(self):
         """Find the elems connected to edges."""
         if self.econn is None:
-            self.econn = reverseIndex(self.getFaces())
+            self.econn = inverseIndex(self.getFaces())
         return self.econn
     
 
     def nodeConnections(self):
         """Find the elems connected to nodes."""
         if self.conn is None:
-            self.conn = reverseIndex(self.elems)
+            self.conn = inverseIndex(self.elems)
         return self.conn
     
 
@@ -954,7 +947,7 @@ class TriSurface(Mesh):
         return arccos(self.edgeCosAngles()) / Deg
 
 
-    def data(self):
+    def _compute_data(self):
         """Compute data for all edges and faces."""
         if hasattr(self,'edglen'):
             return
@@ -970,22 +963,22 @@ class TriSurface(Mesh):
 
 
     def aspectRatio(self):
-        self.data()
+        self._compute_data()
         return self.aspect
 
  
     def smallestAltitude(self):
-        self.data()
+        self._compute_data()
         return self.altmin
 
 
     def longestEdge(self):
-        self.data()
+        self._compute_data()
         return self.edgmax
 
 
     def shortestEdge(self):
-        self.data()
+        self._compute_data()
         return self.edgmin
 
    
@@ -993,7 +986,7 @@ class TriSurface(Mesh):
         """Return a text with full statistics."""
         bbox = self.bbox()
         manifold,closed,mincon,maxcon = self.surfaceType()
-        self.data()
+        self._compute_data()
         angles = self.edgeAngles()
         area = self.area()
         if manifold and closed:
@@ -1033,6 +1026,49 @@ Total area: %s; Enclosed volume: %s
             area,volume
             )
         return s
+
+    
+    def distanceOfPoints(self,X,return_points=False):
+        """Find the distances of points X to the TriSurface.
+    
+        The distance of a point is either:
+        - the closest perpendicular distance to the facets;
+        - the closest perpendicular distance to the edges;
+        - the closest distance to the vertices.
+    
+        X is a (nX,3) shaped array of points.
+        If return_points = True, a second value is returned: an array with
+        the closest (foot)points matching X.
+        """
+        # distance from vertices
+        Vp = self.coords
+        res = vertexDistance(X,Vp,return_points) # OKdist, (OKpoints)
+        dist = res[0]
+        if return_points:
+            points = res[1]
+
+        # distance from edges
+        Ep = self.coords[self.getEdges()]
+        res = edgeDistance(X,Ep,return_points) # OKpid, OKdist, (OKpoints)
+        okE,distE = res[:2]
+        closer = distE < dist[okE]
+        dist[okE[closer]] = distE[closer]
+        if return_points:
+            points[okE[closer]] = res[2][closer]
+
+        # distance from faces
+        Fp = self.coords[self.elems]
+        res = facetDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
+        okF,distF = res[:2]
+        closer = distF < dist[okF]
+        dist[okE[closer]] = distF[closer]
+        if return_points:
+            points[okE[closer]] = res[2][closer]
+
+        if return_points:
+            return dist,points
+        else:
+            return dist
 
 
 ##################  Partitioning a surface #############################
@@ -1147,7 +1183,7 @@ Total area: %s; Enclosed volume: %s
 
 
     def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
-        for p in self.nodeFront(startat=startat,front_increment=front_increment):
+        for p in self.nodeFront(startat=startat,front_increment=front_increment):   
             if nsteps > 0:
                 nsteps -= 1
             elif nsteps == 0:
@@ -1254,7 +1290,7 @@ Total area: %s; Enclosed volume: %s
         part have the same property value.
         The splitProp() method can be used to get a list of Meshes.
         """
-        # First, reduce the surface to the part interseting with the plane
+        # First, reduce the surface to the part intersecting with the plane
         n = asarray(n)
         p = asarray(p)
         t = self.test(nodes='all',dir=n,min=p,atol=atol)
@@ -1273,7 +1309,7 @@ Total area: %s; Enclosed volume: %s
         u = M.test(nodes='all',dir=n,max=p,atol=atol)
         w = ((t+u) == 0) * (t*u == 0)
         ind = where(w)[0]
-        rev = reverseUniqueIndex(ind)
+        rev = inverseUniqueIndex(ind)
         M = M.clip(w)
         x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
 
@@ -1340,16 +1376,8 @@ Total area: %s; Enclosed volume: %s
         else:
             M = Mesh.concatenate(Mparts)
 
-        # Remove doubles
-        magic = M.elems.max()+1
-        mag = enmagic2(M.elems,magic)
-        mag = unique1d(mag)
-        elems = demagic2(mag,magic)
-        M = Mesh(M.coords,elems)
-
-        # Remove degenerate
-        notdegen = M.elems[:,0] != M.elems[:,1]
-        M = Mesh(M.coords,M.elems[notdegen])
+        # Remove degenerate and doubles
+        M = Mesh(M.coords,M.elems.removeDegenerate().removeDoubles())
             
         # Split in connected loops
         parts = connectedLineElems(M.elems)
@@ -1368,24 +1396,25 @@ Total area: %s; Enclosed volume: %s
         The return value is a list of intersectionWithPlanes() return
         values, i.e. a list of list of meshes.
         """
-        xmin,xmax = self.bbox()
-        if type(dir) is int:
-            dir = unitVector(dir)
-
-        x = arange(nplanes+1).reshape(-1,1)/float(nplanes)
-        P = xmin * (1.-x) + xmax * x
-
-        return [ self.intersectionWithPlane(p,dir,ignoreErrors=ignoreErrors) for i,p in enumerate(P) ]
+        o = self.center()
+        xmin,xmax = self.coords.directionalExtremes(dir,o)
+        P = Coords.interpolate(xmin,xmax,nplanes)
+        return [ self.intersectionWithPlane(p,dir,ignoreErrors=ignoreErrors) for p in P ]
 
 
 ##################  Smooth a surface #############################
 
-    def smoothLowPass(self,n_iterations=2,lambda_value=0.5):
-        """Smooth the surface using a low-pass filter."""
+    def smoothLowPass(self,n_iterations=2,lambda_value=0.5,neighbours=1):
+        """Smooth the surface using a low-pass filter.
+        
+        This uses the nodes that are connected to the node via a shortest
+        path of maximum 'neighbours' edges.
+        """
         k = 0.1
         mu_value = -lambda_value/(1-k*lambda_value)
         # find adjacency
-        adj = adjacencyArray(self.getEdges())
+        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)
+        adj = column_stack(adj)
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
@@ -1403,10 +1432,15 @@ Total area: %s; Enclosed volume: %s
             p[inter_vertex] = p[inter_vertex] + mu_value*(w[inter_vertex]*(p[adj[inter_vertex]]-p[inter_vertex].reshape(-1,1,3))).sum(1)
 
 
-    def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2):
-        """Smooth the surface using a Laplace filter and HC algorithm."""
+    def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2,neighbours=1):
+        """Smooth the surface using a Laplace filter and HC algorithm.
+
+        This uses the nodes that are connected to the node via a shortest
+        path of maximum 'neighbours' edges.
+        """
         # find adjacency
-        adj = adjacencyArray(self.getEdges())        
+        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)
+        adj = column_stack(adj)        
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
@@ -1816,63 +1850,3 @@ if __name__ == '__main__':
     print(a)
     
 # End
-
-
-def intersectLWTriSurface(ts, ql, ml, retWarn=True):
-    """"it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
-    For each line returns the points of intersections and the indices of the intersected triangles.
-    
-    TODO:
-    1) to speed up:add some extra clipping (next to the CircumCircle) in order to better clip in case of skewed triangles.
-    2) check irregularities:
-        It seems working also if in case of Inf and NaN, occurring with lines parallel to faces or edges. Anyway, in order to get a warning, a True/False is also returned!"""
-    #gets centers/normals from TriSurface
-
-    nts, pts= ts.areaNormals()[1], ts.coords[ts.elems].mean(axis=1)
-    #intersecting the nl lines with all the nt planes of the TriSurface returning nl*nt points
-    ##is it necessary to remove the Inf/-Inf/NaN ? (lines parallel to planes)v\
-    irregular_intersections=False
-    xall=intersectionPointsLWP(ql,ml,pts,nts)#nl,nt,3
-    xinf=[ xi[prod(-isinf(xi), axis=1, dtype='bool')] for xi in xall]#what is not Inf
-    #if concatenate([ -isfinite(xi) for xi in xall]).any()==True: warning('some Lines are parallel to Edges/Faces of the TriSurface so the intersectionLWTriSurface gives some Inf/NaN')
-    if concatenate([ -isfinite(xi) for xi in xall]).any()==True:
-        if retWarn==True:irregular_intersections=True
-    #for each line select the few triangles which contain the point in their CircumCircle: this selection is poor in case of skewed triangles because they have a large CircumCircle.
-
-    rcc, ccc, nc=triangleCircumCircle(ts.coords[ts.elems]) 
-    cands= length(xall-ccc)<(rcc+1e-5)#nl,nt bool=candidates triangles for each line+tolerance
-    #among the cands, even fewer triangles could be select using clipping...this would avoid long computations in case of skewed triangles which have large CircumCircle
-
-    trperpt=array([len(where(cand)[0]) for cand in cands])#how many triangles per point: skewed triangles have large CircumCircle so give high trperpt.
-    #print '#triangles per point: max %d, mean %f , the higher the slower'%(trperpt.max(),trperpt.mean())#this has to be small if the clipping is good!!!
-    xpts, ixtriangles=[], []
-    for il in range( cands.shape[0] ):#for each line
-        pi=xall[il][cands[il]]#select the points
-        ti=ts.select(cands[il])#select the triangles
-        tie, tic=ti.elems, ti.coords
-        if len(tie)==0:xpts.append([]), ixtriangles.append([])
-        else:
-            tpi=ti.coords[ti.elems]
-            
-######################################################
-            ##method 1: using areas###it is fast also with skewed triangles###########
-            tpi3= column_stack([tpi[:, 0], tpi[:, 1], pi, tpi[:, 0], pi, tpi[:, 2], pi, tpi[:, 1], tpi[:, 2]]).reshape(pi.shape[0]*3,  3, 3)
-            #areas
-            Atpi3=(length(cross(tpi3[:,1]-tpi3[:,0],tpi3[:,2]-tpi3[:,1]))*0.5).reshape(pi.shape[0], 3).sum(axis=1)#area and sum
-            Atpi=length(cross(tpi[:,1]-tpi[:,0],tpi[:,2]-tpi[:,1]))*0.5#area
-            boolx= -(Atpi3>Atpi+1.e-5)#equal =in, different = out
-###########################################################
-#            ##method 2: using barycentric coords###it is slow with skewed triangles#######
-#            pir= repeat([pi], tie.shape[0], axis=0)#only the first line is needed, ... may be improved ?
-#            boolx= insideSimplex(baryCoords(tic[tie],pir))[0]#only the first line is needed, ... may be improved ?
-#######################################################
-
-            xpoints= pi[boolx]#the other lines are repeated
-            whcand= where(cands[il])[0]
-            whbool= where(boolx)[0]
-            whp= whcand[whbool]
-            xpts.append(xall[il][whp] )
-            ixtriangles.append(whp)
-    #print [len(i) for i in xpts]#how many intersection-points per line
-    #print [len(i) for i in ixtriangles]#how many intersected-triangles per line
-    return xpts,  ixtriangles,irregular_intersections#points, ind-triangles grouped per line
