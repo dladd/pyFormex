@@ -566,7 +566,10 @@ def startGui(args=[]):
 
 
 def isWritable(path):
-    """Check that the specified path is writeable."""
+    """Check that the specified path is writeable.
+
+    BEWARE: this only works if the path exists!
+    """
     return os.access(path,os.W_OK)
 
 

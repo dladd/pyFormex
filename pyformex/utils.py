@@ -49,6 +49,7 @@ known_externals = {
     'units': ('units --version','GNU Units version (\S+)'),
     'ffmpeg': ('ffmpeg -version','FFmpeg version (\\S+)'),
     'gts': ('gtsset -h','Usage(:) set'),
+    'calix': ('calix --version','CALIX-(\S+)'),
     }
 
 def checkVersion(name,version,external=False):
@@ -63,9 +64,9 @@ def checkVersion(name,version,external=False):
     This should normally understand version numbers in the format 2.10.1
     """
     if external:
-        ver = the_external.get(name,'0')
+        ver = hasExternal(name)
     else:
-        ver = the_version.get(name,'0')
+        ver = hasModule(name)
     if SaneVersion(ver) > SaneVersion(version):
         return 1
     elif SaneVersion(ver) == SaneVersion(version):
@@ -73,44 +74,36 @@ def checkVersion(name,version,external=False):
     else:
         return -1
 
-
-if checkVersion('python','2.5') < 0:
-    print """
-This version of pyFormex was developed for Python 2.5.
-We advice you to upgrade your Python version.
-Getting pyFormex to run on Python 2.4 should be possible with a
-a few adjustements. Make it run on a lower version is problematic.
-"""
-    sys.exit()
     
-if checkVersion('python','2.6') >= 0:
-    print """
-This version of pyFormex was developed for Python 2.5.
-There should not be any major problem with running on version 2.6,
-but if you encounter some problems, please contact the developers at
-pyformex.berlios.de.
-"""
-    from itertools import combinations
-else:
-    def combinations(iterable, r):
-        # combinations('ABCD', 2) --> AB AC AD BC BD CD
-        # combinations(range(4), 3) --> 012 013 023 123
-        pool = tuple(iterable)
-        n = len(pool)
-        if r > n:
-            return
-        indices = range(r)
-        yield tuple(pool[i] for i in indices)
-        while True:
-            for i in reversed(range(r)):
-                if indices[i] != i + n - r:
-                    break
-            else:
-                return
-            indices[i] += 1
-            for j in range(i+1, r):
-                indices[j] = indices[j-1] + 1
-            yield tuple(pool[i] for i in indices)
+def hasModule(name,check=False):
+    """Test if we have the named module available.
+
+    Returns a nonzero (version) string if the module is available,
+    or an empty string if it is not.
+
+    By default, the module is only checked on the first call. 
+    The result is remembered in the the_version dict.
+    The optional argument check==True forces a new detection.
+    """
+    if the_version.has_key(name) and not check:
+        return the_version[name]
+    else:
+        return checkModule(name)
+
+
+def hasExternal(name):
+    """Test if we have the external command 'name' available.
+
+    Returns a nonzero string if the command is available,
+    or an empty string if it is not.
+
+    The external command is only checked on the first call.
+    The result is remembered in the the_external dict.
+    """
+    if the_external.has_key(name):
+        return the_external[name]
+    else:
+        return checkExternal(name)
 
     
 
@@ -161,22 +154,6 @@ def checkModule(name=None):
     the_version[name] = version
     return version
 
-    
-def hasModule(name,check=False):
-    """Test if we have the named module available.
-
-    Returns a nonzero (version) string if the module is available,
-    or an empty string if it is not.
-
-    By default, the module is only checked on the first call. 
-    The result is remembered in the the_version dict.
-    The optional argument check==True forces a new detection.
-    """
-    if the_version.has_key(name) and not check:
-        return the_version[name]
-    else:
-        return checkModule(name)
-
 
 
 def checkExternal(name=None,command=None,answer=None):
@@ -218,21 +195,6 @@ def checkExternal(name=None,command=None,answer=None):
     _congratulations(name,version,'program',quiet=True)
     the_external[name] = version
     return version
-
-
-def hasExternal(name):
-    """Test if we have the external command 'name' available.
-
-    Returns a nonzero string if the command is available,
-    or an empty string if it is not.
-
-    The external command is only checked on the first call.
-    The result is remembered in the the_external dict.
-    """
-    if the_external.has_key(name):
-        return the_external[name]
-    else:
-        return checkExternal(name)
 
 
 def reportDetected():

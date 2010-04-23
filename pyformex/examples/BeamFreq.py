@@ -12,45 +12,37 @@ techniques = ['external','viewport',]
 BeamFreq
 --------
 This example shows the first natural vibration modes of an elastic beam.
+It requires an external program, calix, which can be downloaded from
+ftp://bumps.ugent.be/pub/calix/
+Make sure you have version 1.5-a8 or higher.
 
 """
-
 from plugins.curve import *
 import simple
 
+_required_calix_version = '1.5-a8'
 
-_install="""
+print utils.checkVersion('calix',_required_calix_version,True)
+
+if utils.checkVersion('calix',_required_calix_version,True) < 0:
+   showText("""..
+
+Error
+-----
+An error occurred when I tried to find the program 'calix'.
+This probably means that calix is not installed on your system,
+or that the installed version is not one I can use for this example.
+
 Calix is a free program and you can install it as follows:
 
-- download calix (1.5-a5 or higher) from ftp://bumps.ugent.be/pub/calix/
+- download calix (%s or higher) from ftp://bumps.ugent.be/pub/calix/
 - unpack, compile and install (as root)::
 
-   tar xvzf calix-1.5-a5.tar.gz
+   tar xvzf calix-%s.tar.gz
    cd calix-1.5
    make
    (sudo) make install
-"""
-
-sta,out = utils.runCommand('echo stop|calix|grep -F "CALIX-"',False)
-if sta:
-   showText("""..
-
-Error
------
-An error occurred when I tried to execute the program 'calix'.
-This probably means that calix is not installed on your system.
-""" + _install)
-   exit()
-
-s = [ si for si in out.split() if si.startswith('CALIX') ]
-if (len(s) == 0) or utils.SaneVersion(s[0]) < utils.SaneVersion('CALIX-1.5-a5'):
-   showText("""..
-
-Error
------
-It looks like the version of 'calix' installed on your system is not
-one I can use for this example.
-""" + _install)
+""" % (_required_calix_version,_required_calix_version))
    exit()
 
 n = 16

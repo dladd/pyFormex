@@ -164,22 +164,21 @@ message("Performing analysis: this may take some time")
 # Find a candidate for the output file
 fullname = os.path.splitext(__file__)[0] + '.out'
 basename = os.path.basename(fullname)
+dirname = os.path.dirname(fullname)
 outfilename = None
-for candidate in [
-    fullname,
-    os.path.join(GD.cfg['workdir'],basename),
-    os.path.join('/var/tmp',basename),
-    ]:
+for candidate in [dirname,GD.cfg['workdir'],'/var/tmp']:
     if isWritable(candidate):
-        outfilename = candidate
-        break
+        fullname = os.path.join(candidate,basename)
+        if not os.path.exists(fullname) or isWritable(fullname):
+            outfilename = fullname
+            break
 
 if outfilename is None:
-    message("No writeable path: I can not execute the simulation\nCopy the script to a writeable path and try again.")
+    error("No writeable path: I can not execute the simulation.\nCopy the script to a writeable path and try running from there.")
     exit()
 
 outfile = file(outfilename,'w')
-message("Output is written to file '%s' in %s" % (outfilename,os.getcwd()))
+message("Output is written to file '%s'" % os.path.realpath(outfilename))
 stdout_saved = sys.stdout
 sys.stdout = outfile
 print "# File created by pyFormex on %s" % time.ctime()
