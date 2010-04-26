@@ -312,24 +312,29 @@ def deleteAllBcons():
 
 xload = 0.0
 yload = 0.0
+nloads = 1
+lc = 0
 
 def setCLoad():
     """Pick the points with load condition."""
-    global xload,yload
+    global xload,yload,nloads
     if model is None:
         warn()
         return
     removeHighlights()
-    res = askItems([('x-load',xload),('y-load',yload)])
+    res = askItems([
+        #('load-case',lc),
+        ('x-load',xload),('y-load',yload)])
     if res:
+        #lc = res['load-case']
         xload = res['x-load']
         yload = res['y-load']
         nodeset = pickNodes()
         if len(nodeset) > 0:
             print nodeset
-            if len(nodeset) > 0:
-                print "SETTING CLOAD %s" % [xload,yload,0.,0.,0.,0.]
-                PDB.nodeProp(set=nodeset,cload=[xload,yload,0.,0.,0.,0.])
+            print "SETTING CLOAD %s" % [xload,yload,0.,0.,0.,0.]
+            PDB.nodeProp(set=nodeset,tag="Load-%s"%lc,cload=[xload,yload,0.,0.,0.,0.])
+            nloads = max(nloads,lc+1)
 
 
 def deleteAllCLoads():
@@ -709,7 +714,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
 
    
     ########### Find number of load cases ############
-    calpyModel.nloads = 1
+    calpyModel.nloads = nloads
     calpyModel.PrintModelData()
     ngp = 2
     nzem = 3
@@ -763,9 +768,10 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     # Also notice that the indexing inside the bcon array uses numpy
     # convention (starting at 0), thus no adding 1 is needed!
     print "Assembling Concentrated Loads"
-    calpyModel.nloads = 1
     f = zeros((calpyModel.ndof,calpyModel.nloads),float)
     for p in PDB.getProp('n',attr=['cload']):
+        lc = 0
+        #lc = int(p.tag)
         if p.set is None:
             nodeset = range(calpyModel.nnodes)
         else:
@@ -775,7 +781,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
             if i in [0,1]:
                 F[i] = v
         for n in nodeset:
-            f[:,0] = fe_util.AssembleVector(f[:,0],F,bcon[n])
+            f[:,lc] = fe_util.AssembleVector(f[:,lc],F,bcon[n])
 
     print "Assembling distributed loads"
     # This is a bit more complex. See Calpy for details
@@ -786,7 +792,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     ngroups = model.ngroups()
     s = [ "" ] * ngroups
     nb = [ 0 ] * ngroups
-    loadcase = 1
+    lc = 1
     for p in PDB.getProp('e',attr=['eload']):
         xload = yload = 0.
         if p.label == 'x':
@@ -800,7 +806,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         g = p.group
         print "Group %s" % g
         for e in p.set:
-            s[g] += "%s %s %s %s %s\n" % (e+1,p.edge+1,loadcase,xload,yload)
+            s[g] += "%s %s %s %s %s\n" % (e+1,p.edge+1,lc,xload,yload)
             nb[g] += 1
     #print s,nb
     for nbi,si,nodes,matnr,Plane in zip(nb,s,NodesGrp,MatnrGrp,PlaneGrp):
@@ -832,22 +838,22 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         res=flavia.ResultsFile(jobname)
         
     # compute stresses
-    for l in range(calpyModel.nloads):
+    for lc in range(calpyModel.nloads):
         
-        print "Results for load case %d" %(l+1)
+        print "Results for load case %d" %(lc+1)
         print "Displacements"
-        aprint(displ[:,:,l],header=['x','y'],numbering=True)
+        aprint(displ[:,:,lc],header=['x','y'],numbering=True)
 
         if flavia:
-            flavia.WriteResultsHeader(res,'"Displacement" "Elastic Analysis"',l+1,'Vector OnNodes')
-            flavia.WriteResults(res,displ[:,:,l])
+            flavia.WriteResultsHeader(res,'"Displacement" "Elastic Analysis"',lc+1,'Vector OnNodes')
+            flavia.WriteResults(res,displ[:,:,lc])
             
         stresn = count = None
         i = 0
         for e,P in zip(model.elems,PlaneGrp):
             i += 1
             #P.debug = 1
-            stresg = P.StressGP (v[:,l],mats)
+            stresg = P.StressGP (v[:,lc],mats)
             if verbose:
                 print "elem group %d" % i
                 print "GP Stress\n", stresg
@@ -870,7 +876,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
             aprint(stresn,header=['sxx','syy','sxy'],numbering=True)
                 
         if flavia:
-            flavia.WriteResultsHeader(res,'"Stress" "Elastic Analysis"',l+1,'Matrix OnNodes')
+            flavia.WriteResultsHeader(res,'"Stress" "Elastic Analysis"',lc+1,'Matrix OnNodes')
             flavia.WriteResults(res,stresn)
 
     
@@ -898,20 +904,20 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     postproc_menu.open_results_dialog()
     
 
-def autoRun(quad=False):
+def autoRun(quadratic=False):
     clear()
-    if quad:
+    if quadratic:
         nx,ny = 2,2
     else:
         nx,ny = 4,4
     createRectPart(dict(x0=0.,x2=1.,y0=0.,y2=1.,nx=nx,ny=ny,eltype='quad'))
     createRectPart(dict(x0=0.,x2=-1.,y0=0.,y2=1.,nx=nx,ny=ny,eltype='quad'))
-    if quad:
+    if quadratic:
         convertQuadratic()
     createModel()
     nodenrs = arange(model.coords.shape[0])
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
-    if quad:
+    if quadratic:
         ny *= 2
     PDB.nodeProp(set=nodenrs[:ny+1],bound=[1,1,0,0,0,0])
     PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[10.,0.,0.,0.,0.,0.])
@@ -924,11 +930,23 @@ def autoRun2():
     convertQuadratic()
     createModel()
     nodenrs = arange(model.coords.shape[0])
+    xmin,xmax = model.coords.bbox()[:,0]
+    xtol = (xmax-xmin) / 1000.
+    left = model.coords.test(dir=0,min=xmin-xtol,max=xmin+xtol)
+    right = model.coords.test(dir=0,min=xmax-xtol,max=xmax+xtol)
+    leftnrs = where(left)[0]
+    rightnrs = where(right)[0]
+    print leftnrs
+    print rightnrs
+    
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
     ny *= 2
-    PDB.nodeProp(set=nodenrs[:ny+1],bound=[1,1,0,0,0,0])
-    PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[10.,0.,0.,0.,0.,0.])
-    runCalpyAnalysis('FeEx',verbose=True)
+    PDB.nodeProp(set=leftnrs,bound=[1,1,0,0,0,0])
+    PDB.nodeProp(set=rightnrs,cload=[10.,0.,0.,0.,0.,0.])
+
+    print "This example is incomplete."
+    print PDB
+    #runCalpyAnalysis('FeEx',verbose=True)
 
 def autoConv():
     clear()

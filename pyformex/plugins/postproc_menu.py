@@ -724,6 +724,7 @@ def open_results_dialog():
     if not checkDB():
         warning("No results database was selected!")
         return
+    close_dialog()
     data = GD.PF.get('__PostProcMenu_data__',dia_defaults)
     print("SAVED DATA",data)
     for k,v in data.items():
