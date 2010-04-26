@@ -15,21 +15,19 @@ restindex
 Documentation
 -------------  
 
-*The pyFormex documentation is currently being restructured, rewritten
-and expanded. While we already provide a preview of the upcoming new
-documentation, we will also offer the old manual until the transformation
-has been finalized.*
-
-- Preview of the new `pyFormex documentation`_ under development. 
+The `pyFormex documentation`_ is currently under development. 
 
   - The `Introduction to pyFormex`_, `Installing pyFormex`_, `pyFormex
     tutorial`_ and `pyFormex reference manual`_ are already fairly complete
     and useable. 
-  - The `pyFormex user guide`_ and `pyFormex examples`_ are still very limited. 
+  - The `pyFormex user guide`_ and `pyFormex examples`_ are still
+    rather embryonal. 
 
-- The older pyFormex manual (version 0.8):
 
-  - Browse the `Online manual`_ (a local version is accessible from inside the pyFormex GUI).
-  - Download `PDF-version`_ of the manual.
+You can access the documentation in the following ways:
+
+  - Browse the `Online manual`_.
+  - Download a `PDF version`_ of the manual for off-line reading.
+  - Use the Help menu of the pyFormex GUI.
 
 .. End

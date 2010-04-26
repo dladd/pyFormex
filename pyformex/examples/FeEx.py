@@ -38,6 +38,7 @@ from plugins.fe_abq import *
 from plugins.fe_post import FeResult
 from plugins import postproc_menu
 from plugins import mesh_menu
+from plugins import isopar
 from odict import ODict
 import utils
 
@@ -88,13 +89,15 @@ def deleteAll():
 ######################## parts ####################
     
 x0,y0 = 0.,0.
-x1,y1 = 1.,1.
+x1,y1 = 1.,0.
+x2,y2 = 1.,1.
+x3,y3 = 0.,1.
 nx,ny = 4,4
 eltype = 'quad'
 
 def createRectPart(res=None):
     """Create a rectangular domain from user input"""
-    global x0,y0,x1,y1
+    global x0,y0,x2,y2,nx,ny,eltype
     if model is not None:
         if ask('You have already merged the parts! I can not add new parts anymore.\nYou should first delete everything and recreate the parts.',['Delete','Cancel']) == 'Delete':
             deleteAll()
@@ -103,53 +106,59 @@ def createRectPart(res=None):
     if res is None:
         res = askItems([('x0',x0,{'tooltip':'The x-value of one of the corners'}),
                         ('y0',y0),
-                        ('x1',x1),('y1',y1),
+                        ('x2',x2),('y2',y2),
                         ('nx',nx),('ny',ny),
                         ('eltype',eltype,'select',['quad','tri-u','tri-d']),
                         ])
     if res:
         globals().update(res)
-        if x0 > x1:
-            x0,x1 = x1,x0
-        if y0 > y1:
-            y0,y1 = y1,y0
+        if x0 > x2:
+            x0,x2 = x2,x0
+        if y0 > y2:
+            y0,y2 = y2,y0
         diag = {'quad':'', 'tri-u':'u', 'tri-d':'d'}[eltype]
-        F = rectangle(nx,ny,x1-x0,y1-y0,diag=diag).trl([x0,y0,0])
-        addPart(F)
-#        drawParts()
+        M = rectangle(nx,ny,x2-x0,y2-y0,diag=diag).toMesh().trl([x0,y0,0])
+        addPart(M)
+
 
 def createQuadPart(res=None):
     """Create a quadrilateral domain from user input"""
-    global x0,y0,x1,y1,x2,y2,x3,y3
+    global x0,y0,x1,y1,x2,y2,x3,y3,nx,ny,eltype
     if model is not None:
         if ask('You have already merged the parts! I can not add new parts anymore.\nYou should first delete everything and recreate the parts.',['Delete','Cancel']) == 'Delete':
             deleteAll()
         else:
             return
     if res is None:
-        res = askItems([('x0',x0,{'tooltip':'The x-value of one of the corners'}),
-                        ('y0',y0),
-                        ('x1',x1),('y1',y1),
-                        ('nx',nx),('ny',ny),
-                        ('eltype',eltype,'select',['quad','tri-u','tri-d']),
-                        ])
+        res = askItems([
+            ('Vertex 0',(x0,y0)),
+            ('Vertex 1',(x1,y1)),
+            ('Vertex 2',(x2,y2)),
+            ('Vertex 3',(x3,y3)),
+            ('nx',nx),
+            ('ny',ny),
+            ('eltype',eltype,'select',['quad','tri-u','tri-d']),
+            ])
     if res:
-        globals().update(res)
-        if x0 > x1:
-            x0,x1 = x1,x0
-        if y0 > y1:
-            y0,y1 = y1,y0
+        x0,y0 = res['Vertex 0']
+        x1,y1 = res['Vertex 1']
+        x2,y2 = res['Vertex 2']
+        x3,y3 = res['Vertex 3']
+        nx = res['nx']
+        ny = res['ny']
+        eltype = res['eltype']
         diag = {'quad':'', 'tri-u':'u', 'tri-d':'d'}[eltype]
-        F = rectangle(nx,ny,x1-x0,y1-y0,diag=diag).trl([x0,y0,0])
-        addPart(F)
-#        drawParts()
+        xold = rectangle(1,1).coords
+        xnew = Coords([[x0,y0],[x1,y1],[x2,y2],[x3,y3]])
+        M = rectangle(nx,ny,1.,1.,diag=diag).toMesh().isopar('quad4',xnew,xold)
+        addPart(M)
 
 
-def addPart(F):
-    """Add a Formex to the parts list."""
+def addPart(M):
+    """Add a Mesh to the parts list."""
     global parts
     n = len(parts)
-    part = F.setProp(n).toMesh()
+    part = M.setProp(n)
     parts.append(part)
     partname = 'part-%s'%n
     export({partname:part})
@@ -419,8 +428,8 @@ def createCalixInput():
         print "No Job Name: writing to sys.stdout"
         jobname = None
 
-    filname = jobname+'.dta'
-    fil = open(filname,'w')
+    filnam = jobname+'.dta'
+    fil = open(filnam,'w')
     
     nnodes = model.coords.shape[0]
     nelems = model.celems[-1]
@@ -439,6 +448,10 @@ def createCalixInput():
                    mat.thickness,
                    0.0,      # rho was not defined in material
                    ] for mat in matprops]) 
+    matnr = zeros(nelems,dtype=int32)
+    for i,mat in enumerate(matprops):  # proces in same order as above!
+        matnr[mat.set] = i+1
+    print matnr
     nmats = mats.shape[0]
     nloads = 0
     # Header
@@ -487,6 +500,7 @@ plane
                            $$      D O F S      $$
                            $$$$$$$$$$$$$$$$$$$$$$$
 """)
+    
     # Materials
     fil.write(""";-----------------------------------------
 ; Materialen
@@ -494,22 +508,26 @@ plane
 array mat     1 4
 """)
     fil.write('\n'.join([ "%.4e "*4 % tuple(m) for m in mats]))
+    fil.write('\n\n')
     fil.write("""print mat 3
                            $$$$$$$$$$$$$$$$$$$$$$$
                            $$ M A T E R I A L S $$
                            $$$$$$$$$$$$$$$$$$$$$$$
 """)
+    
     # Elements
-    fil.write(""";-----------------------------------------
+    for grp in model.elems:
+        nelems,nplex = grp.shape
+        fil.write(""";-----------------------------------------
 ; Elementen
 ;----------
-elements nodes matnr     9   100 1
+elements nodes matnr  %s %s 1
+""" % (nplex,nelems))
+        fil.write('\n'.join(["%5i"*(nplex+2) % tuple([i,1]+e.tolist()) for i,e in zip(arange(nelems)+1,grp+1)]))
+        fil.write('\n\n')
+        fil.write("""plane plane coord bcon nodes matnr 2 2
 """)
-    print model.elems
-    #fil.write('\n'.join(["%5i"*(nplex+2) % tuple([i,1]+e) for i,e in zip(arange(nelems)+1,model.elems)]))
-    fil.write('\n\n')
-    fil.write("""plane plane coord bcon nodes matnr 2 2
-""")
+        
     # Nodal Loads
     fil.write("""text 3 1
                            $$$$$$$$$$$$$$$$$$$$
@@ -517,10 +535,21 @@ elements nodes matnr     9   100 1
                            $$$$$$$$$$$$$$$$$$$$
 loads f bcon 1
 """)
-    fil.write('\n\n')
+    loadcase=1
+    for p in PDB.getProp('n',attr=['cload']):
+        if p.set is None:
+            nodeset = range(calpyModel.nnodes)
+        else:
+            nodeset = p.set
+        F = [0.0,0.0]
+        for i,v in p.cload:
+            if i in [0,1]:
+                F[i] = v
+        fil.write(''.join(["%5i%5i%10.2f%10.2f\n" % (n,loadcase,F[0],F[1]) for n in nodeset]))
+
+    fil.write('\n')
+    
     # Distributed loads
-    fil.write("""""")
-    fil.write("""""")
     fil.write("""""")
     fil.write("""no debug
 print f 3
@@ -532,9 +561,9 @@ assemble plane mat s 0 0 0 3
 """)
     # Solve and output
     fil.write(""";------------------------------------------------solve+output
-flavia mesh '%s.flavia.msh'     9
+flavia mesh '%s.flavia.msh' %s
 flavia nodes coord
-flavia elems nodes matnr     9
+flavia elems nodes matnr  %s
 flavia results '%s.flavia.res'
 solbnd s f
 delete s
@@ -559,11 +588,18 @@ loop 1
  intvar add 1 1
 next
 stop
-""" % (jobname,jobname))
+""" % (jobname,nplex,nplex,jobname))
 
     # Done: Close data file
     fil.close()
-    showFile(filname,mono=True)
+    showFile(filnam,mono=True)
+
+    if ack("Shall I run the Calix analysis?"):
+        # Run the analysis
+        outfile = utils.changeExt(filnam,'res')
+        cmd = "calix %s %s" % (filnam,outfile)
+        utils.runCommand(cmd)
+        showFile(outfile,mono=True)
     
     
 
@@ -868,8 +904,8 @@ def autoRun(quad=False):
         nx,ny = 2,2
     else:
         nx,ny = 4,4
-    createRectPart(dict(x0=0.,x1=1.,y0=0.,y1=1.,nx=nx,ny=ny,eltype='quad'))
-    createRectPart(dict(x0=0.,x1=-1.,y0=0.,y1=1.,nx=nx,ny=ny,eltype='quad'))
+    createRectPart(dict(x0=0.,x2=1.,y0=0.,y2=1.,nx=nx,ny=ny,eltype='quad'))
+    createRectPart(dict(x0=0.,x2=-1.,y0=0.,y2=1.,nx=nx,ny=ny,eltype='quad'))
     if quad:
         convertQuadratic()
     createModel()
@@ -884,7 +920,7 @@ def autoRun(quad=False):
 def autoRun2():
     clear()
     nx,ny = 1,1
-    createRectPart(dict(x0=0.,x1=1.,y0=0.,y1=1.,nx=nx,ny=ny,eltype='quad'))
+    createRectPart(dict(x0=0.,x2=1.,y0=0.,y2=1.,nx=nx,ny=ny,eltype='quad'))
     convertQuadratic()
     createModel()
     nodenrs = arange(model.coords.shape[0])

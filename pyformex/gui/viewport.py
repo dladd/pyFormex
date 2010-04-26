@@ -1036,6 +1036,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         By default, the full actor list is used.
         """
         self.picked = []
+        GD.debug('PICK_PARTS %s %s %s' % (obj_type,max_objects,store_closest))
         if max_objects <= 0:
             GD.message("No such objects to be picked!")
             return

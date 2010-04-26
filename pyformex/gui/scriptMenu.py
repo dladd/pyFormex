@@ -440,7 +440,7 @@ class ScriptMenu(QtGui.QMenu):
 
     def classify(self):
         """Classify the files in submenus according to keywords."""
-        kat = ['all','level','topics','techniques']
+        kat = ['level','topics','techniques','all']
         cat = dict([ (k,set()) for k in kat])
         cat['level'] = [ 'beginner', 'normal', 'advanced' ]
         col = {'all':set()}

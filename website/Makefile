@@ -6,7 +6,7 @@ HTDOCS= developer.html documentation.html install.html links.html screenshots.ht
 EXAMPLES= examples/*.html
 IMAGES= images/*.png images/*.gif images/*.jpg
 SCRIPTS= scripts/*.py
-RSYNC= rsync -av -e ssh
+RSYNC= rsync -av -e ssh --delete
 
 SERVER= shell.berlios.de
 TARGETDIR= ${SERVER}:/home/groups/pyformex/htdocs
@@ -25,6 +25,9 @@ $(HOMEPARTS): pyformex.html
 	./split_home
 
 # Transfers the files to BerliOs
+pubtest: $(HOMEPARTS)
+	$(RSYNC) --exclude src . ${TARGETDIR} -n
+
 pub: $(HOMEPARTS)
 	$(RSYNC) $(HTDOCS) ${TARGETDIR}
 	$(RSYNC) $(EXAMPLES) ${TARGETDIR}/examples

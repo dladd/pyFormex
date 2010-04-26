@@ -14,9 +14,9 @@
 .. _`Help Forum`: http://developer.berlios.de/forum/forum.php?forum_id=8348
 .. _`Bug tracker`: http://developer.berlios.de/bugs/?group_id=2717
 
-.. _`Online manual`: http://pyformex.berlios.de/manual/index.html
+.. _`Online manual`: http://pyformex.berlios.de/doc/index.html
 .. _`pyFormex documentation`: http://pyformex.berlios.de/doc/index.html
-.. _`PDF-version`: ftp://ftp.berlios.de/pub/pyformex/pyformex.pdf
+.. _`PDF version`: ftp://ftp.berlios.de/pub/pyformex/pyformex.pdf
 .. _`Introduction to pyFormex`: http://pyformex.berlios.de/doc/intro.html
 .. _`Installing pyFormex`: http://pyformex.berlios.de/doc/install.html
 .. _`pyFormex tutorial`: http://pyformex.berlios.de/doc/tutorial.html

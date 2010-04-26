@@ -1133,7 +1133,7 @@ def highlightEdges(K):
     for i in K.keys():
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
-        FA = actors.GeomActor(Formex(actor.coords[actor.data.getEdges()[K[i]]]),color=GD.canvas.settings.slcolor,linewidth=3)
+        FA = actors.GeomActor(Formex(actor.coords[actor.object.getEdges()[K[i]]]),color=GD.canvas.settings.slcolor,linewidth=3)
         GD.canvas.addHighlight(FA)
             
     GD.canvas.update()

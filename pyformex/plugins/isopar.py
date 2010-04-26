@@ -183,4 +183,12 @@ def _isopar_F(self,eltype,coords,oldcoords):
 
 Formex.isopar = _isopar_F
 
+from plugins import mesh
+
+def _isopar_M(self,eltype,coords,oldcoords):
+    return mesh.Mesh(self.coords.isopar(eltype,coords,oldcoords),self.elems,self.prop,self.eltype)
+
+mesh.Mesh.isopar = _isopar_M
+
+
 # End

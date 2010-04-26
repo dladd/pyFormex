@@ -28,7 +28,7 @@ Examples
 - `Post-processing`_: pyFormex can be used as a postprocessor for numerical simulation codes such as FEA or CFD.
  
 
-.. _`pyFormex distribution`: ../download.html
+.. _`pyFormex distribution`: ../install.html
 
 Want other examples?
 --------------------
