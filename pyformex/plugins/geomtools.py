@@ -34,13 +34,43 @@ class Plane(object):
         self.coords = Coords.concatenate([P,normalize(n)])
 
 
-def triangleCircumCircle(x):
+def triangleInCircle(x):
+    """Compute the incircles of the triangles x
+
+    The incircle of a triangle is the largest circle that can be inscribed
+    in the triangle.
+
+    x is a Coords array with shape (ntri,3,3) representing ntri triangles.
+    
+    Returns a tuple r,C,n with the radii, Center and unit normals of the
+    incircles.
+    """
+    checkArray(x,shape=(-1,3,3))
+    # Edge vectors
+    v = roll(x,-1,axis=1) - x
+    v = normalize(v)
+    # create bisecting lines in x0 and x1
+    b0 = v[:,0]-v[:,2]
+    b1 = v[:,1]-v[:,0]
+    # find intersection => center point of incircle
+    center = lineIntersection(x[:,0],b0,x[:,1],b1)
+    # find distance to any side => radius
+    radius = center.distanceFromLine(x[:,0],v[:,0])
+    # normals
+    normal = cross(v[:,0],v[:,1])
+    normal /= length(normal).reshape(-1,1)
+    return radius,center,normal
+
+
+def triangleCircumCircle(x,bounding=False):
     """Compute the circumcircles of the triangles x
 
     x is a Coords array with shape (ntri,3,3) representing ntri triangles.
     
     Returns a tuple r,C,n with the radii, Center and unit normals of the
     circles going through the vertices of each triangle.
+
+    If bounding=True, this returns the triangle bounding circle.
     """
     checkArray(x,shape=(-1,3,3))
     # Edge vectors
@@ -60,7 +90,48 @@ def triangleCircumCircle(x):
     C = C.sum(axis=1) / nn.reshape(-1,1) / 2
     # Unit normals
     n = n / N.reshape(-1,1)
+    # Bounding circle
+    if bounding:
+        # Modify for obtuse triangles
+        for i,j,k in [[0,1,2],[1,2,0],[2,0,1]]:
+            obt = vv[:,i] >= vv[:,j]+vv[:,k]
+            r[obt] = 0.5 * lv[obt,i]
+            C[obt] = 0.5 * (x[obt,i] + x[obt,j])
+    
     return r,C,n
+
+
+def triangleBoundingCircle(x):
+    """Compute the bounding circles of the triangles x
+
+    The bounding circle is the smallest circle in the plane of the triangle
+    such that all vertices of the triangle are on or inside the circle.
+    If the triangle is acute, this is equivalent to the triangle's
+    circumcircle. It the triangle is obtuse, the longest edge is the
+    diameter of the bounding circle.
+    
+    x is a Coords array with shape (ntri,3,3) representing ntri triangles.
+    
+    Returns a tuple r,C,n with the radii, Center and unit normals of the
+    bounding circles.
+    """
+    return triangleCircumCircle(x,bounding=True)
+
+
+def triangleObtuse(x):
+    """Checks for obtuse triangles
+    
+    x is a Coords array with shape (ntri,3,3) representing ntri triangles.
+    
+    Returns an (ntri) array of True/False values indicating whether the
+    triangles are obtuse.
+    """
+    checkArray(x,shape=(-1,3,3))
+    # Edge vectors
+    v = x - roll(x,-1,axis=1)
+    vv = dotpr(v,v)
+    return (vv[:,0] > vv[:,1]+vv[:,2]) + (vv[:,1] > vv[:,2]+vv[:,0]) + (vv[:,2] > vv[:,0]+vv[:,1])
+
 
 
 def lineIntersection(P1,D1,P2,D2):
@@ -545,10 +616,8 @@ def insideSimplex(BC,bound=True):
         return (BC > 0.).all(-1)
 
 
-# End
-
 def intersectionLWTriSurface(ts, ql, ml, side='+'):
-    """"it takes a TriSurface ts and a set of lines ql,m and intersect the lines with the TriSurface.
+    """it takes a TriSurface ts and a set of lines ql,m and intersect the lines with the TriSurface.
     It returns an array of points and 2 arrays of indices: the points of intersection of the Lines with the Trisurface and for each point the index of the line and the index of the triangle which have been intersected.
     If side is None the intersections produced by the line are returned, while if it is + or -, only half-line (ray) are used for the intersections.
     The side ('+' or '-')  is positive or negative depending on the sign of the scalar product of 2 vectors: the direction of the line and the normal of the surface. Therefore, side it is usefull only if the TriSurface has correct normals.
@@ -610,5 +679,5 @@ def intersectionLWTriSurface(ts, ql, ml, side='+'):
 #zoomAll()
 
 
-
+# End
 

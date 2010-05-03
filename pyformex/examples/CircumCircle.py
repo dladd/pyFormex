@@ -30,24 +30,105 @@ techniques = ['function','import','mpattern','dialog','viewports']
 """
 import simple
 from examples.Cube import cube_tri
-from plugins.geomtools import triangleCircumCircle
+from plugins.geomtools import *
+
+## /// <summary>
+## /// Calculates the intersection point between two lines, assuming that there is such a point.
+## /// </summary>
+## /// <param name="originD">The origin of the first line</param>
+## /// <param name="directionD">The direction of the first line.</param>
+## /// <param name="originE">The origin of the second line.</param>
+## /// <param name="directionE">The direction of the second line.</param>
+## /// <returns>The point at which the two lines intersect.</returns>
+## Vector3 LineLineIntersection(Vector3 originD, Vector3 directionD, Vector3 originE, Vector3 directionE) {
+##   directionD.Normalize();
+##   directionE.Normalize();
+##   var N = Vector3.Cross(directionD, directionE);
+##   var SR = originD - originE;
+##   var absX = Math.Abs(N.X);
+##   var absY = Math.Abs(N.Y);
+##   var absZ = Math.Abs(N.Z);
+##   float t;
+##   if (absZ > absX && absZ > absY) {
+##     t = (SR.X*directionE.Y - SR.Y*directionE.X)/N.Z;
+##   } else if (absX > absY) {
+##     t = (SR.Y*directionE.Z - SR.Z*directionE.Y)/N.X;
+##   } else {
+##     t = (SR.Z*directionE.X - SR.X*directionE.Z)/N.Y;
+##   }
+##   return originD - t*directionD;
+## }
+
+## /// <summary>
+## /// Calculates the distance between a point and a line.
+## /// </summary>
+## /// <param name="P">The point.</param>
+## /// <param name="S">The origin of the line.</param>
+## /// <param name="D">The direction of the line.</param>
+## /// <returns>
+## /// The distance of the point to the line.
+## /// </returns>
+## float PointLineDistance(Vector3 P, Vector3 S, Vector3 D) {
+##   D.Normalize();
+##   var SP = P - S;
+##   return Vector3.Distance(SP, Vector3.Dot(SP, D)*D);
+## }
 
 
-def drawCircles(F):
-    for r,c,n in zip(*triangleCircumCircle(F.coords)):
+# Circumcircle
+## // lines from a to b and a to c
+## var AB = B - A;
+## var AC = C - A;
+
+## // perpendicular vector on triangle
+## var N = Vector3.Normalize(Vector3.Cross(AB, AC));
+
+## // find the points halfway on AB and AC
+## var halfAB = A + AB*0.5f;
+## var halfAC = A + AC*0.5f;
+
+## // build vectors perpendicular to ab and ac
+## var perpAB = Vector3.Cross(AB, N);
+## var perpAC = Vector3.Cross(AC, N);
+
+## // find intersection between the two lines
+## // D: halfAB + t*perpAB
+## // E: halfAC + s*perpAC
+## var center = LineLineIntersection(halfAB, perpAB, halfAC, perpAC);
+## // the radius is the distance between center and any point
+## // distance(A, B) = length(A-B)
+## var radius = Vector3.Distance(center, A);
+
+
+
+def draw_circles(circles,color=red):
+    for r,c,n in circles:
         C = simple.circle(r=r,n=n,c=c)
-        draw(C)
+        draw(C,color=color)
 
+
+def drawCircles(F,func,color=red):
+    r,c,n = func(F.coords)
+    draw(c,color=color)
+    draw_circles(zip(r,c,n),color=color)
+    
+    
 # create two viewports
-layout(2)
+layout(1)
+wireframe()
 
 # draw in viewport 0
 viewport(0)
 clear()
-F = Formex(mpattern('16-32'),[0,1]).scale([2,1,0])
+rtri = Formex(mpattern('16-32')).scale([1.5,1,0])
+F = rtri + rtri.shear(0,1,-0.5).trl(0,-4.0) + rtri.shear(0,1,0.75).trl(0,3.0)
 draw(F)
-drawCircles(F)
+drawCircles(F,triangleCircumCircle,color=red)
 zoomAll()   
+drawCircles(F,triangleInCircle,color=blue)
+drawCircles(F,triangleBoundingCircle,color=black)
+zoomAll()   
+exit()
 
 # draw in viewport 1
 viewport(1)

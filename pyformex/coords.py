@@ -288,6 +288,7 @@ class Coords(ndarray):
     def distanceFromLine(self,p,n):
         """Return the distance of all points from the line (p,n).
 
+        p,n are (1,3) or (npts,3) arrays defining 1 or npts lines
         p is a point on the line specified by 3 coordinates.
         n is a vector specifying the direction of the line through p.
 
@@ -295,8 +296,8 @@ class Coords(ndarray):
         each point to the line through p with direction n.
         All distance values are positive or zero.
         """
-        p = asarray(p).reshape((3))
-        n = asarray(n).reshape((3))
+        p = asarray(p)#.reshape((3))
+        n = asarray(n)#.reshape((3))
         t = cross(n,p-self)
         d = sqrt(sum(t*t,-1)) / length(n)
         return d

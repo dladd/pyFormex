@@ -644,7 +644,7 @@ def drawVertexNumbers(F,color='black',trl=None):
 
 def drawNormals(N,P,size=5,**extra):
     """Draw normals N in P. size can be single constant or list."""
-    C = zeros((N.shape[0],2,3))
+    C = numpy.zeros((N.shape[0],2,3))
     C[:,0,:] = P
     C[:,1,:] = P + size*N
     return draw(Formex(C),**extra)
@@ -941,7 +941,8 @@ def step():
     Else, it starts the script in step mode.
     """
     import script
-    if script.scriptRunning:
+    #if script.scriptRunning:
+    if GD.GUI.drawlock.locked:
         GD.GUI.drawlock.release()
     else:
         if ack("""

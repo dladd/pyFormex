@@ -1839,18 +1839,9 @@ def Sphere(level=4,verbose=False,filename=None):
     return S
 
 
-# For compatibility
+from utils import deprecation
 
-#Surface = TriSurface
-
-if __name__ == '__main__':
-    f = file('unit_triangle.stl','r')
-    a = read_ascii(f)
-    f.close()
-    print(a)
-    
-# End
-
+@deprecation("\nUse geomtools.triangleBoundingCircle instead.")
 def triangleBoundingSphere(tr):
     """each triangle has a smallest bounding sphere (center and radius) which contains its 3 points (not necessarily touching the surface of the sphere). If the triangle is acute, the sphere touches all the 3 vertices and is therefore obtained from the CircumCircle. If the triangle is obtuse, the sphere touches only 2 vertices and its diameter is the longest edge."""
     trne=tr.coords[tr.elems]
@@ -1915,7 +1906,7 @@ def checkPointInsideTriangleOne2One(tpi, pi, atol=1.e-5):
     return -(Atpi3>Atpi+atol)#True mean point inside triangle
 
 def intersectSurfaceWithLines(ts, qli, mli):
-    """"it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
+    """it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
     It returns the points of intersection and the indices of the intersected line and triangle.
     TODO: the slowest part is computing the distances of lines from triangles, can it be faster? """
     #find Bounding Sphere for each triangle
@@ -1932,3 +1923,16 @@ def intersectSurfaceWithLines(ts, qli, mli):
     wOut= where(xOut==False)[0]
     xc, wl, wt=[delete(i, wOut, axis=0) for i in [xc, wl, wt]]
     return xc, wl, wt
+
+
+
+# For compatibility with older project files, this can be uncommented
+# Surface = TriSurface
+
+if __name__ == '__main__':
+    f = file('unit_triangle.stl','r')
+    a = read_ascii(f)
+    f.close()
+    print(a)
+    
+# End

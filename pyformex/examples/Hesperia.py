@@ -297,7 +297,7 @@ def createFrameModel():
     print "%s triangles are part of quadrilateral faces" % nquadtri
     if nquadtri > 0:
         # Create triangle definitions of the quadtri faces
-        tri = Connectivity.compact(quadtri,S.getEdges())
+        tri = Connectivity.tangle(quadtri,S.getEdges())
         D = Formex(nodes[tri])
         clear()
         flatwire()
@@ -649,10 +649,13 @@ def runCalpyAnalysis():
     """
 
     ############################
-    # Load the needed calpy modules    
+    # Load the needed calpy modules
+    # You can prepend your own path here to override the installed calpy
+    # sys.path[0:0] = ['/home/bene/prj/calpy']
     from plugins import calpy_itf
     calpy_itf.check()
     import calpy
+    print calpy
     calpy.options.optimize=True
     from calpy import fe_util,beam3d
     ############################
@@ -788,7 +791,12 @@ def runCalpyAnalysis():
     nlc = 1
     loads = zeros((ndof,nlc),float)
     for p in FE.prop.getProp('n',attr=['cload']):
-        loads[:,0] = fe_util.AssembleVector(loads[:,0],p.cload,bcon[p.set,:])
+        cload = zeros(6)
+        for i,v in p.cload:
+            cload[i] += v
+        print cload
+        print cload.shape
+        loads[:,0] = fe_util.AssembleVector(loads[:,0],cload,bcon[p.set,:])
     if verbose:
         print "Calpy.Loads"
         print loads
