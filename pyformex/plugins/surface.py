@@ -1850,3 +1850,85 @@ if __name__ == '__main__':
     print(a)
     
 # End
+
+def triangleBoundingSphere(tr):
+    """each triangle has a smallest bounding sphere (center and radius) which contains its 3 points (not necessarily touching the surface of the sphere). If the triangle is acute, the sphere touches all the 3 vertices and is therefore obtained from the CircumCircle. If the triangle is obtuse, the sphere touches only 2 vertices and its diameter is the longest edge."""
+    trne=tr.coords[tr.elems]
+    trv0, trv1, trv2= trne[:, 0], trne[:, 1], trne[:, 2]
+    tra0, tra1= rotationAngle(trv1-trv0,trv1-trv2,angle_spec=Deg)[0], rotationAngle(trv2-trv1,trv2-trv0,angle_spec=Deg)[0]
+    trtype= column_stack([tra0, tra1, 180.-tra0-tra1]).max(axis=1)>90.
+    tr0, tr1=tr.select(trtype), tr.select(-trtype)
+    if tr0.nelems()!=0:
+        #trtype obtuse: longest edge, if there is 1 angle>90.
+        edg=tr0.coords[Mesh.getEdges(tr0, unique=False)].reshape(-1, 3, 2, 3)#nt,nplex,2,3
+        edm= length(edg[:, :, 1]-edg[:, :, 0]).argmax(axis=1)#which is longest edge
+        ledg=array( [ edg[i, x] for i, x in enumerate(edm) ] )#longest edge
+        rsphere0, csphere0= 0.5*length(ledg[:, 1]-ledg[:, 0]), mean(ledg, axis=1)
+    if tr1.nelems()!=0:
+        #trtype acute: circumcircle, if all angles<=90.
+        rsphere1, csphere1, norm1=triangleCircumCircle(tr1.coords[tr1.elems])
+    rsphere= ones([tr.nelems()])
+    csphere=ones([tr.nelems(), 3])
+    if tr0.nelems()!=0:
+        rsphere[ trtype ]=rsphere0
+        csphere[ trtype ]=csphere0
+    if tr1.nelems()!=0:
+        rsphere[ -trtype ]=rsphere1
+        csphere[ -trtype ]=csphere1
+    return csphere, rsphere
+
+def fastApproxBoundingSphereTriangle(tr):
+    """it takes a number of triangles and returns a small sphere around it but not the smallest. It is faster than the triangleBoundingSphere. """
+    vt, ve=tr.coords, Mesh.getEdges(tr, unique=False)
+    edg=vt[ve].reshape(-1, 3, 2, 3)#nt,nplex,2,3
+    edgp=edg.mean(axis=2)#for each triangle,mean point on each edge
+    edgl= length(edg[:, :, 1]-edg[:, :, 0])#for each triangle,length of each edge
+    edgl= edgl.reshape(edgp.shape[0],3  , 1).repeat(3, axis=2)
+    avgc= average(edgp, axis=1, weights=edgl)#edge averaged center
+    avgc3= avgc[:, newaxis].repeat(3, axis=1)
+    avgr=length(edg[:,:,   0]-avgc3).max(axis=1)
+    return avgc, avgr
+
+def checkDistanceLinesPointsTreshold(p, q, m, dtresh):
+    """p are np points, q m are nl lines, dtresh are np distances. It returns the indices of lines, points which are in a distance < dtresh. The distance point-line is calculated using Pitagora as it seems the fastest way."""
+    cand=[]
+    for i in range(q.shape[0]):
+        hy= p-q[i]
+        dpl=(length(hy)**2.-dotpr(hy, m[i])**2.)**0.5
+        wd= dpl<=dtresh
+        cand.append([i,where(wd)[0]] )
+    candwl= concatenate([repeat(cand[i][0], cand[i][1].shape[0]) for i in range(len(cand))])
+    candwt= concatenate([cand[i][1] for i in range(len(cand))])
+    return candwl, candwt
+
+def intersectLineWithPlaneOne2One(q,m,p,n):
+    """it returns for each pair of line(q,m) and plane (p,n) the point of intersection. plane: (x-p)n=0, line: x=q+t m. It find the scalar t and returns the point."""
+    t=dotpr(n, (p-q))/dotpr(n, m)
+    return q+m*t[:, newaxis]
+
+def checkPointInsideTriangleOne2One(tpi, pi, atol=1.e-5):
+    """return a 1D boolean with the same dimension of tpi and pi. The value [i] is True if the point pi[i] is inside the triangle tpi[i]. It uses areas to check it. """
+    tpi3= column_stack([tpi[:, 0], tpi[:, 1], pi, tpi[:, 0], pi, tpi[:, 2], pi, tpi[:, 1], tpi[:, 2]]).reshape(pi.shape[0]*3,  3, 3)
+    #areas
+    Atpi3=(length(cross(tpi3[:,1]-tpi3[:,0],tpi3[:,2]-tpi3[:,1]))*0.5).reshape(pi.shape[0], 3).sum(axis=1)#area and sum
+    Atpi=length(cross(tpi[:,1]-tpi[:,0],tpi[:,2]-tpi[:,1]))*0.5#area
+    return -(Atpi3>Atpi+atol)#True mean point inside triangle
+
+def intersectSurfaceWithLines(ts, qli, mli):
+    """"it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
+    It returns the points of intersection and the indices of the intersected line and triangle.
+    TODO: the slowest part is computing the distances of lines from triangles, can it be faster? """
+    #find Bounding Sphere for each triangle
+    tsc, tsr=fastApproxBoundingSphereTriangle(ts)#tsc, tsr=triangleBoundingSphere(ts)#it is faster using the fastApproxBoundingSphereTriangle than the triangleBoundingSphere(ts).
+    wl, wt=checkDistanceLinesPointsTreshold(tsc,qli, mli, tsr)#slow part
+    #find the intersection points xc only for the candidates wl,wt
+    npl= ts.areaNormals()[1]
+    xc= intersectLineWithPlaneOne2One(qli[wl],mli[wl],tsc[wt],npl[wt])
+    #check if each intersection is really inside the triangle
+    tsw=ts.select(wt)
+    tsw=tsw.coords[tsw.elems]
+    xOut=checkPointInsideTriangleOne2One(tsw, xc)
+    #remove intersection if it falls outside the triangle
+    wOut= where(xOut==False)[0]
+    xc, wl, wt=[delete(i, wOut, axis=0) for i in [xc, wl, wt]]
+    return xc, wl, wt
