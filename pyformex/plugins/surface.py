@@ -38,7 +38,7 @@ from formex import *
 import tempfile
 from numpy import *
 from gui.drawable import interpolateNormals
-from plugins.geomtools import projectionVOP,rotationAngle,facetDistance,edgeDistance,vertexDistance
+from plugins.geomtools import projectionVOP,rotationAngle,facetDistance,edgeDistance,vertexDistance, triangleBoundingCircle
 from plugins import inertia
 
 hasExternal('admesh')
@@ -1841,45 +1841,6 @@ def Sphere(level=4,verbose=False,filename=None):
 
 from utils import deprecation
 
-@deprecation("\nUse geomtools.triangleBoundingCircle instead.")
-def triangleBoundingSphere(tr):
-    """each triangle has a smallest bounding sphere (center and radius) which contains its 3 points (not necessarily touching the surface of the sphere). If the triangle is acute, the sphere touches all the 3 vertices and is therefore obtained from the CircumCircle. If the triangle is obtuse, the sphere touches only 2 vertices and its diameter is the longest edge."""
-    trne=tr.coords[tr.elems]
-    trv0, trv1, trv2= trne[:, 0], trne[:, 1], trne[:, 2]
-    tra0, tra1= rotationAngle(trv1-trv0,trv1-trv2,angle_spec=Deg)[0], rotationAngle(trv2-trv1,trv2-trv0,angle_spec=Deg)[0]
-    trtype= column_stack([tra0, tra1, 180.-tra0-tra1]).max(axis=1)>90.
-    tr0, tr1=tr.select(trtype), tr.select(-trtype)
-    if tr0.nelems()!=0:
-        #trtype obtuse: longest edge, if there is 1 angle>90.
-        edg=tr0.coords[Mesh.getEdges(tr0, unique=False)].reshape(-1, 3, 2, 3)#nt,nplex,2,3
-        edm= length(edg[:, :, 1]-edg[:, :, 0]).argmax(axis=1)#which is longest edge
-        ledg=array( [ edg[i, x] for i, x in enumerate(edm) ] )#longest edge
-        rsphere0, csphere0= 0.5*length(ledg[:, 1]-ledg[:, 0]), mean(ledg, axis=1)
-    if tr1.nelems()!=0:
-        #trtype acute: circumcircle, if all angles<=90.
-        rsphere1, csphere1, norm1=triangleCircumCircle(tr1.coords[tr1.elems])
-    rsphere= ones([tr.nelems()])
-    csphere=ones([tr.nelems(), 3])
-    if tr0.nelems()!=0:
-        rsphere[ trtype ]=rsphere0
-        csphere[ trtype ]=csphere0
-    if tr1.nelems()!=0:
-        rsphere[ -trtype ]=rsphere1
-        csphere[ -trtype ]=csphere1
-    return csphere, rsphere
-
-def fastApproxBoundingSphereTriangle(tr):
-    """it takes a number of triangles and returns a small sphere around it but not the smallest. It is faster than the triangleBoundingSphere. """
-    vt, ve=tr.coords, Mesh.getEdges(tr, unique=False)
-    edg=vt[ve].reshape(-1, 3, 2, 3)#nt,nplex,2,3
-    edgp=edg.mean(axis=2)#for each triangle,mean point on each edge
-    edgl= length(edg[:, :, 1]-edg[:, :, 0])#for each triangle,length of each edge
-    edgl= edgl.reshape(edgp.shape[0],3  , 1).repeat(3, axis=2)
-    avgc= average(edgp, axis=1, weights=edgl)#edge averaged center
-    avgc3= avgc[:, newaxis].repeat(3, axis=1)
-    avgr=length(edg[:,:,   0]-avgc3).max(axis=1)
-    return avgc, avgr
-
 def checkDistanceLinesPointsTreshold(p, q, m, dtresh):
     """p are np points, q m are nl lines, dtresh are np distances. It returns the indices of lines, points which are in a distance < dtresh. The distance point-line is calculated using Pitagora as it seems the fastest way."""
     cand=[]
@@ -1910,7 +1871,7 @@ def intersectSurfaceWithLines(ts, qli, mli):
     It returns the points of intersection and the indices of the intersected line and triangle.
     TODO: the slowest part is computing the distances of lines from triangles, can it be faster? """
     #find Bounding Sphere for each triangle
-    tsc, tsr=fastApproxBoundingSphereTriangle(ts)#tsc, tsr=triangleBoundingSphere(ts)#it is faster using the fastApproxBoundingSphereTriangle than the triangleBoundingSphere(ts).
+    tsr,  tsc, tsn=triangleBoundingCircle(ts.coords[ts.elems])
     wl, wt=checkDistanceLinesPointsTreshold(tsc,qli, mli, tsr)#slow part
     #find the intersection points xc only for the candidates wl,wt
     npl= ts.areaNormals()[1]
