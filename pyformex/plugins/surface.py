@@ -1844,6 +1844,7 @@ from utils import deprecation
 def checkDistanceLinesPointsTreshold(p, q, m, dtresh):
     """p are np points, q m are nl lines, dtresh are np distances. It returns the indices of lines, points which are in a distance < dtresh. The distance point-line is calculated using Pitagora as it seems the fastest way."""
     cand=[]
+    m=normalize(m)
     for i in range(q.shape[0]):
         hy= p-q[i]
         dpl=(length(hy)**2.-dotpr(hy, m[i])**2.)**0.5
@@ -1879,11 +1880,9 @@ def intersectSurfaceWithLines(ts, qli, mli):
     #check if each intersection is really inside the triangle
     tsw=ts.select(wt)
     tsw=tsw.coords[tsw.elems]
-    xOut=checkPointInsideTriangleOne2One(tsw, xc)
-    #remove intersection if it falls outside the triangle
-    wOut= where(xOut==False)[0]
-    xc, wl, wt=[delete(i, wOut, axis=0) for i in [xc, wl, wt]]
-    return xc, wl, wt
+    xIn=checkPointInsideTriangleOne2One(tsw, xc)
+    #takes only intersections that fall inside the triangle
+    return xc[xIn], wl[xIn], wt[xIn]
 
 
 
