@@ -1061,9 +1061,9 @@ Total area: %s; Enclosed volume: %s
         res = facetDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
         okF,distF = res[:2]
         closer = distF < dist[okF]
-        dist[okE[closer]] = distF[closer]
+        dist[okF[closer]] = distF[closer]
         if return_points:
-            points[okE[closer]] = res[2][closer]
+            points[okF[closer]] = res[2][closer]
 
         if return_points:
             return dist,points
