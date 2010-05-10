@@ -34,7 +34,7 @@ import elements
 from utils import deprecation
 from geometry import Geometry
 from simple import regularGrid
-
+from geomtools import rotationAngle
 
 #################### This first section holds experimental stuff!! #####
 
@@ -501,6 +501,20 @@ class Mesh(Geometry):
         faces. It is equivalent to ```self.getLowerEntities(2,unique)```
         """
         return self.getLowerEntities(2,unique)
+
+
+    def getAngles(self, angle_spec=Deg):
+        """Returns the angles in Deg or Rad between the edges of a mesh.
+        
+        The returned angles are shaped  as (nelems, n1faces, n1vertices),
+        where n1faces are the number of faces in 1 element and the number of vertices in 1 face.
+        """
+        mf=self.getCoords()[self.getFaces()]
+        el = getattr(elements,self.eltype.capitalize())
+        v = mf - roll(mf,-1,axis=1)
+        v1=-roll(v,+1,axis=1)
+        angfac= rotationAngle(v,v1,angle_spec)[0]
+        return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
 
     def getBorder(self):
