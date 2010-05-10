@@ -34,7 +34,7 @@ import elements
 from utils import deprecation
 from geometry import Geometry
 from simple import regularGrid
-from geomtools import rotationAngle
+
 
 #################### This first section holds experimental stuff!! #####
 
@@ -512,8 +512,9 @@ class Mesh(Geometry):
         mf=self.getCoords()[self.getFaces()]
         el = getattr(elements,self.eltype.capitalize())
         v = mf - roll(mf,-1,axis=1)
+        v=normalize(v)
         v1=-roll(v,+1,axis=1)
-        angfac= rotationAngle(v,v1,angle_spec)[0]
+        angfac= arccos( dotpr(v, v1) )*180./math.pi
         return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
 
