@@ -1208,17 +1208,13 @@ def meshRenumberingNodesOnElems(xMesh):
     er= indexRenumbering1D(ef)
     inr= unique1d(er, return_index=True)[1]
     return xnx[ef[inr]], er.reshape(es)
-###to try the meshRenumberingNodesOnElems(xMesh)
-#n, e=structuredHexGrid(1, 2, 3, isophex=None)
-#F=Formex(n[e], eltype='Hex8').rotate(10., 0).rotate(50., 2).setProp(1)
-#print F.shape()
-#drawNumbers(F, color='white')
-#M=F.toMesh()
-#print M.coords.shape
-#dn=drawNumbers(M.coords.translate([0.1, 0., 0.]))#before renumbering
-#nr, er=meshRenumberingNodesOnElems(M)
-#drawNumbers(Formex(nr), color='blue')#after renumbering
-#draw(Mesh(coords=nr, elems=er), color='red')
+from formex import vectorTripleProduct
+def correctHexMeshOrientation(hm):
+    """hexahedral elements have an orientation. Some geometrical transformation (e.g. reflect) may produce inconsistent orientation, which results in negative (signed) volume of the hexahedral (triple product). This function fixes the hexahedrals without orientation. """
+    hf=hm.coords[hm.elems]
+    tp=vectorTripleProduct(hf[:, 1]-hf[:, 0], hf[:, 2]-hf[:, 1], hf[:, 4]-hf[:, 0])# from formex.py
+    hm.elems[tp<0.]=hm.elems[tp<0.][:,  [4, 5, 6, 7, 0, 1, 2, 3]]
+    return hm
 
 
 
