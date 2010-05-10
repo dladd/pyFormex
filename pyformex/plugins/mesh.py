@@ -1071,7 +1071,27 @@ Size: %s
         if side == '-':
             n = -n
         return self.clip(self.test(nodes=nodes,dir=n,min=p))
- 
+
+
+    def equiAngleSkew(self):
+        """Returns the equiAngleSkew of the elements, a mesh quality parameter .
+       
+      It quantifies the skewness of the elements: normalize difference between
+      the worst angle in each element and the ideal angle (angle in the face 
+      of an equiangular element, qe).
+      """
+        eang=self.getAngles(Deg)
+        eangsh= eang.shape
+        eang= eang.reshape(eangsh[0], eangsh[1]*eangsh[2])
+        eang.max(axis=1), eang.min(axis=1)
+        eangMax, eangmin=eang.max(axis=1), eang.min(axis=1)
+        el = getattr(elements,self.eltype.capitalize())
+        nedginface= len( el.faces[0] )
+        qe=180.*(nedginface-2.)/nedginface
+        extremeAngles= [ (eangMax-qe)/(180.-qe), (qe-eangmin)/qe ]
+        return array(extremeAngles).max(axis=0)
+
+
 ########### Functions #####################
 
 
