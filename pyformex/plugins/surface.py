@@ -32,7 +32,7 @@ import os
 import pyformex as GD
 from plugins import tetgen
 from plugins.mesh import Mesh
-from connectivity import Connectivity,inverseIndex,closedLoop,connectedLineElems,adjacencyArrays,adjacent,adjacencyArray
+from connectivity import Connectivity,closedLoop,connectedLineElems,adjacencyArrays,adjacent,adjacencyArray
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
@@ -635,15 +635,18 @@ class TriSurface(Mesh):
         return S
 
     # Some functions for offsetting a surface
-    
+
+
+    # ?? IS THIS DIFFERENT FROM avgVertexNormals ??
     def pointNormals(self):
-        """Compute the normal vectors in each point of a collection of triangles.
+        """Compute the normal vectors at the points.
         
         The normal vector in a point is the average of the normal vectors of
-        the neighbouring triangles.
-        The normal vectors are normalized.
+        all the neighbouring triangles.
+        The normal vectors are normalized before they are returned.
         """
-        con = inverseIndex(self.getElems())
+        # get list of elements connected to each point
+        con = self.nodeConnections(self)
         NP = self.areaNormals()[1][con] #self.normal doesn't work here???
         w = where(con == -1)
         NP[w] = 0.
@@ -799,14 +802,14 @@ class TriSurface(Mesh):
     def edgeConnections(self):
         """Find the elems connected to edges."""
         if self.econn is None:
-            self.econn = inverseIndex(self.getFaces())
+            self.econn = self.getFaces().inverse()
         return self.econn
     
 
     def nodeConnections(self):
         """Find the elems connected to nodes."""
         if self.conn is None:
-            self.conn = inverseIndex(self.elems)
+            self.conn = self.elems.inverse()
         return self.conn
     
 

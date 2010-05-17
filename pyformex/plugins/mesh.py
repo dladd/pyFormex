@@ -1211,15 +1211,16 @@ def structuredHexGrid(dx, dy, dz, isophex='hex64'):
     else: return Coords(n3.reshape(-1, 3)), hzyx.reshape(-1, 8)
 
 
-
-# End
-
+# BV:
+# This should be replaced with arraytools.inverseUniqueIndex
 def argSortAndUnsort(xarr):
     """it reverse the sorting: return the indices to unsort the sorted array. For the moment it works only with 1D array"""
     isx=argsort(xarr)#index of sorting
     iusx=argsort(arange(xarr.shape[0])[isx])#index to unsort the sorted array
     return isx, iusx
 
+# BV:
+# We should implement this on a lower level (arraytools?) 
 def indexRenumbering1D(xarr):
     """it takes a 1D array of integers and renumbers them based on the order of appearance in the array"""
     uxa, invux = unique1d(xarr, return_inverse=True)
@@ -1235,6 +1236,9 @@ def indexRenumbering1D(xarr):
     iux= arange(iux.shape[0])[siux]
     return array([iux[p] for p in invux])
 
+# BV:
+# This does not return a Mesh. should probably become a Mesh method
+# providing different renumbering schemes
 def meshRenumberingNodesOnElems(xMesh):
     """it takes a Mesh and return the same Mesh but with a different order of nodes. The nodes are ordered as they appear in the elements, therefore in a standardized order based on the topology and not on the geometry. """
     xnx, xex=xMesh.coords, xMesh.elems
@@ -1243,13 +1247,20 @@ def meshRenumberingNodesOnElems(xMesh):
     er= indexRenumbering1D(ef)
     inr= unique1d(er, return_index=True)[1]
     return xnx[ef[inr]], er.reshape(es)
-from formex import vectorTripleProduct
+
+# BV:
+# While this function seems to make sense, it should be avoided
+# The creator of the mesh normally KNOWS the correct connectivity,
+# and should immediately fix it, instead of calculating it from
+# coordinate data
+
 def correctHexMeshOrientation(hm):
     """hexahedral elements have an orientation. Some geometrical transformation (e.g. reflect) may produce inconsistent orientation, which results in negative (signed) volume of the hexahedral (triple product). This function fixes the hexahedrals without orientation. """
+    from formex import vectorTripleProduct
     hf=hm.coords[hm.elems]
     tp=vectorTripleProduct(hf[:, 1]-hf[:, 0], hf[:, 2]-hf[:, 1], hf[:, 4]-hf[:, 0])# from formex.py
     hm.elems[tp<0.]=hm.elems[tp<0.][:,  [4, 5, 6, 7, 0, 1, 2, 3]]
     return hm
 
 
-
+# End

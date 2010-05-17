@@ -187,7 +187,7 @@ def inverseIndex(index,maxcon=4):
     return reverse
 
 
-@deprecation("\n Use 'Connectivity.inverseIndex()' instead")
+@deprecation("\n Use 'Connectivity.inverse()' instead")
 def reverseIndex(*args,**kargs):
    return inverseIndex(*args,**kargs)
 
@@ -705,7 +705,7 @@ def connected(index,i):
     return unique(adj[adj != i])
 
 
-def adjacent(index,rev=None):
+def adjacent(index,inv=None):
     """Return an index of connected elements.
 
     index is a (nr,nc) shaped integer array.
@@ -722,9 +722,9 @@ def adjacent(index,rev=None):
     The inverse index may be specified, if it was already computed.
     """
     n = index.shape[0]
-    if rev is None:
-        rev = inverseIndex(index)
-    adj = rev[index].reshape((n,-1))
+    if inv is None:
+        inv = inverseIndex(index)
+    adj = inv[index].reshape((n,-1))
     #print(adj)
     k =arange(n)
     # remove the element itself

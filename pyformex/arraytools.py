@@ -622,10 +622,99 @@ def cubicEquation(a,b,c,d):
 ##     return itemgrps,itemnrs,itemcnt,itemlen
 
 
+def unique1dOrdered(ar1, return_index=False, return_inverse=False):
+    """
+    Find the unique elements of an array.
+    This is like numpy's unique1d, but using a stable sorting algorithm.
+
+    Parameters
+    ----------
+    ar1 : array_like
+        This array will be flattened if it is not already 1-D.
+    return_index : bool, optional
+        If True, also return the indices against `ar1` that result in the
+        unique array.
+    return_inverse : bool, optional
+        If True, also return the indices against the unique array that
+        result in `ar1`.
+
+    Returns
+    -------
+    unique : ndarray
+        The unique values.
+    unique_indices : ndarray, optional
+        The indices of the unique values. Only provided if `return_index` is
+        True.
+    unique_inverse : ndarray, optional
+        The indices to reconstruct the original array. Only provided if
+        `return_inverse` is True.
+
+    Examples
+    --------
+    >>> a = array([2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,7,8])
+    >>> numpy.unique1d(a,True)
+    (array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]))
+    >>> unique1dOrdered(a,True)
+    (array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]))
+
+    Notice the difference in the 4-th entry of the second array.
+
+    """
+    import numpy as np
+    ar = np.asanyarray(ar1).flatten()
+    if ar.size == 0:
+        if return_inverse and return_index:
+            return ar, np.empty(0, np.bool), np.empty(0, np.bool)
+        elif return_inverse or return_index:
+            return ar, np.empty(0, np.bool)
+        else:
+            return ar
+
+    if return_inverse or return_index:
+        perm = ar.argsort(kind='mergesort')
+        aux = ar[perm]
+        flag = np.concatenate(([True], aux[1:] != aux[:-1]))
+        if return_inverse:
+            iflag = np.cumsum(flag) - 1
+            iperm = perm.argsort()
+            if return_index:
+                return aux[flag], perm[flag], iflag[iperm]
+            else:
+                return aux[flag], iflag[iperm]
+        else:
+            return aux[flag], perm[flag]
+
+    else:
+        ar.sort()
+        flag = np.concatenate(([True], ar[1:] != ar[:-1]))
+        return ar[flag]
+
+
+def renumberIndex(index):
+    """Renumber an index.
+
+    index is a one-dimensional integer array with non-negative values.
+    The entries in index are translated to new integer entries in the range
+    0..index.max(), such that identical numbers are always replaced with
+    the same number and the translated index has its new entries in
+    sequential order.
+    
+    The return value is a one-dimensional integer array with length equal to
+    index.max()+1, holding the original entry numbers corresponding to the new
+    numbers 0..index.max().
+
+    Use inverseUniqueIndex to find the inverse mapping.
+    """
+    un,pos = unique1dOrdered(index,True)
+    srt = pos.argsort()
+    old = un[srt]
+    return old
+
+
 def inverseUniqueIndex(index):
     """Inverse an index.
 
-    index is a one-dimensional integer array with unique non-negative values.
+    index is a one-dimensional integer array with *unique* non-negative values.
 
     The return value is the inverse index: each value shows the position
     of its index in the index array. The length of the inverse index is
@@ -637,9 +726,10 @@ def inverseUniqueIndex(index):
     sequential index.
     """
     index = asarray(index)
-    inv = zeros(1+index.max(),dtype=index.dtype) - 1
+    inv = -ones(index.max()+1,dtype=index.dtype)
     inv[index] = arange(index.size,dtype=inv.dtype)
     return inv
+    
 
 
 def sortByColumns(A):
