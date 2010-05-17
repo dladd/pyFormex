@@ -62,11 +62,14 @@ def checkVersion(name,version,external=False):
     Return value is -1, 0 or 1, depending on a version found that is
     <, == or > than the requested values.
     This should normally understand version numbers in the format 2.10.1
+    Returns -2 if no version found.
     """
     if external:
         ver = hasExternal(name)
     else:
         ver = hasModule(name)
+    if not ver:
+        return -2
     if SaneVersion(ver) > SaneVersion(version):
         return 1
     elif SaneVersion(ver) == SaneVersion(version):
