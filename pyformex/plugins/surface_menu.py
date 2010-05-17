@@ -38,6 +38,8 @@ import simple
 from plugins.tools import Plane
 from pyformex.arraytools import niceLogSize
 
+from gui.widgets import simpleInputItem as I
+
 import os, timer
 
 ##################### selection and annotations ##########################
@@ -413,8 +415,8 @@ def fillHoles():
 #  - domain to display: True to display on edges, False to display on elements
 
 SelectableStatsValues = odict.ODict([
-    ('Facet Area', (TriSurface.facetArea,False)),
     ('Aspect ratio', (TriSurface.aspectRatio,False)),
+    ('Facet Area', (TriSurface.facetArea,False)),
     ('Smallest altitude', (TriSurface.smallestAltitude,False)),
     ('Longest edge', (TriSurface.longestEdge,False)),
     ('Shortest edge', (TriSurface.shortestEdge,False)),
@@ -435,7 +437,7 @@ def showHistogram(key,val,cumulative):
 
 _stat_dia = None
 
-def showStatistics(key=None,domain=True,dist=False,cumdist=False):
+def showStatistics(key=None,domain=True,dist=False,cumdist=False,clip=False):
     """Show the values corresponding with key in the specified mode.
 
     key is one of the keys of SelectableStatsValues
@@ -443,32 +445,34 @@ def showStatistics(key=None,domain=True,dist=False,cumdist=False):
     """
     S = selection.check(single=True)
     if S:
-        if key in SelectableStatsValues:
-            func,onEdges = SelectableStatsValues[key]
+        func,onEdges = SelectableStatsValues[key]
+        kargs = {}
         if key == 'Curvature':
-            curv_neigh = _stat_dia.results['Curvature Neighbourhood']
-            curv_val = _stat_dia.results['Curvature Value']
-            ind = CurvatureValues.index(curv_val)
-            curv = func(S,curv_neigh)
-            val = curv[ind]
-            rem_out = _stat_dia.results['Remove Curvature Outliers']
-            if rem_out:
-                try:
-                    from scipy.stats.stats import scoreatpercentile
-                    Q1 = scoreatpercentile(val,25)
-                    Q3 = scoreatpercentile(val,75)
-                    factor = 3
-                    vmin = Q1-factor*(Q3-Q1)
-                    vmax = Q3+factor*(Q3-Q1)
-                    val = val.clip(vmin,vmax)
-                except:
-                    warning("""..
-
-**Remove Curvature Outliers** option is not available.
-Most likely because 'python-scipy' is not installed.""")
+            kargs['neighbours'] = _stat_dia.results['neighbours']
+        val = func(S,**kargs)
+        if key == 'Curvature':
+            ind = CurvatureValues.index(_stat_dia.results['curval'])
+            val = val[ind]
             val = val[S.elems]
-        else:
-            val = func(S)
+        
+        if clip:
+            # !! THIS SHOULD BE IMPLEMENTED AS A GENERAL VALUE CLIPPER
+            # !! e.g popping up when clicking the legend
+            # !! and the values should be changeable 
+            try:
+                from scipy.stats.stats import scoreatpercentile
+                Q1 = scoreatpercentile(val,25)
+                Q3 = scoreatpercentile(val,75)
+                factor = 3
+                vmin = Q1-factor*(Q3-Q1)
+                vmax = Q3+factor*(Q3-Q1)
+                val = val.clip(vmin,vmax)
+            except:
+                warning("""..
+                
+**Clip extreme values** option is not available.
+Most likely because 'python-scipy' is not installed.""")
+
         if domain:
             showSurfaceValue(S,key,val,onEdges)
         if dist:
@@ -486,7 +490,8 @@ def _show_stats(domain,dist):
         dist = Fals/e
     else:
         cumdist = False
-    showStatistics(key,domain,dist,cumdist)
+    clip = res['clip']
+    showStatistics(key,domain,dist,cumdist,clip)
 
 def _show_domain():
     _show_stats(True,False)
@@ -507,13 +512,13 @@ def showStatisticsDialog():
         
     dispmodes = ['On Domain','Histogram','Cumulative Histogram']
     keys = SelectableStatsValues.keys()
-    _stat_dia = widgets.InputDialog(
+    _stat_dia = widgets.NewInputDialog(
         caption='Surface Statistics',items=[
-            ('Value',None,'vradio',keys),
-            ('Curvature Neighbourhood',1),
-            ('Remove Curvature Outliers',False),
-            ('Curvature Value',None,'vradio',CurvatureValues),
-            ('Cumulative Distribution',False),
+            I('Value',itemtype='vradio',choices=keys),
+            I('neighbours',text='Curvature Neighbourhood',value=1),
+            I('curval',text='Curvature Value',itemtype='vradio',choices=CurvatureValues),
+            I('clip',False,text='Clip extreme Values'),
+            I('Cumulative Distribution',False),
             ],
         actions=[
             ('Close',_close_stats_dia),

@@ -1163,8 +1163,8 @@ def defaultItemType(item):
 def simpleInputItem(name,value=None,itemtype=None,**kargs):
     """A convenience function to create an InputItem dictionary"""
     kargs['name'] = name
-    if value is not None:
-        kargs['value'] = value
+    #if value is not None:
+    kargs['value'] = value
     if itemtype is not None:
         kargs['itemtype'] = itemtype
     return kargs
@@ -1362,10 +1362,11 @@ class NewInputDialog(QtGui.QDialog):
         """Create an InputItem with the new data style.
 
         """
+        #print item
         if not 'name' in item:
             item['name'] = self.autoname.next()
         if not 'value' in item:
-            print self.store
+            #print self.store
             try:
                 item['value'] = self.store[item['name']]
             except:
