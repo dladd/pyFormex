@@ -2330,7 +2330,7 @@ class TextBox(QtGui.QDialog):
     The function returns True if the OK button was clicked or 'ENTER'
     was pressed, False if the 'CANCEL' button was pressed or ESC was pressed.
     """
-    def __init__(self,text,format=None,actions=['OK',None],modal=None,parent=None,caption=None,mono=False,flags=None):
+    def __init__(self,text,format=None,actions=['OK',None],modal=None,parent=None,caption=None,mono=False,timeout=None,flags=None):
         if parent is None:
             parent = GD.GUI
         QtGui.QDialog.__init__(self,parent)
@@ -2354,6 +2354,8 @@ class TextBox(QtGui.QDialog):
             font = QtGui.QFont("DejaVu Sans Mono")
             # font.setStyle(QtGui.QFont.StyleNormal)
             self.setFont(font)
+
+        addTimeOut(self,timeout,"accept()")
 
     def getResult(self):
         return self.exec_() == QtGui.QDialog.Accepted

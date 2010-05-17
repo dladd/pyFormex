@@ -136,6 +136,7 @@ _cookies = [
     "Programmers are tools for converting caffeine into code.",
     "There are 10 types of people in the world: those who understand binary, and those who don't.",
     "Linux: the choice of a GNU generation",
+    "Everything should be made as simple as possible, but not simpler (A. Einstein)",
     
     ]    
 random.shuffle(_cookies)
