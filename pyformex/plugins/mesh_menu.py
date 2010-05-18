@@ -362,6 +362,26 @@ def convertMesh():
             selection.set(names)
             clear()
             selection.draw()
+
+
+def renumberMeshInElemsOrder():
+    """Renumber the selected Meshes in elems order.
+
+    """
+    if not selection.check():
+        selection.ask()
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    names = selection.names
+    meshes = [ M.renumber() for M in meshes ]
+    export2(names,meshes)
+    selection.set(names)
+    clear()
+    selection.draw()
+
     
 
 ################################## Menu #############################
@@ -383,6 +403,7 @@ def create_menu():
         ("&Fuse Nodes",fuseMesh),
         ("&Divide Mesh",divideMesh),
         ("&Convert Mesh Eltype",convertMesh),
+        ("&Renumber Mesh in Elems order",renumberMeshInElemsOrder),
         ("---",None),
         ("Toggle &Annotations",
          [("&Name",selection.toggleNames,dict(checked=selection.hasNames())),

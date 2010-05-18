@@ -503,6 +503,7 @@ class Mesh(Geometry):
         return self.getLowerEntities(2,unique)
 
 
+    # ?? DOES THIS WORK FOR *ANY* MESH ??
     def getAngles(self, angle_spec=Deg):
         """Returns the angles in Deg or Rad between the edges of a mesh.
         
@@ -843,6 +844,25 @@ Size: %s
             ML = [M0,M1]
             
         return ML
+
+
+    def renumber(self,order='elems'):
+        """Renumber the nodes of a Mesh in the specified order.
+
+        order is an index with length equal to the number of nodes. The
+        index specifies the node number that should come at this position.
+        Thus, the order values are the old node numbers on the new node
+        number positions.
+
+        order can also be a predefined value that will generate the node
+        index automatically:
+        - 'elems': the nodes are number in order of their appearance in the
+          Mesh connectivity.
+        """
+        if order == 'elems':
+            order = renumberIndex(self.elems)
+        newnrs = inverseUniqueIndex(order)
+        return Mesh(self.coords[order],newnrs[self.elems],prop=self.prop,eltype=self.eltype)
  
 
     def extrude(self,n,step=1.,dir=0,autofix=True):
@@ -1073,7 +1093,7 @@ Size: %s
             n = -n
         return self.clip(self.test(nodes=nodes,dir=n,min=p))
 
-
+    # ?? IS THIS DEFINED FOR *ANY* MESH ??
     def equiAngleSkew(self):
         """Returns the equiAngleSkew of the elements, a mesh quality parameter .
        
@@ -1220,7 +1240,7 @@ def argSortAndUnsort(xarr):
     return isx, iusx
 
 # BV:
-# We should implement this on a lower level (arraytools?) 
+# We should be replaced with arraytools.renumberIndex 
 def indexRenumbering1D(xarr):
     """it takes a 1D array of integers and renumbers them based on the order of appearance in the array"""
     uxa, invux = unique1d(xarr, return_inverse=True)
@@ -1237,8 +1257,7 @@ def indexRenumbering1D(xarr):
     return array([iux[p] for p in invux])
 
 # BV:
-# This does not return a Mesh. should probably become a Mesh method
-# providing different renumbering schemes
+# This should be replaced with Mesh.renumber()
 def meshRenumberingNodesOnElems(xMesh):
     """it takes a Mesh and return the same Mesh but with a different order of nodes. The nodes are ordered as they appear in the elements, therefore in a standardized order based on the topology and not on the geometry. """
     xnx, xex=xMesh.coords, xMesh.elems
@@ -1253,6 +1272,7 @@ def meshRenumberingNodesOnElems(xMesh):
 # The creator of the mesh normally KNOWS the correct connectivity,
 # and should immediately fix it, instead of calculating it from
 # coordinate data
+# 
 
 def correctHexMeshOrientation(hm):
     """hexahedral elements have an orientation. Some geometrical transformation (e.g. reflect) may produce inconsistent orientation, which results in negative (signed) volume of the hexahedral (triple product). This function fixes the hexahedrals without orientation. """

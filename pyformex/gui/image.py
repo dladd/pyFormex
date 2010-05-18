@@ -432,7 +432,7 @@ def createMovie():
         return
     
     #cmd = "mencoder -ovc lavc -fps 5 -o output.avi %s" % names.glob()
-    cmd = "ffmpeg -r 1 -i %s output.mp4" % names.glob()
+    cmd = "ffmpeg -qscale -1 -r 1 -i %s output.mp4" % names.glob()
     GD.debug(cmd)
     utils.runCommand(cmd)
 

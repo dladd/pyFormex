@@ -45,7 +45,8 @@ Exercises
 1. Make this script also work for the 1D case. 
 
 """
-draw.logfile = open('pyformex.log','w')
+
+#draw.logfile = open('pyformex.log','w')
 
 def showDescription():
     txt = __doc__.partition('.. Description')
@@ -77,7 +78,7 @@ clear()
 m = a.toMesh().setProp(1)
 draw(m)
 drawNumbers(m)
-print "%s elements" % m.nelems()
+message("%s elements" % m.nelems())
 
 export({'mesh':m})
 
@@ -87,14 +88,14 @@ e = Mesh(m.coords,m.getEdges()).setProp(2)
 clear()
 draw(e)
 drawNumbers(e)
-print "%s edges" % e.nelems()
+message("%s edges" % e.nelems())
 
 pause('')
 e = Mesh(m.coords,m.getEdges(unique=True)).setProp(2)
 clear()
 draw(e)
 drawNumbers(e)
-print "%s edges" % e.nelems()
+message("%s unique edges" % e.nelems())
 
 pause('')
 smoothwire()
@@ -102,21 +103,21 @@ e = Mesh(m.coords,m.getFaces()).setProp(3)
 clear()
 draw(e)
 drawNumbers(e)
-print "%s faces" % e.nelems()
+message("%s faces" % e.nelems())
 
 pause('')
 e = Mesh(m.coords,m.getFaces(unique=True)).setProp(3)
 clear()
 draw(e)
 drawNumbers(e)
-print "%s faces" % e.nelems()
+message("%s unique faces" % e.nelems())
 
 pause('')
 e = Mesh(m.coords,m.getBorder()).setProp(4)
 clear()
 draw(e)
 drawNumbers(e)
-print "%s border elements" % e.nelems()
+message("%s border elements" % e.nelems())
 
 
 export({'border':e})

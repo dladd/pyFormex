@@ -143,9 +143,12 @@ Plugins
 
 - geomtools: added intersection tools, distance tools
 - draw2d: new plugin with some interactive drawing functions.
-- surface: TriSurface is now derived from Mesh, added inertia function,
-  intersectionWithPlane, distanceOfPoints
-
+- surface: 
+  
+  - TriSurface is now derived from Mesh
+  - added functions: inertia, intersectionWithPlane, distanceOfPoints
+  - advanced curvature calculation
+  - surface menu: statistics: offers cut off of extreme values
 
 Examples
 --------
