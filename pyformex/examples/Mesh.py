@@ -45,6 +45,7 @@ Exercises
 1. Make this script also work for the 1D case. 
 
 """
+draw.logfile = open('pyformex.log','w')
 
 def showDescription():
     txt = __doc__.partition('.. Description')

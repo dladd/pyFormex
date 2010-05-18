@@ -673,7 +673,7 @@ class Canvas(object):
         self.begin_2D_drawing()
         
         if self.background:
-            GD.debug("Displaying background")
+            #GD.debug("Displaying background")
             self.background.draw(mode='smooth')
 
         if len(self.decorations) > 0:

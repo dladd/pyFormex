@@ -419,13 +419,16 @@ def createScriptDirsDialog():
         
 
 def setOptions():
-    options = ['test','debug','uselib','safelib','fastencode']
+    options = ['test','uselib','safelib','fastencode']
     options = [ o for o in options if hasattr(GD.options,o) ]
     items = [ (o,getattr(GD.options,o)) for o in options ]
+    debug_levels = [ 'All','None' ]
+    items.append(('debug',None,'vradio',debug_levels))
     res = draw.askItems(items)
     if res:
         for o in options:
             setattr(GD.options,o,res[o])
+            setattr(GD.options,'debug',debug_levels.index(res['debug'])-1)
             print(GD.options)
             ## if o == 'debug':
             ##     GD.setDebugFunc()

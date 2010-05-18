@@ -67,10 +67,10 @@ def message(s):
 
 warning = message
 
-def debug(s,lead="DEBUG",level=0):
+def debug(s,lead="DEBUG",level=-1):
     """Print a debug message"""
     try: # to make sure that debug() can be used before options are set
-        if options.debug < 0 or (level>0 and options.debug % level > 0):
+        if options.debug < 0 or (options.debug % level > 0):
             raise
         pass
     except:

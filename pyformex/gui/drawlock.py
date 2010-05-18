@@ -45,8 +45,8 @@ class DrawLock(object):
         """
         if self.allowed:
             while self.locked:
-                GD.app.processEvents()
                 GD.canvas.update()
+                GD.app.processEvents()
 
 
     def lock(self,time=None):
@@ -54,15 +54,18 @@ class DrawLock(object):
 
         If a no time is specified, a global value is used.
         """
+        #print self.allowed,self.locked
         if self.allowed and not self.locked:
             if time is None:
                 time = GD.GUI.drawwait
             if time > 0:
+                GD.debug('STARTING TIMER')
                 self.locked = True
                 self.timer = threading.Timer(time,self.release)
                 self.timer.start()
 
 
+    # ?? SHOULD block and release only be activated if self.allowed ??
     def block(self):
         """Lock the drawing function indefinitely."""
         if self.timer:
@@ -75,6 +78,7 @@ class DrawLock(object):
 
         If a timer is running, cancel it.
         """
+        #print "RELEASING LOCK"
         self.locked = False
         if self.timer:
             self.timer.cancel()
@@ -92,5 +96,44 @@ class DrawLock(object):
         This is called after a free() to reinstall the draw locking.
         """
         self.allowed = True
+
+
+def repeat(func,duration=-1,maxcount=-1,*args,**kargs):
+    """Repeatedly execute a function.
+
+    func(*args,**kargs) is repeatedly executed until one of the following
+    conditions is met:
+    - the function returns a value that evaluates to False
+    - duration >= 0 and duration seconds have elapsed
+    - maxcount >=0 and maxcount executions have been reached
+    The default will indefinitely execute the function until it returns False.
+    This may cause the system to freeze if it never does so!
+    """
+    GD.debug("REPEAT: %s, %s" % (duration,maxcount))
+    global _repeat_timed_out
+    _repeat_timed_out = False
+    _repeat_count_reached = False
+    
+    def timeOut():
+        global _repeat_timed_out
+        _repeat_timed_out = True
+        
+    if duration >= 0:
+        timer = threading.Timer(duration,timeOut)
+        timer.start()
+    
+    count = 0
+
+    while True:
+        GD.app.processEvents()
+        res = func(*args,**kargs)
+        _exit_requested = not(res)
+        count += 1
+        if maxcount >= 0:
+             _repeat_count_reached = count >= maxcount
+        if _exit_requested or _repeat_timed_out or _repeat_count_reached:
+            GD.debug("Count: %s, TimeOut: %s" % (count,_repeat_timed_out))
+            break
+            
 
 #### End

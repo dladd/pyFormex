@@ -275,16 +275,27 @@ def setShrink(mode):
 
 ################# Timeout Button ###############
 
-timeout_button = None # the toggle timeout button
+timeout_button = None # the timeout toggle button
 
 def toggleTimeout(onoff=None):
     if onoff is None:
         onoff = widgets.input_timeout < 0
     if onoff:
-        widgets.setInputTimeout(GD.cfg.get('gui/timeoutvalue',-1))
+        timeout = GD.cfg.get('gui/timeoutvalue',-1)
     else:
-        widgets.setInputTimeout(-1)
+        timeout = -1
+
+    widgets.setInputTimeout(timeout)
     onoff = widgets.input_timeout > 0
+    if onoff:
+        # THIS SUSPENDS ALL WAITING! WE SHOULD IMPLEMENT A TIMEOUT!
+        # BY FORCING ALL INDEFINITE PAUSES TO A WAIT TIME EQUAL TO
+        # WIDGET INPUT TIMEOUT
+        GD.debug("FREEING the draw lock")
+        GD.GUI.drawlock.free()
+    else:
+        GD.debug("ALLOWING the draw lock")
+        GD.GUI.drawlock.allow()
     return onoff
 
 

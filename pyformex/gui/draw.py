@@ -281,6 +281,7 @@ def checkWorkdir():
     
 
 logfile = None     # the log file
+    
 
 def printMessage(s):
     """Print a message on the message board.
@@ -913,24 +914,29 @@ def redraw():
     GD.canvas.update()
 
 
-def pause(msg="Use the Step or Continue button to proceed"):
-    """Pause the execution until an external event occurs.
+
+def pause(msg="Use the Step or Continue button to proceed",timeout=None):
+    """Pause the execution until an external event occurs or timeout.
 
     When the pause statement is executed, execution of the pyformex script
     is suspended until some external event forces it to proceed again.
     Clicking the STEP or CONTINUE button will produce such an event.
     """
+    from gui.drawlock import repeat
+
+    def _continue_():
+        return GD.GUI.drawlock.locked
+
     GD.debug("PAUSE ACTIVATED!")
     if msg:
         GD.message(msg)
-    #GD.debug("PAUSE ALLOWED: %s"%GD.GUI.drawlock.allowed)
+
+    GD.GUI.drawlock.release()
     if GD.GUI.drawlock.allowed:
-        GD.GUI.drawlock.block()    # will need external event to release it
-        while (GD.GUI.drawlock.locked):
-            #GD.debug("PAUSE: Processing events")
-            sleep(1)
-            GD.app.processEvents()
-            GD.canvas.update()
+        GD.GUI.drawlock.locked = True
+    if timeout is None:
+        timeout = widgets.input_timeout
+    repeat(_continue_,timeout)
 
 
 def step():
