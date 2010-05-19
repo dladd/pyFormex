@@ -45,12 +45,15 @@ Exercises
 1. Make this script also work for the 1D case. 
 
 """
+def atExit():
+    print "THIS IS THE EXIT FUNC"
+    GD.GUI.setBusy(False)
+    
 
+
+from gui.helpMenu import showDescription
+GD.GUI.setBusy()
 #draw.logfile = open('pyformex.log','w')
-
-def showDescription():
-    txt = __doc__.partition('.. Description')
-    showText(' '.join(txt[1:]),modal=False)
     
 clear()
 view('iso')
@@ -121,6 +124,5 @@ message("%s border elements" % e.nelems())
 
 
 export({'border':e})
-
 
 showInfo("Done")

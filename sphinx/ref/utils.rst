@@ -27,10 +27,10 @@
 **Functions defined in the module utils**
 
    .. autofunction:: checkVersion(name,version,external=False)
-   .. autofunction:: checkModule(name=None)
    .. autofunction:: hasModule(name,check=False)
-   .. autofunction:: checkExternal(name=None,command=None,answer=None)
    .. autofunction:: hasExternal(name)
+   .. autofunction:: checkModule(name=None)
+   .. autofunction:: checkExternal(name=None,command=None,answer=None)
    .. autofunction:: reportDetected()
    .. autofunction:: procInfo(title)
    .. autofunction:: strNorm(s)

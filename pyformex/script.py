@@ -328,9 +328,6 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                         scr = utils.mergeme(scr[:n],scr[n:])
                     exec scr in g
 
-            if pyformex.cfg['autoglobals']:
-                exportNames.extend(listAll(clas=formex.Formex,dic=g))
-            pyformex.PF.update([(k,g[k]) for k in exportNames])
         except _Exit:
             pass
         except _ExitAll:
@@ -339,6 +336,18 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             raise
             
     finally:
+        # honour the exit function
+        if g.has_key('atExit'):
+            atExit = g['atExit']
+            try:
+                atExit()
+            except:
+                GD.debug('Error while calling script exit function')
+                
+        if pyformex.cfg['autoglobals']:
+            exportNames.extend(listAll(clas=formex.Formex,dic=g))
+        pyformex.PF.update([(k,g[k]) for k in exportNames])
+
         scriptRunning = False # release the lock in case of an error
         elapsed = time.clock() - starttime
         pyformex.debug('SCRIPT RUNTIME : %s seconds' % elapsed)

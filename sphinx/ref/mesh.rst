@@ -40,6 +40,7 @@
       .. automethod:: getLowerEntities(level=1,unique=False)
       .. automethod:: getEdges(unique=False)
       .. automethod:: getFaces(unique=False)
+      .. automethod:: getAngles(angle_spec=Deg)
       .. automethod:: getBorder()
       .. automethod:: getBorderMesh()
       .. automethod:: report()
@@ -57,6 +58,7 @@
       .. automethod:: convertRandom(choices)
       .. automethod:: reduceDegenerate(eltype=None)
       .. automethod:: splitDegenerate(autofix=True)
+      .. automethod:: renumber(order='elems')
       .. automethod:: extrude(n,step=1.,dir=0,autofix=True)
       .. automethod:: revolve(n,axis=0,angle=360.,around=None,autofix=True)
       .. automethod:: sweep(path,autofix=True)
@@ -65,6 +67,7 @@
       .. automethod:: clip(t)
       .. automethod:: cclip(t)
       .. automethod:: clipAtPlane(p,n,nodes='any',side='+')
+      .. automethod:: equiAngleSkew()
 
 **Functions defined in the module mesh**
 
@@ -76,6 +79,10 @@
    .. autofunction:: connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None)
    .. autofunction:: connectMeshSequence(ML,loop=False)
    .. autofunction:: structuredHexGrid(dx,dy,dz,isophex='hex64')
+   .. autofunction:: argSortAndUnsort(xarr)
+   .. autofunction:: indexRenumbering1D(xarr)
+   .. autofunction:: meshRenumberingNodesOnElems(xMesh)
+   .. autofunction:: correctHexMeshOrientation(hm)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

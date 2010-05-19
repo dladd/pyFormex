@@ -103,7 +103,25 @@ def sortSets(d):
         if type(d[k]) == set:
             d[k] = list(d[k])
             d[k].sort()
-  
+
+
+def getDocString(scriptfile):
+    fil = open(scriptfile,'r')
+    s = fil.read()
+    i = s.find('"""')
+    if i >= 0:
+        j = s.find('"""',i+1)
+        if j >= i+2:
+            print s[i+2:j]
+            return s[i+2:j]
+    return ''
+
+def getDescription(doc):
+    txt = doc.partition('.. Description')
+    print txt[1]
+    print len(txt[1])
+    return ' '.join(txt[1:])
+    
 
 
 class ScriptMenu(QtGui.QMenu):

@@ -49,6 +49,18 @@ def help(page=None):
     else:
         browser = GD.cfg['viewer']
     pid = utils.spawn(' '.join([browser,page]))
+    
+  
+def showDescription():
+    """Show the Desription part of a pyFormex script's docstring."""
+    from scriptMenu import getDocString,getDescription
+    if GD.GUI.canPlay:
+        scriptfile = GD.prefcfg['curfile']
+        doc = getDocString(scriptfile)
+        des = getDescription(doc)
+        print len(des)
+        print len(des.strip())
+        draw.showText(des,modal=False)
 
 
 def catchAndDisplay(cmd):
@@ -160,6 +172,7 @@ def createMenuData():
 
     try:
         MenuData = DocsMenuData + [
+            (_('&About current script'),showDescription),
             ('---',None),
             (_('&Command line options'),cmdline),
             ] + Docs2MenuData + [

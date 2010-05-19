@@ -71,7 +71,8 @@ Core
 - Empty geometry objects are now generally well supported.
 - Connectivity: removeDegenerate and removeDoubles, new encoding/decoding, 
   listUnique, listDouble, insertLevel, tangle, untangle
-
+- arraytools: unique1dOrdered, renumberIndex
+- repeat(): repeatedly call a function certain result, timeout, or number of executions
 
 Gui
 ---
@@ -128,7 +129,7 @@ Mesh
 - Better sweep function, added revolve function
 - Splitting on property values
 - GetEdges, GetFaces, GetLowerEntities, getBorder, getBorderMesh
-- reduceDegenerate
+- reduceDegenerate, renumber
 
 
 Plugins
@@ -141,7 +142,7 @@ Plugins
   - PolyLine: split, cutWithPlane
   - BezierSpline: end directions can be set
 
-- geomtools: added intersection tools, distance tools
+- geomtools: added intersection tools, distance tools, triangleInCircle, triangleBoundingCircle, triangleObtuse
 - draw2d: new plugin with some interactive drawing functions.
 - surface: 
   

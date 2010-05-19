@@ -1,6 +1,6 @@
-.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"\\n Use \'Connectivity.inverseIndex()\' instead"'))))))))))))))))), (8, ')'), (4, '')))
+.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"\\n Use \'Connectivity.inverse()\' instead"'))))))))))))))))), (8, ')'), (4, '')))
 .. MATCHING (259, (50, '@'), (287, (1, 'deprecation')))
-.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"\\n Use \'Connectivity.inverseIndex()\' instead"'))))))))))))))))), (8, ')'), (4, '')))
+.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"\\n Use \'Connectivity.inverse()\' instead"'))))))))))))))))), (8, ')'), (4, '')))
 .. POPPING (260, (259, (50, '@'), (287, (1, 'staticmethod')), (4, '')))
 .. MATCHING (259, (50, '@'), (287, (1, 'staticmethod')))
 .. POPPING (260, (259, (50, '@'), (287, (1, 'staticmethod')), (4, '')))
@@ -60,7 +60,7 @@
    .. autofunction:: adjacencyArray(elems,maxcon=5)
    .. autofunction:: adjacencyArrays(elems,nsteps=1)
    .. autofunction:: connected(index,i)
-   .. autofunction:: adjacent(index,rev=None)
+   .. autofunction:: adjacent(index,inv=None)
    .. autofunction:: closedLoop(elems)
    .. autofunction:: connectedLineElems(elems)
 

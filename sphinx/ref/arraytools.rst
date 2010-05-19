@@ -40,6 +40,8 @@
    .. autofunction:: readArray(file,dtype,shape,sep=' ')
    .. autofunction:: writeArray(file,array,sep=' ')
    .. autofunction:: cubicEquation(a,b,c,d)
+   .. autofunction:: unique1dOrdered(ar1,return_index=False,return_inverse=False)
+   .. autofunction:: renumberIndex(index)
    .. autofunction:: inverseUniqueIndex(index)
    .. autofunction:: sortByColumns(A)
    .. autofunction:: uniqueRows(A)

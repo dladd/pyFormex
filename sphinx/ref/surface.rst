@@ -124,6 +124,10 @@
    .. autofunction:: Rectangle(nx,ny)
    .. autofunction:: Cube()
    .. autofunction:: Sphere(level=4,verbose=False,filename=None)
+   .. autofunction:: checkDistanceLinesPointsTreshold(p,q,m,dtresh)
+   .. autofunction:: intersectLineWithPlaneOne2One(q,m,p,n)
+   .. autofunction:: checkPointInsideTriangleOne2One(tpi,pi,atol=1.e-5)
+   .. autofunction:: intersectSurfaceWithLines(ts,qli,mli)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

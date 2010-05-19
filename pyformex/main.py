@@ -432,10 +432,16 @@ def run(argv=[]):
     if pyformex.options.gui:
         pyformex.options.interactive = True
 
-    # Set Revision if we run from an SVN version
+    # Set Revision and run svnclean if we run from an SVN version
     if svnversion:
         setRevision()
-    
+        svnclean = './pyformex/svnclean'
+        if os.path.exists(svnclean):
+            try:
+                utils.runCommand(svnclean)
+            except:
+                print "Error while executing %s, we ignore it and continue" % svnclean
+                
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if pyformex.options.gui:
