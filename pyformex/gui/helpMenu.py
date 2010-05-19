@@ -58,8 +58,19 @@ def showDescription():
         scriptfile = GD.prefcfg['curfile']
         doc = getDocString(scriptfile)
         des = getDescription(doc)
-        print len(des)
-        print len(des.strip())
+        if len(des.strip()) == 0:
+            des = """.. NoDescription
+
+No help available
+=================
+
+The maintainers of this script have not yet added a description
+for this example.
+
+You can study the source code, and if anything is unclear,
+ask for help on the pyFormex forums.
+"""
+
         draw.showText(des,modal=False)
 
 
