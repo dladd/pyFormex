@@ -1411,12 +1411,12 @@ Total area: %s; Enclosed volume: %s
         """Smooth the surface using a low-pass filter.
         
         This uses the nodes that are connected to the node via a shortest
-        path of maximum 'neighbours' edges.
+        path of minimum 1 and maximum 'neighbours' edges.
         """
         k = 0.1
         mu_value = -lambda_value/(1-k*lambda_value)
         # find adjacency
-        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)
+        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)[1:]
         adj = column_stack(adj)
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
@@ -1427,6 +1427,7 @@ Total area: %s; Enclosed volume: %s
         w[adj<0] = 0.
         val = (adj>=0).sum(-1).reshape(-1,1)
         w /= val
+        print val[0]
         w = w.reshape(adj.shape[0],adj.shape[1],1)
         # recalculate vertices
         p = self.coords
@@ -1439,10 +1440,10 @@ Total area: %s; Enclosed volume: %s
         """Smooth the surface using a Laplace filter and HC algorithm.
 
         This uses the nodes that are connected to the node via a shortest
-        path of maximum 'neighbours' edges.
+        path of minimum 1 and maximum 'neighbours' edges.
         """
         # find adjacency
-        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)
+        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)[1:]
         adj = column_stack(adj)        
         # find interior vertices
         bound_edges = self.borderEdgeNrs()

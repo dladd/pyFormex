@@ -653,14 +653,16 @@ def adjacencyArrays(elems,nsteps=1):
     holds a sorted list of the nodes that are connected to node i via a shortest
     path of j elements, padded with -1 values to create an equal list length
     for all nodes.
-    This is: [adj1, ..., adjj, ... , adjn] with n=nsteps.
+    This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.
     """
     if len(elems.shape) != 2 or elems.shape[1] != 2:
-        raise ValueError,"""Expected a set of 2-node elements."""    
+        raise ValueError,"""Expected a set of 2-node elements."""
+    if nsteps < 1:
+        raise ValueError, """The shortest path should be at least 1."""
     # Construct table of nodes connected to each node
     adj1 = adjacencyArray(elems)
-    m = adj1.shape[0]    
-    adj = [ adj1 ]
+    m = adj1.shape[0]
+    adj = [ arange(m).reshape(-1,1), adj1 ]
     nodes = adj1
     step = 2
     while step <= nsteps and nodes.size > 0:
