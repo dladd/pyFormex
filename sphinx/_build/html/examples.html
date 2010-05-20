@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyFormex example scripts &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>pyFormex example scripts &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="index.html" />
     <link rel="next" title="pyFormex reference manual" href="refman.html" />
     <link rel="prev" title="pyFormex FAQ ‘n TRICKS" href="faq.html" /> 
   </head>
@@ -432,17 +432,18 @@ centre lines of the crossing wires. The number of modules in the axial direction
 <img class="math" src="_images/math/46587de496607a13f873f771a0964285cbe8f638.png" alt="ny"/> is an integer, therefore, the actual length of the stent model might
 differ slightly from the specified, desired length <img class="math" src="_images/math/859ccf4cd60c7bc6b8fa1afc9a42dc811a826d6f.png" alt="L"/>. However, this
 difference has a negligible impact on the numerical results.</p>
-<div class="highlight-python"><pre>    def __init__(self,De,L,d,nx,be,ds=0.0,nb=4,connectors=True):
-        """Create the Wire Stent."""
+<pre class="literal-block">
+    def __init__(self,De,L,d,nx,be,ds=0.0,nb=4,connectors=True):
+        &#8220;&#8221;&#8220;Create the Wire Stent.&#8221;&#8220;&#8221;
         D = De - 2*d - ds
         r = 0.5*D
         dz = 0.5*(ds+d)
         p = math.pi*D*tand(be)
         nx = int(nx)
         ny = int(round(nx*L/p))  # The actual length may differ
-		 a bit from L
+                 a bit from L
+
 </pre>
-</div>
 <p>Of now, all parameters to describe the stent geometry are specified and
 available to start the construction of the wire stent. Initially a simple Formex
 is created using the <tt class="docutils literal"><span class="pre">pattern()</span></tt>-function: a straigth line segment of length
@@ -455,21 +456,22 @@ intensity is specified by the quadratic <tt class="docutils literal"><span class
 X-axis (<img class="math" src="_images/math/bc1f9d9bf8a1b606a4188b5ce9a2af1809e27a89.png" alt="0"/>-axis). The creation of this single bumped strut, oriented
 along the X-axis is summarized in the next script and depicted in figures
 <a class="reference internal" href="#fig-straight"><em>A straight line segment</em></a>, <a class="reference internal" href="#fig-replicated"><em>The line segment with replications</em></a> and <a class="reference internal" href="#fig-bumped"><em>A bumped line segment</em></a>,.</p>
-<div class="highlight-python"><pre>        # a single bumped strut, oriented along the x-axis
+<pre class="literal-block">
+        # a single bumped strut, oriented along the x-axis
         bump_z=lambda x: 1.-(x/nb)**2
-        base = Formex(pattern('1')).replic(nb,1.0).bump1
-		(2,[0.,0.,dz],bump_z,0)
+        base = Formex(pattern(&#8216;1&#8217;)).replic(nb,1.0).bump1
+                (2,[0.,0.,dz],bump_z,0)
+
 </pre>
-</div>
-<div align="center" class="figure" id="fig-straight">
+<div class="figure align-center" id="fig-straight">
 <img alt="straight line segment" src="_images/WireStentDemot2Step01.png" style="width: 300px;" />
 <p class="caption">A straight line segment</p>
 </div>
-<div align="center" class="figure" id="fig-replicated">
+<div class="figure align-center" id="fig-replicated">
 <img alt="line segment with replications" src="_images/WireStentDemot2Step02.png" style="width: 300px;" />
 <p class="caption">The line segment with replications</p>
 </div>
-<div align="center" class="figure" id="fig-bumped">
+<div class="figure align-center" id="fig-bumped">
 <img alt="bumped line segment" src="_images/WireStentDemot2Step03.png" style="width: 300px;" />
 <p class="caption">A bumped line segment</p>
 </div>
@@ -504,15 +506,15 @@ property <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c
             cell1 += Formex([[NE[0][0],SE[0][0]]],2)
 </pre>
 </div>
-<div align="center" class="figure" id="fig-rescaled">
+<div class="figure align-center" id="fig-rescaled">
 <img alt="rescaled bumped line segment" src="_images/WireStentDemot2Step04.png" style="width: 300px;" />
 <p class="caption">Rescaled bumped strut</p>
 </div>
-<div align="center" class="figure" id="fig-mirrored">
+<div class="figure align-center" id="fig-mirrored">
 <img alt="mirrored and skewed bumped strut" src="_images/WireStentDemot2Step07.png" style="width: 300px;" />
 <p class="caption">Mirrored and skewed bumped strut</p>
 </div>
-<div align="center" class="figure" id="fig-unit-cell">
+<div class="figure align-center" id="fig-unit-cell">
 <img alt="unit cell of wires and connectors" src="_images/WireStentDemot2Step09.png" style="width: 300px;" />
 <p class="caption">Unit cell of crossing wires and connectors</p>
 </div>
@@ -536,11 +538,11 @@ use is impossible with local variables, such as for example the <tt class="docut
         # the base pattern cell1+cell2 now has size [-2,-2]..[2,2]
 </pre>
 </div>
-<div align="center" class="figure" id="fig-mirrored-unit-cell">
+<div class="figure align-center" id="fig-mirrored-unit-cell">
 <img alt="mirrored unit cell" src="_images/WireStentDemot2Step10.png" style="width: 300px;" />
 <p class="caption">Mirrored unit cell</p>
 </div>
-<div align="center" class="figure" id="fig-base-module">
+<div class="figure align-center" id="fig-base-module">
 <img alt="completed base module" src="_images/WireStentDemot2Step11.png" style="width: 300px;" />
 <p class="caption">Completed base module</p>
 </div>
@@ -557,11 +559,11 @@ pattern with <img class="math" src="_images/math/435f3a43ae59ed41768ef39b59d4515
         F = (self.cell1+self.cell2).replic2(nx,ny,dx,dy)
 </pre>
 </div>
-<div align="center" class="figure" id="fig-full-plane">
+<div class="figure align-center" id="fig-full-plane">
 <img alt="Full planar topology" src="_images/WireStentDemot2Step12.png" style="width: 300px;" />
 <p class="caption">Full planar topology</p>
 </div>
-<div align="center" class="figure" id="fig-full-plane-orthoview">
+<div class="figure align-center" id="fig-full-plane-orthoview">
 <img alt="orthogonal view of the full planar topology" src="_images/WireStentDemot2Step13.png" style="width: 300px;" />
 <p class="caption">Orthogonal view of the full planar topology</p>
 </div>
@@ -574,20 +576,21 @@ transformation with the Z-coordinates as distance <img class="math" src="_images
 as angle <img class="math" src="_images/math/52e8ed7a3ba22130ad3984eb2cd413406475a689.png" alt="\theta"/> and the Y-coordinates as height <img class="math" src="_images/math/b13f21416d84e13708696f34dea81026cda583c9.png" alt="z"/>. The
 <tt class="docutils literal"><span class="pre">scale()</span></tt>-operator rescales the stent structure to the correct circumference
 and length. The resulting stent geometry is depicted in Figure <a class="reference internal" href="#fig-stent"><em>Cylindrical stent</em></a>.</p>
-<div class="highlight-python"><pre>        # fold it into a cylinder
+<pre class="literal-block">
+        # fold it into a cylinder
         self.F = F.translate([0.,0.,r]).cylindrical(dir=
-		[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
-	  self.ny = ny</pre>
-</div>
+                [2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
+          self.ny = ny
+</pre>
 <p>In addition to the stent initialization, the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class script
 contains a function <tt class="docutils literal"><span class="pre">all()</span></tt> representing the complete stent Formex.
 Consequently, the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class has four attributes: the Formices
 <tt class="docutils literal"><span class="pre">cell1</span></tt>, <tt class="docutils literal"><span class="pre">cell2</span></tt> and <tt class="docutils literal"><span class="pre">all</span></tt>; and the number <img class="math" src="_images/math/46587de496607a13f873f771a0964285cbe8f638.png" alt="ny"/>.</p>
-<div align="center" class="figure" id="fig-stent">
+<div class="figure align-center" id="fig-stent">
 <img alt="cylindrical stent" src="_images/WireStentDemot2Step16.png" style="width: 300px;" />
 <p class="caption">Cylindrical stent</p>
 </div>
-<div align="center" class="figure" id="fig-stent-ortho">
+<div class="figure align-center" id="fig-stent-ortho">
 <img alt="orthogonal view of thecylindrical stent" src="_images/WireStentDemot2Step15.png" style="width: 300px;" />
 <p class="caption">Orthogonal view of the cylindrical stent</p>
 </div>
@@ -606,35 +609,35 @@ stents are all created with the same script, but with other values of the
 parameters <img class="math" src="_images/math/80c2d7b999148a9a1b9740bd873c5365df7f461a.png" alt="De"/>, <img class="math" src="_images/math/435f3a43ae59ed41768ef39b59d4515a9f150105.png" alt="nx"/> and <img class="math" src="_images/math/fdb63b9e51abe6bbb16acfb5d7b773ddbb5bf4a8.png" alt="\beta"/>. As the script for building
 the wire stent geometry is defined as a the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class in the
 (<tt class="docutils literal"><span class="pre">WireStent.py</span></tt>) script, it can easily be imported for e.g. this purpose.</p>
-<div align="center" class="figure" id="fig-stent-d16l40d22n6b25">
+<div class="figure align-center" id="fig-stent-d16l40d22n6b25">
 <img alt="Stent variant" src="_images/WireStentD16L40d22n6b25.png" style="width: 300px;" />
 <p class="caption">Stent variant with <img class="math" src="_images/math/dd5e3857ae21daa6c9c4521d45e2e09454c847f0.png" alt="De=16, nx=6, \beta=25"/></p>
 </div>
-<div align="center" class="figure" id="fig-stent-d16l40d22n6b50">
+<div class="figure align-center" id="fig-stent-d16l40d22n6b50">
 <img alt="Stent variant" src="_images/WireStentD16L40d22n6b50.png" style="width: 300px;" />
 <p class="caption">Stent variant with <img class="math" src="_images/math/a3dfc30029c4ca579f65947e1858a05ae1233659.png" alt="De=16, nx=6, \beta=50"/></p>
 </div>
-<div align="center" class="figure" id="fig-stent-d16l40d22n10b25">
+<div class="figure align-center" id="fig-stent-d16l40d22n10b25">
 <img alt="Stent variant" src="_images/WireStentD16L40d22n10b25.png" style="width: 300px;" />
 <p class="caption">Stent variant with <img class="math" src="_images/math/9f3bdd8f54a9a2d46c769410f286bff8646a4d7a.png" alt="De=16, nx=10, \beta=25"/></p>
 </div>
-<div align="center" class="figure" id="fig-stent-d16l40d22n10b50">
+<div class="figure align-center" id="fig-stent-d16l40d22n10b50">
 <img alt="Stent variant" src="_images/WireStentD16L40d22n10b50.png" style="width: 300px;" />
 <p class="caption">Stent variant with <img class="math" src="_images/math/55aaa8741e5126c197bd3a986f46165e15d7bf19.png" alt="De=16, nx=10, \beta=50"/></p>
 </div>
-<div align="center" class="figure" id="fig-stent-d32l40d22n6b25">
+<div class="figure align-center" id="fig-stent-d32l40d22n6b25">
 <img alt="Stent variant" src="_images/WireStentD32L40d22n6b25.png" style="width: 300px;" />
 <p class="caption">Stent variant with <img class="math" src="_images/math/6ab77f0909f9e9426fbe827c5e805a87aa1e6fa4.png" alt="De=32, nx=6, \beta=25"/></p>
 </div>
-<div align="center" class="figure" id="fig-stent-d32l40d22n6b50">
+<div class="figure align-center" id="fig-stent-d32l40d22n6b50">
 <img alt="Stent variant" src="_images/WireStentD32L40d22n6b50.png" style="width: 300px;" />
 <p class="caption">Stent variant with <img class="math" src="_images/math/2aeee926bd2d6bbe822ad1871a424e07bad899a5.png" alt="De=32, nx=6, \beta=50"/></p>
 </div>
-<div align="center" class="figure" id="fig-stent-d32l40d22n10b25">
+<div class="figure align-center" id="fig-stent-d32l40d22n10b25">
 <img alt="Stent variant" src="_images/WireStentD32L40d22n10b25.png" style="width: 300px;" />
 <p class="caption">Stent variant with <img class="math" src="_images/math/a6b32b71d40ef0cc4f92e0493a2f3db800b8d2a1.png" alt="De=32, nx=10, \beta=25"/></p>
 </div>
-<div align="center" class="figure" id="fig-stent-d32l40d22n10b50">
+<div class="figure align-center" id="fig-stent-d32l40d22n10b50">
 <img alt="Stent variant" src="_images/WireStentD32L40d22n10b50.png" style="width: 300px;" />
 <p class="caption">Stent variant with <img class="math" src="_images/math/03093f6aafd62c55673071ae075bcc438f87e571.png" alt="De=32, nx=10, \beta=50"/></p>
 </div>
@@ -672,7 +675,7 @@ deployed by inflating a balloon, located inside the stent. Figure
 <a class="reference internal" href="#fig-cypher-stent"><em>Triangulated mesh of a Cypher® stent</em></a> shows an example of such a stent prior to expansion
 (balloon not shown). The 3D surface is obtained by micro CT and consists of
 triangles.</p>
-<div align="center" class="figure" id="fig-cypher-stent">
+<div class="figure align-center" id="fig-cypher-stent">
 <img alt="Cypher stent" src="_images/cypher-stent.png" />
 <p class="caption">Triangulated mesh of a Cypher® stent</p>
 </div>
@@ -682,7 +685,7 @@ investigate triangulated meshes. A simple unroll operation of the stent gives a
 much better overview of the complete geometrical structure and allows easier
 analysis (see figure <a class="reference internal" href="#fig-cypher-stent-unroll"><em>Result of the unroll operation</em></a>).</p>
 <p><tt class="docutils literal"><span class="pre">F</span> <span class="pre">=</span> <span class="pre">F.toCylindrical().scale([1.,2*radius*pi/360,1.])</span></tt></p>
-<div align="center" class="figure" id="fig-cypher-stent-unroll">
+<div class="figure align-center" id="fig-cypher-stent-unroll">
 <img alt="Cypher stent unrolled" src="_images/cypher-stent-unroll.png" />
 <p class="caption">Result of the unroll operation</p>
 </div>
@@ -691,7 +694,7 @@ property of such a stent is the circumference of a single stent cell. The
 <tt class="docutils literal"><span class="pre">clip()</span></tt> method can be used to isolate a single stent cell. In order to obtain
 a line describing the stent cell, the function <tt class="docutils literal"><span class="pre">intersectionLinesWithPlane()</span></tt>
 has been used. The result can be seen in figures <a class="reference internal" href="#fig-cypher-stent-cell-full"><em>Part of the intersection with a plane</em></a>.</p>
-<div align="center" class="figure" id="fig-cypher-stent-cell-full">
+<div class="figure align-center" id="fig-cypher-stent-cell-full">
 <img alt="Intersection with plane" src="_images/stent-cell-full.png" />
 <p class="caption">Part of the intersection with a plane</p>
 </div>
@@ -699,7 +702,7 @@ has been used. The result can be seen in figures <a class="reference internal" h
 (figure <a class="reference internal" href="#fig-cypher-stent-cell"><em>Circumference of a stent cell</em></a>)
 and the <tt class="docutils literal"><span class="pre">length()</span></tt> function returns its length, which
 is 9.19 mm.</p>
-<div align="center" class="figure" id="fig-cypher-stent-cell">
+<div class="figure align-center" id="fig-cypher-stent-cell">
 <img alt="circumference of stent cell" src="_images/stent-cell.png" />
 <p class="caption">Circumference of a stent cell</p>
 </div>
@@ -714,7 +717,7 @@ is 9.19 mm.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="index.html">Documentation</a></h3>
             <h3><a href="index.html">Table Of Contents</a></h3>

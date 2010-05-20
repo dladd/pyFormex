@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>40. fe_abq — An interface to write Finite Element models in Abaqus input file format. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>40. fe_abq — An interface to write Finite Element models in Abaqus input file format. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="41. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
     <link rel="prev" title="39. fe — Finite Element Models in pyFormex." href="fe.html" /> 
@@ -65,6 +65,7 @@ and write them to the Abaqus input file.</p>
 <dt id="fe_abq.Step">
 <em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Step</tt><big>(</big><em>analysis='STATIC'</em>, <em>time=</em><span class="optional">[</span>, <em>0.0</em>, <em>0.0</em>, <em>0.0</em>, <em>0.0</em><span class="optional">]</span>, <em>nlgeom='NO'</em>, <em>tags=None</em>, <em>inc=None</em>, <em>sdi=None</em>, <em>buckle='SUBSPACE'</em>, <em>incr=0.10000000000000001</em>, <em>name=None</em>, <em>bulkvisc=None</em>, <em>out=None</em>, <em>res=None</em><big>)</big><a class="headerlink" href="#fe_abq.Step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains all data about a step.</p>
+<p class="rubric">Methods</p>
 <p>Create new analysis data.</p>
 <ul>
 <li><p class="first"><cite>analysis</cite>:  the analysis type. Should be one of: &#8216;STATIC&#8217;, &#8216;DYNAMIC&#8217;,
@@ -100,6 +101,7 @@ in Explicit steps.</p>
 come in addition to the global ones.</p>
 </li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Step objects have the following methods:</p>
 <dl class="method">
 <dt id="fe_abq.Step.write">
@@ -119,6 +121,7 @@ resfreq and timemarks are global values only used by Explicit</p>
 <dt id="fe_abq.Output">
 <em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Output</tt><big>(</big><em>kind=None</em>, <em>keys=None</em>, <em>set=None</em>, <em>type='FIELD'</em>, <em>variable='PRESELECT'</em>, <em>extra=''</em>, <em>**options</em><big>)</big><a class="headerlink" href="#fe_abq.Output" title="Permalink to this definition">¶</a></dt>
 <dd><p>A request for output to .odb and history.</p>
+<p class="rubric">Methods</p>
 <p>Create new output request.</p>
 <ul class="simple">
 <li><cite>type</cite>: &#8216;FIELD&#8217; or &#8216;HISTORY&#8217;</li>
@@ -143,6 +146,7 @@ should be written. If no set is specified, the default is &#8216;Nall&#8217;
 for kind==&#8217;NODE&#8217; and &#8216;Eall&#8217; for kind=&#8217;ELEMENT&#8217;</li>
 </ul>
 </blockquote>
+<p class="rubric">Methods</p>
 <p>Output objects have the following methods:</p>
 <dl class="method">
 <dt id="fe_abq.Output.fmt">
@@ -157,6 +161,7 @@ for kind==&#8217;NODE&#8217; and &#8216;Eall&#8217; for kind=&#8217;ELEMENT&#821
 <dt id="fe_abq.Result">
 <em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Result</tt><big>(</big><em>kind</em>, <em>keys</em>, <em>set=None</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>time=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe_abq.Result" title="Permalink to this definition">¶</a></dt>
 <dd><p>A request for output of results on nodes or elements.</p>
+<p class="rubric">Methods</p>
 <p>Create new result request.</p>
 <ul>
 <li><p class="first"><cite>kind</cite>: &#8216;NODE&#8217; or &#8216;ELEMENT&#8217; (first character suffices)</p>
@@ -179,6 +184,7 @@ output)(Abaqus/Standard only)</p>
 </ul>
 <p>Extra keyword arguments are available: see the <cite>writeNodeResults</cite> and
 <cite>writeElemResults</cite> methods for details.</p>
+<p class="rubric">Methods</p>
 <p>Result objects have the following methods:</p>
 </dd></dl>
 
@@ -186,6 +192,7 @@ output)(Abaqus/Standard only)</p>
 <dt id="fe_abq.AbqData">
 <em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">AbqData</tt><big>(</big><em>model</em>, <em>prop</em>, <em>nprop=None</em>, <em>eprop=None</em>, <em>steps=</em><span class="optional">[</span><span class="optional">]</span>, <em>res=</em><span class="optional">[</span><span class="optional">]</span>, <em>out=</em><span class="optional">[</span><span class="optional">]</span>, <em>bound=None</em><big>)</big><a class="headerlink" href="#fe_abq.AbqData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains all data required to write the Abaqus input file.</p>
+<p class="rubric">Methods</p>
 <p>Create new AbqData.</p>
 <ul class="simple">
 <li><cite>model</cite> : a <tt class="xref docutils literal"><span class="pre">Model</span></tt> instance.</li>
@@ -197,6 +204,7 @@ output)(Abaqus/Standard only)</p>
 The default is to apply ALL boundary conditions initially.
 Specify a (possibly non-existing) tag to override the default.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>AbqData objects have the following methods:</p>
 <dl class="method">
 <dt id="fe_abq.AbqData.write">
@@ -672,7 +680,7 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>21. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>21. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="22. camera — OpenGL camera handling" href="camera.html" />
     <link rel="prev" title="20. canvas — This implements an OpenGL drawing widget for painting 3D scenes." href="canvas.html" /> 
@@ -65,7 +65,9 @@ implements a dynamic array of multiple canvases.</p>
 <dt id="viewport.CursorShapeHandler">
 <em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CursorShapeHandler</tt><big>(</big><em>widget</em><big>)</big><a class="headerlink" href="#viewport.CursorShapeHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for handling the mouse cursor shape on the Canvas.</p>
+<p class="rubric">Methods</p>
 <p>Create a CursorHandler for the specified widget.</p>
+<p class="rubric">Methods</p>
 <p>CursorShapeHandler objects have the following methods:</p>
 <dl class="method">
 <dt id="viewport.CursorShapeHandler.setCursorShape">
@@ -83,6 +85,7 @@ implements a dynamic array of multiple canvases.</p>
 <dt id="viewport.CanvasMouseHandler">
 <em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CanvasMouseHandler</tt><a class="headerlink" href="#viewport.CanvasMouseHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for handling the mouse events on the Canvas.</p>
+<p class="rubric">Methods</p>
 <p>CanvasMouseHandler objects have the following methods:</p>
 <dl class="method">
 <dt id="viewport.CanvasMouseHandler.setMouse">
@@ -110,7 +113,9 @@ provided by the canvas.Canvas class.</p>
 <p>Interactivity is highly dependent on Qt4. Putting the interactive
 functions in a separate class makes it esier to use the Canvas class
 in non-interactive situations or combining it with other GUI toolsets.</p>
+<p class="rubric">Methods</p>
 <p>Initialize an empty canvas with default settings.</p>
+<p class="rubric">Methods</p>
 <p>QtCanvas objects have the following methods:</p>
 <dl class="method">
 <dt id="viewport.QtCanvas.resetOptions">
@@ -522,7 +527,9 @@ On RELEASE, add the line to the drawing.</p>
 <dt id="viewport.FramedGridLayout">
 <em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">FramedGridLayout</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#viewport.FramedGridLayout" title="Permalink to this definition">¶</a></dt>
 <dd><p>A QtGui.QGridLayout where each added widget is framed.</p>
+<p class="rubric">Methods</p>
 <p>Initialize the multicanvas.</p>
+<p class="rubric">Methods</p>
 <p>FramedGridLayout objects have the following methods:</p>
 <dl class="method">
 <dt id="viewport.FramedGridLayout.addWidget">
@@ -542,7 +549,9 @@ On RELEASE, add the line to the drawing.</p>
 <dd><p>An OpenGL canvas with multiple viewports and QT interaction.</p>
 <p>The MultiCanvas implements a central QT widget containing one or more
 QtCanvas widgets.</p>
+<p class="rubric">Methods</p>
 <p>Initialize the multicanvas.</p>
+<p class="rubric">Methods</p>
 <p>MultiCanvas objects have the following methods:</p>
 <dl class="method">
 <dt id="viewport.MultiCanvas.newView">
@@ -676,7 +685,7 @@ The default OpenGL format can be changed by command line options:</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

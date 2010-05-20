@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="4. script — Basic pyFormex script functions" href="script.html" />
     <link rel="prev" title="2. formex — Formex algebra in Python" href="formex.html" /> 
@@ -278,8 +278,8 @@ The sep parameter can be specified as in tofile.</p>
 <dd><p>Solve a cubiq equation using a direct method.</p>
 <p>a,b,c,d are the (floating point) coefficients of a third degree
 polynomial equation:</p>
-<div class="highlight-python"><pre> 3         2
-a . x  +  b . x  +  c . x  +  d   =   0</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mf">3</span>  <span class="o">+</span>  <span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mf">2</span>  <span class="o">+</span>  <span class="n">c</span> <span class="o">*</span> <span class="n">x</span>  <span class="o">+</span>  <span class="n">d</span>   <span class="o">=</span>   <span class="mf">0</span>
+</pre></div>
 </div>
 <p>This function computes the three roots (real and complex) of this equation
 and returns full information about their kind, sorting order, occurrence
@@ -287,24 +287,141 @@ of double roots. It uses scaling of the variables to enhance the accuracy.</p>
 <p>The return value is a tuple (r1,r2,r3,kind), where r1,r2 and r3 are three
 float values and kind is an integer specifying the kind of roots.</p>
 <p>Depending on the value of <cite>kind</cite>, the roots are defined as follows:</p>
-<p>kind      roots
-====      ========================
-0         three real roots r1 &lt; r2 &lt; r3
-1         three real roots r1 &lt; r2 = r3
-2         three real roots r1 = r2 &lt; r3
-3         three real roots r1 = r2 = r3
-4         one real root r1 and two complex conjugate roots with real part</p>
-<blockquote>
-r2 and imaginary part r3: the complex roots are thus :
-r2+i*r3 en r2-i*r3, where i = sqrt(-1).</blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">kind</th>
+<th class="head">roots</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>0</td>
+<td>three real roots r1 &lt; r2 &lt; r3</td>
+</tr>
+<tr><td>1</td>
+<td>three real roots r1 &lt; r2 = r3</td>
+</tr>
+<tr><td>2</td>
+<td>three real roots r1 = r2 &lt; r3</td>
+</tr>
+<tr><td>3</td>
+<td>three real roots r1 = r2 = r3</td>
+</tr>
+<tr><td>4</td>
+<td>one real root r1 and two complex conjugate roots with real
+part r2 and imaginary part r3; the complex roots are thus:
+r2+i*r3 en r2-i*r3, where i = sqrt(-1).</td>
+</tr>
+</tbody>
+</table>
 <p>If the coefficient a==0, a ValueError is raised.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.unique1dOrdered">
+<tt class="descclassname">arraytools.</tt><tt class="descname">unique1dOrdered</tt><big>(</big><em>ar1</em>, <em>return_index=False</em>, <em>return_inverse=False</em><big>)</big><a class="headerlink" href="#arraytools.unique1dOrdered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the unique elements of an array.</p>
+<p>This works like numpy&#8217;s unique1d, but uses a stable sorting algorithm.
+The returned index may therefore hold other entries for multiply
+occurring values. In such case, unique1dOrdered returns the first
+occurrence in the flattened array.
+The unique elements and the inverse index are allways the same as those
+returned by numpy&#8217;s unique1d.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ar1</strong> : array_like</p>
+<blockquote>
+<p>This array will be flattened if it is not already 1-D.</p>
+</blockquote>
+<p><strong>return_index</strong> : bool, optional</p>
+<blockquote>
+<p>If True, also return the indices against <cite>ar1</cite> that result in the
+unique array.</p>
+</blockquote>
+<p><strong>return_inverse</strong> : bool, optional</p>
+<blockquote>
+<p>If True, also return the indices against the unique array that
+result in <cite>ar1</cite>.</p>
+</blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>unique</strong> : ndarray</p>
+<blockquote>
+<p>The unique values.</p>
+</blockquote>
+<p><strong>unique_indices</strong> : ndarray, optional</p>
+<blockquote>
+<p>The indices of the unique values. Only provided if <cite>return_index</cite> is
+True.</p>
+</blockquote>
+<p><strong>unique_inverse</strong> : ndarray, optional</p>
+<blockquote class="last">
+<p>The indices to reconstruct the original array. Only provided if
+<cite>return_inverse</cite> is True.</p>
+</blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">unique1d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unique1dOrdered</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]))</span>
+</pre></div>
+</div>
+<p>Notice the difference in the 4-th entry of the second array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.renumberIndex">
+<tt class="descclassname">arraytools.</tt><tt class="descname">renumberIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.renumberIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renumber an index sequentially.</p>
+<p>Given a one-dimensional integer array with only non-negative values,
+and <cite>max</cite> being the highest value in it, the elements are replaced
+with new values in the range 0..max, such that identical numbers are
+allways replaced with the same number and the new values at their
+first occurrence form an increasing sequence 0..max.</p>
+<p>The return value is a one-dimensional integer array with length equal to
+max+1, holding the original values corresponding to the new value 0..max.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>index</strong> : array_like, 1d, integer</p>
+<blockquote>
+<p>An array with non-negative integer values</p>
+</blockquote>
+</td>
+</tr>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>index</strong> : ndarray, length <cite>max</cite></p>
+<blockquote class="last">
+<p>The orginal values that have been replaced with 0..max.</p>
+</blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a title="arraytools.inverseUniqueIndex" class="reference internal" href="#arraytools.inverseUniqueIndex"><tt class="xref docutils literal"><span class="pre">inverseUniqueIndex</span></tt></a></dt>
+<dd>find the inverse mapping.</dd>
+</dl>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.inverseUniqueIndex">
 <tt class="descclassname">arraytools.</tt><tt class="descname">inverseUniqueIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.inverseUniqueIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inverse an index.</p>
-<p>index is a one-dimensional integer array with unique non-negative values.</p>
+<p>index is a one-dimensional integer array with <em>unique</em> non-negative values.</p>
 <p>The return value is the inverse index: each value shows the position
 of its index in the index array. The length of the inverse index is
 equal to maximum value in index plus one. Values not occurring in index
@@ -347,7 +464,7 @@ Currently, this is sortByColumns.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

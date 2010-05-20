@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>30. mesh — mesh.py &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>30. mesh — mesh.py &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="31. surface — Operations on triangulated surfaces." href="surface.html" />
     <link rel="prev" title="29. curve — Definition of curves in pyFormex." href="curve.html" /> 
@@ -90,7 +90,9 @@ values should be in the range 0 &lt;= value &lt; ncoords.</li>
 <p>If eltype is None, a default eltype is deived from the plexitude.</p>
 <p>A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
 or by a single geometric object that provides a toMesh() method.</p>
+<p class="rubric">Methods</p>
 <p>Initialize a new Mesh.</p>
+<p class="rubric">Methods</p>
 <p>Mesh objects have the following methods:</p>
 <dl class="method">
 <dt id="mesh.Mesh.setCoords">
@@ -261,6 +263,14 @@ faces. It is equivalent to <tt class="docutils literal"><span class="pre">`self.
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.getAngles">
+<tt class="descname">getAngles</tt><big>(</big><em>angle_spec=Deg</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getAngles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the angles in Deg or Rad between the edges of a mesh.</p>
+<p>The returned angles are shaped  as (nelems, n1faces, n1vertices),
+where n1faces are the number of faces in 1 element and the number of vertices in 1 face.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.getBorder">
 <tt class="descname">getBorder</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the border of the Mesh.</p>
@@ -416,6 +426,21 @@ degenerate elements.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.renumber">
+<tt class="descname">renumber</tt><big>(</big><em>order='elems'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.renumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renumber the nodes of a Mesh in the specified order.</p>
+<p>order is an index with length equal to the number of nodes. The
+index specifies the node number that should come at this position.
+Thus, the order values are the old node numbers on the new node
+number positions.</p>
+<p>order can also be a predefined value that will generate the node
+index automatically:
+- &#8216;elems&#8217;: the nodes are number in order of their appearance in the</p>
+<blockquote>
+Mesh connectivity.</blockquote>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.extrude">
 <tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.</em>, <em>dir=0</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.extrude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extrude a Mesh in one of the axes directions.</p>
@@ -524,6 +549,15 @@ The resulting TriSurface will contain all elements where t &gt; 0.</p>
 at one side of the plane (p,n)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="mesh.Mesh.equiAngleSkew">
+<tt class="descname">equiAngleSkew</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.equiAngleSkew" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the equiAngleSkew of the elements, a mesh quality parameter .</p>
+<p>It quantifies the skewness of the elements: normalize difference between
+the worst angle in each element and the ideal angle (angle in the face 
+of an equiangular element, qe).</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><strong>Functions defined in the module mesh</strong></p>
@@ -617,6 +651,26 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
 If isopHex is specified, a convenient set of control points for the isoparametric transformation hex64 is also returned.
 TODO: include other options to get the control points for other isoparametric transformation for hex.</dd></dl>
 
+<dl class="function">
+<dt id="mesh.argSortAndUnsort">
+<tt class="descclassname">mesh.</tt><tt class="descname">argSortAndUnsort</tt><big>(</big><em>xarr</em><big>)</big><a class="headerlink" href="#mesh.argSortAndUnsort" title="Permalink to this definition">¶</a></dt>
+<dd>it reverse the sorting: return the indices to unsort the sorted array. For the moment it works only with 1D array</dd></dl>
+
+<dl class="function">
+<dt id="mesh.indexRenumbering1D">
+<tt class="descclassname">mesh.</tt><tt class="descname">indexRenumbering1D</tt><big>(</big><em>xarr</em><big>)</big><a class="headerlink" href="#mesh.indexRenumbering1D" title="Permalink to this definition">¶</a></dt>
+<dd>it takes a 1D array of integers and renumbers them based on the order of appearance in the array</dd></dl>
+
+<dl class="function">
+<dt id="mesh.meshRenumberingNodesOnElems">
+<tt class="descclassname">mesh.</tt><tt class="descname">meshRenumberingNodesOnElems</tt><big>(</big><em>xMesh</em><big>)</big><a class="headerlink" href="#mesh.meshRenumberingNodesOnElems" title="Permalink to this definition">¶</a></dt>
+<dd>it takes a Mesh and return the same Mesh but with a different order of nodes. The nodes are ordered as they appear in the elements, therefore in a standardized order based on the topology and not on the geometry.</dd></dl>
+
+<dl class="function">
+<dt id="mesh.correctHexMeshOrientation">
+<tt class="descclassname">mesh.</tt><tt class="descname">correctHexMeshOrientation</tt><big>(</big><em>hm</em><big>)</big><a class="headerlink" href="#mesh.correctHexMeshOrientation" title="Permalink to this definition">¶</a></dt>
+<dd>hexahedral elements have an orientation. Some geometrical transformation (e.g. reflect) may produce inconsistent orientation, which results in negative (signed) volume of the hexahedral (triple product). This function fixes the hexahedrals without orientation.</dd></dl>
+
 </blockquote>
 </div>
 
@@ -627,7 +681,7 @@ TODO: include other options to get the control points for other isoparametric tr
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

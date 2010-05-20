@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="2. formex — Formex algebra in Python" href="formex.html" />
     <link rel="prev" title="pyFormex reference manual" href="../refman.html" /> 
@@ -93,6 +93,7 @@ is used, or the default <tt class="xref docutils literal"><span class="pre">Floa
 <p><cite>copy</cite>: If <tt class="xref docutils literal"><span class="pre">True</span></tt>, the data are copied. By default, the original data are
 used if possible, e.g. if a correctly shaped and typed
 <tt class="xref docutils literal"><span class="pre">numpy.ndarray</span></tt> is specified.</p>
+<p class="rubric">Methods</p>
 <p>Coords objects have the following methods:</p>
 <dl class="method">
 <dt id="coords.Coords.points">
@@ -198,7 +199,8 @@ plane indicated by the positive normal.</p>
 <dt id="coords.Coords.distanceFromLine">
 <tt class="descname">distanceFromLine</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#coords.Coords.distanceFromLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the distance of all points from the line (p,n).</p>
-<p>p is a point on the line specified by 3 coordinates.
+<p>p,n are (1,3) or (npts,3) arrays defining 1 or npts lines
+p is a point on the line specified by 3 coordinates.
 n is a vector specifying the direction of the line through p.</p>
 <p>The return value is a [...] shaped array with the distance of
 each point to the line through p with direction n.
@@ -765,7 +767,7 @@ ones, you need to copy them before you use the transformation.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

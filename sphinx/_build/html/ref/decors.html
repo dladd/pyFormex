@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>17. decors — 2D decorations for the OpenGL canvas. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>17. decors — 2D decorations for the OpenGL canvas. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="18. marks — OpenGL marks for annotating 3D actors." href="marks.html" />
     <link rel="prev" title="16. actors — OpenGL actors for populating the 3D scene." href="actors.html" /> 
@@ -70,7 +70,9 @@ This should only use openGL function that are
 allowed in a display list.</blockquote>
 </dd>
 </dl>
+<p class="rubric">Methods</p>
 <p>Create a decoration at canvas coordinates x,y</p>
+<p class="rubric">Methods</p>
 <p>Decoration objects have the following methods:</p>
 </dd></dl>
 
@@ -78,6 +80,7 @@ allowed in a display list.</blockquote>
 <dt id="decors.Mark">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Mark</tt><big>(</big><em>x</em>, <em>y</em>, <em>mark='dot'</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Mark" title="Permalink to this definition">¶</a></dt>
 <dd><p>A mark at a fixed position on the canvas.</p>
+<p class="rubric">Methods</p>
 <p>Mark objects have the following methods:</p>
 <dl class="method">
 <dt id="decors.Mark.drawGL">
@@ -90,6 +93,7 @@ allowed in a display list.</blockquote>
 <dt id="decors.Line">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Line</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Line" title="Permalink to this definition">¶</a></dt>
 <dd><p>A straight line on the canvas.</p>
+<p class="rubric">Methods</p>
 <p>Line objects have the following methods:</p>
 <dl class="method">
 <dt id="decors.Line.drawGL">
@@ -119,7 +123,9 @@ for the horizontal. The default(empty) string will center the text.</li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Methods</p>
 <p>Create a text actor</p>
+<p class="rubric">Methods</p>
 <p>GlutText objects have the following methods:</p>
 <dl class="method">
 <dt id="decors.GlutText.drawGL">
@@ -132,6 +138,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 <dt id="decors.ColorLegend">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorlegend</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>font=None</em>, <em>size=None</em>, <em>dec=2</em>, <em>scale=0</em>, <em>grid=0</em>, <em>linewidth=None</em>, <em>lefttext=False</em>, <em>nlabels=-1</em><big>)</big><a class="headerlink" href="#decors.ColorLegend" title="Permalink to this definition">¶</a></dt>
 <dd><p>A viewport decoration showing a colorscale legend.</p>
+<p class="rubric">Methods</p>
 <p>ColorLegend objects have the following methods:</p>
 <dl class="method">
 <dt id="decors.ColorLegend.drawGL">
@@ -149,6 +156,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 <dt id="decors.Rectangle">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Rectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.Rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D-rectangle on the canvas.</p>
+<p class="rubric">Methods</p>
 <p>Rectangle objects have the following methods:</p>
 <dl class="method">
 <dt id="decors.Rectangle.drawGL">
@@ -161,6 +169,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 <dt id="decors.Grid">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Grid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx=1</em>, <em>ny=1</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D-grid on the canvas.</p>
+<p class="rubric">Methods</p>
 <p>Grid objects have the following methods:</p>
 <dl class="method">
 <dt id="decors.Grid.drawGL">
@@ -173,10 +182,12 @@ for the horizontal. The default(empty) string will center the text.</li>
 <dt id="decors.LineDrawing">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">LineDrawing</tt><big>(</big><em>data</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.LineDrawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>A collection of straight lines on the canvas.</p>
+<p class="rubric">Methods</p>
 <p>Initially a Line Drawing.</p>
 <p>data can be a 2-plex Formex or equivalent coordinate data.
 The z-coordinates of the Formex are unused.
 A (n,2,2) shaped array will do as well.</p>
+<p class="rubric">Methods</p>
 <p>LineDrawing objects have the following methods:</p>
 <dl class="method">
 <dt id="decors.LineDrawing.drawGL">
@@ -206,6 +217,7 @@ position (&#8216;b&#8217;, &#8216;c&#8217; or &#8216;t&#8217;).</p>
 string or a tuple of 3 strings.</p>
 </li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Triade objects have the following methods:</p>
 <dl class="method">
 <dt id="decors.Triade.draw">
@@ -257,7 +269,7 @@ ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

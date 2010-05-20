@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>49. objects — Selection of objects from the global dictionary. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>49. objects — Selection of objects from the global dictionary. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="50. olist — Some convenient shortcuts for common list operations." href="olist.html" />
     <link rel="prev" title="48. tools — tools.py" href="tools.html" /> 
@@ -65,11 +65,13 @@
 <p>The class provides facilities to filter the global objects by their type
 and select one or more objects by their name(s). The values of these
 objects can be changed and the changes can be undone.</p>
+<p class="rubric">Methods</p>
 <p>Create a new selection of objects.</p>
 <p>If a filter is given, only objects passing it will be accepted.
 The filter will be applied dynamically on the dict.</p>
 <p>If a list of names is given, the current selection will be set to
 those names (provided they are in the dictionary).</p>
+<p class="rubric">Methods</p>
 <p>Objects objects have the following methods:</p>
 <dl class="method">
 <dt id="objects.Objects.object_type">
@@ -205,6 +207,7 @@ argument to draw some annotation for the object,</li>
 <li><cite>active</cite> is a flag to signal if the annotation should be drawn or not.</li>
 </ul>
 <p>The default is to draw object name and element numbers.</p>
+<p class="rubric">Methods</p>
 <p>DrawableObjects objects have the following methods:</p>
 <dl class="method">
 <dt id="objects.DrawableObjects.draw">
@@ -351,7 +354,7 @@ If a selected object does not have a setProp method, it is ignored.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

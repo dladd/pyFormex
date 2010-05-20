@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>29. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>29. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="30. mesh — mesh.py" href="mesh.html" />
     <link rel="prev" title="28. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" /> 
@@ -71,6 +71,7 @@ The subclasses should at least define the following:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">sub_points</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
 </pre></div>
 </div>
+<p class="rubric">Methods</p>
 <p>Curve objects have the following methods:</p>
 <dl class="method">
 <dt id="curve.Curve.pointsOn">
@@ -172,11 +173,13 @@ their own drawing routines.</p>
 <dt id="curve.PolyLine">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">PolyLine</tt><big>(</big><em>coords=</em><span class="optional">[</span><span class="optional">]</span>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a series of straight line segments.</p>
+<p class="rubric">Methods</p>
 <p>Initialize a PolyLine from a coordinate array.</p>
 <p>coords is a (npts,3) shaped array of coordinates of the subsequent
 vertices of the polyline (or a compatible data object).
 If closed == True, the polyline is closed by connecting the last
 point to the first. This does not change the vertex data.</p>
+<p class="rubric">Methods</p>
 <p>PolyLine objects have the following methods:</p>
 <dl class="method">
 <dt id="curve.PolyLine.nelems">
@@ -275,6 +278,7 @@ n is the normal vector to a plane, specified by 3 components.</p>
 <dt id="curve.Polygon">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Polygon</tt><big>(</big><em>coords=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#curve.Polygon" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Polygon is a closed PolyLine.</p>
+<p class="rubric">Methods</p>
 <p>Polygon objects have the following methods:</p>
 </dd></dl>
 
@@ -282,6 +286,7 @@ n is the normal vector to a plane, specified by 3 components.</p>
 <dt id="curve.BezierSpline">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">BezierSpline</tt><big>(</big><em>coords</em>, <em>deriv=None</em>, <em>curl=0.5</em>, <em>control=None</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.BezierSpline" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a cubic Bezier spline curve.</p>
+<p class="rubric">Methods</p>
 <p>Create a cubic spline curve through the given points.</p>
 <ul>
 <li><p class="first">coords: an (npoints,3) array with ordered points on the curve</p>
@@ -310,6 +315,7 @@ the deriv and curl parameters.</p>
 to the first to create a closed curve.</p>
 </li>
 </ul>
+<p class="rubric">Methods</p>
 <p>BezierSpline objects have the following methods:</p>
 <dl class="method">
 <dt id="curve.BezierSpline.pointsOn">
@@ -332,7 +338,9 @@ to the first to create a closed curve.</p>
 <dt id="curve.QuadBezierSpline">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">QuadBezierSpline</tt><big>(</big><em>coords</em>, <em>control=None</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a Quadratic Bezier spline curve.</p>
+<p class="rubric">Methods</p>
 <p>Create a quadratic spline curve through the given points.</p>
+<p class="rubric">Methods</p>
 <p>QuadBezierSpline objects have the following methods:</p>
 <dl class="method">
 <dt id="curve.QuadBezierSpline.pointsOn">
@@ -361,7 +369,9 @@ to the first to create a closed curve.</p>
 The separate class name is retained for compatibility and convenience. 
 See CardinalSpline2 for a direct implementation (it misses the end
 intervals of the point set).</p>
+<p class="rubric">Methods</p>
 <p>Create a natural spline through the given points.</p>
+<p class="rubric">Methods</p>
 <p>CardinalSpline objects have the following methods:</p>
 </dd></dl>
 
@@ -369,10 +379,12 @@ intervals of the point set).</p>
 <dt id="curve.CardinalSpline2">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">CardinalSpline2</tt><big>(</big><em>coords</em>, <em>tension=0.0</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a cardinal spline.</p>
+<p class="rubric">Methods</p>
 <p>Create a natural spline through the given points.</p>
 <p>This is a direct implementation of the Cardinal Spline.
 For open curves, it misses the interpolation in the two end
 intervals of the point set.</p>
+<p class="rubric">Methods</p>
 <p>CardinalSpline2 objects have the following methods:</p>
 <dl class="method">
 <dt id="curve.CardinalSpline2.compute_coefficients">
@@ -390,6 +402,7 @@ intervals of the point set.</p>
 <dt id="curve.NaturalSpline">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">NaturalSpline</tt><big>(</big><em>coords</em>, <em>endcond=</em><span class="optional">[</span>, <em>'notaknot'</em>, <em>'notaknot'</em><span class="optional">]</span>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a natural spline.</p>
+<p class="rubric">Methods</p>
 <p>Create a natural spline through the given points.</p>
 <p>coords specifies the coordinates of a set of points. A natural spline
 is constructed through this points.
@@ -399,6 +412,7 @@ With &#8216;notaknot&#8217;, maximal continuity (up to the third derivative)
 is obtained between the first two splines.
 With &#8216;secder&#8217;, the spline ends with a zero second derivative.
 If closed is True, the spline is closed, and endcond is ignored.</p>
+<p class="rubric">Methods</p>
 <p>NaturalSpline objects have the following methods:</p>
 <dl class="method">
 <dt id="curve.NaturalSpline.compute_coefficients">
@@ -416,8 +430,10 @@ If closed is True, the spline is closed, and endcond is ignored.</p>
 <dt id="curve.Arc3">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc3</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#curve.Arc3" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a circular arc.</p>
+<p class="rubric">Methods</p>
 <p>Create a circular arc.</p>
 <p>The arc is specified by 3 non-colinear points.</p>
+<p class="rubric">Methods</p>
 <p>Arc3 objects have the following methods:</p>
 <dl class="method">
 <dt id="curve.Arc3.sub_points">
@@ -430,8 +446,10 @@ If closed is True, the spline is closed, and endcond is ignored.</p>
 <dt id="curve.Arc">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#curve.Arc" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a circular arc.</p>
+<p class="rubric">Methods</p>
 <p>Create a circular arc.</p>
 <p>The arc is specified by the center and begin and end-point.</p>
+<p class="rubric">Methods</p>
 <p>Arc objects have the following methods:</p>
 <dl class="method">
 <dt id="curve.Arc.sub_points">
@@ -444,6 +462,7 @@ If closed is True, the spline is closed, and endcond is ignored.</p>
 <dt id="curve.Spiral">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Spiral</tt><big>(</big><em>turns=2.0</em>, <em>nparts=100</em>, <em>rfunc=None</em><big>)</big><a class="headerlink" href="#curve.Spiral" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a spiral curve.</p>
+<p class="rubric">Methods</p>
 <p>Spiral objects have the following methods:</p>
 </dd></dl>
 
@@ -474,7 +493,7 @@ If closed is True, the spline is closed, and endcond is ignored.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>15. colorscale — Color mapping of a range of values. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>15. colorscale — Color mapping of a range of values. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="16. actors — OpenGL actors for populating the 3D scene." href="actors.html" />
     <link rel="prev" title="14. menu — Menus for the pyFormex GUI." href="menu.html" /> 
@@ -68,6 +68,7 @@ This is e.g. quite useful in Finite Element postprocessing (see the
 postproc plugin).</p>
 <p>The ColorLegend class provides a way to make the ColorScale visible
 on the canvas.</p>
+<p class="rubric">Methods</p>
 <p>Create a colorscale to map a range of values into colors.</p>
 <p>The values range from minval to maxval (default 0.0..1.0).</p>
 <p>A midval may be specified to set the value corresponding to
@@ -86,6 +87,7 @@ an exponent &#8216;exp&#8217; different from 1.0. Mapping is done with the
 &#8216;stuur&#8217; function from the &#8216;utils&#8217; module. 
 If 2 exponents are given, mapping is done independently with exp
 in the range minval..midval and with exp2 in the range midval..maxval.</p>
+<p class="rubric">Methods</p>
 <p>ColorScale objects have the following methods:</p>
 <dl class="method">
 <dt id="colorscale.ColorScale.scale">
@@ -115,11 +117,13 @@ to the -1, 0 and 1 values.</p>
 <dt id="colorscale.ColorLegend">
 <em class="property">class </em><tt class="descclassname">colorscale.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorscale</em>, <em>n</em><big>)</big><a class="headerlink" href="#colorscale.ColorLegend" title="Permalink to this definition">¶</a></dt>
 <dd><p>A colorlegend is a colorscale divided in a number of subranges.</p>
+<p class="rubric">Methods</p>
 <p>Create a color legend dividing a colorscale in n subranges.</p>
 <p>The full value range of the colorscale is divided in n subranges,
 each half range being divided in n/2 subranges.
 This sets n+1 limits of the subranges.
 The n colors of the subranges correspond to the subrange middle value.</p>
+<p class="rubric">Methods</p>
 <p>ColorLegend objects have the following methods:</p>
 <dl class="method">
 <dt id="colorscale.ColorLegend.overflow">
@@ -152,7 +156,7 @@ The returned color is a tuple of three RGB values in the range 0-1.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

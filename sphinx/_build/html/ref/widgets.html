@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>13. widgets — A collection of custom widgets used in the pyFormex GUI &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>13. widgets — A collection of custom widgets used in the pyFormex GUI &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="14. menu — Menus for the pyFormex GUI." href="menu.html" />
     <link rel="prev" title="12. elements — Element local coordinates and numbering." href="elements.html" /> 
@@ -78,7 +78,9 @@ Default mode is to accept any filename. You can specify exist=True
 to accept only existing files. Or set exist=True and multi=True to
 accept multiple files.
 If dir==True, a single existing directory is asked.</p>
+<p class="rubric">Methods</p>
 <p>The constructor shows the widget.</p>
+<p class="rubric">Methods</p>
 <p>FileSelection objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.FileSelection.show">
@@ -99,7 +101,9 @@ If the user hits CANCEL or ESC, None is returned.</p>
 <dt id="widgets.ProjectSelection">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ProjectSelection</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>compression=4</em>, <em>ignore_signature=True</em><big>)</big><a class="headerlink" href="#widgets.ProjectSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A file selection dialog specialized for opening projects.</p>
+<p class="rubric">Methods</p>
 <p>Create the dialog.</p>
+<p class="rubric">Methods</p>
 <p>ProjectSelection objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.ProjectSelection.getResult">
@@ -118,7 +122,9 @@ extra fields to set the Save Image parameters:</p>
 <li>Whole Window: If checked, the whole pyFormex main window will be
 saved. If unchecked, only the current OpenGL viewport is saved.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Create the dialog.</p>
+<p class="rubric">Methods</p>
 <p>SaveImageDialog objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.SaveImageDialog.getResult">
@@ -133,6 +139,7 @@ saved. If unchecked, only the current OpenGL viewport is saved.</li>
 <dd><p>A dialog to select an image file.</p>
 <p>The dialog helps selecting the correct image by displaying the
 image in an image viewer widget.</p>
+<p class="rubric">Methods</p>
 <p>ImageViewerDialog objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.ImageViewerDialog.getFilename">
@@ -149,6 +156,7 @@ If the user hits CANCEL or ESC, None is returned.</p>
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">DockedSelection</tt><big>(</big><em>slist=</em><span class="optional">[</span><span class="optional">]</span>, <em>title='Selection Dialog'</em>, <em>mode=None</em>, <em>sort=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#widgets.DockedSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget that is docked in the main window and contains a modeless
 dialog for selecting items.</p>
+<p class="rubric">Methods</p>
 <p>DockedSelection objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.DockedSelection.setSelected">
@@ -166,7 +174,9 @@ dialog for selecting items.</p>
 <dt id="widgets.ModelessSelection">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ModelessSelection</tt><big>(</big><em>slist=</em><span class="optional">[</span><span class="optional">]</span>, <em>title='Selection Dialog'</em>, <em>mode=None</em>, <em>sort=False</em>, <em>func=None</em>, <em>width=None</em>, <em>height=None</em><big>)</big><a class="headerlink" href="#widgets.ModelessSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A modeless dialog for selecting one or more items from a list.</p>
+<p class="rubric">Methods</p>
 <p>Create the SelectionList dialog.</p>
+<p class="rubric">Methods</p>
 <p>ModelessSelection objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.ModelessSelection.setSelected">
@@ -188,8 +198,10 @@ value.</p>
 <dt id="widgets.Selection">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Selection</tt><big>(</big><em>slist=</em><span class="optional">[</span><span class="optional">]</span>, <em>title='Selection Dialog'</em>, <em>mode=None</em>, <em>sort=False</em>, <em>selected=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#widgets.Selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog for selecting one or more items from a list.</p>
+<p class="rubric">Methods</p>
 <p>Create the SelectionList dialog.</p>
 <p>selected is a list of items that are initially selected.</p>
+<p class="rubric">Methods</p>
 <p>Selection objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.Selection.setSelected">
@@ -241,7 +253,9 @@ the return value of the item.</li>
 <tt class="docutils literal"><span class="pre">input.setValidator(QtGui.QIntValidator(input))</span></tt></p>
 <p>Subclasses can define a show() method e.g. to select the data in the
 input field on display of the dialog.</p>
+<p class="rubric">Methods</p>
 <p>Creates a horizontal box layout and puts the label in it.</p>
+<p class="rubric">Methods</p>
 <p>InputItem objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputItem.name">
@@ -271,7 +285,9 @@ input field on display of the dialog.</p>
 <dd><p>An unchangeable input field with a label in front.</p>
 <p>It is just like an InputString, but the text can not be edited.</p>
 <p>There are no specific options.</p>
+<p class="rubric">Methods</p>
 <p>Creates the input item.</p>
+<p class="rubric">Methods</p>
 <p>InputInfo objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputInfo.value">
@@ -290,7 +306,9 @@ will be eval&#8217;ed before returning.</p>
 <ul class="simple">
 <li><cite>max</cite>: the maximum number of characters in the string.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Creates the input item.</p>
+<p class="rubric">Methods</p>
 <p>InputString objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputString.show">
@@ -311,7 +329,9 @@ will be eval&#8217;ed before returning.</p>
 <p>If the type of value is not a string, the input text
 will be eval&#8217;ed before returning.</p>
 <p>There are no specific op[tions.</p>
+<p class="rubric">Methods</p>
 <p>Creates the input item.</p>
+<p class="rubric">Methods</p>
 <p>InputText objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputText.show">
@@ -334,11 +354,13 @@ will be eval&#8217;ed before returning.</p>
 <dt id="widgets.InputBool">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBool</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputBool" title="Permalink to this definition">¶</a></dt>
 <dd><p>A boolean input item.</p>
+<p class="rubric">Methods</p>
 <p>Creates a new checkbox for the input of a boolean value.</p>
 <p>Displays the name next to a checkbox, which will initially be set
 if value evaluates to True. (Does not use the label)
 The value is either True or False,depending on the setting
 of the checkbox.</p>
+<p class="rubric">Methods</p>
 <p>InputBool objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputBool.text">
@@ -361,6 +383,7 @@ of the checkbox.</p>
 <dt id="widgets.InputCombo">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputCombo</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>onselect=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputCombo" title="Permalink to this definition">¶</a></dt>
 <dd><p>A combobox InputItem.</p>
+<p class="rubric">Methods</p>
 <p>Creates a new combobox for the selection of a value from a list.</p>
 <p>choices is a list/tuple of possible values.
 default is the initial/default choice.
@@ -370,6 +393,7 @@ If default is None, the first item of choices is taken as the default.</p>
 initially be set to the default value.</p>
 <p>An optional <cite>onselect</cite> function may be specified, which will be called
 whenever the current selection changes.</p>
+<p class="rubric">Methods</p>
 <p>InputCombo objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputCombo.value">
@@ -387,6 +411,7 @@ whenever the current selection changes.</p>
 <dt id="widgets.InputRadio">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputRadio</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputRadio" title="Permalink to this definition">¶</a></dt>
 <dd><p>A radiobuttons InputItem.</p>
+<p class="rubric">Methods</p>
 <p>Creates radiobuttons for the selection of a value from a list.</p>
 <p>choices is a list/tuple of possible values.
 default is the initial/default choice.
@@ -395,6 +420,7 @@ If default is None, the first item of choices is taken as the default.</p>
 <p>The choices are presented to the user as a hbox with radio buttons,
 of which the default will initially be pressed.
 If direction == &#8216;v&#8217;, the options are in a vbox.</p>
+<p class="rubric">Methods</p>
 <p>InputRadio objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputRadio.value">
@@ -412,6 +438,7 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dt id="widgets.InputPush">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPush</tt><big>(</big><em>name</em>, <em>default=None</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputPush" title="Permalink to this definition">¶</a></dt>
 <dd><p>A pushbuttons InputItem.</p>
+<p class="rubric">Methods</p>
 <p>Creates pushbuttons for the selection of a value from a list.</p>
 <p>choices is a list/tuple of possible values.
 default is the initial/default choice.
@@ -420,6 +447,7 @@ If default is None, the first item of choices is taken as the default.</p>
 <p>The choices are presented to the user as a hbox with radio buttons,
 of which the default will initially be selected.
 If direction == &#8216;v&#8217;, the options are in a vbox.</p>
+<p class="rubric">Methods</p>
 <p>InputPush objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputPush.setText">
@@ -451,7 +479,9 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <ul class="simple">
 <li>&#8216;min, &#8216;max&#8217;: range of the scale (integer)</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Creates a new integer input field with a label in front.</p>
+<p class="rubric">Methods</p>
 <p>InputInteger objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputInteger.show">
@@ -474,7 +504,9 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dt id="widgets.InputFloat">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloat</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFloat" title="Permalink to this definition">¶</a></dt>
 <dd><p>An float input item.</p>
+<p class="rubric">Methods</p>
 <p>Creates a new float input field with a label in front.</p>
+<p class="rubric">Methods</p>
 <p>InputFloat objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputFloat.show">
@@ -497,7 +529,9 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dt id="widgets.InputFloatTable">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloatTable</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFloatTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>A table of floats input item.</p>
+<p class="rubric">Methods</p>
 <p>Creates a new float table input field.</p>
+<p class="rubric">Methods</p>
 <p>InputFloatTable objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputFloatTable.show">
@@ -527,7 +561,9 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <li><tt class="docutils literal"><span class="pre">func</span></tt> : an optional function to be called whenever the value is
 changed. The function takes a float/integer argument.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Creates a new integer input slider.</p>
+<p class="rubric">Methods</p>
 <p>InputSlider objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputSlider.set_value">
@@ -550,7 +586,9 @@ changed. The function receives the input field as argument. With
 this argument, the fields attirbutes like name, value, text, can
 be retrieved.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Creates a new integer input slider.</p>
+<p class="rubric">Methods</p>
 <p>InputFSlider objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputFSlider.set_value">
@@ -563,10 +601,12 @@ be retrieved.</li>
 <dt id="widgets.InputColor">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputColor</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>A color input item.</p>
+<p class="rubric">Methods</p>
 <p>Creates a new color input field with a label in front.</p>
 <p>The color input field is a button displaying the current color.
 Clicking on the button opens a color dialog, and the returned
 value is set in the button.</p>
+<p class="rubric">Methods</p>
 <p>InputColor objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputColor.setColor">
@@ -584,7 +624,9 @@ value is set in the button.</p>
 <dt id="widgets.InputFont">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFont</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFont" title="Permalink to this definition">¶</a></dt>
 <dd><p>An input item to select a font.</p>
+<p class="rubric">Methods</p>
 <p>Creates a new font input field.</p>
+<p class="rubric">Methods</p>
 <p>InputFont objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputFont.setFont">
@@ -607,7 +649,9 @@ acceptData() is called.</li>
 specified in the dict.</li>
 </ul>
 <p>The return value of this item is an ODict.</p>
+<p class="rubric">Methods</p>
 <p>Creates a new InputWidget.</p>
+<p class="rubric">Methods</p>
 <p>InputWidget objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.InputWidget.text">
@@ -672,7 +716,9 @@ get prefixed with the tab and group names, separated with a &#8216;/&#8217;.</li
 <li>flags:</li>
 <li>modal:</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Create a dialog asking the user for the value of items.</p>
+<p class="rubric">Methods</p>
 <p>NewInputDialog objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.NewInputDialog.add_items">
@@ -685,17 +731,17 @@ layout is the widget layout where the input widgets will be added</p>
 <dl class="method">
 <dt id="widgets.NewInputDialog.add_tab">
 <tt class="descname">add_tab</tt><big>(</big><em>name</em>, <em>items</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.add_tab" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd>Add a Tab page of input items.</dd></dl>
 
 <dl class="method">
 <dt id="widgets.NewInputDialog.add_group">
 <tt class="descname">add_group</tt><big>(</big><em>name</em>, <em>items</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.add_group" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd>Add a group of input items.</dd></dl>
 
 <dl class="method">
-<dt id="widgets.NewInputDialog.inputAny">
-<tt class="descname">inputAny</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.inputAny" title="Permalink to this definition">¶</a></dt>
-<dd>Create an InputItem with the new data style.</dd></dl>
+<dt id="widgets.NewInputDialog.add_input">
+<tt class="descname">add_input</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#widgets.NewInputDialog.add_input" title="Permalink to this definition">¶</a></dt>
+<dd>Add a single input item.</dd></dl>
 
 <dl class="method">
 <dt id="widgets.NewInputDialog.timeout">
@@ -767,6 +813,7 @@ Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
 Qt classes, this widget provides a way to construct fairly complex
 input dialogs with a minimum of effort.</p>
 <p>The input dialog can be modal or non-modal dialog.</p>
+<p class="rubric">Methods</p>
 <p>Create a dialog asking the user for the value of items.</p>
 <p><cite>items</cite> is either a list of items, or a dict where each value is a
 list of items or another dict (where each value is then a list of items).
@@ -839,6 +886,7 @@ A variant &#8216;vpush&#8217; aligns the options vertically.</li>
 <li>[ &#8216;name&#8217;, &#8216;red&#8217;, &#8216;color&#8217; ] will present a color selection widget,
 with &#8216;red&#8217; as the initial choice.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>OldInputDialog objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.OldInputDialog.add_input_items">
@@ -923,6 +971,7 @@ Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
 This means that an item at row i and column j can be addressed as
 data[i][j].
 Optional lists of column and row headers can be specified.</p>
+<p class="rubric">Methods</p>
 <p>TableModel objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.TableModel.makeEditable">
@@ -982,6 +1031,7 @@ and row numbers.</li>
 <li><cite>edit</cite>: if True (default), the data can be edited. Set to False to make
 the data readonly.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>ArrayModel objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.ArrayModel.setData">
@@ -1005,7 +1055,9 @@ TableModel doesn&#8217;t.</li>
 <li><cite>label</cite>: currently unused (intended to display an optional label
 in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are specified.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Initialize the Table widget.</p>
+<p class="rubric">Methods</p>
 <p>Table objects have the following methods:</p>
 </dd></dl>
 
@@ -1018,7 +1070,9 @@ in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are s
 <li><cite>caption</cite>:</li>
 <li><cite>parent</cite>:</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Create the TabWidget.</p>
+<p class="rubric">Methods</p>
 <p>Tabs objects have the following methods:</p>
 </dd></dl>
 
@@ -1037,7 +1091,9 @@ an &#8216;OK&#8217; button is displayed to close the dialog. Can be set to None
 to avoid creation of a button box.</li>
 <li><cite>default</cite>: the default action, &#8216;OK&#8217; by default.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Create the Dialog</p>
+<p class="rubric">Methods</p>
 <p>Dialog objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.Dialog.add">
@@ -1051,10 +1107,12 @@ to avoid creation of a button box.</li>
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableDialog</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>title=None</em>, <em>parent=None</em>, <em>actions=</em><span class="optional">[</span>, <em>('OK'</em>, <em>)</em><span class="optional">]</span>, <em>default='OK'</em><big>)</big><a class="headerlink" href="#widgets.TableDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog widget to show/edit a two-dimensional array of items.</p>
 <p>A convenience class representing a Table within a dialog.</p>
+<p class="rubric">Methods</p>
 <p>Create the Table dialog.</p>
 <p>data is a 2-D array of items, with nrow rows and ncol columns.
 chead is an optional list of ncol column headers.
 rhead is an optional list of nrow row headers.</p>
+<p class="rubric">Methods</p>
 <p>TableDialog objects have the following methods:</p>
 </dd></dl>
 
@@ -1062,11 +1120,13 @@ rhead is an optional list of nrow row headers.</p>
 <dt id="widgets.OldTableDialog">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">OldTableDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>tab=False</em><big>)</big><a class="headerlink" href="#widgets.OldTableDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog widget to show two-dimensional arrays of items.</p>
+<p class="rubric">Methods</p>
 <p>Create the Table dialog.</p>
 <p>If tab = False, a dialog with one table is created and items
 should be a list [table_header,table_data].
 If tab = True, a dialog with multiple pages is created and items
 should be a list of pages [page_header,table_header,table_data].</p>
+<p class="rubric">Methods</p>
 <p>OldTableDialog objects have the following methods:</p>
 </dd></dl>
 
@@ -1098,6 +1158,7 @@ dialog is created, i.e. the user will have to click a button or hit the
 ESC key before he can continue.</p>
 <p>If you want a modeless dialog, allowing the user to continue while the
 message stays open, use the <a title="widgets.MessageBox.show" class="reference internal" href="#widgets.MessageBox.show"><tt class="xref docutils literal"><span class="pre">show()</span></tt></a> mehod to display it.</p>
+<p class="rubric">Methods</p>
 <p>MessageBox objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.MessageBox.show">
@@ -1123,11 +1184,12 @@ an empty string if ESC was hit.</p>
 
 <dl class="class">
 <dt id="widgets.TextBox">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TextBox</tt><big>(</big><em>text</em>, <em>format=None</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em>, <em>None</em><span class="optional">]</span>, <em>modal=None</em>, <em>parent=None</em>, <em>caption=None</em>, <em>flags=None</em><big>)</big><a class="headerlink" href="#widgets.TextBox" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TextBox</tt><big>(</big><em>text</em>, <em>format=None</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em>, <em>None</em><span class="optional">]</span>, <em>modal=None</em>, <em>parent=None</em>, <em>caption=None</em>, <em>mono=False</em>, <em>timeout=None</em>, <em>flags=None</em><big>)</big><a class="headerlink" href="#widgets.TextBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text and wait for user response.</p>
 <p>Possible choices are &#8216;OK&#8217; and &#8216;CANCEL&#8217;.
 The function returns True if the OK button was clicked or &#8216;ENTER&#8217;
 was pressed, False if the &#8216;CANCEL&#8217; button was pressed or ESC was pressed.</p>
+<p class="rubric">Methods</p>
 <p>TextBox objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.TextBox.getResult">
@@ -1145,6 +1207,7 @@ was pressed, False if the &#8216;CANCEL&#8217; button was pressed or ESC was pre
 <dt id="widgets.InputBox">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBox</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#widgets.InputBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget accepting a line of input.</p>
+<p class="rubric">Methods</p>
 <p>InputBox objects have the following methods:</p>
 </dd></dl>
 
@@ -1163,6 +1226,7 @@ should be specified.</li>
 specified if one of the buttons actions is widgets.ACCEPTED or
 widgets.REJECTED.</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>ButtonBox objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.ButtonBox.setText">
@@ -1191,6 +1255,7 @@ widgets.REJECTED.</li>
 <dt id="widgets.CoordsBox">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">CoordsBox</tt><big>(</big><em>ndim=3</em>, <em>*args</em><big>)</big><a class="headerlink" href="#widgets.CoordsBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget displaying the coordinates of a point.</p>
+<p class="rubric">Methods</p>
 <p>CoordsBox objects have the following methods:</p>
 <dl class="method">
 <dt id="widgets.CoordsBox.setValues">
@@ -1251,6 +1316,16 @@ a hex #RRGGBB string. If the dialog is canceled, None is returned.</p>
 <dl class="function">
 <dt id="widgets.simpleInputItem">
 <tt class="descclassname">widgets.</tt><tt class="descname">simpleInputItem</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>itemtype=None</em><big>)</big><a class="headerlink" href="#widgets.simpleInputItem" title="Permalink to this definition">¶</a></dt>
+<dd>A convenience function to create an InputItem dictionary</dd></dl>
+
+<dl class="function">
+<dt id="widgets.groupInputItem">
+<tt class="descclassname">widgets.</tt><tt class="descname">groupInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#widgets.groupInputItem" title="Permalink to this definition">¶</a></dt>
+<dd>A convenience function to create an InputItem dictionary</dd></dl>
+
+<dl class="function">
+<dt id="widgets.tabInputItem">
+<tt class="descclassname">widgets.</tt><tt class="descname">tabInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#widgets.tabInputItem" title="Permalink to this definition">¶</a></dt>
 <dd>A convenience function to create an InputItem dictionary</dd></dl>
 
 <dl class="function">
@@ -1353,15 +1428,15 @@ default is the name of the action to set as the default.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="elements.html"
-                                  title="previous chapter">12. <tt class="docutils literal docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.</a></p>
+                                  title="previous chapter">12. <tt class="docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="menu.html"
-                                  title="next chapter">14. <tt class="docutils literal docutils literal docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
+                                  title="next chapter">14. <tt class="docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/widgets.txt"

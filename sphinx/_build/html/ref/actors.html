@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>16. actors — OpenGL actors for populating the 3D scene. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>16. actors — OpenGL actors for populating the 3D scene. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="17. decors — 2D decorations for the OpenGL canvas." href="decors.html" />
     <link rel="prev" title="15. colorscale — Color mapping of a range of values." href="colorscale.html" /> 
@@ -80,6 +80,7 @@ for which we porvide do-nothing defaults here:</p>
 <li><cite>nelems()</cite>:</li>
 <li><cite>pickGL()</cite>:</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Actor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.Actor.npoints">
@@ -102,6 +103,7 @@ for which we porvide do-nothing defaults here:</p>
 <dt id="actors.TranslatedActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">TranslatedActor</tt><big>(</big><em>A</em>, <em>trl=(0.0</em>, <em>0.0</em>, <em>0.0)</em><big>)</big><a class="headerlink" href="#actors.TranslatedActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An Actor translated to another position.</p>
+<p class="rubric">Methods</p>
 <p>TranslatedActor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.TranslatedActor.bbox">
@@ -124,11 +126,13 @@ for which we porvide do-nothing defaults here:</p>
 <dt id="actors.RotatedActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">RotatedActor</tt><big>(</big><em>A</em>, <em>rot=(1.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>twist=0.0</em><big>)</big><a class="headerlink" href="#actors.RotatedActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An Actor rotated to another position.</p>
+<p class="rubric">Methods</p>
 <p>Created a new rotated actor.</p>
 <p>If rot is an array with shape (3,), the rotation is specified
 by the direction of the local 0 axis of the actor.
 If rot is an array with shape (4,4), the rotation is specified
 by the direction of the local 0, 1 and 2 axes of the actor.</p>
+<p class="rubric">Methods</p>
 <p>RotatedActor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.RotatedActor.bbox">
@@ -151,6 +155,7 @@ by the direction of the local 0, 1 and 2 axes of the actor.</p>
 <dt id="actors.CubeActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">CubeActor</tt><big>(</big><em>size</em>, <em>color=</em><span class="optional">[</span>, <em>(1.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>0.0)</em>, <em>(1.0</em>, <em>0.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>0.0</em>, <em>1.0)</em>, <em>(1.0</em>, <em>1.0</em>, <em>0.0)</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#actors.CubeActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor with cubic shape and 6 colored sides.</p>
+<p class="rubric">Methods</p>
 <p>CubeActor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.CubeActor.bbox">
@@ -168,6 +173,7 @@ by the direction of the local 0, 1 and 2 axes of the actor.</p>
 <dt id="actors.BboxActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">BboxActor</tt><big>(</big><em>bbox</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#actors.BboxActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draws a bbox.</p>
+<p class="rubric">Methods</p>
 <p>BboxActor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.BboxActor.bbox">
@@ -185,6 +191,7 @@ by the direction of the local 0, 1 and 2 axes of the actor.</p>
 <dt id="actors.TriadeActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">TriadeActor</tt><big>(</big><em>size=1.0</em>, <em>pos=</em><span class="optional">[</span>, <em>0.0</em>, <em>0.0</em>, <em>0.0</em><span class="optional">]</span>, <em>color=</em><span class="optional">[</span>, <em>(1.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>0.0)</em>, <em>(0.0</em>, <em>0.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>(1.0</em>, <em>0.0</em>, <em>1.0)</em>, <em>(1.0</em>, <em>1.0</em>, <em>0.0)</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#actors.TriadeActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor representing a triade of global axes.</p>
+<p class="rubric">Methods</p>
 <p>TriadeActor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.TriadeActor.bbox">
@@ -212,6 +219,7 @@ by the direction of the local 0, 1 and 2 axes of the actor.</p>
 <dt id="actors.GridActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GridActor</tt><big>(</big><em>nx=(1</em>, <em>1</em>, <em>1)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>dx=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.20000000000000001</em>, <em>lines=True</em>, <em>planes=True</em><big>)</big><a class="headerlink" href="#actors.GridActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draws a (set of) grid(s) in one of the coordinate planes.</p>
+<p class="rubric">Methods</p>
 <p>GridActor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.GridActor.bbox">
@@ -229,6 +237,7 @@ by the direction of the local 0, 1 and 2 axes of the actor.</p>
 <dt id="actors.CoordPlaneActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">CoordPlaneActor</tt><big>(</big><em>nx=(1</em>, <em>1</em>, <em>1)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>dx=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.5</em>, <em>lines=True</em>, <em>planes=True</em><big>)</big><a class="headerlink" href="#actors.CoordPlaneActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draws a set of 3 coordinate planes.</p>
+<p class="rubric">Methods</p>
 <p>CoordPlaneActor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.CoordPlaneActor.bbox">
@@ -246,7 +255,9 @@ by the direction of the local 0, 1 and 2 axes of the actor.</p>
 <dt id="actors.PlaneActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">PlaneActor</tt><big>(</big><em>nx=(2</em>, <em>2</em>, <em>2)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>size=((0.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>1.0))</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.5</em>, <em>lines=True</em>, <em>planes=True</em><big>)</big><a class="headerlink" href="#actors.PlaneActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>A plane in a 3D scene.</p>
+<p class="rubric">Methods</p>
 <p>A plane perpendicular to the x-axis at the origin.</p>
+<p class="rubric">Methods</p>
 <p>PlaneActor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.PlaneActor.bbox">
@@ -265,6 +276,7 @@ by the direction of the local 0, 1 and 2 axes of the actor.</p>
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GeomActor</tt><big>(</big><em>data</em>, <em>elems=None</em>, <em>eltype=None</em>, <em>color=None</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=1.0</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>marksize=None</em><big>)</big><a class="headerlink" href="#actors.GeomActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor representing a geometrical model.</p>
 <p>The model can either be in Formex or Mesh format.</p>
+<p class="rubric">Methods</p>
 <p>Create a geometry actor.</p>
 <p>The geometry is either in Formex model: a coordinate block with
 shape (nelems,nplex,3), or in Mesh format: a coordinate block
@@ -319,6 +331,7 @@ the backside (inside) of the surface. Default will be the same
 as the front color.
 The user can specify a linewidth to be used when drawing
 in wireframe mode.</p>
+<p class="rubric">Methods</p>
 <p>GeomActor objects have the following methods:</p>
 <dl class="method">
 <dt id="actors.GeomActor.getType">
@@ -343,6 +356,11 @@ in wireframe mode.</p>
 <dl class="method">
 <dt id="actors.GeomActor.npoints">
 <tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.npoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.nedges">
+<tt class="descname">nedges</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.nedges" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -422,7 +440,7 @@ of its parent, but the eltype will be retained.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

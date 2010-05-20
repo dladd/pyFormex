@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>51. mydict — &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>51. mydict — &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="52. odict — Specialized dictionary type structures." href="odict.html" />
     <link rel="prev" title="50. olist — Some convenient shortcuts for common list operations." href="olist.html" /> 
@@ -111,10 +111,12 @@ so these are the ones to watch out for:
 &#8216;clear&#8217;, &#8216;copy&#8217;, &#8216;fromkeys&#8217;, &#8216;get&#8217;, &#8216;has_key&#8217;, &#8216;items&#8217;, &#8216;iteritems&#8217;,
 &#8216;iterkeys&#8217;, &#8216;itervalues&#8217;, &#8216;keys&#8217;, &#8216;pop&#8217;, &#8216;popitem&#8217;, &#8216;setdefault&#8217;,
 &#8216;update&#8217;, &#8216;values&#8217;.</p>
+<p class="rubric">Methods</p>
 <p>Create a new Dict instance.</p>
 <p>The Dict can be initialized with a Python dict or a Dict.
 If defined, default is a function that is used for alternate key
 lookup if the key was not found in the dict.</p>
+<p class="rubric">Methods</p>
 <p>Dict objects have the following methods:</p>
 <dl class="method">
 <dt id="mydict.Dict.update">
@@ -144,7 +146,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="mydict.CDict">
-<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">CDict</tt><big>(</big><em>data={}</em>, <em>default=&lt;function returnNone at 0x2c9b1b8&gt;</em><big>)</big><a class="headerlink" href="#mydict.CDict" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">CDict</tt><big>(</big><em>data={}</em>, <em>default=&lt;function returnNone at 0x3f2baa0&gt;</em><big>)</big><a class="headerlink" href="#mydict.CDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>A cascading Dict: properties not in Dict are searched in all Dicts.</p>
 <p>This is equivalent to the Dict class, except that if a key is not found
 and the CDict has items with values that are themselves instances
@@ -154,6 +156,7 @@ of CDict&#8217;s. The cascade will stop if you use a Dict.
 There is no way to guarantee in which order the (Cascading)Dict&#8217;s are
 visited, so if multiple Dicts on the same level hold the same key,
 you should know yourself what you are doing.</p>
+<p class="rubric">Methods</p>
 <p>CDict objects have the following methods:</p>
 </dd></dl>
 
@@ -188,7 +191,7 @@ and the first matching key found is returned.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

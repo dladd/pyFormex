@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>31. surface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>31. surface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="32. geomtools — Basic geometrical operations." href="geomtools.html" />
     <link rel="prev" title="30. mesh — mesh.py" href="mesh.html" /> 
@@ -78,7 +78,9 @@ an (ntri,3) integer array of edges numbers.</li>
 </ul>
 <p>Additionally, a keyword argument prop= may be specified to
 set property values.</p>
+<p class="rubric">Methods</p>
 <p>Create a new surface.</p>
+<p class="rubric">Methods</p>
 <p>TriSurface objects have the following methods:</p>
 <dl class="method">
 <dt id="surface.TriSurface.nedges">
@@ -158,10 +160,10 @@ Setting compress==False will keep all original nodes in the surface.</p>
 <dl class="method">
 <dt id="surface.TriSurface.pointNormals">
 <tt class="descname">pointNormals</tt><big>(</big><big>)</big><a class="headerlink" href="#surface.TriSurface.pointNormals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the normal vectors in each point of a collection of triangles.</p>
+<dd><p>Compute the normal vectors at the points.</p>
 <p>The normal vector in a point is the average of the normal vectors of
-the neighbouring triangles.
-The normal vectors are normalized.</p>
+all the neighbouring triangles.
+The normal vectors are normalized before they are returned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -522,7 +524,7 @@ values, i.e. a list of list of meshes.</p>
 <tt class="descname">smoothLowPass</tt><big>(</big><em>n_iterations=2</em>, <em>lambda_value=0.5</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.smoothLowPass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Smooth the surface using a low-pass filter.</p>
 <p>This uses the nodes that are connected to the node via a shortest
-path of maximum &#8216;neighbours&#8217; edges.</p>
+path of minimum 1 and maximum &#8216;neighbours&#8217; edges.</p>
 </dd></dl>
 
 <dl class="method">
@@ -530,7 +532,7 @@ path of maximum &#8216;neighbours&#8217; edges.</p>
 <tt class="descname">smoothLaplaceHC</tt><big>(</big><em>n_iterations=2</em>, <em>lambda_value=0.5</em>, <em>alpha=0.</em>, <em>beta=0.2</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#surface.TriSurface.smoothLaplaceHC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Smooth the surface using a Laplace filter and HC algorithm.</p>
 <p>This uses the nodes that are connected to the node via a shortest
-path of maximum &#8216;neighbours&#8217; edges.</p>
+path of minimum 1 and maximum &#8216;neighbours&#8217; edges.</p>
 </dd></dl>
 
 <dl class="method">
@@ -820,6 +822,28 @@ file is created.
 Beware: this may take a lot of time if level is 8 or higher.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="surface.checkDistanceLinesPointsTreshold">
+<tt class="descclassname">surface.</tt><tt class="descname">checkDistanceLinesPointsTreshold</tt><big>(</big><em>p</em>, <em>q</em>, <em>m</em>, <em>dtresh</em><big>)</big><a class="headerlink" href="#surface.checkDistanceLinesPointsTreshold" title="Permalink to this definition">¶</a></dt>
+<dd>p are np points, q m are nl lines, dtresh are np distances. It returns the indices of lines, points which are in a distance &lt; dtresh. The distance point-line is calculated using Pitagora as it seems the fastest way.</dd></dl>
+
+<dl class="function">
+<dt id="surface.intersectLineWithPlaneOne2One">
+<tt class="descclassname">surface.</tt><tt class="descname">intersectLineWithPlaneOne2One</tt><big>(</big><em>q</em>, <em>m</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#surface.intersectLineWithPlaneOne2One" title="Permalink to this definition">¶</a></dt>
+<dd>it returns for each pair of line(q,m) and plane (p,n) the point of intersection. plane: (x-p)n=0, line: x=q+t m. It find the scalar t and returns the point.</dd></dl>
+
+<dl class="function">
+<dt id="surface.checkPointInsideTriangleOne2One">
+<tt class="descclassname">surface.</tt><tt class="descname">checkPointInsideTriangleOne2One</tt><big>(</big><em>tpi</em>, <em>pi</em>, <em>atol=1.e-5</em><big>)</big><a class="headerlink" href="#surface.checkPointInsideTriangleOne2One" title="Permalink to this definition">¶</a></dt>
+<dd>return a 1D boolean with the same dimension of tpi and pi. The value [i] is True if the point pi[i] is inside the triangle tpi[i]. It uses areas to check it.</dd></dl>
+
+<dl class="function">
+<dt id="surface.intersectSurfaceWithLines">
+<tt class="descclassname">surface.</tt><tt class="descname">intersectSurfaceWithLines</tt><big>(</big><em>ts</em>, <em>qli</em>, <em>mli</em><big>)</big><a class="headerlink" href="#surface.intersectSurfaceWithLines" title="Permalink to this definition">¶</a></dt>
+<dd>it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
+It returns the points of intersection and the indices of the intersected line and triangle.
+TODO: the slowest part is computing the distances of lines from triangles, can it be faster?</dd></dl>
+
 </blockquote>
 </div>
 
@@ -830,7 +854,7 @@ Beware: this may take a lot of time if level is 8 or higher.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

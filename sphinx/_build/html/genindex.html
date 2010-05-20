@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>Index &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="index.html" /> 
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -87,6 +87,7 @@
 <dt><a href="ref/units.html#units.UnitsSystem.Add">Add() (units.UnitsSystem method)</a></dt>
 <dt><a href="ref/widgets.html#widgets.Dialog.add">add() (widgets.Dialog method)</a></dt>
 <dt><a href="ref/widgets.html#widgets.NewInputDialog.add_group">add_group() (widgets.NewInputDialog method)</a></dt>
+<dt><a href="ref/widgets.html#widgets.NewInputDialog.add_input">add_input() (widgets.NewInputDialog method)</a></dt>
 <dt><a href="ref/widgets.html#widgets.OldInputDialog.add_input_items">add_input_items() (widgets.OldInputDialog method)</a></dt>
 <dt><a href="ref/widgets.html#widgets.NewInputDialog.add_items">add_items() (widgets.NewInputDialog method)</a></dt>
 <dt><a href="ref/widgets.html#widgets.NewInputDialog.add_tab">add_tab() (widgets.NewInputDialog method)</a></dt>
@@ -148,6 +149,7 @@
     <dt><a href="ref/surface.html#surface.TriSurface.areaNormals">(surface.TriSurface method)</a></dt>
   </dl></dd>
 <dt><a href="ref/postproc.html#postproc.argNearestValue">argNearestValue() (in module postproc)</a></dt>
+<dt><a href="ref/mesh.html#mesh.argSortAndUnsort">argSortAndUnsort() (in module mesh)</a></dt>
 <dt><a href="ref/widgets.html#widgets.ArrayModel">ArrayModel (class in widgets)</a></dt>
 <dt><a href="ref/arraytools.html#module-arraytools">arraytools (module)</a></dt>
 <dt><a href="ref/formex.html#formex.Formex.asArray">asArray() (formex.Formex method)</a></dt>
@@ -171,7 +173,7 @@
   <dd><dl>
     <dt><a href="ref/properties.html#properties.PropertyDB.autoName">(properties.PropertyDB class method)</a></dt>
   </dl></dd>
-<dt><a href="config.html#index-20">autorun</a></dt>
+<dt><a href="config.html#index-0">autorun</a></dt>
 <dt><a href="ref/image.html#image.autoSaveOn">autoSaveOn() (in module image)</a></dt>
 <dt><a href="ref/curve.html#curve.PolyLine.avgDirections">avgDirections() (curve.PolyLine method)</a></dt>
 <dt><a href="ref/surface.html#surface.TriSurface.avgVertexNormals">avgVertexNormals() (surface.TriSurface method)</a></dt>
@@ -280,11 +282,13 @@
 <dt><a href="ref/properties.html#properties.checkArrayOrIdValue">checkArrayOrIdValue() (in module properties)</a></dt>
 <dt><a href="ref/surface.html#surface.TriSurface.checkBorder">checkBorder() (surface.TriSurface method)</a></dt>
 <dt><a href="ref/canvas.html#canvas.CanvasSettings.checkDict">checkDict() (canvas.CanvasSettings class method)</a></dt>
+<dt><a href="ref/surface.html#surface.checkDistanceLinesPointsTreshold">checkDistanceLinesPointsTreshold() (in module surface)</a></dt>
 <dt><a href="ref/utils.html#utils.checkExternal">checkExternal() (in module utils)</a></dt>
 <dt><a href="ref/properties.html#properties.checkIdValue">checkIdValue() (in module properties)</a></dt>
 <dt><a href="ref/image.html#image.checkImageFormat">checkImageFormat() (in module image)</a></dt>
 <dt><a href="ref/flatkeydb.html#flatkeydb.FlatDB.checkKeys">checkKeys() (flatkeydb.FlatDB method)</a></dt>
 <dt><a href="ref/utils.html#utils.checkModule">checkModule() (in module utils)</a></dt>
+<dt><a href="ref/surface.html#surface.checkPointInsideTriangleOne2One">checkPointInsideTriangleOne2One() (in module surface)</a></dt>
 <dt><a href="ref/flatkeydb.html#flatkeydb.FlatDB.checkRecord">checkRecord() (flatkeydb.FlatDB method)</a></dt>
 <dt><a href="ref/script.html#script.checkRevision">checkRevision() (in module script)</a></dt>
 <dt><a href="ref/properties.html#properties.checkString">checkString() (in module properties)</a></dt>
@@ -373,6 +377,7 @@
     <dt><a href="ref/mesh.html#mesh.Mesh.copy">(mesh.Mesh method)</a></dt>
     <dt><a href="ref/surface.html#surface.TriSurface.copy">(surface.TriSurface method)</a></dt>
   </dl></dd>
+<dt><a href="ref/mesh.html#mesh.correctHexMeshOrientation">correctHexMeshOrientation() (in module mesh)</a></dt>
 <dt><a href="ref/arraytools.html#arraytools.cosd">cosd() (in module arraytools)</a></dt>
   <dd><dl>
     <dt><a href="ref/turtle.html#turtle.cosd">(in module turtle)</a></dt>
@@ -571,7 +576,7 @@
 <dt><a href="ref/viewport.html#viewport.QtCanvas.edit_drawing">edit_drawing() (viewport.QtCanvas method)</a></dt>
 <dt><a href="ref/coords.html#coords.Coords.egg">egg() (coords.Coords method)</a></dt>
 <dt><a href="ref/formex.html#formex.Formex.elbbox">elbbox() (formex.Formex method)</a></dt>
-<dt><a href="tutorial.html#index-24">element</a></dt>
+<dt><a href="tutorial.html#index-4">element</a></dt>
 <dt><a href="ref/elements.html#elements.Element">Element (class in elements)</a></dt>
 <dt><a href="ref/fe_post.html#fe_post.FeResult.Element">Element() (fe_post.FeResult method)</a></dt>
 <dt><a href="ref/formex.html#formex.Formex.element">element() (formex.Formex method)</a></dt>
@@ -590,8 +595,8 @@
 <dt><a href="ref/canvas.html#canvas.Light.enable">enable() (canvas.Light method)</a></dt>
   <dd><dl>
     <dt><a href="ref/canvas.html#canvas.Lights.enable">(canvas.Lights method)</a></dt>
-  </dl></dd></dl></td><td width="33%" valign="top"><dl>
-<dt><a href="ref/script.html#script.enableBreak">enableBreak() (in module script)</a></dt>
+  </dl></dd>
+<dt><a href="ref/script.html#script.enableBreak">enableBreak() (in module script)</a></dt></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="ref/canvas.html#canvas.Canvas.enableLight">enableLight() (canvas.Canvas method)</a></dt>
 <dt><a href="ref/connectivity.html#connectivity.Connectivity.encode">encode() (connectivity.Connectivity method)</a></dt>
 <dt><a href="ref/canvas.html#canvas.Canvas.end_2D_drawing">end_2D_drawing() (canvas.Canvas method)</a></dt>
@@ -601,6 +606,7 @@
 <dt><a href="ref/connectivity.html#connectivity.enmagic">enmagic() (in module connectivity)</a></dt>
 <dt><a href="ref/connectivity.html#connectivity.enmagic2">enmagic2() (in module connectivity)</a></dt>
 <dt><a href="ref/dxf.html#dxf.DxfExporter.entities">entities() (dxf.DxfExporter method)</a></dt>
+<dt><a href="ref/mesh.html#mesh.Mesh.equiAngleSkew">equiAngleSkew() (mesh.Mesh method)</a></dt>
 <dt><a href="ref/draw.html#draw.error">error() (in module draw)</a></dt>
   <dd><dl>
     <dt><a href="ref/script.html#script.error">(in module script)</a></dt>
@@ -693,7 +699,7 @@
     <dt><a href="ref/objects.html#objects.Objects.forget">(objects.Objects method)</a></dt>
   </dl></dd>
 <dt><a href="ref/config.html#config.formatDict">formatDict() (in module config)</a></dt>
-<dt><a href="tutorial.html#index-23">Formex</a></dt>
+<dt><a href="tutorial.html#index-3">Formex</a></dt>
   <dd><dl>
     <dt><a href="ref/formex.html#formex.Formex">(class in formex)</a></dt>
   </dl></dd>
@@ -736,6 +742,7 @@
     <dt><a href="ref/mydict.html#mydict.Dict.get">(mydict.Dict method)</a></dt>
   </dl></dd>
 <dt><a href="ref/units.html#units.UnitsSystem.Get">Get() (units.UnitsSystem method)</a></dt>
+<dt><a href="ref/mesh.html#mesh.Mesh.getAngles">getAngles() (mesh.Mesh method)</a></dt>
 <dt><a href="ref/mesh.html#mesh.Mesh.getBorder">getBorder() (mesh.Mesh method)</a></dt>
 <dt><a href="ref/mesh.html#mesh.Mesh.getBorderMesh">getBorderMesh() (mesh.Mesh method)</a></dt>
 <dt><a href="ref/camera.html#camera.Camera.getCenter">getCenter() (camera.Camera method)</a></dt>
@@ -743,7 +750,9 @@
 <dt><a href="ref/tools.html#tools.getCollection">getCollection() (in module tools)</a></dt>
 <dt><a href="ref/widgets.html#widgets.getColor">getColor() (in module widgets)</a></dt>
 <dt><a href="ref/mesh.html#mesh.Mesh.getCoords">getCoords() (mesh.Mesh method)</a></dt>
+<dt><a href="ref/scriptMenu.html#scriptMenu.getDescription">getDescription() (in module scriptMenu)</a></dt>
 <dt><a href="ref/camera.html#camera.Camera.getDist">getDist() (camera.Camera method)</a></dt>
+<dt><a href="ref/scriptMenu.html#scriptMenu.getDocString">getDocString() (in module scriptMenu)</a></dt>
 <dt><a href="ref/mesh.html#mesh.Mesh.getEdges">getEdges() (mesh.Mesh method)</a></dt>
   <dd><dl>
     <dt><a href="ref/surface.html#surface.TriSurface.getEdges">(surface.TriSurface method)</a></dt>
@@ -833,6 +842,7 @@
 <dt><a href="ref/colors.html#colors.grey">grey() (in module colors)</a></dt>
 <dt><a href="ref/decors.html#decors.Grid">Grid (class in decors)</a></dt>
 <dt><a href="ref/actors.html#actors.GridActor">GridActor (class in actors)</a></dt>
+<dt><a href="ref/widgets.html#widgets.groupInputItem">groupInputItem() (in module widgets)</a></dt>
 <dt><a href="ref/lima.html#lima.Lima.grow">grow() (lima.Lima method)</a></dt>
 <dt><a href="ref/arraytools.html#arraytools.growAxis">growAxis() (in module arraytools)</a></dt>
 <dt><a href="ref/tools.html#tools.growCollection">growCollection() (in module tools)</a></dt>
@@ -888,6 +898,7 @@
 <dt><a href="ref/widgets.html#widgets.ImageViewerDialog">ImageViewerDialog (class in widgets)</a></dt>
 <dt><a href="ref/fe_post.html#fe_post.FeResult.Increment">Increment() (fe_post.FeResult method)</a></dt>
 <dt><a href="ref/menu.html#menu.BaseMenu.index">index() (menu.BaseMenu method)</a></dt>
+<dt><a href="ref/mesh.html#mesh.indexRenumbering1D">indexRenumbering1D() (in module mesh)</a></dt>
 <dt><a href="ref/inertia.html#module-inertia">inertia (module)</a></dt>
 <dt><a href="ref/inertia.html#inertia.inertia">inertia() (in module inertia)</a></dt>
   <dd><dl>
@@ -899,9 +910,6 @@
 <dt><a href="ref/viewport.html#viewport.QtCanvas.initializeGL">initializeGL() (viewport.QtCanvas method)</a></dt>
 <dt><a href="ref/sendmail.html#sendmail.input_message">input_message() (in module sendmail)</a></dt>
 <dt><a href="ref/widgets.html#widgets.inputAny">inputAny() (in module widgets)</a></dt>
-  <dd><dl>
-    <dt><a href="ref/widgets.html#widgets.NewInputDialog.inputAny">(widgets.NewInputDialog method)</a></dt>
-  </dl></dd>
 <dt><a href="ref/widgets.html#widgets.inputAnyOld">inputAnyOld() (in module widgets)</a></dt>
 <dt><a href="ref/widgets.html#widgets.InputBool">InputBool (class in widgets)</a></dt>
 <dt><a href="ref/widgets.html#widgets.InputBox">InputBox (class in widgets)</a></dt>
@@ -924,8 +932,8 @@
 <dt><a href="ref/flatkeydb.html#flatkeydb.FlatDB.insert">insert() (flatkeydb.FlatDB method)</a></dt>
 <dt><a href="ref/menu.html#menu.BaseMenu.insert_action">insert_action() (menu.BaseMenu method)</a></dt>
 <dt><a href="ref/menu.html#menu.BaseMenu.insert_menu">insert_menu() (menu.BaseMenu method)</a></dt>
-<dt><a href="ref/menu.html#menu.BaseMenu.insert_sep">insert_sep() (menu.BaseMenu method)</a></dt></dl></td><td width="33%" valign="top"><dl>
-<dt><a href="ref/menu.html#menu.BaseMenu.insertItems">insertItems() (menu.BaseMenu method)</a></dt>
+<dt><a href="ref/menu.html#menu.BaseMenu.insert_sep">insert_sep() (menu.BaseMenu method)</a></dt>
+<dt><a href="ref/menu.html#menu.BaseMenu.insertItems">insertItems() (menu.BaseMenu method)</a></dt></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="ref/connectivity.html#connectivity.Connectivity.insertLevel">insertLevel() (connectivity.Connectivity method)</a></dt>
 <dt><a href="ref/widgets.html#widgets.TableModel.insertRows">insertRows() (widgets.TableModel method)</a></dt>
 <dt><a href="ref/arraytools.html#arraytools.inside">inside() (in module arraytools)</a></dt>
@@ -942,7 +950,6 @@
   <dd><dl>
     <dt><a href="ref/formex.html#formex.intersectionLinesWithPlane">(in module formex)</a></dt>
   </dl></dd>
-<dt><a href="ref/geomtools.html#geomtools.intersectionLWTriSurface">intersectionLWTriSurface() (in module geomtools)</a></dt>
 <dt><a href="ref/geomtools.html#geomtools.intersectionPointsLWL">intersectionPointsLWL() (in module geomtools)</a></dt>
 <dt><a href="ref/geomtools.html#geomtools.intersectionPointsLWP">intersectionPointsLWP() (in module geomtools)</a></dt>
 <dt><a href="ref/geomtools.html#geomtools.intersectionPointsPOL">intersectionPointsPOL() (in module geomtools)</a></dt>
@@ -961,6 +968,8 @@
     <dt><a href="ref/formex.html#formex.intersectionWithPlane">(in module formex)</a></dt>
     <dt><a href="ref/surface.html#surface.TriSurface.intersectionWithPlane">(surface.TriSurface method)</a></dt>
   </dl></dd>
+<dt><a href="ref/surface.html#surface.intersectLineWithPlaneOne2One">intersectLineWithPlaneOne2One() (in module surface)</a></dt>
+<dt><a href="ref/surface.html#surface.intersectSurfaceWithLines">intersectSurfaceWithLines() (in module surface)</a></dt>
 <dt><a href="ref/tetgen.html#tetgen.invalid">invalid() (in module tetgen)</a></dt>
 <dt><a href="ref/connectivity.html#connectivity.Connectivity.inverse">inverse() (connectivity.Connectivity method)</a></dt>
 <dt><a href="ref/connectivity.html#connectivity.inverseIndex">inverseIndex() (in module connectivity)</a></dt>
@@ -1109,6 +1118,7 @@
 <dt><a href="ref/mesh.html#mesh.mergeNodes">mergeNodes() (in module mesh)</a></dt>
 <dt><a href="ref/mesh.html#mesh.Mesh">Mesh (class in mesh)</a></dt>
 <dt><a href="ref/mesh.html#module-mesh">mesh (module)</a></dt>
+<dt><a href="ref/mesh.html#mesh.meshRenumberingNodesOnElems">meshRenumberingNodesOnElems() (in module mesh)</a></dt>
 <dt><a href="ref/sendmail.html#sendmail.message">message() (in module sendmail)</a></dt>
 <dt><a href="ref/widgets.html#widgets.MessageBox">MessageBox (class in widgets)</a></dt>
 <dt><a href="ref/postproc.html#postproc.min">min() (in module postproc)</a></dt>
@@ -1147,7 +1157,7 @@
   <dd><dl>
     <dt><a href="ref/mesh.html#mesh.Mesh.ncoords">(mesh.Mesh method)</a></dt>
   </dl></dd>
-<dt><a href="tutorial.html#index-22">ndarray</a></dt>
+<dt><a href="tutorial.html#index-2">ndarray</a></dt>
 <dt><a href="ref/formex.html#formex.Formex.ndim">ndim() (formex.Formex method)</a></dt>
   <dd><dl>
     <dt><a href="ref/mesh.html#mesh.Mesh.ndim">(mesh.Mesh method)</a></dt>
@@ -1155,8 +1165,9 @@
 <dt><a href="ref/postproc.html#postproc.nearestValue">nearestValue() (in module postproc)</a></dt>
 <dt><a href="ref/surface.html#surface.TriSurface.nEdgeAdjacent">nEdgeAdjacent() (surface.TriSurface method)</a></dt>
 <dt><a href="ref/surface.html#surface.TriSurface.nEdgeConnected">nEdgeConnected() (surface.TriSurface method)</a></dt>
-<dt><a href="ref/elements.html#elements.Element.nedges">nedges() (elements.Element method)</a></dt>
+<dt><a href="ref/actors.html#actors.GeomActor.nedges">nedges() (actors.GeomActor method)</a></dt>
   <dd><dl>
+    <dt><a href="ref/elements.html#elements.Element.nedges">(elements.Element method)</a></dt>
     <dt><a href="ref/mesh.html#mesh.Mesh.nedges">(mesh.Mesh method)</a></dt>
     <dt><a href="ref/surface.html#surface.TriSurface.nedges">(surface.TriSurface method)</a></dt>
   </dl></dd>
@@ -1183,8 +1194,8 @@
   <dd><dl>
     <dt><a href="ref/surface.html#surface.TriSurface.nfaces">(surface.TriSurface method)</a></dt>
   </dl></dd>
-<dt><a href="ref/fe.html#fe.Model.ngroups">ngroups() (fe.Model method)</a></dt>
-<dt><a href="ref/arraytools.html#arraytools.niceLogSize">niceLogSize() (in module arraytools)</a></dt></dl></td><td width="33%" valign="top"><dl>
+<dt><a href="ref/fe.html#fe.Model.ngroups">ngroups() (fe.Model method)</a></dt></dl></td><td width="33%" valign="top"><dl>
+<dt><a href="ref/arraytools.html#arraytools.niceLogSize">niceLogSize() (in module arraytools)</a></dt>
 <dt><a href="ref/arraytools.html#arraytools.niceNumber">niceNumber() (in module arraytools)</a></dt>
   <dd><dl>
     <dt><a href="ref/postproc.html#postproc.niceNumber">(in module postproc)</a></dt>
@@ -1307,7 +1318,7 @@
   </dl></dd>
 <dt><a href="ref/script.html#script.playFile">playFile() (in module script)</a></dt>
 <dt><a href="ref/script.html#script.playScript">playScript() (in module script)</a></dt>
-<dt><a href="tutorial.html#index-23">plexitude</a></dt>
+<dt><a href="tutorial.html#index-3">plexitude</a></dt>
 <dt><a href="ref/elements.html#elements.Point">Point (class in elements)</a></dt>
 <dt><a href="ref/formex.html#formex.Formex.point">point() (formex.Formex method)</a></dt>
   <dd><dl>
@@ -1506,11 +1517,15 @@
 <dt><a href="drawing.html#removeViewport">removeViewport() (built-in function)</a></dt>
   <dd><dl>
     <dt><a href="ref/draw.html#draw.removeViewport">(in module draw)</a></dt>
-  </dl></dd></dl></td><td width="33%" valign="top"><dl>
-<dt><a href="ref/viewport.html#viewport.FramedGridLayout.removeWidget">removeWidget() (viewport.FramedGridLayout method)</a></dt>
+  </dl></dd>
+<dt><a href="ref/viewport.html#viewport.FramedGridLayout.removeWidget">removeWidget() (viewport.FramedGridLayout method)</a></dt></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="ref/script.html#script.rename">rename() (in module script)</a></dt>
 <dt><a href="ref/draw.html#draw.renderMode">renderMode() (in module draw)</a></dt>
 <dt><a href="ref/fe.html#fe.Model.renumber">renumber() (fe.Model method)</a></dt>
+  <dd><dl>
+    <dt><a href="ref/mesh.html#mesh.Mesh.renumber">(mesh.Mesh method)</a></dt>
+  </dl></dd>
+<dt><a href="ref/arraytools.html#arraytools.renumberIndex">renumberIndex() (in module arraytools)</a></dt>
 <dt><a href="ref/coords.html#coords.Coords.replace">replace() (coords.Coords method)</a></dt>
   <dd><dl>
     <dt><a href="ref/geometry.html#geometry.Geometry.replace">(geometry.Geometry method)</a></dt>
@@ -1874,7 +1889,7 @@
     <dt><a href="ref/geometry.html#geometry.Geometry.spherical">(geometry.Geometry method)</a></dt>
   </dl></dd>
 <dt><a href="ref/curve.html#curve.Spiral">Spiral (class in curve)</a></dt>
-<dt><a href="config.html#index-21">splash image</a></dt>
+<dt><a href="config.html#index-1">splash image</a></dt>
 <dt><a href="ref/coords.html#coords.Coords.split">split() (coords.Coords method)</a></dt>
   <dd><dl>
     <dt><a href="ref/curve.html#curve.PolyLine.split">(curve.PolyLine method)</a></dt>
@@ -1948,6 +1963,7 @@
 <table width="100%" class="indextable"><tr><td width="33%" valign="top">
 <dl>
 
+<dt><a href="ref/widgets.html#widgets.tabInputItem">tabInputItem() (in module widgets)</a></dt>
 <dt><a href="ref/widgets.html#widgets.Table">Table (class in widgets)</a></dt>
 <dt><a href="ref/widgets.html#widgets.TableDialog">TableDialog (class in widgets)</a></dt>
 <dt><a href="ref/widgets.html#widgets.TableModel">TableModel (class in widgets)</a></dt>
@@ -1999,8 +2015,8 @@
     <dt><a href="ref/mesh.html#mesh.Mesh.toFormex">(mesh.Mesh method)</a></dt>
   </dl></dd>
 <dt><a href="ref/objects.html#objects.DrawableObjects.toggleAnnotation">toggleAnnotation() (objects.DrawableObjects method)</a></dt>
-<dt><a href="ref/objects.html#objects.DrawableObjects.toggleBbox">toggleBbox() (objects.DrawableObjects method)</a></dt></dl></td><td width="33%" valign="top"><dl>
-<dt><a href="ref/toolbar.html#toolbar.toggleLight">toggleLight() (in module toolbar)</a></dt>
+<dt><a href="ref/objects.html#objects.DrawableObjects.toggleBbox">toggleBbox() (objects.DrawableObjects method)</a></dt>
+<dt><a href="ref/toolbar.html#toolbar.toggleLight">toggleLight() (in module toolbar)</a></dt></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="ref/objects.html#objects.DrawableObjects.toggleNames">toggleNames() (objects.DrawableObjects method)</a></dt>
 <dt><a href="ref/objects.html#objects.DrawableObjects.toggleNodeNumbers">toggleNodeNumbers() (objects.DrawableObjects method)</a></dt>
 <dt><a href="ref/objects.html#objects.DrawableObjects.toggleNodes">toggleNodes() (objects.DrawableObjects method)</a></dt>
@@ -2042,7 +2058,10 @@
 <dt><a href="ref/decors.html#decors.Triade">Triade (class in decors)</a></dt>
 <dt><a href="ref/actors.html#actors.TriadeActor">TriadeActor (class in actors)</a></dt>
 <dt><a href="ref/simple.html#simple.triangle">triangle() (in module simple)</a></dt>
+<dt><a href="ref/geomtools.html#geomtools.triangleBoundingCircle">triangleBoundingCircle() (in module geomtools)</a></dt>
 <dt><a href="ref/geomtools.html#geomtools.triangleCircumCircle">triangleCircumCircle() (in module geomtools)</a></dt>
+<dt><a href="ref/geomtools.html#geomtools.triangleInCircle">triangleInCircle() (in module geomtools)</a></dt>
+<dt><a href="ref/geomtools.html#geomtools.triangleObtuse">triangleObtuse() (in module geomtools)</a></dt>
 <dt><a href="ref/surface.html#surface.TriSurface">TriSurface (class in surface)</a></dt>
 <dt><a href="ref/turtle.html#module-turtle">turtle (module)</a></dt>
 </dl></td></tr></table>
@@ -2060,6 +2079,7 @@
 <dt><a href="ref/draw.html#draw.undraw">undraw() (in module draw)</a></dt>
 <dt><a href="ref/olist.html#olist.union">union() (in module olist)</a></dt>
 <dt><a href="ref/formex.html#formex.Formex.unique">unique() (formex.Formex method)</a></dt>
+<dt><a href="ref/arraytools.html#arraytools.unique1dOrdered">unique1dOrdered() (in module arraytools)</a></dt>
 <dt><a href="ref/arraytools.html#arraytools.uniqueRows">uniqueRows() (in module arraytools)</a></dt>
 <dt><a href="ref/units.html#module-units">units (module)</a></dt>
 <dt><a href="ref/units.html#units.UnitsSystem">UnitsSystem (class in units)</a></dt>
@@ -2070,13 +2090,13 @@
     <dt><a href="ref/canvas.html#canvas.Canvas.unProject">(canvas.Canvas method)</a></dt>
   </dl></dd>
 <dt><a href="ref/flatkeydb.html#flatkeydb.unQuote">unQuote() (in module flatkeydb)</a></dt>
-<dt><a href="ref/connectivity.html#connectivity.Connectivity.untangle">untangle() (connectivity.Connectivity method)</a></dt>
+<dt><a href="ref/connectivity.html#connectivity.Connectivity.untangle">untangle() (connectivity.Connectivity method)</a></dt></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="ref/canvas.html#canvas.CanvasSettings.update">update() (canvas.CanvasSettings method)</a></dt>
   <dd><dl>
     <dt><a href="ref/config.html#config.Config.update">(config.Config method)</a></dt>
     <dt><a href="ref/mydict.html#mydict.Dict.update">(mydict.Dict method)</a></dt>
     <dt><a href="ref/odict.html#odict.ODict.update">(odict.ODict method)</a></dt>
-  </dl></dd></dl></td><td width="33%" valign="top"><dl>
+  </dl></dd>
 <dt><a href="ref/imageViewer.html#imageViewer.ImageViewer.updateActions">updateActions() (imageViewer.ImageViewer method)</a></dt>
 <dt><a href="ref/viewport.html#viewport.MultiCanvas.updateAll">updateAll() (viewport.MultiCanvas method)</a></dt>
 <dt><a href="ref/widgets.html#widgets.NewInputDialog.updateData">updateData() (widgets.NewInputDialog method)</a></dt>
@@ -2263,7 +2283,7 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="index.html">Documentation</a></h3>
 

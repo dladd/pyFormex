@@ -25,7 +25,7 @@ sys.path.insert(0,os.path.abspath('../pyformex'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath']
+extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'numpydoc']
 
 # Add both class and __init__ docstrings
 autoclass_content = 'both'
@@ -116,7 +116,7 @@ html_short_title = 'pyFormex Documentation'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = 'images/pyformex_logo.png' # 'images/scallop_dome_small.png'
+html_logo = 'images/pyformex_logo_small.png' # 'images/scallop_dome_small.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32

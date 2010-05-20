@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
     <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" /> 
@@ -105,7 +105,7 @@ The remaining arguments are passed to the InputDialog getResult method.</p>
 
 <dl class="function">
 <dt id="draw.showText">
-<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text</em>, <em>type=None</em>, <em>actions=</em><span class="optional">[</span>, <em>(!!(319</em>, <em>(303</em>, <em>(304</em>, <em>(305</em>, <em>(306</em>, <em>(307</em>, <em>(309</em>, <em>(310</em>, <em>(311</em>, <em>(312</em>, <em>(313</em>, <em>(314</em>, <em>(315</em>, <em>(316</em>, <em>(317</em>, <em>(3</em>, <em>&quot;'OK'&quot;)))))))))))))))</em>, <em>(12</em>, <em>'</em>, <em>')</em>, <em>(303</em>, <em>(304</em>, <em>(305</em>, <em>(306</em>, <em>(307</em>, <em>(309</em>, <em>(310</em>, <em>(311</em>, <em>(312</em>, <em>(313</em>, <em>(314</em>, <em>(315</em>, <em>(316</em>, <em>(317</em>, <em>(1</em>, <em>'None'))))))))))))))))!!)</em><span class="optional">]</span>, <em>modal=True</em><big>)</big><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text</em>, <em>type=None</em>, <em>actions=</em><span class="optional">[</span>, <em>(!!(319</em>, <em>(303</em>, <em>(304</em>, <em>(305</em>, <em>(306</em>, <em>(307</em>, <em>(309</em>, <em>(310</em>, <em>(311</em>, <em>(312</em>, <em>(313</em>, <em>(314</em>, <em>(315</em>, <em>(316</em>, <em>(317</em>, <em>(3</em>, <em>&quot;'OK'&quot;)))))))))))))))</em>, <em>(12</em>, <em>'</em>, <em>')</em>, <em>(303</em>, <em>(304</em>, <em>(305</em>, <em>(306</em>, <em>(307</em>, <em>(309</em>, <em>(310</em>, <em>(311</em>, <em>(312</em>, <em>(313</em>, <em>(314</em>, <em>(315</em>, <em>(316</em>, <em>(317</em>, <em>(1</em>, <em>'None'))))))))))))))))!!)</em><span class="optional">]</span>, <em>modal=True</em>, <em>mono=False</em><big>)</big><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text and wait for user response.</p>
 <p>This opens a TextBox widget and displays the text in the widget.
 Scrollbars will be added if the text is too large to display at once.</p>
@@ -115,7 +115,7 @@ recognized and rendered appropriately. See widgets.TextBox.</p>
 
 <dl class="function">
 <dt id="draw.showFile">
-<tt class="descclassname">draw.</tt><tt class="descname">showFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#draw.showFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showFile</tt><big>(</big><em>filename</em>, <em>mono=False</em><big>)</big><a class="headerlink" href="#draw.showFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text file.</p>
 <p>This will use the showText() function to display a text read from a
 file.</p>
@@ -612,8 +612,8 @@ val is a value between 0.0 and 1.0</p>
 
 <dl class="function">
 <dt id="draw.pause">
-<tt class="descclassname">draw.</tt><tt class="descname">pause</tt><big>(</big><em>msg=&quot;Use the Step or Continue button to proceed&quot;</em><big>)</big><a class="headerlink" href="#draw.pause" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pause the execution until an external event occurs.</p>
+<tt class="descclassname">draw.</tt><tt class="descname">pause</tt><big>(</big><em>msg=&quot;Use the Step or Continue button to proceed&quot;</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#draw.pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pause the execution until an external event occurs or timeout.</p>
 <p>When the pause statement is executed, execution of the pyformex script
 is suspended until some external event forces it to proceed again.
 Clicking the STEP or CONTINUE button will produce such an event.</p>
@@ -843,7 +843,7 @@ might also be set by the user.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

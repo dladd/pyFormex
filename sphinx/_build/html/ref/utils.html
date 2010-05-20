@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>11. utils — A collection of miscellaneous utility functions. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>11. utils — A collection of miscellaneous utility functions. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="12. elements — Element local coordinates and numbering." href="elements.html" />
     <link rel="prev" title="10. project — project.py" href="project.html" /> 
@@ -81,7 +81,9 @@ hallo-000.png, hallo-001.png, ...</li>
 <li><tt class="docutils literal"><span class="pre">NameSequence('/home/user/hallo23','5.png')</span></tt> generates the names
 /home/user/hallo235.png, /home/user/hallo245.png, ...</li>
 </ul>
+<p class="rubric">Methods</p>
 <p>Create a new NameSequence from name,ext.</p>
+<p class="rubric">Methods</p>
 <p>NameSequence objects have the following methods:</p>
 <dl class="method">
 <dt id="utils.NameSequence.next">
@@ -115,15 +117,8 @@ been registered.
 Default is to treat name as a module. Add external=True for a program.</p>
 <p>Return value is -1, 0 or 1, depending on a version found that is
 &lt;, == or &gt; than the requested values.
-This should normally understand version numbers in the format 2.10.1</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="utils.checkModule">
-<tt class="descclassname">utils.</tt><tt class="descname">checkModule</tt><big>(</big><em>name=None</em><big>)</big><a class="headerlink" href="#utils.checkModule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the named Python module is available, and record its version.</p>
-<p>The version string is returned, empty if the module could not be loaded.
-The (name,version) pair is also inserted into the the_version dict.</p>
+This should normally understand version numbers in the format 2.10.1
+Returns -2 if no version found.</p>
 </dd></dl>
 
 <dl class="function">
@@ -135,6 +130,24 @@ or an empty string if it is not.</p>
 <p>By default, the module is only checked on the first call. 
 The result is remembered in the the_version dict.
 The optional argument check==True forces a new detection.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.hasExternal">
+<tt class="descclassname">utils.</tt><tt class="descname">hasExternal</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#utils.hasExternal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if we have the external command &#8216;name&#8217; available.</p>
+<p>Returns a nonzero string if the command is available,
+or an empty string if it is not.</p>
+<p>The external command is only checked on the first call.
+The result is remembered in the the_external dict.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.checkModule">
+<tt class="descclassname">utils.</tt><tt class="descname">checkModule</tt><big>(</big><em>name=None</em><big>)</big><a class="headerlink" href="#utils.checkModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the named Python module is available, and record its version.</p>
+<p>The version string is returned, empty if the module could not be loaded.
+The (name,version) pair is also inserted into the the_version dict.</p>
 </dd></dl>
 
 <dl class="function">
@@ -155,16 +168,6 @@ the result.</p>
 that can be checked by their name alone.
 If no name is given, all commands in that list are checked, and no
 value is returned.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="utils.hasExternal">
-<tt class="descclassname">utils.</tt><tt class="descname">hasExternal</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#utils.hasExternal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if we have the external command &#8216;name&#8217; available.</p>
-<p>Returns a nonzero string if the command is available,
-or an empty string if it is not.</p>
-<p>The external command is only checked on the first call.
-The result is remembered in the the_external dict.</p>
 </dd></dl>
 
 <dl class="function">
@@ -460,7 +463,7 @@ is returned.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>

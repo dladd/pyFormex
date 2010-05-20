@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>8. connectivity — A class and functions for handling nodal connectivity. &mdash; pyFormex v0.8.2-a3 documentation</title>
+    <title>8. connectivity — A class and functions for handling nodal connectivity. &mdash; pyFormex v0.8.2-a6 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a3',
+        VERSION:     '0.8.2-a6',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="9. simple — Predefined geometries with a simple shape." href="simple.html" />
     <link rel="prev" title="7. geometry — A generic interface to the Coords transformation methods" href="geometry.html" /> 
@@ -87,6 +87,7 @@ specified plexitude.</li>
 </ul>
 <p>A Connectivity object stores its maximum value found at creation time
 in an attribute _max.</p>
+<p class="rubric">Methods</p>
 <p>Connectivity objects have the following methods:</p>
 <dl class="method">
 <dt id="connectivity.Connectivity.nelems">
@@ -382,7 +383,7 @@ The result is a list of adjacency arrays, where row i of adjacency array j
 holds a sorted list of the nodes that are connected to node i via a shortest
 path of j elements, padded with -1 values to create an equal list length
 for all nodes.
-This is: [adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
+This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
 </dd></dl>
 
 <dl class="function">
@@ -398,7 +399,7 @@ the element number i itself.</p>
 
 <dl class="function">
 <dt id="connectivity.adjacent">
-<tt class="descclassname">connectivity.</tt><tt class="descname">adjacent</tt><big>(</big><em>index</em>, <em>rev=None</em><big>)</big><a class="headerlink" href="#connectivity.adjacent" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacent</tt><big>(</big><em>index</em>, <em>inv=None</em><big>)</big><a class="headerlink" href="#connectivity.adjacent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an index of connected elements.</p>
 <p>index is a (nr,nc) shaped integer array.
 An element j of index is said to be connected to element i, if element j
@@ -449,7 +450,7 @@ Each row holds the two vertex numbers of a single line segment.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
         <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
