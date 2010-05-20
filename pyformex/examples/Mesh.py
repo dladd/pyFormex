@@ -46,7 +46,7 @@ Exercises
 
 """
 def atExit():
-    print "THIS IS THE EXIT FUNC"
+    #print "THIS IS THE EXIT FUNC"
     GD.GUI.setBusy(False)
     
 
@@ -60,13 +60,15 @@ view('iso')
 smoothwire()
 transparent()
 
-showDescription()
 
 n = 3,2,5
 a = Formex(origin())
 
-res = ask("Do you want a 2D or a 3D model?",["None","2D","3D"])
+res = ask("Choose the model:",["None","2D","3D","Help"])
 if res == "None":
+    exit()
+if res == "Help":
+    showDescription()
     exit()
 
 ndim = int(res[0])

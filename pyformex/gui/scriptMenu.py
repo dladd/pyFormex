@@ -112,7 +112,6 @@ def getDocString(scriptfile):
     if i >= 0:
         j = s.find('"""',i+1)
         if j >= i+2:
-            print s[i+2:j]
             return s[i+2:j]
     return ''
 

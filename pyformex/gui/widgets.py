@@ -1169,6 +1169,20 @@ def simpleInputItem(name,value=None,itemtype=None,**kargs):
         kargs['itemtype'] = itemtype
     return kargs
 
+def groupInputItem(name,items=[],**kargs):
+    """A convenience function to create an InputItem dictionary"""
+    kargs['name'] = name
+    kargs['items'] = items
+    kargs['itemtype'] = 'group'
+    return kargs
+
+def tabInputItem(name,items=[],**kargs):
+    """A convenience function to create an InputItem dictionary"""
+    kargs['name'] = name
+    kargs['items'] = items
+    kargs['itemtype'] = 'tab'
+    return kargs
+
 
 def compatInputItem(name,value,itemtype=None,kargs={}):
     """A convenience function to create an InputItem dictionary
@@ -1271,6 +1285,7 @@ class NewInputDialog(QtGui.QDialog):
         self.form = QtGui.QVBoxLayout()
         self.tabform = None
         self.groupform = None
+        self.forms = [self.form]
         self.add_items(items,self.form)
 
         # add the action buttons
@@ -1303,15 +1318,32 @@ class NewInputDialog(QtGui.QDialog):
             if isinstance(item,dict):
                 if self.prefix:
                     item['name'] = self.prefix + item['name']
-                line = self.inputAny(item)
-                form.addLayout(line)
-                self.fields.append(line)
+
+                if item.get('itemtype',None) == 'tab':
+                    self.add_tab(**item)
+
+                elif item.get('itemtype',None) == 'group':
+                    self.add_group(**item)
+
+                else:
+                    self.add_input(item)
 
             elif isinstance(item,QtGui.QWidget):
                 form.addWidget(item)
 
             elif type(item) is tuple:
+                import warnings
+                warnings.warn("""
+.. warning
 
+Warning
+-------
+
+The specification of groupboxes or tab forms via a tuple is deprecated!
+Please use a dictionary format with itemtype='group' or itemtype='tag',
+or use the functions widgets.tabInputItem or widgets.groupInputItem
+""")
+           
                 if form == self.form:
                     self.add_tab(item[0],item[1])
 
@@ -1322,13 +1354,15 @@ class NewInputDialog(QtGui.QDialog):
                     raise ValueError,"Too deep nesting of input items at item %s" % item
 
 
-    def add_tab(self,name,items):
+    def add_tab(self,name,items,**extra):
+        """Add a Tab page of input items."""
         if self.tab is None:
             self.tab = QtGui.QTabWidget()
             self.form.addWidget(self.tab)
             
         w = QtGui.QWidget()
         self.tabform = QtGui.QVBoxLayout()
+        self.forms.append(self.tabform)
         if self.autoprefix:
             saveprefix = self.prefix
             self.prefix += name+'/'
@@ -1338,12 +1372,15 @@ class NewInputDialog(QtGui.QDialog):
         self.tabform.addStretch()
         w.setLayout(self.tabform)
         self.tab.addTab(w,name)
+        self.forms.pop()
         self.tabform = None
 
 
-    def add_group(self,name,items):
+    def add_group(self,name,items,**extra):
+        """Add a group of input items."""
         w = QtGui.QGroupBox()
         self.groupform = QtGui.QVBoxLayout()
+        self.forms.append(self.groupform)
         if self.autoprefix:
             saveprefix = self.prefix
             self.prefix += name+'/'
@@ -1353,15 +1390,16 @@ class NewInputDialog(QtGui.QDialog):
         #self.groupform.addStretch()
         w.setLayout(self.groupform)
         w.setTitle(name)
-        self.tabform.addWidget(w)
+        if 'checkable' in extra:
+            w.setCheckable(extra.get('checkable',False))
+            w.setChecked(extra.get('checked',False))
+        self.forms.pop()
+        self.forms[-1].addWidget(w)
         self.groupform = None
 
                 
-
-    def inputAny(self,item):
-        """Create an InputItem with the new data style.
-
-        """
+    def add_input(self,item):
+        """Add a single input item."""
         if not 'name' in item:
             item['name'] = self.autoname.next()
         if not 'value' in item:
@@ -1385,7 +1423,8 @@ class NewInputDialog(QtGui.QDialog):
         item['parent'] = self
 
         field = inputAny(**item)
-        return field
+        self.fields.append(field)
+        self.forms[-1].addLayout(field)
     
 
     def __getitem__(self,name):

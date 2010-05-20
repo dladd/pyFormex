@@ -30,7 +30,10 @@ import os
 from gettext import gettext as _
 import utils
 import widgets
-from widgets import simpleInputItem as I, compatInputItem as C
+from widgets import simpleInputItem as I
+from widgets import groupInputItem as G
+from widgets import tabInputItem as T
+from widgets import compatInputItem as C
 import toolbar
 import draw
 import imageViewer
@@ -129,7 +132,7 @@ def settings():
         caption='pyFormex Settings',
         store=GD.cfg,
         items=[
-            ('General',[
+            T('General',[
                 I('syspath'),
                 I('editor'),
                 I('viewer'),
@@ -139,9 +142,9 @@ def settings():
                 I('scriptdirs',text='Script Paths',tooltip='pyFormex will look for scripts in these directories',buttons=[('Edit',changeScriptDirs)]),
                 ],
              ),
-            ('GUI',[
-                ('Appearence',appearence),
-                ('Components',[
+            T('GUI',[
+                G('Appearence',appearence),
+                G('Components',[
                     I('gui/coordsbox',GD.cfg['gui/coordsbox']),
                     I('gui/showfocus',GD.cfg['gui/showfocus']),
                     I('gui/timeoutbutton',GD.cfg['gui/timeoutbutton']),
@@ -152,8 +155,8 @@ def settings():
                 w,
                 ],
              ),
-            ('Mouse',mouse_settings),
-            ('Plugins',plugin_items),
+            T('Mouse',mouse_settings),
+            T('Plugins',plugin_items),
             ],
         actions=[
             ('Close',close),

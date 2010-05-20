@@ -39,6 +39,7 @@ from plugins.tools import Plane
 from pyformex.arraytools import niceLogSize
 
 from gui.widgets import simpleInputItem as I
+from gui.widgets import groupInputItem as G
 
 import os, timer
 
@@ -437,7 +438,7 @@ def showHistogram(key,val,cumulative):
 
 _stat_dia = None
 
-def showStatistics(key=None,domain=True,dist=False,cumdist=False,clip=False):
+def showStatistics(key=None,domain=True,dist=False,cumdist=False,clip=None,vmin=None,vmax=None,percentile=False):
     """Show the values corresponding with key in the specified mode.
 
     key is one of the keys of SelectableStatsValues
@@ -454,24 +455,37 @@ def showStatistics(key=None,domain=True,dist=False,cumdist=False,clip=False):
             ind = CurvatureValues.index(_stat_dia.results['curval'])
             val = val[ind]
             val = val[S.elems]
-        
+
+        # !! THIS SHOULD BE IMPLEMENTED AS A GENERAL VALUE CLIPPER
+        # !! e.g popping up when clicking the legend
+        # !! and the values should be changeable 
+
         if clip:
-            # !! THIS SHOULD BE IMPLEMENTED AS A GENERAL VALUE CLIPPER
-            # !! e.g popping up when clicking the legend
-            # !! and the values should be changeable 
-            try:
-                from scipy.stats.stats import scoreatpercentile
-                Q1 = scoreatpercentile(val,25)
-                Q3 = scoreatpercentile(val,75)
-                factor = 3
-                vmin = Q1-factor*(Q3-Q1)
-                vmax = Q3+factor*(Q3-Q1)
-                val = val.clip(vmin,vmax)
-            except:
-                warning("""..
+            clip = clip.lower()
+            if percentile:
+                try:
+                    from scipy.stats.stats import scoreatpercentile
+                except:
+                    warning("""..
                 
-**Clip extreme values** option is not available.
-Most likely because 'python-scipy' is not installed.""")
+**The **percentile** clipping option is not available.
+Most likely because 'python-scipy' is not installed on your system.""")
+                    return
+
+                Q1 = scoreatpercentile(val,vmin)
+                Q3 = scoreatpercentile(val,vmax)
+                factor = 3
+                if vmin:
+                    vmin = Q1-factor*(Q3-Q1)
+                if vmax:
+                    vmax = Q3+factor*(Q3-Q1)
+                
+            if clip == 'top':
+                val = val.clip(max=vmax)
+            elif clip == 'bottom':
+                val = val.clip(min=vmin)
+            else:
+                val = val.clip(vmin,vmax)
 
         if domain:
             showSurfaceValue(S,key,val,onEdges)
@@ -491,7 +505,12 @@ def _show_stats(domain,dist):
     else:
         cumdist = False
     clip = res['clip']
-    showStatistics(key,domain,dist,cumdist,clip)
+    if clip == 'None':
+        clip = None
+    percentile = res['Clip Mode'] != 'Range'
+    minval = res['Bottom']
+    maxval = res['Top']
+    showStatistics(key,domain,dist,cumdist,clip=clip,vmin=minval,vmax=maxval,percentile=percentile)
 
 def _show_domain():
     _show_stats(True,False)
@@ -517,7 +536,13 @@ def showStatisticsDialog():
             I('Value',itemtype='vradio',choices=keys),
             I('neighbours',text='Curvature Neighbourhood',value=1),
             I('curval',text='Curvature Value',itemtype='vradio',choices=CurvatureValues),
-            I('clip',False,text='Clip extreme Values'),
+            I('clip',itemtype='hradio',choices=['None','Top','Bottom','Both']),
+            I('Clip Mode',itemtype='hradio',choices=['Range','Percentile']),
+            G('Clip Values',checkable=True,items=[
+                I('Top',1.0),
+                I('Bottom',0.0),
+                ],
+              ),
             I('Cumulative Distribution',False),
             ],
         actions=[
