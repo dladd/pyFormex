@@ -169,7 +169,9 @@ links = [('pyFormex','pyformex.org'),('pyFormex-dev','developer.berlios.de/proje
 docs = [('&Local documentation',localdoc),('&Reference Manual',refman),('Tutorial',tutorial),('&Module Index',modindex),('&Index',index),('&Online documentation',webdoc),]
 docs2 = [('&Readme',readme),('&ReleaseNotes',notes),('&License',license),('New InputDialog',os.path.join(pyformexdir,"doc","InputDialog.rst")),]
 
+devlinks = [('Numpy documentation guidelines','projects.scipy.org/numpy/wiki/CodingStyleGuidelines'),]
 
+             
 [keys]
 save = 'F2'
 

@@ -508,8 +508,7 @@ def cubicEquation(a,b,c,d):
     a,b,c,d are the (floating point) coefficients of a third degree
     polynomial equation::
   
-       3         2
-      a . x  +  b . x  +  c . x  +  d   =   0
+      a * x**3  +  b * x**2  +  c * x  +  d   =   0
 
     This function computes the three roots (real and complex) of this equation
     and returns full information about their kind, sorting order, occurrence
@@ -520,15 +519,17 @@ def cubicEquation(a,b,c,d):
 
     Depending on the value of `kind`, the roots are defined as follows:
     
+    ====      ==========================================================
     kind      roots
-    ====      ========================
+    ====      ==========================================================
     0         three real roots r1 < r2 < r3
     1         three real roots r1 < r2 = r3
     2         three real roots r1 = r2 < r3
     3         three real roots r1 = r2 = r3
-    4         one real root r1 and two complex conjugate roots with real part
-              r2 and imaginary part r3: the complex roots are thus :
+    4         one real root r1 and two complex conjugate roots with real
+              part r2 and imaginary part r3; the complex roots are thus:
               r2+i*r3 en r2-i*r3, where i = sqrt(-1).
+    ====      ==========================================================
 
     If the coefficient a==0, a ValueError is raised.
     """
@@ -625,7 +626,13 @@ def cubicEquation(a,b,c,d):
 def unique1dOrdered(ar1, return_index=False, return_inverse=False):
     """
     Find the unique elements of an array.
-    This is like numpy's unique1d, but using a stable sorting algorithm.
+    
+    This works like numpy's unique1d, but uses a stable sorting algorithm.
+    The returned index may therefore hold other entries for multiply
+    occurring values. In such case, unique1dOrdered returns the first
+    occurrence in the flattened array.
+    The unique elements and the inverse index are allways the same as those
+    returned by numpy's unique1d.
 
     Parameters
     ----------
@@ -691,19 +698,30 @@ def unique1dOrdered(ar1, return_index=False, return_inverse=False):
 
 
 def renumberIndex(index):
-    """Renumber an index.
+    """Renumber an index sequentially.
 
-    index is a one-dimensional integer array with non-negative values.
-    The entries in index are translated to new integer entries in the range
-    0..index.max(), such that identical numbers are always replaced with
-    the same number and the translated index has its new entries in
-    sequential order.
+    Given a one-dimensional integer array with only non-negative values,
+    and `max` being the highest value in it, the elements are replaced
+    with new values in the range 0..max, such that identical numbers are
+    allways replaced with the same number and the new values at their
+    first occurrence form an increasing sequence 0..max.
     
     The return value is a one-dimensional integer array with length equal to
-    index.max()+1, holding the original entry numbers corresponding to the new
-    numbers 0..index.max().
+    max+1, holding the original values corresponding to the new value 0..max.
 
-    Use inverseUniqueIndex to find the inverse mapping.
+    Parameters
+    ----------
+    index : array_like, 1d, integer
+        An array with non-negative integer values
+
+    Returns
+    -------
+    index : ndarray, length `max`
+        The orginal values that have been replaced with 0..max.
+
+    See also
+    --------
+    inverseUniqueIndex: find the inverse mapping.
     """
     un,pos = unique1dOrdered(index,True)
     srt = pos.argsort()

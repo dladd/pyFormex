@@ -171,15 +171,18 @@ def cookie():
     draw.showInfo(_cookies[0],["OK"])
     roll(_cookies)
 
-def links(link):
-    help('http://'+link)
+def showURL(link):
+    if not link.startswith('http://'):
+        link = 'http://'+link
+    help(link)
 
 
 def createMenuData():
     """Returns the help menu data"""
     DocsMenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] 
     Docs2MenuData = [(k,draw.showFile,{'data':v}) for k,v in GD.cfg['help/docs2']]
-    LinksMenuData = [(k,links,{'data':v}) for k,v in GD.cfg['help/links']]
+    LinksMenuData = [(k,showURL,{'data':v}) for k,v in GD.cfg['help/links']]
+    DevLinksMenuData = [(k,showURL,{'data':v}) for k,v in GD.cfg['help/devlinks']]
 
     try:
         MenuData = DocsMenuData + [
@@ -193,6 +196,8 @@ def createMenuData():
             (_('&Favourite Links'),LinksMenuData),
             (_('&Developers'),developers), 
             (_('&About'),about), 
+            ('---',None),
+            (_('&Developer Links'),DevLinksMenuData),
             ]
     except:
         MenuData = []
