@@ -22,13 +22,13 @@
 //  along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-/*
-  A collection of accelerated pyFormex functions.
-*/
-
 #include <Python.h>
 #include <numpy/arrayobject.h>
 
+static char __doc__[] = "_misc module\n\
+\n\
+This module provides accelerated versions of some pyFormex functions.\n\
+\n";
 
 /**************************************************** isclose ****/
 /* Check if two floats are equal within a given tolerance */
@@ -53,8 +53,7 @@
      sel : (nnod) 
      tol : tolerance for defining equality of coordinates
 */  
-static PyObject *
-coords_fuse2(PyObject *dummy, PyObject *args)
+static PyObject * coords_fuse2(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
@@ -129,8 +128,7 @@ coords_fuse2(PyObject *dummy, PyObject *args)
      sel : (nnod) 
      tol : tolerance for defining equality of coordinates
 */  
-static PyObject *
-coords_fuse(PyObject *dummy, PyObject *args)
+static PyObject * coords_fuse(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
@@ -184,7 +182,7 @@ coords_fuse(PyObject *dummy, PyObject *args)
   Py_INCREF(Py_None);
   return Py_None;
  fail:
-  printf("Error Cleanup\n");
+  //printf("Error Cleanup\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
@@ -206,8 +204,7 @@ coords_fuse(PyObject *dummy, PyObject *args)
     (CURRENTLY NOT IMPLEMENTED)
     The operations are done in-place. The return value is None.
 */  
-static PyObject *
-nodal_sum(PyObject *dummy, PyObject *args)
+static PyObject * nodal_sum(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL;
@@ -274,8 +271,7 @@ nodal_sum(PyObject *dummy, PyObject *args)
     
     The operations are done in-place. The return value is None.
 */  
-static PyObject *
-nodal_sum_1(PyObject *dummy, PyObject *args)
+static PyObject * nodal_sum_1(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
@@ -339,7 +335,7 @@ nodal_sum_1(PyObject *dummy, PyObject *args)
 
 
 /* The methods defined in this module */
-static PyMethodDef Methods[] = {
+static PyMethodDef __methods__[] = {
     {"_fuse2", coords_fuse2, METH_VARARGS, "Fuse nodes."},
     {"_fuse", coords_fuse, METH_VARARGS, "Fuse nodes."},
     {"nodalSum", nodal_sum, METH_VARARGS, "Nodal sum."},
@@ -347,10 +343,9 @@ static PyMethodDef Methods[] = {
 };
 
 /* Initialize the module */
-PyMODINIT_FUNC
-initmisc(void)
+PyMODINIT_FUNC initmisc(void)
 {
-    (void) Py_InitModule("misc", Methods);
+  (void) Py_InitModule3("misc", __methods__, __doc__);
     import_array(); /* Get access to numpy array API */
 }
 
