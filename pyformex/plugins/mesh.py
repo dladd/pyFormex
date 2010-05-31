@@ -1231,41 +1231,7 @@ def structuredHexGrid(dx, dy, dz, isophex='hex64'):
     else: return Coords(n3.reshape(-1, 3)), hzyx.reshape(-1, 8)
 
 
-# BV:
-# This should be replaced with arraytools.inverseUniqueIndex
-def argSortAndUnsort(xarr):
-    """it reverse the sorting: return the indices to unsort the sorted array. For the moment it works only with 1D array"""
-    isx=argsort(xarr)#index of sorting
-    iusx=argsort(arange(xarr.shape[0])[isx])#index to unsort the sorted array
-    return isx, iusx
 
-# BV:
-# We should be replaced with arraytools.renumberIndex 
-def indexRenumbering1D(xarr):
-    """it takes a 1D array of integers and renumbers them based on the order of appearance in the array"""
-    uxa, invux = unique1d(xarr, return_inverse=True)
-    def orderedUnique1d(ar):
-        """this is like unique1d(return_index=True) but it returns the indices of the unique arrays in the correct order: like they appear in ar. There should be a better way to do it, but I did not find it out !!!"""
-        arshift= ar-arange(ar.shape[0])* 1./ar.shape[0]#trick to make (lower positions = lower indices) in the argsort
-        perm=arshift.argsort()
-        aux= ar.take(perm)
-        flag=ediff1d(aux, 1)!=0
-        return perm.compress(flag)
-    iux= orderedUnique1d(xarr)
-    siux=argSortAndUnsort(iux)[1]
-    iux= arange(iux.shape[0])[siux]
-    return array([iux[p] for p in invux])
-
-# BV:
-# This should be replaced with Mesh.renumber()
-def meshRenumberingNodesOnElems(xMesh):
-    """it takes a Mesh and return the same Mesh but with a different order of nodes. The nodes are ordered as they appear in the elements, therefore in a standardized order based on the topology and not on the geometry. """
-    xnx, xex=xMesh.coords, xMesh.elems
-    es= xex.shape
-    ef=xex.ravel()
-    er= indexRenumbering1D(ef)
-    inr= unique1d(er, return_index=True)[1]
-    return xnx[ef[inr]], er.reshape(es)
 
 # BV:
 # While this function seems to make sense, it should be avoided
