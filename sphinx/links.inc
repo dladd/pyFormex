@@ -51,7 +51,8 @@
 .. _`dd for Windows`: http://www.chrysocome.net/dd
 
 .. _`stent research group`: http://www.stent-ibitech.ugent.be
-.. _`IBiTech - Ghent University`: http://www.ibitech.ugent.be
+.. _`IBiTech-bioMMeda, Ghent University`: http://www.biommeda.ugent.be
+.. _`IBiTech, Ghent University`: http://www.ibitech.ugent.be
 .. _`BuMPer cluster`: http://bumps.ugent.be/bumper
 .. _`FEops`: http://www.feops.com  
 
