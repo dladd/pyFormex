@@ -1888,6 +1888,12 @@ def intersectSurfaceWithLines(ts, qli, mli):
     #takes only intersections that fall inside the triangle
     return xc[xIn], wl[xIn], wt[xIn]
 
+def intersectSurfaceWithSegments(s1, segm, atol=1.e-5):
+    """it takes a TriSurface ts and a set of segments (-1,2,3) and intersect the segments with the TriSurface.
+    It returns the points of intersections and, for each point, the indices of the intersected segment and triangle"""
+    p, il, it=surface.intersectSurfaceWithLines(s1, segm[:, 0], normalize(segm[:, 1]-segm[:, 0]))
+    win= length(p-segm[:, 0][il])+ length(p-segm[:, 1][il])< length(segm[:, 1][il]-segm[:, 0][il])+atol
+    return p[win], il[win], it[win]
 
 
 # For compatibility with older project files, this can be uncommented
