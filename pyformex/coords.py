@@ -1055,7 +1055,7 @@ class Coords(ndarray):
 ##############################################################################
 
 
-    def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
+    def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5,repeat=True):
         """Find (almost) identical nodes and return a compressed set.
 
         This method finds the points that are very close and replaces them
@@ -1073,18 +1073,28 @@ class Coords(ndarray):
         is computed, that is then used to sort the nodes.
         Then only nodes inside the same box are compared on almost equal
         coordinates, using the numpy allclose() function. Two coordinates are
-        considered close if they are within a relative tolerance rtol or absolute
-        tolerance atol. See numpy for detail. The default atol is set larger than
-        in numpy, because pyformex typically runs with single precision.
+        considered close if they are within a relative tolerance rtol or
+        absolute tolerance atol. See numpy for detail. The default atol is
+        set larger than in numpy, because pyformex typically runs with single
+        precision.
         Close nodes are replaced by a single one.
 
-        Currently the procedure does not guarantee to find all close nodes:
+        Running the procedure once does not guarantee to find all close nodes:
         two close nodes might be in adjacent boxes. The performance hit for
         testing adjacent boxes is rather high, and the probability of separating
-        two close nodes with the computed box limits is very small. Nevertheless
-        we intend to access this problem by repeating the procedure with the
-        boxes shifted in space.
+        two close nodes with the computed box limits is very small.
+        Therefore, the most sensible way is to run the procedure twice, with
+        a different shift value (they should differ more than the tolerance).
+        Specifying repeat=True will automatically do this.
         """
+        if repeat:
+            # Aplly twice with different shift value
+            coords,index = self.fuse(nodesperbox,shift,rtol,atol,repeat=False)
+            coords,index2 = coords.fuse(nodesperbox,shift+0.25,rtol,atol,repeat=False)
+            index = index2[index]
+            return coords,index
+
+        # This is the single pass
         x = self.points()
         nnod = x.shape[0]
         # Calculate box size

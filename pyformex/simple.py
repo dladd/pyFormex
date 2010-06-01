@@ -350,6 +350,13 @@ def cylinder(D,L,nt,nl,D1=None,angle=360.,bias=0.,diag=None):
 
 
 def cuboid(xmin=[0.,0.,0.],xmax=[1.,1.,1.]):
+    """Create a rectangular prism
+
+    Creates a rectangular prism with faces parallel to the global
+    axes through the points xmin and xmax.
+
+    Returns a single element Formex with eltype 'hex8'.
+    """
     x0,y0,z0 = xmin
     x1,y1,z1 = xmax
     x = Coords([[

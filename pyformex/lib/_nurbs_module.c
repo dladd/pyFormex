@@ -274,14 +274,11 @@ static PyObject * _nurbs_bspeval(PyObject *self, PyObject *args)
   free(ctrlmat);
   free(pntmat);
 
-  //return PyArray_Return(pnt);
-  return NULL;
-
   /* Clean up and return */
   Py_DECREF(arr1);
   Py_DECREF(arr2);
   Py_DECREF(arr3);
-  return Py_None;
+  return ret;
 
  fail:
   Py_XDECREF(arr1);
@@ -413,7 +410,8 @@ static void _bspdeval(int d, double **c, int mc, int nc, double *k, int nk,
              double u, int n, double **p)
 {
   int i, l, j, s;
-  int du = min(d,n);
+  int du = d;
+  if (n < d) du = n;
   double **dN;   
 
   dN = matrix(d+1, n+1);

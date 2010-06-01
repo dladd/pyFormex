@@ -238,7 +238,7 @@ def fromFormex(suffix=''):
     if not suffix:
         formex_menu.selection.clear()
     selection.set(meshes.keys())
-    print "Number of points before fusing: %s" % before
+    #print "Number of points before fusing: %s" % before
 
 
 def splitProp():

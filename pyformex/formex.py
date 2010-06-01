@@ -1111,7 +1111,7 @@ class Formex(Geometry):
 
     # Data conversion
     
-    def fuse(self,nodesperbox=1,repeat=True,rtol=1.e-5,atol=None):
+    def fuse(self,repeat=True,nodesperbox=1,rtol=1.e-5,atol=None):
         """Return a tuple of nodal coordinates and element connectivity.
 
         A tuple of two arrays is returned. The first is float array with
@@ -1131,13 +1131,10 @@ class Formex(Geometry):
         """
         if atol is None:
             atol = rtol * self.dsize()
-        f = reshape(self.coords,(self.nnodes(),3))
-        f,s = f.fuse(nodesperbox,0.5,rtol=rtol,atol=atol)
-        if repeat:
-            f,t = f.fuse(nodesperbox,0.75,rtol=rtol,atol=atol)
-            s = t[s]
-        e = reshape(s,self.coords.shape[:2])
-        return f,e
+        coords = reshape(self.coords,(self.nnodes(),3))
+        coords,index = coords.fuse(nodesperbox,0.5,rtol=rtol,atol=atol,repeat=repeat)
+        index = index.reshape(self.coords.shape[:2])
+        return coords,index
 
 
     def toMesh(self,*args,**kargs):

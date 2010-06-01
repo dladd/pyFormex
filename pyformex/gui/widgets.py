@@ -717,22 +717,25 @@ class InputBool(InputItem):
 
     
 class InputCombo(InputItem):
-    """A combobox InputItem."""
+    """A combobox InputItem.
+
+    A combobox is a widget allowing the selection of an item from a drop
+    down list.
+
+    choices is a list/tuple of possible values.
+    default is the initial/default choice.
+    If default is not in the choices list, it is prepended.
+    If default is None, the first item of choices is taken as the default.
+    
+    The choices are presented to the user as a combobox, which will
+    initially be set to the default value.
+    
+    An optional `onselect` function may be specified, which will be called
+    whenever the current selection changes.
+    """
     
     def __init__(self,name,default,choices=[],onselect=None,*args,**kargs):
-        """Creates a new combobox for the selection of a value from a list.
-
-        choices is a list/tuple of possible values.
-        default is the initial/default choice.
-        If default is not in the choices list, it is prepended.
-        If default is None, the first item of choices is taken as the default.
-       
-        The choices are presented to the user as a combobox, which will
-        initially be set to the default value.
-
-        An optional `onselect` function may be specified, which will be called
-        whenever the current selection changes.
-        """
+        """Create the combobox."""
         if len(choices) == 0:
             raise ValueError,"Selection expected choices!"
         if default is None:
@@ -760,20 +763,22 @@ class InputCombo(InputItem):
 
     
 class InputRadio(InputItem):
-    """A radiobuttons InputItem."""
+    """A radiobuttons InputItem.
+
+    Radio buttons are a set of buttons used to select a value from a list.
+    
+    choices is a list/tuple of possible values.
+    default is the initial/default choice.
+    If default is not in the choices list, it is prepended.
+    If default is None, the first item of choices is taken as the default.
+    
+    The choices are presented to the user as a hbox with radio buttons,
+    of which the default will initially be pressed.
+    If direction == 'v', the options are in a vbox. 
+    """
     
     def __init__(self,name,default,choices=[],direction='h',*args,**kargs):
-        """Creates radiobuttons for the selection of a value from a list.
-
-        choices is a list/tuple of possible values.
-        default is the initial/default choice.
-        If default is not in the choices list, it is prepended.
-        If default is None, the first item of choices is taken as the default.
-       
-        The choices are presented to the user as a hbox with radio buttons,
-        of which the default will initially be pressed.
-        If direction == 'v', the options are in a vbox. 
-        """
+        """Creates the radiobuttons."""
         if default is None:
             default = choices[0]
         elif default not in choices:
@@ -1147,6 +1152,52 @@ class InputWidget(InputItem):
         """Change the widget's value."""
         if val:
             self.input.setValue(val)
+
+
+    
+class InputGroup(InputItem):
+    """A boxed group of InputItems."""
+    
+    def __init__(self,name,items,*args,**kargs):
+        if default is None:
+            default = choices[0]
+        elif default not in choices:
+            choices[0:0] = [ default ]
+        InputItem.__init__(self,name,*args,**kargs)
+        self.input = QtGui.QGroupBox()
+        if direction == 'v':
+            self.hbox = QtGui.QVBoxLayout()
+            self.hbox.setContentsMargins(0,10,0,10)
+        else:
+            self.hbox = QtGui.QHBoxLayout()
+            self.hbox.setContentsMargins(10,0,10,0)
+        self.rb = []
+        self.hbox.addStretch(1)
+        
+        for v in choices:
+            rb = QtGui.QRadioButton(v)
+            self.hbox.addWidget(rb)
+            self.rb.append(rb)
+
+        self.rb[choices.index(default)].setChecked(True)
+        self.input.setLayout(self.hbox)
+        self.insertWidget(1,self.input)
+
+    def value(self):
+        """Return the widget's value."""
+        for rb in self.rb:
+            if rb.isChecked():
+                return str(rb.text())
+        return ''
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        val = str(val)
+        for rb in self.rb:
+            if rb.text() == val:
+                rb.setChecked(True)
+                break
+
 
 
 def defaultItemType(item):

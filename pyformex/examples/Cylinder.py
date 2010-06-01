@@ -4,8 +4,8 @@
 """Cylinder
 
 level = 'beginner'
-topics = ['geometry', 'mesh', 'surface']
-techniques = ['extrude','border']
+topics = ['geometry', 'surface']
+techniques = ['import']
 
 .. Description
 
@@ -25,6 +25,9 @@ B = simple.cylinder(2.,h,n,4,diag='u').reverse()
 C = A.reverse()+B+A.trl(2,h)
 S = TriSurface(C)
 export({'surface':S})
+
+smoothwire()
+view('iso')
 draw(S,color=red)
 
 # End
