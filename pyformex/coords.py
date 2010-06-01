@@ -1264,6 +1264,14 @@ class Coords(ndarray):
         return reflect(*args,**kargs)
 
 
+
+# Creating special coordinate sets
+
+def origin():
+    """Return a single point with coordinates [0.,0.,0.]."""
+    return Coords(zeros((3),dtype=Float))
+
+
 ##############################################################################
 #
 #  Testing

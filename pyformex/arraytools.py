@@ -289,11 +289,6 @@ def isClose(values,target,rtol=1.e-5,atol=1.e-8):
     return abs(values - target) < atol + rtol * abs(target) 
 
 
-def origin():
-    """Return a point with coordinates [0.,0.,0.]."""
-    return zeros((3),dtype=Float)
-
-
 def unitVector(v):
     """Return a unit vector in the direction of v.
 
@@ -301,7 +296,7 @@ def unitVector(v):
     or a 3-element array or compatible.
     """
     if type(v) is int:
-        u = origin()
+        u = zeros((3),dtype=Float)
         u[v] = 1.0
     else:
         u = asarray(v,dtype=Float)
