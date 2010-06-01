@@ -1116,7 +1116,7 @@ Size: %s
 ########### Functions #####################
 
 
-def mergeNodes(nodes,**kargs):
+def mergeNodes(nodes,repeat=True, **kargs):
     """Merge all the nodes of a list of node sets.
 
     Each item in nodes is a Coords array.
@@ -1130,6 +1130,9 @@ def mergeNodes(nodes,**kargs):
     """
     coords = Coords(concatenate([x for x in nodes],axis=0))
     coords,index = coords.fuse(**kargs)
+    if repeat:
+        coords,index2 = coords.fuse(shift=0.75)
+        index = index2[index]
     n = array([0] + [ x.npoints() for x in nodes ]).cumsum()
     ind = [ index[f:t] for f,t in zip(n[:-1],n[1:]) ]
     return coords,ind
