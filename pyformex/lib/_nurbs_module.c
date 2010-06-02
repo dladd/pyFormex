@@ -17,6 +17,19 @@ static char _nurbs_module__doc__[] = "_nurbs_ module. Version 0.1\n\
 This module implements low level NURBS functions.\n\
 \n";
 
+int min(int a, int b)
+{
+  if (b < a) a = b;
+  return a;
+}
+
+int max(int a, int b)
+{
+  if (b > a) a = b;
+  return a;
+}
+
+
 static double **vec2mat(double *vec, int nrows, int ncols) 
 {
   int row;
@@ -119,24 +132,34 @@ static PyObject * _nurbs_bincoeff(PyObject *self, PyObject *args)
 //   s - knot span
 //
 // Algorithm A2.1 from 'The NURBS BOOK' pg68.
-static int _findspan(int n, int p, double u, double *U)
+static int _findspan(int n, int p, double u, double *U, int nU)
 {
   int low, high, mid;
-   
+  int cnt=0;
+  printf("findspan %d %d %f\n",n,p,u);
+
   // special case
   if (u == U[n+1]) return(n);
     
   // do binary search
-  low = p;
-  high = n + 1;
+  //low = p;
+  //high = n + 1;
+  // BV !!!
+  low = 0;
+  high = nU-1;
   mid = (low + high) / 2;
-  while (u < U[mid] || u >= U[mid+1])
+  printf("low = %d, high = %d, mid = %d\n",low,high,mid);
+  while (u < U[mid] || u > U[mid+1])
   {
+    printf("mid = %d\n",mid);
+    printf("%f < %f < %f\n",U[mid],u,U[mid+1]);
     if (u < U[mid])
       high = mid;
     else
       low = mid;
     mid = (low + high) / 2;
+    cnt ++;
+    if (cnt > 20) break;
   }  
 
   return(mid);
@@ -204,28 +227,33 @@ OUTPUT:\n\
 Modified version of Algorithm A3.1 from 'The NURBS BOOK' pg82.\n\
 \n";
 
-static void _bspeval(int d, double **ctrl, int mc, int nc, double *k, int nk, double *u,
-            int nu, double **pnt)
+static void _bspeval(int d, double **ctrl, int mc, int nc, double *k, int nk, double *u, int nu, double **pnt)
 {
   int i, s, tmp1, row, col;
   double tmp2;
-
+  
+  printf("This is the evaluator\n");
   // space for the basis functions
+  printf("Allocating space\n");
   double *N = (double*) malloc((d+1)*sizeof(double));
 
+  for (col = 0; col < nc; col++) printf("%f %f %f\n",ctrl[0][col],ctrl[1][col],ctrl[2][col]);
+
   // for each parametric point i
-  for (col = 0; col < nu; col++)
-  {
+  for (col = 0; col < nu; col++) {
+    printf("point %d = %f\n",col,u[col]);
     // find the span of u[col]
-    s = _findspan(nc-1, d, u[col], k);
+    s = _findspan(nc-1, d, u[col], k,nk);
+    printf("span %d\n",s);
     _basisfuns(s, u[col], d, k, N);
-    
+    for (i = 0; i <= d; i++) printf("basis %d = %f\n",i,N[i]);
+    for (row = 0; row < mc; row++) pnt[row][col] = 0.0;
+    continue;
+
     tmp1 = s - d;
-    for (row = 0; row < mc; row++)
-    {
+    for (row = 0; row < mc; row++) {
       tmp2 = 0.0;   
-      for (i = 0; i <= d; i++)
-	  tmp2 += N[i] * ctrl[row][tmp1+i];
+      for (i = 0; i <= d; i++) tmp2 += N[i] * ctrl[row][tmp1+i];
       pnt[row][col] = tmp2;
     }
   }
@@ -238,8 +266,8 @@ static PyObject * _nurbs_bspeval(PyObject *self, PyObject *args)
   npy_intp *ctrl_dim, *k_dim, *u_dim, dim[2];
   double *ctrl, *k, *u, *pnt;
   double **ctrlmat, **pntmat;
-  PyObject *arg2, *arg3, *arg4, *ret;
-  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL;
+  PyObject *arg2, *arg3, *arg4;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *ret=NULL;
 
   if (!PyArg_ParseTuple(args, "iOOO", &d, &arg2, &arg3, &arg4))
     return NULL;
@@ -266,21 +294,30 @@ static PyObject * _nurbs_bspeval(PyObject *self, PyObject *args)
   u = (double *)PyArray_DATA(arr3);
   dim[0] = mc;
   dim[1] = nu;
+  printf("%d %d %d %d %d\n",d,mc,nc,nk,nu);
+
+  /* Create the return array */
   ret = PyArray_SimpleNew(2,dim, NPY_DOUBLE);
+  printf("got new array\n");
+  pnt = (double *)PyArray_DATA(ret);
 
   ctrlmat = vec2mat(ctrl, mc, nc);
   pntmat = vec2mat(pnt, mc, nu);
+  printf("converted to matrices\n");
   _bspeval(d, ctrlmat, mc, nc, k, nk, u, nu, pntmat);
+  printf("return from computations\n");
   free(ctrlmat);
   free(pntmat);
 
   /* Clean up and return */
+  printf("cleanup and return\n");
   Py_DECREF(arr1);
   Py_DECREF(arr2);
   Py_DECREF(arr3);
   return ret;
 
  fail:
+  printf("error cleanup and return\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
@@ -410,8 +447,7 @@ static void _bspdeval(int d, double **c, int mc, int nc, double *k, int nk,
              double u, int n, double **p)
 {
   int i, l, j, s;
-  int du = d;
-  if (n < d) du = n;
+  int du = min(d,n);
   double **dN;   
 
   dN = matrix(d+1, n+1);
@@ -420,7 +456,7 @@ static void _bspdeval(int d, double **c, int mc, int nc, double *k, int nk,
     for (i = 0; i < mc; i++)
       p[l][i] = 0.0;
 
-  s = _findspan(nc-1, d, u, k);
+  s = _findspan(nc-1, d, u, k,nk);
   _dersbasisfuns(d, k, nk, u, s, n, dN);
 
   for (l = 0; l <= du; l++)
@@ -492,8 +528,8 @@ static void _bspkntins(int d, double **ctrl, int mc, int nc, double *k, int nk,
   r = nu - 1;
 
   m = n + d + 1;
-  a = _findspan(n, d, u[0], k);
-  b = _findspan(n, d, u[r], k);
+  a = _findspan(n, d, u[0], k,nk);
+  b = _findspan(n, d, u[r], k,nk);
   ++b;
 
   for (q = 0; q < mc; q++)

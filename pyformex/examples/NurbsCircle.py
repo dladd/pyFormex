@@ -30,6 +30,7 @@ from OpenGL import GL, GLU
 import simple
 from plugins.curve import *
 from gui.actors import Actor
+import lib._nurbs_ as nu
 
 def askCurve():
     default = 'Angle'
@@ -134,7 +135,21 @@ class NurbsActor(Actor):
         GLU.gluNurbsCurve(nurb,self.knots,self.control,GL.GL_MAP1_VERTEX_3)
         GLU.gluEndCurve(nurb)
 
+    def pointsAt(self,u=None):
+        if u is None:
+            u = self.knots
 
+        ctrl = self.control.astype(double)
+        knots = self.knots.astype(double)
+        u = u.astype(double)
+
+        try:
+            pts = nu.bspeval(self.order-1,ctrl.transpose(),knots,u)
+        except:
+            print "SOME ERROR OCCURRED"
+        return pts
+
+                         
 clear()
 transparent()
 linewidth(2)
@@ -225,6 +240,8 @@ drawActor(NO)
     
 zoomAll()
 
-
+## P = NO.pointsAt()
+## print P
+## draw(P,color=blue)
 
 # End
