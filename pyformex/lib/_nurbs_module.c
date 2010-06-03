@@ -248,7 +248,6 @@ static void _bspeval(int d, double **ctrl, int mc, int nc, double *k, int nk, do
     _basisfuns(s, u[col], d, k, N);
     for (i = 0; i <= d; i++) printf("basis %d = %f\n",i,N[i]);
     for (row = 0; row < mc; row++) pnt[row][col] = 0.0;
-    continue;
 
     tmp1 = s - d;
     for (row = 0; row < mc; row++) {

@@ -71,6 +71,7 @@ def unitRange(n):
     else:
         return []
 
+
 class NurbsActor(Actor):
 
     def __init__(self,control,knots=None,closed=False,order=0,color=black):
@@ -94,7 +95,7 @@ class NurbsActor(Actor):
                 #print len(knots)
                 #print nctrl
             print "extra %s" % nextra 
-            control = Coords.concatenate([control,control[:nextra]])
+            control = Coords.concatenate([control[-nextra:],control])
             nctrl = len(control)
             #print nctrl
 
@@ -123,31 +124,38 @@ class NurbsActor(Actor):
         print self.knots
         #print self.control.shape
         #print self.knots.shape
+
         
     def bbox(self):
         return self.control.bbox()
+
         
     def drawGL(self,mode,color=None):
-        fgcolor(self.color)
+        GL.glColor3fv(self.color)
         nurb = GLU.gluNewNurbsRenderer()
         GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,self.samplingTolerance)
         GLU.gluBeginCurve(nurb)
         GLU.gluNurbsCurve(nurb,self.knots,self.control,GL.GL_MAP1_VERTEX_3)
         GLU.gluEndCurve(nurb)
 
+
     def pointsAt(self,u=None):
         if u is None:
-            u = self.knots
+            u = self.knots[order:]
 
         ctrl = self.control.astype(double)
         knots = self.knots.astype(double)
         u = u.astype(double)
 
         try:
+            print "U",u
             pts = nu.bspeval(self.order-1,ctrl.transpose(),knots,u)
+            print pts.shape
+            print pts
+            return Coords(pts.transpose())
         except:
             print "SOME ERROR OCCURRED"
-        return pts
+            return Coords()
 
                          
 clear()
@@ -191,57 +199,37 @@ wts = array([
 
 
 P = PolyLine(pts,closed=closed)
-draw(P,color=magenta)
+#draw(P,color=magenta)
 
 Q = simple.circle()
-draw(Q,color=red)
+draw(Q,color=yellow)
 #drawNumbers(Q,color=red)
 
 N = {}
-for order in range(2,5):
-    N[order] = NurbsActor(pts,closed=closed,order=order)
+for order,color in zip(range(2,5),[black,green,red]):
+    N[order] = NurbsActor(pts,closed=closed,order=order,color=color)
     drawActor(N[order])
-
-#knots = [0.,0.,0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.0]
-## NN = NurbsActor(pts,knots=knots,closed=closed,order=3)
-## drawActor(NN)
 
 print pts.shape
 print wts.shape
-NO = NurbsActor(pts*wts,knots=knots,closed=closed,order=3)
+order = 3
+NO = NurbsActor(pts*wts,knots=knots,closed=closed,order=order,color=blue)
 drawActor(NO)
 
-## pts = Coords([
-##     [0.,-0.5,0.],
-##     [0.5,-0.5,0.],
-##     [0.25,-0.0669873,0.],
-##     [0.,0.3880254,0.],
-##     [-0.25,-0.0669873,0.],
-##     [-0.5,-0.5,0.],
-##     [0.,-0.5,0.],
-##     ])
+print "KNOTS",NO.knots
+n = 10
+degree = order-1
+umin = NO.knots[degree]
+umax = NO.knots[-degree-1]
+print "Umin = %s, Umax = %s" % (umin,umax)
+u = umin + arange(n+1) * (umax-umin) / n
+print u
+P = NO.pointsAt(u)
+print P
+draw(P,color=blue)
+drawNumbers(P,color=blue)
+print P.distanceFromPoint(origin())
 
-## sq2 = 0.5 ** (1./3.)
-## wts = array([
-##     1.0,
-##     sq2,
-##     1.0,
-##     sq2,
-##     1.0,
-##     sq2,
-##     1.0,
-##     ]).reshape(-1,1)
-## knots = [0.,0.,0.,1.,1.,2.,2.,3.,3.,3.]
-## NN = NurbsActor(pts*wts,knots=knots,closed=True,order=3)
-## drawActor(NN)
-
-## draw(pts,color=red)
-## draw(pts*wts,color=blue)
-    
 zoomAll()
-
-## P = NO.pointsAt()
-## print P
-## draw(P,color=blue)
 
 # End
