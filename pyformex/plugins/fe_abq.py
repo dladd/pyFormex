@@ -124,16 +124,41 @@ def fmtMaterial(mat):
     """
     if mat.name is None or mat.name in materialswritten:
         return ""
-
-    if mat.poisson_ratio is None and mat.shear_modulus is not None:
-        mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
-
-    out ="""*MATERIAL, NAME=%s
-*ELASTIC
-%s,%s
-""" % (mat.name, float(mat.young_modulus), float(mat.poisson_ratio))
+    
+    out ="*MATERIAL, NAME=%s\n" % mat.name
     materialswritten.append(mat.name)
+    
+    if not mat.has_key('elasticity') or mat.elasticity == 'linear':
+    
+        if mat.poisson_ratio is None and mat.shear_modulus is not None:
+            mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
 
+        out += """*ELASTIC
+%s,%s
+""" % (float(mat.young_modulus), float(mat.poisson_ratio))
+    
+    elif mat.elasticity == 'hyperelastic':
+        out += "*HYPERELASTIC, %s" % mat.type
+        if mat.type == 'ogden' or mat.type == 'polynomial' or mat.type == 'reduced polynomial':
+            
+            ord = 1
+            if mat.has_key('order'):
+                ord = mat.order
+            out += ", N=%s\n" % ord
+    
+    elif mat.elasticity == 'anisotropic hyperelastic':
+        out += "*ANISOTROPIC HYPERELASTIC, HOLZAPFEL\n"
+        #TO DO: add possibility to define local orientations!!!"
+            
+    elif mat.elasticity == 'user':
+        out += "*USER MATERIAL, CONSTANTS=%s\n" % len(mat.constants)
+            
+    if mat.has_key('constants'):
+        for p in range(len(mat.constants)):
+            out += "%s, " % mat.constants[p]
+            if p%8==7 or p==len(mat.constants)-1:
+                out = out[:-2]+"\n"
+    
     if mat.density is not None:
         out += "*DENSITY\n%s\n" % float(mat.density)
 
