@@ -72,6 +72,7 @@ splash = os.path.join(icondir,'pyformex-splash.png')
 plugins = ['formex_menu','tools_menu']
 style = "Plastique"
 size=(800,600)
+bdsize=size
 pos=(0,0)
 fullscreen = False
 icontype = '.xpm'
