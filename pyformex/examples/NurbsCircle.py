@@ -34,7 +34,7 @@ import lib._nurbs_ as nu
 
 def askCurve():
     default = 'Angle'
-    res = askItems([('curve_type',default,'radio',['Circle','Angle']),('circle_npts',6)])
+    res = askItems([('curve_type',default,'radio',['Circle','Angle']),('closed',False),('circle_npts',6)])
 
     if not res:
         exit()
@@ -43,23 +43,27 @@ def askCurve():
     globals().update(res)
 
     if curve_type == 'Circle':
-        closed = True
         circle = simple.circle(a1=360./circle_npts)
         draw(circle,color='magenta')
         pts = circle[:,0]
 
 
     elif curve_type == 'Angle':
-        closed = True
         F = Formex(simple.pattern('41'))
         draw(F,color='magenta')
         pts = F.coords.reshape(-1,3)
 
     clear()
     drawNumbers(pts)
-    curve = CardinalSpline(pts,closed=closed)
+    print "Number of points: %s"%len(pts)
+    print "POLY"
+    PL = PolyLine(pts,closed=closed)
+    d = PL.directions()
+    dm = PL.avgDirections()
+    #w = PL.doubles()+1
+    #print PL.endOrDouble()
+    curve = BezierSpline(pts,closed=closed)
     draw(curve.approx(100),color='red')
-    print "Number of points: %s",len(pts)
     zoomAll()
     
 
@@ -163,9 +167,9 @@ clear()
 transparent()
 linewidth(2)
 
-askCurve()
-zoomAll()
-exit()
+## askCurve()
+## zoomAll()
+## exit()
 
 closed=False
 pts = Coords([

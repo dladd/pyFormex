@@ -294,26 +294,16 @@ class PolyLine(Curve):
         one less than the number of points.
         """
         x = self.coords
-        y = roll(x,-1,axis=0)
-        if not self.closed:
-            n = self.coords.shape[0] - 1
-            x = x[:n]
-            y = y[:n]
-        return y-x
+        if self.closed:
+            x1 = x
+            x2 = roll(x,-1,axis=0) # NEXT POINT
+        else:
+            x1 = x[:-1]
+            x2 = x[1:]
+        return x2-x1
+        
 
-
-    def doubles(self):
-        """Returns the double points.
-
-        Returns the indices of the points that are identical to the
-        preceding point.
-        """
-        dd = (self.coords[:-1,:] == self.coords[1:,:]).all(axis=1)
-        w = where(dd)[0]
-        return w
-
-
-    def directions(self):
+    def directions(self,return_doubles=False):
         """Returns unit vectors in the direction of the next point.
 
         This directions are returned as a Coords object with the same
@@ -325,18 +315,26 @@ class PolyLine(Curve):
 
         If the curve is not closed, the last direction is set equal to the
         penultimate.
+
+        If return_doubles is True, the return value is a tuple of the direction
+        and an index of the points that are identical with their follower.
         """
         import warnings
         warnings.warn('PolyLine.directions() now always returns the same number of directions as there are points. The last direction of an open PolyLine appears twice.')
         d = normalize(self.vectors())
-        w = self.doubles()
+        w = where(isnan(d).any(axis=-1))[0]
+        #print "DOUBLES:%s" % w
         d[w] = d[w-1]  
         if not self.closed:
             d = concatenate([d,d[-1:]],axis=0)
-        return d
+        #print "Directions",d
+        if return_doubles:
+            return d,w
+        else:
+            return d
     
 
-    def avgDirections(self):
+    def avgDirections(self,return_doubles=False):
         """Returns the average directions at points.
 
         For each point the returned direction is the average of the direction
@@ -344,7 +342,7 @@ class PolyLine(Curve):
         current to the next point.
         
         If the curve is open, the first and last direction are equal to the
-        direction of the firsst, resp. last segment.
+        direction of the first, resp. last segment.
 
         Where two subsequent points are identical, the average directions
         are set equal to those of the segment ending in the first and the
@@ -352,18 +350,29 @@ class PolyLine(Curve):
         """
         import warnings
         warnings.warn('PolyLine.avgDirections() now always returns the same number of directions as there are points. The first and last direction are those of the end segment.')
-        d = self.directions()
-        if self.closed:
-            d1 = d
-            d2 = roll(d,1,axis=0)
-            d = 0.5*(d1+d2)
+        d,w = self.directions(True)
+        #if self.closed:
+        d1 = d
+        d2 = roll(d,1,axis=0) # PREVIOUS DIRECTION
+        #else:
+        #    d1 = d[:-1]
+        #    d2 = d[1:]
+        ## if not self.closed:
+        ##     d = concatenate([d[:1],d],axis=0)
+        #print "expanded",d
+        w = concatenate([w,w+1])
+        if not self.closed:
+            w = concatenate([[0,self.npoints()-1],w])
+        #print "Not averaging at %s" % w
+        w = setdiff1d(arange(self.npoints()),w)
+        #d[w] = dd[w]
+        #print "Averaging at %s" % w
+        d[w] = 0.5 * (d1[w]+d2[w])
+        #print "AVG Directions",d
+        if return_doubles:
+            return d,w
         else:
-            w = self.doubles()
-            d[w] = [0.,0.,0.]  
-            d1 = d[:-1]
-            d2 = d[1:]
-            d[1:] = 0.5*(d1+d2)
-        return d
+            return d
     
 
     def lengths(self):
