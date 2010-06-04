@@ -220,7 +220,17 @@ class PolyLine(Curve):
         If closed == True, the polyline is closed by connecting the last
         point to the first. This does not change the vertex data.
         """
-        coords = Coords(coords)
+        if isinstance(coords,Formex):
+            if coords.nplex() == 1:
+                coords = coords.coords
+            elif coords.nplex() == 2:
+                coords = Coords.concatenate([coords.coords[:,0,:],coords.coords[-1,1,:]])
+            else:
+                raise ValueError,"Only Formices with plexitude 1 or 2 can be converted to PolyLine"
+
+        else:
+            coords = Coords(coords)
+            
         if coords.ndim != 2 or coords.shape[1] != 3:
             raise ValueError,"Expected an (npoints,3) coordinate array"
         self.coords = coords
@@ -277,10 +287,11 @@ class PolyLine(Curve):
 
 
     def vectors(self):
-        """Return the vectors of the points to the next one.
+        """Return the vectors of each point to the next one.
 
         The vectors are returned as a Coords object.
-        If not closed, this returns one less vectors than the number of points.
+        If the curve is not closed, the number of vectors returned is
+        one less than the number of points.
         """
         x = self.coords
         y = roll(x,-1,axis=0)
@@ -291,25 +302,67 @@ class PolyLine(Curve):
         return y-x
 
 
-    def directions(self):
-        """Returns unit vectors in the direction of the next point."""
-        return normalize(self.vectors())
+    def doubles(self):
+        """Returns the double points.
 
-
-    def avgDirections(self,normalized=True):
-        """Returns average directions at the inner nodes.
-
-        If open, the number of directions returned is 2 less than the
-        number of points.
+        Returns the indices of the points that are identical to the
+        preceding point.
         """
+        dd = (self.coords[:-1,:] == self.coords[1:,:]).all(axis=1)
+        w = where(dd)[0]
+        return w
+
+
+    def directions(self):
+        """Returns unit vectors in the direction of the next point.
+
+        This directions are returned as a Coords object with the same
+        number of elements as the point set.
+        
+        If two subsequent points are identical, the first one gets
+        the direction of the previous segment. If more than two subsequent
+        points are equal, an invalid direction (NaN) will result.
+
+        If the curve is not closed, the last direction is set equal to the
+        penultimate.
+        """
+        import warnings
+        warnings.warn('PolyLine.directions() now always returns the same number of directions as there are points. The last direction of an open PolyLine appears twice.')
+        d = normalize(self.vectors())
+        w = self.doubles()
+        d[w] = d[w-1]  
+        if not self.closed:
+            d = concatenate([d,d[-1:]],axis=0)
+        return d
+    
+
+    def avgDirections(self):
+        """Returns the average directions at points.
+
+        For each point the returned direction is the average of the direction
+        from the preceding point to the current, and the direction from the
+        current to the next point.
+        
+        If the curve is open, the first and last direction are equal to the
+        direction of the firsst, resp. last segment.
+
+        Where two subsequent points are identical, the average directions
+        are set equal to those of the segment ending in the first and the
+        segment starting from the last.
+        """
+        import warnings
+        warnings.warn('PolyLine.avgDirections() now always returns the same number of directions as there are points. The first and last direction are those of the end segment.')
         d = self.directions()
         if self.closed:
             d1 = d
             d2 = roll(d,1,axis=0)
+            d = 0.5*(d1+d2)
         else:
+            w = self.doubles()
+            d[w] = [0.,0.,0.]  
             d1 = d[:-1]
             d2 = d[1:]
-        d = 0.5*(d1+d2)
+            d[1:] = 0.5*(d1+d2)
         return d
     
 
@@ -493,13 +546,10 @@ class BezierSpline(Curve):
                         deriv[:1],
                         [[nan,nan,nan]]*(ncoords-2),
                         deriv[-1:]])
-            if closed:
-                autoderiv = deriv
-            else:
-                autoderiv = deriv[1:-1]
-            undefined = isnan(autoderiv).any(axis=-1)
+
+            undefined = isnan(deriv).any(axis=-1)
             if undefined.any():
-                autoderiv[undefined] = P.avgDirections()[undefined]
+                deriv[undefined] = P.avgDirections()[undefined]
                 
             if closed:
                 p1 = coords + deriv*curl*ampl

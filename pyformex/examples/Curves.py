@@ -89,6 +89,9 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
         kargs['curl'] = curl
     S = method[ctype](P,**kargs)
 
+    print S.pointsOn()
+    print S.pointsOff()
+
     if spread:
         print ndiv,ntot
         PL = S.approx(ndiv=ndiv,ntot=ntot)
@@ -119,7 +122,7 @@ dataset = [
             [2., -1.5, -2.], [1.5, -1.5, 2.], [0., -8., 0.], [-1., -8., -1.],
             [3., -3., 1.]]),
     Coords([[0., 1., 0.],[0., 0.1, 0.],[0.1, 0., 0.],  [1., 0., 0.]]),
-    #Coords([[0., 1., 0.],[0.,0.,0.],[1., 0., 0.]]),
+    Coords([[0., 1., 0.],[0.,0.,0.],[0.,0.,0.],[1., 0., 0.]]),
     #Coords([[0., 1., 0.],[1., 0., 0.]]),
     ]
 

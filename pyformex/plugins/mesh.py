@@ -86,20 +86,24 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,end
 
     The return value is a sequence of the transformed Coords objects.
     """
+    from curve import PolyLine
+    if not isinstance(path,PolyLine):
+        path = PolyLine(path)
+        
     points = path.coords
     if avgdir:
         directions = path.avgDirections()
     else:
          directions = path.directions()
 
-    missing = points.shape[0] - directions.shape[0]
-    if missing == 1:
-        lastdir = (points[-1] - points[-2]).reshape(1,3)
-        directions = concatenate([directions,lastdir],axis=0)
-    elif missing == 2:
-        lastdir = (points[-1] - points[-2]).reshape(1,3)
-        firstdir = (points[1] - points[0]).reshape(1,3)
-        directions = concatenate([firstdir,directions,lastdir],axis=0)
+    ## missing = points.shape[0] - directions.shape[0]
+    ## if missing == 1:
+    ##     lastdir = (points[-1] - points[-2]).reshape(1,3)
+    ##     directions = concatenate([directions,lastdir],axis=0)
+    ## elif missing == 2:
+    ##     lastdir = (points[-1] - points[-2]).reshape(1,3)
+    ##     firstdir = (points[1] - points[0]).reshape(1,3)
+    ##     directions = concatenate([firstdir,directions,lastdir],axis=0)
 
     if enddir:
         for i,j in enumerate([0,-1]):

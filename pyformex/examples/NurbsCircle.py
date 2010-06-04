@@ -47,20 +47,21 @@ def askCurve():
         circle = simple.circle(a1=360./circle_npts)
         draw(circle,color='magenta')
         pts = circle[:,0]
-        drawNumbers(pts)
 
 
     elif curve_type == 'Angle':
-        closed = False
+        closed = True
         F = Formex(simple.pattern('41'))
         draw(F,color='magenta')
         pts = F.coords.reshape(-1,3)
 
-    curve = BezierSpline(pts,closed=closed)
-    draw(curve,color='red')
-
+    clear()
+    drawNumbers(pts)
+    curve = CardinalSpline(pts,closed=closed)
+    draw(curve.approx(100),color='red')
     print "Number of points: %s",len(pts)
-
+    zoomAll()
+    
 
 def unitRange(n):
     """Divide the range 0..1 in n equidistant points"""
@@ -161,6 +162,10 @@ class NurbsActor(Actor):
 clear()
 transparent()
 linewidth(2)
+
+askCurve()
+zoomAll()
+exit()
 
 closed=False
 pts = Coords([
