@@ -185,6 +185,9 @@ pub:
 register:
 	python setup.py register
 
+upload:
+	python setup.py upload --show-response
+
 # Tag the release in the svn repository
 tag:
 	svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."

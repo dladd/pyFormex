@@ -69,6 +69,8 @@ This will create a pyformex-${VERSION}.tar.gz in dist/
 
 Set the final version in RELEASE (RELEASE==VERSION)
   make version
+Create up to date documentation
+  make html
 Stamp the files with the version
   make stampall
 Check in (creating the dist may modify some files)
@@ -104,8 +106,10 @@ Make the release available on Berlios FTP server
   make pub
 Make the release available on our local FTP server
   make publocal
-Register with the python package index
-  make register
+#Register with the python package index
+#  make register
+Upload to the python package index
+  make upload
 Add the release data to the database
   edt pyformex-releases.fdb
 
