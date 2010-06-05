@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
+##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -23,7 +23,7 @@
 ##
 """A collection of miscellaneous utility functions."""
 
-import pyformex
+import pyformex as pf
 
 import os,commands,re,sys
 from config import formatDict
@@ -32,7 +32,7 @@ from distutils.version import LooseVersion as SaneVersion
 
 # versions of detected modules/external commands
 the_version = {
-    'pyformex':pyformex.__version__,
+    'pyformex':pf.__version__,
     'python':sys.version.split()[0],
     }
 the_external = {}
@@ -128,15 +128,15 @@ def checkModule(name=None):
             import numpy
             version =  numpy.__version__
         elif name == 'pyopengl':
-            fatal = pyformex.options.gui
+            fatal = pf.options.gui
             import OpenGL
             version =  OpenGL.__version__
         elif name == 'pyqt4':
-            fatal = pyformex.options.gui
+            fatal = pf.options.gui
             import PyQt4.QtCore
             version = PyQt4.QtCore.QT_VERSION_STR
         elif name == 'pyqt4gl':
-            fatal = pyformex.options.gui
+            fatal = pf.options.gui
             import PyQt4.QtOpenGL
             import PyQt4.QtCore
             version = PyQt4.QtCore.QT_VERSION_STR
@@ -201,7 +201,7 @@ def checkExternal(name=None,command=None,answer=None):
 
 
 def reportDetected():
-    s = "%s (%s)\n\n" % (pyformex.Version,pyformex.__revision__)
+    s = "%s (%s)\n\n" % (pf.Version,pf.__revision__)
     s += "Python version: %s\n" % sys.version
     s += "Operating system: %s\n\n" % sys.platform
     s += "Detected Python Modules:\n"
@@ -235,12 +235,12 @@ def strNorm(s):
 def _congratulations(name,version,typ='module',fatal=False,quiet=True):
     """Report a detected module/program."""
     if version and not quiet:
-        pyformex.message("Congratulations! You have %s (%s)" % (name,version))
+        pf.message("Congratulations! You have %s (%s)" % (name,version))
     if not version:
         if not quiet or fatal:
-            pyformex.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
+            pf.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
         if fatal:
-            pyformex.message("Sorry, I'm out of here....")
+            pf.message("Sorry, I'm out of here....")
             sys.exit()
 
 
@@ -425,10 +425,10 @@ def findIcon(name):
 
     If no icon file is found, returns the question mark icon.
     """
-    fname = os.path.join(pyformex.cfg['icondir'],name) + pyformex.cfg['gui/icontype']
+    fname = os.path.join(pf.cfg['icondir'],name) + pf.cfg['gui/icontype']
     if os.path.exists(fname):
         return fname
-    return os.path.join(pyformex.cfg['icondir'],'question') + pyformex.cfg['gui/icontype']
+    return os.path.join(pf.cfg['icondir'],'question') + pf.cfg['gui/icontype']
                                                                
 
 def projectName(fn):
@@ -469,7 +469,7 @@ def timeEval(s,glob=None):
     start = time.time()
     res = eval(s,glob)
     stop = time.time()
-    print "Timed evaluation: %s seconds" % (stop-start)
+    pf.message("Timed evaluation: %s seconds" % (stop-start))
     return res
 
 
@@ -485,14 +485,14 @@ def countLines(fn):
 def runCommand(cmd,RaiseError=True,quiet=False):
     """Run a command and raise error if exited with error."""
     if not quiet:
-        pyformex.message("Running command: %s" % cmd)
+        pf.message("Running command: %s" % cmd)
 #    if GD.GUI:
 #        GD.GUI.setBusy(True)
     sta,out = commands.getstatusoutput(cmd)
 #    if GD.GUI:
 #        GD.GUI.setBusy(False)
     if sta != 0:
-        pyformex.message(out)
+        pf.message(out)
         if RaiseError:
             raise RuntimeError, "Error while executing command:\n  %s" % cmd
     return sta,out
@@ -502,7 +502,7 @@ def spawn(cmd):
     """Spawn a child process."""
     cmd = cmd.split()
     pid = os.spawnvp(os.P_NOWAIT,cmd[0],cmd)
-    pyformex.debug("Spawned child process %s for command '%s'" % (pid,cmd))
+    pf.debug("Spawned child process %s for command '%s'" % (pid,cmd))
     return pid
 
 
@@ -512,7 +512,7 @@ def killProcesses(pids,signal):
         try:
             os.kill(pid,signal)
         except:
-            pyformex.debug("Error in killing of process '%s'" % pid)
+            pf.debug("Error in killing of process '%s'" % pid)
             
 
 

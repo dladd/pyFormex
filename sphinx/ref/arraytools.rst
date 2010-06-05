@@ -28,7 +28,6 @@
    .. autofunction:: permutations(iterable,r=None)
    .. autofunction:: inside(p,mi,ma)
    .. autofunction:: isClose(values,target,rtol=1.e-5,atol=1.e-8)
-   .. autofunction:: origin()
    .. autofunction:: unitVector(v)
    .. autofunction:: rotationMatrix(angle,axis=None,angle_spec=Deg)
    .. autofunction:: rotMatrix(u,w=[0.,0.,1.],n=3)

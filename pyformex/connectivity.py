@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
+##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -100,9 +100,9 @@ def enmagic(elems):
     elems.sort(axis=1)
     magic = elems.max(axis=0) + 1
     prod = magic.prod()
-    print "magic = %s" % magic
-    print "product = %s" % prod
-    print "2**63   = %s" % 2**63
+    #print "magic = %s" % magic
+    #print "product = %s" % prod
+    #print "2**63   = %s" % 2**63
     #if prod >= 2**63 or prod < 0:
     #    raise RuntimeError,"There may be overflow in enmagic! Use encode instead" 
     codes = elems[:,0].astype(int64)
@@ -542,8 +542,7 @@ class Connectivity(ndarray):
                 n = arange(nplex)
                 ind = column_stack([n,roll(n,-1)])
             elif nplex == 2:
-                print "There is no point in untangling a 2-plex Connectivity"
-                print "I'll go ahead anyway"
+                print("There is no point in untangling a 2-plex Connectivity\nI'll go ahead anyway")
                 ind = array([[0,1]])
             else:
                 raise RuntimeError,"Can not untangle a Connectivity with plexitude < 2"

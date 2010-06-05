@@ -79,9 +79,6 @@
    .. autofunction:: connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None)
    .. autofunction:: connectMeshSequence(ML,loop=False)
    .. autofunction:: structuredHexGrid(dx,dy,dz,isophex='hex64')
-   .. autofunction:: argSortAndUnsort(xarr)
-   .. autofunction:: indexRenumbering1D(xarr)
-   .. autofunction:: meshRenumberingNodesOnElems(xMesh)
    .. autofunction:: correctHexMeshOrientation(hm)
 
    

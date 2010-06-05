@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
+##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -23,7 +23,7 @@
 ##
 """Graphical User Interface for pyFormex."""
 
-import pyformex as GD
+import pyformex as pf
 from pyformex.gui import signals
 
 import sys,utils
@@ -120,8 +120,8 @@ class Board(QtGui.QTextEdit):
 
 def set_view(view):
     """Change the view angles of the current camera, keeping the bbox."""
-    GD.canvas.setCamera(angles=view)
-    GD.canvas.update()
+    pf.canvas.setCamera(angles=view)
+    pf.canvas.update()
     
 
 class GUI(QtGui.QMainWindow):
@@ -178,19 +178,19 @@ class GUI(QtGui.QMainWindow):
         self.central.autoFillBackground()
           #self.central.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
         self.central.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
-        self.central.resize(*GD.cfg['gui/size'])
+        self.central.resize(*pf.cfg['gui/size'])
 
         
         # Create an OpenGL canvas with a nice frame around it
-        GD.debug("Setting canvas defaults:\n%s" % dict)
-        canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(GD.cfg['canvas']))
+        pf.debug("Setting canvas defaults:\n%s" % dict)
+        canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(pf.cfg['canvas']))
 
         self.viewports = viewport.MultiCanvas()
         self.central.setLayout(self.viewports)
 
         # Create the message board
         self.board = Board()
-        #self.board.setPlainText(GD.Version+' started')
+        #self.board.setPlainText(pf.Version+' started')
         # Put everything together
         self.splitter.addWidget(self.central)
         self.splitter.addWidget(self.board)
@@ -220,7 +220,7 @@ class GUI(QtGui.QMainWindow):
 
         ###############  RENDERMODE menu and toolbar #############
         modes = [ 'wireframe', 'smooth', 'smoothwire', 'flat', 'flatwire' ]
-        if GD.cfg['gui/modemenu']:
+        if pf.cfg['gui/modemenu']:
             mmenu = QtGui.QMenu('Render Mode')
         else:
             mmenu = None
@@ -233,11 +233,11 @@ class GUI(QtGui.QMainWindow):
         # Add the toggle type buttons
         if self.modebar:
             toolbar.addTransparencyButton(self.modebar)
-        if self.modebar and GD.cfg['gui/lightbutton']:
+        if self.modebar and pf.cfg['gui/lightbutton']:
             toolbar.addLightButton(self.modebar)
-        if self.modebar and GD.cfg['gui/normalsbutton']:
+        if self.modebar and pf.cfg['gui/normalsbutton']:
             toolbar.addNormalsButton(self.modebar)
-        if self.modebar and GD.cfg['gui/shrinkbutton']:
+        if self.modebar and pf.cfg['gui/shrinkbutton']:
             toolbar.addShrinkButton(self.modebar)
          
         if mmenu:
@@ -246,8 +246,8 @@ class GUI(QtGui.QMainWindow):
             pmenu.insertMenu(pmenu.item('background color'),mmenu)
 
         ###############  VIEWS menu and toolbar ################
-        if GD.cfg['gui/viewmenu']:
-            if GD.cfg['gui/viewmenu'] == 'main':
+        if pf.cfg['gui/viewmenu']:
+            if pf.cfg['gui/viewmenu'] == 'main':
                 parent = self.menu
                 before = 'help'
             else:
@@ -259,7 +259,7 @@ class GUI(QtGui.QMainWindow):
             
         self.viewbar = self.activateToolBar('Views ToolBar','viewbar')
 
-        defviews = GD.cfg['gui/defviews']
+        defviews = pf.cfg['gui/defviews']
         views = [ v[0] for v in defviews ]
         viewicons = [ v[1] for v in defviews ]
 
@@ -277,17 +277,17 @@ class GUI(QtGui.QMainWindow):
         self.board.resize(*bdsize)
         
         self.setcurfile()
-        if GD.options.redirect:
+        if pf.options.redirect:
             sys.stderr = self.board
             sys.stdout = self.board
 
-        if GD.options.debug:
+        if pf.options.debug:
             printsize(self,'DEBUG: Main:')
             printsize(self.central,'DEBUG: Canvas:')
             printsize(self.board,'DEBUG: Board:')
 
         # Drawing lock
-        self.drawwait = GD.cfg['draw/wait']
+        self.drawwait = pf.cfg['draw/wait']
         self.drawlock = drawlock.DrawLock()
  
 
@@ -303,7 +303,7 @@ class GUI(QtGui.QMainWindow):
         - 'left', 'right', 'top' or 'bottom': a separate toolbar is created
         - 'default': the default top toolbar is used and a separator is added.
         """
-        area = GD.cfg['gui/%s' % shortname]
+        area = pf.cfg['gui/%s' % shortname]
         if area:
             area = self.toolbarArea.get(area,None)
             if area:
@@ -343,9 +343,9 @@ class GUI(QtGui.QMainWindow):
         
     def toggleCoordsTracker(self,onoff=None):
         def track(x,y,z):
-            X,Y,Z = GD.canvas.unProject(x,y,z,True)
+            X,Y,Z = pf.canvas.unProject(x,y,z,True)
             print "%s --> %s" % ((x,y,z),(X,Y,Z))
-            GD.GUI.coordsbox.setValues([X,Y,Z])
+            pf.GUI.coordsbox.setValues([X,Y,Z])
 
         if onoff is None:
             onoff = self.coordsbox.isHidden()
@@ -395,9 +395,9 @@ class GUI(QtGui.QMainWindow):
         """
         if filename:
             # We always set it to be saved in the prefs
-            GD.prefcfg['curfile'] = filename
+            pf.prefcfg['curfile'] = filename
         else:
-            filename = GD.cfg['curfile']
+            filename = pf.cfg['curfile']
         if filename:
             self.canPlay = utils.isPyFormex(filename) or filename.endswith('.pye')
             self.curfile.setText(os.path.basename(filename))
@@ -407,7 +407,7 @@ class GUI(QtGui.QMainWindow):
                 icon = 'ok'
             else:
                 icon = 'notok'
-            self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(GD.cfg['icondir'],icon)+GD.cfg['gui/icontype'])),0)
+            self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(pf.cfg['icondir'],icon)+pf.cfg['gui/icontype'])),0)
 
 
     def setViewAngles(self,name,angles):
@@ -420,17 +420,17 @@ class GUI(QtGui.QMainWindow):
         do not have the name yet.
         """
         if name not in self.viewbtns.names():
-            iconpath = os.path.join(GD.cfg['icondir'],'userview')+GD.cfg['gui/icontype']
+            iconpath = os.path.join(pf.cfg['icondir'],'userview')+pf.cfg['gui/icontype']
             self.viewbtns.add(name,iconpath)
-        GD.canvas.view_angles[name] = angles
+        pf.canvas.view_angles[name] = angles
 
 
     def setBusy(self,busy=True,force=False):
         if busy:
-            GD.app.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+            pf.app.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         else:
-            GD.app.restoreOverrideCursor()
-        GD.app.processEvents()
+            pf.app.restoreOverrideCursor()
+        pf.app.processEvents()
 
 
     def resetCursor(self):
@@ -438,9 +438,9 @@ class GUI(QtGui.QMainWindow):
 
         This will reset the application cursor to the initial default.
         """
-        while GD.app.overrideCursor():
-            GD.app.restoreOverrideCursor()
-        GD.app.processEvents()
+        while pf.app.overrideCursor():
+            pf.app.restoreOverrideCursor()
+        pf.app.processEvents()
     
 
 
@@ -454,7 +454,7 @@ class GUI(QtGui.QMainWindow):
         Finally, the event is removed.
         """
         key = e.key()
-        GD.debug('Key %s pressed' % key)
+        pf.debug('Key %s pressed' % key)
         self.emit(signals.WAKEUP,())
         signal = signals.keypress_signal.get(key,None)
         if signal:
@@ -485,20 +485,20 @@ class GUI(QtGui.QMainWindow):
         self.move(*self.XPos())
 
         # store the history and main window size/pos
-        GD.prefcfg['gui/history'] = GD.GUI.history.files
+        pf.prefcfg['gui/history'] = pf.GUI.history.files
 
-        GD.prefcfg.update({'size':Size(GD.GUI),
-                           'pos':Pos(GD.GUI),
-                           'bdsize':Size(GD.GUI.board),
+        pf.prefcfg.update({'size':Size(pf.GUI),
+                           'pos':Pos(pf.GUI),
+                           'bdsize':Size(pf.GUI.board),
                            },name='gui')
 
 
     def cleanup(self):
         """Cleanup the GUI (restore default state)."""
-        GD.debug('GUI cleanup')
+        pf.debug('GUI cleanup')
         self.drawlock.release()
-        GD.canvas.cancel_selection()
-        GD.canvas.cancel_draw()
+        pf.canvas.cancel_selection()
+        pf.canvas.cancel_draw()
         draw.clear_canvas()
         self.setBusy(False)
 
@@ -508,9 +508,9 @@ class GUI(QtGui.QMainWindow):
 ##         if draw.ack("Do you really want to quit?"):
 ##             print("YES:EXIT")
         self.cleanup()
-        GD.debug("Executing registered exit functions")
+        pf.debug("Executing registered exit functions")
         for f in self.on_exit:
-            GD.debug(f)
+            pf.debug(f)
             f()
         self.writeSettings()
         event.accept()
@@ -525,7 +525,7 @@ class GUI(QtGui.QMainWindow):
 # THESE FUNCTION SHOULD BECOME app FUNCTIONS
 
     def currentStyle(self):
-        return GD.app.style().metaObject().className()[1:-5]
+        return pf.app.style().metaObject().className()[1:-5]
 
 
     def getStyles(self):
@@ -535,7 +535,7 @@ class GUI(QtGui.QMainWindow):
     def setStyle(self,style):
         """Set the main application style."""
         style = QtGui.QStyleFactory().create(style)
-        GD.app.setStyle(style)
+        pf.app.setStyle(style)
         self.update()
 
 
@@ -549,29 +549,29 @@ class GUI(QtGui.QMainWindow):
             f = QtGui.QFont()
             f.fromString(font)
             font = f
-        GD.app.setFont(font)
+        pf.app.setFont(font)
         self.update()
 
 
     def setFontFamily(self,family):
         """Set the main application font family to the given family."""
-        font = GD.app.font()
+        font = pf.app.font()
         font.setFamily(family)
         self.setFont(font)
 
 
     def setFontSize(self,size):
         """Set the main application font size to the given point size."""
-        font = GD.app.font()
+        font = pf.app.font()
         font.setPointSize(int(size))
         self.setFont(font)
 
 
     def setAppearence(self):
-        style = GD.cfg['gui/style']
-        font = GD.cfg['gui/font']
-        family = GD.cfg['gui/fontfamily']
-        size = GD.cfg['gui/fontsize']
+        style = pf.cfg['gui/style']
+        font = pf.cfg['gui/font']
+        family = pf.cfg['gui/fontfamily']
+        size = pf.cfg['gui/fontsize']
         if style:
             self.setStyle(style)
         if font:
@@ -659,7 +659,7 @@ def findOldProcesses(max=16):
     Returns the next available main window name, and a list of
     running pyFormex GUI processes, if any.
     """
-    windowname = GD.Version
+    windowname = pf.Version
     count = 0
     running = []
 
@@ -675,7 +675,7 @@ def findOldProcesses(max=16):
 
             running.append((windowid,name,pid))
             count += 1
-            windowname = '%s (%s)' % (GD.Version,count)
+            windowname = '%s (%s)' % (pf.Version,count)
         else:
             break
 
@@ -717,8 +717,8 @@ def quit():
     """Quit the GUI"""
     sys.stderr = sys.__stderr__
     sys.stdout = sys.__stdout__
-    if GD.app:
-        GD.app.exit()
+    if pf.app:
+        pf.app.exit()
 
 
 def startGUI(args):
@@ -732,32 +732,32 @@ def startGUI(args):
     #
     QtCore.QLocale.setDefault(QtCore.QLocale.c())
     #
-    #GD.options.debug = -1
-    GD.debug("Arguments passed to the QApplication: %s" % args)
-    GD.app = QtGui.QApplication(args)
+    #pf.options.debug = -1
+    pf.debug("Arguments passed to the QApplication: %s" % args)
+    pf.app = QtGui.QApplication(args)
     
     #
-    GD.debug("Arguments left after constructing the QApplication: %s" % args)
-    GD.debug("Arguments left after constructing the QApplication: %s" % GD.app.arguments().join('\n'))
-    #GD.options.debug = 0
+    pf.debug("Arguments left after constructing the QApplication: %s" % args)
+    pf.debug("Arguments left after constructing the QApplication: %s" % pf.app.arguments().join('\n'))
+    #pf.options.debug = 0
     # As far as I have been testing this, the args passed to the Qt application are
     # NOT acknowledged and neither are they removed!!
 
 
-    GD.app.setOrganizationName("pyformex.org")
-    GD.app.setOrganizationDomain("pyformex.org")
-    GD.app.setApplicationName("pyFormex")
-    GD.app.setApplicationVersion(GD.__version__)
-    ## GD.settings = QtCore.QSettings("pyformex.org", "pyFormex")
-    ## GD.settings.setValue("testje","testvalue")
-    ## print "%s" % GD.settings
+    pf.app.setOrganizationName("pyformex.org")
+    pf.app.setOrganizationDomain("pyformex.org")
+    pf.app.setApplicationName("pyFormex")
+    pf.app.setApplicationVersion(pf.__version__)
+    ## pf.settings = QtCore.QSettings("pyformex.org", "pyFormex")
+    ## pf.settings.setValue("testje","testvalue")
+    ## print "%s" % pf.settings
     
 
     #
     #
     
-    QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
-    QtCore.QObject.connect(GD.app,QtCore.SIGNAL("aboutToQuit()"),quit)
+    QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),pf.app,QtCore.SLOT("quit()"))
+    QtCore.QObject.connect(pf.app,QtCore.SIGNAL("aboutToQuit()"),quit)
 
     # Check if we have DRI
     viewport.setOpenGLFormat()
@@ -830,124 +830,124 @@ You should seriously consider to bail out now!!!
         
     # Load the splash image
     splash = None
-    if os.path.exists(GD.cfg['gui/splash']):
-        GD.debug('Loading splash %s' % GD.cfg['gui/splash'])
-        splashimage = QtGui.QPixmap(GD.cfg['gui/splash'])
+    if os.path.exists(pf.cfg['gui/splash']):
+        pf.debug('Loading splash %s' % pf.cfg['gui/splash'])
+        splashimage = QtGui.QPixmap(pf.cfg['gui/splash'])
         splash = QtGui.QSplashScreen(splashimage)
         splash.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         splash.setFont(QtGui.QFont("Helvetica",24))
-        splash.showMessage(GD.Version,QtCore.Qt.AlignHCenter,QtCore.Qt.red)
+        splash.showMessage(pf.Version,QtCore.Qt.AlignHCenter,QtCore.Qt.red)
         splash.show()
 
     # create GUI, show it, run it
 
-    GD.GUI = GUI(windowname,
-                 GD.cfg.get('gui/size',(800,600)),
-                 GD.cfg.get('gui/pos',(0,0)),
-                 GD.cfg.get('gui/bdsize',(800,600)),
+    pf.GUI = GUI(windowname,
+                 pf.cfg.get('gui/size',(800,600)),
+                 pf.cfg.get('gui/pos',(0,0)),
+                 pf.cfg.get('gui/bdsize',(800,600)),
                  )
 
     # set the appearance
-    GD.GUI.setAppearence()
-    ## GD.GUI.setStyle(GD.cfg.get('gui/style','Plastique'))
-    ## font = GD.cfg.get('gui/font',None)
+    pf.GUI.setAppearence()
+    ## pf.GUI.setStyle(pf.cfg.get('gui/style','Plastique'))
+    ## font = pf.cfg.get('gui/font',None)
     ## if font:
-    ##     GD.GUI.setFont(font)
+    ##     pf.GUI.setFont(font)
     ## else:
-    ##     fontfamily = GD.cfg.get('gui/fontfamily',None)
+    ##     fontfamily = pf.cfg.get('gui/fontfamily',None)
     ##     if fontfamily:
-    ##         GD.GUI.setFontFamily(fontfamily)
-    ##     fontsize =  GD.cfg.get('gui/fontsize',None)
+    ##         pf.GUI.setFontFamily(fontfamily)
+    ##     fontsize =  pf.cfg.get('gui/fontsize',None)
     ##     if fontsize:
-    ##         GD.GUI.setFontSize(fontsize)
+    ##         pf.GUI.setFontSize(fontsize)
     # THIS OCCASIONALLy CAUSE fpbug ON bumper
-    GD.GUI.viewports.changeLayout(1)
-    GD.GUI.viewports.setCurrent(0)
-    GD.board = GD.GUI.board
-    GD.board.write("""%s  (C) Benedict Verhegghe
+    pf.GUI.viewports.changeLayout(1)
+    pf.GUI.viewports.setCurrent(0)
+    pf.board = pf.GUI.board
+    pf.board.write("""%s  (C) Benedict Verhegghe
 
 pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software,
 and you are welcome to redistribute it under the conditions of the
 GNU General Public License, version 3 or later.
 See Help->License or the file COPYING for details.
-""" % GD.Version)
-    GD.GUI.addInputBox()
-    GD.GUI.toggleInputBox(False)
-    GD.GUI.addCoordsTracker()
-    GD.GUI.toggleCoordsTracker(GD.cfg.get('gui/coordsbox',False))
-    GD.GUI.show()
-    GD.debug("Using window name %s" % GD.GUI.windowTitle())
+""" % pf.Version)
+    pf.GUI.addInputBox()
+    pf.GUI.toggleInputBox(False)
+    pf.GUI.addCoordsTracker()
+    pf.GUI.toggleCoordsTracker(pf.cfg.get('gui/coordsbox',False))
+    pf.GUI.show()
+    pf.debug("Using window name %s" % pf.GUI.windowTitle())
     
     # Create additional menus (put them in a list to save)
     
     # History Menu
-    GD.GUI.history = scriptMenu.ScriptMenu('History',files=GD.cfg['gui/history'],max=GD.cfg['gui/history_max'])
+    pf.GUI.history = scriptMenu.ScriptMenu('History',files=pf.cfg['gui/history'],max=pf.cfg['gui/history_max'])
 
-    if GD.cfg.get('gui/history_in_main_menu',False):
-        before = GD.GUI.menu.item('help')
-        GD.GUI.menu.insertMenu(before,GD.GUI.history)
+    if pf.cfg.get('gui/history_in_main_menu',False):
+        before = pf.GUI.menu.item('help')
+        pf.GUI.menu.insertMenu(before,pf.GUI.history)
     else:
-        filemenu = GD.GUI.menu.item('file')
+        filemenu = pf.GUI.menu.item('file')
         before = filemenu.item('---1')
-        filemenu.insertMenu(before,GD.GUI.history)
+        filemenu.insertMenu(before,pf.GUI.history)
     
 
     # Scripts menu
-    GD.GUI.scriptmenu = scriptMenu.createScriptMenu(GD.GUI.menu,before='help')
+    pf.GUI.scriptmenu = scriptMenu.createScriptMenu(pf.GUI.menu,before='help')
 
     # Create databases
     createDatabases()
  
     # PLugin menus
     import plugins
-    ## filemenu = GD.GUI.menu.item('file')
-    ## GD.gui.saveobj = plugins.create_plugin_menus(filemenu,before='options')
+    ## filemenu = pf.GUI.menu.item('file')
+    ## pf.gui.saveobj = plugins.create_plugin_menus(filemenu,before='options')
     ## # Load configured plugins, ignore if not found
     plugins.loadConfiguredPlugins()
-    #for p in GD.cfg['gui/plugins']:
+    #for p in pf.cfg['gui/plugins']:
     #    plugins.load(p)
     
     # Set interaction functions
-    GD.message = draw.message
-    GD.warning = draw.warning
+    pf.message = draw.message
+    pf.warning = draw.warning
     draw.reset()
 
-    GD.GUI.setBusy(False)
-    GD.GUI.addStatusBarButtons()
-    GD.GUI.update()
+    pf.GUI.setBusy(False)
+    pf.GUI.addStatusBarButtons()
+    pf.GUI.update()
 
     # remove the splash window
     if splash is not None:
-        splash.finish(GD.GUI)
+        splash.finish(pf.GUI)
 
-    GD.GUI.setBusy(False)
-    GD.GUI.update()
+    pf.GUI.setBusy(False)
+    pf.GUI.update()
    
-    if os.path.isdir(GD.cfg['workdir']):
+    if os.path.isdir(pf.cfg['workdir']):
         # Make the workdir the current dir
-        os.chdir(GD.cfg['workdir'])
+        os.chdir(pf.cfg['workdir'])
     else:
         # Save the current dir as workdir
         prefMenu.updateSettings({'workdir':os.getcwd(),'Save changes':True})
-    GD.app_started = True
-    GD.app.processEvents()
+    pf.app_started = True
+    pf.app.processEvents()
     return 0
 
 
 def createDatabases():
     """Create unified database objects for all menus."""
     from plugins import objects
-    GD.GUI.database = objects.Objects()
-    GD.GUI.drawable = objects.DrawableObjects()
+    pf.GUI.database = objects.Objects()
+    pf.GUI.drawable = objects.DrawableObjects()
 
 
 def runGUI():
     """Go into interactive mode"""
 
-    egg = GD.cfg.get('gui/easter_egg',None)
-    GD.debug('EGG: %s' % str(egg))
+    egg = pf.cfg.get('gui/easter_egg',None)
+    pf.debug('EGG: %s' % str(egg))
     if egg:
-        GD.debug('EGG')
+        pf.debug('EGG')
         if type(egg) is str:
             pye = egg.endswith('pye')
             egg = file(egg).read()
@@ -956,19 +956,19 @@ def runGUI():
             egg = ''.join(egg)
         draw.playScript(egg,pye=True)
 
-    GD.debug("Start main loop")
+    pf.debug("Start main loop")
     #utils.procInfo('runGUI')
     #from multiprocessing import Process
-    #p = Process(target=GD.app.exec_)
+    #p = Process(target=pf.app.exec_)
     #p.start()
     #res = p.join()
-    res = GD.app.exec_()
-    GD.debug("Exit main loop with value %s" % res)
+    res = pf.app.exec_()
+    pf.debug("Exit main loop with value %s" % res)
     return res
 
 
 def classify_examples():
-    m = GD.GUI.menu.item('Examples')
+    m = pf.GUI.menu.item('Examples')
     #print(m)
     #print(str(m.title()))
     

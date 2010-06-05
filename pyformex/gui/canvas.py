@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
+##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -23,7 +23,7 @@
 ##
 """This implements an OpenGL drawing widget for painting 3D scenes."""
 
-import pyformex as GD
+import pyformex as pf
 from coords import tand
 
 from numpy import *
@@ -42,7 +42,7 @@ import utils
 def gl_pickbuffer():
     "Return a list of the 2nd numbers in the openGL pick buffer."
     buf = GL.glRenderMode(GL.GL_RENDER)
-    #GD.debugt("translate getpickbuf")
+    #pf.debugt("translate getpickbuf")
     return asarray([ r[2] for r in buf ])
 
 
@@ -98,12 +98,12 @@ def glEnable(facility,onoff):
     onoff can be True or False to enable, resp. disable the facility, or
     None to leave it unchanged.
     """
-    print facility,onoff
+    pf.debug("%s: %s" % (facility,onoff))
     if onOff(onoff):
-        print "ENABLE"
+        pf.debug("ENABLE")
         GL.glEnable(facility)
     else:
-        print "DISABLE"
+        pf.debug("DISABLE")
         GL.glDisable(facility)
         
 
@@ -146,14 +146,14 @@ def glShadeModel(model):
             glFlat()
         
 def glSettings(settings):
-    print "GL SETTINGS: %s" % settings
+    pf.debug("GL SETTINGS: %s" % settings)
     glCulling(settings.get('Culling',None))
     glLighting(settings.get('Lighting',None))
     glShadeModel(settings.get('Shading',None))
     glLineSmooth(onOff(settings.get('Line Smoothing',None)))
     glPolygonFillMode(settings.get('Polygon Fill',None))
     glPolygonMode(settings.get('Polygon Mode',None))
-    GD.canvas.update()
+    pf.canvas.update()
 
     
 class ActorList(list):
@@ -358,7 +358,7 @@ class Canvas(object):
         self.setBbox()
         self.settings = CanvasSettings()
         self.mode2D = False
-        self.rendermode = GD.cfg['render/mode']
+        self.rendermode = pf.cfg['render/mode']
         self.polygonfill = False
         self.lighting = True
         self.avgnormals = False
@@ -369,7 +369,7 @@ class Canvas(object):
         self.view_angles = camera.view_angles
         self.cursor = None
         self.focus = False
-        GD.debug("Canvas Setting:\n%s"% self.settings)
+        pf.debug("Canvas Setting:\n%s"% self.settings)
 
 
     def Size(self):
@@ -418,16 +418,16 @@ class Canvas(object):
 
 
     def resetLighting(self):
-        self.lightmodel = GD.cfg['render/lightmodel']
-        self.ambient = GD.cfg['render/material/ambient']
-        self.specular = GD.cfg['render/material/specular']
-        self.emission = GD.cfg['render/material/emission']
-        self.shininess = GD.cfg['render/material/shininess']
+        self.lightmodel = pf.cfg['render/lightmodel']
+        self.ambient = pf.cfg['render/material/ambient']
+        self.specular = pf.cfg['render/material/specular']
+        self.emission = pf.cfg['render/material/emission']
+        self.shininess = pf.cfg['render/material/shininess']
 
         
     def resetLights(self):
         for i in range(8):
-            light = GD.cfg.get('render/light%d' % i, None)
+            light = pf.cfg.get('render/light%d' % i, None)
             if light is not None:
                 self.lights.set(i,**light)
 
@@ -483,7 +483,7 @@ class Canvas(object):
         """
         self.settings.bgcolor = colors.GLColor(color1)
         if color2 is None:
-            GD.debug("Clearing twocolor background")
+            pf.debug("Clearing twocolor background")
             self.settings.bgcolor2 = None
             self.background = None
         else:
@@ -554,7 +554,7 @@ class Canvas(object):
         """
         if on is None:
             on = self.triade is None
-        GD.debug("SETTING TRIADE %s" % on)
+        pf.debug("SETTING TRIADE %s" % on)
         if self.triade:
             self.removeAnnotation(self.triade)
             self.triade = None
@@ -564,11 +564,11 @@ class Canvas(object):
     
 
     def initCamera(self):
-        #if GD.options.makecurrent:
+        #if pf.options.makecurrent:
         self.makeCurrent()  # we need correct OpenGL context for camera
         self.camera = camera.Camera()
-        #GD.debug("camera.rot = %s" % self.camera.rot)
-        #GD.debug("view angles: %s" % self.view_angles)
+        #pf.debug("camera.rot = %s" % self.camera.rot)
+        #pf.debug("view angles: %s" % self.view_angles)
 
 
     def glinit(self,mode=None):
@@ -664,7 +664,7 @@ class Canvas(object):
         This should e.g. be used when actors are added to the scene,
         or after changing  camera position/orientation or lens.
         """
-        #GD.debugt("UPDATING CURRENT OPENGL CANVAS")
+        #pf.debugt("UPDATING CURRENT OPENGL CANVAS")
         self.makeCurrent()
         self.clear()
         self.glLight(self.lighting)
@@ -673,7 +673,7 @@ class Canvas(object):
         self.begin_2D_drawing()
         
         if self.background:
-            #GD.debug("Displaying background")
+            #pf.debug("Displaying background")
             self.background.draw(mode='smooth')
 
         if len(self.decorations) > 0:
@@ -686,7 +686,7 @@ class Canvas(object):
                 ##     self.zoom_2D()
 
         # draw the focus rectangle if more than one viewport
-        if len(GD.GUI.viewports.all) > 1 and GD.cfg['gui/showfocus']:
+        if len(pf.GUI.viewports.all) > 1 and pf.cfg['gui/showfocus']:
             if self.hasFocus():
                 self.draw_focus_rectangle(2)
             elif self.focus:
@@ -745,9 +745,9 @@ class Canvas(object):
         It is assumed that you will not try to change/refresh the normal
         3D drawing cycle during this operation.
         """
-        #GD.debug("Start 2D drawing")
+        #pf.debug("Start 2D drawing")
         if self.mode2D:
-            #GD.debug("WARNING: ALREADY IN 2D MODE")
+            #pf.debug("WARNING: ALREADY IN 2D MODE")
             return
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
@@ -763,7 +763,7 @@ class Canvas(object):
  
     def end_2D_drawing(self):
         """Cancel the 2D drawing mode initiated by begin_2D_drawing."""
-        #GD.debug("End 2D drawing")
+        #pf.debug("End 2D drawing")
         if self.mode2D:
             GL.glEnable(GL.GL_DEPTH_TEST)    
             GL.glMatrixMode(GL.GL_PROJECTION)
@@ -777,7 +777,7 @@ class Canvas(object):
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
         # TEST: use last actor
-        #GD.debug("BBOX WAS: %s" % self.bbox)
+        #pf.debug("BBOX WAS: %s" % self.bbox)
         if bbox is None:
             if len(self.actors) > 0:
                 bbox = self.actors[-1].bbox()
@@ -788,8 +788,8 @@ class Canvas(object):
             self.bbox = nan_to_num(bbox)
         except:
         # if bbox.any() == nan:
-            GD.message("Invalid Bbox: %s" % bbox)
-        #GD.debug("BBOX BECOMES: %s" % self.bbox)
+            pf.message("Invalid Bbox: %s" % bbox)
+        #pf.debug("BBOX BECOMES: %s" % self.bbox)
 
          
     def addActor(self,actor):
@@ -816,7 +816,7 @@ class Canvas(object):
     def removeAnnotation(self,actor):
         """Remove an annotation from the 3D scene."""
         if actor == self.triade:
-            GD.debug("REMOVING TRIADE")
+            pf.debug("REMOVING TRIADE")
             self.triade = None
         self.annotations.delete(actor)
          
@@ -912,9 +912,9 @@ class Canvas(object):
         self.makeCurrent()
         # go to a distance to have a good view with a 45 degree angle lens
         if bbox is not None:
-            GD.debug("SETTING BBOX: %s" % self.bbox)
+            pf.debug("SETTING BBOX: %s" % self.bbox)
             self.setBbox(bbox)
-        GD.debug("USING BBOX: %s" % self.bbox)
+        pf.debug("USING BBOX: %s" % self.bbox)
         X0,X1 = self.bbox
         center = 0.5*(X0+X1)
         # calculating the bounding circle: this is rather conservative
@@ -929,10 +929,10 @@ class Canvas(object):
         # Currently, we keep the default fovy/aspect
         # and change the camera distance to focus
         fovy = self.camera.fovy
-        #GD.debug("FOVY: %s" % fovy)
+        #pf.debug("FOVY: %s" % fovy)
         self.camera.setLens(fovy,self.aspect)
         # Default correction is sqrt(3)
-        correction = float(GD.cfg.get('gui/autozoomfactor',1.732))
+        correction = float(pf.cfg.get('gui/autozoomfactor',1.732))
         tf = tand(fovy/2.)
 
         import simple,coords
@@ -945,7 +945,7 @@ class Canvas(object):
         dist = (vsize/tf + offset) / correction
         
         if dist == nan or dist == inf:
-            GD.debug("DIST: %s" % dist)
+            pf.debug("DIST: %s" % dist)
             return
         if dist <= 0.0:
             dist = 1.0
@@ -1031,15 +1031,15 @@ class Canvas(object):
         """draw the cursor"""
         if self.cursor:
             self.removeDecoration(self.cursor)
-        w,h = GD.cfg.get('pick/size',(20,20))
-        col = GD.cfg.get('pick/color','yellow')
+        w,h = pf.cfg.get('pick/size',(20,20))
+        col = pf.cfg.get('pick/color','yellow')
         self.cursor = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color=col,linewidth=1)
         self.addDecoration(self.cursor)
 
     def draw_rectangle(self,x,y):
         if self.cursor:
             self.removeDecoration(self.cursor)
-        col = GD.cfg.get('pick/color','yellow')
+        col = pf.cfg.get('pick/color','yellow')
         self.cursor = decors.Grid(self.statex,self.statey,x,y,color=col,linewidth=1)
         self.addDecoration(self.cursor)
 

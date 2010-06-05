@@ -69,7 +69,7 @@
       .. automethod:: projectOnSphere(radius=1.,center=[0.,0.,0.])
       .. automethod:: projectOnCylinder(radius=1.,dir=0,center=[0.,0.,0.])
       .. automethod:: split()
-      .. automethod:: fuse(nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5)
+      .. automethod:: fuse(nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5,repeat=True)
       .. automethod:: append(coords)
       .. automethod:: concatenate(clas,L,axis=0)
       .. automethod:: fromstring(clas,fil,sep=' ',ndim=3,count=1)
@@ -80,6 +80,7 @@
 
    .. autofunction:: bbox(objects)
    .. autofunction:: coordsmethod(f)
+   .. autofunction:: origin()
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

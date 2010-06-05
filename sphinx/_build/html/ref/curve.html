@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>29. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.2-a6 documentation</title>
+    <title>29. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a6',
+        VERSION:     '0.8.2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="30. mesh — mesh.py" href="mesh.html" />
     <link rel="prev" title="28. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" /> 
@@ -212,22 +212,39 @@ not guarantee the sequential order.</p>
 <dl class="method">
 <dt id="curve.PolyLine.vectors">
 <tt class="descname">vectors</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.vectors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the vectors of the points to the next one.</p>
+<dd><p>Return the vectors of each point to the next one.</p>
 <p>The vectors are returned as a Coords object.
-If not closed, this returns one less vectors than the number of points.</p>
+If the curve is not closed, the number of vectors returned is
+one less than the number of points.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="curve.PolyLine.directions">
-<tt class="descname">directions</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.directions" title="Permalink to this definition">¶</a></dt>
-<dd>Returns unit vectors in the direction of the next point.</dd></dl>
+<tt class="descname">directions</tt><big>(</big><em>return_doubles=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine.directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns unit vectors in the direction of the next point.</p>
+<p>This directions are returned as a Coords object with the same
+number of elements as the point set.</p>
+<p>If two subsequent points are identical, the first one gets
+the direction of the previous segment. If more than two subsequent
+points are equal, an invalid direction (NaN) will result.</p>
+<p>If the curve is not closed, the last direction is set equal to the
+penultimate.</p>
+<p>If return_doubles is True, the return value is a tuple of the direction
+and an index of the points that are identical with their follower.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="curve.PolyLine.avgDirections">
-<tt class="descname">avgDirections</tt><big>(</big><em>normalized=True</em><big>)</big><a class="headerlink" href="#curve.PolyLine.avgDirections" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns average directions at the inner nodes.</p>
-<p>If open, the number of directions returned is 2 less than the
-number of points.</p>
+<tt class="descname">avgDirections</tt><big>(</big><em>return_doubles=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine.avgDirections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the average directions at points.</p>
+<p>For each point the returned direction is the average of the direction
+from the preceding point to the current, and the direction from the
+current to the next point.</p>
+<p>If the curve is open, the first and last direction are equal to the
+direction of the first, resp. last segment.</p>
+<p>Where two subsequent points are identical, the average directions
+are set equal to those of the segment ending in the first and the
+segment starting from the last.</p>
 </dd></dl>
 
 <dl class="method">

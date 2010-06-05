@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
+##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -124,10 +124,6 @@ def savePreferences():
         return
     
     del pyformex.prefcfg['__ref__']
-    
-    # Currently dangerous to set permanently!
-    # Not anymore, default value changed to 2 seconds!
-    #del pyformex.prefcfg['gui']['timeoutvalue']
 
     # Currently erroroneously processed, therefore not saved
     del pyformex.prefcfg['render']['light0']
@@ -136,16 +132,8 @@ def savePreferences():
     del pyformex.prefcfg['render']['light3']
 
     pyformex.options.debug = 1
-    #print pyformex.options
-    #print pyformex.debug
-    #print pyformex.prefcfg
     pyformex.debug("="*60)
     pyformex.debug("!!!Saving config:\n%s" % pyformex.prefcfg)
-
-    ## print "YOUR SAVE CONFIG NOW HAS KEYS: "
-    ## k = pyformex.prefcfg.keys()
-    ## k.sort()
-    ## print k
 
     try:
         pyformex.prefcfg.write(pyformex.preffile)
@@ -166,7 +154,6 @@ def apply_config_changes(cfg):
 
     for i in range(8):
         t = "render/light%s"%i
-        #print t
         try:
             cfg[t] = dict(cfg[t])
         except:
@@ -187,13 +174,9 @@ def apply_config_changes(cfg):
         'render/ambient','render/diffuse','render/specular','render/emission',
         ]:
         if key in cfg.keys():
-            print "DELETING CONFIG VARIABLE %s" % key
+            # Can we put GD.debug here?
+            print("DELETING CONFIG VARIABLE %s" % key)
             del cfg[key]
-
-    ## print "YOUR SAVED CONFIG NOW HAS KEYS: "
-    ## k = cfg.keys()
-    ## k.sort()
-    ## print k
 
 
 ###########################  app  ################################
@@ -440,7 +423,7 @@ def run(argv=[]):
             try:
                 utils.runCommand(svnclean)
             except:
-                print "Error while executing %s, we ignore it and continue" % svnclean
+                print("Error while executing %s, we ignore it and continue" % svnclean)
                 
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!

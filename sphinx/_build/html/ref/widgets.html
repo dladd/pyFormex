@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>13. widgets — A collection of custom widgets used in the pyFormex GUI &mdash; pyFormex v0.8.2-a6 documentation</title>
+    <title>13. widgets — A collection of custom widgets used in the pyFormex GUI &mdash; pyFormex v0.8.2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a6',
+        VERSION:     '0.8.2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="14. menu — Menus for the pyFormex GUI." href="menu.html" />
     <link rel="prev" title="12. elements — Element local coordinates and numbering." href="elements.html" /> 
@@ -383,8 +383,8 @@ of the checkbox.</p>
 <dt id="widgets.InputCombo">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputCombo</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>onselect=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputCombo" title="Permalink to this definition">¶</a></dt>
 <dd><p>A combobox InputItem.</p>
-<p class="rubric">Methods</p>
-<p>Creates a new combobox for the selection of a value from a list.</p>
+<p>A combobox is a widget allowing the selection of an item from a drop
+down list.</p>
 <p>choices is a list/tuple of possible values.
 default is the initial/default choice.
 If default is not in the choices list, it is prepended.
@@ -393,6 +393,8 @@ If default is None, the first item of choices is taken as the default.</p>
 initially be set to the default value.</p>
 <p>An optional <cite>onselect</cite> function may be specified, which will be called
 whenever the current selection changes.</p>
+<p class="rubric">Methods</p>
+<p>Create the combobox.</p>
 <p class="rubric">Methods</p>
 <p>InputCombo objects have the following methods:</p>
 <dl class="method">
@@ -411,8 +413,7 @@ whenever the current selection changes.</p>
 <dt id="widgets.InputRadio">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputRadio</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputRadio" title="Permalink to this definition">¶</a></dt>
 <dd><p>A radiobuttons InputItem.</p>
-<p class="rubric">Methods</p>
-<p>Creates radiobuttons for the selection of a value from a list.</p>
+<p>Radio buttons are a set of buttons used to select a value from a list.</p>
 <p>choices is a list/tuple of possible values.
 default is the initial/default choice.
 If default is not in the choices list, it is prepended.
@@ -420,6 +421,8 @@ If default is None, the first item of choices is taken as the default.</p>
 <p>The choices are presented to the user as a hbox with radio buttons,
 of which the default will initially be pressed.
 If direction == &#8216;v&#8217;, the options are in a vbox.</p>
+<p class="rubric">Methods</p>
+<p>Creates the radiobuttons.</p>
 <p class="rubric">Methods</p>
 <p>InputRadio objects have the following methods:</p>
 <dl class="method">
@@ -666,6 +669,24 @@ specified in the dict.</li>
 <dl class="method">
 <dt id="widgets.InputWidget.setValue">
 <tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputWidget.setValue" title="Permalink to this definition">¶</a></dt>
+<dd>Change the widget&#8217;s value.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="widgets.InputGroup">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputGroup</tt><big>(</big><em>name</em>, <em>items</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boxed group of InputItems.</p>
+<p class="rubric">Methods</p>
+<p>InputGroup objects have the following methods:</p>
+<dl class="method">
+<dt id="widgets.InputGroup.value">
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputGroup.value" title="Permalink to this definition">¶</a></dt>
+<dd>Return the widget&#8217;s value.</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputGroup.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputGroup.setValue" title="Permalink to this definition">¶</a></dt>
 <dd>Change the widget&#8217;s value.</dd></dl>
 
 </dd></dl>
@@ -1433,10 +1454,10 @@ default is the name of the action to set as the default.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="elements.html"
-                                  title="previous chapter">12. <tt class="docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.</a></p>
+                                  title="previous chapter">12. <tt class="docutils literal docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="menu.html"
-                                  title="next chapter">14. <tt class="docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
+                                  title="next chapter">14. <tt class="docutils literal docutils literal docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/widgets.txt"

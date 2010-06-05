@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.2-a6 documentation</title>
+    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a6',
+        VERSION:     '0.8.2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="2. formex — Formex algebra in Python" href="formex.html" />
     <link rel="prev" title="pyFormex reference manual" href="../refman.html" /> 
@@ -622,7 +622,7 @@ Raises an error if self.ndim &lt; 2.</p>
 
 <dl class="method">
 <dt id="coords.Coords.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1.e-5</em>, <em>atol=1.e-5</em><big>)</big><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1.e-5</em>, <em>atol=1.e-5</em>, <em>repeat=True</em><big>)</big><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find (almost) identical nodes and return a compressed set.</p>
 <p>This method finds the points that are very close and replaces them
 with a single point. The return value is a tuple of two arrays:</p>
@@ -638,16 +638,18 @@ The boxes are numbered in the 3 directions and a unique integer scalar
 is computed, that is then used to sort the nodes.
 Then only nodes inside the same box are compared on almost equal
 coordinates, using the numpy allclose() function. Two coordinates are
-considered close if they are within a relative tolerance rtol or absolute
-tolerance atol. See numpy for detail. The default atol is set larger than
-in numpy, because pyformex typically runs with single precision.
+considered close if they are within a relative tolerance rtol or
+absolute tolerance atol. See numpy for detail. The default atol is
+set larger than in numpy, because pyformex typically runs with single
+precision.
 Close nodes are replaced by a single one.</p>
-<p>Currently the procedure does not guarantee to find all close nodes:
+<p>Running the procedure once does not guarantee to find all close nodes:
 two close nodes might be in adjacent boxes. The performance hit for
 testing adjacent boxes is rather high, and the probability of separating
-two close nodes with the computed box limits is very small. Nevertheless
-we intend to access this problem by repeating the procedure with the
-boxes shifted in space.</p>
+two close nodes with the computed box limits is very small.
+Therefore, the most sensible way is to run the procedure twice, with
+a different shift value (they should differ more than the tolerance).
+Specifying repeat=True will automatically do this.</p>
 </dd></dl>
 
 <dl class="method">
@@ -756,6 +758,11 @@ your class, with the same arguments:</p>
 <p>The coordinates are changed inplane, so if you want to save the original
 ones, you need to copy them before you use the transformation.</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="coords.origin">
+<tt class="descclassname">coords.</tt><tt class="descname">origin</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.origin" title="Permalink to this definition">¶</a></dt>
+<dd>Return a single point with coordinates [0.,0.,0.].</dd></dl>
 
 </blockquote>
 </div>

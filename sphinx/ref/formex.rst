@@ -43,7 +43,7 @@
       .. automethod:: maxProp()
       .. automethod:: propSet()
       .. automethod:: centroids()
-      .. automethod:: fuse(nodesperbox=1,repeat=True,rtol=1.e-5,atol=None)
+      .. automethod:: fuse(repeat=True,nodesperbox=1,rtol=1.e-5,atol=None)
       .. automethod:: toMesh(None)
       .. automethod:: info()
       .. automethod:: point2str(clas,point)

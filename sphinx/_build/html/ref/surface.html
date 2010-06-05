@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>31. surface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.2-a6 documentation</title>
+    <title>31. surface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a6',
+        VERSION:     '0.8.2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="32. geomtools — Basic geometrical operations." href="geomtools.html" />
     <link rel="prev" title="30. mesh — mesh.py" href="mesh.html" /> 
@@ -843,6 +843,12 @@ Beware: this may take a lot of time if level is 8 or higher.</p>
 <dd>it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
 It returns the points of intersection and the indices of the intersected line and triangle.
 TODO: the slowest part is computing the distances of lines from triangles, can it be faster?</dd></dl>
+
+<dl class="function">
+<dt id="surface.intersectSurfaceWithSegments">
+<tt class="descclassname">surface.</tt><tt class="descname">intersectSurfaceWithSegments</tt><big>(</big><em>s1</em>, <em>segm</em>, <em>atol=1.e-5</em><big>)</big><a class="headerlink" href="#surface.intersectSurfaceWithSegments" title="Permalink to this definition">¶</a></dt>
+<dd>it takes a TriSurface ts and a set of segments (-1,2,3) and intersect the segments with the TriSurface.
+It returns the points of intersections and, for each point, the indices of the intersected segment and triangle</dd></dl>
 
 </blockquote>
 </div>

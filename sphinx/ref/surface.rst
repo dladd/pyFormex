@@ -128,6 +128,7 @@
    .. autofunction:: intersectLineWithPlaneOne2One(q,m,p,n)
    .. autofunction:: checkPointInsideTriangleOne2One(tpi,pi,atol=1.e-5)
    .. autofunction:: intersectSurfaceWithLines(ts,qli,mli)
+   .. autofunction:: intersectSurfaceWithSegments(s1,segm,atol=1.e-5)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

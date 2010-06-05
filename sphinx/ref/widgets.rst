@@ -208,6 +208,14 @@
       .. automethod:: value()
       .. automethod:: setValue(val)
 
+   .. autoclass:: InputGroup
+
+
+      InputGroup objects have the following methods:
+
+      .. automethod:: value()
+      .. automethod:: setValue(val)
+
    .. autoclass:: NewInputDialog
 
 

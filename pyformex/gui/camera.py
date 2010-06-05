@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
+##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -157,7 +157,7 @@ class Camera:
 
     def lock(self,onoff=True):
         self.locked = onoff
-        print "Camera locked is %s" % self.locked
+        print("Camera locked is %s" % self.locked)
 
 
     def setCenter(self,x,y,z):

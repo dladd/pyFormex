@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
+##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -36,21 +36,21 @@ from utils import deprecation,checkVersion
 
 
 if checkVersion('python','2.5') < 0:
-    print """
+    print("""
 This version of pyFormex was developed for Python 2.5.
 We advice you to upgrade your Python version.
 Getting pyFormex to run on Python 2.4 should be possible with a
 a few adjustements. Make it run on a lower version is problematic.
-"""
+""")
     sys.exit()
     
 if checkVersion('python','2.6') >= 0:
-    print """
+    print("""
 This version of pyFormex was developed for Python 2.5.
 There should not be any major problem with running on version 2.6,
 but if you encounter some problems, please contact the developers at
 pyformex.berlios.de.
-"""
+""")
     from itertools import combinations
 else:
     def combinations(iterable, r):
@@ -797,11 +797,11 @@ if __name__ == "__main__":
 
     uniq,uniqid = uniqueRows(A)
     B = A[uniq]
-    print B
+    print(B)
 
-    print uniqid
+    print(uniqid)
     AB = B.take(uniqid,axis=0)
-    print A-AB
+    print(A-AB)
     
     
 # End

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>30. mesh — mesh.py &mdash; pyFormex v0.8.2-a6 documentation</title>
+    <title>30. mesh — mesh.py &mdash; pyFormex v0.8.2 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.2-a6',
+        VERSION:     '0.8.2',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.2-a6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="31. surface — Operations on triangulated surfaces." href="surface.html" />
     <link rel="prev" title="29. curve — Definition of curves in pyFormex." href="curve.html" /> 
@@ -650,21 +650,6 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
 <dd>it builds a structured hexahedral grid with nodes and elements both numbered in a structured way: first along z, then along y,and then along x. The resulting hex cells are oriented along z. This function is the equivalent of simple.rectangularGrid but for a mesh. Additionally, dx,dy,dz can be either integers or div (1D list or array). In case of list/array, first and last numbers should be 0.0 and 1.0 if the desired grid has to be inside the region 0.,0.,0. to 1.,1.,1.
 If isopHex is specified, a convenient set of control points for the isoparametric transformation hex64 is also returned.
 TODO: include other options to get the control points for other isoparametric transformation for hex.</dd></dl>
-
-<dl class="function">
-<dt id="mesh.argSortAndUnsort">
-<tt class="descclassname">mesh.</tt><tt class="descname">argSortAndUnsort</tt><big>(</big><em>xarr</em><big>)</big><a class="headerlink" href="#mesh.argSortAndUnsort" title="Permalink to this definition">¶</a></dt>
-<dd>it reverse the sorting: return the indices to unsort the sorted array. For the moment it works only with 1D array</dd></dl>
-
-<dl class="function">
-<dt id="mesh.indexRenumbering1D">
-<tt class="descclassname">mesh.</tt><tt class="descname">indexRenumbering1D</tt><big>(</big><em>xarr</em><big>)</big><a class="headerlink" href="#mesh.indexRenumbering1D" title="Permalink to this definition">¶</a></dt>
-<dd>it takes a 1D array of integers and renumbers them based on the order of appearance in the array</dd></dl>
-
-<dl class="function">
-<dt id="mesh.meshRenumberingNodesOnElems">
-<tt class="descclassname">mesh.</tt><tt class="descname">meshRenumberingNodesOnElems</tt><big>(</big><em>xMesh</em><big>)</big><a class="headerlink" href="#mesh.meshRenumberingNodesOnElems" title="Permalink to this definition">¶</a></dt>
-<dd>it takes a Mesh and return the same Mesh but with a different order of nodes. The nodes are ordered as they appear in the elements, therefore in a standardized order based on the topology and not on the geometry.</dd></dl>
 
 <dl class="function">
 <dt id="mesh.correctHexMeshOrientation">

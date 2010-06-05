@@ -1,6 +1,6 @@
 ## $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
+##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -27,7 +27,7 @@ The draw module provides the basic user interface to the OpenGL
 rendering capabilities of pyFormex.
 """
 
-import pyformex as GD
+import pyformex as pf
 
 import threading,os,sys,types,copy,commands,time
 
@@ -54,8 +54,8 @@ from plugins import surface,tools,mesh,fe
 #################### Interacting with the user ###############################
 
 def closeGui():
-    GD.debug("Closing the GUI: currently, this will also terminate pyformex.")
-    GD.GUI.close()
+    pf.debug("Closing the GUI: currently, this will also terminate pyformex.")
+    pf.GUI.close()
 
 
 def showMessage(text,actions=['OK'],level='info',modal=True,**kargs):
@@ -211,13 +211,13 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
     working directory.
     """
     if cur is None:
-        cur = GD.cfg['workdir']
+        cur = pf.cfg['workdir']
     if os.path.isdir(cur):
         fn = ''
     else:
         fn = os.path.basename(cur)
         cur = os.path.dirname(cur)
-    #GD.debug("cur,fn: %s,%s" % (cur,fn))
+    #pf.debug("cur,fn: %s,%s" % (cur,fn))
     #print("MULTI=%s" % multi)
     w = widgets.FileSelection(cur,filter,exist,multi)
     if fn:
@@ -229,9 +229,9 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
             chdir(fn[0])
         else:
             chdir(fn)
-    GD.GUI.update()
-    GD.canvas.update()
-    GD.app.processEvents()
+    pf.GUI.update()
+    pf.canvas.update()
+    pf.app.processEvents()
     return fn
 
 
@@ -255,14 +255,14 @@ def askDirname(cur=None,change=True):
     False, the selected directory will become the new  working directory.
     """
     if cur is None:
-        cur = GD.cfg['workdir']
+        cur = pf.cfg['workdir']
     cur = os.path.dirname(cur)
     fn = widgets.FileSelection(cur,'*',dir=True).getFilename()
     if fn and change:
         chdir(fn)
-    GD.GUI.update()
-    GD.canvas.update()
-    GD.app.processEvents()
+    pf.GUI.update()
+    pf.canvas.update()
+    pf.app.processEvents()
     return fn
 
 
@@ -290,9 +290,9 @@ def printMessage(s):
     """
     if logfile is not None:
         logfile.write(str(s)+'\n')
-    GD.GUI.board.write(str(s))
-    GD.GUI.update()
-    GD.app.processEvents()
+    pf.GUI.board.write(str(s))
+    pf.GUI.update()
+    pf.app.processEvents()
 
 # message is the preferred function to send text info to the user.
 # The default message handler is set here.
@@ -378,7 +378,7 @@ def draw(F,
     # We need to get the default for bbox before processing a list,
     # because bbox should be set only once for the whole list of objects
     if bbox is None:
-        bbox = GD.canvas.options.get('bbox','auto')
+        bbox = pf.canvas.options.get('bbox','auto')
         
     if type(F) == list:
         actor = []
@@ -397,8 +397,8 @@ def draw(F,
                 
         if bbox == 'auto':
             bbox = coords.bbox(actor)
-            GD.canvas.setCamera(bbox,view)
-            GD.canvas.update()
+            pf.canvas.setCamera(bbox,view)
+            pf.canvas.update()
                 
         return actor           
 
@@ -424,13 +424,13 @@ def draw(F,
 
     # Fill in the remaining defaults
     if shrink is None:
-        shrink = GD.canvas.options.get('shrink',None)
+        shrink = pf.canvas.options.get('shrink',None)
  
     if marksize is None:
-        marksize = GD.canvas.options.get('marksize',GD.cfg.get('marksize',5.0))
+        marksize = pf.canvas.options.get('marksize',pf.cfg.get('marksize',5.0))
 
     if alpha is None:
-        alpha = GD.canvas.options.get('alpha',0.5)
+        alpha = pf.canvas.options.get('alpha',0.5)
        
     # Create the colors
     if color == 'prop':
@@ -444,18 +444,18 @@ def draw(F,
         # create random colors
         color = numpy.random.rand(F.nelems(),3)
 
-    GD.GUI.drawlock.wait()
+    pf.GUI.drawlock.wait()
 
     if clear is None:
-        clear = GD.canvas.options.get('clear',False)
+        clear = pf.canvas.options.get('clear',False)
     if clear:
         clear_canvas()
 
     if view is not None and view != 'last':
-        GD.debug("SETTING VIEW to %s" % view)
+        pf.debug("SETTING VIEW to %s" % view)
         setView(view)
 
-    GD.GUI.setBusy()
+    pf.GUI.setBusy()
     if shrink is not None:
         F = _shrink(F,shrink)
 
@@ -471,27 +471,27 @@ def draw(F,
         if flat:
             actor.specular = 0.
         if highlight:
-            GD.canvas.addHighlight(actor)
+            pf.canvas.addHighlight(actor)
         else:
-            GD.canvas.addActor(actor)
+            pf.canvas.addActor(actor)
             if view is not None or bbox not in [None,'last']:
-                GD.debug("CHANGING VIEW to %s" % view)
+                pf.debug("CHANGING VIEW to %s" % view)
                 if view == 'last':
-                    view = GD.canvas.options['view']
+                    view = pf.canvas.options['view']
                 if bbox == 'auto':
                     bbox = F.bbox()
-                GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
-                GD.canvas.setCamera(bbox,view)
+                pf.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
+                pf.canvas.setCamera(bbox,view)
                 #setView(view)
-        GD.canvas.update()
-        GD.app.processEvents()
-        #GD.debug("AUTOSAVE %s" % image.autoSaveOn())
+        pf.canvas.update()
+        pf.app.processEvents()
+        #pf.debug("AUTOSAVE %s" % image.autoSaveOn())
         if image.autoSaveOn():
             image.saveNext()
         if wait: # make sure next drawing operation is retarded
-            GD.GUI.drawlock.lock()
+            pf.GUI.drawlock.lock()
     finally:
-        GD.GUI.setBusy(False)
+        pf.GUI.setBusy(False)
     return actor
 
 
@@ -499,11 +499,11 @@ def _setFocus(object,bbox,view):
     """Set focus after a draw operation"""
     if view is not None or bbox not in [None,'last']:
         if view == 'last':
-            view = GD.canvas.options['view']
+            view = pf.canvas.options['view']
         if bbox == 'auto':
             bbox = coords.bbox(object)
-        GD.canvas.setCamera(bbox,view)
-    GD.canvas.update()
+        pf.canvas.setCamera(bbox,view)
+    pf.canvas.update()
 
 
 def focus(object):
@@ -516,17 +516,17 @@ def focus(object):
     where the whole object can be viewed using a 45. degrees lens opening.
     This technique may change in future!
     """
-    GD.canvas.setCamera(bbox=bbox(object))
-    GD.canvas.update()
+    pf.canvas.setCamera(bbox=bbox(object))
+    pf.canvas.update()
 
     
 def setDrawOptions(d):
-    GD.canvas.setOptions(d)
+    pf.canvas.setOptions(d)
 
     
 def showDrawOptions():
-    GD.message("Current Drawing Options: %s" % GD.canvas.options)
-    GD.message("Current Viewport Options: %s" % GD.canvas.settings)
+    pf.message("Current Drawing Options: %s" % pf.canvas.options)
+    pf.message("Current Viewport Options: %s" % pf.canvas.settings)
 
 
 def askDrawOptions(d={}):
@@ -535,14 +535,14 @@ def askDrawOptions(d={}):
     A dictionary may be specified to override the current defaults.
     """
     setDrawOptions(d)
-    res = askItems(GD.canvas.options.items())
+    res = askItems(pf.canvas.options.items())
     setDrawOptions(res)
 
 
 def reset():
-    GD.canvas.resetOptions()
-    GD.GUI.drawwait = GD.cfg['draw/wait']
-    GD.canvas.resetDefaults(GD.cfg['canvas'])
+    pf.canvas.resetOptions()
+    pf.GUI.drawwait = pf.cfg['draw/wait']
+    pf.canvas.resetDefaults(pf.cfg['canvas'])
     clear()
     view('front')
 
@@ -589,12 +589,12 @@ def drawVectors(P,v,d=1.0,color='red'):
 
 def drawPlane(P,N,size):
     actor = actors.PlaneActor(size=size)
-    actor.create_list(mode=GD.canvas.rendermode)
+    actor.create_list(mode=pf.canvas.rendermode)
     actor = actors.RotatedActor(actor,N)
-    actor.create_list(mode=GD.canvas.rendermode)
+    actor.create_list(mode=pf.canvas.rendermode)
     actor = actors.TranslatedActor(actor,P)
-    GD.canvas.addActor(actor)
-    GD.canvas.update()
+    pf.canvas.addActor(actor)
+    pf.canvas.update()
     return actor
 
 
@@ -607,9 +607,9 @@ def drawMarks(X,M,color='black',leader=''):
     3D coordinate.
     """
     M = marks.MarkList(X,M,color=color,leader=leader)
-    GD.canvas.addAnnotation(M)
-    GD.canvas.numbers = M
-    GD.canvas.update()
+    pf.canvas.addAnnotation(M)
+    pf.canvas.numbers = M
+    pf.canvas.update()
     return M
 
 
@@ -654,8 +654,8 @@ def drawNormals(N,P,size=5,**extra):
 def drawText3D(P,text,color=None,font='sans',size=18):
     """Draw a text at a 3D point P."""
     M = marks.TextMark(P,text,color=color,font=font,size=size)
-    GD.canvas.addAnnotation(M)
-    GD.canvas.update()
+    pf.canvas.addAnnotation(M)
+    pf.canvas.update()
     return M
 
 
@@ -675,8 +675,8 @@ def drawBbox(A):
 
 def drawActor(A):
     """Draw an actor and update the screen."""
-    GD.canvas.addActor(A)
-    GD.canvas.update()
+    pf.canvas.addActor(A)
+    pf.canvas.update()
 
 
 def undraw(itemlist):
@@ -686,24 +686,24 @@ def undraw(itemlist):
     the item that was drawn from the canvas.
     A single item or a list of items may be specified.
     """
-    GD.canvas.remove(itemlist)
-    GD.canvas.update()
-    GD.app.processEvents()
+    pf.canvas.remove(itemlist)
+    pf.canvas.update()
+    pf.app.processEvents()
     
 
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
-    GD.GUI.drawlock.wait()
+    pf.GUI.drawlock.wait()
     if v != 'last':
-        angles = GD.canvas.view_angles.get(v)
+        angles = pf.canvas.view_angles.get(v)
         if not angles:
             warning("A view named '%s' has not been created yet" % v)
             return
-        GD.canvas.setCamera(None,angles)
+        pf.canvas.setCamera(None,angles)
     setView(v)
-    GD.canvas.update()
+    pf.canvas.update()
     if wait:
-        GD.GUI.drawlock.lock()
+        pf.GUI.drawlock.lock()
 
 
 def setTriade(on=None,pos='lb',siz=100):
@@ -712,9 +712,9 @@ def setTriade(on=None,pos='lb',siz=100):
     If on is True, the axes triade is displayed, if False it is
     removed. The default (None) toggles between on and off.
     """
-    GD.canvas.setTriade(on,pos,siz)
-    GD.canvas.update()
-    GD.app.processEvents()
+    pf.canvas.setTriade(on,pos,siz)
+    pf.canvas.update()
+    pf.app.processEvents()
 
 
 def drawText(text,x,y,gravity='E',font='helvetica',size=14,color=None,zoom=None):
@@ -725,21 +725,21 @@ def drawText(text,x,y,gravity='E',font='helvetica',size=14,color=None,zoom=None)
 
 def annotate(annot):
     """Draw an annotation."""
-    GD.canvas.addAnnotation(annot)
-    GD.canvas.update()
+    pf.canvas.addAnnotation(annot)
+    pf.canvas.update()
 
 def unannotate(annot):
-    GD.canvas.removeAnnotation(annot)
-    GD.canvas.update()
+    pf.canvas.removeAnnotation(annot)
+    pf.canvas.update()
 
 def decorate(decor):
     """Draw a decoration."""
-    GD.canvas.addDecoration(decor)
-    GD.canvas.update()
+    pf.canvas.addDecoration(decor)
+    pf.canvas.update()
 
 def undecorate(decor):
-    GD.canvas.removeDecoration(decor)
-    GD.canvas.update()
+    pf.canvas.removeDecoration(decor)
+    pf.canvas.update()
 
 
 
@@ -766,31 +766,31 @@ def createView(name,angles):
     If the view name is new, and there is a views toolbar,
     a view button will be added to it.
     """
-    GD.GUI.setViewAngles(name,angles)   
+    pf.GUI.setViewAngles(name,angles)   
     
 
 def zoomBbox(bb):
     """Zoom thus that the specified bbox becomes visible."""
-    GD.canvas.setBbox(bb)
-    GD.canvas.setCamera()
-    GD.canvas.update()
+    pf.canvas.setBbox(bb)
+    pf.canvas.setCamera()
+    pf.canvas.update()
 
 
 def zoomRectangle():
     """Zoom a rectangle selected by the user."""
-    GD.canvas.start_rectangle_zoom()
-    GD.canvas.update()
+    pf.canvas.start_rectangle_zoom()
+    pf.canvas.update()
     
 
 
 def zoomAll():
     """Zoom thus that all actors become visible."""
-    if GD.canvas.actors:
-        zoomBbox(coords.bbox(GD.canvas.actors))
+    if pf.canvas.actors:
+        zoomBbox(coords.bbox(pf.canvas.actors))
 
 def zoom(f):
-    GD.canvas.zoom(f)
-    GD.canvas.update()
+    pf.canvas.zoom(f)
+    pf.canvas.update()
 
 
 def bgcolor(color,color2=None):
@@ -800,22 +800,22 @@ def bgcolor(color,color2=None):
     If two colors are given, the background color will get a vertical
     gradient with color on top and color2 at the bottom.
     """
-    GD.canvas.setBgColor(color,color2)
-    GD.canvas.display()
-    GD.canvas.update()
+    pf.canvas.setBgColor(color,color2)
+    pf.canvas.display()
+    pf.canvas.update()
 
 
 def fgcolor(color):
     """Set the default foreground color."""
-    GD.canvas.setFgColor(color)
+    pf.canvas.setFgColor(color)
 
 
 def renderMode(mode,avg=False):
-    GD.canvas.setRenderMode(mode)
+    pf.canvas.setRenderMode(mode)
     toolbar.setNormals(avg)
-    toolbar.setLight(GD.canvas.lighting)
-    GD.canvas.update()
-    GD.app.processEvents()
+    toolbar.setLight(pf.canvas.lighting)
+    pf.canvas.update()
+    pf.app.processEvents()
     
 def wireframe():
     renderMode("wireframe")
@@ -837,7 +837,7 @@ def smooth_avg():
 
 ## def opacity(alpha):
 ##     """Set the viewports transparency."""
-##     GD.canvas.alpha = float(alpha)
+##     pf.canvas.alpha = float(alpha)
 
 def lights(onoff):
     """Set the lights on or off"""
@@ -858,39 +858,39 @@ def set_material_value(typ,val):
     typ is one of 'ambient','specular','emission','shininess'
     val is a value between 0.0 and 1.0
     """
-    print "SETMATVAL %s = %s" % (typ,val)
-    setattr(GD.canvas,typ,val)
-    GD.canvas.setLighting(True)
-    GD.canvas.update()
-    GD.app.processEvents()
+    #print "SETMATVAL %s = %s" % (typ,val)
+    setattr(pf.canvas,typ,val)
+    pf.canvas.setLighting(True)
+    pf.canvas.update()
+    pf.app.processEvents()
 
 def set_light(light,**args):
     light = int(light)
-    GD.canvas.lights.set(light,**args)
-    GD.canvas.setLighting(True)
-    GD.canvas.update()
-    GD.app.processEvents()
+    pf.canvas.lights.set(light,**args)
+    pf.canvas.setLighting(True)
+    pf.canvas.update()
+    pf.app.processEvents()
 
 def set_light_value(light,key,val):
     light = int(light)
-    GD.canvas.lights.set_value(light,key,val)
-    GD.canvas.setLighting(True)
-    GD.canvas.update()
-    GD.app.processEvents()
+    pf.canvas.lights.set_value(light,key,val)
+    pf.canvas.setLighting(True)
+    pf.canvas.update()
+    pf.app.processEvents()
 
 
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
-    GD.canvas.setLineWidth(wid)
+    pf.canvas.setLineWidth(wid)
 
 def pointsize(siz):
     """Set the size to be used in point drawings."""
-    GD.canvas.setPointSize(siz)
+    pf.canvas.setPointSize(siz)
 
 
 def canvasSize(width,height):
     """Resize the canvas to (width x height)."""
-    GD.canvas.resize(width,height)
+    pf.canvas.resize(width,height)
 
 
 def clear_canvas():
@@ -898,20 +898,20 @@ def clear_canvas():
 
     This is a low level function not intended for the user.
     """
-    GD.canvas.removeAll()
-    GD.canvas.clear()
+    pf.canvas.removeAll()
+    pf.canvas.clear()
 
 
 def clear():
     """Clear the canvas"""
-    GD.GUI.drawlock.wait()
+    pf.GUI.drawlock.wait()
     clear_canvas()
-    GD.canvas.update()
+    pf.canvas.update()
 
 
 def redraw():
-    GD.canvas.redrawAll()
-    GD.canvas.update()
+    pf.canvas.redrawAll()
+    pf.canvas.update()
 
 
 
@@ -925,15 +925,15 @@ def pause(msg="Use the Step or Continue button to proceed",timeout=None):
     from gui.drawlock import repeat
 
     def _continue_():
-        return GD.GUI.drawlock.locked
+        return pf.GUI.drawlock.locked
 
-    GD.debug("PAUSE ACTIVATED!")
+    pf.debug("PAUSE ACTIVATED!")
     if msg:
-        GD.message(msg)
+        pf.message(msg)
 
-    GD.GUI.drawlock.release()
-    if GD.GUI.drawlock.allowed:
-        GD.GUI.drawlock.locked = True
+    pf.GUI.drawlock.release()
+    if pf.GUI.drawlock.allowed:
+        pf.GUI.drawlock.locked = True
     if timeout is None:
         timeout = widgets.input_timeout
     repeat(_continue_,timeout)
@@ -948,8 +948,8 @@ def step():
     """
     import script
     #if script.scriptRunning:
-    if GD.GUI.drawlock.locked:
-        GD.GUI.drawlock.release()
+    if pf.GUI.drawlock.locked:
+        pf.GUI.drawlock.release()
     else:
         if ack("""
 STEP MODE is currently only possible with specially designed,
@@ -962,14 +962,14 @@ Are you REALLY SURE you want to run this script in step mode?
         
 
 def fforward():
-    GD.GUI.drawlock.free()
+    pf.GUI.drawlock.free()
 
 
 def delay(i):
     """Set the draw delay in seconds."""
     i = int(i)
     if i >= 0:
-        GD.cfg['draw/wait'] = i
+        pf.cfg['draw/wait'] = i
     
 
         
@@ -994,7 +994,7 @@ def sleep(timeout=None):
     ## while sleeping, we have to process events
     ## (we could start another thread for this)
     while sleeping:
-        GD.app.processEvents()
+        pf.app.processEvents()
         #time.sleep(0.1)
     # ignore further wakeup events
     offSignal(WAKEUP,wakeup)
@@ -1018,46 +1018,46 @@ def wakeup(mode=0):
 
 
 def printbbox():
-    print(GD.canvas.bbox)
+    pf.message(pf.canvas.bbox)
 
 def printviewportsettings():
-    GD.GUI.viewports.printSettings()
+    pf.GUI.viewports.printSettings()
 
 
 #################### viewports ##################################
 
 def layout(nvps=None,ncols=None,nrows=None):
     """Set the viewports layout."""
-    GD.GUI.viewports.changeLayout(nvps,ncols,nrows)
+    pf.GUI.viewports.changeLayout(nvps,ncols,nrows)
 
 def addViewport():
     """Add a new viewport."""
-    GD.GUI.viewports.addView()
+    pf.GUI.viewports.addView()
 
 def removeViewport():
     """Remove the last viewport."""
-    n = len(GD.GUI.viewports.all)
+    n = len(pf.GUI.viewports.all)
     if n > 1:
-        GD.GUI.viewports.removeView()
+        pf.GUI.viewports.removeView()
 
 def linkViewport(vp,tovp):
     """Link viewport vp to viewport tovp.
 
     Both vp and tovp should be numbers of viewports. 
     """
-    GD.GUI.viewports.link(vp,tovp)
+    pf.GUI.viewports.link(vp,tovp)
 
 def viewport(n):
     """Select the current viewport"""
-    GD.GUI.viewports.setCurrent(n)
+    pf.GUI.viewports.setCurrent(n)
 
 ####################
 
 def updateGUI():
     """Update the GUI."""
-    GD.GUI.update()
-    GD.canvas.update()
-    GD.app.processEvents()
+    pf.GUI.update()
+    pf.canvas.update()
+    pf.app.processEvents()
 
 
 def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
@@ -1079,20 +1079,20 @@ def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
         warning("The flypath should be a plex-2 Formex!")
         
     for eye,center in path:
-        GD.debug("Eye: %s; Center: %s" % (eye,center))
-        GD.canvas.camera.lookAt(eye,center,upvector)
-        GD.canvas.display()
-        GD.canvas.update()
+        pf.debug("Eye: %s; Center: %s" % (eye,center))
+        pf.canvas.camera.lookAt(eye,center,upvector)
+        pf.canvas.display()
+        pf.canvas.update()
         image.saveNext()
         if sleeptime is None:
-            sleeptime = GD.cfg['draw/flywait']
+            sleeptime = pf.cfg['draw/flywait']
         sleeptime = float(sleeptime)
         if sleeptime > 0.0:
             sleep(sleeptime)
 
-    GD.canvas.camera.setCenter(*center)
-    GD.canvas.camera.setDist(coords.length(center-eye))
-    GD.canvas.update()
+    pf.canvas.camera.setCenter(*center)
+    pf.canvas.camera.setDist(coords.length(center-eye))
+    pf.canvas.update()
 
 
 ######### Highlighting ###############
@@ -1104,13 +1104,13 @@ def highlightActors(K):
     colormap is a list of two colors, for the actors not in, resp. in
     the Collection K.
     """
-    GD.canvas.removeHighlights()
+    pf.canvas.removeHighlights()
     for i in K.get(-1,[]):
-        print("%s/%s" % (i,len(GD.canvas.actors)))
-        actor = GD.canvas.actors[i]
-        FA = actors.GeomActor(actor,color=GD.canvas.settings.slcolor)
-        GD.canvas.addHighlight(FA)
-    GD.canvas.update()
+        pf.message("%s/%s" % (i,len(pf.canvas.actors)))
+        actor = pf.canvas.actors[i]
+        FA = actors.GeomActor(actor,color=pf.canvas.settings.slcolor)
+        pf.canvas.addHighlight(FA)
+    pf.canvas.update()
 
 
 def highlightElements(K):
@@ -1120,13 +1120,13 @@ def highlightElements(K):
     colormap is a list of two colors, for the elements not in, resp. in
     the Collection K.
     """
-    GD.canvas.removeHighlights()
+    pf.canvas.removeHighlights()
     for i in K.keys():
-        GD.debug("Actor %s: Selection %s" % (i,K[i]))
-        actor = GD.canvas.actors[i]
-        FA = actors.GeomActor(actor.select(K[i]),color=GD.canvas.settings.slcolor,linewidth=3)
-        GD.canvas.addHighlight(FA)
-    GD.canvas.update()
+        pf.debug("Actor %s: Selection %s" % (i,K[i]))
+        actor = pf.canvas.actors[i]
+        FA = actors.GeomActor(actor.select(K[i]),color=pf.canvas.settings.slcolor,linewidth=3)
+        pf.canvas.addHighlight(FA)
+    pf.canvas.update()
 
 
 def highlightEdges(K):
@@ -1136,14 +1136,14 @@ def highlightEdges(K):
     colormap is a list of two colors, for the edges not in, resp. in
     the Collection K.
     """
-    GD.canvas.removeHighlights()
+    pf.canvas.removeHighlights()
     for i in K.keys():
-        GD.debug("Actor %s: Selection %s" % (i,K[i]))
-        actor = GD.canvas.actors[i]
-        FA = actors.GeomActor(Formex(actor.coords[actor.object.getEdges()[K[i]]]),color=GD.canvas.settings.slcolor,linewidth=3)
-        GD.canvas.addHighlight(FA)
+        pf.debug("Actor %s: Selection %s" % (i,K[i]))
+        actor = pf.canvas.actors[i]
+        FA = actors.GeomActor(Formex(actor.coords[actor.object.getEdges()[K[i]]]),color=pf.canvas.settings.slcolor,linewidth=3)
+        pf.canvas.addHighlight(FA)
             
-    GD.canvas.update()
+    pf.canvas.update()
 
 
 def highlightPoints(K):
@@ -1151,13 +1151,13 @@ def highlightPoints(K):
 
     K is Collection of actor elements as returned by the pick() method.
     """
-    GD.canvas.removeHighlights()
+    pf.canvas.removeHighlights()
     for i in K.keys():
-        GD.debug("Actor %s: Selection %s" % (i,K[i]))
-        actor = GD.canvas.actors[i]
-        FA = actors.GeomActor(Formex(actor.vertices()[K[i]]),color=GD.canvas.settings.slcolor,marksize=10)
-        GD.canvas.addHighlight(FA)
-    GD.canvas.update()
+        pf.debug("Actor %s: Selection %s" % (i,K[i]))
+        actor = pf.canvas.actors[i]
+        FA = actors.GeomActor(Formex(actor.vertices()[K[i]]),color=pf.canvas.settings.slcolor,marksize=10)
+        pf.canvas.addHighlight(FA)
+    pf.canvas.update()
 
 
 def highlightPartitions(K):
@@ -1167,14 +1167,14 @@ def highlightPartitions(K):
     connected to a collection of property numbers, as returned by the
     partitionCollection() method.
     """
-    GD.canvas.removeHighlights()
+    pf.canvas.removeHighlights()
     for i in K.keys():
-        GD.debug("Actor %s: Partitions %s" % (i,K[i][0]))
-        actor = GD.canvas.actors[i]
+        pf.debug("Actor %s: Partitions %s" % (i,K[i][0]))
+        actor = pf.canvas.actors[i]
         for j in K[i][0].keys():           
             FA = actors.GeomActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))
-            GD.canvas.addHighlight(FA)
-    GD.canvas.update()
+            pf.canvas.addHighlight(FA)
+    pf.canvas.update()
 
 
 highlight_funcs = { 'actor': highlightActors,
@@ -1186,8 +1186,8 @@ highlight_funcs = { 'actor': highlightActors,
 
 def removeHighlights():
     """Remove the highlights from the current viewport"""
-    GD.canvas.removeHighlights()
-    GD.canvas.update()
+    pf.canvas.removeHighlights()
+    pf.canvas.update()
     
 
 
@@ -1197,7 +1197,7 @@ selection_filters = [ 'none', 'single', 'closest', 'connected' ]
 def set_selection_filter(i):
     """Set the selection filter mode"""
     if i in range(len(selection_filters)):
-        GD.canvas.start_selection(None,selection_filters[i])
+        pf.canvas.start_selection(None,selection_filters[i])
 
     
 def pick(mode='actor',filtr=None,oneshot=False,func=None):
@@ -1209,11 +1209,11 @@ def pick(mode='actor',filtr=None,oneshot=False,func=None):
 
     If no filter is given, the available filters are presented in a combobox.
     """
-    if GD.canvas.selection_mode is not None:
+    if pf.canvas.selection_mode is not None:
         warning("You need to finish the previous picking operation first!")
         return
 
-    pick_buttons = widgets.ButtonBox('Selection:',[('Cancel',GD.canvas.cancel_selection),('OK',GD.canvas.accept_selection)])
+    pick_buttons = widgets.ButtonBox('Selection:',[('Cancel',pf.canvas.cancel_selection),('OK',pf.canvas.accept_selection)])
     
     if mode == 'element':
         filters = selection_filters
@@ -1226,18 +1226,18 @@ def pick(mode='actor',filtr=None,oneshot=False,func=None):
     
     if func is None:
         func = highlight_funcs.get(mode,None)
-    GD.message("Select %s %s" % (filtr,mode))
+    pf.message("Select %s %s" % (filtr,mode))
 
-    GD.GUI.statusbar.addWidget(pick_buttons)
-    GD.GUI.statusbar.addWidget(filter_combo)
+    pf.GUI.statusbar.addWidget(pick_buttons)
+    pf.GUI.statusbar.addWidget(filter_combo)
     try:
-        sel = GD.canvas.pick(mode,oneshot,func,filtr)
+        sel = pf.canvas.pick(mode,oneshot,func,filtr)
     finally:
         # cleanup
-        if GD.canvas.selection_mode is not None:
-            GD.canvas.finish_selection()
-        GD.GUI.statusbar.removeWidget(pick_buttons)
-        GD.GUI.statusbar.removeWidget(filter_combo)
+        if pf.canvas.selection_mode is not None:
+            pf.canvas.finish_selection()
+        pf.GUI.statusbar.removeWidget(pick_buttons)
+        pf.GUI.statusbar.removeWidget(filter_combo)
     return sel
  
     
@@ -1268,8 +1268,8 @@ def highlight(K,mode):
 
 def pickNumbers(marks=None):
     if marks:
-        GD.canvas.numbers = marks
-    return GD.canvas.pickNumbers()
+        pf.canvas.numbers = marks
+    return pf.canvas.pickNumbers()
 
 
 LineDrawing = None
@@ -1279,7 +1279,7 @@ edit_modes = ['undo', 'clear','close']
 def set_edit_mode(i):
     """Set the drawing edit mode."""
     if i in range(len(edit_modes)):
-        GD.canvas.edit_drawing(edit_modes[i])
+        pf.canvas.edit_drawing(edit_modes[i])
 
 
 def drawLinesInter(mode ='line',single=False,func=None):
@@ -1292,18 +1292,18 @@ def drawLinesInter(mode ='line',single=False,func=None):
     The drawing can be edited using the methods 'undo', 'clear' and 'close', which
     are presented in a combobox.
     """
-    if GD.canvas.drawing_mode is not None:
+    if pf.canvas.drawing_mode is not None:
         warning("You need to finish the previous drawing operation first!")
         return
     if func == None:
         func = showLineDrawing
-    drawing_buttons = widgets.ButtonBox('Drawing:',[('Cancel',GD.canvas.cancel_drawing),('OK',GD.canvas.accept_drawing)])
-    GD.GUI.statusbar.addWidget(drawing_buttons)
+    drawing_buttons = widgets.ButtonBox('Drawing:',[('Cancel',pf.canvas.cancel_drawing),('OK',pf.canvas.accept_drawing)])
+    pf.GUI.statusbar.addWidget(drawing_buttons)
     edit_combo = widgets.ComboBox('Edit:',edit_modes,set_edit_mode)
-    GD.GUI.statusbar.addWidget(edit_combo)
-    lines = GD.canvas.drawLinesInter(mode,single,func)
-    GD.GUI.statusbar.removeWidget(drawing_buttons)
-    GD.GUI.statusbar.removeWidget(edit_combo)
+    pf.GUI.statusbar.addWidget(edit_combo)
+    lines = pf.canvas.drawLinesInter(mode,single,func)
+    pf.GUI.statusbar.removeWidget(drawing_buttons)
+    pf.GUI.statusbar.removeWidget(edit_combo)
     return lines
 
 
@@ -1325,7 +1325,7 @@ def showLineDrawing(L):
 ################################
 
 def setLocalAxes(mode=True):
-    GD.cfg['draw/localaxes'] = mode 
+    pf.cfg['draw/localaxes'] = mode 
 def setGlobalAxes(mode=True):
     setLocalAxes(not mode)
          
