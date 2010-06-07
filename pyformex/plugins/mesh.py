@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
+##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -86,24 +86,20 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,end
 
     The return value is a sequence of the transformed Coords objects.
     """
-    from curve import PolyLine
-    if not isinstance(path,PolyLine):
-        path = PolyLine(path)
-        
     points = path.coords
     if avgdir:
         directions = path.avgDirections()
     else:
          directions = path.directions()
 
-    ## missing = points.shape[0] - directions.shape[0]
-    ## if missing == 1:
-    ##     lastdir = (points[-1] - points[-2]).reshape(1,3)
-    ##     directions = concatenate([directions,lastdir],axis=0)
-    ## elif missing == 2:
-    ##     lastdir = (points[-1] - points[-2]).reshape(1,3)
-    ##     firstdir = (points[1] - points[0]).reshape(1,3)
-    ##     directions = concatenate([firstdir,directions,lastdir],axis=0)
+    missing = points.shape[0] - directions.shape[0]
+    if missing == 1:
+        lastdir = (points[-1] - points[-2]).reshape(1,3)
+        directions = concatenate([directions,lastdir],axis=0)
+    elif missing == 2:
+        lastdir = (points[-1] - points[-2]).reshape(1,3)
+        firstdir = (points[1] - points[0]).reshape(1,3)
+        directions = concatenate([firstdir,directions,lastdir],axis=0)
 
     if enddir:
         for i,j in enumerate([0,-1]):
@@ -1193,6 +1189,7 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
     e1 = mesh1.elems[:,n1]
     e2 = mesh2.elems[:,n2] + nnod
     et = concatenate([e1,e2],axis=-1)
+    if type(n)!=int:n=len(n)-1
     e = concatenate([et+i*nnod for i in range(n)])
     return Mesh(x,e,eltype=eltype)
 
