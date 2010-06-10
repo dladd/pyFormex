@@ -66,6 +66,13 @@ class Actor(Drawable):
     def __init__(self):
         Drawable.__init__(self)
 
+    def bbox(self):
+        """Default implementation for bbox()."""
+        try:
+            return self.coords.bbox()
+        except:
+            raise ValueError,"No bbox() defined and no coords attribute"
+            
     def npoints(self):
         return 0
     def nelems(self):

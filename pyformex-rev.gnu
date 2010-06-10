@@ -6,8 +6,8 @@ set key top left
 #set offsets 0,0.1,0,0
 set xdata time
 set timefmt "%Y-%m-%d"
-set format x "%y-%m"
-set xlabel "Date (YY-MM)"
+set format x "%m\n%y"
+set xlabel "Month/Year"
 set ylabel "revision number"
 #set yrange [0:1.2]
 plot 'pyformex.revisions' using 2:1 title 'revisions' with lines linetype 1

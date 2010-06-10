@@ -13,7 +13,20 @@ Each task can have the following keys:
  rem(arks)
 
 
-* Release 0.8.1:
+* Release 0.9:
+
+   - Add Layers  to the rendering engine
+
+   - Create Spline Surface class, based on Spline curves
+
+   - Add Nurbs curves and surfaces
+
+   - Add faceted surfaces
+
+   - Add quad based surfaces
+      
+   - Expand the Abaqus exporter:
+      
    - Default focus
       dev: bverheg
       sta: IDEA
@@ -34,10 +47,6 @@ Each task can have the following keys:
       rem: Done via external 'gts': transform to GTS format
       Should be implemented as C function 
 
-   - Final surface format ??
-      
-   - Expand the Abaqus exporter:
-      
    - Export FEA models in Fluent format: 
       dev: pmortier?
       sta: INITIATED
@@ -60,11 +69,6 @@ Each task can have the following keys:
 
    - Add a GRID option to the canvas
       
-   - Create CURVE objects
-      dev: bverheg
-      sta: PARTIAL
-      rem: See the Curves example. 
-      
    - Create PLANE objects
       dev: bverheg
       sta: PARTIAL
@@ -77,23 +81,24 @@ Each task can have the following keys:
    - Add an interactive Python aware editor widget
       
    - Generalize the timeout to all dialogs
-      A 'timeout' branch was created for experiments
-      Need work for: non-modal dialogs, pause()
+      dev: bverheg
+      sta: MOSTLY DONE
+      rem: Some specialized dialogs are still missing the timeout 
       
    - Copy viewport defaults to newly added viewports
       sta: TODO
 
    - Fix all docstrings for the sphinx system
 
-   - Finish the tutorial
-
    - Complete the Coords.fromfile and Formex.fromfile arguments
+      
+      
+* Release 0.9.1 :
 
-      
-      
-* Release 0.9 :
+   - Finish the tutorial and user guide
+
    - Set up procedures to follow up submitted bugs/questions
-      
+
    - Create Debian packages
       
 * Release 1.0:

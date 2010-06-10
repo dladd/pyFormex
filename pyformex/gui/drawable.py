@@ -163,6 +163,38 @@ def drawLines(x,e,color):
     drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0)
 
 
+def drawBezier(x,color=None,objtype=GL.GL_LINE_STRIP,granularity=100):
+    """Draw a collection of Bezier curves.
+
+    x: (4,3,3) : control points
+    color: (4,) or (4,4): colors
+    """
+    GL.glMap1f(GL.GL_MAP1_VERTEX_3,0.0,1.0,x)
+    GL.glEnable(GL.GL_MAP1_VERTEX_3)
+    if color is not None and color.shape == (4,4):
+        GL.glMap1f(GL.GL_MAP1_COLOR_4,0.0,1.0,color)
+        GL.glEnable(GL.GL_MAP1_COLOR_4)
+
+    u = arange(granularity+1) / float(granularity)
+    if color is not None and color.shape == (4,):
+        GL.glColor4fv(color)
+        color = None
+        
+    GL.glBegin(objtype)
+    for ui in u:
+        #  For multicolors, this will generate both a color and a vertex  
+        GL.glEvalCoord1f(ui)
+    GL.glEnd()
+
+    GL.glDisable(GL.GL_MAP1_VERTEX_3)
+    if color is not None:
+        GL.glDisable(GL.GL_MAP1_COLOR_4)
+
+
+def drawBezierPoints(x,color=None,granularity=100):
+    drawBezier(x,color=None,objtype=GL.GL_POINTS,granularity=granularity)
+
+
 def color_multiplex(color,nparts):
     """Multiplex a color array over nparts of the elements.
 
@@ -758,6 +790,5 @@ class Drawable(object):
     def setColor(self,color=None,colormap=None,ncolors=1):
         """Set the color of the Drawable."""
         self.color,self.colormap = saneColorSet(color,colormap,shape=(ncolors,))
-
 
 ### End
