@@ -97,7 +97,7 @@ class TranslatedActor(Actor):
         self.actor.redraw(mode=mode,color=color)
         Drawable.redraw(self,mode=mode,color=color)
 
-    def drawGL(self,mode,color=None,**kargs):
+    def drawGL(self,**kargs):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glTranslate(*self.trl)
@@ -132,7 +132,7 @@ class RotatedActor(Actor):
         self.actor.redraw(mode=mode,color=color)
         Drawable.redraw(self,mode=mode,color=color)
 
-    def drawGL(self,mode,color=None,**kargs):
+    def drawGL(self,**kargs):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glMultMatrixf(self.rot)
@@ -152,7 +152,7 @@ class CubeActor(Actor):
     def bbox(self):
         return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
 
-    def drawGL(self,mode='wireframe',color=None,**kargs):
+    def drawGL(self,**kargs):
         """Draw the cube."""
         drawCube(self.size,self.color)
 
@@ -173,13 +173,11 @@ class BboxActor(Actor):
     def bbox(self):
         return self.bb
 
-    def drawGL(self,mode,color=None,**kargs):
+    def drawGL(self,**kargs):
         """Always draws a wireframe model of the bbox."""
-        if color is None:
-            color = self.color
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
-        drawLines(self.vertices,self.edges,color)
+        drawLines(self.vertices,self.edges,self.color)
 
 
  
@@ -207,7 +205,7 @@ class TriadeActor(Actor):
             self.size = size
         self.delete_list()
 
-    def drawGL(self,mode='wireframe',color=None,**kargs):
+    def drawGL(self,**kargs):
         """Draw the triade."""
         # When entering here, the modelview matrix has been set
         # We should make sure it is unchanged on exit
@@ -257,7 +255,7 @@ class GridActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def drawGL(self,mode,color=None,**kargs):
+    def drawGL(self,**kargs):
         """Draw the grid."""
 
         if self.lines:
@@ -290,7 +288,7 @@ class CoordPlaneActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def drawGL(self,mode,color=None,**kargs):
+    def drawGL(self,**kargs):
         """Draw the grid."""
 
         for i in range(3):
@@ -330,7 +328,7 @@ class PlaneActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def drawGL(self,mode,color=None,**kargs):
+    def drawGL(self,**kargs):
         """Draw the grid."""
 
         for i in range(3):
@@ -484,6 +482,7 @@ class GeomActor(Actor):
     def setBkColor(self,color,colormap=None):
         """Set the backside color of the Actor."""
         self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.shape())
+        print "BKCOLOR %s = %s"%(color,self.bkcolor)
 
     def setAlpha(self,alpha):
         """Set the Actors alpha value."""
@@ -604,6 +603,8 @@ class GeomActor(Actor):
 
         ################## draw the geometry #################
         nplex = self.nplex()
+        print "ELTYPE=%s" % self.eltype
+        
         if nplex == 1:
             if self.eltype == 'point3d':
                 x = self.coords.reshape((-1,3))
@@ -631,8 +632,22 @@ class GeomActor(Actor):
             if mode=='wireframe' :
                 drawPolyLines(self.coords,self.elems,color)
             else:
+                if bkcolor is not None:
+                    print "COLOR=%s" % color
+                    print "BKCOLOR =%s" % bkcolor
+                    # Draw front and back with different colors
+                    #from canvas import glCulling
+                    #glCulling()
+                    GL.glEnable(GL.GL_CULL_FACE)
+                    GL.glCullFace(GL.GL_BACK)
+                    print "DRAWING FRONT SIDES"
                 drawPolygons(self.coords,self.elems,mode,color,alpha)
-                    
+                if bkcolor is not None:
+                    print "DRAWING BACK SIDES"
+                    GL.glCullFace(GL.GL_FRONT)
+                    GL.glColor(append(bkcolor,alpha))
+                    drawPolygons(self.coords,self.elems,mode,bkcolor,alpha)
+                   
         else:
             try:
                 el = getattr(elements,self.eltype.capitalize())
@@ -645,7 +660,21 @@ class GeomActor(Actor):
                     faces = el.drawfaces
                 else:
                     faces = el.faces
+                if bkcolor is not None:
+                    print "COLOR=%s" % color
+                    print "BKCOLOR =%s" % bkcolor
+                    # Draw front and back with different colors
+                    #from canvas import glCulling
+                    #glCulling()
+                    GL.glEnable(GL.GL_CULL_FACE)
+                    GL.glCullFace(GL.GL_BACK)
+                    print "DRAWING FRONT SIDES"
                 drawFaces(self.coords,self.elems,faces,mode,color,alpha)
+                if bkcolor is not None:
+                    print "DRAWING BACK SIDES"
+                    GL.glCullFace(GL.GL_FRONT)
+                    GL.glColor(append(bkcolor,alpha))
+                    drawFaces(self.coords,self.elems,faces,mode,bkcolor,alpha)
 
    
 

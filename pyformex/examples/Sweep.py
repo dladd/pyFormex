@@ -172,11 +172,11 @@ def show():
 
     structure = CS.sweep(PL,normal=[1.,0.,0.],upvector=eval(cross_upvector),avgdir=True)
     clear()
-    draw(structure,color='red')
+    smoothwire()
+    draw(structure,color='red',bkcolor='cyan')
 
     if nwires > 1:
         structure = structure.toFormex().rosette(nwires,360./nwires).toMesh()
-        smoothwire()
         draw(structure,color='orange')
 
 

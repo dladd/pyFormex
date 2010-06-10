@@ -474,7 +474,7 @@ def draw(F,
         if F.nelems() == 0:
             return None
         
-        actor = actors.GeomActor(F,color=color,colormap=colormap,bkcolor=color,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+        actor = actors.GeomActor(F,color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
         
         if flat:
             actor.specular = 0.

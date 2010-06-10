@@ -157,7 +157,7 @@ class NurbsActor(Actor):
         return self.control.bbox()
 
         
-    def drawGL(self,mode,color=None,**kargs):
+    def drawGL(self,**kargs):
         GL.glColor3fv(self.color)
         nurb = GLU.gluNewNurbsRenderer()
         GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,self.samplingTolerance)
