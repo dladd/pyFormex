@@ -23,7 +23,7 @@
 ##
 """OpenGL actors for populating the 3D scene."""
 
-import pyformex as GD
+import pyformex as pf
 
 from OpenGL import GL,GLU
 
@@ -97,7 +97,7 @@ class TranslatedActor(Actor):
         self.actor.redraw(mode=mode,color=color)
         Drawable.redraw(self,mode=mode,color=color)
 
-    def drawGL(self,mode,color=None):
+    def drawGL(self,mode,color=None,**kargs):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glTranslate(*self.trl)
@@ -132,7 +132,7 @@ class RotatedActor(Actor):
         self.actor.redraw(mode=mode,color=color)
         Drawable.redraw(self,mode=mode,color=color)
 
-    def drawGL(self,mode,color=None):
+    def drawGL(self,mode,color=None,**kargs):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glMultMatrixf(self.rot)
@@ -152,7 +152,7 @@ class CubeActor(Actor):
     def bbox(self):
         return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
 
-    def drawGL(self,mode='wireframe',color=None):
+    def drawGL(self,mode='wireframe',color=None,**kargs):
         """Draw the cube."""
         drawCube(self.size,self.color)
 
@@ -173,7 +173,7 @@ class BboxActor(Actor):
     def bbox(self):
         return self.bb
 
-    def drawGL(self,mode,color=None):
+    def drawGL(self,mode,color=None,**kargs):
         """Always draws a wireframe model of the bbox."""
         if color is None:
             color = self.color
@@ -207,7 +207,7 @@ class TriadeActor(Actor):
             self.size = size
         self.delete_list()
 
-    def drawGL(self,mode='wireframe',color=None):
+    def drawGL(self,mode='wireframe',color=None,**kargs):
         """Draw the triade."""
         # When entering here, the modelview matrix has been set
         # We should make sure it is unchanged on exit
@@ -257,7 +257,7 @@ class GridActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def drawGL(self,mode,color=None):
+    def drawGL(self,mode,color=None,**kargs):
         """Draw the grid."""
 
         if self.lines:
@@ -290,7 +290,7 @@ class CoordPlaneActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def drawGL(self,mode,color=None):
+    def drawGL(self,mode,color=None,**kargs):
         """Draw the grid."""
 
         for i in range(3):
@@ -330,7 +330,7 @@ class PlaneActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def drawGL(self,mode,color=None):
+    def drawGL(self,mode,color=None,**kargs):
         """Draw the grid."""
 
         for i in range(3):
@@ -476,12 +476,12 @@ class GeomActor(Actor):
         return self.coords.reshape(-1,3)
 
  
-    def setColor(self,color=None,colormap=None):
+    def setColor(self,color,colormap=None):
         """Set the color of the Actor."""
         self.color,self.colormap = saneColorSet(color,colormap,self.shape())
 
 
-    def setBkColor(self,color=None,colormap=None):
+    def setBkColor(self,color,colormap=None):
         """Set the backside color of the Actor."""
         self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.shape())
 
@@ -498,7 +498,7 @@ class GeomActor(Actor):
         """
 #### DEFAULT MARK SIZE SHOULD BECOME A CANVAS SETTING!!
         
-        if marksize is None:
+        if marksize is  None:
             marksize = 4.0 # default size 
         if self.eltype == 'point3d':
             # ! THIS SHOULD BE SET FROM THE SCENE SIZE
@@ -508,72 +508,82 @@ class GeomActor(Actor):
                 marksize = 1.0
             self.setMark(marksize,"cube")
         self.marksize = marksize
-
-
-    def setMark(self,size,type):
-        """Create a symbol for drawing 3D points."""
-        self.mark = GL.glGenLists(1)
-        GL.glNewList(self.mark,GL.GL_COMPILE)
-        if type == "sphere":
-            drawSphere(size)
-        else:
-            drawCube(size)
-        GL.glEndList()
         
 
     def bbox(self):
         return self.coords.bbox()
 
 
-    def drawGL(self,mode='wireframe',color=None,colormap=None,alpha=None):
-        """Draw the formex.
+    def drawGL(self,canvas=None,mode=None,color=None,**kargs):
+        """Draw the geometry on the specified canvas.
 
-        if color is None, it is drawn with the color specified on creation.
-        if color == 'prop' and a colormap was installed, props define color.
-        else, color should be an array of RGB values, either with shape
-        (3,) for a single color, or (nelems,3) for differently colored
-        elements 
+        The drawing parameters not provided by the Actor itself, are
+        derived from the canvas defaults.
 
-        if mode ends with wire (smoothwire or flatwire), two drawing
-        operations are done: one with wireframe and color black, and
-        one with mode[:-4] and self.color.
+        mode and color can be overridden for the sole purpose of allowing
+        the recursive use for modes ending on 'wire' ('smoothwire' or
+        'flatwire'). In these cases, two drawing operations are done:
+        one with mode='wireframe' and color=black, and one with mode=mode[:-4].
         """
-        if self.mode is not None:
+        if canvas is None:
+            canvas = pf.canvas
+        if mode is None:
             mode = self.mode
+        if mode is None:
+            mode = canvas.rendermode()
 
         if mode.endswith('wire'):
-            self.drawGL(mode=mode[:-4],color=color,colormap=colormap,alpha=alpha)
+            self.drawGL(mode=mode[:-4])
             # draw the lines without lights
-            save = GD.canvas.hasLight()
-            GD.canvas.glLight(False)
-            self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
-            GD.canvas.glLight(save)
+            save = canvas.hasLight()
+            canvas.glLight(False)
+            self.drawGL(mode='wireframe',color=asarray(black))
+            canvas.glLight(save)
             return
                             
         ############# set drawing attributes #########
+        alpha = self.alpha
         if alpha is None:
-            alpha = self.alpha
+            alpha = canvas.settings.alpha
         
         if color is None:
             color,colormap = self.color,self.colormap
         else:
-            color,colormap = saneColorSet(color,colormap,self.nelems())
+            color,colormap = saneColor(color),None
 
+        if color is None:  # set canvas default
+            color,colormap = canvas.settings.fgcolor,canvas.settings.colormap
 
-        if color is None:  # no color
+        if color is None:
+            # no color
             pass
         
-        elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
+        elif color.dtype.kind == 'f' and color.ndim == 1:
+            # single color: set now
             GL.glColor(append(color,alpha))
-                
             color = None
 
-        elif color.dtype.kind == 'i': # color index
+        elif color.dtype.kind == 'i':
+            # color index: convert to full colors
             color = colormap[color]
 
-        else: # a full color array : use as is
+        else:
+            # a full color array: set later while drawing
             pass
-                
+
+
+        bkcolor, bkcolormap = self.bkcolor,self.bkcolormap
+        if bkcolor is None:  # set canvas default
+            bkcolor,bkcolormap = canvas.settings.bkcolor,canvas.settings.bkcolormap
+
+        if bkcolor is not None and bkcolor.dtype.kind == 'i':
+            # convert index to colors
+            bkcolor = bkcolormap[bkcolor]
+        
+        linewidth = self.linewidth
+        if linewidth is None:
+            linewidth = canvas.settings.linewidth
+
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
 
@@ -582,10 +592,10 @@ class GeomActor(Actor):
                 fill_mode = GL.GL_FRONT
                 import colors
                 if color:
-                    spec = color * self.specular# *  GD.canvas.specular
+                    spec = color * self.specular# *  pf.canvas.specular
                     spec = append(spec,1.)
                 else:
-                    spec = colors.GREY(self.specular)# *  GD.canvas.specular
+                    spec = colors.GREY(self.specular)# *  pf.canvas.specular
                 #print self.coords.shape
                 #print "SETTING SPECULAR to %s" % str(spec)
                 GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,spec)
@@ -602,18 +612,18 @@ class GeomActor(Actor):
                 drawPoints(self.coords,color,alpha,self.marksize)
                 
         elif nplex == 2:
-            #save = GD.canvas.hasLight()
-            #GD.canvas.glLight(False)
+            #save = pf.canvas.hasLight()
+            #pf.canvas.glLight(False)
             drawLines(self.coords,self.elems,color)
-            #GD.canvas.glLight(save)
+            #pf.canvas.glLight(save)
 
         
         elif self.eltype == 'curve' and nplex == 3:
-            GD.debug("DRAWING WITH drawQuadraticCurves")
+            pf.debug("DRAWING WITH drawQuadraticCurves")
             drawQuadraticCurves(self.coords,color,n=quadratic_curve_ndiv)
             
         elif self.eltype == 'nurbs' and (nplex == 3 or nplex == 4):
-            GD.debug("DRAWING WITH drawNurbsCurves")
+            pf.debug("DRAWING WITH drawNurbsCurves")
             drawNurbsCurves(self.coords,color)
             
         elif self.eltype is None:

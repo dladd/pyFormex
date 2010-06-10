@@ -37,6 +37,7 @@ import actors
 import decors
 import marks
 import utils
+from mydict import Dict
 
 
 def gl_pickbuffer():
@@ -187,76 +188,60 @@ class ActorList(list):
 #  The Canvas Settings
 #
 
-class CanvasSettings(object):
+class CanvasSettings(Dict):
     """A collection of settings for an OpenGL Canvas."""
 
-    default = dict(
-        pointsize = 4.0,
-        linewidth = 1.0,
-        bgcolor = colors.mediumgrey,
-        bgcolor2 = None,
-        fgcolor = colors.black,
-        slcolor = colors.magenta,     # highlight color
-        transparency = 0.5,           # half transparent
-        colormap = [
-            colors.black, colors.red, colors.green, colors.blue,
-            colors.cyan, colors.magenta, colors.yellow, colors.white
-            ],
-        )
+    def __init__(self,dict={}):
+        """Create a new set of CanvasSettings, possibly changing defaults."""
+        Dict.__init__(self)
+        self.reset(dict)
+
+    def reset(self,dict={}):
+        """Reset to defaults.
+
+        If a dict is specified, these settings will override defaults.
+        """
+        self.myupdate(pf.refcfg['canvas'])
+        self.myupdate(pf.prefcfg['canvas'])
+        self.myupdate(pf.cfg['canvas'])
+        if dict:
+            self.myupdate(dict)
+
+    def myupdate(self,d):
+        """Update current values with the specified settings
+
+        Returns the sanitized update values.
+        """
+        ok = self.checkDict(d)
+        Dict.update(self,ok)
+        ## THIS SHOULD BE DONE WHILE SETTING THE CFG !!
+        ## if (self.bgcolor2 == self.bgcolor).all():
+        ##     self.bgcolor2 = None
 
     @classmethod
     def checkDict(clas,dict):
         """Transform a dict to acceptable settings."""
         ok = {}
         for k,v in dict.items():
-            if k in [ 'bgcolor', 'fgcolor', 'slcolor' ]:
-                ok[k] = colors.GLColor(v)
-            elif k == 'bgcolor2':
-                if v is None or v == ok['bgcolor']:
-                    ok[k] = None
-                else:
-                    ok[k] = colors.GLColor(v)
-            elif k == 'colormap':
-                ok[k] = map(colors.GLColor,v)
-            elif k == 'linewidth':
-                ok[k] = float(v)
-            elif k == 'pointsize':
+            if k in [ 'bgcolor', 'bgcolor2', 'fgcolor', 'bkcolor', 'slcolor']:
+                if v is not None:
+                    v = saneColor(v)
+            elif k in ['colormap','bkcolormap','propcolors']:
+                if v is not None:
+                    v =  map(saneColor,v)
+            elif k in ['linewidth', 'pointsize', 'marksize']:
                 ok[k] = float(v)
             elif k == 'transparency':
                 ok[k] = max(min(float(v),1.0),0.0)
-            elif k == 'colormap':
-                ok[k] = saneColor(colormap)
-        return ok
-
-        
-    def __init__(self,dict={}):
-        """Create a new set of CanvasSettings, possibly changing defaults."""
-        self.reset(dict)
-
-
-    def items(self):
-        return self.__dict__.items()
-    
-    def reset(self,dict={}):
-        """Reset to defaults
-
-        If a dict is specified, these settings will override defaults.
-        """
-        self.update(self.default)
-        if dict:
-            self.update(dict)
-
-    def update(self,dict):
-        """Update current values with the specified settings
-
-        Returns the sanitized update values.
-        """
-        ok = self.checkDict(dict)
-        self.__dict__.update(ok)
+            elif k == 'marktype':
+                pass
+            else:
+                raise ValueError,"Invalid key for CanvasSettings: %s" % k
+            ok[k] = v
         return ok
     
     def __str__(self):
-        return utils.formatDict(self.__dict__)
+        return utils.formatDict(self)
 
 
 ############### OpenGL Lighting #################################
@@ -513,23 +498,23 @@ class Canvas(object):
         self.settings.slcolor = colors.GLColor(color)
 
 
-    def updateSettings(self,settings):
-        """Update the viewport settings"""
-        for k,v in settings.items():
-            if k == 'linewidth':
-                self.setLineWidth(v)
-            elif k == 'bgcolor':
-                if 'bgcolor2' in settings:
-                    self.setBgColor(v,settings.get('bgcolor2',None))
-            elif k == 'bgcolor2':
-                if 'bgcolor' in settings:
-                    pass
-                else:
-                    self.setBgColor(self.settings.bgcolor,v)
-            elif k == 'fgcolor':
-                self.setFgColor(v)
-            elif k == 'slcolor':
-                self.setSlColor(v)
+    ## def updateSettings(self,settings):
+    ##     """Update the viewport settings"""
+    ##     for k,v in settings.items():
+    ##         if k == 'linewidth':
+    ##             self.setLineWidth(v)
+    ##         elif k == 'bgcolor':
+    ##             if 'bgcolor2' in settings:
+    ##                 self.setBgColor(v,settings.get('bgcolor2',None))
+    ##         elif k == 'bgcolor2':
+    ##             if 'bgcolor' in settings:
+    ##                 pass
+    ##             else:
+    ##                 self.setBgColor(self.settings.bgcolor,v)
+    ##         elif k == 'color':
+    ##             self.setFgColor(v)
+    ##         elif k == 'slcolor':
+    ##             self.setSlColor(v)
         
         
     def setLightValue(self,nr,key,val):
@@ -576,8 +561,8 @@ class Canvas(object):
             self.rendermode = mode
 
 
-        if self.settings.bgcolor != self.settings.bgcolor2:
-            self.setBgColor(self.settings.bgcolor,self.settings.bgcolor2)
+        ## if self.settings.bgcolor2 is not None self.settings.bgcolor != self.settings.bgcolor2:
+        self.setBgColor(self.settings.bgcolor,self.settings.bgcolor2)
 
         self.clear()
         #GL.glClearColor(*colors.RGBA(self.default.bgcolor))# Clear The Background Color
@@ -681,7 +666,7 @@ class Canvas(object):
                 self.setDefaults()
                 ## if hasattr(actor,'zoom'):
                 ##     self.zoom_2D(actor.zoom)
-                actor.draw(mode=self.rendermode)
+                actor.draw(canvas=self)
                 ## if hasattr(actor,'zoom'):
                 ##     self.zoom_2D()
 

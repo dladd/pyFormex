@@ -305,7 +305,7 @@ message = printMessage
 
 def draw(F,
          view=None,bbox=None,
-         color='prop',colormap=None,alpha=None,
+         color='prop',colormap=None,bkcolor=None,bkcolormap=None,alpha=None,
          mode=None,linewidth=None,shrink=None,marksize=None,
          wait=True,clear=None,allviews=False,
          highlight=False,flat=False):
@@ -348,6 +348,14 @@ def draw(F,
     color,colormap,linewidth,alpha,marksize are passed to the
     creation of the 3D actor.
 
+        
+    if color is None, it is drawn with the color specified on creation.
+    if color == 'prop' and a colormap was installed, props define color.
+    else, color should be an array of RGB values, either with shape
+    (3,) for a single color, or (nelems,3) for differently colored
+    elements 
+
+
     shrink is a floating point shrink factor that will be applied to object
     before drawing it.
 
@@ -387,7 +395,7 @@ def draw(F,
             if Fi is F[-1]:
                 nowait = wait
             actor.append(draw(Fi,view,bbox,
-                              color,colormap,alpha,
+                              color,colormap,bkcolor,bkcolormap,alpha,
                               mode,linewidth,shrink,marksize,
                               wait=nowait,clear=clear,allviews=allviews,
                               highlight=highlight,flat=flat))
@@ -466,7 +474,7 @@ def draw(F,
         if F.nelems() == 0:
             return None
         
-        actor = actors.GeomActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+        actor = actors.GeomActor(F,color=color,colormap=colormap,bkcolor=color,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
         
         if flat:
             actor.specular = 0.

@@ -137,7 +137,7 @@ class Mark(Decoration):
         self.linewidth = saneLineWidth(linewidth)
 
 
-    def drawGL(self,mode='wireframe',color=None):
+    def drawGL(self,mode='wireframe',color=None,**kargs):
         if self.color is not None:
             GL.glColor3fv(self.color)
         if self.linewidth is not None:
@@ -157,7 +157,7 @@ class Line(Decoration):
         self.linewidth = saneLineWidth(linewidth)
 
 
-    def drawGL(self,mode='wireframe',color=None):
+    def drawGL(self,mode='wireframe',color=None,**kargs):
         if self.color is not None:
             GL.glColor3fv(self.color)
         if self.linewidth is not None:
@@ -214,7 +214,7 @@ class GlutText(Decoration):
         self.color = saneColor(color)
         self.zoom = zoom
 
-    def drawGL(self,mode='wireframe',color=None):
+    def drawGL(self,mode='wireframe',color=None,**kargs):
         """Draw the text."""
         ## if self.zoom:
         ##     GD.canvas.zoom_2D(self.zoom)
@@ -244,7 +244,7 @@ class ColorLegend(Decoration):
         self.linewidth = saneLineWidth(linewidth)
         self.lefttext = lefttext
 
-    def drawGL(self,mode='wireframe',color=None):
+    def drawGL(self,mode='wireframe',color=None,**kargs):
         #from draw import drawText
         n = len(self.cl.colors)
         GD.debug("NUMBER OF COLORS: %s" % n)
@@ -311,7 +311,7 @@ class Rectangle(Decoration):
         self.y2 = y2
         self.setColor(color,ncolors=4)
 
-    def drawGL(self,mode='wireframe',color=None):
+    def drawGL(self,mode='wireframe',color=None,**kargs):
         drawRectangle(self.x1,self.y1,self.x2,self.y2,self.color)
 
 
@@ -328,7 +328,7 @@ class Grid(Decoration):
         self.color = saneColor(color)
         self.linewidth = saneLineWidth(linewidth)
 
-    def drawGL(self,mode='wireframe',color=None):
+    def drawGL(self,mode='wireframe',color=None,**kargs):
         if self.color is not None:
             GL.glColor3fv(self.color)
         if self.linewidth is not None:
@@ -355,7 +355,7 @@ class LineDrawing(Decoration):
         self.linewidth = saneLineWidth(linewidth)
     
 
-    def drawGL(self,mode=None,color=None):
+    def drawGL(self,mode=None,color=None,**kargs):
         if self.color is not None:
             GL.glColor3fv(self.color)
         if self.linewidth is not None:

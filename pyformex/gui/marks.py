@@ -51,7 +51,7 @@ class AxesMark(Mark):
         Mark.__init__(self,pos)
         self.color = saneColor(color)
 
-    def drawGL(self,mode='wireframe',color=None):
+    def drawGL(self,mode='wireframe',color=None,**kargs):
         if self.color is not None:
             GL.glColor3fv(self.color)
         GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1)
@@ -71,7 +71,7 @@ class TextMark(Mark):
         self.color = saneColor(color)
         self.font = gluttext.glutSelectFont(font,size)
 
-    def drawGL(self,mode=None,color=None):
+    def drawGL(self,mode=None,color=None,**kargs):
         if self.color is not None:
             GL.glColor3fv(self.color)
         GL.glRasterPos3fv(self.pos)
@@ -107,7 +107,7 @@ class MarkList(Mark):
         self.leader = str(leader)
 
 
-    def drawGL(self,mode=None,color=None):
+    def drawGL(self,mode=None,color=None,**kargs):
         if self.color is not None:
             GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):

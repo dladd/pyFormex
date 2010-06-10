@@ -116,12 +116,18 @@ showfocus = True
 
 # Default canvas settings
 [canvas]
-bgcolor = 'lightgrey'
-bgcolor2 = None
-fgcolor = 'black'
-slcolor = 'magenta'
-linewidth = 1.0
+bgcolor = 'lightgrey'       # canvas background color
+bgcolor2 = None             # if defined, canvas has a graded background
+fgcolor = 'black'           # default drawing color
+bkcolor = None              # if defined, backsides of planes have this color
+slcolor = 'yellow'          # highlighting color
 colormap = ['black','red','green','blue','cyan','magenta','yellow','white'] 
+bkcolormap = colormap
+transparency = 0.5          # default transparency value
+pointsize = 4.0             # size of points
+linewidth = 1.0             # width of lines
+marksize = 0.4              # size of 3D marks
+marktype = 'sphere'         # type of 3D mark
 
 
 [mark]

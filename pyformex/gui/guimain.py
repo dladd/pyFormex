@@ -180,10 +180,10 @@ class GUI(QtGui.QMainWindow):
         self.central.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.central.resize(*pf.cfg['gui/size'])
 
-        
-        # Create an OpenGL canvas with a nice frame around it
-        pf.debug("Setting canvas defaults:\n%s" % dict)
-        canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(pf.cfg['canvas']))
+        ## THIS IS REPLACED WITH DEFAULTS IN canvas.py
+        ## # Create an OpenGL canvas with a nice frame around it
+        ## pf.debug("Setting canvas defaults:\n%s" % dict)
+        ## canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(pf.cfg['canvas']))
 
         self.viewports = viewport.MultiCanvas()
         self.central.setLayout(self.viewports)

@@ -557,6 +557,18 @@ def drawGridPlanes(x0,x1,nx):
             GL.glEnd()
 
 
+def createMark(self,size,type='sphere'):
+    """Create a display list with a symbol for drawing 3D points."""
+    mark = GL.glGenLists(1)
+    GL.glNewList(mark,GL.GL_COMPILE)
+    if type == 'sphere':
+        drawSphere(size)
+    else:
+        drawCube(size)
+    GL.glEndList()
+    return mark
+
+
 ######################## Picking functions ########################
 
 def pickPolygons(x,e=None,objtype=-1):
@@ -628,7 +640,7 @@ def saneColor(color=None):
     [ 0,0,255 ] would be a color index with 3 values. 
     """
     if color is None:
-        # no color: use canvas fgcolor
+        # no color: use canvas color
         return None
 
     # detect color index
@@ -682,17 +694,17 @@ def saneColorArray(color,shape):
     return color
 
 
-def saneColorSet(color=None,colormap=None,shape=(1,)):
+def saneColorSet(color=None,colormap=None,shape=(1,),canvas=None):
     """Return a sane set of colors.
 
     A sane set of colors is one that guarantees correct use by the
     draw functions. This means either
     - no color (None)
     - a single color
-    - at least as many colors as the shape ncolors specifies
+    - at least as many colors as the shape argument specifies
     - a color index and a color map with enough colors to satisfy the index.
-    The return value is a tuple color,colormap. colormap will return
-    unchanged, unless color is an integer array, meaning a color index.
+    The return value is a tuple color,colormap. colormap will be None,
+    unless color is an integer array, meaning a color index.
     """
     if type(shape) == int:  # make sure we get a tuple
         shape = (shape,)
@@ -701,11 +713,15 @@ def saneColorSet(color=None,colormap=None,shape=(1,)):
         if color.dtype.kind == 'i':
             ncolors = color.max()+1
             if colormap is None:
-                colormap = GD.canvas.settings.colormap
+                if canvas:
+                    colormap = canvas.settings.colormap
+                else:
+                    colormap = GD.cfg['canvas/colormap']
             colormap = saneColor(colormap)
             colormap = saneColorArray(colormap,(ncolors,))
         else:
             color = saneColorArray(color,shape)
+            colormap = None
 
     return color,colormap
 
