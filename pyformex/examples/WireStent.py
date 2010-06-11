@@ -26,7 +26,7 @@
 
 level = 'normal'
 topics = ['geometry']
-techniques = ['dialog', 'persistence', 'colors']
+techniques = ['dialog', 'persistence', 'color']
 """
 
 # needed if we import this from another script

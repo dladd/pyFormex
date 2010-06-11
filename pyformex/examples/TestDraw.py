@@ -27,7 +27,7 @@ Example for testing the low level drawing functions
 
 level = 'normal'
 topics = ['geometry','mesh','drawing']
-techniques = ['widgets','dialog','random','colors']
+techniques = ['widgets','dialog','random','color']
 """
 
 from numpy.random import rand

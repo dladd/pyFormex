@@ -27,7 +27,7 @@
 
 level = 'normal'
 topics = ['illustration']
-techniques = ['colors','dialog','draw','persistence','random']
+techniques = ['color','dialog','draw','persistence','random']
 
 """
 

@@ -26,7 +26,7 @@
 
 level = 'normal'
 topics = ['geometry']
-techniques = ['colors']
+techniques = ['color']
 
 """
 clear()

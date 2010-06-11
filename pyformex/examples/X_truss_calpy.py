@@ -26,7 +26,7 @@
 
 level = 'advanced'
 topics = ['FEA']
-techniques = ['colors','persistence'] 
+techniques = ['color','persistence'] 
 """
 
 ############################

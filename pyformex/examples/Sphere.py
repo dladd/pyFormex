@@ -26,7 +26,7 @@
 
 level = 'normal'
 topics = ['geometry','surface']
-techniques = ['dialog', 'colors']
+techniques = ['dialog', 'color']
 
 """
 

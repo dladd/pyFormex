@@ -27,7 +27,7 @@
 
 level = 'beginner'
 topics = ['geometry']
-techniques = ['dialog', 'colors', 'persistence']
+techniques = ['dialog', 'color', 'persistence']
 
 """
 

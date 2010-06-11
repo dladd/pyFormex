@@ -26,7 +26,7 @@
 
 level = 'advanced'
 topics = ['FEA']
-techniques = ['colors'] 
+techniques = ['color'] 
 """
 
 chdir(__file__)

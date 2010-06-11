@@ -26,7 +26,7 @@
 
 level = 'beginner'
 topics = ['surface']
-techniques = ['colors']
+techniques = ['color']
 
 Creates random points, bars, triangles, quads, ...
 """

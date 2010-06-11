@@ -26,7 +26,7 @@
 
 level = 'advanced'
 topics = ['FEA']
-techniques = ['menu', 'dialog', 'persistence', 'colors'] 
+techniques = ['menu', 'dialog', 'persistence', 'color'] 
 """
 from pyformex import GUI
 from gui import menu

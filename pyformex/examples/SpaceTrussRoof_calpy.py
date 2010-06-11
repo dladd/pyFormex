@@ -26,7 +26,7 @@
 
 level = 'advanced'
 topics = ['FEA']
-techniques = ['dialog', 'animation', 'persistence', 'colors'] 
+techniques = ['dialog', 'animation', 'persistence', 'color'] 
 """
 
 from plugins.mesh import Mesh

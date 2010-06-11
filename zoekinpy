@@ -5,7 +5,7 @@
 cd $(dirname $0)
 
 #set -f
-files="pyformex/pyformex pyformex/*.py pyformex/gui/*.py pyformex/plugins/*.py pyformex/lib/*.py  pyformex/examples/*.py pyformex/examples/*/*.py"
+files="pyformex/pyformex pyformex/pyformexrc pyformex/*.py pyformex/gui/*.py pyformex/plugins/*.py pyformex/lib/*.py  pyformex/examples/*.py pyformex/examples/*/*.py"
 
 
 if [ "$1" = "-a" ]; then

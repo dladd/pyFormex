@@ -26,10 +26,11 @@
 
 level = 'beginner'
 topics = ['structure']
-techniques = ['colors']
+techniques = ['color']
 
 """
-
+print GD.canvas.settings
+exit()
 clear()
 m = 12 # number of cells in direction 0
 n = 36 # number of cells in direction 1
@@ -51,4 +52,5 @@ draw(a3,'bottom',color='green')
 a4 = a3.replic(k,m,0)
 draw(a4,'bottom',color='blue')
 clear()
+print GD.canvas.settings
 draw(a4,'bottom')

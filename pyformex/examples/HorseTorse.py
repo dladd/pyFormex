@@ -26,7 +26,7 @@
 
 level = 'advanced'
 topics = ['geometry','surface']
-techniques = ['animation', 'colors']
+techniques = ['animation', 'color']
 
 Torsing a horse is like horsing a torse.
 """

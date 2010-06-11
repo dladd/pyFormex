@@ -24,8 +24,8 @@
 """Spirals
 
 level = 'normal'
-topics = ['geometry']
-techniques = ['curve','transform']
+topics = ['geometry','curve']
+techniques = ['transform']
 
 See also the Sweep example for a more sophisticated Spirals application
 """

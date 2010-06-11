@@ -189,30 +189,50 @@ class ActorList(list):
 #
 
 class CanvasSettings(Dict):
-    """A collection of settings for an OpenGL Canvas."""
+    """A collection of settings for an OpenGL Canvas.
 
-    def __init__(self,dict={}):
+    The canvas settings are a collection of settings and default values
+    affecting the rendering in an individual viewport. Currently the
+    following values are defined:
+
+    - bgcolor: the viewport background color
+    - bgcolor2: None for a single color background, bottom color for a
+      graded background (the top color then being bgcolor)
+    - fgcolor: the default drawing color
+    - bkcolor: the default backface color
+    - slcolor: the highlight color
+    - colormap: the default color map to be used if color is an index
+    - bklormap: the default color map to be used if bkcolor is an index
+
+    Any of these values can be set in the constructor using a keyword argument.
+    All items that are not set, will get their value from the configuration
+    file(s).
+    """
+
+    def __init__(self,**kargs):
         """Create a new set of CanvasSettings, possibly changing defaults."""
         Dict.__init__(self)
-        self.reset(dict)
+        self.reset(kargs)
 
-    def reset(self,dict={}):
+    def reset(self,d):
         """Reset to defaults.
 
         If a dict is specified, these settings will override defaults.
         """
-        self.myupdate(pf.refcfg['canvas'])
-        self.myupdate(pf.prefcfg['canvas'])
-        self.myupdate(pf.cfg['canvas'])
+        print "RESETTING %s" % d
+        self.update(pf.refcfg['canvas'])
+        self.update(pf.prefcfg['canvas'])
+        self.update(pf.cfg['canvas'])
         if dict:
-            self.myupdate(dict)
+            self.update(d)
 
-    def myupdate(self,d):
+    def update(self,d):
         """Update current values with the specified settings
 
         Returns the sanitized update values.
         """
         ok = self.checkDict(d)
+        print "UPDATING %s" % ok
         Dict.update(self,ok)
         ## THIS SHOULD BE DONE WHILE SETTING THE CFG !!
         ## if (self.bgcolor2 == self.bgcolor).all():
@@ -226,7 +246,7 @@ class CanvasSettings(Dict):
             if k in [ 'bgcolor', 'bgcolor2', 'fgcolor', 'bkcolor', 'slcolor']:
                 if v is not None:
                     v = saneColor(v)
-            elif k in ['colormap','bkcolormap','propcolors']:
+            elif k in ['colormap','bkcolormap']:
                 if v is not None:
                     v =  map(saneColor,v)
             elif k in ['linewidth', 'pointsize', 'marksize']:

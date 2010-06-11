@@ -306,7 +306,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.options = dict(
             view = None,       # Keep the current camera angles
             bbox = 'auto',     # Automatically zoom on the drawed object
-            clear = False,      # Clear on each drawing action
+            clear = False,     # Clear on each drawing action
             shrink = None,
             )
 
@@ -1270,7 +1270,13 @@ class MultiCanvas(FramedGridLayout):
 
 
     def newView(self,shared=None):
-        "Create a new viewport"
+        """Create a new viewport
+
+        If another QtCanvas instance is passed, both will share the same
+        display lists and textures.
+        """
+        if shared is not None:
+            print "SHARING WITH %s" % shared
         canv = QtCanvas(self.parent,shared)
         return(canv)
         
@@ -1430,21 +1436,24 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
 
     def link(self,vp,to):
         """Link viewport vp to to"""
+        print "LINK %s to %s" % (vp,to)
         nvps = len(self.all)
         if vp < nvps and to < nvps:
             to = self.all[to]
             oldvp = self.all[vp]
-            newvp = self.newView(to)
-            self.all[vp] = newvp
-            self.removeWidget(oldvp)
-            oldvp.close()
-            self.showWidget(newvp)
-            vp = newvp
-            vp.actors = to.actors
-            vp.bbox = to.bbox
-            vp.show()
-            vp.setCamera()
-            vp.redrawAll()
+            import warnings
+            warnings.warn("Due to a bug, linking viewports is currently deactivated")
+            ## newvp = self.newView(to)
+            ## self.all[vp] = newvp
+            ## self.removeWidget(oldvp)
+            ## oldvp.close()
+            ## self.showWidget(newvp)
+            ## vp = newvp
+            ## vp.actors = to.actors
+            ## vp.bbox = to.bbox
+            ## vp.show()
+            ## vp.setCamera()
+            ## vp.redrawAll()
             #vp.updateGL()
             GD.app.processEvents()
 

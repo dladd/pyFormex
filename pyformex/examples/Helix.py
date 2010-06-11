@@ -26,7 +26,7 @@
 
 level = 'beginner'
 topics = ['geometry']
-techniques = ['colors']
+techniques = ['color']
 
 This is basically the same example as Torus.py, but it shows all steps.
 

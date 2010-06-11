@@ -27,7 +27,7 @@
 
 level = 'advanced'
 topics = ['surface']
-techniques = ['colors','widgets']
+techniques = ['color','widgets']
 
 """
 from plugins.surface import TriSurface

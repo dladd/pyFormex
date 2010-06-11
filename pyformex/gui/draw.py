@@ -548,9 +548,9 @@ def askDrawOptions(d={}):
 
 
 def reset():
+    pf.canvas.resetDefaults()
     pf.canvas.resetOptions()
     pf.GUI.drawwait = pf.cfg['draw/wait']
-    pf.canvas.resetDefaults(pf.cfg['canvas'])
     clear()
     view('front')
 

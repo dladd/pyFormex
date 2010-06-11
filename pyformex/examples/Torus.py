@@ -26,7 +26,7 @@
 
 level = 'beginner'
 topics = ['geometry']
-techniques = ['colors']
+techniques = ['color']
 
 """
 m = 36 # number of cells along torus big circle

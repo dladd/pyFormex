@@ -26,7 +26,7 @@
 
 level = 'beginner'
 topics = ['geometry']
-techniques = ['function','import','mpattern','dialog','viewports']
+techniques = ['function','import','mpattern','dialog','viewport']
 """
 import simple
 from examples.Cube import cube_tri
@@ -113,12 +113,12 @@ def drawCircles(F,func,color=red):
     draw_circles(zip(r,c,n),color=color)
     
     
-# create two viewports
-layout(1)
+layout(2)
 wireframe()
 
 # draw in viewport 0
 viewport(0)
+view('front')
 clear()
 rtri = Formex(mpattern('16-32')).scale([1.5,1,0])
 F = rtri + rtri.shear(0,1,-0.5).trl(0,-4.0) + rtri.shear(0,1,0.75).trl(0,3.0)
@@ -128,14 +128,15 @@ zoomAll()
 drawCircles(F,triangleInCircle,color=blue)
 drawCircles(F,triangleBoundingCircle,color=black)
 zoomAll()   
-exit()
+
 
 # draw in viewport 1
 viewport(1)
+view('iso')
 clear()
 F,c = cube_tri()
 draw(F)
-drawCircles(F)
+drawCircles(F,triangleInCircle)
 zoomAll()   
 
 if not ack("Keep both viewports ?"):

@@ -54,6 +54,27 @@ globals().update(data)
 #draw(f)
 
 plotChar('A')
-  
+
+right = array([1.,0.,0.])
+print right
+left = -right
+print left
+from plugins.curve import *
+clear()
+x = Formex(mpattern('65')).coords.reshape(-1,3)
+C =  BezierSpline(x)
+print C.pointsOn()
+draw(C.pointsOn())
+draw(C,color=red)
+C =  BezierSpline(x.trl(0,1.),deriv=[left,right])
+print C.pointsOn()
+draw(C.pointsOn())
+draw(C,color=blue)
+exit()
+x = Coords([[0,0],[0,2],[0,2],[1,1.5],[0,1],[0,1],[1,0.5],[0,0]])
+C = BezierSpline(x)
+draw(C.pointsOn())
+draw(C,color=red)
+
 
 # End

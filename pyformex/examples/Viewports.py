@@ -25,7 +25,7 @@
 
 level = 'advanced'
 topics = ['surface']
-techniques = ['viewports', 'colors']
+techniques = ['viewport', 'color']
 
 Demonstrate multiple viewports.
 """
@@ -49,20 +49,21 @@ F = Formex.read(getcfg('datadir')+'/horse.formex')
 
 layout(1)
 FA = draw(F,view='front')
-## sleep(1)
+pause()
 
 layout(2)
 drawText('Viewport 2',10,10)
 GD.GUI.viewports.updateAll()
-
+pause()
 
 layout(3)
 draw(F,color='green')
-#sleep(nsl)
-
+pause()
 
 viewport(1)
 linkViewport(1,0)
+
+exit()
 #sleep(nsl)
 layout(1)
 
@@ -70,6 +71,7 @@ layout(4,2)
 viewport(0)
 sleep(nsl)
 
+exit()
 
 for i in range(1,4):
     linkViewport(i,0)
@@ -83,6 +85,8 @@ for i,v in enumerate(['front','right','top','iso']):
     GD.canvas.setBgColor(GD.canvas.settings.bgcolor)
     GD.canvas.display()
     GD.canvas.update()
+
+exit()
 
 sleep(nsl)
 viewport(3)

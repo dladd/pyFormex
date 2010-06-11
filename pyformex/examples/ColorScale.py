@@ -29,7 +29,7 @@ Examples showing the use of the 'colorscale' plugin
 
 level = 'normal'
 topics = ['FEA']
-techniques = ['dialog', 'colors']
+techniques = ['dialog', 'color']
 
 """
 

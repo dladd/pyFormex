@@ -28,7 +28,7 @@
 
 level = 'beginner'
 topics = ['geometry']
-techniques = ['colors']
+techniques = ['color']
 
 """
 

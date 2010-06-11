@@ -26,7 +26,7 @@
 
 level = 'advanced'
 topics = ['geometry','surface']
-techniques = ['dialog', 'animation', 'colors']
+techniques = ['dialog', 'animation', 'color']
 
 """
 
@@ -50,7 +50,7 @@ TA = draw(strip,color='orange',bkcolor='red')
 
 sleep(1)
 
-nsteps = 20
+nsteps = 40
 step = n*180./nsteps/l
 for i in arange(nsteps+1):
     a = i*step
@@ -61,7 +61,7 @@ for i in arange(nsteps+1):
 
 sleep(1)
 #TA = None
-nsteps = 40
+nsteps = 60
 step = 360./nsteps
 for i in arange(1,nsteps+1):
     ring = torded.trl(2,l*nsteps/pi/i).scale([i*step/l,1.,1.]).trl(0,-90).cylindrical(dir=[2,0,1])

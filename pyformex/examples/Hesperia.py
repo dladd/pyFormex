@@ -27,7 +27,7 @@
 
 level = 'advanced'
 topics = ['geometry', 'FEA', 'domes', 'surface']
-techniques = ['menu', 'dialog', 'persistence', 'colors'] 
+techniques = ['menu', 'dialog', 'persistence', 'color'] 
 """
 
 import simple,utils

@@ -27,7 +27,7 @@
 
 level = 'advanced'
 topics = ['FEA']
-techniques = ['persistence', 'dialog', 'colors'] 
+techniques = ['persistence', 'dialog', 'color'] 
 """
 
 from plugins.fe import *

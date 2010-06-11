@@ -26,7 +26,7 @@
 
 level = 'normal'
 topics = ['curve','drawing','illustration']
-techniques = ['colors','persistence','curve','lima','import']
+techniques = ['color','persistence','lima','import']
 
 """
 reset()

@@ -144,8 +144,8 @@ class RotatedActor(Actor):
 class CubeActor(Actor):
     """An OpenGL actor with cubic shape and 6 colored sides."""
 
-    def __init__(self,size,color=[red,cyan,green,magenta,blue,yellow]):
-        FacingActor.__init__(self)
+    def __init__(self,size=1.0,color=[red,cyan,green,magenta,blue,yellow]):
+        Actor.__init__(self)
         self.size = size
         self.color = color
 
@@ -155,6 +155,22 @@ class CubeActor(Actor):
     def drawGL(self,**kargs):
         """Draw the cube."""
         drawCube(self.size,self.color)
+
+
+class SphereActor(Actor):
+    """An OpenGL actor representing a sphere."""
+
+    def __init__(self,size=1.0,color=None):
+        Actor.__init__(self)
+        self.size = size
+        self.color = color
+
+    def bbox(self):
+        return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
+
+    def drawGL(self,**kargs):
+        """Draw the cube."""
+        drawSphere(self.size,self.color)
 
 
 # This could be subclassed from GridActor
@@ -349,9 +365,6 @@ class PlaneActor(Actor):
                 drawGridPlanes(self.x0,self.x1,nx)
 
 
-
-
-
 ###########################################################################
 
 quadratic_curve_ndiv = 8
@@ -382,8 +395,6 @@ class GeomActor(Actor):
         =========   ===========   ============================================
         plexitude   `eltype`      element type
         =========   ===========   ============================================
-        1           ``point3d``   | a 3D cube with 6 differently colored faces
-                                    is drawn at each point
         4           ``tet4``      a tetrahedron
         6           ``wedge6``    a wedge (triangular prism)
         8           ``hex8``      a hexahedron
@@ -394,7 +405,7 @@ class GeomActor(Actor):
         values than the PropSet, it is wrapped around. It can also be
         a single OpenGL color, which will be used for all elements.
         For surface type elements, a bkcolor color can be given for
-        the backside (inside) of the surface. Default will be the same
+        the backside of the surface. Default will be the same
         as the front color.
         The user can specify a linewidth to be used when drawing
         in wireframe mode.
@@ -419,25 +430,12 @@ class GeomActor(Actor):
             self.elems = elems
             self.eltype = eltype
             
-        ## if self.elems is None:
-        ##     self.atype = 'Formex'
-        ## else:
-        ##     self.atype = 'Mesh'
-        ##     if isinstance(data,TriSurface):
-        ##         self.atype = 'TriSurface'
-            
         self.mode = mode
         self.setLineWidth(linewidth)
         self.setColor(color,colormap)
         self.setBkColor(bkcolor,bkcolormap)
         self.setAlpha(alpha)
-##         if coloradjust:
-##             if colormap is not None:
-##                 colormap /= colormap.sum(axis=1)
-##             if bkcolormap is not None:
-##                 bkcolormap /= bkcolormap.sum(axis=1).reshape(-1,1)
-        if self.nplex() == 1:
-            self.setMarkSize(marksize)
+        self.marksize = marksize
         self.list = None
 
 
@@ -484,30 +482,12 @@ class GeomActor(Actor):
         self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.shape())
         print "BKCOLOR %s = %s"%(color,self.bkcolor)
 
+
     def setAlpha(self,alpha):
         """Set the Actors alpha value."""
         self.alpha = float(alpha)
         self.trans = self.alpha < 1.0
-
-
-    def setMarkSize(self,marksize):
-        """Set the mark size.
-
-        The mark size is currently only used with plex-1 Formices.
-        """
-#### DEFAULT MARK SIZE SHOULD BECOME A CANVAS SETTING!!
-        
-        if marksize is  None:
-            marksize = 4.0 # default size 
-        if self.eltype == 'point3d':
-            # ! THIS SHOULD BE SET FROM THE SCENE SIZE
-            #   RATHER THAN FORMEX SIZE 
-            marksize = self.coords.dsize() * marksize
-            if marksize <= 0.0:
-                marksize = 1.0
-            self.setMark(marksize,"cube")
-        self.marksize = marksize
-        
+            
 
     def bbox(self):
         return self.coords.bbox()
@@ -606,18 +586,16 @@ class GeomActor(Actor):
         print "ELTYPE=%s" % self.eltype
         
         if nplex == 1:
-            if self.eltype == 'point3d':
-                x = self.coords.reshape((-1,3))
-                drawAtPoints(x,self.mark,color)
-            else:
-                drawPoints(self.coords,color,alpha,self.marksize)
-                
+            marksize = self.marksize
+            if marksize is None:
+                marksize = canvas.settings.pointsize
+            drawPoints(self.coords,color,alpha,marksize)
+
         elif nplex == 2:
             #save = pf.canvas.hasLight()
             #pf.canvas.glLight(False)
             drawLines(self.coords,self.elems,color)
             #pf.canvas.glLight(save)
-
         
         elif self.eltype == 'curve' and nplex == 3:
             pf.debug("DRAWING WITH drawQuadraticCurves")

@@ -557,18 +557,6 @@ def drawGridPlanes(x0,x1,nx):
             GL.glEnd()
 
 
-def createMark(self,size,type='sphere'):
-    """Create a display list with a symbol for drawing 3D points."""
-    mark = GL.glGenLists(1)
-    GL.glNewList(mark,GL.GL_COMPILE)
-    if type == 'sphere':
-        drawSphere(size)
-    else:
-        drawCube(size)
-    GL.glEndList()
-    return mark
-
-
 ######################## Picking functions ########################
 
 def pickPolygons(x,e=None,objtype=-1):

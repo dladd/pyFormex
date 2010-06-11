@@ -77,7 +77,7 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
     if TA is not None:
         undecorate(TA)
     TA = drawText(text,10,10,font='sans',size=20)
-    draw(P, color='black',marksize=3)
+    draw(P, color='black')
     drawNumbers(Formex(P))
     kargs = {'closed':closed}
     if ctype in ['Natural Spline']:
@@ -106,8 +106,7 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
         draw(PC[1],color=green)
     else:
         draw(PL, color=method_color[im])
-    draw(PL.pointsOn(),color=black,marksize=4)
-
+    draw(PL.pointsOn(),color=black)
     
 
 dataset = [
