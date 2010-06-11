@@ -84,7 +84,7 @@ class Actor(Drawable):
 class TranslatedActor(Actor):
     """An Actor translated to another position."""
 
-    def __init__(self,A,trl=(0.,0.,0.)):
+    def __init__(self,A,trl=(0.,0.,0.),**kargs):
         Actor.__init__(self)
         self.actor = A
         self.trans = A.trans
@@ -109,7 +109,7 @@ class TranslatedActor(Actor):
 class RotatedActor(Actor):
     """An Actor rotated to another position."""
 
-    def __init__(self,A,rot=(1.,0.,0.),twist=0.0):
+    def __init__(self,A,rot=(1.,0.,0.),twist=0.0,**kargs):
         """Created a new rotated actor.
 
         If rot is an array with shape (3,), the rotation is specified
@@ -144,7 +144,7 @@ class RotatedActor(Actor):
 class CubeActor(Actor):
     """An OpenGL actor with cubic shape and 6 colored sides."""
 
-    def __init__(self,size=1.0,color=[red,cyan,green,magenta,blue,yellow]):
+    def __init__(self,size=1.0,color=[red,cyan,green,magenta,blue,yellow],**kargs):
         Actor.__init__(self)
         self.size = size
         self.color = color
@@ -160,7 +160,7 @@ class CubeActor(Actor):
 class SphereActor(Actor):
     """An OpenGL actor representing a sphere."""
 
-    def __init__(self,size=1.0,color=None):
+    def __init__(self,size=1.0,color=None,**kargs):
         Actor.__init__(self)
         self.size = size
         self.color = color
@@ -177,7 +177,7 @@ class SphereActor(Actor):
 class BboxActor(Actor):
     """Draws a bbox."""
 
-    def __init__(self,bbox,color=None,linewidth=None):
+    def __init__(self,bbox,color=None,linewidth=None,**kargs):
         Actor.__init__(self)
         self.color = color
         self.linewidth = linewidth
@@ -200,7 +200,7 @@ class BboxActor(Actor):
 class TriadeActor(Actor):
     """An OpenGL actor representing a triade of global axes."""
 
-    def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue,cyan,magenta,yellow]):
+    def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue,cyan,magenta,yellow],**kargs):
         Actor.__init__(self)
         self.color = color
         self.setPos(pos)
@@ -255,7 +255,7 @@ class TriadeActor(Actor):
 class GridActor(Actor):
     """Draws a (set of) grid(s) in one of the coordinate planes."""
 
-    def __init__(self,nx=(1,1,1),ox=(0.0,0.0,0.0),dx=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.2,lines=True,planes=True):
+    def __init__(self,nx=(1,1,1),ox=(0.0,0.0,0.0),dx=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.2,lines=True,planes=True,**kargs):
         Actor.__init__(self)
         self.linecolor = saneColor(linecolor)
         self.planecolor = saneColor(planecolor)
@@ -288,7 +288,7 @@ class GridActor(Actor):
 class CoordPlaneActor(Actor):
     """Draws a set of 3 coordinate planes."""
 
-    def __init__(self,nx=(1,1,1),ox=(0.0,0.0,0.0),dx=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
+    def __init__(self,nx=(1,1,1),ox=(0.0,0.0,0.0),dx=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True,**kargs):
         Actor.__init__(self)
         self.linecolor = saneColor(linecolor)
         self.planecolor = saneColor(planecolor)
@@ -325,7 +325,7 @@ class CoordPlaneActor(Actor):
 class PlaneActor(Actor):
     """A plane in a 3D scene."""
 
-    def __init__(self,nx=(2,2,2),ox=(0.,0.,0.),size=((0.0,1.0,1.0),(0.0,1.0,1.0)),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
+    def __init__(self,nx=(2,2,2),ox=(0.,0.,0.),size=((0.0,1.0,1.0),(0.0,1.0,1.0)),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True,**kargs):
         """A plane perpendicular to the x-axis at the origin."""
         Actor.__init__(self)
         self.linecolor = saneColor(linecolor)
@@ -352,12 +352,12 @@ class PlaneActor(Actor):
             nx[i] = 0
             
             if self.lines:
-                if self.linewidth:
+                if self.linewidth is not None:
                     GL.glLineWidth(self.linewidth)
+                color = self.linecolor
                 if color is None:
-                    glColor(self.linecolor)
-                else:
-                    glColor(color)
+                    color = canvas.settings.fgcolor
+                glColor(color)
                 drawGridLines(self.x0,self.x1,nx)
             
             if self.planes:
@@ -377,7 +377,7 @@ class GeomActor(Actor):
     """
     mark = False
 
-    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,marksize=None):
+    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,marksize=None,**kargs):
         """Create a geometry actor.
 
         The geometry is either in Formex model: a coordinate block with
@@ -480,7 +480,7 @@ class GeomActor(Actor):
     def setBkColor(self,color,colormap=None):
         """Set the backside color of the Actor."""
         self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.shape())
-        print "BKCOLOR %s = %s"%(color,self.bkcolor)
+        #print "BKCOLOR %s = %s"%(color,self.bkcolor)
 
 
     def setAlpha(self,alpha):
@@ -583,7 +583,7 @@ class GeomActor(Actor):
 
         ################## draw the geometry #################
         nplex = self.nplex()
-        print "ELTYPE=%s" % self.eltype
+        #print "ELTYPE=%s" % self.eltype
         
         if nplex == 1:
             marksize = self.marksize
@@ -611,20 +611,21 @@ class GeomActor(Actor):
                 drawPolyLines(self.coords,self.elems,color)
             else:
                 if bkcolor is not None:
-                    print "COLOR=%s" % color
-                    print "BKCOLOR =%s" % bkcolor
+                    #print "COLOR=%s" % color
+                    #print "BKCOLOR =%s" % bkcolor
                     # Draw front and back with different colors
                     #from canvas import glCulling
                     #glCulling()
                     GL.glEnable(GL.GL_CULL_FACE)
                     GL.glCullFace(GL.GL_BACK)
-                    print "DRAWING FRONT SIDES"
+                    #print "DRAWING FRONT SIDES"
                 drawPolygons(self.coords,self.elems,mode,color,alpha)
                 if bkcolor is not None:
-                    print "DRAWING BACK SIDES"
+                    #print "DRAWING BACK SIDES"
                     GL.glCullFace(GL.GL_FRONT)
                     GL.glColor(append(bkcolor,alpha))
                     drawPolygons(self.coords,self.elems,mode,bkcolor,alpha)
+                    GL.glDisable(GL.GL_CULL_FACE)
                    
         else:
             try:
@@ -639,20 +640,21 @@ class GeomActor(Actor):
                 else:
                     faces = el.faces
                 if bkcolor is not None:
-                    print "COLOR=%s" % color
-                    print "BKCOLOR =%s" % bkcolor
+                    #print "COLOR=%s" % color
+                    #print "BKCOLOR =%s" % bkcolor
                     # Draw front and back with different colors
                     #from canvas import glCulling
                     #glCulling()
                     GL.glEnable(GL.GL_CULL_FACE)
                     GL.glCullFace(GL.GL_BACK)
-                    print "DRAWING FRONT SIDES"
+                    #print "DRAWING FRONT SIDES"
                 drawFaces(self.coords,self.elems,faces,mode,color,alpha)
                 if bkcolor is not None:
-                    print "DRAWING BACK SIDES"
+                    #print "DRAWING BACK SIDES"
                     GL.glCullFace(GL.GL_FRONT)
                     GL.glColor(append(bkcolor,alpha))
                     drawFaces(self.coords,self.elems,faces,mode,bkcolor,alpha)
+                    GL.glDisable(GL.GL_CULL_FACE)
 
    
 

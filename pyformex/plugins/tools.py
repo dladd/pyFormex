@@ -27,7 +27,7 @@
 Graphic Tools for pyFormex.
 """
 
-import pyformex as GD
+import pyformex as pf
 from coords import *
 from collection import Collection
 from gui.actors import GeomActor
@@ -70,6 +70,16 @@ class Plane(object):
         return 'P:%s n:%s s:%s' % (list(self.P),list(self.n), (list(self.s[0]),list(self.s[1])))
 
 
+    def actor(self,**kargs):
+        from gui import actors
+        actor = actors.PlaneActor(size=self.s,**kargs)
+        actor.create_list(mode=pf.canvas.rendermode)
+        actor = actors.RotatedActor(actor,self.n,**kargs)
+        actor.create_list(mode=pf.canvas.rendermode)
+        actor = actors.TranslatedActor(actor,self.P,**kargs)
+        return actor
+
+
 ################# Report information about picked objects ################
 
 def report(K):
@@ -93,7 +103,7 @@ def reportActors(K):
     v = K.get(-1,[])
     s += "Actors %s\n" % v
     for k in v:
-        A = GD.canvas.actors[k]
+        A = pf.canvas.actors[k]
         t = A.getType()
         s += "  Actor %s (type %s)\n" % (k,t)
     return s
@@ -103,7 +113,7 @@ def reportElements(K):
     s = "Element report\n"
     for k in K.keys():
         v = K[k]
-        A = GD.canvas.actors[k]
+        A = pf.canvas.actors[k]
         t = A.getType()
         s += "Actor %s (type %s); Elements %s\n" % (k,t,v)
         if t == 'Formex':
@@ -119,7 +129,7 @@ def reportPoints(K):
     s = "Point report\n"
     for k in K.keys():
         v = K[k]
-        A = GD.canvas.actors[k]
+        A = pf.canvas.actors[k]
         s += "Actor %s (type %s); Points %s\n" % (k,A.getType(),v)
         x = A.vertices()
         for p in v:
@@ -131,7 +141,7 @@ def reportEdges(K):
     s = "Edge report\n"
     for k in K.keys():
         v = K[k]
-        A = GD.canvas.actors[k]
+        A = pf.canvas.actors[k]
         s += "Actor %s (type %s); Edges %s\n" % (k,A.getType(),v)
         e = A.edges()
         for p in v:
@@ -142,7 +152,7 @@ def reportPartitions(K):
     s = "Partition report\n"
     for k in K.keys():
         P = K[k][0]
-        A = GD.canvas.actors[k]
+        A = pf.canvas.actors[k]
         t = A.getType()
         for l in P.keys():
             v = P[l]
@@ -203,11 +213,11 @@ def getObjectItems(obj,items,mode):
 def getCollection(K):
     """Returns a collection."""
     if K.obj_type == 'actor':
-        return [ GD.canvas.actors[int(i)].object for i in K.get(-1,[]) if hasattr(GD.canvas.actors[int(i)],'object') ]
+        return [ pf.canvas.actors[int(i)].object for i in K.get(-1,[]) if hasattr(pf.canvas.actors[int(i)],'object') ]
     elif K.obj_type in ['element','point']:
-        return [ getObjectItems(GD.canvas.actors[k],K[k],K.obj_type) for k in K.keys() ]
+        return [ getObjectItems(pf.canvas.actors[k],K[k],K.obj_type) for k in K.keys() ]
     elif K.obj_type == 'partition':
-        return [getObjectItems(GD.canvas.actors[k],K[k][0][prop],K.obj_type) for k in K.keys() for prop in K[k][0].keys()]
+        return [getObjectItems(pf.canvas.actors[k],K[k][0][prop],K.obj_type) for k in K.keys() for prop in K[k][0].keys()]
     else:
         return None
 
@@ -221,7 +231,7 @@ def growCollection(K,**kargs):
     """
     if K.obj_type == 'element':
         for k in K.keys():
-            o = GD.canvas.actors[k]
+            o = pf.canvas.actors[k]
             if hasattr(o,'growSelection'):
                 K[k] = o.growSelection(K[k],**kargs)
 

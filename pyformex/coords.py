@@ -1264,6 +1264,15 @@ class Coords(ndarray):
         return reflect(*args,**kargs)
 
 
+    def actor(self,**kargs):
+
+        if self.npoints() == 0:
+            return None
+        
+        from gui.actors import GeomActor
+        from formex import Formex
+        return GeomActor(Formex(self.reshape(-1,3)),**kargs)
+
 
 # Creating special coordinate sets
 

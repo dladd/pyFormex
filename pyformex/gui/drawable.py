@@ -60,10 +60,11 @@ def glColor(color,alpha=1.0):
     alpha is a single real value.
     All values are between 0.0 and 1.0
     """
-    if alpha == 1.0:
-        GL.glColor3fv(color)
-    else:
-        GL.glColor4fv(append(color,alpha)) 
+    if color is not None:
+        if alpha == 1.0:
+            GL.glColor3fv(color)
+        else:
+            GL.glColor4fv(append(color,alpha)) 
 
 
 #
@@ -553,6 +554,7 @@ def drawGridPlanes(x0,x1,nx):
             x[:,:,axes] = corners
             GL.glBegin(GL.GL_QUADS)
             for p in x.reshape((-1,3)):
+                print p
                 GL.glVertex3fv(p)
             GL.glEnd()
 

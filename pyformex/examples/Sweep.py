@@ -64,11 +64,13 @@ cross_sections_2d.update({
     'channel' : '1223',
     'sigma' : '16253',
     'H-beam' : '11/322/311',
+    'swastika':'12+23+34+41',
     })
 # define some plane surface patterns
 cross_sections_3d = {
     'filled_square':'123',
     'filled_triangle':'12',
+    'swastika3':'12+23+34+41',
     }
 
 
@@ -170,9 +172,11 @@ def show():
     CS = createCrossSection()
     draw(CS)
 
+    print CS.shape()
     structure = CS.sweep(PL,normal=[1.,0.,0.],upvector=eval(cross_upvector),avgdir=True)
     clear()
     smoothwire()
+    print structure.shape()
     draw(structure,color='red',bkcolor='cyan')
 
     if nwires > 1:

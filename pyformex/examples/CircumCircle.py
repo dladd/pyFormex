@@ -123,6 +123,7 @@ clear()
 rtri = Formex(mpattern('16-32')).scale([1.5,1,0])
 F = rtri + rtri.shear(0,1,-0.5).trl(0,-4.0) + rtri.shear(0,1,0.75).trl(0,3.0)
 draw(F)
+
 drawCircles(F,triangleCircumCircle,color=red)
 zoomAll()   
 drawCircles(F,triangleInCircle,color=blue)

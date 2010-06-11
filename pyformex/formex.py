@@ -139,9 +139,10 @@ def pattern(s):
     The first point of the list is [0,0,0]. Each character from the input
     string is interpreted as a code specifying how to move to the next point.
     Currently defined are the following codes:
-    0 = goto origin [0,0,0]
     1..8 move in the x,y plane
     9 remains at the same place
+    0 = goto origin [0,0,0]
+    + = go back to origin without creating a line segment
     When looking at the plane with the x-axis to the right,
     1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE.
     Adding 16 to the ordinal of the character causes an extra move of +1 in
@@ -171,6 +172,9 @@ def pattern(s):
     for c in s:
         if c == "/":
             connect = False
+            continue
+        if c == "+":
+            x = y = z = 0
             continue
         pos = [x,y,z]
         if c == "0":
@@ -220,8 +224,9 @@ def mpattern(s):
     """This is like pattern, but allowing lists with more than 2 points.
 
     Subsequent points are included in the same list until a '-' occurs.
-    A '-' character splits lists. Each list starts at the last point of
-    the previous list.
+    A '+' or '-' character splits lists. After a '-', the list starts at the
+    last point of the previous list. After a '+', the list starts again
+    at the origin.
     All lists should have equal length if you want to use the resulting
     list to initialize a Formex.
     """
@@ -233,6 +238,10 @@ def mpattern(s):
         if c == '/':
             connect = False
             continue
+        elif c == '+':
+            l.append(li)
+            li = []
+            x = y = z = 0
         elif c == '-':
             l.append(li)
             li = []
@@ -2071,6 +2080,15 @@ maxprop  = %s
         if x.shape[0] % nplex != 0:
             raise RuntimeError,"Number of points read: %s, should be multiple of %s!" % (x.shape[0],nplex)
         return Formex(x.reshape(-1,nplex,3))
+
+
+    def actor(self,**kargs):
+
+        if self.nelems() == 0:
+            return None
+        
+        from gui.actors import GeomActor
+        return GeomActor(self,**kargs)
 
 
 #########################################################################

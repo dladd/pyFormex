@@ -26,7 +26,7 @@
 
 level = 'beginner'
 topics = ['geometry']
-techniques = ['color']
+techniques = ['color','pattern']
 
 """
 
@@ -48,5 +48,6 @@ if __name__ == "draw":
         if FA:
             undraw(FA)
         FA = FB
+        pause()
 
 # End

@@ -28,4 +28,19 @@ This file is mainly here to flag the gui directory as a Python package.
 Global variables for the gui package may be defined here.
 """
 
+## def geomActor(object,**kargs):
+##     from actors import GeomActor
+##     return GeomActor(F,**kargs)
+
+
+## import coords
+## print coords.__dict__
+## k = dir(coords)
+## #.keys()
+## k.sort()
+## print k
+
+## coords.Coords.actor = geomActor
+
+
 # End

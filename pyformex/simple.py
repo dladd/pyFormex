@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
@@ -37,15 +36,15 @@ from formex import *
 # The shape() function below returns the corresponding Formex.
 Pattern = {
     'line'   : '1',
-    'angle'  : '102',
+    'angle'  : '1+2',
     'square' : '1234',
-    'plus'   : '1020304',
-    'cross'  : '5060708',
+    'plus'   : '1+2+3+4',
+    'cross'  : '5+6+7+8',
     'diamond' : '/45678',
     'rtriangle' : '164',
     'cube'   : '1234I/aI/bI/cI/41234',
-    'star'   : '102030405060708',
-    'star3d' : '1/02/03/04/05/06/07/08/0A/0B/0C/0D/0E/0F/0G/0H/0a/0b/0c/0d/0e/0f/0g/0h'
+    'star'   : '1+2+3+4+5+6+7+8',
+    'star3d' : '1+2+3+4+5+6+7+8+A+B+C+D+E+F+G+H+a+b+c+d+e+f+g+h'
     }
 
 def shape(name):

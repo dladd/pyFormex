@@ -1113,6 +1113,14 @@ Size: %s
         return array(extremeAngles).max(axis=0)
 
 
+    def actor(self,**kargs):
+
+        if self.nelems() == 0:
+            return None
+        
+        from gui.actors import GeomActor
+        return GeomActor(self,**kargs)
+
 ########### Functions #####################
 
 

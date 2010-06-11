@@ -413,20 +413,12 @@ def draw(F,
     # We now should have a single object to draw
     # Check if it is something we can draw
 
-    if isinstance(F,Formex):
-        pass
-    elif isinstance(F,mesh.Mesh):
-        pass
-    elif isinstance(F,surface.TriSurface):
-        pass
-    elif isinstance(F,tools.Plane):
-        pass
-    elif hasattr(F,'toFormex'):
+    
+    if not hasattr(F,'actor') and hasattr(F,'toFormex'):
+        pf.debug("CONVERTING %s TO FORMEX TO ENABLE DRAWING" %  type(F))
         F = F.toFormex()
-    # keep this below trying the 'toFormex' !!!
-    elif isinstance(F,coords.Coords):
-        F = Formex(F)
-    else:
+
+    if not hasattr(F,'actor'):
         # Don't know how to draw this object
         raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
 
@@ -468,13 +460,13 @@ def draw(F,
         F = _shrink(F,shrink)
 
     try:
-        if isinstance(F,tools.Plane):
-            return drawPlane(F.point(),F.normal(),F.size())
+        ## if isinstance(F,tools.Plane):
+        ##     return drawPlane(F.point(),F.normal(),F.size())
 
-        if F.nelems() == 0:
+        actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+
+        if actor is None:
             return None
-        
-        actor = actors.GeomActor(F,color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
         
         if flat:
             actor.specular = 0.
@@ -596,14 +588,17 @@ def drawVectors(P,v,d=1.0,color='red'):
 
 
 def drawPlane(P,N,size):
-    actor = actors.PlaneActor(size=size)
-    actor.create_list(mode=pf.canvas.rendermode)
-    actor = actors.RotatedActor(actor,N)
-    actor.create_list(mode=pf.canvas.rendermode)
-    actor = actors.TranslatedActor(actor,P)
-    pf.canvas.addActor(actor)
-    pf.canvas.update()
-    return actor
+    from plugins.tools import Plane
+    p = Plane(P,N,size)
+    return draw(p,bbox='last')
+    ## actor = actors.PlaneActor(size=size)
+    ## actor.create_list(mode=pf.canvas.rendermode)
+    ## actor = actors.RotatedActor(actor,N)
+    ## actor.create_list(mode=pf.canvas.rendermode)
+    ## actor = actors.TranslatedActor(actor,P)
+    ## pf.canvas.addActor(actor)
+    ## pf.canvas.update()
+    ## return actor
 
 
 def drawMarks(X,M,color='black',leader=''):
