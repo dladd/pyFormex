@@ -6,4 +6,5 @@ pwd
 rm -f gui/gui.pyc
 rm -f scriptsmenu.pyc
 rm -f gui/help.pyc
+rm -f plugins/surface.pyc
 

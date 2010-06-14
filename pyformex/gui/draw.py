@@ -47,7 +47,7 @@ from formex import Formex
 from script import *
 from signals import *
 
-from plugins import surface,tools,mesh,fe
+from plugins import trisurface,tools,mesh,fe
 
 
         

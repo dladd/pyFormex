@@ -94,7 +94,7 @@ if ack("Create Surface model?"):
     if ack('Export this model in STL format?',default='No'):
         fn = askNewFilename(getcfg('workdir'),"Stl files (*.stl)")
         if fn:
-            from plugins import surface
+            from plugins import trisurface
             f = file(fn,'w')
             surface.write_stla(f,T.coords)
             f.close()

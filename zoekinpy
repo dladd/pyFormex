@@ -1,21 +1,55 @@
-#!/bin/sh
-# Zoek een string in all .py files
-#
+#!/bin/bash
+# 
+syntax() {
+    cat <<EOF
+Usage: zoekinpy [-a] [OPTION]... SEARCH
+       sedinpy [-a] [OPTION]... SEARCH TARGET REPLACE
 
-cd $(dirname $0)
+zoekinpy searches for a string SEARCH in all Python files of pyFormex
+and possibly in other configured (Python or other) files. 
+It displays the matching file names and lines.
 
-#set -f
+sedinpy searches the same files for SEARCH, and in all matching lines 
+it replaces the string TARGET with REPLACE.
+
+Options:
+-a : Should be the first and a separate option: if specified, the user
+     configuration file zoekinpy.conf will be loaded.
+
+EOF
+}
+
+script=$(basename $0)
+
 files="pyformex/pyformex pyformex/pyformexrc pyformex/*.py pyformex/gui/*.py pyformex/plugins/*.py pyformex/lib/*.py  pyformex/examples/*.py pyformex/examples/*/*.py"
 
 
 if [ "$1" = "-a" ]; then
+    cfg=zoekinpy.conf
     shift
-    for d in local local/* stent faceting osteo; do
-	[ -d "$d" ] && files="$files $d/*.py"
-    done
+    [ -f "$cfg" ] && {
+	. $cfg
+	files="$files $myfiles"
+    }
 fi
-#echo "$files"
-#set +f
+
+search=$1
+[ -n "$search" ] || { syntax; exit; }
+
+
+cd $(dirname $0)
+
 #echo $files
- 
-grep "$@" $files
+
+case "$script" in
+    zoekinpy ) 
+	grep "$@" $files ;;
+    
+    sedinpy ) 
+	target=$2
+	replace=$3
+	[ -n "$target" ] && sed -i "/$search/s|$target|$replace|" $files
+	;;
+
+esac
+

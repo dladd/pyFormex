@@ -30,7 +30,7 @@ topics = ['surface']
 techniques = ['color','widgets']
 
 """
-from plugins.surface import TriSurface
+from plugins.trisurface import TriSurface
 
 
 def askSlices(bb):

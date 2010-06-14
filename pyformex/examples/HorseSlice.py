@@ -29,7 +29,7 @@ topics = ['geometry','surface','mesh']
 techniques = ['intersection']
 
 """
-from plugins.surface import TriSurface
+from plugins.trisurface import TriSurface
 from plugins.mesh import Mesh
 
 reset()

@@ -31,7 +31,7 @@ import pyformex as GD
 from gui import actors,colors,decors,widgets,menu
 from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *
-from plugins.surface import *
+from plugins.trisurface import *
 from plugins.objects import *
 from plugins import plot2d,formex_menu,mesh_menu,fe_abq
 import simple

@@ -30,7 +30,7 @@ techniques = ['animation', 'color']
 
 Torsing a horse is like horsing a torse.
 """
-from plugins.surface import TriSurface
+from plugins.trisurface import TriSurface
 
 def drawSurf(F,surface=False,**kargs):
     """Draw a Formex as surface or not."""

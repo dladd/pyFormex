@@ -32,7 +32,7 @@ techniques = ['menu', 'dialog', 'persistence', 'color']
 
 import simple,utils
 from connectivity import Connectivity
-from plugins.surface import TriSurface
+from plugins.trisurface import TriSurface
 from plugins.properties import *
 from plugins.fe_abq import *
 from gui.colorscale import ColorScale,ColorLegend

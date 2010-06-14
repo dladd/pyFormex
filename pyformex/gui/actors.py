@@ -32,7 +32,7 @@ from formex import *
 import elements
 
 from plugins.mesh import Mesh
-from plugins.surface import TriSurface
+from plugins.trisurface import TriSurface
 from marks import TextMark
 
 import timer

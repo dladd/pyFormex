@@ -33,7 +33,7 @@ Determine approximation for the centerline.
 import pyformex as GD
 import os
 from numpy import *
-from plugins import surface,tetgen
+from plugins import trisurface,tetgen
 from utils import runCommand
 import coords,connectivity
 
@@ -102,7 +102,7 @@ def voronoi(fn):
     The voronoi diagram is determined by Tetgen.
     The output are the voronoi nodes and the corresponding radii of the voronoi spheres.
     """
-    S = surface.TriSurface.read(fn)
+    S = trisurface.TriSurface.read(fn)
     fn,ftype = os.path.splitext(fn)
     ftype = ftype.strip('.').lower()
     if ftype != 'smesh':
@@ -125,7 +125,7 @@ def voronoiInner(fn):
     fn is the file name of a surface, including the extension (.off, .stl, .gts, .neu or .smesh)
     The output are the voronoi nodes and the corresponding radii of the voronoi spheres.
     """
-    S = surface.TriSurface.read(fn)
+    S = trisurface.TriSurface.read(fn)
     fn,ftype = os.path.splitext(fn)
     ftype = ftype.strip('.').lower()
     if ftype != 'smesh':

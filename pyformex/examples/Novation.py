@@ -87,7 +87,7 @@ if bottom:
 draw(e,alpha=0.8)
 
 if export and checkWorkdir():
-    from plugins import surface
+    from plugins import trisurface
     f = file('novation.stl','w')
     F = e # + b
     # Create triangles

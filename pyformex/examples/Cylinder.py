@@ -38,7 +38,7 @@ to create a parametric cylindrical surface.
 
 """
 import simple
-from plugins.surface import TriSurface
+from plugins.trisurface import TriSurface
 
 n=12
 h=5.

@@ -230,6 +230,7 @@ def fromFormex(suffix=''):
         names = [ n + suffix for n in names ]
 
     #t = timer.Timer()
+    print "CONVERTING %s" % names
     meshes =  dict([ (n,F.toMesh()) for n,F in zip(names,formices) if F.nplex() == 3])
     #print("Converted in %s seconds" % t.seconds())
     print("Converted %s" % meshes.keys())

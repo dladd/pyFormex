@@ -28,7 +28,7 @@ from gui import decors,colors
 from gui.camera import inverse
 from gui.draw import *
 from formex import *
-from plugins import surface
+from plugins import trisurface
 
 VA=None
 

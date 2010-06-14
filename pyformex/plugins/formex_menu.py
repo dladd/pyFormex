@@ -37,7 +37,7 @@ from gui import actors
 from gui import menu
 from gui.draw import *
 
-from plugins import objects,surface,inertia,partition,sectionize
+from plugins import objects,trisurface,inertia,partition,sectionize
 
 import commands, os, timer
 

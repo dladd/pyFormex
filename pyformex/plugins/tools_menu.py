@@ -36,7 +36,7 @@ from gui.draw import *
 from gui.widgets import simpleInputItem as I, compatInputItem as C
 from plugins import objects
 from plugins.tools import *
-from plugins.surface import TriSurface
+from plugins.trisurface import TriSurface
 
 
 def editFormex(F,name):

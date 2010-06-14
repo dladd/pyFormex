@@ -28,7 +28,7 @@ Finite Element Plugin Menu for pyFormex.
 (C) 2009 Benedict Verhegghe.
 """
 
-from plugins import formex_menu,surface
+from plugins import formex_menu,trisurface
 import simple
 from elements import Hex8
 
