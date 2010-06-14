@@ -590,6 +590,57 @@ class Connectivity(ndarray):
         return inverseIndex(self)
 
 
+    @classmethod
+    def connect(clas,clist,nodid=None,bias=None,loop=False):
+        """Return a Connectivity which connects the nodes of the Connectivity list.
+
+        clist is a list of Connectivities, nodid is an optional list of nod ids and
+        bias is an optional list of element bias values. All lists should have
+        the same length.
+
+        The returned Connectivity has a plexitude equal to the number of
+        Connectivities in clist. Each element of the new Connectivity consist
+        of a node from the corresponding element of each of the Connectivities
+        in clist. By default this will be the first node of that element,
+        but a nodid list may be given to specify the node id to be used for each
+        of the Connectivities.
+        Finally, a list of bias values may be given to specify an offset in
+        element number for the subsequent Connectivities.
+        If loop==False, the lecgth of the Connectivity will be the minimum length
+        of the Connectivities in clist, each minus its respective bias. By setting
+        loop=True however, each Connectivity will loop around if its end is
+        encountered, and the length of the result is the maximum length in clist.
+        """
+        try:
+            m = len(clist)
+            for i in range(m):
+                if isinstance(clist[i],Connectivity):
+                    pass
+                elif isinstance(clist[i],ndarray):
+                    clist[i] = Connectivity(clist[i])
+                else:
+                    raise TypeError
+        except TypeError:
+            raise TypeError,'Connectivity.connect(): first argument should be a list of Connectivities'
+
+        if not nodid:
+            nodid = [ 0 for i in range(m) ]
+        if not bias:
+            bias = [ 0 for i in range(m) ]
+        if loop:
+            n = max([ clist[i].nelems() for i in range(m) ])
+        else:
+            n = min([ clist[i].nelems() - bias[i] for i in range(m) ])
+        f = zeros((n,m),dtype=Int)
+        for i,j,k in zip(range(m),nodid,bias):
+            v = clist[i][k:k+n,j]
+            if loop and k > 0:
+                v = concatenate([v,clist[i][:k,j]])
+            f[:,i] = resize(v,(n))
+        return Connectivity(f)
+    
+
+
 ############################################################################
 
 

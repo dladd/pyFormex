@@ -37,14 +37,14 @@ but special cases may be created for handling plane curves.
 #from pyformex import debug
 from numpy import *
 from formex import *
+from geometry import Geometry
 from plugins.geomtools import triangleCircumCircle
 from plugins.mesh import Mesh
 
 
 ##############################################################################
-# THIS IS A PROPOSAL !
+# THIS IS A PROPOSAL FOR THE CURVE API!
 #
-# Common interface for curves:
 # attributes:
 #    coords: coordinates of points defining the curve
 #    parts:  number of parts (e.g. straight segments of a polyline)
@@ -57,7 +57,6 @@ from plugins.mesh import Mesh
 #    pointsOn(): the defining points situated on the curve
 #    pointsOff(): the defining points situated off the curve (control points)
 
-from geometry import Geometry
 
 class Curve(Geometry):
     """Base class for curve type classes.
@@ -704,6 +703,8 @@ class CardinalSpline(BezierSpline):
 
     def __init__(self,coords,tension=0.0,closed=False):
         """Create a natural spline through the given points."""
+        curl = (1.-tension)/3.
+        print "CURL=%s" % curl
         BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed)
 
 
@@ -778,7 +779,7 @@ class NaturalSpline(Curve):
 
 
     def compute_coefficients(self):
-        x, y, z = self.coords.x(),self.coords.y(),self.coords.z()
+       # x, y, z = self.coords.x(),self.coords.y(),self.coords.z()
         n = self.nparts
         M = zeros([4*n, 4*n])
         B = zeros([4*n, 3])
@@ -835,6 +836,20 @@ class NaturalSpline(Curve):
         return X
 
 ##############################################################################
+
+
+def circle():
+    """Create a spline approximation of a circle.
+
+    The returned circle lies in the x,y plane, has its center at (0,0,0)
+    and has a radius 1.
+    
+    In the current implementation it is approximated by a bezier spline
+    with curl 0.375058 through 8 points.
+    """
+    pts = Formex([1.0,0.0,0.0]).rosette(8,45.).coords.reshape(-1,3)
+    return BezierSpline(pts,curl=0.375058,closed=True)
+
 
 def vectorPairAngle(v1,v2):
     """Return the angle between the vectors v1 and v2."""

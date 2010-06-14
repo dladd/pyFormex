@@ -589,7 +589,12 @@ class GeomActor(Actor):
             marksize = self.marksize
             if marksize is None:
                 marksize = canvas.settings.pointsize
-            drawPoints(self.coords,color,alpha,marksize)
+            # THIS COULD GO INTO drawPoints
+            if self.elems is None:
+                coords = self.coords
+            else:
+                coords = self.coords[self.elems]
+            drawPoints(coords,color,alpha,marksize)
 
         elif nplex == 2:
             #save = pf.canvas.hasLight()

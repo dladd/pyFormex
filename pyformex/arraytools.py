@@ -400,6 +400,28 @@ def reverseAxis(a,axis=-1):
     return a.take(arange(n-1,-1,-1),axis)
 
 
+def addAxis(a,axis=0):
+    """Add an additional axis with length 1 to an array.
+
+    The new axis is inserted before the specified one. Default is to
+    add it at the front.
+    """
+    s = list(a.shape)
+    s[axis:axis] = [1]
+    return a.reshape(s)
+
+
+def stack(al,axis=0):
+    """Stack a list of arrays along a new axis.
+
+    al is a list of arrays all of the same shape.
+    The return value is a new array with one extra axis, along which the
+    input arrays are stacked. The position of the new axis can be specified,
+    and is the first axis by default.
+    """
+    return concatenate([addAxis(ai,axis) for ai in al],axis=axis)
+
+
 def checkArray(a,shape=None,kind=None,allow=None):
     """Check that an array a has the correct shape and type.
 

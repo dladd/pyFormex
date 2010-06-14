@@ -245,26 +245,39 @@ print pts.shape
 print wts.shape
 order = 3
 NO = NurbsActor(pts*wts,knots=knots,closed=closed,order=order,color=blue)
-draw(pts*wts,color=magenta)
 drawActor(NO)
 
-print "KNOTS",NO.knots
-n = 20
-degree = order-1
-umin = NO.knots[degree]
-umax = NO.knots[-degree-1]
-print "Umin = %s, Umax = %s" % (umin,umax)
-u = umin + arange(n+1) * (umax-umin) / n
-print u
-P = NO.pointsAt(u)
-print P
-draw(P,color=blue)
-drawNumbers(P,color=blue)
-print P.distanceFromPoint(origin())
+## print "KNOTS",NO.knots
+## n = 20
+## degree = order-1
+## umin = NO.knots[degree]
+## umax = NO.knots[-degree-1]
+## print "Umin = %s, Umax = %s" % (umin,umax)
+## u = umin + arange(n+1) * (umax-umin) / n
+## print u
+## P = NO.pointsAt(u)
+## print P
+## draw(P,color=blue)
+## drawNumbers(P,color=blue)
 
-S = NaturalSpline(pts*wts,closed=True)
-draw(S,color=magenta)
+## def distance(C):
+##     d = C.approx(100).pointsOn().distanceFromPoint(origin())
+##     return 1.-d.min(),1.-d.max()
+
+## clear()
+## S = NaturalSpline(pts*wts,closed=True)
+## draw(S,color=magenta)
+## draw(S.pointsOn(),color=magenta)
+## drawNumbers(S.pointsOn(),color=magenta)
+## print distance(S)
+
+## #from gui.colors import *
+## for c,curl in zip([black,red,green,blue],[ 0.375055, 0.375058, 0.37506  ]):
+##     C = BezierSpline(pts*wts,closed=True,curl=curl)
+##     draw(C,color=c)
+##     print distance(C)
+
 
 zoomAll()
 
-# End
+# En1
