@@ -92,6 +92,12 @@ def printbbox():
     database.printbbox()
     
 
+def keep_():
+    """Forget global variables."""
+    database.ask()
+    database.keep()
+
+
 def forget_():
     """Forget global variables."""
     database.ask()
@@ -99,22 +105,7 @@ def forget_():
 
 
 def create():
-    """Create a global variable."""
-    ## name = ''
-    ## value = ''
-    ## while True:
-    ##     res = askItems([('name',name),('value',value,'text')])
-    ##     if res:
-    ##         name = res['name']
-    ##         value = res['value']
-    ##         if name in database:
-    ##             ans = ask("The named variable already exists! How should I proceed?",["Cancel","Rename New","Rename Old","Overwrite Old"])
-    ##             if ans == "Cancel":
-    ##                 return
-    ##             elif ans == "Rename New":
-    ##                 continue
-    ##             elif ans == "Rename old":
-
+    """Create a new global variable with default initial contents."""
     res = askItems([('name','')])
     if res:
         name = res['name']
@@ -169,6 +160,9 @@ def writeGeometry():
         cur = GD.cfg['workdir']
         fn = askNewFilename(cur=cur,filter=filter)
         if fn:
+            if not fn.endswith('.pgf'):
+                fn.append('.pgf')
+            message("Writing geometry file %s" % fn)
             drawable.writeToFile(fn)
 
 
@@ -178,16 +172,29 @@ def readGeometry():
     cur = GD.cfg['workdir']
     fn = askFilename(cur=cur,filter=filter)
     if fn:
+        message("Reading geometry file %s" % fn)
         drawable.readFromFile(fn)
+        print drawable.names
         drawable.draw()
         zoomAll()
-        print drawable.names
+
+
+def convertGeometry():
+    """Convert geometry file to latest format."""
+    filter = utils.fileDescription(['pgf','all'])
+    cur = GD.cfg['workdir']
+    fn = askFilename(cur=cur,filter=filter)
+    if fn:
+        from geomfile import GeometryFile
+        message("Converting geometry file %s to version %s" % (fn,GeometryFile._version_))
+        GeometryFile(fn).rewrite()
+        
 
 def dos2unix():
     fn = askFilename(multi=True)
-    print("selected %s" % fn)
     if fn:
         for f in fn:
+            message("Converting file to UNIX: %s" % f)
             utils.dos2unix(f)
 
 
@@ -195,6 +202,7 @@ def unix2dos():
     fn = askFilename(multi=True)
     if fn:
         for f in fn:
+            message("Converting file to DOS: %s" % f)
             utils.unix2dos(f)
 
         
@@ -485,6 +493,7 @@ def create_menu():
     MenuData = [
         ('&Read Geometry File',readGeometry),
         ('&Write Geometry File',writeGeometry),
+        ('&Convert Geometry File',convertGeometry),
         ('-- Global Variables --',printall,dict(disabled=True)),
         ('  &List All',printall),
         ('  &Select',database.ask),
@@ -494,6 +503,7 @@ def create_menu():
         ('  &Create',create),
         ('  &Change Value',edit),
         ('  &Rename',rename_),
+        ('  &Keep',keep_),
         ('  &Delete',forget_),
         ('  &Delete All',deleteAll),
         ("---",None),

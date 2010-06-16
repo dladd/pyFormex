@@ -974,16 +974,22 @@ def spliner():
         return
     res = askItems([['Direction',[1.,0.,0.]],
                     ['# slices',20],
+                    ['remove_invalid',False],
                    ],caption = 'Define the slicing planes')
     if res:
         axis = res['Direction']
         nslices = res['# slices']
+        remove_cruft = res['remove_invalid']
         GD.GUI.setBusy(True)
         slices = S.slice(dir=axis,nplanes=nslices,ignoreErrors=True)
         GD.GUI.setBusy(False)
         print [ s.nelems() for s in slices ]
         split = [ s.splitProp().values() for s in slices if s.nelems() > 0 ]
         split = olist.flatten(split)
+        hasnan = [ isnan(s.coords).any() for s in split ]
+        print hasnan
+        print sum(hasnan)
+        #print [s.closed for s in split]
         export({'%s/split' % selection[0]:split}) 
         draw(split,color='blue',bbox='last',view=None)
         splines = [ BezierSpline(s.coords[s.elems[:,0]],closed=True) for s in split ]

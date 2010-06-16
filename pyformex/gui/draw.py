@@ -391,9 +391,12 @@ def draw(F,
     if type(F) == list:
         actor = []
         nowait = False
+        #print "DRAWING LIST WITH BBOX %s" % bbox
+        save_bbox = bbox
         for Fi in F:
             if Fi is F[-1]:
                 nowait = wait
+                #print "DRAWING WITH BBOX %s, VIEW %s" % (bbox,view)
             actor.append(draw(Fi,view,bbox,
                               color,colormap,bkcolor,bkcolormap,alpha,
                               mode,linewidth,shrink,marksize,
@@ -402,7 +405,9 @@ def draw(F,
             if Fi is F[0]:
                 clear = False
                 view = None
-                
+                bbox = 'last'
+
+        bbox = save_bbox
         if bbox == 'auto':
             bbox = coords.bbox(actor)
             pf.canvas.setCamera(bbox,view)

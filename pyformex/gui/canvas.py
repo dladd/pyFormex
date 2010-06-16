@@ -219,7 +219,7 @@ class CanvasSettings(Dict):
 
         If a dict is specified, these settings will override defaults.
         """
-        print "RESETTING %s" % d
+        #print "RESETTING %s" % d
         self.update(pf.refcfg['canvas'])
         self.update(pf.prefcfg['canvas'])
         self.update(pf.cfg['canvas'])
@@ -232,7 +232,7 @@ class CanvasSettings(Dict):
         Returns the sanitized update values.
         """
         ok = self.checkDict(d)
-        print "UPDATING %s" % ok
+        #print "UPDATING %s" % ok
         Dict.update(self,ok)
         ## THIS SHOULD BE DONE WHILE SETTING THE CFG !!
         ## if (self.bgcolor2 == self.bgcolor).all():

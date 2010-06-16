@@ -208,10 +208,16 @@ class Objects(object):
         else:
             return None
 
+
     def forget(self):
         """Remove the selection from the globals."""
         forget(self.names)
         self.clear()
+
+
+    def keep(self):
+        """Remove everything except the selection from the globals."""
+        forget([ n for n in self.listAll() if not n in self.names ])
 
 
     def printval(self):

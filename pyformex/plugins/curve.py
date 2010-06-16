@@ -263,6 +263,35 @@ class PolyLine(Curve):
         return Mesh(self.coords,elems,eltype='line2')
 
 
+    def write_geom(self,geomfile,name=None,sep=None):
+        """Write a PolyLine to a pyFormex geometry file.
+
+        The following attributes and arguments are written in the header:
+        ncoords, closed, name, sep.
+        The following attributes are written as arrays: coords
+        """
+        if sep is None:
+            sep = geomfile.sep
+        head = "# objtype='PolyLine'; ncoords=%r; closed=%r; sep='%s'" % (self.coords.shape[0],self.closed,sep)
+        if name:
+            head += "; name='%s'" % name 
+        geomfile.fil.write(head+'\n')
+        geomfile.writeData(self.coords,sep)
+ 
+
+    @classmethod
+    def read_geom(clas,geomfile,ncoords,closed,sep):
+        """Read a PolyLine from a pyFormex geometry file.
+
+        The coordinate array for ncoords points is read from the file
+        and a PolyLine is returned.
+        """
+        ndim = 3
+        coords = readArray(geomfile.fil,Float,(ncoords,ndim),sep=sep)
+        print coords.shape
+        return PolyLine(coords,closed)
+
+
     def sub_points(self,t,j):
         """Return the points at values t in part j"""
         j = int(j)
@@ -407,6 +436,7 @@ class PolyLine(Curve):
 
 
     def reverse(self):
+        """Return the same curve with the parameter direction reversed."""
         return PolyLine(reverseAxis(self.coords,axis=0),closed=self.closed)
 
 
@@ -600,6 +630,38 @@ class BezierSpline(Curve):
         return self.coords[:self.nparts,1:,:]
 
 
+    def write_geom(self,geomfile,name=None,sep=None):
+        """Write a BezierSpline to a geometry file.
+
+        The following attributes and arguments are written in the header:
+        ncoords, nparts, closed, name, sep.
+        The following attributes are written as arrays: coords
+        """
+        if sep is None:
+            sep = geomfile.sep
+        head = "# objtype='BezierSpline'; ncoords=%r; nparts=%r; closed=%r; sep='%s'" % (self.coords.shape[0],self.nparts,self.closed,sep)
+        if name:
+            head += "; name='%s'" % name 
+        geomfile.fil.write(head+'\n')
+        geomfile.writeData(self.pointsOn(),sep)
+        geomfile.writeData(self.pointsOff(),sep)
+ 
+
+    @classmethod
+    def read_geom(clas,geomfile,ncoords,nparts,closed,sep):
+        """Read a BezierSpline from a pyFormex geometry file.
+
+        The coordinate array for ncoords points and control point array
+        for (nparts,2) control points are read from the file.
+        A BezierSpline is constructed and returned.
+        """
+        ndim = 3
+        coords = readArray(geomfile.fil,Float,(ncoords,ndim),sep=sep)
+        control = readArray(geomfile.fil,Float,(nparts,2,ndim),sep=sep)
+        print coords.shape,control.shape
+        return BezierSpline(coords,control=control,closed=closed)
+
+
     def sub_points(self,t,j):
         j1 = (j+1) % self.coords.shape[0]
         P = self.pointsOn()[[j,j1]]
@@ -609,6 +671,14 @@ class BezierSpline(Curve):
         U = column_stack([t**3., t**2., t, ones_like(t)])
         X = dot(U,C)
         return X
+
+
+    def reverse(self):
+        """Return the same curve with the parameter direction reversed."""
+        coords = reverseAxis(self.pointsOn(),axis=0)
+        control = reverseAxis(self.pointsOff()[:self.nparts],axis=0)
+        return BezierSpline(coords,control=control,closed=self.closed)
+
 
 ##############################################################################
 #

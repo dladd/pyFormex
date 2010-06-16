@@ -32,8 +32,9 @@ import utils
 from coords import *
 from formex import Formex
 from plugins.mesh import Mesh
-from plugins.curve import Curve
+from plugins.curve import PolyLine,BezierSpline
 from odict import ODict
+from pyformex import message
 
 import os
 
@@ -47,10 +48,12 @@ class GeometryFile(object):
     specified `mode`. If no mode is specified, 'r' will be used for
     existing files and 'w' for new files.
     Else, `file` should be an already open file.
-    For files opened in write mode, 
+    For files opened in write mode,
+
+    Geometry classes can provide the facility 
     """
 
-    _version_ = '1.2'
+    _version_ = '1.3'
 
     def __init__(self,fil,mode=None,sep=' '):
         """Create the GeometryFile object."""
@@ -62,10 +65,9 @@ class GeometryFile(object):
                 else:
                     mode = 'w'
             fil = open(fil,mode)
-                
         self.isname = isname
         self.fil = fil
-        self.writing = fil.mode[0] in 'wa'
+        self.writing = self.fil.mode[0] in 'wa'
         if self.writing:
             self.sep = sep
         if self.isname:
@@ -81,7 +83,8 @@ class GeometryFile(object):
         The default mode for the reopen is 'r'
         """
         self.fil.close()
-        self.fil = open(self.fil.name,mode)
+        self.__init__(self.fil.name,mode)
+        print self.fil,self.writing,self.isname
 
 
     def close(self):
@@ -92,6 +95,11 @@ class GeometryFile(object):
         self.fil.close()
         self.fil = None
 
+
+    def checkWritable(self):
+        if not self.writing:
+            raise RuntimeError,"File is not opened for writing"
+        
 
     def writeHeader(self):
         """Write the header of a pyFormex geometry file.
@@ -108,6 +116,8 @@ class GeometryFile(object):
 
     def writeData(self,data,sep):
         """Write an array of data to a pyFormex geometry file."""
+        if not self.writing:
+            raise RuntimeError,"File is not opened for writing"
         data.tofile(self.fil,sep)
         self.fil.write('\n')
         
@@ -118,20 +128,30 @@ class GeometryFile(object):
         `geom` is one of the Geometry data types of pyFormex or a list
         or dict of such objects.
         Currently exported geometry objects are
-        :class:`Coords`, :class:`Formex`, :class:`Mesh`, :class:`Curve`.
+        :class:`Coords`, :class:`Formex`, :class:`Mesh`,
+        :class:`PolyLine`, :class:`BezierSpline`.
         The geometry object is written to the file using the specified
         separator, or the default.
         """
+        self.checkWritable()
         if isinstance(geom,dict):
             for name in geom:
                 self.write(geom[name],name,sep)
         elif isinstance(geom,list):
-            for obj in geom:
-                self.write(obj,None,sep)
+            if name is None:
+                for obj in geom:
+                    self.write(obj,None,sep)
+            else:
+                name = utils.NameSequence(name)
+                for obj in geom:
+                    self.write(obj,name.next(),sep)
+                    
         elif isinstance(geom,Formex):
             self.writeFormex(geom,name,sep)
-        elif isinstance(geom,Mesh):
-            self.writeMesh(geom,name,sep)
+        elif hasattr(geom,'write_geom'):
+            geom.write_geom(self,name,sep)
+        else:
+            message("Can not (yet) write objects of type %s to geometry file: skipping" % type(geom))
 
 
     def writeFormex(self,F,name=None,sep=None):
@@ -144,30 +164,11 @@ class GeometryFile(object):
         if sep is None:
             sep = self.sep
         hasprop = F.prop is not None
-        head = "# nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'" % (F.nelems(),F.nplex(),hasprop,F.eltype,sep)
+        head = "# objtype='Formex'; nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'" % (F.nelems(),F.nplex(),hasprop,F.eltype,sep)
         if name:
             head += "; name='%s'" % name 
         self.fil.write(head+'\n')
         self.writeData(F.coords,sep)
-        if hasprop:
-            self.writeData(F.prop,sep)
-
-
-    def writeMesh(self,F,name=None,sep=None):
-        """Write a Mesh to the geometry file.
-
-        `F` is a Mesh. The following attributes of the Mesh are written as
-        arrays to the geometry file: coords, elems, prop
-        """
-        if sep is None:
-            sep = self.sep
-        hasprop = F.prop is not None
-        head = "# objtype='Mesh'; ncoords=%r; nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'" % (F.ncoords(),F.nelems(),F.nplex(),hasprop,F.eltype,sep)
-        if name:
-            head += "; name='%s'" % name 
-        self.fil.write(head+'\n')
-        self.writeData(F.coords,sep)
-        self.writeData(F.elems,sep)
         if hasprop:
             self.writeData(F.prop,sep)
 
@@ -197,9 +198,16 @@ class GeometryFile(object):
         """Read a pyFormex Geometry File.
 
         fil is a filename or a file object.
-        If the file is in a valid Formex file format, the Formex is read and
-        returned. Otherwise, None is returned.
-        Valid Formex file formats are described in the manual.
+        If the file is in a valid pyFormex geometry file format, geometry
+        objects are read from the file and returned in a dictionary.
+        The object names are used as keys. If the file does not contain
+        object names, they will be autogenerated from the file name.
+
+        A count may be specified to limit the number of objects read.
+
+        If the file format is invalid and no valid geometry could be read,
+        None is returned.
+        Valid pyFormex geometry file formats are described in the manual.
         """
         eltype = None # for compatibility with pre 1.1 .formex files
         ndim = 3
@@ -209,19 +217,35 @@ class GeometryFile(object):
             sep = self.sep
             name = None
             s = self.fil.readline()
-            if len(s) == 0:
+            
+            if len(s) == 0:   # end of file
                 break
 
-            if s.startswith('#'):
-                try:
-                    exec(s[1:].strip())
-                except:
-                    continue
+            if not s.startswith('#'):  # not a header: skip
+                continue
+            
+            try:
+                exec(s[1:].strip())
+            except:
+                continue  # not a legal header: skip
 
+            print("READING OBJECT OF TYPE %s" % objtype) 
+
+            # OK, we have a legal header, try to read data
             if objtype == 'Formex':
                 obj = self.readFormex(nelems,nplex,props,eltype,sep)
             elif objtype == 'Mesh':
                 obj = self.readMesh(ncoords,nelems,nplex,props,eltype,sep)
+            elif objtype == 'PolyLine':
+                obj = PolyLine.read_geom(self,ncoords,closed,sep)
+            elif objtype == 'BezierSpline':
+                obj = BezierSpline.read_geom(self,ncoords,nparts,closed,sep)
+            elif globals().has_key(objtype) and hasattr(globals()[objtype],'read_geom'):
+                obj = globals()[objtype].read_geom(self)
+            else:
+                from pyformex import message
+                message("Can not (yet) read objects of type %s from geometry file: skipping" % objtype)
+                continue # skip to next header
 
 
             if obj is not None:
@@ -236,7 +260,7 @@ class GeometryFile(object):
             self.fil.close()
 
         return self.results
-
+        
 
     def readFormex(self,nelems,nplex,props,eltype,sep):
         ndim = 3
@@ -257,6 +281,22 @@ class GeometryFile(object):
         else:
             p = None
         return Mesh(x,e,p,eltype)
-        
-    
+
+
+    def rewrite(self):
+        """Convert the geometry file to the latest format.
+       
+        The conversion is done by reading all objects from the geometry file
+        and writing them back. Parts that could not be succesfully read will
+        be skipped.
+        """
+        self.reopen('r')
+        obj = self.read()
+        self._version_ = GeometryFile._version_
+        print self._version_
+        if obj is not None:
+            self.reopen('w')
+            self.write(obj)
+        self.close()
+
 # End

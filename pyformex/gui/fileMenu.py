@@ -388,7 +388,7 @@ def showImage():
 MenuData = [
     (_('&Start new project'),createProject),
     (_('&Open existing project'),openProject),
-    (_('&Import another project'),importProject),
+    (_('&Import a project'),importProject),
     (_('&Set current script as AutoScript'),setAutoScript),
     (_('&Remove the AutoScript'),removeAutoScript),
     (_('&Set current script as AutoFile'),setAutoFile),
