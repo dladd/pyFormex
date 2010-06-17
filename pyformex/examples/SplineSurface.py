@@ -155,12 +155,10 @@ from geomfile import GeometryFile
 import os
 
 
-fn = getcfg('datadir')+'/horse.pgf'
-G = GeometryFile(fn,'r')
-G.convert()
-exit()
-
-clear()
+## fn = getcfg('datadir')+'/horse.pgf'
+## G = GeometryFile(fn,'r')
+## G.convert()
+## exit()
 
 def createCircles(n=4):
     C = circle()
@@ -168,6 +166,7 @@ def createCircles(n=4):
     CL = [ C.scale([1.,a,0.]) for a in 0.5 + arange(n+1) /float(n) ]
     CL = [ Ci.trl(2,a) for Ci,a in zip(CL,arange(n+1)/float(n)*4.) ]
     CL = [ Ci.rot(a,2) for Ci,a in zip(CL,arange(n+1)/float(n)*45.) ]
+    return CL
 
 def readSplines():
     fn = getcfg('datadir')+'/splines.pgf'
@@ -179,15 +178,32 @@ def readSplines():
     return T
 
 
-    m = 36
+clear()
+from gui.widgets import simpleInputItem as I
 
-CL = named('splines')
+res = askItems([
+    I('base',itemtype='vradio',choices=['Circles and Ellipses','Kinked Artery']),
+    I('nu',value=12,text='Number of cells along splines'),
+    I('nv',value=12,text='Number of cells across splines'),
+    ], legacy=False)
+
+globals().update(res)
+
+if base == 'Circles and Ellipses':
+    CL = createCircles(n=nu)
+else:
+    CL = readSplines()
+    
+
 print len(CL)
 
 print isnan(CL[0].coords).any()
 
 CL = [ Ci for Ci in CL if not isnan(Ci.coords).any() ]
 print len(CL)
+
+draw(CL)
+exit()
 
 def area(C):
     """Compute area inside spline"""
