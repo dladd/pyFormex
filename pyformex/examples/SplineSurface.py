@@ -6,6 +6,34 @@ level = 'advanced'
 topics = ['geometry','surface']
 techniques = ['spline']
 
+.. Description
+
+SplineSurface
+-------------
+This example illustrates some advanced geometrical modeling tools using
+spline curves and surfaces.
+
+The script first creates a set of closed BezierSpline curves. Currently
+two sets of curves are predefined:
+
+- a set of transformations of a unit circle. The circle is scaled
+  non-uniformously, resulting in an ellips, which is then rotated and
+  translated.
+
+- a set of curves obtained by cutting a triangulated surface model
+  with a series of parallel planes. The original surface model was
+  obtained from medical imaging processes and represents a human
+  artery with a kink. These curves are read from a geometry file
+  'splines.pgf' include in the pyFormex distribution. 
+
+In the first case, the number of curves will be equal to the specified
+number.  In the latter case, the number can not be large than the
+number of curves in the file.
+
+The set of splines are then used to create a QuadSurface (a surface
+consisting of quadrilaterals). The number of elements along the
+splines can be chosen. The number of elements across the splines is
+currently unused.
 """
 
 """Definition of surfaces in pyFormex.
@@ -59,10 +87,12 @@ def alignCurvePoints(curve,axis=1,max=True):
         ind = curve.pointsOn()[:,axis].argmax()
     else:
         ind = curve.pointsOn()[:,axis].argmin()
-    print "ALIGNING ON POINT %s"
-    print curve.coords
+    #print curve.pointsOn()
+    print "ALIGNING ON POINT %s" % ind
+    #drawNumbers(curve.pointsOn())
     rollCurvePoints(curve,-ind)
-    print curve.coords
+    #print curve.pointsOn()
+    #drawNumbers(curve.pointsOn(),color=red)
     
 
 class SplineSurface(Geometry):
@@ -131,44 +161,28 @@ class SplineSurface(Geometry):
         return [ draw(c,**kargs) for c in self.curves ] 
 
 
-from geomfile import GeometryFile
 
-## S = named('splines')
-## print len(S)
-## print [len(Si.coords) for Si in S]
-## #exit()
-## ## S = named('splines-000')
-## clear()
-## draw(S)
-## print os.getcwd()
-## G = GeometryFile('splines.pgf','w')
-## G.write(S,'splines')
-## G.reopen()
-## obj = G.read()
-## T = obj.values()
-## print len(T)
-## print [len(Si.coords) for Si in T]
-## draw(T,color=red)
+def createCircles(n):
+    """Create a set of BezierSpline curves.
 
-## exit()
-
-import os
-
-
-## fn = getcfg('datadir')+'/horse.pgf'
-## G = GeometryFile(fn,'r')
-## G.convert()
-## exit()
-
-def createCircles(n=4):
+    The curves are transformations of a unit circle.
+    They are non-uniformously scaled to yield ellipses, and then rotated
+    and translated.
+    """
     C = circle()
     t = arange(n+1) /float(n)
     CL = [ C.scale([1.,a,0.]) for a in 0.5 + arange(n+1) /float(n) ]
-    CL = [ Ci.trl(2,a) for Ci,a in zip(CL,arange(n+1)/float(n)*4.) ]
     CL = [ Ci.rot(a,2) for Ci,a in zip(CL,arange(n+1)/float(n)*45.) ]
+    CL = [ Ci.trl(2,a) for Ci,a in zip(CL,arange(n+1)/float(n)*4.) ]
     return CL
 
+
 def readSplines():
+    """Read spline curves from a geometry file.
+
+    The geometry file splines.pgf is provided with the pyFormex distribution.
+    """
+    from geomfile import GeometryFile
     fn = getcfg('datadir')+'/splines.pgf'
     f = GeometryFile(fn)
     obj = f.read()
@@ -177,65 +191,91 @@ def readSplines():
     print [len(Si.coords) for Si in T]
     return T
 
+    
+def removeInvalid(CL):
+    """Remove the curves that contain NaN values.
+
+    NaN values are invalid numerical values.
+    This function removes the curves containing such values from a list
+    of curves.
+    """
+    nc = len(CL)
+    CL = [ Ci for Ci in CL if not isnan(Ci.coords).any() ]
+    nd = len(CL)
+    if nc > nd:
+        print "Removed %s invalid curves, leaving %s" % (nc-nd,nd)
+    return CL
+
+
+def area(C,nroll=0):
+    """Compute area inside spline
+
+    The curve is supposed to be in the (x,y) plane.
+    The nroll parameter may be specified to roll the coordinates
+    appropriately.
+    """
+    print nroll
+    from plugins.section2d import planeSection
+    F = C.toFormex().rollAxes(nroll)
+    S = planeSection(F)
+    C = S.sectionChar()
+    return C['A']
+
+###############################################################
 
 clear()
 from gui.widgets import simpleInputItem as I
 
 res = askItems([
     I('base',itemtype='vradio',choices=['Circles and Ellipses','Kinked Artery']),
-    I('nu',value=12,text='Number of cells along splines'),
+    I('ncurves',value=24,text='Number of spline curves'),
+    I('nu',value=36,text='Number of cells along splines'),
     I('nv',value=12,text='Number of cells across splines'),
+    I('align',False),
+    I('aligndir',1),
+    I('alignmax',False),
     ], legacy=False)
 
 globals().update(res)
 
 if base == 'Circles and Ellipses':
-    CL = createCircles(n=nu)
+    CL = createCircles(n=ncurves)
+    nroll = 0
 else:
     CL = readSplines()
+    nroll = -1
+
+ncurves = len(CL)
+print "Created %s BezierSpline curves" % ncurves
+CL = removeInvalid(CL)
     
-
-print len(CL)
-
-print isnan(CL[0].coords).any()
-
-CL = [ Ci for Ci in CL if not isnan(Ci.coords).any() ]
-print len(CL)
-
-draw(CL)
-exit()
-
-def area(C):
-    """Compute area inside spline"""
-    from plugins.section2d import planeSection
-    F = C.toFormex().rollAxes(-1)
-    S = planeSection(F)
-    C = S.sectionChar()
-    return C['A']
-    
-areas = [ area(Ci) for Ci in CL ]
+areas = [ area(Ci,nroll) for Ci in CL ]
+print areas
 for i,a in enumerate(areas):
     if a < 0.0:
-        print "Reversing section %s" % i
+        print "Reversing curve %s" % i
         CL[i] = CL[i].reverse()
 
-draw(CL)
+if align:
+    for Ci in CL:
+        alignCurvePoints(Ci,aligndir,alignmax)
 
-for Ci in CL:
-    alignCurvePoints(Ci)
+draw(CL)
+export({'splines':CL})
+print "Number of points in the curves:",[ Ci.coords.shape[0] for Ci in CL]
 
 PL = [Ci.approx(1) for Ci in CL]
 
-export({'polylines':PL,'splines':CL})
-draw(PL,color=red)
-
-print [ Ci.coords.shape[0] for Ci in CL]
-print [ Ci.coords.shape[0] for Ci in PL]
+createPL = False
+if createPL:
+    export({'polylines':PL})
+    draw(PL,color=red)
+    print "Number of points in the PolyLines:",[ Ci.coords.shape[0] for Ci in PL]
 
 
 S = SplineSurface(CL)
 
-S.createGrid(m,n)
+S.createGrid(nu,nv)
 draw(S.grid)
 print S.grid.shape
 
