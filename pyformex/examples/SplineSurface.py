@@ -105,10 +105,15 @@ class SplineSurface(Geometry):
     Two sets of parametric curves can be drawn: in u and in v direction.
     """
 
-    def __init__(self,curves):
+    def __init__(self,curves=None,coords=None):
         self.curves = curves
         self.grid = None
         self.ccurves = None
+        closed = [ c.closed for c in self.curves ]
+        self.uclosed = sum(closed) > 0
+        errors = [ c.closed != self.uclosed for c in self.curves ]
+        if sum(errors) > 0:
+            raise ValueError,"Either ALL or NONE of the curves should be closed."
 
 
     def bbox(self):
@@ -123,6 +128,8 @@ class SplineSurface(Geometry):
         CA = [ C.approx(ntot=nu) for C in self.curves ]
         print "Curves have %s points" % CA[0].coords.shape[0]
         print "There are %s curves" % len(CA)
+        if not self.uclosed:
+            nu += 1 
         self.grid = Coords(stack([CAi.coords[:nu] for CAi in CA]))
         print "Created grid %s x %s" % self.grid.shape[:2]
 
@@ -135,13 +142,18 @@ class SplineSurface(Geometry):
         return [ BezierSpline(self.grid[i,:,:],curl=0.375) for i in range(self.grid.shape[0]) ]
 
 
-    def toMesh(self):
+    def toMesh(self,closed=False):
         """Convert the Grid Surface to a Quad Mesh"""
         nu = self.grid.shape[1]
         nv = self.grid.shape[0] -1 
         elems = array([[ 0,1,nu+1,nu ]])
-        elems = concatenate([(elems+i) for i in range(nu-1)],axis=0)
-        elems = concatenate([elems,[[ nu-1,0,nu,2*nu-1]]],axis=0)
+        if self.uclosed:
+            elems = concatenate([(elems+i) for i in range(nu-1)],axis=0)
+            elems = concatenate([elems,[[ nu-1,0,nu,2*nu-1]]],axis=0)
+        else:
+            #drawNumbers(self.grid.reshape(-1,3))
+            #print elems
+            elems = concatenate([(elems+i) for i in range(nu-1)],axis=0)
         #print elems
         #print nu
         elems = concatenate([(elems+i*nu) for i in range(nv)],axis=0)
@@ -174,6 +186,26 @@ def createCircles(n):
     CL = [ C.scale([1.,a,0.]) for a in 0.5 + arange(n+1) /float(n) ]
     CL = [ Ci.rot(a,2) for Ci,a in zip(CL,arange(n+1)/float(n)*45.) ]
     CL = [ Ci.trl(2,a) for Ci,a in zip(CL,arange(n+1)/float(n)*4.) ]
+    return CL
+
+
+def createPowerCurves(nu,nv):
+    """Create a set of BezierSpline power curves.
+
+    The curves are transformations of a straight line. The line is
+    transformed by two subsequent power law transformations:
+    y = a*x**b and z = c*y**d.
+    """
+    X = Formex(origin()).replic(nu+1,1.).coords.reshape(-1,3)
+    C = BezierSpline(X)
+    sx = C.dsize()
+    sy = 0.5*sx
+    sz = 0.25*sx
+    powers = 1. * (arange(nv+1) * 2 - nv) / float(nv)
+    print powers
+    powers = exp(powers)
+    print powers
+    CL = [ C.map1(1,lambda x:sy*(x/sx)**e,0).map1(2,lambda x:sz*(x/sx)**e,1) for e in powers ]
     return CL
 
 
@@ -227,7 +259,10 @@ clear()
 from gui.widgets import simpleInputItem as I
 
 res = askItems([
-    I('base',itemtype='vradio',choices=['Circles and Ellipses','Kinked Artery']),
+    I('base',itemtype='vradio',choices=[
+        'Circles and Ellipses',
+        'Power Curves',
+        'Kinked Artery']),
     I('ncurves',value=24,text='Number of spline curves'),
     I('nu',value=36,text='Number of cells along splines'),
     I('nv',value=12,text='Number of cells across splines'),
@@ -241,20 +276,27 @@ globals().update(res)
 if base == 'Circles and Ellipses':
     CL = createCircles(n=ncurves)
     nroll = 0
+    reverse = False
+elif base == 'Power Curves':
+    CL = createPowerCurves(nu,nv)
+    nroll = 0
+    reverse = False
 else:
     CL = readSplines()
     nroll = -1
+    reverse = True
 
 ncurves = len(CL)
 print "Created %s BezierSpline curves" % ncurves
 CL = removeInvalid(CL)
-    
-areas = [ area(Ci,nroll) for Ci in CL ]
-print areas
-for i,a in enumerate(areas):
-    if a < 0.0:
-        print "Reversing curve %s" % i
-        CL[i] = CL[i].reverse()
+
+if reverse:
+    areas = [ area(Ci,nroll) for Ci in CL ]
+    print areas
+    for i,a in enumerate(areas):
+        if a < 0.0:
+            print "Reversing curve %s" % i
+            CL[i] = CL[i].reverse()
 
 if align:
     for Ci in CL:
@@ -275,6 +317,7 @@ if createPL:
 
 S = SplineSurface(CL)
 
+print nu,nv
 S.createGrid(nu,nv)
 draw(S.grid)
 print S.grid.shape
@@ -288,7 +331,7 @@ smoothwire()
 M = S.toMesh()
 draw(M,color=yellow,bkcolor='steelblue')
 export({'quadsurface':M})
-
+zoomAll()
 
 
 
