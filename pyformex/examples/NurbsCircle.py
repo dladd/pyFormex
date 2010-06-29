@@ -51,8 +51,122 @@ from OpenGL import GL, GLU
 
 import simple
 from plugins.curve import *
+from plugins.nurbs import *
 from gui.actors import Actor
 import lib._nurbs_ as nu
+
+class NurbsCurve():
+
+    def __init__(self,control,wts=None,knots=None,closed=False,order=0):
+        self.closed = closed
+        nctrl = len(control)
+        
+        if order <= 0:
+            if knots is None:
+                order = min(nctrl,3)
+            else:
+                order = len(knots) - nctrl
+        if order <= 0:
+            raise ValueError,"Length of knot vector (%s) must be larger than number of control points (%s)" % (len(knots),nctrl)
+
+        control = toCoords4(control)
+        if wts is not None:
+            control.deNormalize(wts)
+        #print "CONTROL",control
+
+        if closed:
+            if knots is None:
+                nextra = order-1
+            else:
+                nextra = len(knots) - nctrl - order
+            nextra1 = (nextra+1) // 2
+            nextra2 = nextra-nextra1
+            print "extra %s = %s + %s" % (nextra,nextra1,nextra2) 
+            control = Coords.concatenate([control[-nextra1:],control,control[:nextra2]])
+
+        nctrl = len(control)
+
+        if nctrl < order:
+            raise ValueError,"Number of control points (%s) must not be smaller than order (%s)" % (nctrl,order)
+
+        if knots is None:
+            if closed:
+                knots = unitRange(nctrl+order)
+            else:
+                knots = concatenate([[0.]*(order-1),unitRange(nctrl-order+2),[1.]*(order-1)])
+        nknots = len(knots)                                                  
+        if nknots != nctrl+order:
+            
+            raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
+
+
+        print "Nurbs curve of order %s with %s control points and %s knots" % (order,nctrl,nknots)
+        print "KNOTS",knots
+       
+        self.control = control
+        self.knots = asarray(knots)
+        self.order = order
+        self.closed = closed
+
+        
+    def bbox(self):
+        return self.control.toCoords().bbox()
+
+
+    def pointsAt(self,u=None,n=10):
+        if u is None:
+            umin = self.knots[0]
+            umax = self.knots[-1]
+            u = umin + arange(n+1) * (umax-umin) / n
+        
+        ctrl = self.control.astype(double)
+        knots = self.knots.astype(double)
+        u = asarray(u).astype(double)
+
+        try:
+            print "U",u
+            pts = nu.bspeval(self.order-1,ctrl.transpose(),knots,u)
+            print pts.shape
+            print pts
+            pts = pts[:3] / pts[3:]
+            return Coords(pts[:3].transpose())
+        except:
+            print "SOME ERROR OCCURRED"
+            return Coords()
+
+
+    def actor(self,**kargs):
+        """Graphical representation"""
+        return NurbsActor(self,**kargs)
+
+
+class NurbsActor(Actor):
+
+    def __init__(self,data,color=None,**kargs):
+        from gui.drawable import saneColor
+        Actor.__init__(self)
+        self.object = data
+        self.color = saneColor(color)
+        self.samplingTolerance = 1.0
+
+        
+    def bbox(self):
+        return self.object.bbox()
+
+        
+    def drawGL(self,**kargs):
+        if self.color is not None:
+            GL.glColor3fv(self.color)
+            
+        nurb = GLU.gluNewNurbsRenderer()
+        GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,self.samplingTolerance)
+        GLU.gluBeginCurve(nurb)
+        mode = GL.GL_MAP1_VERTEX_4
+        #print "DRAW CONTROL",self.object.control
+        GLU.gluNurbsCurve(nurb,self.object.knots,self.object.control,mode)
+        GLU.gluEndCurve(nurb)
+
+
 
 def askCurve():
     default = 'Angle'
@@ -99,166 +213,83 @@ def unitRange(n):
         return []
 
 
-class NurbsActor(Actor):
-
-    def __init__(self,control,knots=None,closed=False,order=0,color=black):
-        Actor.__init__(self)
-        self.closed = closed
-        nctrl = len(control)
-        
-        if order <= 0:
-            if knots is None:
-                order = min(nctrl,3)
-            else:
-                order = len(knots) - nctrl
-        if order <= 0:
-            raise ValueError,"Length of knot vector (%s) must be larger than number of control points (%s)" % (len(knots),nctrl)
-
-        if closed:
-            if knots is None:
-                nextra = order-1
-            else:
-                nextra = len(knots) - nctrl - order
-                #print len(knots)
-                #print nctrl
-            print "extra %s" % nextra 
-            control = Coords.concatenate([control[-nextra:],control])
-            nctrl = len(control)
-            #print nctrl
-
-        if nctrl < order:
-            raise ValueError,"Number of control points (%s) must not be smaller than order (%s)" % (nctrl,order)
-
-        if knots is None:
-            if closed:
-                knots = unitRange(nctrl+order)
-            else:
-                knots = concatenate([[0.]*(order-1),unitRange(nctrl-order+2),[1.]*(order-1)])
-        nknots = len(knots)                                                  
-        if nknots != nctrl+order:
-            
-            raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
-
-        print "Nurbs curve of order %s with %s control points and %s knots" % (order,nctrl,nknots)
-
-        self.control = control
-        self.knots = knots
-        self.order = order
-        self.closed = closed
-        self.samplingTolerance = 1.0
-        self.color = color
-        print self.control
-        print self.knots
-        #print self.control.shape
-        #print self.knots.shape
-
-        
-    def bbox(self):
-        return self.control.bbox()
-
-        
-    def drawGL(self,**kargs):
-        GL.glColor3fv(self.color)
-        nurb = GLU.gluNewNurbsRenderer()
-        GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,self.samplingTolerance)
-        GLU.gluBeginCurve(nurb)
-        GLU.gluNurbsCurve(nurb,self.knots,self.control,GL.GL_MAP1_VERTEX_3)
-        GLU.gluEndCurve(nurb)
-
-
-    def pointsAt(self,u=None):
-        if u is None:
-            u = self.knots[order:]
-
-        ctrl = self.control.astype(double)
-        knots = self.knots.astype(double)
-        u = u.astype(double)
-
-        try:
-            print "U",u
-            pts = nu.bspeval(self.order-1,ctrl.transpose(),knots,u)
-            print pts.shape
-            print pts
-            return Coords(pts.transpose())
-        except:
-            print "SOME ERROR OCCURRED"
-            return Coords()
+def drawThePoints(N,n,color=None):
+    degree = order-1
+    umin = N.knots[degree]
+    umax = N.knots[-degree-1]
+    #umin = N.knots[0]
+    #umax = N.knots[-1]
+    print "Umin = %s, Umax = %s" % (umin,umax)
+    u = umin + arange(n+1) * (umax-umin) / float(n)
+    print u
+    u = [0.25,0.5,0.75]
+    P = N.pointsAt(u)
+    print P
+    draw(P,color=color)
+    drawNumbers(P,color=color)
 
                          
 clear()
-#transparent()
 linewidth(2)
 
-## askCurve()
-## zoomAll()
-## exit()
 
+sq2 = sqrt(0.5)
 closed=False
-pts = Coords([
-    [0.,1.,0.],
-    [0.,0.,0.],
-    [1.,0.,0.],
-    [1.,-1.,0.],
-    ])
-knots = None
-
-closed=True
 pts = Coords([
     [1.,0.,0.],
     [1.,1.,0.],
     [0.,1.,0.],
     [-1.,1.,0.],
     [-1.,0.,0.],
-    [-1.,-1.,0.],
-    [0.,-1.,0.],
-    [1.,-1.,0.],
     ])
+
 draw(pts)
 drawNumbers(pts)
 
-sq2 = sqrt(0.5)
-wts = array([
-    1.0,
-    sq2,
-    1.0,
-    sq2,
-    1.0,
-    sq2,
-    1.0,
-    sq2,
-    ]).reshape(-1,1)
 
+order = [ 2,3,4 ]
+weight = [0.,0.5,sqrt(0.5),1.,sqrt(2.),2,10]
+colors = [red,green,blue,cyan,magenta,yellow,black]
+o = 3
+for w,c in zip(weight,colors):
+    knots = [0.,0.,0.,1.,1.,2.,2.,2.]
+    #knots = None
+    qc = Coords4(pts)
+    qc[1::2].deNormalize(w)
+    C = NurbsCurve(qc,knots=knots,order=o,closed=False)
+    draw(C,color=c)
+    #drawThePoints(N[order],10,color=color)
+    
 
-P = PolyLine(pts,closed=closed)
-#draw(P,color=magenta)
+zoomAll()
+exit()
+## for order,color in zip(range(2,5),[cyan,magenta,yellow]):
+##     if order > len(pts):
+##         continue
+##     N[order] = NurbsActor(pts,closed=closed,order=order,color=color)
+##     drawActor(N[order])
 
-Q = simple.circle()
-draw(Q,color=yellow)
-#drawNumbers(Q,color=red)
-
-N = {}
-for order,color in zip(range(2,5),[black,green,red]):
-    N[order] = NurbsActor(pts,closed=closed,order=order,color=color)
+for order,color in zip(range(2,5),[red,green,blue]):
+    if order > len(pts):
+        continue
+    print wts.shape
+    N[order] = NurbsActor(pts,wts=wts,closed=False,order=order,color=color)
     drawActor(N[order])
 
-print pts.shape
-print wts.shape
-order = 3
-NO = NurbsActor(pts*wts,knots=knots,closed=closed,order=order,color=blue)
+exit()
+drawNumbers(pts*wts,color=red)
+for order,color in zip(range(2,5),[cyan,magenta,yellow]):
+    N[order] = NurbsActor(pts*wts,closed=closed,order=order,color=color)
+    drawActor(N[order])
+
+exit()
+
+
+NO = NurbsActor(pts*wts,closed=closed,order=3,color=blue)
 drawActor(NO)
 
-## print "KNOTS",NO.knots
-## n = 20
-## degree = order-1
-## umin = NO.knots[degree]
-## umax = NO.knots[-degree-1]
-## print "Umin = %s, Umax = %s" % (umin,umax)
-## u = umin + arange(n+1) * (umax-umin) / n
-## print u
-## P = NO.pointsAt(u)
-## print P
-## draw(P,color=blue)
-## drawNumbers(P,color=blue)
+NO = NurbsActor(pts*wts,closed=closed,order=2,color=cyan)
+drawActor(NO)
 
 ## def distance(C):
 ##     d = C.approx(100).pointsOn().distanceFromPoint(origin())

@@ -22,13 +22,29 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""An interface to write Finite Element models in Abaqus input file format.
+"""Exporting finite element models in Abaqus\ |trade| input file format.
 
-There are low level functions that just generate a part of an Abaqus (R)
-input file, conforming to the Keywords manual.
+This module provides functions and classes to export finite element models
+from pyFormex in the Abaqus\ |trade| input format (.inp).
+The exporter handles the mesh geometry as well as model, node and element
+properties gathered in a :class:`PropertyDB` database (see module
+:mod:`properties`).
+
+While this module provides only a small part of the Abaqus input file format,
+it suffices for most standard jobs. While we continue to expand the interface,
+depending on our own necessities or when asked by third parties, we do not
+intend to make this into a full implementation of the Abaqus input
+specification. If you urgently need some missing function, there is always
+the possibility to edit the resulting text file or to import it into the
+Abaqus environment for further processing.
+
+The module provides two levels of functionality: on the lowest level, there
+are functions that just generate a part of an Abaqus input file, conforming
+to the Abaqus\ |trade| Keywords manual.
 
 Then there are higher level functions that read data from the property module
-and write them to the Abaqus input file.
+and write them to the Abaqus input file and some data classes to organize all
+the data involved with the finite element model.
 """
 
 from plugins.properties import *
@@ -1018,39 +1034,66 @@ def writeModelProps(fil,prop):
         
         
 class Step(Dict):
-    """Contains all data about a step."""
+    """The basic logical unit in the simulation history.
 
-    analysis_types = [ 'STATIC', 'DYNAMIC', 'EXPLICIT', \
-                       'PERTURBATION', 'BUCKLE', 'RIKS' ]
+    In Abaqus, a step is the smallest logical entity in the simulation
+    history. It is typically a time step in a dynamic simulation, but it
+    can also describe different loading states in a (quasi-)static simulation.
+
+    Our Step class holds all the data describing the global step parameters.
+    It combines the Abaqus '*STEP', '*STATIC', '*DYNAMIC' and '*BUCKLE'
+    commands (and even some more global parameter setting commands).
+
+    Parameters
+    ----------
     
-    def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
-                 tags=None,inc=None,sdi=None,buckle='SUBSPACE',incr=0.1,
-                 name=None,bulkvisc=None,out=None,res=None):
-        """Create new analysis data.
-        
-        - `analysis`:  the analysis type. Should be one of: 'STATIC', 'DYNAMIC',
-          'EXPLICIT', 'PERTURBATION', 'BUCKLE', 'RIKS' 
-        - `time`: either
+    analysis : str
+        The analysis type, one of: 'STATIC', 'DYNAMIC',
+        'EXPLICIT', 'PERTURBATION', 'BUCKLE', 'RIKS'
 
-          - a single float value specifying the step time,
-          - a list of 4 values: time inc, step time, min. time inc, max. time inc
-          - for LANCZOS: a list of 5 values
-          - for RIKS: a list of 8 values
-          
-          In most cases, only the step time should be specified.
-        - `nlgeom='YES'` specifies that the analysis will be non-linear.
-          'RIKS' always sets ``nlgeom='YES'``, 'BUCKLE' sets it to ``'NO'``,
-          'PERTURBATION' ignores `nlgeom`.
-        - `tags` : a list of property tags to include in this step.
+    time : 
+      either
+    
+      - a single float value specifying the step time,
+      - a list of 4 values: time inc, step time, min. time inc, max. time inc
+      - for LANCZOS: a list of 5 values
+      - for RIKS: a list of 8 values
+       
+      In most cases, only the step time should be specified.
+
+    nlgeom : 'YES' ot 'NO' (default)
+        If 'YES', the analysis will be geometrically non-linear. Analysis type
+        'RIKS' always sets `nlgeom` to 'YES', 'BUCKLE' sets it to 'NO',
+        'PERTURBATION' ignores `nlgeom`.
+        
+    tags : a list of property tags to include in this step.
+        If specified, only the property records having one of the listed values
+        as their `tag` attribute will be included in this step.
+
+    
         - `inc`:  the maximum number of increments in a step (the default is 100)
         - `sdi`: determines how severe discontinuities are accounted for
+        - timeinc: 
         - `buckle`: specifies the BUCKLE type: 'SUBSPACE' or 'LANCZOS'
         - `incr`: the increment in 'RIKS' type
         - `bulkvisc`:  a list of two floats (default: [0.06,1.2]), only used
           in Explicit steps.
         - `out` and `res`: specific output/result records for this step. They
           come in addition to the global ones.
-        """
+   x : type
+   Description of parameter `x`.
+
+    """
+
+    analysis_types = [ 'STATIC', 'DYNAMIC', 'EXPLICIT', \
+                       'PERTURBATION', 'BUCKLE', 'RIKS' ]
+    
+    def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
+                 tags=None,inc=None,sdi=None,timeinc=None,
+                 buckle='SUBSPACE',incr=0.1,
+                 name=None,bulkvisc=None,out=None,res=None):
+        """Create new analysis step."""
+        
         self.analysis = analysis.upper()
         self.name = name
         if not self.analysis in Step.analysis_types:

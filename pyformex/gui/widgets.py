@@ -93,9 +93,10 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
         raise ValueError,"Could not start the timeout timer"
 
 
-
 class Options:
-    pass
+    "An empty class to allow easy attribute syntax"
+    def __init__(self):
+        pass
 
 ###################### File Selection Dialog #########################
 

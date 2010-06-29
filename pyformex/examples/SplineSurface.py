@@ -105,7 +105,7 @@ class SplineSurface(Geometry):
     Two sets of parametric curves can be drawn: in u and in v direction.
     """
 
-    def __init__(self,curves=None,coords=None):
+    def __init__(self,curves=None,nu=0,coords=None):
         self.curves = curves
         self.grid = None
         self.ccurves = None
@@ -114,6 +114,9 @@ class SplineSurface(Geometry):
         errors = [ c.closed != self.uclosed for c in self.curves ]
         if sum(errors) > 0:
             raise ValueError,"Either ALL or NONE of the curves should be closed."
+        if nu <= 0:
+            nu = len(curves)-1
+        self.grid = self.createGrid(nu)
 
 
     def bbox(self):
@@ -123,55 +126,60 @@ class SplineSurface(Geometry):
     def createGrid(self,nu,nv=None):
         print "Creating grid %s x %s" % (nu,nv)
         if nv is None:
-            nv = self.curves[0].nparts()
+            nv = self.curves[0].nparts
 
         CA = [ C.approx(ntot=nu) for C in self.curves ]
         print "Curves have %s points" % CA[0].coords.shape[0]
         print "There are %s curves" % len(CA)
         if not self.uclosed:
             nu += 1 
-        self.grid = Coords(stack([CAi.coords[:nu] for CAi in CA]))
-        print "Created grid %s x %s" % self.grid.shape[:2]
-
-
-    def uCurves(self):
-        return [ BezierSpline(self.grid[:,i,:],curl=0.375) for i in range(self.grid.shape[1]) ]
+        grid = Coords(stack([CAi.coords[:nu] for CAi in CA]))
+        print "Created grid %s x %s" % grid.shape[:2]
+        return grid
 
 
     def vCurves(self):
+        return [ BezierSpline(self.grid[:,i,:],curl=0.375) for i in range(self.grid.shape[1]) ]
+
+
+    def uCurves(self):
         return [ BezierSpline(self.grid[i,:,:],curl=0.375) for i in range(self.grid.shape[0]) ]
 
 
-    def toMesh(self,closed=False):
-        """Convert the Grid Surface to a Quad Mesh"""
-        nu = self.grid.shape[1]
-        nv = self.grid.shape[0] -1 
-        elems = array([[ 0,1,nu+1,nu ]])
-        if self.uclosed:
-            elems = concatenate([(elems+i) for i in range(nu-1)],axis=0)
-            elems = concatenate([elems,[[ nu-1,0,nu,2*nu-1]]],axis=0)
-        else:
-            #drawNumbers(self.grid.reshape(-1,3))
-            #print elems
-            elems = concatenate([(elems+i) for i in range(nu-1)],axis=0)
-        #print elems
-        #print nu
-        elems = concatenate([(elems+i*nu) for i in range(nv)],axis=0)
-
-        x = self.grid.reshape(-1,3)
-        #print nu,nv
-        #print x.shape
-        #print elems.shape
-        #print elems.min(),elems.max()
-        M = Mesh(self.grid.reshape(-1,3),elems)
-        #print M.elems
-        #drawNumbers(M.coords)
-        return M
-    
+    def approx(self,nu,nv):
+        CL = self.vCurves()
+        draw(CL,color=red)
+        
 
     def actor(self,**kargs):
         return [ draw(c,**kargs) for c in self.curves ] 
 
+
+def gridToMesh(grid,closed=False):
+    """Convert a Grid Surface to a Quad Mesh"""
+    nu = grid.shape[1]
+    nv = grid.shape[0] -1 
+    elems = array([[ 0,1,nu+1,nu ]])
+    if closed:
+        elems = concatenate([(elems+i) for i in range(nu-1)],axis=0)
+        elems = concatenate([elems,[[ nu-1,0,nu,2*nu-1]]],axis=0)
+    else:
+        #drawNumbers(self.grid.reshape(-1,3))
+        #print elems
+        elems = concatenate([(elems+i) for i in range(nu-1)],axis=0)
+    #print elems
+    #print nu
+    elems = concatenate([(elems+i*nu) for i in range(nv)],axis=0)
+
+    x = grid.reshape(-1,3)
+    #print nu,nv
+    #print x.shape
+    #print elems.shape
+    #print elems.min(),elems.max()
+    M = Mesh(grid.reshape(-1,3),elems)
+    #print M.elems
+    #drawNumbers(M.coords)
+    return M
 
 
 def createCircles(n):
@@ -256,6 +264,7 @@ def area(C,nroll=0):
 ###############################################################
 
 clear()
+smoothwire()
 from gui.widgets import simpleInputItem as I
 
 res = askItems([
@@ -263,8 +272,9 @@ res = askItems([
         'Circles and Ellipses',
         'Power Curves',
         'Kinked Artery']),
-    I('ncurves',value=24,text='Number of spline curves'),
+    I('ncurves',value=12,text='Number of spline curves'),
     I('nu',value=36,text='Number of cells along splines'),
+    I('refine',False),
     I('nv',value=12,text='Number of cells across splines'),
     I('align',False),
     I('aligndir',1),
@@ -315,22 +325,19 @@ if createPL:
     print "Number of points in the PolyLines:",[ Ci.coords.shape[0] for Ci in PL]
 
 
-S = SplineSurface(CL)
-
-print nu,nv
-S.createGrid(nu,nv)
-draw(S.grid)
-print S.grid.shape
-
-#Cu = S.uCurves()
-#Cv = S.vCurves()
-#draw(Cu,color=red)
-#draw(Cv,color=blue)
-
-smoothwire()
-M = S.toMesh()
+S = SplineSurface(CL,nu)
+M = gridToMesh(S.grid,closed = S.uclosed)
 draw(M,color=yellow,bkcolor='steelblue')
 export({'quadsurface':M})
+
+if refine:
+    clear()
+    print "Refining to %s" % nv
+    S = SplineSurface(S.vCurves(),nv)
+    N = gridToMesh(S.grid,closed = S.uclosed)
+    draw(N,color=magenta,bkcolor='olive')
+    export({'quadsurface-1':N})
+
 zoomAll()
 
 

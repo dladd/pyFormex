@@ -36,6 +36,7 @@ the :class:`Coords` class.
 While the user will mostly use the higher level classes, he might occasionally
 find good reason to use the :class:`Coords` class directly as well.
 """
+
 from arraytools import *
 from lib import misc
 from pyformex import options
@@ -126,25 +127,25 @@ class Coords(ndarray):
         """Create a new instance of :class:`Coords`.
 
         """
-        # An empty coords object
         if data is None:
-            data = ndarray((0,3),dtype=Float)
-
-        #
-        # !! Perhaps we should force at least dimension 2 ???
-        #
-
-        # Turn the data into an array, and copy if requested
-        ar = array(data, dtype=dtyp, copy=copy)
+            # create an empty array : we need at least a 2D array
+            # because we want the last axis to have length 3 and
+            # we also need an axis with length 0 to have size 0
+            ar = ndarray((0,3),dtype=dtyp)
+        else:
+            # turn the data into an array, and copy if requested
+            ar = array(data, dtype=dtyp, copy=copy)
+            
         if ar.shape[-1] == 3:
             pass
         elif ar.shape[-1] in [1,2]:
-            ar = concatenate([ar,zeros(ar.shape[:-1]+(3-ar.shape[-1],))],axis=-1)
-        elif ar.shape[-1] == 0: # allow empty coords objects 
+            # make last axis length 3, adding 0 values
+            ar = growAxis(ar,3-ar.shape[-1],-1)
+        elif ar.shape[-1] == 0:
+            # allow empty coords objects 
             ar = ar.reshape(0,3)
         else:
             raise ValueError,"Expected a length 1,2 or 3 for last array axis"
-
 
         # Make sure dtype is a float type
         if ar.dtype.kind != 'f':

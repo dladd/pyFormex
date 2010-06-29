@@ -378,15 +378,34 @@ def rotMatrix(u,w=[0.,0.,1.],n=3):
         return a
 
 
-def growAxis(a,size,axis=-1,fill=0):
-    """Grow a single array axis to the given size and fill with given value."""
+def growAxis(a,add,axis=-1,fill=0):
+    """Increase the length of a single array axis.
+
+    The specified axis of the array `a` is increased with a value `add` and
+    the new elements all get the value `fill`.
+
+    Parameters
+    ----------
+    a: ndarray
+
+    add: int
+        The value to add to the axis length. If <= 0, the unchanged array
+        is returned.
+
+    axis: int
+        The axis to change, default -1 (last).
+
+    fill: int or float
+        The value to set the new elements to.
+
+    """
     if axis >= len(a.shape):
         raise ValueError,"No such axis number!"
-    if size <= a.shape[axis]:
+    if add <= 0:
         return a
     else:
         missing = list(a.shape)
-        missing[axis] = size-missing[axis]
+        missing[axis] = add
         return concatenate([a,fill * ones(missing,dtype=a.dtype)],axis=axis)
 
 
