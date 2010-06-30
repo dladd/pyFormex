@@ -21,9 +21,9 @@ class Coords4(ndarray):
     """A collection of points represented by their homogeneous coordinates.
     
     While most of the pyFormex implementation is based on the 3D Cartesian
-    coordinates :class:`Coords`, some applications may benefit from using
+    coordinates class :class:`Coords`, some applications may benefit from using
     homogeneous coordinates. The class :class:`Coords4` provides some basic
-    functions and conversion to and from cartesian coordinates :class:`Coords`.
+    functions and conversion to and from cartesian coordinates.
     Through the conversion, all other pyFormex functions, such as
     transformations, are available.
     
@@ -46,7 +46,7 @@ class Coords4(ndarray):
     Parameters
     ----------
     
-    data : array of floats
+    data : array_like
         If specified, data should evaluate to an array of floats, with the
         length of its last axis not larger than 4. When equal to four, each
         tuple along the last axis represents a ingle point in homogeneous
@@ -56,17 +56,19 @@ class Coords4(ndarray):
         position.
         If no data are given, a single point (0.,0.,0.) will be created.
 
-    w : array of floats
+    w : array_like
         If specified, the w values are used to denormalize the homogeneous
         data such that the last component becomes w.
 
-    `dtyp`: The datatype to be used. It not specified, the datatype of `data`
-    is used, or the default :data:`Float` (which is equivalent to
-    :data:`numpy.float32`).
+    dtyp : data-type
+        The datatype to be used. It not specified, the datatype of `data`
+        is used, or the default :data:`Float` (which is equivalent to
+        :data:`numpy.float32`).
 
-    `copy`: If ``True``, the data are copied. By default, the original data are
-    used if possible, e.g. if a correctly shaped and typed
-    :class:`numpy.ndarray` is specified.
+    copy : boolean
+        If ``True``, the data are copied. By default, the original data are
+        used if possible, e.g. if a correctly shaped and typed
+        :class:`numpy.ndarray` is specified.
     """
             
     def __new__(cls, data=None, w=None, dtyp=Float, copy=False):

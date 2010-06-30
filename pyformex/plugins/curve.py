@@ -209,16 +209,22 @@ class Curve(Geometry):
 ##############################################################################
 #
 class PolyLine(Curve):
-    """A class representing a series of straight line segments."""
+    """A class representing a series of straight line segments.
 
-    def __init__(self,coords=[],closed=False):
-        """Initialize a PolyLine from a coordinate array.
+    coords is a (npts,3) shaped array of coordinates of the subsequent
+    vertices of the polyline (or a compatible data object).
+    If closed == True, the polyline is closed by connecting the last
+    point to the first. This does not change the vertex data.
 
-        coords is a (npts,3) shaped array of coordinates of the subsequent
-        vertices of the polyline (or a compatible data object).
-        If closed == True, the polyline is closed by connecting the last
-        point to the first. This does not change the vertex data.
-        """
+    The `control` parameter has the same meaning as `coords` and is added
+    for symmetry with other Curve classes. If specified, it will override
+    the `coords` argument.
+    """
+
+    def __init__(self,coords=[],control=None,closed=False):
+        """Initialize a PolyLine from a coordinate array."""
+        if control is not None:
+            coords = control
         if isinstance(coords,Formex):
             if coords.nplex() == 1:
                 coords = coords.coords
@@ -261,35 +267,6 @@ class PolyLine(Curve):
         if not self.closed:
             elems = elems[:-1]
         return Mesh(self.coords,elems,eltype='line2')
-
-
-    def write_geom(self,geomfile,name=None,sep=None):
-        """Write a PolyLine to a pyFormex geometry file.
-
-        The following attributes and arguments are written in the header:
-        ncoords, closed, name, sep.
-        The following attributes are written as arrays: coords
-        """
-        if sep is None:
-            sep = geomfile.sep
-        head = "# objtype='PolyLine'; ncoords=%r; closed=%r; sep='%s'" % (self.coords.shape[0],self.closed,sep)
-        if name:
-            head += "; name='%s'" % name 
-        geomfile.fil.write(head+'\n')
-        geomfile.writeData(self.coords,sep)
- 
-
-    @classmethod
-    def read_geom(clas,geomfile,ncoords,closed,sep):
-        """Read a PolyLine from a pyFormex geometry file.
-
-        The coordinate array for ncoords points is read from the file
-        and a PolyLine is returned.
-        """
-        ndim = 3
-        coords = readArray(geomfile.fil,Float,(ncoords,ndim),sep=sep)
-        print coords.shape
-        return PolyLine(coords,closed)
 
 
     def sub_points(self,t,j):
@@ -530,143 +507,168 @@ class Polygon(PolyLine):
 ##############################################################################
 #
 class BezierSpline(Curve):
-    """A class representing a cubic Bezier spline curve."""
+    """A class representing a cubic Bezier spline curve.
+    
+    A cubic Bezier spline is a continuous curve consisting of `nparts`
+    successive parts and where each part is a cubic Bezier curve described
+    by four control points (two end points which are on the curve, and two
+    intermediate control points which are off the curve).
+    Since the end point of one part is the begin point of the next part,
+    a BezierSpline is described by ncontrol=3*nparts+1 control points if the
+    curve is open, or ncontrol=3*nparts if the curve is closed.
+
+    The constructor provides different ways to initialize the full set of
+    control points. In many cases the off-curve control points can be
+    generated automatically.
+
+    Parameters
+    ----------
+    
+    coords : array_like (npoints,3)
+        The points that are on the curve. For an open curve, npoints=nparts+1,
+        for a closed curve, npoints = nparts.
+        If not specified, the on-curve points should be included in the
+        `control` argument.
+    deriv : array_like (npoints,3) or (2,3)
+        If specified, it gives the direction of the curve at all points or at
+        the endpoints only for a shape (2,3) array.
+        For points where the direction is left unspecified or where the
+        specified direction contains a `NaN` value, the direction
+        is calculated as the average direction of the two
+        line segments ending in the point. This will also be used
+        for points where the specified direction contains a value `NaN`.
+        In the two endpoints of an open curve however, this average
+        direction can not be calculated: the two control points in these
+        parts are set coincident.
+    curl : float         
+        The curl parameter can be set to influence the curliness of the curve
+        in between two subsequent points. A value curl=0.0 results in
+        straight segments. The higher the value, the more the curve becomes
+        curled.
+    control : array(nparts,2,3) or array(ncontrol,3)
+        If `coords` was specified, this should be a (nparts,2,3) array with
+        the intermediate control points, two for each part.
+        
+        If `coords` was not specified, this should be the full array of
+        `ncontrol` control points for the curve. The number of points should
+        be a multiple of 3 plus 1. If the curve is closed, the last point is
+        equal to the first and does not need to a multiple of 3 is
+        also allowed, in which case the first point will be appended as last.
+
+        If not specified, the control points are generated automatically from
+        the `coords`, `deriv` and `curl` arguments.
+        If specified, they override these parameters.
+    closed : boolean
+        If True, the curve will be continued from the last point back
+        to the first to create a closed curve.
+
+          """
     coeffs = matrix([[-1.,  3., -3., 1.],
                      [ 3., -6.,  3., 0.],
                      [-3.,  3.,  0., 0.],
                      [ 1.,  0.,  0., 0.]]
                     )
 
-    def __init__(self,coords,deriv=None,curl=0.5,control=None,closed=False):
-        """Create a cubic spline curve through the given points.
+    def __init__(self,coords=None,deriv=None,curl=0.5,control=None,closed=False):
+        """Create a cubic spline curve."""
 
-        - coords: an (npoints,3) array with ordered points on the curve
-        - deriv: an (npoints,3) or (2,3) array with the directions at all
-          the points or at the two endpoints only.
-          For points where the direction is left unspecified or where the
-          specified direction contains a `NaN` value, the direction
-          is calculated as the average direction of the two
-          line segments ending in the point. This will also be used
-          for points where the specified direction contains a value `NaN`.
-          In the two endpoints of an open curve however, this average
-          direction can not be calculated: the two control points in these
-          parts are set coincident.
-          
-          The curl parameter can be set to influence the curliness of the curve
-          in between two subsequent points. A value curl=0.0 results in
-          straight segments.
-        
-        - control: an (nparts,2,3) array of control points, two for each
-          curve segemetn between two consecutive points. For a closed curve,
-          nparts = npoints, while for an open curve nparts = npoints-1.
-          If the control points are specified directly, they override
-          the deriv and curl parameters.
-        - closed: if True, the curve will be continued from the last point
-          to the first to create a closed curve.
-        """
-        coords = Coords(coords)
-        ncoords = nparts = coords.shape[0]
-        if not closed:
-            nparts -= 1
+        if coords is None:
+            # All control points are given, in a single array
+            coords = Coords(control)
+            if len(coords.shape) != 2 or coords.shape[-1] != 3:
+                raise ValueError,"If no coords argument given, the control parameter should have shape (ncontrol,3), but got %s" % str(coords.shape)
 
-        if control is None:
-            P = PolyLine(coords,closed=closed)
-            ampl = P.lengths().reshape(-1,1)
-            if deriv is None:
-                deriv = array([[nan,nan,nan]]*ncoords)
-            else:
-                deriv = Coords(deriv)
-                nderiv = deriv.shape[0]
-                if nderiv < ncoords:
-                    if nderiv != 2:
-                        raise ValueError,"Either all or 2 directions expected (got %s)" % nderiv
-                    deriv = concatenate([
-                        deriv[:1],
-                        [[nan,nan,nan]]*(ncoords-2),
-                        deriv[-1:]])
-
-            undefined = isnan(deriv).any(axis=-1)
-            if undefined.any():
-                deriv[undefined] = P.avgDirections()[undefined]
-                
             if closed:
-                p1 = coords + deriv*curl*ampl
-                p2 = coords - deriv*curl*roll(ampl,1,axis=0)
-                p2 = roll(p2,-1,axis=0)
-            else:
-                p1 = coords[:-1] + deriv[:-1]*curl*ampl
-                p2 = coords[1:] - deriv[1:]*curl*ampl
-                if isnan(p1[0]).any():
-                    p1[0] = p2[0]
-                if isnan(p2[-1]).any():
-                    p2[-1] = p1[-1]
-            control = concatenate([p1,p2],axis=1)
+                coords = Coords.concatenate([coords,coords[:1]])
                 
-        control = asarray(control).reshape(-1,2,3)
-        control = Coords(control)
-        if control.shape != (nparts,2,3):
-            print("coords array has shape %s" % str(coords.shape))
-            print("control array has shape %s" % str(control.shape))
-            raise ValueError,"Invalid control points for BezierSpline"
+            ncoords = coords.shape[0]
+            nextra = (ncoords-1) % 3
+            if nextra != 0:
+                nextra = 3 - nextra
+                coords = Coords.concatenate([coords,]+[coords[:1]]*nextra)
+                ncoords = coords.shape[0]
+            
+            nparts = (ncoords-1) // 3
+                
+        else:
+            # Oncurve points are specified separately
+            coords = Coords(coords)
+            ncoords = nparts = coords.shape[0]
+            if not closed:
+                nparts -= 1
 
-        # To enable easy transforms, we join the coords and controls
-        # in a single array
-        if not closed:
-            dummy = Coords([[[0.,0.,0.],[0.,0.,0.]]])
-            control = Coords.concatenate([control,dummy],axis=0)
-        coords = coords[:,newaxis,:]
-        self.coords = Coords.concatenate([coords,control],axis=1)
+            if control is None:
+                P = PolyLine(coords,closed=closed)
+                ampl = P.lengths().reshape(-1,1)
+                if deriv is None:
+                    deriv = array([[nan,nan,nan]]*ncoords)
+                else:
+                    deriv = Coords(deriv)
+                    nderiv = deriv.shape[0]
+                    if nderiv < ncoords:
+                        if nderiv != 2:
+                            raise ValueError,"Either all or 2 directions expected (got %s)" % nderiv
+                        deriv = concatenate([
+                            deriv[:1],
+                            [[nan,nan,nan]]*(ncoords-2),
+                            deriv[-1:]])
+
+                undefined = isnan(deriv).any(axis=-1)
+                if undefined.any():
+                    deriv[undefined] = P.avgDirections()[undefined]
+
+                if closed:
+                    p1 = coords + deriv*curl*ampl
+                    p2 = coords - deriv*curl*roll(ampl,1,axis=0)
+                    p2 = roll(p2,-1,axis=0)
+                else:
+                    p1 = coords[:-1] + deriv[:-1]*curl*ampl
+                    p2 = coords[1:] - deriv[1:]*curl*ampl
+                    if isnan(p1[0]).any():
+                        p1[0] = p2[0]
+                    if isnan(p2[-1]).any():
+                        p2[-1] = p1[-1]
+                control = concatenate([p1,p2],axis=1)
+
+            control = asarray(control).reshape(-1,2,3)
+            control = Coords(control)
+            if control.shape != (nparts,2,3):
+                print("coords array has shape %s" % str(coords.shape))
+                print("control array has shape %s" % str(control.shape))
+                raise ValueError,"Invalid control points for BezierSpline"
+
+            # To enable easy transforms, we join the coords and controls
+            # in a single array
+            if not closed:
+                dummy = Coords([[[0.,0.,0.],[0.,0.,0.]]])
+                control = Coords.concatenate([control,dummy],axis=0)
+            coords = Coords.concatenate([coords[:,newaxis,:],control],axis=1)
+            coords = coords.reshape(-1,3)
+            # We now have a multiple of 3 coordinates
+            if closed:
+                coords = Coords.concatenate([coords,coords[:1]])
+            else:
+                coords = coords[:-2]
+
+
+        print "Final coords shape = %s" % str(coords.shape)
+        self.coords = coords
         self.nparts = nparts
         self.closed = closed
 
 
     def pointsOn(self):
         """Return the points on the curve""" 
-        return self.coords[:,0,:]
+        return self.coords[::3]
 
 
     def pointsOff(self):
         """Return the points off the curve (the control points)""" 
-        return self.coords[:self.nparts,1:,:]
-
-
-    def write_geom(self,geomfile,name=None,sep=None):
-        """Write a BezierSpline to a geometry file.
-
-        The following attributes and arguments are written in the header:
-        ncoords, nparts, closed, name, sep.
-        The following attributes are written as arrays: coords
-        """
-        if sep is None:
-            sep = geomfile.sep
-        head = "# objtype='BezierSpline'; ncoords=%r; nparts=%r; closed=%r; sep='%s'" % (self.coords.shape[0],self.nparts,self.closed,sep)
-        if name:
-            head += "; name='%s'" % name 
-        geomfile.fil.write(head+'\n')
-        geomfile.writeData(self.pointsOn(),sep)
-        geomfile.writeData(self.pointsOff(),sep)
- 
-
-    @classmethod
-    def read_geom(clas,geomfile,ncoords,nparts,closed,sep):
-        """Read a BezierSpline from a pyFormex geometry file.
-
-        The coordinate array for ncoords points and control point array
-        for (nparts,2) control points are read from the file.
-        A BezierSpline is constructed and returned.
-        """
-        ndim = 3
-        coords = readArray(geomfile.fil,Float,(ncoords,ndim),sep=sep)
-        control = readArray(geomfile.fil,Float,(nparts,2,ndim),sep=sep)
-        print coords.shape,control.shape
-        return BezierSpline(coords,control=control,closed=closed)
+        return stack([self.coords[i::3] for i in [1,2]],axis=1)
 
 
     def sub_points(self,t,j):
-        j1 = (j+1) % self.coords.shape[0]
-        P = self.pointsOn()[[j,j1]]
-        D = self.pointsOff()[j]
-        P = concatenate([ P[0],D[0],D[1],P[1] ],axis=0).reshape(-1,3)
+        P = self.coords[3*j:3*j+4]
         C = self.coeffs * P
         U = column_stack([t**3., t**2., t, ones_like(t)])
         X = dot(U,C)
@@ -689,7 +691,7 @@ class QuadBezierSpline(Curve):
                      [ 1.,  0.,  0.]]
                     )
 
-    def __init__(self,coords,control=None,closed=False):
+    def __init__(self,coords=None,control=None,closed=False):
         """Create a quadratic spline curve through the given points.
 
         """
@@ -975,7 +977,7 @@ class Arc(Curve):
         self.radius = length(v[0])
         self.normal = unitVector(cross(v[0],v[2]))
         self.angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self.center) for x in self.coords[[0,-1]] ]
-        print(self.coords)
+        #print(self.coords)
         print("Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal))
         print("ANGLES=%s" % (self.angles))
 

@@ -47,6 +47,7 @@ The nurbs curve are defined by the following parameters:
 The yellow curve is created with simple.circle and uses 180 line segments.
 """
 
+
 from OpenGL import GL, GLU
 
 import simple
@@ -57,6 +58,18 @@ import lib._nurbs_ as nu
 
 class NurbsCurve():
 
+    """A NURBS curve
+
+    order (2,3,4,...) = degree+1 = min. number of control points
+    ncontrol >= order
+    nknots = order + ncontrol >= 2*order
+
+    convenient solutions:
+    OPEN:
+      nparts = (npoints-1) / degree
+      nintern = 
+    """
+    
     def __init__(self,control,wts=None,knots=None,closed=False,order=0):
         self.closed = closed
         nctrl = len(control)
@@ -105,9 +118,12 @@ class NurbsCurve():
        
         self.control = control
         self.knots = asarray(knots)
-        self.order = order
+        #self.order = order
         self.closed = closed
 
+
+    def order(self):
+        return len(self.knots)-len(self.control)
         
     def bbox(self):
         return self.control.toCoords().bbox()
@@ -125,7 +141,7 @@ class NurbsCurve():
 
         try:
             print "U",u
-            pts = nu.bspeval(self.order-1,ctrl.transpose(),knots,u)
+            pts = nu.bspeval(self.order()-1,ctrl.transpose(),knots,u)
             print pts.shape
             print pts
             pts = pts[:3] / pts[3:]
@@ -214,7 +230,7 @@ def unitRange(n):
 
 
 def drawThePoints(N,n,color=None):
-    degree = order-1
+    degree = N.order()-1
     umin = N.knots[degree]
     umax = N.knots[-degree-1]
     #umin = N.knots[0]
@@ -240,25 +256,50 @@ pts = Coords([
     [1.,1.,0.],
     [0.,1.,0.],
     [-1.,1.,0.],
-    [-1.,0.,0.],
+#    [-1.,0.,0.],
     ])
 
 draw(pts)
 drawNumbers(pts)
+P = PolyLine(pts)
+draw(P)
+export({'PolyLine':P})
 
+print pts.shape
+B = BezierSpline(coords=pts,closed=False)
+draw(B,color=blue)
+export({'B_open_coords':B})
+B = BezierSpline(control=pts,closed=False)
+draw(B,color=red)
+export({'B_open_control':B})
+
+B = BezierSpline(coords=pts,closed=True)
+draw(B,color=cyan)
+export({'B_closed_coords':B})
+B = BezierSpline(control=pts,closed=True)
+draw(B,color=magenta)
+export({'B_closed_control':B})
+
+
+exit()
+
+
+Q = QuadBezierSpline(pts[::2],control=pts[1::2])
+draw(Q)
+exit()
 
 order = [ 2,3,4 ]
 weight = [0.,0.5,sqrt(0.5),1.,sqrt(2.),2,10]
 colors = [red,green,blue,cyan,magenta,yellow,black]
 o = 3
+knots = [0.,0.,0.,1.,1.,2.,2.,2.]
+#knots = None
 for w,c in zip(weight,colors):
-    knots = [0.,0.,0.,1.,1.,2.,2.,2.]
-    #knots = None
     qc = Coords4(pts)
     qc[1::2].deNormalize(w)
     C = NurbsCurve(qc,knots=knots,order=o,closed=False)
     draw(C,color=c)
-    #drawThePoints(N[order],10,color=color)
+    drawThePoints(C,10,color=c)
     
 
 zoomAll()

@@ -32,7 +32,6 @@ import utils
 from coords import *
 from formex import Formex
 from plugins.mesh import Mesh
-from plugins.curve import PolyLine,BezierSpline
 from odict import ODict
 from pyformex import message
 
@@ -53,7 +52,7 @@ class GeometryFile(object):
     Geometry classes can provide the facility 
     """
 
-    _version_ = '1.3'
+    _version_ = '1.4'
 
     def __init__(self,fil,mode=None,sep=' '):
         """Create the GeometryFile object."""
@@ -146,12 +145,16 @@ class GeometryFile(object):
                 for obj in geom:
                     self.write(obj,name.next(),sep)
                     
-        elif isinstance(geom,Formex):
-            self.writeFormex(geom,name,sep)
         elif hasattr(geom,'write_geom'):
             geom.write_geom(self,name,sep)
         else:
-            message("Can not (yet) write objects of type %s to geometry file: skipping" % type(geom))
+            try:
+                writefunc = getattr(self,'write'+geom.__class__.__name__)
+                print writefunc
+                writefunc(geom,name,sep)
+            except:
+                message("Can not (yet) write objects of type %s to geometry file: skipping" % type(geom))
+
 
 
     def writeFormex(self,F,name=None,sep=None):
@@ -171,6 +174,82 @@ class GeometryFile(object):
         self.writeData(F.coords,sep)
         if hasprop:
             self.writeData(F.prop,sep)
+
+
+    def writeMesh(self,F,name=None,sep=None,objtype='Mesh'):
+        """Write a Mesh to a pyFormex geometry file.
+
+        This writes a header line with these attributes and arguments:
+        objtype, ncoords, nelems, nplex, props(True/False),
+        eltype, name, sep.
+        This is followed by the array data for: coords, elems, prop
+
+        The objtype can/should be overridden for subclasses.
+        """
+        if objtype is None:
+            objtype = 'Mesh'
+        if sep is None:
+            sep = self.sep
+        hasprop = F.prop is not None
+        head = "# objtype=%r; ncoords=%r; nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.eltype,sep)
+        if name:
+            head += "; name='%s'" % name 
+        self.fil.write(head+'\n')
+        self.writeData(F.coords,sep)
+        self.writeData(F.elems,sep)
+        if hasprop:
+            self.writeData(F.prop,sep)
+
+
+    def writeTriSurface(self,F,name=None,sep=None):
+        """Write a TriSurface to a pyFormex geometry file.
+
+        This is equivalent to writeMesh(F,name,sep,objtype='TriSurface')
+        """
+        self.writeMesh(F,name=None,sep=None,objtype='TriSurface')
+
+
+    def writeCurve(self,F,name=None,sep=None,objtype=None):
+        """Write a Curve to a pyFormex geometry file.
+
+        This function writes any curve type to the geometry file.
+        The `objtype` is automatically detected but can be overridden.
+        
+        The following attributes and arguments are written in the header:
+        ncoords, closed, name, sep.
+        The following attributes are written as arrays: coords
+        """
+        if sep is None:
+            sep = self.sep
+        head = "# objtype='%s'; ncoords=%r; closed=%r; sep='%s'" % (F.__class__.__name__,F.coords.shape[0],F.closed,sep)
+        if name:
+            head += "; name='%s'" % name 
+        self.fil.write(head+'\n')
+        self.writeData(F.coords,sep)
+
+
+    def writePolyLine(self,F,name=None,sep=None):
+        """Write a PolyLine to a pyFormex geometry file.
+
+        This is equivalent to writeCurve(F,name,sep,objtype='PolyLine')
+        """
+        self.writeCurve(F,name=None,sep=None,objtype='PolyLine')
+
+
+    def writeBezierSpline(self,F,name=None,sep=None):
+        """Write a BezierSpline to a pyFormex geometry file.
+
+        This is equivalent to writeCurve(F,name,sep,objtype='BezierSpline')
+        """
+        self.writeCurve(F,name=None,sep=None,objtype='BezierSpline')
+
+
+    def writeQuadBezierSpline(self,F,name=None,sep=None):
+        """Write a QuadBezierSpline to a pyFormex geometry file.
+
+        This is equivalent to writeCurve(F,name,sep,objtype='QuadBezierSpline')
+        """
+        self.writeCurve(F,name=None,sep=None,objtype='QuadBezierSpline')
 
 
     def readHeader(self):
@@ -234,12 +313,14 @@ class GeometryFile(object):
             # OK, we have a legal header, try to read data
             if objtype == 'Formex':
                 obj = self.readFormex(nelems,nplex,props,eltype,sep)
-            elif objtype == 'Mesh':
+            elif objtype in ['Mesh','TriSurface']:
                 obj = self.readMesh(ncoords,nelems,nplex,props,eltype,sep)
-            elif objtype == 'PolyLine':
-                obj = PolyLine.read_geom(self,ncoords,closed,sep)
-            elif objtype == 'BezierSpline':
-                obj = BezierSpline.read_geom(self,ncoords,nparts,closed,sep)
+            elif objtype in ['PolyLine','BezierSpline']:
+                if 'nparts' in s:
+                    # THis looks like a version 1.3 BezierSpline
+                    obj = self.oldReadBezierSpline(ncoords,nparts,closed,sep)
+                else:
+                    obj = self.readCurve(ncoords,closed,sep,objtype)
             elif globals().has_key(objtype) and hasattr(globals()[objtype],'read_geom'):
                 obj = globals()[objtype].read_geom(self)
             else:
@@ -263,6 +344,12 @@ class GeometryFile(object):
         
 
     def readFormex(self,nelems,nplex,props,eltype,sep):
+        """Read a Formex from a pyFormex geometry file.
+
+        The coordinate array for nelems*nplex points is read from the file.
+        If present, the property numbers for nelems elements are read.
+        From the coords and props a Formex is created and returned.
+        """
         ndim = 3
         f = readArray(self.fil,Float,(nelems,nplex,ndim),sep=sep)
         if props:
@@ -272,7 +359,17 @@ class GeometryFile(object):
         return Formex(f,p,eltype)
  
 
-    def readMesh(self,ncoords,nelems,nplex,props,eltype,sep):
+    def readMesh(self,ncoords,nelems,nplex,props,eltype,sep,objtype='Mesh'):
+        """Read a Mesh from a pyFormex geometry file.
+
+        The following arrays are read from the file:
+        - a coordinate array with `ncoords` points,
+        - a connectivity array with `nelems` elements of plexitude `nplex`,
+        - if present, a property number array for `nelems` elements.
+
+        Returns the Mesh constructed from these data, or a subclass if
+        an objtype is specified.
+        """
         ndim = 3
         x = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
         e = readArray(self.fil,Float,(nelems,nplex),sep=sep)
@@ -280,7 +377,39 @@ class GeometryFile(object):
             p = readArray(self.fil,Int,(nelems,),sep=sep)
         else:
             p = None
-        return Mesh(x,e,p,eltype)
+        M = Mesh(x,e,p,eltype)
+        if objtype != 'Mesh':
+            clas = globals()[objtype]
+            M = clas(M)
+        return M
+ 
+
+    def readCurve(self,ncoords,closed,sep,objtype):
+        """Read a Curve from a pyFormex geometry file.
+
+        The coordinate array for ncoords points is read from the file
+        and a Curve of type `objtype` is returned.
+        """
+        from plugins import curve
+        ndim = 3
+        coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
+        clas = getattr(curve,objtype)
+        return clas(control=coords,closed=closed)
+
+
+    def oldReadBezierSpline(self,ncoords,nparts,closed,sep):
+        """Read a BezierSpline from a pyFormex geometry file version 1.3.
+
+        The coordinate array for ncoords points and control point array
+        for (nparts,2) control points are read from the file.
+        A BezierSpline is constructed and returned.
+        """
+        from plugins.curve import BezierSpline
+        ndim = 3
+        coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
+        control = readArray(self.fil,Float,(nparts,2,ndim),sep=sep)
+        #print coords.shape,control.shape
+        return BezierSpline(coords,control=control,closed=closed)
 
 
     def rewrite(self):

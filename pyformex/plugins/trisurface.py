@@ -727,15 +727,6 @@ class TriSurface(Mesh):
             print("Cannot save TriSurface as file %s" % fname)
 
 
-    def write_geom(self,geomfile,name=None,sep=None):
-        """Write a TriSurface to a pyFormex geometry file.
-
-        This uses the Mesh.write_geom() method, overriding the default
-        objtype with 'TriSurface'.
-        """
-        Mesh.write_geom(self,geomfile,name,sep,objtype='TriSurface')
-
-
     @coordsmethod
     def reflect(self,*args,**kargs):
         if kargs.get('invert_normals',True) == True:

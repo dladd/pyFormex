@@ -325,7 +325,7 @@ def pointsAt(F,t):
     F is a plex 2 Formex and t is an array with F.nelems() float values which
     are interpreted as local parameters along the edges of the Formex, such
     that the first node has value 0.0 and the last has vaue 1.0.
-    The return value is a Coords array with the points at values t.
+    The return value is a :class:`coords.Coords` array with the points at values t.
     """
     f = F.coords
     t = t[:,newaxis]

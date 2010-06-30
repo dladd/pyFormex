@@ -1122,31 +1122,6 @@ Size: %s
         return GeomActor(self,**kargs)
 
 
-    def write_geom(self,geomfile,name=None,sep=None,objtype='Mesh'):
-        """Write a Mesh to a pyFormex geometry file.
-
-        This writes a header line with these attributes and arguments:
-        objtype, ncoords, nelems, nplex, props(True/False),
-        eltype, name, sep.
-        This is followed by the array data for: coords, elems, prop
-
-        The objtype can/should be overridden by subclasses.
-        """
-        if objtype is None:
-            objtype = 'Mesh'
-        if sep is None:
-            sep = geomfile.sep
-        hasprop = self.prop is not None
-        head = "# objtype=%r; ncoords=%r; nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'" % (objtype,self.ncoords(),self.nelems(),self.nplex(),hasprop,self.eltype,sep)
-        if name:
-            head += "; name='%s'" % name 
-        geomfile.fil.write(head+'\n')
-        geomfile.writeData(self.coords,sep)
-        geomfile.writeData(self.elems,sep)
-        if hasprop:
-            geomfile.writeData(self.prop,sep)
-
-
 ########### Functions #####################
 
 
