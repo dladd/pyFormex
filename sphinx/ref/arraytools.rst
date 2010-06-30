@@ -2,6 +2,7 @@
 .. pyformex reference manual --- arraytools
 .. CREATED WITH py2rst.py: DO NOT EDIT
 
+.. include:: <isonum.txt>
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
@@ -31,8 +32,10 @@
    .. autofunction:: unitVector(v)
    .. autofunction:: rotationMatrix(angle,axis=None,angle_spec=Deg)
    .. autofunction:: rotMatrix(u,w=[0.,0.,1.],n=3)
-   .. autofunction:: growAxis(a,size,axis=1,fill=0)
+   .. autofunction:: growAxis(a,add,axis=1,fill=0)
    .. autofunction:: reverseAxis(a,axis=1)
+   .. autofunction:: addAxis(a,axis=0)
+   .. autofunction:: stack(al,axis=0)
    .. autofunction:: checkArray(a,shape=None,kind=None,allow=None)
    .. autofunction:: checkArray1D(a,size=None,kind=None,allow=None)
    .. autofunction:: checkUniqueNumbers(nrs,nmin=0,nmax=None)

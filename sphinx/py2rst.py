@@ -417,6 +417,7 @@ def ship_module(name,docstring):
 .. pyformex reference manual --- %s
 .. CREATED WITH py2rst.py: DO NOT EDIT
 
+.. include:: <isonum.txt>
 .. include:: ../defines.inc
 .. include:: ../links.inc
 

@@ -123,8 +123,9 @@ path, these modules are in no way different from other pyFormex modules.
 
    ref/curve
    ref/mesh
-   ref/surface
+   ref/trisurface
    ref/geomtools
+   ref/nurbs
    ref/isopar
    ref/section2d
    ref/inertia
@@ -157,7 +158,7 @@ elsewhere.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 49
+   :numbered: 50
 
    ref/olist
    ref/mydict

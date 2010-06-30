@@ -11,6 +11,7 @@
 .. pyformex reference manual --- formex
 .. CREATED WITH py2rst.py: DO NOT EDIT
 
+.. include:: <isonum.txt>
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
@@ -92,6 +93,7 @@
       .. automethod:: read(clas,fil,sep=' ')
       .. automethod:: fromstring(clas,fil,sep=' ',nplex=1,ndim=3,count=1)
       .. automethod:: fromfile(clas,fil,sep=' ',nplex=1)
+      .. automethod:: actor()
       .. automethod:: reverseElements()
       .. automethod:: feModel(None)
 

@@ -15,8 +15,8 @@ GUIMODULES= actors camera canvas colors colorscale decors draw gluttext \
   image imageViewer imagearray imagecolor marks menu\
   scriptMenu toolbar viewport widgets 
 PLUGINMODULES= curve datareader dxf export fe fe_abq fe_post geomtools \
-  inertia isopar lima mesh objects postproc properties section2d surface \
-  tetgen tools turtle units
+  inertia isopar lima mesh nurbs objects postproc properties section2d \
+  tetgen tools trisurface turtle units
 #AUTOREF= $(COREMODULES) $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
 AUTOREF= $(COREMODULES) $(GUIMODULES) $(PLUGINMODULES)
 

@@ -1,6 +1,7 @@
 .. $Id$  -*- rst -*-
 .. pyformex documentation master file
 
+.. include:: <isonum.txt>
 .. include:: defines.inc
 .. include:: links.inc
 

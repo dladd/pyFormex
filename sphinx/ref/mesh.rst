@@ -2,6 +2,7 @@
 .. pyformex reference manual --- mesh
 .. CREATED WITH py2rst.py: DO NOT EDIT
 
+.. include:: <isonum.txt>
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
@@ -68,6 +69,8 @@
       .. automethod:: cclip(t)
       .. automethod:: clipAtPlane(p,n,nodes='any',side='+')
       .. automethod:: equiAngleSkew()
+      .. automethod:: actor()
+      .. automethod:: write_geom(geomfile,name=None,sep=None,objtype='Mesh')
 
 **Functions defined in the module mesh**
 

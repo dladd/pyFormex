@@ -2,6 +2,7 @@
 .. pyformex reference manual --- curve
 .. CREATED WITH py2rst.py: DO NOT EDIT
 
+.. include:: <isonum.txt>
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
@@ -41,6 +42,8 @@
       .. automethod:: nelems()
       .. automethod:: toFormex()
       .. automethod:: toMesh()
+      .. automethod:: write_geom(geomfile,name=None,sep=None)
+      .. automethod:: read_geom(clas,geomfile,ncoords,closed,sep)
       .. automethod:: sub_points(t,j)
       .. automethod:: sub_points2(t,j)
       .. automethod:: vectors()
@@ -65,7 +68,10 @@
 
       .. automethod:: pointsOn()
       .. automethod:: pointsOff()
+      .. automethod:: write_geom(geomfile,name=None,sep=None)
+      .. automethod:: read_geom(clas,geomfile,ncoords,nparts,closed,sep)
       .. automethod:: sub_points(t,j)
+      .. automethod:: reverse()
 
    .. autoclass:: QuadBezierSpline
 
@@ -120,6 +126,7 @@
 
 **Functions defined in the module curve**
 
+   .. autofunction:: circle()
    .. autofunction:: vectorPairAngle(v1,v2)
    .. autofunction:: convertFormexToCurve(closed=False)
 

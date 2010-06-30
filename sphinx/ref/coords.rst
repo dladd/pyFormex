@@ -2,6 +2,7 @@
 .. pyformex reference manual --- coords
 .. CREATED WITH py2rst.py: DO NOT EDIT
 
+.. include:: <isonum.txt>
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
@@ -75,6 +76,7 @@
       .. automethod:: fromstring(clas,fil,sep=' ',ndim=3,count=1)
       .. automethod:: fromfile(clas,fil)
       .. automethod:: interpolate(clas,F,G,div)
+      .. automethod:: actor()
 
 **Functions defined in the module coords**
 

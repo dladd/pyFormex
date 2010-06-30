@@ -11,6 +11,7 @@
 .. pyformex reference manual --- connectivity
 .. CREATED WITH py2rst.py: DO NOT EDIT
 
+.. include:: <isonum.txt>
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
@@ -46,6 +47,7 @@
       .. automethod:: untangle(ind=None)
       .. automethod:: tangle(lo)
       .. automethod:: inverse()
+      .. automethod:: connect(clas,clist,nodid=None,bias=None,loop=False)
 
 **Functions defined in the module connectivity**
 

@@ -28,7 +28,7 @@ sys.path.insert(0,os.path.abspath('../pyformex'))
 extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'numpydoc']
 
 # Add both class and __init__ docstrings
-autoclass_content = 'both'
+autoclass_content = 'class'  # 'class', 'init' or 'both'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

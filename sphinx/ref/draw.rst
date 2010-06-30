@@ -2,6 +2,7 @@
 .. pyformex reference manual --- draw
 .. CREATED WITH py2rst.py: DO NOT EDIT
 
+.. include:: <isonum.txt>
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
@@ -33,7 +34,7 @@
    .. autofunction:: askDirname(cur=None,change=True)
    .. autofunction:: checkWorkdir()
    .. autofunction:: printMessage(s)
-   .. autofunction:: draw(F,view=None,bbox=None,color='prop',colormap=None,alpha=None,mode=None,linewidth=None,shrink=None,marksize=None,wait=True,clear=None,allviews=False,highlight=False,flat=False)
+   .. autofunction:: draw(F,view=None,bbox=None,color='prop',colormap=None,bkcolor=None,bkcolormap=None,alpha=None,mode=None,linewidth=None,shrink=None,marksize=None,wait=True,clear=None,allviews=False,highlight=False,flat=False)
    .. autofunction:: focus(object)
    .. autofunction:: setDrawOptions(d)
    .. autofunction:: showDrawOptions()
