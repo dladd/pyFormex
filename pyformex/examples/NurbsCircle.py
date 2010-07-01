@@ -263,65 +263,23 @@ pts = Coords([
     [1.,0.,0.],
     ])
 
-draw(pts)
-drawNumbers(pts)
-#P = PolyLine(pts)
-#draw(P)
-#export({'PolyLine':P})
-closed = False
-
-B = BezierSpline(coords=pts,closed=closed,degree=3)
-draw(B,color=red)
-
-B = BezierSpline(coords=pts,closed=closed,degree=2)
-draw(B,color=blue)
-
-B = BezierSpline(coords=pts,closed=closed,degree=1)
-draw(B,color=green)
-exit()
-#for d,c in zip([1,2,3],[red,green,blue]):
-#    B = BezierSpline(control=pts,closed=True,degree=d)
-#    draw(B,color=c)
-for d,c in zip([3],[magenta,yellow,cyan]):
-    print B.coords
-exit()
-
-print pts.shape
-B = BezierSpline(coords=pts,closed=False)
-draw(B,color=blue)
-export({'B_open_coords':B})
-B = BezierSpline(control=pts,closed=False)
-draw(B,color=red)
-export({'B_open_control':B})
-
-B = BezierSpline(coords=pts,closed=True)
-draw(B,color=cyan)
-export({'B_closed_coords':B})
-B = BezierSpline(control=pts,closed=True)
-draw(B,color=magenta)
-export({'B_closed_control':B})
-
-
-exit()
-
-
-Q = QuadBezierSpline(pts[::2],control=pts[1::2])
-draw(Q)
-exit()
-
+pts = pts[:5]
 order = [ 2,3,4 ]
 weight = [0.,0.5,sqrt(0.5),1.,sqrt(2.),2,10]
 colors = [red,green,blue,cyan,magenta,yellow,black]
 o = 3
 knots = [0.,0.,0.,1.,1.,2.,2.,2.]
 #knots = None
+L = {}
 for w,c in zip(weight,colors):
     qc = Coords4(pts)
     qc[1::2].deNormalize(w)
     C = NurbsCurve(qc,knots=knots,order=o,closed=False)
     draw(C,color=c)
     drawThePoints(C,10,color=c)
-    
+    L["wt-%s" % w] = C
+
+export(L)
 
 zoomAll()
 exit()
@@ -330,7 +288,6 @@ exit()
 ##         continue
 ##     N[order] = NurbsActor(pts,closed=closed,order=order,color=color)
 ##     drawActor(N[order])
-
 for order,color in zip(range(2,5),[red,green,blue]):
     if order > len(pts):
         continue

@@ -52,7 +52,7 @@ class GeometryFile(object):
     Geometry classes can provide the facility 
     """
 
-    _version_ = '1.4'
+    _version_ = '1.5'
 
     def __init__(self,fil,mode=None,sep=' '):
         """Create the GeometryFile object."""
@@ -209,7 +209,7 @@ class GeometryFile(object):
         self.writeMesh(F,name=None,sep=None,objtype='TriSurface')
 
 
-    def writeCurve(self,F,name=None,sep=None,objtype=None):
+    def writeCurve(self,F,name=None,sep=None,objtype=None,extra=None):
         """Write a Curve to a pyFormex geometry file.
 
         This function writes any curve type to the geometry file.
@@ -223,7 +223,9 @@ class GeometryFile(object):
             sep = self.sep
         head = "# objtype='%s'; ncoords=%r; closed=%r; sep='%s'" % (F.__class__.__name__,F.coords.shape[0],F.closed,sep)
         if name:
-            head += "; name='%s'" % name 
+            head += "; name='%s'" % name
+        if extra:
+            head += extra
         self.fil.write(head+'\n')
         self.writeData(F.coords,sep)
 
@@ -241,15 +243,7 @@ class GeometryFile(object):
 
         This is equivalent to writeCurve(F,name,sep,objtype='BezierSpline')
         """
-        self.writeCurve(F,name=None,sep=None,objtype='BezierSpline')
-
-
-    def writeQuadBezierSpline(self,F,name=None,sep=None):
-        """Write a QuadBezierSpline to a pyFormex geometry file.
-
-        This is equivalent to writeCurve(F,name,sep,objtype='QuadBezierSpline')
-        """
-        self.writeCurve(F,name=None,sep=None,objtype='QuadBezierSpline')
+        self.writeCurve(F,name=None,sep=None,objtype='BezierSpline',extra="; degree=%s" % F.degree)
 
 
     def readHeader(self):
@@ -302,7 +296,12 @@ class GeometryFile(object):
 
             if not s.startswith('#'):  # not a header: skip
                 continue
-            
+
+
+            ###
+            ###  THIS WILL USE UNDEFINED VALUES FROM A PREVIOUS OBJECT
+            ###  THIS SHOULD THEREFORE BE CHANGED !!!!
+            ###
             try:
                 exec(s[1:].strip())
             except:
@@ -315,12 +314,17 @@ class GeometryFile(object):
                 obj = self.readFormex(nelems,nplex,props,eltype,sep)
             elif objtype in ['Mesh','TriSurface']:
                 obj = self.readMesh(ncoords,nelems,nplex,props,eltype,sep)
-            elif objtype in ['PolyLine','BezierSpline']:
+            elif objtype == 'PolyLine':
+                obj = self.readpolyLine(ncoords,closed,sep)
+            elif objtype == 'BezierSpline':
                 if 'nparts' in s:
                     # THis looks like a version 1.3 BezierSpline
                     obj = self.oldReadBezierSpline(ncoords,nparts,closed,sep)
                 else:
-                    obj = self.readCurve(ncoords,closed,sep,objtype)
+                    if not 'degree' in s:
+                        # compatibility with 1.4  BezierSpline records
+                        degree = 3
+                    obj = self.readBezierSpline(ncoords,closed,degree,sep)
             elif globals().has_key(objtype) and hasattr(globals()[objtype],'read_geom'):
                 obj = globals()[objtype].read_geom(self)
             else:
@@ -384,17 +388,30 @@ class GeometryFile(object):
         return M
  
 
-    def readCurve(self,ncoords,closed,sep,objtype):
+    def readPolyLine(self,ncoords,closed,sep):
         """Read a Curve from a pyFormex geometry file.
 
         The coordinate array for ncoords points is read from the file
         and a Curve of type `objtype` is returned.
         """
-        from plugins import curve
+        from plugins.curve import PolyLine
         ndim = 3
         coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
-        clas = getattr(curve,objtype)
-        return clas(control=coords,closed=closed)
+        return PolyLine(control=coords,closed=closed)
+ 
+
+    def readBezierSpline(self,ncoords,closed,degree,sep):
+        """Read a BezierSpline from a pyFormex geometry file.
+
+        The coordinate array for ncoords points is read from the file
+        and a BezierSpline of the given degree is returned.
+        """
+        from plugins.curve import BezierSpline
+        ndim = 3
+        coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
+        print coords
+        print coords.shape
+        return BezierSpline(control=coords,closed=closed,degree=degree)
 
 
     def oldReadBezierSpline(self,ncoords,nparts,closed,sep):

@@ -140,6 +140,7 @@ class Curve(Geometry):
         else:
             u = array(div).ravel()
             div = len(u)
+            
         parts = [ self.sub_points(u,j) for j in range(self.nparts) ]
 
         if not self.closed:
@@ -616,8 +617,11 @@ class BezierSpline(Curve):
                 nparts -= 1
 
             if control is None:
+
+                if degree == 1:
+                    control = coords[:nparts]
                 
-                if degree == 2:
+                elif degree == 2:
                     if closed:
                         P0 = 0.5 * (roll(coords,1,axis=0) + roll(coords,-1,axis=0))
                         P1 = 2*coords - P0
@@ -666,32 +670,31 @@ class BezierSpline(Curve):
                             p2[-1] = p1[-1]
                     control = concatenate([p1,p2],axis=1)
 
-        if control is None:
-            # This should be the case for degree = 1
-            control = coords
+            if control is not None and degree > 1:
+                try:
+                    control = asarray(control).reshape(nparts,degree-1,3)
+                    control = Coords(control)
+                    #print "COORDS",coords
+                    #print "CONTROL",control
+                except:
+                    print("coords array has shape %s" % str(coords.shape))
+                    print("control array has shape %s" % str(control.shape))
+                    raise ValueError,"Invalid control points for BezierSpline"
 
-        else:
-            try:
-                control = asarray(control).reshape(nparts,degree-1,3)
-                control = Coords(control)
-                print "COORDS",coords
-                print "CONTROL",control
-            except:
-                print("coords array has shape %s" % str(coords.shape))
-                print("control array has shape %s" % str(control.shape))
-                raise ValueError,"Invalid control points for BezierSpline"
+                # Join the coords and controls in a single array
+                control = Coords.concatenate([coords[:nparts,newaxis,:],control],axis=1).reshape(-1,3)
 
-            # Join the coords and controls in a single array
-            control = Coords.concatenate([coords[:nparts,newaxis,:],control],axis=1).reshape(-1,3)
-            # We now have a multiple of 3 coordinates, add the last:
-            if closed:
-                last = 0
-            else:
-                last = -1
-            control = Coords.concatenate([control,coords[last]])
+            if control is not None:
+                # We now have a multiple of degree coordinates, add the last:
+                if closed:
+                    last = 0
+                else:
+                    last = -1
+                control = Coords.concatenate([control,coords[last]])
 
 
-        print "Final coords shape = %s" % str(control.shape)
+        #print "Final coords shape = %s" % str(control.shape)
+        #print "nparts = %s" % nparts
 
         self.degree = degree
         self.coeffs = BezierSpline.coeffs[degree]
@@ -714,12 +717,17 @@ class BezierSpline(Curve):
         """Returns the points defining part j of the curve"""
         start = self.degree * j
         end = start + self.degree + 1
+        #print "PART %s: %s,%s" % (j,start,end)
         return self.coords[start:end]
 
 
     def sub_points(self,t,j):
+        #print "tj %s, %s" % (j,t)
         P = self.part(j)
+        #print "C",self.coeffs.shape
+        #print "P",P.shape
         C = self.coeffs * P
+        #print "C*P",C.shape
         U = [ ones_like(t), t ]
         for d in range(self.degree-1):
             U.append(U[-1] * t)
@@ -736,79 +744,20 @@ class BezierSpline(Curve):
 
 ##############################################################################
 #
-class QuadBezierSpline(Curve):
-    """A class representing a Quadratic Bezier spline curve."""
-    coeffs = matrix([[ 1., -2.,  1.],
-                     [-2.,  2.,  0.],
-                     [ 1.,  0.,  0.]]
-                    )
+class QuadBezierSpline(BezierSpline):
+    """A class representing a Quadratic Bezier spline curve.
 
-    def __init__(self,coords=None,control=None,closed=False):
-        """Create a quadratic spline curve through the given points.
+    This is a (deprecated) convenience class for BezierSpline with fixed
+    value of degree=2. The constructor takes the same parameters as
+    BezierSpline, except for degree.
+    """
 
-        """
-        coords = Coords(coords)
-        nparts = coords.shape[0]
-        if not closed:
-            nparts -= 1
-            
-        if control is None:
-            if nparts < 2:
-                control = 0.5*(coords[:-1] + coords[1:])
-            else:
-                if closed:
-                    P0 = 0.5 * (roll(coords,1,axis=0) + roll(coords,-1,axis=0))
-                    P1 = 2*coords - P0
-                    Q0 = 0.5*(roll(coords,1,axis=0) + P1)
-                    Q1 = 0.5*(roll(coords,-1,axis=0) + P1)
-                    Q = 0.5*(roll(Q0,-1,axis=0)+Q1)
-                    control = Q
-                else:
-                    P0 = 0.5 * (coords[:-2] + coords[2:])
-                    P1 = 2*coords[1:-1] - P0
-                    Q0 = 0.5*(coords[:-2] + P1)
-                    Q1 = 0.5*(coords[2:] + P1)
-                    Q = 0.5*(Q0[1:]+Q1[:-1])
-                    control = Coords.concatenate([Q0[:1],Q,Q1[-1:]],axis=0)
-
-        control = asarray(control).reshape(-1,3)
-        control = Coords(control)
-        if control.shape != (nparts,3):
-            print("coords array has shape %s" % str(coords.shape))
-            print("control array has shape %s" % str(control.shape))
-            raise ValueError,"Invalid control points for QuadBezierSpline"
-
-        # To enable easy transforms, we join the coords and controls
-        # in a single array
-        if not closed:
-            dummy = Coords([[0.,0.,0.]])
-            control = Coords.concatenate([control,dummy],axis=0)
-        coords = coords[:,newaxis,:]
-        control = control[:,newaxis,:]
-        self.coords = Coords.concatenate([coords,control],axis=1)
-        self.nparts = nparts
-        self.closed = closed
-
-
-    def pointsOn(self):
-        """Return the points on the curve""" 
-        return self.coords[:,0,:]
-
-
-    def pointsOff(self):
-        """Return the points off the curve (the control points)""" 
-        return self.coords[:self.nparts,1,:]
-
-
-    def sub_points(self,t,j):
-        j1 = (j+1) % self.coords.shape[0]
-        P = self.pointsOn()[[j,j1]]
-        D = self.pointsOff()[j]
-        P = concatenate([ P[0],D,P[1] ],axis=0).reshape(-1,3)
-        C = self.coeffs * P
-        U = column_stack([t**2., t, ones_like(t)])
-        X = dot(U,C)
-        return X
+    def __init__(self,**kargs):
+        """Create a natural spline through the given points."""
+        import warnings
+        warnings.warn("The use of the QuadBezierSpline class is deprecated and will be removed in future. Use the BezierSpline class with parameter `degree = 2` instead")
+        kargs['degree'] = 2
+        BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed)
 
 
 ##############################################################################
@@ -828,7 +777,7 @@ class CardinalSpline(BezierSpline):
     def __init__(self,coords,tension=0.0,closed=False):
         """Create a natural spline through the given points."""
         curl = (1.-tension)/3.
-        print "CURL=%s" % curl
+        #print "CURL=%s" % curl
         BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed)
 
 
