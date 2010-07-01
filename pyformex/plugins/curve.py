@@ -563,32 +563,50 @@ class BezierSpline(Curve):
         to the first to create a closed curve.
 
           """
-    coeffs = matrix([[-1.,  3., -3., 1.],
-                     [ 3., -6.,  3., 0.],
-                     [-3.,  3.,  0., 0.],
-                     [ 1.,  0.,  0., 0.]]
-                    )
+    coeffs = {
+        1: matrix([
+            [ 1.,  0.],
+            [-1.,  1.],
+            ]),
+        2: matrix([
+            [ 1.,  0.,  0.],
+            [-2.,  2.,  0.],
+            [ 1., -2.,  1.],
+            ]),
+        3: matrix([
+            [ 1.,  0.,  0., 0.],
+            [-3.,  3.,  0., 0.],
+            [ 3., -6.,  3., 0.],
+            [-1.,  3., -3., 1.],
+            ]),
+        }
 
-    def __init__(self,coords=None,deriv=None,curl=0.5,control=None,closed=False):
+    def __init__(self,coords=None,deriv=None,curl=0.5,control=None,closed=False,degree=3):
         """Create a cubic spline curve."""
+
+        if not degree > 0:
+            raise ValueError,"Degree of BezierSpline should be >= 0!"
+
+        if degree > 3:
+            raise ValueError,"Currently, the highest degree of BezierSpline cureves is limited to 3!"
 
         if coords is None:
             # All control points are given, in a single array
-            coords = Coords(control)
-            if len(coords.shape) != 2 or coords.shape[-1] != 3:
-                raise ValueError,"If no coords argument given, the control parameter should have shape (ncontrol,3), but got %s" % str(coords.shape)
+            control = Coords(control)
+            if len(control.shape) != 2 or control.shape[-1] != 3:
+                raise ValueError,"If no coords argument given, the control parameter should have shape (ncontrol,3), but got %s" % str(control.shape)
 
             if closed:
-                coords = Coords.concatenate([coords,coords[:1]])
+                control = Coords.concatenate([control,control[:1]])
                 
-            ncoords = coords.shape[0]
-            nextra = (ncoords-1) % 3
+            ncontrol = control.shape[0]
+            nextra = (ncontrol-1) % degree
             if nextra != 0:
-                nextra = 3 - nextra
-                coords = Coords.concatenate([coords,]+[coords[:1]]*nextra)
-                ncoords = coords.shape[0]
+                nextra = degree - nextra
+                control = Coords.concatenate([control,]+[control[:1]]*nextra)
+                ncontrol = control.shape[0]
             
-            nparts = (ncoords-1) // 3
+            nparts = (ncontrol-1) // degree
                 
         else:
             # Oncurve points are specified separately
@@ -598,88 +616,122 @@ class BezierSpline(Curve):
                 nparts -= 1
 
             if control is None:
-                P = PolyLine(coords,closed=closed)
-                ampl = P.lengths().reshape(-1,1)
-                if deriv is None:
-                    deriv = array([[nan,nan,nan]]*ncoords)
-                else:
-                    deriv = Coords(deriv)
-                    nderiv = deriv.shape[0]
-                    if nderiv < ncoords:
-                        if nderiv != 2:
-                            raise ValueError,"Either all or 2 directions expected (got %s)" % nderiv
-                        deriv = concatenate([
-                            deriv[:1],
-                            [[nan,nan,nan]]*(ncoords-2),
-                            deriv[-1:]])
+                
+                if degree == 2:
+                    if closed:
+                        P0 = 0.5 * (roll(coords,1,axis=0) + roll(coords,-1,axis=0))
+                        P1 = 2*coords - P0
+                        Q0 = 0.5*(roll(coords,1,axis=0) + P1)
+                        Q1 = 0.5*(roll(coords,-1,axis=0) + P1)
+                        Q = 0.5*(roll(Q0,-1,axis=0)+Q1)
+                        control = Q
+                    else:
+                        P0 = 0.5 * (coords[:-2] + coords[2:])
+                        P1 = 2*coords[1:-1] - P0
+                        Q0 = 0.5*(coords[:-2] + P1)
+                        Q1 = 0.5*(coords[2:] + P1)
+                        Q = 0.5*(Q0[1:]+Q1[:-1])
+                        control = Coords.concatenate([Q0[:1],Q,Q1[-1:]],axis=0)
 
-                undefined = isnan(deriv).any(axis=-1)
-                if undefined.any():
-                    deriv[undefined] = P.avgDirections()[undefined]
+                elif degree == 3:
+                    P = PolyLine(coords,closed=closed)
+                    ampl = P.lengths().reshape(-1,1)
+                    if deriv is None:
+                        deriv = array([[nan,nan,nan]]*ncoords)
+                    else:
+                        deriv = Coords(deriv)
+                        nderiv = deriv.shape[0]
+                        if nderiv < ncoords:
+                            if nderiv != 2:
+                                raise ValueError,"Either all or 2 directions expected (got %s)" % nderiv
+                            deriv = concatenate([
+                                deriv[:1],
+                                [[nan,nan,nan]]*(ncoords-2),
+                                deriv[-1:]])
 
-                if closed:
-                    p1 = coords + deriv*curl*ampl
-                    p2 = coords - deriv*curl*roll(ampl,1,axis=0)
-                    p2 = roll(p2,-1,axis=0)
-                else:
-                    p1 = coords[:-1] + deriv[:-1]*curl*ampl
-                    p2 = coords[1:] - deriv[1:]*curl*ampl
-                    if isnan(p1[0]).any():
-                        p1[0] = p2[0]
-                    if isnan(p2[-1]).any():
-                        p2[-1] = p1[-1]
-                control = concatenate([p1,p2],axis=1)
+                    undefined = isnan(deriv).any(axis=-1)
+                    if undefined.any():
+                        deriv[undefined] = P.avgDirections()[undefined]
 
-            control = asarray(control).reshape(-1,2,3)
-            control = Coords(control)
-            if control.shape != (nparts,2,3):
+                    if closed:
+                        p1 = coords + deriv*curl*ampl
+                        p2 = coords - deriv*curl*roll(ampl,1,axis=0)
+                        p2 = roll(p2,-1,axis=0)
+                    else:
+                        p1 = coords[:-1] + deriv[:-1]*curl*ampl
+                        p2 = coords[1:] - deriv[1:]*curl*ampl
+                        if isnan(p1[0]).any():
+                            p1[0] = p2[0]
+                        if isnan(p2[-1]).any():
+                            p2[-1] = p1[-1]
+                    control = concatenate([p1,p2],axis=1)
+
+        if control is None:
+            # This should be the case for degree = 1
+            control = coords
+
+        else:
+            try:
+                control = asarray(control).reshape(nparts,degree-1,3)
+                control = Coords(control)
+                print "COORDS",coords
+                print "CONTROL",control
+            except:
                 print("coords array has shape %s" % str(coords.shape))
                 print("control array has shape %s" % str(control.shape))
                 raise ValueError,"Invalid control points for BezierSpline"
 
-            # To enable easy transforms, we join the coords and controls
-            # in a single array
-            if not closed:
-                dummy = Coords([[[0.,0.,0.],[0.,0.,0.]]])
-                control = Coords.concatenate([control,dummy],axis=0)
-            coords = Coords.concatenate([coords[:,newaxis,:],control],axis=1)
-            coords = coords.reshape(-1,3)
-            # We now have a multiple of 3 coordinates
+            # Join the coords and controls in a single array
+            control = Coords.concatenate([coords[:nparts,newaxis,:],control],axis=1).reshape(-1,3)
+            # We now have a multiple of 3 coordinates, add the last:
             if closed:
-                coords = Coords.concatenate([coords,coords[:1]])
+                last = 0
             else:
-                coords = coords[:-2]
+                last = -1
+            control = Coords.concatenate([control,coords[last]])
 
 
-        print "Final coords shape = %s" % str(coords.shape)
-        self.coords = coords
+        print "Final coords shape = %s" % str(control.shape)
+
+        self.degree = degree
+        self.coeffs = BezierSpline.coeffs[degree]
+        self.coords = control
         self.nparts = nparts
         self.closed = closed
 
 
     def pointsOn(self):
         """Return the points on the curve""" 
-        return self.coords[::3]
+        return self.coords[::self.degree]
 
 
     def pointsOff(self):
         """Return the points off the curve (the control points)""" 
-        return stack([self.coords[i::3] for i in [1,2]],axis=1)
+        return stack([self.coords[i::self.degree] for i in range(1,self.degree-1)],axis=1)
+
+
+    def part(self,j):
+        """Returns the points defining part j of the curve"""
+        start = self.degree * j
+        end = start + self.degree + 1
+        return self.coords[start:end]
 
 
     def sub_points(self,t,j):
-        P = self.coords[3*j:3*j+4]
+        P = self.part(j)
         C = self.coeffs * P
-        U = column_stack([t**3., t**2., t, ones_like(t)])
+        U = [ ones_like(t), t ]
+        for d in range(self.degree-1):
+            U.append(U[-1] * t)
+        U = column_stack(U)
         X = dot(U,C)
         return X
 
 
     def reverse(self):
         """Return the same curve with the parameter direction reversed."""
-        coords = reverseAxis(self.pointsOn(),axis=0)
-        control = reverseAxis(self.pointsOff()[:self.nparts],axis=0)
-        return BezierSpline(coords,control=control,closed=self.closed)
+        control = reverseAxis(self.coords,axis=0)
+        return BezierSpline(control=control,closed=self.closed,degree=self.degree)
 
 
 ##############################################################################

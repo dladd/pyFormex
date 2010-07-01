@@ -256,14 +256,35 @@ pts = Coords([
     [1.,1.,0.],
     [0.,1.,0.],
     [-1.,1.,0.],
-#    [-1.,0.,0.],
+    [-1.,0.,0.],
+    [-1.,-1.,0.],
+    [0.,-1.,0.],
+    [1.,-1.,0.],
+    [1.,0.,0.],
     ])
 
 draw(pts)
 drawNumbers(pts)
-P = PolyLine(pts)
-draw(P)
-export({'PolyLine':P})
+#P = PolyLine(pts)
+#draw(P)
+#export({'PolyLine':P})
+closed = False
+
+B = BezierSpline(coords=pts,closed=closed,degree=3)
+draw(B,color=red)
+
+B = BezierSpline(coords=pts,closed=closed,degree=2)
+draw(B,color=blue)
+
+B = BezierSpline(coords=pts,closed=closed,degree=1)
+draw(B,color=green)
+exit()
+#for d,c in zip([1,2,3],[red,green,blue]):
+#    B = BezierSpline(control=pts,closed=True,degree=d)
+#    draw(B,color=c)
+for d,c in zip([3],[magenta,yellow,cyan]):
+    print B.coords
+exit()
 
 print pts.shape
 B = BezierSpline(coords=pts,closed=False)
