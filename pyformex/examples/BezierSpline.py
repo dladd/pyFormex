@@ -59,6 +59,7 @@ pts = Coords([
     [1.,0.,0.],
     ])
 
+
 # Ask the user how many points he wants to use
 res = askItems([I('npts',5,text='How many points to use (2..%s)' % len(pts))],legacy=False)
 if not res:
@@ -79,11 +80,13 @@ for closed in [False,True]:
         print "DEGREE %s, %s" % (d,closed)
         B = BezierSpline(coords=pts,closed=closed,degree=d)
         draw(B,color=c)
+        C = BezierSpline(coords=pts.toCylindrical().scale(pi/180.,1),closed=closed,degree=d)
+        draw(C.approx().scale(180./pi,1).cylindrical(),color=c,linestipple=(16,2))
         collection["BezierSpline-degree:%s-closed:%s" % (d,closed)] = B
     # Translate the points to the right
     pts = pts.trl(0,2.5)#[:-1]
 
 zoomAll()
 export(collection)
-
+        
 # End

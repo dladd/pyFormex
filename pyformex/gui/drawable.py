@@ -603,6 +603,20 @@ def saneLineWidth(linewidth):
         linewidth = float(linewidth)
     return linewidth
 
+
+def saneLineStipple(stipple):
+    """Return a sane line stipple tuple.
+
+    A line stipple tuple is a tuple (factor,pattern) where
+    pattern defines which pixels are on or off (maximum 16 bits),
+    factor is a multiplier for each bit.   
+    """
+    try:
+        stipple = map(int,stipple)
+    except:
+        stipple = None
+    return stipple
+    
    
 def saneColor(color=None):
     """Return a sane color array derived from the input color.
@@ -792,6 +806,10 @@ class Drawable(object):
     def setLineWidth(self,linewidth):
         """Set the linewidth of the Actor."""
         self.linewidth = saneLineWidth(linewidth)
+    
+    def setLineStipple(self,linestipple):
+        """Set the linewidth of the Actor."""
+        self.linestipple = saneLineStipple(linestipple)
 
     def setColor(self,color=None,colormap=None,ncolors=1):
         """Set the color of the Drawable."""

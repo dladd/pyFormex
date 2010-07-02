@@ -377,7 +377,7 @@ class GeomActor(Actor):
     """
     mark = False
 
-    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,marksize=None,**kargs):
+    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,linestipple=None,marksize=None,**kargs):
         """Create a geometry actor.
 
         The geometry is either in Formex model: a coordinate block with
@@ -432,6 +432,7 @@ class GeomActor(Actor):
             
         self.mode = mode
         self.setLineWidth(linewidth)
+        self.setLineStipple(linestipple)
         self.setColor(color,colormap)
         self.setBkColor(bkcolor,bkcolormap)
         self.setAlpha(alpha)
@@ -504,6 +505,7 @@ class GeomActor(Actor):
         'flatwire'). In these cases, two drawing operations are done:
         one with mode='wireframe' and color=black, and one with mode=mode[:-4].
         """
+        from canvas import glLineStipple
         if canvas is None:
             canvas = pf.canvas
         if mode is None:
@@ -565,6 +567,9 @@ class GeomActor(Actor):
 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
+
+        if self.linestipple is not None:
+            glLineStipple(*self.linestipple)
 
         if mode.startswith('smooth'):
             if hasattr(self,'specular'):

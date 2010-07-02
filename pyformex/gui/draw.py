@@ -306,7 +306,7 @@ message = printMessage
 def draw(F,
          view=None,bbox=None,
          color='prop',colormap=None,bkcolor=None,bkcolormap=None,alpha=None,
-         mode=None,linewidth=None,shrink=None,marksize=None,
+         mode=None,linewidth=None,linestipple=None,shrink=None,marksize=None,
          wait=True,clear=None,allviews=False,
          highlight=False,flat=False):
     """Draw object(s) with specified settings and direct camera to it.
@@ -399,7 +399,7 @@ def draw(F,
                 #print "DRAWING WITH BBOX %s, VIEW %s" % (bbox,view)
             actor.append(draw(Fi,view,bbox,
                               color,colormap,bkcolor,bkcolormap,alpha,
-                              mode,linewidth,shrink,marksize,
+                              mode,linewidth,linestipple,shrink,marksize,
                               wait=nowait,clear=clear,allviews=allviews,
                               highlight=highlight,flat=flat))
             if Fi is F[0]:
@@ -468,7 +468,7 @@ def draw(F,
         ## if isinstance(F,tools.Plane):
         ##     return drawPlane(F.point(),F.normal(),F.size())
 
-        actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+        actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize)
 
         if actor is None:
             return None
@@ -890,6 +890,10 @@ def set_light_value(light,key,val):
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
     pf.canvas.setLineWidth(wid)
+
+def linestipple(factor,pattern):
+    """Set the linewidth to be used in line drawings."""
+    pf.canvas.setLineStipple(factor,pattern)
 
 def pointsize(siz):
     """Set the size to be used in point drawings."""

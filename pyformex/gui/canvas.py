@@ -73,6 +73,22 @@ def glLineSmooth(onoff):
         GL.glDisable(GL.GL_LINE_SMOOTH)
 
 
+def glLineStipple(factor,pattern):
+    """Set the line stipple pattern.
+
+    When drawing lines, OpenGl can use a stipple pattern. The stipple
+    is defined by two values: a pattern (on/off) of maximum 16 bits,
+    used on the pixel level, and a multiplier factor for each bit.
+
+    If factor <= 0, the stippling is disabled.
+    """
+    if factor > 0:
+        GL.glLineStipple(factor,pattern)
+        GL.glEnable(GL.GL_LINE_STIPPLE)    
+    else:
+        GL.glDisable(GL.GL_LINE_STIPPLE)
+
+
 def glSmooth():
     """Enable smooth shading"""
     GL.glShadeModel(GL.GL_SMOOTH)
@@ -250,9 +266,11 @@ class CanvasSettings(Dict):
                 if v is not None:
                     v =  map(saneColor,v)
             elif k in ['linewidth', 'pointsize', 'marksize']:
-                ok[k] = float(v)
+                v = float(v)
+            elif k == 'linestipple':
+                v = map(int,v)
             elif k == 'transparency':
-                ok[k] = max(min(float(v),1.0),0.0)
+                v = max(min(float(v),1.0),0.0)
             elif k == 'marktype':
                 pass
             else:
@@ -473,6 +491,12 @@ class Canvas(object):
     def setLineWidth(self,lw):
         """Set the linewidth for line rendering."""
         self.settings.linewidth = float(lw)
+       
+
+    def setLineStipple(self,repeat,pattern):
+        """Set the linestipple for line rendering."""
+        self.settings.update({'linestipple':(repeat,pattern)})
+        
 
     def setPointSize(self,sz):
         """Set the size for point drawing."""
@@ -646,6 +670,7 @@ class Canvas(object):
         """Activate the canvas settings in the GL machine."""
         GL.glColor3fv(self.settings.fgcolor)
         GL.glLineWidth(self.settings.linewidth)
+        glLineStipple(*self.settings.linestipple)
         GL.glPointSize(self.settings.pointsize)
         if self.rendermode.startswith('smooth'):
             self.glLightSpec()
