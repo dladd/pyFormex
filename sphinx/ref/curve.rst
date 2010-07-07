@@ -42,8 +42,6 @@
       .. automethod:: nelems()
       .. automethod:: toFormex()
       .. automethod:: toMesh()
-      .. automethod:: write_geom(geomfile,name=None,sep=None)
-      .. automethod:: read_geom(clas,geomfile,ncoords,closed,sep)
       .. automethod:: sub_points(t,j)
       .. automethod:: sub_points2(t,j)
       .. automethod:: vectors()
@@ -68,8 +66,7 @@
 
       .. automethod:: pointsOn()
       .. automethod:: pointsOff()
-      .. automethod:: write_geom(geomfile,name=None,sep=None)
-      .. automethod:: read_geom(clas,geomfile,ncoords,nparts,closed,sep)
+      .. automethod:: part(j)
       .. automethod:: sub_points(t,j)
       .. automethod:: reverse()
 
@@ -78,9 +75,6 @@
 
       QuadBezierSpline objects have the following methods:
 
-      .. automethod:: pointsOn()
-      .. automethod:: pointsOff()
-      .. automethod:: sub_points(t,j)
 
    .. autoclass:: CardinalSpline
 

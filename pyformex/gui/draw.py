@@ -137,7 +137,7 @@ def showFile(filename,mono=False):
 _dialog_widget = None
 _dialog_result = None
 
-def askItems(items,caption=None,timeout=None,legacy=True,**kargs):
+def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -157,13 +157,19 @@ def askItems(items,caption=None,timeout=None,legacy=True,**kargs):
     global _dialog_widget,_dialog_result
     import warnings
     warnings.warn("""
-The default operation of the askItems function will change in version 0.9!
-It will then use the new InputDialog, meaning that the input items have
-to be dicts.
-Though the old InputDialog will still be available for some time when using the
-'legacy = True' argument, we advice you to switch to the newer InputItem
+The default operation of the askItems has changed!!!!
+It will now by default try to convert the items to use the new InputDialog.
+The old InputDialog will still be available for some time by using the
+'legacy = True' argument, but we advice you to switch to the newer InputItem
 format as soon as possible.
+Using 'legacy = False' will force the use of the new format.
+The default 'legacy=None' tries to convert old data when they are found and
+when they are convertible.
 """)
+    if legacy is None:
+        items = widgets.convertInputItemList(items)
+        legacy = False
+
     if legacy:
         w = widgets.OldInputDialog(items,caption,**kargs)
     else:

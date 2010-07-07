@@ -31,7 +31,7 @@ Qt widgets directly.
 
 import os,types
 from PyQt4 import QtCore, QtGui
-import pyformex as GD
+import pyformex as pf
 import colors
 import odict
 import imageViewer
@@ -78,7 +78,7 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
     try:
         timeout = float(timeout)
         if timeout >= 0.0:
-            GD.debug("ADDING TIMEOUT %s,%s" % (timeout,timeoutfunc))
+            pf.debug("ADDING TIMEOUT %s,%s" % (timeout,timeoutfunc))
             timer = QtCore.QTimer()
             if type(timeoutfunc) is str:
                 timer.connect(timer,QtCore.SIGNAL("timeout()"),widget,QtCore.SLOT(timeoutfunc))
@@ -88,7 +88,7 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
             timeout = int(1000*timeout)
             timer.start(timeout)
             widget.timer = timer  # make sure this timer stays alive
-            GD.debug("TIMER STARTED")
+            pf.debug("TIMER STARTED")
     except:
         raise ValueError,"Could not start the timeout timer"
 
@@ -150,7 +150,7 @@ class FileSelection(QtGui.QFileDialog):
 ##                 urls.append(QtCore.QUrl.fromLocalFile(f))
 ##             self.setSidebarUrls(urls)
 ##         for p in self.sidebarUrls():
-##             GD.message(p.toString())
+##             pf.message(p.toString())
 
     timeout = "accept()"
 
@@ -182,7 +182,7 @@ class ProjectSelection(FileSelection):
     def __init__(self,path=None,pattern=None,exist=False,compression=4,ignore_signature=True):
         """Create the dialog."""
         if path is None:
-            path = GD.cfg['workdir']
+            path = pf.cfg['workdir']
         if pattern is None:
             pattern = map(utils.fileDescription, ['pyf'])  
         FileSelection.__init__(self,path,pattern,exist)
@@ -242,7 +242,7 @@ class SaveImageDialog(FileSelection):
     def __init__(self,path=None,pattern=None,exist=False,multi=False):
         """Create the dialog."""
         if path is None:
-            path = GD.cfg['workdir']
+            path = pf.cfg['workdir']
         if pattern is None:
             pattern = map(utils.fileDescription, ['img','icon','all'])  
         FileSelection.__init__(self,path,pattern,exist)
@@ -258,7 +258,7 @@ class SaveImageDialog(FileSelection):
         self.roo = QtGui.QCheckBox("Crop Root")
         self.bor = QtGui.QCheckBox("Add Border")
         self.mul = QtGui.QCheckBox("Multi mode")
-        self.hot = QtGui.QCheckBox("Activate '%s' hotkey" % GD.cfg['keys/save'])
+        self.hot = QtGui.QCheckBox("Activate '%s' hotkey" % pf.cfg['keys/save'])
         self.aut = QtGui.QCheckBox('Autosave mode')
         self.mul.setChecked(multi)
         self.hot.setChecked(multi)
@@ -1103,7 +1103,7 @@ class InputFont(InputItem):
         """Creates a new font input field."""
         InputItem.__init__(self,name,*args,**kargs)
         if value is None:
-            value = GD.app.font().toString()
+            value = pf.app.font().toString()
         self.input = QtGui.QPushButton(value)
         self.setValue(value)
         self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setFont)
@@ -1114,7 +1114,7 @@ class InputFont(InputItem):
         font = selectFont()
         if font:
             self.setValue(font.toString())
-            GD.GUI.setFont(font)
+            pf.GUI.setFont(font)
     
 
 class InputWidget(InputItem):
@@ -1257,6 +1257,40 @@ def compatInputItem(name,value,itemtype=None,kargs={}):
     item['value'] = value
     item['itemtype'] = itemtype
     return item
+   
+
+def convertInputItemList(items):
+    """Convert a list of InputItems from old to new format.
+
+    In the old format, data for InputItems could be lists or tuples or
+    dictionaries, and there were even differently interpreted lists or tuples.
+    In the new format, all InputItem data are dictionaries.
+
+    This function helps the transition to the new format, by doing its best
+    to convert lists of data in old format to the new format.
+    For most simple old inputdata, calling this function will suffice.
+    However, this function does not guarantee full and correct conversion
+    of all old format. Users are therfore encouraged to restructure their
+    data and either write them as dictionaries per item, or use
+    the `simpleInputItem` call to create the dictionary for each item.
+
+    The conversion does the following:
+    - if the item data is a list or a tuple, it is converted to a new format
+      dictionary by calling compatInputItem function with the
+    Anything else will currently raise a ValueError.
+    """
+    def convert_item(item):
+        if type(item) in [list,tuple]:
+            return compatInputItem(*item)
+        else:
+            raise ValueError,"Converting input items of type %s is not yet implemented"
+
+    if isinstance(items[0],dict):
+        # Looks like new style input data
+        return items
+    pf.debug("Converting old style input data to new style")
+    return map(convert_item,items)
+    
 
 
 class NewInputDialog(QtGui.QDialog):
@@ -1314,7 +1348,7 @@ class NewInputDialog(QtGui.QDialog):
         """Create a dialog asking the user for the value of items.
         """
         if parent is None:
-            parent = GD.GUI
+            parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
         if flags is not None:
             self.setWindowFlags(flags)
@@ -1353,7 +1387,7 @@ class NewInputDialog(QtGui.QDialog):
             self.scroll = QtGui.QScrollArea(self)
             self.scroll.setWidget(self.child)
             self.scroll.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
-            self.scroll.resize(GD.GUI.width()/2,GD.GUI.height())
+            self.scroll.resize(pf.GUI.width()/2,pf.GUI.height())
         else:
             self.setLayout(self.form)
         self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
@@ -1490,7 +1524,7 @@ or use the functions widgets.tabInputItem or widgets.groupInputItem
 
     def timeout(self):
         """Hide the dialog and set the result code to TIMEOUT"""
-        GD.debug("TIMEOUT")
+        pf.debug("TIMEOUT")
         self.acceptData(TIMEOUT)
 
 
@@ -1579,7 +1613,7 @@ or use the functions widgets.tabInputItem or widgets.groupInputItem
         self.exec_()
         self.activateWindow()
         self.raise_()
-        GD.app.processEvents()
+        pf.app.processEvents()
         self._pos = self.saveGeometry()
         return self.results
 
@@ -1804,7 +1838,7 @@ class OldInputDialog(QtGui.QDialog):
           with 'red' as the initial choice.
         """
         if parent is None:
-            parent = GD.GUI
+            parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
         if flags is not None:
             self.setWindowFlags(flags)
@@ -1856,7 +1890,7 @@ class OldInputDialog(QtGui.QDialog):
             self.scroll = QtGui.QScrollArea(self)
             self.scroll.setWidget(self.child)
             self.scroll.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
-            self.scroll.resize(GD.GUI.width()/2,GD.GUI.height())
+            self.scroll.resize(pf.GUI.width()/2,pf.GUI.height())
         else:
             self.setLayout(form)
         self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
@@ -1890,7 +1924,7 @@ class OldInputDialog(QtGui.QDialog):
 
     def timeout(self):
         """Hide the dialog and set the result code to TIMEOUT"""
-        GD.debug("TIMEOUT")
+        pf.debug("TIMEOUT")
         self.acceptData(TIMEOUT)
 
 
@@ -1927,7 +1961,7 @@ class OldInputDialog(QtGui.QDialog):
         results without having to raise the accepted() signal (which
         would close the dialog).
         """
-        #GD.debug("ACCEPTING DATA WITH RESULT %s"%result)
+        #pf.debug("ACCEPTING DATA WITH RESULT %s"%result)
         self.results = odict.ODict()
         self.results.update([ (fld.name(),fld.value()) for fld in self.fields ])
         ## if self.report_pos:
@@ -1980,7 +2014,7 @@ class OldInputDialog(QtGui.QDialog):
         self.exec_()
         self.activateWindow()
         self.raise_()
-        GD.app.processEvents()
+        pf.app.processEvents()
         self._pos = self.saveGeometry()
         return self.results
 
@@ -2203,7 +2237,7 @@ class Dialog(QtGui.QDialog):
 
     - `widgets`: a list of widgets to include in the dialog
     - `title`: the window title for the dialog
-    - `parent`: the parent widget. If None, it is set to GD.GUI.
+    - `parent`: the parent widget. If None, it is set to pf.GUI.
     - `actions`: the actions to include in the bottom button box. By default,
       an 'OK' button is displayed to close the dialog. Can be set to None
       to avoid creation of a button box.
@@ -2213,7 +2247,7 @@ class Dialog(QtGui.QDialog):
     def __init__(self,widgets,title=None,parent=None,actions=[('OK',)],default='OK'):
         """Create the Dialog"""
         if parent is None:
-            parent = GD.GUI
+            parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
         if title is None:
             title = 'pyFormex Dialog'
@@ -2325,8 +2359,8 @@ def updateText(widget,text,format=''):
         try:
             text = utils.rst2html(text)
         except:
-            GD.message("Could not convert reStrucuturedText to html. Displaying as plain text.")
-            if GD.options.debug:
+            pf.message("Could not convert reStrucuturedText to html. Displaying as plain text.")
+            if pf.options.debug:
                 raise
             
         format = ''
@@ -2373,7 +2407,7 @@ class MessageBox(QtGui.QMessageBox):
     """
     def __init__(self,text,format='',level='info',actions=['OK'],default=None,timeout=None,modal=None,parent=None):
         if parent is None:
-            parent = GD.GUI
+            parent = pf.GUI
         QtGui.QMessageBox.__init__(self,parent)
         if modal is not None:
             self.setModal(modal)
@@ -2432,7 +2466,7 @@ class TextBox(QtGui.QDialog):
     """
     def __init__(self,text,format=None,actions=['OK',None],modal=None,parent=None,caption=None,mono=False,timeout=None,flags=None):
         if parent is None:
-            parent = GD.GUI
+            parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
         if flags is not None:
             self.setWindowFlags(flags)

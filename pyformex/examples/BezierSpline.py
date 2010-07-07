@@ -61,7 +61,7 @@ pts = Coords([
 
 
 # Ask the user how many points he wants to use
-res = askItems([I('npts',5,text='How many points to use (2..%s)' % len(pts))],legacy=False)
+res = askItems([I('npts',5,text='How many points to use (2..%s)' % len(pts))])
 if not res:
     exit()
 
