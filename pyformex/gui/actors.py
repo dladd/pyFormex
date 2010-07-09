@@ -575,7 +575,7 @@ class GeomActor(Actor):
             if hasattr(self,'specular'):
                 fill_mode = GL.GL_FRONT
                 import colors
-                if color:
+                if color is not None:
                     spec = color * self.specular# *  pf.canvas.specular
                     spec = append(spec,1.)
                 else:
