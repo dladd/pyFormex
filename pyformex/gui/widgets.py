@@ -564,11 +564,26 @@ class InputItem(QtGui.QHBoxLayout):
 
         if 'tooltip' in kargs:
             self.label.setToolTip(kargs['tooltip'])
+        try:
+            self.input.setToolTip(kargs['tooltip'])
+        except:
+            pass
 
         if 'buttons' in kargs and 'parent' in kargs:
             self.buttons = dialogButtons(kargs['parent'],kargs['buttons'])
             self.addLayout(self.buttons)
             
+
+    def setTooltip(self,**kargs):
+        """Set the tooltip for this input field.
+
+        This method should be called by the derived classes AFTER they
+        have constructed the input field.
+        """
+        try:
+            self.input.setToolTip(kargs['tooltip'])
+        except:
+            pass
 
     def name(self):
         """Return the name of the InputItem."""
@@ -602,9 +617,9 @@ class InputInfo(InputItem):
     """
     def __init__(self,name,value,*args,**kargs):
         """Creates the input item."""
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
         self.input.setReadOnly(True)
+        InputItem.__init__(self,name,*args,**kargs)
         self._value_ = value
         self.insertWidget(1,self.input)
 
@@ -625,8 +640,8 @@ class InputString(InputItem):
     """
     def __init__(self,name,value,max=None,*args,**kargs):
         """Creates the input item."""
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
+        InputItem.__init__(self,name,*args,**kargs)
         if max>0:
             self.input.setMaxLength(max)
         self._is_string_ = type(value) == str
@@ -656,9 +671,9 @@ class InputText(InputItem):
     """
     def __init__(self,name,value,*args,**kargs):
         """Creates the input item."""
-        InputItem.__init__(self,name,*args,**kargs)
         self._is_string_ = type(value) == str
         self.input =  QtGui.QTextEdit()
+        InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
         self.insertWidget(1,self.input)
 
@@ -696,8 +711,8 @@ class InputBool(InputItem):
         else:
             text = str(name)
         kargs['text'] = '' # Force no label
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QCheckBox(text)
+        InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
         self.insertWidget(1,self.input)
 
@@ -744,8 +759,8 @@ class InputCombo(InputItem):
         elif default not in choices:
             choices[0:0] = [ default ]
         self._choices_ = [ str(s) for s in choices ]
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QComboBox()
+        InputItem.__init__(self,name,*args,**kargs)
         self.input.addItems(self._choices_)
         if callable(onselect):
             self.connect(self.input,QtCore.SIGNAL("currentIndexChanged(const QString &)"),onselect)
@@ -784,8 +799,8 @@ class InputRadio(InputItem):
             default = choices[0]
         elif default not in choices:
             choices[0:0] = [ default ]
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QGroupBox()
+        InputItem.__init__(self,name,*args,**kargs)
         if direction == 'v':
             self.hbox = QtGui.QVBoxLayout()
             self.hbox.setContentsMargins(0,10,0,10)
@@ -839,8 +854,8 @@ class InputPush(InputItem):
             default = choices[0]
         elif default not in choices:
             choices[0:0] = [ default ]
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QGroupBox()
+        InputItem.__init__(self,name,*args,**kargs)
         self.input.setFlat(True)
         if direction == 'v':
             self.hbox = QtGui.QVBoxLayout()
@@ -895,8 +910,8 @@ class InputInteger(InputItem):
     
     def __init__(self,name,value,*args,**kargs):
         """Creates a new integer input field with a label in front."""
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
+        InputItem.__init__(self,name,*args,**kargs)
         self.validator = QtGui.QIntValidator(self)
         if kargs.has_key('min'):
             self.validator.setBottom(int(kargs['min']))
@@ -925,8 +940,8 @@ class InputFloat(InputItem):
     
     def __init__(self,name,value,*args,**kargs):
         """Creates a new float input field with a label in front."""
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
+        InputItem.__init__(self,name,*args,**kargs)
         self.validator = QtGui.QDoubleValidator(self)
         if kargs.has_key('min'):
             self.validator.setBottom(float(kargs['min']))
@@ -957,7 +972,6 @@ class InputFloatTable(InputItem):
     
     def __init__(self,name,value,*args,**kargs):
         """Creates a new float table input field."""
-        InputItem.__init__(self,name,*args,**kargs)
         if value is None:
             ncols = kargs.get('ncols',1)
             nrows = kargs.get('nrows',1)
@@ -969,6 +983,7 @@ class InputFloatTable(InputItem):
         rhead = kargs.get('rhead',None)
 
         self.input = ArrayTable(value,rhead=rhead,chead=chead)
+        InputItem.__init__(self,name,*args,**kargs)
         self.insertWidget(1,self.input)
 
     def show(self):
@@ -1076,9 +1091,9 @@ class InputColor(InputItem):
         Clicking on the button opens a color dialog, and the returned
         value is set in the button.
         """
-        InputItem.__init__(self,name,*args,**kargs)
         color = colors.colorName(value)
         self.input = QtGui.QPushButton(color)
+        InputItem.__init__(self,name,*args,**kargs)
         self.setValue(color)
         self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setColor)
         self.insertWidget(1,self.input)
@@ -1101,10 +1116,10 @@ class InputFont(InputItem):
     """An input item to select a font."""
     def __init__(self,name,value,*args,**kargs):
         """Creates a new font input field."""
-        InputItem.__init__(self,name,*args,**kargs)
         if value is None:
             value = pf.app.font().toString()
         self.input = QtGui.QPushButton(value)
+        InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
         self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setFont)
         self.insertWidget(1,self.input)
@@ -1136,8 +1151,8 @@ class InputWidget(InputItem):
         """Creates a new InputWidget."""
         
         kargs['text'] = '' # Force no label
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = value
+        InputItem.__init__(self,name,*args,**kargs)
         self.insertWidget(1,self.input)
 
     def text(self):
@@ -1164,8 +1179,8 @@ class InputGroup(InputItem):
             default = choices[0]
         elif default not in choices:
             choices[0:0] = [ default ]
-        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QGroupBox()
+        InputItem.__init__(self,name,*args,**kargs)
         if direction == 'v':
             self.hbox = QtGui.QVBoxLayout()
             self.hbox.setContentsMargins(0,10,0,10)
@@ -1338,13 +1353,18 @@ class NewInputDialog(QtGui.QDialog):
     - default: the default action
     - parent: the parent widget (by default, this is the pyFormex main window)
     - autoprefix: if True, the names of items inside tabs and group boxes will
-      get prefixed with the tab and group names, separated with a '/'. 
+      get prefixed with the tab and group names, separated with a '/'.
+    - flat: if True, the results are returned in a single (flat) dictionary,
+      with keys being the specified or autoprefixed ones. If False, the results
+      will be structured: the value of a tab or a group is a dictionary with
+      the results of its fields. The default value is equal to the value of
+      autoprefix.
     - flags:
     - modal:
           
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,modal=None):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,flat=None,modal=None):
         """Create a dialog asking the user for the value of items.
         """
         if parent is None:
@@ -1365,7 +1385,11 @@ class NewInputDialog(QtGui.QDialog):
         self.autoname = utils.NameSequence('input-')
         self.prefix = prefix
         self.autoprefix = autoprefix
-
+        if flat is None:
+            self.flat = self.autoprefix
+        else:
+            self.flat = flat
+            
         # create the form with the input fields
         self.tab = None
         self.form = QtGui.QVBoxLayout()

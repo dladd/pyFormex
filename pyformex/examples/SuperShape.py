@@ -247,7 +247,7 @@ def openSuperShapeDialogs():
     actions = [('Close',close),('Reset',reset),('Replay',play),('Save',save),('Show Grid',show_grid),('Show',show_shape)]
 
     # The dialog
-    dialog = InputDialog(grid_items+items,caption='SuperShape parameters',actions=actions,default='Show')
+    dialog = OldInputDialog(grid_items+items,caption='SuperShape parameters',actions=actions,default='Show')
 
     dialog.timeout = dialog_timeout
 

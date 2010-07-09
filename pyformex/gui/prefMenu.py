@@ -133,10 +133,10 @@ def settings():
         store=pf.cfg,
         items=[
             T('General',[
-                I('syspath'),
-                I('editor'),
-                I('viewer'),
-                I('browser'),
+                I('syspath',tooltip="If you need to import modules from a non-standard path, you can supply additional paths to search here."),
+                I('editor',tooltip="The command to be used to edit a script file. The command will be executed with the path to the script file as argument."),
+                I('viewer',tooltip="The command to be used to view an HTML file. The command will be executed with the path to the HTML file as argument."),
+                I('browser',tooltip="The command to be used to browse the internet. The command will be executed with an URL as argument."),
                 I('help/docs'),
                 I('autorun',text='Startup script',tooltip='This script will automatically be run at pyFormex startup'),
                 I('scriptdirs',text='Script Paths',tooltip='pyFormex will look for scripts in these directories',buttons=[('Edit',changeScriptDirs)]),
@@ -304,7 +304,7 @@ def setLighting():
     choices = pf.canvas.light_model.keys()
     # DO NOT ALLOW THE LIGHT MODEL TO BE CHANGED
     choices = [ 'ambient and diffuse' ]
-    items = [ {'name':'lightmodel','value':pf.canvas.lightmodel,'choices':choices}, ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
+    items = [ {'name':'lightmodel','value':pf.canvas.lightmodel,'choices':choices,'tooltip':"""The light model defines which light components are set by the color setting functions. The default light model is 'ambient and diffuse'. The other modes are experimentally. Use them only if you know what you are doing."""}, ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
     #print items
 
     dia = None
@@ -330,18 +330,26 @@ def setLighting():
     def acceptAndSave():
         accept(save=True)
 
-    dia = widgets.NewInputDialog(
-        caption='pyFormex Settings',
-        store=pf.cfg,
-        items=items,
-        prefix='render/',
-        autoprefix=True,
-        actions=[
-            ('Close',close),
-            ('Accept and Save',acceptAndSave),
-            ('Apply',accept),
-            ]
-        )
+    def addLight():
+        accept(save=False)
+        dia.close()
+        
+    def createDialog():  
+        dia = widgets.NewInputDialog(
+            caption='pyFormex Settings',
+            store=pf.cfg,
+            items=items,
+            prefix='render/',
+            autoprefix=True,
+            actions=[
+                ('Close',close),
+                ('Accept and Save',acceptAndSave),
+                ('Apply',accept),
+                ]
+            )
+        return dia
+
+    dia = createDialog()
     dia.show()
     #if res:
     #    updateSettings({tgt:res})

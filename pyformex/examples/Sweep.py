@@ -207,7 +207,7 @@ def timeOut():
 saved_data = GD.PF.get('Sweep_data',{})
 widgets.updateDialogItems(input_data,GD.PF.get('Sweep_data',{}))
 # Create the modeless dialog widget
-dialog = widgets.InputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
+dialog = widgets.OldInputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
 # The examples style requires a timeout action
 dialog.timeout = timeOut
 # Show the dialog and let the user have fun
