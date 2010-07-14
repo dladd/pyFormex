@@ -619,3 +619,15 @@ def insideSimplex(BC,bound=True):
 
 # End
 
+
+#Gianluca: I this function should be added to coords.py
+from plugins.isopar import *
+def rototranslate(F, currentCS, destinationCS):
+    """this function roto-translate Coords (and so Formex, Mesh, etc) from an initial Coordinate System to a final coordinate system. For example, this function allows returning to the original sys after a series of rotations/translations without having to do all the steps back.
+    Each coordinate system is defined by 4 points:
+    e.g.   Coords([[1., 0., 0.], [0., 1., 0.],[0., 0., 1.], [0., 0., 0.]]) = x,y,z,origine
+    Be careful:
+    Coords 0,1,2 (axes) needs to have unit distance from Coords 3 (origin), otherwise SCALING is applied.
+    The 3 axes need to be orthogonal to each other, otherwise SHEARING is applied.
+    """
+    return isopar(F,'tet4',destinationCS,currentCS)
