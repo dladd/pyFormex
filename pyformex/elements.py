@@ -28,7 +28,7 @@ This modules allows for a consistent local numbering scheme throughout
 pyFormex. When interfacing with other programs, one should be aware
 that conversions may be necessary. Conversions to/from external programs
 should be done by the interface modules.
-"""
+""" 
 from numpy import array
 from olist import collectOnLength
 from math import sqrt
@@ -264,6 +264,43 @@ class Hex8(Element):
               (0,3,2,1), (4,5,6,7) ]
 
     element = [ 0,1,2,3,4,5,6,7 ]
+
+
+#Gianluca: 
+#TODO
+#1) Benedict should check the convetion of node numbering.
+#2)Hex20 is still not included in actors.py . I think that the when drawing a quadratic element (like the Quad8), the edge should include the mid-node, like a PolyLine of 3 vertices and, if possible, the face should also be drawn as a Polygon of 8 vertices (9 for the Quad9).
+#3)Hex20 should be included in the mesh.py
+#4)Mesh.connect() applied to 2 surface of Quad8 mesh should produce a Hex20 volume mesh.
+#5) in future, probably would be convenient to include all the element which are mentioned in the plugins.isopar.py, like: quad13, quad16,tet10,hex27,hex36, hex64.
+
+class Hex20(Element):
+    """An 20-node hexahedron"""
+    ndim = 3
+    
+    vertices =Hex8.vertices+ [ (  0.5,  0.0, 0.0 ),
+                                  (  1.0,  0.5, 0.0 ),
+                                  (  0.5,  1.0, 0.0 ),
+                                  (  0.0,  0.5, 0.0 ),
+                                  (  0.5,  0.0, 1.0 ),
+                                  (  1.0,  0.5, 1.0 ),
+                                  (  0.5,  1.0, 1.0 ),
+                                  (  0.0,  0.5, 1.0 ),
+                                  (  0.0,  0.0, 0.5 ),
+                                  (  1.0,  0.0, 0.5 ),
+                                  (  1.0,  1.0, 0.5 ),
+                                  (  0.0,  1.0, 0.5 )
+                                  ]
+
+    edges = Hex8.edges
+    
+    faces = [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
+              (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
+              (0,3,2,1,11,10,9, 8), (4,5,6,7,12,13,14,15) ]
+
+    element = range(20)
+
+    drawfaces = Hex8.faces
 
 
 class Icosa(Element):
