@@ -52,6 +52,7 @@ The new documentation is currently only available in HTML format.
    examples
    refman
    file_format
+   bumpix
    license
    meta
 

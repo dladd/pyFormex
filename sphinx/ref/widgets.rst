@@ -80,6 +80,7 @@
 
       InputItem objects have the following methods:
 
+      .. automethod:: setTooltip()
       .. automethod:: name()
       .. automethod:: text()
       .. automethod:: value()
@@ -361,6 +362,7 @@
    .. autofunction:: groupInputItem(name,items=[])
    .. autofunction:: tabInputItem(name,items=[])
    .. autofunction:: compatInputItem(name,value,itemtype=None,kargs={})
+   .. autofunction:: convertInputItemList(items)
    .. autofunction:: inputAny(name,value,itemtype=str)
    .. autofunction:: inputAnyOld(item,parent=None)
    .. autofunction:: updateDialogItems(data,newdata)
