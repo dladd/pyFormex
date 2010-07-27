@@ -1,465 +1,241 @@
 #!/usr/bin/env pyformex --gui
 # $Id:$
-##
-##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
-##  pyFormex is a tool for generating, manipulating and transforming 3D
-##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
-##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
-##  Distributed under the GNU General Public License version 3 or later.
-##
-##
-##  This program is free software: you can redistribute it and/or modify
-##  it under the terms of the GNU General Public License as published by
-##  the Free Software Foundation, either version 3 of the License, or
-##  (at your option) any later version.
-##
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU General Public License for more details.
-##
-##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see http://www.gnu.org/licenses/.
-##
+#
 
 """Rubik
 
 level = 'normal'
 topics = ['illustration']
-techniques = ['color','dialog','draw','persistence','random']
+techniques = ['colors','dialog','draw','persistence','random']
+
+.. Description
+
+Rubik
+-------
+
+This example illustrates how the user can interact with the canvas.
+Herefore, a Rubik cube with a variable number of rows is shown.
+By keeping the *SHIFT* key pressed and dragging an element of the cube, one can rotate a row of the cube.
+Pressing the *SHIFT* key is needed so that the script does not interfere with basic canvas functionality
+like rotating and zooming.
+
+The script creates a nxnxn cube as a Formex. When the left mouse button is used together with the *SHIFT* key,
+the definition **turn** is executed. When the LMB is pressed, the current location of the mouse cursor is registered
+and the cube element (i.e. a quadrilateral of the Formex) closest by this position is registered. When the LMB is released,
+the current position of the cursor is compared to the former position. If the cursor position has changed, the selected
+element is rotated in the direction determined by the projection of the vector created by the position change, rotated
+over the current view rotation and projected onto the plane of the selected element.
+
+The cubes can be shuffled into a random position and solved subsequently.
+
+The maximum number of cubes in one row is limited to ten because of the enormous number of permutations possible,
+and thus the large amount of time needed to solve such large cubes. For a 7x7 cube for example, the total number
+of permutations is already higher than the assumed total number of atoms in our universe (eh ... that's something
+like ten to the power 80, but we might be way off). You can check the exact number of possible permutations
+for the displayed cube by pressing the button *permutations*. This number is not stored, it is calculated each time. It's
+an amazing example of how python can easily handle huge numbers.
+
 
 """
 
-
-"""Example: Rubik's cube
-Note: inverse means counter clockwise!
-Plane numbering: (0:Front,1:Back,2:Left,3:Right,4:Up,5:Down)
-
-  |4|        |U|
-|2|0|3|1|  |L|F|R|B|
-  |5|        |D|
-"""
-
-expl = """How to solve a Rubik's cube:
-
-(This is certainly not the fastest way, but it is rather easy to use and comprehend)
-
-Scramble the cube either manually or with the "Randomize" button.
-
-Step 1.
-Create a cross at the bottom (white) plane, taking care that the sides are in the right direction
-(meaning green and blue opposite to each other, as well as magenta and red)
-This should be relatively easy to so with intuitions, so no algorithm is added.
-
-Step 2.
-Put the corners of the bottom plane at their right position and direction.
-This should also be rather easy, so again no algorithm is provided.
-When ready turn the middle squares of the side planes (magenta,blue,red,green) to their respective positions.
-
-Step 3.
-You should now have solved the bottom row.
-For the middle row, turn the top row so that the top middle square is the same color as the middle square, and the color on the top plane is not the original top color (yellow if you didn't change the front yet).
-This means that the top color has to turn left or right to get in the right position.
-First set this plane to be the front plane, with "Set front".
-Then use the algorithm "To left" or "To right" to turn it correctly.
-Repeat this to position the four corner pieces of the middle row. Should at any point the needed piece be at the side in stead of at the top, use the same two algorithms to place it at the top.
-
-Step 4.
-You should now have solved the two lowest rows, only the top row should remain.
-First, create a cross at the top plane by getting the middle squares facing upwards (do not look at their position for the moment, only at their orientation).
-Use algorithm "To cross" for this.
-If there is more than one side already at the right orientation, hold them in an --- or -' shape (by using U).
-Do the "To cross" algorithm once in the first case, and twice in the second case.
-
-Step 5.
-Now the cross should be sorted in the right order.
-If possible, use U to get more than one side square in the right position.
-Use "To front" on a side plane to get the right squares in an I or L shape.
-If only one can be brought to the right position, than the front plane can be chosen random.
-Now use the "Sort cross" algorithm to get them to the correct position (once for L shape, twice for the others), until only the corners of the upper plane remain to be solved.
-
-Step 6.
-Get the corners to their position.
-Use the "Sort corners" algorithm to get them into the right positions, with a correct one in the lower right corner of the upper plane.
-You may have to use this a few times. Change the front plane if you have to in order to get a solved one in the lower right corner.
-
-Step 7.
-All parts are in the right spot now, but the upper corners need to be oriented.
-For this you use the final algorithm "Orient corners".
-Make sure that an incorrect one is always in the lower right corner of the upper plane.
-It can be easier if you put the first correct one in  the lower left corner.
-Use U to turn when a correctly oriented one arrives in the lower right corner (should each time be after using the algorithm either 2 two or four times).
-Do not change the front plane while executing step 7!
-Magically, once you orient the last corner, you only have to do U to solve the cube.
-
-Your cube should be solved now, congratulations!
-"""
-
-
-from numpy import *
 from formex import *
-from plugins import formex_menu
-from plugins.mesh import *
-from numpy.random import rand
-import gui.widgets
 from gui.widgets import simpleInputItem as I
-from gui.draw import showText
+from gui.viewport import *
+from numpy.random import rand
+import time
+import math
 
-# Geometry generation
-def createRubik():
-    """Creates a new Rubik cube, with all colors at the right spot"""
-    base = Formex(mpattern('123')).replic2(3,3,1,1)
-    front = base.translate(2,3)
-    back = base.rotate(180,1).translate([3,0,0])
-    left = base.rotate(-90,1)
-    right = base.rotate(90,1).translate([3,0,3])
-    up = base.rotate(-90,0).translate([0,3,3])
-    down = base.rotate(90,0)
-    F = front + back + left + right + up + down
-    F = F.translate([-1.5,-1.5,-1.5])
-    prop = ones((6,3,3),int) #Front = red
-    prop[1] = 5 * prop[1]    #Back = magenta
-    prop[2] = 3 * prop[2]    #Left = blue
-    prop[3] = 2 * prop[3]    #Right = green
-    prop[4] = 6 * prop[4]    #Up = yellow
-    prop[5] = 7 * prop[5]    #Down = white
-    setProp(F,prop)
-    return F
 
-# Drawing definitions
-def refresh(self,undo=False):
-    """Refresh the view of the cube"""
+# General definitions
+def createCube(n=3):
+    tol = 0.005
+    front = Formex(mpattern('123')).replic2(n,n).translate([-n/2.,-n/2.,-n/2.])
+    sides = front+front.translate(2,n)
+    darkPosTol = Formex(mpattern('123')).replic2(n,n).translate([-n/2.,-n/2.,0.]).scale(1.-5.*tol/n).translate(2, -n/2.+1+tol)
+    darkNegTol = darkPosTol.translate(2, -2*tol)
+    dark = darkPosTol.replic(n-1, 1, dir=2) + darkNegTol.replic(n-1, 1, dir=2)
+    cube = sides + sides.rotate(90,1) + sides.rotate(90,0) + dark + dark.rotate(90, 0) + dark.rotate(90, 1)
+    cube.prop = append(repeat(array([5,1,3,2,6,7]),n**2), repeat(array([0]), 6*(n-1)*n**2))
+    return cube
+
+def refresh():
+    """Refresh the cube on the canvas"""
+    global drawn
     clear()
-    draw(self)
-    #drawNumbers(self)
-    #drawText('generated by pyFormex',10,20,color=blue,font='f',size=12)
-    if not undo:
-        global undoList
-        undoList = append(undoList[1:],getProp(self)).reshape(-1,6,3,3)
+    drawn = draw(cube)
 
-# General property changing
-def setProp(self,prop):
-    """Apply the new color properties to the cube"""
-    self.prop = prop.ravel()
+# Rotation definitions
+def turn(x=0,y=0,action=0):
+    """Execute a rotation when SHIFT and LMB is pressed"""
+    global busy, x1, y1, element
+    if action==PRESS and not busy:
+        busy = True
+        GD.canvas.setCursorShape('pick')
+        x1, y1 = x, y
+        busy = False
+        element = selectElement(GD.canvas, x, y, 2, 2)
+        if element == [-1]:
+            message('No element selected.\nPlease select an element of the cube.')
+#        else:
+#            draw(cube[element], color=red, bbox='last', linewidth=5.0)
+        busy = False
+    if action==RELEASE and not busy:
+        busy = True
+        GD.canvas.setCursorShape('default')
+        if element != [-1] and x1!=-1:
+            x2, y2 = x, y
+            dx = float(x2-x1)
+            dy = float(y2-y1)
+            if dx == 0 and dy == 0:
+                busy = False
+                return
+            x1 = -1
+            v = [dx, dy, 0]
+            rot = GD.canvas.camera.rot[:3, :3]
+            v2 = dot(v, linalg.inv(rot))
+            V = v2/sqrt(dot(v2,v2.conj()))
+            centers = cube.centroids()
+            P1 = centers[element][0]
+#            draw(Formex([[P1, P1+V]]), color=red, bbox='last', linewidth=3.0)
+            planeAxis = argsort(abs(P1))[-1]
+            pos = P1[planeAxis]>0
+            rotateCube(cube, planeAxis, pos, P1, V)
+        busy = False
 
-def getProp(self):
-    """Returns the cube's color in a 6x3x3 matrix notation"""
-    return self.prop.reshape(6,3,3)
+def selectElement(self, x, y, w, h):
+    """Returns the element closest to the cursor position"""
+    self.selection.clear()
+    self.selection.setType('element')
+    self.selection_filter = None
+    self.pick_window = (x,y,w,h,GL.glGetIntegerv(GL.GL_VIEWPORT))
+    self.pick_parts('element', 54, store_closest=True)
+    if len(self.picked) != 0:
+        self.selection_front = self.closest_pick
+        self.selection.set([self.closest_pick[0]])
+    self.update()
+    try:
+        return self.selection[0]
+    except:
+        return [-1]
 
-def change(self,plane):
-    """This is just a development function to assign colors to certain squares of the cube"""
-    oldprop = self.prop.reshape(6,9)
-    prop = oldprop.copy()
-    #for i in range(9):
-        #prop[plane,i] = i
-    prop[plane,0] = 0
-    self.prop = prop.ravel()
-    return self
-
-# General rotations
-def rot(prop,inv=False):
-    """Return the new colors of the rotating plane. inv stands for inverted (i.e. counter clockwise) rotation"""
-    if inv:
-        return column_stack((prop[2][:,newaxis],prop[1][:,newaxis],prop[0][:,newaxis]))
+def rotateCube(self, planeAxis, pos, P, V, view=True):
+    """Determine which elements should rotate in which direction."""
+    tol = 0.001
+    V[planeAxis] = 0.
+    sorted = argsort(abs(V))
+    rotAxis, dirAxis = int(sorted[1]), int(sorted[2])
+    if (rotAxis+1) % 3 != dirAxis:
+        dir = (pos==(V[dirAxis]>0))
     else:
-        return column_stack((prop[0][:,newaxis][::-1],prop[1][:,newaxis][::-1],prop[2][:,newaxis][::-1]))
+        dir = not (pos==(V[dirAxis]>0))
+    centers = self.centroids()
+    rowElements = where(abs(centers[:, rotAxis]-P[rotAxis])<tol+0.5)[0]
+    rotateRow(cube, rowElements, rotAxis, dir, steps, view)
 
-def rotnb(oldprop,plane,inv=False):
-    """Return the new colors of the neighbouring planes when the plane is rotated. inv = counter clockwise"""
-    nb,pos = neighbours[plane],positions[plane]
-    prop = oldprop.copy()
-    a = -1
-    if inv:
-        a = 1
-    for i in range(4):
-        j = (i+a)%4
-        if pos[i][0]==-1:
-            if pos[i][2]==-1:
-                prop[nb[i],:,pos[i][1]] = cut(oldprop,nb[j],pos[j])
-            else:
-                prop[nb[i],:,pos[i][1]][::-1] = cut(oldprop,nb[j],pos[j])
+def rotateRow(self, rowElements, rotAxis, dir, steps=1, view=True):
+    """Rotate the rowElements around rotAxis in direction dir"""
+    if dir:
+        angle = 90.
+    else:
+        angle = -90.
+    if view:
+        global drawn
+        if steps == 0:
+            steps = 1
+        for i in range(steps):
+            self[rowElements] = self[rowElements].rotate(angle/steps, rotAxis)        
+            dr = drawn
+            drawn = draw(self, bbox='last')
+            undraw(dr)
+            time.sleep(t)
+    else:
+        self[rowElements] = self[rowElements].rotate(angle, rotAxis)
+
+def perm(n=2):
+    """Calulate the number of permutations for a nxnxn cube"""
+    even = (n%2==0)
+    if even:
+        if n<3:
+            return fac(8)*3**7/24
         else:
-            if pos[i][2]==-1:
-                prop[nb[i],pos[i][0],:] = cut(oldprop,nb[j],pos[j])
-            else:
-                prop[nb[i],pos[i][0],:][::-1] = cut(oldprop,nb[j],pos[j])
-    return prop
-
-def cut(prop,nb,pos):
-    """A helping function for rotnb."""
-    if pos[0]==-1:
-        tmp = prop[nb,:,pos[1]]
+            return fac(8)*3**7*(fac(24)/fac(4)**6)**((n-2)/2)**2*fac(24)**((n-2)/2)/24
     else:
-        tmp = prop[nb,pos[0],:]
-    if pos[2]==-1:
-        return tmp
-    else:
-        return tmp[::-1]
+        if n<4:
+            return fac(8)*3**7*fac(12)/2*2**11
+        else:
+            return fac(8)*3**7*(fac(24)/fac(4)**6)**(((n-3)/2)**2+(n-3)/2)*fac(12)/2*2**11*fac(24)**((n-3)/2)
 
-# Plane rotations
-def rotatePlane(self,plane=0,inv=False):
-    """Rotate a certain plane."""
-    oldprop = getProp(self)
-    prop = oldprop.copy()
-    prop[plane] = rot(oldprop[plane],inv)
-    prop = rotnb(prop,plane,inv)
-    setProp(self,prop)
-    return self
+def fac(x):
+    """Return the factorial of x"""
+    return reduce(lambda y,z:y*z,range(1,x+1))
 
-# Short expressions
-def F(self):
-    return rotatePlane(self,0)
-
-def Fi(self):
-    return rotatePlane(self,0,True)
-
-def B(self):
-    return rotatePlane(self,1)
-
-def Bi(self):
-    return rotatePlane(self,1,True)
-
-def L(self):
-    return rotatePlane(self,2)
-
-def Li(self):
-    return rotatePlane(self,2,True)
-
-def R(self):
-    return rotatePlane(self,3)
-
-def Ri(self):
-    return rotatePlane(self,3,True)
-
-def U(self):
-    return rotatePlane(self,4)
-
-def Ui(self):
-    return rotatePlane(self,4,True)
-
-def D(self):
-    return rotatePlane(self,5)
-
-def Di(self):
-    return rotatePlane(self,5,True)
-
-# Some algorithms that can be used to solve the cube
-# Note that you should read the algorithms from right to left, consistent with nested functions
-def alg1(self):
-    """Algorithm for step 3: top block to the right"""
-    return F(U(Fi(Ui(Ri(Ui(R(U(self))))))))
-
-def alg2(self):
-    """Algorithm for step 3: top block to the left"""
-    return Fi(Ui(F(U(L(U(Li(Ui(self))))))))
-
-def alg3(self):
-    """Algorithm for step 4: creating a cross at the top"""
-    return Fi(Ui(Ri(U(R(F(self))))))
-
-def alg4(self):
-    """Algorithm for step 5: sorting the cross at the top"""
-    return Ri(U(U(R(U(Ri(U(R(self))))))))
-
-def alg5(self):
-    """Algorithm for step 6: corners at the top to their right position, but not necessarily the right direction"""
-    return L(Ui(Ri(U(Li(Ui(R(U(self))))))))
-
-def alg6(self):
-    """Algorithm for step 7: corners at the top rotating to the right direction"""
-    return D(R(Di(Ri(self))))
-
-# Main program
-clear()
-#GD.canvas.setBgColor('#333366','#acacc0')
-#GD.GUI.drawwait = 1.
-renderMode('flatwire')
-view('iso')
-#toolbar.setProjection()
-l,r,b,t = [-1,0,-1],[-1,2,-1],[0,-1,-1],[2,-1,-1]
-li,ri,bi,ti = [-1,0,0],[-1,2,0],[0,-1,0],[2,-1,0]
-global neighbours # List of the neighbouring planes, clockwise starting from right
-neighbours = [[3,5,2,4],[2,5,3,4],[0,5,1,4],[1,5,0,4],[3,0,2,1],[3,1,2,0]]
-global positions
-positions = [[li,ti,r,b],[l,bi,ri,t],[l,l,ri,l],[li,r,r,r],[t,t,t,t],[b,b,b,b]]
-choices = ['F','B','L','R','U','D']
-global undoList
-buf=10
-undoList = ndarray((buf,6,3,3)).astype(int)
-global rub
-rub = createRubik()
-#rub = change(rub,2)
-refresh(rub)
-
-# Dialog and its functions
+# Dialogue
 dia = None
-
-def close():
-    """Close the dialog"""
-    dia.close()
-
-def rotateF():
-    execRotateGeneral(0)
-
-def rotateB():
-    execRotateGeneral(1)
-
-def rotateL():
-    execRotateGeneral(2)
-
-def rotateR():
-    execRotateGeneral(3)
-
-def rotateU():
-    execRotateGeneral(4)
-
-def rotateD():
-    execRotateGeneral(5)
-
-def rotateFi():
-    execRotateGeneral(0,True)
-
-def rotateBi():
-    execRotateGeneral(1,True)
-
-def rotateLi():
-    execRotateGeneral(2,True)
-
-def rotateRi():
-    execRotateGeneral(3,True)
-
-def rotateUi():
-    execRotateGeneral(4,True)
-
-def rotateDi():
-    execRotateGeneral(5,True)
-
-def execRotateGeneral(plane=0,inv=False):
-    global rub
-    rub = rotatePlane(rub,plane,inv)
-    refresh(rub)
-
-def algorithm1():
-    global rub
-    rub = alg1(rub)
-    refresh(rub)
-    message('Algorithm: U R Ui Ri Ui Fi U F')
-
-def algorithm2():
-    global rub
-    rub = alg2(rub)
-    refresh(rub)
-    message('Algorithm: Ui Li U L U F Ui Fi')
-
-def algorithm3():
-    global rub
-    rub = alg3(rub)
-    refresh(rub)
-    message('Algorithm: F R U Ri Ui Fi')
-
-def algorithm4():
-    global rub
-    rub = alg4(rub)
-    refresh(rub)
-    message('Algorithm: R U Ri U R U U Ri')
-
-def algorithm5():
-    global rub
-    rub = alg5(rub)
-    refresh(rub)
-    message('Algorithm: U R Ui Li U Ri Ui L')
-
-def algorithm6():
-    global rub
-    rub = alg6(rub)
-    refresh(rub)
-    message('Algorithm: Ri Di R D')
-
-def howToSolve():
-    """Shows the steps you can follow to easily solve the cube"""
-    showText(expl,modal=False)
-
 def new():
-    """Create a new (solved) cube"""
-    global rub
-    rub = createRubik()
-    refresh(rub)
+    global cube, n, steps, t
+    dia.acceptData()
+    globals().update(dia.results)
+    cube = createCube(n)
+    refresh()
+
+def set():
+    global n,  steps, t
+    dia.acceptData()
+    res = dia.results
+    if res['n']!=n:
+        new()
+    else:
+        steps, t = res['steps'], res['t']
 
 def randomize():
-    """Apply random rotations to the cube, i.e. scramble the cube"""
-    global rub
-    step = [' F',' B',' L',' R',' U',' D']
-    n = int(10 + 10*rand()) # Number of random rotations
-    random = rand(n,2)
-    steps = ''
+    global cube
+    N = int(10*n + 5*n*rand())
+    random = rand(N,6)
+    centers = cube.centroids()
     for i in random:
-        rr = int(6*i[0])
-        steps += step[rr]
-        inv = i[1]<0.5
-        if inv:
-            steps += 'i'
-        rub = rotatePlane(rub,rr,inv)
-    message('The apllied random rotations are:%s' % steps)
-    refresh(rub)
+        rotateCube(cube, int(3*i[0]), i[1]<0.5, centers[int(i[2]*6*n**2)], i[3:6], view=False)
+    refresh()
 
-def undo():
-    """Undo the last moves so that the cube gets back into the last viewed shape"""
-    global rub
-    global undoList
-    last = undoList[-2]
-    if sum(last)==0:
-        warning('Maximum number of undo\'s reached!')
-        return
-    rub.prop = last.ravel()
-    undoList = append(zeros((6,3,3),int),undoList[:-1]).reshape(-1,6,3,3)
-    refresh(rub,True)
+def permutations():
+    message('The total number of permutations of a %sx%s cube is:' % (n,n))
+    N = str(perm(n))
+    message(N)
+    message('or roughly %s.%se%s' % (N[0],N[1:4],len(N)-1))
 
-def setFront():
-    """Select a plane that you would like to have as the front plane (rotates the whole cube)"""
-    global rub
-    planerotations = [[0,0],[0,180],[0,-90],[0,90],[-90,0],[90,0]]
-    p = pick('element',filtr='single')[0]
-    pl = planerotations[int(p/9)]
-    propold = rub.prop
-    rubtmp = rub.rotate(pl[0],0).rotate(pl[1],1)
-    cent = rub.centroids()
-    centnew = rubtmp.centroids()
-    tmp = map(lambda x:x[0]+x[1]*10.+x[2]*100.,cent)
-    tmp2 = map(lambda x:x[0]+x[1]*10.+x[2]*100.,centnew)
-    newnumbers = asarray(map(lambda x: where(tmp==x)[0],tmp2)).ravel()
-    rub.prop = propold[newnumbers]
-    refresh(rub)
-    view('front')
+def close():
+    GD.canvas.resetMouse(LEFT,SHIFT)
+    dia.close()
 
 def timeOut():
     show()
     close()
 
-b1 = widgets.ButtonBox('Basic',actions=[('F',rotateF),('B',rotateB),('L',rotateL),('R',rotateR),('U',rotateU),('D',rotateD)])
-b2 = widgets.ButtonBox('Inverse',actions=[('Fi',rotateFi),('Bi',rotateBi),('Li',rotateLi),('Ri',rotateRi),('Ui',rotateUi),('Di',rotateDi)])
-b3 = widgets.ButtonBox('Algorithms',actions=[('To right',algorithm1),('To left',algorithm2),('To cross',algorithm3),('Sort cross',algorithm4),('Sort corners',algorithm5),('Orient corners',algorithm6)])
-b4 = widgets.ButtonBox('',actions=[('How to solve the cube',howToSolve)])
-
-data_items1 = [b1,b2,b3]
-
-data_items2 = [b4]
-
 dia = widgets.NewInputDialog(
-    caption="Rubik's Cube",
+    caption='Cube',
     items=[
-        ('Cube transformations',data_items1),
-#        ('Help',data_items2),
-    ],
+        I('n', 3,  text='Number of elements on a row', itemtype='slider', min=2, max=10, ticks=1),
+        I('steps', 10, text='Animation steps', itemtype='slider', min=0, max=50, ticks=5),
+        I('t', 0.05, text='Time between steps', min=0),  
+   ],
     actions=[
-        ('How to solve the cube',howToSolve),
         ('New',new),
-        ('Randomize',randomize),
-        ('Undo',undo),
-        ('Set front',setFront),
+        ('Set', set), 
+        ('Shuffle',randomize),
+        ('Permutations',permutations),
         ('Close',close),
     ])
 
-dia.timeout = timeOut
-#dia.resize(800,200)
-dia.show()
+if __name__ == "draw":
+    clear()
+    #renderMode('flatwire')
+    cube = createCube()
+    busy = False
+    refresh()
+    drawText('Hold SHIFT and move an element while pressing the LMB to move a row of the cube',20,40,color=blue,font='f',size=12)
+    GD.canvas.setMouse(LEFT,turn,mod=SHIFT)
+    dia.timeout = timeOut
+    dia.show()
+    dia.acceptData()
+    globals().update(dia.results)
+
+# End
