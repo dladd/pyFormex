@@ -378,6 +378,18 @@ def rotMatrix(u,w=[0.,0.,1.],n=3):
         return a
 
 
+def rotationAnglesFromMatrix(mat,angle_spec=Deg):
+    """Return rotation angles from rotation matrix mat.
+    
+    This returns the three angles around the global axes 0, 1 and 2.
+    The angles are returned in degrees, unless angle_spec=Rad.
+    """
+    rx = arctan(mat[1,2]/mat[2,2]) / angle_spec
+    ry = -arcsin(mat[0,2]) / angle_spec
+    rz = arctan(mat[0,1]/mat[0,0]) / angle_spec
+    return rx,ry,rz
+
+
 def growAxis(a,add,axis=-1,fill=0):
     """Increase the length of a single array axis.
 

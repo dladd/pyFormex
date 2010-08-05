@@ -219,27 +219,40 @@ def segmentOrientation(vertices,vertices2=None,point=None):
     return orient
 
 
-def rotationAngle(A,B,angle_spec=Deg):
+def rotationAngle(A,B,m=None,angle_spec=Deg):
     """Return rotation angles and vectors for rotations of A to B.
 
     A and B are (n,3) shaped arrays where each line represents a vector.
     This function computes the rotation from each vector of A to the
     corresponding vector of B.
-    The return value is a tuple of an (n,) shaped array with rotation angles
-    (by default in degrees) and an (n,3) shaped array with unit vectors
-    along the rotation axis.
+    If m is None, the return value is a tuple of an (n,) shaped array with
+    rotation angles (by default in degrees) and an (n,3) shaped array with
+    unit vectors along the rotation axis.
+    If m is a (n,3) shaped array with vectors along the rotation axis, the
+    return value is a (n,) shaped array with rotation angles.
     Specify angle_spec=Rad to get the angles in radians.
-    """  
-    A = normalize(A)
-    B = normalize(B)
-    n = cross(A,B) # vectors perpendicular to A and B
-    t = length(n) == 0.
-    if t.any(): # some vectors A and B are parallel
-        n[t] = anyPerpendicularVector(A[t])
-    n = normalize(n)
-    c = dotpr(A,B)
-    angle = arccos(c.clip(min=-1.,max=1.)) / angle_spec
-    return angle,n
+    """
+    if m is None:
+        A = normalize(A)
+        B = normalize(B)
+        n = cross(A,B) # vectors perpendicular to A and B
+        t = length(n) == 0.
+        if t.any(): # some vectors A and B are parallel
+            n[t] = anyPerpendicularVector(A[t])
+        n = normalize(n)
+        c = dotpr(A,B)
+        angle = arccos(c.clip(min=-1.,max=1.)) / angle_spec
+        return angle,n
+    else:
+        # project vectors on plane
+        A = projectionVOP(A,m)
+        B = projectionVOP(B,m)
+        angle,n = rotationAngle(A,B,angle_spec=angle_spec)
+        # check sign of the angles
+        m = normalize(m)
+        inv = isClose(dotpr(n,m),[-1.])
+        angle[inv] *= -1.
+        return angle
 
 
 def anyPerpendicularVector(A):
@@ -596,7 +609,7 @@ def baryCoords(S,P):
     A = dotpr(vs[:,newaxis],vs[newaxis,:]) # (dim,dim,1,nel)
     A = repeat(A,P.shape[1],2) # (dim,dim,npts,nel)
     b = dotpr(vs,vp) # (dim,npts,nel)
-    # Compute barycentric coordinates        
+    # Compute barycentric coordinates
     t = solveMany(A,b) # (dim,npts,nel)
     t = asarray(t).transpose(1,2,0) # (npts,nel,dim)
     t0 = 1.-t.sum(-1)
