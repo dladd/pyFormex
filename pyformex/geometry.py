@@ -100,6 +100,12 @@ class Geometry(object):
         return self.coords.distanceFromLine(*args,**kargs)
     def distanceFromPoint(self,*args,**kargs):
         return self.coords.distanceFromPoint(*args,**kargs)
+    def directionalSize(self,*args,**kargs):
+        return self.coords.directionalSize(*args,**kargs)
+    def directionalWidth(self,*args,**kargs):
+        return self.coords.directionalWidth(*args,**kargs)
+    def directionalExtremes(self,*args,**kargs):
+        return self.coords.directionalExtremes(*args,**kargs)
 
     def __str__(self):
         return self.coords.__str__()
