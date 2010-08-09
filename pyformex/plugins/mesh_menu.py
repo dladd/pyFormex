@@ -276,8 +276,8 @@ def fuseMesh():
     meshes = [ m.fuse(
         atol = res['Relative Tolerance'],
         rtol = res['Absolute Tolerance'],
-        atol = res['Shift'],
-        atol = res['Nodes per box'],
+        shift = res['Shift'],
+        nodesperbox = res['Nodes per box'],
         ) for m in meshes ]
     after = [ m.ncoords() for m in meshes ]
     print "Number of points before fusing: %s" % before
