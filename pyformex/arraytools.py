@@ -242,11 +242,13 @@ def solveMany(A,b):
 
 # Build-in function for Python 2.6
 def permutations(iterable, r=None):
+    # This function should get a docstring !!
     # permutations('ABCD', 2) --> AB AC AD BA BC BD CA CB CD DA DB DC
     # permutations(range(3)) --> 012 021 102 120 201 210
     pool = tuple(iterable)
     n = len(pool)
-    r = n if r is None else r
+    if r is None:
+        r = n
     if r > n:
         return
     indices = range(n)
