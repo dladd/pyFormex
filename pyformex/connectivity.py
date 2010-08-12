@@ -436,8 +436,11 @@ class Connectivity(ndarray):
         else:
             C = self
         ind = sortByColumns(C)
-        C = C.take(ind,axis=0)
-        ok = (C != roll(C,1,axis=0)).any(axis=1)
+        if self.nelems() == 1:
+            ok = resize(True,ind.shape)
+        else:
+            C = C.take(ind,axis=0)
+            ok = (C != roll(C,1,axis=0)).any(axis=1)
         return ind,ok
     
 
