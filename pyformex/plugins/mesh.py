@@ -610,6 +610,14 @@ Size: %s
         return Mesh(self.coords,elems,prop,self.eltype)
 
 
+    def unselect(self, unselected):
+        """Return a mesh without the unselected elements.
+        """
+        wi=ones([self.nelems()])
+        wi[unselected]=0
+        return self.clip(wi)
+
+
     def meanNodes(self,nodsel):
         """Create nodes from the existing nodes of a mesh.
 
@@ -1092,6 +1100,24 @@ Size: %s
         if side == '-':
             n = -n
         return self.clip(self.test(nodes=nodes,dir=n,min=p))
+
+
+    def volumes(self):
+        """Return the signed volume of all the mesh elements
+        by splitting into tet (tet volume is 1/3 * base *height). 
+        """
+        if self.eltype=='tet4': 
+            f=self.coords[self.elems]
+            return 1./6. * vectorTripleProduct(f[:, 1]-f[:, 0], f[:, 2]-f[:, 1], f[:, 3]-f[:, 0])
+        #if self.eltype=='wedge6': return self.convert('tet4').volumes().reshape(-1, 3).sum(axis=1)#the conversion of the wedge6 to tet4 may be wrong!
+        if self.eltype=='hex8': return self.convert('tet4').volumes().reshape(-1, 5).sum(axis=1)
+
+
+    def volume(self):
+        """Return the total volume of a Mesh.
+        """
+        return self.volumes().sum()
+
 
     # ?? IS THIS DEFINED FOR *ANY* MESH ??
     def equiAngleSkew(self):
