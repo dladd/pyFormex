@@ -27,7 +27,7 @@ two sets of curves are predefined:
   'splines.pgf' include in the pyFormex distribution. 
 
 In the first case, the number of curves will be equal to the specified
-number.  In the latter case, the number can not be large than the
+number.  In the latter case, the number can not be larger than the
 number of curves in the file.
 
 The set of splines are then used to create a QuadSurface (a surface
@@ -67,7 +67,14 @@ def rollCurvePoints(curve,n=1):
     This only works for PolyLine and BezierSpline (and derived) classes.
     """
     if (isinstance(curve,PolyLine) or isinstance(curve,BezierSpline)) and curve.closed:
-        curve.coords = roll(curve.coords,n,axis=0)
+        if isinstance(curve,PolyLine):
+            mult = 1
+        elif isinstance(curve,QuadBezierSpline):
+            mult = 2
+        else:
+            mult = 3
+        curve.coords[:-1] = roll(curve.coords[:-1],-mult*n,axis=0)
+        curve.coords[-1] = curve.coords[0]
     else:
         raise ValueError,"Expected a closed PolyLine or BezierSpline."
     
@@ -87,12 +94,15 @@ def alignCurvePoints(curve,axis=1,max=True):
         ind = curve.pointsOn()[:,axis].argmax()
     else:
         ind = curve.pointsOn()[:,axis].argmin()
-    #print curve.pointsOn()
-    print "ALIGNING ON POINT %s" % ind
+    #for i,x in enumerate(curve.pointsOn()):
+    #    print "%s: %s" % (i,x)
     #drawNumbers(curve.pointsOn())
-    rollCurvePoints(curve,-ind)
-    #print curve.pointsOn()
+    #print "ALIGNING ON POINT %s" % ind
+    rollCurvePoints(curve,ind)
+    #for i,x in enumerate(curve.pointsOn()):
+    #    print "%s: %s" % (i,x)
     #drawNumbers(curve.pointsOn(),color=red)
+    draw(curve.pointsOn()[0],color=green)
     
 
 class SplineSurface(Geometry):
@@ -265,21 +275,28 @@ def area(C,nroll=0):
 
 clear()
 smoothwire()
+
 from gui.widgets import simpleInputItem as I
 
 res = askItems([
     I('base',itemtype='vradio',choices=[
         'Circles and Ellipses',
         'Power Curves',
-        'Kinked Artery']),
+        'Kinked Artery',
+        ]),
     I('ncurves',value=12,text='Number of spline curves'),
     I('nu',value=36,text='Number of cells along splines'),
     I('refine',False),
     I('nv',value=12,text='Number of cells across splines'),
     I('align',False),
     I('aligndir',1),
-    I('alignmax',False),
-    ], legacy=False)
+    I('alignmax',True),
+    ],
+               #actions=[('HELP',showDescription),('CANCEL',),('OK',)],
+               legacy=False)
+
+if not res:
+    exit()
 
 globals().update(res)
 
@@ -309,8 +326,13 @@ if reverse:
             CL[i] = CL[i].reverse()
 
 if align:
+    #view('left')
     for Ci in CL:
+        #clear()
         alignCurvePoints(Ci,aligndir,alignmax)
+        #zoomAll()
+        #pause()
+        #exit()
 
 draw(CL)
 export({'splines':CL})

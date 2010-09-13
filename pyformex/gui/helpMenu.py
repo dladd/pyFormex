@@ -49,29 +49,6 @@ def help(page=None):
     else:
         browser = GD.cfg['viewer']
     pid = utils.spawn(' '.join([browser,page]))
-    
-  
-def showDescription():
-    """Show the Desription part of a pyFormex script's docstring."""
-    from scriptMenu import getDocString,getDescription
-    if GD.GUI.canPlay:
-        scriptfile = GD.prefcfg['curfile']
-        doc = getDocString(scriptfile)
-        des = getDescription(doc)
-        if len(des.strip()) == 0:
-            des = """.. NoDescription
-
-No help available
-=================
-
-The maintainers of this script have not yet added a description
-for this example.
-
-You can study the source code, and if anything is unclear,
-ask for help on the pyFormex forums.
-"""
-
-        draw.showText(des,modal=False)
 
 
 def catchAndDisplay(cmd):
@@ -186,7 +163,7 @@ def createMenuData():
 
     try:
         MenuData = DocsMenuData + [
-            (_('&About current script'),showDescription),
+            (_('&About current script'),draw.showDescription),
             ('---',None),
             (_('&Command line options'),cmdline),
             ] + Docs2MenuData + [

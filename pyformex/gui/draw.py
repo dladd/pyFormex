@@ -131,6 +131,34 @@ def showFile(filename,mono=False):
         return
     showText(f.read(),mono=mono)
     f.close()
+    
+  
+def showDescription(filename=None):
+    """Show the Description part of the docstring of a pyFormex script.
+
+    If no file name is specified, the current script is used.
+    If the script's docstring has no Description part, a default text is
+    shown.
+    """
+    from scriptMenu import getDocString,getDescription
+    if GD.GUI.canPlay:
+        scriptfile = GD.prefcfg['curfile']
+        doc = getDocString(scriptfile)
+        des = getDescription(doc)
+        if len(des.strip()) == 0:
+            des = """.. NoDescription
+
+No help available
+=================
+
+The maintainers of this script have not yet added a description
+for this example.
+
+You can study the source code, and if anything is unclear,
+ask for help on the pyFormex forums.
+"""
+
+        showText(des,modal=False)
 
 
 # widget and result status of the widget in askItems() function
