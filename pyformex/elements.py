@@ -266,33 +266,29 @@ class Hex8(Element):
     element = [ 0,1,2,3,4,5,6,7 ]
 
 
-#Gianluca: 
-#TODO
-#1) Benedict should check the convetion of node numbering.
-#2)Hex20 is still not included in actors.py . I think that the when drawing a quadratic element (like the Quad8), the edge should include the mid-node, like a PolyLine of 3 vertices and, if possible, the face should also be drawn as a Polygon of 8 vertices (9 for the Quad9).
-#3)Hex20 should be included in the mesh.py
-#4)Mesh.connect() applied to 2 surface of Quad8 mesh should produce a Hex20 volume mesh.
-#5) in future, probably would be convenient to include all the element which are mentioned in the plugins.isopar.py, like: quad13, quad16,tet10,hex27,hex36, hex64.
-
 class Hex20(Element):
     """An 20-node hexahedron"""
     ndim = 3
     
-    vertices =Hex8.vertices+ [ (  0.5,  0.0, 0.0 ),
-                                  (  1.0,  0.5, 0.0 ),
-                                  (  0.5,  1.0, 0.0 ),
-                                  (  0.0,  0.5, 0.0 ),
-                                  (  0.5,  0.0, 1.0 ),
-                                  (  1.0,  0.5, 1.0 ),
-                                  (  0.5,  1.0, 1.0 ),
-                                  (  0.0,  0.5, 1.0 ),
-                                  (  0.0,  0.0, 0.5 ),
-                                  (  1.0,  0.0, 0.5 ),
-                                  (  1.0,  1.0, 0.5 ),
-                                  (  0.0,  1.0, 0.5 )
-                                  ]
+    vertices = Hex8.vertices + [
+        (  0.5,  0.0, 0.0 ),
+        (  1.0,  0.5, 0.0 ),
+        (  0.5,  1.0, 0.0 ),
+        (  0.0,  0.5, 0.0 ),
+        (  0.5,  0.0, 1.0 ),
+        (  1.0,  0.5, 1.0 ),
+        (  0.5,  1.0, 1.0 ),
+        (  0.0,  0.5, 1.0 ),
+        (  0.0,  0.0, 0.5 ),
+        (  1.0,  0.0, 0.5 ),
+        (  1.0,  1.0, 0.5 ),
+        (  0.0,  1.0, 0.5 )
+        ]
 
-    edges = Hex8.edges
+    # This draws the edges as straight lines, but through the midpoints
+    edges = [ (0,8), (8,1), (1,9), (9,2), (2,10),(10,3),(3,11),(11,0),
+              (4,12),(12,5),(5,13),(13,6),(6,14),(14,7),(7,15),(15,4),
+              (0,16),(16,4),(1,17),(17,5),(2,18),(18,6),(3,19),(19,7) ]
     
     faces = [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
               (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),

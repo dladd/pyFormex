@@ -147,6 +147,9 @@ _default_eltype = {
 def defaultEltype(nplex):
     """Default element type for a mesh with given plexitude.
 
+    For the most common cases of plexitudes, we define a default element
+    type. The full list of default types can be found in
+    plugins.mesh._default_eltype.
     """
     return _default_eltype.get(nplex,None)
 
@@ -198,6 +201,9 @@ _conversions_ = {
     'hex8': {
         'wedge6': [ ('s', [ (0,1,2,4,5,6),(2,3,0,6,7,4) ]), ],
         'tet4'  : [ ('s', [ (0,1,2,5),(2,3,0,7),(5,7,6,2),(7,5,4,0),(0,5,2,7) ]), ],
+        'hex20' : [ ('m', [ (0,1), (1,2), (2,3), (3,0),
+                            (4,5), (5,6), (6,7), (7,4),
+                            (0,4), (1,5), (2,6), (3,7), ]), ],
         },
     }
 
@@ -254,7 +260,10 @@ class Mesh(Geometry):
     - prop: array of element property numbers, default None.
     - eltype: string designing the element type, default None.
     
-    If eltype is None, a default eltype is deived from the plexitude.
+    If eltype is None, a default eltype is derived from the plexitude, by
+    calling the defaultEltype function. For plexitudes without default type,
+    or if the default type is not the wanted element type, the user should
+    specify the element type himself.
 
     A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
     or by a single geometric object that provides a toMesh() method.
@@ -1171,7 +1180,7 @@ Size: %s
             return self.volumes().sum()
         except:
             return 0.0
-        
+    
 
     # ?? IS THIS DEFINED FOR *ANY* MESH ??
     def equiAngleSkew(self):
@@ -1281,6 +1290,9 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
     if type(n)!=int:n=len(n)-1
     e = concatenate([et+i*nnod for i in range(n)])
     return Mesh(x,e,eltype=eltype)
+        
+# define this also as a Mesh method
+Mesh.connect = connectMesh
 
 
 def connectMeshSequence(ML,loop=False,**kargs):
