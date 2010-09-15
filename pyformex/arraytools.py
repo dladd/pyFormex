@@ -37,19 +37,13 @@ from utils import deprecation,checkVersion
 
 if checkVersion('python','2.5') < 0:
     print("""
-This version of pyFormex was developed for Python 2.5.
-We advice you to upgrade your Python version.
-Getting pyFormex to run on Python 2.4 should be possible with a
-a few adjustements. Make it run on a lower version is problematic.
+This version of pyFormex was developed for Python 2.5. We advice you to upgrade your Python version. Getting pyFormex to run on Python 2.4 should be possible with a few adjustements. Make it run on a lower version is problematic.
 """)
     sys.exit()
     
 if checkVersion('python','2.6') >= 0:
     print("""
-This version of pyFormex was developed for Python 2.5.
-There should not be any major problem with running on version 2.6,
-but if you encounter some problems, please contact the developers at
-pyformex.berlios.de.
+This version of pyFormex was developed for Python 2.5. We expect it to run well on Python2.6 or higher, but if you encounter some problems, please contact the developers at pyformex.berlios.de.
 """)
     from itertools import combinations
 else:
