@@ -596,10 +596,12 @@ Size: %s
         """Return a mesh with selected elements from the original.
 
         - `selected`: an object that can be used as an index in the
-          `elems` array, e.g. a list of element numbers.
+          `elems` array, e.g. a list of (integer) element numbers,
+          or a boolean array with the same length as the `elems` array.
           
         Returns a Mesh with only the selected elements.
-        The returned mesh is not compacted.
+        The returned Mesh is not compacted.
+        The complimentary operation is `unselect`.
         """
         if len(self.elems) == 0:
             return self
@@ -610,12 +612,20 @@ Size: %s
         return Mesh(self.coords,elems,prop,self.eltype)
 
 
-    def unselect(self, unselected):
-        """Return a mesh without the unselected elements.
+    def unselect(self, selected):
+        """Return a mesh without the selected elements.
+
+        This is the complimentary operation of `select`.
+        - `selected`: an object that can be used as an index in the
+          `elems` array, e.g. a list of (integer) element numbers,
+          or a boolean array with the same length as the `elems` array.
+          
+        Returns a Mesh with all but the selected elements.
+        The returned mesh is not compacted.
         """
-        wi=ones([self.nelems()])
-        wi[unselected]=0
-        return self.clip(wi)
+        wi = ones([self.nelems()],dtype=Int)
+        wi[unselected] = 0
+        return self.select(wi)
 
 
     def meanNodes(self,nodsel):
@@ -1008,11 +1018,11 @@ Size: %s
     def test(self,nodes='all',dir=0,min=None,max=None,atol=0.):
         """Flag elements having nodal coordinates between min and max.
 
-        This function is very convenient in clipping a TriSurface in a specified
+        This function is very convenient in clipping a Mesh in a specified
         direction. It returns a 1D integer array flagging (with a value 1 or
         True) the elements having nodal coordinates in the required range.
         Use where(result) to get a list of element numbers passing the test.
-        Or directly use clip() or cclip() to create the clipped TriSurface
+        Or directly use clip() or cclip() to create the clipped Mesh
         
         The test plane can be defined in two ways, depending on the value of dir.
         If dir == 0, 1 or 2, it specifies a global axis and min and max are
@@ -1075,17 +1085,17 @@ Size: %s
 
 
     def clip(self,t):
-        """Return a TriSurface with all the elements where t>0.
+        """Return a Mesh with all the elements where t>0.
 
         t should be a 1-D integer array with length equal to the number
-        of elements of the TriSurface.
-        The resulting TriSurface will contain all elements where t > 0.
+        of elements of the Mesh.
+        The resulting Mesh will contain all elements where t > 0.
         """
         return self.select(t>0)
 
 
     def cclip(self,t):
-        """This is the complement of clip, returning a TriSurface where t<=0.
+        """This is the complement of clip, returning a Mesh where t<=0.
         
         """
         return self.select(t<=0)
