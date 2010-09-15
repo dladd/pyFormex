@@ -67,6 +67,11 @@ if __name__ == "__main__":
 - do not put blanks around operators, except for the assignment
   operator, where you should always use ' = '
 
+- all functions/methods/classes/modules should have a docstring, consisting
+  of a single first line with the short description, possibly followed 
+  by a blank line and an extended description.
+  It is recommended to add an extended description for any but trivial 
+  components.
 
 - Some numpy specifics:
 =======================

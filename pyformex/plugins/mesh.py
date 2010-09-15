@@ -715,7 +715,28 @@ Size: %s
     
 
     def convert(self,totype):
+        """Convert a Mesh to another element type.
+
+        Converting a Mesh from one element type to another can only be
+        done if both element types are of the same dimensionality.
+        Thus, 3D elements can only be converted to 3D elements.
+
+        The conversion is done by splitting the elements in smaller parts
+        and/or by adding new nodes to the elements.
+
+        Not all conversions between elements of the same dimensionality
+        are possible. The possible conversion strategies are implemented
+        in a table. New strategies may be added however.
+
+        The return value is a Mesh of the requested element type, representing
+        the same geometry (possibly approximatively) as the original mesh.
+        
+        If the requested conversion is not implemented, an error is raised.
+        """
+        
         fromtype = self.eltype
+        if totype == fromtype:
+            return self
 
         strategy = _conversions_[fromtype].get(totype,None)
 
@@ -1114,20 +1135,43 @@ Size: %s
 
     def volumes(self):
         """Return the signed volume of all the mesh elements
-        by splitting into tet (tet volume is 1/3 * base *height). 
+
+        For a 'tet4' tetraeder Mesh, the volume of the elements is calculated
+        as 1/3 * surface of base * height.
+
+        For other Mesh types the volumes are calculated by first splitting
+        the elements into tetraeder elements.
+
+        The return value is an array of float values with length equal to the
+        number of elements.
+        If the Mesh conversion to tetraeder does not succeed, the return
+        value is None.
         """
-        if self.eltype=='tet4': 
-            f=self.coords[self.elems]
-            return 1./6. * vectorTripleProduct(f[:, 1]-f[:, 0], f[:, 2]-f[:, 1], f[:, 3]-f[:, 0])
-        #if self.eltype=='wedge6': return self.convert('tet4').volumes().reshape(-1, 3).sum(axis=1)#the conversion of the wedge6 to tet4 may be wrong!
-        if self.eltype=='hex8': return self.convert('tet4').volumes().reshape(-1, 5).sum(axis=1)
+        try:
+            M = self.convert('tet4')
+            mult = M.nelems() // self.nelems()
+            if mult*self.nelems() !=  M.nelems():
+                raise ValueError,"Conversion to tet4 Mesh produces nonunique split paterns"
+            f = M.coords[M.elems]
+            vol = 1./6. * vectorTripleProduct(f[:, 1]-f[:, 0], f[:, 2]-f[:, 1], f[:, 3]-f[:, 0])
+            if mult > 1:
+                vol = vol.reshape(-1,mult).sum(axis=1)
+            return vol
+        
+        except:
+            return None
 
 
     def volume(self):
         """Return the total volume of a Mesh.
-        """
-        return self.volumes().sum()
 
+        If the Mesh can not be converted to tet4 type, 0 is returned
+        """
+        try:
+            return self.volumes().sum()
+        except:
+            return 0.0
+        
 
     # ?? IS THIS DEFINED FOR *ANY* MESH ??
     def equiAngleSkew(self):
