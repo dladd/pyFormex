@@ -25,8 +25,8 @@
 """Elements
 
 level = 'beginner'
-topics = ['geometry','surface']
-techniques = ['dialog']
+topics = ['geometry','mesh']
+techniques = ['dialog','elements']
 
 """
 
@@ -56,8 +56,11 @@ def showElement(eltype):
 if __name__ == "draw":
 
     view('iso')
-    ElemList = ['Tet4','Wedge6','Hex8','Icosa']
-    res = askItems([('Element Type',None,'select',['All',]+ElemList),])
+    ElemList = []
+    for ndim in [2,3]:
+        ElemList += elements.elementTypes(ndim)
+        
+    res = askItems([('Element Type',None,'select',['All',]+ElemList),],legacy=True)
     if not res:
         exit()
         

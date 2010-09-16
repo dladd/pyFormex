@@ -83,7 +83,8 @@ class Element(object):
     def getFaces(self):
         return collectOnLength(self.faces)
 
-
+# BV
+# Should we use Coords objects for the vertices and arrays for the rest?
 
 class Point(Element):
     """A single node element"""
@@ -345,9 +346,24 @@ class Icosa(Element):
 
     element = range(12)
 
+# Keep a list of all element types
+_element_types = [ o for o in globals().values() if isinstance(o,type) and issubclass(o,Element) ]
 
+# Interrogate element types
+def elementTypes(ndim=None):
+    if ndim is None:
+        eltypes = _element_types
+    else:
+        eltypes = [ e for e in _element_types if e.ndim == ndim ]
+    names = [ e.__name__ for e in eltypes ]
+    names.sort()
+    return names
 
+def printElementTypes():
+    print "Available Element Types: %s" % elementTypes()        
+    for ndim in range(4):
+        print "  %s-dimensional elements: %s" % (ndim,elementTypes(ndim)        )
 
 if __name__ == "__main__":
 
-    print(Icosa.vertices)
+    printElementTypes()

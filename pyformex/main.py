@@ -44,10 +44,24 @@ You should probably rebuild the pyFormex library first.
 Do 'make lib' in %s
 """ % pyformexdir
 
-import pyformex
+
 import utils
+
+if utils.checkVersion('python','2.5') < 0:
+    startup_warnings += """
+This version of pyFormex was developed for Python 2.5. We advice you to upgrade your Python version. Getting pyFormex to run on Python 2.4 should be possible with a few adjustements. Make it run on a lower version is problematic.
+"""
+    sys.exit()
+    
+if utils.checkVersion('python','2.6') >= 0:
+    startup_warnings += """
+This version of pyFormex was developed for Python 2.5. It is expected to run well on Python2.6 or higher, but if you encounter problems, please contact the developers at pyformex.berlios.de.
+"""
+
+import pyformex
 from config import Config
 
+# Remove unwanted warnings
 import warnings
 warnings.filterwarnings('ignore','.*return_index.*',UserWarning,'numpy')
 
@@ -435,7 +449,7 @@ def run(argv=[]):
         if res != 0:
             print("Could not start the pyFormex GUI: %s" % res)
             return res # EXIT
-        
+
     # Display the startup warnings
     if startup_warnings:
         pyformex.warning(startup_warnings)

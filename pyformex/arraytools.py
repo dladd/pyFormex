@@ -32,21 +32,13 @@ everything from this module::
 """
 
 from numpy import *
-from utils import deprecation,checkVersion
+import utils
 
-
-if checkVersion('python','2.5') < 0:
-    print("""
-This version of pyFormex was developed for Python 2.5. We advice you to upgrade your Python version. Getting pyFormex to run on Python 2.4 should be possible with a few adjustements. Make it run on a lower version is problematic.
-""")
-    sys.exit()
     
-if checkVersion('python','2.6') >= 0:
-    print("""
-This version of pyFormex was developed for Python 2.5. We expect it to run well on Python2.6 or higher, but if you encounter some problems, please contact the developers at pyformex.berlios.de.
-""")
+if utils.checkVersion('python','2.6') >= 0:
     from itertools import combinations
 else:
+    # Provide our own implementation of combinations
     def combinations(iterable, r):
         # combinations('ABCD', 2) --> AB AC AD BC BD CD
         # combinations(range(4), 3) --> 012 013 023 123
@@ -67,15 +59,7 @@ else:
                 indices[j] = indices[j-1] + 1
             yield tuple(pool[i] for i in indices)
 
-
-###########################################################################
-##
-##   some math functions
-##
-#########################
-
 # Define a wrapper function for old versions of numpy
-#
 
 if unique1d([1],True)[0][0] == 0:
     # We have the old numy version
