@@ -1,0 +1,64 @@
+--- sphinx/environment.py.orig	2010-09-17 20:21:00.000000000 +0200
++++ sphinx/environment.py	2010-09-17 20:33:56.000000000 +0200
+@@ -312,7 +312,7 @@
+         self.files_to_rebuild = {}  # docname -> set of files
+                                     # (containing its TOCs) to rebuild too
+         self.glob_toctrees = set()  # docnames that have :glob: toctrees
+-        self.numbered_toctrees = set() # docnames that have :numbered: toctrees
++        self.numbered_toctrees = {} # docnames that have :numbered: toctrees
+ 
+         # domain-specific inventories, here to be pickled
+         self.domaindata = {}        # domainname -> domain-specific dict
+@@ -357,7 +357,7 @@
+             self.toctree_includes.pop(docname, None)
+             self.indexentries.pop(docname, None)
+             self.glob_toctrees.discard(docname)
+-            self.numbered_toctrees.discard(docname)
++            self.numbered_toctrees.pop(docname, None)
+             self.images.purge_doc(docname)
+             self.dlfiles.purge_doc(docname)
+ 
+@@ -972,8 +972,8 @@
+            file relations from it."""
+         if toctreenode['glob']:
+             self.glob_toctrees.add(docname)
+-        if toctreenode.get('numbered'):
+-            self.numbered_toctrees.add(docname)
++        if toctreenode.get('numbered',-1) >= 0:
++            self.numbered_toctrees[docname] = toctreenode['numbered']
+         includefiles = toctreenode['includefiles']
+         for includefile in includefiles:
+             # note that if the included file is rebuilt, this one must be
+@@ -1416,9 +1416,9 @@
+         for docname in self.numbered_toctrees:
+             doctree = self.get_doctree(docname)
+             for toctreenode in doctree.traverse(addnodes.toctree):
+-                if toctreenode.get('numbered'):
+-                    # every numbered toctree gets new numbering
+-                    numstack = [0]
++                if toctreenode.get('numbered',-1) >= 0:
++                    # every numbered toctree starts from specified number
++                    numstack = [toctreenode['numbered']]
+                     _walk_toctree(toctreenode)
+ 
+         return rewrite_needed
+--- sphinx/directives/other.py.orig	2010-09-17 20:21:01.000000000 +0200
++++ sphinx/directives/other.py	2010-09-17 20:36:55.000000000 +0200
+@@ -34,7 +34,7 @@
+         'maxdepth': int,
+         'glob': directives.flag,
+         'hidden': directives.flag,
+-        'numbered': directives.flag,
++        'numbered': int,
+         'titlesonly': directives.flag,
+     }
+ 
+@@ -98,7 +98,7 @@
+         subnode['maxdepth'] = self.options.get('maxdepth', -1)
+         subnode['glob'] = glob
+         subnode['hidden'] = 'hidden' in self.options
+-        subnode['numbered'] = 'numbered' in self.options
++        subnode['numbered'] = self.options.get('numbered',-1)
+         subnode['titlesonly'] = 'titlesonly' in self.options
+         wrappernode = nodes.compound(classes=['toctree-wrapper'])
+         wrappernode.append(subnode)

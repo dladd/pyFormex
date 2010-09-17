@@ -29,7 +29,7 @@ What is pyFormex?
 
 You probably expect to find here a short definition of what pyFormex is and
 what it can do for you. I may have to disappoint you: describing the essence
-of pyFormex in a few lines is not an easy task to do, because the program can
+of pyFormex in a few lines is not easy to do, because the program can
 be (and is being) used for very different tasks. 
 So I will give you two answers here: a short one and a long one.
 
@@ -59,7 +59,7 @@ It is one of the many examples provided with pyFormex.
 
 .. _`fig:wirestent-example`:
 
-.. figure:: images/wirestent.png
+.. figure:: images/wirestent.*
    :align: center
    :alt: A wire stent
 
@@ -74,7 +74,8 @@ operations, illustrated in the figure :ref:`fig:wirestent-steps`:
 #. Create a nearly planar base module of two crossing wires. The wires have a
    slight out-of-plane bend, to enable the crossing.
 #. Extend the base module with a mirrored and translated copy.
-#. Replicate the base module in both directions of the base plane.
+#. Replicate the base module in both directions to create a (nearly
+   planar) rectangular grid.
 #. Roll the planar grid into a cylinder.
 
 pyFormex provides all the operations needed to define the geometry in this
@@ -85,6 +86,8 @@ way.
 .. figure:: images/wirestent-steps.png
    :align: center
    :alt: A wire stent
+   :figclass: align-center
+
 
    First three steps in building the WireStent example
 
@@ -106,17 +109,18 @@ in a single consistent environment, and certainly not as free software.
 .. % genre Blender
 .. % (such as GiD)
 
-Perhaps the most important feature of pyFormex is that it was primarily
-intended to be an easy scripting language for creating geometrical models
-of 3D-structures. The Graphical User Interface was only added as a convenient
-means to visualize the designed structure.
-pyFormex can still run without user interface, and this makes it ideal
-for use in a batch toolchain. Anybody involved in the simulation of the
-mechanical behaviour of materials and structures will testify that most of the
-work (often 80-90%) goes into the building of the model, not into the
-simulations itself. Repeatedly building a model for optimization of your
-structure quickly becomes cumbersome, unless you use a tool like pyFormex,
-allowing for automated and unattended building of model variants.
+Perhaps the most important feature of pyFormex is that it was
+primarily intended to be an easy scripting language for creating
+geometrical models of 3D-structures. The graphical user interface
+(GUI) was only added as a convenient means to visualize the designed
+structure.  pyFormex can still run without user interface, and this
+makes it ideal for use in a batch toolchain. Anybody involved in the
+simulation of the mechanical behavior of materials and structures
+will testify that most of the work (often 80-90%) goes into the
+building of the model, not into the simulations itself. Repeatedly
+building a model for optimization of your structure quickly becomes
+cumbersome, unless you use a tool like pyFormex, allowing for
+automated and unattended building of model variants.
 
 The author of  pyFormex, professor in structural engineering and heavy
 computer user and programmer since mainframe times, deeply regrets that
@@ -129,7 +133,7 @@ The hope to get some of them back into coding has been a stimulus in
 continuing our work on pyFormex. The strength of the scripting language
 and the elegance of Python have already attracted many users on this path.
 
-Finally, pyFormex is, and will always be, free software in both meanings
+Finally, pyFormex is, and always will be, free software in both meanings
 of free: guaranteeing the freedom of the user (see :ref:`sec:license`) and
 without charging a fee for it. [#]_
 
@@ -179,8 +183,8 @@ sections on Python and NumPy if you already have some experience with it.
 
 If you have used pyFormex before or you are of the adventurous type that does
 not want to be told where to go and how to do it, skip the tutorial and go 
-directly to the :doc:`user-guide`. It provide the most thorough information
-of all aspects of pyFormex
+directly to the :doc:`user-guide`. It provides the most thorough information
+of all aspects of pyFormex. 
 
 
 Getting Help
@@ -194,16 +198,17 @@ project and its developers are not paid to develop or maintain pyFormex,
 they just do this because they find pyFormex very helpful in their normal
 daily activities. 
 
-If you are a professional pyFormex user and required guaranteed support,
+If you are a professional pyFormex user and require guaranteed support,
 you can check with `FEops`_, a young company providing services with and
-support for pyFormex.
+support for pyFormex. [2]_
 
 
 .. rubric:: Footnotes
 
-.. [#] A stent is a tube-shaped structure that is e.g. used to reopen
+.. [#] A stent is a tubular structure that is e.g. used to reopen
    (and keep open) obstructed blood vessels.
 
-.. [#] Third parties may offer pyFormex extensions and/or professional support that are fee-based.
+.. [#] Third parties may offer pyFormex extensions and/or professional
+   support that are fee-based.
 
 .. End

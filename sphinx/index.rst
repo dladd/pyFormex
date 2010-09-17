@@ -19,9 +19,6 @@ This is the pyFormex |release| documentation, last updated on |today|.
    complete and useable. The :doc:`user-guide` and :doc:`examples` are
    still in an embryonal state but may already contain valuable information
    for some users.
-  
-   A `PDF version`_ of the full documentation set is available for
-   download from our FTP server.
 
 
 These documents are to become a full documentation set for the
@@ -33,10 +30,12 @@ accurate for any version of pyFormex.
 However, since partial documentation is better than none, we decided
 to make this preliminary version available to the general public, to
 ease the use of pyFormex. The :doc:`refman` is automatically generated
-from the docstrings in the Python source, so this might best reflect
+from the docstrings in the Python source, so that might best reflect
 the latest development version of the software.
 
-The new documentation is currently only available in HTML format. 
+The new documentation is available in HTML format for interactive
+browsing. A `PDF version`_ of the full documentation set can be downloaded
+from our FTP server.
 
 
 **Parts of the documentation**

@@ -30,7 +30,21 @@ Guidelines for creating pyFormex documentation
   the program, or a directory path name, use all lower case: ``pyformex``.
 
 
-- Install required packages:: ``apt-get install sphinx dvipng``
+- Install required packages 
+
+  :: 
+    apt-get install dvipng
+    apt-get remove --purge python-sphinx
+    easy-install -U Sphinx
+    easy-install -U numpydoc
+
+- Patch the sphinx installation.
+
+  We use a slightly patched version of Sphinx. The pyformex/sphinx
+  source tree contains the required patch file ::
+
+    cd /usr/local/lib/python???/dist-packages/Sphinx-???-py???.egg
+    patch -p0 < ???/pyformex/sphinx/sphinx-???-bv.diff
 
 - To create the html documentation, do ``make html`` in the ``sphinx`` directory.
 
