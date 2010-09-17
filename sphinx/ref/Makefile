@@ -8,7 +8,7 @@
 # of Sphinx are not yet powerful enough.
 # 
 
-COREMODULES= arraytools collection config connectivity coords elements \
+COREMODULES= arraytools collection config connectivity coords elements  \
   flatkeydb formex geometry misc mydict odict olist project \
   script sendmail simple timer utils
 GUIMODULES= actors camera canvas colors colorscale decors draw gluttext \

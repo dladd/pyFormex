@@ -441,10 +441,14 @@ def ship_end():
 """
 
 
-def ship_class(name,docstring):
+def ship_class_old(name,docstring):
     shortdoc,longdoc = split_doc(docstring)
     print "\n   .. autoclass:: %s\n" % name
 
+def ship_class(name,members=[]):
+    print """
+   .. autoclass:: %s
+      :members: %s""" % (name,','.join(members))
 
 def ship_classinit(name,args,docstring):
     pass
@@ -528,7 +532,7 @@ def do_method(info):
     ship_method(info._name,info._arglist,sanitize(info._docstring),info.class_method,info.coords_method)
 
 
-def do_class(info):
+def do_class_old(info):
     if info._name.startswith('_'):
         return
     ship_class(info._name,sanitize(info._docstring))
@@ -548,6 +552,13 @@ def do_class(info):
         if k.startswith('_'):
             continue
         do_method(info[k])
+
+
+def do_class(info):
+    if info._name.startswith('_'):
+        return
+    names = [ n for n in info.get_method_names() if not n.startswith('_') ]
+    ship_class(info._name,names)
 
 
 def do_module(info):

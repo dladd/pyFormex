@@ -44,7 +44,7 @@ help:
 	@echo "  pdf       to make PDF manual"
 
 clean:
-	-rm -rf _build/*
+	rm -rf _build/* ref/*.rst
 
 html: prereq
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html

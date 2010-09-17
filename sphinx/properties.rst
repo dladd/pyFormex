@@ -64,7 +64,7 @@ modules.
 
 The tag field can be used to attach an identification string to the property
 record. This string can be as complex as the user wants and its interpretation
-is completely left to the user. The :class:`ProeprtyDB` class just provides an
+is completely left to the user. The :class:`PropertyDB` class just provides an
 easy way to select the records by their tag name or by a set of tag names. The
 set and setname fields are treated further in :ref:`sec:set-and-setname`.
 
@@ -82,7 +82,7 @@ your code.  ::
      name = Stick
      weight = 25
 
-Notice the auto-generated nr field. Here's another example, with a tag::
+Notice the auto-generated `nr` field. Here's another example, with a tag::
 
    >>> author = P.Prop(tag='author',name='Alfred E Neuman',\
            address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
@@ -114,7 +114,7 @@ If you set an attribute of a :class:`CascadingDict`, it is always set in the
 toplevel. If you want to change lower level attributes, you need to use the full
 path to it.  ::
 
-   >>> print author.street
+   >>> print author.st
      Krijgslaan
    >>> author.street = 'Voskenslaan'
    >>> print author.street

@@ -17,357 +17,145 @@
 
 
    .. autoclass:: Options
-
-
-      Options objects have the following methods:
-
+      :members: 
 
    .. autoclass:: FileSelection
-
-
-      FileSelection objects have the following methods:
-
-      .. automethod:: show(timeout=None,timeoutfunc=None,modal=False)
-      .. automethod:: getFilename(timeout=None)
+      :members: show,getFilename
 
    .. autoclass:: ProjectSelection
-
-
-      ProjectSelection objects have the following methods:
-
-      .. automethod:: getResult()
+      :members: getResult
 
    .. autoclass:: SaveImageDialog
-
-
-      SaveImageDialog objects have the following methods:
-
-      .. automethod:: getResult()
+      :members: getResult
 
    .. autoclass:: ImageViewerDialog
-
-
-      ImageViewerDialog objects have the following methods:
-
-      .. automethod:: getFilename()
+      :members: getFilename
 
    .. autoclass:: DockedSelection
-
-
-      DockedSelection objects have the following methods:
-
-      .. automethod:: setSelected(selected,bool)
-      .. automethod:: getResult()
+      :members: setSelected,getResult
 
    .. autoclass:: ModelessSelection
-
-
-      ModelessSelection objects have the following methods:
-
-      .. automethod:: setSelected(selected,bool)
-      .. automethod:: getResult()
+      :members: setSelected,getResult
 
    .. autoclass:: Selection
-
-
-      Selection objects have the following methods:
-
-      .. automethod:: setSelected(selected)
-      .. automethod:: getResult()
+      :members: setSelected,getResult
 
    .. autoclass:: InputItem
-
-
-      InputItem objects have the following methods:
-
-      .. automethod:: setTooltip()
-      .. automethod:: name()
-      .. automethod:: text()
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: setTooltip,name,text,value,setValue
 
    .. autoclass:: InputInfo
-
-
-      InputInfo objects have the following methods:
-
-      .. automethod:: value()
+      :members: value
 
    .. autoclass:: InputString
-
-
-      InputString objects have the following methods:
-
-      .. automethod:: show()
-      .. automethod:: value()
+      :members: show,value
 
    .. autoclass:: InputText
-
-
-      InputText objects have the following methods:
-
-      .. automethod:: show()
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: show,value,setValue
 
    .. autoclass:: InputBool
-
-
-      InputBool objects have the following methods:
-
-      .. automethod:: text()
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: text,value,setValue
 
    .. autoclass:: InputCombo
-
-
-      InputCombo objects have the following methods:
-
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: value,setValue
 
    .. autoclass:: InputRadio
-
-
-      InputRadio objects have the following methods:
-
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: value,setValue
 
    .. autoclass:: InputPush
-
-
-      InputPush objects have the following methods:
-
-      .. automethod:: setText(text,index=0)
-      .. automethod:: setIcon(icon,index=0)
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: setText,setIcon,value,setValue
 
    .. autoclass:: InputInteger
-
-
-      InputInteger objects have the following methods:
-
-      .. automethod:: show()
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: show,value,setValue
 
    .. autoclass:: InputFloat
-
-
-      InputFloat objects have the following methods:
-
-      .. automethod:: show()
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: show,value,setValue
 
    .. autoclass:: InputFloatTable
-
-
-      InputFloatTable objects have the following methods:
-
-      .. automethod:: show()
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: show,value,setValue
 
    .. autoclass:: InputSlider
-
-
-      InputSlider objects have the following methods:
-
-      .. automethod:: set_value(val)
+      :members: set_value
 
    .. autoclass:: InputFSlider
-
-
-      InputFSlider objects have the following methods:
-
-      .. automethod:: set_value(val)
+      :members: set_value
 
    .. autoclass:: InputColor
-
-
-      InputColor objects have the following methods:
-
-      .. automethod:: setColor()
-      .. automethod:: setValue(value)
+      :members: setColor,setValue
 
    .. autoclass:: InputFont
-
-
-      InputFont objects have the following methods:
-
-      .. automethod:: setFont()
+      :members: setFont
 
    .. autoclass:: InputWidget
-
-
-      InputWidget objects have the following methods:
-
-      .. automethod:: text()
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: text,value,setValue
 
    .. autoclass:: InputGroup
-
-
-      InputGroup objects have the following methods:
-
-      .. automethod:: value()
-      .. automethod:: setValue(val)
+      :members: value,setValue
 
    .. autoclass:: NewInputDialog
-
-
-      NewInputDialog objects have the following methods:
-
-      .. automethod:: add_items(items,form)
-      .. automethod:: add_tab(name,items)
-      .. automethod:: add_group(name,items)
-      .. automethod:: add_input(item)
-      .. automethod:: timeout()
-      .. automethod:: timedOut()
-      .. automethod:: show(timeout=None,timeoutfunc=None,modal=False)
-      .. automethod:: acceptData(result=ACCEPTED)
-      .. automethod:: updateData(d)
-      .. automethod:: getResult(timeout=None)
+      :members: add_items,add_tab,add_group,add_input,timeout,timedOut,show,acceptData,updateData,getResult
 
    .. autoclass:: OldInputDialog
-
-
-      OldInputDialog objects have the following methods:
-
-      .. automethod:: add_input_items(items,layout)
-      .. automethod:: timeout()
-      .. automethod:: timedOut()
-      .. automethod:: show(timeout=None,timeoutfunc=None,modal=False)
-      .. automethod:: acceptData(result=ACCEPTED)
-      .. automethod:: updateData(d)
-      .. automethod:: getResult(timeout=None)
+      :members: add_input_items,timeout,timedOut,show,acceptData,updateData,getResult
 
    .. autoclass:: InputDialog
-
-
-      InputDialog objects have the following methods:
-
+      :members: 
 
    .. autoclass:: TableModel
-
-
-      TableModel objects have the following methods:
-
-      .. automethod:: makeEditable(edit=True)
-      .. automethod:: rowCount(parent=None)
-      .. automethod:: columnCount(parent=None)
-      .. automethod:: data(index,role)
-      .. automethod:: headerData(col,orientation,role)
-      .. automethod:: insertRows(row=None,count=None)
-      .. automethod:: removeRows(row=None,count=None)
-      .. automethod:: flags(index)
-      .. automethod:: setData(index,value,role=_EDITROLE)
+      :members: makeEditable,rowCount,columnCount,data,headerData,insertRows,removeRows,flags,setData
 
    .. autoclass:: ArrayModel
-
-
-      ArrayModel objects have the following methods:
-
-      .. automethod:: setData(index,value,role=_EDITROLE)
+      :members: setData
 
    .. autoclass:: Table
-
-
-      Table objects have the following methods:
-
+      :members: 
 
    .. autoclass:: Tabs
-
-
-      Tabs objects have the following methods:
-
+      :members: 
 
    .. autoclass:: Dialog
-
-
-      Dialog objects have the following methods:
-
-      .. automethod:: add(widgets,pos=1)
+      :members: add
 
    .. autoclass:: TableDialog
-
-
-      TableDialog objects have the following methods:
-
+      :members: 
 
    .. autoclass:: OldTableDialog
-
-
-      OldTableDialog objects have the following methods:
-
+      :members: 
 
    .. autoclass:: MessageBox
-
-
-      MessageBox objects have the following methods:
-
-      .. automethod:: show(modal=False)
-      .. automethod:: getResult()
-      .. automethod:: updateText(text,format='')
+      :members: show,getResult,updateText
 
    .. autoclass:: TextBox
-
-
-      TextBox objects have the following methods:
-
-      .. automethod:: getResult()
-      .. automethod:: updateText(text,format='')
+      :members: getResult,updateText
 
    .. autoclass:: InputBox
-
-
-      InputBox objects have the following methods:
-
+      :members: 
 
    .. autoclass:: ButtonBox
-
-
-      ButtonBox objects have the following methods:
-
-      .. automethod:: setText(text,index=0)
-      .. automethod:: setIcon(icon,index=0)
+      :members: setText,setIcon
 
    .. autoclass:: ComboBox
-
-
-      ComboBox objects have the following methods:
-
-      .. automethod:: setIndex(i)
+      :members: setIndex
 
    .. autoclass:: CoordsBox
-
-
-      CoordsBox objects have the following methods:
-
-      .. automethod:: setValues(values)
+      :members: setValues
 
 **Functions defined in the module widgets**
 
    .. autofunction:: setInputTimeout(timeout)
-   .. autofunction:: addTimeOut(widget,timeout=None,timeoutfunc=None)
+   .. autofunction:: addTimeOut(widget,timeout=???,timeoutfunc=???)
    .. autofunction:: selectFont()
-   .. autofunction:: getColor(col=None,caption=None)
+   .. autofunction:: getColor(col=???,caption=???)
    .. autofunction:: defaultItemType(item)
-   .. autofunction:: simpleInputItem(name,value=None,itemtype=None)
-   .. autofunction:: groupInputItem(name,items=[])
-   .. autofunction:: tabInputItem(name,items=[])
-   .. autofunction:: compatInputItem(name,value,itemtype=None,kargs={})
+   .. autofunction:: simpleInputItem(name,value=???,itemtype=???)
+   .. autofunction:: groupInputItem(name,items=???)
+   .. autofunction:: tabInputItem(name,items=???)
+   .. autofunction:: compatInputItem(name,value,itemtype=???,kargs=???)
    .. autofunction:: convertInputItemList(items)
-   .. autofunction:: inputAny(name,value,itemtype=str)
-   .. autofunction:: inputAnyOld(item,parent=None)
+   .. autofunction:: inputAny(name,value,itemtype=???)
+   .. autofunction:: inputAnyOld(item,parent=???)
    .. autofunction:: updateDialogItems(data,newdata)
-   .. autofunction:: updateText(widget,text,format='')
-   .. autofunction:: dialogButtons(dialog,actions,default=None)
+   .. autofunction:: updateText(widget,text,format=???)
+   .. autofunction:: dialogButtons(dialog,actions,default=???)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

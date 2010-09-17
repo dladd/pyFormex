@@ -17,19 +17,10 @@
 
 
    .. autoclass:: Dict
-
-
-      Dict objects have the following methods:
-
-      .. automethod:: update(data={})
-      .. automethod:: get(key,default)
-      .. automethod:: setdefault(key,default)
+      :members: update,get,setdefault
 
    .. autoclass:: CDict
-
-
-      CDict objects have the following methods:
-
+      :members: 
 
 **Functions defined in the module mydict**
 

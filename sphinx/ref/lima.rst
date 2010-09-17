@@ -17,18 +17,11 @@
 
 
    .. autoclass:: Lima
-
-
-      Lima objects have the following methods:
-
-      .. automethod:: status()
-      .. automethod:: addRule(atom,product)
-      .. automethod:: translate(rule,keep=False)
-      .. automethod:: grow(ngen=1)
+      :members: status,addRule,translate,grow
 
 **Functions defined in the module lima**
 
-   .. autofunction:: lima(axiom,rules,level,turtlecmds,glob=None)
+   .. autofunction:: lima(axiom,rules,level,turtlecmds,glob=???)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

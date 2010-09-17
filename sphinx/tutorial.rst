@@ -516,7 +516,7 @@ Formex is placed inside braces.
 
 Until now we have only dealt with plane structures, but 3D structures
 are as easy to create from the coordinate data. The following Formex
-represents a pyramid defined by four points (a tetraeder)::
+represents a pyramid defined by four points (a tetrahedron)::
 
    F = Formex([[[0.,0.,0.],[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]]],eltype='tet4')
    draw(F)
@@ -528,9 +528,9 @@ like one of the following:
 
 .. figure:: images/tetraeder.png
    :align: center
-   :alt: The tetraeder in wireframe and smoothwire rendering 
+   :alt: The tetrahedron in wireframe and smoothwire rendering 
 
-   The tetraeder in wireframe and smoothwire (transparent) rendering
+   The tetrahedron in wireframe and smoothwire (transparent) rendering
 
 The smoothwire mode can be set from the :menuselection:`Viewport -->
 Render Mode --> Smoothwire` option or the |button-smoothwire|
@@ -1034,7 +1034,7 @@ change the values in a single place when you want to create another
 structure:
 `your model has become a parametric model.`
 
-Lines 5 resets the drawing options to the defaults. It is not essential in this script but it is often a good idea to restore the defaults, in case they would have been changed by a script tha was run previously.
+Lines 5 resets the drawing options to the defaults. It is not essential in this script but it is often a good idea to restore the defaults, in case they would have been changed by a script that was run previously.
 Setting the ``clear=True`` option in line 6 makes sure the subsequent drawing instructions will remove the previous step from the canvas.
 
 In line 7 we create the basic geometrical entity for this structure: a triangle consisting of three lines, which we give the properties 1, 2 and 3, so that the three lines are shown in a different color::
@@ -1076,13 +1076,13 @@ is copied ``n`` times  with the same step size in the direction 1. ::
    Replicated in y-direction
 
 Now a copy of this last Formex is translated in direction '2' with a
-translation step of '1'. This necessary for the transformation into a cilinder.
+translation step of '1'. This necessary for the transformation into a cylinder.
 The result of all previous steps is a rectangular pattern with the desired
 dimensions, in a plane z=1.  ::
 
    F = F.translate(2,1); drawit(F,'iso')
 
-This pattern is rolled up into a cilinder around the 2-axis.
+This pattern is rolled up into a cylinder around the 2-axis.
 
 .. % \begin{figure}[ht]
 .. % \centering
@@ -1101,8 +1101,8 @@ This pattern is rolled up into a cilinder around the 2-axis.
 
    F = F.cylindrical([2,1,0],[1.,360./n,1.]); drawit(F,'iso')
 
-This cilinder is copied 5 times in the 2-direction with a translation step of
-'m' (the lenght of the cilinder).
+This cylinder is copied 5 times in the 2-direction with a translation step of
+'m' (the lenght of the cylinder).
 
 .. % \begin{figure}[ht]
 .. % \centering
@@ -1121,7 +1121,7 @@ This cilinder is copied 5 times in the 2-direction with a translation step of
 
    F = F.replic(5,m,2); drawit(F,'iso')
 
-The next step is to rotate this cilinder -10 degrees around the 0-axis.  This
+The next step is to rotate this cylinder -10 degrees around the 0-axis.  This
 will determine the pitch angle of the spiral.  ::
 
    F = F.rotate(-10,0); drawit(F,'iso')
@@ -1178,8 +1178,8 @@ Converting a Formex to a Finite Element model
 
 The :meth:`feModel` method is important in exporting the geometry to finite
 element (FE) programs. A Formex often contains many points with (nearly) the
-same coordinates. In a finite element model, theses points have to be merged
-into a single nod, to express the continuity of the material. This is exactly
+same coordinates. In a finite element model, these points have to be merged
+into a single node, to express the continuity of the material. This is exactly
 what\ :meth:`feModel` does. It returns a tuple of two numpy arrays
 (nodes,elems), where
 

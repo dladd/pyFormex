@@ -46,7 +46,7 @@ def bbox(objects):
     """Compute the bounding box of a list of objects.
 
     All the objects in list should have the `bbox` method.
-    The result is the eclosing bbox of all the objects in the list.
+    The result is the enclosing bbox of all the objects in the list.
     Objects returning a None bbox are ignored.
     """
     bboxes = [f.bbox() for f in objects if hasattr(f,'bbox') and not isnan(f.bbox()).any()]

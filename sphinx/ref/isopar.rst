@@ -17,15 +17,11 @@
 
 
    .. autoclass:: Isopar
-
-
-      Isopar objects have the following methods:
-
-      .. automethod:: transform(X)
+      :members: transform
 
 **Functions defined in the module isopar**
 
-   .. autofunction:: evaluate(atoms,x,y=0,z=0)
+   .. autofunction:: evaluate(atoms,x,y=???,z=???)
    .. autofunction:: isopar(X,eltype,coords,oldcoords)
 
    

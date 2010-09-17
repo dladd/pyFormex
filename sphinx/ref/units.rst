@@ -17,16 +17,7 @@
 
 
    .. autoclass:: UnitsSystem
-
-
-      UnitsSystem objects have the following methods:
-
-      .. automethod:: Add(un)
-      .. automethod:: Predefined(system)
-      .. automethod:: International()
-      .. automethod:: Engineering()
-      .. automethod:: Read(filename)
-      .. automethod:: Get(ent)
+      :members: Add,Predefined,International,Engineering,Read,Get
 
 **Functions defined in the module units**
 

@@ -17,20 +17,10 @@
 
 
    .. autoclass:: ColorScale
-
-
-      ColorScale objects have the following methods:
-
-      .. automethod:: scale(val)
-      .. automethod:: color(val)
+      :members: scale,color
 
    .. autoclass:: ColorLegend
-
-
-      ColorLegend objects have the following methods:
-
-      .. automethod:: overflow(oflow=None)
-      .. automethod:: color(val)
+      :members: overflow,color
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

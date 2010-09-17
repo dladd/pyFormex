@@ -19,8 +19,8 @@
    .. autofunction:: colorName(color)
    .. autofunction:: createColorDict()
    .. autofunction:: closestColorName(color)
-   .. autofunction:: RGBA(rgb,alpha=1.0)
-   .. autofunction:: GREY(val,alpha=1.0)
+   .. autofunction:: RGBA(rgb,alpha=???)
+   .. autofunction:: GREY(val,alpha=???)
    .. autofunction:: grey(i)
 
    

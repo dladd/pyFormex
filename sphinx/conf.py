@@ -20,6 +20,7 @@ sys.path.insert(0,os.path.abspath('../pyformex/examples'))
 sys.path.insert(0,os.path.abspath('../pyformex/plugins'))
 sys.path.insert(0,os.path.abspath('../pyformex/gui'))
 sys.path.insert(0,os.path.abspath('../pyformex'))
+sys.path.insert(0,os.path.abspath('..'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -105,7 +106,7 @@ html_theme = 'default'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+#html_theme_path = [ '/home/bene/soft/sphinx-0.6.6/sphinx/theme' ]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".

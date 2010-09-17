@@ -15,15 +15,15 @@
    :synopsis: Some convenient shortcuts for common list operations.
 
 
-   .. autofunction:: roll(a,n=1)
+   .. autofunction:: roll(a,n=???)
    .. autofunction:: union(a,b)
    .. autofunction:: difference(a,b)
    .. autofunction:: symdifference(a,b)
    .. autofunction:: intersection(a,b)
    .. autofunction:: concatenate(a)
-   .. autofunction:: flatten(a,recurse=False)
+   .. autofunction:: flatten(a,recurse=???)
    .. autofunction:: select(a,b)
-   .. autofunction:: collectOnLength(items,return_indices=False)
+   .. autofunction:: collectOnLength(items,return_indices=???)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

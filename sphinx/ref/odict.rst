@@ -17,23 +17,10 @@
 
 
    .. autoclass:: ODict
-
-
-      ODict objects have the following methods:
-
-      .. automethod:: update(data={})
-      .. automethod:: sort(keys)
-      .. automethod:: keys()
-      .. automethod:: values()
-      .. automethod:: items()
-      .. automethod:: pos(key)
+      :members: update,sort,keys,values,items,pos
 
    .. autoclass:: KeyedList
-
-
-      KeyedList objects have the following methods:
-
-      .. automethod:: items()
+      :members: items
 
 **Functions defined in the module odict**
 

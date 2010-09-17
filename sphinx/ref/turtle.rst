@@ -20,13 +20,13 @@
    .. autofunction:: reset()
    .. autofunction:: push()
    .. autofunction:: pop()
-   .. autofunction:: fd(d=None,connect=True)
-   .. autofunction:: mv(d=None)
+   .. autofunction:: fd(d=???,connect=???)
+   .. autofunction:: mv(d=???)
    .. autofunction:: ro(a)
    .. autofunction:: go(p)
    .. autofunction:: st(d)
    .. autofunction:: an(a)
-   .. autofunction:: play(scr,glob=None)
+   .. autofunction:: play(scr,glob=???)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

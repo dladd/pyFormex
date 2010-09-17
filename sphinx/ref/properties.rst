@@ -17,70 +17,31 @@
 
 
    .. autoclass:: Database
-
-
-      Database objects have the following methods:
-
-      .. automethod:: readDatabase(filename,None)
+      :members: readDatabase
 
    .. autoclass:: MaterialDB
-
-
-      MaterialDB objects have the following methods:
-
+      :members: 
 
    .. autoclass:: SectionDB
-
-
-      SectionDB objects have the following methods:
-
+      :members: 
 
    .. autoclass:: ElemSection
-
-
-      ElemSection objects have the following methods:
-
-      .. automethod:: addSection(section)
-      .. automethod:: computeSection(section)
-      .. automethod:: addMaterial(material)
+      :members: addSection,computeSection,addMaterial
 
    .. autoclass:: ElemLoad
-
-
-      ElemLoad objects have the following methods:
-
+      :members: 
 
    .. autoclass:: EdgeLoad
-
-
-      EdgeLoad objects have the following methods:
-
+      :members: 
 
    .. autoclass:: CoordSystem
-
-
-      CoordSystem objects have the following methods:
-
+      :members: 
 
    .. autoclass:: Amplitude
-
-
-      Amplitude objects have the following methods:
-
+      :members: 
 
    .. autoclass:: PropertyDB
-
-
-      PropertyDB objects have the following methods:
-
-      .. automethod:: autoName(clas,kind)
-      .. automethod:: setMaterialDB(aDict)
-      .. automethod:: setSectionDB(aDict)
-      .. automethod:: Prop(kind='',tag=None,set=None,name=None)
-      .. automethod:: getProp(kind='',rec=None,tag=None,attr=[],noattr=[],delete=False)
-      .. automethod:: delProp(kind='',rec=None,tag=None,attr=[])
-      .. automethod:: nodeProp(prop=None,set=None,name=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None)
-      .. automethod:: elemProp(prop=None,grp=None,set=None,name=None,tag=None,section=None,eltype=None,dload=None,eload=None,ampl=None)
+      :members: setMaterialDB,setSectionDB,Prop,getProp,delProp,nodeProp,elemProp
 
 **Functions defined in the module properties**
 

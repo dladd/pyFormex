@@ -17,11 +17,7 @@
 
 
    .. autoclass:: planeSection
-
-
-      planeSection objects have the following methods:
-
-      .. automethod:: sectionChar()
+      :members: sectionChar
 
 **Functions defined in the module section2d**
 
