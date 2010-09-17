@@ -632,8 +632,8 @@ Size: %s
         Returns a Mesh with all but the selected elements.
         The returned mesh is not compacted.
         """
-        wi = ones([self.nelems()],dtype=Int)
-        wi[unselected] = 0
+        wi=range(self.nelems())
+        wi = delete(wi, selected)
         return self.select(wi)
 
 
