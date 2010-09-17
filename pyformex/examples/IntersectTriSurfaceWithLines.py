@@ -1,22 +1,23 @@
 #!/usr/bin/env pyformex
-
-##
+# $Id$
 
 """IntersectTriSurfaceWithLines.py
 
 level = 'normal'
 topics = ['surface']
 techniques = ['transform','projection']
+author: gianluca
 
 .. Description
 
 IntersectTriSurfaceWithLines
---------
+----------------------------
+
 This example illustrates the use of intersectSurfaceWithLines.
 
 """
 from plugins.isopar import *
-from plugins.surface import *
+from plugins.trisurface import *
 from plugins.mesh import *
 from connectivity import inverseIndex
 from gui.widgets import simpleInputItem as I
@@ -207,7 +208,7 @@ undraw(dp)
 undraw(dx)
 undraw(de0)
 undraw(de1)
-G=makeGrid8(mH.setCoords(Coords(pts)), px, py, kx, ky)
+G=makeGrid8(mH._set_coords(Coords(pts)), px, py, kx, ky)
 
 
 zoomAll()

@@ -26,8 +26,6 @@
 This module defines a generic Geometry superclass which adds all the
 possibilities of coordinate transformations offered by the
 Coords class to the derived classes.
-
-.. warning:: This is experimental stuff!
 """
 
 from coords import Coords
@@ -39,27 +37,29 @@ class Geometry(object):
     The Geometry class is a generic parent class for all geometric classes,
     intended to make the Coords transformations available without explicit
     declaration. This class is not intended to be used directly, only
-    through derived classes.
+    through derived classes. Examples of derived classes are :class:`Formex`,
+    :class:`Mesh`, :class:`Curve`.
 
     There is no initialization to be done when constructing a new instance of
     this class. The class just defines a set of methods which operate on
-    the attribute `coords` which is be a Coords object.
+    the attribute `coords`, which should be a Coords object.
     Most of the transformation methods of the Coords class are thus exported
     through the Geometry class to its derived classes, and when called, will
     get executed on the `coords` attribute. 
-    The derived class should make sure this attribute exists and contains
-    the coordinates of all the points that should get transformed under a
-    Coords transformation. 
+    The derived class constructor should make sure that the `coords` attribute
+    exists, has the proper type and contains the coordinates of all the points
+    that should get transformed under a Coords transformation. 
 
     Derived classes can (and in most cases should) declare a method
-    `setCoords(coords)` returning an object that is identical to the
+    `_set_coords(coords)` returning an object that is identical to the
     original, except for its coords being replaced by new ones with the
     same array shape.
     
     The Geometry class provides two possible default implementations:
-    - `setCoords_inplace` sets the coords attribute to the provided new
+    
+    - `_set_coords_inplace` sets the coords attribute to the provided new
       coords, thus changing the object itself, and returns itself,
-    - `setCoords_copy` creates a deep copy of the object before setting
+    - `_set_coords_copy` creates a deep copy of the object before setting
       the coords attribute. The original object is unchanged, the returned
       one is the changed copy.
 
@@ -67,11 +67,97 @@ class Geometry(object):
     will result in both `A` and `B` pointing to the same scaled object,
     while with the second method, `A` would still be the untransformed
     object. Since the latter is in line with the design philosophy of
-    pyFormex, it is set as the default `setCoords` method.
+    pyFormex, it is set as the default `_set_coords` method.
     Most derived classes that are part of pyFormex however override this
     default and implement a more efficient copy method.
-    
+
+    The following :class:`Geometry` methods return the value of the same
+    method applied on the `coords` attribute:
+    `x`,
+    `y`,
+    `z`,
+    `bbox`,
+    `center`,
+    `centroid`,
+    `sizes`,
+    `dsize`,
+    `bsphere`,
+    `distanceFromPlane`,
+    `distanceFromLine`,
+    `distanceFromPoint`,
+    `directionalSize`,
+    `directionalWidth`,
+    `directionalExtremes`,
+    `__str__`. Refer to the correponding :class:`Coords` method for their usage.
+
+    The following :class:`Coords` transformation methods can be directly applied
+    to a :class:`Geometry` object or a derived class object. The return value
+    is a new object identical to the original, except for the coordinates,
+    which will have been transformed by the specified method.
+    Refer to the correponding :class:`Coords` method for the usage of these
+    methods:
+    `scale`,
+    `translate`,
+    `rotate`,
+    `shear`,
+    `reflect`,
+    `affine`,
+    `cylindrical`,
+    `hyperCylindrical`,
+    `toCylindrical`,
+    `spherical`,
+    `superSpherical`,
+    `toSpherical`,
+    `bump`,
+    `bump1`,
+    `bump2`,
+    `flare`,
+    `map`,
+    `map1`,
+    `mapd`,
+    `newmap`,
+    `replace`,
+    `swapAxes`,
+    `rollAxes`,
+    `projectOnSphere`,
+    `projectOnCylinder`,
+    `rot`,
+    `trl`.
     """
+    
+    ########### Change the coords #################
+
+    def _coords_transform(func):
+        """Perform a transformation on the .coords attribute of the object
+
+        """
+        coords_func = getattr(Coords,func.__name__)
+        def newf(self,*args,**kargs):
+            """Performs the Coords %s transformation on the coords attribute""" 
+            return self._set_coords(coords_func(self.coords,*args,**kargs))
+        newf.__name__ = func.__name__
+        newf.__doc__ = coords_func.__doc__
+        return newf
+
+
+    def _set_coords_inplace(self,coords):
+        """Replace the current coords with new ones.
+
+        """
+        if isinstance(coords,Coords) and coords.shape == self.coords.shape:
+            self.coords = coords
+            return self
+        else:
+            raise ValueError,"Invalid reinitialization of Geometry coords"
+
+
+    def _set_coords_copy(self,coords):
+        """Return a copy of the object with new coordinates replacing the old.
+
+        """
+        return self.copy()._set_coords_inplace(coords)
+
+    _set_coords = _set_coords_copy
 
     ########### Return information about the coords #################
 
@@ -116,42 +202,9 @@ class Geometry(object):
         """Return a deep copy of the object."""
         from copy import deepcopy
         return deepcopy(self)
-    
-
-    ########### Change the coords #################
-
-    def _coords_transform(func):
-        """Perform a transformation on the .coords attribute of the object
-
-        """
-        coords_func = getattr(Coords,func.__name__)
-        def newf(self,*args,**kargs):
-            """Performs the Coords %s transformation on the coords attribute""" 
-            return self.setCoords(coords_func(self.coords,*args,**kargs))
-        newf.__name__ = func.__name__
-        newf.__doc__ = coords_func.__doc__
-        return newf
 
 
-    def setCoords_inplace(self,coords):
-        """Replace the current coords with new ones.
-
-        """
-        if isinstance(coords,Coords) and coords.shape == self.coords.shape:
-            self.coords = coords
-            return self
-        else:
-            raise ValueError,"Invalid reinitialization of Geometry coords"
-
-
-    def setCoords_copy(self,coords):
-        """Return a copy of the object with new coordinates replacing the old.
-
-        """
-        return self.copy().setCoords_inplace(coords)
-
-    setCoords = setCoords_copy
-
+    ########### Coords transformations #################
  
     @_coords_transform
     def scale(self,*args,**kargs):

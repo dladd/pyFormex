@@ -836,22 +836,6 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
 #########################
 #
 
-## def coords_transformation(f):
-##     """Define a Formex transformation as the equivalent Coords transformation.
-
-##     This decorator replaces a Formex method with the equally named
-##     Coords method applied on the Formex coordinates attribute (.coords).
-##     The return value is a Formex with changed coordinates but unchanged
-##     properties.
-##     """
-##     repl = getattr(Coords,f.__name__)
-##     def newf(self,*args,**kargs):
-##         return Formex(repl(self.coords,*args,**kargs),self.prop,self.eltype)
-##     newf.__name__ = f.__name__
-##     newf.__doc__ = repl.__doc__
-##     return newf
-
-
 class Formex(Geometry):
     """A Formex is a numpy array of order 3 (axes 0,1,2) and type Float.
     A scalar element represents a coordinate (F:uniple).
@@ -949,7 +933,7 @@ class Formex(Geometry):
             self.eltype = None
 
 
-    def setCoords(self,coords):
+    def _set_coords(self,coords):
         """Replace the current coords with new ones.
 
         """
@@ -1067,46 +1051,6 @@ class Formex(Geometry):
         else:
             return unique(self.prop)
 
-    # The following functions get the corresponding information from
-    # the underlying Coords object
-
-    ## def x(self):
-    ##     return self.coords.x()
-    ## def y(self):
-    ##     return self.coords.y()
-    ## def z(self):
-    ##     return self.coords.z()
-
-    ## def bbox(self):
-    ##     return self.coords.bbox()
-
-    ## def center(self):
-    ##     return self.coords.center()
-
-    ## def centroid(self):
-    ##     return self.coords.centroid()
-
-    ## def sizes(self):
-    ##     return self.coords.sizes()
-
-    ## def dsize(self):
-    ##     return self.coords.dsize()
-
-    ## def bsphere(self):
-    ##     return self.coords.bsphere()
-
-
-    ## #  Distance
-
-    ## def distanceFromPlane(self,*args,**kargs):
-    ##     return self.coords.distanceFromPlane(*args,**kargs)
-
-    ## def distanceFromLine(self,*args,**kargs):
-    ##     return self.coords.distanceFromLine(*args,**kargs)
-
-
-    ## def distanceFromPoint(self,*args,**kargs):
-    ##     return self.coords.distanceFromPoint(*args,**kargs)
 
     def centroids(self):
         """Return the centroids of all elements of the Formex.

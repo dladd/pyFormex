@@ -19,9 +19,10 @@ PLUGINMODULES= curve datareader dxf export fe fe_abq fe_post geomtools \
   tetgen tools trisurface turtle units
 #AUTOREF= $(COREMODULES) $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
 AUTOREF= $(COREMODULES) $(GUIMODULES) $(PLUGINMODULES)
-
-NOAUTOREF= coords
 AUTOSRC= $(addsuffix .rst, ${AUTOREF})
+
+MANUALREF = #geometry
+MANUALSRC = $(addsuffix .rst, ${MANUALREF})
 
 PY2RST=../py2rst.py
 
@@ -34,6 +35,9 @@ vpath %.py $(addprefix ../../pyformex, / /gui/ /plugins/)
 
 all: ${AUTOSRC}
 
+clean:
+	rm -f ${AUTOSRC}
+
 #gui.%.rst: %.py ${PY2RST}
 #	${PY2RST} $< > $@
 
@@ -42,5 +46,6 @@ all: ${AUTOSRC}
 
 %.rst: %.py ${PY2RST}
 	${PY2RST} $< > $@
+
 
 # End

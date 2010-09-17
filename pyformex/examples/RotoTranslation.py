@@ -1,20 +1,19 @@
 #!/usr/bin/env pyformex
-
-##
+# $Id$
 
 """RotoTranslation
 
-level = 'beginner'
+level = 'advanced'
 topics = ['geometry']
 techniques = ['transform']
+author: gianluca
 
 .. Description
 
 RotoTranslation
---------
-This example illustrates the use of rototranslate(), which I temporarily insert into geomtools,
-to return to an original reference system after a number of affine transformations.
-
+---------------
+This example illustrates the use of rototranslate() to return to an original
+reference system after a number of affine transformations.
 """
 from numpy import *
 from plugins.geomtools import rototranslate
@@ -106,7 +105,7 @@ drawText(tx, 100, 50, size=15)
 #sleep(1)
 n1, e1=M1.coords, M1.elems
 n2=rototranslate(n1, cs1,cs0)
-M2=M1.setCoords(Coords(n2))
+M2=M1._set_coords(Coords(n2))
 
 
 c2=M2.center()

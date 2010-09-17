@@ -20,9 +20,8 @@ This is the pyFormex |release| documentation, last updated on |today|.
    still in an embryonal state but may already contain valuable information
    for some users.
   
-   For some time, we will also keep the old `Online manual`_ available.
-   A `PDF-version`_ of the older (v0.8) manual is available for
-   download.
+   A `PDF version`_ of the full documentation set is available for
+   download from our FTP server.
 
 
 These documents are to become a full documentation set for the

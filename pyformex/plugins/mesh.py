@@ -305,7 +305,7 @@ class Mesh(Geometry):
             self.eltype = eltype
 
 
-    def setCoords(self,coords):
+    def _set_coords(self,coords):
         """Replace the current coords with new ones.
 
         Returns a Mesh exactly like the current except for the position

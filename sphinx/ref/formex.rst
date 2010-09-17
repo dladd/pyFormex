@@ -17,7 +17,7 @@
 
 
    .. autoclass:: Formex
-      :members: setCoords,element,point,coord,nelems,nplex,ndim,npoints,shape,view,getProp,maxProp,propSet,centroids,fuse,toMesh,info,asFormex,asFormexWithProp,asArray,fprint,setProp,append,select,selectNodes,points,vertices,remove,whereProp,withProp,splitProp,elbbox,unique,reverse,test,clip,cclip,mirror,centered,resized,circulize,circulize1,shrink,replic,replic2,rosette,translatem,extrude,divide,intersectionWithPlane,intersectionPointsWithPlane,intersectionLinesWithPlane,cutWithPlane,split,write,actor
+      :members: setCoords,element,point,coord,nelems,nplex,ndim,npoints,shape,view,getProp,maxProp,propSet,centroids,fuse,toMesh,info,asFormex,asFormexWithProp,asArray,fprint,setProp,append,select,selectNodes,points,vertices,remove,whereProp,withProp,splitProp,elbbox,unique,reverse,test,clip,cclip,mirror,centered,resized,circulize,circulize1,shrink,replic,replic2,rosette,translatem,extrude,divide,intersectionWithPlane,intersectionPointsWithPlane,intersectionLinesWithPlane,cutWithPlane,split,write,actor,cylindrical
 
 **Functions defined in the module formex**
 

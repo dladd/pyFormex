@@ -567,7 +567,7 @@ class TriSurface(Mesh):
     # Convenience functions are defined to change some of the data.
     #
 
-    def setCoords(self,coords):
+    def _set_coords(self,coords):
         """Change the coords."""
         self.__init__(coords,self.elems,prop=self.prop)
         return self
