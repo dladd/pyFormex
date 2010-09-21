@@ -47,7 +47,7 @@ files = [
              )
 
 for f in files:
-   print f
+   print 'include %s' % f
 
 # End
 

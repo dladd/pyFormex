@@ -27,23 +27,25 @@ import sys,os
 pyformexdir = sys.path[0]
 svnversion = os.path.exists(os.path.join(pyformexdir,'.svn'))
 startup_warnings = ''
+startup_messages = ''
 
 if svnversion:
+    msg = ''
     libdir = os.path.join(pyformexdir,'lib')
     libraries = [ 'miscmodule','drawglmodule' ]
     for lib in libraries:
         src = os.path.join(libdir,lib+'.c')
         obj = os.path.join(libdir,lib+'.so')
         if not os.path.exists(obj) or os.path.getmtime(obj) < os.path.getmtime(src):
-            startup_warnings += "\nThe compiled library '%s' is not up to date!" % lib
-    if startup_warnings:
-        startup_warnings += """
+            msg += "\nThe compiled library '%s' is not up to date!" % lib
+    if msg:
+        msg += """
         
 You should probably rebuild the pyFormex library first.
 
 Do 'make lib' in %s
 """ % pyformexdir
-
+    startup_warnings += msg
 
 import utils
 
@@ -450,9 +452,14 @@ def run(argv=[]):
             print("Could not start the pyFormex GUI: %s" % res)
             return res # EXIT
 
-    # Display the startup warnings
+    # Display the startup warnings and messages
     if startup_warnings:
-        pyformex.warning(startup_warnings)
+        if pyformex.cfg['startup_warnings']:
+            pyformex.warning(startup_warnings)
+        else:
+            print(startup_warnings)
+    if startup_messages:
+        print(startup_messages)
 
     pyformex.debug(utils.reportDetected())
  

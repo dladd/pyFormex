@@ -242,6 +242,9 @@ class Geometry(object):
     def superSpherical(self,*args,**kargs):
         pass
     @_coords_transform
+    def egg(self,*args,**kargs):
+        pass
+    @_coords_transform
     def toSpherical(self,*args,**kargs):
         pass
     @_coords_transform

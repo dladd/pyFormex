@@ -165,13 +165,11 @@ dist: ${LATEST}
 ${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
 
-${PKGDIR}/${PKGVER}: version
-	@echo "Creating MANIFEST"
-	python create_manifest.py >MANIFEST
+${PKGDIR}/${PKGVER}: version MANIFEST.in
 	@echo "Creating ${PKGDIR}/${PKGVER}"
-	python setup.py sdist
+	python setup.py sdist --no-defaults
 
-MANIFEST: 
+MANIFEST.in: 
 	python create_manifest.py >$@
 
 # Publish the distribution to our ftp server and berlios

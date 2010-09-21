@@ -27,7 +27,7 @@
 
 level = 'beginner'
 topics = ['geometry', 'mesh']
-techniques = ['extrude','border']
+techniques = ['extrude','border','pause']
 
 .. Description
 
@@ -73,7 +73,6 @@ def atExit():
     
 
 
-from gui.helpMenu import showDescription
 GD.GUI.setBusy()
 #draw.logfile = open('pyformex.log','w')
     
