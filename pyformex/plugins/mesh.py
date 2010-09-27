@@ -556,9 +556,16 @@ class Mesh(Geometry):
         """Return a Mesh with the border elements.
 
         Returns a Mesh representing the border of the Mesh.
+        The new Mesh has the same properties of the old mesh (if any).
         The new Mesh is of the next lower hierarchical level.
         """
-        return Mesh(self.coords,self.getBorder())
+        if self.propSet()==None: return Mesh(self.coords,self.getBorder())
+        kp=self.propSet()
+        p=self.splitProp()
+        brd=Mesh.concatenate( [Mesh(p[k].coords,p[k].getBorder()).setProp(k) for k in  kp] )
+        ind,ok = brd.elems.testDoubles()
+        testdoubles= ind[ok*roll(ok, -1, 0)]#remove repeated faces with different props
+        return brd.select(testdoubles)
 
 
     def report(self):
