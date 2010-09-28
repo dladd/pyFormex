@@ -137,12 +137,12 @@ class Tri6(Element):
     vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
+                 ( 0.5, 0.0, 0.0 ),
                  ( 0.5, 0.5, 0.0 ),
                  ( 0.0, 0.5, 0.0 ),
-                 ( 0.5, 0.0, 0.0 ),
                  ]
                  
-    edges = [ (0,5), (5,1),(1,3),(3,2), (2,4), (4,0) ]
+    edges = [ (0,3), (3,1),(1,4),(4,2), (2,5), (5,0) ]
     #edges = [ (0,1), (1,2), (2,0) ]
 
     faces = [ (0,1,2, 3, 4, 5), ]
@@ -150,8 +150,8 @@ class Tri6(Element):
 
     element = faces[0]
 
-    drawfaces = Tri3.faces
-
+    drawfaces =  [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]#For Benedict: if drawn like that, the contours of the face are well represented. Should we use this drawing trick for the faces of all quadratic elements?
+    #drawfaces = Tri3.faces
 
 class Quad4(Element):
     """A 4-node quadrilateral"""
