@@ -562,7 +562,7 @@ class Mesh(Geometry):
         if self.propSet()==None: return Mesh(self.coords,self.getBorder())
         kp=self.propSet()
         p=self.splitProp()
-        brd=Mesh.concatenate( [Mesh(p[k].coords,p[k].getBorder()).setProp(k) for k in  kp] )
+        brd=Mesh.concatenate( [Mesh(p[k].coords,p[k].getBorder()).setProp(k) for k in  kp] ).renumber()
         ind,ok = brd.elems.testDoubles()
         testdoubles= ind[ok*roll(ok, -1, 0)]#remove repeated faces with different props
         return brd.select(testdoubles)
