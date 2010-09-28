@@ -568,6 +568,20 @@ class Mesh(Geometry):
         return brd.select(testdoubles)
 
 
+    def neighborsByNode(self, elsel=None):
+        """For each element index in the list elsel, it returns the list of neighbor elements (connected by one node at least). If elsel is None, the neighbors of all elements are calculated, but it is computationally expensive for big meshes."""
+        if elsel==None:elsel=range(self.nelems())
+        fnf= self.elems.inverse()#faces touched by node
+        fnf= fnf[self.elems[elsel]]#face, nodes belonging to face, faces touched by nodes)
+        ff= fnf.reshape(fnf.shape[0], fnf.shape[1]*fnf.shape[2] )#(faces touched faces)
+        #add -1 so everyone has at least once -1
+        ff=concatenate([ff, -ones([ff.shape[0]  ],  dtype=int).reshape(-1, 1)   ], 1)
+        #take unique on each row and remove the -1
+        uf=[unique(fi)[1:] for fi in ff]
+        #remove the face-i from the neighboors of face-i
+        return [ uf[i] [uf[i]!=i] for i in range(len(uf)) ]
+
+
     def report(self):
         bb = self.bbox()
         return """
