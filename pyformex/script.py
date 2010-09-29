@@ -379,7 +379,9 @@ def step_script(s,glob,paus=True):
         else:
             buf += line
         if paus and (line.strip().startswith('draw') or
-                     line.find('draw(') >= 0 ):
+                     line.find('draw(') >= 0  or
+                     line.strip().startswith('view') or
+                     line.find('view(') >= 0 ):
             pyformex.GUI.drawlock.block()
             message(buf)
             exec(buf) in glob

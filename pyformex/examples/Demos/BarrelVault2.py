@@ -31,6 +31,7 @@ techniques = ['colors']
 """
 
 clear()
+
 m=10 # number of modules in axial direction
 n=8 # number of modules in tangential direction
 r=10. # barrel radius
@@ -39,41 +40,58 @@ l=30. # barrel length
 
 
 # Diagonals
-d = Formex([[[0.,0.,0.],[1.,1.,0.]]],1)
+d = Formex([[[0.,0.,0.],[1.,1.,0.]]],1) # a single diagonal
 draw(d,view='front')
-d += d.reflect(0,1) # reflect in x-direction
-d += d.reflect(1,1) # reflect in y-direction
+
+d += d.reflect(0,1.) # reflect in x-direction
 draw(d)
 
-# Replicate in x-direction
-da = d.replic(m,2,0)
+d += d.reflect(1,1.) # reflect in y-direction
+draw(d)
+
+da = d.replic(m,2,0) # replicate in x-direction
 draw(da)
-# Replicate in y-direction
-da = da.replic(n,2,1)
+
+da = da.replic(n,2,1) # replicate in y-direction
 draw(da)
 
 # Longitudinals
-h = Formex(pattern("1"),3) # Same as  Formex([[[0.,0.,0.],[1.,0.,0.]]],3)
+h = Formex(pattern("1"),3) # same as  Formex([[[0.,0.,0.],[1.,0.,0.]]],3)
 draw(h)
-ha = h.replic2(2*m,2*n+1,1,1)
+
+ha = h.replic2(2*m,2*n+1,1,1) # replicate in x- and y-direction
 draw(ha)
 
 # End bars
-e = Formex(pattern("2"),0)
+e = Formex(pattern("2"),0) # a unit vertical line
 draw(e)
-ea = e.replic2(2,2*n,2*m,1)
+
+ea = e.replic2(2,2*n,2*m,1) # verticals only at the ends!
 draw(ea)
 
-
+# Choose better viewing angle for 3D
 view('iso')
-# Create barrel
+drawAxes()
+
+# Rotate the grid to (y,z) plane and give it an offset from the z-axis
 grid = (da+ha+ea).rotate(90,1).translate(0,r)
 draw(grid)
 
-grid = grid.scale([1.,pi*r/(2*n),l/(2*m)])
-draw(grid)
+# Scale the grid to the requested length and circumference of the barrel
+# The current height of the grid is 2*n
+# As the angle a is given in degrees, the circumference is
+circum = a*Deg*r
+scaled_grid = grid.scale([1.,circum/(2*n),l/(2*m)])
+draw(scaled_grid)
 
-barrel = grid.cylindrical(scale=[1.,a/(pi*r),1.])
+# Create barrel
+# The cylindrical transformation by default expects angles in degrees
+barrel = scaled_grid.cylindrical(scale=[1.,(1./r)/Deg,1.])
 draw(barrel)
+
+# Remark: if we did not want to show the scaled grid, the creation
+# of the barrel could be simplified by combining the last two transformations:
+# barrel = grid.cylindrical(scale=[1.,a/(2*n),l/(2*m)])
+
 
 # That's all, folks!

@@ -198,7 +198,15 @@ class BboxActor(Actor):
 
  
 class TriadeActor(Actor):
-    """An OpenGL actor representing a triade of global axes."""
+    """An OpenGL actor representing a triade of global axes.
+
+    By default, this draws three unit length axes at the origin,
+    and three colored triangles representing the coordinate planes.
+    The size and position of the axes can be changed.
+
+    Specifying color=None will suppress the drawing of the coordinate
+    planes.
+    """
 
     def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue,cyan,magenta,yellow],**kargs):
         Actor.__init__(self)
@@ -239,15 +247,16 @@ class TriadeActor(Actor):
                 GL.glVertex3f(*x)
             pts = pts.rollAxes(1)
         GL.glEnd()
-        # Coord plane triangles of size 0.5
-        GL.glBegin(GL.GL_TRIANGLES)
-        pts = Formex(mpattern('16')).scale(0.5).coords.reshape(-1,3)
-        for i in range(3):
-            pts = pts.rollAxes(1)
-            GL.glColor(*self.color[i])
-            for x in pts:
-                GL.glVertex3f(*x)
-        GL.glEnd()
+        if self.color:
+            # Coord plane triangles of size 0.5
+            GL.glBegin(GL.GL_TRIANGLES)
+            pts = Formex(mpattern('16')).scale(0.5).coords.reshape(-1,3)
+            for i in range(3):
+                pts = pts.rollAxes(1)
+                GL.glColor(*self.color[i])
+                for x in pts:
+                    GL.glVertex3f(*x)
+            GL.glEnd()
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
 

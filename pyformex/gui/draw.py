@@ -701,6 +701,18 @@ def drawText3D(P,text,color=None,font='sans',size=18):
     return M
 
 
+def drawAxes(**args):
+    """Draw the global axes.
+
+    This draws a TriadeActor of unit size at the origin of the
+    global axes. Possible arguments are the same as the actors.TriadeActor
+    constructor.
+    """
+    A = actors.TriadeActor(**args)
+    drawActor(A)
+    return A
+
+
 def drawViewportAxes3D(pos,color=None):
     """Draw two viewport axes at a 3D position."""
     M = marks.AxesMark(pos,color)
