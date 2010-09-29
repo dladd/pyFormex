@@ -1316,11 +1316,19 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
     et = concatenate([e1,e2],axis=-1)
     if type(n)!=int:n=len(n)-1
     e = concatenate([et+i*nnod for i in range(n)])
-    return Mesh(x,e,eltype=eltype)
+    return Mesh(x,e,eltype=eltype).setProp(mesh1.prop)
         
 # define this also as a Mesh method
 Mesh.connect = connectMesh
-
+def connectQuadraticMesh(mesh1,mesh2,n=1, eltype='Hex20'):
+    """currently works for Quad8 only. Connect two Quad8 meshes to form a Hex20 mesh. """
+    #this is a proposal. Is it better to implement the conversion in the _conversions_ ?
+    h16=connectMesh(mesh1,mesh2,n=n)
+    #now a conversion hex16 to hex20
+    h20=h16.addMeanNodes( [ (0,8), (1,9), (2,10), (3,11) ],'hex20')
+    h20.elems=h20.elems[:, [0, 1, 2, 3, 8, 9, 10, 11, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19]]
+    #finally fuse (needed after addMeanNodes) and renumber
+    return h20
 
 def connectMeshSequence(ML,loop=False,**kargs):
     #print([Mi.eltype for Mi in ML])
