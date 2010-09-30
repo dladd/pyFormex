@@ -1482,6 +1482,23 @@ Total area: %s; Enclosed volume: %s
         if sta == 0:
             GD.message('The surface is a closed, orientable non self-intersecting manifold')
  
+ 
+    def fixNormals(self):
+        """Fix normals using admesh, thus converting a non-orientable manifold into an orientable manifold. This operation is required before gts boolean operations."""
+        cmd = 'admesh'
+        tmp = tempfile.mktemp('.stl')
+        tmp1 = tempfile.mktemp('.stl')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'stl')
+        cmd += ' %s -da %s' % (tmp,tmp1)
+        GD.message("Fixing surface normals with command\n %s" % cmd)
+        sta,out = runCommand(cmd)
+        GD.message("Reading result from %s" % tmp1)
+        S = TriSurface.read(tmp1)   
+        os.remove(tmp)
+        os.remove(tmp1)    
+        return S.setProp(self.prop)
+ 
 
     def split(self,base,verbose=False):
         """Check the surface using gtscheck."""
@@ -1598,7 +1615,7 @@ Total area: %s; Enclosed volume: %s
 #### WE MIGHT DO THIS IN FUTURE FOR ALL SURFACE PROCESSING
 
     def boolean(self,surf,op,inter=False,check=False,verbose=False):
-        """Perform a boolean operation with surface surf.
+        """Perform a boolean operation with surface surf. Both surfaces needs to be closed (border of a volume) and to be an orientable manifold (use fixNormals).
 
         """
         ops = {'+':'union', '-':'diff', '*':'inter'}
