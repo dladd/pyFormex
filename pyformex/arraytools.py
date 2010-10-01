@@ -364,10 +364,20 @@ def rotationAnglesFromMatrix(mat,angle_spec=Deg):
     This returns the three angles around the global axes 0, 1 and 2.
     The angles are returned in degrees, unless angle_spec=Rad.
     """
-    rx = arctan(mat[1,2]/mat[2,2]) / angle_spec
-    ry = -arcsin(mat[0,2]) / angle_spec
-    rz = arctan(mat[0,1]/mat[0,0]) / angle_spec
-    return rx,ry,rz
+    rx = arctan(mat[1,2]/mat[2,2])
+    ry = -arcsin(mat[0,2])
+    rz = arctan(mat[0,1]/mat[0,0])
+    R = dot(dot(rotationMatrix(rx,0,Rad),rotationMatrix(ry,1,Rad)),rotationMatrix(rz,2,Rad))
+    T = isClose(mat,R,rtol=1.e-3,atol=1.e-5)
+    w = where(~T.ravel())[0]
+    w = w.tolist()
+    if w == [3,4,5,6,7,8]:
+        rx = pi + rx
+    elif w == [0,1,3,4,6,7]:
+        rz = pi + rz
+    elif w == [0,1,5,8]:
+        ry = pi - ry
+    return rx / angle_spec, ry / angle_spec, rz / angle_spec
 
 
 def growAxis(a,add,axis=-1,fill=0):
