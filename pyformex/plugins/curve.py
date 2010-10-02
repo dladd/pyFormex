@@ -767,6 +767,7 @@ class QuadBezierSpline(BezierSpline):
         warnings.warn("The use of the QuadBezierSpline class is deprecated and will be removed in future. Use the BezierSpline class with parameter `degree = 2` instead")
         kargs['degree'] = 2
         BezierSpline.__init__(self,coords,**kargs)
+        print self.degree
 
 
 ##############################################################################

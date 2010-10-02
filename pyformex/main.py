@@ -49,16 +49,25 @@ Do 'make lib' in %s
 
 import utils
 
-if utils.checkVersion('python','2.5') < 0:
+# intended Python version
+minimal_version = '2.5'
+target_version = '2.5'
+found_version = utils.hasModule('python')
+
+
+if utils.SaneVersion(found_version) < utils.SaneVersion(minimal_version):
+#if utils.checkVersion('python',minimal_version) < 0:
     startup_warnings += """
-This version of pyFormex was developed for Python 2.5. We advice you to upgrade your Python version. Getting pyFormex to run on Python 2.4 should be possible with a few adjustements. Make it run on a lower version is problematic.
-"""
+Your Python version is %s, but pyFormex requires Python >= %s. We advice you to upgrade your Python version. Getting pyFormex to run on Python 2.4 requires only minor adjustements. Lower versions are problematic.
+""" % (found_version,minimal_version)
+    print startup_warnings
     sys.exit()
     
-if utils.checkVersion('python','2.6') >= 0:
+if utils.SaneVersion(found_version[:3]) > utils.SaneVersion(target_version):
+#if utils.checkVersion('python',target_version) > 0:
     startup_warnings += """
-This version of pyFormex was developed for Python 2.5. It is expected to run well on Python2.6 or higher, but if you encounter problems, please contact the developers at pyformex.berlios.de.
-"""
+Your Python version is %s, but pyFormex has only been tested with Python <= %s. We expect pyFormex to run correctly with your Python version, but if you encounter problems, please contact the developers at pyformex.berlios.de.
+""" % (found_version,target_version)
 
 import pyformex
 from config import Config

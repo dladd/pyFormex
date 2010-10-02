@@ -191,7 +191,7 @@ def timeOut():
     showAll()
     close()
     
-dialog = widgets.InputDialog(
+dialog = widgets.OldInputDialog(
     data_items,
     caption='Curve parameters',
     actions = [('Close',close),('Show All',showAll),('Show',show)],

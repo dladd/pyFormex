@@ -524,7 +524,7 @@ def timeOut():
 
 # Display the dialog
 
-dialog = widgets.InputDialog(data_items,caption='Optical illusions',actions = [('Done',close),('Next',next),('Explain',explain),('Show',show)],default='Show')
+dialog = widgets.OldInputDialog(data_items,caption='Optical illusions',actions = [('Done',close),('Next',next),('Explain',explain),('Show',show)],default='Show')
 dialog.timeout = timeOut
 dialog.show()
 explanation = None

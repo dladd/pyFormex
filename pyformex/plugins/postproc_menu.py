@@ -741,7 +741,7 @@ def open_results_dialog():
 #               ('Show Fields',showfields),
 #               ('Show Attr',showattr),
                ]
-    dialog = widgets.InputDialog(dia_dict.values(),caption='Results Dialog',actions=actions,default='Show')
+    dialog = widgets.OldInputDialog(dia_dict.values(),caption='Results Dialog',actions=actions,default='Show')
     dialog.show()
     GD.PF['__PostProcMenu_dialog__'] = dialog
 

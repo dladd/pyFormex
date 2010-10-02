@@ -116,7 +116,7 @@ diag=''
 
 items = [ [n,globals()[n]] for n in ['r0','r1','h','t', 'nr','nt','diag'] ]
 items[-1].extend(['radio',['','u','d']])
-dialog = widgets.InputDialog(items)
+dialog = widgets.OldInputDialog(items)
 
 
 while not dialog.result() == widgets.TIMEOUT:

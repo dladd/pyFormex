@@ -184,7 +184,7 @@ def askConfigPreferences(items,prefix=None,store=None):
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
     itemlist = [ [ i,store[i] ] for i in items ]
-    res = widgets.InputDialog(itemlist+[('Save changes',True)],'Config Dialog',pf.GUI).getResult()
+    res = widgets.OldInputDialog(itemlist+[('Save changes',True)],'Config Dialog',pf.GUI).getResult()
     pf.debug(res)
     if res and store==pf.cfg:
         updateSettings(res)
@@ -205,7 +205,7 @@ def setToolbarPlacement(store=None):
     current = [ store[s] for s in setting ]
     itemlist = [(l, options[1], 'select', options) for (l,c) in zip(label,setting)]
     itemlist.append(('Store these settings as defaults', False))
-    res = widgets.InputDialog(itemlist,'Config Dialog',pf.GUI).getResult()
+    res = widgets.OldInputDialog(itemlist,'Config Dialog',pf.GUI).getResult()
     if res:
         pf.debug(res)
         if res['Store these settings as defaults']:

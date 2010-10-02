@@ -37,7 +37,9 @@ the_version = {
     }
 the_external = {}
 
-known_modules = [ 'python','numpy','pyopengl','pyqt4','pyqt4gl','calpy',
+# Do not include pyformex or python here: they are predefined
+# and could be erased by the detection 
+known_modules = [ 'numpy','pyopengl','pyqt4','pyqt4gl','calpy',
                   'gnuplot','gl2ps' ]
 
 known_externals = {
