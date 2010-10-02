@@ -53,8 +53,8 @@ def base(type,m,n=None):
     else:
         raise ValueError,"Unknown type '%s'" % str(type)
 
- 
-res = askItems([('nx',4),('ny',3),('nz',2),('Grid type','','select',['Box','Plane']),('alpha',0.3)])
+# This is the old input format, but relies on auto-conversion 
+res = askItems([('nx',4),('ny',3),('nz',2),('Grid type','','select',{'choices':['Box','Plane']}),('alpha',0.3)])
 
 if not res:
     exit()

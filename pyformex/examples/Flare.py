@@ -39,21 +39,28 @@ def addFlares(F,dir=[0,2]):
     F = F.flare(m/4.,-1.,dir,0,0.5)
     F = F.flare(m/4.,1.5,dir,1,2.)
     return F
-    
-view('iso')
+
+# Some named colors (they should exist in /etc/X11/rgb.txt)
+color_choice = ['red','blue','orange','indianred','gold','pink','orchid','steelblue','turquoise','aquamarine','aquamarine1','aquamarine2','aquamarine3','aquamarine4','navy blue','royal blue']
+
+# Ask data from the user
 data = [
-    ('m',36,{'text':'number of cells in longest grid direction'}),
-    ('n',12,{'text':'number of cells in shortes grid direction'}),
-    ('f0',True,{'text':'add flares on rectangle'}),
-    ('f1',False,{'text':'add flares on cylinder'}),
-    ('f2',False,{'text':'add flares on torus'}),
-    ('geom','cylinder','radio',['rectangle','cylinder','torus'],{'text':'geometry'}),
+    {'name':'m','value':36,'text':'number of cells in longest grid direction'},
+    {'name':'n','value':12,'text':'number of cells in shortes grid direction'},
+    {'name':'f0','value':True,'text':'add flares on rectangle'},
+    {'name':'f1','value':False,'text':'add flares on cylinder'},
+    {'name':'f2','value':False,'text':'add flares on torus'},
+    {'name':'geom','value':'cylinder','itemtype':'radio','choices':['rectangle','cylinder','torus'],'text':'geometry'},
+    {'name':'color0','value':'red','choices':color_choice},
+    {'name':'color1','value':'blue','choices':color_choice},
     ]
 res = askItems(data)
 if not res:
     exit()
+
+# Add the returned data to the global variables
 globals().update(res)
-F = Formex(mpattern("12-34"),[1,3]).replic2(m,n,1,1)
+F = Formex(mpattern("12-34"),[0,1]).replic2(m,n,1,1)
 if f0:
     F = addFlares(F)
 
@@ -66,7 +73,9 @@ if geom != 'rectangle':
         if f2:
             F = addFlares(F)
 
+# Draw the structure
 clear()
-draw(F)
+view('iso')
+draw(F,colormap=[color0,color1])
 
 # End

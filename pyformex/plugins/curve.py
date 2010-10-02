@@ -704,8 +704,8 @@ class BezierSpline(Curve):
     def pointsOn(self):
         """Return the points on the curve.
 
-        This returns a Coords object of shape [n], where n=nparts+1 for
-        an open curve, and n=nparts for a closed curve.
+        This returns a Coords object of shape [nparts+1]. For a closed curve,
+        the last point will be equal to the first.
         """ 
         return self.coords[::self.degree]
 
@@ -766,8 +766,6 @@ class QuadBezierSpline(BezierSpline):
         import warnings
         warnings.warn("The use of the QuadBezierSpline class is deprecated and will be removed in future. Use the BezierSpline class with parameter `degree = 2` instead")
         kargs['degree'] = 2
-        print coords
-        print kargs
         BezierSpline.__init__(self,coords,**kargs)
 
 

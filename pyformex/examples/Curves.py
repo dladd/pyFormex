@@ -89,7 +89,7 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
         kargs['curl'] = curl
     S = method[ctype](P,**kargs)
 
-    draw(S.pointsOn(),color=blue)
+    print "%s points on the curve" % S.pointsOn().shape[0]
     draw(S.pointsOff(),color=red)
 
     if spread:

@@ -43,7 +43,7 @@ smooth()
 lights(True)
 
 surf=True
-F = Formex.read(getcfg('datadir')+'/horse.formex')
+F = Formex.read(getcfg('datadir')+'/horse.pgf')
 F = F.translate(-F.center())
 xmin,xmax = F.bbox()
 

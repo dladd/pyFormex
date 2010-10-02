@@ -2064,16 +2064,18 @@ def updateDialogItems(data,newdata):
                     d[1] = v
 
 
-class InputDialog(OldInputDialog):
+class InputDialog(NewInputDialog):
     def __init__(self,*args,**kargs):
         import warnings
         warnings.warn("""
 =========== WARNING! ========
-The InputDialog will change in the near future.
+The default InputDialog has changed to the NewInputDialog!
 See the related help item for more info.
+For some time, you will be able to use OldInputDialog to
+get the old behavior.
 =============================
 """)
-        OldInputDialog.__init__(self,*args,**kargs)
+        NewInputDialog.__init__(self,*args,**kargs)
 
 
 ########################### Table widgets ###########################

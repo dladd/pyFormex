@@ -28,7 +28,7 @@ level = 'normal'
 topics = ['surface']
 techniques = ['animation','colors'] 
 
-This script reads horse.formex, transforms it into a surface,
+This script reads horse.pgf, transforms it into a surface,
 loads the surface plugin and cuts the horse in a number of surfaces.
 """
 
@@ -49,7 +49,7 @@ GD.message('Click Step to continue')
 
 say('A Horse Story...')
 y -= 10
-F = Formex.read(getcfg('datadir')+'/horse.formex')
+F = Formex.read(getcfg('datadir')+'/horse.pgf')
 A = draw(F)
 pause()
 

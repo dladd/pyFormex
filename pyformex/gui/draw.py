@@ -169,9 +169,25 @@ def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
-    Input is a list of input items (basically [key,value] pairs).
+    'items' is a list of input items (basically [key,value] pairs).
     See the widgets.InputDialog class for complete description of the
     available input items.
+
+    Two InputDialog classes are defined in gui.widgets.
+    The OldInputDialog class is deprecated in favor of NewInputDialog, which
+    has become the default as of pyFormex 0.8.3.
+    The two classes differ in how the input is specified.
+    In the new format, each input item is either a simpleInputItem, a
+    groupInputItem or a tabInputItem.
+    
+    You can specify 'legacy=False' to indicate that you are using the new
+    format, or 'legacy=True' if your data are in the old format.
+    The default ('legacy = None'), will make this function try to detect
+    the format and convert the input items to the proper new format.
+    This conversion will work on most, but not all legacy formats that
+    have been used in the past by pyFormex.
+    Since the legacy format is scheduled to be withdrawn in future, users
+    are encouraged to change their input to the new format.
 
     The remaining arguments are keyword arguments that are passed to the
     InputDialog.getResult method.
