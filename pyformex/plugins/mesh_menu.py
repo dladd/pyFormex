@@ -274,8 +274,8 @@ def fuseMesh():
 
     before = [ m.ncoords() for m in meshes ]
     meshes = [ m.fuse(
-        atol = res['Relative Tolerance'],
-        rtol = res['Absolute Tolerance'],
+        rtol = res['Relative Tolerance'],
+        atol = res['Absolute Tolerance'],
         shift = res['Shift'],
         nodesperbox = res['Nodes per box'],
         ) for m in meshes ]
