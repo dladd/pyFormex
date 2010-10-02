@@ -32,11 +32,10 @@ techniques = ['color','widgets']
 """
 from plugins.trisurface import TriSurface
 
-
 def askSlices(bb):
-    res = askItems([['Direction',0],
-                    ['# slices',25],
-                    ['total rot',70.],
+    res = askItems([('Direction',0),
+                    ('# slices',25),
+                    ('total rot',70.),
                    ],caption = 'Define the slicing planes')
     if res:
         axis = res['Direction']
@@ -56,7 +55,7 @@ smooth()
 lights(True)
 transparent(False)
 setView('horse',[20,20,0])
-S = TriSurface.read(getcfg('datadir')+'/horse.gts')
+S = TriSurface.read(getcfg('datadir')+'/horse.off')
 bb = S.bbox()
 
 t = -0.3

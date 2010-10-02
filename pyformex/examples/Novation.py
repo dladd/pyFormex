@@ -36,9 +36,9 @@ reset()
 basechoices = ['Triangles','Quadrilaterals']
 renderchoices = ['wireframe','flat','flatwire','smooth','smoothwire']
 res = askItems([
-    ('baseGeom',None,'radio',basechoices,{'text':'Type of surface element'}),
+    ('baseGeom',None,'radio',{'choices':basechoices,'text':'Type of surface element'}),
     ('nbumps',3,{'text':'Number of bumps'}),
-    ('rendermode',None,'select',renderchoices,{'text':'Render mode'}),
+    ('rendermode',None,'select',{'choices':renderchoices,'text':'Render mode'}),
     ('transparent',False,{'text':'Transparent'}),
     ('bottom',False,{'text':'Add a bottom plate'}),
     ('shrink',False,{'text':'Shrink elements'}),

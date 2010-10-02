@@ -80,9 +80,12 @@ examples = { 'Square'    : square_example,
              'CloseLoop' : close_loop_example,
              }
 
-res = askItems([('Select an example',None,'select',examples.keys())])
+from gui.widgets import simpleInputItem as I
+res = askItems([
+    I('example',text='Select an example',choices=examples.keys()),
+    ])
 if res:
-    F = examples[res['Select an example']]()
+    F = examples[res['example']]()
     draw(F)
     S = sectionChar(F)
     S.update(extendedSectionChar(S))
