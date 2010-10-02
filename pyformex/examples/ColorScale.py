@@ -61,7 +61,7 @@ def getData():
         ('Size',(100,600)),
         ('Header','Currently not displayed'),
         ('Gravity','Notused'),
-        ])
+        ],legacy=True)
     
     if not res:
         return

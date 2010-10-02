@@ -87,6 +87,7 @@ def showCube(base,color):
 if __name__ == "draw":
 
     from gui import widgets
+    from gui.widgets import simpleInputItem as I
 
     clear()
     reset()
@@ -100,9 +101,9 @@ if __name__ == "draw":
     base = 'Quad'
     color = 'Full'
     while True:
-        res = askItems([('All',all),
-                        ('Base',base,'select',baseshape),
-                        ('Color',color,'select',colormode),
+        res = askItems([I('All',all),
+                        I('Base',base,choices=baseshape),
+                        I('Color',color,choices=colormode),
                         ],caption="Make a selection or check 'All'")
         if not res:
             break;

@@ -752,7 +752,7 @@ class QuadBezierSpline(BezierSpline):
     BezierSpline, except for degree.
     """
 
-    def __init__(self,**kargs):
+    def __init__(self,coords,**kargs):
         """Create a natural spline through the given points."""
         import warnings
         warnings.warn("The use of the QuadBezierSpline class is deprecated and will be removed in future. Use the BezierSpline class with parameter `degree = 2` instead")
