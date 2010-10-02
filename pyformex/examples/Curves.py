@@ -52,11 +52,11 @@ def BezierCurve(X,curl=None,closed=False):
     
 
 method = ODict([
-    ('Natural Spline', NaturalSpline),
     ('Bezier Spline', BezierSpline),
-    ('Cardinal Bezier Spline', CardinalSpline),
     ('Quadratic Bezier Spline', QuadBezierSpline),
+    ('Cardinal Bezier Spline', CardinalSpline),
     ('Cardinal Spline', CardinalSpline2),
+    ('Natural Spline', NaturalSpline),
     ('Polyline', PolyLine),
     ('Bezier Curve', BezierCurve),
 ])
@@ -89,8 +89,8 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
         kargs['curl'] = curl
     S = method[ctype](P,**kargs)
 
-    print S.pointsOn()
-    print S.pointsOff()
+    draw(S.pointsOn(),color=blue)
+    draw(S.pointsOff(),color=red)
 
     if spread:
         print ndiv,ntot

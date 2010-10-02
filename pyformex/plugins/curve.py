@@ -692,25 +692,34 @@ class BezierSpline(Curve):
                     last = -1
                 control = Coords.concatenate([control,coords[last]])
 
-
-        #print "Final coords shape = %s" % str(control.shape)
-        #print "nparts = %s" % nparts
-
         self.degree = degree
         self.coeffs = BezierSpline.coeffs[degree]
         self.coords = control
         self.nparts = nparts
         self.closed = closed
 
+        print "Degree: %s; Parts: %s, Ncoords: %s" % (self.degree,self.nparts,self.coords.shape[0])
+
 
     def pointsOn(self):
-        """Return the points on the curve""" 
+        """Return the points on the curve.
+
+        This returns a Coords object of shape [n], where n=nparts+1 for
+        an open curve, and n=nparts for a closed curve.
+        """ 
         return self.coords[::self.degree]
 
 
     def pointsOff(self):
-        """Return the points off the curve (the control points)""" 
-        return stack([self.coords[i::self.degree] for i in range(1,self.degree-1)],axis=1)
+        """Return the points off the curve (the control points)
+
+        This returns a Coords object of shape [nparts,ndegree-1], or
+        an empty Coords if degree <= 1.
+        """
+        if self.degree > 1:
+            return self.coords[:-1].reshape(-1,self.degree,3)[:,1:]
+        else:
+            return Coords()
 
 
     def part(self,j):
@@ -749,7 +758,7 @@ class QuadBezierSpline(BezierSpline):
 
     This is a (deprecated) convenience class for BezierSpline with fixed
     value of degree=2. The constructor takes the same parameters as
-    BezierSpline, except for degree.
+    BezierSpline, except for degree, which is fixed to a value 2.
     """
 
     def __init__(self,coords,**kargs):
@@ -757,7 +766,9 @@ class QuadBezierSpline(BezierSpline):
         import warnings
         warnings.warn("The use of the QuadBezierSpline class is deprecated and will be removed in future. Use the BezierSpline class with parameter `degree = 2` instead")
         kargs['degree'] = 2
-        BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed)
+        print coords
+        print kargs
+        BezierSpline.__init__(self,coords,**kargs)
 
 
 ##############################################################################
