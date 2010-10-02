@@ -35,9 +35,8 @@ from project import Project
 linewidth(2)
 fgcolor(blue)
 grow('Plant1',ngen=7,clearing=False,text=False)
-P = Project(os.path.join(GD.cfg['datadir'],'blippo-5.pyf'),create=False)
-P.load()
-curve = P['blippo-5']
+data = readGeomFile(os.path.join(GD.cfg['datadir'],'blippo.pgf'))
+curve = data['blippo_000']
 bb = curve.coords.bbox()
 ctr = bb.center()
 siz = bb.sizes()

@@ -51,7 +51,7 @@ import utils
 
 # intended Python version
 minimal_version = '2.5'
-target_version = '2.5'
+target_version = '2.6'
 found_version = utils.hasModule('python')
 
 
