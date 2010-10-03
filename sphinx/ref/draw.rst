@@ -51,6 +51,7 @@
    .. autofunction:: drawVertexNumbers(F,color=???,trl=???)
    .. autofunction:: drawNormals(N,P,size=???)
    .. autofunction:: drawText3D(P,text,color=???,font=???,size=???)
+   .. autofunction:: drawAxes()
    .. autofunction:: drawViewportAxes3D(pos,color=???)
    .. autofunction:: drawBbox(A)
    .. autofunction:: drawActor(A)

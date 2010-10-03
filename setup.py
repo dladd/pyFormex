@@ -37,7 +37,7 @@ from pyformex.utils import listTree
 
 DOC_FILES = [ f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
 
-EXT_MODULES = [ 'drawgl', 'misc' ]
+EXT_MODULES = [ 'drawgl', 'misc', '_nurbs_' ]
 
 DATA_FILES = [
               ('pixmaps', ['pyformex/icons/pyformex-64x64.png']),
@@ -103,7 +103,7 @@ files.
 
 setup(cmdclass={'build_ext': build_ext,'install':install},
       name='pyformex',
-      version='0.8.3-a2',
+      version='0.8.3-a3',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
 pyFormex is a tool for generating, manipulating and operating on 

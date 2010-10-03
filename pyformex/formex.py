@@ -1031,7 +1031,7 @@ class Formex(Geometry):
 
     # Properties
     def getProp(self,index=None):
-        """Return the propertie numbers of the element in index"""
+        """Return the property numbers of the element in index"""
         if index is None or self.prop is None:
             return self.prop
         else:

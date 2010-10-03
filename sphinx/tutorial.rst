@@ -692,20 +692,30 @@ scripts) the text file ``square.txt`` with the following contents::
 
    0, 0, 0,  0, 1, 0,  1, 1, 0,  1, 0, 0,
    1, 1, 0,  2, 1, 0,  2, 2, 0,
-   1, 2, 0,
+   1, 2, 0
 
-Then create and execute the following script. It will generate the
-same square as above (figure :ref:`fig:square`).  ::
+Then create and execute the following script. ::
 
    #!/usr/bin/env pyformex
    chdir(__file__)
    F = Formex.fromfile('square.txt',sep=',',nplex=4)
    draw(F)
 
+It will generate two squares, as shown in the figure :ref:`fig:twosquares`. 
+
+.. _`fig:twosquares`:
+
+.. figure:: images/twosquares.png
+   :align: center
+   :alt: Two squares read from file
+
+   Two squares with coordinates read from a file
+
 The ``chdir(__file__)`` statement sets your working
 directory to the directory where the script is located, so that the filename
 can be specified without adding the full pathname.
-The :meth:`Formex.fromfile` call reads the coordinates (as specified, separated by ',') from the file and groups them into elements of the specified
+The :meth:`Formex.fromfile` call reads the coordinates (as specified,
+separated by ',') from the file and groups them into elements of the specified
 plexitude (4). The grouping of coordinates on a line is irrelevant:
 all data could just as well be given on a single line, or with just one value
 per line. The separator character can be accompanied by extra
@@ -789,7 +799,7 @@ Formex property numbers
 Apart from the coordinates of its points, a :class:`Formex` object can
 also store a set of property numbers. This is a set of integers, one
 for every element of the Formex. The property numbers are stored in an
-attribute :attr:`p` of the Formex.  They can be set, changed or
+attribute :attr:`prop` of the Formex.  They can be set, changed or
 deleted, and be used for any purpose the user wants, e.g. to number
 the elements in a different order than their appearence in the
 coordinate array. Or they can be used as pointers into a large
@@ -819,16 +829,16 @@ property number 1, the second and fourth get property 3.::
 
    F = Formex(mpattern('12-34-14-32'))
    F.setProp([1,3])
-   print F.p   # --> [1 3 1 3]
+   print F.prop   # --> [1 3 1 3]
 
 As a convenience, you can also specify the property numbers as a
 second argument to the Formex constructor.
 Once the properties have been created, you can safely change
-individual values by directly accessing the :attr:`p` attribute::
+individual values by directly accessing the :attr:`prop` attribute::
 
    F = Formex(mpattern('12-34-14-32'),[1,3])
-   F.p[3] = 4
-   print(F.p)   # --> [1 3 1 4]
+   F.prop[3] = 4
+   print(F.prop)   # --> [1 3 1 4]
    draw(F)
    drawNumbers(F)
 
@@ -852,8 +862,9 @@ function draws the element numbers (starting from 0).
    A Formex with property numbers drawn as colors. From left to right:
    wireframe, flat, flat (transparent), flatwire (transparent).
 
-Remark how the flat rendering mode obscures the element numbers. We
-make them reappear by using the transparent mode, which can be toggled
+In flat rendering mode, the element numbers may be obscured by the
+faces. In such case, you can make the numbers visible by using the
+transparent mode, which can be toggled
 with the |button-transparent| button. 
 
 Adding properties to a Formex is often done with the sole purpose of
@@ -873,9 +884,10 @@ impression of the structure you created, at times the view will not
 provide enough information or not precise enough. Viewing a 3D
 geometry on a 2D screen can at times even be very misleading. The most
 reliable source for checking your geometry will always be the Formex
-data itself. We have already seen that you can print the coordinates of the Formex ``F``
+data itself. We have already seen that you can print the coordinates
+of the Formex ``F``
 just by printing the Formex itself: ``print(F)``. 
-Likewise you can see the property numbers from a ``print(F.p)`` instruction.
+Likewise you can see the property numbers from a ``print(F.prop)`` instruction.
 
 But once you start using large data structures, this information may become difficult to handle.
 You are usually better of with some generalized information about the Formex object.
@@ -889,8 +901,6 @@ The following table lists the most interesting ones.
 +--------------------+----------------------------------------------+
 | :meth:`F.nplex()`  | The plexitude of the Formex (the number      |
 |                    | of points in each element of the Formex)     |
-+--------------------+----------------------------------------------+
-| :meth:`F.prop()`   | The properties array (same as F.p)           |
 +--------------------+----------------------------------------------+
 | :meth:`F.bbox()`   | The bounding box of the Formex               |
 +--------------------+----------------------------------------------+
@@ -939,7 +949,7 @@ figure :ref:`fig:props` above.
    linewidth(2)
    canvasSize(200,300)
    F = Formex(mpattern('12-34-14-32'),[1,3])
-   F.p[3] = 4
+   F.prop[3] = 4
    clear()
    draw(F)
    drawNumbers(F)
@@ -1173,31 +1183,39 @@ torus.   ::
 
 .. _sec:femodel:
 
-Converting a Formex to a Finite Element model
-=============================================
+Converting a Formex to a Mesh model
+===================================
 
-The :meth:`feModel` method is important in exporting the geometry to finite
+pyFormex contains other geometry models besides the Formex. The
+:class:`Mesh` model e.g. is important in exporting the geometry to finite
 element (FE) programs. A Formex often contains many points with (nearly) the
-same coordinates. In a finite element model, these points have to be merged
-into a single node, to express the continuity of the material. This is exactly
-what\ :meth:`feModel` does. It returns a tuple of two numpy arrays
-(nodes,elems), where
+same coordinates. In a Finite Element model, these points have to be merged
+into a single node, to express the continuity of the material. 
+The :meth:`toMesh` method of a :class:`Formex`
+performs exactly that. It returns a  :class:`Mesh` instance, which has
+two import array attributes 'coords' and 'elems':
 
-* nodes is a float array with shape (?,3), containing the coordinates of the
-  merged points (nodes),
+* coords is a float array with shape (ncoords,3), containing the
+  coordinates of the merged points (nodes),
 
 * elems is an integer array with shape (F.nelems(),F.nplex()), describing each
-  element by a list of node numbers. The elements and their nodes are in the same
-  order as in F.
+  element by a list of node numbers. These can be used as indices in
+  the coords array to find the coordinates of the node.
+  The elements and their nodes are in the same order as in F.
 
 ::
 
-   >>> from simple import *
-   >>> F = Formex(pattern(Pattern['cube']))
-   >>> draw(F)
-   >>> nodes,elems = F.feModel()
-   >>> print 'Nodes',nodes
-   >>> print 'Elements',elems
+   from simple import *
+   F = Formex(pattern(Pattern['cube']))
+   draw(F)
+   M = F.toMesh()
+   print 'Coords',M.coords
+   print 'Elements',M.elems
+
+The output of this script are the coordinates of the unique nodes of
+the Mesh, and the connectivity of the elements. The connectivity is an
+integer array with the same shape as the first two dimensions of the
+Formex: (F.nelems(),F.nplex())::
 
    Nodes
    [[ 0.  0.  0.]
@@ -1222,15 +1240,15 @@ what\ :meth:`feModel` does. It returns a tuple of two numpy arrays
     [7 6]
     [6 4]]
 
-The reverse operation of transforming a finite element model back into a Formex
-is quite simple: ``Formex(nodes[elems])`` will indeed be identical to the
+The reverse operation of transforming a Mesh model back into a Formex
+is also quite simple: ``Formex(nodes[elems])`` will indeed be identical to the
 original F (within the tolerance used in merging of the nodes). ::
 
    >>> G = Formex(nodes[elems])
    >>> print allclose(F.f,G.f)
    True
 
-The ``allclose`` funcion in the second line tests that all coordinates in bopth
+The ``allclose`` funcion in the second line tests that all coordinates in both
 arrays are the same, within a small tolerance.
 
 

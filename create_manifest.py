@@ -42,7 +42,7 @@ files = [
              excludedirs=['.svn'],
              ) + \
     listTree('pyformex/external',listdirs=False,sorted=True,
-             excludedirs=['.svn'],
+             excludedirs=['.svn','pyftgl','sippy-ftgl'],
              excludefiles=['.*~$'],
              )
 
