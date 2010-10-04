@@ -242,12 +242,12 @@ class CanvasSettings(Dict):
         if dict:
             self.update(d)
 
-    def update(self,d):
+    def update(self,d,strict=True):
         """Update current values with the specified settings
 
         Returns the sanitized update values.
         """
-        ok = self.checkDict(d)
+        ok = self.checkDict(d,strict)
         #print "UPDATING %s" % ok
         Dict.update(self,ok)
         ## THIS SHOULD BE DONE WHILE SETTING THE CFG !!
@@ -255,7 +255,7 @@ class CanvasSettings(Dict):
         ##     self.bgcolor2 = None
 
     @classmethod
-    def checkDict(clas,dict):
+    def checkDict(clas,dict,strict=True):
         """Transform a dict to acceptable settings."""
         ok = {}
         for k,v in dict.items():
@@ -274,7 +274,10 @@ class CanvasSettings(Dict):
             elif k == 'marktype':
                 pass
             else:
-                raise ValueError,"Invalid key for CanvasSettings: %s" % k
+                if strict:
+                    raise ValueError,"Invalid key for CanvasSettings: %s" % k
+                else:
+                    continue
             ok[k] = v
         return ok
     

@@ -29,7 +29,7 @@ import widgets
 import draw
 from gettext import gettext as _
 
-from widgets import compatInputItem as C
+from widgets import simpleInputItem as I, compatInputItem as C
 
 
 def setTriade():
@@ -117,10 +117,11 @@ def setLineWidth():
     res = widgets.NewInputDialog(itemlist,'Choose default line width').getResult()
     if res:
         GD.canvas.setLineWidth(res['Line Width'])
+
     
 def setCanvasSize():
     """Save the current viewport size"""
-    itemlist = [C('w',GD.canvas.width()),('h',GD.canvas.height())]
+    itemlist = [I('w',GD.canvas.width()),I('h',GD.canvas.height())]
     res = widgets.NewInputDialog(itemlist,'Set Canvas Size').getResult()
     if res:
         GD.canvas.resize(int(res['w']),int(res['h']))
@@ -133,19 +134,19 @@ def viewportSettings():
     s = GD.canvas.settings
     if s.bgcolor2 is None:
         s.bgcolor2 = s.bgcolor
-    itemlist = [C('rendermode', mode, 'select', modes),
-                C('linewidth', s.linewidth, 'float'),
-                C('bgcolor', s.bgcolor, 'color'),
-                C('bgcolor2', s.bgcolor2, 'color'),
-                C('fgcolor', s.fgcolor, 'color'),
-                C('slcolor', s.slcolor, 'color'),
-                C('Store these settings as defaults', False),
+    itemlist = [I('rendermode', mode, choices=modes),
+                I('linewidth', s.linewidth, itemtype='float'),
+                I('bgcolor', s.bgcolor, itemtype='color'),
+                I('bgcolor2', s.bgcolor2, itemtype='color'),
+                I('fgcolor', s.fgcolor, itemtype='color'),
+                I('slcolor', s.slcolor, itemtype='color'),
+                I('Store these settings as defaults', False),
                 ]
     res = widgets.NewInputDialog(itemlist,'Config Dialog').getResult()
     if res:
         GD.debug(res)
-        GD.canvas.updateSettings(res)
         GD.canvas.setRenderMode(res['rendermode'])
+        GD.canvas.settings.update(res,strict=False)
         #GD.canvas.clear()
         GD.canvas.redrawAll()
         GD.canvas.update()

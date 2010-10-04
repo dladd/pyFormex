@@ -13,6 +13,7 @@
 
 .. automodule:: formex
    :synopsis: Formex algebra in Python
+   :members: vectorLength,vectorNormalize,intersectionLinesWithPlane
 
 
 
