@@ -13,12 +13,13 @@
 
 .. automodule:: inertia
    :synopsis: inertia.py
+   :members: centroids,center,inertia,principal
+
+   ``Classes defined in module inertia``
 
 
-   .. autofunction:: centroids(X)
-   .. autofunction:: center(X,mass=???)
-   .. autofunction:: inertia(X,mass=???)
-   .. autofunction:: principal(inertia,sort=???,right_handed=???)
+   ``Functions defined in module inertia`` 
+
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

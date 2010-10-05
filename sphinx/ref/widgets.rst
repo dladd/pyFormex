@@ -13,7 +13,9 @@
 
 .. automodule:: widgets
    :synopsis: A collection of custom widgets used in the pyFormex GUI
+   :members: setInputTimeout,addTimeOut,selectFont,getColor,defaultItemType,simpleInputItem,groupInputItem,tabInputItem,compatInputItem,convertInputItemList,inputAny,inputAnyOld,updateDialogItems,updateText,dialogButtons
 
+   ``Classes defined in module widgets``
 
 
    .. autoclass:: Options
@@ -139,23 +141,8 @@
    .. autoclass:: CoordsBox
       :members: setValues
 
-**Functions defined in the module widgets**
+   ``Functions defined in module widgets`` 
 
-   .. autofunction:: setInputTimeout(timeout)
-   .. autofunction:: addTimeOut(widget,timeout=???,timeoutfunc=???)
-   .. autofunction:: selectFont()
-   .. autofunction:: getColor(col=???,caption=???)
-   .. autofunction:: defaultItemType(item)
-   .. autofunction:: simpleInputItem(name,value=???,itemtype=???)
-   .. autofunction:: groupInputItem(name,items=???)
-   .. autofunction:: tabInputItem(name,items=???)
-   .. autofunction:: compatInputItem(name,value,itemtype=???,kargs=???)
-   .. autofunction:: convertInputItemList(items)
-   .. autofunction:: inputAny(name,value,itemtype=???)
-   .. autofunction:: inputAnyOld(item,parent=???)
-   .. autofunction:: updateDialogItems(data,newdata)
-   .. autofunction:: updateText(widget,text,format=???)
-   .. autofunction:: dialogButtons(dialog,actions,default=???)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

@@ -13,22 +13,13 @@
 
 .. automodule:: image
    :synopsis: Saving OpenGL renderings to image files.
+   :members: imageFormats,initialize,checkImageFormat,imageFormatFromExt,save_canvas,save_window,save_main_window,save_rect,save,saveNext,saveIcon,autoSaveOn,createMovie,saveMovie
+
+   ``Classes defined in module image``
 
 
-   .. autofunction:: imageFormats()
-   .. autofunction:: initialize()
-   .. autofunction:: checkImageFormat(fmt,verbose=???)
-   .. autofunction:: imageFormatFromExt(ext)
-   .. autofunction:: save_canvas(canvas,fn,fmt=???,quality=???,options=???)
-   .. autofunction:: save_window(filename,format,quality=???,windowname=???)
-   .. autofunction:: save_main_window(filename,format,quality=???,border=???)
-   .. autofunction:: save_rect(x,y,w,h,filename,format,quality=???)
-   .. autofunction:: save(filename=???,window=???,multi=???,hotkey=???,autosave=???,border=???,rootcrop=???,format=???,quality=???,verbose=???)
-   .. autofunction:: saveNext()
-   .. autofunction:: saveIcon(fn,size=???)
-   .. autofunction:: autoSaveOn()
-   .. autofunction:: createMovie()
-   .. autofunction:: saveMovie(filename,format,windowname=???)
+   ``Functions defined in module image`` 
+
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

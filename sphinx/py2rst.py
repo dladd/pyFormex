@@ -409,6 +409,28 @@ def ParameterInfo(node):
         
 
 ############# Output formatting ##########################
+
+
+def split_doc(docstring):
+    s = docstring.split('\n')
+    shortdoc = s[0]
+    if len(s) > 2:
+        longdoc = '\n'.join(s[2:])
+    else:
+        longdoc = ''
+    return shortdoc.strip('"'),longdoc.strip('"')
+
+
+def sanitize(s):
+    """Sanitize a string for LaTeX."""
+    for c in '#&%':
+        s = s.replace('\\'+c,c)
+        s = s.replace(c,'\\'+c)
+    ## for c in '{}':
+    ##     s = s.replace('\\'+c,c)
+    ##     s = s.replace(c,'\\'+c)
+    return s
+
     
 
 def ship_module(name,docstring):
@@ -427,9 +449,7 @@ def ship_module(name,docstring):
 %s
 
 .. automodule:: %s
-   :synopsis: %s
-
-""" % ('Id',name,name,name,shortdoc,'='*(12+len(name)+len(shortdoc)),name,shortdoc)
+   :synopsis: %s""" % ('Id',name,name,name,shortdoc,'='*(12+len(name)+len(shortdoc)),name,shortdoc)
     
 
 def ship_end():
@@ -440,119 +460,24 @@ def ship_end():
 .. End
 """
 
-
-def ship_class_old(name,docstring):
-    shortdoc,longdoc = split_doc(docstring)
-    print "\n   .. autoclass:: %s\n" % name
+def ship_functions(members=[]):
+    if members:
+        print """   :members: %s""" % (','.join(members))
 
 def ship_class(name,members=[]):
     print """
    .. autoclass:: %s
       :members: %s""" % (name,','.join(members))
 
-def ship_classinit(name,args,docstring):
-    pass
-##    print("\nThe %s class has the constructor: \n" % name)
+def ship_class_init(name):
+    print """
+   ``Classes defined in module %s``
+""" % name
 
-##       :method:
-## \\begin{classdesc}{%s}{%s}
-## %s
-
-## \\end{classdesc}
-## """ % (name,name,ship_args(args),docstring)
-
-
-def ship_classmethods(name):
-    print "\n      %s objects have the following methods:\n" % name 
-
-
-def ship_method(name,args,docstring,class_method=False,coords_method=False):
-    print "      .. automethod:: %s(%s)" % (name,ship_args(args))
-    ## print docstring
-    ## if coords_method:
-    ##     print "\\coordsmethod"
-    ## if class_method:
-    ##     print "\\classmethod"
-    ## print "\\end{funcdesc}\n"
-    
-
-def ship_function_section(name):
-    s = "Functions defined in the module %s" % name
-    print "\n**%s**\n" % s
-##     print """
-## %s
-## %s
-## """  % (s,'-'*(len(s)))
-
-
-def ship_function(name,args,docstring):
-    print "   .. autofunction:: %s(%s)" % (name,ship_args(args))
-
-
-def split_doc(docstring):
-    s = docstring.split('\n')
-    shortdoc = s[0]
-    if len(s) > 2:
-        longdoc = '\n'.join(s[2:])
-    else:
-        longdoc = ''
-    return shortdoc.strip('"'),longdoc.strip('"')
-
-
-def argformat(a):
-    if a[1] is None:
-        return str(a[0])
-    else:
-        return '%s=%s' % a
-
-def ship_args(args):
-    if len(args) > 0 and args[0][0] == 'self':
-        args = args[1:]
-    args = map(argformat,args)
-    #args = [ a for a in args if a[0] is not None ]
-    return sanitize(','.join(args))
-
-
-def sanitize(s):
-    """Sanitize a string for LaTeX."""
-    for c in '#&%':
-        s = s.replace('\\'+c,c)
-        s = s.replace(c,'\\'+c)
-    ## for c in '{}':
-    ##     s = s.replace('\\'+c,c)
-    ##     s = s.replace(c,'\\'+c)
-    return s
-
-
-def do_function(info):
-    ship_function(info._name,info._arglist,sanitize(info._docstring))
-
-
-def do_method(info):
-    ship_method(info._name,info._arglist,sanitize(info._docstring),info.class_method,info.coords_method)
-
-
-def do_class_old(info):
-    if info._name.startswith('_'):
-        return
-    ship_class(info._name,sanitize(info._docstring))
-    names = info.get_method_names()
-    i = None
-    if '__new__' in names:
-        i = info['__new__']
-    elif '__init__' in names:
-        i = info['__init__']
-    if i:
-        ship_classinit(info._name,i._arglist,sanitize(i._docstring))
-
-    ship_classmethods(info._name)
-    for k in names:
-        if k == '__init__' or k == '__new__':
-            continue
-        if k.startswith('_'):
-            continue
-        do_method(info[k])
-
+def ship_functions_init(name):
+    print """
+   ``Functions defined in module %s`` 
+""" % name
 
 def do_class(info):
     if info._name.startswith('_'):
@@ -560,20 +485,14 @@ def do_class(info):
     names = [ n for n in info.get_method_names() if not n.startswith('_') ]
     ship_class(info._name,names)
 
-
 def do_module(info):
     ship_module(info._name,sanitize(info._docstring))
+    names = [ n for n in info.get_function_names() if not n.startswith('_') ]
+    ship_functions(names)
+    ship_class_init(info._name)
     for k in info.get_class_names():
         do_class(info[k])
-
-    if len(info.get_class_names()) > 0 and len(info.get_function_names()) > 0:
-        ship_function_section(info._name)
-    
-    for k in info.get_function_names():
-        if k.startswith('_'):
-            continue
-        do_function(info[k])
-        
+    ship_functions_init(info._name)
     ship_end()
 
 

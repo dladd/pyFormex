@@ -13,7 +13,9 @@
 
 .. automodule:: mydict
    :synopsis: 
+   :members: cascade,returnNone,raiseKeyError
 
+   ``Classes defined in module mydict``
 
 
    .. autoclass:: Dict
@@ -22,11 +24,8 @@
    .. autoclass:: CDict
       :members: 
 
-**Functions defined in the module mydict**
+   ``Functions defined in module mydict`` 
 
-   .. autofunction:: cascade(d,key)
-   .. autofunction:: returnNone(key)
-   .. autofunction:: raiseKeyError(key)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

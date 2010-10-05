@@ -13,7 +13,9 @@
 
 .. automodule:: properties
    :synopsis: General framework for attributing properties to geometrical elements.
+   :members: checkIdValue,checkArrayOrIdValue,checkString,autoName,Nset,Eset,FindListItem,RemoveListItem
 
+   ``Classes defined in module properties``
 
 
    .. autoclass:: Database
@@ -43,16 +45,8 @@
    .. autoclass:: PropertyDB
       :members: setMaterialDB,setSectionDB,Prop,getProp,delProp,nodeProp,elemProp
 
-**Functions defined in the module properties**
+   ``Functions defined in module properties`` 
 
-   .. autofunction:: checkIdValue(values)
-   .. autofunction:: checkArrayOrIdValue(values)
-   .. autofunction:: checkString(a,valid)
-   .. autofunction:: autoName(base)
-   .. autofunction:: Nset()
-   .. autofunction:: Eset()
-   .. autofunction:: FindListItem(l,p)
-   .. autofunction:: RemoveListItem(l,p)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

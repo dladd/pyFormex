@@ -13,15 +13,16 @@
 
 .. automodule:: fe
    :synopsis: Finite Element Models in pyFormex.
+   :members: mergedModel
 
+   ``Classes defined in module fe``
 
 
    .. autoclass:: Model
       :members: nnodes,nelems,ngroups,mplex,splitElems,elemNrs,getElems,renumber
 
-**Functions defined in the module fe**
+   ``Functions defined in module fe`` 
 
-   .. autofunction:: mergedModel(meshes)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

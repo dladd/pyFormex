@@ -13,15 +13,16 @@
 
 .. automodule:: units
    :synopsis: A Python wrapper for unit conversion of physical quantities.
+   :members: convertUnits
 
+   ``Classes defined in module units``
 
 
    .. autoclass:: UnitsSystem
       :members: Add,Predefined,International,Engineering,Read,Get
 
-**Functions defined in the module units**
+   ``Functions defined in module units`` 
 
-   .. autofunction:: convertUnits(From,To)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

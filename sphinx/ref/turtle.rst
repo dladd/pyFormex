@@ -13,20 +13,13 @@
 
 .. automodule:: turtle
    :synopsis: Turtle graphics for pyFormex
+   :members: sind,cosd,reset,push,pop,fd,mv,ro,go,st,an,play
+
+   ``Classes defined in module turtle``
 
 
-   .. autofunction:: sind(arg)
-   .. autofunction:: cosd(arg)
-   .. autofunction:: reset()
-   .. autofunction:: push()
-   .. autofunction:: pop()
-   .. autofunction:: fd(d=???,connect=???)
-   .. autofunction:: mv(d=???)
-   .. autofunction:: ro(a)
-   .. autofunction:: go(p)
-   .. autofunction:: st(d)
-   .. autofunction:: an(a)
-   .. autofunction:: play(scr,glob=???)
+   ``Functions defined in module turtle`` 
+
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

@@ -13,7 +13,9 @@
 
 .. automodule:: curve
    :synopsis: Definition of curves in pyFormex.
+   :members: circle,vectorPairAngle,convertFormexToCurve
 
+   ``Classes defined in module curve``
 
 
    .. autoclass:: Curve
@@ -49,11 +51,8 @@
    .. autoclass:: Spiral
       :members: 
 
-**Functions defined in the module curve**
+   ``Functions defined in module curve`` 
 
-   .. autofunction:: circle()
-   .. autofunction:: vectorPairAngle(v1,v2)
-   .. autofunction:: convertFormexToCurve(closed=???)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

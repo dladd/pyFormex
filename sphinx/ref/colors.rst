@@ -13,15 +13,13 @@
 
 .. automodule:: colors
    :synopsis: Definition of some RGB colors and color conversion functions
+   :members: GLColor,colorName,createColorDict,closestColorName,RGBA,GREY,grey
+
+   ``Classes defined in module colors``
 
 
-   .. autofunction:: GLColor(color)
-   .. autofunction:: colorName(color)
-   .. autofunction:: createColorDict()
-   .. autofunction:: closestColorName(color)
-   .. autofunction:: RGBA(rgb,alpha=???)
-   .. autofunction:: GREY(val,alpha=???)
-   .. autofunction:: grey(i)
+   ``Functions defined in module colors`` 
+
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

@@ -13,16 +13,16 @@
 
 .. automodule:: isopar
    :synopsis: Isoparametric transformations
+   :members: evaluate,isopar
 
+   ``Classes defined in module isopar``
 
 
    .. autoclass:: Isopar
       :members: transform
 
-**Functions defined in the module isopar**
+   ``Functions defined in module isopar`` 
 
-   .. autofunction:: evaluate(atoms,x,y=???,z=???)
-   .. autofunction:: isopar(X,eltype,coords,oldcoords)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

@@ -13,26 +13,16 @@
 
 .. automodule:: connectivity
    :synopsis: A class and functions for handling nodal connectivity.
+   :members: enmagic2,demagic2,enmagic,demagic,inverseIndex,adjacencyList,adjacencyArray,adjacencyArrays,connected,adjacent,closedLoop,connectedLineElems
 
+   ``Classes defined in module connectivity``
 
 
    .. autoclass:: Connectivity
       :members: nelems,nplex,encode,testDegenerate,listDegenerate,listNonDegenerate,removeDegenerate,testDoubles,listUnique,listDoubles,removeDoubles,selectNodes,insertLevel,untangle,tangle,inverse
 
-**Functions defined in the module connectivity**
+   ``Functions defined in module connectivity`` 
 
-   .. autofunction:: enmagic2(cols,magic=???)
-   .. autofunction:: demagic2(codes,magic)
-   .. autofunction:: enmagic(elems)
-   .. autofunction:: demagic(codes,magic)
-   .. autofunction:: inverseIndex(index,maxcon=???)
-   .. autofunction:: adjacencyList(elems)
-   .. autofunction:: adjacencyArray(elems,maxcon=???)
-   .. autofunction:: adjacencyArrays(elems,nsteps=???)
-   .. autofunction:: connected(index,i)
-   .. autofunction:: adjacent(index,inv=???)
-   .. autofunction:: closedLoop(elems)
-   .. autofunction:: connectedLineElems(elems)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

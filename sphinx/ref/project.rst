@@ -14,10 +14,14 @@
 .. automodule:: project
    :synopsis: project.py
 
+   ``Classes defined in module project``
 
 
    .. autoclass:: Project
       :members: header_data,set_data_from_header,save,load,delete
+
+   ``Functions defined in module project`` 
+
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

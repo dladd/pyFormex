@@ -13,15 +13,16 @@
 
 .. automodule:: lima
    :synopsis: Lindenmayer Systems
+   :members: lima
 
+   ``Classes defined in module lima``
 
 
    .. autoclass:: Lima
       :members: status,addRule,translate,grow
 
-**Functions defined in the module lima**
+   ``Functions defined in module lima`` 
 
-   .. autofunction:: lima(axiom,rules,level,turtlecmds,glob=???)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

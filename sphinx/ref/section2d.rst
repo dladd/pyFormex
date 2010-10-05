@@ -13,17 +13,16 @@
 
 .. automodule:: section2d
    :synopsis: Some functions operating on 2D structures.
+   :members: sectionChar,extendedSectionChar,princTensor2D
 
+   ``Classes defined in module section2d``
 
 
    .. autoclass:: planeSection
       :members: sectionChar
 
-**Functions defined in the module section2d**
+   ``Functions defined in module section2d`` 
 
-   .. autofunction:: sectionChar(F)
-   .. autofunction:: extendedSectionChar(S)
-   .. autofunction:: princTensor2D(Ixx,Iyy,Ixy)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

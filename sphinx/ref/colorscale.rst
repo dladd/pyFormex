@@ -14,6 +14,7 @@
 .. automodule:: colorscale
    :synopsis: Color mapping of a range of values.
 
+   ``Classes defined in module colorscale``
 
 
    .. autoclass:: ColorScale
@@ -21,6 +22,9 @@
 
    .. autoclass:: ColorLegend
       :members: overflow,color
+
+   ``Functions defined in module colorscale`` 
+
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

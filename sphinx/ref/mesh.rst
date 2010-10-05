@@ -13,23 +13,16 @@
 
 .. automodule:: mesh
    :synopsis: mesh.py
+   :members: vectorRotation,sweepCoords,defaultEltype,mergeNodes,mergeMeshes,connectMesh,connectMeshSequence,structuredHexGrid,correctHexMeshOrientation
 
+   ``Classes defined in module mesh``
 
 
    .. autoclass:: Mesh
       :members: setProp,getProp,maxProp,propSet,copy,toFormex,ndim,nelems,nplex,ncoords,shape,nedges,centroids,getCoords,getElems,getLowerEntitiesSelector,getLowerEntities,getEdges,getFaces,getAngles,getBorder,getBorderMesh,report,fuse,compact,select,unselect,meanNodes,addNodes,addMeanNodes,selectNodes,withProp,splitProp,convert,splitRandom,convertRandom,reduceDegenerate,splitDegenerate,renumber,extrude,revolve,sweep,test,clip,cclip,clipAtPlane,volumes,volume,equiAngleSkew,actor
 
-**Functions defined in the module mesh**
+   ``Functions defined in module mesh`` 
 
-   .. autofunction:: vectorRotation(vec1,vec2,upvec=???)
-   .. autofunction:: sweepCoords(path,origin=???,normal=???,upvector=???,avgdir=???,enddir=???,scalex=???,scaley=???)
-   .. autofunction:: defaultEltype(nplex)
-   .. autofunction:: mergeNodes(nodes)
-   .. autofunction:: mergeMeshes(meshes)
-   .. autofunction:: connectMesh(mesh1,mesh2,n=???,n1=???,n2=???,eltype=???)
-   .. autofunction:: connectMeshSequence(ML,loop=???)
-   .. autofunction:: structuredHexGrid(dx,dy,dz,isophex=???)
-   .. autofunction:: correctHexMeshOrientation(hm)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

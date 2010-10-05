@@ -14,6 +14,7 @@
 .. automodule:: odict
    :synopsis: Specialized dictionary type structures.
 
+   ``Classes defined in module odict``
 
 
    .. autoclass:: ODict
@@ -22,7 +23,7 @@
    .. autoclass:: KeyedList
       :members: items
 
-**Functions defined in the module odict**
+   ``Functions defined in module odict`` 
 
 
    
