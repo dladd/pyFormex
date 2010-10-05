@@ -869,6 +869,62 @@ class Formex(Geometry):
     modified or deleted at any time. Of course, the properties that are
     copied in an operation are those that exist at the time of performing
     the operation.   
+
+    Because the :class:`Formex` class is derived from :class:`Geometry`,
+    the following :class:`Formex` methods exist and return the value of the
+    same method applied on the :attr:`coords` attribute:
+    `x`,
+    `y`,
+    `z`,
+    `bbox`,
+    `center`,
+    `centroid`,
+    `sizes`,
+    `dsize`,
+    `bsphere`,
+    `distanceFromPlane`,
+    `distanceFromLine`,
+    `distanceFromPoint`,
+    `directionalSize`,
+    `directionalWidth`,
+    `directionalExtremes`,
+    `__str__`.
+    Refer to the correponding :class:`Coords` method for their usage.
+
+    Also, the following :class:`Coords` transformation methods can be
+    directly applied to a :class:`Formex` object or a derived class object.
+    The return value is a new object identical to the original,
+    except for the coordinates,
+    which will have been transformed by the specified method.
+    Refer to the correponding :class:`Coords` method for the usage of these
+    methods:
+    `scale`,
+    `translate`,
+    `rotate`,
+    `shear`,
+    `reflect`,
+    `affine`,
+    `cylindrical`,
+    `hyperCylindrical`,
+    `toCylindrical`,
+    `spherical`,
+    `superSpherical`,
+    `toSpherical`,
+    `bump`,
+    `bump1`,
+    `bump2`,
+    `flare`,
+    `map`,
+    `map1`,
+    `mapd`,
+    `newmap`,
+    `replace`,
+    `swapAxes`,
+    `rollAxes`,
+    `projectOnSphere`,
+    `projectOnCylinder`,
+    `rot`,
+    `trl`.
     """
             
 

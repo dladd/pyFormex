@@ -132,7 +132,7 @@ class ScriptMenu(QtGui.QMenu):
     can then be executed from the menu. The user may use this class to add
     his own scripts into the pyFormex GUI.
 
-    Only files that are recognized by :func:`utils.isPyFormex()` as being
+    Only files that are recognized by :func:`utils.is_pyFormex()` as being
     pyFormex scripts will be added to the menu. 
 
     The constructor takes the following arguments:
@@ -258,7 +258,7 @@ class ScriptMenu(QtGui.QMenu):
             n = len(self.ext)
             files = [ f[:-n] for f in files ]
 
-        filtr = lambda s:utils.isPyFormex(self.fileName(s))
+        filtr = lambda s:utils.is_pyFormex(self.fileName(s))
         files = filter(filtr,files)
 
         if self.max > 0 and len(files) > self.max:
@@ -270,7 +270,7 @@ class ScriptMenu(QtGui.QMenu):
  
     def filterFiles(self,files):
         """Filter a list of scripts"""
-        filtr = lambda s:utils.isPyFormex(self.fileName(s))
+        filtr = lambda s:utils.is_pyFormex(self.fileName(s))
         files = filter(filtr,files)
 
         if self.max > 0 and len(files) > self.max:
@@ -441,8 +441,13 @@ class ScriptMenu(QtGui.QMenu):
             self.load()
 
 
-    def add(self,filename):
-        """Add a new filename to the front of the menu."""
+    def add(self,filename,strict=True):
+        """Add a new filename to the front of the menu.
+
+        By default, only legal pyFormex scripts can be added.
+        """
+        if strict and not utils.is_pyFormex(filename):
+            return
         files = self.files
         if filename in files:
             files.remove(filename)

@@ -384,7 +384,7 @@ class GUI(QtGui.QMainWindow):
     def setcurfile(self,filename=''):
         """Set the current file and check whether it is a pyFormex script.
 
-        The checking is done by the function isPyFormex().
+        The checking is done by the function is_pyFormex().
         A file that is not a pyFormex script can be loaded in the editor,
         but it can not be played as a pyFormex script.
         """
@@ -394,7 +394,7 @@ class GUI(QtGui.QMainWindow):
         else:
             filename = pf.cfg['curfile']
         if filename:
-            self.canPlay = utils.isPyFormex(filename) or filename.endswith('.pye')
+            self.canPlay = utils.is_pyFormex(filename) or filename.endswith('.pye')
             self.curfile.setText(os.path.basename(filename))
             self.actions['Play'].setEnabled(self.canPlay)
             self.actions['Step'].setEnabled(self.canPlay)

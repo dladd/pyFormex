@@ -542,7 +542,7 @@ def tildeExpand(fn):
     
 
       
-def isPyFormex(filename):
+def is_pyFormex(filename):
     """Checks whether a file is a pyFormex script.
 
     A script is considered to be a pyFormex script if its first line
@@ -553,6 +553,7 @@ def isPyFormex(filename):
 
        #!/usr/bin/env pyformex
     """
+    filename = str(filename) # force it into a string
     if filename.endswith(".pye"):
         return True
 

@@ -436,7 +436,7 @@ def run(argv=[]):
 
     # Set default --nogui if first remaining argument is a pyformex script.
     if pyformex.options.gui is None:
-        pyformex.options.gui = not (len(args) > 0 and utils.isPyFormex(args[0]))
+        pyformex.options.gui = not (len(args) > 0 and utils.is_pyFormex(args[0]))
 
     if pyformex.options.gui:
         pyformex.options.interactive = True

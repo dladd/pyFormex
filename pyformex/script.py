@@ -480,7 +480,7 @@ def processArgs(args):
         fn = args.pop(0)
         if fn.endswith('.pye'):
             pass
-        elif not os.path.exists(fn) or not utils.isPyFormex(fn):
+        elif not os.path.exists(fn) or not utils.is_pyFormex(fn):
             pyformex.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
             continue
         res = playFile(fn,args)
