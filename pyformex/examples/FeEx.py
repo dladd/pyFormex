@@ -30,6 +30,7 @@ techniques = ['menu', 'dialog', 'persistence', 'color']
 """
 from pyformex import GUI
 from gui import menu
+from gui.widgets import simpleInputItem as I
 
 from simple import rectangle
 from plugins.fe import *
@@ -104,12 +105,12 @@ def createRectPart(res=None):
         else:
             return
     if res is None:
-        res = askItems([('x0',x0,{'tooltip':'The x-value of one of the corners'}),
-                        ('y0',y0),
-                        ('x2',x2),('y2',y2),
-                        ('nx',nx),('ny',ny),
-                        ('eltype',eltype,'select',['quad','tri-u','tri-d']),
-                        ])
+        res = askItems([I('x0',x0,tooltip='The x-value of one of the corners'),
+                        I('y0',y0),
+                        I('x2',x2),I('y2',y2),
+                        I('nx',nx),I('ny',ny),
+                        I('eltype',eltype,itemtype='radio',choices=['quad','tri-u','tri-d']),
+                        ],legacy=False)
     if res:
         globals().update(res)
         if x0 > x2:

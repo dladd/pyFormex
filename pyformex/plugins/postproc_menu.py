@@ -664,7 +664,8 @@ def selectDB(db=None):
     """
     if not isinstance(db,FeResult):
         db = selection.ask1()
-        print("Selected results database: %s" % selection.names[0])
+        if db:
+            print("Selected results database: %s" % selection.names[0])
     if db:
         setDB(db)
         clear()
