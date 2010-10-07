@@ -1254,6 +1254,25 @@ Total area: %s; Enclosed volume: %s
         return firstprop + self.partitionByEdgeFront(small_angle)
 
 
+    def splitByConnection(self):
+        """Split the surface into connected parts."""
+        p = self.partitionByConnection()
+        return [ self.clip(p==pi) for pi in range(p.max()+1) ]
+
+
+    def largestByConnection(self):
+        """Return the largest connected part of the surface."""
+        p = self.partitionByConnection()
+        nparts = p.max()+1
+        if nparts == 1:
+            return self,nparts
+        else:
+            t = [ p == pi for pi in range(nparts) ]
+            n = [ ti.sum() for ti in t ]
+            w = array(n).argmax()
+            return self.clip(t[w]),nparts
+
+
     def cutWithPlane(self,*args,**kargs):
         """Cut a surface with a plane."""
         self.__init__(self.toFormex().cutWithPlane(*args,**kargs))
