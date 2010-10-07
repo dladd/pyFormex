@@ -190,8 +190,10 @@ class Quad8(Element):
     faces = [ (0,1,2,3,4,5,6,7), ]
 
     element = faces[0]
-
-    drawfaces = Quad4.faces
+    
+    drawfaces =[(0, 4, 7),(1, 5, 4),(2, 6, 5), (3, 7, 6),  (4, 5, 6), (4, 6, 7)]
+    #drawfaces = Quad4.faces
+    
 
 
 class Quad9(Element):
@@ -206,7 +208,8 @@ class Quad9(Element):
 
     element = faces[0]
 
-    drawfaces = Quad4.faces
+    drawfaces =[(0, 4, 8),(4, 1,8),(1, 5, 8), (5, 2, 8), (2, 6, 8),(6, 3, 8), (3, 7, 8), (7, 0, 8) ]
+    #drawfaces = Quad4.faces
 
 
 class Tet4(Element):
@@ -304,8 +307,9 @@ class Hex20(Element):
 
     element = range(20)
 
-    drawfaces = Hex8.faces
-
+    #drawfaces = Hex8.faces
+    drawfaces=array(faces)[:, Quad8.drawfaces].reshape(-1, 3)
+    
 
 class Icosa(Element):
     """An icosahedron: a regular polyhedron with 20 triangular surfaces.
