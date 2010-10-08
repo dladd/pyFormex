@@ -1241,7 +1241,7 @@ Size: %s
 ########### Functions #####################
 
 
-def mergeNodes(nodes,**kargs):
+def mergeNodes(nodes,fuse=True,**kargs):
     """Merge all the nodes of a list of node sets.
 
     Each item in nodes is a Coords array.
@@ -1254,13 +1254,16 @@ def mergeNodes(nodes,**kargs):
     that will be passed to :meth:`Coords:fuse`.
     """
     coords = Coords(concatenate([x for x in nodes],axis=0))
-    coords,index = coords.fuse(**kargs)
+    if fuse:
+        coords,index = coords.fuse(**kargs)
+    else:
+        index = arange(coords.shape[0])
     n = array([0] + [ x.npoints() for x in nodes ]).cumsum()
     ind = [ index[f:t] for f,t in zip(n[:-1],n[1:]) ]
     return coords,ind
 
 
-def mergeMeshes(meshes,**kargs):
+def mergeMeshes(meshes,fuse=True,**kargs):
     """Merge all the nodes of a list of Meshes.
 
     Each item in meshes is a Mesh instance.
@@ -1272,10 +1275,12 @@ def mergeMeshes(meshes,**kargs):
 
     The merging operation can be tuned by specifying extra arguments
     that will be passed to :meth:`Coords:fuse`.
+    Setting fuse=False will merely concatenate all the mesh.coords, but
+    not fuse them.
     """
     coords = [ m.coords for m in meshes ]
     elems = [ m.elems for m in meshes ]
-    coords,index = mergeNodes(coords,**kargs)
+    coords,index = mergeNodes(coords,fuse,**kargs)
     return coords,[Connectivity(i[e]) for i,e in zip(index,elems)]
 
 

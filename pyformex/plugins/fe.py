@@ -79,12 +79,16 @@ class Model(Dict):
             elems = [ elems ]
         self.coords = Coords(coords)
         self.elems = [ Connectivity(e) for e in elems ]
-        nelems = [ e.nelems() for e in self.elems ]
-        nplex = [ e.nplex() for e in self.elems ]
+        self.meshes = [ Mesh(self.coords,e) for e in self.elems ]
+        nnodes = [ m.nnodes() for m in self.meshes ]
+        nelems = [ m.nelems() for m in self.meshes ]
+        nplex = [ m.nplex() for m in self.meshes ]
+        self.cnodes = cumsum([0]+nnodes)
         self.celems = cumsum([0]+nelems)
         GD.message("Number of nodes: %s" % self.coords.shape[0])
         GD.message("Number of elements: %s" % self.celems[-1])
         GD.message("Number of element groups: %s" % len(nelems))
+        GD.message("Number of nodes per group: %s" % nnodes)
         GD.message("Number of elements per group: %s" % nelems)
         GD.message("Plexitude of each group: %s" % nplex)
 
