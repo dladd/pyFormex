@@ -130,10 +130,11 @@ class ElemSection(CDict):
     material
       the element material. This can be a dict or a string.
       Currently known keys to fe_abq.py are: young_modulus,
-      shear_modulus, density, poisson_ratio
-
+      shear_modulus, density, poisson_ratio . (see fmtMaterial in fe_abq)
+      
     orientation
-      is a list of 3 direction cosines of the first beam section axis.
+      - a Dict, or
+      - a list of 3 direction cosines of the first beam section axis.
 
     behavior
       the behavior of a connector
@@ -599,9 +600,11 @@ class PropertyDB(Dict):
                 if isinstance(csys,CoordSystem):
                     d['csys'] = csys
                 else:
-                    raise
+                    raise ValueError,"Invalid Coordinate System"
+            
             # Currently unchecked!
-            d['ampl'] = ampl
+            if ampl is not None:
+                d['ampl'] = ampl
             return self.Prop(kind='n',prop=prop,tag=tag,set=set,name=name,**d)
         except:
             print("tag=%s,set=%s,name=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,name,cload,bound,displ,csys))
@@ -639,7 +642,8 @@ class PropertyDB(Dict):
             if eload is not None:
                 d['eload'] = eload
             # Currently unchecked!
-            d['ampl'] = ampl
+            if ampl is not None:
+                d['ampl'] = ampl
             d.update(kargs)
             
 
