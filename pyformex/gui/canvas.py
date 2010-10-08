@@ -195,7 +195,7 @@ class ActorList(list):
         This should e.g. be used after changing an actor's properties.
         """
         for actor in self:
-            actor.redraw(mode=self.canvas.rendermode)
+            actor.redraw()
 
 
 
@@ -734,7 +734,7 @@ class Canvas(object):
         if self.highlights:
             for actor in self.highlights:
                 self.setDefaults()
-                actor.draw(mode=self.rendermode)
+                actor.draw(canvas=self)
 
         # draw the scene actors
         if self.alphablend:
@@ -742,24 +742,24 @@ class Canvas(object):
             transp = [ a for a in self.actors if a.trans ]
             for actor in opaque:
                 self.setDefaults()
-                actor.draw(mode=self.rendermode)
+                actor.draw(canvas=self)
             GL.glEnable (GL.GL_BLEND)
             GL.glDepthMask (GL.GL_FALSE)
             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
             for actor in transp:
                 self.setDefaults()
-                actor.draw(mode=self.rendermode)
+                actor.draw(canvas=self)
             GL.glDepthMask (GL.GL_TRUE)
             GL.glDisable (GL.GL_BLEND)
         else:
             for actor in self.actors:
                 self.setDefaults()
-                actor.draw(mode=self.rendermode)
+                actor.draw(canvas=self)
 
         # annotations are decorations drawn in 3D space
         for actor in self.annotations:
             self.setDefaults()
-            actor.draw(mode=self.rendermode)
+            actor.draw(canvas=self)
 
         # make sure canvas is updated
         GL.glFlush()

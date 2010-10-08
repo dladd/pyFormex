@@ -629,9 +629,9 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     calpy_itf.check()
 
     ## # Load development version
-    ## import sys
-    ## sys.path.insert(0,'/home/bene/prj/calpy')
-    ## print sys.path
+    #import sys
+    #sys.path.insert(0,'/home/bene/prj/calpy')
+    #print sys.path
 
     import calpy
     reload(calpy)

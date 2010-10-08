@@ -554,7 +554,7 @@ def drawGridPlanes(x0,x1,nx):
             x[:,:,axes] = corners
             GL.glBegin(GL.GL_QUADS)
             for p in x.reshape((-1,3)):
-                print p
+                #print p
                 GL.glVertex3fv(p)
             GL.glEnd()
 
@@ -774,6 +774,7 @@ class Drawable(object):
         pass
 
     def draw(self,**kargs):
+        #print "draw with args %s" % kargs
         if self.list is None:
             self.create_list(**kargs)
         self.use_list()

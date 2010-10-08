@@ -514,13 +514,17 @@ class GeomActor(Actor):
         'flatwire'). In these cases, two drawing operations are done:
         one with mode='wireframe' and color=black, and one with mode=mode[:-4].
         """
-        from canvas import glLineStipple
+        from gui.canvas import glLineStipple
         if canvas is None:
             canvas = pf.canvas
+        #print "Calling with canvas %s" % canvas
+        #print "Calling with mode %s" % mode
         if mode is None:
-            mode = self.mode
+           mode = self.mode
+        #print "self.mode %s" % mode
         if mode is None:
-            mode = canvas.rendermode()
+            mode = canvas.rendermode
+        #print "DRAWING WITH MODE %s" % mode
 
         if mode.endswith('wire'):
             self.drawGL(mode=mode[:-4])
