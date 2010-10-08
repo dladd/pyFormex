@@ -606,7 +606,18 @@ stop
         cmd = "calix %s %s" % (filnam,outfile)
         utils.runCommand(cmd)
         showFile(outfile,mono=True)
-    
+        
+        if ack("Shall I read the results for postprocessing?"):
+            from plugins import flavia
+            meshfile = utils.changeExt(filnam,'flavia.msh')
+            resfile = utils.changeExt(filnam,'flavia.res')
+            DB = flavia.readFlavia(meshfile,resfile)
+            postproc_menu.setDB(DB)
+            export({name:DB})
+            showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name)
+            postproc_menu.selection.set(name)
+            postproc_menu.selectDB(DB)
+            postproc_menu.open_results_dialog()
     
 
 ##############################################################################
@@ -888,7 +899,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     DB.elems = dict(enumerate(model.elems))
     DB.nelems = model.celems[-1]
     DB.Finalize()
-    DB.data_size['S'] = 3
+    DB.datasize['S'] = 3
     #print DB.elems
     for lc in range(calpyModel.nloads):
         DB.Increment(lc,0)

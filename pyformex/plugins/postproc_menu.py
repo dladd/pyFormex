@@ -240,6 +240,12 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     """
     clear()
 
+    # expand displ if it is smaller than nodes
+    # e.g. in 2d returning only 2d displacements
+    n = nodes.shape[1] - displ.shape[1]
+    if n > 0:
+        displ = growAxis(displ,n,axis=1,fill=0.0)
+
     if type(elems) != list:
         elems = [ elems ]
 
@@ -259,7 +265,8 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
             vmid = 0.5*(vmin+vmax)
 
         scalev = [vmin,vmid,vmax]
-        logv = [ a for a in scalev if a != 0.0 ]
+        print scalev
+        logv = [ abs(a) for a in scalev if a != 0.0 ]
         logs = log10(logv)
         logma = int(logs.max())
 
@@ -670,7 +677,7 @@ def selectDB(db=None):
         setDB(db)
         clear()
         print(DB.about.get('heading','No Heading'))
-        print('Stress tensor has %s components' % DB.data_size['S'])
+        print('Stress tensor has %s components' % DB.datasize['S'])
         showModel()
     return db
 

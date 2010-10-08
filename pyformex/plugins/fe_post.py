@@ -42,11 +42,12 @@ import re
 class FeResult(object):
 
     _name_ = '__FePost__'
-    data_size = {'U':3,'S':6,'COORD':3}
     re_Skey = re.compile("S[0-5]")
+    re_Ukey = re.compile("U[0-2]")
 
-    def __init__(self,name=_name_):
+    def __init__(self,name=_name_,datasize={'U':3,'S':6,'COORD':3}):
         self.name = name
+        self.datasize = datasize.copy()
         self.about = {'creator':GD.Version,
                       'created':GD.StartTime,
                       }
@@ -67,9 +68,9 @@ class FeResult(object):
         self.nodnr = 0
         self.elnr = 0
 
-    def datasize(self,key,data):
-        if FeResult.data_size.has_key(key):
-            return FeResult.data_size[key]
+    def dataSize(self,key,data):
+        if self.datasize.has_key(key):
+            return self.datasize[key]
         else:
             return len(data)
 
@@ -93,7 +94,7 @@ class FeResult(object):
         self.dofs = array(data)
         self.displ = self.dofs[self.dofs[:6] > 0]
         if self.displ.max() > 3:
-            self.data_size['U'] = 6
+            self.datasize['U'] = 6
         
     def Heading(self,head):
         self.about.update({'heading':head})
@@ -159,7 +160,7 @@ class FeResult(object):
 
     def NodeOutput(self,key,nodid,data):
         if not self.R.has_key(key):
-            self.R[key] = zeros((self.nnodes,self.datasize(key,data)),dtype=float32)
+            self.R[key] = zeros((self.nnodes,self.dataSize(key,data)),dtype=float32)
         if key == 'U':
             self.R[key][nodid-1][self.displ-1] = data
         elif key == 'S':
@@ -231,11 +232,17 @@ class FeResult(object):
         The key may include a component to return only a single column
         of a multicolumn value.
         """
-        #print(self.dofs)
-        if self.re_Skey.match(key) and self.data_size['S']==3:
-            components = '013'
-        else:
-            components = '012345'
+        components = '012'
+        if self.re_Skey.match(key):
+            if self.datasize['S']==3:
+                components = '013'
+            else:
+                components = '012345'
+        elif self.re_Ukey.match(key):
+            if self.datasize['U']==2:
+                components = '01'
+            else:
+                components = '012'
         comp = components.find(key[-1])
         if comp >= 0:
             key = key[:-1]
