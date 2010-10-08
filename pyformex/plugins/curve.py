@@ -96,6 +96,13 @@ class Curve(Geometry):
         """
         raise NotImplementedError
 
+    def sub_tangents(self,t,j):
+        """Return the unit tangent vectors at values t in part j
+
+        t can be an array of parameter values, j is a single segment number.
+        """
+        raise NotImplementedError
+
     def lengths(self):
         raise NotImplementedError
 
@@ -116,10 +123,10 @@ class Curve(Geometry):
         except:
             allX = concatenate([ self.sub_points(tj,ij) for tj,ij in zip(t,i)])
         return Coords(allX)
-        
-    
+
+
     def subPoints(self,div=10,extend=[0., 0.]):
-        """Return a series of points on the PolyLine.
+        """Return a series of points on the Curve.
 
         The parameter space of each segment is divided into ndiv parts.
         The coordinates of the points at these parameter values are returned
@@ -723,7 +730,7 @@ class BezierSpline(Curve):
 
 
     def part(self,j):
-        """Returns the points defining part j of the curve"""
+        """Returns the points defining part j of the curve."""
         start = self.degree * j
         end = start + self.degree + 1
         #print "PART %s: %s,%s" % (j,start,end)
@@ -731,6 +738,7 @@ class BezierSpline(Curve):
 
 
     def sub_points(self,t,j):
+        """Return the points at values t in part j."""
         #print "tj %s, %s" % (j,t)
         P = self.part(j)
         #print "C",self.coeffs.shape
@@ -743,6 +751,19 @@ class BezierSpline(Curve):
         U = column_stack(U)
         X = dot(U,C)
         return X
+
+
+    def sub_tangents(self,t,j):
+        """Return the unit tangent vectors at values t in part j."""
+        P = self.part(j)
+        C = self.coeffs * P
+        U = [ zeros_like(t), ones_like(t) ]
+        for d in range(2,self.degree+1):
+            U.append(d*(t**(d-1)))
+        U = column_stack(U)
+        T = dot(U,C)
+        T = normalize(T)
+        return T
 
 
     def reverse(self):
