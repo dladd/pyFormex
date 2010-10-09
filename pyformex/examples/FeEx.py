@@ -167,12 +167,16 @@ def addPart(M):
     mesh_menu.selection.draw()
 
 
-def convertQuadratic():
+def convertQuadratic(qtype='quad8'):
     """Convert the parts to quadratic"""
     global parts
-    parts = [ p.convert('quad9') for p in parts ]
+    parts = [ p.convert(qtype) for p in parts ]
     mesh_menu.selection.changeValues(parts)
     drawParts()
+    
+def convertQuadratic9():
+    """Convert the parts to quadratic9"""
+    convertQuadratic(qtype='quad9')
     
 
 def drawParts():
@@ -1043,6 +1047,7 @@ def create_menu():
         ("&Create Rectangular Part",createRectPart),
         ("&Create QuadrilateralPart",createQuadPart),
         ("&Convert to Quadratic",convertQuadratic),
+        ("&Convert to Quadratic9",convertQuadratic9),
         ("&Show All",drawParts),
         ("---",None),
         ("&Merge Parts into Model",createModel),
