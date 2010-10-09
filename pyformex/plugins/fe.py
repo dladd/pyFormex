@@ -29,34 +29,37 @@ set of nodal coordinates and one of more sets of elements.
 
 from coords import *
 from connectivity import *
-from mydict import Dict
-from numpy import *
+from geometry import Geometry
+#from numpy import *
 from plugins.mesh import Mesh,mergeMeshes
 from utils import deprecation
 import warnings
 
 
-@deprecation("\nUse Mesh instances and mesh.mergeMeshes instead.")
-def mergeModels(femodels,**kargs):
-    """Merge all the nodes of a list of FE models.
+## BV: withdrawn in 0.8.3
+## @deprecation("\nUse Mesh instances and mesh.mergeMeshes instead.")
+## def mergeModels(femodels,**kargs):
+##     """Merge all the nodes of a list of FE models.
 
-    Each item in femodels is a (coords,elems) tuple.
-    The return value is a tuple with:
+##     Each item in femodels is a (coords,elems) tuple.
+##     The return value is a tuple with:
 
-    - the coordinates of all unique nodes,
-    - a list of elems corresponding to the input list,
-      but with numbers referring to the new coordinates.
+##     - the coordinates of all unique nodes,
+##     - a list of elems corresponding to the input list,
+##       but with numbers referring to the new coordinates.
 
-    The merging operation can be tuned by specifying extra arguments
-    that will be passed to :meth:`Coords:fuse`.
-    """
-    return mergeMeshes([Mesh(m) for m in femodels])
+##     The merging operation can be tuned by specifying extra arguments
+##     that will be passed to :meth:`Coords:fuse`.
+##     """
+##     return mergeMeshes([Mesh(m) for m in femodels])
 
 
 ######################## Finite Element Model ##########################
 
-class Model(Dict):
+class Model(Geometry):
     """Contains all FE model data."""
+    
+    _set_coords = Geometry._set_coords_inplace
     
     def __init__(self,coords,elems):
         """Create new model data.
@@ -74,7 +77,7 @@ class Model(Dict):
 
         The model can have node and element property numbers.
         """
-        Dict.__init__(self)
+        #Dict.__init__(self)
         if not type(elems) == list:
             elems = [ elems ]
         self.coords = Coords(coords)

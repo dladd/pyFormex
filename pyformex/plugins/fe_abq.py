@@ -112,6 +112,31 @@ def fmtCmd(cmd='*'):
     return '*'+cmd+'\n'
 
 
+def fmtData1D(data,npl=8,sep=', ',linesep='\n'):
+    """Format numerical data in lines with maximum npl items.
+
+    data is a numeric array. The array is flattened and then the data are
+    formatted in lines with maximum npl items, separated by sep.
+    Lines are separated by linesep.
+    """
+    data = data.flat
+    return linesep.join([
+        sep.join(map(str,data[i:i+npl])) for i in range(0,len(data),npl)
+        ])
+
+
+def fmtData(data,npl=8,sep=', ',linesep='\n'):
+    """Format numerical data in lines with maximum npl items.
+
+    data is a numeric array, which is coerced to be a 2D array, either by
+    adding a first axis or by collapsing the first ndim-1 axies.
+    Then the data are formatted in lines with maximum npl items, separated
+    by sep. Lines are separated by linesep.
+    """
+    data = data.reshape(-1,data.shape[-1])
+    return linesep.join([fmtData1D(row,npl,sep,linesep) for row in data])
+
+
 def fmtHeading(text=''):
     """Format the heading of the Abaqus input file."""
     out = """**  Abaqus input file created by %s (%s)
@@ -1459,8 +1484,7 @@ Script: %s
         if prop:
             GD.message("Writing surfaces")
             fil.write(fmtSurface(prop))
-
-        prop = self.prop.getProp('',attr=['interaction'])
+            prop = self.prop.getProp('',attr=['interaction'])
         if prop:       
             GD.message("Writing contact pairs")
             fil.write(fmtContactPair(prop))
@@ -1516,6 +1540,20 @@ def exportMesh(filename,mesh,eltype=None,header=''):
 ##################################################
 
 if __name__ == "script" or __name__ == "draw":
+
+    def TestwriteFormatLines():
+        a = arange(27)
+        print fmtData1D(a)
+        print fmtData1D(a,5)
+        print fmtData1D(a,12)
+
+        a = a.reshape(3,9)
+        print fmtData(a)
+        print fmtData(a,5)
+        print fmtData(a,12)
+
+    TestwriteFormatLines()
+    exit()
 
     print("The data hereafter are incorrect and inconsistent.")
     print("See the FeAbq example for a comprehensive example.")
