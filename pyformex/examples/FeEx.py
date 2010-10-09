@@ -500,7 +500,8 @@ plane
         else:
             nod = array(p.set)
         fil.write('\n'.join([ bnd % i for i in nod+1 ]))
-    fil.write('\n\n')
+        fil.write('\n')
+    fil.write('\n')
     fil.write("""print bcon 3
                            $$$$$$$$$$$$$$$$$$$$$$$
                            $$      D O F S      $$
@@ -551,30 +552,54 @@ loads f bcon 1
         for i,v in p.cload:
             if i in [0,1]:
                 F[i] = v
-        fil.write(''.join(["%5i%5i%10.2f%10.2f\n" % (n,loadcase,F[0],F[1]) for n in nodeset]))
+        fil.write(''.join(["%5i%5i%10.2f%10.2f\n" % (n+1,loadcase,F[0],F[1]) for n in nodeset]))
     fil.write('\n')
     
     # Distributed loads
-    fil.write("""text 3 1
+    fil.write("""text 4 1
+                           $$$$$$$$$$$$$$$$$$$$$$$$$$
+                           $$  BOUNDARY  ELEMENTS  $$
+                           $$$$$$$$$$$$$$$$$$$$$$$$$$
+   elem  loadnr  localnodes
+""")
+    # get the data from database, group by group
+    loadcase=1
+    for igrp in range(len(model.elems)):
+        eloads = [ p for p in PDB.getProp('e',attr=['eload']) if p.group==igrp ]
+        neloads = len(eloads)
+        loaddata = []
+        fil.write("array randen integer   %s 4 0 1\n" % neloads)
+        i = 1
+        for p in eloads:
+            xload = yload = 0.
+            if p.label == 'x':
+                xload = p.value
+            elif p.label == 'y':
+                yload = p.value
+            # Save the load data for later
+            loaddata.append((i,loadcase,xload,yload))
+            # Because of the way we constructed the database, the set will
+            # contain only one element, but let's loop over it anyway in case
+            # one day we make the storage more effective
+            for e in p.set:
+                fil.write(("%5s"*4+"\n")%(e+1,i,p.edge+1,(p.edge+1)%4+1))
+            i += 1
+        fil.write("""print randen
+tran randen tranden
+boundary  rand-%s coord bcon elems-%s matnr-%s tranden 1
+""" % ((igrp,)*3))
+        fil.write("""text 3 1
                            $$$$$$$$$$$$$$$$$$$$$$$
                            $$  BOUNDARY  LOADS  $$
                            $$$$$$$$$$$$$$$$$$$$$$$
-""")
-    ## loadcase=1
-    ## for p in PDB.getProp('n',attr=['cload']):
-    ##     if p.set is None:
-    ##         nodeset = range(calpyModel.nnodes)
-    ##     else:
-    ##         nodeset = p.set
-    ##     F = [0.0,0.0]
-    ##     for i,v in p.cload:
-    ##         if i in [0,1]:
-    ##             F[i] = v
-    ##     fil.write(''.join(["%5i%5i%10.2f%10.2f\n" % (n,loadcase,F[0],F[1]) for n in nodeset]))
-    fil.write('\n')
+loadvec boundary rand-%s f 1
+""" % igrp)
+        for eload in loaddata:
+            fil.write("%5s%5s%10s%10s\n" % eload)
+        fil.write('\n')
 
     # Print total load vector
-    fil.write("""no debug
+    fil.write("""
 print f 3
                            $$$$$$$$$$$$$$$$$$$$
                            $$  LOAD  VECTOR  $$
@@ -827,7 +852,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     # This is a bit more complex. See Calpy for details
     # We first generate the input data in a string, then read them with the
     # calpy femodel.ReadBoundaryLoads function and finally assemble them with
-    # plane.addBoundaryLoads. We have to this operation per element group.
+    # plane.addBoundaryLoads. We have to do this operation per element group.
     # The group number is stored in the property record.
     ngroups = model.ngroups()
     s = [ "" ] * ngroups
