@@ -235,20 +235,20 @@ def fmtMaterial(mat):
         out += "*DENSITY\n%s\n" % float(mat.density)
 
     if mat.plastic is not None:
+        out += "*PLASTIC\n"
         mat.plastic = asarray(mat.plastic)
         if mat.plastic.ndim != 2:
             raise ValueError,"Plastic data should be 2-dim array"
         ## if mat.plastic.shape[1] > 8:
         ##     raise ValueError,"Plastic data array should have max. 8 columns"
         
-        out += "*PLASTIC\n"
         out += fmtData(mat.plastic.shape)
 
     if mat.damping == 'Yes':
         out += "*DAMPING"
-        if mat.alpha != 'None':
+        if mat.alpha is not None:
             out +=", ALPHA = %s" %mat.alpha
-        if mat.beta != 'None':
+        if mat.beta is not None:
             out +=", BETA = %s" %mat.beta
         out += '\n'
 
@@ -486,12 +486,12 @@ def fmtSurface(prop):
     """
     out = ''
     for p in prop:
-        out += "*Surface, name=%s, type=%s\n" % (p.name,p.surftype)
+        out += "*SURFACE, NAME=%s, TYPE=%s\n" % (p.name,p.surftype)
         for e in p.set:
             if p.label is None:
-                out += "%s\n" % e
+                out += "%s\n" % (e+1)
             else:
-                out += "%s, %s\n" % (e,p.label)
+                out += "%s, %s\n" % (e+1,p.label)
     return out
 
  
@@ -751,7 +751,7 @@ def writeSection(fil,prop):
     ##########################
     elif eltype in surface_elems:
         if el.sectiontype.upper() == 'SURFACE':
-            fil.write("""*SURFACE SECTION, ELSET=%s \n""" % setname)
+            fil.write("*SURFACE SECTION, ELSET=%s \n" % setname)
     
     ############
     ## MEMBRANE elements
@@ -786,7 +786,7 @@ def writeSection(fil,prop):
     ##########################
     elif eltype in ['R2D2','RB2D2','RB3D2','RAX2','R3D3','R3D4']:
         if el.sectiontype.upper() == 'RIGID':
-            fil.write("""*RIGID BODY,REFNODE=%s,density=%s, ELSET=%s\n""" % (el.nodeset,el.density,setname))
+            fil.write("*RIGID BODY,REFNODE=%s,density=%s, ELSET=%s\n" % (el.nodeset,el.density,setname))
 
 
 

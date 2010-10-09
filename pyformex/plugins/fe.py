@@ -91,7 +91,7 @@ class Model(Geometry):
         GD.message("Number of nodes: %s" % self.coords.shape[0])
         GD.message("Number of elements: %s" % self.celems[-1])
         GD.message("Number of element groups: %s" % len(nelems))
-        GD.message("Number of nodes per group: %s" % nnodes)
+        #GD.message("Number of nodes per group: %s" % nnodes)
         GD.message("Number of elements per group: %s" % nelems)
         GD.message("Plexitude of each group: %s" % nplex)
 
