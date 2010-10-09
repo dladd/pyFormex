@@ -119,6 +119,7 @@ def fmtData1D(data,npl=8,sep=', ',linesep='\n'):
     formatted in lines with maximum npl items, separated by sep.
     Lines are separated by linesep.
     """
+    data = asarray(data)
     data = data.flat
     return linesep.join([
         sep.join(map(str,data[i:i+npl])) for i in range(0,len(data),npl)
@@ -133,6 +134,7 @@ def fmtData(data,npl=8,sep=', ',linesep='\n'):
     Then the data are formatted in lines with maximum npl items, separated
     by sep. Lines are separated by linesep.
     """
+    data = asarray(data)
     data = data.reshape(-1,data.shape[-1])
     return linesep.join([fmtData1D(row,npl,sep,linesep) for row in data])
 
@@ -162,6 +164,41 @@ def fmtMaterial(mat):
     `mat` is the property dict of the material.
     If the material has a name and has already been written, this function
     does nothing.
+
+    LINEAR ( Default)
+    elasticity=linear  (or None)
+    
+    REQUIRED
+    young_modulus
+    mat.shear_modulus
+    
+    OPTIONAL
+    mat.poisson_ratio (calcultated if None)
+    
+    ========================
+    
+    HYPERELASTIC
+    
+    elasticity=str hyperelastic
+    model=str ogden , polynomial , reduced polynomial
+    constants= list  of int sorted abaqus parameter
+
+    ========================
+
+    ANISOTROPIC HYPERELASTIC
+    elasticity=anisotropic hyperelastic
+    model= holzapfel
+    constants= ist  of int sorted abaqus parameter
+
+    ========================
+
+    USER MATERIAL
+    elasticity=user
+    constants= list  of int sorted abaqus parameter
+    
+    ============================
+    Additional parametrer
+    plastic: list([yield stress, yield strain])
     """
     if mat.name is None or mat.name in materialswritten:
         return ""
@@ -169,8 +206,7 @@ def fmtMaterial(mat):
     out ="*MATERIAL, NAME=%s\n" % mat.name
     materialswritten.append(mat.name)
     
-    if not mat.has_key('elasticity') or mat.elasticity == 'linear':
-    
+    if mat.elasticity is None or mat.elasticity == 'linear':
         if mat.poisson_ratio is None and mat.shear_modulus is not None:
             mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
 
@@ -193,12 +229,7 @@ def fmtMaterial(mat):
             
     elif mat.elasticity == 'user':
         out += "*USER MATERIAL, CONSTANTS=%s\n" % len(mat.constants)
-            
-    if mat.has_key('constants'):
-        for p in range(len(mat.constants)):
-            out += "%s, " % mat.constants[p]
-            if p%8==7 or p==len(mat.constants)-1:
-                out = out[:-2]+"\n"
+        out += fmtData(mat.constants)
     
     if mat.density is not None:
         out += "*DENSITY\n%s\n" % float(mat.density)
@@ -207,12 +238,11 @@ def fmtMaterial(mat):
         mat.plastic = asarray(mat.plastic)
         if mat.plastic.ndim != 2:
             raise ValueError,"Plastic data should be 2-dim array"
-        if mat.plastic.shape[1] > 8:
-            raise ValueError,"Plastic data array should have max. 8 columns"
-
+        ## if mat.plastic.shape[1] > 8:
+        ##     raise ValueError,"Plastic data array should have max. 8 columns"
+        
         out += "*PLASTIC\n"
-        fmt = ', '.join(['%s']*mat.plastic.shape[1]) + '\n'
-        out += ''.join([fmt % tuple(p) for p in mat.plastic ])
+        out += fmtData(mat.plastic.shape)
 
     if mat.damping == 'Yes':
         out += "*DAMPING"
@@ -232,7 +262,7 @@ def fmtTransform(setname,csys):
     - `csys` is a CoordSystem.
     """
     out = "*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys)
-    out += "%s,%s,%s,%s,%s,%s\n" % tuple(csys.data.ravel())
+    out += fmtData(csys.data)
     return out
 
 
@@ -288,11 +318,11 @@ def fmtFrameSection(el,setname):
         out += "%s, %s\n" % (float(el.width),float(el.height))
 
     if el.orientation != None:
-        out += "%s,%s,%s\n" % tuple(el.orientation)
+        out += fmtData(el.orientation)
     else:
         out += '\n'
      
-    out += "%s, %s \n" % (float(el.young_modulus),float(el.shear_modulus))
+    out += fmtData([float(el.young_modulus),float(el.shear_modulus)])
 
     return out
 
@@ -475,7 +505,7 @@ def fmtSurfaceInteraction(prop):
     """
     out = ''
     for p in prop:
-        out += "*Surface Interaction, name=%s\n" % (p.name)
+        out += "*SURFACE INTERACTION, NAME=%s\n" % (p.name)
         if p.cross_section is not None:
             out += "%s\n" % p.cross_section
         if p.friction is not None:
@@ -541,17 +571,19 @@ def fmtOrientation(prop):
     """
     out = ''
     for p in prop:
-        out += "*Orientation, name=%s" % (p.name)
+        out += "*ORIENTATION, NAME=%s" % (p.name)
         if p.definition is not None:
-            out += ", DEFINITION=%s" % p.definition
+            out += ", definition=%s" % p.definition
         if p.system is not None:
             out += ", SYSTEM=%s" % p.system
         out += "\n"
         if p.a is not None:
-            out += "%s,%s,%s" % tuple(p.a)
+            data = tuple(p.a)
             if p.b is not None:
-                out += ",%s,%s,%s" % tuple(p.b)  
-            out += "\n"
+                data += tuple(p.b)
+            out += fmtData(data)
+        else:
+            raise ValueError,"Orientation needs at least point a"
     return out
 
 
@@ -1505,7 +1537,7 @@ Script: %s
 
         if filename is not None:
             fil.close()
-        GD.message("Done")
+        GD.message("Wrote Abaqus input file %s" % filename)
 
 
     

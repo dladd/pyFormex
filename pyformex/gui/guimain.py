@@ -867,7 +867,6 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.GUI.toggleInputBox(False)
     pf.GUI.addCoordsTracker()
     pf.GUI.toggleCoordsTracker(pf.cfg.get('gui/coordsbox',False))
-    pf.GUI.show()
     pf.debug("Using window name %s" % pf.GUI.windowTitle())
     
     # Create additional menus (put them in a list to save)
@@ -906,21 +905,23 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     pf.GUI.setBusy(False)
     pf.GUI.addStatusBarButtons()
-    pf.GUI.update()
 
     # remove the splash window
     if splash is not None:
         splash.finish(pf.GUI)
 
     pf.GUI.setBusy(False)
-    pf.GUI.update()
-   
+
     if os.path.isdir(pf.cfg['workdir']):
         # Make the workdir the current dir
         os.chdir(pf.cfg['workdir'])
+        pf.debug("Setting workdir to %s" % pf.cfg['workdir'])
     else:
         # Save the current dir as workdir
         prefMenu.updateSettings({'workdir':os.getcwd(),'Save changes':True})
+
+    pf.GUI.show()
+    pf.GUI.update()
     pf.app_started = True
     pf.app.processEvents()
     return 0

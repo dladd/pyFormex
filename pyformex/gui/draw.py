@@ -48,8 +48,6 @@ from script import *
 from signals import *
 
 from plugins import trisurface,tools,mesh,fe
-
-
         
 #################### Interacting with the user ###############################
 

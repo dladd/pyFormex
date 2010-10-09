@@ -32,6 +32,8 @@ techniques = ['color']
 from plugins.properties import *
 from plugins.fe_abq import *
 
+import os
+
 ####
 #Data
 ###################
@@ -143,7 +145,6 @@ model = Model(M.coords,M.elems)
 if not checkWorkdir():
     exit()
 
-message("Writing the Abaqus file")
 AbqData(model,P,[step],eprop=F.prop,out=[out],res=res).write('SpaceTruss')
 
 # End
