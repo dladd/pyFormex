@@ -132,13 +132,13 @@ def createQuadPart(res=None):
             return
     if res is None:
         res = askItems([
-            ('Vertex 0',(x0,y0)),
-            ('Vertex 1',(x1,y1)),
-            ('Vertex 2',(x2,y2)),
-            ('Vertex 3',(x3,y3)),
-            ('nx',nx),
-            ('ny',ny),
-            ('eltype',eltype,'select',['quad','tri-u','tri-d']),
+            I('Vertex 0',(x0,y0)),
+            I('Vertex 1',(x1,y1)),
+            I('Vertex 2',(x2,y2)),
+            I('Vertex 3',(x3,y3)),
+            I('nx',nx),
+            I('ny',ny),
+            I('eltype',eltype,itemtype='radio',choices=['quad','tri-u','tri-d']),
             ])
     if res:
         x0,y0 = res['Vertex 0']
@@ -511,8 +511,8 @@ plane
     fil.write(""";-----------------------------------------
 ; Materialen
 ;-----------
-array mat     1 4
-""")
+array mat    %s 4
+""" % len(mats))
     fil.write('\n'.join([ "%.4e "*4 % tuple(m) for m in mats]))
     fil.write('\n\n')
     fil.write("""print mat 3
@@ -522,17 +522,17 @@ array mat     1 4
 """)
     
     # Elements
-    for grp in model.elems:
+    for igrp,grp in enumerate(model.elems):
         nelems,nplex = grp.shape
         fil.write(""";-----------------------------------------
 ; Elementen
 ;----------
-elements nodes matnr  %s %s 1
-""" % (nplex,nelems))
+elements elems-%s matnr-%s  %s %s 1
+""" % (igrp,igrp,nplex,nelems))
         fil.write('\n'.join(["%5i"*(nplex+2) % tuple([i,1]+e.tolist()) for i,e in zip(arange(nelems)+1,grp+1)]))
         fil.write('\n\n')
-        fil.write("""plane plane coord bcon nodes matnr 2 2
-""")
+        fil.write("""plane plane-%s coord bcon elems-%s matnr-%s 2 2
+""" % (igrp,igrp,igrp))
         
     # Nodal Loads
     fil.write("""text 3 1
@@ -552,25 +552,48 @@ loads f bcon 1
             if i in [0,1]:
                 F[i] = v
         fil.write(''.join(["%5i%5i%10.2f%10.2f\n" % (n,loadcase,F[0],F[1]) for n in nodeset]))
-
     fil.write('\n')
     
     # Distributed loads
-    fil.write("""""")
+    fil.write("""text 3 1
+                           $$$$$$$$$$$$$$$$$$$$$$$
+                           $$  BOUNDARY  LOADS  $$
+                           $$$$$$$$$$$$$$$$$$$$$$$
+""")
+    ## loadcase=1
+    ## for p in PDB.getProp('n',attr=['cload']):
+    ##     if p.set is None:
+    ##         nodeset = range(calpyModel.nnodes)
+    ##     else:
+    ##         nodeset = p.set
+    ##     F = [0.0,0.0]
+    ##     for i,v in p.cload:
+    ##         if i in [0,1]:
+    ##             F[i] = v
+    ##     fil.write(''.join(["%5i%5i%10.2f%10.2f\n" % (n,loadcase,F[0],F[1]) for n in nodeset]))
+    fil.write('\n')
+
+    # Print total load vector
     fil.write("""no debug
 print f 3
                            $$$$$$$$$$$$$$$$$$$$
                            $$  LOAD  VECTOR  $$
                            $$$$$$$$$$$$$$$$$$$$
 ;
-assemble plane mat s 0 0 0 3
 """)
+    # Assemble
+    for igrp in range(len(model.elems)):
+        fil.write("assemble plane-%s mat s 0 0 0 3\n" % igrp)
+
     # Solve and output
     fil.write(""";------------------------------------------------solve+output
 flavia mesh '%s.flavia.msh' %s
 flavia nodes coord
-flavia elems nodes matnr  %s
-flavia results '%s.flavia.res'
+""" %  (jobname,nplex))
+    for igrp in range(len(model.elems)):
+        fil.write("flavia elems elems-%s matnr-%s %s\n" % (igrp,igrp,nplex))
+    fil.write("flavia results '%s.flavia.res'\n" % jobname)
+    fil.write("""
 solbnd s f
 delete s
 text named 1
@@ -583,18 +606,23 @@ text types 1
 Matrix OnNodes
 intvar set 1 1
 loop 1
- displ f bcon displ $1 1
- tran displ disp
- flavia result named typed disp $1
- stress plane mat f stresg $1 1
- gp2nod plane stresg strese 0 1
- nodavg plane nodes strese stren nval 1
- tran stren stre
- flavia result names types stre $1
- intvar add 1 1
+  displ f bcon displ $1 1
+  tran displ disp
+  flavia result named typed disp $1
+""")
+    for igrp in range(len(model.elems)):
+        fil.write("""
+  stress plane-%s mat f stresg $1 1
+  gp2nod plane-%s stresg strese 0 1
+  nodavg plane-%s elems-%s strese stren nval 1
+  tran stren stre
+  flavia result names types stre $1
+""" % ((igrp,)*4))
+    fil.write("""       
+  intvar add 1 1
 next
 stop
-""" % (jobname,nplex,nplex,jobname))
+""")
 
     # Done: Close data file
     fil.close()
@@ -614,10 +642,10 @@ stop
             DB = flavia.readFlavia(meshfile,resfile)
             postproc_menu.setDB(DB)
             export({name:DB})
-            showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name)
-            postproc_menu.selection.set(name)
-            postproc_menu.selectDB(DB)
-            postproc_menu.open_results_dialog()
+            if showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name,actions=['Cancel','OK']) == 'OK':
+                postproc_menu.selection.set(name)
+                postproc_menu.selectDB(DB)
+                postproc_menu.open_results_dialog()
     
 
 ##############################################################################
@@ -910,10 +938,10 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     postproc_menu.setDB(DB)
     name = feresult_name.next()
     export({name:DB})
-    showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name)
-    postproc_menu.selection.set(name)
-    postproc_menu.selectDB(DB)
-    postproc_menu.open_results_dialog()
+    if showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name,actions=['Cancel','OK']) == 'OK':
+        postproc_menu.selection.set(name)
+        postproc_menu.selectDB(DB)
+        postproc_menu.open_results_dialog()
     
 
 def autoRun(quadratic=False):

@@ -7,7 +7,7 @@ Interface with flavia FE result files.
 (C) 2010 Benedict Verhegghe.
 """
 from arraytools import *
-from plugins.mesh import Mesh
+from plugins.mesh import Mesh,mergeMeshes
 from plugins.fe_post import FeResult
 import shlex
 
@@ -35,10 +35,11 @@ element_results_count = {
 def readMesh(fn):
     """Read a flavia mesh file.
 
-    Returns a Mesh if succesful.
+    Returns a list of Meshes if succesful.
     """
     fil = open(fn,'r')
 
+    meshes = []
     for line in fil:
         if line.startswith('#'):
             continue
@@ -52,17 +53,17 @@ def readMesh(fn):
             print "eltype = %s, ndim = %s" % (eltype,ndim)
         elif line.startswith('Coordinates'):
             coords = readCoords(fil,ndim)
-            print coords.shape
+            print "Coords %s" % str(coords.shape)
         elif line.startswith('Elements'):
             elems,props = readElems(fil,nplex)
-            print elems.shape
-            print props.shape
+            print "Elements %s %s" % (elems.shape,props.shape)
+            meshes.append((elems,props))
         else:
             print line
-    M = Mesh(coords,elems,props).compact()
-    M.ndim = ndim
-    return M
-            
+    elems,props = [m[0] for m in meshes],[m[1] for m in meshes]
+    maxnod = max([ e.max() for e in elems])
+    coords = coords[:maxnod+1]
+    return coords,elems,props,ndim
             
 
 def readCoords(fil,ndim):
@@ -106,7 +107,7 @@ def readElems(fil,nplex):
     return elems[defined]-1,props[defined]
 
 
-def readResults(fn,mesh):
+def readResults(fn,nnodes,ndim):
     """Read a flavia results file for an ndim mesh.
 
     """
@@ -127,10 +128,10 @@ def readResults(fn,mesh):
                 print "Skipping %s %s" % (name,domain)
                 nres = 0
                 continue
-            nres = element_results_count[restype][mesh.ndim]
+            nres = element_results_count[restype][ndim]
         elif line.startswith('Values'):
             if nres > 0:
-                result = readResult(fil,mesh.nnodes(),nres)
+                result = readResult(fil,nnodes,nres)
                 print name
                 results[name] = result
         else:
@@ -154,9 +155,10 @@ def readResult(fil,nvalues,nres):
 from plugins.fe import Model
 from plugins.fe_post import FeResult
 
-def createFeResult(mesh,results):
-    
-    model = Model(mesh.coords,mesh.elems)
+
+def createFeResult(model,results):
+    """Create an FeResult from meshes and results"""
+    #model = Model(*mergeMeshes(meshes,fuse=False))
     DB = FeResult()
     DB.nodes = model.coords
     DB.nnodes = model.coords.shape[0]
@@ -177,9 +179,15 @@ def createFeResult(mesh,results):
 
 
 def readFlavia(meshfile,resfile):
-    """Read flavia results files"""
-    M = readMesh(meshfile)
-    R = readResults(resfile,M)
+    """Read flavia results files
+
+    Currently we only read matching pairs of meshfile,resfile files.
+    """
+    if meshfile:
+        coords,elems,props,ndim = readMesh(meshfile)
+    if resfile:
+        R = readResults(resfile,coords.shape[0],ndim)
+    M = Model(coords,elems)
     DB = createFeResult(M,R)
     DB.printSteps()
     return DB

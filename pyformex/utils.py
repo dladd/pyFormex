@@ -402,12 +402,14 @@ file_description = {
     'off': 'OFF files (*.off)',
     'smesh': 'Tetgen surface mesh files (*.smesh)',
     'neu': 'Gambit Neutral files (*.neu)',
-    'surface': 'Any Surface file ( *.gts *.stl *.off *.smesh *.neu)',
-    'postproc': 'Postproc scripts (*_post.py *.post)',
+    'surface': 'Any Surface file (*.gts *.stl *.off *.smesh *.neu)',
     'pyformex': 'pyFormex scripts (*.py *.pye)',
     'pyf': 'pyFormex projects (*.pyf)',
     'pgf': 'pyFormex geometry files (*.pgf *.formex)',
+    'postproc': 'Postproc scripts (*_post.py *.post)',
+    'flavia' : 'flavia results (*.flavia.msh *.flavia.res)'
 }
+
 
 def fileDescription(ftype):
     """Return a description of the specified file type.

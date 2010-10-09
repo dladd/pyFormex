@@ -231,8 +231,10 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
     nodes is an array with nodal coordinates
     elems is a single element group or a list of elem groups
-    displ are the displacements at the nodes
-    val are the scalar values at the nodes
+    displ are the displacements at the nodes, may be set to None.
+    val are the scalar values at the nodes, may also be None.
+    If not None, displ should have the same shape as nodes and val
+    should have shape (nnodes).
 
     If dscale is a list of values, the results will be drawn with
     subsequent deformation scales, with a sleeptime intermission,
@@ -240,11 +242,16 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     """
     clear()
 
+    if displ is not None:
     # expand displ if it is smaller than nodes
-    # e.g. in 2d returning only 2d displacements
-    n = nodes.shape[1] - displ.shape[1]
-    if n > 0:
-        displ = growAxis(displ,n,axis=1,fill=0.0)
+        # e.g. in 2d returning only 2d displacements
+        n = nodes.shape[1] - displ.shape[1]
+        if n > 0:
+            displ = growAxis(displ,n,axis=1,fill=0.0)
+
+        if nodes.shape != displ.shape:
+            warning("The displacements do not match the mesh: the mesh coords have shape %s; but the displacements have shape %s. I will continue without displacements." % (nodes.shape,displ.shape))
+            displ = None
 
     if type(elems) != list:
         elems = [ elems ]
@@ -256,6 +263,11 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
     # compute the colors according to the values
     multiplier = 0
+    if val is not None:
+        if val.shape != (nodes.shape[0],):
+            warning("The values do not match the mesh: there are %s nodes in the mesh, and I got values with shape. I will continue without showing values." % (nodes.shape[0],val.shape))
+            val = None
+            
     if val is not None:
         # create a colorscale and draw the colorlegend
         vmin,vmax = val.min(),val.max()
@@ -297,10 +309,10 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     bboxes = []
     for dsc in dscale.flat:
 
-        #print(dsc)
-        #print(nodes.shape)
-        #print(displ.shape)
-        dnodes = nodes + dsc * displ
+        if displ is None:
+            dnodes = nodes
+        else:
+            dnodes = nodes + dsc * displ
         deformed = [ Mesh(dnodes,el,eltype='quad%d'%el.shape[1]) for el in elems ]
         bboxes.append(bbox(deformed))
         # We store the changing parts of the display, so that we can
@@ -611,8 +623,6 @@ def show():
                 val = norm2(val)
     if val is not None:
         txt = res_dict.values()[resindex]
-    #print(nodes.shape)
-    #print(displ.shape)
     showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
     return val
 
@@ -680,6 +690,49 @@ def selectDB(db=None):
         print('Stress tensor has %s components' % DB.datasize['S'])
         showModel()
     return db
+
+    
+def importFlavia(fn=None):
+    """Import a flavia file and select it as the current results.
+
+    Flavia files are the postprocessing format used by GiD pre- and
+    postprocessor, and can also be written by the FE program calix.
+    There usually are two files named 'BASE.flavia.msh' and 'BASE.flavia.res'
+    which hold the FE mesh and results, respectively.
+    
+    This functions asks the user to select a flavia file (either mesh or
+    results), will then read both the mesh and corrseponding results files,
+    and store the results in a FeResult instance, which will be set as the
+    current results database for the postprocessing menu.
+    """
+    from plugins.flavia import readFlavia
+    if fn is None:
+        types = [ utils.fileDescription('flavia'), utils.fileDescription('all') ]
+        fn = askFilename(GD.cfg['workdir'],types)
+    if fn:
+        chdir(fn)
+        if fn.endswith('.msh'):
+            meshfile = fn
+            resfile = utils.changeExt(fn,'res')
+        else:
+            resfile = fn
+            meshfile = utils.changeExt(fn,'msh')
+            
+        db = readFlavia(meshfile,resfile)
+        if not isinstance(db,FeResult):
+            warning("!Something went wrong during the import of the flavia database %s" % fn)
+            return
+
+        ### ok: export and select the DB
+        name = os.path.splitext(os.path.basename(fn))[0].replace('.flavia','')
+        export({name:db})
+        db.printSteps()
+        print db.R
+        print db.datasize
+        
+        selection.set([name])
+        selectDB(db)
+        
 
     
 def importDB(fn=None):
@@ -781,7 +834,8 @@ def create_menu():
     """Create the Postproc menu."""
     MenuData = [
 #        ("&Translate Abaqus .fil to FeResult database",P.postABQ),
-        ("&Open FeResult Database",importDB),
+        ("&Read FeResult Database",importDB),
+        ("&Read Flavia Database",importFlavia),
         ("&Select FeResult Data",selectDB),
 #        ("&Forget FeResult Data",P.selection.forget),
         ("---",None),
