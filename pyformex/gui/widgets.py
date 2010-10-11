@@ -1424,8 +1424,8 @@ class NewInputDialog(QtGui.QDialog):
         layout is the widget layout where the input widgets will be added
         """
         for item in items:
-            print item
-            print type(item)
+            #print item
+            #print type(item)
             if isinstance(item,dict):
                 if self.prefix:
                     item['name'] = self.prefix + item['name']
