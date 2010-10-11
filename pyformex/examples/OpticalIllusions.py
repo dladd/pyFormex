@@ -253,7 +253,7 @@ def MotionInducedBlindness():
     Cool huh?
     """
     resetview('black')
-    res = askItems([('Number of static points',10),('Background',None,'radio',['Tiles','Structured points','Random points']),('Rotations',2),('Rotation angle',2),('Number of random points',300)])
+    res = askItems([('Number of static points',10),('Background',None,'radio',{'choices':['Tiles','Structured points','Random points']}),('Rotations',2),('Rotation angle',2),('Number of random points',300)])
     if not res: return
     nr,a,rot,back,n = res['Number of random points'],res['Rotation angle'],res['Rotations'],res['Background'],res['Number of static points']
     draw(shape('star').scale(0.4),color=red,linewidth=2)
