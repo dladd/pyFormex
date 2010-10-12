@@ -25,9 +25,9 @@
 #
 """Barrel Vault
 
-level = 'advanced'
-topics = ['FEA']
-techniques = ['colors'] 
+level = 'beginner'
+topics = ['geometry']
+techniques = ['stepmode','cylindrical'] 
 """
 
 clear()
@@ -43,7 +43,7 @@ l=30. # barrel length
 d = Formex([[[0.,0.,0.],[1.,1.,0.]]],1) # a single diagonal
 draw(d,view='front')
 
-d += d.reflect(0,1.) # reflect in x-direction
+d += d.reflect(0,1.) # reflect in x-direction and add to the original
 draw(d)
 
 d += d.reflect(1,1.) # reflect in y-direction
@@ -88,6 +88,8 @@ draw(scaled_grid)
 # The cylindrical transformation by default expects angles in degrees
 barrel = scaled_grid.cylindrical(scale=[1.,(1./r)/Deg,1.])
 draw(barrel)
+print("Het aantal elementen is %s (plexitude %s)" % (barrel.nelems(),barrel.nplex()))
+print("De grootte van de coordinatenarray is %s" % str(barrel.shape()))
 
 # Remark: if we did not want to show the scaled grid, the creation
 # of the barrel could be simplified by combining the last two transformations:

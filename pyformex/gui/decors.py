@@ -482,7 +482,7 @@ class Triade(Drawable):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
 
-    def draw(self,mode='wireframe',color=None):
+    def draw(self,**kargs):
         self._draw_absolute()
 
 # End

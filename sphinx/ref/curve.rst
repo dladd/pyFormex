@@ -19,7 +19,7 @@
 
 
    .. autoclass:: Curve
-      :members: pointsOn,pointsOff,ncoords,npoints,sub_points,sub_points_2,lengths,pointsAt,subPoints,length,approx,toFormex
+      :members: pointsOn,pointsOff,ncoords,npoints,sub_points,sub_points_2,sub_tangents,lengths,pointsAt,subPoints,length,approx,toFormex
 
    .. autoclass:: PolyLine
       :members: nelems,toFormex,toMesh,sub_points,sub_points2,vectors,directions,avgDirections,lengths,atLength,reverse,split,cutWithPlane
@@ -28,7 +28,7 @@
       :members: 
 
    .. autoclass:: BezierSpline
-      :members: pointsOn,pointsOff,part,sub_points,reverse
+      :members: pointsOn,pointsOff,part,sub_points,sub_tangents,reverse
 
    .. autoclass:: QuadBezierSpline
       :members: 

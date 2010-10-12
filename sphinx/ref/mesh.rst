@@ -13,13 +13,13 @@
 
 .. automodule:: mesh
    :synopsis: mesh.py
-   :members: vectorRotation,sweepCoords,defaultEltype,mergeNodes,mergeMeshes,connectMesh,connectMeshSequence,structuredHexGrid,correctHexMeshOrientation
+   :members: vectorRotation,sweepCoords,defaultEltype,mergeNodes,mergeMeshes,connectMesh,connectQuadraticMesh,connectMeshSequence,structuredHexGrid,correctHexMeshOrientation
 
    ``Classes defined in module mesh``
 
 
    .. autoclass:: Mesh
-      :members: setProp,getProp,maxProp,propSet,copy,toFormex,ndim,nelems,nplex,ncoords,shape,nedges,centroids,getCoords,getElems,getLowerEntitiesSelector,getLowerEntities,getEdges,getFaces,getAngles,getBorder,getBorderMesh,report,fuse,compact,select,unselect,meanNodes,addNodes,addMeanNodes,selectNodes,withProp,splitProp,convert,splitRandom,convertRandom,reduceDegenerate,splitDegenerate,renumber,extrude,revolve,sweep,test,clip,cclip,clipAtPlane,volumes,volume,equiAngleSkew,actor
+      :members: setProp,getProp,maxProp,propSet,copy,toFormex,ndim,nelems,nplex,ncoords,shape,nedges,centroids,getCoords,getElems,getLowerEntitiesSelector,getLowerEntities,getEdges,getFaces,getAngles,getBorder,getBorderMesh,neighborsByNode,report,fuse,compact,select,unselect,meanNodes,addNodes,addMeanNodes,selectNodes,withProp,splitProp,convert,splitRandom,convertRandom,reduceDegenerate,splitDegenerate,renumber,extrude,revolve,sweep,test,clip,cclip,clipAtPlane,volumes,volume,equiAngleSkew,actor
 
    ``Functions defined in module mesh`` 
 

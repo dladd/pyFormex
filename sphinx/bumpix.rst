@@ -149,8 +149,12 @@ toolbar at the bottom.
 
 .. warning:: More detailed documentation on how to use the system is
    currently under preparation. For now, feel free to `email us`_ if
-   you have any problems or urgent questions.
+   you have any problems or urgent questions. But first check that your
+   question is not solved in the FAQ below.
+
   
+
+.. _sec:bumpix_faq:
 
 FAQ
 ===
