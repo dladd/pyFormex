@@ -152,4 +152,14 @@ toolbar at the bottom.
    you have any problems or urgent questions.
   
 
+FAQ
+===
+A collection of hints and answers to frequently asked questions.
+
+#) The initial user name is `user` and the password `live`.
+
+#) On shutdown/reboot, the system pauses with the advice to remove the
+   USB stick before hitting `ENTER` to proceed. We advice not to do this:
+   first hit `ENTER` and remove the USB stick when the screen goes black.
+
 .. End
