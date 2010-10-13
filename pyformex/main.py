@@ -147,7 +147,18 @@ def savePreferences():
     """
     if pyformex.preffile is None:
         return
-    
+
+    # Create the user conf dir
+    prefdir = os.path.dirname(pyformex.preffile)
+    if not os.path.exists(prefdir):
+        try:
+            os.makedirs(prefdir)
+        except:
+            print("The path where your user preferences should be stored can not be created!\nPreferences are not saved!")
+            return
+
+
+    # Cleanup up the prefcfg
     del pyformex.prefcfg['__ref__']
 
     # Currently erroroneously processed, therefore not saved
@@ -159,7 +170,7 @@ def savePreferences():
     pyformex.options.debug = 1
     pyformex.debug("="*60)
     pyformex.debug("!!!Saving config:\n%s" % pyformex.prefcfg)
-
+    
     try:
         pyformex.prefcfg.write(pyformex.preffile)
         res = "Saved"
@@ -373,21 +384,9 @@ def run(argv=[]):
 
     ########### Read the config files  ####################
 
-    # Create the user conf dir
-    if not os.path.exists(pyformex.cfg.userconfdir):
-        os.mkdir(pyformex.cfg.userconfdir)
-
     # These values  should not be changed
     pyformex.cfg.userprefs = os.path.join(pyformex.cfg.userconfdir,'pyformexrc')
     pyformex.cfg.autorun = os.path.join(pyformex.cfg.userconfdir,'startup.py')
-
-    # Migrate old user prefs
-    olduserprefs = os.path.join(pyformex.cfg.homedir,'.pyformexrc')
-    if not os.path.exists(pyformex.cfg.userprefs) and os.path.exists(olduserprefs):
-        import shutil
-        print("Moving user preferences to new location")
-        print("%s --> %s" % (olduserprefs,pyformex.cfg.userprefs))
-        shutil.move(olduserprefs,pyformex.cfg.userprefs)
     
     # Set the config files
     if pyformex.options.nodefaultconfig:
