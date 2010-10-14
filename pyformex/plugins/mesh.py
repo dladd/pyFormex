@@ -735,7 +735,14 @@ Size: %s
             for v in asarray(val).flat:
                 t += (self.prop == v)
             return Mesh(self.coords,self.elems[t],self.prop[t],self.eltype)
-            
+        
+    
+    def withoutProp(self, val):
+        """it is the complementary function of withProp."""
+        wi=range(len(self.propSet()))
+        wi = delete(wi, val)
+        return self.withProp(wi)
+
 
     def splitProp(self):
         """Partition aMesh according to its prop values.
