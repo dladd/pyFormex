@@ -676,14 +676,14 @@ Size: %s
 
     def addNodes(self,newcoords,eltype=None):
         """Add new nodes to elements.
-
+    
         `newcoords` is an `(nelems,nnod,3)` array of coordinates.
         Each element thus gets exactly `nnod` extra points and the result
         is a Mesh with plexitude self.nplex() + nnod.
         """
-        newnodes = arange(newcoords.shape[0]).reshape(self.elems.shape[0],-1) + self.coords.shape[0]
+        newnodes=arange(newcoords.shape[1]*self.elems.shape[0] ).reshape(self.elems.shape[0], -1)+ self.coords.shape[0]
         elems = Connectivity(concatenate([self.elems,newnodes],axis=-1))
-        coords = Coords.concatenate([self.coords,newcoords])
+        coords = Coords.concatenate([self.coords,newcoords.reshape(-1, 3)])
         return Mesh(coords,elems,self.prop,eltype)
 
 
