@@ -942,6 +942,7 @@ class TriSurface(Mesh):
         """Fills the holes of a surface by creating extra faces at the boundary edges. Original surface and boundaries are returned with different id prop."""
         brd=self.boundaryEdges()
         Brd=[ brd.withProp(p).compact() for p in brd.propSet() ]
+        if self.prop==None:self=self.setProp(0)
         maxp=self.maxProp()+1
         capsm=[Mesh( surfaceInsideLoop(Brd[i].coords,Brd[i].elems) ).setProp(i+maxp) for i in range(len(Brd))]
         return TriSurface( Mesh.concatenate( capsm+[self] ) )#.renumber()
