@@ -928,6 +928,25 @@ class TriSurface(Mesh):
         return Formex(self.coords[self.getEdges()[self.borderEdges()]])
 
 
+    def boundaryEdges(self):
+        """Returns the border edges of a surface, grouped by id property. """
+        be=Mesh(self.coords, self.getEdges()[self.borderEdges()] )#.renumber()
+        be.elems=be.elems.removeDegenerate().removeDoubles()
+        parts = connectedLineElems(be.elems)
+        prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
+        elems = concatenate(parts,axis=0)
+        return Mesh(be.coords,elems,prop=prop)
+    
+    
+    def boundaryFiller(self):
+        """Fills the holes of a surface by creating extra faces at the boundary edges. Original surface and boundaries are returned with different id prop."""
+        brd=self.boundaryEdges()
+        Brd=[ brd.withProp(p).compact() for p in brd.propSet() ]
+        maxp=self.maxProp()+1
+        capsm=[Mesh( surfaceInsideLoop(Brd[i].coords,Brd[i].elems) ).setProp(i+maxp) for i in range(len(Brd))]
+        return TriSurface( Mesh.concatenate( capsm+[self] ) )#.renumber()
+
+
     def edgeCosAngles(self):
         """Return the cos of the angles over all edges.
         
