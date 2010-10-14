@@ -38,7 +38,7 @@ but special cases may be created for handling plane curves.
 from numpy import *
 from formex import *
 from geometry import Geometry
-from plugins.geomtools import triangleCircumCircle
+from plugins.geomtools import triangleCircumCircle,intersectionTimesLWP
 from plugins.mesh import Mesh
 
 
@@ -765,6 +765,81 @@ class BezierSpline(Curve):
         T = normalize(T)
         return T
 
+    
+    def length_intgrnd(self,t,j):
+        """Return the arc length integrand at value t in part j."""
+        P = self.part(j)
+        C = self.coeffs * P
+        U = [ 0., 1. ]
+        for d in range(2,self.degree+1):
+            U.append(d*(t**(d-1)))
+        U = array(U)
+        T = dot(U,C)
+        T = array(T).reshape(3)
+        return length(T)
+
+
+    def lengths(self):
+        """Return the length of the parts of the curve."""
+        try:
+            from scipy.integrate import quad
+        except:
+            warning("""..
+        
+**The **lengths** function is not available.
+Most likely because 'python-scipy' is not installed on your system.""")
+            return
+        L = [ quad(self.length_intgrnd,0.,1.,args=(j,))[0] for j in range(self.nparts) ]
+        return array(L)
+
+
+    def approx_by_subdivision(self,tol=1.e-3):
+        """Return a PolyLine approximation of the curve.
+
+        tol is a tolerance value for the flatness of the curve.
+        The flatness of each part is calculated as the maximum
+        orthogonal distance of its intermediate control points
+        from the straight segment through its end points.
+        
+        Parts for which the distance is larger than tol are subdivided
+        using the 'de Casteljau algorithm'. The subdivision stops
+        if all parts are sufficiently flat. The return value is a PolyLine
+        connecting the end points of all parts.
+        """
+        # get the control points (nparts,degree+1,3)
+        P = array([ self.part(j) for j in range(self.nparts) ])
+        T = resize(True,self.nparts)
+        while T.any():
+            EP = P[T][:,[0,-1]] # end points (...,2,3)
+            IP = P[T][:,1:-1] # intermediate points (...,degree-1,3)
+            # compute maximum orthogonal distance of IP from line EP
+            q,m = EP[:,0].reshape(-1,1,3),(EP[:,1]-EP[:,0]).reshape(-1,1,3)
+            t = (dotpr(IP,m) - dotpr(q,m)) / dotpr(m,m)
+            X = q + t[:,:,newaxis] * m
+            d = length(X-IP).max(axis=1)
+            # subdivide parts for which distance is larger than tol
+            T[T] *= d > tol
+            if T.any():
+                # compute midpoints
+                M = [ P[T] ]
+                for i in range(self.degree):
+                    M.append( (M[-1][:,:-1]+M[-1][:,1:])/2 )
+                # compute new control points
+                Q1 = stack([ Mi[:,0] for Mi in M ],axis=1)
+                Q2 = stack([ Mi[:,-1] for Mi in M[::-1] ],axis=1)
+                # concatenate the parts
+                P = P[~T]
+                indQ = T.cumsum()-1
+                indP = (1-T).cumsum()-1
+                P = [ [Q1[i],Q2[i]] if Ti else [P[j]] for i,j,Ti in zip(indQ,indP,T) ]
+                P = Coords.concatenate(P,axis=0)
+                T = [ [Ti,Ti] if Ti else [Ti] for Ti in T ]
+                T = concatenate(T,axis=0)
+        # create PolyLine through end points
+        P = Coords.concatenate([P[:,0],P[-1,-1]],axis=0)
+        PL = PolyLine(P,closed=self.closed)
+        return PL
+
 
     def reverse(self):
         """Return the same curve with the parameter direction reversed."""
@@ -1055,5 +1130,58 @@ def convertFormexToCurve(self,closed=False):
     return curve
 
 Formex.toCurve = convertFormexToCurve
+
+
+def distanceBetweenBezier(curve1,curve2,tol=1.e-3,pdist=1.):
+    """Return the orthogonal distances between two Bezier splines.
+    
+    Each curve is approximated by a polyline using a flatness
+    tolerance 'tol' and a series of points and corresponding tangent
+    vectors at equal distance 'pdist' along the polyline is calculated.
+    
+    The distances of these points from the other polyline are
+    calculated, orthogonal to the corresponding tangent vectors.
+    
+    The return value is a tuple
+    (distances,points on polyline,intersection points on other polyline).
+    """
+    PL,p,n, = [],[],[]
+    for curve in [curve1,curve2]:
+        # compute polyline approximation of the curve
+        PLi = curve.approx_by_subdivision(tol)
+        PL.append(PLi)
+        # compute points and tangent vectors at equal distance 'pdist'
+        ntot = int(ceil(PLi.length()/pdist))
+        t = PLi.atLength(ntot)
+        t = asarray(t).ravel()
+        ti = floor(t).clip(min=0,max=PLi.nparts-1)
+        t -= ti
+        i = ti.astype(int)
+        pi = concatenate([PLi.sub_points(tj,ij) for tj,ij in zip(t,i)])
+        ni = normalize(PLi.vectors())[i]
+        p.append(Coords(pi))
+        n.append(Coords(ni))
+    # compute orthogonal distances
+    d,a,b = [],[],[]
+    for PLi,pi,ni in zip(PL[::-1],p,n):
+        q = PLi.pointsOn()[:-1]
+        m = PLi.vectors()
+        t = intersectionTimesLWP(q,m,pi,ni)
+        t = t.transpose((1,0))
+        x = q[newaxis,:] + t[:,:,newaxis] * m[newaxis,:]
+        inside = (t >= 0.) * (t <= 1.)
+        pid = where(inside)[0]
+        y = pi[pid]
+        x = x[inside]
+        dist = length(x-y)
+        OKpid = unique(pid)
+        OKdist = array([ dist[pid == i].min() for i in OKpid ])
+        minid = array([ dist[pid == i].argmin() for i in OKpid ])
+        OKpoints = array([ x[pid==i][j] for i,j in zip(OKpid,minid) ]).reshape(-1,3)
+        d.append(OKdist)
+        a.append(pi[OKpid])
+        b.append(OKpoints)
+    return d,a,b
+
 
 # End
