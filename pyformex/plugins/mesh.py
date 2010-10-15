@@ -639,6 +639,7 @@ Size: %s
         The returned Mesh is not compacted.
         The complimentary operation is `unselect`.
         """
+        selected=array(selected)
         if len(self.elems) == 0:
             return self
         prop = self.prop
@@ -659,6 +660,9 @@ Size: %s
         Returns a Mesh with all but the selected elements.
         The returned mesh is not compacted.
         """
+        selected=array(selected)
+        if selected.dtype==bool:
+            return self.select(selected==False)
         wi=range(self.nelems())
         wi = delete(wi, selected)
         return self.select(wi)
