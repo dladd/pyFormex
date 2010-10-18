@@ -617,22 +617,22 @@ class TriSurface(Mesh):
             S.setProp(self.prop.copy())
         return S
 
-    #this is already implemented with the same name in Mesh, and a TriSurface is also a Mesh.
-#    def select(self,idx,compact=True):
-#        """Return a TriSurface which holds only elements with numbers in ids.
-#
-#        idx can be a single element number or a list of numbers or
-#        any other index mechanism accepted by numpy's ndarray
-#        By default, the vertex list will be compressed to hold only those
-#        used in the selected elements.
-#        Setting compress==False will keep all original nodes in the surface.
-#        """
-#        S = TriSurface(self.coords, self.elems[idx])
-#        if self.prop is not None:
-#            S.setProp(self.prop[idx])
-#        if compact:
-#            S.compact()
-#        return S
+##    #this is already implemented with the same name in Mesh, and a TriSurface is also a Mesh.
+    def select(self,idx,compact=True):
+        """Return a TriSurface which holds only elements with numbers in ids.
+
+        idx can be a single element number or a list of numbers or
+        any other index mechanism accepted by numpy's ndarray
+        By default, the vertex list will be compressed to hold only those
+        used in the selected elements.
+        Setting compress==False will keep all original nodes in the surface.
+        """
+        S = TriSurface(self.coords, self.elems[idx])
+        if self.prop is not None:
+            S.setProp(self.prop[idx])
+        if compact:
+            S.compact()
+        return S
 
     # Some functions for offsetting a surface
 
