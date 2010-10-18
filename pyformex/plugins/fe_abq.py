@@ -488,10 +488,12 @@ def fmtSurface(prop):
     for p in prop:
         out += "*SURFACE, NAME=%s, TYPE=%s\n" % (p.name,p.surftype)
         for e in p.set:
+            if e.dtype.kind != 'S':
+                e += 1
             if p.label is None:
-                out += "%s\n" % (e+1)
+                out += "%s\n" % e
             else:
-                out += "%s, %s\n" % (e+1,p.label)
+                out += "%s, %s\n" % (e,p.label)
     return out
 
  
