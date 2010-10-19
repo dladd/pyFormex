@@ -1384,6 +1384,7 @@ Total area: %s; Enclosed volume: %s
         icut = [ where(ncut==i)[0] for i in range(4) ]
         cut0,cut1,cut2,cut3 = icut
         GD.debug("Number of triangles with 0..3 cutting edges: %s" % icut)
+        ftol = 1.e-5
         
         if cut3.size > 0:
             # The triangles with three vertices in the cutting plane
@@ -1395,12 +1396,14 @@ Total area: %s; Enclosed volume: %s
             # define the intersection line segment.
             cutedg = fac[cut3][cut[cut3]].reshape(-1,3)
             seg = rev[cutedg]
-            xd,xe = x[seg].fuse()
+            xd,xe = x[seg].fuse(rtol=0.,atol=ftol)
+            while not Connectivity(xe).testDegenerate().all():
+                ftol *= 10.
+                xd,xe = x[seg].fuse(rtol=0.,atol=ftol)
             # Keep the first vertex and the 2nd or 3rd, depending on which
             # is different from the first
-            seg = column_stack([xe[:,0], where(xe[:,1] == xe[:,0],xe[:,2],xe[:,1])])
+            seg = column_stack([xe[:,0], where(xe[:,1] == xe[:,0],xe[:,2],xe[:,1])])            
             Mparts.append(Mesh(xd,seg))
-
 
         if cut2.size > 0:
             # Create line elements between each pair of intersection points
@@ -1416,11 +1419,11 @@ Total area: %s; Enclosed volume: %s
         if len(Mparts) == 1:
             M = Mparts[0]
         else:
-            M = Mesh.concatenate(Mparts)
+            M = Mesh.concatenate(Mparts,rtol=0.,atol=ftol)
 
         # Remove degenerate and doubles
         M = Mesh(M.coords,M.elems.removeDegenerate().removeDoubles())
-            
+
         # Split in connected loops
         parts = connectedLineElems(M.elems)
         prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
