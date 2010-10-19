@@ -84,9 +84,9 @@ modemenu = True      # add rendermode menu
 viewmenu = True      # add views menu
 examplesmenu = True  # add examples menu
 
-camerabar = True     # add camera toolbar
-modebar = True       # add rendemode toolbar
-viewbar = True       # add views toolbar
+camerabar = 'top'     # add camera toolbar to top toolbar space
+modebar = 'top'       # add rendemode toolbar to top toolbar space
+viewbar = 'top'       # add views toolbar to top toolbar space
 
 normalsbutton = True  # add normals button to toolbar
 lightbutton = True    # add light button to toolbar

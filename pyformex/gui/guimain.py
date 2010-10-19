@@ -127,11 +127,11 @@ def set_view(view):
 class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
 
-    toolbarArea = { 'top': QtCore.Qt.TopToolBarArea,
-                    'bottom': QtCore.Qt.BottomToolBarArea,
-                    'left': QtCore.Qt.LeftToolBarArea,
-                    'right': QtCore.Qt.RightToolBarArea,
-                    }
+    toolbar_area = { 'top': QtCore.Qt.TopToolBarArea,
+                     'bottom': QtCore.Qt.BottomToolBarArea,
+                     'left': QtCore.Qt.LeftToolBarArea,
+                     'right': QtCore.Qt.RightToolBarArea,
+                     }
 
     def __init__(self,windowname,size=(800,600),pos=(0,0),bdsize=(0,0)):
         """Constructs the GUI.
@@ -203,12 +203,13 @@ class GUI(QtGui.QMainWindow):
         self.menu.show()
 
         # Define Toolbars
-        self.toolbardefs = [ ('Camera ToolBar','camerabar'),
-                             ('RenderMode ToolBar','modebar'),
-                             ('Views ToolBar','viewbar'),
-                             ]
+    
+        self.camerabar = self.updateToolBar('camerabar','Camera ToolBar')
+        self.modebar = self.updateToolBar('modebar','RenderMode ToolBar')
+        self.viewbar = self.updateToolBar('viewbar','Views ToolBar')
+        self.toolbars = [self.camerabar, self.modebar, self.viewbar]
+        
         ###############  CAMERA menu and toolbar #############
-        self.camerabar = self.activateToolBar('Camera ToolBar','camerabar')
         if self.camerabar:
             toolbar.addCameraButtons(self.camerabar)
             toolbar.addPerspectiveButton(self.camerabar)
@@ -219,7 +220,6 @@ class GUI(QtGui.QMainWindow):
             mmenu = QtGui.QMenu('Render Mode')
         else:
             mmenu = None
-        self.modebar = self.activateToolBar('RenderMode ToolBar','modebar')
             
         #menutext = '&' + name.capitalize()
         self.modebtns = menu.ActionList(
@@ -240,7 +240,7 @@ class GUI(QtGui.QMainWindow):
             pmenu = self.menu.item('viewport')
             pmenu.insertMenu(pmenu.item('background color'),mmenu)
 
-        ###############  VIEWS menu and toolbar ################
+        ###############  VIEWS menu ################
         if pf.cfg['gui/viewmenu']:
             if pf.cfg['gui/viewmenu'] == 'main':
                 parent = self.menu
@@ -251,8 +251,6 @@ class GUI(QtGui.QMainWindow):
             self.viewsMenu = menu.Menu('&Views',parent=parent,before=before)
         else:
             self.viewsMenu = None
-            
-        self.viewbar = self.activateToolBar('Views ToolBar','viewbar')
 
         defviews = pf.cfg['gui/defviews']
         views = [ v[0] for v in defviews ]
@@ -264,7 +262,6 @@ class GUI(QtGui.QMainWindow):
             toolbar=self.viewbar,
             icons = viewicons
             )
-    
 
         # Restore previous pos/size
         self.resize(*size)
@@ -286,9 +283,18 @@ class GUI(QtGui.QMainWindow):
         self.drawlock = drawlock.DrawLock()
  
 
+    def updateToolBars(self):
+        for t in ['camerabar','modebar','viewbar']:
+            self.updateToolBar(t)
 
-    def activateToolBar(self,fullname,shortname):
-        """Add a new toolbar to the GUI main window.
+    def updateToolBar(self,shortname,fullname=None):
+        """Add a toolbar or change its postion.
+
+        This function adds a toolbar to the GUI main window at the position
+        specified in the configuration. If the toolbar already exists, it is
+        moved from its previous location to the requested position. If the
+        toolbar does not exist, it is created with the given fullname, or the
+        shortname by default.
 
         The full name is the name as displayed to the user.
         The short name is the name as used in the config settings.
@@ -299,17 +305,50 @@ class GUI(QtGui.QMainWindow):
         - 'default': the default top toolbar is used and a separator is added.
         """
         area = pf.cfg['gui/%s' % shortname]
-        if area:
-            area = self.toolbarArea.get(area,None)
-            if area:
-                toolbar = QtGui.QToolBar(fullname,self)
-                self.addToolBar(area,toolbar)
-            else: # default
-                toolbar = self.toolbar
-                self.toolbar.addSeparator()
-        else:
+        try:
+            toolbar = getattr(self,shortname)
+        except:
             toolbar = None
+            
+        if area:
+            area = self.toolbar_area.get(area,4) # default is top
+            # Add/reposition the toolbar
+            if toolbar is None:
+                if fullname is None:
+                    fullname = shortname
+                toolbar = QtGui.QToolBar(fullname,self)
+            self.addToolBar(area,toolbar)
+        else:
+            if toolbar is not None:
+                self.removeToolBar(toolbar)
+                toolbar = None
+            
         return toolbar
+ 
+
+    ## def activateToolBar(self,fullname,shortname):
+    ##     """Add a new toolbar to the GUI main window.
+
+    ##     The full name is the name as displayed to the user.
+    ##     The short name is the name as used in the config settings.
+
+    ##     The config setting for the toolbar determines its placement:
+    ##     - None: the toolbar is not created
+    ##     - 'left', 'right', 'top' or 'bottom': a separate toolbar is created
+    ##     - 'default': the default top toolbar is used and a separator is added.
+    ##     """
+    ##     area = pf.cfg['gui/%s' % shortname]
+    ##     if area:
+    ##         area = self.toolbar_area.get(area,0)
+    ##         if area:
+    ##             toolbar = QtGui.QToolBar(fullname,self)
+    ##             self.addToolBar(area,toolbar)
+    ##         else: # default
+    ##             toolbar = self.toolbar
+    ##             self.toolbar.addSeparator()
+    ##     else:
+    ##         toolbar = None
+    ##     return toolbar
 
 
     def addStatusBarButtons(self):

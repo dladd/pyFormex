@@ -265,20 +265,17 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
     else:
         fn = os.path.basename(cur)
         cur = os.path.dirname(cur)
-    #pf.debug("cur,fn: %s,%s" % (cur,fn))
-    #print("MULTI=%s" % multi)
     w = widgets.FileSelection(cur,filter,exist,multi)
     if fn:
         w.selectFile(fn)
     fn = w.getFilename()
-    #print("SELECTED=%s" % fn)
     if fn and change:
         if multi:
             chdir(fn[0])
         else:
             chdir(fn)
     pf.GUI.update()
-    pf.canvas.update()
+    #pf.canvas.update()
     pf.app.processEvents()
     return fn
 

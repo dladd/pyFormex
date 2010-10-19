@@ -69,14 +69,24 @@ def updateSettings(res,save=None):
                 pf.prefcfg[k] = pf.cfg[k]
 
             if pf.GUI:
+                todo = set([])
                 if k in _activate_settings:
-                    _activate_settings[k]()
+                    todo.add(_activate_settings[k])
+                for f in todo:
+                    f()
 
     pf.debug("New settings:",pf.cfg)
     pf.debug("New preferences:",pf.prefcfg)
     #print res['render/light0']
     #print pf.cfg['render/light0']
     #print pf.prefcfg['render/light0']
+
+
+def askImageFile(fn=None):
+    if not fn:
+        fn = pf.cfg['pyformexdir']
+    filt = map(utils.fileDescription,['img','all'])
+    return draw.askFilename(fn,filter=filt,multi=False,exist=True)
 
 
 def settings():
@@ -123,6 +133,11 @@ def settings():
         I('gui/font',pf.app.font().toString(),'font'),
         ]
 
+    toolbartip = "Currently, changing the toolbar position will only be in effect when you restart pyFormex"
+    toolbars = [
+        I('gui/%s'%t,pf.cfg['gui/%s'%t],text=getattr(pf.GUI,t).windowTitle(),choices=['left','right','top','bottom'],tooltip=toolbartip) for t in [ 'camerabar','modebar','viewbar' ]
+        ]
+
     cur = pf.cfg['gui/splash']
     if not cur:
         cur = pf.cfg.get('icondir','.')
@@ -144,14 +159,14 @@ def settings():
              ),
             T('GUI',[
                 G('Appearence',appearence),
-                G('Components',[
+                G('Components',toolbars+[
                     I('gui/coordsbox',pf.cfg['gui/coordsbox']),
                     I('gui/showfocus',pf.cfg['gui/showfocus']),
                     I('gui/timeoutbutton',pf.cfg['gui/timeoutbutton']),
                     I('gui/timeoutvalue',pf.cfg['gui/timeoutvalue']),
                     ],
                  ),
-                I('Splash image',pf.cfg['gui/splash'],buttons=[('Change',changeSplash)]),
+                I('Splash image',pf.cfg['gui/splash'],itemtype='button',func=askImageFile),
                 w,
                 ],
              ),
@@ -189,35 +204,6 @@ def askConfigPreferences(items,prefix=None,store=None):
     if res and store==pf.cfg:
         updateSettings(res)
     return res
-
-
-def setToolbarPlacement(store=None):
-    """Ask placement of toolbars.
-
-    Items in list should be existing toolbar widgets.
-    """
-    if store is None:
-        store = pf.cfg
-    toolbar = pf.GUI.toolbardefs
-    label = [ i[0] for i in toolbar ]
-    setting = [ 'gui/%s' % i[1] for i in toolbar ]
-    options = [ None, 'default', 'left', 'right', 'top', 'bottom' ]
-    current = [ store[s] for s in setting ]
-    itemlist = [(l, options[1], 'select', options) for (l,c) in zip(label,setting)]
-    itemlist.append(('Store these settings as defaults', False))
-    res = widgets.OldInputDialog(itemlist,'Config Dialog',pf.GUI).getResult()
-    if res:
-        pf.debug(res)
-        if res['Store these settings as defaults']:
-            # The following  does not work for our Config class!
-            #    store.update(res)
-            # Therefore, we set the items individually
-            for s,l in zip(setting,label):
-                val = res[l]
-                if val == "None":
-                    val = None
-                store[s] = val
-        pf.debug(store)
 
  
 def setDrawWait():
@@ -432,9 +418,14 @@ def createScriptDirsDialog():
 def setOptions():
     options = ['test','uselib','safelib','fastencode']
     options = [ o for o in options if hasattr(pf.options,o) ]
-    items = [ (o,getattr(pf.options,o)) for o in options ]
+    items = [ I(o,getattr(pf.options,o)) for o in options ]
+    # currently we only have All or None as debug levels
     debug_levels = [ 'All','None' ]
-    items.append(('debug',None,'vradio',debug_levels))
+    if pf.options.debug:
+        debug = 'All'
+    else:
+        debug = 'None'
+    items.append(I('debug',debug,'vradio',choices=debug_levels))
     res = draw.askItems(items)
     if res:
         for o in options:
@@ -461,6 +452,9 @@ def updateCanvas():
 def updateStyle():
     pf.GUI.setAppearence()
 
+def updateToolbars():
+    pf.GUI.updateToolBars()
+
     
 # This sets the functions that should be called when a setting has changed
 _activate_settings = {
@@ -469,6 +463,9 @@ _activate_settings = {
     'gui/showfocus':updateCanvas,
     'gui/style':updateStyle,
     'gui/font':updateStyle,
+    'gui/camerabar':updateToolbars,
+    'gui/viewbar':updateToolbars,
+    'gui/modebar':updateToolbars,
     }
    
 
@@ -477,7 +474,6 @@ MenuData = [
         (_('&Settings Dialog'),settings), 
         (_('&Options'),setOptions),
         ('---',None),
-        (_('&Toolbar Placement'),setToolbarPlacement), 
         (_('&Draw Wait Time'),setDrawWait), 
         (_('Avg&Normal Treshold'),setAvgNormalTreshold), 
         (_('Avg&Normal Size'),setAvgNormalSize), 

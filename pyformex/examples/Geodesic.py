@@ -24,56 +24,41 @@
 ##
 """Geodesic Dome
 
-level = 'normal'
-topics = ['structure','surface','domes']
+level = 'beginner'
+topics = ['geometry','domes']
 techniques = ['dialog', 'color']
 
 """
 
 clear()
-wireframe()
+view('front')
 
 m=n=5
-data = askItems([('m',m),('n',n)])
-if not data.has_key('m'):
+res = askItems([('m',m),('n',n)])
+if not res:
     exit()
 
-m = int(data['m'])
-n = int(data['n'])
+m = res['m']
+n = res['n']
 
 v=0.5*sqrt(3.)
 a = Formex([[[0,0],[1,0],[0.5,v]]],1)
 aa = Formex([[[1,0],[1.5,v],[0.5,v]]],2)
 draw(a+aa)
+pause()
 
-#d = a.genid(m,n,1,v,0.5,-1)
-#dd = aa.genid(m-1,n-1,1,v,0.5,-1)
 d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1)
 dd = aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1)
 clear()
 draw(d+dd)
+pause()
 
-#e = (d+dd).rosad(m*0.5,m*v,6,60)
 e = (d+dd).rosette(6,60,point=[m*0.5,m*v,0])
 draw(e)
+pause()
 
 f = e.mapd(2,lambda d:0.8*sqrt((m+1)**2-d**2),e.center(),[0,1])
 clear()
 draw(f)
 
-clear()
-draw(f.shrink(0.85))
-
-flat()
-draw(f)
-
-clear()
-draw(f.shrink(0.85))
-
-f.setProp(3)
-clear()
-smooth()
-draw(f)
-
-clear()
-draw(f.shrink(0.85))
+# End

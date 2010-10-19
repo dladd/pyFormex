@@ -131,7 +131,7 @@ def rect(p1=[0.,0.,0.],p2=[1.,0.,0.],nx=1,ny=1):
 def rectangle(nx,ny,b=None,h=None,bias=0.,diag=None):
     """Return a Formex representing a rectangluar surface.
 
-    The rectangle has a size(b,h) divivded into (nx,ny) cells.
+    The rectangle has a size(b,h) divided into (nx,ny) cells.
 
     The default b/h values are equal to nx/ny, resulting in a modular grid.
     The rectangle lies in the (x,y) plane, with one corner at [0,0,0].

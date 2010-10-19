@@ -26,9 +26,11 @@
 
 level = 'normal'
 topics = ['geometry']
-techniques = ['dialog', 'animation', 'color']
+techniques = ['dialog', 'animation', 'color', 'import']
 
 """
+import simple
+from gui.widgets import simpleInputItem as I
 
 dx = 180 # Modular size (cm)
 ht = 150 # Deck height
@@ -72,17 +74,21 @@ for i in range(19):
 # fly tru
 if ack("Do you want to fly through the structure?"):
     totaltime = 10
-    nsteps = 20
-    # make sure bottom iz at y=0
+    nsteps = 50
+    # make sure bottom iz at y=0 and structure is centered in (x,z)
+    F = F.centered()
     F = F.translate(1,-F.bbox()[0,1])
     clear()
     linewidth(1)
     draw(F)
     bb = F.bbox()
+    # create a bottom plate
+    B = simple.rectangle(1,1).swapAxes(1,2).centered().scale(F.sizes()[0]*1.5)
+    smooth()
+    draw(B)
     # Fly at reasonable height
-    bb[0,1] = 0.25 * bb[1,1]
-    bb[1,1] = 0.75 * bb[1,1]
-    ends = interpolate(Formex([[bb[0]]]),Formex([[bb[1]]]),[-0.5,0.8])
+    bb[0,1] = bb[1,1] = 170.
+    ends = interpolate(Formex([[bb[0]]]),Formex([[bb[1]]]),[-0.5,0.6])
     path = connect([ends,ends],bias=[0,1]).divide(nsteps)
     linewidth(2)
     draw(path)

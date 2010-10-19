@@ -29,6 +29,7 @@ topics = ['geometry','domes']
 techniques = ['dialog', 'color']
 
 """
+#GD.canvas.settings['colormap'][2] = [1.,0.3,0.]
 
 # This example is fully annotated with comments in the statusbar
 # First we define a function to display a Formex and then wait for the user
@@ -53,6 +54,9 @@ f2 = f1.circulize1()
 f1.setProp(1)
 f2.setProp(2)
 show(f1+f2)
+clear()
+draw(f2)
+exit()
 #
 message("Make circular copies to obtain a full circle")
 show(f1+f2.rosette(6,60.))

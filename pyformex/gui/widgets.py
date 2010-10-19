@@ -563,7 +563,8 @@ class InputItem(QtGui.QHBoxLayout):
             self.data = kargs['data']
 
         if 'tooltip' in kargs:
-            self.label.setToolTip(kargs['tooltip'])
+            if hasattr(self,'label'):
+                self.label.setToolTip(kargs['tooltip'])
         try:
             self.input.setToolTip(kargs['tooltip'])
         except:
@@ -1079,6 +1080,40 @@ class InputFSlider(InputFloat):
         self.input.setText(str(value))
         if self.func:
             self.func(self)
+
+
+class InputButton(InputItem):
+    """A button input item.
+    
+    The button input field is a button displaying the current value.
+    Clicking on the button executes a function responsible for changing
+    the value.
+
+    Extra parameters:
+
+    - func: the function to call when the button is clicked. The current
+      input value is passed as an argument. The function should return the
+      value to be set, or None if it is to be unchanged.
+      If no function is specified, the value can not be changed.
+    """
+   
+    def __init__(self,name,value,*args,**kargs):
+        """Create a new button input field."""
+        value = str(value)
+        self.input = QtGui.QPushButton(value)
+        self.func = kargs.get('func',None)
+        InputItem.__init__(self,name,*args,**kargs)
+        self.setValue(value)
+        if self.func:
+            self.connect(self.input,QtCore.SIGNAL("clicked()"),self.doFunc)
+        self.insertWidget(1,self.input)
+
+    
+    def doFunc(self):
+        """Set the value by calling the button's func"""
+        val = self.func(self.value())
+        if val:
+            self.setValue(val)
 
 
 class InputColor(InputItem):
@@ -1687,6 +1722,9 @@ def inputAny(name,value,itemtype=str,**options):
 
     elif itemtype == 'text':
         line = InputText(name,value,**options)
+
+    elif itemtype == 'button':
+        line = InputButton(name,value,**options)
 
     elif itemtype == 'color':
         line = InputColor(name,value,**options)

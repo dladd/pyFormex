@@ -234,6 +234,7 @@ def addPerspectiveButton(toolbar):
     perspective_button = addButton(toolbar,'Toggle Perspective/Projective Mode',
                                    'perspect',togglePerspective,
                                    toggle=True,icon0='project',checked=True)    
+
 def setPerspective(mode=True):
     """Set the perspective mode on or off."""
     GD.canvas.camera.setPerspective(mode)

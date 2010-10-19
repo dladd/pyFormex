@@ -25,14 +25,13 @@
 
 """Optical Illusions
 
-level = 'beginner'
+level = 'normal'
 topics = ['illustration','geometry']
 techniques = ['dialog', 'draw', 'persistence','random']
 acknowledgements = ['Tomas Praet']
 
 """
 
-#from numpy import *
 from formex import *
 from simple import *
 from gui import widgets
