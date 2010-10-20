@@ -1322,7 +1322,7 @@ Total area: %s; Enclosed volume: %s
         Returns a plex-2 mesh with the line segments obtained by cutting
         all triangles of the surface with the plane (p,n)
         p is a point specified by 3 coordinates.
-        n is the normal vector to a plane, specified by 3 components.
+        n is the normal vector to a plane, specified by 3 components
         atol is a tolerance factor defining whether an edge is intersected
         by the plane.
 
@@ -1442,6 +1442,8 @@ Total area: %s; Enclosed volume: %s
         values, i.e. a list of list of meshes.
         """
         o = self.center()
+        if type(dir) is int:
+            dir = unitVector(dir)
         xmin,xmax = self.coords.directionalExtremes(dir,o)
         P = Coords.interpolate(xmin,xmax,nplanes)
         return [ self.intersectionWithPlane(p,dir,ignoreErrors=ignoreErrors) for p in P ]

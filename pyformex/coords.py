@@ -374,7 +374,8 @@ class Coords(ndarray):
         if p is None:
             p = self.center()
         p = Coords(p)
-        
+
+        print "HALLO",n
         d = self.distanceFromPlane(p,n)
         return [ p+dist*n for dist in [d.min(),d.max() ] ]
 
@@ -519,6 +520,27 @@ class Coords(ndarray):
             vector *= distance 
         out += vector
         return out
+
+
+    def replicate(self,n,vector,distance=None):
+        """Replicate a Coords n times with fixed step in any direction.
+
+        Returns a Coords object with shape (n,) + self.shape, thus having
+        an extra first axis.
+        Each element along the axis 0 is equal to the previous element
+        translated over (vector,distance). Here, vector and distance are
+        interpreted just like in the translate() method.
+        The first element along the axis 0 is identical to the original Coords.
+        """
+        if type(vector) is int:
+            vector = unitVector(vector)
+        vector = Coords(vector)
+        if distance is not None:
+            vector *= distance 
+        f = resize(self,(n,)+self.shape)
+        for i in range(1,n):
+            f[i] += i*vector
+        return Coords(f)
     
 
     def rotate(self,angle,axis=2,around=None,inplace=False):

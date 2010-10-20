@@ -1662,30 +1662,6 @@ maxprop  = %s
 #
 #   Transformations that preserve the topology (but change coordinates)
 #
-#   These functions are the equivalents of the corresponding Coords methods.
-#   They do not change the original Formex, but create a copy! If you want to
-#   change the coordinates of a Formex inplace, directly operate on the
-#   coords attribute.
-
- 
-    ## @coords_transformation
-    ## def scale(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def translate(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def rotate(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def shear(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def reflect(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def affine(self,*args,**kargs):
-    ##     pass
 
     def mirror(self,dir=2,pos=0,keep_orig=True):
         """Reflect a Formex in one of the coordinate directions
@@ -1699,9 +1675,11 @@ maxprop  = %s
         else:
             return self.reflect(dir,pos)
 
+
     def centered(self):
         """Return a centered copy of the Formex."""
         return self.trl(-self.center())
+
 
     def resized(self,size=1.,tol=1.e-5):
         """Return a scaled copy of the Formex with given size in all directions.
@@ -1712,67 +1690,6 @@ maxprop  = %s
         s[s<tol*s.max()] = size
         return self.scale(size/s)
 
-
-    ## @coords_transformation
-    ## def cylindrical(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def hyperCylindrical(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def toCylindrical(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def spherical(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def superSpherical(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def toSpherical(self,*args,**kargs):
-    ##     pass
-
-    ## @coords_transformation
-    ## def bump(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def bump1(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def bump2(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def flare(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def map(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def map1(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def mapd(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def newmap(self,*args,**kargs):
-    ##     pass
-
-    ## @coords_transformation
-    ## def replace(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def swapAxes(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def rollAxes(self,*args,**kargs):
-    ##     pass
-
-    ## @coords_transformation
-    ## def projectOnSphere(self,*args,**kargs):
-    ##     pass
-    ## @coords_transformation
-    ## def projectOnCylinder(self,*args,**kargs):
-    ##     pass
 
     def circulize(self,angle):
         """Transform a linear sector into a circular one.
@@ -1817,6 +1734,20 @@ maxprop  = %s
 #
 #   Transformations that change the topology
 #        
+
+    def replicate(self,n,vector,distance=None):
+        """Replicate a Formex n times with fixed step in any direction.
+
+        Returns a Formex which is the concatenation of n copies, where each
+        copy is equal to the previous one translated over (vector,distance).
+        The first copy is equal to the original.
+        Vector and distance are interpreted just like in the translate() method.
+        """
+        f = self.coords.replicate(n,vector,distance=None)
+        f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
+        ## the replication of the properties is automatic!
+        return Formex(f,self.prop,self.eltype)
+
 
     def replic(self,n,step,dir=0):
         """Return a Formex with n replications in direction dir with step.
@@ -2114,10 +2045,6 @@ maxprop  = %s
     # Convenience short notations and aliases
     rep = replic
     ros = rosette
-    ## rot = rotate
-    ## trl = translate
-    
-
 
 
 ##############################################################################
