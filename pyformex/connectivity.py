@@ -436,11 +436,10 @@ class Connectivity(ndarray):
         else:
             C = self
         ind = sortByColumns(C)
-        if self.nelems() == 1:
-            ok = resize(True,ind.shape)
-        else:
-            C = C.take(ind,axis=0)
-            ok = (C != roll(C,1,axis=0)).any(axis=1)
+        C = C.take(ind,axis=0)
+        ok = (C != roll(C,1,axis=0)).any(axis=1)
+        if not ok[0]: # all doubles -> should result in one unique element
+            ok[0] = True
         return ind,ok
     
 
@@ -466,7 +465,7 @@ class Connectivity(ndarray):
 
         Returns a new Connectivity with the double elements removed.
         """
-        ind,ok = self.testDoubles()
+        ind,ok = self.testDoubles(permutations)
         return self[ind[ok]]
 
 
