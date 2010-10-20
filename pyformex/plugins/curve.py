@@ -739,12 +739,8 @@ class BezierSpline(Curve):
 
     def sub_points(self,t,j):
         """Return the points at values t in part j."""
-        #print "tj %s, %s" % (j,t)
         P = self.part(j)
-        #print "C",self.coeffs.shape
-        #print "P",P.shape
         C = self.coeffs * P
-        #print "C*P",C.shape
         U = [ ones_like(t), t ]
         for d in range(self.degree-1):
             U.append(U[-1] * t)
@@ -887,13 +883,8 @@ class CardinalSpline(BezierSpline):
         BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed)
 
 
-
 ##############################################################################
 #
-#  Curves that can NOT be transformed by Coords Transforms
-#
-##############################################################################
-
 class CardinalSpline2(Curve):
     """A class representing a cardinal spline."""
 
@@ -911,13 +902,8 @@ class CardinalSpline2(Curve):
             self.nparts -= 3
         self.closed = closed
         self.tension = float(tension)
-        self.compute_coefficients()
-
-
-    def compute_coefficients(self):
         s = (1.-self.tension)/2.
-        M = matrix([[-s, 2-s, s-2., s], [2*s, s-3., 3.-2*s, -s], [-s, 0., s, 0.], [0., 1., 0., 0.]])#pag.429 of open GL
-        self.coeffs = M
+        self.coeffs = matrix([[-s, 2-s, s-2., s], [2*s, s-3., 3.-2*s, -s], [-s, 0., s, 0.], [0., 1., 0., 0.]])#pag.429 of open GL
 
 
     def sub_points(self,t,j):
@@ -930,6 +916,10 @@ class CardinalSpline2(Curve):
         return X  
 
 
+##############################################################################
+#
+#  Curves that can NOT be transformed by Coords Transforms
+#
 ##############################################################################
 
 class NaturalSpline(Curve):
@@ -950,11 +940,18 @@ class NaturalSpline(Curve):
         coords = Coords(coords)
         if closed:
             coords = Coords.concatenate([coords,coords[:1]])
-        self.coords = coords
-        self.nparts = self.coords.shape[0] - 1
+        self.nparts = coords.shape[0] - 1
         self.closed = closed
         self.endcond = endcond
-        self.compute_coefficients()
+        self.coords = coords
+        self.coeffs = self.compute_coefficients()
+
+
+    def _set_coords(self,coords):
+        C = self.copy()
+        C._set_coords_inplace(coords)
+        C.compute_coefficients()
+        return C
 
 
     def compute_coefficients(self):

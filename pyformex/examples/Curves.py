@@ -33,7 +33,8 @@ techniques = ['solve','widgets','persistence','import','spline']
 
 from plugins.curve import *
 from odict import ODict
-from gui import widgets
+from gui.widgets import InputDialog, simpleInputItem as I
+
 
 
 def BezierCurve(X,curl=None,closed=False):
@@ -54,7 +55,7 @@ def BezierCurve(X,curl=None,closed=False):
 method = ODict([
     ('Bezier Spline', BezierSpline),
     ('Quadratic Bezier Spline', QuadBezierSpline),
-    ('Cardinal Bezier Spline', CardinalSpline),
+    ('Cardinal Spline (app)', CardinalSpline),
     ('Cardinal Spline', CardinalSpline2),
     ('Natural Spline', NaturalSpline),
     ('Polyline', PolyLine),
@@ -70,7 +71,7 @@ TA = None
 
 
 
-def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False):
+def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False,scale=None):
     global TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -89,14 +90,18 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
         kargs['curl'] = curl
     S = method[ctype](P,**kargs)
 
+    if scale:
+        S = S.scale(scale)
+
     print "%s points on the curve" % S.pointsOn().shape[0]
     draw(S.pointsOff(),color=red)
+    #print "coeffs %s" % S.coeffs
 
     if spread:
-        print ndiv,ntot
+        #print ndiv,ntot
         PL = S.approx(ndiv=ndiv,ntot=ntot)
     else:
-        print ndiv,ntot
+        #print ndiv,ntot
         PL = S.approx(ndiv=ndiv)
         
     im = method.keys().index(ctype)
@@ -126,41 +131,28 @@ dataset = [
     ]
 
 data_items = [
-    ['DataSet','0','select',map(str,range(len(dataset)))], 
-    ['CurveType',None,'select',method.keys()],
-    ['Closed',False],
-    ['EndCondition',None,'select',['notaknot','secder']],
-    ['Tension',0.0],
-    ['Curl',0.5],
-    ['Ndiv',10],
-    ['SpreadEvenly',False],
-    ['Ntot',40],
-    ['ExtendAtStart',0.0],
-    ['ExtendAtEnd',0.0],
-#    ['FreeSpaced',[-0.1,0.0,0.1,0.25,1.5,2.75]],
-    ['DrawAs',None,'hradio',{'choices':['Curve','Polyline']}],
-    ['Clear',True],
-    ['CutWithPlane',False],
+    I('DataSet','0',choices=map(str,range(len(dataset)))), 
+    I('CurveType',choices=method.keys()),
+    I('Closed',False),
+    I('EndCondition',choices=['notaknot','secder']),
+    I('Tension',0.0),
+    I('Curl',0.5),
+    I('Ndiv',10),
+    I('SpreadEvenly',False),
+    I('Ntot',40),
+    I('ExtendAtStart',0.0),
+    I('ExtendAtEnd',0.0),
+    I('Scale',[1.0,1.0,1.0]),
+    I('DrawAs',None,'hradio',choices=['Curve','Polyline']),
+    I('Clear',True),
+    I('CutWithPlane',False),
     ]
-globals().update([i[:2] for i in data_items])
-if GD.PF.has_key('_Curves_data_'):
-    globals().update(GD.PF['_Curves_data_'])
-
 
 clear()
 setDrawOptions({'bbox':'auto','view':'front'})
 linewidth(2)
 
-for i,it in enumerate(data_items):
-    data_items[i][1] = globals()[it[0]]
-
 dialog = None
-
-def save():
-    """Save the data"""
-    keys = [ i[0] for i in data_items ]
-    values = [ globals()[k] for k in keys ]
-    export({'_Curves_data_':dict(zip(keys,values))})
 
 
 def close():
@@ -168,11 +160,12 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
-    save()
+
 
 def show(all=False):
     dialog.acceptData()
     globals().update(dialog.results)
+    export({'_Curves_data_':dialog.results})
     if Clear:
         clear()
     if all:
@@ -181,7 +174,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane)
+        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale)
         setDrawOptions({'bbox':None})
 
 def showAll():
@@ -191,11 +184,16 @@ def timeOut():
     showAll()
     close()
     
-dialog = widgets.OldInputDialog(
+dialog = widgets.InputDialog(
     data_items,
     caption='Curve parameters',
-    actions = [('Close',close),('Show All',showAll),('Show',show)],
+    actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
     default='Show')
+
+if GD.PF.has_key('_Curves_data_'):
+    #print GD.PF['_Curves_data_']
+    dialog.updateData(GD.PF['_Curves_data_'])
+
 dialog.timeout = timeOut
 dialog.show()
        
