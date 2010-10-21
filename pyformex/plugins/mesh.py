@@ -672,10 +672,10 @@ Size: %s
         """Create nodes from the existing nodes of a mesh.
 
         `nodsel` is a local node selector as in :meth:`selectNodes`
-        Returns the mean coordinates of the points in the selector. 
+        Returns the mean coordinates of the points in the selector as `(nelems,nnod,3)` array of coordinates. 
         """
-        elems = self.elems.selectNodes(nodsel)
-        return self.coords[elems].mean(axis=1)
+        elems = self.elems.selectNodes(nodsel).reshape(self.nelems(),len(nodsel), len(nodsel[0]))
+        return self.coords[elems].mean(axis=2)
 
 
     def addNodes(self,newcoords,eltype=None):
