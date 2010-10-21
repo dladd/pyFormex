@@ -199,7 +199,7 @@ def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
     global _dialog_widget,_dialog_result
     import warnings
     warnings.warn("""
-The default operation of the askItems has changed!!!!
+The default operation of askItems has changed!!!!
 It will now by default try to convert the items to use the new InputDialog.
 The old InputDialog will still be available for some time by using the
 'legacy = True' argument, but we advice you to switch to the newer InputItem

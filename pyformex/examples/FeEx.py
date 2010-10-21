@@ -28,7 +28,7 @@ level = 'advanced'
 topics = ['FEA']
 techniques = ['menu', 'dialog', 'persistence', 'color'] 
 """
-from pyformex import GUI
+from pyformex import GUI,PF
 from gui import menu
 from gui.widgets import simpleInputItem as I
 
@@ -70,10 +70,14 @@ feresult_name = utils.NameSequence(name)
 
 def resetData():
     global parts,model,PDB
-    parts = []
-    model = None
-    PDB = None
+    parts = PF.get('FeEx-parts',[])
+    model = PF.get('FeEx-model',None)
+    PDB = PF.get('FeEx-propdb',None)
     mesh_menu.selection.set([])
+
+
+def saveData():
+    export({'FeEx-parts':parts,'FeEx-model':model,'FeEx-propdb':PDB})
     
     
 def reset():
@@ -197,6 +201,7 @@ def createModel():
     global model,PDB
     model = Model(*mergeMeshes(parts))
     PDB = PropertyDB()
+    export({'FeEx-parts':parts,'FeEx-model':model,'FeEx-propdb':PDB})
     drawModel()
 
 
@@ -426,19 +431,22 @@ def createCalixInput():
     
     # ask job name from user
     res = askItems([
-        ('JobName',feresult_name.next()),
-        ('Header','A Calix example'),
+        I('jobname',feresult_name.next(),text='Job Name'),
+        I('header','A Calix example',text='Header Text'),
+        I('zem','3',text='ZEM control',itemtype='radio',choices=['0','3','6'],),
         ])
     if not res:
         return
 
-    jobname = res['JobName']
-    header = res['Header']
+    jobname = res['jobname']
+    header = res['header']
+    nzem = int(res['zem'])
     if not jobname:
         print "No Job Name: writing to sys.stdout"
         jobname = None
 
     filnam = jobname+'.dta'
+    print("Writing calix data file %s in %s" % (filnam,os.getcwd()))
     fil = open(filnam,'w')
     
     nnodes = model.coords.shape[0]
@@ -542,13 +550,13 @@ elements elems-%s matnr-%s  %s %s 1
     #########################
     # Nodal Loads
     cloads = [ p for p in PDB.getProp('n',attr=['cload']) ]
-    if len(cloads) > 0:
-        fil.write("""text 3 1
+    fil.write("""text 3 1
                            $$$$$$$$$$$$$$$$$$$$
                            $$  NODAL  LOADS  $$
                            $$$$$$$$$$$$$$$$$$$$
 loads f bcon 1
 """)
+    if len(cloads) > 0:
         loadcase=1
         for p in cloads:
             if p.set is None:
@@ -560,7 +568,7 @@ loads f bcon 1
                 if i in [0,1]:
                     F[i] = v
             fil.write(''.join(["%5i%5i%10.2f%10.2f\n" % (n+1,loadcase,F[0],F[1]) for n in nodeset]))
-        fil.write('\n')
+    fil.write('\n')
     
     #########################
     # Distributed loads
@@ -619,7 +627,7 @@ print f 3
 """)
     # Assemble
     for igrp in range(len(model.elems)):
-        fil.write("assemble plane-%s mat s 0 0 0 3\n" % igrp)
+        fil.write("assemble plane-%s mat s 0 0 0 %s\n" % (igrp,nzem))
 
     # Solve and output
     fil.write(""";------------------------------------------------solve+output
@@ -1053,8 +1061,8 @@ def create_menu():
         ("&Delete All",deleteAll),
         ("&Create Rectangular Part",createRectPart),
         ("&Create QuadrilateralPart",createQuadPart),
-        ("&Convert to Quadratic",convertQuadratic),
-        ("&Convert to Quadratic9",convertQuadratic9),
+        ("&Convert to Quadratic-8",convertQuadratic),
+        ("&Convert to Quadratic-9",convertQuadratic9),
         ("&Show All",drawParts),
         ("---",None),
         ("&Merge Parts into Model",createModel),
