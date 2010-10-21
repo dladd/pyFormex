@@ -639,7 +639,7 @@ Size: %s
         The returned Mesh is not compacted.
         The complimentary operation is `unselect`.
         """
-        selected=array(selected)
+        selected=asarray(selected)
         if len(self.elems) == 0:
             return self
         prop = self.prop
@@ -660,10 +660,10 @@ Size: %s
         Returns a Mesh with all but the selected elements.
         The returned mesh is not compacted.
         """
-        selected=array(selected)
+        selected = asarray(selected)
         if selected.dtype==bool:
             return self.select(selected==False)
-        wi=range(self.nelems())
+        wi = range(self.nelems())
         wi = delete(wi, selected)
         return self.select(wi)
 
@@ -672,23 +672,25 @@ Size: %s
         """Create nodes from the existing nodes of a mesh.
 
         `nodsel` is a local node selector as in :meth:`selectNodes`
-        Returns the mean coordinates of the points in the selector as `(nelems,nnod,3)` array of coordinates. 
+        Returns the mean coordinates of the points in the selector as
+        `(nelems*nnod,3)` array of coordinates, where nnod is the length
+        of the node selector. 
         """
-        elems = self.elems.selectNodes(nodsel).reshape(self.nelems(),len(nodsel), len(nodsel[0]))
-        return self.coords[elems].mean(axis=2)
+        elems = self.elems.selectNodes(nodsel)
+        return self.coords[elems].mean(axis=1)
 
 
     def addNodes(self,newcoords,eltype=None):
         """Add new nodes to elements.
-    
-        `newcoords` is an `(nelems,nnod,3)` array of coordinates. In case of nnod==1, then newcoords can be shaped as (nelems,3) 
-        Each element thus gets exactly `nnod` extra points and the result
-        is a Mesh with plexitude self.nplex() + nnod.
+
+        `newcoords` is an `(nelems,nnod,3)` or`(nelems*nnod,3)` array of
+        coordinates. Each element gets exactly `nnod` extra nodes from this
+	array. The result is a Mesh with plexitude `self.nplex() + nnod`.
         """
-        if len(newcoords.shape)==2:newcoords=newcoords.reshape(self.nelems(), 1, 3)
-        newnodes=arange(newcoords.shape[1]*self.elems.shape[0] ).reshape(self.elems.shape[0], -1)+ self.coords.shape[0]
+        newcoords = newcoords.reshape(-1,3)
+        newnodes = arange(newcoords.shape[0]).reshape(self.elems.shape[0],-1) + self.coords.shape[0]
         elems = Connectivity(concatenate([self.elems,newnodes],axis=-1))
-        coords = Coords.concatenate([self.coords,newcoords.reshape(-1, 3)])
+        coords = Coords.concatenate([self.coords,newcoords])
         return Mesh(coords,elems,self.prop,eltype)
 
 
