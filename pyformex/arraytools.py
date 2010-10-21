@@ -61,11 +61,15 @@ else:
 
 # Define a wrapper function for old versions of numpy
 
-if unique1d([1],True)[0][0] == 0:
+if not globals().has_key('unique'):
+    from numpy import unique1d as unique
+   
+
+if unique([1],True)[0][0] == 0:
     # We have the old numy version
     import warnings
     warnings.warn("BEWARE: OLD VERSION OF NUMPY!!!! We advise you to upgrade NumPy!")
-    def unique1d(a,return_indices=False):
+    def unique(a,return_indices=False):
         """Replacement for numpy's unique1d"""
         import numpy
         if return_indices:
@@ -511,7 +515,7 @@ def checkUniqueNumbers(nrs,nmin=0,nmax=None):
     is raised. Else, the sorted list of unique values is returned.
     """
     nrs = asarray(nrs)
-    uniq = unique1d(nrs)
+    uniq = unique(nrs)
     if uniq.size != nrs.size or \
            (nmin is not None and uniq.min() < nmin) or \
            (nmax is not None and uniq.max() > nmax):
@@ -654,23 +658,23 @@ def cubicEquation(a,b,c,d):
 ##     - a list of the item length in each bin.
 ##     """
 ##     np = array([ len(e) for e in items ])
-##     itemlen = unique1d(np)
+##     itemlen = unique(np)
 ##     itemnrs = [ where(np==p)[0] for p in itemlen ]
 ##     itemgrps = [ olist.select(items,i) for i in itemnrs ]
 ##     itemcnt = [ len(i) for i in itemnrs ]
 ##     return itemgrps,itemnrs,itemcnt,itemlen
 
 
-def unique1dOrdered(ar1, return_index=False, return_inverse=False):
+def uniqueOrdered(ar1, return_index=False, return_inverse=False):
     """
     Find the unique elements of an array.
     
-    This works like numpy's unique1d, but uses a stable sorting algorithm.
+    This works like numpy's unique, but uses a stable sorting algorithm.
     The returned index may therefore hold other entries for multiply
-    occurring values. In such case, unique1dOrdered returns the first
+    occurring values. In such case, uniqueOrdered returns the first
     occurrence in the flattened array.
     The unique elements and the inverse index are allways the same as those
-    returned by numpy's unique1d.
+    returned by numpy's unique.
 
     Parameters
     ----------
@@ -697,9 +701,9 @@ def unique1dOrdered(ar1, return_index=False, return_inverse=False):
     Examples
     --------
     >>> a = array([2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,7,8])
-    >>> numpy.unique1d(a,True)
+    >>> numpy.unique(a,True)
     (array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]))
-    >>> unique1dOrdered(a,True)
+    >>> uniqueOrdered(a,True)
     (array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]))
 
     Notice the difference in the 4-th entry of the second array.
@@ -761,7 +765,7 @@ def renumberIndex(index):
     --------
     inverseUniqueIndex: find the inverse mapping.
     """
-    un,pos = unique1dOrdered(index,True)
+    un,pos = uniqueOrdered(index,True)
     srt = pos.argsort()
     old = un[srt]
     return old

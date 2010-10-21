@@ -139,8 +139,6 @@ class GUI(QtGui.QMainWindow):
         The GUI has a central canvas for drawing, a menubar and a toolbar
         on top, and a statusbar at the bottom.
         """
-
-        
         self.on_exit = [fileMenu.askCloseProject] 
         QtGui.QMainWindow.__init__(self)
         self.setWindowTitle(windowname)
@@ -735,22 +733,21 @@ We advice you to first try the TERM(15) signal, and only if that
 does not seem to work, use the KILL(9) signal.
 """ % pids
     actions = ['Cancel the operation','KILL(9)','TERM(15)']
-
     answer = draw.ask(warning,actions)
-
     if answer == 'TERM(15)':
-        print "KILLING WITH SIGNAL 15"
         utils.killProcesses(pids,15)
     elif answer == 'KILL(9)':
-        print "KILLING WITH SIGNAL 9"
         utils.killProcesses(pids,9)
 
 
 
 def quit():
     """Quit the GUI"""
+    pf.debug("Quit GUI")
     sys.stderr = sys.__stderr__
     sys.stdout = sys.__stdout__
+    if pf.options.gui:
+        script.force_finish()
     if pf.app:
         pf.app.exit()
 

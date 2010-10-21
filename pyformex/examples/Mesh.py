@@ -147,5 +147,3 @@ message("%s border elements" % e.nelems())
 
 
 export({'border':e})
-
-showInfo("Done")

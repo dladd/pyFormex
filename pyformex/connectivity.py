@@ -170,7 +170,7 @@ def inverseIndex(index,maxcon=4):
         col = index[:,c].copy()  # make a copy, because we will change it
         while(col.max() >= 0):
             # we still have values to process in this column
-            uniq,pos = unique1d(col,True)
+            uniq,pos = unique(col,True)
             #put the unique values at a unique position in reverse index
             ok = uniq >= 0
             if i >= reverse.shape[1]:
@@ -309,8 +309,8 @@ class Connectivity(ndarray):
             original data. Decoding can be done with compact_decode2.
             """
             # We could use a single compaction vector?
-            uniqa, posa = unique1d(data[:,0], return_inverse=True)
-            uniqb, posb = unique1d(data[:,1], return_inverse=True)
+            uniqa, posa = unique(data[:,0], return_inverse=True)
+            uniqb, posb = unique(data[:,1], return_inverse=True)
             # We could insert the encoding directly here,
             # or use an encoding function with 2 arguments
             # to avoid the column_stack operation
@@ -681,7 +681,7 @@ def adjacencyArray(elems,maxcon=5):
         col = elems[:,c].copy()  # make a copy, because we will change it
         while(col.max() >= 0):
             # we still have values to process in this column
-            uniq,pos = unique1d(col,True)
+            uniq,pos = unique(col,True)
             #put the unique values at a unique position in reverse index
             ok = uniq >= 0
             if i >= adj.shape[1]:

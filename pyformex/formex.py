@@ -1473,7 +1473,7 @@ maxprop  = %s
             if type(val) == int:
                 return where(self.prop==val)[0]
             else:
-                return unique1d(concatenate([where(self.prop==v)[0] for v in val]))
+                return unique(concatenate([where(self.prop==v)[0] for v in val]))
         return array([],dtype=Int)
 
     

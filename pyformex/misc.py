@@ -86,7 +86,7 @@ def nodalSum(val,elems,work,avg):
 
     The summation is done inplace, so there is no return value!
     """
-    nodes = unique1d(elems)
+    nodes = unique(elems)
     for i in nodes:
         wi = where(elems==i)
         vi = val[wi]

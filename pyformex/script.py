@@ -235,11 +235,20 @@ sleep = time.sleep
 
 scriptDisabled = False
 scriptRunning = False
+scriptThread = None
 exitrequested = False
 stepmode = False
 starttime = 0.0
 pye = False
 
+
+def executeScript(scr,glob):
+    """Execute a Python script in specified globals."""
+    ## print "SCRIPT"
+    ## print scr
+    ## print "GLOBALS"
+    ## print glob
+    exec scr in glob
  
 def playScript(scr,name=None,filename=None,argv=[],pye=False):
     """Play a pyformex script scr. scr should be a valid Python text.
@@ -259,8 +268,13 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     #pyformex.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
+    global scriptThread
+    if scriptThread is not None and scriptThread.isAlive():
+        pyformex.message("Not executing this script because another one is already running")
+        return
+        
     if scriptRunning or scriptDisabled :
-        pyformex.message("Not executing this script because another one is already running")     
+        pyformex.message("Not executing this script because another one is already running")
         return
     
     scriptRunning = True
@@ -305,27 +319,18 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                 #pyformex.debug("STEPPING THROUGH SCRIPT")
                 step_script(scr,g,True)
             else:
+                if pye:
+                    if type(scr) is file:
+                         scr = scr.read() + '\n'
+                    n = len(scr) // 2
+                    scr = utils.mergeme(scr[:n],scr[n:])
                 if pyformex.options.executor:
-                    import sys
-                    print(name,filename)
-                    n = os.path.split(name)
-                    m = os.path.basename(name)
-                    m = os.path.basename(name)
-                    print(n)
-                    o = os.path.split(n[0])
-                    print(o)
-                    sys.path.insert(0,n[0])
-                    print(sys.path)
-                    print(m)
-                    s = m.replace('.py','')
-                    print(s)
-                    __import__(s,g)
+                    scriptThread = threading.Thread(None,executeScript,'script-0',(scr,g))
+                    scriptThread.daemon = True
+                    print "OK, STARTING THREAD"
+                    scriptThread.start()
+                    print "OK, STARTED THREAD"
                 else:
-                    if pye:
-                        if type(scr) is file:
-                             scr = scr.read() + '\n'
-                        n = len(scr) // 2
-                        scr = utils.mergeme(scr[:n],scr[n:])
                     exec scr in g
 
         except _Exit:
@@ -366,6 +371,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
 def force_finish():
     global scriptRunning,stepmode
+    # print "FORCE FINISH"
     scriptRunning = False # release the lock in case of an error
     stepmode = False
 
@@ -456,6 +462,7 @@ def play(fn=None,argv=[],step=False):
 
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
+    #print "SCRIPT.EXIT"
     if scriptRunning:
         if all:
             raise _ExitAll # exit from pyformex

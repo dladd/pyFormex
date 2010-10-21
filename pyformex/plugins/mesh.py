@@ -613,7 +613,7 @@ Size: %s
 
         Beware! This function changes the object in place.
         """
-        nodes = unique1d(self.elems)
+        nodes = unique(self.elems)
         if nodes.size == 0:
             self.__init__([],[])
         

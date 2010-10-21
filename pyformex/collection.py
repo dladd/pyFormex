@@ -69,12 +69,12 @@ class Collection(object):
             return
         data = asarray(data)
         if data.ndim == 2:
-            for key in unique1d(data[:,0]):
+            for key in unique(data[:,0]):
                 self.add(data[data[:,0]==key,1],key)
 
         else:
             key = int(key)
-            data = unique1d(data)
+            data = unique(data)
             if self.d.has_key(key):
                 self.d[key] = union1d(self.d[key],data)
             elif data.size > 0:
@@ -93,13 +93,13 @@ class Collection(object):
         """Remove data from the collection."""
         data = asarray(data)
         if data.ndim == 2:
-            for key in unique1d(data[:,0]):
+            for key in unique(data[:,0]):
                 self.remove(data[data[:,0]==key,1],key)
 
         else:
             key = int(key)
             if self.d.has_key(key):
-                data = setdiff1d(self.d[key],unique1d(data))
+                data = setdiff1d(self.d[key],unique(data))
                 if data.size > 0:
                     self.d[key] = data
                 else:
@@ -114,7 +114,7 @@ class Collection(object):
     def __setitem__(self,key,data):
         """Set new values for the given key."""
         key = int(key)
-        data = unique1d(data)
+        data = unique(data)
         if data.size > 0:
             self.d[key] = data
         else:

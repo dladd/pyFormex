@@ -369,7 +369,7 @@ def nodalSum2(val,elems,tol):
     cnt
     On return each value is replaced with the sum of values at that node.
     """
-    nodes = unique1d(elems)
+    nodes = unique(elems)
     for i in nodes:
         wi = where(elems==i)
         vi = val[wi]

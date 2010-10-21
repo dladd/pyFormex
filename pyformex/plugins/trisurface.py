@@ -364,7 +364,7 @@ def surfaceInsideLoop(coords,elems):
     coords = Coords(coords)
     if coords.ndim != 2 or elems.ndim != 2 or elems.shape[1] != 2 or elems.max() >= coords.shape[0]:
         raise ValueError,"Invalid argument shape/value"
-    x = coords[unique1d(elems)].center().reshape(-1,3)
+    x = coords[unique(elems)].center().reshape(-1,3)
     n = zeros_like(elems[:,:1]) + coords.shape[0]
     elems = concatenate([elems,n],axis=1)
     coords = Coords.concatenate([coords,x])
@@ -883,7 +883,7 @@ class TriSurface(Mesh):
         Returns a list of vertex numbers.
         """
         border = self.getEdges()[self.borderEdgeNrs()]
-        return unique1d(border)
+        return unique(border)
         
 
     def isManifold(self):
@@ -1183,7 +1183,7 @@ Total area: %s; Enclosed volume: %s
             prop += front_increment
 
             # Determine adjacent elements
-            elems = unique1d(adj[elems])
+            elems = unique(adj[elems])
             elems = elems[(elems >= 0) * (p[elems] < 0) ]
             if elems.size > 0:
                 continue
@@ -1465,7 +1465,7 @@ Total area: %s; Enclosed volume: %s
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
-        inter_vertex[unique1d(self.getEdges()[bound_edges])] = False
+        inter_vertex[unique(self.getEdges()[bound_edges])] = False
         # calculate weights
         w = ones(adj.shape,dtype=float)
         w[adj<0] = 0.
@@ -1492,7 +1492,7 @@ Total area: %s; Enclosed volume: %s
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
-        inter_vertex[unique1d(self.getEdges()[bound_edges])] = False
+        inter_vertex[unique(self.getEdges()[bound_edges])] = False
         # calculate weights
         w = ones(adj.shape,dtype=float)
         w[adj<0] = 0.

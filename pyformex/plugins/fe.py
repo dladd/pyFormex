@@ -121,7 +121,7 @@ class Model(Geometry):
         Each item contains the element numbers from the given set that
         belong to the corresponding group.
         """
-        set = unique1d(set)
+        set = unique(set)
         split = []
         n = 0
         for e in self.celems[1:]:
@@ -174,8 +174,8 @@ class Model(Geometry):
         """
         nnodes = self.nnodes()
         if old is None and new is None:
-            old = unique1d(random.randint(0,nnodes-1,nnodes))
-            new = unique1d(random.randint(0,nnodes-1,nnodes))
+            old = unique(random.randint(0,nnodes-1,nnodes))
+            new = unique(random.randint(0,nnodes-1,nnodes))
             nn = max(old.size,new.size)
             old = old[:nn]
             new = new[:nn]

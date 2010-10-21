@@ -487,7 +487,7 @@ class PropertyDB(Dict):
             else:
                 if type(set) is int:
                     set = [ set ]
-                d.set = unique1d(set)
+                d.set = unique(set)
                 if name is None:
                     name = self.autoName(kind,d.nr)
         if name is not None:
