@@ -1315,7 +1315,6 @@ Total area: %s; Enclosed volume: %s
         return elemlist[p==prop]
 
 
-
     def intersectionWithPlane(self,p,n,atol=0.,ignoreErrors=False):
         """Return the intersection lines with plane (p,n).
 
@@ -1420,6 +1419,124 @@ Total area: %s; Enclosed volume: %s
             M = Mparts[0]
         else:
             M = Mesh.concatenate(Mparts,rtol=0.,atol=ftol)
+
+        # Remove degenerate and doubles
+        M = Mesh(M.coords,M.elems.removeDegenerate().removeDoubles())
+
+        # Split in connected loops
+        parts = connectedLineElems(M.elems)
+        prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
+        elems = concatenate(parts,axis=0)
+
+        return Mesh(M.coords,elems,prop=prop)
+
+
+    def intersectionWithPlane1(self,p,n):
+        """Return the intersection lines with plane (p,n).
+
+        Returns a plex-2 mesh with the line segments obtained by cutting
+        all triangles of the surface with the plane (p,n)
+        p is a point specified by 3 coordinates.
+        n is the normal vector to a plane, specified by 3 components.
+
+        The return value is a plex-2 Mesh where the line segments defining
+        the intersection are sorted to form continuous lines. The Mesh has
+        property numbers such that all segments forming a single continuous
+        part have the same property value.
+        The splitProp() method can be used to get a list of Meshes.
+        """
+        n = asarray(n)
+        p = asarray(p)
+        
+        # The vertices are classified based on their distance d from the plane:
+        # - inside: d = 0
+        # - up: d > 0
+        # - down: d < 0
+        
+        # First, reduce the surface to the part intersecting with the plane:
+        # remove triangles with all up or all down vertices
+        d = self.distanceFromPlane(p,n)
+        d_ele = d[self.elems]
+        ele_all_up = (d_ele > 0.).all(axis=1)
+        ele_all_do = (d_ele < 0.).all(axis=1)
+        S = self.cclip(ele_all_up+ele_all_do)
+
+        # If there is no intersection, we're done
+        if S.nelems() == 0:
+            return Mesh(Coords(),[])
+        
+        Mparts = []
+        coords = S.coords
+        edg = S.getEdges()
+        fac = S.getFaces()
+        ele = S.elems
+        d = S.distanceFromPlane(p,n)
+
+        # Get the edges intersecting with the plane: 1 up and 1 down vertex
+        d_edg = d[edg]
+        edg_1_up = (d_edg > 0.).sum(axis=1) == 1
+        edg_1_do = (d_edg < 0.).sum(axis=1) == 1
+        w = edg_1_up * edg_1_do
+        ind = where(w)[0]
+        # compute the intersection points
+        if ind.size != 0:
+            rev = inverseUniqueIndex(ind)
+            M = Mesh(S.coords,edg[w])
+            x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
+        
+        # For each triangle, compute the number of cutting edges
+        cut = w[fac]
+        ncut = cut.sum(axis=1)
+
+        # Split the triangles based on the number of inside vertices
+        d_ele = d[ele]
+        ins = d_ele == 0.
+        nins = ins.sum(axis=1)
+        ins0,ins1,ins2,ins3 = [ where(nins==i)[0] for i in range(4) ]
+
+        # No inside vertices -> 2 cutting edges
+        if ins0.size > 0:
+            cutedg = fac[ins0][cut[ins0]].reshape(-1,2)
+            e0 = rev[cutedg]
+            Mparts.append(Mesh(x,e0).compact())
+
+        # One inside vertex
+        if ins1.size > 0:
+            ncut1 = ncut[ins1]
+            cut10,cut11 = [ where(ncut1==i)[0] for i in range(2) ]
+            # 0 cutting edges: does not generate a line segment
+            # 1 cutting edge
+            if cut11.size != 0:
+                e11ins = ele[ins1][cut11][ins[ins1][cut11]].reshape(-1,1)
+                cutedg = fac[ins1][cut11][cut[ins1][cut11]].reshape(-1,1)
+                e11cut = rev[cutedg]
+                x11 = Coords.concatenate([coords,x],axis=0)
+                e11 = concatenate([e11ins,e11cut+len(coords)],axis=1)
+                Mparts.append(Mesh(x11,e11).compact())
+
+        # Two inside vertices -> 0 cutting edges
+        if ins2.size > 0:
+            e2 = ele[ins2][ins[ins2]].reshape(-1,2)
+            Mparts.append(Mesh(coords,e2).compact())
+
+        # Three inside vertices -> 0 cutting edges
+        if ins3.size > 0:
+            insedg =  fac[ins3].reshape(-1)
+            insedg.sort(axis=0)
+            double = insedg == roll(insedg,1,axis=0)
+            insedg = setdiff1d(insedg,insedg[double])
+            if insedg.size != 0:
+                e3 = edg[insedg]
+                Mparts.append(Mesh(coords,e3).compact())
+
+        # Done with getting the segments
+        if len(Mparts) ==  0:
+            # No intersection: return empty mesh
+            return Mesh(Coords(),[])
+        elif len(Mparts) == 1:
+            M = Mparts[0]
+        else:
+            M = Mesh.concatenate(Mparts)
 
         # Remove degenerate and doubles
         M = Mesh(M.coords,M.elems.removeDegenerate().removeDoubles())
