@@ -61,10 +61,11 @@ else:
 
 # Define a wrapper function for old versions of numpy
 
-if not globals().has_key('unique'):
+try:
+    unique([1],True)
+except TypeError:
     from numpy import unique1d as unique
    
-
 if unique([1],True)[0][0] == 0:
     # We have the old numy version
     import warnings
