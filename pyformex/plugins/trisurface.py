@@ -532,7 +532,7 @@ class TriSurface(Mesh):
         return self.getEdges().shape[0]
 
     def nfaces(self):
-        return self.getFaces().shape[0]
+        return self.getFaceEdges().shape[0]
 
     def vertices(self):
         return self.coords
@@ -545,7 +545,7 @@ class TriSurface(Mesh):
     # In the new implementation, TriSurface is derived from a Mesh,
     # thus the base information is (coords,elems).
     # Edges and Faces should always be retrieved with getEdges() and
-    # getFaces(). coords and elems can directly be used as attributes
+    # getFaceEdges(). coords and elems can directly be used as attributes
     # and should always be kept in a consistent state.
     #
     
@@ -555,11 +555,18 @@ class TriSurface(Mesh):
             self.faces,self.edges = self.elems.untangle()
         return self.edges
     
-    def getFaces(self):
-        """Get the faces data."""
+    def getFaceEdges(self):
+        """Get the faces' edge numbers."""
         if self.faces is None:
             self.faces,self.edges = self.elems.untangle()
         return self.faces
+    
+    def getFaces(self):
+        """Get the faces' node numbers."""
+        import warnings
+        warnings.warn("TriSurface.getFaces now returns the faces' node numbers.
+        Use TriSurface.getFaceEdges() to get the faces' edge numbers.")
+        return Mesh.getFaces(self)
 
     #
     # Changes to the geometry should by preference be done through the
@@ -711,7 +718,7 @@ class TriSurface(Mesh):
 
         GD.message("Writing surface to file %s" % fname)
         if ftype == 'gts':
-            write_gts(fname,self.coords,self.getEdges(),self.getFaces())
+            write_gts(fname,self.coords,self.getEdges(),self.getFaceEdges())
             GD.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','neu','smesh']:
             if ftype == 'stl':
@@ -802,7 +809,7 @@ class TriSurface(Mesh):
     def edgeConnections(self):
         """Find the elems connected to edges."""
         if self.econn is None:
-            self.econn = self.getFaces().inverse()
+            self.econn = self.getFaceEdges().inverse()
         return self.econn
     
 
@@ -829,7 +836,7 @@ class TriSurface(Mesh):
             nfaces = self.nfaces()
             rfaces = self.edgeConnections()
             # this gives all adjacent elements including element itself
-            adj = rfaces[self.getFaces()].reshape(nfaces,-1)
+            adj = rfaces[self.getFaceEdges()].reshape(nfaces,-1)
             fnr = arange(nfaces).reshape(nfaces,-1)
             self.eadj = adj[adj != fnr].reshape((nfaces,-1))
         return self.eadj
@@ -977,7 +984,7 @@ class TriSurface(Mesh):
         self.areaNormals()
         edg = self.coords[self.getEdges()]
         edglen = length(edg[:,1]-edg[:,0])
-        facedg = edglen[self.getFaces()]
+        facedg = edglen[self.getFaceEdges()]
         edgmin = facedg.min(axis=-1)
         edgmax = facedg.max(axis=-1)
         altmin = 2*self.areas / edgmax
@@ -1135,7 +1142,7 @@ Total area: %s; Enclosed volume: %s
             prop += front_increment
 
             # Determine border
-            edges = unique(self.getFaces()[elems])
+            edges = unique(self.getFaceEdges()[elems])
             edges = edges[todo[edges]]
             if edges.size > 0:
                 # flag edges as done
@@ -1352,7 +1359,7 @@ Total area: %s; Enclosed volume: %s
         Mparts = []
         coords = S.coords
         edg = S.getEdges()
-        fac = S.getFaces()
+        fac = S.getFaceEdges()
         ele = S.elems
         d = S.distanceFromPlane(p,n)
 

@@ -292,7 +292,7 @@ def createFrameModel():
     
     # Get the tri elements that are part of a quadrilateral:
     prop = F.prop
-    quadtri = S.getFaces()[prop==6]
+    quadtri = S.getFaceEdges()[prop==6]
     nquadtri = quadtri.shape[0]
     print "%s triangles are part of quadrilateral faces" % nquadtri
     if nquadtri > 0:
