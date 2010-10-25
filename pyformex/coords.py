@@ -375,7 +375,6 @@ class Coords(ndarray):
             p = self.center()
         p = Coords(p)
 
-        print "HALLO",n
         d = self.distanceFromPlane(p,n)
         return [ p+dist*n for dist in [d.min(),d.max() ] ]
 

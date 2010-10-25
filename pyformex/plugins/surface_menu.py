@@ -586,11 +586,11 @@ def showSurfaceValue(S,txt,val,onEdges):
 def colorByFront():
     S = selection.check(single=True)
     if S:
-        res  = askItems([('front type',None,'select',['node','edge']),
-                         ('number of colors',-1),
-                         ('front width',1),
-                         ('start at',0),
-                         ('first prop',0),
+        res  = askItems([I('front type',choices=['node','edge']),
+                         I('number of colors',-1),
+                         I('front width',1),
+                         I('start at',0),
+                         I('first prop',0),
                          ])
         GD.app.processEvents()
         if res:
@@ -623,7 +623,11 @@ def partitionByConnection():
 def partitionByAngle():
     S = selection.check(single=True)
     if S:
-        res  = askItems([('angle',60.),('firstprop',1),('startat',0)])
+        res  = askItems([
+            I('angle',60.),
+            I('firstprop',1),
+            I('startat',0)
+            ])
         GD.app.processEvents()
         if res:
             selection.remember()
@@ -647,8 +651,8 @@ def scaleSelection():
     """Scale the selection."""
     FL = selection.check()
     if FL:
-        res = askItems([['scale',1.0]],
-                       caption = 'Scaling Factor')
+        res = askItems([I('scale',1.0),
+                        ],caption = 'Scaling Factor')
         if res:
             scale = float(res['scale'])
             selection.remember(True)
@@ -661,8 +665,10 @@ def scale3Selection():
     """Scale the selection with 3 scale values."""
     FL = selection.check()
     if FL:
-        res = askItems([['x-scale',1.0],['y-scale',1.0],['z-scale',1.0]],
-                       caption = 'Scaling Factors')
+        res = askItems([I('x-scale',1.0),
+                        I('y-scale',1.0),
+                        I('z-scale',1.0),
+                        ],caption = 'Scaling Factors')
         if res:
             scale = map(float,[res['%c-scale'%c] for c in 'xyz'])
             selection.remember(True)
@@ -675,8 +681,9 @@ def translateSelection():
     """Translate the selection."""
     FL = selection.check()
     if FL:
-        res = askItems([['direction',0],['distance','1.0']],
-                       caption = 'Translation Parameters')
+        res = askItems([I('direction',0),
+                        I('distance','1.0'),
+                        ],caption = 'Translation Parameters')
         if res:
             dir = int(res['direction'])
             dist = float(res['distance'])
@@ -704,25 +711,25 @@ def rotate(mode='global'):
     FL = selection.check()
     if FL:
         if mode == 'global':
-            res = askItems([['angle','90.0'],['axis',2]])
+            res = askItems([('angle','90.0'),('axis',2)])
             if res:
                 angle = float(res['angle'])
                 axis = int(res['axis'])
                 around = None
         elif mode == 'parallel':
-            res = askItems([['angle','90.0'],['axis',2],['point','[0.0,0.0,0.0]']])
+            res = askItems([('angle','90.0'),('axis',2),('point','[0.0,0.0,0.0]')])
             if res:
                 axis = int(res['axis'])
                 angle = float(res['angle'])
                 around = eval(res['point'])
         elif mode == 'central':
-            res = askItems([['angle','90.0'],['axis','[0.0,0.0,0.0]']])
+            res = askItems([('angle','90.0'),('axis','[0.0,0.0,0.0]')])
             if res:
                 angle = float(res['angle'])
                 axis = eval(res['axis'])
                 around = None
         elif mode == 'general':
-            res = askItems([['angle','90.0'],['axis','[0.0,0.0,0.0]'],['point','[0.0,0.0,0.0]']])
+            res = askItems([('angle','90.0'),('axis','[0.0,0.0,0.0]'),('point','[0.0,0.0,0.0]')])
             if res:
                 angle = float(res['angle'])
                 axis = eval(res['axis'])
@@ -762,8 +769,11 @@ def clip_surface():
     """Clip the stl model."""
     if not check_surface():
         return
-    itemlist = [['axis',0],['begin',0.0],['end',1.0],['nodes','any']]
-    res = askItems(itemlist,caption='Clipping Parameters')
+    res = askItems([I('axis',0),
+                    I('begin',0.0),
+                    I('end',1.0),
+                    I('nodes','any'),
+                    ],caption='Clipping Parameters')
     if res:
         updateGUI()
         nodes,elems = PF['old_surface'] = PF['surface']
@@ -792,7 +802,11 @@ def clipSelection():
     """
     FL = selection.check()
     if FL:
-        res = askItems([['axis',0],['begin',0.0],['end',1.0],['nodes','all','select',['all','any','none']]],caption='Clipping Parameters')
+        res = askItems([I('axis',0),
+                        I('begin',0.0),
+                        I('end',1.0),
+                        I('nodes','all',choices=['all','any','none']),
+                        ],caption='Clipping Parameters')
         if res:
             bb = bbox(FL)
             axis = int(res['axis'])
@@ -814,11 +828,11 @@ def cutAtPlane():
     dsize = bbox(FL).dsize()
     esize = 10 ** (niceLogSize(dsize)-5)
 
-    res = askItems([['Point',(0.0,0.0,0.0)],
-                    ['Normal',(1.0,0.0,0.0)],
-                    ['New props',[1,2,2,3,4,5,6]],
-                    ['Side','positive', 'radio', ['positive','negative','both']],
-                    ['Tolerance',esize],
+    res = askItems([I('Point',(0.0,0.0,0.0)),
+                    I('Normal',(1.0,0.0,0.0)),
+                    I('New props',[1,2,2,3,4,5,6]),
+                    I('Side','positive',itemtype='radio',choices=['positive','negative','both']),
+                    I('Tolerance',esize),
                     ],caption = 'Define the cutting plane')
     if res:
         P = res['Point']
@@ -852,12 +866,12 @@ def clipAtPlane():
     dsize = bbox(FL).dsize()
     esize = 10 ** (niceLogSize(dsize)-5)
 
-    res = askItems([['Point',(0.0,0.0,0.0)],
-                    ['Normal',(1.0,0.0,0.0)],
-                    ['Keep side','positive', 'radio', ['positive','negative']],
-                    ['Nodes','all','radio',['all','any','none']],
-                    ['Tolerance',esize],
-                    ['Property',1],
+    res = askItems([I('Point',(0.0,0.0,0.0)),
+                    I('Normal',(1.0,0.0,0.0)),
+                    I('Keep side','positive', 'radio', ['positive','negative']),
+                    I('Nodes','all','radio',['all','any','none']),
+                    I('Tolerance',esize),
+                    I('Property',1),
                     ],caption = 'Define the clipping plane')
     if res:
         P = res['Point']
@@ -886,10 +900,10 @@ def cutSelectionByPlanes():
                                 'Known %sobjects' % selection.object_type(),
                                 mode='multi',sort=True).getResult()
         if res1:
-            res2 = askItems([['Tolerance',0.],
-                    ['Color by', 'side', 'radio', ['side', 'element type']], 
-                    ['Side','both', 'radio', ['positive','negative','both']]],
-                    caption = 'Cutting parameters')
+            res2 = askItems([I('Tolerance',0.),
+                             I('Color by','side',itemtype='radio',choices=['side', 'element type']), 
+                             I('Side','both',itemtype='radio',choices=['positive','negative','both']),
+                             ],caption = 'Cutting parameters')
             if res2:
                 planes = map(named, res1)
                 p = [plane.P for plane in planes]
@@ -933,15 +947,15 @@ def intersectWithPlane():
     FL = selection.check()
     if not FL:
         return
-    res = askItems([['Suffix','intersect'],
-                    ['Point',(0.0,0.0,0.0)],
-                    ['Normal',(1.0,0.0,0.0)],
+    res = askItems([I('Name suffix','intersect'),
+                    I('Point',(0.0,0.0,0.0)),
+                    I('Normal',(1.0,0.0,0.0)),
                     ],caption = 'Define the cutting plane')
     if res:
-        suffix = res['Suffix']
+        suffix = res['Name suffix']
         P = res['Point']
         N = res['Normal']
-        M = [ S.intersectionWithPlane(P,N,ignoreErrors=True) for S in FL ]
+        M = [ S.intersectionWithPlane(P,N) for S in FL ]
         draw(M,color='red')
         export(dict([('%s/%s' % (n,suffix), m) for (n,m) in zip(selection,M)]))
             
@@ -951,14 +965,16 @@ def slicer():
     S = selection.check(single=True)
     if not S:
         return
-    res = askItems([['Direction',[1.,0.,0.]],
-                    ['# slices',20],
-                   ],caption = 'Define the slicing planes')
+    res = askItems([I('Direction',[1.,0.,0.]),
+                    I('# slices',20),
+                    ],caption = 'Define the slicing planes')
     if res:
         axis = res['Direction']
         nslices = res['# slices']
         GD.GUI.setBusy(True)
-        slices = S.slice(dir=axis,nplanes=nslices,ignoreErrors=True)
+        t = timer.Timer()
+        slices = S.slice(dir=axis,nplanes=nslices)
+        print "Sliced in %s seconds" % t.seconds()
         GD.GUI.setBusy(False)
         print [ s.nelems() for s in slices ]
         draw([ s for s in slices if s.nelems() > 0],color='red',bbox='last',view=None)
@@ -972,16 +988,16 @@ def spliner():
     S = selection.check(single=True)
     if not S:
         return
-    res = askItems([['Direction',[1.,0.,0.]],
-                    ['# slices',20],
-                    ['remove_invalid',False],
-                   ],caption = 'Define the slicing planes')
+    res = askItems([I('Direction',[1.,0.,0.]),
+                    I('# slices',20),
+                    I('remove_invalid',False),
+                    ],caption = 'Define the slicing planes')
     if res:
         axis = res['Direction']
         nslices = res['# slices']
         remove_cruft = res['remove_invalid']
         GD.GUI.setBusy(True)
-        slices = S.slice(dir=axis,nplanes=nslices,ignoreErrors=True)
+        slices = S.slice(dir=axis,nplanes=nslices)
         GD.GUI.setBusy(False)
         print [ s.nelems() for s in slices ]
         split = [ s.splitProp().values() for s in slices if s.nelems() > 0 ]
@@ -1003,8 +1019,10 @@ def smoothLowPass():
     """Smooth the selected surface using a low-pass filter."""
     S = selection.check(single=True)
     if S:
-        res = askItems([('lambda_value',0.5),
-                ('n_iterations',2),('neighbourhood',1)],'Low-pass filter')
+        res = askItems([I('lambda_value',0.5),
+                        I('n_iterations',2),
+                        I('neighbourhood',1),
+                        ],'Low-pass filter')
         if res:
             if not 0.0 <= res['lambda_value'] <= 1.0:
                 warning("Lambda should be between 0 and 1.")
@@ -1021,8 +1039,12 @@ def smoothLaplaceHC():
     """Smooth the selected surface using a Laplace filter and HC algorithm."""
     S = selection.check(single=True)
     if S:
-        res = askItems([('lambda_value',0.5),
-                ('n_iterations',2),('alpha',0.),('beta',0.2),('neighbourhood',1)],'Laplace filter and HC algorithm')
+        res = askItems([I('lambda_value',0.5),
+                        I('n_iterations',2),
+                        I('alpha',0.),
+                        I('beta',0.2),
+                        I('neighbourhood',1),
+                        ],'Laplace filter and HC algorithm')
         if res:
             if not 0.0 <= res['lambda_value'] <= 1.0:
                 warning("Lambda should be between 0 and 1.")
@@ -1084,7 +1106,7 @@ def export_volume():
 
 def show_nodes():
     n = 0
-    data = askItems({'node number':n})
+    data = askItems([('node number',n)])
     n = int(data['node number'])
     if n > 0:
         nodes,elems = PF['surface']
@@ -1118,7 +1140,7 @@ def trim_border(elems,nodes,nb,visual=False):
 
 def trim_surface():
     check_surface()
-    data = GD.cfg.get('stl/border',{'Number of trim rounds':1, 'Minimum number of border edges':1})
+    data = GD.cfg.get('stl/border',[('Number of trim rounds',1),('Minimum number of border edges',1)])
     GD.cfg['stl/border'] = askItems(data)
     GD.GUI.update()
     n = int(data['Number of trim rounds'])
@@ -1224,13 +1246,13 @@ def createSphere():
 _data = {}
 
 def createCone():
-    res = askItems([('name','__auto__'),
-                    ('radius',1.),
-                    ('height',1.),
-                    ('angle',360.),
-                    ('div_along_radius',6),
-                    ('div_along_circ',12),
-                    ('diagonals','up','select',['up','down']),
+    res = askItems([I('name','__auto__'),
+                    I('radius',1.),
+                    I('height',1.),
+                    I('angle',360.),
+                    I('div_along_radius',6),
+                    I('div_along_circ',12),
+                    I('diagonals',choices=['up','down']),
                     ])
     if res:
         name = res['name']
@@ -1330,18 +1352,24 @@ def boolean():
     if len(selection.names) != 2:
         warning("You must select exactly two triangulated surfaces!")
         return
+    print "Selected surfaces: %s, %s" % tuple(selection.names) 
     if S:
-        res = askItems([('operation',None,'select',ops),
-                        ('output intersection curve',False),
-                        ('check self interesection',False),
-                        ('verbose',False),
+        res = askItems([I('operation',choices=ops),
+                        I('reverse surface sequence',False),
+                        I('output intersection curve',False),
+                        I('check self interesection',False),
+                        I('verbose',False),
                         ],'Boolean Operation')
         if res:
             #selection.remember()
-            newS = S[0].boolean(S[1],op=res['operation'].strip()[0],
-                        inter=res['output intersection curve'],
-                        check=res['check self interesection'],
-                        verbose=res['verbose'])
+            if res['reverse surface sequence']:
+                A,B = S[1],S[0]
+            else:
+                A,B = S[0],S[1]
+            newS = A.boolean(B,op=res['operation'].strip()[0],
+                             inter=res['output intersection curve'],
+                             check=res['check self interesection'],
+                             verbose=res['verbose'])
             export({'__auto__':newS})
             #selection.draw()
 

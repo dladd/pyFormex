@@ -1315,123 +1315,7 @@ Total area: %s; Enclosed volume: %s
         return elemlist[p==prop]
 
 
-    def intersectionWithPlane(self,p,n,atol=0.,ignoreErrors=False):
-        """Return the intersection lines with plane (p,n).
-
-        Returns a plex-2 mesh with the line segments obtained by cutting
-        all triangles of the surface with the plane (p,n)
-        p is a point specified by 3 coordinates.
-        n is the normal vector to a plane, specified by 3 components
-        atol is a tolerance factor defining whether an edge is intersected
-        by the plane.
-
-        The return value is a plex-2 Mesh where the line segments defining
-        the intersection are sorted to form continuous lines. The Mesh has
-        property numbers such that all segments forming a single continuous
-        part have the same property value.
-        The splitProp() method can be used to get a list of Meshes.
-        """
-        # First, reduce the surface to the part intersecting with the plane
-        n = asarray(n)
-        p = asarray(p)
-        t = self.test(nodes='all',dir=n,min=p,atol=atol)
-        u = self.test(nodes='all',dir=n,max=p,atol=atol)
-        S = self.cclip(t+u)
-
-        # If there is no intersection, we're done
-        if S.nelems() == 0:
-            return Mesh(Coords(),[])
-
-        # Now, take the mesh with the edges, and intersect them
-        edg = S.getEdges()
-        fac = S.getFaces()
-        M = Mesh(S.coords,edg)
-        t = M.test(nodes='all',dir=n,min=p,atol=atol)
-        u = M.test(nodes='all',dir=n,max=p,atol=atol)
-        w = ((t+u) == 0) * (t*u == 0)
-        ind = where(w)[0]
-        rev = inverseUniqueIndex(ind)
-        M = M.clip(w)
-        x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
-
-        Mparts = []
-        
-        # edges returning NaN as intersection are inside the cutting plane
-        inside = ind[isnan(x).any(axis=1)]
-        if len(inside) > 0:
-            # Mark these edges as non-cutting, to avoid other triangles
-            # to pick them up again
-            w[inside] = False
-
-            # Keep these edges in the return value
-            # BUT ONLY if they occur only once: NEEDS TO BE IMPLEMENTED
-            edgcon = S.edgeConnections()[inside]
-            alledg = fac[edgcon].reshape(-1,6)
-            keep = array([ setdiff1d(two,inside).size  for two in alledg ])
-            cutins = edg[inside[keep>0]]
-            Mparts.append(Mesh(M.coords,cutins).compact())
-
-        # Split the triangles based on the number of cutting edges
-        # 0 : should not occur: filtered at beginning
-        # 1 : currently ignored: does not generate a line segment
-        # 2 : the normal case
-        # 3 : either the triangle is completely in the plane (handled above)
-        #     or two cutting points will coincide with the same vertex.
-        #     The latter is currently unhandled: an error is raised.
-        cut = w[fac]
-        ncut = cut.sum(axis=1)
-        icut = [ where(ncut==i)[0] for i in range(4) ]
-        cut0,cut1,cut2,cut3 = icut
-        GD.debug("Number of triangles with 0..3 cutting edges: %s" % icut)
-        ftol = 1.e-5
-        
-        if cut3.size > 0:
-            # The triangles with three vertices in the cutting plane
-            # have already been handled above, so these must be cases
-            # with one edge and the opposite vertex cutting the plane.
-            # Our strategy is to take the 3 cutting points (two of whom
-            # are coincident) and to fuse them. The fusing information
-            # then tells us which are the noncoincident vertices that
-            # define the intersection line segment.
-            cutedg = fac[cut3][cut[cut3]].reshape(-1,3)
-            seg = rev[cutedg]
-            xd,xe = x[seg].fuse(rtol=0.,atol=ftol)
-            while not Connectivity(xe).testDegenerate().all():
-                ftol *= 10.
-                xd,xe = x[seg].fuse(rtol=0.,atol=ftol)
-            # Keep the first vertex and the 2nd or 3rd, depending on which
-            # is different from the first
-            seg = column_stack([xe[:,0], where(xe[:,1] == xe[:,0],xe[:,2],xe[:,1])])            
-            Mparts.append(Mesh(xd,seg))
-
-        if cut2.size > 0:
-            # Create line elements between each pair of intersection points
-            cutedg = fac[cut2][cut[cut2]].reshape(-1,2)
-            seg = rev[cutedg]
-            Mparts.append(Mesh(x,seg).compact())
-
-        # Done with getting the segments
-        if len(Mparts) ==  0:
-            # No intersection: return empty mesh
-            return Mesh(Coords(),[])
-
-        if len(Mparts) == 1:
-            M = Mparts[0]
-        else:
-            M = Mesh.concatenate(Mparts,rtol=0.,atol=ftol)
-
-        # Remove degenerate and doubles
-        M = Mesh(M.coords,M.elems.removeDegenerate().removeDoubles())
-
-        # Split in connected loops
-        parts = connectedLineElems(M.elems)
-        prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
-        elems = concatenate(parts,axis=0)
-
-        return Mesh(M.coords,elems,prop=prop)
-
-
-    def intersectionWithPlane1(self,p,n):
+    def intersectionWithPlane(self,p,n):
         """Return the intersection lines with plane (p,n).
 
         Returns a plex-2 mesh with the line segments obtained by cutting
@@ -1549,21 +1433,23 @@ Total area: %s; Enclosed volume: %s
         return Mesh(M.coords,elems,prop=prop)
 
 
-    def slice(self,dir=0,nplanes=20,ignoreErrors=False):
+    def slice(self,dir=0,nplanes=20):
         """Intersect a surface with a sequence of planes.
 
         A sequence of nplanes planes with normal dir is constructed
         at equal distances spread over the bbox of the surface.
 
         The return value is a list of intersectionWithPlanes() return
-        values, i.e. a list of list of meshes.
+        values, i.e. a list of Meshes, one for every cutting plane.
+        In each Mesh the simply connected parts are identified by
+        property number.
         """
         o = self.center()
         if type(dir) is int:
             dir = unitVector(dir)
         xmin,xmax = self.coords.directionalExtremes(dir,o)
         P = Coords.interpolate(xmin,xmax,nplanes)
-        return [ self.intersectionWithPlane(p,dir,ignoreErrors=ignoreErrors) for p in P ]
+        return [ self.intersectionWithPlane(p,dir) for p in P ]
 
 
 ##################  Smooth a surface #############################
