@@ -962,11 +962,11 @@ class TriSurface(Mesh):
         conn2 = (conn >= 0).sum(axis=-1) == 2
         n = self.areaNormals()[1][conn[conn2]]
         angles[conn2] = dotpr(n[:,0],n[:,1])
-        return angles
+        return angles.clip(min=-1.,max=1.)
 
 
     def edgeAngles(self):
-        """Return the angles over all edges (in degrees)."""
+        """Return the angles over all edges (in degrees). It is the angle (0 to 180) between 2 face normals."""
         return arccos(self.edgeCosAngles()) / Deg
 
 
