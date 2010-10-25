@@ -1017,6 +1017,7 @@ class TriSurface(Mesh):
         manifold,closed,mincon,maxcon = self.surfaceType()
         self._compute_data()
         angles = self.edgeAngles()
+        vangles = self.getAngles()
         area = self.area()
         if manifold and closed:
             volume = self.volume()
@@ -1031,6 +1032,7 @@ class TriSurface(Mesh):
             self.edglen.min(),self.edglen.max(),
             self.altmin.min(),self.aspect.max(),
             angles.min(),angles.max(),
+            vangles.min(),vangles.max(),
             area,volume
             )
         s = """
@@ -1042,6 +1044,7 @@ Smallest area: %s; largest area: %s
 Shortest edge: %s; longest edge: %s
 Shortest altitude: %s; largest aspect ratio: %s
 Angle between adjacent faces: smallest: %s; largest: %s
+Angle at vertices: smallest: %s; largest: %s
 Total area: %s; Enclosed volume: %s   
 """ % (
             self.ncoords(),self.nedges(),self.nfaces(),
@@ -1052,6 +1055,7 @@ Total area: %s; Enclosed volume: %s
             self.edglen.min(),self.edglen.max(),
             self.altmin.min(),self.aspect.max(),
             angles.min(),angles.max(),
+            vangles.min(),vangles.max(),
             area,volume
             )
         return s
