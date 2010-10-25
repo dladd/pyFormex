@@ -564,8 +564,7 @@ class TriSurface(Mesh):
     def getFaces(self):
         """Get the faces' node numbers."""
         import warnings
-        warnings.warn("TriSurface.getFaces now returns the faces' node numbers.
-        Use TriSurface.getFaceEdges() to get the faces' edge numbers.")
+        warnings.warn("TriSurface.getFaces now returns the faces' node numbers. Use TriSurface.getFaceEdges() to get the faces' edge numbers.")
         return Mesh.getFaces(self)
 
     #
