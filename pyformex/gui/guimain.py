@@ -149,6 +149,7 @@ class GUI(QtGui.QMainWindow):
         self.statusbar = self.statusBar()
         self.curproj = widgets.ButtonBox('Project:',[('None',fileMenu.openProject)])
         self.curfile = widgets.ButtonBox('Script:',[('None',fileMenu.openScript)])
+        self.curdir = widgets.ButtonBox('Cwd:',[('None',fileMenu.setWorkDir)])
         self.canPlay = False
         
         # The menu bar
@@ -267,6 +268,7 @@ class GUI(QtGui.QMainWindow):
         self.board.resize(*bdsize)
         
         self.setcurfile()
+        self.setcurdir()
         if pf.options.redirect:
             sys.stderr = self.board
             sys.stdout = self.board
@@ -355,6 +357,7 @@ class GUI(QtGui.QMainWindow):
         #self.curfile.setFixedHeight(32)
         self.statusbar.addWidget(self.curproj)
         self.statusbar.addWidget(self.curfile)
+        self.statusbar.addWidget(self.curdir)
 
 
     def addInputBox(self):
@@ -440,6 +443,14 @@ class GUI(QtGui.QMainWindow):
             else:
                 icon = 'notok'
             self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(pf.cfg['icondir'],icon)+pf.cfg['gui/icontype'])),0)
+
+
+    def setcurdir(self):
+        """Show the current workdir."""
+        dirname = os.getcwd()
+        shortname = os.path.basename(dirname)
+        self.curdir.setText(shortname)
+        self.curdir.setToolTip(dirname)
 
 
     def setViewAngles(self,name,angles):

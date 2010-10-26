@@ -1347,31 +1347,28 @@ def boolean():
     '-' : difference,
     '*' : interesection
     """
-    ops = ['+ (Union)','- (Difference)','* (Intersection)']
-    S = selection.check(single=False)
-    if len(selection.names) != 2:
-        warning("You must select exactly two triangulated surfaces!")
+    surfs = listAll(clas=TriSurface)
+    if len(surfs) == 0:
+        warning("You currently have no exported surfaces!")
         return
-    print "Selected surfaces: %s, %s" % tuple(selection.names) 
-    if S:
-        res = askItems([I('operation',choices=ops),
-                        I('reverse surface sequence',False),
-                        I('output intersection curve',False),
-                        I('check self interesection',False),
-                        I('verbose',False),
-                        ],'Boolean Operation')
-        if res:
-            #selection.remember()
-            if res['reverse surface sequence']:
-                A,B = S[1],S[0]
-            else:
-                A,B = S[0],S[1]
-            newS = A.boolean(B,op=res['operation'].strip()[0],
-                             inter=res['output intersection curve'],
-                             check=res['check self interesection'],
-                             verbose=res['verbose'])
-            export({'__auto__':newS})
-            #selection.draw()
+    
+    ops = ['+ (Union)','- (Difference)','* (Intersection)']
+    res = askItems([I('surface 1',choices=surfs),
+                    I('surface 2',choices=surfs),
+                    I('operation',choices=ops),
+                    I('output intersection curve',False),
+                    I('check self intersection',False),
+                    I('verbose',False),
+                    ],'Boolean Operation')
+    if res:
+        SA = GD.PF[res['surface 1']]
+        SB = GD.PF[res['surface 2']]
+        SC = SA.boolean(SB,op=res['operation'].strip()[0],
+                        inter=res['output intersection curve'],
+                        check=res['check self intersection'],
+                        verbose=res['verbose'])
+        export({'__auto__':SC})
+        #selection.draw()
 
 
     

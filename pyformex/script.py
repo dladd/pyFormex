@@ -402,7 +402,6 @@ def breakpt(msg=None):
     If an argument is specified, it will be written to the message board.
 
     The exitrequested signal is usually emitted by pressing a button in the GUI.
-    In nongui mode the stopatbreakpt function can be called from another thread.
     """
     global exitrequested
     if exitrequested:
@@ -410,6 +409,11 @@ def breakpt(msg=None):
             pyformex.message(msg)
         exitrequested = False # reset for next time
         raise _Exit
+
+
+## def raiseExit():
+##     pyformex.debug("RAISED EXIT")
+##     raise _Exit
 
 
 def enableBreak(mode=True):

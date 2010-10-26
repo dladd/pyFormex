@@ -575,17 +575,6 @@ class InputItem(QtGui.QHBoxLayout):
             self.addLayout(self.buttons)
             
 
-    def setTooltip(self,**kargs):
-        """Set the tooltip for this input field.
-
-        This method should be called by the derived classes AFTER they
-        have constructed the input field.
-        """
-        try:
-            self.input.setToolTip(kargs['tooltip'])
-        except:
-            pass
-
     def name(self):
         """Return the name of the InputItem."""
         return self.key

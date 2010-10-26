@@ -1749,7 +1749,7 @@ maxprop  = %s
         return Formex(f,self.prop,self.eltype)
 
 
-    def replic(self,n,step,dir=0):
+    def replic(self,n,step=1.0,dir=0):
         """Return a Formex with n replications in direction dir with step.
 
         The original Formex is the first of the n replicas.
