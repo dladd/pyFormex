@@ -570,6 +570,8 @@ def chdir(fn):
             fn = os.path.dirname(os.path.abspath(fn))
         os.chdir(fn)
         setPrefs({'workdir':fn},save=True)
+        if pyformex.GUI:
+            pyformex.GUI.setcurdir()
         pyformex.message("Your current workdir is %s" % os.getcwd())
 
 

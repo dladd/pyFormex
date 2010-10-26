@@ -42,8 +42,8 @@ def addActionButtons(toolbar):
     buttons = [ ( "Play", "next", draw.play, False ),
                 ( "Step", "nextstop", draw.step, False ),
                 ( "Continue", "ff", draw.fforward, False ),
-#                ( "Stop", "stop", draw.stopatbreakpt, False ),
-                ( "Stop", "stop", draw.raiseExit, False ),
+                ( "Stop", "stop", draw.stopatbreakpt, False ),
+#                ( "Stop", "stop", draw.raiseExit, False ),
                 ]
     for b in buttons:
         icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon(b[1])))

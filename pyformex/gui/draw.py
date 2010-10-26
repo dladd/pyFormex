@@ -289,20 +289,21 @@ def askNewFilename(cur=None,filter="All files (*.*)"):
     return askFilename(cur=cur,filter=filter,exist=False,multi=False)
 
 
-def askDirname(cur=None,change=True):
-    """Ask for an existing directory name.
+def askDirname(path=None,change=True):
+    """Interactively select a directory and change the current workdir.
 
-    The dialog pops up where the user can interactively select a directory.
-    Initially, the dialog will show all the subdirectories in the specified
-    path, or by default in the current workdir.
-    
-    Unless the user cancels the operation, or the change parameter was set to
-    False, the selected directory will become the new  working directory.
+    The user is asked to select a directory through the standard file
+    dialog. Initially, the dialog shows all the subdirectories in the
+    specified path, or by default in the current working directory.
+
+    The selected directory becomes the new working directory, unless the
+    user canceled the operation, or the change parameter was set to False.
     """
-    if cur is None:
-        cur = pf.cfg['workdir']
-    cur = os.path.dirname(cur)
-    fn = widgets.FileSelection(cur,'*',dir=True).getFilename()
+    if path is None:
+        path = pf.cfg['workdir']
+    if not os.path.isdir(path):
+        path = os.path.dirname(path)
+    fn = widgets.FileSelection(path,'*',dir=True).getFilename()
     if fn and change:
         chdir(fn)
     pf.GUI.update()

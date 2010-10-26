@@ -149,7 +149,7 @@ class GUI(QtGui.QMainWindow):
         self.statusbar = self.statusBar()
         self.curproj = widgets.ButtonBox('Project:',[('None',fileMenu.openProject)])
         self.curfile = widgets.ButtonBox('Script:',[('None',fileMenu.openScript)])
-        self.curdir = widgets.ButtonBox('Cwd:',[('None',fileMenu.setWorkDir)])
+        self.curdir = widgets.ButtonBox('Cwd:',[('None',draw.askDirname)])
         self.canPlay = False
         
         # The menu bar

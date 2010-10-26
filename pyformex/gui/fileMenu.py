@@ -326,14 +326,6 @@ def editScript(fn=None):
 
 ##################### other functions ##########################
 
-def setWorkDir(fn=None):
-    """Ask and set the current working directory and update GUI."""
-    if fn is None:
-        fn = draw.askDirname()
-    if fn:
-        draw.chdir(fn)
-        GD.GUI.setcurdir()
-        
     
 def saveImage(multi=False):
     """Save an image to file.
