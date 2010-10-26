@@ -652,7 +652,7 @@ class TriSurface(Mesh):
         The normal vectors are normalized before they are returned.
         """
         # get list of elements connected to each point
-        con = self.nodeConnections(self)
+        con = self.nodeConnections()
         NP = self.areaNormals()[1][con] #self.normal doesn't work here???
         w = where(con == -1)
         NP[w] = 0.
