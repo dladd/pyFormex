@@ -167,13 +167,6 @@ de1=draw(getEdgesMesh(mH1).translate([0., 0., 0.001]), color='white', linewidth=
 zoomAll()
 sleep(1)
 
-def missingIndices(ar):
-    """from a sequence of positive ordered indices, it returns the missing ones. e.g. [0,3,4,6] => [1,2,5]"""
-    ar1=append([-1], ar)
-    iar1=append([1], ediff1d(ar1))-1
-    wiar1=where(iar1)[0]
-    if len(wiar1)==0:return array([])
-    return concatenate([ ar1[wi]-arange(iar1[wi], 0, -1) for wi in  wiar1 ])
 def intersectSurfaceWithSegments2(s1, segm, atol=1.e-5, max1xperline=True):
     """it takes a TriSurface ts and a set of segments (-1,2,3) and intersect the segments with the TriSurface.
     It returns the points of intersections and, for each point, the indices of the intersected segment and triangle. If max1xperline is True, only 1 intersection per line is returned (in order to remove multiple intersections due to the tolerance) together with the index of line and triangle (at the moment the selection of one intersection among the others is random: it does not take into account the distances). If some segments do not intersect the surface, their indices are also returned."""
@@ -185,7 +178,7 @@ def intersectSurfaceWithSegments2(s1, segm, atol=1.e-5, max1xperline=True):
         sp=sort(ip, axis=1)[:, -1]
         w= where(sp>-1)[0]
         sw=sp[w]
-        return px[sw], w, itx[sw], missingIndices(w)
+        return px[sw], w, itx[sw], delete( arange(len(segm)),  w)
     else:return px, ilx, itx
 
 
