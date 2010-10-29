@@ -523,7 +523,8 @@ class Mesh(Geometry):
         """Returns the angles in Deg or Rad between the edges of a mesh.
         
         The returned angles are shaped  as (nelems, n1faces, n1vertices),
-        where n1faces are the number of faces in 1 element and the number of vertices in 1 face.
+        where n1faces are the number of faces in 1 element and the number
+        of vertices in 1 face.
         """
         mf=self.getCoords()[self.getFaces()]
         el = getattr(elements,self.eltype.capitalize())
@@ -556,28 +557,31 @@ class Mesh(Geometry):
         """Return a Mesh with the border elements.
 
         Returns a Mesh representing the border of the Mesh.
-        The new Mesh has the same properties of the old mesh (if any).
-        The new Mesh is of the next lower hierarchical level.
+        The returned Mesh is of the next lower hierarchical level.
+        Its elements inherit the property numbers from the original elements
+        they belong to (if any).
         """
         if self.propSet()==None: return Mesh(self.coords,self.getBorder())
-        kp=self.propSet()
-        p=self.splitProp()
-        brd=Mesh.concatenate( [Mesh(p[k].coords,p[k].getBorder()).setProp(k) for k in  kp] ).renumber()
+        kp = self.propSet()
+        p = self.splitProp()
+        brd = Mesh.concatenate( [Mesh(p[k].coords,p[k].getBorder()).setProp(k) for k in  kp] ).renumber()
         ind,ok = brd.elems.testDoubles()
-        testdoubles= ind[ok*roll(ok, -1, 0)]#remove repeated faces with different props
+        #remove repeated faces with different props
+        testdoubles= ind[ok*roll(ok, -1, 0)]
         return brd.select(testdoubles)
 
 
     def neighborsByNode(self, elsel=None):
         """For each element index in the list elsel, it returns the list of neighbor elements (connected by one node at least). If elsel is None, the neighbors of all elements are calculated, but it is computationally expensive for big meshes."""
-        if elsel==None:elsel=range(self.nelems())
-        fnf= self.elems.inverse()#faces touched by node
-        fnf= fnf[self.elems[elsel]]#face, nodes belonging to face, faces touched by nodes)
-        ff= fnf.reshape(fnf.shape[0], fnf.shape[1]*fnf.shape[2] )#(faces touched faces)
+        if elsel==None:
+            elsel=range(self.nelems())
+        fnf = self.elems.inverse()#faces touched by node
+        fnf = fnf[self.elems[elsel]]#face, nodes belonging to face, faces touched by nodes)
+        ff = fnf.reshape(fnf.shape[0], fnf.shape[1]*fnf.shape[2] )#(faces touched faces)
         #add -1 so everyone has at least once -1
-        ff=concatenate([ff, -ones([ff.shape[0]  ],  dtype=int).reshape(-1, 1)   ], 1)
+        ff = concatenate([ff, -ones([ff.shape[0]  ],  dtype=int).reshape(-1, 1)   ], 1)
         #take unique on each row and remove the -1
-        uf=[unique(fi)[1:] for fi in ff]
+        uf = [unique(fi)[1:] for fi in ff]
         #remove the face-i from the neighboors of face-i
         return [ uf[i] [uf[i]!=i] for i in range(len(uf)) ]
 
@@ -733,29 +737,40 @@ Size: %s
         
         If the Mesh has no properties, a copy with all elements is returned.
         """
+        # !! Use keyword for the prop and eltype arguments, so that it
+        # also works for the derived class TriSurface
         if self.prop is None:
-            return Mesh(self.coords,self.elems,eltype=self.eltype)
+            return self.__class__(self.coords,self.elems,eltype=self.eltype)
         elif type(val) == int:
-            return Mesh(self.coords,self.elems[self.prop==val],val,self.eltype)
+            return self.__class__(self.coords,self.elems[self.prop==val],prop=val,eltype=self.eltype)
         else:
             t = zeros(self.prop.shape,dtype=bool)
             for v in asarray(val).flat:
                 t += (self.prop == v)
-            return Mesh(self.coords,self.elems[t],self.prop[t],self.eltype)
+            return self.__class__(self.coords,self.elems[t],prop=self.prop[t],eltype=self.eltype)
         
     
     def withoutProp(self, val):
-        """it is the complementary function of withProp."""
-        wi=range(len(self.propSet()))
+        """Return a Mesh without the elements with property val.
+
+        This is the complementary method of Mesh.withProp().
+        val is either a single integer, or a list/array of integers.
+        The return value is a Mesh holding all the elements that do not
+        have the property val, resp. one of the values in val.
+        The returned Mesh inherits the matching properties.
+        
+        If the Mesh has no properties, a copy with all elements is returned.
+        """
+        wi = range(len(self.propSet()))
         wi = delete(wi, val)
         return self.withProp(wi)
 
 
     def splitProp(self):
-        """Partition aMesh according to its prop values.
+        """Partition a Mesh according to its propery values.
 
-        Returns a dict with the prop values as keys and the corresponding
-        partitions as values. Each value is a Mesh instance.
+        Returns a dict with the property values as keys and the
+        corresponding partitions as values. Each value is a Mesh instance.
         It the Mesh has no props, an empty dict is returned.
         """
         if self.prop is None:

@@ -1,0 +1,17 @@
+Installation procedure for calpy
+================================
+
+Calpy is a simple Finite Element framework with a Python interface.
+It can easily be interfaced with pyFormex. Some of the examples included
+with pyFormex use calpy.
+
+calpy.install will download, compile and install calpy and all that is
+needed to let it cooperate with pyFormex.
+
+By default the installation is done under /usr/local and you will need root
+privileges to do so.
+
+The full installation can be done with a single command (as root):
+./calpy.install all
+
+

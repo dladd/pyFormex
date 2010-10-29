@@ -1,0 +1,15 @@
+Installation procedure for calix
+================================
+
+Calix is an Finite Element solver for 2D and 3D elasticity, thermodynamics and
+thermo-elasticity. pyFormex uses it for some examples.
+
+The install procedure will download, compile and install calix.
+
+By default the installation is done under /usr/local and you will need root
+privileges to do so.
+
+The full installation can be done with a single command (as root):
+./install.sh all
+
+

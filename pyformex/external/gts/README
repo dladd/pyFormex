@@ -1,0 +1,20 @@
+Installation procedure for GTS library and utilities
+====================================================
+
+The 'TriSurface' objects in pyFormex can make use of some powerful fetatures
+of the GTS (GNU Triangulated Surfaces) library.
+While the Linux distribution of your choice may provide a package for this
+library, in most cases it will not install the binaries required for pyFormex.
+
+The gts.install procedure in this directory will download, compile and install
+the GTS library and all that is needed to let it cooperate with pyFormex.
+At the same time it will fix some bugs.
+
+By default the installation is done under /usr/local and you will need root
+privileges to do so. Also, you will need to have the glib2 header files (on
+Debian and alikes: install package libglib2.0-dev.
+
+The full installation can be done with a single command (as root):
+./gts.install all
+
+

@@ -1542,7 +1542,7 @@ or use the functions widgets.tabInputItem or widgets.groupInputItem
             if 'choices' in item:
                 item['value'] = item['choices'][0]
             # DO NOT USE A TEST  if self.store:  HERE
-            # THAT DOES NOT SEEM TO WORK: ALLWAYS RETURNS FALSE
+            # THAT DOES NOT SEEM TO WORK: ALWAYS RETURNS FALSE
             try:
                 item['value'] = self.store[item['name']]
             except:
@@ -1632,7 +1632,7 @@ or use the functions widgets.tabInputItem or widgets.groupInputItem
                 f.setValue(d[n])
         
         
-    def getResult(self,timeout=None):
+    def getResults(self,timeout=None):
         """ Get the results from the input dialog.
 
         This fuction is used to present a modal dialog to the user (i.e. a
@@ -1665,6 +1665,9 @@ or use the functions widgets.tabInputItem or widgets.groupInputItem
         pf.app.processEvents()
         self._pos = self.saveGeometry()
         return self.results
+
+    # for compatibility, should be deprecated
+    getResult = getResults
 
 
 

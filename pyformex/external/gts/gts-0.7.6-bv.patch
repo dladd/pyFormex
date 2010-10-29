@@ -1,0 +1,119 @@
+--- examples/Makefile.am~	2005-03-09 03:18:56.000000000 +0100
++++ examples/Makefile.am	2008-04-03 16:15:11.000000000 +0200
+@@ -16,9 +16,7 @@
+ bin_PROGRAMS = \
+ 	transform \
+ 	delaunay \
+-	$(NETPBM_EXTRA)
+-
+-noinst_PROGRAMS = \
++	$(NETPBM_EXTRA) \
+ 	set \
+ 	volume \
+ 	cleanup \
+@@ -36,3 +34,6 @@
+ 	stripe \
+ 	optimize \
+ 	merge
++
++
++noinst_PROGRAMS =
+--- examples/refine.c~	2006-03-01 04:35:53.000000000 +0100
++++ examples/refine.c	2008-10-08 12:30:35.000000000 +0200
+@@ -96,29 +96,37 @@
+   return FALSE;
+ }
+ 
++/*
++  BV:  Beware: the default cost function used returns a negative
++       value. Therefore, we compare -cost with the defined minimum.
++*/
++
++
+ static gboolean stop_cost_verbose (gdouble cost, guint number, gdouble * min)
+ {
+   g_return_val_if_fail (min != NULL, TRUE);
+ 
+   if (number % 511 == 0) {
+-    fprintf (stderr, "\rEdges: %10u Cost: %10g ", number, cost);
++    fprintf (stderr, "\rEdges: %10u Cost: %10g ", number, -cost);
+     fflush (stderr);
+   }
+-  if (cost < *min)
++  if (-cost < *min)
+     return TRUE;
+   return FALSE;
+ }
+ 
+ static gboolean stop_cost (gdouble cost, guint number, gdouble * min)
+ {
+-  if (cost < *min)
++  if (-cost < *min)
+     return TRUE;
+   return FALSE;
+ }
+ 
+-static gboolean stop_log_cost (gdouble cost, guint number)
++static gboolean stop_log_cost (gdouble cost, guint number, gdouble * min)
+ {
+-  fprintf (stderr, "%d %g\n", number, cost);
++  fprintf (stderr, "%d %g\n", number, -cost);
++  if (*min > 0.0 && -cost < *min)
++    return TRUE;
+   return FALSE;
+ }
+ 
+@@ -164,6 +172,7 @@
+       number = atoi (optarg);
+       break;
+     case 'c': /* stop by cost */
++      fprintf (stderr, "option c \n");
+       stop = COST;
+       cmin = atof (optarg);
+       break;
+@@ -214,9 +223,10 @@
+   }
+ 
+   /* select the right refining process */
+-  if (log_cost)
++  if (log_cost) {
+     stop_func = (GtsStopFunc) stop_log_cost;
+-  else {
++      stop_data = &cmin;
++  } else {
+     switch (stop) {
+     case NUMBER:
+       if (verbose)
+--- examples/Makefile.in~	2006-03-10 01:31:05.000000000 +0100
++++ examples/Makefile.in	2008-11-04 16:14:55.000000000 +0100
+@@ -38,13 +38,14 @@
+ POST_UNINSTALL = :
+ host_triplet = @host@
+ EXTRA_PROGRAMS = happrox$(EXEEXT)
+-bin_PROGRAMS = transform$(EXEEXT) delaunay$(EXEEXT) $(am__EXEEXT_1)
+-noinst_PROGRAMS = set$(EXEEXT) volume$(EXEEXT) cleanup$(EXEEXT) \
++bin_PROGRAMS = transform$(EXEEXT) delaunay$(EXEEXT) \
++	set$(EXEEXT) volume$(EXEEXT) cleanup$(EXEEXT) \
+ 	coarsen$(EXEEXT) refine$(EXEEXT) iso$(EXEEXT) gtstoc$(EXEEXT) \
+ 	oocs$(EXEEXT) partition$(EXEEXT) traverse$(EXEEXT) \
+ 	cartesian$(EXEEXT) split$(EXEEXT) smooth$(EXEEXT) \
+ 	sphere$(EXEEXT) stripe$(EXEEXT) optimize$(EXEEXT) \
+-	merge$(EXEEXT)
++	merge$(EXEEXT) $(am__EXEEXT_1)
++noinst_PROGRAMS = 
+ subdir = examples
+ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+--- configure.in~	2006-03-10 00:48:36.000000000 +0100
++++ configure.in	2009-03-22 22:12:34.000000000 +0100
+@@ -15,8 +15,8 @@
+ GTS_MAJOR_VERSION=0
+ GTS_MINOR_VERSION=7
+ GTS_MICRO_VERSION=6
+-GTS_INTERFACE_AGE=1
+-GTS_BINARY_AGE=1
++GTS_INTERFACE_AGE=0
++GTS_BINARY_AGE=0
+ GTS_VERSION=$GTS_MAJOR_VERSION.$GTS_MINOR_VERSION.$GTS_MICRO_VERSION
+ dnl
+ #AC_DIVERT_POP()dnl
