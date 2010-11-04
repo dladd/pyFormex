@@ -208,7 +208,7 @@ def apply_config_changes(cfg):
     for key in [
         'input/timeout',
         'render/ambient','render/diffuse','render/specular','render/emission',
-        'canvas/propcolors'
+        'canvas/propcolors','Save changes',
         ]:
         if key in cfg.keys():
             # Can we put GD.debug here?

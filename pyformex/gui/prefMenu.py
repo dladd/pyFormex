@@ -45,41 +45,47 @@ def updateSettings(res,save=None):
     res is a dictionary with configuration values.
     The current settings will be update with the values in res.
 
-    If res contains a key 'Save changes' and its value is True, the
+    If res contains a key '_save_' and its value is True, the
     preferences will also be saved to the user's preference file.
     Else, the user will be asked whether he wants to save the changes.
     """
-    pf.debug("Accepted settings:",res)
+    pf.debug(res,"\nACCEPTED SETTINGS")
     if save is None:
-        save = res.get('Save changes',None)
+        save = res.get('_save_',None)
     if save is None:
         save = draw.ack("Save the current changes to your configuration file?")
 
     # Do not use 'pf.cfg.update(res)' here!
     # It will not work with our Config class!
 
+    todo = set([])
     for k in res:
         if k.startswith('_'): # skip temporary variables
             continue
-        
+
+        changed = False
+        # first try to set in prefs, as these will cascade to cfg
+        if save and pf.prefcfg[k] != res[k]:
+            pf.prefcfg[k] = res[k]
+            changed = True
+            
+        # if not saved, set in cfg
         if pf.cfg[k] != res[k]:
             pf.cfg[k] = res[k]
-            
-            if save and pf.prefcfg[k] != pf.cfg[k]:
-                pf.prefcfg[k] = pf.cfg[k]
+            changed = True
 
-            if pf.GUI:
-                todo = set([])
-                if k in _activate_settings:
-                    todo.add(_activate_settings[k])
-                for f in todo:
-                    f()
+        if changed and pf.GUI:
+            if k in _activate_settings:
+                todo.add(_activate_settings[k])
 
-    pf.debug("New settings:",pf.cfg)
-    pf.debug("New preferences:",pf.prefcfg)
-    #print res['render/light0']
-    #print pf.cfg['render/light0']
-    #print pf.prefcfg['render/light0']
+    # We test for pg.GUI in case we want to call updateSettings before
+    # the GUI is created
+    if pf.GUI:
+        for f in todo:
+            f()
+
+    pf.debug(pf.cfg,"\nNEW SETTINGS")
+    pf.debug(pf.prefcfg,"\n\nNEW PREFERENCES")
 
 
 def askImageFile(fn=None):
@@ -100,7 +106,7 @@ def settings():
     def accept(save=False):
         dia.acceptData()
         res = dia.results
-        res['Save changes'] = save
+        res['_save_'] = save
         pf.debug(res)
         ok_plugins = utils.subDict(res,'_plugins/')
         res['gui/plugins'] = [ p for p in ok_plugins if ok_plugins[p]]
@@ -198,8 +204,10 @@ def askConfigPreferences(items,prefix=None,store=None):
         store = pf.cfg
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
-    itemlist = [ [ i,store[i] ] for i in items ]
-    res = widgets.OldInputDialog(itemlist+[('Save changes',True)],'Config Dialog',pf.GUI).getResult()
+    itemlist = [ I(i,store[i]) for i in items ] + [
+        I('_save_',True,text='Save changes')
+        ]
+    res = widgets.NewInputDialog(itemlist,'Config Dialog',pf.GUI).getResult()
     pf.debug(res)
     if res and store==pf.cfg:
         updateSettings(res)
@@ -308,7 +316,7 @@ def setLighting():
         mt = utils.subDict(res,'render/material/')
         l0 = utils.subDict(res,'render/light0/')
         res = dict([ i for i in res.items() if not (i[0].startswith('render/material/') or  i[0].startswith('render/light0/'))])
-        res['Save changes'] = save
+        res['_save_'] = save
         res['render/material'] = mt
         res['render/light0'] =l0
         updateSettings(res)
