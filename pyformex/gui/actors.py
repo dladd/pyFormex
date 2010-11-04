@@ -529,10 +529,8 @@ class GeomActor(Actor):
         if mode.endswith('wire'):
             self.drawGL(mode=mode[:-4])
             # draw the lines without lights
-            save = canvas.hasLight()
             canvas.glLight(False)
             self.drawGL(mode='wireframe',color=asarray(black))
-            canvas.glLight(save)
             return
                             
         ############# set drawing attributes #########

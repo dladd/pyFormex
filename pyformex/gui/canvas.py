@@ -677,6 +677,7 @@ class Canvas(object):
         GL.glPointSize(self.settings.pointsize)
         if self.rendermode.startswith('smooth'):
             self.glLightSpec()
+        self.glLight(self.lighting)
 
     
     def setSize (self,w,h):
@@ -700,7 +701,6 @@ class Canvas(object):
         #pf.debugt("UPDATING CURRENT OPENGL CANVAS")
         self.makeCurrent()
         self.clear()
-        self.glLight(self.lighting)
         
         # decorations are drawn in 2D mode
         self.begin_2D_drawing()
