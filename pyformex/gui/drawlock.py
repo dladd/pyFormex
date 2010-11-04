@@ -26,7 +26,10 @@
 import pyformex as GD
 
 import threading
+from time import sleep
 
+
+# WE SHOULD REIMPLEMENT THIS USING PYTHON threading.Condition?
 
 class DrawLock(object):
     """A timed lock to slow down drawing processes"""
@@ -47,6 +50,7 @@ class DrawLock(object):
             while self.locked:
                 GD.canvas.update()
                 GD.app.processEvents()
+                sleep(0.01)  # to avoid overusing the cpu
 
 
     def lock(self,time=None):
@@ -86,6 +90,7 @@ class DrawLock(object):
 
     def free(self):
         """Release the lock and prevent waits until allow() is called."""
+        #print "FREEING THE DRAW LOCK"
         self.allowed = False
         self.release()
 

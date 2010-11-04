@@ -752,11 +752,14 @@ does not seem to work, use the KILL(9) signal.
 
 
 
-def quit():
+def quitGUI():
     """Quit the GUI"""
     pf.debug("Quit GUI")
     sys.stderr = sys.__stderr__
     sys.stdout = sys.__stdout__
+    #print "QUIT"
+    pf.GUI.drawlock.free()
+    draw.wakeup()
     if pf.options.gui:
         script.force_finish()
     if pf.app:
@@ -798,8 +801,9 @@ def startGUI(args):
     #
     #
     
-    QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),pf.app,QtCore.SLOT("quit()"))
-    QtCore.QObject.connect(pf.app,QtCore.SIGNAL("aboutToQuit()"),quit)
+    #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),pf.app,QtCore.SLOT("quit()"))
+    QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),quitGUI)
+    #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("aboutToQuit()"),quitGUI)
 
     # Check if we have DRI
     viewport.setOpenGLFormat()

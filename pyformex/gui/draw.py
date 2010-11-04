@@ -1042,12 +1042,16 @@ def delay(i):
         pf.cfg['draw/wait'] = i
     
 
-        
+
+################### EXPERIMENTAL STUFF: AVOID! ###############
 _wakeup_mode=0
 sleeping = False
 timer = None
 def sleep(timeout=None):
     """Sleep until key/mouse press in the canvas or until timeout"""
+    import warnings
+    warnings.warn("The sleep function is not yet fully functional and we avoid against using it!")
+    #
     global sleeping,_wakeup_mode,timer
     if _wakeup_mode > 0 or timeout == 0:  # don't bother
         return
@@ -1065,7 +1069,10 @@ def sleep(timeout=None):
     ## (we could start another thread for this)
     while sleeping:
         pf.app.processEvents()
-        #time.sleep(0.1)
+        # And we have to sleep in between, or we would be using to much
+        # processor time idling. 0.1 is a good compromise to get some
+        # responsitivity while not pegging the cpu
+        time.sleep(0.01)
     # ignore further wakeup events
     offSignal(WAKEUP,wakeup)
 
