@@ -34,7 +34,6 @@ from PyQt4 import QtCore, QtGui
 import pyformex as pf
 import colors
 import odict
-import imageViewer
 import utils
 
 # timeout value for all widgets providing timeout feature
@@ -296,33 +295,6 @@ class SaveImageDialog(FileSelection):
             return opt
         else:
             return None
-
-
-class ImageViewerDialog(QtGui.QDialog):
-    """A dialog to select an image file.
-
-    The dialog helps selecting the correct image by displaying the
-    image in an image viewer widget.
-    """
-    def __init__(self,path=None):
-        QtGui.QDialog.__init__(self)
-        box = QtGui.QHBoxLayout()
-        self.viewer = imageViewer.ImageViewer(parent=self,path=path)
-        box.addWidget(self.viewer)
-        self.setLayout(box)
-        
-    def getFilename(self):
-        """Ask for a filename by user interaction.
-
-        Return the filename selected by the user.
-        If the user hits CANCEL or ESC, None is returned.
-        """
-        self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
-            return str(self.viewer.filename)
-        else:
-            return None
-        self.close()
         
 
 def selectFont():
@@ -2689,5 +2661,42 @@ class CoordsBox(QtGui.QWidget):
         for value,val in zip(self.values,values):
             value.setText(str(val))
 
+
+############################# ImageView ###########################
+
+class ImageView(QtGui.QLabel):
+    """A widget displaying an image.
+
+    """
+    
+    def __init__(self,image=None,parent=None):
+        """Create a new ImageView widget."""
+        QtGui.QLabel.__init__(self,parent=parent)
+        self.setBackgroundRole(QtGui.QPalette.Base)
+        self.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+        if image is not None:
+            self.showImage(image)
+            
+
+    def showImage(self,image):
+        """Show an image in the viewer.
+
+        image: either a filename or an existing QImage instance. If a filename,
+        it should be an image file that can be read by the QImage constructor.
+        Most image formats are understood by QImage. The variable
+        gui.image.image_formats_qtr provides a list.
+        """
+        if isinstance(image,QtGui.QImage):
+            filename = None
+        else:
+            filename = str(image)
+            image = QtGui.QImage(filename)
+            if image.isNull():
+                raise ValueError,"Cannot load image file %s" % filename
+        print("Size %sx%s" % (image.width(),image.height()))
+        self.setPixmap(QtGui.QPixmap.fromImage(image))
+        self.filename = filename
+        self.image = image 
+        self.zoom = 1.0
 
 # End

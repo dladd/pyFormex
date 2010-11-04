@@ -36,7 +36,6 @@ from widgets import tabInputItem as T
 from widgets import compatInputItem as C
 import toolbar
 import draw
-import imageViewer
 
 
 def updateSettings(res,save=None):
@@ -78,7 +77,7 @@ def updateSettings(res,save=None):
             if k in _activate_settings:
                 todo.add(_activate_settings[k])
 
-    # We test for pg.GUI in case we want to call updateSettings before
+    # We test for pf.GUI in case we want to call updateSettings before
     # the GUI is created
     if pf.GUI:
         for f in todo:
@@ -124,10 +123,6 @@ def settings():
         pf.debug("SCRIPTDIRS NOW " % pf.cfg['scriptdirs'])
         dia.updateData({'scriptdirs':pf.cfg['scriptdirs']})
 
-    def changeSplash():
-        setSplash()
-        dia.updateData({'gui/splash':pf.cfg['gui/splash']})
-
 
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
 
@@ -145,9 +140,16 @@ def settings():
         ]
 
     cur = pf.cfg['gui/splash']
-    if not cur:
-        cur = pf.cfg.get('icondir','.')
-    w = widgets.ImageViewerDialog(path=cur)
+#    if not cur:
+#        cur = pf.cfg.get('icondir','.')
+    viewer = widgets.ImageView(cur)
+
+    def changeSplash(fn):
+        print "CURRENT %s" % fn
+        fn = askImageFile(fn)
+        if fn:
+            viewer.showImage(fn)
+        return fn
 
     dia = widgets.NewInputDialog(
         caption='pyFormex Settings',
@@ -172,8 +174,8 @@ def settings():
                     I('gui/timeoutvalue',pf.cfg['gui/timeoutvalue']),
                     ],
                  ),
-                I('Splash image',pf.cfg['gui/splash'],itemtype='button',func=askImageFile),
-                w,
+                I('gui/splash',text='Splash image',itemtype='button',func=changeSplash),
+                viewer,
                 ],
              ),
             T('Mouse',mouse_settings),
@@ -348,18 +350,6 @@ def setLighting():
     #if res:
     #    updateSettings({tgt:res})
     #    pf.canvas.resetLights()
-
- 
-def setSplash():
-    """Open an image file and set it as the splash screen."""
-    cur = pf.cfg['gui/splash']
-    if not cur:
-        cur = pf.cfg.get('icondir','.')
-    w = widgets.ImageViewerDialog(path=cur)
-    fn = w.getFilename()
-    w.close()
-    if fn:
-        pf.prefcfg['gui/splash'] = fn
 
 
 def setScriptDirs():
