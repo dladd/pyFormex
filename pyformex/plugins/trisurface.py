@@ -174,7 +174,8 @@ def read_gambit_neutral(fn):
     The .neu file nodes are numbered from 1!
     Returns a nodes,elems tuple.
     """
-    runCommand("/home/pmortier/pyformex/external/gambit-neu '%s'" % fn)
+    scr = os.path.join(cfg['bindir'],'gambit-neu ')
+    runCommand("%s '%s'" % (scr,fn))
     nodesf = changeExt(fn,'.nodes')
     elemsf = changeExt(fn,'.elems')
     nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
