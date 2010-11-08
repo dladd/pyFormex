@@ -15,7 +15,7 @@ TARGETDIR= ${SERVER}:/home/groups/pyformex/htdocs
 
 html: 
 	r2w
-	rm index.html
+#	rm index.html
 #	ln -s pyformex.html index.html
 
 all:	pub

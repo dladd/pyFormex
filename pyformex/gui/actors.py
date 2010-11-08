@@ -24,7 +24,7 @@
 """OpenGL actors for populating the 3D scene."""
 
 import pyformex as pf
-
+import sys
 from OpenGL import GL,GLU
 
 from drawable import *
@@ -514,7 +514,7 @@ class GeomActor(Actor):
         'flatwire'). In these cases, two drawing operations are done:
         one with mode='wireframe' and color=black, and one with mode=mode[:-4].
         """
-        from gui.canvas import glLineStipple
+        from canvas import glLineStipple
         if canvas is None:
             canvas = pf.canvas
         #print "Calling with canvas %s" % canvas

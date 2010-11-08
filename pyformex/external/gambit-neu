@@ -1,0 +1,17 @@
+#!/bin/bash
+# Transform a gambit neutral file to a (nodes,elems) pair of files
+#
+[ -z "$1" ] && {
+  echo "Usage: $(basename $0) gambit-neutral-file"
+  echo "Converts a gambit neutral format file to a (nodes,elems) pair of files"
+  exit
+}
+
+base=${1%.neu}
+neu=${base}.neu
+nodes=${base}.nodes
+elems=${base}.elems
+
+rm -f ${nodes} ${elems}
+awk -v nodes=${nodes} -v elems=${elems} -f $(dirname $0)/gambit-neu.awk ${neu}
+
