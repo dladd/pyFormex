@@ -34,8 +34,8 @@ techniques = ['text']
 
 clear()
 lights(False)
-x = GD.canvas.width()//2
-y = GD.canvas.height()//2
+x = pf.canvas.width()//2
+y = pf.canvas.height()//2
 x,y = 600,300
 print x,y
 

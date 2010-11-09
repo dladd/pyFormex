@@ -53,7 +53,7 @@ pause()
 
 layout(2)
 drawText('Viewport 2',10,10)
-GD.GUI.viewports.updateAll()
+pf.GUI.viewports.updateAll()
 pause()
 
 layout(3)
@@ -82,9 +82,9 @@ for i,v in enumerate(['front','right','top','iso']):
     viewport(i)
     view(v)
     bgcolor(colors[i])
-    GD.canvas.setBgColor(GD.canvas.settings.bgcolor)
-    GD.canvas.display()
-    GD.canvas.update()
+    pf.canvas.setBgColor(pf.canvas.settings.bgcolor)
+    pf.canvas.display()
+    pf.canvas.update()
 
 exit()
 
@@ -93,19 +93,19 @@ viewport(3)
 G = F.cutWithPlane([0.,0.,0.],[-1.,0.,0.],side='+')
 clear()
 draw(G) # this draws in the 4 viewports !
-GD.GUI.viewports.updateAll()
+pf.GUI.viewports.updateAll()
 
 
 sleep(nsl)
 smooth()
-GD.GUI.viewports.updateAll()
+pf.GUI.viewports.updateAll()
 
 exit()
 from gui import canvas
 sleep(nsl)
 canvas.glLine()
 canvas.glFlat()
-GD.GUI.viewports.updateAll()
+pf.GUI.viewports.updateAll()
 
 
 

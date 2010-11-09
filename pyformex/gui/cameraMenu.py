@@ -24,77 +24,81 @@
 ##
 """Camera handling menu"""
 
-import pyformex as GD
+import pyformex as pf
 import draw
 import toolbar
 from gettext import gettext as _
+from guifunc import *
 
-
-         
-def zoomIn():
-    GD.canvas.camera.zoomArea(1./float(GD.cfg['gui/zoomfactor']))
-    GD.canvas.update()
-def zoomOut():
-    GD.canvas.camera.zoomArea(float(GD.cfg['gui/zoomfactor']))
-    GD.canvas.update()
-def panRight():
-    GD.canvas.camera.transArea(-float(GD.cfg['gui/panfactor']),0.)
-    GD.canvas.update()   
-def panLeft():
-    GD.canvas.camera.transArea(float(GD.cfg['gui/panfactor']),0.)
-    GD.canvas.update()   
-def panUp():
-    GD.canvas.camera.transArea(0.,-float(GD.cfg['gui/panfactor']))
-    GD.canvas.update()   
-def panDown():
-    GD.canvas.camera.transArea(0.,float(GD.cfg['gui/panfactor']))
-    GD.canvas.update()   
-def rotRight():
-    GD.canvas.camera.rotate(+float(GD.cfg['gui/rotfactor']),0,1,0)
-    GD.canvas.update()   
-def rotLeft():
-    GD.canvas.camera.rotate(-float(GD.cfg['gui/rotfactor']),0,1,0)
-    GD.canvas.update()   
-def rotUp():
-    GD.canvas.camera.rotate(-float(GD.cfg['gui/rotfactor']),1,0,0)
-    GD.canvas.update()   
-def rotDown():
-    GD.canvas.camera.rotate(+float(GD.cfg['gui/rotfactor']),1,0,0)
-    GD.canvas.update()   
-def twistLeft():
-    GD.canvas.camera.rotate(+float(GD.cfg['gui/rotfactor']),0,0,1)
-    GD.canvas.update()   
-def twistRight():
-    GD.canvas.camera.rotate(-float(GD.cfg['gui/rotfactor']),0,0,1)
-    GD.canvas.update()   
-def transLeft():
-    val = float(GD.cfg['gui/panfactor']) * GD.canvas.camera.getDist()
-    GD.canvas.camera.translate(-val,0,0,GD.cfg['draw/localaxes'])
-    GD.canvas.update()   
-def transRight():
-    val = float(GD.cfg['gui/panfactor']) * GD.canvas.camera.getDist()
-    GD.canvas.camera.translate(+val,0,0,GD.cfg['draw/localaxes'])
-    GD.canvas.update()   
-def transDown():
-    val = float(GD.cfg['gui/panfactor']) * GD.canvas.camera.getDist()
-    GD.canvas.camera.translate(0,-val,0,GD.cfg['draw/localaxes'])
-    GD.canvas.update()   
-def transUp():
-    val = float(GD.cfg['gui/panfactor']) * GD.canvas.camera.getDist()
-    GD.canvas.camera.translate(0,+val,0,GD.cfg['draw/localaxes'])
-    GD.canvas.update()   
-def dollyIn():
-    GD.canvas.camera.dolly(1./float(GD.cfg['gui/zoomfactor']))
-    GD.canvas.update()   
-def dollyOut():
-    GD.canvas.camera.dolly(float(GD.cfg['gui/zoomfactor']))
-    GD.canvas.update()   
-def report():
-    print(GD.canvas.camera.report())
-def lock():
-    GD.canvas.camera.lock()
-def unlock():
-    GD.canvas.camera.lock(False)
+@viewport_function
+def zoomIn(*args,**kargs):
+        pass
+@viewport_function
+def zoomOut(*args,**kargs):
+        pass
+@viewport_function
+def dollyIn(*args,**kargs):
+        pass
+@viewport_function
+def dollyOut(*args,**kargs):
+        pass
+@viewport_function
+def panLeft(*args,**kargs):
+        pass
+@viewport_function
+def panRight(*args,**kargs):
+        pass
+@viewport_function
+def panDown(*args,**kargs):
+        pass
+@viewport_function
+def panUp(*args,**kargs):
+        pass
+@viewport_function
+def transLeft(*args,**kargs):
+        pass
+@viewport_function
+def transRight(*args,**kargs):
+        pass
+@viewport_function
+def transDown(*args,**kargs):
+        pass
+@viewport_function
+def transUp(*args,**kargs):
+        pass
+@viewport_function
+def rotLeft(*args,**kargs):
+        pass
+@viewport_function
+def rotRight(*args,**kargs):
+        pass
+@viewport_function
+def rotDown(*args,**kargs):
+        pass
+@viewport_function
+def rotUp(*args,**kargs):
+        pass
+@viewport_function
+def twistRight(*args,**kargs):
+        pass
+@viewport_function
+def twistLeft(*args,**kargs):
+        pass
+@viewport_function
+def lockCamera(*args,**kargs):
+        pass
+@viewport_function
+def unlockCamera(*args,**kargs):
+        pass
+@viewport_function
+def reportCamera(*args,**kargs):
+        pass
+@viewport_function
+def zoomAll(*args,**kargs):
+        pass
+@viewport_function
+def zoomRectangle(*args,**kargs):
+        pass
 
 
 MenuData = [
@@ -102,7 +106,8 @@ MenuData = [
     (_('&GlobalAxes'),draw.setGlobalAxes),
     (_('&Projection'),toolbar.setProjection),
     (_('&Perspective'),toolbar.setPerspective),
-    (_('&Zoom All'),draw.zoomAll), 
+    (_('&Zoom Rectangle'),zoomRectangle), 
+    (_('&Zoom All'),zoomAll), 
     (_('&Zoom In'),zoomIn), 
     (_('&Zoom Out'),zoomOut), 
     (_('&Dolly In'),dollyIn), 
@@ -125,10 +130,10 @@ MenuData = [
         (_('Rotate &ClockWise'),twistRight),
         (_('Rotate &CCW'),twistLeft),
         ]),
-    (_('&Lock'),lock), 
-    (_('&Unlock'),unlock), 
+    (_('&Lock'),lockCamera), 
+    (_('&Unlock'),unlockCamera), 
     ('---',None),
-    (_('&Report'),report), 
+    (_('&Report'),reportCamera), 
     ]
 
 

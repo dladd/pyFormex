@@ -72,7 +72,7 @@ class AnalogClock(object):
         """
         hrot = - hrs*30. - min*0.5
         mrot = - min*6.
-        GD.canvas.removeActors(self.hands)
+        pf.canvas.removeActors(self.hands)
         MH = draw(self.mainhand.rot(mrot),bbox=None,color='red',linewidth=self.linewidth)
         HH = draw(self.hourhand.rot(hrot),bbox=None,color='red',linewidth=self.linewidth)
         self.hands = [MH,HH]

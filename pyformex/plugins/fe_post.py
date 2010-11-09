@@ -32,7 +32,7 @@ script with the 'postabq' command. Use it as follows::
 Then execute the created script from inside pyFormex.
 """
 
-import pyformex as GD
+import pyformex as pf
 from arraytools import *
 from script import export
 from odict import ODict
@@ -48,8 +48,8 @@ class FeResult(object):
     def __init__(self,name=_name_,datasize={'U':3,'S':6,'COORD':3}):
         self.name = name
         self.datasize = datasize.copy()
-        self.about = {'creator':GD.Version,
-                      'created':GD.StartTime,
+        self.about = {'creator':pf.Version,
+                      'created':pf.StartTime,
                       }
         self.modeldone = False
         self.labels = {}
@@ -191,11 +191,11 @@ class FeResult(object):
             self.inc = None
             self.R = None
         export({self.name:self, self._name_:self})
-        GD.message("Read %d nodes, %d elements" % (self.nnodes,self.nelems))
+        pf.message("Read %d nodes, %d elements" % (self.nnodes,self.nelems))
         if self.res is None:
-            GD.message("No results")
+            pf.message("No results")
         else:
-            GD.message("Steps: %s" % self.res.keys())
+            pf.message("Steps: %s" % self.res.keys())
 
     def do_nothing(*arg,**kargs):
         """A do nothing function to stand in for as yet undefined functions."""

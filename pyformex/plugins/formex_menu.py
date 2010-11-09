@@ -28,7 +28,7 @@ This is a pyFormex plugin. It is not intended to be executed as a script,
 but to be loaded as a plugin.
 """
 
-import pyformex as GD
+import pyformex as pf
 from formex import *
 import utils
 from odict import ODict
@@ -58,21 +58,21 @@ def readSelection(select=True,draw=True,multi=True):
     If select and draw are True (default), the selection is drawn.
     """
     types = utils.fileDescription(['pgf','all'])
-    fn = askFilename(GD.cfg['workdir'],types,multi=multi)
+    fn = askFilename(pf.cfg['workdir'],types,multi=multi)
     if fn:
         if not multi:
             fn = [ fn ]
         chdir(fn[0])
         res = ODict()
-        GD.GUI.setBusy()
+        pf.GUI.setBusy()
         for f in fn:
             res.update(readGeomFile(f))
-        GD.GUI.setBusy(False)
+        pf.GUI.setBusy(False)
         export(res)
         if select:
             oknames = [ k for k in res if isinstance(res[k],Formex) ]
             selection.set(oknames)
-            GD.message("Set Formex selection to %s" % oknames)
+            pf.message("Set Formex selection to %s" % oknames)
             if draw:
                 selection.draw()
     return fn
@@ -84,21 +84,21 @@ def writeSelection():
     if F:
         types = utils.fileDescription(['pgf','all'])
         name = selection.names[0]
-        fn = askNewFilename(os.path.join(GD.cfg['workdir'],"%s.pgf" % name),
+        fn = askNewFilename(os.path.join(pf.cfg['workdir'],"%s.pgf" % name),
                             filter=types)
         if fn:
             if not (fn.endswith('.pgf') or fn.endswith('.formex')):
                 fn += '.pgf'
-            GD.message("Creating pyFormex Geometry File '%s'" % fn)
+            pf.message("Creating pyFormex Geometry File '%s'" % fn)
             chdir(fn)
             selection.writeToFile(fn)
-            GD.message("Contents: %s" % selection.names)
+            pf.message("Contents: %s" % selection.names)
     
 
 def printSize():
     for s in selection.names:
         S = named(s)
-        GD.message("Formex %s has shape %s" % (s,S.shape()))
+        pf.message("Formex %s has shape %s" % (s,S.shape()))
 
 
 ################### Change attributes of Formex #######################
@@ -123,17 +123,17 @@ def showBbox():
     FL = selection.check()
     if FL:
         bb = bbox(FL)
-        GD.message("Bbox of selection: %s" % bb)
+        pf.message("Bbox of selection: %s" % bb)
         nx = array([4,4,4])
         _bbox = actors.CoordPlaneActor(nx=nx,ox=bb[0],dx=(bb[1]-bb[0])/nx)
-        GD.canvas.addAnnotation(_bbox)
-        GD.canvas.update()
+        pf.canvas.addAnnotation(_bbox)
+        pf.canvas.update()
 
 def removeBbox():
     """Remove the bbox of the current selection."""
     global _bbox
     if _bbox:
-        GD.canvas.removeAnnotation(_bbox)
+        pf.canvas.removeAnnotation(_bbox)
         _bbox = None
 
 
@@ -157,11 +157,11 @@ def showPrincipal():
         return
     # compute the axes
     C,I = inertia.inertia(F.coords)
-    GD.message("Center of gravity: %s" % C)
-    GD.message("Inertia tensor: %s" % I)
+    pf.message("Center of gravity: %s" % C)
+    pf.message("Inertia tensor: %s" % I)
     Iprin,Iaxes = inertia.principal(I,sort=True,right_handed=True)
-    GD.message("Principal Values: %s" % Iprin)
-    GD.message("Principal Directions: %s" % Iaxes)
+    pf.message("Principal Values: %s" % Iprin)
+    pf.message("Principal Directions: %s" % Iaxes)
     data = (C,I,Iprin,Iaxes)
     # now display the axes
     siz = F.dsize()
@@ -274,7 +274,7 @@ def rotateAround():
             axis = int(res['axis'])
             angle = float(res['angle'])
             around = eval(res['around'])
-            GD.debug('around = %s'%around)
+            pf.debug('around = %s'%around)
             selection.changeValues([ F.rotate(angle,axis,around) for F in FL ])
             selection.drawChanges()
 
@@ -367,12 +367,12 @@ def partitionSelection():
         return
 
     name = selection[0]
-    GD.message("Partitioning Formex '%s'" % name)
+    pf.message("Partitioning Formex '%s'" % name)
     cuts = partition.partition(F)
-    GD.message("Subsequent cutting planes: %s" % cuts)
+    pf.message("Subsequent cutting planes: %s" % cuts)
     if ack('Save cutting plane data?'):
         types = [ 'Text Files (*.txt)', 'All Files (*)' ]
-        fn = askNewFilename(GD.cfg['workdir'],types)
+        fn = askNewFilename(pf.cfg['workdir'],types)
         if fn:
             chdir(fn)
             fil = file(fn,'w')
@@ -397,17 +397,17 @@ def sectionizeSelection():
         return
 
     name = selection[0]
-    GD.message("Sectionizing Formex '%s'" % name)
+    pf.message("Sectionizing Formex '%s'" % name)
     ns,th,segments = sectionize.createSegments(F)
     if not ns:
         return
     
     sections,ctr,diam = sectionize.sectionize(F,segments,th)
-    #GD.message("Centers: %s" % ctr)
-    #GD.message("Diameters: %s" % diam)
+    #pf.message("Centers: %s" % ctr)
+    #pf.message("Diameters: %s" % diam)
     if ack('Save section data?'):
         types = [ 'Text Files (*.txt)', 'All Files (*)' ]
-        fn = askNewFilename(GD.cfg['workdir'],types)
+        fn = askNewFilename(pf.cfg['workdir'],types)
         if fn:
             chdir(fn)
             fil = file(fn,'w')
@@ -489,18 +489,18 @@ def create_menu():
         ("&Reload menu",reload_menu),
         ("&Close",close_menu),
         ]
-    return menu.Menu('Formex',items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu('Formex',items=MenuData,parent=pf.GUI.menu,before='help')
 
     
 def show_menu():
     """Show the Tools menu."""
-    if not GD.GUI.menu.item('Formex'):
+    if not pf.GUI.menu.item('Formex'):
         create_menu()
 
 
 def close_menu():
     """Close the Tools menu."""
-    m = GD.GUI.menu.item('Formex')
+    m = pf.GUI.menu.item('Formex')
     if m :
         m.remove()
       

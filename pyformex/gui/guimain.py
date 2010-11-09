@@ -49,6 +49,11 @@ import script
 import draw
 import widgets
 import drawlock
+import camera
+
+import warnings
+
+import guifunc
 
 ############### General Qt utility functions #######
 
@@ -118,11 +123,6 @@ class Board(QtGui.QTextEdit):
 ################# GUI ###############
 #####################################
 
-def set_view(view):
-    """Change the view angles of the current camera, keeping the bbox."""
-    pf.canvas.setCamera(angles=view)
-    pf.canvas.update()
-    
 
 class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
@@ -222,7 +222,7 @@ class GUI(QtGui.QMainWindow):
             
         #menutext = '&' + name.capitalize()
         self.modebtns = menu.ActionList(
-            modes,draw.renderMode,menu=mmenu,toolbar=self.modebar)
+            modes,guifunc.renderMode,menu=mmenu,toolbar=self.modebar)
         
         # Add the toggle type buttons
         if self.modebar:
@@ -256,7 +256,7 @@ class GUI(QtGui.QMainWindow):
         viewicons = [ v[1] for v in defviews ]
 
         self.viewbtns = menu.ActionList(
-            views,set_view,
+            views,self.setView,
             menu=self.viewsMenu,
             toolbar=self.viewbar,
             icons = viewicons
@@ -281,6 +281,30 @@ class GUI(QtGui.QMainWindow):
         # Drawing lock
         self.drawwait = pf.cfg['draw/wait']
         self.drawlock = drawlock.DrawLock()
+
+
+    def createView(self,name,angles):
+        """Create a new view and add it to the list of predefined views.
+
+        This creates a named view with specified angles or, if the name
+        already exists, changes its angles to the new values.
+
+        It adds the view to the views Menu and Toolbar, if these exist and
+        do not have the name yet.
+        """
+        if name not in self.viewbtns.names():
+            iconpath = os.path.join(pf.cfg['icondir'],'userview')+pf.cfg['gui/icontype']
+            self.viewbtns.add(name,iconpath)
+        camera.view_angles[name] = angles
+
+
+    def setView(self,view):
+        """Change the view of the current GUI viewport, keeping the bbox.
+
+        view is the name of one of the defined views.
+        """
+        self.viewports.current.setCamera(angles=view)
+        self.viewports.current.update()
  
 
     def updateToolBars(self):
@@ -288,7 +312,7 @@ class GUI(QtGui.QMainWindow):
             self.updateToolBar(t)
 
     def updateToolBar(self,shortname,fullname=None):
-        """Add a toolbar or change its postion.
+        """Add a toolbar or change its position.
 
         This function adds a toolbar to the GUI main window at the position
         specified in the configuration. If the toolbar already exists, it is
@@ -453,27 +477,12 @@ class GUI(QtGui.QMainWindow):
         self.curdir.setToolTip(dirname)
 
 
-    def setViewAngles(self,name,angles):
-        """Create a new view and add it to the list of predefined views.
-
-        This creates a named view with specified angles for the canvas.
-        If the name already exists in the canvas views, it is overwritten
-        by the new angles.
-        It adds the view to the views Menu and Toolbar, if these exist and
-        do not have the name yet.
-        """
-        if name not in self.viewbtns.names():
-            iconpath = os.path.join(pf.cfg['icondir'],'userview')+pf.cfg['gui/icontype']
-            self.viewbtns.add(name,iconpath)
-        pf.canvas.view_angles[name] = angles
-
-
     def setBusy(self,busy=True,force=False):
         if busy:
             pf.app.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         else:
             pf.app.restoreOverrideCursor()
-        pf.app.processEvents()
+        self.processEvents()
 
 
     def resetCursor(self):
@@ -483,7 +492,7 @@ class GUI(QtGui.QMainWindow):
         """
         while pf.app.overrideCursor():
             pf.app.restoreOverrideCursor()
-        pf.app.processEvents()
+        self.processEvents()
     
 
 
@@ -611,6 +620,11 @@ class GUI(QtGui.QMainWindow):
 
 
     def setAppearence(self):
+        """Set all the GUI appearence elements.
+
+        Sets the GUI appearence from the current configuration values
+        'gui/style', 'gui/font', 'gui/fontfamily', 'gui/fontsize'.
+        """
         style = pf.cfg['gui/style']
         font = pf.cfg['gui/font']
         family = pf.cfg['gui/fontfamily']
@@ -623,6 +637,19 @@ class GUI(QtGui.QMainWindow):
             self.setFontFamily(family)
         if size:
             self.setFontSize(size)
+
+
+    def processEvents(self):
+        """Process interactive GUI events."""
+        #saved = pf.canvas
+        #print "SAVED script canvas %s" % pf.canvas
+        #pf.canvas = self.viewports.current
+        #print "SET script canvas %s" % pf.canvas
+        pf.app.processEvents()
+        #pf.canvas = saved
+        #print "RESTORED script canvas %s" % pf.canvas
+        
+
         
 
 
@@ -895,25 +922,45 @@ You should seriously consider to bail out now!!!
 
     # set the appearance
     pf.GUI.setAppearence()
-    ## pf.GUI.setStyle(pf.cfg.get('gui/style','Plastique'))
-    ## font = pf.cfg.get('gui/font',None)
-    ## if font:
-    ##     pf.GUI.setFont(font)
-    ## else:
-    ##     fontfamily = pf.cfg.get('gui/fontfamily',None)
-    ##     if fontfamily:
-    ##         pf.GUI.setFontFamily(fontfamily)
-    ##     fontsize =  pf.cfg.get('gui/fontsize',None)
-    ##     if fontsize:
-    ##         pf.GUI.setFontSize(fontsize)
-    # THIS OCCASIONALLy CAUSE fpbug ON bumper
-    pf.GUI.viewports.changeLayout(1)
-    pf.GUI.viewports.setCurrent(0)
+
+    # setup the message board
     pf.board = pf.GUI.board
     pf.board.write("""%s  (C) Benedict Verhegghe
 
 pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under the conditions of the GNU General Public License, version 3 or later. See Help->License or the file COPYING for details.
 """ % pf.Version)
+    
+    # Set interaction functions
+    def show_warning(message,category,filename,lineno,file=None,line=None):
+        """Replace the default warnings.showwarning
+
+        We display the warnings using our interactive warning widget.
+        This feature can be turned off by setting
+        cfg['nice_warnings'] = False
+        """
+        s = """..
+
+pyFormex Warning
+================
+%s
+
+`Called from:` %s `line:` %s
+""" % (message,filename,lineno)
+        if line:
+            s += "%s\n" % line
+        return draw.warning(s)
+
+    warnings.showwarning = show_warning
+    pf.message = draw.message
+    pf.warning = draw.warning
+
+    # setup the canvas
+    pf.GUI.viewports.changeLayout(1)
+    pf.GUI.viewports.setCurrent(0)
+    pf.canvas = pf.GUI.viewports.current
+    draw.reset()
+
+    # setup the status bar
     pf.GUI.addInputBox()
     pf.GUI.toggleInputBox(False)
     pf.GUI.addCoordsTracker()
@@ -948,11 +995,6 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     plugins.loadConfiguredPlugins()
     #for p in pf.cfg['gui/plugins']:
     #    plugins.load(p)
-    
-    # Set interaction functions
-    pf.message = draw.message
-    pf.warning = draw.warning
-    draw.reset()
 
     pf.GUI.setBusy(False)
     pf.GUI.addStatusBarButtons()
@@ -974,7 +1016,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.GUI.show()
     pf.GUI.update()
     pf.app_started = True
-    pf.app.processEvents()
+    pf.GUI.processEvents()
     return 0
 
 
@@ -1013,9 +1055,6 @@ def runGUI():
 
 def classify_examples():
     m = pf.GUI.menu.item('Examples')
-    #print(m)
-    #print(str(m.title()))
-    
         
 
 

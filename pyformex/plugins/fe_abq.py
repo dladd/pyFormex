@@ -50,7 +50,7 @@ the data involved with the finite element model.
 from plugins.properties import *
 from plugins.fe import *
 from mydict import Dict,CDict
-import pyformex as GD
+import pyformex as pf
 from datetime import datetime
 import os,sys
 
@@ -145,7 +145,7 @@ def fmtHeading(text=''):
 **
 *HEADING
 %s
-""" % (GD.Version,GD.Url,text)
+""" % (pf.Version,pf.Url,text)
     return out
 
 def fmtPart(name='Part-1'):
@@ -796,7 +796,7 @@ def writeSection(fil,prop):
     ## UNSUPPORTED elements
     ##########################
     else:
-        GD.warning('Sorry, elementtype %s is not yet supported' % eltype)
+        pf.warning('Sorry, elementtype %s is not yet supported' % eltype)
 
 
 def writeBoundaries(fil,prop,op='MOD'):
@@ -1223,32 +1223,32 @@ class Step(Dict):
 
         prop = propDB.getProp('n',tag=self.tags,attr=['bound'])
         if prop:
-            GD.message("  Writing step boundary conditions")
+            pf.message("  Writing step boundary conditions")
             writeBoundaries(fil,prop)
      
         prop = propDB.getProp('n',tag=self.tags,attr=['displ'])
         if prop:
-            GD.message("  Writing step displacements")
+            pf.message("  Writing step displacements")
             writeDisplacements(fil,prop)
         
         prop = propDB.getProp('n',tag=self.tags,attr=['cload'])
         if prop:
-            GD.message("  Writing step cloads")
+            pf.message("  Writing step cloads")
             writeCloads(fil,prop)
 
         prop = propDB.getProp('e',tag=self.tags,attr=['dload'])
         if prop:
-            GD.message("  Writing step dloads")
+            pf.message("  Writing step dloads")
             writeDloads(fil,prop)
 
         prop = propDB.getProp('',tag=self.tags,attr=['dsload'])
         if prop:
-            GD.message("  Writing step dsloads")
+            pf.message("  Writing step dsloads")
             writeDsloads(fil,prop)
 
         prop = propDB.getProp('',tag=self.tags)
         if prop:
-            GD.message("  Writing step model props")
+            pf.message("  Writing step model props")
             writeModelProps(fil,prop)
 
         if self.out:
@@ -1299,9 +1299,9 @@ class Output(Dict):
             for kind=='NODE' and 'Eall' for kind='ELEMENT'
         """
         if 'history' in options:
-            GD.warning("The `history` argument in an output request is deprecated.\nPlease use `type='history'` instead.")
+            pf.warning("The `history` argument in an output request is deprecated.\nPlease use `type='history'` instead.")
         if 'numberinterval' in options:
-            GD.warning("The `numberinterval` argument in an output request is deprecated.\nPlease use the `extra` argument instead.")
+            pf.warning("The `numberinterval` argument in an output request is deprecated.\nPlease use the `extra` argument instead.")
 
         if kind:
             kind = kind[0].upper()
@@ -1408,21 +1408,21 @@ class AbqData(object):
         else:
             jobname,filename = abqInputNames(jobname)
             fil = file(filename,'w')
-            GD.message("Writing to file %s" % (filename))
+            pf.message("Writing to file %s" % (filename))
         
         fil.write(fmtHeading("""Model: %s     Date: %s      Created by pyFormex
 Script: %s 
 %s
-""" % (jobname, datetime.now(), GD.scriptName, header)))
+""" % (jobname, datetime.now(), pf.scriptName, header)))
 
         if create_part:
             fil.write("*PART, name=Part-0\n")
         
         nnod = self.model.nnodes()
-        GD.message("Writing %s nodes" % nnod)
+        pf.message("Writing %s nodes" % nnod)
         writeNodes(fil,self.model.coords)
 
-        GD.message("Writing node sets")
+        pf.message("Writing node sets")
         for p in self.prop.getProp('n',attr=['set']):
             if p.set is not None:
                 # set is directly specified
@@ -1440,11 +1440,11 @@ Script: %s
             setname = nsetName(p)
             writeSet(fil,'NSET',setname,set)
 
-        GD.message("Writing coordinate transforms")
+        pf.message("Writing coordinate transforms")
         for p in self.prop.getProp('n',attr=['csys']):
             fil.write(fmtTransform(p.name,p.csys))
 
-        GD.message("Writing element sets")
+        pf.message("Writing element sets")
         telems = self.model.celems[-1]
         nelems = 0
         for p in self.prop.getProp('e'):
@@ -1472,7 +1472,7 @@ Script: %s
                     subsetname = Eset(p.nr,'grp',i,)
                     nels = len(els)
                     if nels > 0:
-                        GD.message("Writing %s elements from group %s" % (nels,i))
+                        pf.message("Writing %s elements from group %s" % (nels,i))
                         writeElems(fil,els,p.eltype,name=subsetname,eid=elnrs)
                         nelems += nels
                         if group_by_eset:
@@ -1482,16 +1482,16 @@ Script: %s
             else:
                 writeSet(fil,'ELSET',p.name,p.set)
                     
-        GD.message("Total number of elements: %s" % telems)
+        pf.message("Total number of elements: %s" % telems)
         if nelems != telems:
-            GD.message("!! Number of elements written: %s !!" % nelems)
+            pf.message("!! Number of elements written: %s !!" % nelems)
 
         ## # Now process the sets without eltype
         ## for p in self.prop.getProp('e',noattr=['eltype']):
         ##     setname = esetName(p)
         ##     writeSet(fil,'ELSET',setname,p.set)
 
-        GD.message("Writing element sections")
+        pf.message("Writing element sections")
         for p in self.prop.getProp('e',attr=['section','eltype']):
             writeSection(fil,p)
 
@@ -1502,44 +1502,44 @@ Script: %s
             fil.write("*END INSTANCE\n")
             fil.write("*END ASSEMBLY\n")
 
-        GD.message("Writing global model properties")
+        pf.message("Writing global model properties")
             
         prop = self.prop.getProp('',attr=['amplitude'])
         if prop:
-            GD.message("Writing amplitudes")
+            pf.message("Writing amplitudes")
             writeAmplitude(fil,prop)
 
         prop = self.prop.getProp('',attr=['orientation'])
         if prop:
-            GD.message("Writing orientations")
+            pf.message("Writing orientations")
             fil.write(fmtOrientation(prop))
 
         prop = self.prop.getProp('',attr=['surftype'])
         if prop:
-            GD.message("Writing surfaces")
+            pf.message("Writing surfaces")
             fil.write(fmtSurface(prop))
             prop = self.prop.getProp('',attr=['interaction'])
         if prop:       
-            GD.message("Writing contact pairs")
+            pf.message("Writing contact pairs")
             fil.write(fmtContactPair(prop))
 
         prop = self.prop.getProp('',attr=['generalinteraction'])
         if prop:  
-                GD.message("Writing general contact")
+                pf.message("Writing general contact")
                 fil.write(fmtGeneralContact(prop))
 
         prop = self.prop.getProp('n',tag=self.bound,attr=['bound'])
         if prop:
-            GD.message("Writing initial boundary conditions")
+            pf.message("Writing initial boundary conditions")
             writeBoundaries(fil,prop)
     
-        GD.message("Writing steps")
+        pf.message("Writing steps")
         for step in self.steps:
             step.write(fil,self.prop,self.out,self.res,resfreq=Result.nintervals,timemarks=Result.timemarks)
 
         if filename is not None:
             fil.close()
-        GD.message("Wrote Abaqus input file %s" % filename)
+        pf.message("Wrote Abaqus input file %s" % filename)
 
 
     
@@ -1566,7 +1566,7 @@ def exportMesh(filename,mesh,eltype=None,header=''):
     writeNodes(fil,mesh.coords)
     writeElems(fil,mesh.elems,eltype,nofs=1)
     fil.close()
-    GD.message("Abaqus file %s written." % filename)
+    pf.message("Abaqus file %s written." % filename)
 
     
 ##################################################
@@ -1598,7 +1598,7 @@ if __name__ == "script" or __name__ == "draw":
     # Create Finite Element model
     nodes,elems = F.feModel()
 
-    if GD.GUI:
+    if pf.GUI:
         draw(F)
         drawNumbers(F)
         drawNumbers(Formex(nodes),color=red)

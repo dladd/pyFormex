@@ -190,9 +190,9 @@ dialog = widgets.InputDialog(
     actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
     default='Show')
 
-if GD.PF.has_key('_Curves_data_'):
-    #print GD.PF['_Curves_data_']
-    dialog.updateData(GD.PF['_Curves_data_'])
+if pf.PF.has_key('_Curves_data_'):
+    #print pf.PF['_Curves_data_']
+    dialog.updateData(pf.PF['_Curves_data_'])
 
 dialog.timeout = timeOut
 dialog.show()

@@ -27,7 +27,7 @@
 Surface operations plugin menu for pyFormex.
 """
 
-import pyformex as GD
+import pyformex as pf
 from gui import actors,colors,decors,widgets,menu
 from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *
@@ -71,7 +71,7 @@ def draw_avg_normals(n):
     C = S.coords
     N = S.avgVertexNormals()
     try:
-        siz = float(GD.cfg['mark/avgnormalsize'])
+        siz = float(pf.cfg['mark/avgnormalsize'])
     except:
         siz = 0.05 * C.dsize()
     D = C + siz * N
@@ -100,10 +100,10 @@ selection.annotations.extend([[draw_edge_numbers,False],
 ##################### select, read and write ##########################
 
 def read_Surface(fn,exportName=True):
-    GD.message("Reading file %s" % fn)
+    pf.message("Reading file %s" % fn)
     t = timer.Timer()
     S = TriSurface.read(fn)
-    GD.message("Read surface with %d vertices, %d edges, %d triangles in %s seconds" % (S.ncoords(),S.nedges(),S.nelems(),t.seconds()))
+    pf.message("Read surface with %d vertices, %d edges, %d triangles in %s seconds" % (S.ncoords(),S.nedges(),S.nelems(),t.seconds()))
     if exportName:
         name = utils.projectName(fn)
         export({name:S})
@@ -118,20 +118,20 @@ def readSelection(select=True,draw=True,multi=True):
     If select and draw are True (default), the selection is drawn.
     """
     types = [ 'Surface Files (*.gts *.stl *.off *.neu *.smesh)', 'All Files (*)' ]
-    fn = askFilename(GD.cfg['workdir'],types,multi=multi)
+    fn = askFilename(pf.cfg['workdir'],types,multi=multi)
     if fn:
         if not multi:
             fn = [ fn ]
         chdir(fn[0])
         names = map(utils.projectName,fn)
-        GD.GUI.setBusy()
+        pf.GUI.setBusy()
         surfaces = [ read_Surface(f,False) for f in fn ]
         for i,S in enumerate(surfaces):
             S.setProp(i)
-        GD.GUI.setBusy(False)
+        pf.GUI.setBusy(False)
         export(dict(zip(names,surfaces)))
         if select:
-            GD.message("Set selection to %s" % str(names))
+            pf.message("Set selection to %s" % str(names))
             selection.set(names)
             if draw:
                 if max([named(s).nfaces() for s in selection]) < 100000 or ack("""
@@ -146,34 +146,34 @@ Shall I proceed with the drawing now?
 def printSize():
     for s in selection.names:
         S = named(s)
-        GD.message("Surface %s has %d vertices, %s edges and %d faces" %
+        pf.message("Surface %s has %d vertices, %s edges and %d faces" %
                    (s,S.ncoords(),S.nedges(),S.nelems()))
 
 def printType():
     for s in selection.names:
         S = named(s)
         if S.isClosedManifold():
-            GD.message("Surface %s is a closed manifold" % s)
+            pf.message("Surface %s is a closed manifold" % s)
         elif S.isManifold():
-            GD.message("Surface %s is an open manifold" % s)
+            pf.message("Surface %s is an open manifold" % s)
         else:
-            GD.message("Surface %s is not a manifold" % s)
+            pf.message("Surface %s is not a manifold" % s)
 
 def printArea():
     for s in selection.names:
         S = named(s)
-        GD.message("Surface %s has area %s" % (s,S.area()))
+        pf.message("Surface %s has area %s" % (s,S.area()))
 
 def printVolume():
     for s in selection.names:
         S = named(s)
-        GD.message("Surface %s has volume %s" % (s,S.volume()))
+        pf.message("Surface %s has volume %s" % (s,S.volume()))
 
 
 def printStats():
     for s in selection.names:
         S = named(s)
-        GD.message("Statistics for surface %s" % s)
+        pf.message("Statistics for surface %s" % s)
         print(S.stats())
 
 def toFormex(suffix=''):
@@ -304,14 +304,14 @@ def toggle_auto_draw():
 
 ## def convert_stl_to_off():
 ##     """Converts an stl to off format without reading it into pyFormex."""
-##     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)")
+##     fn = askFilename(pf.cfg['workdir'],"STL files (*.stl)")
 ##     if fn:     
 ##         return surface.stl_to_off(fn,sanitize=False)
 
 
 ## def sanitize_stl_to_off():
 ##     """Sanitizes an stl to off format without reading it into pyFormex."""
-##     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)")
+##     fn = askFilename(pf.cfg['workdir'],"STL files (*.stl)")
 ##     if fn:     
 ##         return surface.stl_to_off(fn,sanitize=True)
 
@@ -324,12 +324,12 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
         if type(types) == str:
             types = [ types ]
         types = map(utils.fileDescription,types)
-        fn = askNewFilename(GD.cfg['workdir'],types)
+        fn = askNewFilename(pf.cfg['workdir'],types)
         if fn:
-            GD.message("Exporting surface model to %s" % fn)
-            GD.GUI.setBusy()
+            pf.message("Exporting surface model to %s" % fn)
+            pf.GUI.setBusy()
             F.write(fn)   
-            GD.GUI.setBusy(False)
+            pf.GUI.setBusy(False)
 
 #
 # Operations with surface type, border, ...
@@ -382,11 +382,11 @@ def fillHoles():
             print(border_elems)
             
             # draw borders in new viewport
-            R = GD.canvas.camera.getRot()
-            P = GD.canvas.camera.perspective
+            R = pf.canvas.camera.getRot()
+            P = pf.canvas.camera.perspective
             layout(2)
             viewport(1)
-            GD.canvas.camera.rot = R
+            pf.canvas.camera.rot = R
             toolbar.setPerspective(P)
             for i,elems in enumerate(border_elems):
                 draw(Formex(S.coords[elems],i))
@@ -579,7 +579,7 @@ def showSurfaceValue(S,txt,val,onEdges):
     lights(False)
     CL = ColorLegend(CS,100)
     CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
-    GD.canvas.addDecoration(CLA)
+    pf.canvas.addDecoration(CLA)
     drawtext(txt,10,230,'hv18')
 
 
@@ -592,7 +592,7 @@ def colorByFront():
                          I('start at',0),
                          I('first prop',0),
                          ])
-        GD.app.processEvents()
+        pf.app.processEvents()
         if res:
             selection.remember()
             t = timer.Timer()
@@ -628,7 +628,7 @@ def partitionByAngle():
             I('firstprop',1),
             I('startat',0)
             ])
-        GD.app.processEvents()
+        pf.app.processEvents()
         if res:
             selection.remember()
             t = timer.Timer()
@@ -779,7 +779,7 @@ def clip_surface():
         nodes,elems = PF['old_surface'] = PF['surface']
         F = Formex(nodes[elems])
         bb = F.bbox()
-        GD.message("Original bbox: %s" % bb) 
+        pf.message("Original bbox: %s" % bb) 
         xmi = bb[0][0]
         xma = bb[1][0]
         dx = xma-xmi
@@ -971,11 +971,11 @@ def slicer():
     if res:
         axis = res['Direction']
         nslices = res['# slices']
-        GD.GUI.setBusy(True)
+        pf.GUI.setBusy(True)
         t = timer.Timer()
         slices = S.slice(dir=axis,nplanes=nslices)
         print "Sliced in %s seconds" % t.seconds()
-        GD.GUI.setBusy(False)
+        pf.GUI.setBusy(False)
         print [ s.nelems() for s in slices ]
         draw([ s for s in slices if s.nelems() > 0],color='red',bbox='last',view=None)
         export({'%s/slices' % selection[0]:slices}) 
@@ -996,9 +996,9 @@ def spliner():
         axis = res['Direction']
         nslices = res['# slices']
         remove_cruft = res['remove_invalid']
-        GD.GUI.setBusy(True)
+        pf.GUI.setBusy(True)
         slices = S.slice(dir=axis,nplanes=nslices)
-        GD.GUI.setBusy(False)
+        pf.GUI.setBusy(False)
         print [ s.nelems() for s in slices ]
         split = [ s.splitProp().values() for s in slices if s.nelems() > 0 ]
         split = olist.flatten(split)
@@ -1076,7 +1076,7 @@ def flytru_stl():
 def create_volume():
     """Generate a volume tetraeder mesh inside an stl surface."""
     types = [ 'STL/OFF Files (*.stl *.off)', 'All Files (*)' ]
-    fn = askFilename(GD.cfg['workdir'],types)
+    fn = askFilename(pf.cfg['workdir'],types)
     if fn:
         tetgen.runTetgen(fn)        
     
@@ -1085,7 +1085,7 @@ def export_surface():
     S = selection.check(single=True)
     if S:
         types = [ "Abaqus INP files (*.inp)" ]
-        fn = askNewFilename(GD.cfg['workdir'],types)
+        fn = askNewFilename(pf.cfg['workdir'],types)
         if fn:
             print("Exporting surface model to %s" % fn)
             updateGUI()
@@ -1096,7 +1096,7 @@ def export_volume():
     if PF['volume'] is None:
         return
     types = [ "Abaqus INP files (*.inp)" ]
-    fn = askNewFilename(GD.cfg['workdir'],types)
+    fn = askNewFilename(pf.cfg['workdir'],types)
     if fn:
         print("Exporting volume model to %s" % fn)
         updateGUI()
@@ -1140,9 +1140,9 @@ def trim_border(elems,nodes,nb,visual=False):
 
 def trim_surface():
     check_surface()
-    data = GD.cfg.get('stl/border',[('Number of trim rounds',1),('Minimum number of border edges',1)])
-    GD.cfg['stl/border'] = askItems(data)
-    GD.GUI.update()
+    data = pf.cfg.get('stl/border',[('Number of trim rounds',1),('Minimum number of border edges',1)])
+    pf.cfg['stl/border'] = askItems(data)
+    pf.GUI.update()
     n = int(data['Number of trim rounds'])
     nb = int(data['Minimum number of border edges'])
     print("Initial number of elements: %s" % elems.shape[0])
@@ -1158,7 +1158,7 @@ def read_tetgen(surface=True, volume=True):
         ftype += ' *.smesh'
     if volume:
         ftype += ' *.ele'
-    fn = askFilename(GD.cfg['workdir'],"Tetgen files (%s)" % ftype)
+    fn = askFilename(pf.cfg['workdir'],"Tetgen files (%s)" % ftype)
     nodes = elems =surf = None
     if fn:
         chdir(fn)
@@ -1203,7 +1203,7 @@ def show_volume():
         return
     nodes,elems = PF['volume']
     F = Formex(nodes[elems],eltype='tet4')
-    GD.message("BBOX = %s" % F.bbox())
+    pf.message("BBOX = %s" % F.bbox())
     clear()
     draw(F,color='random')
     PF['vol_model'] = F
@@ -1268,13 +1268,13 @@ def createCone():
 def check():
     S = selection.check(single=True)
     if S:
-        GD.message(S.check(verbose=True))
+        pf.message(S.check(verbose=True))
 
 
 def split():
     S = selection.check(single=True)
     if S:
-        GD.message(S.split(base=selection[0],verbose=True))
+        pf.message(S.split(base=selection[0],verbose=True))
 
 
 def coarsen():
@@ -1361,8 +1361,8 @@ def boolean():
                     I('verbose',False),
                     ],'Boolean Operation')
     if res:
-        SA = GD.PF[res['surface 1']]
-        SB = GD.PF[res['surface 2']]
+        SA = pf.PF[res['surface 1']]
+        SB = pf.PF[res['surface 2']]
         SC = SA.boolean(SB,op=res['operation'].strip()[0],
                         inter=res['output intersection curve'],
                         check=res['check self intersection'],
@@ -1474,18 +1474,18 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    return menu.Menu('Surface',items=MenuData,parent=GD.GUI.menu,before='Help')
+    return menu.Menu('Surface',items=MenuData,parent=pf.GUI.menu,before='Help')
 
 
 def show_menu():
     """Show the menu."""
-    if not GD.GUI.menu.item(_menu):
+    if not pf.GUI.menu.item(_menu):
         create_menu()
 
 
 def close_menu():
     """Close the menu."""
-    GD.GUI.menu.removeItem(_menu)
+    pf.GUI.menu.removeItem(_menu)
 
 
 def reload_menu():

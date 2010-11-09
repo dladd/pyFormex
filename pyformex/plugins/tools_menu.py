@@ -27,7 +27,7 @@
 Graphic Tools plugin menu for pyFormex.
 """
 
-import pyformex as GD
+import pyformex as pf
 from gui import menu
 
 import utils
@@ -71,8 +71,8 @@ def command():
 
 ##################### database tools ##########################
 
-database = GD.GUI.database
-drawable = GD.GUI.drawable
+database = pf.GUI.database
+drawable = pf.GUI.drawable
 
 
 def printall():
@@ -129,7 +129,7 @@ def edit():
             res = askItems([(name,repr(F),'text')])
             if res:
                 print(res)
-                GD.PF.update(res)
+                pf.PF.update(res)
 
 
 def rename_():
@@ -149,7 +149,7 @@ def rename_():
 def deleteAll():
     printall()
     if ack("Are you sure you want to unrecoverably delete all global variables?"):
-        GD.PF = {}
+        pf.PF = {}
 
 
 def writeGeometry():
@@ -157,7 +157,7 @@ def writeGeometry():
     drawable.ask()
     if drawable.check():
         filter = utils.fileDescription(['pgf','all'])
-        cur = GD.cfg['workdir']
+        cur = pf.cfg['workdir']
         fn = askNewFilename(cur=cur,filter=filter)
         if fn:
             if not fn.endswith('.pgf'):
@@ -169,7 +169,7 @@ def writeGeometry():
 def readGeometry():
     """Read geometry from file."""
     filter = utils.fileDescription(['pgf','all'])
-    cur = GD.cfg['workdir']
+    cur = pf.cfg['workdir']
     fn = askFilename(cur=cur,filter=filter)
     if fn:
         message("Reading geometry file %s" % fn)
@@ -182,7 +182,7 @@ def readGeometry():
 def convertGeometry():
     """Convert geometry file to latest format."""
     filter = utils.fileDescription(['pgf','all'])
-    cur = GD.cfg['workdir']
+    cur = pf.cfg['workdir']
     fn = askFilename(cur=cur,filter=filter)
     if fn:
         from geomfile import GeometryFile
@@ -346,7 +346,7 @@ def edit_point(pt):
 def edit_points(K):
     if K.obj_type == 'point':
         for k in K.keys():
-            o = GD.canvas.actors[k].object
+            o = pf.canvas.actors[k].object
             n =  drawable.names[k]
             ind = K[k]
             print "CHANGING points %s of object %s" % (ind,n)
@@ -362,14 +362,14 @@ def setpropCollection(K,prop):
     If a selected object does not have a setProp method, it is ignored.
     """
     if K.obj_type == 'actor':
-        obj = [ GD.canvas.actors[i] for i in K.get(-1,[]) ]
+        obj = [ pf.canvas.actors[i] for i in K.get(-1,[]) ]
         for o in obj:
             if hasattr(o,'setProp'):
                 o.setProp(prop)
             
     elif K.obj_type in ['element','point']:
         for k in K.keys():
-            o = GD.canvas.actors[k].object
+            o = pf.canvas.actors[k].object
             print "SETPROP ACTOR %s" % type(o)
             n =  drawable.names[k]
             print "SETPROP DRAWABLE %s" % n
@@ -387,7 +387,7 @@ def setpropCollection(K,prop):
                 print("PROP %s ?= %s" % (o.prop,O.prop))
                 o.prop[K[k]] = prop
                 o.setColor(o.prop)
-                o.redraw(mode=GD.canvas.rendermode)
+                o.redraw(mode=pf.canvas.rendermode)
                 if O and id(O.prop) != id(o.prop):
                     O.setProp(o.prop)
                 print("PROP %s ?= %s" % (o.prop,O.prop))
@@ -437,7 +437,7 @@ def partition_selection():
     if not selection.obj_type in ['actor','element']:
         warning("You need to pick actors or elements.")
         return
-    for A in GD.canvas.actors:
+    for A in pf.canvas.actors:
         if not A.getType() == TriSurface:
             warning("Currently I can only partition TriSurfaces." )
             return
@@ -554,18 +554,18 @@ def create_menu():
         ('&Reload',reload_menu),
         ("&Close",close_menu),
         ]
-    return menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before='help')
 
 
 def show_menu():
     """Show the menu."""
-    if not GD.GUI.menu.item(_menu):
+    if not pf.GUI.menu.item(_menu):
         create_menu()
 
 
 def close_menu():
     """Close the menu."""
-    GD.GUI.menu.removeItem(_menu)
+    pf.GUI.menu.removeItem(_menu)
 
 
 def reload_menu():

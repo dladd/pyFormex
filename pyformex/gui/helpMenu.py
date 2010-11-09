@@ -23,7 +23,7 @@
 ##
 """Display help"""
 
-import pyformex as GD
+import pyformex as pf
 
 import os,sys
 import draw
@@ -39,15 +39,15 @@ def help(page=None):
     If no page is specified, the help manual is displayed.
 
     If page is a string starting with 'http:', the page is displayed with
-    the command set in GD.cfg['browser'], else with the command in
-    GD.cfg['viewer']
+    the command set in pf.cfg['browser'], else with the command in
+    pf.cfg['viewer']
     """
     if not page:
-        page = GD.cfg['help/manual']
+        page = pf.cfg['help/manual']
     if page.startswith('http:'):
-        browser = GD.cfg['browser']
+        browser = pf.cfg['browser']
     else:
-        browser = GD.cfg['viewer']
+        browser = pf.cfg['viewer']
     pid = utils.spawn(' '.join([browser,page]))
 
 
@@ -66,7 +66,7 @@ def catchAndDisplay(cmd):
 
 def cmdline():
     """Display the pyFormex command line help."""
-    catchAndDisplay('GD.print_help()')
+    catchAndDisplay('pf.print_help()')
 
 ## def qappargs():
 ##     """Display informeation on the Qt application arguments."""
@@ -97,7 +97,7 @@ A tool for generating, manipulating and transforming 3D geometrical models by se
 `Copyright 2004-2009 Benedict Verhegghe`
 
 Distributed under the GNU GPL version 3 or later
-""" % (GD.Version,'='*len(GD.Version)))
+""" % (pf.Version,'='*len(pf.Version)))
 
 _developers = [
     'Matthieu De Beule',
@@ -156,10 +156,10 @@ def showURL(link):
 
 def createMenuData():
     """Returns the help menu data"""
-    DocsMenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] 
-    Docs2MenuData = [(k,draw.showFile,{'data':v}) for k,v in GD.cfg['help/docs2']]
-    LinksMenuData = [(k,showURL,{'data':v}) for k,v in GD.cfg['help/links']]
-    DevLinksMenuData = [(k,showURL,{'data':v}) for k,v in GD.cfg['help/devlinks']]
+    DocsMenuData = [(k,help,{'data':v}) for k,v in pf.cfg['help/docs']] 
+    Docs2MenuData = [(k,draw.showFile,{'data':v}) for k,v in pf.cfg['help/docs2']]
+    LinksMenuData = [(k,showURL,{'data':v}) for k,v in pf.cfg['help/links']]
+    DevLinksMenuData = [(k,showURL,{'data':v}) for k,v in pf.cfg['help/devlinks']]
 
     try:
         MenuData = DocsMenuData + [

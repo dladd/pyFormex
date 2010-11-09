@@ -53,7 +53,7 @@ def toggle_preview(onoff=None):
     global _preview
     if onoff is None:
         try:
-            onoff = GD.GUI.menu.item(_menu).item('preview').isChecked()
+            onoff = pf.GUI.menu.item(_menu).item('preview').isChecked()
         except:
             onoff = not _preview
     _preview = onoff
@@ -69,12 +69,12 @@ def draw2D(mode='point',npoints=-1,zplane=0.,coords=None,func=None):
     The drawing can be edited using the methods 'undo', 'clear' and 'close', which
     are presented in a combobox.
     """
-    if GD.canvas.drawmode is not None:
+    if pf.canvas.drawmode is not None:
         warning("You need to finish the previous drawing operation first!")
         return
     if func == None:
         func = highlightDrawing
-    return GD.canvas.idraw(mode,npoints,zplane,func,coords,_preview)
+    return pf.canvas.idraw(mode,npoints,zplane,func,coords,_preview)
 
 
 _obj_params = {}
@@ -110,28 +110,28 @@ def highlightDrawing(points,mode):
 
     pts is an array of points.
     """
-    GD.canvas.removeHighlights()
+    pf.canvas.removeHighlights()
     #print points[-1]
     PA = actors.GeomActor(Formex(points))
     PA.specular=0.0
-    GD.canvas.addHighlight(PA)
+    pf.canvas.addHighlight(PA)
     obj = drawnObject(points,mode=mode)
     if obj is not None:
         if hasattr(obj,'toFormex'):
             F = obj.toFormex()
         else:
             F = Formex(obj)
-        OA = actors.GeomActor(F,color=GD.canvas.settings.slcolor)
+        OA = actors.GeomActor(F,color=pf.canvas.settings.slcolor)
         OA.specular=0.0
-        GD.canvas.addHighlight(OA)
-    GD.canvas.update()
+        pf.canvas.addHighlight(OA)
+    pf.canvas.update()
 
     
 def drawPoints2D(mode,npoints=-1,zvalue=0.,coords=None):
     """Draw a 2D opbject in the xy-plane with given z-value"""
     if mode not in draw_mode_2d:
         return
-    x,y,z = GD.canvas.project(0.,0.,zvalue)
+    x,y,z = pf.canvas.project(0.,0.,zvalue)
     return draw2D(mode,npoints=npoints,zplane=z,coords=coords)
 
     
@@ -162,7 +162,7 @@ def draw_object(mode,npoints=-1):
     print "POINTS %s" % points
     obj = drawnObject(points,mode=mode)
     if obj is None:
-        GD.canvas.removeHighlights()
+        pf.canvas.removeHighlights()
         return
     print "OBJECT IS %s" % obj
     res = askItems([
@@ -177,7 +177,7 @@ def draw_object(mode,npoints=-1):
     if name == autoname[mode].peek():
         autoname[mode].next()
     export({name:obj})
-    GD.canvas.removeHighlights()
+    pf.canvas.removeHighlights()
     draw(points,color='black',flat=True)
     if mode != 'point':
         draw(obj,color=color,flat=True)
@@ -204,7 +204,7 @@ def objectName(actor):
     if hasattr(actor,'object'):
         obj = actor.object
         print "OBJECT",obj
-        for name in GD.PF:
+        for name in pf.PF:
             print name
             print named(name)
             if named(name) is obj:
@@ -215,13 +215,13 @@ def objectName(actor):
 
 def splitPolyLine(c):
     """Interactively split the specified polyline"""
-    GD.options.debug = 1
+    pf.options.debug = 1
     XA = draw(c.coords,clear=False,bbox='last',flat=True)
-    GD.canvas.pickable = [XA]
-    #print "ACTORS",GD.canvas.actors
-    #print "PICKABLE",GD.canvas.pickable
+    pf.canvas.pickable = [XA]
+    #print "ACTORS",pf.canvas.actors
+    #print "PICKABLE",pf.canvas.pickable
     k = pickPoints(filtr='single',oneshot=True)
-    GD.canvas.pickable = None
+    pf.canvas.pickable = None
     undraw(XA)
     if k.has_key(0):
         at = k[0]
@@ -237,7 +237,7 @@ def split_curve():
     if not k.has_key(-1):
         return
     nr = k[-1][0]
-    actor = GD.canvas.actors[nr]
+    actor = pf.canvas.actors[nr]
     name = objectName(actor)
     print "Enter a point to split %s" % name
     c = named(name)
@@ -265,12 +265,12 @@ _grid_data = [
         
 def create_grid():
     global dx,dy
-    if hasattr(GD.canvas,'_grid'):
-        if hasattr(GD.canvas,'_grid_data'):
-            updateData(_grid_data,GD.canvas._grid_data)
+    if hasattr(pf.canvas,'_grid'):
+        if hasattr(pf.canvas,'_grid_data'):
+            updateData(_grid_data,pf.canvas._grid_data)
     res = askItems(_grid_data)
     if res:
-        GD.canvas._grid_data = res
+        pf.canvas._grid_data = res
         globals().update(res)
         
         nx = int(ceil(width/dx))
@@ -291,13 +291,13 @@ def create_grid():
         grid = actors.CoordPlaneActor(nx=(nx,ny,0),ox=ox,dx=(dx,dy,0.),linewidth=lwidth,linecolor=lcolor,planes=showplane,planecolor=pcolor,alpha=0.3)
         remove_grid()
         drawActor(grid)
-        GD.canvas._grid = grid
+        pf.canvas._grid = grid
 
 
 def remove_grid():
-    if hasattr(GD.canvas,'_grid'):
-        undraw(GD.canvas._grid)
-        GD.canvas._grid = None
+    if hasattr(pf.canvas,'_grid'):
+        undraw(pf.canvas._grid)
+        pf.canvas._grid = None
 
     
 def updateData(data,newdata):
@@ -334,29 +334,29 @@ def create_menu(before='help'):
         ("&Close Menu",close_menu),
         ("Test menu",test_menu),
         ]
-    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before=before)
+    w = menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before=before)
     return w
 
 def show_menu(before='help'):
     """Show the menu."""
-    if not GD.GUI.menu.action(_menu):
+    if not pf.GUI.menu.action(_menu):
         create_menu(before=before)
 
 def close_menu():
     """Close the menu."""
-    GD.GUI.menu.removeItem(_menu)
+    pf.GUI.menu.removeItem(_menu)
 
 
 def reload_menu():
     """Reload the menu."""
-    before = GD.GUI.menu.nextitem(_menu)
+    before = pf.GUI.menu.nextitem(_menu)
     print "Menu %s was before %s" % (_menu,before)
     close_menu()
     import plugins
     plugins.refresh('draw2d')
     show_menu(before=before)
     setDrawOptions({'bbox':'last'})
-    print GD.GUI.menu.actionList()
+    print pf.GUI.menu.actionList()
 
 def test_menu():
     print "TEST2"

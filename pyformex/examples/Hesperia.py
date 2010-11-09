@@ -90,7 +90,7 @@ def createGeometry():
 
     # Modular size
     a,b,c = A.sizes()
-    GD.message("Cell width: %s; height: %s" % (a,b))
+    pf.message("Cell width: %s; height: %s" % (a,b))
 
     # Create a mirrored triangle
     B = A.reflect(1)
@@ -118,7 +118,7 @@ def createGeometry():
     # Ratio of the height of the isosceles triangle over the icosaeder edge length.
     c = 0.5*tand(54.)
     angle = arccos(tand(54.)/sqrt(3.))/Deg
-    GD.message("Rotation Ratio: %s; Angle: %s degrees" % (c,angle)) 
+    pf.message("Rotation Ratio: %s; Angle: %s degrees" % (c,angle)) 
     F = F.rotate(angle,0)
     clear()
     draw(F,colormap=['black','magenta','yellow','black'])
@@ -127,7 +127,7 @@ def createGeometry():
     # The sphere has radius ru
     golden_ratio = 0.5 * (1. + sqrt(5.))
     ru = 0.5 * a * sqrt(golden_ratio * sqrt(5.))
-    GD.message("Radius of circumscribed sphere: %s" % ru)
+    pf.message("Radius of circumscribed sphere: %s" % ru)
 
     ru *= n
     C = [0.,0.,-ru]
@@ -135,7 +135,7 @@ def createGeometry():
     draw(F)
 
     hx,hy,h = F.sizes()
-    GD.message("Height of the dome: %s" % h)
+    pf.message("Height of the dome: %s" % h)
 
     # The base circle goes through bottom corner of n-th row,
     # which will be the first point of the first triangle of the n-th row.
@@ -184,7 +184,7 @@ def createGeometry():
 
     # Scale to the real geometry
     scale = 7000. / F.sizes()[2]
-    GD.message("Applying scale factor %s " % scale)
+    pf.message("Applying scale factor %s " % scale)
     print F.bbox()
     F = F.scale(scale)
     print F.bbox()
@@ -209,7 +209,7 @@ def assignProperties():
         p = res['Property']
         sel = pickElements()
         if sel.has_key(0):
-            GD.debug("PICKED NUMBERS:%s" % sel)
+            pf.debug("PICKED NUMBERS:%s" % sel)
             F.prop[sel[0]] = p
         undraw(FA)
         FA = draw(F,view=None,bbox=None)
@@ -230,8 +230,8 @@ def selectProperties():
     res = askItems([('Property Name','p')])
     if res:
         p = res['Property Name']
-        if GD.PF.has_key(p):
-            F.setProp(GD.PF[p])
+        if pf.PF.has_key(p):
+            F.setProp(pf.PF[p])
 
 
 def saveProperties(fn = None):
@@ -424,7 +424,7 @@ def createFrameModel():
     # Get support nodes
     botnodes = where(isClose(nodes[:,2], 0.0))[0]
     bot = nodes[botnodes]
-    GD.message("There are %s support nodes." % bot.shape[0])
+    pf.message("There are %s support nodes." % bot.shape[0])
 
     # Upper structure
     nnodes = nodes.shape[0]              # node number offset
@@ -560,7 +560,7 @@ def createShellModel():
     # Get support nodes
     botnodes = where(isClose(nodes[:,2], 0.0))[0]
     bot = nodes[botnodes].reshape((-1,1,3))
-    GD.message("There are %s support nodes." % bot.shape[0])
+    pf.message("There are %s support nodes." % bot.shape[0])
 
     botofs = bot + [ 0.,0.,-0.2]
     bbot2 = concatenate([bot,botofs],axis=1)
@@ -806,7 +806,7 @@ def runCalpyAnalysis():
     # Enabling the Echo will print out the data.
     # The result consists of nodal displacements and stress resultants.
     print "Starting the Calpy analysis module --- this might take some time"
-    GD.app.processEvents()
+    pf.app.processEvents()
     starttime = time.clock()
     displ,frc = beam3d.static(coords,bcon,mats,elements,loads,Echo=True)
     print "Calpy analysis has finished --- Runtime was %s seconds." % (time.clock()-starttime)
@@ -917,17 +917,17 @@ def create_menu():
         ("---",None),
         ("&Close Menu",close_menu),
         ]
-    return menu.Menu('Hesperia',items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu('Hesperia',items=MenuData,parent=pf.GUI.menu,before='help')
 
  
 def show_menu():
     """Show the menu."""
-    if not GD.GUI.menu.item('Hesperia'):
+    if not pf.GUI.menu.item('Hesperia'):
         create_menu()
 
 def close_menu():
     """Close the menu."""
-    m = GD.GUI.menu.item('Hesperia')
+    m = pf.GUI.menu.item('Hesperia')
     if m :
         m.remove()
 

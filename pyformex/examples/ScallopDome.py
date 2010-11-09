@@ -29,7 +29,7 @@ topics = ['geometry','domes']
 techniques = ['dialog', 'color']
 
 """
-#GD.canvas.settings['colormap'][2] = [1.,0.3,0.]
+#pf.canvas.settings['colormap'][2] = [1.,0.3,0.]
 
 # This example is fully annotated with comments in the statusbar
 # First we define a function to display a Formex and then wait for the user
@@ -38,7 +38,7 @@ def show(F,view='front',clearscr=True):
     if clearscr:
         clear()
     draw(F,view=view)
-    GD.canvas.update()
+    pf.canvas.update()
     
 # Here we go
 message("Create a triangular pattern in the first octant")
@@ -78,7 +78,7 @@ def scallop(n,f,c,r):
 
 message("Create a dome from the circular layout")
 f2.setProp(3)
-GD.canvas.camera.setRotation(0,-45)
+pf.canvas.camera.setRotation(0,-45)
 show(scallop(6,1,2,0),None,False)
 
 

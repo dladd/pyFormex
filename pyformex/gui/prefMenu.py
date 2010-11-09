@@ -30,10 +30,7 @@ import os
 from gettext import gettext as _
 import utils
 import widgets
-from widgets import simpleInputItem as I
-from widgets import groupInputItem as G
-from widgets import tabInputItem as T
-from widgets import compatInputItem as C
+from widgets import simpleInputItem as I, groupInputItem as G, tabInputItem as T
 import toolbar
 import draw
 

@@ -27,7 +27,7 @@
 Create, measure and approximate cross section of a Formex.
 """
 
-import pyformex as GD
+import pyformex as pf
 import simple
 from formex import *
 from gui.draw import *
@@ -85,7 +85,7 @@ def centerline(F,dir,nx=2,mode=2,th=0.2):
 def createSegments(F,ns=None,th=None):
     """Create segments along 0 axis for sectionizing the Formex F."""
     bb = F.bbox()
-    GD.message("Bounding box = %s" % bb)
+    pf.message("Bounding box = %s" % bb)
     if ns is None or th is None:
         res = askItems([['number of sections',20],
                         ['relative thickness',0.1]],
@@ -100,7 +100,7 @@ def createSegments(F,ns=None,th=None):
         A = [ xmin,ygem,zgem ]
         B = [ xmax,ygem,zgem ]
         segments = Formex([[A,B]]).divide(ns)
-        GD.message("Segments: %s" % segments)
+        pf.message("Segments: %s" % segments)
         return ns,th,segments
     return 0,0,[]
 
@@ -139,11 +139,11 @@ def sectionize(F,segments,th=0.1,visual=True):
         G = F.select(test==3)
         if visual:
             draw(G,color='blue',view=None)
-            GD.canvas.update()
+            pf.canvas.update()
         print(G)
         C = G.center()
         D = 2 * G.distanceFromLine(C,n).mean()
-        GD.message("Section Center: %s; Diameter: %s" % (C,D))
+        pf.message("Section Center: %s; Diameter: %s" % (C,D))
         sections.append(G)
         ctr.append(C)
         diam.append(D)

@@ -51,6 +51,7 @@ from plugins import trisurface,tools,mesh,fe
         
 #################### Interacting with the user ###############################
 
+
 def closeGui():
     pf.debug("Closing the GUI: currently, this will also terminate pyformex.")
     pf.GUI.close()
@@ -139,8 +140,8 @@ def showDescription(filename=None):
     shown.
     """
     from scriptMenu import getDocString,getDescription
-    if GD.GUI.canPlay:
-        scriptfile = GD.prefcfg['curfile']
+    if pf.GUI.canPlay:
+        scriptfile = pf.prefcfg['curfile']
         doc = getDocString(scriptfile)
         des = getDescription(doc)
         if len(des.strip()) == 0:
@@ -275,7 +276,6 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
         else:
             chdir(fn)
     pf.GUI.update()
-    #pf.canvas.update()
     pf.app.processEvents()
     return fn
 
@@ -307,7 +307,7 @@ def askDirname(path=None,change=True):
     if fn and change:
         chdir(fn)
     pf.GUI.update()
-    pf.canvas.update()
+    #pf.canvas.update()
     pf.app.processEvents()
     return fn
 
@@ -343,8 +343,6 @@ def printMessage(s):
 # message is the preferred function to send text info to the user.
 # The default message handler is set here.
 message = printMessage
-
-
 
 
 ############################## drawing functions ########################
@@ -422,7 +420,6 @@ def draw(F,
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
-
     # Facility for drawing database objects by name
     if type(F) == str:
         F = named(F)
@@ -511,9 +508,6 @@ def draw(F,
         F = _shrink(F,shrink)
 
     try:
-        ## if isinstance(F,tools.Plane):
-        ##     return drawPlane(F.point(),F.normal(),F.size())
-
         actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize)
 
         if actor is None:
@@ -567,7 +561,7 @@ def focus(object):
     where the whole object can be viewed using a 45. degrees lens opening.
     This technique may change in future!
     """
-    pf.canvas.setCamera(bbox=bbox(object))
+    pf.canvas.setCamera(bbox=coords.bbox(object))
     pf.canvas.update()
 
     
@@ -605,19 +599,6 @@ def resetAll():
 
 def shrink(v):
     setDrawOptions({'shrink':v})
-    
-
-def setView(name,angles=None):
-    """Set the default view for future drawing operations.
-
-    If no angles are specified, the name should be an existing view, or
-    the predefined value 'last'.
-    If angles are specified, this is equivalent to createView(name,angles)
-    followed by setView(name).
-    """
-    if name != 'last' and angles:
-        createView(name,angles)
-    setDrawOptions({'view':name})
 
 
 def _shrink(F,factor):
@@ -642,14 +623,6 @@ def drawPlane(P,N,size):
     from plugins.tools import Plane
     p = Plane(P,N,size)
     return draw(p,bbox='last')
-    ## actor = actors.PlaneActor(size=size)
-    ## actor.create_list(mode=pf.canvas.rendermode)
-    ## actor = actors.RotatedActor(actor,N)
-    ## actor.create_list(mode=pf.canvas.rendermode)
-    ## actor = actors.TranslatedActor(actor,P)
-    ## pf.canvas.addActor(actor)
-    ## pf.canvas.update()
-    ## return actor
 
 
 def drawMarks(X,M,color='black',leader=''):
@@ -808,6 +781,29 @@ def undecorate(decor):
     pf.canvas.update()
 
 
+def createView(name,angles,addtogui=False):
+    """Create a new named view (or redefine an old).
+
+    The angles are (longitude, latitude, twist).
+    By default, the view is local to the script's viewport.
+    If gui is True, it is also added to the GUI.
+    """
+    pf.canvas.view_angles[name] = angles
+    if addtogui:
+        guifunc.createView(name,angles)
+    
+
+def setView(name,angles=None):
+    """Set the default view for future drawing operations.
+
+    If no angles are specified, the name should be an existing view, or
+    the predefined value 'last'.
+    If angles are specified, this is equivalent to createView(name,angles)
+    followed by setView(name).
+    """
+    if name != 'last' and angles:
+        createView(name,angles)
+    setDrawOptions({'view':name})
 
 
 def frontView():
@@ -824,39 +820,6 @@ def bottomView():
     view("bottom")
 def isoView():
     view("iso")
-
-def createView(name,angles):
-    """Create a new named view (or redefine an old).
-
-    The angles are (longitude, latitude, twist).
-    If the view name is new, and there is a views toolbar,
-    a view button will be added to it.
-    """
-    pf.GUI.setViewAngles(name,angles)   
-    
-
-def zoomBbox(bb):
-    """Zoom thus that the specified bbox becomes visible."""
-    pf.canvas.setBbox(bb)
-    pf.canvas.setCamera()
-    pf.canvas.update()
-
-
-def zoomRectangle():
-    """Zoom a rectangle selected by the user."""
-    pf.canvas.start_rectangle_zoom()
-    pf.canvas.update()
-    
-
-
-def zoomAll():
-    """Zoom thus that all actors become visible."""
-    if pf.canvas.actors:
-        zoomBbox(coords.bbox(pf.canvas.actors))
-
-def zoom(f):
-    pf.canvas.zoom(f)
-    pf.canvas.update()
 
 
 def bgcolor(color,color2=None):
@@ -878,10 +841,10 @@ def fgcolor(color):
 
 def renderMode(mode,avg=False):
     pf.canvas.setRenderMode(mode)
-    toolbar.setNormals(avg)
-    toolbar.setLight(pf.canvas.lighting)
     pf.canvas.update()
-    pf.app.processEvents()
+    toolbar.updateNormalsButton()
+    toolbar.updateLightButton()
+    pf.GUI.processEvents()
     
 def wireframe():
     renderMode("wireframe")
@@ -905,15 +868,29 @@ def smooth_avg():
 ##     """Set the viewports transparency."""
 ##     pf.canvas.alpha = float(alpha)
 
-def lights(onoff):
+def lights(state=True):
     """Set the lights on or off"""
-    toolbar.setLight(onoff)
+    pf.canvas.setLighting(state)
+    pf.canvas.update()
+    toolbar.updateLightButton()
+    pf.GUI.processEvents()
 
 
 def transparent(state=True):
-    toolbar.setTransparency(state)
+    """Set the transparency mode on or off."""
+    pf.canvas.setTransparency(state)
+    pf.canvas.update()
+    toolbar.updateTransparencyButton()
+    pf.GUI.processEvents()
+
+
 def perspective(state=True):
-    toolbar.setPerspective(state)
+    pf.canvas.setPerspective(state)
+    pf.canvas.update()
+    toolbar.updatePerspectiveButton()
+    pf.GUI.processEvents()
+
+    
 def timeout(state=None):
     toolbar.timeout(state)
 
@@ -1099,42 +1076,118 @@ def printbbox():
 
 def printviewportsettings():
     pf.GUI.viewports.printSettings()
+    
+def reportCamera():
+    print(pf.canvas.camera.report())
 
 
-#################### viewports ##################################
+#################### camera ##################################
 
-def layout(nvps=None,ncols=None,nrows=None):
-    """Set the viewports layout."""
-    pf.GUI.viewports.changeLayout(nvps,ncols,nrows)
+def zoom_factor(factor=None):
+    if factor is None:
+        factor = pf.cfg['gui/zoomfactor']
+    return float(factor)
 
-def addViewport():
-    """Add a new viewport."""
-    pf.GUI.viewports.addView()
+def pan_factor(factor=None):
+    if factor is None:
+        factor = pf.cfg['gui/panfactor']
+    return float(factor)
 
-def removeViewport():
-    """Remove the last viewport."""
-    n = len(pf.GUI.viewports.all)
-    if n > 1:
-        pf.GUI.viewports.removeView()
+def rot_factor(factor=None):
+    if factor is None:
+        factor = pf.cfg['gui/rotfactor']
+    return float(factor)
 
-def linkViewport(vp,tovp):
-    """Link viewport vp to viewport tovp.
-
-    Both vp and tovp should be numbers of viewports. 
-    """
-    pf.GUI.viewports.link(vp,tovp)
-
-def viewport(n):
-    """Select the current viewport"""
-    pf.GUI.viewports.setCurrent(n)
-
-####################
-
-def updateGUI():
-    """Update the GUI."""
-    pf.GUI.update()
+def zoomIn(factor=None):
+    pf.canvas.camera.zoomArea(1./zoom_factor(factor))
     pf.canvas.update()
-    pf.app.processEvents()
+def zoomOut(factor=None):
+    pf.canvas.camera.zoomArea(zoom_factor(factor))
+    pf.canvas.update()    
+    
+def panRight(factor=None):
+    pf.canvas.camera.transArea(-pan_factor(factor),0.)
+    pf.canvas.update()   
+def panLeft(factor=None):
+    pf.canvas.camera.transArea(pan_factor(factor),0.)
+    pf.canvas.update()   
+def panUp(factor=None):
+    pf.canvas.camera.transArea(0.,-pan_factor(factor))
+    pf.canvas.update()   
+def panDown(factor=None):
+    pf.canvas.camera.transArea(0.,pan_factor(factor))
+    pf.canvas.update()
+    
+def rotRight(factor=None):
+    pf.canvas.camera.rotate(rot_factor(factor),0,1,0)
+    pf.canvas.update()   
+def rotLeft(factor=None):
+    pf.canvas.camera.rotate(-rot_factor(factor),0,1,0)
+    pf.canvas.update()   
+def rotUp(factor=None):
+    pf.canvas.camera.rotate(-rot_factor(factor),1,0,0)
+    pf.canvas.update()   
+def rotDown(factor=None):
+    pf.canvas.camera.rotate(rot_factor(factor),1,0,0)
+    pf.canvas.update()   
+def twistLeft(factor=None):
+    pf.canvas.camera.rotate(rot_factor(factor),0,0,1)
+    pf.canvas.update()   
+def twistRight(factor=None):
+    pf.canvas.camera.rotate(-rot_factor(factor),0,0,1)
+    pf.canvas.update()
+    
+def transLeft(factor=None):
+    val = pan_factor(factor) * pf.canvas.camera.getDist()
+    pf.canvas.camera.translate(-val,0,0,pf.cfg['draw/localaxes'])
+    pf.canvas.update()
+def transRight(factor=None):
+    val = pan_factor(factor) * pf.canvas.camera.getDist()
+    pf.canvas.camera.translate(+val,0,0,pf.cfg['draw/localaxes'])
+    pf.canvas.update()
+def transDown(factor=None):
+    val = pan_factor(factor) * pf.canvas.camera.getDist()
+    pf.canvas.camera.translate(0,-val,0,pf.cfg['draw/localaxes'])
+    pf.canvas.update()   
+def transUp(factor=None):
+    val = pan_factor(factor) * pf.canvas.camera.getDist()
+    pf.canvas.camera.translate(0,+val,0,pf.cfg['draw/localaxes'])
+    pf.canvas.update()
+def dollyIn(factor=None):
+    pf.canvas.camera.dolly(1./zoom_factor(factor))
+    pf.canvas.update()
+def dollyOut(factor=None):
+    pf.canvas.camera.dolly(zoom_factor(factor))
+    pf.canvas.update()
+
+def lockCamera():
+    pf.canvas.camera.lock()
+def unlockCamera():
+    pf.canvas.camera.lock(False)
+
+
+def zoomRectangle():
+    """Zoom a rectangle selected by the user."""
+    pf.canvas.start_rectangle_zoom()
+    pf.canvas.update()
+
+    
+def zoomBbox(bb):
+    """Zoom thus that the specified bbox becomes visible."""
+    pf.canvas.setBbox(bb)
+    pf.canvas.setCamera()
+    pf.canvas.update()
+    
+
+def zoomAll():
+    """Zoom thus that all actors become visible."""
+    if pf.canvas.actors:
+        zoomBbox(coords.bbox(pf.canvas.actors))
+
+# Can this be replaced with zoomIn/Out?
+def zoom(f):
+    pf.canvas.zoom(f)
+    pf.canvas.update()
 
 
 def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
@@ -1170,6 +1223,65 @@ def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
     pf.canvas.camera.setCenter(*center)
     pf.canvas.camera.setDist(coords.length(center-eye))
     pf.canvas.update()
+
+
+#################### viewports ##################################
+
+### BEWARE FOR EFFECTS OF SPLITTING pf.canvas and pf.canvas if these
+### are called from interactive functions!
+
+def _viewport_warning():
+    import warnings
+    warnings.warn("The viewport changing functions have changed: interactive changes through the GUI are now decoupled from changes by the script.\nThis may result in unwanted effects if your script relied on the old (coupled) functionality.\n\nIf you notice any unexpected behaviour, please tell the developers about it through the `forums <%s>`_ or `bug system <%s>`_." % (pf.cfg['help/forums'],pf.cfg['help/bugs']))
+    
+
+def viewport(n=None):
+    """Select the current viewport.
+
+    n is an integer number in the range of the number of viewports,
+    or is one of the viewport objects in pyformex.GUI.viewports
+
+    if n is None, selects the current GUI viewport for drawing
+    """
+    _viewport_warning()
+    if n is not None:
+        pf.canvas.update()
+        pf.GUI.viewports.setCurrent(n)
+    pf.canvas = pf.GUI.viewports.current
+
+
+def layout(nvps=None,ncols=None,nrows=None):
+    """Set the viewports layout."""
+    pf.GUI.viewports.changeLayout(nvps,ncols,nrows)
+    viewport()
+
+def addViewport():
+    """Add a new viewport."""
+    pf.GUI.viewports.addView()
+    viewport()
+
+def removeViewport():
+    """Remove the last viewport."""
+    n = len(pf.GUI.viewports.all)
+    if n > 1:
+        pf.GUI.viewports.removeView()
+    viewport()
+
+def linkViewport(vp,tovp):
+    """Link viewport vp to viewport tovp.
+
+    Both vp and tovp should be numbers of viewports. 
+    """
+    pf.GUI.viewports.link(vp,tovp)
+    viewport()
+
+####################
+
+def updateGUI():
+    """Update the GUI."""
+    pf.GUI.update()
+    pf.canvas.update()
+    pf.app.processEvents()
 
 
 ######### Highlighting ###############
@@ -1409,8 +1521,13 @@ def setGlobalAxes(mode=True):
 
 
 #  deprecated alternative spellings
-zoomall = zoomAll
-drawtext = drawText
+from utils import deprecated
+@deprecated(zoomAll)
+def zoomall(*args,**kargs):
+    return zoomAll(*args,**kargs)
+@deprecated(drawText)
+def drawtext(*args,**kargs):
+    return drawText(*args,**kargs)
 
 
 #### End

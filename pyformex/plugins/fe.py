@@ -26,6 +26,7 @@
 Finite element models are geometrical models that consist of a unique
 set of nodal coordinates and one of more sets of elements.
 """
+import pyformex as pf
 
 from coords import *
 from connectivity import *
@@ -88,12 +89,12 @@ class Model(Geometry):
         nplex = [ m.nplex() for m in self.meshes ]
         self.cnodes = cumsum([0]+nnodes)
         self.celems = cumsum([0]+nelems)
-        GD.message("Number of nodes: %s" % self.coords.shape[0])
-        GD.message("Number of elements: %s" % self.celems[-1])
-        GD.message("Number of element groups: %s" % len(nelems))
-        #GD.message("Number of nodes per group: %s" % nnodes)
-        GD.message("Number of elements per group: %s" % nelems)
-        GD.message("Plexitude of each group: %s" % nplex)
+        pf.message("Number of nodes: %s" % self.coords.shape[0])
+        pf.message("Number of elements: %s" % self.celems[-1])
+        pf.message("Number of element groups: %s" % len(nelems))
+        #pf.message("Number of nodes per group: %s" % nnodes)
+        pf.message("Number of elements per group: %s" % nelems)
+        pf.message("Plexitude of each group: %s" % nplex)
 
 
     def nnodes(self):

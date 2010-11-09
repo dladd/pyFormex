@@ -24,7 +24,7 @@
 ##
 """Menu with pyFormex scripts."""
 
-import pyformex as GD
+import pyformex as pf
 
 from PyQt4 import QtCore, QtGui
 
@@ -49,7 +49,7 @@ def extractKeyword(s):
             if len(key) > 0:
                 return key, eval(s[i+1:].strip())
         except:
-            GD.debug("Error processing keywords %s" % s.strip('\n'))
+            pf.debug("Error processing keywords %s" % s.strip('\n'))
             pass
     return None
 
@@ -286,7 +286,7 @@ class ScriptMenu(QtGui.QMenu):
 
         self.files = self.filterFiles(files)
         
-        if GD.options.debug:
+        if pf.options.debug:
             print("Found Scripts in %s" % self.dir)
             print(self.files)
         self.actions = [ self.addAction(f) for f in self.files ]           
@@ -356,10 +356,10 @@ class ScriptMenu(QtGui.QMenu):
         """Run the specified script."""
         self.current = filename
         selected = self.fileName(filename)
-        GD.debug("Playing script %s" % selected)
-        GD.GUI.setcurfile(selected)
+        pf.debug("Playing script %s" % selected)
+        pf.GUI.setcurfile(selected)
         if self.autoplay:
-            GD.debug("Drawing Options: %s" % GD.canvas.options)
+            pf.debug("Drawing Options: %s" % pf.canvas.options)
             draw.reset()
             draw.play()
 
@@ -372,7 +372,7 @@ class ScriptMenu(QtGui.QMenu):
             i = 0
             print("You should first run a script from the menu, to define the next")
             return
-        GD.debug("This is script %s out of %s" % (i,len(self.files)))
+        pf.debug("This is script %s out of %s" % (i,len(self.files)))
         if i < len(self.files):
             self.runScript(self.files[i])
 
@@ -385,33 +385,33 @@ class ScriptMenu(QtGui.QMenu):
             i = 0
             print("You should first run a script from the menu, to define the following")
             return
-        GD.debug("Running scripts %s-%s" % (i,len(self.files)))
+        pf.debug("Running scripts %s-%s" % (i,len(self.files)))
         self.runAllFiles(self.files[i:])
-        GD.debug("Exiting runAllNext")
+        pf.debug("Exiting runAllNext")
         
 
     def runAll(self):
         """Run all scripts."""
-        GD.debug("Playing all scripts in order")
+        pf.debug("Playing all scripts in order")
         self.runAllFiles(self.files)
-        GD.debug("Finished playing all scripts")
+        pf.debug("Finished playing all scripts")
 
 
     ### THIS should be moved to a playAll function in draw/script module
     def runAllFiles(self,files,randomize=False,pause=0.):
         """Run all the scripts in given list."""
-        GD.GUI.actions['Stop'].setEnabled(True)
+        pf.GUI.actions['Stop'].setEnabled(True)
         if randomize:
             random.shuffle(files)
         for f in files:
             draw.layout(1)
             self.runScript(f)
-            #GD.debug("draw.exitrequested == %s" % draw.exitrequested)
+            #pf.debug("draw.exitrequested == %s" % draw.exitrequested)
             if draw.exitrequested:
                 break
             if pause > 0.:
                 sleep(pause)
-        GD.GUI.actions['Stop'].setEnabled(False)
+        pf.GUI.actions['Stop'].setEnabled(False)
 
 
     def runRandom(self):
@@ -422,9 +422,9 @@ class ScriptMenu(QtGui.QMenu):
 
     def runAllRandom(self):
         """Run all scripts in a random order."""
-        GD.debug("Playing all scripts in random order")
+        pf.debug("Playing all scripts in random order")
         self.runAllFiles(self.files,randomize=True)
-        GD.debug("Finished playing all scripts")
+        pf.debug("Finished playing all scripts")
                        
 
     def reload(self):
@@ -433,7 +433,7 @@ class ScriptMenu(QtGui.QMenu):
         This is only available if a directory path was specified and
         no files.
         """
-        GD.debug("RELOADING THIS MENU")
+        pf.debug("RELOADING THIS MENU")
         if self.dir:
             self.clear()
             self.menus = []
@@ -472,7 +472,7 @@ class ScriptMenu(QtGui.QMenu):
             d = scriptKeywords(fn)
             for k,v in d.items():
                 if not k in kat:
-                    GD.debug("Skipping unknown keyword %s in script %s" % (k,fn))
+                    pf.debug("Skipping unknown keyword %s in script %s" % (k,fn))
                     continue
                 if k == 'level':
                     v = [v]
@@ -530,16 +530,16 @@ def createScriptMenu(parent=None,before=None):
     scriptmenu = menu.Menu('&Scripts',parent=parent,before=before)
     scriptmenu.menuitems = ODict()
     # Create a copy to leave the cfg unchanged!
-    scriptdirs = [] + GD.cfg['scriptdirs']
+    scriptdirs = [] + pf.cfg['scriptdirs']
     # Fill in missing default locations : this enables the user
     # to keep the pyFormex installed examples in his config
-    knownscriptdirs = { 'examples': GD.cfg['examplesdir'] }
+    knownscriptdirs = { 'examples': pf.cfg['examplesdir'] }
     for i,item in enumerate(scriptdirs):
         if type(item[0]) is str and not item[1] and item[0].lower() in knownscriptdirs:
             scriptdirs[i] = (item[0].capitalize(),knownscriptdirs[item[0].lower()])
 
     for txt,dirname in scriptdirs:
-        GD.debug("Loading script dir %s" % dirname)
+        pf.debug("Loading script dir %s" % dirname)
         if os.path.exists(dirname):
             m = ScriptMenu(txt,dir=dirname,autoplay=True)
             scriptmenu.insert_menu(m)
@@ -556,11 +556,11 @@ def createScriptMenu(parent=None,before=None):
 
 
 def reloadScriptMenu():
-    menu = GD.GUI.menu.item('scripts')
+    menu = pf.GUI.menu.item('scripts')
     if menu is not None:
-        before = GD.GUI.menu.nextitem('scripts')
-        GD.GUI.menu.removeItem('scripts')
-        newmenu = createScriptMenu(GD.GUI.menu,before)
+        before = pf.GUI.menu.nextitem('scripts')
+        pf.GUI.menu.removeItem('scripts')
+        newmenu = createScriptMenu(pf.GUI.menu,before)
  
     
 # End

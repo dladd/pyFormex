@@ -23,7 +23,7 @@
 ##
 """Viewport Menu."""
 
-import pyformex as GD
+import pyformex as pf
 import canvas
 import widgets
 import draw
@@ -34,8 +34,8 @@ from widgets import simpleInputItem as I, compatInputItem as C
 
 def setTriade():
     try:
-        pos = GD.canvas.triade.pos
-        siz = GD.canvas.triade.siz
+        pos = pf.canvas.triade.pos
+        siz = pf.canvas.triade.siz
     except:
         pos = 'lb'
         siz = 100
@@ -68,17 +68,17 @@ def set_the_color_bottom():
 
 def setBgColor():
     """Change the background color."""
-    color = GD.canvas.settings.bgcolor
+    color = pf.canvas.settings.bgcolor
     color = widgets.getColor(color)
     if color:
-        GD.canvas.setBgColor(color)
+        pf.canvas.setBgColor(color)
 
 
 def setBgColor2():
     """Interactively set the viewport background colors."""
     global _the_dialog
-    color = GD.canvas.settings.bgcolor
-    color2 = GD.canvas.settings.bgcolor2
+    color = pf.canvas.settings.bgcolor
+    color2 = pf.canvas.settings.bgcolor2
     if color2 is None:
         color2 = color
     itemlist = [C('top',color,'color',{'text':'Top background color'}),
@@ -86,52 +86,52 @@ def setBgColor2():
                 ]
     _the_dialog = widgets.NewInputDialog(itemlist,'Config Dialog')
     res = _the_dialog.getResult()
-    GD.debug(res)
+    pf.debug(res)
     if res:
-        GD.canvas.setBgColor(res['top'],res['bottom'])
-        GD.canvas.update()
+        pf.canvas.setBgColor(res['top'],res['bottom'])
+        pf.canvas.update()
     _the_dialog = None
 
         
 def setFgColor():
     """Change the default drawing color."""
-    color = GD.canvas.settings.fgcolor
+    color = pf.canvas.settings.fgcolor
     color = widgets.getColor(color)
     if color:
-        GD.canvas.setFgColor(color)
+        pf.canvas.setFgColor(color)
 
         
 def setSlColor():
     """Change the highlighting color."""
-    color = GD.canvas.settings.slcolor
+    color = pf.canvas.settings.slcolor
     color = widgets.getColor(color)
     if color:
-        GD.canvas.setSlColor(color)
+        pf.canvas.setSlColor(color)
 
 
         
 def setLineWidth():
     """Change the default line width."""
-    lw = GD.canvas.settings.linewidth
+    lw = pf.canvas.settings.linewidth
     itemlist = [C('Line Width', lw, 'float')]
     res = widgets.NewInputDialog(itemlist,'Choose default line width').getResult()
     if res:
-        GD.canvas.setLineWidth(res['Line Width'])
+        pf.canvas.setLineWidth(res['Line Width'])
 
     
 def setCanvasSize():
     """Save the current viewport size"""
-    itemlist = [I('w',GD.canvas.width()),I('h',GD.canvas.height())]
+    itemlist = [I('w',pf.canvas.width()),I('h',pf.canvas.height())]
     res = widgets.NewInputDialog(itemlist,'Set Canvas Size').getResult()
     if res:
-        GD.canvas.resize(int(res['w']),int(res['h']))
+        pf.canvas.resize(int(res['w']),int(res['h']))
 
 
 def viewportSettings():
     """Interactively set the viewport settings."""
-    mode = GD.canvas.rendermode
+    mode = pf.canvas.rendermode
     modes = canvas.Canvas.rendermodes
-    s = GD.canvas.settings
+    s = pf.canvas.settings
     if s.bgcolor2 is None:
         s.bgcolor2 = s.bgcolor
     itemlist = [I('rendermode', mode, choices=modes),
@@ -144,30 +144,30 @@ def viewportSettings():
                 ]
     res = widgets.NewInputDialog(itemlist,'Config Dialog').getResult()
     if res:
-        GD.debug(res)
-        GD.canvas.setRenderMode(res['rendermode'])
-        GD.canvas.settings.update(res,strict=False)
-        #GD.canvas.clear()
-        GD.canvas.redrawAll()
-        GD.canvas.update()
+        pf.debug(res)
+        pf.canvas.setRenderMode(res['rendermode'])
+        pf.canvas.settings.update(res,strict=False)
+        #pf.canvas.clear()
+        pf.canvas.redrawAll()
+        pf.canvas.update()
         if res['Store these settings as defaults']:
-            GD.cfg.update(GD.canvas.settings.__dict__,name='canvas')
+            pf.cfg.update(pf.canvas.settings.__dict__,name='canvas')
         
 
 def viewportLayout():
     """Set the viewport layout."""
     directions = [ 'rowwise','columnwise' ]
-    if GD.GUI.viewports.rowwise:
+    if pf.GUI.viewports.rowwise:
         current = directions[0]
     else:
         current = directions[1]
-    itemlist = [C('Number of viewports',len(GD.GUI.viewports.all)),
+    itemlist = [C('Number of viewports',len(pf.GUI.viewports.all)),
                 C('Viewport layout direction',current,'select',{'choices':directions}),
-                C('Number of viewports per row/column',GD.GUI.viewports.ncols),
+                C('Number of viewports per row/column',pf.GUI.viewports.ncols),
                 ]
     res = widgets.NewInputDialog(itemlist,'Config Dialog').getResult()
     if res:
-        GD.debug(res)
+        pf.debug(res)
         nvps = res['Number of viewports']
         rowwise = res['Viewport layout direction'] == 'rowwise'
         ncols = res['Number of viewports per row/column']
@@ -176,9 +176,9 @@ def viewportLayout():
         else:
             nrows = ncols
             ncols = None
-        GD.GUI.viewports.changeLayout(nvps,ncols,nrows)
+        pf.GUI.viewports.changeLayout(nvps,ncols,nrows)
 #        if res['Store these settings as defaults']:
-#            GD.cfg.update()
+#            pf.cfg.update()
 
 
 def canvasSettings():
@@ -190,9 +190,9 @@ def canvasSettings():
         dia.close()
         
     def set_near_clip(v):
-        dist = GD.canvas.camera.getDist()
-        GD.canvas.camera.setClip(10**v*dist,10.*dist)
-        GD.canvas.update()
+        dist = pf.canvas.camera.getDist()
+        pf.canvas.camera.setClip(10**v*dist,10.*dist)
+        pf.canvas.update()
         
     dia = widgets.NewInputDialog(
         caption='Canvas Settings',
@@ -233,9 +233,21 @@ def lineSmoothOn():
 def lineSmoothOff():
     canvas.glLineSmooth(False)
 
+def singleViewport():
+    draw.layout(1)
+
+def clearAll():
+    for vp in pf.GUI.viewports.all:
+        vp.removeAll()
+        vp.clear()
+        vp.update()
+    pf.GUI.processEvents()
+
+
 MenuData = [
     (_('&Viewport'),[
         (_('&Clear'),draw.clear),
+        (_('&Clear All'),clearAll),
         (_('&Axes Triade'),setTriade), 
 #        (_('&Transparency'),setOpacity), 
         (_('&Background Color'),setBgColor), 
@@ -262,7 +274,8 @@ MenuData = [
         ##   ('&Polygon Front and Back Fill',canvas.glBothFill),
         ##   ]),
         (_('&Redraw'),draw.redraw),
-        (_('&Reset'),draw.reset),
+        (_('&Reset viewport'),draw.reset),
+        (_('&Reset layout'),singleViewport),
         (_('&Change viewport layout'),viewportLayout), 
         (_('&Add new viewport'),draw.addViewport), 
         (_('&Remove last viewport'),draw.removeViewport), 

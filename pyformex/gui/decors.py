@@ -182,12 +182,12 @@ class Line(Decoration):
 ##     def draw(self,mode='wireframe',color=None):
 ##         """Draw the text."""
 ##         self.count += 1
-## #        GD.canvas.makeCurrent()
+## #        pf.canvas.makeCurrent()
 ##         if self.color is not None:
 ##             GL.glColor3fv(self.color)
-##         GD.canvas.renderText(self.x,GD.canvas.height()-self.y,self.text,self.font)
-## #        GD.canvas.swapBuffers() 
-## #        GD.canvas.updateGL() 
+##         pf.canvas.renderText(self.x,pf.canvas.height()-self.y,self.text,self.font)
+## #        pf.canvas.swapBuffers() 
+## #        pf.canvas.updateGL() 
 
 
 class GlutText(Decoration):
@@ -217,12 +217,12 @@ class GlutText(Decoration):
     def drawGL(self,**kargs):
         """Draw the text."""
         ## if self.zoom:
-        ##     GD.canvas.zoom_2D(self.zoom)
+        ##     pf.canvas.zoom_2D(self.zoom)
         if self.color is not None: 
             GL.glColor3fv(self.color)
         gluttext.glutDrawText(self.text,self.x,self.y,font=self.font,gravity=self.gravity)
         ## if self.zoom:
-        ##     GD.canvas.zoom_2D()
+        ##     pf.canvas.zoom_2D()
 
 Text = GlutText
 
@@ -247,7 +247,7 @@ class ColorLegend(Decoration):
     def drawGL(self,**kargs):
         #from draw import drawText
         n = len(self.cl.colors)
-        GD.debug("NUMBER OF COLORS: %s" % n)
+        pf.debug("NUMBER OF COLORS: %s" % n)
         x1 = float(self.x)
         x2 = float(self.x+self.w)
         y0 = float(self.y)
@@ -268,7 +268,7 @@ class ColorLegend(Decoration):
             x1 = x2 + self.xgap
             gravity = 'E'
         fh = gluttext.glutFontHeight(self.font)
-        GD.debug("FONT HEIGHT %s" % fh)
+        pf.debug("FONT HEIGHT %s" % fh)
         dh = fh + self.ygap # vert. distance between successive labels
         #y0 -= 0.25*fh  # 0.5*fh seems more logic, but character pos is biased
         GL.glColor3f(*colors.black)
@@ -297,8 +297,8 @@ class ColorLegend(Decoration):
         Decoration.use_list(self)
         for t in self.decorations:
             t.use_list()
-            ## if TA not in GD.canvas.decorations:
-            ##     GD.canvas.addDecoration(TA)
+            ## if TA not in pf.canvas.decorations:
+            ##     pf.canvas.addDecoration(TA)
 
 
 class Rectangle(Decoration):

@@ -70,10 +70,10 @@ def turn(x=0,y=0,action=0):
     global busy, x1, y1, element
     if action==PRESS and not busy:
         busy = True
-        GD.canvas.setCursorShape('pick')
+        pf.canvas.setCursorShape('pick')
         x1, y1 = x, y
         busy = False
-        element = selectElement(GD.canvas, x, y, 2, 2)
+        element = selectElement(pf.canvas, x, y, 2, 2)
         if element == [-1]:
             message('No element selected.\nPlease select an element of the cube.')
 #        else:
@@ -81,7 +81,7 @@ def turn(x=0,y=0,action=0):
         busy = False
     if action==RELEASE and not busy:
         busy = True
-        GD.canvas.setCursorShape('default')
+        pf.canvas.setCursorShape('default')
         if element != [-1] and x1!=-1:
             x2, y2 = x, y
             dx = float(x2-x1)
@@ -91,7 +91,7 @@ def turn(x=0,y=0,action=0):
                 return
             x1 = -1
             v = [dx, dy, 0]
-            rot = GD.canvas.camera.rot[:3, :3]
+            rot = pf.canvas.camera.rot[:3, :3]
             v2 = dot(v, linalg.inv(rot))
             V = v2/sqrt(dot(v2,v2.conj()))
             centers = cube.centroids()
@@ -203,7 +203,7 @@ def permutations():
     message('or roughly %s.%se%s' % (N[0],N[1:4],len(N)-1))
 
 def close():
-    GD.canvas.resetMouse(LEFT,SHIFT)
+    pf.canvas.resetMouse(LEFT,SHIFT)
     dia.close()
 
 def timeOut():
@@ -232,7 +232,7 @@ if __name__ == "draw":
     busy = False
     refresh()
     drawText('Hold SHIFT and move an element while pressing the LMB to move a row of the cube',20,40,color=blue,font='f',size=12)
-    GD.canvas.setMouse(LEFT,turn,mod=SHIFT)
+    pf.canvas.setMouse(LEFT,turn,mod=SHIFT)
     dia.timeout = timeOut
     dia.show()
     dia.acceptData()

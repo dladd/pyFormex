@@ -23,7 +23,7 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-import pyformex as GD
+import pyformex as pf
 from gui import menu
 
 import utils
@@ -106,7 +106,7 @@ def remoteCommand(server=None,command=None):
 def submitToCluster(filename=None):
     """Submit an Abaqus job to the cluster."""
     if not filename:
-        filename = askFilename(GD.cfg['workdir'],filter="Abaqus input files (*.inp)",exist=True)
+        filename = askFilename(pf.cfg['workdir'],filter="Abaqus input files (*.inp)",exist=True)
     if filename:
         if not filename.endswith('.inp'):
             filename += '.inp'
@@ -119,8 +119,8 @@ def submitToCluster(filename=None):
             reqtxt = 'cpus=%s\n' % res['ncpus']
             if res['postabq']:
                 reqtxt += 'postproc=postabq\n'
-            host = GD.cfg.get('jobs/host','mecaflix')
-            reqdir = GD.cfg.get('jobs/requests','bumper/requests')
+            host = pf.cfg.get('jobs/host','mecaflix')
+            reqdir = pf.cfg.get('jobs/requests','bumper/requests')
             cmd = "scp %s %s:%s" % (filename,host,reqdir)
             ret = call(['scp',filename,'%s:%s' % (host,reqdir)])
             print ret
@@ -133,8 +133,8 @@ def killClusterJob(jobname=None):
     res = askItems([('jobname','')])
     if res:
         jobname = res['jobname']
-        host = GD.cfg.get('jobs/host','mecaflix')
-        reqdir = GD.cfg.get('jobs/requests','bumper/requests')
+        host = pf.cfg.get('jobs/host','mecaflix')
+        reqdir = pf.cfg.get('jobs/requests','bumper/requests')
         cmd = "touch %s/%s.kill" % (reqdir,jobname)
         print host
         print cmd
@@ -181,7 +181,7 @@ def checkResultsOnServer(server=None,userdir=None):
         the_server = None
         the_userdir = None
         the_jobnames = None
-    GD.message(the_jobnames)
+    pf.message(the_jobnames)
         
     
 
@@ -189,7 +189,7 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
     """Get results back from cluster."""
     global the_jobname
     if targetdir is None:
-        targetdir = GD.cfg['workdir']
+        targetdir = pf.cfg['workdir']
     if jobname is None:
         if the_jobnames is None:
             jobname_input = [('server','mecaflix'),
@@ -236,18 +236,18 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    return menu.Menu('Jobs',items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu('Jobs',items=MenuData,parent=pf.GUI.menu,before='help')
 
 
 def show_menu():
     """Show the menu."""
-    if not GD.GUI.menu.item(_menu):
+    if not pf.GUI.menu.item(_menu):
         create_menu()
 
 
 def close_menu():
     """Close the menu."""
-    GD.GUI.menu.removeItem(_menu)
+    pf.GUI.menu.removeItem(_menu)
 
 
 def reload_menu():

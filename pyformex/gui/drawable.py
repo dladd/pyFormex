@@ -23,7 +23,7 @@
 ##
 """OpenGL drawing functions and base class for all drawable objects."""
 
-import pyformex as GD
+import pyformex as pf
 
 from OpenGL import GL,GLU
 
@@ -84,7 +84,7 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     If size (float) is given, it specifies the point size.
     If color is given it is an (npoints,3) array of RGB values.
     """
-    if GD.options.safelib:
+    if pf.options.safelib:
         x = x.astype(float32).reshape(-1,3)
         if color is not None:
             color = resize(color.astype(float32),x.shape)
@@ -108,7 +108,7 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
     The value can be set to GL.GL_LINE_LOOP to draw the element's circumference
     independent from the drawing mode.
     """
-    GD.debug("drawPolygons")
+    pf.debug("drawPolygons")
     if e is None:
         nelems = x.shape[0]
     else:
@@ -116,16 +116,16 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
     n = None
     if mode.startswith('smooth') and objtype==-1:
         if normals is None:
-            GD.debug("Computing normals")
+            pf.debug("Computing normals")
             if mode == 'smooth_avg' and e is not None:
-                n = interpolateNormals(x,e,treshold=GD.cfg['render/avgnormaltreshold'])
+                n = interpolateNormals(x,e,treshold=pf.cfg['render/avgnormaltreshold'])
                 mode = 'smooth'
             else:
                 if e is None:
                     n = polygonNormals(x)
                 else:
                     n = polygonNormals(x[e])
-                GD.debug("NORMALS:%s" % str(n.shape))
+                pf.debug("NORMALS:%s" % str(n.shape))
         else:
             try:
                 n = asarray(normals)
@@ -134,7 +134,7 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
             except:
                 raise ValueError,"""Invalid normals specified"""
 
-    if GD.options.safelib:
+    if pf.options.safelib:
         x = x.astype(float32)
         if e is not None:
             e = e.astype(int32)
@@ -142,7 +142,7 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
             n = n.astype(float32)
         if color is not None:
             color = color.astype(float32)
-            GD.debug("COLORS:%s" % str(color.shape))
+            pf.debug("COLORS:%s" % str(color.shape))
             if (color.shape[0] != nelems or
                 color.shape[-1] != 3):
                 color = None
@@ -154,13 +154,13 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
 
 def drawPolyLines(x,e,color):
     """Draw the circumference of polygons."""
-    GD.debug("drawPolyLines")
+    pf.debug("drawPolyLines")
     drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0,objtype=GL.GL_LINE_LOOP)
 
 
 def drawLines(x,e,color):
     """Draw straight line segments."""
-    GD.debug("drawLines")
+    pf.debug("drawLines")
     drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0)
 
 
@@ -232,9 +232,9 @@ def draw_parts(x,e,mode,color=None,alpha=1.0):
 
     if color is not None:
         if color.ndim < 3:
-            GD.debug("COLOR SHAPE BEFORE MULTIPLEXING %s" % str(color.shape))
+            pf.debug("COLOR SHAPE BEFORE MULTIPLEXING %s" % str(color.shape))
             color = color_multiplex(color,nfaces)
-            GD.debug("COLOR SHAPE AFTER  MULTIPLEXING %s" % str(color.shape))
+            pf.debug("COLOR SHAPE AFTER  MULTIPLEXING %s" % str(color.shape))
 
     drawPolygons(x,e,mode,color,alpha)
 
@@ -250,7 +250,7 @@ def drawEdges(x,e,edges,color=None):
     The edges are specified by a list of lists. Each list defines a single
     edge of the solid, in local vertex numbers (0..nplex-1). 
     """
-    GD.debug("drawEdges")
+    pf.debug("drawEdges")
     fa = asarray(edges)
     if e is None:
         coords = x[:,fa,:]
@@ -258,15 +258,15 @@ def drawEdges(x,e,edges,color=None):
     else:
         coords = x
         elems = e[:,fa]
-    GD.debug("COORDS SHAPE: %s" % str(coords.shape))
+    pf.debug("COORDS SHAPE: %s" % str(coords.shape))
     if elems is not None:
-        GD.debug("ELEMS SHAPE: %s" % str(elems.shape))
+        pf.debug("ELEMS SHAPE: %s" % str(elems.shape))
     if color is not None and color.ndim==3:
-        GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
+        pf.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
         # select the colors of the matching points
         color = color[:,fa,:]#.reshape((-1,)+color.shape[-2:])
         color = color.reshape((-1,)+color.shape[-2:])
-        GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
+        pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
     draw_parts(coords,elems,'wireframe',color,1.0)
 
 
@@ -282,7 +282,7 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
     face of the solid, in local vertex numbers (0..nplex-1). The faces are
     sorted and collected according to their plexitude before drawing them. 
     """
-    GD.debug("drawFaces")
+    pf.debug("drawFaces")
     # We may have faces with different plexitudes!
     # We collect them according to plexitude.
     # But first convert to a list, so that we can call this function
@@ -297,15 +297,15 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
         else:
             coords = x
             elems = e[:,fa]
-        GD.debug("COORDS SHAPE: %s" % str(coords.shape))
+        pf.debug("COORDS SHAPE: %s" % str(coords.shape))
         if elems is not None:
-            GD.debug("ELEMS SHAPE: %s" % str(elems.shape))
+            pf.debug("ELEMS SHAPE: %s" % str(elems.shape))
         if color is not None and color.ndim==3:
-            GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
+            pf.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
             # select the colors of the matching points
             color = color[:,fa,:]
             color = color.reshape((-1,)+color.shape[-2:])
-            GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
+            pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
         draw_parts(coords,elems,mode,color,alpha)
 
 
@@ -400,7 +400,7 @@ def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
     if elems.shape != val.shape[:2]:
         raise RuntimeError,"shape of val and elems does not match"
     work = zeros((elems.max()+1,val.shape[2]))
-    if GD.options.safelib:
+    if pf.options.safelib:
         val = val.astype(float32)
         elems = elems.astype(int32)
         work = work.astype(float32)
@@ -444,7 +444,7 @@ def drawQuadraticCurves(x,color=None,n=8):
         if color is not None:
             GL.glColor3fv(color[i])
         P = dot(H,x[i])
-        GD.debug("P.shape=%s"%str(P.shape))
+        pf.debug("P.shape=%s"%str(P.shape))
         GL.glBegin(GL.GL_LINE_STRIP)
         for p in P:
             GL.glVertex3fv(p)
@@ -563,7 +563,7 @@ def drawGridPlanes(x0,x1,nx):
 
 def pickPolygons(x,e=None,objtype=-1):
     """Mimics drawPolygons for picking purposes."""
-    if GD.options.safelib:
+    if pf.options.safelib:
         x = x.astype(float32)
         if e is not None:
             e = e.astype(int32)
@@ -720,7 +720,7 @@ def saneColorSet(color=None,colormap=None,shape=(1,),canvas=None):
                 if canvas:
                     colormap = canvas.settings.colormap
                 else:
-                    colormap = GD.cfg['canvas/colormap']
+                    colormap = pf.cfg['canvas/colormap']
             colormap = saneColor(colormap)
             colormap = saneColorArray(colormap,(ncolors,))
         else:
@@ -796,7 +796,7 @@ class Drawable(object):
             ok = True
         finally:
             if not ok:
-                GD.debug("Error while creating a display list")
+                pf.debug("Error while creating a display list")
             GL.glEndList()
 
     def delete_list(self):

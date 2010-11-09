@@ -50,8 +50,8 @@ if __name__ == "draw":
         vp(i)
         draw(F)
         #drawText("F%s"%i,10,10,size=18)
-        GD.canvas.update()
-        sleep(2)
+        pf.canvas.update()
+        #sleep(2)
     
     
 # End

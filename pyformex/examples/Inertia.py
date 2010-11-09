@@ -55,11 +55,11 @@ def showPrincipal1(F):
     """Show the principal axes."""
     clear()
     C,I = inertia.inertia(F.coords)
-    GD.message("Center: %s" % C)
-    GD.message("Inertia tensor: %s" % I)
+    pf.message("Center: %s" % C)
+    pf.message("Inertia tensor: %s" % I)
     Iprin,Iaxes = inertia.principal(I)
-    GD.debug("Principal Values: %s" % Iprin)
-    GD.debug("Principal Directions:\n%s" % Iaxes)
+    pf.debug("Principal Values: %s" % Iprin)
+    pf.debug("Principal Directions:\n%s" % Iaxes)
 
     siz = F.dsize()
     H = Axes.scale(siz).affine(Iaxes.transpose(),C)

@@ -82,4 +82,4 @@ draw(h,bbox=bb)
 
 ##if ack('Do you want to see the spheres with smooth rendering?'):
 ##    smooth()
-##    GD.canvas.update()
+##    pf.canvas.update()

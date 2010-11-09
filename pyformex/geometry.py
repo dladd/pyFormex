@@ -128,8 +128,9 @@ class Geometry(object):
     ########### Change the coords #################
 
     def _coords_transform(func):
-        """Perform a transformation on the .coords attribute of the object
+        """Perform a transformation on the .coords attribute of the object.
 
+        This is a decorator function.
         """
         coords_func = getattr(Coords,func.__name__)
         def newf(self,*args,**kargs):

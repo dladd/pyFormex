@@ -53,7 +53,7 @@ def toggleAnnotation(self,i=0,onoff=None):
     #print "THIS IS THE MESHMENU TOGGLE"
     #print self
     _toggleAnnotation(self,i,onoff)
-    mesh_menu = GD.GUI.menu.item(_menu)
+    mesh_menu = pf.GUI.menu.item(_menu)
     #print mesh_menu.menuitems
     toggle_menu = mesh_menu.item("toggle annotations")
     #print toggle_menu
@@ -110,7 +110,7 @@ def readMesh(fn):
     Returns an (x,e) tuple or None
     """
     d = {}
-    GD.GUI.setBusy(True)
+    pf.GUI.setBusy(True)
     fil = file(fn,'r')
     for line in fil:
         if line[0] == '#':
@@ -129,7 +129,7 @@ def readMesh(fn):
             print("Skipping unrecognized line: %s" % line)
         dfil.close()
 
-    GD.GUI.setBusy(False)
+    pf.GUI.setBusy(False)
     fil.close()
     return d                    
 
@@ -174,7 +174,7 @@ def convert_inp(fn=None):
         return
 
 
-    converter = os.path.join(GD.cfg['pyformexdir'],'bin','read_abq_inp.awk')
+    converter = os.path.join(pf.cfg['pyformexdir'],'bin','read_abq_inp.awk')
     dirname = os.path.dirname(fn)
     basename = os.path.basename(fn)
     cmd = 'cd %s;%s %s' % (dirname,converter,basename)
@@ -417,19 +417,19 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=False)
+    w = menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before='help',tearoff=False)
     return w
 
 
 def show_menu():
     """Show the menu."""
-    if not GD.GUI.menu.item(_menu):
+    if not pf.GUI.menu.item(_menu):
         create_menu()
 
 
 def close_menu():
     """Close the menu."""
-    GD.GUI.menu.removeItem(_menu)
+    pf.GUI.menu.removeItem(_menu)
 
 
 def reload_menu():

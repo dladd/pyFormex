@@ -30,7 +30,7 @@ Determine the (inner) voronoi diagram of a triangulated surface.
 Determine approximation for the centerline.
 """
 
-import pyformex as GD
+import pyformex as pf
 import os
 from numpy import *
 from plugins import trisurface,tetgen

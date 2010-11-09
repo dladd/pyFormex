@@ -80,7 +80,7 @@ if shrink:
 
 renderMode(rendermode)
 if transparent:
-    GD.canvas.alphablend = True
+    pf.canvas.alphablend = True
 if bottom:
     draw(b,color=yellow,alpha=1.0)
 

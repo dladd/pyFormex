@@ -36,8 +36,8 @@ view('iso')
 smooth()
 transparent(state=False)
 
-chdir(GD.cfg['curfile'])
-F = Formex.read(GD.cfg['pyformexdir']+'/data/horse.pgf')#file with horse stl
+chdir(pf.cfg['curfile'])
+F = Formex.read(pf.cfg['pyformexdir']+'/data/horse.pgf')#file with horse stl
 F = F.toMesh().translate(-F.center())
 xmin,xmax = F.bbox()
 M0 = F.scale(1./(xmax[0]-xmin[0])).rotate(180, 1)

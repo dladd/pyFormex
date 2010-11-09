@@ -58,7 +58,7 @@ stent_length = 10.
 stent = DoubleHelixStent(stent_diameter,stent_length,
                          wire_diameter,number_wires,pitch_angle,nb=1).all()
 
-if GD.options.gui:
+if pf.options.gui:
     # draw it
     reset()
     clear()
@@ -80,7 +80,7 @@ message("Output is written to file '%s' in %s" % (outfilename,os.getcwd()))
 stdout_saved = sys.stdout
 sys.stdout = outfile
 print "# File created by pyFormex on %s" % time.ctime()
-print "# Script name: %s" % GD.scriptName
+print "# Script name: %s" % pf.scriptName
 
 
 
@@ -191,7 +191,7 @@ outfile.close()
 #Using pyFormex as postprocessor
 ################################
 
-if GD.options.gui:
+if pf.options.gui:
 
     from gui.colorscale import *
     import gui.decors
@@ -219,7 +219,7 @@ if GD.options.gui:
 
     bgcolor('lightgreen')
     linewidth(3)
-    x = GD.canvas.width()//2
+    x = pf.canvas.width()//2
     TA = drawtext('Normal force in the members',x,100,font='tr32')
     CL = ColorLegend(CS,100)
     CLA = decors.ColorLegend(CL,10,10,30,200) 

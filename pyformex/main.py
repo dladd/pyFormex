@@ -211,7 +211,6 @@ def apply_config_changes(cfg):
         'canvas/propcolors','Save changes',
         ]:
         if key in cfg.keys():
-            # Can we put GD.debug here?
             print("DELETING CONFIG VARIABLE %s" % key)
             del cfg[key]
 

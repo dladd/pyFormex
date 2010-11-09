@@ -32,7 +32,7 @@ Importing this module will automatically check the availabilty of calpy
 and set the sys.path accordingly.
 """
 
-import pyformex as GD
+import pyformex as pf
 
 import utils
 import sys,os
@@ -48,28 +48,28 @@ def detect(trypaths=None):
     if not calpy:
         return
     
-    GD.message("You have calpy version %s" % calpy)
+    pf.message("You have calpy version %s" % calpy)
     path = ''
     calpy = calpy.split('-')[0]  # trim the version trailer
     if utils.checkVersion('calpy','0.3.4-rev3',external=True) >= 0:
         sta,out = utils.runCommand('calpy --whereami')
         if not sta:
             path = out
-            GD.debug("I found calpy in %s" % path)
+            pf.debug("I found calpy in %s" % path)
     if not path:
         if trypaths is None:
             trypaths = [ '/usr/local/lib', '/usr/local' ]
         for p in trypaths:
             path = '%s/calpy-%s' % (p,calpy)
             if os.path.exists(path):
-                GD.debug('path exists: %s' % path)
+                pf.debug('path exists: %s' % path)
                 break
             else:
-                GD.debug('path does not exist: %s' % path)
+                pf.debug('path does not exist: %s' % path)
                 path = ''
     if path:
         #path += '/calpy'
-        GD.message("I found calpy in '%s'" % path)
+        pf.message("I found calpy in '%s'" % path)
         sys.path.append(path)
 
     calpy_path = path
@@ -88,7 +88,7 @@ def check(trypaths=None):
     if utils.hasModule('calpy',check=True):
         return True
     else:
-        GD.warning("sys.path=%s\nSorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it)." % sys.path)
+        pf.warning("sys.path=%s\nSorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it)." % sys.path)
         return False
  
 
@@ -96,7 +96,7 @@ def check(trypaths=None):
 if __name__ == "__main__":
     print(__doc__)
 else:
-    GD.debug("Loading plugin %s" % __file__)
+    pf.debug("Loading plugin %s" % __file__)
     check()
 
 

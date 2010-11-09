@@ -24,7 +24,7 @@
 """Functions from the File menu."""
 
 import os,shutil
-import pyformex as GD
+import pyformex as pf
 import widgets
 import utils
 import project
@@ -58,7 +58,7 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
 
     If makeDefault is True, an already open project will be closed and
     the opened project becomes the current project.
-    If makeDefault is False, the project data are imported into GD.PF
+    If makeDefault is False, the project data are imported into pf.PF
     and the current project does not change. This means that if a project was
     open, the imported data will be added to it.
     
@@ -70,7 +70,7 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
 
     # ask filename from user
     if the_project is None:
-        cur = GD.cfg.get('workdir','.')
+        cur = pf.cfg.get('workdir','.')
     else:
         if makeDefault:
             options = ['Cancel','Close without saving','Save and Close']
@@ -101,10 +101,10 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
             return
         if res == 'Add':
             create = False
-    GD.message("Opening project %s" % fn)
+    pf.message("Opening project %s" % fn)
     
-    if GD.PF:
-        GD.message("Exported symbols: %s" % GD.PF.keys())
+    if pf.PF:
+        pf.message("Exported symbols: %s" % pf.PF.keys())
         if addGlobals is None:
             res = draw.ask("pyFormex already contains exported symbols.\nShall I delete them or add them to your project?",['Delete','Add','Cancel'])
             if res == 'Cancel':
@@ -116,13 +116,13 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
     # OK, we have all data, now create/open the project
         
     updateSettings({'workdir':os.path.dirname(fn)},save=True)
-    sig = GD.Version[:GD.Version.rfind('-')]
+    sig = pf.Version[:pf.Version.rfind('-')]
     if ignoresig:
         sig = ''
 
     proj = _open_project(fn,create,sig,compression,legacy)
         
-    GD.message("Project contents: %s" % proj.keys())
+    pf.message("Project contents: %s" % proj.keys())
     
     if hasattr(proj,'_autoscript_'):
         _ignore = "Ignore it!"
@@ -149,16 +149,16 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
 
     if makeDefault:
         the_project = proj
-        if GD.PF and addGlobals:
-            the_project.update(GD.PF)
-        GD.PF = the_project
-        GD.GUI.setcurproj(fn)
+        if pf.PF and addGlobals:
+            the_project.update(pf.PF)
+        pf.PF = the_project
+        pf.GUI.setcurproj(fn)
 
     else:
         # Just import the data into current project
-        GD.PF.update(proj)
+        pf.PF.update(proj)
 
-    GD.message("Exported symbols: %s" % GD.PF.keys())
+    pf.message("Exported symbols: %s" % pf.PF.keys())
 
 
 def openProject():
@@ -186,29 +186,29 @@ def _open_project(fn,create,signature,compression,legacy):
     exception trapping
     """
     # Loading the project may take a long while; attent user
-    GD.GUI.setBusy()
+    pf.GUI.setBusy()
     try:
         proj = project.Project(fn,create,signature,compression,legacy)
     except:
         proj = None
         raise
     finally:
-        GD.GUI.setBusy(False)
+        pf.GUI.setBusy(False)
     return proj
     
 
 def setAutoScript():
     """Set the current script as autoScript in the project"""
     global the_project
-    if the_project is not None and GD.cfg['curfile'] and GD.GUI.canPlay:
-        the_project._autoscript_ = file(GD.cfg['curfile']).read()
+    if the_project is not None and pf.cfg['curfile'] and pf.GUI.canPlay:
+        the_project._autoscript_ = file(pf.cfg['curfile']).read()
  
 
 def setAutoFile():
     """Set the current script as autoScriptFile in the project"""
     global the_project
-    if the_project is not None and GD.cfg['curfile'] and GD.GUI.canPlay:
-        the_project.autofile = GD.cfg['curfile']
+    if the_project is not None and pf.cfg['curfile'] and pf.GUI.canPlay:
+        the_project.autofile = pf.cfg['curfile']
             
 def removeAutoScript():
     global the_project
@@ -220,10 +220,10 @@ def removeAutoFile():
 
 def saveProject():
     if the_project is not None:
-        GD.message("Project contents: %s" % the_project.keys())
-        GD.GUI.setBusy()
+        pf.message("Project contents: %s" % the_project.keys())
+        pf.GUI.setBusy()
         the_project.save()
-        GD.GUI.setBusy(False)
+        pf.GUI.setBusy(False)
 
 
 def saveAsProject():
@@ -242,14 +242,14 @@ def closeProject(save=True):
     """Close the current project, saving it by default."""
     global the_project
     if the_project is not None:
-        GD.message("Closing project %s" % the_project.filename)
+        pf.message("Closing project %s" % the_project.filename)
         if save:
             saveProject()
         # The following is needed to copy the globals to a new dictionary
         # before destroying the project
-        GD.PF = {}
-        GD.PF.update(the_project)
-        GD.GUI.setcurproj('None')
+        pf.PF = {}
+        pf.PF.update(the_project)
+        pf.GUI.setcurproj('None')
     the_project = None
         
     
@@ -283,9 +283,9 @@ def openScript(fn=None,exist=True,create=False):
     openScript() to open existing scripts.
     """
     if fn is None:
-        cur = GD.cfg['curfile']
+        cur = pf.cfg['curfile']
         if cur is None:
-            cur = GD.cfg['workdir']
+            cur = pf.cfg['workdir']
         if cur is None:
             cur  = '.'
         typ = utils.fileDescription('pyformex')
@@ -294,12 +294,12 @@ def openScript(fn=None,exist=True,create=False):
         if create:
             if not exist and os.path.exists(fn) and not draw.ack("The file %s already exists.\n Are you sure you want to overwrite it?" % fn):
                 return None
-            template = GD.cfg['scripttemplate']
+            template = pf.cfg['scripttemplate']
             if (os.path.exists(template)):
                 shutil.copyfile(template,fn)
         updateSettings({'workdir':os.path.dirname(fn)},save=True)
-        GD.GUI.setcurfile(fn)
-        GD.GUI.history.add(fn)
+        pf.GUI.setcurfile(fn)
+        pf.GUI.history.add(fn)
         if create:
             editScript(fn)
     return fn
@@ -317,10 +317,10 @@ def editScript(fn=None):
     of Emacs.
     If a filename is specified, that file is loaded instead.
     """
-    if GD.cfg['editor']:
+    if pf.cfg['editor']:
         if fn is None:
-            fn = GD.cfg['curfile']
-        pid = utils.spawn('%s %s' % (GD.cfg['editor'],fn))
+            fn = pf.cfg['curfile']
+        pid = utils.spawn('%s %s' % (pf.cfg['editor'],fn))
     else:
         draw.warning('No known editor was found or configured')
 
@@ -337,7 +337,7 @@ def saveImage(multi=False):
      - do nothing
     """
     pat = map(utils.fileDescription, ['img','icon','all'])  
-    dia = widgets.SaveImageDialog(GD.cfg['workdir'],pat,multi=multi)
+    dia = widgets.SaveImageDialog(pf.cfg['workdir'],pat,multi=multi)
     opt = dia.getResult()
     if opt:
         if opt.fm == 'From Extension':
@@ -383,7 +383,7 @@ def showImage():
     global viewer
     fn = draw.askFilename(filter=utils.fileDescription('img'))
     if fn:
-        viewer = ImageViewer(GD.app,fn)
+        viewer = ImageViewer(pf.app,fn)
         viewer.show()
 
 

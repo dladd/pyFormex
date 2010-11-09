@@ -44,7 +44,7 @@ F = simple.sector(r,360.,n,n,h=h,diag=None)
 F.setProp(0)
 draw(F,view='bottom')
 setDrawOptions({'bbox':None})
-zoomall()
+zoomAll()
 zoom(3)
 
 print map(str,range(4))
@@ -61,6 +61,8 @@ if nb > 0:
     B1.setProp(1)
     draw(B1)
 
+#sleep(10)
+
 if nb > 1:
     B2 = B.translate([0.2*r,0.,1.15*h])
     B2.setProp(2)
@@ -71,5 +73,7 @@ if nb > 2:
     B3.setProp(6)
     draw(B3)
 
-zoomall()
+zoomAll()
 zoom(3)
+
+focus(B1)

@@ -125,13 +125,13 @@ loads=zeros((ndof,nlc),Float)
 loads[:,0]=AssembleVector(loads[:,0],[ 0.0, -50.0, 0.0 ],bcon[nr_loaded,:])
 
 message("Performing analysis: this may take some time")
-outfilename = os.path.splitext(os.path.basename(GD.scriptName))[0] + '.out'
+outfilename = os.path.splitext(os.path.basename(pf.scriptName))[0] + '.out'
 outfile = file(outfilename,'w')
 message("Output is written to file '%s' in %s" % (outfilename,os.getcwd()))
 stdout_saved = sys.stdout
 sys.stdout = outfile
 print "# File created by pyFormex on %s" % time.ctime()
-print "# Script name: %s" % GD.scriptName
+print "# Script name: %s" % pf.scriptName
 displ,frc = static(coords,bcon,mats,matnod,loads,Echo=True)
 print "# Analysis finished on %s" % time.ctime()
 sys.stdout = stdout_saved
@@ -175,7 +175,7 @@ dcoords = coords + dscale * displ[:,:,0]
 # first load case
 deformed = Formex(dcoords[elems],range(nelems))
 clear()
-GD.canvas.addDecoration(CLA)
+pf.canvas.addDecoration(CLA)
 linewidth(1)
 draw(results,color='darkgreen')
 linewidth(3)

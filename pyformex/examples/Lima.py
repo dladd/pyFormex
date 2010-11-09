@@ -161,7 +161,7 @@ if __name__ == "draw":
         'viewports':False
         }
 
-    defaults = GD.PF.get('__Lima__data',defaults)
+    defaults = pf.PF.get('__Lima__data',defaults)
 
     res = askItems([
         ('rule',defaults['rule'],'select',{'text':'Production rule','choices':choices,'onselect':setDefaultGenerations}),
@@ -173,7 +173,7 @@ if __name__ == "draw":
 
     if res:
         globals().update(res)
-        GD.PF['__Lima__data'] = res
+        pf.PF['__Lima__data'] = res
         if viewports:
             layout(ngen+1,ncols=(ngen+2)//2)
         if rule == '__custom__':

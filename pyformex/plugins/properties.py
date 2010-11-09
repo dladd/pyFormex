@@ -657,7 +657,7 @@ class PropertyDB(Dict):
 if __name__ == "script" or  __name__ == "draw":
 
 
-    if GD.GUI:
+    if pf.GUI:
         workHere()
     print(os.getcwd())
     

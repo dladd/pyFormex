@@ -69,7 +69,7 @@ def glutSelectFont(font=None,size=None):
     The return value is a 4-character string representing one of the
     GLUT fonts.
     """
-    #GD.debug("INPUT %s,%s" % (font,size))
+    #pf.debug("INPUT %s,%s" % (font,size))
     if size is None and font in GLUTFONTS:
         return font
     if font is None:

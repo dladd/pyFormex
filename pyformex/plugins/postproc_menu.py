@@ -23,7 +23,7 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-import pyformex as GD
+import pyformex as pf
 from gui import menu
 
 from plugins.postproc import *
@@ -125,7 +125,7 @@ class Table(QtGui.QDialog):
         rhead is an optional list of nrow row headers.
         """
         if parent is None:
-            parent = GD.GUI
+            parent = pf.GUI
         
         QtGui.QDialog.__init__(self,parent)
         self.setWindowTitle(str(caption))
@@ -291,7 +291,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         cval = array(map(CS.color,val))
         CL = ColorLegend(CS,100)
         CLA = decors.ColorLegend(CL,20,20,30,200,scale=multiplier) 
-        GD.canvas.addDecoration(CLA)
+        pf.canvas.addDecoration(CLA)
 
     # the supplied text
     if text:
@@ -330,12 +330,12 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         # (though the code is less clear and compact).
         if len(frames) > 0:
             for Fi in frames[-1][0]:
-                GD.canvas.removeActor(Fi)
-            GD.canvas.removeDecoration(frames[-1][1])
+                pf.canvas.removeActor(Fi)
+            pf.canvas.removeDecoration(frames[-1][1])
         # add the latest frame to the stored list of frames
         frames.append((F,T))
         if sleeptime > 0.:
-            GD.app.processEvents()
+            pf.app.processEvents()
             sleep(sleeptime)
 
     zoomBbox(bbox(bboxes))
@@ -350,16 +350,16 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
             # It would be interesting if addactor would add/remove a list
             # of actors
             for Fi in F:
-                GD.canvas.addActor(Fi)
-            GD.canvas.addDecoration(T)
+                pf.canvas.addActor(Fi)
+            pf.canvas.addDecoration(T)
             for Fi in FA:
-                GD.canvas.removeActor(Fi)
-            GD.canvas.removeDecoration(TA)
-            GD.canvas.display()
-            GD.canvas.update()
+                pf.canvas.removeActor(Fi)
+            pf.canvas.removeDecoration(TA)
+            pf.canvas.display()
+            pf.canvas.update()
             FA,TA = F,T
             if sleeptime > 0.:
-                GD.app.processEvents()
+                pf.app.processEvents()
                 sleep(sleeptime)
 
 
@@ -382,15 +382,15 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##     def postABQ(self,fn=None):
 ##         """Translate an Abaqus .fil file in a postproc script."""
 ##         types = [ 'Abaqus results file (*.fil)' ]
-##         fn = askFilename(GD.cfg['workdir'],types)
+##         fn = askFilename(pf.cfg['workdir'],types)
 ##         if fn:
 ##             chdir(fn)
 ##             name,ext = os.path.splitext(fn)
 ##             post = name+'.post'
-##             cmd = "%s/lib/postabq %s > %s" % (GD.cfg['pyformexdir'],fn,post)
+##             cmd = "%s/lib/postabq %s > %s" % (pf.cfg['pyformexdir'],fn,post)
 ##             sta,out = utils.runCommand(cmd)
 ##             if sta:
-##                 GD.message(out)
+##                 pf.message(out)
 
 ##     def selectStepInc(self):
 ##         res = askItems([('Step',self.DB.step,'select',self.DB.res.keys())])
@@ -399,7 +399,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##             res = askItems([('Increment',None,'select',self.DB.res[step].keys())])
 ##             if res:
 ##                 inc = int(res['Increment'])
-##         GD.message("Step %s; Increment %s;" % (step,inc))
+##         pf.message("Step %s; Increment %s;" % (step,inc))
 ##         self.DB.setStepInc(step,inc)
 
     
@@ -448,14 +448,14 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##         else:
 ##             if self.post_button is None:
 ##                 self.post_button = widgets.ButtonBox('PostDB:',['None'],[self.select])
-##                 GD.GUI.statusbar.addWidget(self.post_button)
+##                 pf.GUI.statusbar.addWidget(self.post_button)
 ##             self.post_button.setText(name)
 
 
 ##     def hideName(self):
 ##         """Hide the statusbar button with the name of the DB."""
 ##         if self.post_button:
-##             GD.GUI.statusbar.removeWidget(self.post_button)
+##             pf.GUI.statusbar.removeWidget(self.post_button)
 
 
 ##     def showStepInc(self):
@@ -463,7 +463,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##         steps = self.DB.getSteps()
 ##         if steps:
 ##             self.step_combo = widgets.ComboBox('Step:',steps,self.setStep)
-##             GD.GUI.statusbar.addWidget(self.step_combo)
+##             pf.GUI.statusbar.addWidget(self.step_combo)
 ##             self.showInc(steps[0])
 
 
@@ -472,15 +472,15 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##         if step:
 ##             incs = self.DB.getIncs(step)
 ##             self.inc_combo = widgets.ComboBox('Inc:',incs,self.setInc)
-##             GD.GUI.statusbar.addWidget(self.inc_combo)
+##             pf.GUI.statusbar.addWidget(self.inc_combo)
     
 
 ##     def hideStepInc(self):
 ##         """Hide the step/inc combo boxes"""
 ##         if self._inc_combo:
-##             GD.GUI.statusbar.removeWidget(self._inc_combo)
+##             pf.GUI.statusbar.removeWidget(self._inc_combo)
 ##         if self._step_combo:
-##             GD.GUI.statusbar.removeWidget(self._step_combo)
+##             pf.GUI.statusbar.removeWidget(self._step_combo)
              
 
 ##     def setStep(self,i):
@@ -654,7 +654,7 @@ def reset(data=None):
     # data is a dict with short keys/data
     if data is None:
         data = dia_defaults
-    GD.PF['__PostProcMenu_data__'] = data
+    pf.PF['__PostProcMenu_data__'] = data
     dialog_update(data)
 
 
@@ -665,7 +665,7 @@ def setDB(db):
         DB = db
     else:
         DB = None
-    GD.PF['__PostProcMenu_result__'] = DB
+    pf.PF['__PostProcMenu_result__'] = DB
 
     
 def selectDB(db=None):
@@ -708,7 +708,7 @@ def importFlavia(fn=None):
     from plugins.flavia import readFlavia
     if fn is None:
         types = [ utils.fileDescription('flavia'), utils.fileDescription('all') ]
-        fn = askFilename(GD.cfg['workdir'],types)
+        fn = askFilename(pf.cfg['workdir'],types)
     if fn:
         chdir(fn)
         if fn.endswith('.msh'):
@@ -740,7 +740,7 @@ def importDB(fn=None):
     
     if fn is None:
         types = utils.fileDescription('postproc')
-        fn = askFilename(GD.cfg['workdir'],types)
+        fn = askFilename(pf.cfg['workdir'],types)
     if fn:
         chdir(fn)
         size = os.stat(fn).st_size
@@ -758,7 +758,7 @@ I strongly recommend you to cancel the operation now.
 
         ### check whether the import succeeded
         name = FeResult._name_
-        db = GD.PF[name]
+        db = pf.PF[name]
         if not isinstance(db,FeResult):
             warning("!Something went wrong during the import of the database %s" % fn)
             return
@@ -786,7 +786,7 @@ def open_results_dialog():
         warning("No results database was selected!")
         return
     close_dialog()
-    data = GD.PF.get('__PostProcMenu_data__',dia_defaults)
+    data = pf.PF.get('__PostProcMenu_data__',dia_defaults)
     print("SAVED DATA",data)
     for k,v in data.items():
         dia_dict[k][1] = v
@@ -804,7 +804,7 @@ def open_results_dialog():
                ]
     dialog = widgets.OldInputDialog(dia_dict.values(),caption='Results Dialog',actions=actions,default='Show')
     dialog.show()
-    GD.PF['__PostProcMenu_dialog__'] = dialog
+    pf.PF['__PostProcMenu_dialog__'] = dialog
 
 
 def close_dialog():
@@ -847,25 +847,25 @@ def create_menu():
         ("&Reload menu",reload_menu),
         ("&Close menu",close_menu),
         ]
-    return menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before='help')
 
 
 def show_menu():
     """Show the menu."""
-    if not GD.GUI.menu.item(_menu):
+    if not pf.GUI.menu.item(_menu):
         create_menu()
 
 
 def close_menu():
     """Close the menu."""
-    GD.GUI.menu.removeItem(_menu)
+    pf.GUI.menu.removeItem(_menu)
 
 
 def reload_menu():
     """Reload the Postproc menu."""
     global DB
     close_menu()
-    DB =  GD.PF.get('__PostProcMenu_result__',None)
+    DB =  pf.PF.get('__PostProcMenu_result__',None)
     print("Current database %s" % DB)
     import plugins
     plugins.refresh('postproc_menu')

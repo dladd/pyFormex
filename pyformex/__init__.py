@@ -37,9 +37,9 @@ Description = "pyFormex is a tool for generating, manipulating and transforming 
 # The GUI parts
 app_started = False
 app = None         # the Qapplication 
-GUI = None         # the QMainWindow
-canvas = None      # the OpenGL Drawing widget
-board = None       # the message board
+GUI = None         # the GUI QMainWindow
+canvas = None      # the OpenGL Drawing widget controlled by the running script
+#board = None       # the message board
 
 # set start date/time
 import time,datetime

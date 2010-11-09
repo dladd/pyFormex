@@ -30,7 +30,7 @@ applications, without the need to explicitely importing the :mod:`script`
 module.
 """
 
-import pyformex
+import pyformex as pf
 import formex
 import geomfile
 import utils
@@ -77,9 +77,9 @@ def Globals():
     was executed in the 'draw' module (--gui option) or the 'script'
     module (--nogui option).
     """
-    g = copy.copy(pyformex.PF)
+    g = copy.copy(pf.PF)
     g.update(globals())
-    if pyformex.GUI:
+    if pf.GUI:
         from gui import colors,draw
         g.update(colors.__dict__)
         g.update(draw.__dict__)
@@ -89,7 +89,7 @@ def Globals():
 
 def export(dic):
     """Export the variables in the given dictionary."""
-    pyformex.PF.update(dic)
+    pf.PF.update(dic)
 
 
 def export2(names,values):
@@ -99,7 +99,7 @@ def export2(names,values):
 
 def forget(names):
     """Remove the global variables specified in list."""
-    g = pyformex.PF
+    g = pf.PF
     for name in names:
         if g.has_key(name):
             del g[name]
@@ -107,7 +107,7 @@ def forget(names):
 
 def rename(oldnames,newnames):
     """Rename the global variables in oldnames to newnames."""
-    g = pyformex.PF
+    g = pf.PF
     for oldname,newname in zip(oldnames,newnames):
         if g.has_key(oldname):
             g[newname] = g[oldname]
@@ -128,7 +128,7 @@ def listAll(clas=None,like=None,filter=None,dic=None):
     The return value is a list of keys from dic.
     """
     if dic is None:
-        dic = pyformex.PF
+        dic = pf.PF
 
     names = dic.keys()
     if clas is not None:
@@ -142,11 +142,11 @@ def listAll(clas=None,like=None,filter=None,dic=None):
 
 def named(name):
     """Returns the global object named name."""
-    if pyformex.PF.has_key(name):
-        dic = pyformex.PF
-    elif pyformex._PF_.has_key(name):
-        pyformex.debug("Found %s in pyformex._PF_" % name)
-        dic = pyformex._PF_
+    if pf.PF.has_key(name):
+        dic = pf.PF
+    elif pf._PF_.has_key(name):
+        pf.debug("Found %s in pyformex._PF_" % name)
+        dic = pf._PF_
     else:
         raise NameError,"Name %s is in neither pyformex.PF nor pyformex._PF_" % name
     return dic[name]
@@ -154,7 +154,7 @@ def named(name):
 
 def getcfg(name):
     """Return a value from the configuration."""
-    return pyformex.cfg.get(name,None)
+    return pf.cfg.get(name,None)
 
 
 #################### Interacting with the user ###############################
@@ -212,7 +212,7 @@ def showInfo(message):
 # message is the preferred function to send text info to the user.
 # The default message handler is set here.
 # Best candidates are log/info
-message = pyformex.message
+message = pf.message
 
 def system(cmdline,result='output'):
     """Run a command and return its output.
@@ -265,35 +265,37 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     (including comments) is echoed to the message board.
     """
     global scriptDisabled,scriptRunning,exitrcrequested
-    #pyformex.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
+    #pf.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     global scriptThread
     if scriptThread is not None and scriptThread.isAlive():
-        pyformex.message("Not executing this script because another one is already running")
+        pf.message("Not executing this script because another one is already running")
         return
         
     if scriptRunning or scriptDisabled :
-        pyformex.message("Not executing this script because another one is already running")
+        pf.message("Not executing this script because another one is already running")
         return
     
     scriptRunning = True
     exitrequested = False
 
-    if pyformex.GUI:
+    if pf.GUI:
         global stepmode,exportNames,starttime
-        #pyformex.debug('GUI SCRIPT MODE %s'% (stepmode))
-        pyformex.GUI.drawlock.allow()
-        pyformex.canvas.update()
-        pyformex.GUI.actions['Play'].setEnabled(False)
-        pyformex.GUI.actions['Continue'].setEnabled(True)
-        pyformex.GUI.actions['Stop'].setEnabled(True)
-        pyformex.app.processEvents()
+        #pf.debug('GUI SCRIPT MODE %s'% (stepmode))
+        pf.GUI.drawlock.allow()
+        pf.canvas.update()
+        pf.GUI.actions['Play'].setEnabled(False)
+        pf.GUI.actions['Continue'].setEnabled(True)
+        pf.GUI.actions['Stop'].setEnabled(True)
+        pf.app.processEvents()
     
     # Get the globals
     g = Globals()
-    if pyformex.GUI:
+    if pf.GUI:
         modname = 'draw'
+        # by default, we run the script in the current GUI viewport
+        pf.canvas = pf.GUI.viewports.current
     else:
         modname = 'script'
     g.update({'__name__':modname})
@@ -302,21 +304,21 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     g.update({'argv':argv})
 
     # Make this directory available
-    pyformex._PF_ = g
+    pf._PF_ = g
 
     # Now we can execute the script using these collected globals
     exportNames = []
-    pyformex.scriptName = name
+    pf.scriptName = name
     exitall = False
 
     starttime = time.clock()
-    pyformex.debug('STARTING SCRIPT (%s)' % starttime)
-    #pyformex.debug(scr)
-    #pyformex.debug(pye)
+    pf.debug('STARTING SCRIPT (%s)' % starttime)
+    #pf.debug(scr)
+    #pf.debug(pye)
     try:
         try:
-            if pyformex.GUI and stepmode:
-                #pyformex.debug("STEPPING THROUGH SCRIPT")
+            if pf.GUI and stepmode:
+                #pf.debug("STEPPING THROUGH SCRIPT")
                 step_script(scr,g,True)
             else:
                 if pye:
@@ -324,7 +326,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                          scr = scr.read() + '\n'
                     n = len(scr) // 2
                     scr = utils.mergeme(scr[:n],scr[n:])
-                if pyformex.options.executor:
+                if pf.options.executor:
                     scriptThread = threading.Thread(None,executeScript,'script-0',(scr,g))
                     scriptThread.daemon = True
                     print "OK, STARTING THREAD"
@@ -347,25 +349,25 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             try:
                 atExit()
             except:
-                GD.debug('Error while calling script exit function')
+                pf.debug('Error while calling script exit function')
                 
-        if pyformex.cfg['autoglobals']:
+        if pf.cfg['autoglobals']:
             exportNames.extend(listAll(clas=formex.Formex,dic=g))
-        pyformex.PF.update([(k,g[k]) for k in exportNames])
+        pf.PF.update([(k,g[k]) for k in exportNames])
 
         scriptRunning = False # release the lock in case of an error
         elapsed = time.clock() - starttime
-        pyformex.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
-        if pyformex.GUI:
+        pf.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
+        if pf.GUI:
             stepmode = False
-            pyformex.GUI.drawlock.release() # release the lock
-            pyformex.GUI.actions['Play'].setEnabled(True)
-            #pyformex.GUI.actions['Step'].setEnabled(False)
-            pyformex.GUI.actions['Continue'].setEnabled(False)
-            pyformex.GUI.actions['Stop'].setEnabled(False)
+            pf.GUI.drawlock.release() # release the lock
+            pf.GUI.actions['Play'].setEnabled(True)
+            #pf.GUI.actions['Step'].setEnabled(False)
+            pf.GUI.actions['Continue'].setEnabled(False)
+            pf.GUI.actions['Stop'].setEnabled(False)
 
     if exitall:
-        pyformex.debug("Calling exit() from playscript")
+        pf.debug("Calling exit() from playscript")
         exit()
 
 
@@ -388,7 +390,7 @@ def step_script(s,glob,paus=True):
                      line.find('draw(') >= 0  or
                      line.strip().startswith('view') or
                      line.find('view(') >= 0 ):
-            pyformex.GUI.drawlock.block()
+            pf.GUI.drawlock.block()
             message(buf)
             exec(buf) in glob
             buf = ''
@@ -406,18 +408,18 @@ def breakpt(msg=None):
     global exitrequested
     if exitrequested:
         if msg is not None:
-            pyformex.message(msg)
+            pf.message(msg)
         exitrequested = False # reset for next time
         raise _Exit
 
 
 ## def raiseExit():
-##     pyformex.debug("RAISED EXIT")
+##     pf.debug("RAISED EXIT")
 ##     raise _Exit
 
 
 def enableBreak(mode=True):
-    pyformex.GUI.actions['Stop'].setEnabled(mode)
+    pf.GUI.actions['Stop'].setEnabled(mode)
 
 
 def stopatbreakpt():
@@ -437,9 +439,9 @@ def playFile(fn,argv=[]):
     from timer import Timer
     t = Timer()
     message("Running script (%s)" % fn)
-    pyformex.debug("  Executing with arguments: %s" % argv)
+    pf.debug("  Executing with arguments: %s" % argv)
     res = playScript(file(fn,'r'),fn,fn,argv,fn.endswith('.pye'))
-    pyformex.debug("  Arguments left after execution: %s" % argv)
+    pf.debug("  Arguments left after execution: %s" % argv)
     message("Finished script %s in %s seconds" % (fn,t.seconds()))
     return res
 
@@ -454,12 +456,12 @@ def play(fn=None,argv=[],step=False):
     """
     global stepmode
     if not fn:
-        if pyformex.GUI.canPlay:
-            fn = pyformex.cfg['curfile']
+        if pf.GUI.canPlay:
+            fn = pf.cfg['curfile']
         else:
             return
     stepmode = step
-    pyformex.GUI.history.add(fn)
+    pf.GUI.history.add(fn)
     stepmode = step
     return playFile(fn,argv)
 
@@ -472,9 +474,9 @@ def exit(all=False):
             raise _ExitAll # exit from pyformex
         else:
             raise _Exit # exit from script only
-    if pyformex.app and pyformex.app_started: # exit from GUI
-        pyformex.debug("draw.exit called while no script running")
-        pyformex.app.quit() # close GUI and exit pyformex
+    if pf.app and pf.app_started: # exit from GUI
+        pf.debug("draw.exit called while no script running")
+        pf.app.quit() # close GUI and exit pyformex
     else: # the gui didn't even start
         sys.exit(0) # exit from pyformex
         
@@ -492,11 +494,11 @@ def processArgs(args):
         if fn.endswith('.pye'):
             pass
         elif not os.path.exists(fn) or not utils.is_pyFormex(fn):
-            pyformex.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
+            pf.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
             continue
         res = playFile(fn,args)
-        if res and pyformex.GUI:
-            pyformex.message("Error during execution of script %s" % fn)
+        if res and pf.GUI:
+            pf.message("Error during execution of script %s" % fn)
         
     return res
         
@@ -510,15 +512,15 @@ def setPrefs(res,save=False):
     If save is True, the changes will be stored to the user's
     configuration file.
     """
-    pyformex.debug("Accepted settings:",res)
+    pf.debug("Accepted settings:",res)
     for k in res:
-        pyformex.cfg[k] = res[k]
-        if save and pyformex.prefcfg[k] != pyformex.cfg[k]:
-            pyformex.prefcfg[k] = pyformex.cfg[k]
+        pf.cfg[k] = res[k]
+        if save and pf.prefcfg[k] != pf.cfg[k]:
+            pf.prefcfg[k] = pf.cfg[k]
 
-    pyformex.debug("New settings:",pyformex.cfg)
+    pf.debug("New settings:",pf.cfg)
     if save:
-        pyformex.debug("New preferences:",pyformex.prefcfg)
+        pf.debug("New preferences:",pf.prefcfg)
 
 
 ########################## print information ################################
@@ -540,9 +542,9 @@ def printglobalnames():
 
     
 def printconfig():
-    print("Reference Configuration: " + str(pyformex.refcfg))
-    print("Preference Configuration: " + str(pyformex.prefcfg))
-    print("User Configuration: " + str(pyformex.cfg))
+    print("Reference Configuration: " + str(pf.refcfg))
+    print("Preference Configuration: " + str(pf.prefcfg))
+    print("User Configuration: " + str(pf.cfg))
 
 
 def printdetected():
@@ -570,9 +572,9 @@ def chdir(fn):
             fn = os.path.dirname(os.path.abspath(fn))
         os.chdir(fn)
         setPrefs({'workdir':fn},save=True)
-        if pyformex.GUI:
-            pyformex.GUI.setcurdir()
-        pyformex.message("Your current workdir is %s" % os.getcwd())
+        if pf.GUI:
+            pf.GUI.setcurdir()
+        pf.message("Your current workdir is %s" % os.getcwd())
 
 
 def runtime():
@@ -582,8 +584,8 @@ def runtime():
 
 def startGui(args=[]):
     """Start the gui"""
-    if pyformex.GUI is None:
-        pyformex.debug("Starting the pyFormex GUI")
+    if pf.GUI is None:
+        pf.debug("Starting the pyFormex GUI")
         from gui import guimain
         if guimain.startGUI(args) == 0:
             guimain.runGUI()
@@ -609,11 +611,11 @@ def checkRevision(rev,comp='>='):
     Default is to allow the specified revision and all later ones.
     """
     try:
-        cur = int(utils.splitStartDigits(pyformex.__revision__.split()[1])[0])
+        cur = int(utils.splitStartDigits(pf.__revision__.split()[1])[0])
         if not eval("%s %s %s" % (cur,comp,rev)):
             raise RuntimeError
     except:
-        raise RuntimeError,"Your current pyFormex revision (%s) does not pass the test %s %s" % (pyformex.__revision__,comp,rev)
+        raise RuntimeError,"Your current pyFormex revision (%s) does not pass the test %s %s" % (pf.__revision__,comp,rev)
    
 ################### read and write files #################################
 
@@ -621,7 +623,7 @@ def writeGeomFile(filename,objects,sep=' ',mode='w'):
     """Save geometric objects to a pyFormex Geometry File.
 
     A pyFormex Geometry File can store multiple geometrical objects in a
-    native format that can be efficiently read back into pyFormex.
+    native format that can be efficiently read back into pyformex.
     The format is portable over different pyFormex versions and 
     even to other software.
 
@@ -647,7 +649,7 @@ def readGeomFile(filename):
     """Read a pyFormex Geometry File.
 
     A pyFormex Geometry File can store multiple geometrical objects in a
-    native format that can be efficiently read back into pyFormex.
+    native format that can be efficiently read back into pyformex.
     The format is portable over different pyFormex versions and 
     even to other software.
 

@@ -490,11 +490,7 @@ def runCommand(cmd,RaiseError=True,quiet=False):
     """Run a command and raise error if exited with error."""
     if not quiet:
         pf.message("Running command: %s" % cmd)
-#    if GD.GUI:
-#        GD.GUI.setBusy(True)
     sta,out = commands.getstatusoutput(cmd)
-#    if GD.GUI:
-#        GD.GUI.setBusy(False)
     if sta != 0:
         pf.message(out)
         if RaiseError:

@@ -58,7 +58,7 @@ def numericEnd(s):
     else:
         return -1
     
-feresults = [ k for k in GD.PF.keys() if k.startswith(feresult_base)]
+feresults = [ k for k in pf.PF.keys() if k.startswith(feresult_base)]
 if feresults:
     feresults.sort(lambda a,b:a-b, numericEnd)
     name = feresults[-1]
@@ -489,7 +489,7 @@ use for cmdlog cmdlog
 ; Aantal elementen:   %s
 ; Aantal materialen:     %s
 ; Aantal belastingsgevallen: %s
-"""% (GD.Version,jobname,header,nnodes,nelems,nmats,nloads))
+"""% (pf.Version,jobname,header,nnodes,nelems,nmats,nloads))
     # Nodal coordinates
     fil.write(""";-----------------------------------------
 ; Knopen
@@ -744,7 +744,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
    
     # OK, start calpy
     print "Starting the Calpy analysis module --- this might take some time"
-    GD.app.processEvents()
+    pf.app.processEvents()
     starttime = time.clock()
 
     calpyModel = femodel.FeModel(2,"elast","Plane_Stress")
@@ -1047,10 +1047,10 @@ def autoConv():
 
 
 def importAll():
-    globals().update(GD.PF)
+    globals().update(pf.PF)
 
 def exportAll():
-    GD.PF.update(globals())
+    pf.PF.update(globals())
                  
 #############################################################################
 ######### Create a menu with interactive tasks #############
@@ -1092,17 +1092,17 @@ def create_menu():
         ("---",None),
         ("&Close Menu",close_menu),
         ]
-    return menu.Menu('FeEx',items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu('FeEx',items=MenuData,parent=pf.GUI.menu,before='help')
 
  
 def show_menu():
     """Show the menu."""
-    if not GD.GUI.menu.item('FeEx'):
+    if not pf.GUI.menu.item('FeEx'):
         create_menu()
 
 def close_menu():
     """Close the menu."""
-    m = GD.GUI.menu.item('FeEx')
+    m = pf.GUI.menu.item('FeEx')
     if m :
         m.remove()
 

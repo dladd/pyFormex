@@ -28,7 +28,7 @@
 This is a support module for other pyFormex plugins.
 """
 
-import pyformex as GD
+import pyformex as pf
 
 from coords import bbox
 from script import named
@@ -233,9 +233,9 @@ class Objects(object):
         objects = self.check()
         if objects:
             for n,o in zip(self.names,objects):
-                GD.message("Object %s has bbox %s" % (n,o.bbox()))
+                pf.message("Object %s has bbox %s" % (n,o.bbox()))
             if len(self.names) > 1:
-                GD.message("Overal bbox is %s" % bbox(objects))
+                pf.message("Overal bbox is %s" % bbox(objects))
 
 
     def writeToFile(self,filename):
@@ -306,7 +306,7 @@ class DrawableObjects(Objects):
 
     def draw(self,*args,**kargs):
         clear()
-        GD.debug("Drawing SELECTION: %s" % self.names)
+        pf.debug("Drawing SELECTION: %s" % self.names)
         self._actors = draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
         for i,a in enumerate(self.annotations):
             if a[1]:
@@ -364,8 +364,8 @@ class DrawableObjects(Objects):
 
     def removeAnnotation(self,i=0):
         """Remove the annotation i."""
-        GD.canvas.removeAnnotations(self._annotations[i])
-        GD.canvas.update()
+        pf.canvas.removeAnnotations(self._annotations[i])
+        pf.canvas.update()
         del self._annotations[i]
 
 
@@ -420,7 +420,7 @@ class DrawableObjects(Objects):
 
 if __name__ == "draw":
     # If executed as a pyformex script
-    GD.debug('Reloading module %s' % __file__)
+    pf.debug('Reloading module %s' % __file__)
     
 elif __name__ == "__main__":
     print(__doc__)

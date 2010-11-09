@@ -36,7 +36,7 @@ font = 'times'
 ftmin,ftmax = 12,36
 
 r = random.random((n,7))
-w,h = GD.canvas.width(), GD.canvas.height()
+w,h = pf.canvas.width(), pf.canvas.height()
 a = r[:,:2] * array([w,h]).astype(int)
 size = (ftmin + r[:,2] * (ftmax-ftmin)).astype(int)
 colors = r[:,3:6]
@@ -56,6 +56,6 @@ for i in range(n):
         undecorate(TA)
     TA = TB
     #drawTextQt(T[t[i]],a[i][0],a[i][1])
-    #GD.canvas.update()
+    #pf.canvas.update()
 
 # End

@@ -45,7 +45,7 @@ draw(F,color=color3)
 
 
 for a in [ 'ambient', 'specular', 'emission', 'shininess' ]:
-    v = getattr(GD.canvas,a)
+    v = getattr(pf.canvas,a)
     print "  %s: %s" % (a,v)
 
 # End

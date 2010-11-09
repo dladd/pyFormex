@@ -81,7 +81,7 @@ class TextMark(Mark):
     ##     Mark.use_list(self)
     ##     gluttext.glutRenderText(self.text,self.font)
     ##     #x,y,z = self.pos
-    ##     #GD.canvas.renderText(x,y,z,self.text,self.font)
+    ##     #pf.canvas.renderText(x,y,z,self.text,self.font)
 
 
 class MarkList(Mark):
@@ -114,7 +114,7 @@ class MarkList(Mark):
             GL.glRasterPos3fv(p)
             gluttext.glutRenderText(self.leader+str(v),self.font)
             #x,y,z = p
-            #GD.canvas.renderText(x,y,z,str(v))
+            #pf.canvas.renderText(x,y,z,str(v))
 
 
     def drawpick(self):

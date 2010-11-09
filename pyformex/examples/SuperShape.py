@@ -67,8 +67,8 @@ def reset_data(initialize=False):
         name = sname.peek(),
         color = 'red',
         )
-    GD.PF['__SuperShape__grid_data'] = grid_data
-    GD.PF['__SuperShape__shape_data'] = shape_data
+    pf.PF['__SuperShape__grid_data'] = grid_data
+    pf.PF['__SuperShape__shape_data'] = shape_data
     globals().update(grid_data)
     globals().update(shape_data)
     if dialog:
@@ -103,7 +103,7 @@ def createGrid():
 def createSuperShape():
     """Create a super shape from global parameters"""
     global F
-    B = GD.PF[grid_name]
+    B = pf.PF[grid_name]
     F = B.superSpherical(n=north_south,e=east_west,k=eggness)
     if scale == [1.0,1.0,1.0]:
         print "No need to scale"
@@ -146,8 +146,8 @@ def showSuperShape():
 # Button Functions
 def show_grid():
     dialog.acceptData()
-    refresh(GD.PF['__SuperShape__grid_data'],dialog.results)
-    refresh(GD.PF['__SuperShape__shape_data'],dialog.results)
+    refresh(pf.PF['__SuperShape__grid_data'],dialog.results)
+    refresh(pf.PF['__SuperShape__shape_data'],dialog.results)
     globals().update(dialog.results)
     createGrid()
     showGrid()
@@ -255,14 +255,14 @@ def openSuperShapeDialogs():
 
     
 if __name__ == "draw":
-    if not ('__SuperShape__grid_data' in GD.PF and
-            '__SuperShape__shape_data' in GD.PF):
+    if not ('__SuperShape__grid_data' in pf.PF and
+            '__SuperShape__shape_data' in pf.PF):
         reset_data()
     else:
-        print "set globals from GD.PF"
-        print GD.PF['__SuperShape__grid_data']
-        globals().update(GD.PF['__SuperShape__grid_data'])
-        globals().update(GD.PF['__SuperShape__shape_data'])
+        print "set globals from pf.PF"
+        print pf.PF['__SuperShape__grid_data']
+        globals().update(pf.PF['__SuperShape__grid_data'])
+        globals().update(pf.PF['__SuperShape__shape_data'])
         print globals()
 
     close()
@@ -272,7 +272,7 @@ if __name__ == "draw":
     ## while dialog is not None:
     ##     if dialog.timedOut():
     ##         show_shape()
-    ##     GD.app.processEvents()
+    ##     pf.app.processEvents()
     ##     sleep(1)
 
 

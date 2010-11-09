@@ -38,14 +38,14 @@ reset()
 wireframe()
 
 x = 20
-y = GD.canvas.height()-20
+y = pf.canvas.height()-20
 
 def say(text):
     global y
     drawText(text,x,y)
     y -=20
 
-GD.message('Click Step to continue')
+pf.message('Click Step to continue')
 
 say('A Horse Story...')
 y -= 10

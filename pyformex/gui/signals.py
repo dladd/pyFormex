@@ -26,7 +26,7 @@
 Signals are treated by the normal QT4 machine. They can be emitted from
 anywhere, causing attached functions to be executed.
 """
-import pyformex as GD
+import pyformex as pf
 
 from PyQt4.QtCore import Qt,QObject,SIGNAL,QThread
 
@@ -46,13 +46,13 @@ keypress_signal = {
 def onSignal(signal,function,widget=None):
     """Connect a function to a signal"""
     if widget is None:
-        widget = GD.GUI
+        widget = pf.GUI
     QObject.connect(widget,signal,function)
 
 def offSignal(signal,function,widget=None):
     """Disconnect a function from a signal"""
     if widget is None:
-        widget = GD.GUI
+        widget = pf.GUI
     QObject.disconnect(widget,signal,function)
     
 # End

@@ -137,7 +137,7 @@ if __name__ == "draw":
     draw(cube)
     view('iso')
     zoomAll()
-    GD.canvas.zoom(1.5)
+    pf.canvas.zoom(1.5)
 
     export({'cube':cube})
     exit()
@@ -154,7 +154,7 @@ if __name__ == "draw":
     clear()
     smoothwire()
     draw(cube.shrink(0.8),bbox=None)
-    #GD.canvas.zoom(1.5)
+    #pf.canvas.zoom(1.5)
     image.saveIcon('shrink')
     
 # End

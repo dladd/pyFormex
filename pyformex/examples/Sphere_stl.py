@@ -82,7 +82,7 @@ if ack("Create Surface model?"):
     draw(G)
     
     smoothwire()
-    #GD.canvas.update()
+    #pf.canvas.update()
     T = G.translate([0,bot,r]).spherical()
     clear()
     draw(T)

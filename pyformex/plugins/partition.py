@@ -23,7 +23,7 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-import pyformex as GD
+import pyformex as pf
 from gui import decors,colors
 from gui.camera import inverse
 from gui.draw import *
@@ -46,13 +46,13 @@ def prepare(V):
 
 def testview(F,V,P):
     global VA,waiting
-    p = array(GD.canvas.camera.getCenter())
+    p = array(pf.canvas.camera.getCenter())
     waiting = True
     while waiting:
-        GD.app.processEvents()
-    p -= array(GD.canvas.camera.getCenter())
+        pf.app.processEvents()
+    p -= array(pf.canvas.camera.getCenter())
     print("TRANSLATE: %s" % p)
-    m = GD.canvas.camera.getRot()
+    m = pf.canvas.camera.getRot()
     P += p
     print("TOTAL TRANSLATE: %s" % P)
     V = V.affine(inverse(m[0:3,0:3])).translate(-P)
@@ -151,10 +151,10 @@ def partition(Fin,prop=0):
 
     cut_planes = []
 
-    QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
+    QtCore.QObject.connect(pf.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
 
     linewidth(2)
-    w,h = GD.canvas.width(),GD.canvas.height()
+    w,h = pf.canvas.width(),pf.canvas.height()
     fgcolor('magenta')
     SD = decors.Line(w/2,0,w/2,h)
     decorate(SD)
@@ -179,7 +179,7 @@ def partition(Fin,prop=0):
         else:
             break
         
-    QtCore.QObject.disconnect(GD.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
+    QtCore.QObject.disconnect(pf.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
     clear()
     draw(F)
     Fin.setProp(F.prop)

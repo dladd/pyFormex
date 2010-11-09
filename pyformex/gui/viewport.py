@@ -29,7 +29,7 @@ module :mod:`canvas`.
 implements a dynamic array of multiple canvases.
 """
 
-import pyformex as GD
+import pyformex as pf
 
 from PyQt4 import QtCore, QtGui, QtOpenGL
 from OpenGL import GL
@@ -119,13 +119,13 @@ def setOpenGLFormat():
     """
     global opengl_format
     fmt = QtOpenGL.QGLFormat.defaultFormat()
-    if GD.options.dri is not None:
-        fmt.setDirectRendering(GD.options.dri)
-##     if GD.options.alpha:
+    if pf.options.dri is not None:
+        fmt.setDirectRendering(pf.options.dri)
+##     if pf.options.alpha:
 ##         fmt.setAlpha(True)
     QtOpenGL.QGLFormat.setDefaultFormat(fmt)
     opengl_format = fmt
-    if GD.options.debug:
+    if pf.options.debug:
         print(OpenGLFormat())
     return fmt
 
@@ -373,10 +373,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.makeCurrent()
             self.update()
             if self.trackfunc:
-                print "PRESS",self.trackfunc,GD.canvas.camera.ctr
-                GD.canvas.camera.setTracking(True)
-                x,y,z = GD.canvas.camera.ctr
-                self.zplane = GD.canvas.project(x,y,z,True)[2]
+                print "PRESS",self.trackfunc,pf.canvas.camera.ctr
+                pf.canvas.camera.setTracking(True)
+                x,y,z = pf.canvas.camera.ctr
+                self.zplane = pf.canvas.project(x,y,z,True)[2]
                 print 'ZPLANE',self.zplane
                 self.trackfunc(x,y,self.zplane)
             self.begin_2D_drawing()
@@ -451,7 +451,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.selection_busy = True
         while self.selection_busy:
             self.selection_timer.msleep(20)
-            GD.app.processEvents()
+            pf.app.processEvents()
 
     def finish_selection(self):
         """End an interactive picking mode."""
@@ -670,14 +670,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.update()
             if self.trackfunc:
                 print "ENABLE TRACKING"
-                GD.canvas.camera.setTracking(True)
+                pf.canvas.camera.setTracking(True)
 
         elif action == MOVE:
-            if GD.app.hasPendingEvents():
+            if pf.app.hasPendingEvents():
                 return
             if self.trackfunc:
                 self.trackfunc(x,y,self.zplane)
-                #GD.app.processEvents()
+                #pf.app.processEvents()
             if self.previewfunc:
                 self.swapBuffers()
                 self.drawn = self.unProject(x,y,self.zplane)
@@ -693,7 +693,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def start_drawing(self,mode):
         """Start an interactive line drawing mode."""
-        GD.debug("START DRAWING MODE")
+        pf.debug("START DRAWING MODE")
         self.setMouse(LEFT,self.mouse_draw_line)
         self.setMouse(RIGHT,self.emit_done)
         self.setMouse(RIGHT,self.emit_cancel,SHIFT)
@@ -710,11 +710,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.drawing_busy = True
         while self.drawing_busy:
             self.drawing_timer.msleep(20)
-            GD.app.processEvents()
+            pf.app.processEvents()
 
     def finish_drawing(self):
         """End an interactive drawing mode."""
-        GD.debug("END DRAWING MODE")
+        pf.debug("END DRAWING MODE")
         #self.setCursorShape('default')
         self.resetMouse(LEFT)
         self.resetMouse(RIGHT)
@@ -728,7 +728,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         If clear == True, the current drawing is cleared.
         """
-        GD.debug("CANCEL DRAWING MODE")
+        pf.debug("CANCEL DRAWING MODE")
         self.drawing_accepted = True
         if clear:
             self.drawing = empty((0,2,2),dtype=int)
@@ -788,7 +788,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 ######## QtOpenGL interface ##############################
         
     def initializeGL(self):
-        if GD.options.debug:
+        if pf.options.debug:
             p = self.sizePolicy()
             print(p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch())
         self.initCamera()
@@ -801,7 +801,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def	paintGL(self):
         if not self.mode2D:
-            #GD.debugt("CANVAS DISPLAY")
+            #pf.debugt("CANVAS DISPLAY")
             self.display()
 
     def getSize(self):
@@ -843,7 +843,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             x0 = self.state        # initial vector
             d = length(x0)
             if d > h/8:
-                # GD.debug(d)
+                # pf.debug(d)
                 x1 = [x-w/2, y-h/2]     # new vector
                 a0 = math.atan2(x0[0],x0[1])
                 a1 = math.atan2(x1[0],x1[1])
@@ -898,20 +898,20 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         zoom operation. The action is one of PRESS, MOVE or RELEASE.
         """
         if action == PRESS:
-            self.state = [self.camera.getDist(),self.camera.area.tolist(),GD.cfg['gui/dynazoom']]
+            self.state = [self.camera.getDist(),self.camera.area.tolist(),pf.cfg['gui/dynazoom']]
 
         elif action == MOVE:
             w,h = self.getSize()
             dx,dy = float(self.statex-x)/w, float(self.statey-y)/h
             for method,state,value,size in zip(self.state[2],[self.statex,self.statey],[x,y],[w,h]):
-                #GD.debug("%s %s %s %s" % (method,state,value,size))
+                #pf.debug("%s %s %s %s" % (method,state,value,size))
                 if method == 'area':
                     d = float(state-value)/size
                     f = exp(4*d)
                     self.camera.zoomArea(f,area=asarray(self.state[1]).reshape(2,2))
                 elif method == 'dolly':
                     d = utils.stuur(value,[0,state,size],[5,1,0.2],1.2)
-                    #GD.debug(d)
+                    #pf.debug(d)
                     self.camera.setDist(d*self.state[0])
                     
             self.update()
@@ -922,10 +922,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def wheel_zoom(self,delta):
         """Zoom by rotating a wheel over an angle delta"""
-        f = 2**(delta/120.*GD.cfg['gui/wheelzoomfactor'])
-        if GD.cfg['gui/wheelzoom'] == 'area':
+        f = 2**(delta/120.*pf.cfg['gui/wheelzoomfactor'])
+        if pf.cfg['gui/wheelzoom'] == 'area':
             self.camera.zoomArea(f)
-        elif GD.cfg['gui/wheelzoom'] == 'lens':
+        elif pf.cfg['gui/wheelzoom'] == 'lens':
             self.camera.zoom(f)
         else:
             self.camera.dolly(f)
@@ -987,7 +987,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             x,y = (x+self.statex)/2., (y+self.statey)/2.
             w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
             if w <= 0 or h <= 0:
-               w,h = GD.cfg.get('pick/size',(20,20))
+               w,h = pf.cfg.get('pick/size',(20,20))
             vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
             self.pick_window = (x,y,w,h,vp)
             self.selection_busy = False
@@ -1036,9 +1036,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         By default, the full actor list is used.
         """
         self.picked = []
-        GD.debug('PICK_PARTS %s %s %s' % (obj_type,max_objects,store_closest))
+        pf.debug('PICK_PARTS %s %s %s' % (obj_type,max_objects,store_closest))
         if max_objects <= 0:
-            GD.message("No such objects to be picked!")
+            pf.message("No such objects to be picked!")
             return
         self.camera.loadProjection(pick=self.pick_window)
         self.camera.loadModelView()
@@ -1060,7 +1060,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             buf = asarray(selbuf).reshape(-1,3+selbuf[0])
             buf = buf[buf[:,0] > 0]
             self.picked = buf[:,3:]
-            #GD.debug("PICKBUFFER: %s" % self.picked)
+            #pf.debug("PICKBUFFER: %s" % self.picked)
             if store_closest and len(buf) > 0:
                 w = buf[:,1].argmin()
                 self.closest_pick = (self.picked[w], buf[w,1])
@@ -1082,7 +1082,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Set the list of actor points inside the pick_window."""
         npickable = 0
         for a in self.actors:
-            #GD.debug("ADDING %s pickable points"%a.npoints())
+            #pf.debug("ADDING %s pickable points"%a.npoints())
             npickable += a.npoints()
         self.pick_parts('point',npickable,store_closest=\
                         self.selection_filter == 'single' or\
@@ -1161,12 +1161,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         
     def mousePressEvent(self,e):
         """Process a mouse press event."""
-        GD.GUI.viewports.setCurrent(self)
+        pf.GUI.viewports.setCurrent(self)
         # on PRESS, always remember mouse position and button
         self.statex,self.statey = e.x(), self.height()-e.y()
         self.button = e.button()
         self.mod = e.modifiers() & ALLMODS
-        #GD.debug("PRESS BUTTON %s WITH MODIFIER %s" % (self.button,self.mod))
+        #pf.debug("PRESS BUTTON %s WITH MODIFIER %s" % (self.button,self.mod))
         func = self.getMouseFunc()
         if func:
             func(self.statex,self.statey,PRESS)
@@ -1234,24 +1234,6 @@ class FramedGridLayout(QtGui.QGridLayout):
         QtGui.QGridLayout.removeWidget(self,w)
 
 
-
-## class FramedGridLayout(QtGui.QSplitter):
-##     """A QtGui.QGridLayout where each added widget is framed."""
-
-##     def __init__(self,parent=None):
-##         """Initialize the multicanvas."""
-##         QtGui.QSplitter.__init__(self)
-        
-##     def addWidget(self,w,row,col):
-##         QtGui.QSplitter.addWidget(self,w,row,col)
-    
-##     def removeWidget(self,w):
-##         QtGui.QSplitter.removeWidget(self,w)
-
-    
-
-
-#class MultiCanvas(QtGui.QGridLayout):
 class MultiCanvas(FramedGridLayout):
     """An OpenGL canvas with multiple viewports and QT interaction.
 
@@ -1291,38 +1273,33 @@ class MultiCanvas(FramedGridLayout):
         self.active.append(canv)
         self.showWidget(canv)
         canv.initializeGL()   # Initialize OpenGL context and camera
-        # DO NOT USE self.setCurrent(canv) HERE, because no camera yet
-        #GD.canvas = self.current = canv
         self.setCurrent(canv)
         
 
     def setCurrent(self,canv):
-        """Make the specified viewport the current  one.
+        """Make the specified viewport the current one.
 
         canv can be either a viewport or viewport number.
         """
-#        GL.glFlush()
         if type(canv) == int and canv in range(len(self.all)):
             canv = self.all[canv]
-        if self.current == canv:
-            # alreay current
-            return
-        if GD.canvas:
-            GD.canvas.focus = False
-            GD.canvas.updateGL()
+        if canv == self.current:
+            return  # already current
+
         if canv in self.all:
-            GD.canvas = self.current = canv
-            GD.canvas.focus = True
-            toolbar.setTransparency(self.current.alphablend)
-            toolbar.setPerspective(self.current.camera.perspective)
-            toolbar.setLight(self.current.lighting)
-            #toolbar.setNormals(self.current.avgnormals)
-#            GL.glFlush()
-            GD.canvas.updateGL()
+            if self.current:
+                self.current.focus = False
+                self.current.updateGL()
+            self.current = canv
+            self.current.focus = True
+            self.current.updateGL()
+            toolbar.updateTransparencyButton()
+            toolbar.updatePerspectiveButton()
+            toolbar.updateLightButton()
 
 
     def currentView(self):
-        return self.all.index(GD.canvas)
+        return self.all.index(self.current)
 
 
     def showWidget(self,w):
@@ -1361,10 +1338,10 @@ class MultiCanvas(FramedGridLayout):
 ##         self.current.setCamera(bbox,view)
             
     def updateAll(self):
-         GD.debug("UPDATING ALL VIEWPORTS")
+         pf.debug("UPDATING ALL VIEWPORTS")
          for v in self.all:
              v.update()
-         GD.app.processEvents()
+         pf.GUI.processEvents()
 
     def removeAll(self):
         for v in self.active:
@@ -1380,7 +1357,7 @@ class MultiCanvas(FramedGridLayout):
 
     def printSettings(self):
         for i,v in enumerate(self.all):
-            GD.message("""
+            pf.message("""
 ## VIEWPORTS ##
 Viewport %s;  Active:%s;  Current:%s;  Settings:
 %s
@@ -1388,28 +1365,31 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
 
 
     def changeLayout(self, nvps=None,ncols=None, nrows=None):
-        """Lay out the viewports.
+        """Change the lay-out of the viewports on the OpenGL widget.
 
-        You can specify the number of viewports and the number of columns or
-        rows.
+        nvps: number of viewports
+        ncols: number of columns
+        nrows: number of rows
+
+        Each of this parameters is optional.
 
         If a number of viewports is given, viewports will be added
-        or removed to match the number requested.
+        or removed to match the requested number. 
         By default they are layed out rowwise over two columns.
 
         If ncols is an int, viewports are laid out rowwise over ncols
         columns and nrows is ignored. If ncols is None and nrows is an int,
         viewports are laid out columnwise over nrows rows.
         """
-        if GD.options.fpbug:
+        if pf.options.fpbug:
             print "CHANGE LAYOUT: %s (%s)" % (nvps,type(nvps))
             print self.all
         if type(nvps) == int:
-            if GD.options.fpbug:
+            if pf.options.fpbug:
                 print "removeView"
             while len(self.all) > nvps:
                 self.removeView()
-            if GD.options.fpbug:
+            if pf.options.fpbug:
                 print "addView"
             while len(self.all) < nvps:
                 self.addView()
@@ -1422,13 +1402,13 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
         else:
             return
 
-        if GD.options.fpbug:
+        if pf.options.fpbug:
             print "removeWidget"
         for w in self.all:
             self.removeWidget(w)
         self.ncols = ncols
         self.rowwise = rowwise
-        if GD.options.fpbug:
+        if pf.options.fpbug:
             print "showWidget"
         for w in self.all:
             self.showWidget(w)
@@ -1438,24 +1418,24 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
         """Link viewport vp to to"""
         print "LINK %s to %s" % (vp,to)
         nvps = len(self.all)
-        if vp < nvps and to < nvps:
+        if vp in range(nvps) and to in range(nvps) and vp != to:
             to = self.all[to]
             oldvp = self.all[vp]
             import warnings
-            warnings.warn("Due to a bug, linking viewports is currently deactivated")
-            ## newvp = self.newView(to)
-            ## self.all[vp] = newvp
-            ## self.removeWidget(oldvp)
-            ## oldvp.close()
-            ## self.showWidget(newvp)
-            ## vp = newvp
-            ## vp.actors = to.actors
-            ## vp.bbox = to.bbox
-            ## vp.show()
-            ## vp.setCamera()
-            ## vp.redrawAll()
+            warnings.warn("Linking viewports is an experimental feature which may function improperly and even hang your system.")
+            newvp = self.newView(to)
+            self.all[vp] = newvp
+            self.removeWidget(oldvp)
+            oldvp.close()
+            self.showWidget(newvp)
+            vp = newvp
+            vp.actors = to.actors
+            vp.bbox = to.bbox
+            vp.show()
+            vp.setCamera()
+            vp.redrawAll()
             #vp.updateGL()
-            GD.app.processEvents()
+            pf.GUI.processEvents()
 
                     
 # End

@@ -35,8 +35,8 @@ image = None
 scaled_image = None
 
 #teapot
-chdir(GD.cfg['curfile'])
-T = TriSurface.read(GD.cfg['pyformexdir']+'/data/teapot.off')#file with horse stl
+chdir(pf.cfg['curfile'])
+T = TriSurface.read(pf.cfg['pyformexdir']+'/data/teapot.off')#file with horse stl
 xmin,xmax = T.bbox()
 T= T.translate(-T.center()).scale(1./(xmax[0]-xmin[0])).scale(4.).setProp(2)
 
@@ -209,7 +209,7 @@ draw(G.translate([0., 0., 0.01]),color=color,colormap=colortable)
 draw(G.translate([0., 0., -0.01]),color=color,colormap=colortable)
 zoomAll()
 sleep(2)
-GD.canvas.camera.setRotation(200, 0)
+pf.canvas.camera.setRotation(200, 0)
 zoomAll()
 
 

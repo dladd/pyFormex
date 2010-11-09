@@ -62,7 +62,7 @@ class Shape(object):
 
     def hide(self):
         if self.A:
-            GD.canvas.undraw(self.A)
+            pf.canvas.undraw(self.A)
             self.A = None
 
     def setSize(size):
@@ -91,5 +91,5 @@ if __name__ == 'draw':
     B.draw()
     C.draw()
     D.draw()
-    zoomall()
+    zoomAll()
 # End

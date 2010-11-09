@@ -166,7 +166,7 @@ fullname = os.path.splitext(__file__)[0] + '.out'
 basename = os.path.basename(fullname)
 dirname = os.path.dirname(fullname)
 outfilename = None
-for candidate in [dirname,GD.cfg['workdir'],'/var/tmp']:
+for candidate in [dirname,pf.cfg['workdir'],'/var/tmp']:
     if isWritable(candidate):
         fullname = os.path.join(candidate,basename)
         if not os.path.exists(fullname) or isWritable(fullname):
@@ -182,7 +182,7 @@ message("Output is written to file '%s'" % os.path.realpath(outfilename))
 stdout_saved = sys.stdout
 sys.stdout = outfile
 print "# File created by pyFormex on %s" % time.ctime()
-print "# Script name: %s" % GD.scriptName
+print "# Script name: %s" % pf.scriptName
 displ,frc = static(mesh.coords,bcon,mats,matnod,loads,Echo=True)
 print "# Analysis finished on %s" % time.ctime()
 sys.stdout = stdout_saved
@@ -192,7 +192,7 @@ outfile.close()
 #Using pyFormex as postprocessor
 ################################
 
-if GD.options.gui:
+if pf.options.gui:
 
     from plugins.postproc import niceNumber,frameScale
     from gui.colorscale import *
@@ -245,9 +245,9 @@ if GD.options.gui:
             for s in amplitude:
                 F,T = deformed_plot(s)
                 if FA:
-                    GD.canvas.removeActor(FA)
+                    pf.canvas.removeActor(FA)
                 if TA:
-                    GD.canvas.removeDecoration(TA)
+                    pf.canvas.removeDecoration(TA)
                 TA,FA = T,F
                 sleep(sleeptime)
 

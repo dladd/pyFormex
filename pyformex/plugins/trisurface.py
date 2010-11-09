@@ -29,7 +29,7 @@ a triangulated surface.
 """
 
 import os
-import pyformex as GD
+import pyformex as pf
 from plugins import tetgen
 from plugins.mesh import Mesh
 from connectivity import Connectivity,closedLoop,connectedLineElems,adjacencyArrays,adjacent,adjacencyArray
@@ -82,7 +82,7 @@ def stlConvert(stlname,outname=None,options='-d'):
     program (or a 'file is already uptodate' message).
     """
     if not outname:
-        outname = GD.cfg.get('surface/stlread','.off')
+        outname = pf.cfg.get('surface/stlread','.off')
     if outname.startswith('.'):
         outname = changeExt(stlname,outname)
     if os.path.exists(outname) and mtime(stlname) < mtime(outname):
@@ -106,7 +106,7 @@ def read_gts(fn):
 
     Return a coords,edges,faces tuple.
     """
-    GD.message("Reading GTS file %s" % fn)
+    pf.message("Reading GTS file %s" % fn)
     fil = file(fn,'r')
     header = fil.readline().split()
     ncoords,nedges,nfaces = map(int,header[:3])
@@ -117,11 +117,11 @@ def read_gts(fn):
     coords = fromfile(fil,dtype=Float,count=3*ncoords,sep=' ').reshape(-1,3)
     edges = fromfile(fil,dtype=int32,count=2*nedges,sep=' ').reshape(-1,2) - 1
     faces = fromfile(fil,dtype=int32,count=3*nfaces,sep=' ').reshape(-1,3) - 1
-    GD.message("Read %d coords, %d edges, %d faces" % (ncoords,nedges,nfaces))
+    pf.message("Read %d coords, %d edges, %d faces" % (ncoords,nedges,nfaces))
     if coords.shape[0] != ncoords or \
        edges.shape[0] != nedges or \
        faces.shape[0] != nfaces:
-        GD.message("Error while reading GTS file: the file is probably incorrect!")
+        pf.message("Error while reading GTS file: the file is probably incorrect!")
     return coords,edges,faces
 
 
@@ -131,7 +131,7 @@ def read_off(fn):
     The mesh should consist of only triangles!
     Returns a nodes,elems tuple.
     """
-    GD.message("Reading .OFF %s" % fn)
+    pf.message("Reading .OFF %s" % fn)
     fil = file(fn,'r')
     head = fil.readline().strip()
     if head != "OFF":
@@ -141,7 +141,7 @@ def read_off(fn):
     nodes = fromfile(file=fil, dtype=Float, count=3*nnodes, sep=' ')
     # elems have number of vertices + 3 vertex numbers
     elems = fromfile(file=fil, dtype=int32, count=4*nelems, sep=' ')
-    GD.message("Read %d nodes and %d elems" % (nnodes,nelems))
+    pf.message("Read %d nodes and %d elems" % (nnodes,nelems))
     return nodes.reshape((-1,3)),elems.reshape((-1,4))[:,1:]
 
 
@@ -158,8 +158,8 @@ def read_stl(fn,intermediate=None):
     """
     ofn,sta,out = stlConvert(fn,intermediate)
     if sta:
-        GD.debug("Error during conversion of file '%s' to '%s'" % (fn,ofn))
-        GD.debug(out)
+        pf.debug("Error during conversion of file '%s' to '%s'" % (fn,ofn))
+        pf.debug(out)
         return ()
 
     if ofn.endswith('.gts'):
@@ -174,7 +174,7 @@ def read_gambit_neutral(fn):
     The .neu file nodes are numbered from 1!
     Returns a nodes,elems tuple.
     """
-    scr = os.path.join(GD.cfg['bindir'],'gambit-neu ')
+    scr = os.path.join(pf.cfg['bindir'],'gambit-neu ')
     runCommand("%s '%s'" % (scr,fn))
     nodesf = changeExt(fn,'.nodes')
     elemsf = changeExt(fn,'.elems')
@@ -196,7 +196,7 @@ def write_gts(fn,nodes,edges,faces):
         fil.write("%d %d\n" % tuple(edg))
     for fac in faces+1:
         fil.write("%d %d %d\n" % tuple(fac))
-    fil.write("#GTS file written by %s\n" % GD.Version)
+    fil.write("#GTS file written by %s\n" % pf.Version)
     fil.close()
 
 
@@ -206,7 +206,7 @@ def write_stla(f,x):
     own = type(f) == str
     if own:
         f = file(f,'w')
-    f.write("solid  Created by %s\n" % GD.Version)
+    f.write("solid  Created by %s\n" % pf.Version)
     area,norm = areaNormals(x)
     degen = degenerate(area,norm)
     print("The model contains %d degenerate triangles" % degen.shape[0])
@@ -716,10 +716,10 @@ class TriSurface(Mesh):
         else:
             ftype = ftype.strip('.').lower()
 
-        GD.message("Writing surface to file %s" % fname)
+        pf.message("Writing surface to file %s" % fname)
         if ftype == 'gts':
             write_gts(fname,self.coords,self.getEdges(),self.getFaceEdges())
-            GD.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
+            pf.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','neu','smesh']:
             if ftype == 'stl':
                 write_stla(fname,self.coords[self.elems])
@@ -729,7 +729,7 @@ class TriSurface(Mesh):
                 write_gambit_neutral(fname,self.coords,self.elems)
             elif ftype == 'smesh':
                 write_smesh(fname,self.coords,self.elems)
-            GD.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nelems()))
+            pf.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nelems()))
         else:
             print("Cannot save TriSurface as file %s" % fname)
 
@@ -1127,7 +1127,7 @@ Total area: %s; Enclosed volume: %s
         conn = self.edgeConnections()
         # Bail out if some edge has more than two connected faces
         if conn.shape[1] != 2:
-            GD.warning("Surface is not a manifold")
+            pf.warning("Surface is not a manifold")
             return
         # Check size of okedges
         if okedges is not None:
@@ -1530,15 +1530,15 @@ Total area: %s; Enclosed volume: %s
         if verbose:
             cmd += ' -v'
         tmp = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
+        pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'gts')
-        GD.message("Checking with command\n %s" % cmd)
+        pf.message("Checking with command\n %s" % cmd)
         cmd += ' < %s' % tmp
         sta,out = runCommand(cmd,False)
         os.remove(tmp)
-        GD.message(out)
+        pf.message(out)
         if sta == 0:
-            GD.message('The surface is a closed, orientable non self-intersecting manifold')
+            pf.message('The surface is a closed, orientable non self-intersecting manifold')
  
  
     def fixNormals(self):
@@ -1546,12 +1546,12 @@ Total area: %s; Enclosed volume: %s
         cmd = 'admesh'
         tmp = tempfile.mktemp('.stl')
         tmp1 = tempfile.mktemp('.stl')
-        GD.message("Writing temp file %s" % tmp)
+        pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'stl')
         cmd += ' %s -da %s' % (tmp,tmp1)
-        GD.message("Fixing surface normals with command\n %s" % cmd)
+        pf.message("Fixing surface normals with command\n %s" % cmd)
         sta,out = runCommand(cmd)
-        GD.message("Reading result from %s" % tmp1)
+        pf.message("Reading result from %s" % tmp1)
         S = TriSurface.read(tmp1)   
         os.remove(tmp)
         os.remove(tmp1)    
@@ -1564,14 +1564,14 @@ Total area: %s; Enclosed volume: %s
         if verbose:
             cmd += ' -v'
         tmp = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
+        pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'gts')
-        GD.message("Splitting with command\n %s" % cmd)
+        pf.message("Splitting with command\n %s" % cmd)
         cmd += ' < %s' % tmp
         sta,out = runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
-            GD.message(out)
+            pf.message(out)
    
 
     def coarsen(self,min_edges=None,max_cost=None,
@@ -1603,15 +1603,15 @@ Total area: %s; Enclosed volume: %s
             cmd += ' -v'
         tmp = tempfile.mktemp('.gts')
         tmp1 = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
+        pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'gts')
-        GD.message("Coarsening with command\n %s" % cmd)
+        pf.message("Coarsening with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
         sta,out = runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
-            GD.message(out)
-        GD.message("Reading coarsened model from %s" % tmp1)
+            pf.message(out)
+        pf.message("Reading coarsened model from %s" % tmp1)
         self.__init__(*read_gts(tmp1))        
         os.remove(tmp1)
    
@@ -1632,15 +1632,15 @@ Total area: %s; Enclosed volume: %s
             cmd += ' -v'
         tmp = tempfile.mktemp('.gts')
         tmp1 = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
+        pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'gts')
-        GD.message("Refining with command\n %s" % cmd)
+        pf.message("Refining with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
         sta,out = runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
-            GD.message(out)
-        GD.message("Reading refined model from %s" % tmp1)
+            pf.message(out)
+        pf.message("Reading refined model from %s" % tmp1)
         self.__init__(*read_gts(tmp1))        
         os.remove(tmp1)
 
@@ -1656,15 +1656,15 @@ Total area: %s; Enclosed volume: %s
             cmd += ' -v'
         tmp = tempfile.mktemp('.gts')
         tmp1 = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
+        pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'gts')
-        GD.message("Smoothing with command\n %s" % cmd)
+        pf.message("Smoothing with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
         sta,out = runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
-            GD.message(out)
-        GD.message("Reading smoothed model from %s" % tmp1)
+            pf.message(out)
+        pf.message("Reading smoothed model from %s" % tmp1)
         self.__init__(*read_gts(tmp1))        
         os.remove(tmp1)
 
@@ -1688,18 +1688,18 @@ Total area: %s; Enclosed volume: %s
         tmp = tempfile.mktemp('.gts')
         tmp1 = tempfile.mktemp('.gts')
         tmp2 = tempfile.mktemp('.stl')
-        GD.message("Writing temp file %s" % tmp)
+        pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'gts')
-        GD.message("Writing temp file %s" % tmp1)
+        pf.message("Writing temp file %s" % tmp1)
         surf.write(tmp1,'gts')
-        GD.message("Performing boolean operation with command\n %s" % cmd)
+        pf.message("Performing boolean operation with command\n %s" % cmd)
         cmd += ' %s %s | gts2stl > %s' % (tmp,tmp1,tmp2)
         sta,out = runCommand(cmd)
         os.remove(tmp)
         os.remove(tmp1)
         if sta or verbose:
-            GD.message(out)
-        GD.message("Reading result from %s" % tmp2)
+            pf.message(out)
+        pf.message("Reading result from %s" % tmp2)
         S = TriSurface.read(tmp2)        
         os.remove(tmp2)
         return S
@@ -1788,7 +1788,7 @@ def read_ascii_large(fn,dtype=Float):
 
 def off_to_tet(fn):
     """Transform an .off model to tetgen (.node/.smesh) format."""
-    GD.message("Transforming .OFF model %s to tetgen .smesh" % fn)
+    pf.message("Transforming .OFF model %s to tetgen .smesh" % fn)
     nodes,elems = read_off(fn)
     write_node_smesh(changeExt(fn,'.smesh'),nodes,elems)
 
@@ -1856,7 +1856,7 @@ def remove_triangles(elems,remove):
     Returns a (nelems-nremove,3) integer array with the triangles of
     nelems where the triangles of remove have been removed.
     """
-    GD.message("Removing %s out of %s triangles" % (remove.shape[0],elems.shape[0]))
+    pf.message("Removing %s out of %s triangles" % (remove.shape[0],elems.shape[0]))
     magic = elems.max()+1
 
     mag1 = enmagic3(elems,magic)
@@ -1872,7 +1872,7 @@ def remove_triangles(elems,remove):
     mag1 = mag1[mag1 >= 0]
 
     elems = demagic3(mag1,magic)
-    GD.message("Actually removed %s triangles, leaving %s" % (nelems-mag1.shape[0],elems.shape[0]))
+    pf.message("Actually removed %s triangles, leaving %s" % (nelems-mag1.shape[0],elems.shape[0]))
 
     return elems
 
@@ -1907,11 +1907,11 @@ def Sphere(level=4,verbose=False,filename=None):
     else:
         tmp = filename
     cmd += ' > %s' % tmp
-    GD.message("Writing file %s" % tmp)
+    pf.message("Writing file %s" % tmp)
     sta,out = runCommand(cmd)
     if sta or verbose:
-        GD.message(out)
-    GD.message("Reading model from %s" % tmp)
+        pf.message(out)
+    pf.message("Reading model from %s" % tmp)
     S = TriSurface.read(tmp)
     if filename is None:
         os.remove(tmp)

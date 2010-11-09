@@ -95,7 +95,7 @@ def sectionChar(F):
     """
     if F.nplex() != 2:
         raise ValueError, "Expected a plex-2 Formex!"
-    #GD.debug("The circumference has %d segments" % F.nelems())
+    #pf.debug("The circumference has %d segments" % F.nelems())
     x = F.x()
     y = F.y()
     x0 = x[:,0]

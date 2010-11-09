@@ -69,11 +69,11 @@ Exercises
 """
 def atExit():
     #print "THIS IS THE EXIT FUNC"
-    GD.GUI.setBusy(False)
+    pf.GUI.setBusy(False)
     
 
 
-GD.GUI.setBusy()
+pf.GUI.setBusy()
 #draw.logfile = open('pyformex.log','w')
     
 clear()

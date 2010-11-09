@@ -28,7 +28,7 @@ Currently, this does nothing. The file should be kept though, because it is
 needed to flag this directory as a Python module.
 """
 
-import pyformex as GD
+import pyformex as pf
 from types import ModuleType
 from gettext import gettext as _
 
@@ -98,7 +98,7 @@ def create_plugin_menus(parent=None,before=None):
 
 def loadConfiguredPlugins(ok_plugins=None):
     if ok_plugins is None:
-        ok_plugins = GD.cfg['gui/plugins']
+        ok_plugins = pf.cfg['gui/plugins']
     for n,p in plugin_menus:
         if p in ok_plugins:
             load(p)
@@ -114,14 +114,14 @@ _registered_plugins = odict.ODict()
 
 def show_menu(name,before='help'):
     """Show the menu."""
-    if not GD.GUI.menu.action(_menu):
+    if not pf.GUI.menu.action(_menu):
         create_menu(before=before)
 
 def close_menu(name):
     """Close the menu."""
     name.replace('_menu','')
     print "CLOSING MENU %s" % name 
-    GD.GUI.menu.removeItem(name)
+    pf.GUI.menu.removeItem(name)
 
 
 def register_plugin_menu(name,menudata,before=['help']):
@@ -130,20 +130,20 @@ def register_plugin_menu(name,menudata,before=['help']):
 #        ("&Reload Menu",reload_menu,{'data':name}),
         ("&Close Menu",close_menu,{'data':name}),
         ])
-    w = menu.Menu(name,items=menudata,parent=GD.GUI.menu,before=before[0])
+    w = menu.Menu(name,items=menudata,parent=pf.GUI.menu,before=before[0])
     _registered_plugins[name] = w
     return w
 
 
 def reload_menu(name):
     """Reload the menu."""
-    before = GD.GUI.menu.nextitem(_menu)
+    before = pf.GUI.menu.nextitem(_menu)
     print "Menu %s was before %s" % (_menu,before)
     close_menu()
     import plugins
     plugins.refresh('draw2d')
     show_menu(before=before)
     setDrawOptions({'bbox':'last'})
-    print GD.GUI.menu.actionList()
+    print pf.GUI.menu.actionList()
 
 # End

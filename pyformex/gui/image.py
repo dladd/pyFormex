@@ -31,7 +31,7 @@ a movie from these images.
 """
 
 
-import pyformex as GD
+import pyformex as pf
 
 from OpenGL import GL
 from PyQt4 import QtCore,QtGui
@@ -65,17 +65,17 @@ def initialize():
     # Find interesting supporting software
     utils.hasExternal('ImageMagick')
     # Set some globals
-    GD.debug("LOADING IMAGE FORMATS")
+    pf.debug("LOADING IMAGE FORMATS")
     image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
     image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
-    ## if GD.cfg.get('imagesfromeps',False):
-    ##     GD.image_formats_qt = []
+    ## if pf.cfg.get('imagesfromeps',False):
+    ##     pf.image_formats_qt = []
 
     if utils.hasModule('gl2ps'):
 
         import gl2ps
 
-        _producer = GD.Version + ' (http://pyformex.berlios.de)'
+        _producer = pf.Version + ' (http://pyformex.berlios.de)'
         _gl2ps_types = {
             'ps':gl2ps.GL2PS_PS,
             'eps':gl2ps.GL2PS_EPS,
@@ -90,7 +90,7 @@ def initialize():
         image_formats_gl2ps = _gl2ps_types.keys()
         image_formats_fromeps = [ 'ppm', 'png', 'jpeg', 'rast', 'tiff',
                                      'xwd', 'y4m' ]
-    GD.debug("""
+    pf.debug("""
 Qt image types for saving: %s
 Qt image types for input: %s
 gl2ps image types: %s
@@ -113,11 +113,11 @@ def checkImageFormat(fmt,verbose=False):
 
     Returns the image format, or None if it is not OK.
     """
-    GD.debug("Format requested: %s" % fmt)
-    GD.debug("Formats available: %s" % imageFormats())
+    pf.debug("Format requested: %s" % fmt)
+    pf.debug("Formats available: %s" % imageFormats())
     if fmt in imageFormats():
         if fmt == 'tex' and verbose:
-            GD.warning("This will only write a LaTeX fragment to include the 'eps' image\nYou have to create the .eps image file separately.\n")
+            pf.warning("This will only write a LaTeX fragment to include the 'eps' image\nYou have to create the .eps image file separately.\n")
         return fmt
     else:
         if verbose:
@@ -155,14 +155,14 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,options=None):
     canvas.makeCurrent()
     canvas.raise_()
     canvas.display()
-    GD.app.processEvents()
+    pf.app.processEvents()
     size = canvas.size()
     w = int(size.width())
     h = int(size.height())
-    GD.debug("Saving image with current size %sx%s" % (w,h))
+    pf.debug("Saving image with current size %sx%s" % (w,h))
     
     if fmt in image_formats_qt:
-        GD.debug("Image format can be saved by Qt")
+        pf.debug("Image format can be saved by Qt")
         GL.glFlush()
         qim = canvas.grabFrameBuffer()
         print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
@@ -172,11 +172,11 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,options=None):
             sta = 1
 
     elif fmt in image_formats_gl2ps:
-        GD.debug("Image format can be saved by gl2ps")
+        pf.debug("Image format can be saved by gl2ps")
         sta = save_PS(canvas,fn,fmt)
 
     elif fmt in image_formats_fromeps:
-        GD.debug("Image format can be converted from eps")
+        pf.debug("Image format can be converted from eps")
         fneps = os.path.splitext(fn)[0] + '.eps'
         delete = not os.path.exists(fneps)
         save_PS(canvas,fneps,'eps')
@@ -254,15 +254,15 @@ def save_window(filename,format,quality=-1,windowname=None):
     Else, the main pyFormex window is saved.
     """
     if windowname is None:
-        windowname = GD.GUI.windowTitle()
-    GD.GUI.raise_()
-    GD.GUI.repaint()
-    GD.GUI.toolbar.repaint()
-    GD.GUI.update()
-    GD.canvas.makeCurrent()
-    GD.canvas.raise_()
-    GD.canvas.update()
-    GD.app.processEvents()
+        windowname = pf.GUI.windowTitle()
+    pf.GUI.raise_()
+    pf.GUI.repaint()
+    pf.GUI.toolbar.repaint()
+    pf.GUI.update()
+    pf.canvas.makeCurrent()
+    pf.canvas.raise_()
+    pf.canvas.update()
+    pf.app.processEvents()
     cmd = 'import -window "%s" %s:%s' % (windowname,format,filename)
     sta,out = utils.runCommand(cmd)
     return sta
@@ -276,15 +276,15 @@ def save_main_window(filename,format,quality=-1,border=False):
     window, using save_rect.
     This allows us to grab the border as well.
     """
-    GD.GUI.repaint()
-    GD.GUI.toolbar.repaint()
-    GD.GUI.update()
-    GD.canvas.update()
-    GD.app.processEvents()
+    pf.GUI.repaint()
+    pf.GUI.toolbar.repaint()
+    pf.GUI.update()
+    pf.canvas.update()
+    pf.app.processEvents()
     if border:
-        geom = GD.GUI.frameGeometry()
+        geom = pf.GUI.frameGeometry()
     else:
-        geom = GD.GUI.geometry()
+        geom = pf.GUI.geometry()
     x,y,w,h = geom.getRect()
     return save_rect(x,y,w,h,filename,format,quality)
 
@@ -339,8 +339,8 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
 
     # Leave multisave mode if no filename or starting new multisave mode
     if multisave and (filename is None or multi):
-        GD.message("Leave multisave mode")
-        QtCore.QObject.disconnect(GD.GUI,QtCore.SIGNAL("Save"),saveNext)
+        pf.message("Leave multisave mode")
+        QtCore.QObject.disconnect(pf.GUI,QtCore.SIGNAL("Save"),saveNext)
         multisave = None
 
     if filename is None:
@@ -358,12 +358,12 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
         names = utils.NameSequence(name,ext)
         if os.path.exists(names.peek()):
             next = names.next()
-        GD.message("Start multisave mode to files: %s (%s)" % (names.name,format))
+        pf.message("Start multisave mode to files: %s (%s)" % (names.name,format))
         #print(hotkey)
         if hotkey:
-             QtCore.QObject.connect(GD.GUI,QtCore.SIGNAL("Save"),saveNext)
+             QtCore.QObject.connect(pf.GUI,QtCore.SIGNAL("Save"),saveNext)
              if verbose:
-                 GD.warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % GD.cfg['keys/save'])
+                 pf.warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % pf.cfg['keys/save'])
         multisave = (names,format,quality,window,border,hotkey,autosave,rootcrop)
         print("MULTISAVE %s "% str(multisave))
         return multisave is None
@@ -375,11 +375,11 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
             else:
                 sta = save_window(filename,format,quality)
         else:
-            sta = save_canvas(GD.canvas,filename,format,quality)
+            sta = save_canvas(pf.canvas,filename,format,quality)
         if sta:
-            GD.debug("Error while saving image %s" % filename)
+            pf.debug("Error while saving image %s" % filename)
         else:
-            GD.message("Image file %s written" % filename)
+            pf.message("Image file %s written" % filename)
         return
 
 
@@ -403,12 +403,12 @@ def saveNext():
 
 def saveIcon(fn,size=32):
     """Save the current rendering as an icon."""
-    savew,saveh = GD.canvas.width(),GD.canvas.height()
-    GD.canvas.resize(size,size)
+    savew,saveh = pf.canvas.width(),pf.canvas.height()
+    pf.canvas.resize(size,size)
     if not fn.endswith('.xpm'):
         fn += '.xpm'
     save(fn)
-    GD.canvas.resize(savew,saveh)
+    pf.canvas.resize(savew,saveh)
 
 
 def autoSaveOn():
@@ -422,37 +422,37 @@ def autoSaveOn():
 def createMovie():
     """Create a movie from a saved sequence of images."""
     if not multisave:
-        GD.warning('You need to start multisave mode first!')
+        pf.warning('You need to start multisave mode first!')
         return
 
     names,format,quality,window,border,hotkey,autosave,rootcrop = multisave
     glob = names.glob()
     if glob.split('.')[-1] != 'jpg':
-        GD.warning("Currently you need to save in 'jpg' format to create movies")
+        pf.warning("Currently you need to save in 'jpg' format to create movies")
         return
     
     #cmd = "mencoder -ovc lavc -fps 5 -o output.avi %s" % names.glob()
     # mencoder "mf://%s" -mf fps=10 -o test.avi -ovc lavc -lavcopts vcodec=msmpeg4v2:vbitrate=800
     cmd = "ffmpeg -qscale 1 -r 1 -i %s output.mp4" % names.glob()
-    GD.debug(cmd)
+    pf.debug(cmd)
     utils.runCommand(cmd)
 
 
 def saveMovie(filename,format,windowname=None):
     """Create a movie from the pyFormex window."""
     if windowname is None:
-        windowname = GD.GUI.windowTitle()
-    GD.GUI.raise_()
-    GD.GUI.repaint()
-    GD.GUI.toolbar.repaint()
-    GD.GUI.update()
-    GD.canvas.makeCurrent()
-    GD.canvas.raise_()
-    GD.canvas.update()
-    GD.app.processEvents()
+        windowname = pf.GUI.windowTitle()
+    pf.GUI.raise_()
+    pf.GUI.repaint()
+    pf.GUI.toolbar.repaint()
+    pf.GUI.update()
+    pf.canvas.makeCurrent()
+    pf.canvas.raise_()
+    pf.canvas.update()
+    pf.app.processEvents()
     windowid = windowname
     cmd = "xvidcap --fps 5 --window %s --file %s" % (windowid,filename)
-    GD.debug(cmd)
+    pf.debug(cmd)
     #sta,out = utils.runCommand(cmd)
     return sta
 

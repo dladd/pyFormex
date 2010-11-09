@@ -69,8 +69,8 @@ else:
     GA = actors.CoordPlaneActor(nx=nx,linewidth=0.2,alpha=alpha)
 
 smooth()
-GD.canvas.addActor(GA)
-GD.canvas.setBbox(GA.bbox())
+pf.canvas.addActor(GA)
+pf.canvas.setBbox(GA.bbox())
 zoomAll()
-GD.canvas.update()
+pf.canvas.update()
 

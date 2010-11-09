@@ -186,7 +186,7 @@ def show():
 
 def close():
     global dialog
-    GD.PF['Sweep_data'] = dialog.results
+    pf.PF['Sweep_data'] = dialog.results
     if dialog:
         dialog.close()
         dialog = None
@@ -204,8 +204,8 @@ def timeOut():
 
 
 # Update the data items from saved values
-saved_data = GD.PF.get('Sweep_data',{})
-widgets.updateDialogItems(input_data,GD.PF.get('Sweep_data',{}))
+saved_data = pf.PF.get('Sweep_data',{})
+widgets.updateDialogItems(input_data,pf.PF.get('Sweep_data',{}))
 # Create the modeless dialog widget
 dialog = widgets.OldInputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
 # The examples style requires a timeout action

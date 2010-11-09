@@ -27,7 +27,7 @@
 This module defines the Collection class.
 """
 
-import pyformex as GD
+import pyformex as pf
 from arraytools import *
 
 ################# Collection of Actors or Actor Elements ###############
@@ -105,7 +105,7 @@ class Collection(object):
                 else:
                     del self.d[key]
             else:
-                GD.debug("Not removing from non-existing selection for actor %s" % key)
+                pf.debug("Not removing from non-existing selection for actor %s" % key)
     
     def has_key(self,key):
         """Check whether the collection has an entry for the key."""

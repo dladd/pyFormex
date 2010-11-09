@@ -23,7 +23,7 @@
 ##
 """A locking mechanism for the4 drawing functions."""
 
-import pyformex as GD
+import pyformex as pf
 
 import threading
 from time import sleep
@@ -48,8 +48,8 @@ class DrawLock(object):
         """
         if self.allowed:
             while self.locked:
-                GD.canvas.update()
-                GD.app.processEvents()
+                pf.canvas.update()
+                pf.app.processEvents()
                 sleep(0.01)  # to avoid overusing the cpu
 
 
@@ -61,9 +61,9 @@ class DrawLock(object):
         #print self.allowed,self.locked
         if self.allowed and not self.locked:
             if time is None:
-                time = GD.GUI.drawwait
+                time = pf.GUI.drawwait
             if time > 0:
-                GD.debug('STARTING TIMER')
+                pf.debug('STARTING TIMER')
                 self.locked = True
                 self.timer = threading.Timer(time,self.release)
                 self.timer.start()
@@ -114,7 +114,7 @@ def repeat(func,duration=-1,maxcount=-1,*args,**kargs):
     The default will indefinitely execute the function until it returns False.
     This may cause the system to freeze if it never does so!
     """
-    GD.debug("REPEAT: %s, %s" % (duration,maxcount))
+    pf.debug("REPEAT: %s, %s" % (duration,maxcount))
     global _repeat_timed_out
     _repeat_timed_out = False
     _repeat_count_reached = False
@@ -130,14 +130,14 @@ def repeat(func,duration=-1,maxcount=-1,*args,**kargs):
     count = 0
 
     while True:
-        GD.app.processEvents()
+        pf.app.processEvents()
         res = func(*args,**kargs)
         _exit_requested = not(res)
         count += 1
         if maxcount >= 0:
              _repeat_count_reached = count >= maxcount
         if _exit_requested or _repeat_timed_out or _repeat_count_reached:
-            GD.debug("Count: %s, TimeOut: %s" % (count,_repeat_timed_out))
+            pf.debug("Count: %s, TimeOut: %s" % (count,_repeat_timed_out))
             break
             
 
