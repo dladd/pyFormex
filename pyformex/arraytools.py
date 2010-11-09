@@ -313,6 +313,8 @@ def rotationMatrix(angle,axis=None,angle_spec=Deg):
     a = angle*angle_spec
     c = cos(a)
     s = sin(a)
+    #print angle,a,c,s
+    #print c*c+s*s
     if axis==None:
         f = [[c,s],[-s,c]]
     elif type(axis) == int:
@@ -325,8 +327,8 @@ def rotationMatrix(angle,axis=None,angle_spec=Deg):
         f[k][j] = -s
         f[k][k] = c
     else:
-        t = 1-c
-        X,Y,Z = axis
+        X,Y,Z = unitVector(axis)
+        t = 1.-c
         f = [ [ t*X*X + c  , t*X*Y + s*Z, t*X*Z - s*Y ],
               [ t*Y*X - s*Z, t*Y*Y + c  , t*Y*Z + s*X ],
               [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]

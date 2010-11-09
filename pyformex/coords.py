@@ -569,6 +569,7 @@ class Coords(ndarray):
         if around is not None:
             around = asarray(around)
             out = out.translate(-around,inplace=inplace)
+        print mat
         out = out.affine(mat,around,inplace=inplace)
         return out
     
