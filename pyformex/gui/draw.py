@@ -1027,7 +1027,7 @@ timer = None
 def sleep(timeout=None):
     """Sleep until key/mouse press in the canvas or until timeout"""
     import warnings
-    warnings.warn("The sleep function is not yet fully functional and we avoid against using it!")
+    warnings.warn("The sleep function is not yet fully functional and its use should be avoid. Use pause or the drawwait setting instead!")
     #
     global sleeping,_wakeup_mode,timer
     if _wakeup_mode > 0 or timeout == 0:  # don't bother
