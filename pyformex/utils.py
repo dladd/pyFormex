@@ -364,6 +364,7 @@ try:
 except ImportError:
     def rst2html(text,writer='html'):
         return text
+    
 
 ###################### dos to unix conversion ###################
 

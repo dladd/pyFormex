@@ -2385,17 +2385,18 @@ def updateText(widget,text,format=''):
 
     # conversion
     if format == 'rest':
-        try:
-            text = utils.rst2html(text)
-        except:
-            pf.message("Could not convert reStrucuturedText to html. Displaying as plain text.")
-            if pf.options.debug:
-                raise
-            
-        format = ''
+        html = utils.rst2html(text)
+        if html[:10] == text[:10]:
+            print "CONVERSION TO HTML FAILED"
+            text += "\n\nNote: This reStructuredText is displayed as plain text beacuse it could not be converted to html. If you install python-docutils, you should see this text (and others) with a much nicer layout!\n"
+        else:
+            text = html
+
         # We leave the format undefined, because we are not sure
         # that the conversion function (docutils) is available
-        
+        # and always produces good results
+        format = ''
+
     if format == 'plain':
         widget.setPlainText(text)
     elif format == 'html':

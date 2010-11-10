@@ -63,7 +63,7 @@ pause()
 viewport(1)
 linkViewport(1,0)
 
-exit()
+#exit()
 #sleep(nsl)
 layout(1)
 
