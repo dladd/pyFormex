@@ -78,7 +78,7 @@ pos=(0,0)
 fullscreen = False
 icontype = '.xpm'
 
-prefsmenu = True     # add settins menu menu
+prefsmenu = True     # add settings menu menu
 viewportmenu = True  # add viewport menu
 cameramenu = True    # add camera menu
 modemenu = True      # add rendermode menu

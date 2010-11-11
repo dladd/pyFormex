@@ -313,8 +313,6 @@ def rotationMatrix(angle,axis=None,angle_spec=Deg):
     a = angle*angle_spec
     c = cos(a)
     s = sin(a)
-    #print angle,a,c,s
-    #print c*c+s*s
     if axis==None:
         f = [[c,s],[-s,c]]
     elif type(axis) == int:
@@ -578,7 +576,6 @@ def cubicEquation(a,b,c,d):
 
     If the coefficient a==0, a ValueError is raised.
     """
-    #print "Coeffs: %s" % str((a,b,c,d))
     if a == 0.0:
         raise ValueError,"Coeeficient a of cubiq equation should not be 0"
 
@@ -587,7 +584,6 @@ def cubicEquation(a,b,c,d):
     r = b/a
     s = c/a
     t = d/a
-    #print "r,s,t = %s" % str((r,s,t))
 
     # scale variable
     sc = max(abs(r),sqrt(abs(s)),abs(t)**e3)
@@ -595,17 +591,14 @@ def cubicEquation(a,b,c,d):
     r = r/sc
     s = s/sc/sc
     t = t/sc/sc/sc
-    #print "scaled (%s) r,s,t = %s" % (sc,str((r,s,t)))
     
     rx = r*e3
     p3 = (s-r*rx)*e3
     q2 = rx**3-rx*s/2.+t/2.
-    #print "rx,p3,q2 = %s" % str((rx,p3,q2))
     
     q2s = q2*q2
     p3c = p3**3
     som = q2s+p3c
-    #print "q2s,p3c,som = %s" % str((q2s,p3c,som))
 
     if som <= 0.0:
 
@@ -793,7 +786,6 @@ def inverseUniqueIndex(index):
     inv[index] = arange(index.size,dtype=inv.dtype)
     return inv
     
-
 
 def sortByColumns(A):
     """Sort an array on all its columns, from left to right.

@@ -19,7 +19,7 @@
 
 
    .. autoclass:: Coords
-      :members: points,pshape,npoints,x,y,z,bbox,center,centroid,sizes,dsize,bsphere,distanceFromPlane,distanceFromLine,distanceFromPoint,directionalSize,directionalWidth,directionalExtremes,test,fprint,set,scale,translate,rotate,shear,reflect,affine,cylindrical,hyperCylindrical,toCylindrical,spherical,superSpherical,toSpherical,bump1,bump2,bump,flare,newmap,map,map1,mapd,egg,replace,swapAxes,rollAxes,projectOnPlane,projectOnSphere,projectOnCylinder,split,fuse,append,actor
+      :members: points,pshape,npoints,x,y,z,bbox,center,centroid,sizes,dsize,bsphere,distanceFromPlane,distanceFromLine,distanceFromPoint,directionalSize,directionalWidth,directionalExtremes,test,fprint,set,scale,translate,replicate,rotate,shear,reflect,affine,cylindrical,hyperCylindrical,toCylindrical,spherical,superSpherical,toSpherical,bump1,bump2,bump,flare,newmap,map,map1,mapd,egg,replace,swapAxes,rollAxes,projectOnPlane,projectOnSphere,projectOnCylinder,split,fuse,append,actor
 
    ``Functions defined in module coords`` 
 

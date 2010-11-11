@@ -19,7 +19,7 @@
 
 
    .. autoclass:: Mesh
-      :members: setProp,getProp,maxProp,propSet,copy,toFormex,ndim,nelems,nplex,ncoords,shape,nedges,centroids,getCoords,getElems,getLowerEntitiesSelector,getLowerEntities,getEdges,getFaces,getAngles,getBorder,getBorderMesh,neighborsByNode,report,fuse,compact,select,unselect,meanNodes,addNodes,addMeanNodes,selectNodes,withProp,splitProp,convert,splitRandom,convertRandom,reduceDegenerate,splitDegenerate,renumber,extrude,revolve,sweep,test,clip,cclip,clipAtPlane,volumes,volume,equiAngleSkew,actor
+      :members: setProp,getProp,maxProp,propSet,copy,toFormex,ndim,nelems,nplex,ncoords,shape,nedges,centroids,getCoords,getElems,getLowerEntitiesSelector,getLowerEntities,getEdges,getFaces,getAngles,getBorder,getBorderMesh,neighborsByNode,report,fuse,compact,select,unselect,meanNodes,addNodes,addMeanNodes,selectNodes,withProp,withoutProp,splitProp,convert,splitRandom,convertRandom,reduceDegenerate,splitDegenerate,renumber,extrude,revolve,sweep,test,clip,cclip,clipAtPlane,volumes,volume,equiAngleSkew,actor
 
    ``Functions defined in module mesh`` 
 

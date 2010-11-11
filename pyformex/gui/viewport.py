@@ -1244,7 +1244,6 @@ class MultiCanvas(FramedGridLayout):
         """Initialize the multicanvas."""
         FramedGridLayout.__init__(self)
         self.all = []
-        self.active = []
         self.current = None
         self.ncols = 2
         self.rowwise = True
@@ -1270,7 +1269,6 @@ class MultiCanvas(FramedGridLayout):
             # copy default settings from previous
             canv.resetDefaults(self.all[-1].settings)
         self.all.append(canv)
-        self.active.append(canv)
         self.showWidget(canv)
         canv.initializeGL()   # Initialize OpenGL context and camera
         self.setCurrent(canv)
@@ -1328,8 +1326,6 @@ class MultiCanvas(FramedGridLayout):
             w = self.all.pop()
             if self.current == w:
                 self.setCurrent(self.all[-1])
-            if w in self.active:
-                self.active.remove(w)
             self.removeWidget(w)
             w.close()
 
@@ -1343,25 +1339,13 @@ class MultiCanvas(FramedGridLayout):
              v.update()
          pf.GUI.processEvents()
 
-    def removeAll(self):
-        for v in self.active:
-            v.removeAll()
-
-##     def clear(self):
-##         self.current.clear()  
-
-    def addActor(self,actor):
-        for v in self.active:
-            v.addActor(actor)
-
-
     def printSettings(self):
         for i,v in enumerate(self.all):
             pf.message("""
 ## VIEWPORTS ##
-Viewport %s;  Active:%s;  Current:%s;  Settings:
+Viewport %s;  Current:%s;  Settings:
 %s
-""" % (i,v in self.active, v == self.current, v.settings))
+""" % (i, v == self.current, v.settings))
 
 
     def changeLayout(self, nvps=None,ncols=None, nrows=None):

@@ -30,9 +30,6 @@
    .. autoclass:: SaveImageDialog
       :members: getResult
 
-   .. autoclass:: ImageViewerDialog
-      :members: getFilename
-
    .. autoclass:: DockedSelection
       :members: setSelected,getResult
 
@@ -43,7 +40,7 @@
       :members: setSelected,getResult
 
    .. autoclass:: InputItem
-      :members: setTooltip,name,text,value,setValue
+      :members: name,text,value,setValue
 
    .. autoclass:: InputInfo
       :members: value
@@ -81,6 +78,9 @@
    .. autoclass:: InputFSlider
       :members: set_value
 
+   .. autoclass:: InputButton
+      :members: doFunc
+
    .. autoclass:: InputColor
       :members: setColor,setValue
 
@@ -94,7 +94,7 @@
       :members: value,setValue
 
    .. autoclass:: NewInputDialog
-      :members: add_items,add_tab,add_group,add_input,timeout,timedOut,show,acceptData,updateData,getResult
+      :members: add_items,add_tab,add_group,add_input,timeout,timedOut,show,acceptData,updateData,getResults
 
    .. autoclass:: OldInputDialog
       :members: add_input_items,timeout,timedOut,show,acceptData,updateData,getResult
@@ -140,6 +140,9 @@
 
    .. autoclass:: CoordsBox
       :members: setValues
+
+   .. autoclass:: ImageView
+      :members: showImage
 
    ``Functions defined in module widgets`` 
 

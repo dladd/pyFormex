@@ -13,7 +13,7 @@
 
 .. automodule:: curve
    :synopsis: Definition of curves in pyFormex.
-   :members: circle,vectorPairAngle,convertFormexToCurve
+   :members: circle,vectorPairAngle,convertFormexToCurve,distanceBetweenBezier
 
    ``Classes defined in module curve``
 
@@ -28,7 +28,7 @@
       :members: 
 
    .. autoclass:: BezierSpline
-      :members: pointsOn,pointsOff,part,sub_points,sub_tangents,reverse
+      :members: pointsOn,pointsOff,part,sub_points,sub_tangents,length_intgrnd,lengths,approx_by_subdivision,reverse
 
    .. autoclass:: QuadBezierSpline
       :members: 
@@ -37,7 +37,7 @@
       :members: 
 
    .. autoclass:: CardinalSpline2
-      :members: compute_coefficients,sub_points
+      :members: sub_points
 
    .. autoclass:: NaturalSpline
       :members: compute_coefficients,sub_points

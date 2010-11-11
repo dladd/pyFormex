@@ -69,12 +69,13 @@ layout(1)
 
 layout(4,2)
 viewport(0)
-sleep(nsl)
+#sleep(nsl)
 
-exit()
+#exit()
 
 for i in range(1,4):
     linkViewport(i,0)
+exit()
 
 colors=['indianred','olive','coral','yellow']
 

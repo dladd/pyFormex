@@ -477,6 +477,7 @@ def getColor(col=None,caption=None):
 ########### General Input Dialog ####################################
 #####################################################################
 
+    
 class InputItem(QtGui.QHBoxLayout):
     """A single input item, usually with a label in front.
 
@@ -1041,6 +1042,24 @@ class InputFSlider(InputFloat):
         self.input.setText(str(value))
         if self.func:
             self.func(self)
+
+
+class InputPoint(InputItem):
+    """A 3D point/vector input item."""
+    
+    def __init__(self,name,value,*args,**kargs):
+        """Creates a new point input field with a label in front."""
+        self.input = CoordsBox()
+        InputItem.__init__(self,name,*args,**kargs)
+        self.insertWidget(1,self.input)
+
+    def value(self):
+        """Return the widget's value."""
+        return self.input.getValues()
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        self.input.setValues(val)
 
 
 class InputButton(InputItem):
@@ -1670,6 +1689,9 @@ def inputAny(name,value,itemtype=str,**options):
 
     elif itemtype == float:
         line = InputFloat(name,value,**options)
+
+    elif itemtype == 'point':
+        line = InputPoint(name,value,**options)
 
     elif itemtype == 'slider':
         if type(value) == int:
@@ -2640,27 +2662,36 @@ class ComboBox(QtGui.QWidget):
 
 ############################# Coords box ###########################
 
-
 class CoordsBox(QtGui.QWidget):
     """A widget displaying the coordinates of a point.
 
+
     """
-    def __init__(self,ndim=3,*args):
+    def __init__(self,ndim=3,readonly=False,*args):
         QtGui.QWidget.__init__(self,*args)
         layout = QtGui.QHBoxLayout(self)
+        self.validator = QtGui.QDoubleValidator(self)
         self.values = []
         for name in ['x','y','z'][:ndim]:
             lbl = QtGui.QLabel(name)
             val = QtGui.QLineEdit('0.0')
-            val.setReadOnly(True)
+            val.setValidator(self.validator)
+            val.setReadOnly(readonly)
             layout.addWidget(lbl)
             layout.addWidget(val)
             self.values.append(val)
         self.setLayout(layout)
 
+
+    def getValues(self):
+        """Return the current x,y,z values as a list of floats."""
+        return [ float(val.text()) for val in self.values ] 
+
     def setValues(self,values):
-        for value,val in zip(self.values,values):
+        """Set the three values of the widget."""
+        for value,val in zip(self.values,map(float,values)):
             value.setText(str(val))
+
 
 
 ############################# ImageView ###########################

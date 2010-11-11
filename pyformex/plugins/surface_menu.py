@@ -623,11 +623,10 @@ def partitionByConnection():
 def partitionByAngle():
     S = selection.check(single=True)
     if S:
-        res  = askItems([
-            I('angle',60.),
-            I('firstprop',1),
-            I('startat',0)
-            ])
+        res  = askItems([I('angle',60.),
+                         I('firstprop',1),
+                         I('startat',0)
+                         ])
         pf.app.processEvents()
         if res:
             selection.remember()
@@ -711,33 +710,42 @@ def rotate(mode='global'):
     FL = selection.check()
     if FL:
         if mode == 'global':
-            res = askItems([('angle','90.0'),('axis',2)])
+            res = askItems([I('angle',90.0),
+                            I('axis',2),
+                            ])
             if res:
-                angle = float(res['angle'])
-                axis = int(res['axis'])
+                angle = res['angle']
+                axis = res['axis']
                 around = None
         elif mode == 'parallel':
-            res = askItems([('angle','90.0'),('axis',2),('point','[0.0,0.0,0.0]')])
+            res = askItems([I('angle',90.0),
+                            I('axis',2),
+                            I('point',[0.0,0.0,0.0],itemtype='point'),
+                            ])
             if res:
-                axis = int(res['axis'])
-                angle = float(res['angle'])
-                around = eval(res['point'])
+                angle = res['angle']
+                axis = res['axis']
+                around = res['point']
         elif mode == 'central':
-            res = askItems([('angle','90.0'),('axis','[0.0,0.0,0.0]')])
+            res = askItems([I('angle',90.0),
+                            I('axis',[1.0,0.0,0.0],itemtype='point'),
+                            ])
             if res:
-                angle = float(res['angle'])
-                axis = eval(res['axis'])
+                angle = res['angle']
+                axis = res['axis']
                 around = None
         elif mode == 'general':
-            res = askItems([('angle','90.0'),('axis','[0.0,0.0,0.0]'),('point','[0.0,0.0,0.0]')])
+            res = askItems([I('angle',90.0),
+                            I('axis',[1.0,0.0,0.0],itemtype='point'),
+                            I('point',[0.0,0.0,0.0],itemtype='point'),
+                            ])
             if res:
-                angle = float(res['angle'])
-                axis = eval(res['axis'])
-                around = eval(res['point'])
+                angle = res['angle']
+                axis = res['axis']
+                around = res['point']
         if res:
             selection.remember(True)
             for F in FL:
-                #print("ROTATE %s %s %s " % (angle,axis,around))
                 F.rotate(angle,axis,around)
             selection.drawChanges()
 
@@ -1452,6 +1460,7 @@ def create_menu():
          ("&Laplace and HC algorithm",smoothLaplaceHC),
            ]),
         ("&Undo Last Changes",selection.undoChanges),
+        ("---",None),
         ('&GTS functions',
          [('&Check surface',check),
           ('&Split surface',split),
@@ -1460,7 +1469,6 @@ def create_menu():
           ("&Smooth surface",smooth),
           ("&Boolean operation on two surfaces",boolean),
           ]),
-        ("---",None),
 #        ("&Show volume model",show_volume),
         # ("&Print Nodal Coordinates",show_nodes),
         # ("&Convert STL file to OFF file",convert_stl_to_off),

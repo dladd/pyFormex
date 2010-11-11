@@ -146,10 +146,10 @@ def rename_():
             database.set(name)
 
 
-def deleteAll():
+def delete_all():
     printall()
     if ack("Are you sure you want to unrecoverably delete all global variables?"):
-        pf.PF = {}
+        forgetAll()
 
 
 def writeGeometry():
@@ -505,7 +505,7 @@ def create_menu():
         ('  &Rename',rename_),
         ('  &Keep',keep_),
         ('  &Delete',forget_),
-        ('  &Delete All',deleteAll),
+        ('  &Delete All',delete_all),
         ("---",None),
         ('&Execute pyFormex command',command),
         ("&DOS to Unix",dos2unix),

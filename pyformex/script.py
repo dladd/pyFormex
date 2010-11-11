@@ -103,7 +103,12 @@ def forget(names):
     for name in names:
         if g.has_key(name):
             del g[name]
-        
+
+
+def forgetAll():
+    """Delete all the global variables."""
+    pf.PF = {}
+    
 
 def rename(oldnames,newnames):
     """Rename the global variables in oldnames to newnames."""
@@ -123,7 +128,7 @@ def listAll(clas=None,like=None,filter=None,dic=None):
     - like: a string: if given, only object names starting with this string
       will be returned
     - filter: a function taking an object name as parameter and returning True
-      or False. If specified, onnly objects passing the test will be returned.
+      or False. If specified, only objects passing the test will be returned.
 
     The return value is a list of keys from dic.
     """
