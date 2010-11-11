@@ -15,7 +15,7 @@ RotoTranslation
 This example illustrates the use of rototranslate() to return to an original
 reference system after a number of affine transformations.
 """
-from numpy import *
+#from numpy import *
 from plugins.geomtools import rototranslate
 
 def drawCS(ax=None):

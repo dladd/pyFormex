@@ -148,18 +148,25 @@ def cookie():
     draw.showInfo(_cookies[0],["OK"])
     roll(_cookies)
 
+
 def showURL(link):
     if not link.startswith('http://'):
         link = 'http://'+link
     help(link)
 
 
+def showFileOrURL(link):
+    if link.startswith('http://'):
+        showURL(link)
+    else:
+        draw.showFile(link)
+
 def createMenuData():
     """Returns the help menu data"""
     DocsMenuData = [(k,help,{'data':v}) for k,v in pf.cfg['help/docs']] 
     Docs2MenuData = [(k,draw.showFile,{'data':v}) for k,v in pf.cfg['help/docs2']]
     LinksMenuData = [(k,showURL,{'data':v}) for k,v in pf.cfg['help/links']]
-    DevLinksMenuData = [(k,showURL,{'data':v}) for k,v in pf.cfg['help/devlinks']]
+    DevLinksMenuData = [(k,showFileOrURL,{'data':v}) for k,v in pf.cfg['help/developer']]
 
     try:
         MenuData = DocsMenuData + [
@@ -174,7 +181,7 @@ def createMenuData():
             (_('&Developers'),developers), 
             (_('&About'),about), 
             ('---',None),
-            (_('&Developer Links'),DevLinksMenuData),
+            (_('&Developer Guidelines '),DevLinksMenuData),
             ]
     except:
         MenuData = []

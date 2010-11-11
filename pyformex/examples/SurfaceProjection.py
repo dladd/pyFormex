@@ -35,7 +35,7 @@ image = None
 scaled_image = None
 
 #teapot
-chdir(pf.cfg['curfile'])
+chdir(__file__)
 T = TriSurface.read(pf.cfg['pyformexdir']+'/data/teapot.off')#file with horse stl
 xmin,xmax = T.bbox()
 T= T.translate(-T.center()).scale(1./(xmax[0]-xmin[0])).scale(4.).setProp(2)

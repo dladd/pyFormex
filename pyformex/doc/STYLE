@@ -1,0 +1,138 @@
+.. This looks like plain text, but is really  -*- rst -*-
+
+Style for source and text files used by the pyFormex project
+============================================================
+
+Here are some recommendations on the style to be used for pyFormex
+development and on the use of the pyFormex Subversion repository. 
+All developers should follow these guidelines as closely as possible.
+
+- Make sure the following is in your subversion configuration 
+  (``~/.subversion/config``)::
+
+    global-ignores = *~ *.pyc
+    use-commit-times = yes
+    enable-auto-props = yes
+    [auto-props]
+    *.py = svn:eol-style=native;svn:keywords=Id
+
+
+General guidelines for source (text) files
+------------------------------------------
+
+- Name of .py files should be only lowercase, except for the approved
+  examples distributed with pyFormex, which should start with an upper case.
+
+- All new source (text) files in the pyFormex repository should be
+  created with the following line as the first OR second line::
+  
+  # $Id$
+
+  Start executable Python scripts with the following two lines::
+
+  #!/usr/bin/env python	  
+  # $Id$
+
+  Start pyformex GUI scripts with the following two lines::
+
+  #!/usr/bin/env pyformex --gui
+  # $Id$
+
+  Start pyformex non-GUI scripts with the following two lines::
+
+  #!/usr/bin/env pyformex --nogui
+  # $Id$
+
+- Never directly edit the ``$Id`` line: it is automatically handled by Subversion.
+
+- End your text files with a line::
+
+  # End
+
+- In Python files, always use 4 blanks for indenting, never TABs. Use
+  a decent Python-aware editor that allows you to configure this. The
+  main author of pyFormex uses ``Emacs`` with ``python-mode.el``. 
+
+
+pyFormex modules
+----------------
+
+- pyFormex modules providing a functionality that can be used under
+  plain Python can, and probably should, end with a section to test
+  the modules::
+
+    if __name__ == "__main__":
+        # Statements to test the module functionality
+   
+
+  The statements in this section will be executed when the module is
+  run with the command::
+
+    python module.py
+
+
+pyFormex scripts
+----------------
+
+- pyFormex scripts (this includes the examples provided with pyFormex)
+  can test the ``__name__`` variable to find out whether the script is
+  running under the GUI or not::
+
+    if __name__ == "draw":
+        # Statements to execute when run under the GUI
+    
+    elif __name__ == "script":
+        # Statements to execute when run without the GUI
+
+
+Coding style
+------------
+
+- Variables, functions, classes and their methods should be named
+  as closely as possible according to the following scheme:
+  
+  - classes: ``UpperUpperUpper`` 
+  - functions and methods: ``lowerUpperUpper``
+  - variables: ``lowercaseonly``
+
+  Lower case only names can have underscores inserted to visually separate
+  the constituant parts: ``lower_case_only``.
+  
+  Local names that are not supposed to be used directly by the user
+  or application programmer, can have underscores inserted or
+  appended.
+
+  Local names may start with an underscore to hide them from the user.
+  These names will indeed not be made available by Python's ``import``
+  statements.
+
+- All functions, methods, classes and modules should have a docstring,
+  consisting of a single first line with the short description,
+  possibly followed by a blank line and an extended description. It
+  is recommended to add an extended description for all but the trivial
+  components.
+
+- Docstrings should not exceed the 80 character total line
+  length. Python statements can exceed that length, if the result is more easy
+  to read than splitting the line.
+
+- Docstrings should be written with `re-structured text (reST)
+  <http://docutils.sourceforge.net/rst.html>`_ syntax. This allows us
+  to use the docstrings to autmoatically generate the reference
+  manual in a nice layout, while the docstrings keep being easily
+  readible. Where in doubt, try to follow the `Numpy documentation guidelines
+  <http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines>`_.
+
+- Do not put blanks before or after operators, except with the assignment
+  operator (``=``), where you should always put a single blank before and after it.
+
+- Always start a new line after the colon (``:``) in ``if`` and ``for`` statements. 
+
+- Always try to use implicit for loops instead of explicit ones.
+
+- Numpy often provides a choice of using an attribute, a method or a
+  function to get to the same result. The preference ordering is:
+  attribute > method > function. E.g. use ``A.shape`` and not ``shape(A)``.
+
+.. End
+

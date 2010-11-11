@@ -669,7 +669,7 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
     The returned index may therefore hold other entries for multiply
     occurring values. In such case, uniqueOrdered returns the first
     occurrence in the flattened array.
-    The unique elements and the inverse index are allways the same as those
+    The unique elements and the inverse index are always the same as those
     returned by numpy's unique.
 
     Parameters
@@ -741,7 +741,7 @@ def renumberIndex(index):
     Given a one-dimensional integer array with only non-negative values,
     and `max` being the highest value in it, the elements are replaced
     with new values in the range 0..max, such that identical numbers are
-    allways replaced with the same number and the new values at their
+    always replaced with the same number and the new values at their
     first occurrence form an increasing sequence 0..max.
     
     The return value is a one-dimensional integer array with length equal to
