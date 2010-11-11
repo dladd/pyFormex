@@ -106,6 +106,20 @@ Coding style
   These names will indeed not be made available by Python's ``import``
   statements.
 
+- Do not put blanks before or after operators, except with the assignment
+  operator (``=``), where you should always put a single blank before and after it.
+
+- Always start a new line after the colon (``:``) in ``if`` and ``for`` statements. 
+
+- Always try to use implicit for loops instead of explicit ones.
+
+- Numpy often provides a choice of using an attribute, a method or a
+  function to get to the same result. The preference ordering is:
+  attribute > method > function. E.g. use ``A.shape`` and not ``shape(A)``.
+
+Docstrings
+----------
+
 - All functions, methods, classes and modules should have a docstring,
   consisting of a single first line with the short description,
   possibly followed by a blank line and an extended description. It
@@ -123,16 +137,9 @@ Coding style
   readible. Where in doubt, try to follow the `Numpy documentation guidelines
   <http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines>`_.
 
-- Do not put blanks before or after operators, except with the assignment
-  operator (``=``), where you should always put a single blank before and after it.
-
-- Always start a new line after the colon (``:``) in ``if`` and ``for`` statements. 
-
-- Always try to use implicit for loops instead of explicit ones.
-
-- Numpy often provides a choice of using an attribute, a method or a
-  function to get to the same result. The preference ordering is:
-  attribute > method > function. E.g. use ``A.shape`` and not ``shape(A)``.
+- The parameters of class constructor methods (``__init__``) should be
+  documented in the Class doctring, not in the ``__init__`` method
+  itself.
 
 .. End
 
