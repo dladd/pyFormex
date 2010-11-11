@@ -34,6 +34,7 @@ from plugins import isopar
 import simple
 import elements
 
+wireframe()
 
 ttype = ask("Select type of transformation",['Cancel','1D','2D','3D'])
 if not ttype or ttype ==  'Cancel':
@@ -115,7 +116,7 @@ G.setProp(1)
 message('This is the transformed Formex')
 draw(G)
 
-sleep(0.8)
+pause()
 undraw(FA)
 
 # End

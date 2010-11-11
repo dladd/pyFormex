@@ -569,7 +569,6 @@ class Coords(ndarray):
         if around is not None:
             around = asarray(around)
             out = out.translate(-around,inplace=inplace)
-        print mat
         out = out.affine(mat,around,inplace=inplace)
         return out
     
@@ -1064,6 +1063,52 @@ class Coords(ndarray):
             f[...,i] *= s
         f += c
         return f
+
+
+    # Extra transformations implemented by plugins
+
+    def isopar(self,eltype,coords,oldcoords):
+        """Perform an isoparametric transformation on a Coords.
+
+        This is a convenience method to transform a Coords object through
+        an isoparametric transformation. It is equivalent to::
+
+          Isopar(eltype,coords,oldcoords).transform(self)
+
+        See :module:`plugins.isopar` for more details.
+        """
+        from plugins.isopar import Isopar
+        return Isopar(eltype,coords,oldcoords).transform(self)
+
+
+    def transformCS(self,currentCS,initialCS=None):
+        """Perform a CoordinateSystem transformation on the Coords.
+
+        This method transforms the Coords object by the transformation that
+        turns the initial CoordinateSystem into the currentCoordinateSystem.
+
+        currentCS and initialCS are CoordSystem or (4,3) shaped Coords
+        instances. If initialCS is None, the global (x,y,z) axes are used.
+
+        E.g. the default initialCS and currentCS equal to::
+
+           0.  1.  0.
+          -1.  0.  0.
+           0.  0.  1.
+           0.  0.  0.
+
+        result in a rotation of 90 degrees around the z-axis.
+
+        This is a convenience function equivalent to:: 
+
+          self.isopar('tet4',currentCS,initialCS)
+        """
+        # This is currently implemented using isopar, but could
+        # obviously also be done using affine
+        return self.isopar('tet4',currentCS,initialCS)
+        
+
+##############################################################################    
     def split(self):
         """Split the coordinate array in blocks along first axis.
 
@@ -1073,9 +1118,6 @@ class Coords(ndarray):
         if self.ndim < 2:
             raise ValueError,"Can only split arrays with dim >= 2"
         return [ self[i] for i in range(self.shape[0]) ]
-        
-
-##############################################################################
 
 
     def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5,repeat=True):
@@ -1278,6 +1320,7 @@ class Coords(ndarray):
     # Convenient shorter notations
     rot = rotate
     trl = translate
+   
 
     # Deprecated functions
     from utils import deprecated
@@ -1297,11 +1340,37 @@ class Coords(ndarray):
         return GeomActor(Formex(self.reshape(-1,3)),**kargs)
 
 
+class CoordinateSystem(Coords):
+    """A CoordinateSystem defines a coordinate system in 3D space.
+
+    The coordinate system is defined by and stored as a set of four points:
+    three endpoints of the unit vectors along the axes at the origin, and
+    the origin itself as fourth point.
+
+    The constructor takes a (4,3) array as input. THe default constructs
+    the standard global Cartesian axes system::
+
+      1.  0.  0.
+      0.  1.  0.
+      0.  0.  1.
+      0.  0.  0.
+    """
+    def __init__(self,coords=None):
+        """Initialize the CoordinateSystem"""
+        if coords is None:
+            coords = ident2(4,3)
+        else:
+            coords = checkArray(coords,(4,3),'f','i')
+        Coords.__init__(self,coords)
+        
+
 # Creating special coordinate sets
 
 def origin():
     """Return a single point with coordinates [0.,0.,0.]."""
     return Coords(zeros((3),dtype=Float))
+
+
 
 
 ##############################################################################

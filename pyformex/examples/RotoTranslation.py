@@ -12,11 +12,9 @@ author: gianluca
 
 RotoTranslation
 ---------------
-This example illustrates the use of rototranslate() to return to an original
+This example illustrates the use of transformCS() to return to an original
 reference system after a number of affine transformations.
 """
-#from numpy import *
-from plugins.geomtools import rototranslate
 
 def drawCS(ax=None):
     """it draws the coordinate system (x,y,z,o)"""
@@ -104,7 +102,7 @@ drawText(tx, 100, 50, size=15)
 #go back in 1 step to the original sys0
 #sleep(1)
 n1, e1=M1.coords, M1.elems
-n2=rototranslate(n1, cs1,cs0)
+n2=n1.transformCS(cs0,cs1)
 M2=M1._set_coords(Coords(n2))
 
 

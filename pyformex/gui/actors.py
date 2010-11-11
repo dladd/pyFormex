@@ -204,11 +204,11 @@ class TriadeActor(Actor):
     and three colored triangles representing the coordinate planes.
     The size and position of the axes can be changed.
 
-    Specifying color=None will suppress the drawing of the coordinate
-    planes.
+    colored_axes = False draws black axes.
+    draw_planes = False suppress the drawing of the coordinate planes.
     """
 
-    def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue,cyan,magenta,yellow],**kargs):
+    def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue],colored_axes=True,draw_planes=True,**kargs):
         Actor.__init__(self)
         self.color = color
         self.setPos(pos)
@@ -242,12 +242,13 @@ class TriadeActor(Actor):
         pts = Formex(pattern('1')).coords.reshape(-1,3)
         GL.glColor3f(*black)
         for i in range(3):
-            #GL.glColor(*self.color[i])
+            if colored_axes:
+                GL.glColor(*self.color[i])
             for x in pts:
                 GL.glVertex3f(*x)
             pts = pts.rollAxes(1)
         GL.glEnd()
-        if self.color:
+        if draw_planes:
             # Coord plane triangles of size 0.5
             GL.glBegin(GL.GL_TRIANGLES)
             pts = Formex(mpattern('16')).scale(0.5).coords.reshape(-1,3)

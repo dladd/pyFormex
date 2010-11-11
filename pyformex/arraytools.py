@@ -448,6 +448,19 @@ def stack(al,axis=0):
     return concatenate([addAxis(ai,axis) for ai in al],axis=axis)
 
 
+def ident2(m,n):
+    """Create a (possibly rectangular) identity matrix.
+
+    Returns an (m,n) shaped array of floats with values 1.0 on the
+    main diagonal and zero elsewhere. If the matrix is rectangular,
+    the main diagonal starts at the element (0,0) but obviously does not
+    end at (m-1,n-1).
+    """
+    a = zeros((m,n),dtype=Float)
+    fill_diagonal(a,1.0)
+    return a
+
+
 def checkArray(a,shape=None,kind=None,allow=None):
     """Check that an array a has the correct shape and type.
 

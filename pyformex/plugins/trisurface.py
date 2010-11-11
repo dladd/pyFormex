@@ -46,7 +46,6 @@ hasExternal('tetgen')
 hasExternal('gts')
 
 
-
 def areaNormals(x):
     """Compute the area and normal vectors of a collection of triangles.
 

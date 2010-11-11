@@ -24,8 +24,7 @@
 
 """Isoparametric transformations"""
 
-from formex import *
-from utils import deprecation
+from coords import *
 
 
 def evaluate(atoms,x,y=0,z=0):
@@ -162,33 +161,6 @@ class Isopar(object):
         if ndim < 3:
             xx[...,ndim:] += X[...,ndim:]
         return xx
-
-
-def isopar(X,eltype,coords,oldcoords):
-    """Perform an isoparametric transformation on a Coords.
-
-    This is a convenience function that creates and uses an isoparametric
-    transformation in a single line. It is equivalent to::
-
-      Isopar(eltype,coords,oldcoords).transform(X)
-    """
-    return Isopar(eltype,coords,oldcoords).transform(X)
-
-
-Coords.isopar = isopar
-
-def _isopar_F(self,eltype,coords,oldcoords):
-    X = isopar(self.coords,eltype,coords,oldcoords)
-    return Formex(X,self.prop,self.eltype)
-
-Formex.isopar = _isopar_F
-
-from plugins import mesh
-
-def _isopar_M(self,eltype,coords,oldcoords):
-    return mesh.Mesh(self.coords.isopar(eltype,coords,oldcoords),self.elems,self.prop,self.eltype)
-
-mesh.Mesh.isopar = _isopar_M
 
 
 # End
