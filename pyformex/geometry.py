@@ -293,6 +293,9 @@ class Geometry(object):
     @_coords_transform
     def isopar(self,*args,**kargs):
         pass
+    @_coords_transform
+    def transformCS(self,*args,**kargs):
+        pass
 
     rot = rotate
     trl = translate

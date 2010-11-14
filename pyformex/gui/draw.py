@@ -686,14 +686,17 @@ def drawText3D(P,text,color=None,font='sans',size=18):
     return M
 
 
-def drawAxes(**args):
-    """Draw the global axes.
+def drawAxes(*args,**kargs):
+    """Draw the axes of a CoordinateSystem.
 
-    This draws a TriadeActor of unit size at the origin of the
-    global axes. Possible arguments are the same as the actors.TriadeActor
-    constructor.
+    This draws an AxesActor corresponding to the specified Coordinatesystem.
+    The arguments are the same as those of the AxesActor constructor.
     """
-    A = actors.TriadeActor(**args)
+    if 'pos' in kargs:
+        warnings.warn("The syntax of drawAxes has changed. The use of the 'pos' argument is deprecated. Use an appropriate CoordinateSystem instead.")
+        A = actors.TriadeActor(**kargs)
+    else:
+        A = actors.AxesActor(*args,**kargs)
     drawActor(A)
     return A
 

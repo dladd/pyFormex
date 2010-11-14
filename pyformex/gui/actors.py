@@ -197,6 +197,55 @@ class BboxActor(Actor):
 
 
  
+class AxesActor(Actor):
+    """An actor showing the three axes of a CoordinateSystem.
+
+    If no CoordinateSystem is specified, the global coordinate system is drawn.
+    
+    The default actor consists of three colored lines of unit length along
+    the unit vectors of the axes and three colored triangles representing the
+    coordinate planes. This can be modified by the following parameters:
+
+    size: scale factor for the unit vectors.
+    color: a set of three colors to use for x,y,z axes.
+    colored_axes = False: draw black axes.
+    draw_planes = False: do not draw the coordinate planes.
+    """
+
+    def __init__(self,cs=None,size=1.0,color=[red,green,blue],colored_axes=True,draw_planes=False,**kargs):
+        Actor.__init__(self)
+        if cs is None:
+            cs = CoordinateSystem()
+        self.cs = cs    
+        self.color = saneColorArray(color,(3,1))
+        self.colored_axes = colored_axes
+        self.draw_planes = draw_planes
+        self.setSize(size)
+
+    def bbox(self):
+        origin = self.cs[3]
+        return array([origin-self.size,origin+self.size])
+
+    def setSize(self,size):
+        size = float(size)
+        if size > 0.0:
+            self.size = size
+        self.delete_list()
+
+    def drawGL(self,**kargs):
+        """Draw the axes."""
+        if self.draw_planes:
+            e = array([[3,1,2],[3,2,0],[3,0,1]])
+            drawPolygons(self.cs,e,'flat')
+            
+        e = array([[3,0],[3,1],[3,2]])
+        if self.colored_axes:
+            c = self.color
+        else:
+            c = None
+        drawLines(self.cs,e,c)
+
+ 
 class TriadeActor(Actor):
     """An OpenGL actor representing a triade of global axes.
 

@@ -123,10 +123,8 @@ class Coords(ndarray):
     :class:`numpy.ndarray` is specified.
     """
             
-    def __new__(cls, data=None, dtyp=Float, copy=False):
-        """Create a new instance of :class:`Coords`.
-
-        """
+    def __new__(clas, data=None, dtyp=Float, copy=False):
+        """Create a new instance of :class:`Coords`."""
         if data is None:
             # create an empty array : we need at least a 2D array
             # because we want the last axis to have length 3 and
@@ -152,7 +150,7 @@ class Coords(ndarray):
             ar = ar.astype(Float)
  
         # Transform 'subarr' from an ndarray to our new subclass.
-        ar = ar.view(cls)
+        ar = ar.view(clas)
 
         return ar
 
@@ -1355,13 +1353,13 @@ class CoordinateSystem(Coords):
       0.  0.  1.
       0.  0.  0.
     """
-    def __init__(self,coords=None):
+    def __new__(clas,coords=None):
         """Initialize the CoordinateSystem"""
         if coords is None:
             coords = ident2(4,3)
         else:
             coords = checkArray(coords,(4,3),'f','i')
-        Coords.__init__(self,coords)
+        return Coords(coords)
         
 
 # Creating special coordinate sets

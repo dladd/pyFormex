@@ -868,7 +868,7 @@ class Canvas(object):
         item appears.
         itemlist can also be a single item instead of a list.
         """
-        if not type(itemlist) == list:
+        if not type(itemlist) in (list,tuple):
             itemlist = [ itemlist ]
         for item in itemlist:
             self.actors.delete(item)

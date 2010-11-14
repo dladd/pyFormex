@@ -307,7 +307,7 @@ class GeometryFile(object):
             except:
                 continue  # not a legal header: skip
 
-            print("READING OBJECT OF TYPE %s" % objtype) 
+            message("READING OBJECT OF TYPE %s" % objtype) 
 
             # OK, we have a legal header, try to read data
             if objtype == 'Formex':
@@ -328,7 +328,7 @@ class GeometryFile(object):
             elif globals().has_key(objtype) and hasattr(globals()[objtype],'read_geom'):
                 obj = globals()[objtype].read_geom(self)
             else:
-                from pyformex import message
+                #from pyformex import message
                 message("Can not (yet) read objects of type %s from geometry file: skipping" % objtype)
                 continue # skip to next header
 
@@ -409,8 +409,8 @@ class GeometryFile(object):
         from plugins.curve import BezierSpline
         ndim = 3
         coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
-        print coords
-        print coords.shape
+        #print coords
+        #print coords.shape
         return BezierSpline(control=coords,closed=closed,degree=degree)
 
 
@@ -439,7 +439,7 @@ class GeometryFile(object):
         self.reopen('r')
         obj = self.read()
         self._version_ = GeometryFile._version_
-        print self._version_
+        #print self._version_
         if obj is not None:
             self.reopen('w')
             self.write(obj)
