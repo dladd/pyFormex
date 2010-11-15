@@ -65,7 +65,7 @@ setDrawOptions({'bbox':None})
 # read the model of the horse
 F = Formex.read(getcfg('datadir')+'/horse.pgf')
 # make sure it is centered
-F = F.translate(-F.center())
+F = F.centered()
 # scale it to unity size and head it in the x-direction
 xmin,xmax = F.bbox()
 H = F.scale(1./(xmax[0]-xmin[0])).rotate(180, 1)

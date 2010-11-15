@@ -1917,10 +1917,12 @@ def Sphere(level=4,verbose=False,filename=None):
     return S
 
 
+####### Unsupported functions needing cleanup #######################
+
 from utils import deprecation
 
 def checkDistanceLinesPointsTreshold(p, q, m, dtresh):
-    """p are np points, q m are nl lines, dtresh are np distances. It returns the indices of lines, points which are in a distance < dtresh. The distance point-line is calculated using Pitagora as it seems the fastest way."""
+    """_p are np points, q m are nl lines, dtresh are np distances. It returns the indices of lines, points which are in a distance < dtresh. The distance point-line is calculated using Pitagora as it seems the fastest way."""
     cand=[]
     m=normalize(m)
     for i in range(q.shape[0]):
@@ -1933,12 +1935,12 @@ def checkDistanceLinesPointsTreshold(p, q, m, dtresh):
     return candwl, candwt
 
 def intersectLineWithPlaneOne2One(q,m,p,n):
-    """it returns for each pair of line(q,m) and plane (p,n) the point of intersection. plane: (x-p)n=0, line: x=q+t m. It find the scalar t and returns the point."""
+    """_it returns for each pair of line(q,m) and plane (p,n) the point of intersection. plane: (x-p)n=0, line: x=q+t m. It find the scalar t and returns the point."""
     t=dotpr(n, (p-q))/dotpr(n, m)
     return q+m*t[:, newaxis]
 
 def checkPointInsideTriangleOne2One(tpi, pi, atol=1.e-5):
-    """return a 1D boolean with the same dimension of tpi and pi. The value [i] is True if the point pi[i] is inside the triangle tpi[i]. It uses areas to check it. """
+    """_return a 1D boolean with the same dimension of tpi and pi. The value [i] is True if the point pi[i] is inside the triangle tpi[i]. It uses areas to check it. """
     tpi3= column_stack([tpi[:, 0], tpi[:, 1], pi, tpi[:, 0], pi, tpi[:, 2], pi, tpi[:, 1], tpi[:, 2]]).reshape(pi.shape[0]*3,  3, 3)
     #areas
     Atpi3=(length(cross(tpi3[:,1]-tpi3[:,0],tpi3[:,2]-tpi3[:,1]))*0.5).reshape(pi.shape[0], 3).sum(axis=1)#area and sum
@@ -1946,7 +1948,7 @@ def checkPointInsideTriangleOne2One(tpi, pi, atol=1.e-5):
     return -(Atpi3>Atpi+atol)#True mean point inside triangle
 
 def intersectSurfaceWithLines(ts, qli, mli):
-    """it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
+    """_it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
     It returns the points of intersection and the indices of the intersected line and triangle.
     TODO: the slowest part is computing the distances of lines from triangles, can it be faster? """
     #find Bounding Sphere for each triangle
@@ -1963,7 +1965,7 @@ def intersectSurfaceWithLines(ts, qli, mli):
     return xc[xIn], wl[xIn], wt[xIn]
 
 def intersectSurfaceWithSegments(s1, segm, atol=1.e-5):
-    """it takes a TriSurface ts and a set of segments (-1,2,3) and intersect the segments with the TriSurface.
+    """_it takes a TriSurface ts and a set of segments (-1,2,3) and intersect the segments with the TriSurface.
     It returns the points of intersections and, for each point, the indices of the intersected segment and triangle"""
     p, il, it=intersectSurfaceWithLines(s1, segm[:, 0], normalize(segm[:, 1]-segm[:, 0]))
     win= length(p-segm[:, 0][il])+ length(p-segm[:, 1][il])< length(segm[:, 1][il]-segm[:, 0][il])+atol

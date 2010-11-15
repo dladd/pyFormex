@@ -29,33 +29,22 @@ topics = ['image']
 techniques = ['color']
 
 """
-
+from gui.widgets import ImageView,simpleInputItem as I
 from gui.imagecolor import *
 
-flat()
-lights(False)
-transparent(False)
-view('front')
-
-filename = getcfg('datadir')+'/butterfly.png'
-image = None
-scaled_image = None
-w,h = 200,200
-
-def selectFile():
-    """Select an image file."""
-    global filename
-    filename = askFilename(filename,filter=utils.fileDescription('img'),multi=False,exist=True)
-    if filename:
-        currentDialog().updateData({'filename':filename})
-        loadImage()
+def selectImage(fn):
+    fn = askImageFile(fn)
+    if fn:
+        viewer.showImage(fn)
+        loadImage(fn)
+    return fn
 
 
-def loadImage():
+def loadImage(fn):
     global image, scaled_image
-    image = QtGui.QImage(filename)
+    image = QImage(fn)
     if image.isNull():
-        warning("Could not load image '%s'" % filename)
+        warning("Could not load image '%s'" % fn)
         return None
 
     w,h = image.width(),image.height()
@@ -70,62 +59,80 @@ def loadImage():
         scale = sqrt(maxsiz/w/h)
         w = int(w*scale)
         h = int(h*scale)
+    return w,h
 
 
-transforms = {
-    'flat': lambda F: F,
-    'cylindrical': lambda F: F.cylindrical([2,0,1],[2.,90./float(nx),1.]).rollAxes(-1),
-    'spherical': lambda F: F.spherical(scale=[1.,90./float(nx),2.]).rollAxes(-1),
-    'projected_on_cylinder': lambda F: F.projectOnCylinder(2*R,1),
-    }
+if __name__ == 'draw':  # allows loading this file as a module
+    flat()
+    lights(False)
+    transparent(False)
+    view('front')
 
-res = askItems([
-    ('filename',filename,{'buttons':[('Select File',selectFile)]}),
-    ('nx',w,{'text':'width'}),
-    ('ny',h,{'text':'height'}),
-    ('transform',None,'vradio',{'choices':transforms.keys()}),
-    ])
+    # default image file
+    filename = getcfg('datadir')+'/butterfly.png'
+    image = None
+    scaled_image = None
+    w,h = 200,200
 
-if not res:
-    exit()
+    # image viewer widget
+    viewer = ImageView(filename)
 
-globals().update(res)
+    transforms = {
+        'flat': lambda F: F,
+        'cylindrical': lambda F: F.cylindrical([2,0,1],[2.,90./float(nx),1.]).rollAxes(-1),
+        'spherical': lambda F: F.spherical(scale=[1.,90./float(nx),2.]).rollAxes(-1),
+        'projected_on_cylinder': lambda F: F.projectOnCylinder(2*R,1),
+        }
 
-if image is None:
-    print "Loading image"
-    loadImage()
+    res = askItems([
+        I('filename',filename,text='Image file',itemtype='button',func=selectImage),
+        viewer,  # the image previewing widget
+        I('nx',w,text='width'),
+        I('ny',h,text='height'),
+        I('transform',itemtype='vradio',choices=transforms.keys()),
+        ])
 
-if image is None:
-    exit()
+    if not res:
+        exit()
 
-# Create the colors
-color,colortable = image2glcolor(image.scaled(nx,ny))
-print "Converting image to color array"
+    globals().update(res)
 
-# Create a 2D grid of nx*ny elements
-print "Creating grid"
-R = float(nx)/pi
-L = float(ny)
-F = Formex(mpattern('123')).replic2(nx,ny).centered()
-F = F.translate(2,R)
+    if image is None:
+        print "Loading image"
+        loadImage(filename)
 
-# Transform rid and draw
-def drawTransform(transform):
-    print "Transforming grid"
-    trf = transforms[transform]
-    G = trf(F)
-    clear()
-    print "Drawing Colored grid"
-    draw(G,color=color,colormap=colortable)
-    drawtext('Created with pyFormex',10,10,size=24)
+    if image is None:
+        exit()
+
+    # Create the colors
+    color,colortable = image2glcolor(image.scaled(nx,ny))
+    print "Converting image to color array"
+
+    # Create a 2D grid of nx*ny elements
+    print "Creating grid"
+    R = float(nx)/pi
+    L = float(ny)
+    F = Formex(mpattern('123')).replic2(nx,ny).centered()
+    F = F.translate(2,R)
+
+    # Transform grid and draw
+    def drawTransform(transform):
+        print "Transforming grid"
+        trf = transforms[transform]
+        G = trf(F)
+        clear()
+        print "Drawing Colored grid"
+        draw(G,color=color,colormap=colortable)
+        drawText('Created with pyFormex',20,20,size=24)
 
 
-layout(2)
-viewport(0)
-drawTransform('cylindrical')
-zoomAll()
+    layout(2)
+    viewport(0)
+    drawTransform('cylindrical')
+    zoomAll()
 
-viewport(1)
-drawTransform('spherical')
-zoomAll()
+    viewport(1)
+    drawTransform('spherical')
+    zoomAll()
+
 # End

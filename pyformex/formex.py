@@ -1035,6 +1035,9 @@ class Formex(Geometry):
         return self.coords.shape[0]
 
 
+    __len__ = nelems  # implements len(Formex)
+    
+
     def nplex(self):
         """Return the number of points per element.
 

@@ -84,13 +84,6 @@ def updateSettings(res,save=None):
     pf.debug(pf.prefcfg,"\n\nNEW PREFERENCES")
 
 
-def askImageFile(fn=None):
-    if not fn:
-        fn = pf.cfg['pyformexdir']
-    filt = map(utils.fileDescription,['img','all'])
-    return draw.askFilename(fn,filter=filt,multi=False,exist=True)
-
-
 def settings():
     import plugins
     
@@ -142,8 +135,8 @@ def settings():
     viewer = widgets.ImageView(cur)
 
     def changeSplash(fn):
-        print "CURRENT %s" % fn
-        fn = askImageFile(fn)
+        #print "CURRENT %s" % fn
+        fn = draw.askImageFile(fn)
         if fn:
             viewer.showImage(fn)
         return fn

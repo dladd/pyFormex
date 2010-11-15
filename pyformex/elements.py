@@ -83,6 +83,18 @@ class Element(object):
     def getFaces(self):
         return collectOnLength(self.faces)
 
+    @classmethod
+    def toFormex(clas):
+        x = array(clas.vertices)
+        e = array(clas.element)
+        return Formex(x[e])
+
+    def toMesh(self):
+        from plugins import Mesh
+        x = array(self.vertices)
+        e = array(self.element)
+        return Mesh(x,e)
+
 # BV
 # Should we use Coords objects for the vertices and arrays for the rest?
 

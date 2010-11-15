@@ -5,8 +5,8 @@
 
 level = 'normal'
 topics = ['surface']
-techniques = ['transform','projection']
-author: gianluca
+techniques = ['transform','projection','dialog','image']
+original idea: gianluca
 
 .. Description
 
@@ -16,12 +16,40 @@ IntersectTriSurfaceWithLines
 This example illustrates the use of intersectSurfaceWithLines.
 
 """
-from plugins.isopar import *
-from plugins.trisurface import *
-from plugins.mesh import *
+from plugins.trisurface import TriSurface
+import elements
 from connectivity import inverseIndex
-from gui.widgets import simpleInputItem as I
+from gui.widgets import ImageView,simpleInputItem as I
 from gui.imagecolor import *
+
+
+def selectImage(fn):
+    fn = askImageFile(fn)
+    if fn:
+        viewer.showImage(fn)
+    return fn
+
+
+def loadImage(fn):
+    global image, scaled_image
+    image = QImage(fn)
+    if image.isNull():
+        warning("Could not load image '%s'" % fn)
+        return None
+
+    return image.width(),image.height()
+
+
+def makeGrid(nx,ny,eltype):
+    """Create a 2D grid of nx*ny elements of type eltype.
+
+    The grid is scaled to unit size and centered.
+    """
+    elem = getattr(elements,eltype)
+    x = array(elem.vertices)
+    e = array(elem.element)
+    return Formex([x[e]],eltype=eltype).replic2(nx,ny).resized(1.).centered()
+
 
 clear()
 smooth()
@@ -29,64 +57,29 @@ lights(True)
 transparent(False)
 view('iso')
 
-
-
 image = None
 scaled_image = None
 
-#teapot
-chdir(__file__)
-T = TriSurface.read(pf.cfg['pyformexdir']+'/data/teapot.off')#file with horse stl
+# read the teapot surface
+T = TriSurface.read(getcfg('datadir')+'/teapot.off')
 xmin,xmax = T.bbox()
 T= T.translate(-T.center()).scale(1./(xmax[0]-xmin[0])).scale(4.).setProp(2)
-
 draw(T)
 
-
-##to convert image color to 8 bit (256 levels) use GIMP image-mode-indexed and save as png
+# default image file
 filename = getcfg('datadir')+'/benedict_6.jpg'
+viewer = ImageView(filename)
 
-def selectFile():
-    """Select an image file."""
-    global filename
-    filename = askFilename(filename,filter=utils.fileDescription('img'),multi=False,exist=True)
-    if filename:
-        currentDialog().updateData({'filename':filename})
-        loadImage()
-
-def loadImage():
-    global image, scaled_image
-    image = QtGui.QImage(filename)
-    if image.isNull():
-        warning("Could not load image '%s'" % filename)
-        return None
-
-    w,h = image.width(),image.height()
-    print "size = %sx%s" % (w,h)
-
-    diag = currentDialog()
-    if diag:
-        diag.updateData({'nx':w,'ny':h})
-
-    maxsiz = 40000.
-    if w*h > maxsiz:
-        scale = sqrt(maxsiz/w/h)
-        w = int(w*scale)
-        h = int(h*scale)
-    return w, h
-
-
-#the projection is made only with few control points (px*py) while the picture is reconstructed many points (nx*ny).
-
-px, py=5, 5#control points for projection of patches
-kx, ky= 50,50#number of cells in each patch
+px,py = 5,5 #control points for projection of patches
+kx,ky = 60,50 #number of cells in each patch
 
 res = askItems([
-    ('filename',filename,{'buttons':[('Select File',selectFile)]}),
-    ('px',px,{'text':'patch x'}),
-    ('kx',kx,{'text':'pixel in patch x'}), 
-    ('py',py,{'text':'patch y'}),
-    ('ky',ky,{'text':'pixel in patch y'}), 
+    I('filename',filename,text='Image file',itemtype='button',func=selectImage),
+#    viewer,   # uncomment this line to add the image previewer
+    I('px',px,text='Number of patches in x-direction'),
+    I('py',py,text='Number of patches in y-direction'),
+    I('kx',kx,text='Width of a patch in pixels'), 
+    I('ky',ky,text='Height of a patch in pixels'), 
     ])
 
 if not res:
@@ -94,82 +87,63 @@ if not res:
 
 globals().update(res)
 
-
-
-nx, ny=px*kx, py*ky#pixels
+nx,ny = px*kx,py*ky # pixels
 print 'the picture is reconstructed with %d x %d pixels'%(nx, ny)
 
 F = Formex(mpattern('123')).replic2(nx,ny).centered()
 if image is None:
     print "Loading image"
-    wpic, hpic=loadImage()
+    wpic, hpic=loadImage(filename)
 
 if image is None:
     exit()
 
 # Create the colors
 color,colortable = image2glcolor(image.scaled(nx,ny))
-print "Converting image to color array"
+# Reorder by patch
+pcolor = color.reshape((py,ky,px,kx,3)).swapaxes(1,2).reshape(-1,kx*ky,3)
+print pcolor.shape
 
+mH = makeGrid(px,py,'Quad8')
 
-# Create a 2D grid of nx*ny elements
-##trick: to speed up the projection, the grid is patched and then refined with the isop quad8!
-def makePatches8(px=3., py=2.):
-    """it makes patches (quad regions) in xy of 8 nods each, suitable for the isop transformation with type quad8. The patches together are in the region (0.,0.) (1.,1.).
-    From this patches, a grid can be generated using the makeGrid8"""
-    #px*py is the nr of patches
-    Pat=Formex( mpattern('123') )
-    Fp=Pat.replic2(n1=px,n2=py)   
-    cp=concatenate( [ Fp[:, 0], Fp[:, 1],Fp[:, 2],Fp[:, 3],    (Fp[:, 0]+Fp[:, 1])*0.5,  (Fp[:, 1]+Fp[:, 2])*0.5,  (Fp[:, 2]+Fp[:,3])*0.5, (Fp[:, 3]+Fp[:, 0])*0.5] , axis=1).reshape(-1, 8, 3)
-    cp=[ Coords(cpi) for cpi in cp]
-    #drawNumbers(Formex(cp[0]))
-    #draw(Fp, linewidth=2)
-    mcp=Formex(cp, eltype='Quad8').centered().toMesh().renumber()
-    sc=mcp.sizes()
-    return mcp.scale([ 1./sc[0], 1./sc[1], 1.] )
-
-def makeGrid8(mcp, px=3., py=2., kx=30., ky=20.):
-    #px*py is the nr of patches
-    #kx*ky is the nr of quads in 1 patch
-    Pat=Formex( mpattern('123') )
-    Sp=Pat.replic2(n1=kx,n2=ky).scale([1./kx, 1./ky, 1.])
-    #draw(Sp)
-    Sm=Sp.toMesh().renumber()
-    cp=mcp.toFormex()
-    cp0=Coords(elements.Quad8().vertices )
-    #drawNumbers(cp0)
-    #[drawNumbers(cp[i]) for i in range(px*py) ]
-    fullGrid=concatenate([ concatenate([mesh.Mesh.isopar(Sm,'quad8',cp[i+int(px)*j], cp0).toFormex()[:].reshape(ky, kx,4, 3) for i in range(px)], 1) for j in range(py) ], 0).reshape(-1, 4, 3)
-    #drawNumbers(Formex(fullGrid))
-    return Formex(fullGrid, eltype='Quad4')
-
-
-mH=makePatches8(px, py)
 try:
     hpic, wpic
-    ratioYX=float(hpic)/wpic
-    mH=mH.scale(ratioYX, 1)#Keep original proportions
+    ratioYX = float(hpic)/wpic
+    mH = mH.scale(ratioYX,1) # Keep original aspect ratio
 except: pass
-#draw(mH)
-#draw(makeGrid8(mH, px, py, kx, ky) )
 
-mH0=mH.copy().translate([-0.5, 0.1, 2.])
-mH1=mH.copy().rotate(-30., 0).scale(0.5).translate([0., -.7, -2.])
-def getEdgesMesh(m):
-    return Mesh(m.coords,m.getEdges(unique=True) )
+mH0 = mH.translate([-0.5,0.1,2.])
+mH1 = mH.rotate(-30.,0).scale(0.5).translate([0.,-.7,-2.])
 
-draw(makeGrid8(mH0, px, py, kx, ky),color=color,colormap=colortable)
-draw(makeGrid8(mH1, px, py, kx, ky),color=color,colormap=colortable)
+dg0 = draw(mH0,mode='wireframe')
+dg1 = draw(mH1,mode='wireframe')
 zoomAll()
-sleep(1)
-de0=draw(getEdgesMesh(mH0).translate([0., 0., 0.001]), color='white', linewidth=2)
-de1=draw(getEdgesMesh(mH1).translate([0., 0., 0.001]), color='white', linewidth=2)
-zoomAll()
-sleep(1)
+zoom(0.5)
+pause('Create %s x %s patches at both sides of the surface > STEP' % (px,py))
+
+# Create the transforms
+base = makeGrid(1,1,'Quad8').coords[0]
+patch = makeGrid(kx,ky,'Quad4').toMesh()
+
+
+def drawImage(grid):
+    """Draw the image on the specified patch grid.
+
+    grid is a Formex with px*py Quad8 elements.
+    Each element of grid will be filled by a kx*jy patch of colors.
+    """
+    mT = [ patch.isopar('quad8',x,base) for x in grid.coords ]
+    return [ draw(i,color=c,bbox='last') for i,c in zip (mT,pcolor)]
+
+
+d0 = drawImage(mH0)
+d1 = drawImage(mH1)
+
 
 def intersectSurfaceWithSegments2(s1, segm, atol=1.e-5, max1xperline=True):
     """it takes a TriSurface ts and a set of segments (-1,2,3) and intersect the segments with the TriSurface.
     It returns the points of intersections and, for each point, the indices of the intersected segment and triangle. If max1xperline is True, only 1 intersection per line is returned (in order to remove multiple intersections due to the tolerance) together with the index of line and triangle (at the moment the selection of one intersection among the others is random: it does not take into account the distances). If some segments do not intersect the surface, their indices are also returned."""
+    segm = segm.coords
     p, il, it=trisurface.intersectSurfaceWithLines(s1, segm[:, 0], normalize(segm[:, 1]-segm[:, 0]))
     win= length(p-segm[:, 0][il])+ length(p-segm[:, 1][il])< length(segm[:, 1][il]-segm[:, 0][il])+atol
     px, ilx, itx=p[win], il[win], it[win]
@@ -184,33 +158,33 @@ def intersectSurfaceWithSegments2(s1, segm, atol=1.e-5, max1xperline=True):
 
 
 
-x= column_stack([mH0.coords, mH1.coords]).reshape(-1, 2, 3)
-print 'intersecting %d lines with %d triangles'%(len(x), T. nelems())
-dx=draw(Formex(x), linewidth=1, color='gray')
+x = connect([mH0.points(), mH1.points()])
+
+dx = draw(x)
+pause('Creating intersection with surface > STEP')
 
 pts, il, it, mil=intersectSurfaceWithSegments2(T, x, max1xperline=True)
-print '---%d missing---%d segments of the original %d do not intersect' %(len(mil),  len(x)-len(pts), len(x)  )
-if len(x)-len(pts)!=0:raise ValueError,"some of the lines do not intersect the surface"
-dp=draw(Formex(pts), marksize=6, color='white')
 
+if len(x) != len(pts):
+    print "Some of the lines do not intersect the surface:"
+    print " %d lines, %d intersections %d missing" % (len(x),len(pts),len(mil))
+    exit()
+    
+dp=draw(pts, marksize=6, color='white')
+print pts.shape
+mH2 = Formex(pts.reshape(-1,8,3))
 
-zoomAll()
-sleep(1)
-
+pause('Finally use the intersection points to map the image > STEP')
 undraw(dp)
 undraw(dx)
-undraw(de0)
-undraw(de1)
-G=makeGrid8(mH._set_coords(Coords(pts)), px, py, kx, ky)
+undraw(d0)
+undraw(d1)
+undraw(dg0)
+undraw(dg1)
 
-
-zoomAll()
-draw(G.translate([0., 0., 0.01]),color=color,colormap=colortable)
-draw(G.translate([0., 0., -0.01]),color=color,colormap=colortable)
-zoomAll()
-sleep(2)
-pf.canvas.camera.setRotation(200, 0)
+d0 = drawImage(mH2.trl([0.,0.,0.01]))
+# small translation to make sure the image is above the surface, not cutting it
+view('front')
 zoomAll()
 
-
-
+# End

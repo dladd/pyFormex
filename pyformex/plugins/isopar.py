@@ -160,7 +160,7 @@ class Isopar(object):
         xx = reshape(dot(aa,self.trf),X.shape)
         if ndim < 3:
             xx[...,ndim:] += X[...,ndim:]
-        return xx
+        return Coords(xx)
 
 
 # End

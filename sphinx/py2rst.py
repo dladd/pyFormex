@@ -487,7 +487,7 @@ def do_class(info):
 
 def do_module(info):
     ship_module(info._name,sanitize(info._docstring))
-    names = [ n for n in info.get_function_names() if not n.startswith('_') ]
+    names = [ n for n in info.get_function_names() if not n.startswith('_') and not info[n]._docstring.startswith('_') ]
     ship_functions(names)
     ship_class_init(info._name)
     for k in info.get_class_names():

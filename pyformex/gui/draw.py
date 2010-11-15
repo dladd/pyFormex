@@ -199,13 +199,19 @@ def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
     """
     global _dialog_widget,_dialog_result
     import warnings
-    warnings.warn("""
-The default operation of askItems has changed!!!!
+    warnings.warn(""".. warn_askitems
+
+askItems
+--------
+The default operation of askItems has changed!
 It will now by default try to convert the items to use the new InputDialog.
+
 The old InputDialog will still be available for some time by using the
 'legacy = True' argument, but we advice you to switch to the newer InputItem
 format as soon as possible.
+
 Using 'legacy = False' will force the use of the new format.
+
 The default 'legacy=None' tries to convert old data when they are found and
 when they are convertible.
 """)
@@ -310,6 +316,13 @@ def askDirname(path=None,change=True):
     #pf.canvas.update()
     pf.app.processEvents()
     return fn
+
+
+def askImageFile(fn=None):
+    if not fn:
+        fn = pf.cfg['pyformexdir']
+    filt = map(utils.fileDescription,['img','all'])
+    return askFilename(fn,filter=filt,multi=False,exist=True)
 
 
 def checkWorkdir():

@@ -1381,7 +1381,7 @@ def connectMeshSequence(ML,loop=False,**kargs):
 
 
 def structuredHexGrid(dx, dy, dz, isophex='hex64'):
-    """it builds a structured hexahedral grid with nodes and elements both numbered in a structured way: first along z, then along y,and then along x. The resulting hex cells are oriented along z. This function is the equivalent of simple.rectangularGrid but for a mesh. Additionally, dx,dy,dz can be either integers or div (1D list or array). In case of list/array, first and last numbers should be 0.0 and 1.0 if the desired grid has to be inside the region 0.,0.,0. to 1.,1.,1.
+    """_it builds a structured hexahedral grid with nodes and elements both numbered in a structured way: first along z, then along y,and then along x. The resulting hex cells are oriented along z. This function is the equivalent of simple.rectangularGrid but for a mesh. Additionally, dx,dy,dz can be either integers or div (1D list or array). In case of list/array, first and last numbers should be 0.0 and 1.0 if the desired grid has to be inside the region 0.,0.,0. to 1.,1.,1.
     If isopHex is specified, a convenient set of control points for the isoparametric transformation hex64 is also returned.
     TODO: include other options to get the control points for other isoparametric transformation for hex."""
     sgx, sgy, sgz=dx, dy, dz
@@ -1412,7 +1412,7 @@ def structuredHexGrid(dx, dy, dz, isophex='hex64'):
 # 
 
 def correctHexMeshOrientation(hm):
-    """hexahedral elements have an orientation. Some geometrical transformation (e.g. reflect) may produce inconsistent orientation, which results in negative (signed) volume of the hexahedral (triple product). This function fixes the hexahedrals without orientation. """
+    """_hexahedral elements have an orientation. Some geometrical transformation (e.g. reflect) may produce inconsistent orientation, which results in negative (signed) volume of the hexahedral (triple product). This function fixes the hexahedrals without orientation. """
     from formex import vectorTripleProduct
     hf=hm.coords[hm.elems]
     tp=vectorTripleProduct(hf[:, 1]-hf[:, 0], hf[:, 2]-hf[:, 1], hf[:, 4]-hf[:, 0])# from formex.py
