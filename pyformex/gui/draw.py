@@ -198,8 +198,15 @@ def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
     Sets the dialog timeout and accepted status in global variables.
     """
     global _dialog_widget,_dialog_result
-    import warnings
-    warnings.warn(""".. warn_askitems
+    if legacy is None:
+        # check for new style items
+        newitems = [ isinstance(i,dict) for i in items ]
+        newitems = sum(newitems) == len(newitems)
+        if newitems:
+            legacy = False
+        else:
+            import warnings
+            warnings.warn(""".. warn_askitems
 
 askItems
 --------
@@ -215,9 +222,9 @@ Using 'legacy = False' will force the use of the new format.
 The default 'legacy=None' tries to convert old data when they are found and
 when they are convertible.
 """)
-    if legacy is None:
-        items = widgets.convertInputItemList(items)
-        legacy = False
+
+            items = widgets.convertInputItemList(items)
+            legacy = False
 
     if legacy:
         w = widgets.OldInputDialog(items,caption,**kargs)

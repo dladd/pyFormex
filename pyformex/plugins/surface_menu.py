@@ -1114,7 +1114,8 @@ def export_volume():
 
 def show_nodes():
     n = 0
-    data = askItems([('node number',n)])
+    data = askItems([I('node number',n),
+                     ])
     n = int(data['node number'])
     if n > 0:
         nodes,elems = PF['surface']
@@ -1148,11 +1149,11 @@ def trim_border(elems,nodes,nb,visual=False):
 
 def trim_surface():
     check_surface()
-    data = pf.cfg.get('stl/border',[('Number of trim rounds',1),('Minimum number of border edges',1)])
-    pf.cfg['stl/border'] = askItems(data)
-    pf.GUI.update()
-    n = int(data['Number of trim rounds'])
-    nb = int(data['Minimum number of border edges'])
+    res = askItems([I('Number of trim rounds',1),
+                    I('Minimum number of border edges',1),
+                    ])
+    n = int(res['Number of trim rounds'])
+    nb = int(res['Minimum number of border edges'])
     print("Initial number of elements: %s" % elems.shape[0])
     for i in range(n):
         elems = trim_border(elems,nodes,nb)
@@ -1219,7 +1220,12 @@ def show_volume():
 
 
 def createGrid():
-    res = askItems([('name','__auto__'),('nx',3),('ny',3),('b',1),('h',1)])
+    res = askItems([I('name','__auto__'),
+                    I('nx',3),
+                    I('ny',3),
+                    I('b',1),
+                    I('h',1),
+                    ])
     if res:
         globals().update(res)
         #name = res['name']
@@ -1233,7 +1239,8 @@ def createGrid():
 
 
 def createCube():
-    res = askItems([('name','__auto__')])
+    res = askItems([I('name','__auto__'),
+                    ])
     if res:
         name = res['name']
         S = Cube()
@@ -1242,7 +1249,9 @@ def createCube():
         selection.draw()
 
 def createSphere():
-    res = askItems([('name','__auto__'),('grade',4),])
+    res = askItems([I('name','__auto__'),
+                    I('grade',4),
+                    ])
     if res:
         name = res['name']
         level = max(1,res['grade'])
@@ -1288,17 +1297,17 @@ def split():
 def coarsen():
     S = selection.check(single=True)
     if S:
-        res = askItems([('min_edges',-1),
-                        ('max_cost',-1.0),
-                        ('mid_vertex',False),
-                        ('length_cost',False),
-                        ('max_fold',1.0),
-                        ('volume_weight',0.5),
-                        ('boundary_weight',0.5),
-                        ('shape_weight',0.0),
-                        ('progressive',False),
-                        ('log',False),
-                        ('verbose',False),
+        res = askItems([I('min_edges',-1),
+                        I('max_cost',-1.0),
+                        I('mid_vertex',False),
+                        I('length_cost',False),
+                        I('max_fold',1.0),
+                        I('volume_weight',0.5),
+                        I('boundary_weight',0.5),
+                        I('shape_weight',0.0),
+                        I('progressive',False),
+                        I('log',False),
+                        I('verbose',False),
                         ])
         if res:
             selection.remember()
@@ -1313,10 +1322,10 @@ def coarsen():
 def refine():
     S = selection.check(single=True)
     if S:
-        res = askItems([('max_edges',-1),
-                        ('min_cost',-1.0),
-                        ('log',False),
-                        ('verbose',False),
+        res = askItems([I('max_edges',-1),
+                        I('min_cost',-1.0),
+                        I('log',False),
+                        I('verbose',False),
                         ])
         if res:
             selection.remember()
@@ -1331,10 +1340,10 @@ def refine():
 def smooth():
     S = selection.check(single=True)
     if S:
-        res = askItems([('lambda_value',0.5),
-                        ('n_iterations',2),
-                        ('fold_smoothing',None),
-                        ('verbose',False),
+        res = askItems([I('lambda_value',0.5),
+                        I('n_iterations',2),
+                        I('fold_smoothing',None),
+                        I('verbose',False),
                         ],'Laplacian Smoothing')
         if res:
             if not 0.0 <= res['lambda_value'] <= 1.0:
