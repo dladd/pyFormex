@@ -302,6 +302,30 @@ def toggle_auto_draw():
     autodraw = not autodraw
 
 
+def reverse():
+    """Reverse the normals of the selected surfaces."""
+    SL = selection.check()
+    if SL:
+        SL = [ S.reverse() for S in SL ]
+        export2(selection.names,SL)
+        selection.draw()
+
+
+def merge():
+    """Merge the selected surfaces."""
+    SL = selection.check(warn=False)
+    if len(SL) < 2:
+        warning("You should at least selct two surfaces!")
+        return
+
+    S = TriSurface.concatenate(SL)
+    name = '--merged-surface--'
+    export({name:S})
+    selection.set(name)
+    selection.draw()
+   
+
+
 ## def convert_stl_to_off():
 ##     """Converts an stl to off format without reading it into pyFormex."""
 ##     fn = askFilename(pf.cfg['workdir'],"STL files (*.stl)")
@@ -337,37 +361,32 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
 def showBorder():
     S = selection.check(single=True)
     if S:
-        print(S.nEdgeConnected())
-        print(S.borderEdges())
-        B = S.border()
-        if B:
-            coloredB = [ b.setProp(i+1) for i,b in enumerate(B) ]
+        border = S.border()
+        if border:
+            print("The border consists of %s parts" % len(border))
+            print("The sorted border edges are: ")
+            print('\n'.join([" %s: %s" % (i,b.elems) for i,b in enumerate(border)]))
+            coloredB = [ b.setProp(i+1) for i,b in enumerate(border) ]
             draw(coloredB,linewidth=3)
             export({'border':coloredB})
         else:
             warning("The surface %s does not have a border" % selection[0])
-
-def checkBorder():
-    S = selection.check(single=True)
-    if S:
-        border = S.checkBorder()
-        if border is None:
-            print("The surface has no border.")
-        else:
-            print("The border consists of %s parts" % len(border))
-            print("The sorted border edges are: %s" % border)
+            forget('border')
 
 
 def fillBorder():
-    S = selection.check(single=True)
-    if S:
-        options = ["Cancel","Existing points","New points"]
-        res = ask("Which method ?",options)
-        if res == options[1]: 
-            S.fillBorder(0)
-        elif res == options[2]: 
-            S.fillBorder(1)
-        selection.draw()
+    showBorder()
+    B = named('border')
+    if B:
+        res = askItems([
+            I('Fill how many',itemtype='radio',choices=['All','One']),
+            I('Filling method',itemtype='radio',choices=['radial','border']),
+            ])
+        if res['Fill how many'] == 'One':
+            B = B[:1]
+        fills = [ surfaceInsideBorder(b,method=res['Filling method']).setProp(i+1) for i,b in enumerate(B) ]
+        draw(fills)
+        export(dict([('fill-%s'%i,f) for i,f in enumerate(fills)]))
         
 
 def fillHoles():
@@ -1422,6 +1441,7 @@ def create_menu():
         ("&Forget Selection",selection.forget),
         ("&Convert to Formex",toFormex),
         ("&Convert from Formex",fromFormex),
+        ("&Convert from Mesh",fromMesh),
         ("&Write Surface Model",write_surface),
         ("---",None),
         ("&Create surface",
@@ -1431,6 +1451,9 @@ def create_menu():
           ('&Cylinder, Cone, Truncated Cone',createCylinder),
           ('&Circle, Sector, Cone',createCone),
           ]),
+        ("&Merge Selection",merge),
+        ("&Reverse Normals",reverse),
+        ("&Set Property",selection.setProperty),
         ("---",None),
         ("Print &Information",
          [('&Data Size',printSize),
@@ -1440,7 +1463,6 @@ def create_menu():
           ('&Enclosed Volume',printVolume),
           ('&All Statistics',printStats),
           ]),
-        ("&Set Property",selection.setProperty),
         ("&Shrink",toggle_shrink),
         ("Toggle &Annotations",
          [("&Names",selection.toggleNames,dict(checkable=True)),
@@ -1459,9 +1481,8 @@ def create_menu():
           ("&Partition By Angle",partitionByAngle),
           ]),
         ("&Border Line",showBorder),
-        ("&Border Type",checkBorder),
         ("&Fill Border",fillBorder),
-        ("&Fill Holes",fillHoles),
+#        ("&Fill Holes",fillHoles),
         ("---",None),
         ("&Transform",
          [("&Scale",scaleSelection),

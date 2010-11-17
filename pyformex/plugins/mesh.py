@@ -500,6 +500,26 @@ class Mesh(Geometry):
         return ent
 
 
+    def getPoints(self):
+        """Return the nodal coordinates of the Mesh.
+
+        This returns only those points that are effectively used in
+        the connectivity table. For a compacted Mesh, it is equal to
+        the coords attribute.
+        """
+        return self.coords[self.getNodes()]
+
+
+    def getNodes(self):
+        """Return the set of unique node numbers in the Mesh.
+
+        This returns only the node numbers that are effectively used in
+        the connectivity table. For a compacted Mesh, it is equal to
+        the range(self.nelems).
+        """
+        return unique(self.elems)
+        
+
     def getEdges(self,unique=False):
         """Return the edges of the elements.
 
@@ -518,6 +538,16 @@ class Mesh(Geometry):
         return self.getLowerEntities(2,unique)
 
 
+    def reverse(self):
+        """Return a Mesh where all elements have been reversed.
+
+        Reversing an element means reversing the order of its points.
+        This is equivalent to::
+          Mesh(self.coords,self.elems[:,::-1])
+        """
+        return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
+
+    
     # ?? DOES THIS WORK FOR *ANY* MESH ??
     def getAngles(self, angle_spec=Deg):
         """Returns the angles in Deg or Rad between the edges of a mesh.
@@ -526,12 +556,12 @@ class Mesh(Geometry):
         where n1faces are the number of faces in 1 element and the number
         of vertices in 1 face.
         """
-        mf=self.getCoords()[self.getFaces()]
+        mf = self.coords[self.getFaces()]
         el = getattr(elements,self.eltype.capitalize())
         v = mf - roll(mf,-1,axis=1)
         v=normalize(v)
         v1=-roll(v,+1,axis=1)
-        angfac= arccos( dotpr(v, v1) )*180./math.pi
+        angfac= arccos( dotpr(v, v1) )/angle_spec
         return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
 
@@ -567,12 +597,13 @@ class Mesh(Geometry):
         brd = Mesh.concatenate( [Mesh(p[k].coords,p[k].getBorder()).setProp(k) for k in  kp] ).renumber()
         ind,ok = brd.elems.testDoubles()
         #remove repeated faces with different props
-        testdoubles= ind[ok*roll(ok, -1, 0)]
+        testdoubles = ind[ok*roll(ok, -1, 0)]
         return brd.select(testdoubles)
 
 
+    # This needs clean up
     def neighborsByNode(self, elsel=None):
-        """For each element index in the list elsel, it returns the list of neighbor elements (connected by one node at least). If elsel is None, the neighbors of all elements are calculated, but it is computationally expensive for big meshes."""
+        """_For each element index in the list elsel, it returns the list of neighbor elements (connected by one node at least). If elsel is None, the neighbors of all elements are calculated, but it is computationally expensive for big meshes."""
         if elsel==None:
             elsel=range(self.nelems())
         fnf = self.elems.inverse()#faces touched by node
@@ -583,7 +614,7 @@ class Mesh(Geometry):
         #take unique on each row and remove the -1
         uf = [unique(fi)[1:] for fi in ff]
         #remove the face-i from the neighboors of face-i
-        return [ uf[i] [uf[i]!=i] for i in range(len(uf)) ]
+        return [ uf[i][uf[i]!=i] for i in range(len(uf)) ]
 
 
     def report(self):
@@ -1095,7 +1126,7 @@ Size: %s
         coords,elems = mergeMeshes(meshes,**kargs)
         elems = concatenate(elems,axis=0)
         #print coords,elems,prop,eltype
-        return Mesh(coords,elems,prop,eltype)
+        return clas(coords,elems,prop=prop,eltype=eltype)
 
  
     # Test and clipping functions

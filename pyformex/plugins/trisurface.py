@@ -28,18 +28,19 @@ Any surface in space, no matter how complex, can be approximated with
 a triangulated surface.
 """
 
-import os
 import pyformex as pf
+
+from formex import *
+#from numpy import *
 from plugins import tetgen
 from plugins.mesh import Mesh
 from connectivity import Connectivity,closedLoop,connectedLineElems,adjacencyArrays,adjacent,adjacencyArray
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
-from formex import *
-import tempfile
-from numpy import *
 from gui.drawable import interpolateNormals
 from plugins.geomtools import projectionVOP,rotationAngle,facetDistance,edgeDistance,vertexDistance, triangleBoundingCircle
 from plugins import inertia
+
+import os,tempfile
 
 hasExternal('admesh')
 hasExternal('tetgen')
@@ -349,45 +350,51 @@ def curvature(coords,elems,edges,neighbours=1):
 ############################################################################
 
 
-def surfaceInsideLoop(coords,elems):
-    """Create a surface inside a closed curve defined by coords and elems.
+def surfaceInsideBorder(border,method='radial'):
+    """Create a surface inside a closed curve defined by a 2-plex Mesh.
 
-    coords is a set of coordinates.
-    elems is an (nsegments,2) shaped connectivity array defining a set of line
-    segments forming a closed loop.
+    border is a 2-plex Mesh representing a closed polyline.
 
-    The return value is coords,elems tuple where
-    coords has one more point: the center of th original coords
-    elems is (nsegment,3) and defines triangles describing a surface inside
-    the original curve.
+    The return value is a TrisSurface filling the hole inside the border.
+
+    There are two fill methods:
+    - 'radial': this method adds a central point and connects all border
+      segments with the center to create triangles. It is fast and works
+      well if the border is smooth, nearly convex and nearly planar.
+    - 'border': this method creates subsequent triangles by connecting the
+      endpoints of two consecutive border segments and thus works its way
+      inwards until the hole is closed. Triangles are created at the segments
+      that form the smallest angle. This method is slower, but works also
+      for most complex borders. Also, because it does not create any new
+      points, the returned surface uses the same point coordinate array
+      as the input Mesh.
     """
-    coords = Coords(coords)
-    if coords.ndim != 2 or elems.ndim != 2 or elems.shape[1] != 2 or elems.max() >= coords.shape[0]:
-        raise ValueError,"Invalid argument shape/value"
-    x = coords[unique(elems)].center().reshape(-1,3)
-    n = zeros_like(elems[:,:1]) + coords.shape[0]
-    elems = concatenate([elems,n],axis=1)
-    coords = Coords.concatenate([coords,x])
-    return coords,elems
+    if border.nplex() != 2:
+        raise ValueError,"Expected Mesh with plexitude 2, got %s" % border.nplex()
 
+    if method == 'radial':
+        x = border.getPoints().center()
+        n = zeros_like(border.elems[:,:1]) + border.coords.shape[0]
+        elems = concatenate([border.elems,n],axis=1)
+        coords = Coords.concatenate([border.coords,x])
 
-def fillHole(coords,elems):
-    """Fill a hole surrounded by the border defined by coords and elems.
+    elif method == 'border':
+        coords = border.coords
+        segments = border.elems
+        elems = empty((0,3,),dtype=int)
+        while len(segments) != 3:
+            segments,triangle = _create_border_triangle(coords,segments)
+            elems = row_stack([elems,triangle])
+        elems = row_stack([elems,segments[:,0]])
+
+    else:
+        raise ValueError,"Strategy should be either 'radial' or 'border'"
     
-    Coords is a (npoints,3) shaped array of floats.
-    Elems is a (nelems,2) shaped array of integers representing the border
-    element numbers and must be ordered.
-    """
-    triangles = empty((0,3,),dtype=int)
-    while shape(elems)[0] != 3:
-        elems,triangle = create_border_triangle(coords,elems)
-        triangles = row_stack([triangles,triangle])
-    # remaining border
-    triangles = row_stack([triangles,elems[:,0]])
-    return triangles
+    return TriSurface(coords,elems)
 
 
-def create_border_triangle(coords,elems):
+# This should be replaced with an algorith using PolyLine
+def _create_border_triangle(coords,elems):
     """Create a triangle within a border.
     
     The triangle is created from the two border elements with
@@ -425,6 +432,7 @@ def create_border_triangle(coords,elems):
         elems = insert(elems,i,new_edge,0)
     triangle = append(old_edges[:,0],old_edges[-1,1].reshape(1),0)
     return elems,triangle
+
 
 
 ############################################################################
@@ -908,28 +916,9 @@ class TriSurface(Mesh):
             return connectedLineElems(border)
         else:
             return []
-
-
-    def fillBorder(self,method=0):
-        """If the surface has a single closed border, fill it.
-
-        Filling the border is done by adding a single point inside
-        the border and connectin it with all border segments.
-        This works well if the border is smooth and nearly planar.
-        """
-        border = self.getEdges()[self.borderEdges()]
-        closed,loop = closedLoop(border)
-        if closed == 0:
-            if method == 0:
-                coords,elems = surfaceInsideLoop(self.coords,loop)
-                newS = TriSurface(coords,elems)
-            else:
-                elems = fillHole(self.coords,loop)
-                newS = TriSurface(self.coords,elems)
-            self.append(newS)
         
 
-    def border(self):
+    def border(self,):
         """Return the border(s) of TriSurface.
 
         The complete border of the surface is returned as a list
@@ -937,6 +926,20 @@ class TriSurface(Mesh):
         of the border.
         """
         return [ Mesh(self.coords,e) for e in self.checkBorder() ]
+
+
+    def fillBorder(self,method='radial',merge=False):
+        """Fill the border areas of a surface to make it closed.
+
+        If the surface has no border, it is returned unchanged.
+        Else, each singly connected part of the border which forms a
+        closed curve will be filled with triangles, thus effectively
+        creating a closed surface.
+
+        There are two methods, corresponding with the methods of
+        the surfaceInsideBorder.
+        """
+        return [ surfaceInsideBorder(b,method).setProp(i) for i,b in enumerate(self.border()) ]
 
 
     def boundaryEdges(self):

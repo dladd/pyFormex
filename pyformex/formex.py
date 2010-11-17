@@ -1570,10 +1570,11 @@ maxprop  = %s
         """Return a Formex where all elements have been reversed.
 
         Reversing an element means reversing the order of its points.
-        This is equivalent to
-        self.selectNodes(range(self.nplex()-1,-1,-1))
+        This is equivalent to::
+          self.selectNodes(arange(self.nplex()-1,-1,-1))
         """
-        return self.selectNodes(range(self.coords.shape[1]-1,-1,-1))
+        return Formex(self.coords[:,::-1],self.prop,self.eltype)
+#        return self.selectNodes(arange(self.coords.shape[1]-1,-1,-1))
 
 
 #############################

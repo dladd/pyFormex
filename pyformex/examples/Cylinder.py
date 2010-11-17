@@ -26,7 +26,7 @@
 """Cylinder
 
 level = 'beginner'
-topics = ['geometry', 'surface']
+topics = ['geometry', 'surface', 'cylinder']
 techniques = ['import']
 
 .. Description
@@ -42,7 +42,7 @@ from plugins.trisurface import TriSurface
 
 n=12
 h=5.
-A = simple.sector(1.,360.,1,n,diag='up')
+A = simple.sector(1.,360.,1,n,diag='u')
 B = simple.cylinder(2.,h,n,4,diag='u').reverse()
 C = A.reverse()+B+A.trl(2,h)
 S = TriSurface(C)

@@ -233,8 +233,12 @@ class SaveImageDialog(FileSelection):
     The dialog contains the normal file selection widget plus some
     extra fields to set the Save Image parameters:
 
-    - Whole Window: If checked, the whole pyFormex main window will be
+    - `Whole Window`: If checked, the whole pyFormex main window will be
       saved. If unchecked, only the current OpenGL viewport is saved.
+
+    - `Crop Root`: If checked, the window will be cropped from the root
+      window. This mode is required if you want to include the window
+      decorations.
 
     
     """
@@ -1306,7 +1310,8 @@ def convertInputItemList(items):
 
     The conversion does the following:
     - if the item data is a list or a tuple, it is converted to a new format
-      dictionary by calling compatInputItem function with the
+      dictionary by calling compatInputItem function with the data
+      
     Anything else will currently raise a ValueError.
     """
     def convert_item(item):

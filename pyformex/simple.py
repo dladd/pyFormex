@@ -223,7 +223,7 @@ def triangle():
 
 
 def quadraticCurve(x=None,n=8):
-    """CreateDraw a collection of curves.
+    """Create a collection of curves.
 
     x is a (3,3) shaped array of coordinates, specifying 3 points.
 
@@ -304,7 +304,7 @@ def sector(r,t,nr,nt,h=0.,diag=None):
     """Constructs a Formex which is a sector of a circle/cone.
 
     A sector with radius r and angle t is modeled by dividing the
-    radius in nr parts and the angle in nt parts and then drawing
+    radius in nr parts and the angle in nt parts and then creating
     straight line segments.
     If a nonzero value of h is given, a conical surface results with its
     top at the origin and the base circle of the cone at z=h.
@@ -319,14 +319,15 @@ def sector(r,t,nr,nt,h=0.,diag=None):
     r = float(r)
     t = float(t)
     p = Formex(regularGrid([0.,0.,0.],[r,0.,0.],[nr,0,0]).reshape(-1,3))
-    draw(p)
     if h != 0.:
         p = p.shear(2,0,h/r)
     q = p.rotate(t/nt)
-    if diag == 'up':
+    if type(diag) is str:
+        diag = diag[0]
+    if diag == 'u':
         F = connect([p,p,q],bias=[0,1,1]) + \
             connect([p,q,q],bias=[1,2,1])
-    elif diag == 'down':
+    elif diag == 'd':
         F = connect([q,p,q],bias=[0,1,1]) + \
             connect([p,p,q],bias=[1,2,1])
     else:
