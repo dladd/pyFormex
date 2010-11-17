@@ -417,7 +417,11 @@ def growAxis(a,add,axis=-1,fill=0):
 
 
 def reverseAxis(a,axis=-1):
-    """Reverse the elements along axis."""
+    """Reverse the elements along a computed axis.
+
+    If the axis is known, it might be more efficient to use::
+      a[:,:::-1,:]
+    """
     a = asarray(a)
     try:
         n = a.shape[axis]
@@ -446,19 +450,6 @@ def stack(al,axis=0):
     and is the first axis by default.
     """
     return concatenate([addAxis(ai,axis) for ai in al],axis=axis)
-
-
-def ident2(m,n):
-    """Create a (possibly rectangular) identity matrix.
-
-    Returns an (m,n) shaped array of floats with values 1.0 on the
-    main diagonal and zero elsewhere. If the matrix is rectangular,
-    the main diagonal starts at the element (0,0) but obviously does not
-    end at (m-1,n-1).
-    """
-    a = zeros((m,n),dtype=Float)
-    fill_diagonal(a,1.0)
-    return a
 
 
 def checkArray(a,shape=None,kind=None,allow=None):

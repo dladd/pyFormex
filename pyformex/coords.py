@@ -1345,7 +1345,7 @@ class CoordinateSystem(Coords):
     three endpoints of the unit vectors along the axes at the origin, and
     the origin itself as fourth point.
 
-    The constructor takes a (4,3) array as input. THe default constructs
+    The constructor takes a (4,3) array as input. The default constructs
     the standard global Cartesian axes system::
 
       1.  0.  0.
@@ -1356,7 +1356,7 @@ class CoordinateSystem(Coords):
     def __new__(clas,coords=None):
         """Initialize the CoordinateSystem"""
         if coords is None:
-            coords = ident2(4,3)
+            coords = eye(4,3)
         else:
             coords = checkArray(coords,(4,3),'f','i')
         return Coords(coords)
