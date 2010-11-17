@@ -13,7 +13,7 @@
 
 .. automodule:: script
    :synopsis: Basic pyFormex script functions
-   :members: Globals,export,export2,forget,rename,listAll,named,getcfg,ask,ack,error,warning,showInfo,system,executeScript,playScript,force_finish,step_script,breakpt,enableBreak,stopatbreakpt,playFile,play,exit,processArgs,setPrefs,printall,printglobals,printglobalnames,printconfig,printdetected,writable,chdir,runtime,startGui,isWritable,checkRevision,writeGeomFile,readGeomFile
+   :members: Globals,export,export2,forget,forgetAll,rename,listAll,named,getcfg,ask,ack,error,warning,showInfo,system,executeScript,playScript,force_finish,step_script,breakpt,enableBreak,stopatbreakpt,playFile,play,exit,processArgs,setPrefs,printall,printglobals,printglobalnames,printconfig,printdetected,writable,chdir,runtime,startGui,isWritable,checkRevision,writeGeomFile,readGeomFile
 
    ``Classes defined in module script``
 

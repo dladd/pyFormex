@@ -78,6 +78,9 @@
    .. autoclass:: InputFSlider
       :members: set_value
 
+   .. autoclass:: InputPoint
+      :members: value,setValue
+
    .. autoclass:: InputButton
       :members: doFunc
 
@@ -139,7 +142,7 @@
       :members: setIndex
 
    .. autoclass:: CoordsBox
-      :members: setValues
+      :members: getValues,setValues
 
    .. autoclass:: ImageView
       :members: showImage

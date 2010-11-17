@@ -13,7 +13,7 @@
 
 .. automodule:: mesh
    :synopsis: mesh.py
-   :members: vectorRotation,sweepCoords,defaultEltype,mergeNodes,mergeMeshes,connectMesh,connectQuadraticMesh,connectMeshSequence,structuredHexGrid,correctHexMeshOrientation
+   :members: vectorRotation,sweepCoords,defaultEltype,mergeNodes,mergeMeshes,connectMesh,connectQuadraticMesh,connectMeshSequence
 
    ``Classes defined in module mesh``
 

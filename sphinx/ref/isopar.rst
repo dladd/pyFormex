@@ -13,7 +13,7 @@
 
 .. automodule:: isopar
    :synopsis: Isoparametric transformations
-   :members: evaluate,isopar
+   :members: evaluate
 
    ``Classes defined in module isopar``
 
