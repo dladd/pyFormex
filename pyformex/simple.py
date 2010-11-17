@@ -319,6 +319,7 @@ def sector(r,t,nr,nt,h=0.,diag=None):
     r = float(r)
     t = float(t)
     p = Formex(regularGrid([0.,0.,0.],[r,0.,0.],[nr,0,0]).reshape(-1,3))
+    draw(p)
     if h != 0.:
         p = p.shear(2,0,h/r)
     q = p.rotate(t/nt)
@@ -336,13 +337,19 @@ def sector(r,t,nr,nt,h=0.,diag=None):
 
 
 def cylinder(D,L,nt,nl,D1=None,angle=360.,bias=0.,diag=None):
-    """Create a cylinder with diameter D and length L.
+    """Create a cylindrical or conical surface.
 
-    The cylinder has nt elements in circumferential direction and
+    Returns a Formex representing a cylindrical or (possibly truncated)
+    conical surface around the z-axis. L is the length(height) of the
+    cy;linder/cone and D is the base diameter. If D1 is specified,
+    it is used as the diameter at the top. If no, it is taken equal to D,
+    resulting in a cylindrical surface. Setting either D1 or D to zero
+    results in a cone, other values will create a truncated cone.
+
+    The surface has nt elements in circumferential direction and
     nl in longitudinal direction.
-    The cylinder's axis is the z-axis.
-    By default, the elements are quads. Put in a diagonal ('u' or 'd')
-    to create triangles.
+    By default, the elements are quads. Setting diag to 'u' or 'd' will
+    put in an up or down diagonal to create triangles.
     """
     C = rectangle(nl,nt,L,angle,bias=bias,diag=diag).trl(2,D/2.)
     return C.cylindrical(dir=[2,1,0])

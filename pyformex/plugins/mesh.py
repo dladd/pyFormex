@@ -539,7 +539,7 @@ class Mesh(Geometry):
         """Return the border of the Mesh.
 
         This returns a Connectivity table with the border of the Mesh.
-        The border entities are of a lower jierarchical level than the
+        The border entities are of a lower hierarchical level than the
         mesh itself. This Connectivity can be used together with the
         Mesh coords to construct a Mesh of the border geometry.
         See also getBorderMesh.

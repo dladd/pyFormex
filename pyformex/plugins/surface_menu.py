@@ -339,10 +339,11 @@ def showBorder():
     if S:
         print(S.nEdgeConnected())
         print(S.borderEdges())
-        F = S.border()
-        if F.nelems() > 0:
-            draw(F,color='red',linewidth=3)
-            export({'border':F})
+        B = S.border()
+        if B:
+            coloredB = [ b.setProp(i+1) for i,b in enumerate(B) ]
+            draw(coloredB,linewidth=3)
+            export({'border':coloredB})
         else:
             warning("The surface %s does not have a border" % selection[0])
 
@@ -353,9 +354,8 @@ def checkBorder():
         if border is None:
             print("The surface has no border.")
         else:
-            closed,loop = border
-            print("The border is of type %s" % closed)
-            print("The sorted border edges are: %s" % loop)
+            print("The border consists of %s parts" % len(border))
+            print("The sorted border edges are: %s" % border)
 
 
 def fillBorder():
@@ -372,13 +372,14 @@ def fillBorder():
 
 def fillHoles():
     """Fill the holes in the selected surface."""
+    from connectivity import connectedLineElems
     S = selection.check(single=True)
     if S:
         border_elems = S.getEdges()[S.borderEdges()]
         if border_elems.size != 0:
             # partition borders
             print(border_elems)
-            border_elems = partitionSegmentedCurve(border_elems)
+            border_elems = connectedLineElems(border_elems)
             print(border_elems)
             
             # draw borders in new viewport
@@ -1260,7 +1261,26 @@ def createSphere():
         selection.set([name])
         selection.draw()
 
-_data = {}
+
+def createCylinder():
+    res = askItems([I('name','__auto__'),
+                    I('base diameter',1.),
+                    I('top diameter',1.),
+                    I('height',1.),
+                    I('angle',360.),
+                    I('div_along_length',6),
+                    I('div_along_circ',12),
+                    I('bias',0.),
+                    I('diagonals',choices=['up','down']),
+                    ])
+    if res:
+        print res
+        name = res['name']
+        F = simple.cylinder(L=res['height'],D=res['base diameter'],D1=res['top diameter'],angle=res['angle'],nt=res['div_along_circ'],nl=res['div_along_length'],bias=res['bias'],diag=res['diagonals'][0])
+        export({name:TriSurface(F)})
+        selection.set([name])
+        selection.draw()
+
 
 def createCone():
     res = askItems([I('name','__auto__'),
@@ -1408,6 +1428,7 @@ def create_menu():
          [('&Plane Grid',createGrid),
           ('&Cube',createCube),
           ('&Sphere',createSphere),
+          ('&Cylinder, Cone, Truncated Cone',createCylinder),
           ('&Circle, Sector, Cone',createCone),
           ]),
         ("---",None),

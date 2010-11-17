@@ -905,9 +905,9 @@ class TriSurface(Mesh):
         """Return the border of TriSurface as a set of segments."""
         border = self.getEdges()[self.borderEdges()]
         if len(border) > 0:
-            return closedLoop(border)
+            return connectedLineElems(border)
         else:
-            return None
+            return []
 
 
     def fillBorder(self,method=0):
@@ -927,11 +927,16 @@ class TriSurface(Mesh):
                 elems = fillHole(self.coords,loop)
                 newS = TriSurface(self.coords,elems)
             self.append(newS)
-
+        
 
     def border(self):
-        """Return the border of TriSurface as a Plex-2 Formex."""
-        return Formex(self.coords[self.getEdges()[self.borderEdges()]])
+        """Return the border(s) of TriSurface.
+
+        The complete border of the surface is returned as a list
+        of plex-2 Meshes. Each Mesh constitutes a continuous part
+        of the border.
+        """
+        return [ Mesh(self.coords,e) for e in self.checkBorder() ]
 
 
     def boundaryEdges(self):

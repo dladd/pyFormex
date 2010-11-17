@@ -870,10 +870,11 @@ def connectedLineElems(elems):
         parts.append(loop[loop!=-1].reshape(-1,2))
         elems = elems[elems!=-1].reshape(-1,2)
     return parts
+   
+
 
 partitionSegmentedCurve = connectedLineElems
 
-   
 
 
 ############################################################################
