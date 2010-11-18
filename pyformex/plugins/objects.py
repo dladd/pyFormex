@@ -338,7 +338,7 @@ class DrawableObjects(Objects):
 
 
     def toggleAnnotation(self,i=0,onoff=None):
-        """Toggle the display of an annotaion On or Off.
+        """Toggle the display of an annotation On or Off.
 
         If given, onoff is True or False. 
         If no onoff is given, this works as a toggle. 

@@ -42,32 +42,25 @@ from plugins.mesh import *
 
 ##################### select, read and write ##########################
 
-selection = DrawableObjects(clas=Mesh)
+# We subclass the DrawableObject to change its toggleAnnotation method
+class MeshObjects(DrawableObjects):
+    def __init__(self):
+        DrawableObjects.__init__(self,clas=Mesh)
 
-def toggleAnnotation(self,i=0,onoff=None):
-    """Toggle mesh annotations on/off.
+    def toggleAnnotation(self,i=0,onoff=None):
+        """Toggle mesh annotations on/off.
 
-    This functions is like DrawableObjects.toggleAnnotation but also
-    updates the mesh_menu when changes are made.
-    """
-    #print "THIS IS THE MESHMENU TOGGLE"
-    #print self
-    _toggleAnnotation(self,i,onoff)
-    mesh_menu = pf.GUI.menu.item(_menu)
-    #print mesh_menu.menuitems
-    toggle_menu = mesh_menu.item("toggle annotations")
-    #print toggle_menu
-    # This relies on the menu having the same items as the annotation list
-    action = toggle_menu.actions()[i]
-    action.setChecked(selection.hasAnnotation(i))
-    #print "ACTION %s" % action
-    #toggle_menu.itemAction(action)
-    
-_toggleAnnotation = DrawableObjects.toggleAnnotation
-DrawableObjects.toggleAnnotation = toggleAnnotation
+        This functions is like DrawableObjects.toggleAnnotation but also
+        updates the mesh_menu when changes are made.
+        """
+        DrawableObjects.toggleAnnotation(self,i,onoff)
+        mesh_menu = pf.GUI.menu.item(_menu)
+        toggle_menu = mesh_menu.item("toggle annotations")
+        # This relies on the menu having the same items as the annotation list
+        action = toggle_menu.actions()[i]
+        action.setChecked(selection.hasAnnotation(i))
 
-setSelection = selection.set
-drawSelection = selection.draw
+selection = MeshObjects()
 
 
 def getParams(line):
@@ -93,6 +86,7 @@ def readElems(fil,nplex):
     e = Connectivity(e)
     print(e.shape)
     return e
+
 
 def readEsets(fil):
     """Read the eset data of type generate"""

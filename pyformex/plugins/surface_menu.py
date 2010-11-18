@@ -84,6 +84,7 @@ ntoggles = len(selection.annotations)
 def toggleEdgeNumbers():
     selection.toggleAnnotation(0+ntoggles)
 def toggleNodeNumbers():
+    print "SURFACE_MENU: %s" % selection
     selection.toggleAnnotation(1+ntoggles)
 def toggleNormals():
     selection.toggleAnnotation(2+ntoggles)
@@ -1293,7 +1294,6 @@ def createCylinder():
                     I('diagonals',choices=['up','down']),
                     ])
     if res:
-        print res
         name = res['name']
         F = simple.cylinder(L=res['height'],D=res['base diameter'],D1=res['top diameter'],angle=res['angle'],nt=res['div_along_circ'],nl=res['div_along_length'],bias=res['bias'],diag=res['diagonals'][0])
         export({name:TriSurface(F)})

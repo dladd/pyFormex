@@ -33,6 +33,7 @@ import threading,os,sys,types,copy,commands,time
 
 import numpy
 import utils
+import messages
 import widgets
 import toolbar
 import actors
@@ -205,24 +206,7 @@ def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
         if newitems:
             legacy = False
         else:
-            import warnings
-            warnings.warn(""".. warn_askitems
-
-askItems
---------
-The default operation of askItems has changed!
-It will now by default try to convert the items to use the new InputDialog.
-
-The old InputDialog will still be available for some time by using the
-'legacy = True' argument, but we advice you to switch to the newer InputItem
-format as soon as possible.
-
-Using 'legacy = False' will force the use of the new format.
-
-The default 'legacy=None' tries to convert old data when they are found and
-when they are convertible.
-""")
-
+            messages.warning("warn_askitems_changed")
             items = widgets.convertInputItemList(items)
             legacy = False
 
@@ -713,7 +697,7 @@ def drawAxes(*args,**kargs):
     The arguments are the same as those of the AxesActor constructor.
     """
     if 'pos' in kargs:
-        warnings.warn("The syntax of drawAxes has changed. The use of the 'pos' argument is deprecated. Use an appropriate CoordinateSystem instead.")
+        message.warnings("warn_drawaxes_changed","0.8.3")
         A = actors.TriadeActor(**kargs)
     else:
         A = actors.AxesActor(*args,**kargs)
@@ -1252,11 +1236,7 @@ def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
 
 ### BEWARE FOR EFFECTS OF SPLITTING pf.canvas and pf.canvas if these
 ### are called from interactive functions!
-
-def _viewport_warning():
-    import warnings
-    warnings.warn("The viewport changing functions have changed: interactive changes through the GUI are now decoupled from changes by the script.\nThis may result in unwanted effects if your script relied on the old (coupled) functionality.\n\nIf you notice any unexpected behaviour, please tell the developers about it through the `forums <%s>`_ or `bug system <%s>`_." % (pf.cfg['help/forums'],pf.cfg['help/bugs']))
-    
+   
 
 def viewport(n=None):
     """Select the current viewport.
@@ -1266,7 +1246,7 @@ def viewport(n=None):
 
     if n is None, selects the current GUI viewport for drawing
     """
-    _viewport_warning()
+    messages.warning("warn_viewport_switching")
     if n is not None:
         pf.canvas.update()
         pf.GUI.viewports.setCurrent(n)

@@ -29,20 +29,20 @@ topics = ['geometry','surface']
 techniques = ['dialog', 'persistence', 'color']
 
 """
+from gui.widgets import simpleInputItem as I
 
 reset()
-
 
 basechoices = ['Triangles','Quadrilaterals']
 renderchoices = ['wireframe','flat','flatwire','smooth','smoothwire']
 res = askItems([
-    ('baseGeom',None,'radio',{'choices':basechoices,'text':'Type of surface element'}),
-    ('nbumps',3,{'text':'Number of bumps'}),
-    ('rendermode',None,'select',{'choices':renderchoices,'text':'Render mode'}),
-    ('transparent',False,{'text':'Transparent'}),
-    ('bottom',False,{'text':'Add a bottom plate'}),
-    ('shrink',False,{'text':'Shrink elements'}),
-    ('export',False,{'text':'Export to .stl'}),
+    I('baseGeom',itemtype='radio',choices=basechoices,text='Type of surface element'),
+    I('nbumps',3,text='Number of bumps'),
+    I('rendermode',choices=renderchoices,text='Render mode'),
+    I('transparent',False,text='Transparent'),
+    I('bottom',False,text='Add a bottom plate'),
+    I('shrink',False,text='Shrink elements'),
+    I('export',False,text='Export to .stl'),
     ])
 if not res:
     exit()
