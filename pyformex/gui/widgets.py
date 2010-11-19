@@ -539,6 +539,13 @@ class InputItem(QtGui.QHBoxLayout):
         if 'data' in kargs:
             self.data = kargs['data']
 
+        if 'readonly' in kargs:
+            try:
+                self.input.setReadOnly(kargs['readonly'])
+            except:
+                print "Can not set readonly: %s,%s" % (name,kargs)
+    
+
         if 'tooltip' in kargs:
             if hasattr(self,'label'):
                 self.label.setToolTip(kargs['tooltip'])
@@ -634,7 +641,7 @@ class InputText(InputItem):
     If the type of value is not a string, the input text
     will be eval'ed before returning.
     
-    There are no specific op[tions.
+    There are no specific options.
     """
     def __init__(self,name,value,*args,**kargs):
         """Creates the input item."""
@@ -2706,11 +2713,13 @@ class ImageView(QtGui.QLabel):
 
     """
     
-    def __init__(self,image=None,parent=None):
+    def __init__(self,image=None,maxheight=None,parent=None):
         """Create a new ImageView widget."""
         QtGui.QLabel.__init__(self,parent=parent)
         self.setBackgroundRole(QtGui.QPalette.Base)
         self.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+        if maxheight:
+            self.setMaximumHeight(maxheight)
         if image is not None:
             self.showImage(image)
             

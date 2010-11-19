@@ -33,7 +33,7 @@ from gui import menu
 import utils
 from formex import *
 from gui.draw import *
-from gui.widgets import simpleInputItem as I, compatInputItem as C
+from gui.widgets import simpleInputItem as I
 from plugins import objects
 from plugins.tools import *
 from plugins.trisurface import TriSurface
@@ -483,6 +483,35 @@ def export_selection():
         elif res['Export as'] == options[1]:
             export(dict([ (name+"-%s"%i,v) for i,v in enumerate(sel)]))
      
+
+def sendMail():
+    import sendmail
+    sender = pf.cfg['mail/sender']
+    if not sender:
+        warning("You have to configure your email settings first")
+        return
+    
+    res = askItems([
+        I('sender',sender,text="From:",readonly=True),
+        I('to','',text="To:"),
+        I('cc','',text="Cc:"),
+        I('subject','',text="Subject:"),
+        I('text','',itemtype='text',text="Message:"),
+       ])
+    if not res:
+        return
+
+    msg = sendmail.message(**res)
+    print msg
+    to = res['to'].split(',')
+    cc = res['cc'].split(',')
+    sendmail.sendmail(message=msg,sender='bene@bump',to='bene@bump')
+    #sendmail.sendmail(message=msg,sender=res['sender'],to=to+cc)
+    print "Mail has been sent to %s" % to 
+    if cc:
+        print "  with copy to %s" % cc
+
+
         
 ################### menu #################
 
@@ -508,8 +537,9 @@ def create_menu():
         ('  &Delete All',delete_all),
         ("---",None),
         ('&Execute pyFormex command',command),
-        ("&DOS to Unix",dos2unix),
+        ("&DOS to Unix",dos2unix,dict(tooltip="Convert a text file from DOS to Unix line terminators")),
         ("&Unix to DOS",unix2dos),
+        ("Send &Mail",sendMail),
         ("---",None),
         ("&Create Plane",
             [("Coordinates", 

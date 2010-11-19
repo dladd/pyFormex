@@ -86,6 +86,7 @@ def updateSettings(res,save=None):
 
 def settings():
     import plugins
+    import sendmail
     
     dia = None
 
@@ -132,7 +133,7 @@ def settings():
     cur = pf.cfg['gui/splash']
 #    if not cur:
 #        cur = pf.cfg.get('icondir','.')
-    viewer = widgets.ImageView(cur)
+    viewer = widgets.ImageView(cur,maxheight=200)
 
     def changeSplash(fn):
         #print "CURRENT %s" % fn
@@ -140,6 +141,11 @@ def settings():
         if fn:
             viewer.showImage(fn)
         return fn
+
+    mail_settings = [
+        I('mail/sender',pf.cfg.get('mail/sender',sendmail.mail),text="My mail address"),
+        I('mail/server',pf.cfg.get('mail/server','localhost'),text="Outgoing mail server")
+        ]
 
     dia = widgets.NewInputDialog(
         caption='pyFormex Settings',
@@ -170,6 +176,8 @@ def settings():
              ),
             T('Mouse',mouse_settings),
             T('Plugins',plugin_items),
+            T('Environment',mail_settings),
+                
             ],
         actions=[
             ('Close',close),

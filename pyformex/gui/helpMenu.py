@@ -161,6 +161,7 @@ def showFileOrURL(link):
     else:
         draw.showFile(link)
 
+
 def createMenuData():
     """Returns the help menu data"""
     DocsMenuData = [(k,help,{'data':v}) for k,v in pf.cfg['help/docs']] 

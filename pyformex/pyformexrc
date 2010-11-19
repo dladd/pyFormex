@@ -190,3 +190,11 @@ save = 'F2'
 
 [surface]
 stlread = '.off'
+
+
+[mail]
+sender = ''
+server = 'localhost'
+
+#End
+

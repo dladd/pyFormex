@@ -70,7 +70,7 @@ def message(sender='',to='',cc='',subject='',text=''):
 def sendmail(message,sender,to,serverURL='localhost'):
     """Send an email message
 
-    'message' is an email message (e.g. returned but message())
+    'message' is an email message (e.g. returned by message())
     'sender' is a single mail address
     'to' can be a list of addresses
     """
