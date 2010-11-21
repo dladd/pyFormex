@@ -1520,7 +1520,7 @@ class NewInputDialog(QtGui.QDialog):
         if parent is None:
             parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
-        self.setMaximumSize(*maxSize())
+        #self.setMaximumSize(*maxSize())
         if flags is not None:
             self.setWindowFlags(flags)
         if caption is None:
@@ -1720,7 +1720,6 @@ or use the functions widgets.tabInputItem or widgets.groupInputItem
         self.status = None
 
         self.setModal(modal)
-        self.resize(800,600)
         QtGui.QDialog.show(self)
 
         addTimeOut(self,timeout,timeoutfunc)
@@ -2692,20 +2691,26 @@ class InputBox(QtGui.QWidget):
 ############################# Button box ###########################
 
 
-def dialogButtons(dialog,actions=[('Cancel',),('OK',)],default=None):
+def dialogButtons(dialog,actions=None,default=None):
     """Create a set of dialog buttons
 
     dia is a dialog widget
+
     actions is a list of tuples (name,) or (name,function).
     If a function is specified, it will be executed on pressing the button.
     If no function is specified, and name is one of 'ok' or 'cancel' (case
     is ignored), the button will be bound to the dialog's 'accept'
     or 'reject' slot.
+    If actions==None (default), it will be set to the default::
+      [('Cancel',),('OK',)]
+    Specify actions=[] if you want an empty dialogDuttons.
     default is the name of the action to set as the default. If no default
     is given, it is set to the LAST button.
 
     Returns a horizontal box layout with the buttons.
     """
+    if actions is None:
+        actions = [('Cancel',),('OK',)]
     but = QtGui.QHBoxLayout()
     spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
     but.addItem(spacer)

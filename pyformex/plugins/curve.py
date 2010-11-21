@@ -108,7 +108,7 @@ class Curve(Geometry):
 
 
     def pointsAt(self,t):
-        """Returns the points at parameter values t.
+        """Return the points at parameter values t.
 
         Parameter values are floating point values. Their integer part
         is interpreted as the curve segment number, and the decimal part
