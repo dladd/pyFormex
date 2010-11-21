@@ -798,7 +798,7 @@ Most likely because 'python-scipy' is not installed on your system.""")
         from the straight segment through its end points.
         
         Parts for which the distance is larger than tol are subdivided
-        using the 'de Casteljau algorithm'. The subdivision stops
+        using de Casteljau's algorithm. The subdivision stops
         if all parts are sufficiently flat. The return value is a PolyLine
         connecting the end points of all parts.
         """
@@ -816,7 +816,7 @@ Most likely because 'python-scipy' is not installed on your system.""")
             # subdivide parts for which distance is larger than tol
             T[T] *= d > tol
             if T.any():
-                # compute midpoints
+                # apply de Casteljau's algorithm for t = 0.5
                 M = [ P[T] ]
                 for i in range(self.degree):
                     M.append( (M[-1][:,:-1]+M[-1][:,1:])/2 )
@@ -828,13 +828,47 @@ Most likely because 'python-scipy' is not installed on your system.""")
                 indQ = T.cumsum()-1
                 indP = (1-T).cumsum()-1
                 P = [ [Q1[i],Q2[i]] if Ti else [P[j]] for i,j,Ti in zip(indQ,indP,T) ]
-                P = Coords.concatenate(P,axis=0)
+                P = Coords(concatenate(P,axis=0))
                 T = [ [Ti,Ti] if Ti else [Ti] for Ti in T ]
                 T = concatenate(T,axis=0)
         # create PolyLine through end points
         P = Coords.concatenate([P[:,0],P[-1,-1]],axis=0)
         PL = PolyLine(P,closed=self.closed)
         return PL
+
+
+    def extend(self,extend=[1.,1.]):
+        """Extend the curve beyond its endpoints.
+    
+        This function will add a Bezier curve before the first part and/or
+        after the last part by applying de Casteljau's algorithm on this part.
+        """
+        if self.closed:
+            return
+        if extend[0] > 0.:
+            # get the control points
+            P = self.part(0)
+            # apply de Casteljau's algorithm
+            t = -extend[0]
+            M = [ P ]
+            for i in range(self.degree):
+                M.append( (1.-t)*M[-1][:-1] + t*M[-1][1:] )
+            # compute control points
+            Q = stack([ Mi[0] for Mi in M[::-1] ],axis=0)
+            self.coords = Coords.concatenate([Q[:-1],self.coords])
+            self.nparts += 1
+        if extend[1] > 0.:
+            # get the control points
+            P = self.part(self.nparts-1)
+            # apply de Casteljau's algorithm
+            t = 1.+extend[1]
+            M = [ P ]
+            for i in range(self.degree):
+                M.append( (1.-t)*M[-1][:-1] + t*M[-1][1:] )
+            # compute control points
+            Q = stack([ Mi[-1] for Mi in M ],axis=0)
+            self.coords = Coords.concatenate([self.coords,Q[1:]])
+            self.nparts += 1
 
 
     def reverse(self):
