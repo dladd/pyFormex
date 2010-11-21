@@ -95,11 +95,18 @@ class Curve(Geometry):
         t and j can both be arrays, but should have the same length.
         """
         raise NotImplementedError
-
-    def sub_tangents(self,t,j):
-        """Return the unit tangent vectors at values t in part j
+    
+    def sub_directions(self,t,j):
+        """Return the directions at values t in part j
 
         t can be an array of parameter values, j is a single segment number.
+        """
+        raise NotImplementedError
+
+    def sub_directions_2(self,t,j):
+        """Return the directions at values,parts given by zip(t,j)
+
+        t and j can both be arrays, but should have the same length.
         """
         raise NotImplementedError
 
@@ -114,7 +121,8 @@ class Curve(Geometry):
         is interpreted as the curve segment number, and the decimal part
         goes from 0 to 1 over the segment.
         """
-        t = asarray(t).ravel()
+        # Do not use asarray here! We change it!
+        t = array(t).ravel()
         ti = floor(t).clip(min=0,max=self.nparts-1)
         t -= ti
         i = ti.astype(Int)
@@ -122,6 +130,24 @@ class Curve(Geometry):
             allX = self.sub_points_2(t,i)
         except:
             allX = concatenate([ self.sub_points(tj,ij) for tj,ij in zip(t,i)])
+        return Coords(allX)
+
+
+    def directionsAt(self,t):
+        """Return the points at parameter values t.
+
+        Parameter values are floating point values. Their integer part
+        is interpreted as the curve segment number, and the decimal part
+        goes from 0 to 1 over the segment.
+        """
+        t = array(t).ravel()
+        ti = floor(t).clip(min=0,max=self.nparts-1)
+        t -= ti
+        i = ti.astype(Int)
+        try:
+            allX = self.sub_directions_2(t,i)
+        except:
+            allX = concatenate([ self.sub_directions(tj,ij) for tj,ij in zip(t,i)])
         return Coords(allX)
 
 
@@ -733,7 +759,6 @@ class BezierSpline(Curve):
         """Returns the points defining part j of the curve."""
         start = self.degree * j
         end = start + self.degree + 1
-        #print "PART %s: %s,%s" % (j,start,end)
         return self.coords[start:end]
 
 
@@ -749,8 +774,8 @@ class BezierSpline(Curve):
         return X
 
 
-    def sub_tangents(self,t,j):
-        """Return the unit tangent vectors at values t in part j."""
+    def sub_directions(self,t,j):
+        """Return the unit direction vectors at values t in part j."""
         P = self.part(j)
         C = self.coeffs * P
         U = [ zeros_like(t), ones_like(t) ]
@@ -761,6 +786,9 @@ class BezierSpline(Curve):
         T = normalize(T)
         return T
 
+
+    # deprecated
+    sub_tangents = sub_directions
     
     def length_intgrnd(self,t,j):
         """Return the arc length integrand at value t in part j."""

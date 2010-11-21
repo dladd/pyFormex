@@ -80,9 +80,18 @@ for closed in [False,True]:
         print "DEGREE %s, %s" % (d,closed)
         B = BezierSpline(coords=pts,closed=closed,degree=d)
         draw(B,color=c)
-        C = BezierSpline(coords=pts.toCylindrical().scale(pi/180.,1),closed=closed,degree=d)
-        draw(C.approx().scale(180./pi,1).cylindrical(),color=c,linestipple=(2,63))
+        #C = BezierSpline(coords=pts.toCylindrical().scale(pi/180.,1),closed=closed,degree=d)
+        #draw(C.approx().scale(180./pi,1).cylindrical(),color=c,linestipple=(2,63))
         collection["BezierSpline-degree:%s-closed:%s" % (d,closed)] = B
+
+        t = arange(2*B.nparts)*0.5
+        ipts = B.pointsAt(t)
+        draw(ipts,color=c,marksize=10)
+        idir = B.directionsAt(t)
+        x = zeros((ipts.shape[0],2,ipts.shape[1]))
+        x[:,0] = ipts
+        x[:,1] += ipts+0.2*idir
+        draw(Formex(x),linewidth=3,flat=True)#,color=c)
     # Translate the points to the right
     pts = pts.trl(0,2.5)#[:-1]
 
