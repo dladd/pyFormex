@@ -55,6 +55,7 @@ import warnings
 
 import guifunc
 
+
 ############### General Qt utility functions #######
 
 ## might go to a qtutils module
@@ -648,9 +649,6 @@ class GUI(QtGui.QMainWindow):
         pf.app.processEvents()
         #pf.canvas = saved
         #print "RESTORED script canvas %s" % pf.canvas
-        
-
-        
 
 
 def xwininfo(windowid=None,name=None):
@@ -822,11 +820,6 @@ def startGUI(args):
     pf.app.setApplicationVersion(pf.__version__)
     ## pf.settings = QtCore.QSettings("pyformex.org", "pyFormex")
     ## pf.settings.setValue("testje","testvalue")
-    ## print "%s" % pf.settings
-    
-
-    #
-    #
     
     #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),pf.app,QtCore.SLOT("quit()"))
     QtCore.QObject.connect(pf.app,QtCore.SIGNAL("lastWindowClosed()"),quitGUI)
@@ -923,6 +916,7 @@ You should seriously consider to bail out now!!!
     # set the appearance
     pf.GUI.setAppearence()
 
+
     # setup the message board
     pf.board = pf.GUI.board
     pf.board.write("""%s  (C) Benedict Verhegghe
@@ -938,7 +932,8 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         This feature can be turned off by setting
         cfg['nice_warnings'] = False
         """
-        s = """..
+        message = format_warning(message,category,filename,lineno,line)
+        message = """..
 
 pyFormex Warning
 ================
@@ -947,10 +942,33 @@ pyFormex Warning
 `Called from:` %s `line:` %s
 """ % (message,filename,lineno)
         if line:
-            s += "%s\n" % line
-        return draw.warning(s)
+            message += "%s\n" % line
 
+        ## from widgets import simpleInputItem as I
+        ## res = draw.askItems([
+        ##     I('message',message,itemtype='label',text='warning'),
+        ##     I('filter',False,text='Suppress this message in future sessions'),
+        ##     ],actions=[('OK',)],legacy=False)
+        #print res
+        #return res
+        return draw.warning(message)
+
+
+    def format_warning(message,category,filename,lineno,line=None):
+        """Replace the default warnings.formatwarning
+
+        We display the warnings using our interactive warning widget.
+        This feature can be turned off by setting
+        cfg['nice_warnings'] = False
+        """
+        import messages
+        return messages.getMessage(message)
+
+
+    warnings.formatwarning = format_warning
     warnings.showwarning = show_warning
+    
+    
     pf.message = draw.message
     pf.warning = draw.warning
 

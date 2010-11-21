@@ -1257,7 +1257,7 @@ class MultiCanvas(FramedGridLayout):
         display lists and textures.
         """
         if shared is not None:
-            print "SHARING WITH %s" % shared
+            pf.debug("SHARING display lists WITH %s" % shared)
         canv = QtCanvas(self.parent,shared)
         return(canv)
         
@@ -1406,7 +1406,7 @@ Viewport %s;  Current:%s;  Settings:
             to = self.all[to]
             oldvp = self.all[vp]
             import warnings
-            warnings.warn("Linking viewports is an experimental feature which may function improperly and even hang your system.")
+            warnings.warn("Linking viewports is an experimental feature and is not fully functional yet.")
             newvp = self.newView(to)
             self.all[vp] = newvp
             self.removeWidget(oldvp)

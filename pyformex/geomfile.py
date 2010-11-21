@@ -33,7 +33,7 @@ from coords import *
 from formex import Formex
 from plugins.mesh import Mesh
 from odict import ODict
-from pyformex import message
+from pyformex import message,debug
 
 import os
 
@@ -307,7 +307,7 @@ class GeometryFile(object):
             except:
                 continue  # not a legal header: skip
 
-            message("READING OBJECT OF TYPE %s" % objtype) 
+            debug("READING OBJECT OF TYPE %s" % objtype) 
 
             # OK, we have a legal header, try to read data
             if objtype == 'Formex':
@@ -328,7 +328,6 @@ class GeometryFile(object):
             elif globals().has_key(objtype) and hasattr(globals()[objtype],'read_geom'):
                 obj = globals()[objtype].read_geom(self)
             else:
-                #from pyformex import message
                 message("Can not (yet) read objects of type %s from geometry file: skipping" % objtype)
                 continue # skip to next header
 

@@ -29,53 +29,40 @@ techniques = ['viewport', 'color']
 
 Demonstrate multiple viewports.
 """
+def atExit():
+    print "EXITING"
+    layout(1)
+    reset()
 
 nsl = 0
 F = Formex.read(getcfg('datadir')+'/horse.pgf')
 
-## layout(2)
-## viewport(0)
-## draw(F)
-## drawNumbers(F)
-## drawText('Viewport 0',10,10)
-## viewport(1)
-## draw(F)
-## drawNumbers(F)
-## drawText('Viewport 1',10,10)
-## viewport(0)
-## viewport(1)
-## exit()
-
-
 layout(1)
 FA = draw(F,view='front')
-pause()
+drawText('Viewport 0',20,20,size=20)
 
+pause('NEXT: Create Viewport 1')
 layout(2)
-drawText('Viewport 2',10,10)
+drawText('Viewport 1',20,20,size=20)
 pf.GUI.viewports.updateAll()
-pause()
 
+pause('NEXT: Create Viewport 2')
 layout(3)
 draw(F,color='green')
-pause()
 
-viewport(1)
-linkViewport(1,0)
+pause('NEXT: Link Viewport 2 to Viewport 0')
 
-#exit()
-#sleep(nsl)
-layout(1)
+linkViewport(2,0)
+pf.GUI.viewports.updateAll()
 
+pause('NEXT: Create 4 Viewports all linked to Viewport 0')
+      
 layout(4,2)
 viewport(0)
-#sleep(nsl)
-
-#exit()
-
 for i in range(1,4):
     linkViewport(i,0)
-exit()
+    
+pause('NEXT: Change background colors in the viewports')
 
 colors=['indianred','olive','coral','yellow']
 
@@ -87,15 +74,17 @@ for i,v in enumerate(['front','right','top','iso']):
     pf.canvas.display()
     pf.canvas.update()
 
-exit()
+pause('NEXT: Cut the horse in viewport 3, notice results visible in all')
 
-sleep(nsl)
 viewport(3)
 G = F.cutWithPlane([0.,0.,0.],[-1.,0.,0.],side='+')
 clear()
 draw(G) # this draws in the 4 viewports !
 pf.GUI.viewports.updateAll()
 
+pause('NEXT: DONE')
+
+exit()
 
 sleep(nsl)
 smooth()

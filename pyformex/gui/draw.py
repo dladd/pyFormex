@@ -68,6 +68,8 @@ def showMessage(text,actions=['OK'],level='info',modal=True,**kargs):
     The return value is the button text. 
     """
     w = widgets.MessageBox(text,level=level,actions=actions,**kargs)
+    print w.sizePolicy()
+    print w.children()
     if modal:
         return w.getResult()
     else:
@@ -206,7 +208,8 @@ def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
         if newitems:
             legacy = False
         else:
-            messages.warning("warn_askitems_changed")
+            import warnings
+            warnings.warn("warn_askitems_changed")
             items = widgets.convertInputItemList(items)
             legacy = False
 
@@ -1034,7 +1037,7 @@ timer = None
 def sleep(timeout=None):
     """Sleep until key/mouse press in the canvas or until timeout"""
     import warnings
-    warnings.warn("The sleep function is not yet fully functional and its use should be avoid. Use pause or the drawwait setting instead!")
+    warnings.warn("The sleep function is not yet fully functional and its use should currently be avoided. Use pause or the drawwait setting instead!")
     #
     global sleeping,_wakeup_mode,timer
     if _wakeup_mode > 0 or timeout == 0:  # don't bother
@@ -1246,7 +1249,8 @@ def viewport(n=None):
 
     if n is None, selects the current GUI viewport for drawing
     """
-    messages.warning("warn_viewport_switching")
+    import warnings
+    warnings.warn("warn_viewport_switching")
     if n is not None:
         pf.canvas.update()
         pf.GUI.viewports.setCurrent(n)

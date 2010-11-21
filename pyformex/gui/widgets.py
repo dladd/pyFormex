@@ -55,6 +55,27 @@ TIMEOUT = -1        # the return value if a widget timed out
 Accept = QtCore.SLOT("accept()")
 Reject = QtCore.SLOT("reject()")
 
+# icons
+def standardIcon(label):
+    try:
+        icon = ['noicon','info','warning','error','question'].index(label)
+        return QtGui.QMessageBox.standardIcon(icon)
+    except:
+        return label
+
+
+
+def maxSize():
+    """Return the maximum widget size.
+
+    The maximum widget size is the (available) screen size. This may be
+    smaller than the physical screen size (e.g. excluding docking panels).
+    """
+    rect = pf.app.desktop().availableGeometry()
+    maxh,maxw = rect.width(),rect.height()
+    return maxh,maxw
+
+ 
 def addTimeOut(widget,timeout=None,timeoutfunc=None):
     """Add a timeout to a widget.
 
@@ -533,7 +554,12 @@ class InputItem(QtGui.QHBoxLayout):
         else:
             text = self.key
         if text:
-            self.label = QtGui.QLabel(text)
+            self.label = QtGui.QLabel()
+            text = standardIcon(text)
+            if isinstance(text,QtGui.QPixmap):
+                self.label.setPixmap(text)
+            else:
+                self.label.setText(text)
             self.addWidget(self.label)
 
         if 'data' in kargs:
@@ -544,8 +570,14 @@ class InputItem(QtGui.QHBoxLayout):
                 self.input.setReadOnly(kargs['readonly'])
             except:
                 print "Can not set readonly: %s,%s" % (name,kargs)
-    
 
+        if 'width' in kargs:
+            try:
+                print 'SETTING WIDTH',self.input
+                self.input.setMinimumWidth(kargs['width'])
+            except:
+                pass
+            
         if 'tooltip' in kargs:
             if hasattr(self,'label'):
                 self.label.setToolTip(kargs['tooltip'])
@@ -602,6 +634,90 @@ class InputInfo(InputItem):
         return self._value_
 
 
+class InputLabel(InputItem):
+    """An unchangeable information field.
+
+    The value is displayed as a string.
+    
+    By default, the text format will be guessed to be either plain text,
+    ReStructuredText ot html. Specify plain=True to display in plain text.
+    """
+    def __init__(self,name,value,*args,**kargs):
+        """Create the input item."""
+        self._plain = kargs.get('plain',False)
+        self.input =  QtGui.QLabel()
+        maxw,maxh = maxSize()
+        self.input.setMaximumSize(int(0.75*maxw),maxh)
+        InputItem.__init__(self,name,*args,**kargs)
+        self.setValue(value)
+        self.insertWidget(1,self.input)
+        self.label.setWordWrap(True)
+        self.setSize()
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        val = str(val)
+        if self._plain:
+            self.input.setText(val)
+        else:
+            updateText(self.input,val)
+
+
+    def layoutMinimumWidth(self):
+        self.activate()
+        return self.totalMinimumSize().width()
+
+
+    def setSize(self):
+        maxw,maxh = maxSize()
+        maxw -= 40
+
+        self.label.setWordWrap(False) # makes the label return min size
+        width = self.layoutMinimumWidth()
+        print "min size: %s" % width
+        self.label.setWordWrap(True)
+## 00357 
+## 00358     if (width > softLimit) {
+## 00359         label->setWordWrap(true);
+## 00360         width = qMax(softLimit, layoutMinimumWidth());
+## 00361 
+## 00362         if (width > hardLimit) {
+## 00363             label->d_func()->ensureTextControl();
+## 00364             if (QTextControl *control = label->d_func()->control)
+## 00365                 control->setWordWrapMode(QTextOption::WrapAnywhere);
+## 00366             width = hardLimit;
+## 00367         }
+## 00368     }
+## 00369 
+## 00370     if (informativeLabel) {
+## 00371         label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+## 00372         if (layoutMinimumWidth() > hardLimit) { // longest word is really big, so wrap anywhere
+## 00373             informativeLabel->d_func()->ensureTextControl();
+## 00374             if (QTextControl *control = informativeLabel->d_func()->control)
+## 00375                 control->setWordWrapMode(QTextOption::WrapAnywhere);
+## 00376         }
+## 00377         QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+## 00378         policy.setHeightForWidth(label->wordWrap());
+## 00379         label->setSizePolicy(policy);
+## 00380         policy.setHeightForWidth(true);
+## 00381         informativeLabel->setSizePolicy(policy);
+## 00382     }
+## 00383 
+## 00384     QFontMetrics fm(qApp->font("QWorkspaceTitleBar"));
+## 00385     int windowTitleWidth = qMin(fm.width(q->windowTitle()) + 50, hardLimit);
+## 00386     if (windowTitleWidth > width)
+## 00387         width = windowTitleWidth;
+## 00388 
+## 00389     q->layout()->activate();
+## 00390     int height = (q->layout()->hasHeightForWidth())
+## 00391                      ? q->layout()->totalHeightForWidth(width)
+## 00392                      : q->layout()->totalMinimumSize().height();
+## 00393     q->setFixedSize(width, height);
+## 00394 }
+        
+    
+
+
 class InputString(InputItem):
     """A string input field with a label in front.
 
@@ -635,17 +751,22 @@ class InputString(InputItem):
             return eval(s)
 
 
+
 class InputText(InputItem):
     """A scrollable text input field with a label in front.
+
+    By default, the text format will be guessed to be either plain text,
+    ReStructuredText ot html.
+
+    Specify plain=True to display in plain text.
     
-    If the type of value is not a string, the input text
-    will be eval'ed before returning.
-    
-    There are no specific options.
+    If the type of value is not a string, the input text will be eval'ed
+    before returning.
     """
     def __init__(self,name,value,*args,**kargs):
         """Creates the input item."""
         self._is_string_ = type(value) == str
+        self._plain = kargs.get('plain',False)
         self.input =  QtGui.QTextEdit()
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
@@ -666,7 +787,10 @@ class InputText(InputItem):
 
     def setValue(self,val):
         """Change the widget's value."""
-        self.input.setPlainText(str(val))
+        if self._plain:
+            self.input.setPlainText(str(val))
+        else:
+            updateText(self.input,str(val))
 
 
 class InputBool(InputItem):
@@ -1392,11 +1516,11 @@ class NewInputDialog(QtGui.QDialog):
     """
     
     def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,flat=None,modal=None):
-        """Create a dialog asking the user for the value of items.
-        """
+        """Create a dialog asking the user for the value of items."""
         if parent is None:
             parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
+        self.setMaximumSize(*maxSize())
         if flags is not None:
             self.setWindowFlags(flags)
         if caption is None:
@@ -1426,9 +1550,6 @@ class NewInputDialog(QtGui.QDialog):
         self.add_items(items,self.form)
 
         # add the action buttons
-        if actions is None:
-            actions = [('CANCEL',),('OK',)]
-            default = 'OK'
         but = dialogButtons(self,actions,default)
         self.form.addLayout(but)
         if scroll:
@@ -1599,6 +1720,7 @@ or use the functions widgets.tabInputItem or widgets.groupInputItem
         self.status = None
 
         self.setModal(modal)
+        self.resize(800,600)
         QtGui.QDialog.show(self)
 
         addTimeOut(self,timeout,timeoutfunc)
@@ -1717,6 +1839,9 @@ def inputAny(name,value,itemtype=str,**options):
 
     elif itemtype == 'info':
         line = InputInfo(name,value,**options)
+
+    elif itemtype == 'label':
+        line = InputLabel(name,value,**options)
 
     elif itemtype == 'text':
         line = InputText(name,value,**options)
@@ -1939,9 +2064,6 @@ class OldInputDialog(QtGui.QDialog):
             self.add_input_items(items,form)
 
         # add the action buttons
-        if actions is None:
-            actions = [('CANCEL',),('OK',)]
-            default = 'OK'
         but = dialogButtons(self,actions,default)
         form.addLayout(but)
         if scroll:
@@ -1956,7 +2078,6 @@ class OldInputDialog(QtGui.QDialog):
             self.setLayout(form)
         self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
 
-        
 
     def add_input_items(self,items,layout):
         """Add input items.
@@ -2292,7 +2413,7 @@ class Tabs(QtGui.QTabWidget):
             self.addTab(widget,header)
 
 
-class Dialog(QtGui.QDialog):
+class GenericDialog(QtGui.QDialog):
     """A generic dialog widget.
 
     The dialog if formed by a number of widgets stacked in a vertical box
@@ -2337,7 +2458,7 @@ class Dialog(QtGui.QDialog):
             self.form.insertWidget(ind,w)
 
 
-class TableDialog(Dialog):
+class TableDialog(GenericDialog):
     """A dialog widget to show/edit a two-dimensional array of items.
 
     A convenience class representing a Table within a dialog.
@@ -2350,13 +2471,13 @@ class TableDialog(Dialog):
         chead is an optional list of ncol column headers.
         rhead is an optional list of nrow row headers.
         """
-        Dialog.__init__(self,
-                        [Table(data,chead=chead,rhead=rhead,parent=self)],
-                        title=title, parent=parent,
-                        actions=actions,default=default)
+        GenericDialog.__init__(self,
+                               [Table(data,chead=chead,rhead=rhead,parent=self)],
+                               title=title, parent=parent,
+                               actions=actions,default=default)
 
 
-class OldTableDialog(Dialog):
+class OldTableDialog(GenericDialog):
     """A dialog widget to show two-dimensional arrays of items."""
     def __init__(self,items,caption=None,parent=None,tab=False):
         """Create the Table dialog.
@@ -2369,7 +2490,7 @@ class OldTableDialog(Dialog):
         import warnings
         warnings.warn('The use of OldTableDialog is deprecated.\nPlease use a combination of the Dialog, Tabs and Table widgets.')
 
-        Dialog.__init__(self,[],title=caption,parent=parent)
+        GenericDialog.__init__(self,[],title=caption,parent=parent)
         if tab:
             contents = Tabs(
                 [ (item[0], Table(data=item[2],chead=item[1],parent=None))
@@ -2478,14 +2599,7 @@ class MessageBox(QtGui.QMessageBox):
         if default is None:
             default = actions[-1]
         updateText(self,text,format)
-        if level == 'error':
-            self.setIcon(QtGui.QMessageBox.Critical)
-        elif level == 'warning':
-            self.setIcon(QtGui.QMessageBox.Warning)
-        elif level == 'info':
-            self.setIcon(QtGui.QMessageBox.Information)
-        elif level == 'question':
-            self.setIcon(QtGui.QMessageBox.Question)
+        self.setIcon(['noicon','info','warning','error','question'].index(level))
         for a in actions:
             b = self.addButton(a,QtGui.QMessageBox.AcceptRole)
             if a == default:
@@ -2578,16 +2692,19 @@ class InputBox(QtGui.QWidget):
 ############################# Button box ###########################
 
 
-def dialogButtons(dialog,actions,default=None):
+def dialogButtons(dialog,actions=[('Cancel',),('OK',)],default=None):
     """Create a set of dialog buttons
 
     dia is a dialog widget
     actions is a list of tuples (name,) or (name,function).
     If a function is specified, it will be executed on pressing the button.
     If no function is specified, and name is one of 'ok' or 'cancel' (case
-    does not matter), the button will be bound to the dialog's 'accept'
+    is ignored), the button will be bound to the dialog's 'accept'
     or 'reject' slot.
-    default is the name of the action to set as the default.
+    default is the name of the action to set as the default. If no default
+    is given, it is set to the LAST button.
+
+    Returns a horizontal box layout with the buttons.
     """
     but = QtGui.QHBoxLayout()
     spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )

@@ -5,11 +5,21 @@
 """
 
 import pyformex as pf
-import warnings
+## import warnings
 
-def warning(msg,ver=''):
-    msg = globals().get(msg,msg)
-    warnings.warn(msg)
+## def warning(msg,ver=''):
+##     msg = globals().get(msg,msg)
+##     warnings.warn(msg)
+
+
+def getMessage(msg):
+    """Return the real message corresponding with the specified mnemonic.
+
+    If no matching message was defined, the original is returned.
+    """
+    msg = str(msg) # allows for msg being a Warning
+    return globals().get(msg,msg)
+
 
 warn_askitems_changed = """.. warn_askitems_changed
 
