@@ -62,9 +62,8 @@ def draw_normals(n):
     S = named(n)
     C = S.centroids()
     A,N = S.areaNormals()
-    D = C + sqrt(A).reshape((-1,1))*N
-    F = connect([Formex(C),Formex(D)])
-    return draw(F,color='red')
+    drawNormals(N,C,size=sqrt(A).reshape(-1,1),color='green')
+    return drawVectors(C,N,size=sqrt(A).reshape(-1,1),color='red')
 
 def draw_avg_normals(n):
     S = named(n)
@@ -74,9 +73,7 @@ def draw_avg_normals(n):
         siz = float(pf.cfg['mark/avgnormalsize'])
     except:
         siz = 0.05 * C.dsize()
-    D = C + siz * N
-    F = connect([Formex(C),Formex(D)])
-    return draw(F,color='orange')
+    return drawVectors(C,N,size=siz,color='orange')
     
 selection = DrawableObjects(clas=TriSurface)
 

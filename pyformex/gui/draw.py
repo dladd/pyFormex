@@ -43,12 +43,12 @@ import image
 import canvas
 import colors
 import coords
-from formex import Formex
+
+from plugins import trisurface,tools,mesh,fe
 
 from script import *
 from signals import *
-
-from plugins import trisurface,tools,mesh,fe
+from formex import *
         
 #################### Interacting with the user ###############################
 
@@ -619,11 +619,21 @@ def _shrink(F,factor):
     return F.shrink(factor)
 
 
-def drawVectors(P,v,d=1.0,color='red'):
-    v = normalize(v)
-    Q = P+v
-    F = connect([Formex(P),Formex(Q)])
-    return draw(F,color=color,linewidth=3)
+def drawVectors(P,v,size=None,**drawOptions):
+    """Draw a set of vectors.
+
+    If size==None, draws the vectors v at the points P.
+    If size is specified, draws the vectors size*normalize(v)
+    P, v and size are single points
+    or sets of points. If sets, they should be of the same size.
+
+    Other drawoptions can be specified and will be passed to the draw function.
+    """
+    if size is None:
+        Q = P + v
+    else:
+        Q = P + size*normalize(v)
+    return draw(connect([P,Q]),**drawOptions)
 
 
 def drawPlane(P,N,size):
@@ -675,14 +685,6 @@ def drawVertexNumbers(F,color='black',trl=None):
     if trl is not None:
         FC = FC.trl(trl)
     return drawMarks(FC,numpy.resize(numpy.arange(F.coords.shape[1]),(FC.shape[0])),color=color)
-
-
-def drawNormals(N,P,size=5,**extra):
-    """Draw normals N in P. size can be single constant or list."""
-    C = numpy.zeros((N.shape[0],2,3))
-    C[:,0,:] = P
-    C[:,1,:] = P + size*N
-    return draw(Formex(C),**extra)
 
 
 def drawText3D(P,text,color=None,font='sans',size=18):
@@ -1528,13 +1530,17 @@ def setGlobalAxes(mode=True):
 
 
 #  deprecated alternative spellings
-from utils import deprecated
+from utils import deprecated,deprecation
 @deprecated(zoomAll)
 def zoomall(*args,**kargs):
-    return zoomAll(*args,**kargs)
+    pass
 @deprecated(drawText)
 def drawtext(*args,**kargs):
-    return drawText(*args,**kargs)
+    pass
+
+@deprecation("`drawNormals` is deprecated: use `drawVectors` instead.\nNotice that the argument order is different!")
+def drawNormals(v,P,size=None,**drawOptions):
+    drawVectors(P,v,size=size,**drawOptions)
 
 
 #### End

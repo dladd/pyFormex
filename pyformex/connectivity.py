@@ -33,8 +33,6 @@ adjacency of elements can easily be detected from common node numbers.
 """
 
 from arraytools import *
-from utils import deprecation
-
 
 # THINGS TO DO:
 #
@@ -184,11 +182,6 @@ def inverseIndex(index,maxcon=4):
     maxc = reverse.max(axis=0)
     reverse = reverse[:,maxc>=0]
     return reverse
-
-
-@deprecation("\n Use 'Connectivity.inverse()' instead")
-def reverseIndex(*args,**kargs):
-   return inverseIndex(*args,**kargs)
 
 
 ############################################################################
@@ -639,15 +632,9 @@ class Connectivity(ndarray):
                 v = concatenate([v,clist[i][:k,j]])
             f[:,i] = resize(v,(n))
         return Connectivity(f)
-    
 
 
 ############################################################################
-
-
-@deprecation("\n Use 'arraytools.inverseUniqueIndex()' instead")
-def reverseUniqueIndex(*args):
-    return inverseUniqueIndex(*args)
 
 
 def adjacencyList(elems):

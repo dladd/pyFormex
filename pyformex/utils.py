@@ -728,6 +728,7 @@ def deprecation(message):
     def decorator(func):
         def wrapper(*_args,**_kargs):
             import warnings
+            print func.__name__
             warnings.warn(message, DeprecationWarning, stacklevel=2)
             return func(*_args,**_kargs)
         return wrapper

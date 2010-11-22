@@ -88,10 +88,7 @@ for closed in [False,True]:
         ipts = B.pointsAt(t)
         draw(ipts,color=c,marksize=10)
         idir = B.directionsAt(t)
-        x = zeros((ipts.shape[0],2,ipts.shape[1]))
-        x[:,0] = ipts
-        x[:,1] += ipts+0.2*idir
-        draw(Formex(x),linewidth=3,flat=True)#,color=c)
+        drawVectors(ipts,0.2*idir)
     # Translate the points to the right
     pts = pts.trl(0,2.5)#[:-1]
 

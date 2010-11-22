@@ -1924,9 +1924,10 @@ maxprop  = %s
         raise ValueError,"Formex should be plex-2 or plex-3"
 
 
-    @deprecation("\nUse cutWithPlane() instead. Check arguments ")
-    def cutAtPlane(self,p,n,newprops=None,side='+',atol=0.):
-        return self.cutWithPlane(p,n,side=side,atol=atol,newprops=newprops)
+# BV: withdrawn in 0.8.3
+#    @deprecation("\nUse cutWithPlane() instead. Check arguments ")
+#    def cutAtPlane(self,p,n,newprops=None,side='+',atol=0.):
+#        return self.cutWithPlane(p,n,side=side,atol=atol,newprops=newprops)
 
 
 #################### Misc Operations #########################################
@@ -2034,16 +2035,19 @@ maxprop  = %s
     # New users should avoid these functions!
     # They may (will) be removed in future.
 
+    ## BV: withdrawn in 0.8.3
+    ## @functionWasRenamed(reverse)
+    ## def reverseElements(self):
+    ##     pass
 
-    @functionWasRenamed(reverse)
-    def reverseElements(self):
-        pass
-
-    @deprecation("feModel() is deprecated. Use toMesh() wherever possible.\nfuse() remains available with the same result as feModel()")
+    @deprecation("`feModel()` is deprecated. Use `toMesh()` wherever possible.\n`fuse()` remains available with the same result as `feModel()`")
     def feModel(self,*args,**kargs):
         return self.fuse(*args,**kargs)
 
-    nnodel = nplex
+    @deprecation("`nnodel` is deprecated: use `nplex` instead.")
+    def nnodel(self):
+        return self.nplex()
+    
     nnodes = npoints
 
     # Convenience short notations and aliases
