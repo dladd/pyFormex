@@ -72,12 +72,17 @@ Your Python version is %s, but pyFormex has only been tested with Python <= %s. 
 import pyformex
 from config import Config
 
-# Remove unwanted warnings
-import warnings
-warnings.filterwarnings('ignore','.*return_index.*',UserWarning,'numpy')
 
+# Remove unwanted warnings 
+# We have moved this to the config file 
+#utils.filterWarning('.*return_index.*','numpy')
 
 ###########################  main  ################################
+
+def filterWarnings():
+    for w in pyformex.cfg['filterwarnings']:
+        utils.filterWarning(*w)
+
 
 def refLookup(key):
     """Lookup a key in the reference configuration."""
@@ -452,6 +457,9 @@ def run(argv=[]):
                 utils.runCommand(svnclean)
             except:
                 print("Error while executing %s, we ignore it and continue" % svnclean)
+
+    ###### We have the config and options all set up ############
+    filterWarnings()
                 
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!

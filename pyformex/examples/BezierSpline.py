@@ -34,7 +34,8 @@ techniques = ['spline','dialog']
 Bezier Spline
 =============
 
-This example shows a collection of Bezier Spline curves thropugh a number of points. The points used are the corners and midside points of a unit square.
+This example shows a collection of Bezier Spline curves through a number of
+points. The points used are the corners and midside points of a unit square.
 The user is asked for a number of points to use.
 The image shows open (left) and closed (right) BezierSpline curves of
 degrees 1(red), 2(magenta) and 3(blue).
@@ -79,10 +80,8 @@ for closed in [False,True]:
     for d,c in zip(degrees,colors):
         print "DEGREE %s, %s" % (d,closed)
         B = BezierSpline(coords=pts,closed=closed,degree=d)
-        draw(B,color=c)
-        #C = BezierSpline(coords=pts.toCylindrical().scale(pi/180.,1),closed=closed,degree=d)
-        #draw(C.approx().scale(180./pi,1).cylindrical(),color=c,linestipple=(2,63))
         collection["BezierSpline-degree:%s-closed:%s" % (d,closed)] = B
+        draw(B,color=c)
 
         t = arange(2*B.nparts)*0.5
         ipts = B.pointsAt(t)

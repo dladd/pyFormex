@@ -2225,12 +2225,10 @@ class InputDialog(NewInputDialog):
     def __init__(self,*args,**kargs):
         import warnings
         warnings.warn("""
-=========== WARNING! ========
 The default InputDialog has changed to the NewInputDialog!
 See the related help item for more info.
 For some time, you will be able to use OldInputDialog to
 get the old behavior.
-=============================
 """)
         NewInputDialog.__init__(self,*args,**kargs)
 
@@ -2632,6 +2630,37 @@ class MessageBox(QtGui.QMessageBox):
 
     def updateText(self,text,format=''):
         updateText(self._t,text,format)
+
+        
+class WarningBox(QtGui.QMessageBox):
+    """A message box is a widget displaying a short text for the user.
+
+    The message box displays a text, an optional icon depending on the level
+    and a number of push buttons.
+
+    - `text`: the text to be shown. This can be either plain text or html
+      or reStructuredText.
+    - `format`: the text format: either 'plain', 'html' or 'rest'.
+      Any other value will try automatic recognition.
+      Recognition of plain text and html is automatic.
+      A text is autorecognized to be reStructuredText if its first
+      line starts with '..' and is followed by a blank line.
+    - `level`: defines the icon that will be shown together with the text.
+      If one of 'question', 'info', 'warning' or 'error', a matching icon
+      will be shown to hint the user about the type of message. Any other
+      value will suppress the icon.
+    - `actions`: a list of strings. For each string a pushbutton will be
+      created which can be used to exit the dialog and remove the message.
+      By default there is a single button labeled 'OK'.
+
+    When the MessageBox is displayed with the :meth:`getResult()` method,
+    a modal
+    dialog is created, i.e. the user will have to click a button or hit the
+    ESC key before he can continue.
+
+    If you want a modeless dialog, allowing the user to continue while the
+    message stays open, use the :meth:`show()` mehod to display it.
+    """
 
 
 class TextBox(QtGui.QDialog):

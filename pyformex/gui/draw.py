@@ -68,8 +68,8 @@ def showMessage(text,actions=['OK'],level='info',modal=True,**kargs):
     The return value is the button text. 
     """
     w = widgets.MessageBox(text,level=level,actions=actions,**kargs)
-    print w.sizePolicy()
-    print w.children()
+    #print w.sizePolicy()
+    #print w.children()
     if modal:
         return w.getResult()
     else:

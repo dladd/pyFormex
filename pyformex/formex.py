@@ -2137,8 +2137,6 @@ def interpolate(F,G,div,swap=False):
     return Formex(r.reshape((-1,) + r.shape[-2:]))
     
 
-#print "formex.py: %s" % id(Formex)
-
 ##############################################################################
 #
 #  Testing

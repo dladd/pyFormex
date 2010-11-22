@@ -765,4 +765,14 @@ def functionBecameMethod(replacement):
         return wrapper
     return decorator
 
+
+def filterWarning(message,module='',category='U',action='ignore'):
+    import warnings
+    if category == 'D':
+        category = DeprecationWarning
+    else:
+        category = UserWarning
+    warnings.filterwarnings(action,message,category,module)
+
+
 ### End
