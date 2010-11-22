@@ -220,7 +220,7 @@ if pf.options.gui:
     bgcolor('lightgreen')
     linewidth(3)
     x = pf.canvas.width()//2
-    TA = drawtext('Normal force in the members',x,100,font='tr32')
+    TA = drawText('Normal force in the members',x,100,font='tr32')
     CL = ColorLegend(CS,100)
     CLA = decors.ColorLegend(CL,10,10,30,200) 
     decorate(CLA)
@@ -239,7 +239,7 @@ if pf.options.gui:
         linewidth(3)
         deformed = Formex(dcoords[elems])
         draw(deformed,color=cval)
-        drawtext('Deformed geometry (scale %.2f)' % dscale,x,70)
+        drawText('Deformed geometry (scale %.2f)' % dscale,x,70)
 
 
     if ack("Show the output file?"):

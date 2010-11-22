@@ -5,8 +5,8 @@
 """Rubik
 
 level = 'normal'
-topics = ['illustration']
-techniques = ['colors','dialog','draw','persistence','random']
+topics = ['illustration','game']
+techniques = ['color','dialog','draw','persistence','random']
 
 .. Description
 
@@ -226,6 +226,7 @@ dia = widgets.NewInputDialog(
     ])
 
 if __name__ == "draw":
+    transparent(False)
     clear()
     #renderMode('flatwire')
     cube = createCube()

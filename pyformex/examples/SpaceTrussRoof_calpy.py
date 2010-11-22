@@ -220,7 +220,7 @@ if pf.options.gui:
         clear()
         linewidth(3)
         draw(mesh,color=cval)
-        drawtext('Normal force in the truss members',300,50,size=24)
+        drawText('Normal force in the truss members',300,50,size=24)
         CL = ColorLegend(CS,100)
         CLA = decors.ColorLegend(CL,10,10,30,200,size=24)
         decorate(CLA)
@@ -233,7 +233,7 @@ if pf.options.gui:
         dnodes = mesh.coords + dscale * displ[:,:,0]
         deformed = Mesh(dnodes,mesh.elems,mesh.prop)
         FA = draw(deformed,bbox='last',view=None,wait=False)
-        TA = drawtext('Deformed geometry (scale %.2f)' % dscale,300,50,size=24)
+        TA = drawText('Deformed geometry (scale %.2f)' % dscale,300,50,size=24)
         return FA,TA
 
     def animate_deformed_plot(amplitude,sleeptime=1,count=1):

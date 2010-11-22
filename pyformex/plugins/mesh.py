@@ -22,10 +22,11 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""mesh.py
+"""Finite element meshes in pyFormex.
 
-Definition of the Mesh class for describing discrete geometrical models.
-And some useful meshing functions to create such models.
+This module defines the Mesh class, which can be used to describe discrete
+geometrical models like those used in Finite Element models.
+It also contains some useful functions to create such models.
 """
 
 from formex import *
@@ -184,8 +185,9 @@ _conversions_ = {
         'quad9'  : [ ('v', 'quad8'), ],
         },
     'quad8': {
-        'tri3' : [ ('s', [ (0,4,7),(4,1,5),(5,2,6),(6,3,7),
-                     (7,4,6),(4,5,6) ]), ],
+        'tri3'   : [ ('v', 'quad9'), ],
+        'tri3-v' : [ ('s', [ (0,4,7),(1,5,4),(2,6,5),(3,7,6),(5,6,4),(7,4,6) ]), ],
+        'tri3-h' : [ ('s', [ (0,4,7),(1,5,4),(2,6,5),(3,7,6),(4,5,7),(6,7,5) ]), ],
         'quad4'  : [ ('s', [ (0,1,2,3) ]), ],
         'quad4-4': [ ('v', 'quad9'), ],
         'quad9'  : [ ('m', [ (4,5,6,7) ]), ],
@@ -194,7 +196,7 @@ _conversions_ = {
         'quad8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
         'quad4'  : [ ('v', 'quad8'), ],
         'quad4-4': [ ('s', [ (0,4,8,7),(4,1,5,8),(7,8,6,3),(8,5,2,6) ]), ],
-        'tri3'   : 'tri3-x',
+        'tri3'   : 'tri3-d',
         'tri3-d' : [ ('s', [ (0,4,7),(4,1,5),(5,2,6),(6,3,7),
                       (7,4,8),(4,5,8),(5,6,8),(6,7,8) ]), ],
         'tri3-x' : [ ('s', [ (0,4,8),(4,1,8),(1,5,8),(5,2,8),

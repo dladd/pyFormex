@@ -70,5 +70,5 @@ else:
         sx = 360.
     G = F.spherical(scale=[sx/nx,180./ny,2.*max(nx,ny)]).rollAxes(-1)
 draw(G,color=color,colormap=colormap)
-drawtext('Created with pyFormex',10,10)
+drawText('Created with pyFormex',10,10)
 # End

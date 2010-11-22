@@ -576,10 +576,10 @@ def showStatisticsDialog():
 def showSurfaceValue(S,txt,val,onEdges):
     val = nan_to_num(val)
     mi,ma = val.min(),val.max()
-    print(mi,ma)
+    #print(mi,ma)
     # Test: replace min with max
     dec = min(abs(mi),abs(ma))
-    print(dec)
+    #print(dec)
     if dec > 0.0:
         dec = max(0,3-int(log10(dec)))
     else:
@@ -598,7 +598,7 @@ def showSurfaceValue(S,txt,val,onEdges):
     CL = ColorLegend(CS,100)
     CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
     pf.canvas.addDecoration(CLA)
-    drawtext(txt,10,230,'hv18')
+    drawText(txt,10,230,'hv18')
 
 
 def colorByFront():
