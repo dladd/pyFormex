@@ -1935,7 +1935,7 @@ def checkDistanceLinesPointsTreshold(p, q, m, dtresh):
     m=normalize(m)
     for i in range(q.shape[0]):
         hy= p-q[i]
-        dpl=(length(hy)**2.-dotpr(hy, m[i])**2.)**0.5
+        dpl=(abs(length(hy)**2.-dotpr(hy, m[i])**2.))**0.5
         wd= dpl<=dtresh
         cand.append([i,where(wd)[0]] )
     candwl= concatenate([repeat(cand[i][0], cand[i][1].shape[0]) for i in range(len(cand))])
