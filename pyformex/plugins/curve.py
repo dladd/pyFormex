@@ -1003,7 +1003,7 @@ class NaturalSpline(Curve):
         self.closed = closed
         self.endcond = endcond
         self.coords = coords
-        self.coeffs = self.compute_coefficients()
+        self.compute_coefficients()
 
 
     def _set_coords(self,coords):
