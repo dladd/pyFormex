@@ -1955,7 +1955,7 @@ def checkPointInsideTriangleOne2One(tpi, pi, atol=1.e-5):
     Atpi=length(cross(tpi[:,1]-tpi[:,0],tpi[:,2]-tpi[:,1]))*0.5#area
     return -(Atpi3>Atpi+atol)#True mean point inside triangle
 
-def intersectSurfaceWithLines(ts, qli, mli):
+def intersectSurfaceWithLines(ts, qli, mli, atol=1.e-5):
     """_it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
     It returns the points of intersection and the indices of the intersected line and triangle.
     TODO: the slowest part is computing the distances of lines from triangles, can it be faster? """
@@ -1968,7 +1968,7 @@ def intersectSurfaceWithLines(ts, qli, mli):
     #check if each intersection is really inside the triangle
     tsw=ts.select(wt)
     tsw=tsw.coords[tsw.elems]
-    xIn=checkPointInsideTriangleOne2One(tsw, xc)
+    xIn=checkPointInsideTriangleOne2One(tsw, xc, atol)
     #takes only intersections that fall inside the triangle
     return xc[xIn], wl[xIn], wt[xIn]
 
