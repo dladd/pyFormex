@@ -325,6 +325,13 @@ class PolyLine(Curve):
         return X
 
 
+    def sub_directions(self,t,j):
+        """Return the unit direction vectors at values t in part j."""
+        j = int(j)
+        t = asarray(t).reshape(-1,1)
+        return self.directions()[j].reshape(len(t),3)
+
+
     def vectors(self):
         """Return the vectors of each point to the next one.
 
@@ -905,25 +912,6 @@ Most likely because 'python-scipy' is not installed on your system.""")
 
 ##############################################################################
 #
-class QuadBezierSpline(BezierSpline):
-    """A class representing a Quadratic Bezier spline curve.
-
-    This is a (deprecated) convenience class for BezierSpline with fixed
-    value of degree=2. The constructor takes the same parameters as
-    BezierSpline, except for degree, which is fixed to a value 2.
-    """
-
-    def __init__(self,coords,**kargs):
-        """Create a natural spline through the given points."""
-        import warnings
-        warnings.warn('warn_quadbezierspline')
-        kargs['degree'] = 2
-        BezierSpline.__init__(self,coords,**kargs)
-        print self.degree
-
-
-##############################################################################
-#
 class CardinalSpline(BezierSpline):
     """A class representing a cardinal spline.
 
@@ -975,10 +963,6 @@ class CardinalSpline2(Curve):
         return X  
 
 
-##############################################################################
-#
-#  Curves that can NOT be transformed by Coords Transforms
-#
 ##############################################################################
 
 class NaturalSpline(Curve):
@@ -1188,6 +1172,20 @@ def convertFormexToCurve(self,closed=False):
 Formex.toCurve = convertFormexToCurve
 
 
+
+##############################################################################
+#
+# NEEDS WORK
+#
+
+#
+# This function is not very pyFormex-like. It does too much at once.
+# And it uses too much append's.
+# 
+# It should be converted to a PolyLine method/function
+# The BezierSpline method or the user should then call an approx() method
+#
+
 def distanceBetweenBezier(curve1,curve2,tol=1.e-3,pdist=1.):
     """Return the orthogonal distances between two Bezier splines.
     
@@ -1239,5 +1237,26 @@ def distanceBetweenBezier(curve1,curve2,tol=1.e-3,pdist=1.):
         b.append(OKpoints)
     return d,a,b
 
+
+
+##############################################################################
+#
+# DEPRECATED
+#
+
+class QuadBezierSpline(BezierSpline):
+    """A class representing a Quadratic Bezier spline curve.
+
+    This is a (deprecated) convenience class for BezierSpline with fixed
+    value of degree=2. The constructor takes the same parameters as
+    BezierSpline, except for degree, which is fixed to a value 2.
+    """
+
+    def __init__(self,coords,**kargs):
+        """Create a natural spline through the given points."""
+        import warnings
+        warnings.warn('warn_quadbezierspline')
+        kargs['degree'] = 2
+        BezierSpline.__init__(self,coords,**kargs)
 
 # End

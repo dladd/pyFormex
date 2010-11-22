@@ -617,7 +617,7 @@ def _shrink(F,factor):
     return F.shrink(factor)
 
 
-def drawVectors(P,v,size=None,**drawOptions):
+def drawVectors(P,v,size=None,flat=True,**drawOptions):
     """Draw a set of vectors.
 
     If size==None, draws the vectors v at the points P.
@@ -631,7 +631,7 @@ def drawVectors(P,v,size=None,**drawOptions):
         Q = P + v
     else:
         Q = P + size*normalize(v)
-    return draw(connect([P,Q]),**drawOptions)
+    return draw(connect([P,Q]),flat=flat,**drawOptions)
 
 
 def drawPlane(P,N,size):

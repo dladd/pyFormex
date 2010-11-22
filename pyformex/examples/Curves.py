@@ -71,7 +71,7 @@ TA = None
 
 
 
-def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False,scale=None):
+def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False,scale=None,directions=False):
     global TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -113,6 +113,14 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
         draw(PL, color=method_color[im])
     draw(PL.pointsOn(),color=black)
     
+    if directions:
+        t = arange(2*S.nparts+1)*0.5
+        ipts = S.pointsAt(t)
+        draw(ipts)
+        idir = S.directionsAt(t)
+        drawVectors(ipts,0.2*idir)
+        
+    
 
 dataset = [
     Coords([[1., 0., 0.],[0., 1., 0.],[-1., 0., 0.],  [0., -1., 0.]]),
@@ -145,6 +153,7 @@ data_items = [
     I('Scale',[1.0,1.0,1.0]),
     I('DrawAs',None,'hradio',choices=['Curve','Polyline']),
     I('Clear',True),
+    I('ShowDirections',False),
     I('CutWithPlane',False),
     ]
 
@@ -174,7 +183,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale)
+        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale,ShowDirections)
         setDrawOptions({'bbox':None})
 
 def showAll():
