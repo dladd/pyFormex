@@ -925,33 +925,27 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 """ % pf.Version)
     
     # Set interaction functions
+    
     def show_warning(message,category,filename,lineno,file=None,line=None):
         """Replace the default warnings.showwarning
 
         We display the warnings using our interactive warning widget.
         This feature can be turned off by setting
-        cfg['nice_warnings'] = False
+        cfg['warnings/popup'] = False
         """
-        message = format_warning(message,category,filename,lineno,line)
-        message = """..
-
-pyFormex Warning
-================
-%s
-
-`Called from:` %s `line:` %s
-""" % (message,filename,lineno)
-        if line:
-            message += "%s\n" % line
-
+        full_message = warnings.formatwarning(message,category,filename,lineno,line)
         ## from widgets import simpleInputItem as I
         ## res = draw.askItems([
         ##     I('message',message,itemtype='label',text='warning'),
         ##     I('filter',False,text='Suppress this message in future sessions'),
         ##     ],actions=[('OK',)],legacy=False)
         #print res
-        #return res
-        return draw.warning(message)
+        
+        res,check = draw.showMessage(full_message,level='warning',check="Do not show this warning anymore in future sessions")
+        if check[0]:
+            oldfilters = pf.prefcfg['warnings/filters']
+            newfilters = oldfilters + [(str(message),)]
+            pf.prefcfg.update({'filters':newfilters},name='warnings')
 
 
     def format_warning(message,category,filename,lineno,line=None):
@@ -962,11 +956,25 @@ pyFormex Warning
         cfg['nice_warnings'] = False
         """
         import messages
-        return messages.getMessage(message)
+        message = messages.getMessage(message)
+        message = """..
+
+pyFormex Warning
+================
+%s
+
+`Called from:` %s `line:` %s
+""" % (message,filename,lineno)
+        if line:
+            message += "%s\n" % line
+        return message
 
 
-    warnings.formatwarning = format_warning
-    warnings.showwarning = show_warning
+    if pf.cfg['warnings/nice']:
+        warnings.formatwarning = format_warning
+
+    if pf.cfg['warnings/popup']:
+        warnings.showwarning = show_warning
     
     
     pf.message = draw.message

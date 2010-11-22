@@ -80,9 +80,12 @@ from config import Config
 ###########################  main  ################################
 
 def filterWarnings():
-    for w in pyformex.cfg['filterwarnings']:
-        utils.filterWarning(*w)
-
+    try:
+        for w in pyformex.cfg['warnings/filters']:
+            utils.filterWarning(*w)
+    except:
+        pyformex.debug("Error while processing warning filters: %s" % pyformex.cfg['warnings/filters'])
+    
 
 def refLookup(key):
     """Lookup a key in the reference configuration."""
@@ -189,6 +192,10 @@ def apply_config_changes(cfg):
 
     cfg is the user configuration that is to be saved.
     """
+    # Safety checks
+    if type(cfg['warnings/filters']) != list:
+        cfg['warnings/filters'] = []
+    
     # Adhoc changes
     if type(cfg['gui/dynazoom']) is str:
         cfg['gui/dynazoom'] = [ cfg['gui/dynazoom'], '' ]
@@ -211,7 +218,7 @@ def apply_config_changes(cfg):
 
     # Delete settings
     for key in [
-        'input/timeout',
+        'input/timeout','filterwarnings',
         'render/ambient','render/diffuse','render/specular','render/emission',
         'canvas/propcolors','Save changes',
         ]:

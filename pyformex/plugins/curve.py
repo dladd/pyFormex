@@ -359,14 +359,12 @@ class PolyLine(Curve):
         and an index of the points that are identical with their follower.
         """
         import warnings
-        warnings.warn('PolyLine.directions() now always returns the same number of directions as there are points. The last direction of an open PolyLine appears twice.')
+        warnings.warn('warn_polyline_directions')
         d = normalize(self.vectors())
         w = where(isnan(d).any(axis=-1))[0]
-        #print "DOUBLES:%s" % w
         d[w] = d[w-1]  
         if not self.closed:
             d = concatenate([d,d[-1:]],axis=0)
-        #print "Directions",d
         if return_doubles:
             return d,w
         else:
@@ -388,7 +386,7 @@ class PolyLine(Curve):
         segment starting from the last.
         """
         import warnings
-        warnings.warn('PolyLine.avgDirections() now always returns the same number of directions as there are points. The first and last direction are those of the end segment.')
+        warnings.warn('warn_polyline_avgdirections')
         d,w = self.directions(True)
         #if self.closed:
         d1 = d
@@ -918,7 +916,7 @@ class QuadBezierSpline(BezierSpline):
     def __init__(self,coords,**kargs):
         """Create a natural spline through the given points."""
         import warnings
-        warnings.warn("The use of the QuadBezierSpline class is deprecated and will be removed in future. Use the BezierSpline class with parameter `degree = 2` instead")
+        warnings.warn('warn_quadbezierspline')
         kargs['degree'] = 2
         BezierSpline.__init__(self,coords,**kargs)
         print self.degree
@@ -941,7 +939,6 @@ class CardinalSpline(BezierSpline):
     def __init__(self,coords,tension=0.0,closed=False):
         """Create a natural spline through the given points."""
         curl = (1.-tension)/3.
-        #print "CURL=%s" % curl
         BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed)
 
 

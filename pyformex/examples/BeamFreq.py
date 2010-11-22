@@ -192,7 +192,6 @@ hscale = 0.5
 def drawDeformed(M,u,r):
    xd = M.coords.copy()
    xd[:,0] += u
-   #print xd
    c = NaturalSpline(xd)
    draw(c,color=red)
    draw(c.pointsOn())

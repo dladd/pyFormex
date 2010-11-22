@@ -68,8 +68,6 @@ def showMessage(text,actions=['OK'],level='info',modal=True,**kargs):
     The return value is the button text. 
     """
     w = widgets.MessageBox(text,level=level,actions=actions,**kargs)
-    #print w.sizePolicy()
-    #print w.children()
     if modal:
         return w.getResult()
     else:
@@ -209,7 +207,7 @@ def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
             legacy = False
         else:
             import warnings
-            warnings.warn("warn_askitems_changed")
+            warnings.warn('warn_askitems_changed')
             items = widgets.convertInputItemList(items)
             legacy = False
 
@@ -702,7 +700,8 @@ def drawAxes(*args,**kargs):
     The arguments are the same as those of the AxesActor constructor.
     """
     if 'pos' in kargs:
-        message.warnings("warn_drawaxes_changed","0.8.3")
+        import warnings
+        warnings.warn('warn_drawaxes_changed')
         A = actors.TriadeActor(**kargs)
     else:
         A = actors.AxesActor(*args,**kargs)
@@ -1039,7 +1038,7 @@ timer = None
 def sleep(timeout=None):
     """Sleep until key/mouse press in the canvas or until timeout"""
     import warnings
-    warnings.warn("The sleep function is not yet fully functional and its use should currently be avoided. Use pause or the drawwait setting instead!")
+    warnings.warn('warn_avoid_sleep')
     #
     global sleeping,_wakeup_mode,timer
     if _wakeup_mode > 0 or timeout == 0:  # don't bother
@@ -1252,7 +1251,7 @@ def viewport(n=None):
     if n is None, selects the current GUI viewport for drawing
     """
     import warnings
-    warnings.warn("warn_viewport_switching")
+    warnings.warn('warn_viewport_switching')
     if n is not None:
         pf.canvas.update()
         pf.GUI.viewports.setCurrent(n)

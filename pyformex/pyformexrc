@@ -63,12 +63,15 @@ browser = 'firefox'  # web browser
 autoglobals = True
 uselib = True
 
+[warnings]
+nice = True
+popup=True
 # Warnings to be filtered out: a list of tuples (message,module,category)
 # module and category have defaults
 # Example: filterwarnings = [('warn_viewport_switching',)]
 # This should best be left empty and only filled by the user
-filterwarnings = [('.*return_index.*','numpy')]
-#filterwarnings = []
+# Warnings from upstream packages can be filtered out here
+filters = [('.*return_index.*','numpy')]
 
 [gui]
 #imagesfromeps = True

@@ -1406,7 +1406,7 @@ Viewport %s;  Current:%s;  Settings:
             to = self.all[to]
             oldvp = self.all[vp]
             import warnings
-            warnings.warn("Linking viewports is an experimental feature and is not fully functional yet.")
+            warnings.warn('warn_viewport_linking')
             newvp = self.newView(to)
             self.all[vp] = newvp
             self.removeWidget(oldvp)

@@ -1459,7 +1459,7 @@ def convertInputItemList(items):
     
 
 
-class NewInputDialog(QtGui.QDialog):
+class InputDialog(QtGui.QDialog):
     """A dialog widget to interactively set the value of one or more items.
 
     Overview
@@ -1592,16 +1592,7 @@ class NewInputDialog(QtGui.QDialog):
 
             elif type(item) is tuple:
                 import warnings
-                warnings.warn("""
-.. warning
-
-Warning
--------
-
-The specification of groupboxes or tab forms via a tuple is deprecated!
-Please use a dictionary format with itemtype='group' or itemtype='tag',
-or use the functions widgets.tabInputItem or widgets.groupInputItem
-""")
+                warnings.warn('warn_group_tab_items')
            
                 if form == self.form:
                     self.add_tab(item[0],item[1])
@@ -1931,274 +1922,6 @@ def inputAnyOld(item,parent=None):
 
     return inputAny(name,value,itemtype,**options)
 
-
-class OldInputDialog(QtGui.QDialog):
-    """A dialog widget to set the value of one or more items.
-
-    While general input dialogs can be constructed from all the underlying
-    Qt classes, this widget provides a way to construct fairly complex
-    input dialogs with a minimum of effort.
-
-    The input dialog can be modal or non-modal dialog.
-    """
-    
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False):
-        """Create a dialog asking the user for the value of items.
-
-        `items` is either a list of items, or a dict where each value is a
-        list of items or another dict (where each value is then a list of items).
-        If `items` is a dict, a tabbed widget will be created
-        with a tab for each (key,value) pair in the dict. If the value is
-        again a dict, then a box will be created for each (key,value) pair in
-        that subdict.
-
-        Each item in an `items` list is a list or tuple of the form
-        (name,value,type,options), where the fields have the following meaning:
-    
-        - name:  the name of the field,
-        - value: the initial or default value of the field,
-        - type:  the type of values the field can accept,
-        - options: a dict with options for the field.
-
-        At least the name and initial value need to be specified. The type
-        can often be determined from the initial value. Some types set the
-        initial value from an option if it was an empty string or None.
-        The options dictionary has both generic options, available for all
-        item types, and type specific options.
-
-        Each item specifies a single input field, and its value will be
-        contained in the results dictionary using the field name as a key.
-        
-        For each item a single input line is created in the dialog.
-        This line by default consists of a label displaying the field
-        name and a LineEdit widget where the initial value is displayed
-        and can be changed. Where appropriate, a validator function is attached
-        to it.
-
-        The following options are applicable to all item types:
-
-        - text: if specified, the text value will be displayed instead of
-          the name. The name value will remain the key in the return dict.
-          Use this field to display a more descriptive text for the user,
-          while using a short name for handling the value in your script.
-        - buttons:
-        - tooltip:
-
-        Currently, the following item types are available:
-
-        The item specific options:
-        - min
-        - max
-        - range: the range of values the field can accept,
-        - choices
-
-        The first two fields are mandatory. In many cases the type can be
-        determined from the value and no other fields are required. Thus:
-
-        - [ 'name', 'value' ] will accept any string (initial string = 'value'),
-        - [ 'name', True ] will show a checkbox with the item checked,
-        - [ 'name', 10 ] will accept any integer,
-        - [ 'name', 1.5 ] will accept any float.
-
-        Range settings for int and float types:
-
-        - [ 'name', 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive
-        - [ 'name', 1, float, 0.0, 1.0, 2 ] will accept a float in the range
-          from 0.0 to 1.0 with a maximum of two decimals.
-
-        Composed types:
-
-        - [ 'name', 'option1', 'select', ['option0','option1','option2']] will
-          present a combobox to select between one of the options.
-          The initial and default value is 'option1'.
-        - [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
-          present a group of radiobuttons to select between one of the options.
-          The initial and default value is 'option1'.
-          A variant 'vradio' aligns the options vertically. 
-        - [ 'name', 'option1', 'push', ['option0','option1','option2']] will
-          present a group of pushbuttons to select between one of the options.
-          The initial and default value is 'option1'.
-          A variant 'vpush' aligns the options vertically. 
-        - [ 'name', 'red', 'color' ] will present a color selection widget,
-          with 'red' as the initial choice.
-        """
-        if parent is None:
-            parent = pf.GUI
-        QtGui.QDialog.__init__(self,parent)
-        if flags is not None:
-            self.setWindowFlags(flags)
-        if caption is None:
-            caption = 'pyFormex-dialog'
-        self.setWindowTitle(str(caption))
-        self.fields = []
-        self.results = odict.ODict()
-        self._pos = None
-        form = QtGui.QVBoxLayout()
-
-        if isinstance(items,dict):
-            # add the input tab pages
-            tab = QtGui.QTabWidget()
-            for page in items.keys():
-                w = QtGui.QWidget()
-                f = QtGui.QVBoxLayout()
-                if isinstance(items[page],dict):
-                    for box in items[page].keys():
-                        fi = QtGui.QVBoxLayout()
-                        g = QtGui.QGroupBox()
-                        g.setTitle(box)
-                        g.setLayout(fi)
-                        f.addWidget(g)
-                        # add the items to the tab page
-                        self.add_input_items(items[page][box],fi)
-                else:
-                    # add the items to the tab page
-                    self.add_input_items(items[page],f)
-                f.addStretch()
-                w.setLayout(f)
-                tab.addTab(w,page)
-            form.addWidget(tab)
-
-        else:
-            # add the items directly
-            self.add_input_items(items,form)
-
-        # add the action buttons
-        but = dialogButtons(self,actions,default)
-        form.addLayout(but)
-        if scroll:
-            # This is experimental !!!
-            self.child = QtGui.QWidget()
-            self.child.setLayout(form)
-            self.scroll = QtGui.QScrollArea(self)
-            self.scroll.setWidget(self.child)
-            self.scroll.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
-            self.scroll.resize(pf.GUI.width()/2,pf.GUI.height())
-        else:
-            self.setLayout(form)
-        self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
-
-
-    def add_input_items(self,items,layout):
-        """Add input items.
-
-        items is a list of input item data
-        layout is the widget layout where the input widgets will be added
-        """
-        for item in items:
-            ## try:
-            ##     line = inputAny(item,parent=self)
-            ## except:
-            ##     print "inputAny ERROR for %s" % str(item)
-            line = inputAnyOld(item,parent=self)
-            layout.addLayout(line)
-            self.fields.append(line)
-
-
-    def __getitem__(self,name):
-        """Return the input item with specified name."""
-        items = [ f for f in self.fields if f.name() == name ]
-        if len(items) > 0:
-            return items[0]
-        else:
-            return None
-
-
-    def timeout(self):
-        """Hide the dialog and set the result code to TIMEOUT"""
-        pf.debug("TIMEOUT")
-        self.acceptData(TIMEOUT)
-
-
-    def timedOut(self):
-        """Returns True if the result code was set to TIMEOUT"""
-        return self.result() == TIMEOUT
-
-
-    def show(self,timeout=None,timeoutfunc=None,modal=False):
-        """Show the dialog.
-
-        For a non-modal dialog, the user has to call this function to
-        display the dialog. 
-        For a modal dialog, this is implicitely executed by getResult().
-
-        If a timeout is given, start the timeout timer.
-        """
-        # Set the keyboard focus to the first input field
-        self.fields[0].input.setFocus()
-        self.status = None
-
-        self.setModal(modal)
-        QtGui.QDialog.show(self)
-
-        addTimeOut(self,timeout,timeoutfunc)
-        
-        
-    def acceptData(self,result=ACCEPTED):
-        """Update the dialog's return value from the field values.
-
-        This function is connected to the 'accepted()' signal.
-        Modal dialogs should normally not need to call it.
-        In non-modal dialogs however, you can call it to update the
-        results without having to raise the accepted() signal (which
-        would close the dialog).
-        """
-        #pf.debug("ACCEPTING DATA WITH RESULT %s"%result)
-        self.results = odict.ODict()
-        self.results.update([ (fld.name(),fld.value()) for fld in self.fields ])
-        ## if self.report_pos:
-        ##     self.results.update({'__pos__':self.pos()})
-        if result == TIMEOUT:
-            self.done(result)
-        else:
-            self.setResult(result)
-        
-
-    def updateData(self,d):
-        """Update a dialog from the data in given dictionary.
-
-        d is a dictionary where the keys are field names in the dialog.
-        The values will be set in the corresponding input items.
-        """
-        for f in self.fields:
-            n = f.name()
-            if n in d:
-                f.setValue(d[n])
-        
-        
-    def getResult(self,timeout=None):
-        """ Get the results from the input dialog.
-
-        This fuction is used to present a modal dialog to the user (i.e. a
-        dialog that must be ended before the user can continue with the
-        program. The dialog is shown and user interaction is processed.
-        The user ends the interaction either by accepting the data (e.g. by
-        pressing the OK button or the ENTER key) or by rejecting them (CANCEL
-        button or ESC key).
-        On accept, a dictionary with all the fields and their values is
-        returned. On reject, an empty dictionary is returned.
-        
-        If a timeout (in seconds) is given, a timer will be started and if no
-        user input is detected during this period, the input dialog returns
-        with the default values set.
-        A value 0 will timeout immediately, a negative value will never timeout.
-        The default is to use the global variable input_timeout.
-
-        The result() method can be used to find out how the dialog was ended.
-        Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.
-        """
-        self.results = odict.ODict()
-        self.setResult(0)
-        if self._pos is not None:
-            self.restoreGeometry(self._pos)
-            
-        self.show(timeout,modal=True)
-        self.exec_()
-        self.activateWindow()
-        self.raise_()
-        pf.app.processEvents()
-        self._pos = self.saveGeometry()
-        return self.results
-
     
 def updateDialogItems(data,newdata):
     """Update the input data fields with new data values
@@ -2219,18 +1942,6 @@ def updateDialogItems(data,newdata):
                 v = newdata.get(d[0],None)
                 if v is not None:
                     d[1] = v
-
-
-class InputDialog(NewInputDialog):
-    def __init__(self,*args,**kargs):
-        import warnings
-        warnings.warn("""
-The default InputDialog has changed to the NewInputDialog!
-See the related help item for more info.
-For some time, you will be able to use OldInputDialog to
-get the old behavior.
-""")
-        NewInputDialog.__init__(self,*args,**kargs)
 
 
 ########################### Table widgets ###########################
@@ -2474,30 +2185,6 @@ class TableDialog(GenericDialog):
                                actions=actions,default=default)
 
 
-class OldTableDialog(GenericDialog):
-    """A dialog widget to show two-dimensional arrays of items."""
-    def __init__(self,items,caption=None,parent=None,tab=False):
-        """Create the Table dialog.
-        
-        If tab = False, a dialog with one table is created and items
-        should be a list [table_header,table_data].
-        If tab = True, a dialog with multiple pages is created and items
-        should be a list of pages [page_header,table_header,table_data].
-        """
-        import warnings
-        warnings.warn('The use of OldTableDialog is deprecated.\nPlease use a combination of the Dialog, Tabs and Table widgets.')
-
-        GenericDialog.__init__(self,[],title=caption,parent=parent)
-        if tab:
-            contents = Tabs(
-                [ (item[0], Table(data=item[2],chead=item[1],parent=None))
-                  for item in items ], parent=parent)
-        else:
-            contents = Table(data=items[1],chead=items[0],parent=None)
-
-        self.add(contents)
-        self.show()
-
 
 #####################################################################
 ########### Text Display Widgets ####################################
@@ -2580,14 +2267,13 @@ class MessageBox(QtGui.QMessageBox):
       By default there is a single button labeled 'OK'.
 
     When the MessageBox is displayed with the :meth:`getResult()` method,
-    a modal
-    dialog is created, i.e. the user will have to click a button or hit the
-    ESC key before he can continue.
+    a modal dialog is created, i.e. the user will have to click a button
+    or hit the ESC key before he can continue.
 
     If you want a modeless dialog, allowing the user to continue while the
     message stays open, use the :meth:`show()` mehod to display it.
     """
-    def __init__(self,text,format='',level='info',actions=['OK'],default=None,timeout=None,modal=None,parent=None):
+    def __init__(self,text,format='',level='info',actions=['OK'],default=None,timeout=None,modal=None,parent=None,check=None):
         if parent is None:
             parent = pf.GUI
         QtGui.QMessageBox.__init__(self,parent)
@@ -2603,6 +2289,18 @@ class MessageBox(QtGui.QMessageBox):
                 self.setDefaultButton(b)
 
         addTimeOut(self,timeout,"accept()")
+        self.checks = []
+        if check:
+            self.checks.append(self.addCheck(check))
+            
+
+    def addCheck(self,text):
+        """Add a check field at the bottom of the layout."""
+        grid = self.layout()
+        nr,nc = grid.rowCount(),grid.columnCount()
+        check = QtGui.QCheckBox(text)
+        grid.addWidget(check,nr,1)
+        return check
 
         
     def show(self,modal=False):
@@ -2624,9 +2322,14 @@ class MessageBox(QtGui.QMessageBox):
         if not b:  # b == 0 or b is None
             b = self.defaultButton()
         if b:
-            return str(b.text())
+            res = str(b.text())
         else:
-            return ''
+            res = ''
+        if self.checks:
+            return res,[c.isChecked() for c in self.checks]
+        else:
+            return res
+        
 
     def updateText(self,text,format=''):
         updateText(self._t,text,format)
@@ -2895,5 +2598,304 @@ class ImageView(QtGui.QLabel):
         self.filename = filename
         self.image = image 
         self.zoom = 1.0
+
+        
+############################# Deprecated Features ###########################
+
+class OldTableDialog(GenericDialog):
+    """A dialog widget to show two-dimensional arrays of items."""
+    def __init__(self,items,caption=None,parent=None,tab=False):
+        """Create the Table dialog.
+        
+        If tab = False, a dialog with one table is created and items
+        should be a list [table_header,table_data].
+        If tab = True, a dialog with multiple pages is created and items
+        should be a list of pages [page_header,table_header,table_data].
+        """
+        import warnings
+        warnings.warn('warn_old_table_dialog')
+        
+        GenericDialog.__init__(self,[],title=caption,parent=parent)
+        if tab:
+            contents = Tabs(
+                [ (item[0], Table(data=item[2],chead=item[1],parent=None))
+                  for item in items ], parent=parent)
+        else:
+            contents = Table(data=items[1],chead=items[0],parent=None)
+
+        self.add(contents)
+        self.show()
+
+
+class OldInputDialog(QtGui.QDialog):
+    """A dialog widget to set the value of one or more items.
+
+    While general input dialogs can be constructed from all the underlying
+    Qt classes, this widget provides a way to construct fairly complex
+    input dialogs with a minimum of effort.
+
+    The input dialog can be modal or non-modal dialog.
+    """
+    
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False):
+        """Create a dialog asking the user for the value of items.
+
+        `items` is either a list of items, or a dict where each value is a
+        list of items or another dict (where each value is then a list of items).
+        If `items` is a dict, a tabbed widget will be created
+        with a tab for each (key,value) pair in the dict. If the value is
+        again a dict, then a box will be created for each (key,value) pair in
+        that subdict.
+
+        Each item in an `items` list is a list or tuple of the form
+        (name,value,type,options), where the fields have the following meaning:
+    
+        - name:  the name of the field,
+        - value: the initial or default value of the field,
+        - type:  the type of values the field can accept,
+        - options: a dict with options for the field.
+
+        At least the name and initial value need to be specified. The type
+        can often be determined from the initial value. Some types set the
+        initial value from an option if it was an empty string or None.
+        The options dictionary has both generic options, available for all
+        item types, and type specific options.
+
+        Each item specifies a single input field, and its value will be
+        contained in the results dictionary using the field name as a key.
+        
+        For each item a single input line is created in the dialog.
+        This line by default consists of a label displaying the field
+        name and a LineEdit widget where the initial value is displayed
+        and can be changed. Where appropriate, a validator function is attached
+        to it.
+
+        The following options are applicable to all item types:
+
+        - text: if specified, the text value will be displayed instead of
+          the name. The name value will remain the key in the return dict.
+          Use this field to display a more descriptive text for the user,
+          while using a short name for handling the value in your script.
+        - buttons:
+        - tooltip:
+
+        Currently, the following item types are available:
+
+        The item specific options:
+        - min
+        - max
+        - range: the range of values the field can accept,
+        - choices
+
+        The first two fields are mandatory. In many cases the type can be
+        determined from the value and no other fields are required. Thus:
+
+        - [ 'name', 'value' ] will accept any string (initial string = 'value'),
+        - [ 'name', True ] will show a checkbox with the item checked,
+        - [ 'name', 10 ] will accept any integer,
+        - [ 'name', 1.5 ] will accept any float.
+
+        Range settings for int and float types:
+
+        - [ 'name', 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive
+        - [ 'name', 1, float, 0.0, 1.0, 2 ] will accept a float in the range
+          from 0.0 to 1.0 with a maximum of two decimals.
+
+        Composed types:
+
+        - [ 'name', 'option1', 'select', ['option0','option1','option2']] will
+          present a combobox to select between one of the options.
+          The initial and default value is 'option1'.
+        - [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
+          present a group of radiobuttons to select between one of the options.
+          The initial and default value is 'option1'.
+          A variant 'vradio' aligns the options vertically. 
+        - [ 'name', 'option1', 'push', ['option0','option1','option2']] will
+          present a group of pushbuttons to select between one of the options.
+          The initial and default value is 'option1'.
+          A variant 'vpush' aligns the options vertically. 
+        - [ 'name', 'red', 'color' ] will present a color selection widget,
+          with 'red' as the initial choice.
+        """
+        import warnings
+        warnings.warn('warn_old_input_dialog')
+        
+        if parent is None:
+            parent = pf.GUI
+        QtGui.QDialog.__init__(self,parent)
+        if flags is not None:
+            self.setWindowFlags(flags)
+        if caption is None:
+            caption = 'pyFormex-dialog'
+        self.setWindowTitle(str(caption))
+        self.fields = []
+        self.results = odict.ODict()
+        self._pos = None
+        form = QtGui.QVBoxLayout()
+
+        if isinstance(items,dict):
+            # add the input tab pages
+            tab = QtGui.QTabWidget()
+            for page in items.keys():
+                w = QtGui.QWidget()
+                f = QtGui.QVBoxLayout()
+                if isinstance(items[page],dict):
+                    for box in items[page].keys():
+                        fi = QtGui.QVBoxLayout()
+                        g = QtGui.QGroupBox()
+                        g.setTitle(box)
+                        g.setLayout(fi)
+                        f.addWidget(g)
+                        # add the items to the tab page
+                        self.add_input_items(items[page][box],fi)
+                else:
+                    # add the items to the tab page
+                    self.add_input_items(items[page],f)
+                f.addStretch()
+                w.setLayout(f)
+                tab.addTab(w,page)
+            form.addWidget(tab)
+
+        else:
+            # add the items directly
+            self.add_input_items(items,form)
+
+        # add the action buttons
+        but = dialogButtons(self,actions,default)
+        form.addLayout(but)
+        if scroll:
+            # This is experimental !!!
+            self.child = QtGui.QWidget()
+            self.child.setLayout(form)
+            self.scroll = QtGui.QScrollArea(self)
+            self.scroll.setWidget(self.child)
+            self.scroll.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
+            self.scroll.resize(pf.GUI.width()/2,pf.GUI.height())
+        else:
+            self.setLayout(form)
+        self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
+
+
+    def add_input_items(self,items,layout):
+        """Add input items.
+
+        items is a list of input item data
+        layout is the widget layout where the input widgets will be added
+        """
+        for item in items:
+            ## try:
+            ##     line = inputAny(item,parent=self)
+            ## except:
+            ##     print "inputAny ERROR for %s" % str(item)
+            line = inputAnyOld(item,parent=self)
+            layout.addLayout(line)
+            self.fields.append(line)
+
+
+    def __getitem__(self,name):
+        """Return the input item with specified name."""
+        items = [ f for f in self.fields if f.name() == name ]
+        if len(items) > 0:
+            return items[0]
+        else:
+            return None
+
+
+    def timeout(self):
+        """Hide the dialog and set the result code to TIMEOUT"""
+        pf.debug("TIMEOUT")
+        self.acceptData(TIMEOUT)
+
+
+    def timedOut(self):
+        """Returns True if the result code was set to TIMEOUT"""
+        return self.result() == TIMEOUT
+
+
+    def show(self,timeout=None,timeoutfunc=None,modal=False):
+        """Show the dialog.
+
+        For a non-modal dialog, the user has to call this function to
+        display the dialog. 
+        For a modal dialog, this is implicitely executed by getResult().
+
+        If a timeout is given, start the timeout timer.
+        """
+        # Set the keyboard focus to the first input field
+        self.fields[0].input.setFocus()
+        self.status = None
+
+        self.setModal(modal)
+        QtGui.QDialog.show(self)
+
+        addTimeOut(self,timeout,timeoutfunc)
+        
+        
+    def acceptData(self,result=ACCEPTED):
+        """Update the dialog's return value from the field values.
+
+        This function is connected to the 'accepted()' signal.
+        Modal dialogs should normally not need to call it.
+        In non-modal dialogs however, you can call it to update the
+        results without having to raise the accepted() signal (which
+        would close the dialog).
+        """
+        self.results = odict.ODict()
+        self.results.update([ (fld.name(),fld.value()) for fld in self.fields ])
+        if result == TIMEOUT:
+            self.done(result)
+        else:
+            self.setResult(result)
+        
+
+    def updateData(self,d):
+        """Update a dialog from the data in given dictionary.
+
+        d is a dictionary where the keys are field names in the dialog.
+        The values will be set in the corresponding input items.
+        """
+        for f in self.fields:
+            n = f.name()
+            if n in d:
+                f.setValue(d[n])
+        
+        
+    def getResult(self,timeout=None):
+        """ Get the results from the input dialog.
+
+        This fuction is used to present a modal dialog to the user (i.e. a
+        dialog that must be ended before the user can continue with the
+        program. The dialog is shown and user interaction is processed.
+        The user ends the interaction either by accepting the data (e.g. by
+        pressing the OK button or the ENTER key) or by rejecting them (CANCEL
+        button or ESC key).
+        On accept, a dictionary with all the fields and their values is
+        returned. On reject, an empty dictionary is returned.
+        
+        If a timeout (in seconds) is given, a timer will be started and if no
+        user input is detected during this period, the input dialog returns
+        with the default values set.
+        A value 0 will timeout immediately, a negative value will never timeout.
+        The default is to use the global variable input_timeout.
+
+        The result() method can be used to find out how the dialog was ended.
+        Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.
+        """
+        self.results = odict.ODict()
+        self.setResult(0)
+        if self._pos is not None:
+            self.restoreGeometry(self._pos)
+            
+        self.show(timeout,modal=True)
+        self.exec_()
+        self.activateWindow()
+        self.raise_()
+        pf.app.processEvents()
+        self._pos = self.saveGeometry()
+        return self.results
+
+
+NewInputDialog = InputDialog
+
 
 # End
