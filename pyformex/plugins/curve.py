@@ -534,6 +534,59 @@ class PolyLine(Curve):
             return res
 
 
+    def distanceOfPoints(self,p,n,return_points=False):
+        """Find the distances of points p, perpendicular to the vectors n.
+        
+        p is a (np,3) shaped array of points.
+        n is a (np,3) shaped array of vectors.
+    
+        The return value is a tuple OKpid,OKdist,OKpoints where:
+        - OKpid is an array with the point numbers having a distance;
+        - OKdist is an array with the distances for these points;
+        - OKpoints is an array with the footpoints for these points
+        and is only returned if return_points = True.
+        """
+        q = self.pointsOn()
+        if not self.closed:
+            q = q[:-1]
+        m = self.vectors()
+        t = intersectionTimesLWP(q,m,p,n)
+        t = t.transpose((1,0))
+        x = q[newaxis,:] + t[:,:,newaxis] * m[newaxis,:]
+        inside = (t >= 0.) * (t <= 1.)
+        pid = where(inside)[0]
+        p = p[pid]
+        x = x[inside]
+        dist = length(x-p)
+        OKpid = unique(pid)
+        OKdist = array([ dist[pid == i].min() for i in OKpid ])
+        if return_points:
+            minid = array([ dist[pid == i].argmin() for i in OKpid ])
+            OKpoints = array([ x[pid == i][j] for i,j in zip(OKpid,minid) ]).reshape(-1,3)
+            return OKpid,OKdist,OKpoints
+        return OKpid,OKdist
+
+
+    def distanceOfPolyLine(self,PL,ds,return_points=False):
+        """Find the distances of the PolyLine PL.
+        
+        PL is first discretised by calculating a set of points p and direction
+        vectors n at equal distance of approximately ds along PL. The
+        distance of PL is then calculated as the distances of the set (p,n).
+        
+        If return_points = True, two extra values are returned: an array
+        with the points p and an array with the footpoints matching p.        
+        """
+        ntot = int(ceil(PL.length()/ds))
+        t = PL.atLength(ntot)
+        p = PL.pointsAt(t)
+        n = PL.directionsAt(t)
+        res = self.distanceOfPoints(p,n,return_points)
+        if return_points:
+            return res[1],p[res[0]],res[2]
+        return res[1]
+
+
 ##############################################################################
 #
 class Polygon(PolyLine):
@@ -1170,73 +1223,6 @@ def convertFormexToCurve(self,closed=False):
     return curve
 
 Formex.toCurve = convertFormexToCurve
-
-
-
-##############################################################################
-#
-# NEEDS WORK
-#
-
-#
-# This function is not very pyFormex-like. It does too much at once.
-# And it uses too much append's.
-# 
-# It should be converted to a PolyLine method/function
-# The BezierSpline method or the user should then call an approx() method
-#
-
-def distanceBetweenBezier(curve1,curve2,tol=1.e-3,pdist=1.):
-    """Return the orthogonal distances between two Bezier splines.
-    
-    Each curve is approximated by a polyline using a flatness
-    tolerance 'tol' and a series of points and corresponding tangent
-    vectors at equal distance 'pdist' along the polyline is calculated.
-    
-    The distances of these points from the other polyline are
-    calculated, orthogonal to the corresponding tangent vectors.
-    
-    The return value is a tuple
-    (distances,points on polyline,intersection points on other polyline).
-    """
-    PL,p,n, = [],[],[]
-    for curve in [curve1,curve2]:
-        # compute polyline approximation of the curve
-        PLi = curve.approx_by_subdivision(tol)
-        PL.append(PLi)
-        # compute points and tangent vectors at equal distance 'pdist'
-        ntot = int(ceil(PLi.length()/pdist))
-        t = PLi.atLength(ntot)
-        t = asarray(t).ravel()
-        ti = floor(t).clip(min=0,max=PLi.nparts-1)
-        t -= ti
-        i = ti.astype(int)
-        pi = concatenate([PLi.sub_points(tj,ij) for tj,ij in zip(t,i)])
-        ni = normalize(PLi.vectors())[i]
-        p.append(Coords(pi))
-        n.append(Coords(ni))
-    # compute orthogonal distances
-    d,a,b = [],[],[]
-    for PLi,pi,ni in zip(PL[::-1],p,n):
-        q = PLi.pointsOn()[:-1]
-        m = PLi.vectors()
-        t = intersectionTimesLWP(q,m,pi,ni)
-        t = t.transpose((1,0))
-        x = q[newaxis,:] + t[:,:,newaxis] * m[newaxis,:]
-        inside = (t >= 0.) * (t <= 1.)
-        pid = where(inside)[0]
-        y = pi[pid]
-        x = x[inside]
-        dist = length(x-y)
-        OKpid = unique(pid)
-        OKdist = array([ dist[pid == i].min() for i in OKpid ])
-        minid = array([ dist[pid == i].argmin() for i in OKpid ])
-        OKpoints = array([ x[pid==i][j] for i,j in zip(OKpid,minid) ]).reshape(-1,3)
-        d.append(OKdist)
-        a.append(pi[OKpid])
-        b.append(OKpoints)
-    return d,a,b
-
 
 
 ##############################################################################
