@@ -730,7 +730,7 @@ Size: %s
         return M
 
 
-    def cselect(self,selected,compact=True)):
+    def cselect(self,selected,compact=True):
         """Return a mesh without the selected elements.
 
         - `selected`: an object that can be used as an index in the
@@ -928,13 +928,15 @@ Size: %s
 
         By default, the Meshes are compacted. Compaction may be switched
         off for efficiency reasons.
-        "
+        """
         sel = random.randint(0,n,(self.nelems()))
         return [ self.select(sel==i,compact=compact) for i in range(n) if i in sel ]
 
 
     def convertRandom(self,choices):
-        """Convert choosing randomly between choices"""
+        """Convert choosing randomly between choices
+
+        """
         ml = self.splitRandom(len(choices),compact=False)
         ml = [ m.convert(c) for m,c in zip(ml,choices) ]
         prop = self.prop
