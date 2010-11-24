@@ -75,4 +75,6 @@ warn_quadbezierspline = "The use of the QuadBezierSpline class is deprecated and
 
 warn_trisurface_getfaces = "TriSurface.getFaces now returns the faces' node numbers. Use TriSurface.getFaceEdges() to get the faces' edge numbers."
 
+warn_mesh_select_default_compacted = "Mesh.select now by default compacts the Mesh. Use the `compact=False` argument if you do not want the compaction."
+
 # End

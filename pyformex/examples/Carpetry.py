@@ -66,6 +66,7 @@ conversions = []
 
 maxconv = 10
 minconv = 5
+minelems = 10000
 maxelems = 100000
 
 V = surface_menu.SelectableStatsValues
@@ -75,7 +76,7 @@ nkeys = len(possible_keys)
 
 nconv = random.randint(minconv,maxconv)
 
-while (len(conversions) < nconv and M.nelems() < maxelems):
+while (len(conversions) < nconv and M.nelems() < maxelems) or (M.nelems() < minelems):
     possible_conversions = mesh._conversions_[M.eltype].keys()
     i = random.randint(len(possible_conversions))
     conv = possible_conversions[i]

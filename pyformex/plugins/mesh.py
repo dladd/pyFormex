@@ -575,35 +575,48 @@ class Mesh(Geometry):
 
         This returns a Connectivity table with the border of the Mesh.
         The border entities are of a lower hierarchical level than the
-        mesh itself. This Connectivity can be used together with the
-        Mesh coords to construct a Mesh of the border geometry.
+        mesh itself. These entities become part of the border if they
+        are connected to only one element.
+
+        The returned Connectivity can be used together with the
+        Mesh.coords to construct a Mesh of the border geometry.
         See also getBorderMesh.
         """
         sel = self.getLowerEntitiesSelector(-1)
         hi,lo = self.elems.insertLevel(sel)
         hiinv = hi.inverse()
         ncon = (hiinv>=0).sum(axis=1)
-        brd = (ncon<=1)
+        brd = (ncon<=1)   # < 1 should not occur 
         brd = lo[brd]
         return brd
 
 
-    def getBorderMesh(self):
+    def getBorderMesh(self,compact=True):
         """Return a Mesh with the border elements.
 
         Returns a Mesh representing the border of the Mesh.
         The returned Mesh is of the next lower hierarchical level.
-        Its elements inherit the property numbers from the original elements
-        they belong to (if any).
+        If the Mesh has property numbers, the border elements inherit
+        the property of the element to which they belong.
+
+        By default, the resulting Mesh is compacted. Compaction can be
+        switched off by setting `compact=False`.
         """
-        if self.propSet()==None: return Mesh(self.coords,self.getBorder())
-        kp = self.propSet()
-        p = self.splitProp()
-        brd = Mesh.concatenate( [Mesh(p[k].coords,p[k].getBorder()).setProp(k) for k in  kp] ).renumber()
-        ind,ok = brd.elems.testDoubles()
-        #remove repeated faces with different props
-        testdoubles = ind[ok*roll(ok, -1, 0)]
-        return brd.select(testdoubles)
+        if self.props==None:
+            M = Mesh(self.coords,self.getBorder())
+
+        else:
+            kp = self.propSet()
+            p = self.splitProp()
+            brd = Mesh.concatenate( [Mesh(p[k].coords,p[k].getBorder()).setProp(k) for k in  kp] ).renumber()
+            ind,ok = brd.elems.testDoubles()
+            #remove repeated faces with different props
+            testdoubles = ind[ok*roll(ok, -1, 0)]
+            M = brd.select(testdoubles,compact=False)
+
+        if compact:
+            M = M.compact()
+        return M
 
 
     # This needs clean up
@@ -668,44 +681,59 @@ Size: %s
         return self
 
 
-    def select(self,selected):
-        """Return a mesh with selected elements from the original.
+    # IS this operation equivalent to clip in a Formex?
+    # THen they should be named likewise.
+
+    def select(self,selected,compact=True):
+        """Return a Mesh only holding the selected elements.
 
         - `selected`: an object that can be used as an index in the
           `elems` array, e.g. a list of (integer) element numbers,
           or a boolean array with the same length as the `elems` array.
+
+        - `compact`: boolean. If True (default), the returned Mesh will be
+          compacted, i.e. the unused nodes are removed and the nodes are
+          renumbered from zero. If False, returns the node set and numbers
+          unchanged. 
           
-        Returns a Mesh with only the selected elements.
-        The returned Mesh is not compacted.
-        The complimentary operation is `unselect`.
+        Returns a Mesh (or subclass) with only the selected elements.
+        
+        See `cselect` for the complementary operation.
         """
-        selected=asarray(selected)
-        if len(self.elems) == 0:
-            return self
-        prop = self.prop
-        if prop is not None:
-            prop = prop[selected]
-        elems = self.elems[selected]
-        return Mesh(self.coords,elems,prop,self.eltype)
+        if self.__class__ == Mesh:
+            import warnings
+            warnings.warn('warn_mesh_select_default_compacted')
+        M = self.__class__(self.coords,self.elems[selected],eltype=self.eltype)
+        if self.prop is not None:
+            M.setProp(self.prop[selected])
+        if compact:
+            M.compact()
+        return M
 
 
-    def unselect(self, selected):
+    def cselect(self,selected,compact=True)):
         """Return a mesh without the selected elements.
 
-        This is the complimentary operation of `select`.
         - `selected`: an object that can be used as an index in the
           `elems` array, e.g. a list of (integer) element numbers,
           or a boolean array with the same length as the `elems` array.
+
+        - `compact`: boolean. If True (default), the returned Mesh will be
+          compacted, i.e. the unused nodes are removed and the nodes are
+          renumbered from zero. If False, returns the node set and numbers
+          unchanged. 
           
         Returns a Mesh with all but the selected elements.
-        The returned mesh is not compacted.
+        
+        This is the complimentary operation of `select`.
         """
         selected = asarray(selected)
         if selected.dtype==bool:
-            return self.select(selected==False)
-        wi = range(self.nelems())
-        wi = delete(wi, selected)
-        return self.select(wi)
+            return self.select(selected==False,compact=compact)
+        else:
+            wi = range(self.nelems())
+            wi = delete(wi,selected)
+            return self.select(wi,compact=compact)
 
 
     def meanNodes(self,nodsel):
@@ -874,15 +902,23 @@ Size: %s
         return mesh
 
 
-    def splitRandom(self,n):
-        """Split a mesh in n parts, distributing the elements randomly."""
+    def splitRandom(self,n,compact=True):
+        """Split a mesh in n parts, distributing the elements randomly.
+
+        Returns a list of n Mesh objects, constituting together the same
+        Mesh as the original. The elements are randomly distributed over
+        the subMeshes.
+
+        By default, the Meshes are compacted. Compaction may be switched
+        off for efficiency reasons.
+        "
         sel = random.randint(0,n,(self.nelems()))
-        return [ self.select(sel==i) for i in range(n) if i in sel ]
+        return [ self.select(sel==i,compact=compact) for i in range(n) if i in sel ]
 
 
     def convertRandom(self,choices):
         """Convert choosing randomly between choices"""
-        ml = self.splitRandom(len(choices))
+        ml = self.splitRandom(len(choices),compact=False)
         ml = [ m.convert(c) for m,c in zip(ml,choices) ]
         prop = self.prop
         if prop is not None:
@@ -938,7 +974,7 @@ Size: %s
                     if m.prop is not None:
                         prop.append(m.prop[sel])
                     # remove the reduced elems from m
-                    m = m.select(~w)
+                    m = m.select(~w,compact=False)
 
                     if m.nelems() == 0:
                         break
@@ -976,8 +1012,8 @@ Size: %s
         degenerate elements.
         """
         deg = self.elems.testDegenerate()
-        M0 = self.select(~deg)
-        M1 = self.select(deg)
+        M0 = self.select(~deg,compact=False)
+        M1 = self.select(deg,compact=False)
         if autofix:
             ML = [M0] + M1.reduceDegenerate()
         else:
@@ -1206,21 +1242,21 @@ Size: %s
         return T
 
 
-    def clip(self,t):
+    def clip(self,t,compact=False):
         """Return a Mesh with all the elements where t>0.
 
         t should be a 1-D integer array with length equal to the number
         of elements of the Mesh.
         The resulting Mesh will contain all elements where t > 0.
         """
-        return self.select(t>0)
+        return self.select(t>0,compact=compact)
 
 
-    def cclip(self,t):
+    def cclip(self,t,compact=False):
         """This is the complement of clip, returning a Mesh where t<=0.
         
         """
-        return self.select(t<=0)
+        return self.select(t<=0,compact=compact)
 
 
     def clipAtPlane(self,p,n,nodes='any',side='+'):
@@ -1234,6 +1270,9 @@ Size: %s
         return self.clip(self.test(nodes=nodes,dir=n,min=p))
 
 
+    ## THIS NEEDS WORK ###
+    ## surfacetype is also eltype ??
+    
     def areas(self):
         """area of elements
         
@@ -1353,6 +1392,12 @@ Size: %s
         
         from gui.actors import GeomActor
         return GeomActor(self,**kargs)
+
+
+    ################ DEPRECATED ###############
+    @deprecation("Mesh.unselect is deprecated. Use Mesh.cselect instead")
+    def unselect(self,*args,**kargs):
+        return self.cselect(*args,**kargs)
 
 
 ########### Functions #####################
