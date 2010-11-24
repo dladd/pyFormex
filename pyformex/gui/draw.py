@@ -896,7 +896,7 @@ def transparent(state=True):
 
 
 def perspective(state=True):
-    pf.canvas.setPerspective(state)
+    pf.canvas.camera.setPerspective(state)
     pf.canvas.update()
     toolbar.updatePerspectiveButton()
     pf.GUI.processEvents()
