@@ -789,6 +789,7 @@ def quitGUI():
         script.force_finish()
     if pf.app:
         pf.app.exit()
+        pf.app = None
 
 
 def startGUI(args):
@@ -1055,7 +1056,7 @@ def createDatabases():
 
 def runGUI():
     """Go into interactive mode"""
-
+    
     egg = pf.cfg.get('gui/easter_egg',None)
     pf.debug('EGG: %s' % str(egg))
     if egg:
@@ -1068,6 +1069,7 @@ def runGUI():
             egg = ''.join(egg)
         draw.playScript(egg,pye=True)
 
+    pf.interactive = True
     pf.debug("Start main loop")
     #utils.procInfo('runGUI')
     #from multiprocessing import Process

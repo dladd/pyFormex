@@ -43,7 +43,6 @@ def atExit():
     pf.GUI.setBusy(False)
 
 
-
 def drawMesh(M):
     clear()
     draw(M)
@@ -60,41 +59,66 @@ transparent()
 nx,ny = 4,2
 M = Formex(origin()).extrude(nx,1.,0).extrude(ny,1.,1).toMesh().setProp(1)
 
-
-conversions = []
-#drawMesh(M)
+V = surface_menu.SelectableStatsValues
+possible_keys = [ k for k in V.keys() if not V[k][1] ][:-1]
+nkeys = len(possible_keys)
 
 maxconv = 10
 minconv = 5
 minelems = 10000
-maxelems = 100000
+maxelems = 50000
 
-V = surface_menu.SelectableStatsValues
-possible_keys = [ k for k in V.keys() if not V[k][1] ][:-1]
-print possible_keys
-nkeys = len(possible_keys)
 
-nconv = random.randint(minconv,maxconv)
+def carpet(M):
+    conversions = []
+    nconv = random.randint(minconv,maxconv)
 
-while (len(conversions) < nconv and M.nelems() < maxelems) or (M.nelems() < minelems):
-    possible_conversions = mesh._conversions_[M.eltype].keys()
-    i = random.randint(len(possible_conversions))
-    conv = possible_conversions[i]
-    conversions.append(conv)
-    M = M.convert(conv)
-    #drawMesh(M)
+    while (len(conversions) < nconv and M.nelems() < maxelems) or M.nelems() < minelems:
+        possible_conversions = mesh._conversions_[M.eltype].keys()
+        i = random.randint(len(possible_conversions))
+        conv = possible_conversions[i]
+        conversions.append(conv)
+        M = M.convert(conv)
+
+    if M.eltype != 'tri3':
+        M = M.convert('tri3')
+        conversions.append('tri3')
+
+    print "%s patches" % M.nelems()
+    print "conversions: %s" % conversions
+
+    # Coloring
+    key = possible_keys[random.randint(nkeys)]
+    print "colored by %s" % key
+    func = V[key][0]
+    S = trisurface.TriSurface(M)
+    val = func(S)
+    export({'surface':S})
+    surface_menu.selection.set(['surface'])
+    surface_menu.showSurfaceValue(S,str(conversions),val,False)
+    pf.canvas.removeDecorations()
     
-if M.eltype != 'tri3':
-    M = M.convert('tri3')
-print "%s patches" % M.nelems()
-print "conversions: %s" % conversions
-key = possible_keys[random.randint(nkeys)]
-print "colored by %s" % key
-S = trisurface.TriSurface(M)
-export({'surface':S})
-surface_menu.selection.set(['surface'])
-surface_menu.showStatistics(key=key)
-pf.canvas.removeDecorations()
-       
-# q4 - q9 - t3-d - q4 - t3-x
-# smallest altitude
+
+clear()
+flatwire()
+lights(True)
+transparent(False)
+
+if pf.interactive:
+    print "running interactively"
+    A = None
+    for i in range(4):
+        carpet(M)
+        B = pf.canvas.actors[-1:]
+        if A:
+            undraw(A)
+        A = B
+
+else:
+    print "just saving image"
+    from gui import image,guimain
+    carpet(M)
+    image.save('testje2.png')
+    #exit(all=True)
+    guimain.quitGUI()
+# End

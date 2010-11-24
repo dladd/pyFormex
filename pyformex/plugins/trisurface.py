@@ -1268,19 +1268,43 @@ Total area: %s; Enclosed volume: %s
 
         okedges flags the edges where the two adjacent triangles are to be
         in the same part of the surface.
-        startat is a list of elements that are in the first part. 
+        startat is a list of elements that are in the first part.
+        
         The partitioning is returned as a property type array having a value
         corresponding to the part number. The lowest property number will be
-        firstprop
+        firstprop.
         """
         return firstprop + self.walkNodeFront(startat=startat,front_increment=0)
 
 
     def partitionByConnection(self):
+        """Detects the connected parts of a surface.
+
+        The surface is partitioned in parts in which all elements are
+        connected. Two elements are connected if it is possible to draw a
+        continuous (poly)line from a point in one element to a point in
+        the other element without leaving the surface.
+        
+        The partitioning is returned as a property type array having a value
+        corresponding to the part number. The lowest property number will be
+        firstprop.
+        """
         return self.partitionByNodeFront()
 
 
-    def partitionByAngle(self,angle=180.,firstprop=0,startat=0):
+    def partitionByAngle(self,angle=60.,firstprop=0,startat=0):
+        """Partitions the surface by splitting it at sharp edges.
+
+        The surface is partitioned in parts in which all elements can be
+        reach without ever crossing a sharp edge angle. More precisely,
+        any two elements that can be connected by a line not crossing an
+        edge between two elements having their normals differ more than
+        angle (in degrees), will belong to the same part.
+       
+        The partitioning is returned as a property type array having a value
+        corresponding to the part number. The lowest property number will be
+        firstprop.
+        """
         conn = self.edgeConnections()
         # Flag edges that connect two faces
         conn2 = (conn >= 0).sum(axis=-1) == 2
@@ -1293,9 +1317,15 @@ Total area: %s; Enclosed volume: %s
 
 
     def splitByConnection(self):
-        """Split the surface into connected parts."""
-        p = self.partitionByConnection()
-        return [ self.clip(p==pi) for pi in range(p.max()+1) ]
+        """Split the surface into connected parts.
+
+        Returns a list of surfaces that each form a connected part.
+        """
+        split = self.splitProp(self.partitionByConnection())
+        if split:
+            return split.values()
+        else:
+            return [ self ]
 
 
     def largestByConnection(self):

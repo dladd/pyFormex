@@ -269,7 +269,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
-    global scriptDisabled,scriptRunning,exitrcrequested
+    global scriptDisabled,scriptRunning,exitrequested
     #pf.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant

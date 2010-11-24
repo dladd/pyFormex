@@ -279,6 +279,17 @@ class Mesh(Geometry):
     A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
     or by a single geometric object that provides a toMesh() method.
     """
+    ###################################################################
+    ## DEVELOPERS: ATTENTION
+    ##
+    ## Because the TriSurface is derived from Mesh, all methods which
+    ## return a Mesh and will also work correctly on a TriSurface,
+    ## should use self.__class__ to return the proper class, and they 
+    ## should specify the prop and eltype arguments using keywords
+    ## (because only the first two arguments match).
+    ## See the copy() method for an example.
+    ###################################################################
+    
     def __init__(self,coords=None,elems=None,prop=None,eltype=None):
         """Initialize a new Mesh."""
         self.coords = self.elems = self.prop = self.eltype = None
@@ -371,7 +382,7 @@ class Mesh(Geometry):
     def copy(self):
         """Return a copy using the same data arrays"""
         # SHOULD THIS RETURN A DEEP COPY?
-        return Mesh(self.coords,self.elems,self.prop,self.eltype)
+        return self.__class__(self.coords,self.elems,prop=self.prop,eltype=self.eltype)
 
 
     def toFormex(self):
@@ -554,6 +565,7 @@ class Mesh(Geometry):
 
     
     # ?? DOES THIS WORK FOR *ANY* MESH ??
+    # What with a mesh of points, lines, ...
     def getAngles(self, angle_spec=Deg):
         """Returns the angles in Deg or Rad between the edges of a mesh.
         
@@ -636,6 +648,11 @@ class Mesh(Geometry):
 
 
     def report(self):
+        """Create a report on the Mesh shape and size.
+
+        The report contains the number of nodes, number of elements,
+        plexitude, bbox and size.
+        """
         bb = self.bbox()
         return """
 Shape: %s nodes, %s elems, plexitude %s
@@ -645,6 +662,11 @@ Size: %s
 
 
     def __str__(self):
+        """Format a Mesh in a string.
+
+        This creates a detailed string representation of a Mesh,
+        containing the report() and the lists of nodes and elements.
+        """
         return self.report() + "Coords:\n" + self.coords.__str__() +  "Elems:\n" + self.elems.__str__()
 
 
@@ -658,7 +680,7 @@ Size: %s
         that will be passed to :meth:`Coords:fuse`.
         """
         coords,index = self.coords.fuse(**kargs)
-        return Mesh(coords,index[self.elems],self.prop,self.eltype)
+        return self.__class__(coords,index[self.elems],prop=self.prop,eltype=self.eltype)
     
 
     def compact(self):
@@ -680,9 +702,6 @@ Size: %s
 
         return self
 
-
-    # IS this operation equivalent to clip in a Formex?
-    # THen they should be named likewise.
 
     def select(self,selected,compact=True):
         """Return a Mesh only holding the selected elements.
@@ -801,8 +820,6 @@ Size: %s
         
         If the Mesh has no properties, a copy with all elements is returned.
         """
-        # !! Use keyword for the prop and eltype arguments, so that it
-        # also works for the derived class TriSurface
         if self.prop is None:
             return self.__class__(self.coords,self.elems,eltype=self.eltype)
         elif type(val) == int:

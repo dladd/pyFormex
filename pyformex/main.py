@@ -537,7 +537,7 @@ def run(argv=[]):
         
 
     # after processing all args, go into interactive mode
-    if pyformex.options.gui:
+    if pyformex.options.gui and pyformex.app:
         res = guimain.runGUI()
 
     ## elif pyformex.options.interactive:

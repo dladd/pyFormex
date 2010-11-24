@@ -506,6 +506,8 @@ Most likely because 'python-scipy' is not installed on your system.""")
                 val = val.clip(vmin,vmax)
 
         if domain:
+            clear()
+            lights(False)
             showSurfaceValue(S,key,val,onEdges)
         if dist:
             showHistogram(key,val,cumulative=False)
@@ -576,10 +578,8 @@ def showStatisticsDialog():
 def showSurfaceValue(S,txt,val,onEdges):
     val = nan_to_num(val)
     mi,ma = val.min(),val.max()
-    #print(mi,ma)
     # Test: replace min with max
     dec = min(abs(mi),abs(ma))
-    #print(dec)
     if dec > 0.0:
         dec = max(0,3-int(log10(dec)))
     else:
@@ -588,13 +588,11 @@ def showSurfaceValue(S,txt,val,onEdges):
     CS = ColorScale('RAINBOW',mi,ma,0.5*(mi+ma),1.)
     cval = array(map(CS.color,ravel(val)))
     cval = cval.reshape(append(val.shape,cval.shape[-1]))
-    clear()
     if onEdges:
         F = Formex(S.coords[S.getEdges()])
-        draw(F,color=cval)#,linewidth=2)
+        draw(F,color=cval)
     else:
         draw(S,color=cval)
-    lights(False)
     CL = ColorLegend(CS,100)
     CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
     pf.canvas.addDecoration(CLA)
