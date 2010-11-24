@@ -268,7 +268,7 @@ def draw_elem_numbers(n):
 
 def draw_nodes(n):
     """Draw the numbers of an object's nodes."""
-    return draw(named(n).coords,flat=True)
+    return draw(named(n).coords,flat=True,wait=False)
 
 def draw_node_numbers(n):
     """Draw the numbers of an object's nodes."""
@@ -304,10 +304,10 @@ class DrawableObjects(Objects):
         self._actors = []
 
 
-    def draw(self,*args,**kargs):
+    def draw(self,**kargs):
         clear()
         pf.debug("Drawing SELECTION: %s" % self.names)
-        self._actors = draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
+        self._actors = draw(self.names,clear=False,shrink=self.shrink,wait=False,**kargs)
         for i,a in enumerate(self.annotations):
             if a[1]:
                 self.drawAnnotation(i)
@@ -327,8 +327,8 @@ class DrawableObjects(Objects):
         old and new can be a either Formex instances or names or lists thereof.
         old are drawn in yellow, new in the current color.
         """
-        self.draw(wait=False)
-        draw(self.values,color='yellow',bbox=None,clear=False,shrink=self.shrink)
+        self.draw()
+        draw(self.values,color='yellow',bbox=None,clear=False,shrink=self.shrink,wait=False)
 
 
     def undoChanges(self):

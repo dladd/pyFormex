@@ -1233,7 +1233,7 @@ Total area: %s; Enclosed volume: %s
 
 
     def growSelection(self,sel,mode='node',nsteps=1):
-        """Grows a selection of a surface.
+        """Grow a selection of a surface.
 
         `p` is a single element number or a list of numbers.
         The return value is a list of element numbers obtained by
@@ -1251,7 +1251,7 @@ Total area: %s; Enclosed volume: %s
     
 
     def partitionByEdgeFront(self,okedges,firstprop=0,startat=0):
-        """Detects different parts of the surface using a frontal method.
+        """Detect different parts of the surface using a frontal method.
 
         okedges flags the edges where the two adjacent triangles are to be
         in the same part of the surface.
@@ -1278,7 +1278,7 @@ Total area: %s; Enclosed volume: %s
 
 
     def partitionByConnection(self):
-        """Detects the connected parts of a surface.
+        """Detect the connected parts of a surface.
 
         The surface is partitioned in parts in which all elements are
         connected. Two elements are connected if it is possible to draw a
@@ -1293,7 +1293,7 @@ Total area: %s; Enclosed volume: %s
 
 
     def partitionByAngle(self,angle=60.,firstprop=0,startat=0):
-        """Partitions the surface by splitting it at sharp edges.
+        """Partition the surface by splitting it at sharp edges.
 
         The surface is partitioned in parts in which all elements can be
         reach without ever crossing a sharp edge angle. More precisely,
@@ -1344,8 +1344,6 @@ Total area: %s; Enclosed volume: %s
     def cutWithPlane(self,*args,**kargs):
         """Cut a surface with a plane."""
         self.__init__(self.toFormex().cutWithPlane(*args,**kargs))
-
-    cutAtPlane = cutWithPlane  # DEPRECATED
 
 
     def connectedElements(self,target,elemlist=None):
@@ -1559,10 +1557,49 @@ Total area: %s; Enclosed volume: %s
             p[inter_vertex] = pn[inter_vertex] - (beta*b[inter_vertex] + (1-beta)*(w[inter_vertex]*b[adj[inter_vertex]]).sum(1))
 
 
-########################## Methods using GTS #############################
+###################### Methods using admesh/GTS #############################
+ 
+ 
+    def fixNormals(self):
+        """Fix the orientation of the normals.
+
+        Some surface operations may result in improperly oriented normals.
+        This tries to reverse improperly oriented normals so that a
+        single oriented surface is achieved. It only works on a
+        closed surface.
+
+        In the current version, this uses the external program `admesh`,
+        so this should be installed on the machine.
+
+        If the surface was a (possibly non-orientable) manifold, the result
+        will be an orientable manifold. This is a necessary condition
+        for the `gts` methods to be applicable.
+        """
+        tmp = tempfile.mktemp('.stl')
+        pf.message("Writing temp file %s" % tmp)
+        self.write(tmp,'stl')
+        tmp1 = tempfile.mktemp('.off')
+        cmd = "admesh -d --write-off='%s' '%s'" % (tmp1,tmp)
+        pf.message("Fixing surface normals with command\n %s" % cmd)
+        sta,out = runCommand(cmd)
+        pf.message("Reading result from %s" % tmp1)
+        S = TriSurface.read(tmp1)   
+        os.remove(tmp)
+        os.remove(tmp1)    
+        return S.setProp(self.prop)
+
 
     def check(self,verbose=False):
-        """Check the surface using gtscheck."""
+        """Check the surface using gtscheck.
+
+        Checks whether the surface is a closed, orientable,
+        non self-intersecting manifold. This is a necessary condition
+        for the use of the `gts` methods: split, coarsen, refine, boolean.
+
+        Returns 0 if the surface passes the tests, nonzero if not.
+
+        The fixNormals method may be used to
+        """
         cmd = 'gtscheck'
         if verbose:
             cmd += ' -v'
@@ -1576,23 +1613,7 @@ Total area: %s; Enclosed volume: %s
         pf.message(out)
         if sta == 0:
             pf.message('The surface is a closed, orientable non self-intersecting manifold')
- 
- 
-    def fixNormals(self):
-        """Fix normals using admesh, thus converting a non-orientable manifold into an orientable manifold. This operation is required before gts boolean operations."""
-        cmd = 'admesh'
-        tmp = tempfile.mktemp('.stl')
-        tmp1 = tempfile.mktemp('.stl')
-        pf.message("Writing temp file %s" % tmp)
-        self.write(tmp,'stl')
-        cmd += ' %s -da %s' % (tmp,tmp1)
-        pf.message("Fixing surface normals with command\n %s" % cmd)
-        sta,out = runCommand(cmd)
-        pf.message("Reading result from %s" % tmp1)
-        S = TriSurface.read(tmp1)   
-        os.remove(tmp)
-        os.remove(tmp1)    
-        return S.setProp(self.prop)
+        return sta
  
 
     def split(self,base,verbose=False):
@@ -1740,6 +1761,11 @@ Total area: %s; Enclosed volume: %s
         S = TriSurface.read(tmp2)        
         os.remove(tmp2)
         return S
+
+
+    @deprecation("cutAtPlane has been renamed to cutWithPlane. Please use the new name.")
+    def cutAtPlane(self,*args,**kargs):
+        return cutWithPlane(*args,**kargs)
 
 
 ##########################################################################

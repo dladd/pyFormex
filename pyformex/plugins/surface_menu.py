@@ -58,22 +58,32 @@ def draw_node_numbers(n):
     F = Formex(S.coords) 
     return drawNumbers(F,color='red')
 
-def draw_normals(n):
+def draw_normals(n,avg=False):
+    """Draw the surface normals at centers or averaged normals at the nodes."""
     S = named(n)
-    C = S.centroids()
-    A,N = S.areaNormals()
-    drawNormals(N,C,size=sqrt(A).reshape(-1,1),color='green')
-    return drawVectors(C,N,size=sqrt(A).reshape(-1,1),color='red')
+    if avg:
+        C = S.coords
+        N = S.avgVertexNormals()
+    else:
+        C = S.centroids()
+        A,N = S.areaNormals()
+    siz = pf.cfg['mark/normalsize']
+    if siz == 'area' and not avg:
+        siz = sqrt(A).reshape(-1,1)
+    else:
+        try:
+            siz = float(siz)
+        except:
+            siz = 0.05 * C.dsize()
+    if avg:
+        color = 'orange'
+    else:
+        color = 'red'
+    return drawVectors(C,N,size=siz,color=color,wait=False)
 
 def draw_avg_normals(n):
-    S = named(n)
-    C = S.coords
-    N = S.avgVertexNormals()
-    try:
-        siz = float(pf.cfg['mark/avgnormalsize'])
-    except:
-        siz = 0.05 * C.dsize()
-    return drawVectors(C,N,size=siz,color='orange')
+    return draw_normals(n,True)
+
     
 selection = DrawableObjects(clas=TriSurface)
 
@@ -300,7 +310,16 @@ def toggle_auto_draw():
     autodraw = not autodraw
 
 
-def reverse():
+def fixNormals():
+    """Fix the normals of the selected surfaces."""
+    SL = selection.check()
+    if SL:
+        SL = [ S.fixNormals() for S in SL ]
+        export2(selection.names,SL)
+        selection.draw()
+
+
+def reverseNormals():
     """Reverse the normals of the selected surfaces."""
     SL = selection.check()
     if SL:
@@ -680,12 +699,10 @@ def scale3Selection():
     """Scale the selection with 3 scale values."""
     FL = selection.check()
     if FL:
-        res = askItems([I('x-scale',1.0),
-                        I('y-scale',1.0),
-                        I('z-scale',1.0),
+        res = askItems([I('scale',[1.0,1.0,1.0],itemtype='point'),
                         ],caption = 'Scaling Factors')
         if res:
-            scale = map(float,[res['%c-scale'%c] for c in 'xyz'])
+            scale = res['scale']
             selection.remember(True)
             for F in FL:
                 F.scale(scale)
@@ -700,8 +717,8 @@ def translateSelection():
                         I('distance','1.0'),
                         ],caption = 'Translation Parameters')
         if res:
-            dir = int(res['direction'])
-            dist = float(res['distance'])
+            dir = res['direction']
+            dist = res['distance']
             selection.remember(True)
             for F in FL:
                 F.translate(dir,dist)
@@ -762,6 +779,7 @@ def rotate(mode='global'):
         if res:
             selection.remember(True)
             for F in FL:
+                print angle,axis,around
                 F.rotate(angle,axis,around)
             selection.drawChanges()
 
@@ -843,6 +861,41 @@ def clipSelection():
             selection.drawChanges()
 
 
+def clipAtPlane():
+    """Clip the selection with a plane."""
+    FL = selection.check()
+    if not FL:
+        return
+    
+    dsize = bbox(FL).dsize()
+    esize = 10 ** (niceLogSize(dsize)-5)
+
+    res = askItems([I('Point',[0.0,0.0,0.0],itemtype='point'),
+                    I('Normal',[1.0,0.0,0.0],itemtype='point'),
+                    I('Keep side',itemtype='radio',choices=['positive','negative']),
+                    I('Nodes',itemtype='radio',choices=['all','any','none']),
+                    I('Tolerance',esize),
+                    I('Property',1),
+                    ],caption = 'Define the clipping plane')
+    if res:
+        P = res['Point']
+        N = res['Normal']
+        side = res['Keep side']
+        nodes = res['Nodes']
+        atol = res['Tolerance']
+        prop = res['Property']
+        selection.remember(True)
+        if side == 'positive':
+            func = TriSurface.clip
+        else:
+            func = TriSurface.cclip
+        FL = [ func(F,F.test(nodes=nodes,dir=N,min=P,atol=atol)) for F in FL]
+        FL = [ F.setProp(prop) for F in FL ]
+        export(dict([('%s/clip' % n,F) for n,F in zip(selection,FL)]))
+        selection.set(['%s/clip' % n for n in selection])
+        selection.draw()
+
+
 def cutAtPlane():
     """Cut the selection with a plane."""
     FL = selection.check()
@@ -852,8 +905,8 @@ def cutAtPlane():
     dsize = bbox(FL).dsize()
     esize = 10 ** (niceLogSize(dsize)-5)
 
-    res = askItems([I('Point',(0.0,0.0,0.0)),
-                    I('Normal',(1.0,0.0,0.0)),
+    res = askItems([I('Point',[0.0,0.0,0.0],itemtype='point'),
+                    I('Normal',[1.0,0.0,0.0],itemtype='point'),
                     I('New props',[1,2,2,3,4,5,6]),
                     I('Side','positive',itemtype='radio',choices=['positive','negative','both']),
                     I('Tolerance',esize),
@@ -879,41 +932,6 @@ def cutAtPlane():
         else:
             [F.cutWithPlane(P,N,newprops=p,side=side,atol=atol) for F in FL]
             selection.drawChanges()
-
-
-def clipAtPlane():
-    """Clip the selection with a plane."""
-    FL = selection.check()
-    if not FL:
-        return
-    
-    dsize = bbox(FL).dsize()
-    esize = 10 ** (niceLogSize(dsize)-5)
-
-    res = askItems([I('Point',(0.0,0.0,0.0)),
-                    I('Normal',(1.0,0.0,0.0)),
-                    I('Keep side','positive', 'radio', ['positive','negative']),
-                    I('Nodes','all','radio',['all','any','none']),
-                    I('Tolerance',esize),
-                    I('Property',1),
-                    ],caption = 'Define the clipping plane')
-    if res:
-        P = res['Point']
-        N = res['Normal']
-        side = res['Keep side']
-        nodes = res['Nodes']
-        atol = res['Tolerance']
-        prop = res['Property']
-        selection.remember(True)
-        if side == 'positive':
-            func = TriSurface.clip
-        else:
-            func = TriSurface.cclip
-        FL = [ func(F,F.test(nodes=nodes,dir=N,min=P,atol=atol)) for F in FL]
-        FL = [ F.setProp(prop) for F in FL ]
-        export(dict([('%s/clip' % n,F) for n,F in zip(selection,FL)]))
-        selection.set(['%s/clip' % n for n in selection])
-        selection.draw()
 
 
 def cutSelectionByPlanes():
@@ -1447,7 +1465,8 @@ def create_menu():
           ('&Circle, Sector, Cone',createCone),
           ]),
         ("&Merge Selection",merge),
-        ("&Reverse Normals",reverse),
+        ("&Fix Normals",fixNormals),
+        ("&Reverse Normals",reverseNormals),
         ("&Set Property",selection.setProperty),
         ("---",None),
         ("Print &Information",

@@ -1187,6 +1187,7 @@ class InputPoint(InputItem):
         self.input = CoordsBox()
         InputItem.__init__(self,name,*args,**kargs)
         self.insertWidget(1,self.input)
+        self.setValue(value)
 
     def value(self):
         """Return the widget's value."""
@@ -2555,8 +2556,8 @@ class CoordsBox(QtGui.QWidget):
 
     def setValues(self,values):
         """Set the three values of the widget."""
-        for value,val in zip(self.values,map(float,values)):
-            value.setText(str(val))
+        for v,val in zip(self.values,map(float,values)):
+            v.setText(str(val))
 
 
 
