@@ -40,6 +40,7 @@ creation of colored value plots on surfaces.
 from plugins import mesh,trisurface,surface_menu
 
 def atExit():
+    pf.cfg['gui/autozoomfactor'] = saved_autozoomfactor
     pf.GUI.setBusy(False)
 
 
@@ -48,15 +49,19 @@ def drawMesh(M):
     draw(M)
     drawText("%s %s elements" % (M.nelems(),M.eltype),20,20,size=20)
 
+# make sure this is a good aspect ratio if you want a movie
+nx,ny = 4,3
+
+saved_autozoomfactor = pf.cfg['gui/autozoomfactor']
+
 pf.GUI.setBusy()
-    
+pf.cfg['gui/autozoomfactor'] = 2.0
+
 clear()
 view('front')
 smoothwire()
 transparent()
 
-
-nx,ny = 4,2
 M = Formex(origin()).extrude(nx,1.,0).extrude(ny,1.,1).toMesh().setProp(1)
 
 V = surface_menu.SelectableStatsValues
@@ -106,8 +111,11 @@ transparent(False)
 
 if pf.interactive:
     print "running interactively"
+    n = ask("How many?",['1','10','100','1000'])
+    n = int(n)
+    print n
     A = None
-    for i in range(4):
+    for i in range(n):
         carpet(M)
         B = pf.canvas.actors[-1:]
         if A:
@@ -115,6 +123,7 @@ if pf.interactive:
         A = B
 
 else:
+    canvasSize(nx*200,ny*200)
     print "just saving image"
     from gui import image,guimain
     carpet(M)
