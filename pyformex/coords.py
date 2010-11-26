@@ -187,13 +187,34 @@ class Coords(ndarray):
     ncoords = npoints
 
     def x(self):
-        """Return the x-plane"""
+        """Return the X-coordinates of all points.
+
+        Returns an array with all the X-coordinates in the Coords.
+        The returned array has the same shape as the Coords array along
+        its first ndim-1 axes.
+        This is equivalent with ::
+          self[...,0]
+        """
         return self[...,0]
     def y(self):
-        """Return the y-plane"""
+        """Return the Y-coordinates of all points.
+
+        Returns an array with all the Y-coordinates in the Coords.
+        The returned array has the same shape as the Coords array along
+        its first ndim-1 axes.
+        This is equivalent with ::
+          self[...,1]
+        """
         return self[...,1]
     def z(self):
-        """Return the z-plane"""
+        """Return the Z-coordinates of all points.
+
+        Returns an array with all the Z-coordinates in the Coords.
+        The returned array has the same shape as the Coords array along
+        its first ndim-1 axes.
+        This is equivalent with ::
+          self[...,0]
+        """
         return self[...,2]
 
 
@@ -340,6 +361,19 @@ class Coords(ndarray):
         return d.min(),d.max()
 
 
+    def directionalExtremes(self,n,p=None):
+        """Return extremal planes in the direction n.
+
+        `n` and `p` have the same meaning as in `directionalSize`.
+
+        The return value is a list of two points on the line (p,n) thus
+        that the planes with normal n through these points define the
+        extremal planes of the Coords.
+        """
+        dmin,dmax = self.directionalSize(n,p)
+        return [ p+dmin, p+dmax ]
+
+
     def directionalWidth(self,n):
         """Return the width of a Coords in the given direction.
 
@@ -348,33 +382,8 @@ class Coords(ndarray):
 
         The return value is the thickness of the object in the direction n.
         """
-        xmin,xmax = self.directionalSize(n)
-        return xmax-xmin
-
-
-    def directionalExtremes(self,n,p=None):
-        """Return extremal planes in the direction n.
-
-        The direction n can be specified by a 3 component vector or by
-        a single integer 0..2 designing one of the coordinate axes.
-
-        p is any point in space. If not specified, it is taken as the
-        center() of the Coords.
-
-        The return value is a list of two points on the line (p,n) thus
-        that the planes with normal through these points define the
-        extremal planes of the Coords.
-        """
-        if type(n) is int:
-            n = unitVector(n)
-        n = normalize(Coords(n))
-
-        if p is None:
-            p = self.center()
-        p = Coords(p)
-
-        d = self.distanceFromPlane(p,n)
-        return [ p+dist*n for dist in [d.min(),d.max() ] ]
+        dmin,dmax = self.directionalSize(n)
+        return dmax-dmin
 
 
     # Test position
@@ -540,7 +549,7 @@ class Coords(ndarray):
         return Coords(f)
     
 
-    def rotate(self,angle,axis=2,around=None):
+    def rotate(self,angle,axis=2,around=None,inplace=False):
         """Return a copy rotated over angle around axis.
 
         The angle is specified in degrees.
@@ -555,7 +564,10 @@ class Coords(ndarray):
         All rotations are performed around the point [0,0,0], unless a
         rotation origin is specified in the argument 'around'. 
         """
-        out = self
+        if inplace:
+            out = self
+        else:
+            out = self.copy()
         mat = asarray(angle)
         if mat.size == 1:
             mat = rotationMatrix(angle,axis)
@@ -563,8 +575,8 @@ class Coords(ndarray):
             raise ValueError,"Rotation matrix should be 3x3"
         if around is not None:
             around = asarray(around)
-            out = out.translate(-around)
-        out = out.affine(mat,around)
+            out = out.translate(-around,inplace=inplace)
+        out = out.affine(mat,around,inplace=inplace)
         return out
     
 
@@ -595,7 +607,7 @@ class Coords(ndarray):
         return out
     
 
-    def affine(self,mat,vec=None):
+    def affine(self,mat,vec=None,inplace=False):
         """Returns a general affine transform of the :class:`Coords` object.
 
         `mat`: a 3x3 float matrix
@@ -604,7 +616,12 @@ class Coords(ndarray):
         
         The returned object has coordinates given by ``self * mat + vec``.
         """
-        out = self
+        if inplace:
+            import warnings
+            warnings.warn("The Coords.affine transformation is currently not guaranteed to execute inplace. The same will hold for all transformations based on affine.")
+            out = self
+        else:
+            out = self.copy()
         out = dot(out,mat)
         if vec is not None:
             out += vec

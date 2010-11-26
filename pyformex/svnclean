@@ -3,8 +3,5 @@
 pyformexdir=$(dirname $0)
 cd $pyformexdir
 pwd
-rm -f gui/gui.pyc
-rm -f scriptsmenu.pyc
-rm -f gui/help.pyc
-rm -f plugins/surface.pyc
+rm -f scriptsmenu.pyc gui/gui.pyc gui/help.pyc gui/messages.pyc plugins/surface.pyc
 

@@ -949,30 +949,30 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
             pf.prefcfg.update({'filters':newfilters},name='warnings')
 
 
-    def format_warning(message,category,filename,lineno,line=None):
-        """Replace the default warnings.formatwarning
+##     def format_warning(message,category,filename,lineno,line=None):
+##         """Replace the default warnings.formatwarning
 
-        We display the warnings using our interactive warning widget.
-        This feature can be turned off by setting
-        cfg['nice_warnings'] = False
-        """
-        import messages
-        message = messages.getMessage(message)
-        message = """..
+##         We display the warnings using our interactive warning widget.
+##         This feature can be turned off by setting
+##         cfg['nice_warnings'] = False
+##         """
+##         import messages
+##         message = messages.getMessage(message)
+##         message = """..
 
-pyFormex Warning
-================
-%s
+## pyFormex Warning
+## ================
+## %s
 
-`Called from:` %s `line:` %s
-""" % (message,filename,lineno)
-        if line:
-            message += "%s\n" % line
-        return message
+## `Called from:` %s `line:` %s
+## """ % (message,filename,lineno)
+##         if line:
+##             message += "%s\n" % line
+##         return message
 
 
-    if pf.cfg['warnings/nice']:
-        warnings.formatwarning = format_warning
+##     if pf.cfg['warnings/nice']:
+##         warnings.formatwarning = format_warning
 
     if pf.cfg['warnings/popup']:
         warnings.showwarning = show_warning

@@ -229,7 +229,6 @@ def apply_config_changes(cfg):
 
 ###########################  app  ################################
 
-    
 def run(argv=[]):
     """This is a fairly generic main() function.
 
@@ -467,6 +466,35 @@ def run(argv=[]):
 
     ###### We have the config and options all set up ############
     filterWarnings()
+
+
+
+    def _format_warning(message,category,filename,lineno,line=None):
+        """Replace the default warnings.formatwarning
+
+        This allows the warnings being called using a simple mnemonic
+        string. The full message is then found from the message module.
+        """
+        import messages
+        message = messages.getMessage(message)
+        message = """..
+
+pyFormex Warning
+================
+%s
+
+`Called from:` %s `line:` %s
+""" % (message,filename,lineno)
+        if line:
+            message += "%s\n" % line
+        return message
+
+
+    if pyformex.cfg['warnings/nice']:
+        import warnings
+        warnings.formatwarning = _format_warning
+    
+
                 
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
