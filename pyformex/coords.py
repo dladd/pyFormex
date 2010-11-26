@@ -555,6 +555,7 @@ class Coords(ndarray):
         All rotations are performed around the point [0,0,0], unless a
         rotation origin is specified in the argument 'around'. 
         """
+        out = self
         mat = asarray(angle)
         if mat.size == 1:
             mat = rotationMatrix(angle,axis)
@@ -603,6 +604,7 @@ class Coords(ndarray):
         
         The returned object has coordinates given by ``self * mat + vec``.
         """
+        out = self
         out = dot(out,mat)
         if vec is not None:
             out += vec
