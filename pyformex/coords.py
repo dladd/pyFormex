@@ -512,9 +512,9 @@ class Coords(ndarray):
             out = self.copy()
         if type(vector) is int:
             vector = unitVector(vector)
-        vector = Coords(vector)
+        vector = Coords(vector,copy=True)
         if distance is not None:
-            vector *= distance 
+            vector *= distance
         out += vector
         return out
 
@@ -531,7 +531,7 @@ class Coords(ndarray):
         """
         if type(vector) is int:
             vector = unitVector(vector)
-        vector = Coords(vector)
+        vector = Coords(vector,copy=True)
         if distance is not None:
             vector *= distance 
         f = resize(self,(n,)+self.shape)
@@ -540,7 +540,7 @@ class Coords(ndarray):
         return Coords(f)
     
 
-    def rotate(self,angle,axis=2,around=None,inplace=False):
+    def rotate(self,angle,axis=2,around=None):
         """Return a copy rotated over angle around axis.
 
         The angle is specified in degrees.
@@ -555,10 +555,6 @@ class Coords(ndarray):
         All rotations are performed around the point [0,0,0], unless a
         rotation origin is specified in the argument 'around'. 
         """
-        if inplace:
-            out = self
-        else:
-            out = self.copy()
         mat = asarray(angle)
         if mat.size == 1:
             mat = rotationMatrix(angle,axis)
@@ -566,8 +562,8 @@ class Coords(ndarray):
             raise ValueError,"Rotation matrix should be 3x3"
         if around is not None:
             around = asarray(around)
-            out = out.translate(-around,inplace=inplace)
-        out = out.affine(mat,around,inplace=inplace)
+            out = out.translate(-around)
+        out = out.affine(mat,around)
         return out
     
 
@@ -598,7 +594,7 @@ class Coords(ndarray):
         return out
     
 
-    def affine(self,mat,vec=None,inplace=False):
+    def affine(self,mat,vec=None):
         """Returns a general affine transform of the :class:`Coords` object.
 
         `mat`: a 3x3 float matrix
@@ -607,10 +603,6 @@ class Coords(ndarray):
         
         The returned object has coordinates given by ``self * mat + vec``.
         """
-        if inplace:
-            out = self
-        else:
-            out = self.copy()
         out = dot(out,mat)
         if vec is not None:
             out += vec
