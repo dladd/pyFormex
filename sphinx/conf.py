@@ -26,7 +26,9 @@ sys.path.insert(0,os.path.abspath('..'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'numpydoc']
+extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'numpydoc']#, 'sphinx.ext.autosummary']
+
+#render_class_autosummary = False
 
 # Add both class and __init__ docstrings
 autoclass_content = 'class'  # 'class', 'init' or 'both'
@@ -47,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'pyFormex'
-copyright = '2009, Benedict Verhegghe'
+copyright = '2010, Benedict Verhegghe'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

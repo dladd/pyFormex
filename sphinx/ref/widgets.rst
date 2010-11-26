@@ -13,7 +13,7 @@
 
 .. automodule:: widgets
    :synopsis: A collection of custom widgets used in the pyFormex GUI
-   :members: setInputTimeout,addTimeOut,selectFont,getColor,defaultItemType,simpleInputItem,groupInputItem,tabInputItem,compatInputItem,convertInputItemList,inputAny,inputAnyOld,updateDialogItems,updateText,dialogButtons
+   :members: setInputTimeout,standardIcon,maxSize,addTimeOut,selectFont,getColor,defaultItemType,simpleInputItem,groupInputItem,tabInputItem,compatInputItem,convertInputItemList,inputAny,inputAnyOld,updateDialogItems,updateText,dialogButtons
 
    ``Classes defined in module widgets``
 
@@ -44,6 +44,9 @@
 
    .. autoclass:: InputInfo
       :members: value
+
+   .. autoclass:: InputLabel
+      :members: setValue,layoutMinimumWidth,setSize
 
    .. autoclass:: InputString
       :members: show,value
@@ -96,14 +99,8 @@
    .. autoclass:: InputGroup
       :members: value,setValue
 
-   .. autoclass:: NewInputDialog
-      :members: add_items,add_tab,add_group,add_input,timeout,timedOut,show,acceptData,updateData,getResults
-
-   .. autoclass:: OldInputDialog
-      :members: add_input_items,timeout,timedOut,show,acceptData,updateData,getResult
-
    .. autoclass:: InputDialog
-      :members: 
+      :members: add_items,add_tab,add_group,add_input,timeout,timedOut,show,acceptData,updateData,getResults
 
    .. autoclass:: TableModel
       :members: makeEditable,rowCount,columnCount,data,headerData,insertRows,removeRows,flags,setData
@@ -117,17 +114,17 @@
    .. autoclass:: Tabs
       :members: 
 
-   .. autoclass:: Dialog
+   .. autoclass:: GenericDialog
       :members: add
 
    .. autoclass:: TableDialog
       :members: 
 
-   .. autoclass:: OldTableDialog
-      :members: 
-
    .. autoclass:: MessageBox
-      :members: show,getResult,updateText
+      :members: addCheck,show,getResult,updateText
+
+   .. autoclass:: WarningBox
+      :members: 
 
    .. autoclass:: TextBox
       :members: getResult,updateText
@@ -146,6 +143,12 @@
 
    .. autoclass:: ImageView
       :members: showImage
+
+   .. autoclass:: OldTableDialog
+      :members: 
+
+   .. autoclass:: OldInputDialog
+      :members: add_input_items,timeout,timedOut,show,acceptData,updateData,getResult
 
    ``Functions defined in module widgets`` 
 

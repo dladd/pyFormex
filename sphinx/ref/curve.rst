@@ -13,25 +13,22 @@
 
 .. automodule:: curve
    :synopsis: Definition of curves in pyFormex.
-   :members: circle,vectorPairAngle,convertFormexToCurve,distanceBetweenBezier
+   :members: circle,vectorPairAngle,convertFormexToCurve
 
    ``Classes defined in module curve``
 
 
    .. autoclass:: Curve
-      :members: pointsOn,pointsOff,ncoords,npoints,sub_points,sub_points_2,sub_tangents,lengths,pointsAt,subPoints,length,approx,toFormex
+      :members: pointsOn,pointsOff,ncoords,npoints,sub_points,sub_points_2,sub_directions,sub_directions_2,lengths,pointsAt,directionsAt,subPoints,length,approx,toFormex
 
    .. autoclass:: PolyLine
-      :members: nelems,toFormex,toMesh,sub_points,sub_points2,vectors,directions,avgDirections,lengths,atLength,reverse,split,cutWithPlane
+      :members: nelems,toFormex,toMesh,sub_points,sub_points2,sub_directions,vectors,directions,avgDirections,lengths,atLength,reverse,split,cutWithPlane,distanceOfPoints,distanceOfPolyLine
 
    .. autoclass:: Polygon
       :members: 
 
    .. autoclass:: BezierSpline
-      :members: pointsOn,pointsOff,part,sub_points,sub_tangents,length_intgrnd,lengths,approx_by_subdivision,reverse
-
-   .. autoclass:: QuadBezierSpline
-      :members: 
+      :members: pointsOn,pointsOff,part,sub_points,sub_directions,length_intgrnd,lengths,approx_by_subdivision,extend,reverse
 
    .. autoclass:: CardinalSpline
       :members: 
@@ -49,6 +46,9 @@
       :members: sub_points
 
    .. autoclass:: Spiral
+      :members: 
+
+   .. autoclass:: QuadBezierSpline
       :members: 
 
    ``Functions defined in module curve`` 

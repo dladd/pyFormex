@@ -13,7 +13,7 @@
 
 .. automodule:: arraytools
    :synopsis: A collection of numerical array utilities.
-   :members: niceLogSize,niceNumber,sind,cosd,tand,dotpr,length,normalize,projection,norm,solveMany,permutations,inside,isClose,unitVector,rotationMatrix,rotMatrix,rotationAnglesFromMatrix,growAxis,reverseAxis,addAxis,stack,ident2,checkArray,checkArray1D,checkUniqueNumbers,readArray,writeArray,cubicEquation,uniqueOrdered,renumberIndex,inverseUniqueIndex,sortByColumns,uniqueRows
+   :members: niceLogSize,niceNumber,sind,cosd,tand,dotpr,length,normalize,projection,norm,solveMany,permutations,inside,isClose,unitVector,rotationMatrix,rotMatrix,rotationAnglesFromMatrix,growAxis,reverseAxis,addAxis,stack,checkArray,checkArray1D,checkUniqueNumbers,readArray,writeArray,cubicEquation,uniqueOrdered,renumberIndex,inverseUniqueIndex,sortByColumns,uniqueRows
 
    ``Classes defined in module arraytools``
 

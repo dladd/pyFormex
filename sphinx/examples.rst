@@ -22,8 +22,8 @@ distribution.
 
 .. _sec:creating-geometry:
 
-Creating geometry
-=================
+WireStent
+=========
 
 To get acquainted with the modus operandi of pyFormex, 
 the :file:`WireStent.py` script is studied step by step. The lines are numbered
@@ -35,25 +35,25 @@ for easy referencing, but are not part of the script itself.
    :linenos:
 
 As all pyFormex scripts, it starts with a comments line holding the word
-``pyformex``. 
+``pyformex`` (line 1). This is followed by a documentation string explaining
+the purpose of the script (lines 2-7). 
 
-To start, all required modules to run the :file:`WireStent.py`
-script are imported (e.g. the ``math`` module to use the mathematical constant
-:math:`\pi`). Subsequently, the class ``DoubleHelixStent`` is defined which
+The script then starts by importing all definitions from
+other modules required to run the :file:`WireStent.py`
+script (line 9).
+
+
+Subsequently, the class ``DoubleHelixStent`` is defined which
 allows the simple use of the geometrical model in other scripts for e.g.
 parametric, optimization and finite element analyses of braided wire stents.
 Consequently, the latter scripts do not have to contain the wire stent geometry
 building and can be condensed and conveniently arranged. The definition of the
-class starts with a :math:`"""`\ documentation string\ :math:`"""`, explaining
-its aim and functioning.
+class starts with a documentation string, explaining
+its aim and functioning (lines 11-37).
 
-
-.. literalinclude:: _static/scripts/WireStent1.py
-   :language: python
-   :linenos:
 
 The constructor ``__init__`` of the ``DoubleHelixStent`` class requires 8
-arguments:
+arguments (line 38):
 
 * stent external diameter :math:`De` (mm).
 
@@ -89,6 +89,7 @@ structure, which is easily parametric adaptable.
 
 Creating the base module
 ------------------------
+(lines 40-48)
 
 Depending on the specified arguments in the constructor, the mean stent diameter
 :math:`D`, the average stent radius :math:`r`, the ``bump`` or curvature of the
@@ -102,9 +103,6 @@ centre lines of the crossing wires. The number of modules in the axial direction
 differ slightly from the specified, desired length :math:`L`. However, this
 difference has a negligible impact on the numerical results.
 
-
-.. include:: _static/scripts/WireStent2.py
-   :literal:
 
 Of now, all parameters to describe the stent geometry are specified and
 available to start the construction of the wire stent. Initially a simple Formex
@@ -120,9 +118,6 @@ X-axis (:math:`0`\ -axis). The creation of this single bumped strut, oriented
 along the X-axis is summarized in the next script and depicted in figures
 :ref:`fig:straight`, :ref:`fig:replicated` and :ref:`fig:bumped`,.
 
-
-.. include:: _static/scripts/WireStent3.py
-   :literal:
 
 .. _`fig:straight`:
 
@@ -171,9 +166,7 @@ of crossing struts by :math:`2` rotational replications with an angular step of
 :math:`2` replicas). If specified in the constructor, an additional Formex with
 property :math:`2` connects the first points of the ``NE`` and ``SE`` Formices.
 
-
-.. include:: _static/scripts/WireStent4.py
-   :literal:
+(lines 49-61)
 
 .. _`fig:rescaled`:
 
@@ -217,8 +210,7 @@ allowing their use after every ``DoubleHelixStent`` initialisation. Such further
 use is impossible with local variables, such as for example the ``NE`` and
 ``SE`` Formices.
 
-.. include:: _static/scripts/WireStent5.py
-   :literal:
+(lines 61-66)
 
 .. _`fig:mirrored_unit_cell`:
 
@@ -248,8 +240,7 @@ directions and shown in Figure :ref:`fig:full_plane`. ``replic2()`` generates th
 pattern with :math:`nx` and :math:`ny` replications with steps :math:`dx` and
 :math:`dy` in respectively, the default X- and Y-direction.
 
-.. include:: _static/scripts/WireStent6.py
-   :literal:
+(lines 67-70)
 
 .. _`fig:full_plane`:
 
@@ -281,8 +272,7 @@ as angle :math:`\theta` and the Y-coordinates as height :math:`z`. The
 ``scale()``\ -operator rescales the stent structure to the correct circumference
 and length. The resulting stent geometry is depicted in Figure :ref:`fig:stent`.
 
-.. include:: _static/scripts/WireStent7.py
-   :literal:
+(lines 71-73)
 
 In addition to the stent initialization, the ``DoubleHelixStent`` class script
 contains a function ``all()`` representing the complete stent Formex.
@@ -307,10 +297,7 @@ Consequently, the ``DoubleHelixStent`` class has four attributes: the Formices
 
    Orthogonal view of the cylindrical stent
 
-.. include:: _static/scripts/WireStent8.py
-   :literal:
-
-
+(lines 74-77)
 
 Parametric stent geometry
 -------------------------
