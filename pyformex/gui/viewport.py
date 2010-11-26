@@ -257,6 +257,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     """
     cursor_shape = { 'default': QtCore.Qt.ArrowCursor,
                      'pick'   : QtCore.Qt.CrossCursor, 
+                     'draw'   : QtCore.Qt.CrossCursor, 
                      'busy'   : QtCore.Qt.BusyCursor,
                      }
     
@@ -326,6 +327,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Set the cursor shape to shape"""
         if func in [ self.mouse_rectangle_zoom,self.mouse_pick ]:
             shape = 'pick'
+        elif func == self.mouse_draw:
+            shape = 'draw'
         else:
             shape = 'default'
         self.setCursorShape(shape)
