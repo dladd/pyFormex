@@ -169,7 +169,7 @@ ${PKGDIR}/${PKGVER}: version MANIFEST.in
 	@echo "Creating ${PKGDIR}/${PKGVER}"
 	python setup.py sdist --no-defaults
 
-MANIFEST.in: 
+MANIFEST.in: create_manifest.py
 	python create_manifest.py >$@
 
 # Publish the distribution to our ftp server and berlios

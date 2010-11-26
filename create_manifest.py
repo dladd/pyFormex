@@ -18,13 +18,16 @@ files = [
     listTree('pyformex',listdirs=False,sorted=True,
              excludedirs=['.svn'],
              includedirs=['gui','plugins'],
-             includefiles=['.*\.py$','pyformex(rc)?$']) + \
+             includefiles=['.*\.py$','pyformex(rc)?$']
+             ) + \
     listTree('pyformex/icons',listdirs=False,sorted=True,
              excludedirs=['.svn'],
-             includefiles=['.*\.xpm$','pyformex.*\.png$']) + \
+             includefiles=['.*\.xpm$','pyformex.*\.png$']
+             ) + \
     listTree('pyformex/lib',listdirs=False,sorted=True,
              excludedirs=['.svn'],
-             includefiles=['.*\.c$','configure(_py)?$','Makefile.in$','__init__.py$']) + \
+             includefiles=['.*\.c$','configure(_py)?$','Makefile.in$','__init__.py$']
+             ) + \
     listTree('pyformex/examples',listdirs=False,sorted=True,
              excludedirs=['.svn'],
              excludefiles=['.*\.pyc','.*~$'],
@@ -32,7 +35,7 @@ files = [
              ) + \
     listTree('pyformex/data',listdirs=False,sorted=True,
              excludedirs=['.svn'],
-             excludefiles=['.*\.pyc','.*~$']
+             excludefiles=['.*\.pyc','.*~$','PTAPE.*'],
              ) + \
     listTree('pyformex/doc',listdirs=False,sorted=True,
              excludedirs=['.svn'],
@@ -43,6 +46,10 @@ files = [
              ) + \
     listTree('pyformex/external',listdirs=False,sorted=True,
              excludedirs=['.svn','pyftgl','sippy-ftgl'],
+             excludefiles=['.*~$'],
+             ) + \
+    listTree('pyformex/bin',listdirs=False,sorted=True,
+             excludedirs=['.svn'],
              excludefiles=['.*~$'],
              )
 

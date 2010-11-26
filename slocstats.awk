@@ -4,4 +4,4 @@
 /^Total.*(SLOC)/ { sub("[^=]*= ",""); sub(",",""); print "sloc="$0 }
 /^Devel.*Months)/ { sub("[^=]*= ",""); sub(",",""); print "manyears="$1 }
 /^Schedule.*Months)/ { sub("[^=]*= ",""); sub(",",""); print "years="$1 }
-/^Total Estimated Cost/ { sub("[^=]*= ",""); sub(",",""); print "dollars="$2 }
+/^Total Estimated Cost/ { sub("[^=]*= ",""); gsub(",",""); print "dollars="$2 }

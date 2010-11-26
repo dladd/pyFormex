@@ -117,10 +117,10 @@ set key top left
 set xdata time
 set timefmt "%s"
 set format x "%s"
-set xlabel "Date (YY-MM)"
+set xlabel "Date (YY/MM)"
 #set ylabel "revision number"
 #set yrange [0:1.2]
-plot """ % (outfile,now,'%Y-%m-%d','%y-%m')
+plot """ % (outfile,now,'%Y-%m-%d','%y\\n%m')
 
 KEYSplot = { # what to plot (scale, title)
     'python': (100,'%S lines of Python code'),
