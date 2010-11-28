@@ -479,9 +479,21 @@ def ship_functions_init(name):
    ``Functions defined in module %s`` 
 """ % name
 
+
+def get_new_sig(source,clas):
+    return '()'
+
 def do_class(info):
     if info._name.startswith('_'):
         return
+    ## if '__new__' in info.get_method_names():
+    ##     info._arglist = info['__new__']._arglist
+    ##     print source
+    ##     print dir(info)
+    ##     #class_sig = sig_from_new()
+    ##     args = info['__new__']._arglist
+    ##     print args
+        
     names = [ n for n in info.get_method_names() if not n.startswith('_') ]
     ship_class(info._name,names)
 
@@ -497,7 +509,7 @@ def do_module(info):
 
 
 def main(argv):
-    global options
+    global options,source
     from optparse import OptionParser,make_option
     parser = OptionParser(
         usage = """usage: %prog [Options] PYTHONFILE
@@ -512,8 +524,8 @@ defined in PYTHONFILE.""",
         ])
     options, args = parser.parse_args(argv)
     
-    for a in args:
-        info = get_docs(a)
+    for source in args:
+        info = get_docs(source)
         do_module(info)
 
 

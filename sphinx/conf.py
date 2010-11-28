@@ -21,12 +21,14 @@ sys.path.insert(0,os.path.abspath('../pyformex/plugins'))
 sys.path.insert(0,os.path.abspath('../pyformex/gui'))
 sys.path.insert(0,os.path.abspath('../pyformex'))
 sys.path.insert(0,os.path.abspath('..'))
+sys.path.insert(0,os.path.abspath('.'))  # for our patched numpydoc
+print sys.path
 
 # -- General configuration -----------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'numpydoc']#, 'sphinx.ext.autosummary']
+extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'sphinx.ext.autosummary', 'numpydoc.numpydoc']
 
 #render_class_autosummary = False
 
