@@ -78,7 +78,7 @@ def enmagic2(cols,magic=0):
 def demagic2(codes,magic):
     """Decode an integer number into two integers.
 
-    codes and magic are the result of an enmagic2() operation.
+    The arguments `codes` and `magic` are the result of an enmagic2() operation.
     This will restore the original two values for the codes.
 
     A negative magic value flags the fastencode option.
@@ -93,35 +93,35 @@ def demagic2(codes,magic):
 # These are the equivalents for enmagic2 en demagic2 for any plexitude
 # The -2 versions however have a fastencode option
 
-def enmagic(elems):
-    elems.sort(axis=1)
-    magic = elems.max(axis=0) + 1
-    prod = magic.prod()
-    #print "magic = %s" % magic
-    #print "product = %s" % prod
-    #print "2**63   = %s" % 2**63
-    #if prod >= 2**63 or prod < 0:
-    #    raise RuntimeError,"There may be overflow in enmagic! Use encode instead" 
-    codes = elems[:,0].astype(int64)
-    i = 0
-    for m in magic[1:]:
-        codes = codes * m
-        i += 1
-        codes = codes + elems[:,i]
-    return codes,magic
+## def enmagic(elems):
+##     elems.sort(axis=1)
+##     magic = elems.max(axis=0) + 1
+##     prod = magic.prod()
+##     #print "magic = %s" % magic
+##     #print "product = %s" % prod
+##     #print "2**63   = %s" % 2**63
+##     #if prod >= 2**63 or prod < 0:
+##     #    raise RuntimeError,"There may be overflow in enmagic! Use encode instead" 
+##     codes = elems[:,0].astype(int64)
+##     i = 0
+##     for m in magic[1:]:
+##         codes = codes * m
+##         i += 1
+##         codes = codes + elems[:,i]
+##     return codes,magic
 
-def demagic(codes,magic):
-    nelems = len(codes)
-    nplex = len(magic)
-    elems = zeros((nelems,nplex),int32)
-    i = nplex-1
-    while i > 0:
-        m = magic[i]
-        elems[:,i] = codes % m
-        codes /= m
-        i -= 1
-    elems[:,0] = codes
-    return elems
+## def demagic(codes,magic):
+##     nelems = len(codes)
+##     nplex = len(magic)
+##     elems = zeros((nelems,nplex),int32)
+##     i = nplex-1
+##     while i > 0:
+##         m = magic[i]
+##         elems[:,i] = codes % m
+##         codes /= m
+##         i -= 1
+##     elems[:,0] = codes
+##     return elems
 
 
 def inverseIndex(index,maxcon=4):
@@ -197,26 +197,26 @@ class Connectivity(ndarray):
     A connectivity object is a 2-dimensional integer array with all
     non-negative values.
     In this implementation, all values should be smaller than 2**31.
-    
     Furthermore, all values in a row should be unique. This is not enforced
     at creation time, but a method is provided to check the uniqueness.
 
-    Create a new Connectivity object
-        
-    Connectivity(data=[],dtyp=None,copy=False,nplex=0)
+    A new Connectivity object is created with the following syntax::
+      Connectivity(data=[],dtyp=None,copy=False,nplex=0)
+
+    Parameters:
     
-    - data: should be integer type and evaluate to an 2-dim array.
-    - dtype: can be specified to force an integer type.
+    - `data`: should be integer type and evaluate to an 2-dim array.
+    - `dtype`: can be specified to force an integer type.
       By default set from data.
-    - copy: can be set True to force copying the data. By default, the
+    - `copy`: can be set True to force copying the data. By default, the
       specified data will be used without copying, if possible.
-    - nplex: can be specified to force a check on the plexitude of the
+    - `nplex`: can be specified to force a check on the plexitude of the
       data, or to set the plexitude for an empty Connectivity.
       An error will be raised if the specified data do not match the
       specified plexitude.
 
     A Connectivity object stores its maximum value found at creation time
-    in an attribute _max.
+    in an attribute `_max`.
     """
 
     def __new__(self,data=[],dtyp=None,copy=False,nplex=0):
@@ -283,6 +283,7 @@ class Connectivity(ndarray):
           to return only the codes.
           
         Return value(s):
+    
         - codes: an (nelems,) shaped array with the element code numbers,
         - magic: the information needed to restore the original rows from
           the codes. See Connectivity.decode() 
@@ -340,6 +341,7 @@ class Connectivity(ndarray):
 
         This is a static method, and should be invoked as
         ```Connectivity.decode(codes,magic)```.
+        
         - codes: code numbers as returned by Connectivity.encode, or a subset
           thereof.
         - magic: the magic information as returned by Connectivity.encode,
@@ -361,9 +363,6 @@ class Connectivity(ndarray):
             pos = demagic2(codes,magic)
             return column_stack([uniqa[pos[:,0]],uniqb[pos[:,1]]])
         
-
-
-
         data = []
         for mag in magic:
             cols = compact_decode2(codes,mag[0],mag[1],mag[2])
@@ -406,10 +405,10 @@ class Connectivity(ndarray):
         return self[~self.testDegenerate()]
 
 
-    #    This algorithm is faster than encode,
-    #    but for nplex=2 a enmagic2 would probably still be faster.
     
     def testDoubles(self,permutations=True):
+    #    This algorithm is faster than encode,
+    #    but for nplex=2 a enmagic2 would probably still be faster.
         """Test the Connectivity list for doubles.
 
         By default, doubles are elements that consist of the same set of
@@ -418,6 +417,7 @@ class Connectivity(ndarray):
         every position.
 
         This function returns a tuple with two arrays:
+        
         - an index used to sort the elements
         - a flags array with the value True for indices of the unique elements
           and False for those of the doubles.
@@ -484,10 +484,12 @@ class Connectivity(ndarray):
         For example, if you have volumes defined in function of points,
         you can insert an intermediate level of edges, or faces.
         The return value is a tuple of two Connectivities (hi,lo), where:
+    
         - hi: defines the original elements in function of the intermediate
           level ones,
         - lo: defines the intermediate level items in function of the lowest
           level ones.
+          
         Intermediate level items that consist of the same items in any
         permutation order are collapsed to single items.
         The low level items respect the numbering order inside the

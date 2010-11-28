@@ -86,10 +86,12 @@ def drawGrid(x1,y1,x2,y2,nx,ny):
 
 
 def drawRect(x1,y1,x2,y2):
+    """Draw the circumference of a rectangle."""
     drawGrid(x1,y1,x2,y2,1,1)
 
 
 def drawRectangle(x1,y1,x2,y2,color):
+    """Draw a single rectangular quad."""
     color = resize(asarray(color),(4,3))
     coord = [(x1,y1),(x2,y1),(x2,y2),(x1,y2)]
     GL.glBegin(GL.GL_QUADS)
@@ -104,11 +106,13 @@ def drawRectangle(x1,y1,x2,y2,color):
 class Decoration(Drawable):
     """A decoration is a 2-D drawing at canvas position x,y.
 
-    All decoration have at least the following attributes:
-      x,y : (int) window coordinates of the insertion point
-      drawGL() : function that draws the decoration at (x,y).
+    All decorations have at least the following attributes:
+    
+    - x,y : (int) window coordinates of the insertion point
+    - drawGL() : function that draws the decoration at (x,y).
                This should only use openGL function that are
                allowed in a display list.
+               
     """
 
     def __init__(self,x,y):
@@ -165,41 +169,42 @@ class Line(Decoration):
         drawLine(self.x1,self.y1,self.x2,self.y2)
 
         
-## class QText(Decoration):
-##     """A viewport decoration showing a text."""
+## ## class QText(Decoration):
+## ##     """A viewport decoration showing a text."""
 
-##     def __init__(self,text,x,y,adjust='left',font=None,size=None,color=None):
-##         """Create a text actor"""
-##         Decoration.__init__(self,x,y)
-##         self.text = str(text)
-##         self.adjust = adjust
-##         self.font = getFont(font,size)
-##         self.color = saneColor(color)
+## ##     def __init__(self,text,x,y,adjust='left',font=None,size=None,color=None):
+## ##         """Create a text actor"""
+## ##         Decoration.__init__(self,x,y)
+## ##         self.text = str(text)
+## ##         self.adjust = adjust
+## ##         self.font = getFont(font,size)
+## ##         self.color = saneColor(color)
 
-##     count = 0
-##     # QT text color does not seem to work good with display lists,
-##     # therefore we redefine draw(), not drawGL()
-##     def draw(self,mode='wireframe',color=None):
-##         """Draw the text."""
-##         self.count += 1
-## #        pf.canvas.makeCurrent()
-##         if self.color is not None:
-##             GL.glColor3fv(self.color)
-##         pf.canvas.renderText(self.x,pf.canvas.height()-self.y,self.text,self.font)
-## #        pf.canvas.swapBuffers() 
-## #        pf.canvas.updateGL() 
+## ##     count = 0
+## ##     # QT text color does not seem to work good with display lists,
+## ##     # therefore we redefine draw(), not drawGL()
+## ##     def draw(self,mode='wireframe',color=None):
+## ##         """Draw the text."""
+## ##         self.count += 1
+## ## #        pf.canvas.makeCurrent()
+## ##         if self.color is not None:
+## ##             GL.glColor3fv(self.color)
+## ##         pf.canvas.renderText(self.x,pf.canvas.height()-self.y,self.text,self.font)
+## ## #        pf.canvas.swapBuffers() 
+## ## #        pf.canvas.updateGL() 
 
 
 class GlutText(Decoration):
     """A viewport decoration showing a text string.
 
     - text: a simple string, a multiline string or a list of strings. If it is
-      a string, it will be splitted on the occurrence of '\n' characters.
+      a string, it will be splitted on the occurrence of '\\n' characters.
     - x,y: insertion position on the canvas
     - gravity: a string that determines the adjusting of the text with
       respect to the insert position. It can be a combination of one of the
       characters 'N or 'S' to specify the vertical positon, and 'W' or 'E'
       for the horizontal. The default(empty) string will center the text.
+    
     """
 
     def __init__(self,text,x,y,font='9x15',size=None,gravity=None,color=None,zoom=None):
@@ -371,7 +376,7 @@ class LineDrawing(Decoration):
 
 class Triade(Drawable):
     """An OpenGL actor representing a triade of global axes.
-
+    
     - `pos`: position on the canvas: two charaters, of which first sets
        horizontal position ('l', 'c' or 'r') and second sets vertical
        position ('b', 'c' or 't').
@@ -380,6 +385,7 @@ class Triade(Drawable):
       '16' givec a triangle. '' disables the planes.
     - `legend`: text symbols to plot at the end of the axes. A 3-character
       string or a tuple of 3 strings.
+      
     """
 
     def __init__(self,pos='lb',siz=100,pat='12-34',legend='xyz',color=[red,green,blue,cyan,magenta,yellow]):

@@ -44,8 +44,7 @@ class Coords4(ndarray):
     :class:`numpy.ndarray`.
 
     Parameters
-    ----------
-    
+        
     data : array_like
         If specified, data should evaluate to an array of floats, with the
         length of its last axis not larger than 4. When equal to four, each

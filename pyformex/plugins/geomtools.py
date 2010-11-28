@@ -401,8 +401,8 @@ def intersectionLinesPWP(p1,n1,p2,n2):
     p1/n1 is a (np1,3) shaped array of points/normals.
     p2/n2 is a (np2,3) shaped array of points/normals.
 
-    The return value is a tuple of (np1,np2,3) shaped arrays of intersection points q
-    and vectors m, such that the intersection lines are given by q+t*m.
+    The return value is a tuple of (np1,np2,3) shaped arrays of intersection
+    points q and vectors m, such that the intersection lines are given by q+t*m.
     """
     if p1.shape != n1.shape:
         raise RuntimeError,"Expected p1 and n1 with same shape."
@@ -481,7 +481,7 @@ def intersectionTimesPOL(p,q,m):
     return (I1-I2)/I3
 
 
-################## distance tools ###############
+## ################## distance tools ###############
 
 def facetDistance(X,Fp,return_points=False):
     """Compute the closest perpendicular distance of points X to a set of facets.
@@ -493,10 +493,11 @@ def facetDistance(X,Fp,return_points=False):
     of the facets.
 
     The return value is a tuple OKpid,OKdist,OKpoints where:
+    
     - OKpid is an array with the point numbers having a normal distance;
     - OKdist is an array with the shortest distances for these points;
     - OKpoints is an array with the closest footpoints for these points
-    and is only returned if return_points = True.
+      and is only returned if return_points = True.
     """
     if not Fp.shape[1] == 3:
         raise ValueError, "Currently this function only works for triangular faces."
@@ -532,10 +533,11 @@ def edgeDistance(X,Ep,return_points=False):
     of the edges.
 
     The return value is a tuple OKpid,OKdist,OKpoints where:
+    
     - OKpid is an array with the point numbers having a normal distance;
     - OKdist is an array with the shortest distances for these points;
     - OKpoints is an array with the closest footpoints for these points
-    and is only returned if return_points = True.
+      and is only returned if return_points = True.
     """
     # Compute vectors along the edges
     En = Ep[:,1] - Ep[:,0]
@@ -567,9 +569,10 @@ def vertexDistance(X,Vp,return_points=False):
     Vp is a (nV,3) shaped array of vertices.
 
     The return value is a tuple OKdist,OKpoints where:
+    
     - OKdist is an array with the shortest distances for the points;
     - OKpoints is an array with the closest vertices for the points
-    and is only returned if return_points = True.
+      and is only returned if return_points = True.
     """
     # Compute the distances
     dist = length(X[:,newaxis]-Vp)
@@ -583,20 +586,24 @@ def vertexDistance(X,Vp,return_points=False):
     return OKdist,
 
 
-##########################################
+## ##########################################
 
 def baryCoords(S,P):
     """Return the barycentric coordinates of points P wrt. simplexes S.
     
     S is a (nel,nplex,3) shaped array of n-simplexes (n=nplex-1) e.g.:
-        - 1-simplex: line segment
-        - 2-simplex: triangle
-        - 3-simplex: tetrahedron
+
+    - 1-simplex: line segment
+    - 2-simplex: triangle
+    - 3-simplex: tetrahedron
+
     P is a (npts,nel,3) shaped array of points.
     
     The return value is a (npts,nel,nplex) shaped array of barycentric
-    coordinates BC, such that the points P are given by
-    (BC[:,:,:,newaxis]*S).sum(-2).
+    coordinates BC, such that the points P are given by ::
+    
+       (BC[:,:,:,newaxis]*S).sum(-2)
+       
     """
     if S.shape[0] != P.shape[1]:
         raise RuntimeError,"Expected S and P with same number of elements."

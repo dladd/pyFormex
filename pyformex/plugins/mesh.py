@@ -497,7 +497,7 @@ class Mesh(Geometry):
         to that of the caller. If it is positive, it is taken absolute.
         Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
         returns the faces, while for a 2D element type, it returns the edges.
-        For bothe meshes however,  getLowerEntities(+1) returns the edges.
+        For both meshes however,  getLowerEntities(+1) returns the edges.
 
         By default, all entities for all elements are returned and common
         entities will appear multiple times. Specifying unique=True will 
@@ -559,7 +559,9 @@ class Mesh(Geometry):
 
         Reversing an element means reversing the order of its points.
         This is equivalent to::
+        
           Mesh(self.coords,self.elems[:,::-1])
+          
         """
         return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
 
@@ -633,7 +635,12 @@ class Mesh(Geometry):
 
     # This needs clean up
     def neighborsByNode(self, elsel=None):
-        """_For each element index in the list elsel, it returns the list of neighbor elements (connected by one node at least). If elsel is None, the neighbors of all elements are calculated, but it is computationally expensive for big meshes."""
+        """_For each element index in the list elsel,
+
+        it returns the list of neighbor elements (connected by one node at
+        least). If elsel is None, the neighbors of all elements are
+        calculated, but it is computationally expensive for big meshes.
+        """
         if elsel==None:
             elsel=range(self.nelems())
         fnf = self.elems.inverse()#faces touched by node
@@ -1051,6 +1058,7 @@ Size: %s
 
         order can also be a predefined value that will generate the node
         index automatically:
+        
         - 'elems': the nodes are number in order of their appearance in the
           Mesh connectivity.
         """
@@ -1419,7 +1427,7 @@ Size: %s
         return self.cselect(*args,**kargs)
 
 
-########### Functions #####################
+######################## Functions #####################
 
 
 def mergeNodes(nodes,fuse=True,**kargs):
@@ -1432,7 +1440,7 @@ def mergeNodes(nodes,fuse=True,**kargs):
     - a list of indices translating the old node numbers to the new.
 
     The merging operation can be tuned by specifying extra arguments
-    that will be passed to :meth:`Coords:fuse`.
+    that will be passed to :meth:`Coords.fuse`.
     """
     coords = Coords(concatenate([x for x in nodes],axis=0))
     if fuse:
@@ -1507,7 +1515,10 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
 # define this also as a Mesh method
 Mesh.connect = connectMesh
 def connectQuadraticMesh(mesh1,mesh2,n=1, eltype='Hex20'):
-    """currently works for Quad8 only. Connect two Quad8 meshes to form a Hex20 mesh. """
+    """currently works for Quad8 only.
+
+    Connect two Quad8 meshes to form a Hex20 mesh.
+    """
     #this is a proposal. Is it better to implement the conversion in the _conversions_ ?
     h16=connectMesh(mesh1,mesh2,n=n)
     #now a conversion hex16 to hex20
@@ -1532,26 +1543,26 @@ def connectMeshSequence(ML,loop=False,**kargs):
 
 
 
-def structuredHexGrid(dx, dy, dz, isophex='hex64'):
-    """_it builds a structured hexahedral grid with nodes and elements both numbered in a structured way: first along z, then along y,and then along x. The resulting hex cells are oriented along z. This function is the equivalent of simple.rectangularGrid but for a mesh. Additionally, dx,dy,dz can be either integers or div (1D list or array). In case of list/array, first and last numbers should be 0.0 and 1.0 if the desired grid has to be inside the region 0.,0.,0. to 1.,1.,1.
-    If isopHex is specified, a convenient set of control points for the isoparametric transformation hex64 is also returned.
-    TODO: include other options to get the control points for other isoparametric transformation for hex."""
-    sgx, sgy, sgz=dx, dy, dz
-    if type(dx)!=int:sgx=len(dx)-1
-    if type(dy)!=int:sgy=len(dy)-1
-    if type(dz)!=int:sgz=len(dz)-1
-    n3=regularGrid([0., 0., 0.],[1., 1., 1.],[sgx, sgy, sgz])
-    if type(dx)!=int:n3[..., 0]=array(dx).reshape(-1, 1, 1)
-    if type(dy)!=int:n3[..., 1]=array(dy).reshape(-1,  1)
-    if type(dz)!=int:n3[..., 2]=array(dz).reshape(-1)
-    nyz=(sgy+1)*(sgz+1)
-    xh0= array([0, nyz, nyz+sgz+1,0+sgz+1 ])
-    xh0= concatenate([xh0, xh0+1], axis=1)#first cell
-    hz= array([xh0+j for j in range(sgz)])#z column
-    hzy= array([hz+(sgz+1)*j for j in range(sgy)])#zy 2D rectangle
-    hzyx=array([hzy+nyz*k for k in range(sgx)]).reshape(-1, 8)#zyx 3D
-    if isophex=='hex64': return Coords(n3.reshape(-1, 3)), hzyx.reshape(-1, 8), regularGrid([0., 0., 0.], [1., 1., 1.], [3, 3, 3]).reshape(-1, 3)#control points for the hex64 applied to a basic struct hex grid
-    else: return Coords(n3.reshape(-1, 3)), hzyx.reshape(-1, 8)
+## def structuredHexGrid(dx, dy, dz, isophex='hex64'):
+##     """_it builds a structured hexahedral grid with nodes and elements both numbered in a structured way: first along z, then along y,and then along x. The resulting hex cells are oriented along z. This function is the equivalent of simple.rectangularGrid but for a mesh. Additionally, dx,dy,dz can be either integers or div (1D list or array). In case of list/array, first and last numbers should be 0.0 and 1.0 if the desired grid has to be inside the region 0.,0.,0. to 1.,1.,1.
+##     If isopHex is specified, a convenient set of control points for the isoparametric transformation hex64 is also returned.
+##     TODO: include other options to get the control points for other isoparametric transformation for hex."""
+##     sgx, sgy, sgz=dx, dy, dz
+##     if type(dx)!=int:sgx=len(dx)-1
+##     if type(dy)!=int:sgy=len(dy)-1
+##     if type(dz)!=int:sgz=len(dz)-1
+##     n3=regularGrid([0., 0., 0.],[1., 1., 1.],[sgx, sgy, sgz])
+##     if type(dx)!=int:n3[..., 0]=array(dx).reshape(-1, 1, 1)
+##     if type(dy)!=int:n3[..., 1]=array(dy).reshape(-1,  1)
+##     if type(dz)!=int:n3[..., 2]=array(dz).reshape(-1)
+##     nyz=(sgy+1)*(sgz+1)
+##     xh0= array([0, nyz, nyz+sgz+1,0+sgz+1 ])
+##     xh0= concatenate([xh0, xh0+1], axis=1)#first cell
+##     hz= array([xh0+j for j in range(sgz)])#z column
+##     hzy= array([hz+(sgz+1)*j for j in range(sgy)])#zy 2D rectangle
+##     hzyx=array([hzy+nyz*k for k in range(sgx)]).reshape(-1, 8)#zyx 3D
+##     if isophex=='hex64': return Coords(n3.reshape(-1, 3)), hzyx.reshape(-1, 8), regularGrid([0., 0., 0.], [1., 1., 1.], [3, 3, 3]).reshape(-1, 3)#control points for the hex64 applied to a basic struct hex grid
+##     else: return Coords(n3.reshape(-1, 3)), hzyx.reshape(-1, 8)
 
 
 
@@ -1561,10 +1572,14 @@ def structuredHexGrid(dx, dy, dz, isophex='hex64'):
 # The creator of the mesh normally KNOWS the correct connectivity,
 # and should immediately fix it, instead of calculating it from
 # coordinate data
-# 
-
 def correctHexMeshOrientation(hm):
-    """_hexahedral elements have an orientation. Some geometrical transformation (e.g. reflect) may produce inconsistent orientation, which results in negative (signed) volume of the hexahedral (triple product). This function fixes the hexahedrals without orientation. """
+    """_hexahedral elements have an orientation.
+
+    Some geometrical transformation (e.g. reflect) may produce
+    inconsistent orientation, which results in negative (signed)
+    volume of the hexahedral (triple product).
+    This function fixes the hexahedrals without orientation.
+    """
     from formex import vectorTripleProduct
     hf=hm.coords[hm.elems]
     tp=vectorTripleProduct(hf[:, 1]-hf[:, 0], hf[:, 2]-hf[:, 1], hf[:, 4]-hf[:, 0])# from formex.py

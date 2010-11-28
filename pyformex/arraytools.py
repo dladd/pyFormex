@@ -28,7 +28,7 @@ These are general utility functions that depend only on the :mod:`numpy`
 array model. All pyformex modules needing :mod:`numpy` should import
 everything from this module::
 
-   from arraytools import * 
+  from arraytools import * 
 """
 
 from numpy import *
@@ -420,6 +420,7 @@ def reverseAxis(a,axis=-1):
     """Reverse the elements along a computed axis.
 
     If the axis is known, it might be more efficient to use::
+    
       a[:,:::-1,:]
     """
     a = asarray(a)

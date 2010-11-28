@@ -110,8 +110,9 @@ lights(True)
 transparent(False)
 
 if pf.interactive:
+    canvasSize(nx*200,ny*200)
     print "running interactively"
-    n = ask("How many?",['1','10','100','1000'])
+    n = ask("How many?",['1000','100','10','1'])
     n = int(n)
     print n
     A = None

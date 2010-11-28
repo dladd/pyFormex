@@ -161,45 +161,51 @@ materialswritten=[]
 def fmtMaterial(mat):
     """Write a material section.
     
-    `mat` is the property dict of the material.
-    If the material has a name and has already been written, this function
-    does nothing.
+    `mat` is the property dict of the material. The following keys are
+    recognized and output accordingly:
 
-    LINEAR ( Default)
-    elasticity=linear  (or None)
-    
-    REQUIRED
-    young_modulus
-    mat.shear_modulus
-    
-    OPTIONAL
-    mat.poisson_ratio (calcultated if None)
-    
-    ========================
-    
-    HYPERELASTIC
-    
-    elasticity=str hyperelastic
-    model=str ogden , polynomial , reduced polynomial
-    constants= list  of int sorted abaqus parameter
+    - `name`: if specified, and a material with this name has already been
+      written, this function does nothing.
 
-    ========================
+    - `elasticity`: one of 'LINEAR', 'HYPERELASTIC', 'ANISOTROPIC HYPERELASTIC',
+      'USER'. Default is 'LINEAR'. Defines the elastic behavior class of the
+      material. The requirements for the other keys depend on this type.
 
-    ANISOTROPIC HYPERELASTIC
-    elasticity=anisotropic hyperelastic
-    model= holzapfel
-    constants= ist  of int sorted abaqus parameter
-
-    ========================
-
-    USER MATERIAL
-    elasticity=user
-    constants= list  of int sorted abaqus parameter
+    - ``LINEAR``:
     
-    ============================
-    Additional parametrer
-    plastic: list([yield stress, yield strain])
+      - required:
+        - young_modulus
+        - shear_modulus
+        
+      - optional:
+        - poisson_ratio: calculated if None
+
     """
+    ## ========================
+    
+    ## HYPERELASTIC
+    
+    ## elasticity=str hyperelastic
+    ## model=str ogden , polynomial , reduced polynomial
+    ## constants= list  of int sorted abaqus parameter
+
+    ## ========================
+
+    ## ANISOTROPIC HYPERELASTIC
+    ## elasticity=anisotropic hyperelastic
+    ## model= holzapfel
+    ## constants= ist  of int sorted abaqus parameter
+
+    ## ========================
+
+    ## USER MATERIAL
+    ## elasticity=user
+    ## constants= list  of int sorted abaqus parameter
+    
+    ## ============================
+    ## Additional parametrer
+    ## plastic: list([yield stress, yield strain])
+    ## """
     if mat.name is None or mat.name in materialswritten:
         return ""
     
@@ -260,6 +266,7 @@ def fmtTransform(setname,csys):
 
     - `setname` is the name of a node set
     - `csys` is a CoordSystem.
+    
     """
     out = "*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys)
     out += fmtData(csys.data)
@@ -1098,49 +1105,38 @@ class Step(Dict):
     In Abaqus, a step is the smallest logical entity in the simulation
     history. It is typically a time step in a dynamic simulation, but it
     can also describe different loading states in a (quasi-)static simulation.
-
+    
     Our Step class holds all the data describing the global step parameters.
-    It combines the Abaqus '*STEP', '*STATIC', '*DYNAMIC' and '*BUCKLE'
+    It combines the Abaqus 'STEP', 'STATIC', 'DYNAMIC' and 'BUCKLE' keyword
     commands (and even some more global parameter setting commands).
 
-    Parameters
-    ----------
+    Parameters:
     
-    analysis : str
-        The analysis type, one of: 'STATIC', 'DYNAMIC',
-        'EXPLICIT', 'PERTURBATION', 'BUCKLE', 'RIKS'
-
-    time : 
-      either
-    
+    - `analysis`: the analysis type, one of: 'STATIC', 'DYNAMIC', 'EXPLICIT',
+      'PERTURBATION', 'BUCKLE', 'RIKS'
+    - `time`: either
       - a single float value specifying the step time,
       - a list of 4 values: time inc, step time, min. time inc, max. time inc
       - for LANCZOS: a list of 5 values
       - for RIKS: a list of 8 values
-       
       In most cases, only the step time should be specified.
-
-    nlgeom : 'YES' ot 'NO' (default)
-        If 'YES', the analysis will be geometrically non-linear. Analysis type
-        'RIKS' always sets `nlgeom` to 'YES', 'BUCKLE' sets it to 'NO',
-        'PERTURBATION' ignores `nlgeom`.
-        
-    tags : a list of property tags to include in this step.
-        If specified, only the property records having one of the listed values
-        as their `tag` attribute will be included in this step.
-
-    
-        - `inc`:  the maximum number of increments in a step (the default is 100)
-        - `sdi`: determines how severe discontinuities are accounted for
-        - timeinc: 
-        - `buckle`: specifies the BUCKLE type: 'SUBSPACE' or 'LANCZOS'
-        - `incr`: the increment in 'RIKS' type
-        - `bulkvisc`:  a list of two floats (default: [0.06,1.2]), only used
-          in Explicit steps.
-        - `out` and `res`: specific output/result records for this step. They
-          come in addition to the global ones.
-   x : type
-   Description of parameter `x`.
+      
+    - `nlgeom`: 'YES' ot 'NO' (default)
+      If 'YES', the analysis will be geometrically non-linear. Analysis type
+      'RIKS' always sets `nlgeom` to 'YES', 'BUCKLE' sets it to 'NO',
+      'PERTURBATION' ignores `nlgeom`.
+    - `tags`: a list of property tags to include in this step.
+      If specified, only the property records having one of the listed values
+      as their `tag` attribute will be included in this step.
+    - `inc`:  the maximum number of increments in a step (the default is 100)
+    - `sdi`: determines how severe discontinuities are accounted for
+    - timeinc: 
+    - `buckle`: specifies the BUCKLE type: 'SUBSPACE' or 'LANCZOS'
+    - `incr`: the increment in 'RIKS' type
+    - `bulkvisc`:  a list of two floats (default: [0.06,1.2]), only used
+      in Explicit steps.
+    - `out` and `res`: specific output/result records for this step. They
+      come in addition to the global ones.
 
     """
 
@@ -1151,7 +1147,7 @@ class Step(Dict):
                  tags=None,inc=None,sdi=None,timeinc=None,
                  buckle='SUBSPACE',incr=0.1,
                  name=None,bulkvisc=None,out=None,res=None):
-        """Create new analysis step."""
+        """Create a new analysis step."""
         
         self.analysis = analysis.upper()
         self.name = name
@@ -1275,29 +1271,31 @@ class Step(Dict):
 
     
 class Output(Dict):
-    """A request for output to .odb and history."""
+    """A request for output to .odb and history.
+
+    Parameters:
+    
+    - `type`: 'FIELD' or 'HISTORY'
+    - `kind`: None, 'NODE', or 'ELEMENT' (first character suffices)
+    - `extra`: an extra string to be added to the command line. This
+      allows to add Abaqus options not handled by this constructor.
+      The string will be appended to the command line preceded by a comma.
+
+    For kind=='':
+    
+    - `variable`: 'ALL', 'PRESELECT' or ''
+          
+    For kind=='NODE' or 'ELEMENT':
+    
+    - `keys`: a list of output identifiers (compatible with kind type)
+    - `set`: a single item or a list of items, where each item is either
+      a property number or a node/element set name for which the results
+      should be written. If no set is specified, the default is 'Nall'
+      for kind=='NODE' and 'Eall' for kind='ELEMENT'
+    """
     
     def __init__(self,kind=None,keys=None,set=None,type='FIELD',variable='PRESELECT',extra='',**options):
-        """ Create new output request.
-
-        - `type`: 'FIELD' or 'HISTORY'
-        - `kind`: None, 'NODE', or 'ELEMENT' (first character suffices)
-        - `extra`: an extra string to be added to the command line. This
-          allows to add Abaqus options not handled by this constructor.
-          The string will be appended to the command line preceded by a comma.
-
-        For kind=='':
-
-          - `variable`: 'ALL', 'PRESELECT' or ''
-          
-        For kind=='NODE' or 'ELEMENT':
-
-          - `keys`: a list of output identifiers (compatible with kind type)
-          - `set`: a single item or a list of items, where each item is either
-            a property number or a node/element set name for which the results
-            should be written. If no set is specified, the default is 'Nall'
-            for kind=='NODE' and 'Eall' for kind='ELEMENT'
-        """
+        """ Create a new output request."""
         if 'history' in options:
             pf.warning("The `history` argument in an output request is deprecated.\nPlease use `type='history'` instead.")
         if 'numberinterval' in options:
@@ -1328,7 +1326,24 @@ class Output(Dict):
 
 
 class Result(Dict):
-    """A request for output of results on nodes or elements."""
+    """A request for output of results on nodes or elements.
+
+    Parameters:
+        
+    - `kind`: 'NODE' or 'ELEMENT' (first character suffices)
+    - `keys`: a list of output identifiers (compatible with kind type)
+    - `set`: a single item or a list of items, where each item is either
+      a property number or a node/element set name for which the results
+      should be written. If no set is specified, the default is 'Nall'
+      for kind=='NODE' and 'Eall' for kind='ELEMENT'
+    - `output` is either ``FILE`` (for .fil output) or ``PRINT`` (for .dat
+      output)(Abaqus/Standard only)
+    - `freq` is the output frequency in increments (0 = no output)
+
+    Extra keyword arguments are available: see the `writeNodeResults` and
+    `writeElemResults` methods for details.
+
+    """
 
     # The following values can be changed to set the output frequency
     # for Abaqus/Explicit
@@ -1337,21 +1352,7 @@ class Result(Dict):
     
     def __init__(self,kind,keys,set=None,output='FILE',freq=1,time=False,
                  **kargs):
-        """Create new result request.
-        
-        - `kind`: 'NODE' or 'ELEMENT' (first character suffices)
-        - `keys`: a list of output identifiers (compatible with kind type)
-        - `set`: a single item or a list of items, where each item is either
-           a property number or a node/element set name for which the results
-           should be written. If no set is specified, the default is 'Nall'
-           for kind=='NODE' and 'Eall' for kind='ELEMENT'
-        - `output` is either ``FILE`` (for .fil output) or ``PRINT`` (for .dat
-          output)(Abaqus/Standard only)
-        - `freq` is the output frequency in increments (0 = no output)
-
-        Extra keyword arguments are available: see the `writeNodeResults` and
-        `writeElemResults` methods for details.
-        """
+        """Create new result request."""
         kind = kind[0].upper()
         if set is None:
             set = "%sall" % kind
@@ -1363,20 +1364,21 @@ class Result(Dict):
 ############################################################ AbqData
         
 class AbqData(object):
-    """Contains all data required to write the Abaqus input file."""
+    """Contains all data required to write the Abaqus input file.
+        
+    - `model` : a :class:`Model` instance.
+    - `prop` : the `Property` database.
+    - `steps` : a list of `Step` instances.
+    - `res` : a list of `Result` instances.
+    - `out` : a list of `Output` instances.
+    - `bound` : a tag or alist of the initial boundary conditions.
+      The default is to apply ALL boundary conditions initially.
+      Specify a (possibly non-existing) tag to override the default.
+
+    """
     
     def __init__(self,model,prop,nprop=None,eprop=None,steps=[],res=[],out=[],bound=None):
-        """Create new AbqData. 
-        
-        - `model` : a :class:`Model` instance.
-        - `prop` : the `Property` database.
-        - `steps` : a list of `Step` instances.
-        - `res` : a list of `Result` instances.
-        - `out` : a list of `Output` instances.
-        - `bound` : a tag or alist of the initial boundary conditions.
-          The default is to apply ALL boundary conditions initially.
-          Specify a (possibly non-existing) tag to override the default.
-        """
+        """Create new AbqData."""
         if not isinstance(model,Model) or not isinstance(prop,PropertyDB):
             raise ValueError,"Invalid arguments: expected Model and PropertyDB, got %s and %s" % (type(model),type(prop))
         

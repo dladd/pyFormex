@@ -160,7 +160,6 @@ class Coords(ndarray):
     #   Methods that return information about a Coords object or other
     #   views on the object data, without changing the object itself.
 
-
     # General
 
     def points(self):
@@ -193,6 +192,7 @@ class Coords(ndarray):
         The returned array has the same shape as the Coords array along
         its first ndim-1 axes.
         This is equivalent with ::
+        
           self[...,0]
         """
         return self[...,0]
@@ -203,6 +203,7 @@ class Coords(ndarray):
         The returned array has the same shape as the Coords array along
         its first ndim-1 axes.
         This is equivalent with ::
+        
           self[...,1]
         """
         return self[...,1]
@@ -213,6 +214,7 @@ class Coords(ndarray):
         The returned array has the same shape as the Coords array along
         its first ndim-1 axes.
         This is equivalent with ::
+        
           self[...,0]
         """
         return self[...,2]
@@ -1084,7 +1086,7 @@ class Coords(ndarray):
 
           Isopar(eltype,coords,oldcoords).transform(self)
 
-        See :module:`plugins.isopar` for more details.
+        See :mod:`plugins.isopar` for more details.
         """
         from plugins.isopar import Isopar
         return Isopar(eltype,coords,oldcoords).transform(self)
@@ -1228,7 +1230,7 @@ class Coords(ndarray):
 
         Returns the concatenated Coords object, without changing the current.
 
-        This is comparable to the :numpy:`append` function, but the result
+        This is comparable to :func:`numpy.append`, but the result
         is a :class:`Coords` object, the default axis is the first one
         instead of the last, and it is a method rather than a function.
         """

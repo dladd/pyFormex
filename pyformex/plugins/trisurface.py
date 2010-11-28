@@ -31,7 +31,6 @@ a triangulated surface.
 import pyformex as pf
 
 from formex import *
-#from numpy import *
 from plugins import tetgen
 from plugins.mesh import Mesh
 from connectivity import Connectivity,closedLoop,connectedLineElems,adjacencyArrays,adjacent,adjacencyArray
@@ -358,6 +357,7 @@ def surfaceInsideBorder(border,method='radial'):
     The return value is a TrisSurface filling the hole inside the border.
 
     There are two fill methods:
+    
     - 'radial': this method adds a central point and connects all border
       segments with the center to create triangles. It is fast and works
       well if the border is smooth, nearly convex and nearly planar.

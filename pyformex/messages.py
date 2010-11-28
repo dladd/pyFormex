@@ -46,7 +46,7 @@ functionality.
 
 If you notice any unexpected behaviour, please tell the developers about it
 through the `forums <%s>`_ or `bug system <%s>`_.
-""" % (pf.cfg['help/forums'],pf.cfg['help/bugs'])
+""" % (pf.cfg.get('help/forums',''),pf.cfg.get('help/bugs',''))
 
 warn_viewport_linking = "Linking viewports is an experimental feature and is not fully functional yet."
 

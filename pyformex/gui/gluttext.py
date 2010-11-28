@@ -154,7 +154,7 @@ def glutDrawText(text,x,y,font='hv18',gravity='',spacing=1.0):
     """Draw a text at given 2D position in window.
 
     - text: a simple string, a multiline string or a list of strings. If it is
-      a string, it will be splitted on the occurrence of '\n' characters.
+      a string, it will be splitted on the occurrence of '\\n' characters.
     - x,y: insertion position on the canvas
     - gravity: a string that determines the adjusting of the text with
       respect to the insert position. It can be a combination of one of the

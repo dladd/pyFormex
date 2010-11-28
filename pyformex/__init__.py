@@ -51,7 +51,7 @@ StartTime = datetime.datetime.now()
 options = None     # the options found on the command line
 print_help = None  # the function to print(the pyformex help text (pyformex -h))
 
-cfg = None         # the current session configuration
+cfg = {}         # the current session configuration
 prefcfg = None     # the preferenced configuration 
 refcfg = None      # the reference configuration 
 preffile = None    # the file where the preferenced configuration will be saved

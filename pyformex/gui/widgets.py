@@ -339,7 +339,9 @@ def selectFont():
 
 
 class DockedSelection(QtGui.QDockWidget):
-    """A widget that is docked in the main window and contains a modeless
+    """A docked selection widget.
+
+    A widget that is docked in the main window and contains a modeless
     dialog for selecting items.
     """
     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None):
@@ -366,8 +368,7 @@ class ModelessSelection(QtGui.QDialog):
         }
     
     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None,width=None,height=None):
-        """Create the SelectionList dialog.
-        """
+        """Create the SelectionList dialog."""
         QtGui.QDialog.__init__(self)
         self.setWindowTitle(title)
         # Selection List
@@ -410,7 +411,10 @@ class ModelessSelection(QtGui.QDialog):
 
 
 class Selection(QtGui.QDialog):
-    """A dialog for selecting one or more items from a list."""
+    """A dialog for selecting one or more items from a list.
+
+    - `slist`: a list of items that are initially selected.
+    """
     
     selection_mode = {
         None: QtGui.QAbstractItemView.NoSelection,
@@ -421,10 +425,7 @@ class Selection(QtGui.QDialog):
         }
     
     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
-        """Create the SelectionList dialog.
-
-        selected is a list of items that are initially selected.
-        """
+        """Create the SelectionList dialog."""
         QtGui.QDialog.__init__(self)
         self.setWindowTitle(title)
         # Selection List
@@ -528,8 +529,9 @@ class InputItem(QtGui.QHBoxLayout):
     The superclass also defines default values for the text(), value() and
     setValue() methods.
 
-    Subclasses should initialize the superclass as follows:
-    ``InputItem.__init__(self,name,*args,**kargs)``
+    Subclasses should initialize the superclass as follows::
+    
+       InputItem.__init__(self,name,*args,**kargs)
 
     Subclasses should override:
     
@@ -1003,7 +1005,7 @@ class InputInteger(InputItem):
 
     Options:
 
-    - 'min, 'max': range of the scale (integer)
+    - `min`, `max`: range of the scale (integer)
     """
     
     def __init__(self,name,value,*args,**kargs):
@@ -1104,9 +1106,9 @@ class InputSlider(InputInteger):
 
     Options:
     
-    - ``min``, ``max``: range of the scale (integer)
-    - ``ticks`` : step for the tick marks (default range length / 10)
-    - ``func`` : an optional function to be called whenever the value is
+    - `min`, `max`: range of the scale (integer)
+    - `ticks`: step for the tick marks (default range length / 10)
+    - `func`: an optional function to be called whenever the value is
       changed. The function takes a float/integer argument.
     """
     
@@ -1141,10 +1143,10 @@ class InputFSlider(InputFloat):
 
     Options:
     
-    - 'min', 'max': range of the scale (integer)
-    - 'scale': scale factor to compute the float value
-    - 'ticks' : step for the tick marks (default range length / 10)
-    - 'func' : an optional function to be called whenever the value is
+    - `min`, `max`: range of the scale (integer)
+    - `scale`: scale factor to compute the float value
+    - `ticks`: step for the tick marks (default range length / 10)
+    - `func`: an optional function to be called whenever the value is
       changed. The function receives the input field as argument. With
       this argument, the fields attirbutes like name, value, text, can
       be retrieved.
@@ -1207,7 +1209,7 @@ class InputButton(InputItem):
 
     Extra parameters:
 
-    - func: the function to call when the button is clicked. The current
+    - `func`: the function to call when the button is clicked. The current
       input value is passed as an argument. The function should return the
       value to be set, or None if it is to be unchanged.
       If no function is specified, the value can not be changed.
@@ -1441,6 +1443,7 @@ def convertInputItemList(items):
     the `simpleInputItem` call to create the dictionary for each item.
 
     The conversion does the following:
+
     - if the item data is a list or a tuple, it is converted to a new format
       dictionary by calling compatInputItem function with the data
       
@@ -1927,8 +1930,9 @@ def inputAnyOld(item,parent=None):
 def updateDialogItems(data,newdata):
     """Update the input data fields with new data values
 
-    data: a list of dialog items, as required by an InputDialog.
-    newdata: a dictionary with new values for (some of) the items.
+    - data: a list of dialog items, as required by an InputDialog.
+    - newdata: a dictionary with new values for (some of) the items.
+
     The values in data which have a matching key in newdata will be
     replaced with the new value, unless it is None.
     
@@ -2209,7 +2213,7 @@ def updateText(widget,text,format=''):
     of these before sending it to the widget. Currently, we convert the
     following formats:
     
-    ``rest`` (reStructuredText): 
+    - ``rest`` (reStructuredText): 
       If the :mod:docutils is available, `rest` text is converted to `html`,
       otherwise it will be displayed as plain text.
       A text is autorecognized as reStructuredText if its first
@@ -2434,8 +2438,9 @@ def dialogButtons(dialog,actions=None,default=None):
     If no function is specified, and name is one of 'ok' or 'cancel' (case
     is ignored), the button will be bound to the dialog's 'accept'
     or 'reject' slot.
-    If actions==None (default), it will be set to the default::
-      [('Cancel',),('OK',)]
+    If actions==None (default), it will be set to the default
+    ``[('Cancel',),('OK',)]``.
+      
     Specify actions=[] if you want an empty dialogDuttons.
     default is the name of the action to set as the default. If no default
     is given, it is set to the LAST button.

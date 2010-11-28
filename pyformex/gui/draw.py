@@ -54,6 +54,11 @@ from formex import *
 
 
 def closeGui():
+    """Close the GUI.
+
+    Calling this function from a script closes the GUI and terminates
+    pyFormex.
+    """
     pf.debug("Closing the GUI: currently, this will also terminate pyformex.")
     pf.GUI.close()
 
@@ -110,6 +115,8 @@ def showText(text,type=None,actions=[('OK',None)],modal=True,mono=False):
 
     The text can be plain text format. Some rich text formats will be 
     recognized and rendered appropriately. See widgets.TextBox.
+
+    `mono=True` forces the use of a monospaced font.
     """
     w = widgets.TextBox(text,type,actions,modal=modal,mono=mono)
     if modal:
@@ -122,8 +129,8 @@ def showText(text,type=None,actions=[('OK',None)],modal=True,mono=False):
 def showFile(filename,mono=False):
     """Display a text file.
 
-    This will use the showText() function to display a text read from a
-    file. 
+    This will use the :func:`showText()` function to display a text read
+    from a file. 
     """
     try:
         f = file(filename,'r')
