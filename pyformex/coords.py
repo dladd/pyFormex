@@ -339,7 +339,7 @@ class Coords(ndarray):
         return sqrt(sum(d*d,-1))
 
 
-    def directionalSize(self,n,p=None):
+    def directionalSize(self,n,p=None,_points=False):
         """Return the extreme distances from the plane p,n.
 
         The direction n can be specified by a 3 component vector or by
@@ -360,7 +360,12 @@ class Coords(ndarray):
         p = Coords(p)
         
         d = self.distanceFromPlane(p,n)
-        return d.min(),d.max()
+        dmin,dmax = d.min(),d.max()
+
+        if _points:
+            return [p+dmin*n, p+dmax*n]
+        else:
+            return dmin,dmax
 
 
     def directionalExtremes(self,n,p=None):
@@ -368,21 +373,11 @@ class Coords(ndarray):
 
         `n` and `p` have the same meaning as in `directionalSize`.
 
-        The return value is a list of two points on the line (p,n) thus
-        that the planes with normal n through these points define the
-        extremal planes of the Coords.
+        The return value is a list of two points on the line (p,n),
+        such that the planes with normal n through these points define
+        the extremal planes of the Coords.
         """
-        dmin,dmax = self.directionalSize(n,p)
-
-        if type(n) is int:
-            n = unitVector(n)
-        n = normalize(Coords(n))
-
-        if p is None:
-            p = self.center()
-        p = Coords(p)
-        
-        return [ p+dmin*n, p+dmax*n ]
+        return self.directionalSize(n,p,_points=True)
 
 
     def directionalWidth(self,n):
