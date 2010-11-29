@@ -373,7 +373,16 @@ class Coords(ndarray):
         extremal planes of the Coords.
         """
         dmin,dmax = self.directionalSize(n,p)
-        return [ p+dmin, p+dmax ]
+
+        if type(n) is int:
+            n = unitVector(n)
+        n = normalize(Coords(n))
+
+        if p is None:
+            p = self.center()
+        p = Coords(p)
+        
+        return [ p+dmin*n, p+dmax*n ]
 
 
     def directionalWidth(self,n):
