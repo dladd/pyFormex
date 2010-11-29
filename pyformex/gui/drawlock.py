@@ -112,7 +112,8 @@ def repeat(func,duration=-1,maxcount=-1,*args,**kargs):
     - duration >= 0 and duration seconds have elapsed
     - maxcount >=0 and maxcount executions have been reached
     The default will indefinitely execute the function until it returns False.
-    This may cause the system to freeze if it never does so!
+
+    Between each execution of the function, application events are processed.
     """
     pf.debug("REPEAT: %s, %s" % (duration,maxcount))
     global _repeat_timed_out
@@ -121,6 +122,7 @@ def repeat(func,duration=-1,maxcount=-1,*args,**kargs):
     
     def timeOut():
         global _repeat_timed_out
+        #print "REPEAT TIMED OUT"
         _repeat_timed_out = True
         
     if duration >= 0:
@@ -139,6 +141,8 @@ def repeat(func,duration=-1,maxcount=-1,*args,**kargs):
         if _exit_requested or _repeat_timed_out or _repeat_count_reached:
             pf.debug("Count: %s, TimeOut: %s" % (count,_repeat_timed_out))
             break
-            
 
+    pf.debug("BREAK FROM REPEAT")
+    pf.GUI.drawlock.release()
+    
 #### End
