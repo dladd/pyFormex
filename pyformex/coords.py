@@ -351,13 +351,12 @@ class Coords(ndarray):
         The return value is a tuple of two float values specifying the
         extreme distances from the plane p,n.
         """
-        if type(n) is int:
-            n = unitVector(n)
-        n = normalize(Coords(n))
+        n = unitVector(n)
 
         if p is None:
             p = self.center()
-        p = Coords(p)
+        else:
+            p = Coords(p)
         
         d = self.distanceFromPlane(p,n)
         dmin,dmax = d.min(),d.max()
@@ -384,7 +383,7 @@ class Coords(ndarray):
         """Return the width of a Coords in the given direction.
 
         The direction can be specified by a 3 component vector or by
-        a single integer 0..2 designing one of the coordinate axes.
+        a single integer 0..2 designating one of the coordinate axes.
 
         The return value is the thickness of the object in the direction n.
         """

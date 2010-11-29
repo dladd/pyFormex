@@ -173,6 +173,8 @@ def show():
     draw(CS)
 
     print CS.shape()
+    draw(CS)
+    return
     structure = CS.sweep(PL,normal=[1.,0.,0.],upvector=eval(cross_upvector),avgdir=True)
     clear()
     smoothwire()

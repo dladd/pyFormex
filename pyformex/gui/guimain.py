@@ -180,7 +180,7 @@ class GUI(QtGui.QMainWindow):
         self.central.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.central.resize(*pf.cfg['gui/size'])
 
-        self.viewports = viewport.MultiCanvas()
+        self.viewports = viewport.MultiCanvas(parent=self.central)
         self.central.setLayout(self.viewports)
 
         # Create the message board
@@ -941,7 +941,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         ##     I('filter',False,text='Suppress this message in future sessions'),
         ##     ],actions=[('OK',)],legacy=False)
         #print res
-        
+        pf.message(full_message)
         res,check = draw.showMessage(full_message,level='warning',check="Do not show this warning anymore in future sessions")
         if check[0]:
             oldfilters = pf.prefcfg['warnings/filters']

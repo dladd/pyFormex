@@ -112,7 +112,7 @@ transparent(False)
 if pf.interactive:
     canvasSize(nx*200,ny*200)
     print "running interactively"
-    n = ask("How many?",['1000','100','10','1'])
+    n = ask("How many?",['0','1000','100','10','1'])
     n = int(n)
     print n
     A = None
@@ -131,4 +131,17 @@ else:
     image.save('testje2.png')
     #exit(all=True)
     guimain.quitGUI()
+
+
+## print "ATEXIT"
+## from PyQt4 import QtGui
+## print "current:%s" % pf.GUI.viewports.current.size()
+## print "max:%s" % pf.GUI.viewports.current.maximumSize()
+## pf.GUI.viewports.current.setMaximumSize(1000,2000)
+## pf.GUI.central.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)
+## pf.GUI.central.resize(pf.GUI.central.size().width()+0,pf.GUI.central.size().height()+0)
+## pf.GUI.viewports.activate()
+## pf.GUI.resize(pf.GUI.size().width()+0,pf.GUI.size().height()+0)
+## pf.GUI.update()
+
 # End

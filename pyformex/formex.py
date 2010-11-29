@@ -1758,6 +1758,7 @@ maxprop  = %s
 
         The original Formex is the first of the n replicas.
         """
+        n = int(n)
         f = array( [ self.coords for i in range(n) ] )
         for i in range(1,n):
             f[i,:,:,dir] += i*step

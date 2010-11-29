@@ -7,43 +7,54 @@
 level = 'normal'
 topics = ['illustration','game']
 techniques = ['color','dialog','draw','persistence','random']
+createdby = ['tpraet']
 
 .. Description
 
-Rubik
--------
+Rubik's cube
+============
 
+Overview
+--------
 This example illustrates how the user can interact with the canvas.
-Herefore, a Rubik cube with a variable number of rows is shown.
-By keeping the *SHIFT* key pressed and dragging an element of the cube, one can rotate a row of the cube.
-Pressing the *SHIFT* key is needed so that the script does not interfere with basic canvas functionality
-like rotating and zooming.
+Hereto a Rubik's cube with a user definable number of rows is shown.
+To rotate a plane of the cube, you just press the left mouse button
+and move it in the appropriate direction. This operation overrides the
+normal left mouse button action, which is to rotate the model as a whole.
+This operation is still available however, when depressing the ALT button
+together with the left mouse button movement.
 
-The script creates a nxnxn cube as a Formex. When the left mouse button is used together with the *SHIFT* key,
-the definition **turn** is executed. When the LMB is pressed, the current location of the mouse cursor is registered
-and the cube element (i.e. a quadrilateral of the Formex) closest by this position is registered. When the LMB is released,
-the current position of the cursor is compared to the former position. If the cursor position has changed, the selected
-element is rotated in the direction determined by the projection of the vector created by the position change, rotated
-over the current view rotation and projected onto the plane of the selected element.
+Indeep
+------
+The script creates an (n,n,n) cube as a Formex. The number n can be set
+from the user dialog. Randomize the colors with the **Shuffle** button.
+
+When the mouse is moved with the left mouse button (LMB) depressed, the
+function ``turn`` is executed. When the LMB is pressed, the current location
+of the mouse cursor is registered and the cube element (i.e. a quadrilateral
+of the Formex) closest to this position is registered. When the LMB is released,
+the current position of the cursor is compared to the former position.
+If the cursor position has changed, the selected element is rotated in
+the direction determined by the projection of the vector created by the
+position change, rotated over the current view rotation and projected
+onto the plane of the selected element.
 
 The cubes can be shuffled into a random position and solved subsequently.
 
-The maximum number of cubes in one row is limited to ten because of the enormous number of permutations possible,
-and thus the large amount of time needed to solve such large cubes. For a 7x7 cube for example, the total number
-of permutations is already higher than the assumed total number of atoms in our universe (eh ... that's something
-like ten to the power 80, but we might be way off). You can check the exact number of possible permutations
-for the displayed cube by pressing the button *permutations*. This number is not stored, it is calculated each time. It's
-an amazing example of how python can easily handle huge numbers.
-
-
+The maximum number of cubes in one row is limited to ten because of the
+enormous number of permutations possible, and thus the large amount of time
+needed to solve such large cubes. For a 7x7 cube for example, the total number
+of permutations is already higher than the assumed total number of atoms in
+the universe (eh ... that's something like ten to the power 80, but we might
+be way off). You can check the exact number of possible permutations
+for the displayed cube by pressing the **Permutations** button.
+This number is not stored, it is calculated each time. It's a nice example
+of how easily Python can handle huge numbers.
 """
 
-from formex import *
 from gui.widgets import simpleInputItem as I
 from gui.viewport import *
 from numpy.random import rand
-import time
-import math
 
 
 # General definitions
@@ -66,7 +77,7 @@ def refresh():
 
 # Rotation definitions
 def turn(x=0,y=0,action=0):
-    """Execute a rotation when SHIFT and LMB is pressed"""
+    """Execute a rotation when mouse moved with left button pressed"""
     global busy, x1, y1, element
     if action==PRESS and not busy:
         busy = True
@@ -147,7 +158,7 @@ def rotateRow(self, rowElements, rotAxis, dir, steps=1, view=True):
             dr = drawn
             drawn = draw(self, bbox='last')
             undraw(dr)
-            time.sleep(t)
+            sleep(t)
     else:
         self[rowElements] = self[rowElements].rotate(angle, rotAxis)
 
@@ -169,7 +180,7 @@ def fac(x):
     """Return the factorial of x"""
     return reduce(lambda y,z:y*z,range(1,x+1))
 
-# Dialogue
+# Dialog
 dia = None
 def new():
     global cube, n, steps, t
@@ -187,7 +198,7 @@ def set():
     else:
         steps, t = res['steps'], res['t']
 
-def randomize():
+def shuffle():
     global cube
     N = int(10*n + 5*n*rand())
     random = rand(N,6)
@@ -207,7 +218,7 @@ def close():
     dia.close()
 
 def timeOut():
-    show()
+    shuffle()
     close()
 
 dia = widgets.NewInputDialog(
@@ -220,7 +231,7 @@ dia = widgets.NewInputDialog(
     actions=[
         ('New',new),
         ('Set', set), 
-        ('Shuffle',randomize),
+        ('Shuffle',shuffle),
         ('Permutations',permutations),
         ('Close',close),
     ])
@@ -232,8 +243,8 @@ if __name__ == "draw":
     cube = createCube()
     busy = False
     refresh()
-    drawText('Hold SHIFT and move an element while pressing the LMB to move a row of the cube',20,40,color=blue,font='f',size=12)
-    pf.canvas.setMouse(LEFT,turn,mod=SHIFT)
+    drawText("Rotate a row by moving the mouse with left button pressed.\nUse ALT button to rotate the whole cube.",20,40,color=blue,font='f',size=20)
+    pf.canvas.setMouse(LEFT,turn)
     dia.timeout = timeOut
     dia.show()
     dia.acceptData()

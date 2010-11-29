@@ -1155,7 +1155,6 @@ Size: %s
         seq = sweepCoords(self.coords,path,**kargs)
         ML = [ Mesh(x,self.elems) for x in seq ]
         M = connectMeshSequence(ML)
-        #print M
 
         if autofix and nplex == 2:
             # fix node ordering for line2 to quad4 extrusions

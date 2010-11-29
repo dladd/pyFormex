@@ -274,6 +274,15 @@ def isClose(values,target,rtol=1.e-5,atol=1.e-8):
     return abs(values - target) < atol + rtol * abs(target) 
 
 
+def anyVector(v):
+    """Create a 3D vector.
+
+    v is some data compatible with a (3)-shaped float array.
+    Returns v as such an array.
+    """
+    return asarray(v,dtype=Float).reshape((3))
+
+
 def unitVector(v):
     """Return a unit vector in the direction of v.
 
@@ -284,7 +293,7 @@ def unitVector(v):
         u = zeros((3),dtype=Float)
         u[v] = 1.0
     else:
-        u = asarray(v,dtype=Float)
+        u = asarray(v,dtype=Float).reshape((3))
         ul = length(u)
         if ul <= 0.0:
             raise ValueError,"Zero length vector %s" % v
