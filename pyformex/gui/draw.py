@@ -1030,11 +1030,14 @@ def fforward():
     pf.GUI.drawlock.free()
 
 
-def delay(i):
-    """Set the draw delay in seconds."""
-    i = int(i)
-    if i >= 0:
-        pf.cfg['draw/wait'] = i
+def delay(s):
+    """Set the draw delay in seconds.
+    
+    s is a possibly fractional time in seconds.
+    After this call, draw operations will respect this draw wait time.
+    """
+    s = float(s)
+    pf.GUI.drawwait = s
     
 
 
