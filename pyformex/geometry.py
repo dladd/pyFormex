@@ -300,6 +300,22 @@ class Geometry(object):
     rot = rotate
     trl = translate
 
+    
+    def write(self,fil,sep=' ',mode='w'):
+        """Write a Geometry to a .pgf file.
+
+        If fil is a string, a file with that name is opened. Else fil should
+        be an open file.
+        The Geometry is then written to that file in a native format, using
+        sep as separator between the coordinates.
+        If fil is a string, the file is closed prior to returning.
+        """
+        from geomfile import GeometryFile
+        f = GeometryFile(fil,mode='w',sep=sep)
+        f.write(self)
+        if f.isname and mode[0]=='w':
+            f.close()
+
 
 
 if __name__ == "draw":

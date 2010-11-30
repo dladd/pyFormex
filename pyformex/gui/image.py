@@ -419,21 +419,29 @@ def autoSaveOn():
     return multisave and multisave[-2]
 
 
-def createMovie():
-    """Create a movie from a saved sequence of images."""
+def createMovie(encoder='ffmpeg'):
+    """Create a movie from a saved sequence of images.
+
+    encoder is one of: 'ffmpeg, mencoder, convert'
+    """
     if not multisave:
         pf.warning('You need to start multisave mode first!')
         return
 
     names,format,quality,window,border,hotkey,autosave,rootcrop = multisave
     glob = names.glob()
-    if glob.split('.')[-1] != 'jpg':
-        pf.warning("Currently you need to save in 'jpg' format to create movies")
-        return
-    
-    #cmd = "mencoder -ovc lavc -fps 5 -o output.avi %s" % names.glob()
-    # mencoder "mf://%s" -mf fps=10 -o test.avi -ovc lavc -lavcopts vcodec=msmpeg4v2:vbitrate=800
-    cmd = "ffmpeg -qscale 1 -r 1 -i %s output.mp4" % names.glob()
+    ## if glob.split('.')[-1] != 'jpg':
+    ##     pf.warning("Currently you need to save in 'jpg' format to create movies")
+    ##     return
+
+    if encoder == 'convert':
+        cmd = "convert -delay 1 -colors 256 %s output.gif" % names.glob()
+    elif encoder == 'mencoder':
+        cmd = "mencoder -ovc lavc -fps 5 -o output.avi %s" % names.glob()
+    elif encoder == 'mencoder1':
+        cmd = "mencoder \"mf://%s\" -mf fps=10 -o output1.avi -ovc lavc -lavcopts vcodec=msmpeg4v2:vbitrate=800" % names.glob()
+    else:
+        cmd = "ffmpeg -qscale 1 -r 1 -i %s output.mp4" % names.glob()
     pf.debug(cmd)
     utils.runCommand(cmd)
 

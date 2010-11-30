@@ -150,7 +150,7 @@ class GeometryFile(object):
         else:
             try:
                 writefunc = getattr(self,'write'+geom.__class__.__name__)
-                print writefunc
+                #print writefunc
                 writefunc(geom,name,sep)
             except:
                 message("Can not (yet) write objects of type %s to geometry file: skipping" % type(geom))

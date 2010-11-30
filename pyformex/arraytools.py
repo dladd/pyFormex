@@ -34,7 +34,7 @@ everything from this module::
 from numpy import *
 import utils
 
-    
+
 if utils.checkVersion('python','2.6') >= 0:
     from itertools import combinations
 else:
@@ -819,6 +819,7 @@ def uniqueRows(A):
 
     The input is an (nr,nc) shaped array.
     The return value is a tuple of two indices:
+    
     - uniq: an (nuniq) shaped array with the numbers of the unique rows from A
     - uniqid: an (nr) shaped array with the numbers of uniq corresponding to
       all the rows of the input array A.

@@ -719,12 +719,14 @@ class TriSurface(Mesh):
         if ftype is None:
             ftype = os.path.splitext(fname)[1]
         if ftype == '':
-            ftype = 'gts'
+            ftype = 'off'
         else:
             ftype = ftype.strip('.').lower()
 
         pf.message("Writing surface to file %s" % fname)
-        if ftype == 'gts':
+        if ftype == 'pgf':
+            Geometry.write(self,fname)
+        elif ftype == 'gts':
             write_gts(fname,self.coords,self.getEdges(),self.getFaceEdges())
             pf.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','neu','smesh']:
@@ -1597,8 +1599,10 @@ Total area: %s; Enclosed volume: %s
         for the use of the `gts` methods: split, coarsen, refine, boolean.
 
         Returns 0 if the surface passes the tests, nonzero if not.
+        A full report is printed out. 
 
-        The fixNormals method may be used to
+        The :meth:`fixNormals` and :meth:`reverse` methods may be used to fix
+        the normals of an otherwise correct closed manifold.
         """
         cmd = 'gtscheck'
         if verbose:
@@ -1617,7 +1621,16 @@ Total area: %s; Enclosed volume: %s
  
 
     def split(self,base,verbose=False):
-        """Check the surface using gtscheck."""
+        """Split the surface using gtssplit.
+
+        Splits the surface into connected and manifold components.
+        This uses the external program `gtssplit`. The surface
+        should be a closed orientable non-intersecting manifold.
+        Use the :meth:`check` method to find out.
+
+        This method creates a series of files with given base name,
+        each file contains a single connected manifold.
+        """
         cmd = 'gtssplit -v %s' % base
         if verbose:
             cmd += ' -v'
@@ -1633,10 +1646,34 @@ Total area: %s; Enclosed volume: %s
    
 
     def coarsen(self,min_edges=None,max_cost=None,
-                mid_vertex=False, length_cost=False, max_fold = 1.0,
+                mid_vertex=False, length_cost=False, max_fold=1.0,
                 volume_weight=0.5, boundary_weight=0.5, shape_weight=0.0,
                 progressive=False, log=False, verbose=False):
-        """Coarsen the surface using gtscoarsen."""
+        """Coarsen the surface using gtscoarsen.
+
+        Construct a coarsened version of the surface.
+        This uses the external program `gtscoarsen`. The surface
+        should be a closed orientable non-intersecting manifold.
+        Use the :meth:`check` method to find out.
+
+        Parameters:
+        
+        - `min_edges`: int: stops the coarsening process if the number of
+          edges was to fall below it
+        - `max_cost`: float: stops the coarsening process if the cost of
+          collapsing an edge is larger
+        - `mid_vertex`: boolean: use midvertex as replacement vertex instead
+          of the default, which is a volume optimized point
+        - `length_cost`: boolean: use length^2 as cost function instead of the
+          default optimized point cost
+        - `max_fold`: float: maximum fold angle in degrees
+        - `volume_weight`: float: weight used for volume optimization
+        - `boundary_weight`: float: weight used for boundary optimization
+        - `shape_weight`: float: weight used for shape optimization
+        - `progressive`: boolean: write progressive surface file
+        - `log`: boolean: log the evolution of the cost
+        - `verbose`: boolean: print statistics about the surface
+        """
         if min_edges is None and max_cost is None:
             min_edges = self.nedges() / 2
         cmd = 'gtscoarsen'
@@ -1674,9 +1711,23 @@ Total area: %s; Enclosed volume: %s
         os.remove(tmp1)
    
 
-    def refine(self,max_edges=None,min_cost=None,
-               log=False, verbose=False):
-        """Refine the surface using gtsrefine."""
+    def refine(self,max_edges=None,min_cost=None,log=False,verbose=False):
+        """Refine the surface using gtsrefine.
+
+        Construct a refined version of the surface.
+        This uses the external program `gtsrefine`. The surface
+        should be a closed orientable non-intersecting manifold.
+        Use the :meth:`check` method to find out.
+
+        Parameters:
+        
+        - `max_edges`: int: stop the refining process if the number of
+          edges exceeds this value
+        - `min_cost`: float: stop the refining process if the cost of refining
+          an edge is smaller
+        - `log`: boolean: log the evolution of the cost
+        - `verbose`: boolean: print statistics about the surface
+        """
         if max_edges is None and min_cost is None:
             max_edges = self.nedges() * 2
         cmd = 'gtsrefine'
@@ -1703,13 +1754,27 @@ Total area: %s; Enclosed volume: %s
         os.remove(tmp1)
 
 
-    def smooth(self,lambda_value=0.5,n_iterations=2,
-               fold_smoothing=None,verbose=False):
-        """Smooth the surface using gtssmooth."""
+    def smooth(self,lambda_value=0.5,iterations=2,fold_smoothing=None,verbose=False):
+        """Smooth the surface using gtssmooth.
+
+        Smooth a surface by applying iterations of a Laplacian filter.
+        This uses the external program `gtssmooth`. The surface
+        should be a closed orientable non-intersecting manifold.
+        Use the :meth:`check` method to find out.
+
+        Parameters:
+
+        - `lambda_value`: float: Laplacian filter parameter
+        - `iterations`: int: number of iterations
+        - `fold_smoothing`: boolean: smooth only folds
+        - `verbose`: boolean: print statistics about the surface
+
+        See also: :meth:`smoothLowPass`, :meth:`smoothLaplaceHC`
+        """
         cmd = 'gtssmooth'
         if fold_smoothing:
             cmd += ' -f %s' % fold_smoothing
-        cmd += ' %s %s' % (lambda_value,n_iterations)
+        cmd += ' %s %s' % (lambda_value,iterations)
         if verbose:
             cmd += ' -v'
         tmp = tempfile.mktemp('.gts')
@@ -1730,12 +1795,28 @@ Total area: %s; Enclosed volume: %s
 #### THIS FUNCTION RETURNS A NEW SURFACE
 #### WE MIGHT DO THIS IN FUTURE FOR ALL SURFACE PROCESSING
 
-    def boolean(self,surf,op,inter=False,check=False,verbose=False):
-        """Perform a boolean operation with surface surf. Both surfaces needs to be closed (border of a volume) and to be an orientable manifold (use fixNormals).
+    def boolean(self,surf,op,intersection_curve=False,check=False,verbose=False):
+        """Perform a boolean operation with another surface.
 
+        Boolean operations between surfaces are a basic operation in
+        free surface modeling. Both surfaces should be closed orientable
+        non-intersecting manifolds.
+        Use the :meth:`check` method to find out.
+
+        The boolean operations are set operations on the enclosed volumes:
+        union('+'), difference('-') or intersection('*').
+
+        Parameters:
+
+        - `intersection_curve`: boolean: output an OOGL (Geomview)
+          representation of the curve intersection of the surfaces
+        - `check`: boolean: check that the surfaces are not self-intersecting;
+          if one of them is, the set of self-intersecting faces is written
+          (as a GtsSurface) on standard output
+        - `verbose`: boolean: print statistics about the surface
         """
-        ops = {'+':'union', '-':'diff', '*':'inter'}
         cmd = 'gtsset'
+        ops = {'+':'union', '-':'diff', '*':'inter'}
         if inter:
             cmd += ' -i'
         if check:
@@ -1954,8 +2035,9 @@ def Cube():
     faces = fb + fb.rollAxes(1) + fb.rollAxes(2)
     return TriSurface(faces)
 
+
 def Sphere(level=4,verbose=False,filename=None):
-    """Create a spherical surface by caling the gtssphere command.
+    """Create a spherical surface by calling the gtssphere command.
 
     If a filename is given, it is stored under that name, else a temporary
     file is created.
