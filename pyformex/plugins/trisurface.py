@@ -1817,7 +1817,7 @@ Total area: %s; Enclosed volume: %s
         """
         cmd = 'gtsset'
         ops = {'+':'union', '-':'diff', '*':'inter'}
-        if inter:
+        if intersection_curve:
             cmd += ' -i'
         if check:
             cmd += ' -s'
