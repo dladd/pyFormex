@@ -67,8 +67,8 @@ def reset_data(initialize=False):
         name = sname.peek(),
         color = 'red',
         )
-    pf.PF['__SuperShape__grid_data'] = grid_data
-    pf.PF['__SuperShape__shape_data'] = shape_data
+    pf.PF['_SuperShape_grid_data'] = grid_data
+    pf.PF['_SuperShape_shape_data'] = shape_data
     globals().update(grid_data)
     globals().update(shape_data)
     if dialog:
@@ -146,8 +146,8 @@ def showSuperShape():
 # Button Functions
 def show_grid():
     dialog.acceptData()
-    refresh(pf.PF['__SuperShape__grid_data'],dialog.results)
-    refresh(pf.PF['__SuperShape__shape_data'],dialog.results)
+    refresh(pf.PF['_SuperShape_grid_data'],dialog.results)
+    refresh(pf.PF['_SuperShape_shape_data'],dialog.results)
     globals().update(dialog.results)
     createGrid()
     showGrid()
@@ -255,14 +255,14 @@ def openSuperShapeDialogs():
 
     
 if __name__ == "draw":
-    if not ('__SuperShape__grid_data' in pf.PF and
-            '__SuperShape__shape_data' in pf.PF):
+    if not ('_SuperShape_grid_data' in pf.PF and
+            '_SuperShape_shape_data' in pf.PF):
         reset_data()
     else:
         print "set globals from pf.PF"
-        print pf.PF['__SuperShape__grid_data']
-        globals().update(pf.PF['__SuperShape__grid_data'])
-        globals().update(pf.PF['__SuperShape__shape_data'])
+        print pf.PF['_SuperShape_grid_data']
+        globals().update(pf.PF['_SuperShape_grid_data'])
+        globals().update(pf.PF['_SuperShape_shape_data'])
         print globals()
 
     close()

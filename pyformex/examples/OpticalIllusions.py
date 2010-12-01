@@ -32,13 +32,12 @@ acknowledgements = ['Tomas Praet']
 
 """
 
-from formex import *
 from simple import *
 from gui import widgets
+from gui.widgets import simpleInputItem as I
 from odict import ODict
-from numpy.random import rand
 
-# Illusion definitions
+################# Illusion definitions #####################
 
 def ParallelLines():
     """Parallel Lines
@@ -107,7 +106,7 @@ def SquaresAndCircles():
     O = [0,0,0]
     G = Formex([[C[i,0],C[i+1,0],O] for i in arange(0,36,2)]).translate([1.1,1.1,0]).replic2(B-1,H-1,1.2,1.2)
     G.setProp(7)
-    draw(F,color=rand(3)/2)
+    draw(F,color=random.rand(3)/2)
     draw(G)
 
 
@@ -166,7 +165,7 @@ def RunningInCircles():
     b2 = Formex(mpattern('1234')).scale([1.5,0.8,0]).translate([0,7,0.1])
     b2.setProp(6)
     b = b1+b2
-    col = [rand(3)/3,[1,1,1]-rand(3)/8]
+    col = [random.rand(3)/3,[1,1,1]-random.rand(3)/8]
     for i in range(4*N):
         b = b.rotate(360./N/4)
         dr = draw(b,bbox=box,color=col)
@@ -209,16 +208,19 @@ def AlignedLines():
     resetview()
     a = 60.
     lines = Formex(pattern('1')).scale([20,1,0]).rotate(a).translate([-20.*cos(a*pi/180.),0,0]).replic(32,1)
-    lines = cut2AtPlane(cut2AtPlane(lines,[-1,0,0],[1,0,0],side='+'),[22,0,0],[1,0,0],side='-')
+    lines = lines.cutWithPlane([-1,0,0],[1,0,0],side='+').cutWithPlane([22,0,0],[1,0,0],side='-')
     mask = Formex(mpattern('1234')).scale([1,20.*sin(a*pi/180.),1]).replic(11,2)
     mask.setProp(6)
-    draw(mask,color=rand(3))
+    savedelay = pf.GUI.drawwait
+    draw(mask,color=random.rand(3))
+    delay(2)
     draw(lines,linewidth=2)
     for i in range(3):
-        sleep(2)
+        wait()
         renderMode('wireframe')
-        sleep(1)
+        wait()
         renderMode('flat')
+    delay(savedelay)
 
 
 def ParallelLinesOverWheel():
@@ -257,11 +259,11 @@ def MotionInducedBlindness():
     nr,a,rot,back,n = res['Number of random points'],res['Rotation angle'],res['Rotations'],res['Background'],res['Number of static points']
     draw(shape('star').scale(0.4),color=red,linewidth=2)
     points = Formex([[0,-10,0]]).rosette(n,360./n)
-    draw(points,color=rand(3),marksize=10)
-    col=rand(3)
+    draw(points,color=random.rand(3),marksize=10)
+    col=random.rand(3)
     if back=='Tiles': F = shape('plus').replic2(11,11,3,3).translate([-15,-15,0])
     elif back=='Structured points': F = Formex([[0,0,0]]).replic2(30,30,1).translate([-15,-15,0])
-    else: F = Formex(random.random((nr,3))).scale([30,30,0]).translate([-15,-15,0])
+    else: F = Formex(random.rand((nr,3))).scale([30,30,0]).translate([-15,-15,0])
     for i in range(rot*360/a):
         F = F.rotate(a)
         dr = draw(F,color=col,linewidth=2,bbox=[[-10,-10,0],[10,10,0]])
@@ -335,8 +337,8 @@ def CirclesAndLines():
     for i in range(2,nc+1): C += c.scale(i)
     C = C.replic2(n,m,2*nc,2*nc)
     lines = lines.replic2(n,m,2*nc,2*nc)
-    draw(C,linewidth=2,color=rand(3))
-    draw(lines,linewidth=3,color=rand(3))
+    draw(C,linewidth=2,color=random.rand(3))
+    draw(lines,linewidth=3,color=random.rand(3))
 
 
 def Crater():
@@ -346,7 +348,7 @@ def Crater():
     Look carefully and you'll see the whirlabout of a crater shaped object.
     """
     resetview()
-    deg,rot,col = 5,3,rand(2,3)
+    deg,rot,col = 5,3,random.rand(2,3)
     r1,r2,r3,r4,r5,r6,r7,r8 = 1,1.9,2.9,4,5.1,6.1,7,7.8
     p = circle(a1=5).vertices()
     C = Formex([p[0:len(p):2]])
@@ -381,7 +383,7 @@ def Cussion():
     if b%2==0: b+=1
     if h%2==0: h+=1
     chess = Formex(mpattern('1234')).replic2(b,h,1,1).translate([-b/2+0.5,-h/2+0.5,0])
-    col=[rand(3),rand(3)]
+    col=[random.rand(3),random.rand(3)]
     sq1 = Formex(mpattern('1234')).scale([0.25,0.25,1]).translate([-0.45,0.2,0])
     sq2 = Formex(mpattern('1234')).scale([0.25,0.25,1]).translate([0.2,-0.45,0])
     F = sq1.translate([1,0,0]).replic(int(b/2)-1,1)+sq2.translate([0,1,0]).replic(int(h/2)-1,1,dir=1)
@@ -422,8 +424,8 @@ def CrazyCircles():
     draw(F1+F2,color=col)
 
 
-# Other definitions
-
+############ Other actions #################
+    
 def resetview(bgcol='white'):
     clear()
     reset()
@@ -434,7 +436,11 @@ def resetview(bgcol='white'):
     frontView()
 
 
-# Persistent dialog settings
+############# Create dialog #################
+
+gdname = '_OpticalIllusions_data_'
+dialog = None
+explanation = None
 
 illusions = [
     ParallelLines,
@@ -457,27 +463,19 @@ illusions = [
 headers = [ getattr(f,'__doc__').split('\n')[0] for f in illusions ]
 method = ODict(zip(headers,illusions))
 
-data_items = [
-    ['Illusion',None,'select',method.keys()],
-    ['Explain',False,{'text':'Show explanation'}],
-    ]
-
-globals().update([i[:2] for i in data_items])
-
-for i,it in enumerate(data_items):
-    data_items[i][1] = globals()[it[0]]
-
-# Actions
+# Dialog Actions
 
 def close():
     """Close the dialog"""
     global dialog,explanation
     if dialog:
+        pf.PF[gdname] = dialog.results
         dialog.close()
         dialog = None
     if explanation:
         explanation.close()
         explanation = None
+    
 
 def explain():
     """Show the explanation"""
@@ -504,7 +502,9 @@ def show():
     globals().update(dialog.results)
     if Explain:
         explain()
+    dialog.hide()
     method[Illusion]()
+    dialog.show()
 
 def next():
     """Show the next illusion"""
@@ -521,11 +521,38 @@ def timeOut():
     show()
     close()
 
-# Display the dialog
 
-dialog = widgets.OldInputDialog(data_items,caption='Optical illusions',actions = [('Done',close),('Next',next),('Explain',explain),('Show',show)],default='Show')
-dialog.timeout = timeOut
-dialog.show()
-explanation = None
+def openDialog():
+    """Create and display the dialog"""
+    global dialog,explanation
+    data_items = [
+        I('Illusion',Illusion,choices=method.keys()),
+        I('Explain',Explain,text='Show explanation'),
+        ]
 
+    dialog = widgets.NewInputDialog(
+        data_items,
+        caption='Optical illusions',
+        actions = [('Done',close),
+                   ('Next',next),
+                   ('Explain',explain),
+                   ('Show',show)],
+        default='Show'
+        )
+    dialog.timeout = timeOut
+    dialog.show()
+    
+
+if __name__ == "draw":
+    try:
+        globals().update(pf.PF[gdname])
+    except:
+        Illusion = None
+        Explain = False
+
+
+    print Illusion,Explain
+    close()
+    openDialog()
+    
 # End

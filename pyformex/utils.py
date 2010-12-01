@@ -155,7 +155,7 @@ def checkModule(name=None):
         pass
     # make sure version is a string (e.g. gl2ps uses a float!)
     version = str(version)
-    _congratulations(name,version,'module',fatal,quiet=True)
+    _congratulations(name,version,'module',fatal,quiet=False)
     the_version[name] = version
     return version
 
@@ -197,7 +197,7 @@ def checkExternal(name=None,command=None,answer=None):
         version = m.group(1)
     else:
         version = ''
-    _congratulations(name,version,'program',quiet=True)
+    _congratulations(name,version,'program',quiet=False)
     the_external[name] = version
     return version
 

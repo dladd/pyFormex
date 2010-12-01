@@ -73,22 +73,23 @@ class Geometry(object):
 
     The following :class:`Geometry` methods return the value of the same
     method applied on the `coords` attribute:
-    `x`,
-    `y`,
-    `z`,
-    `bbox`,
-    `center`,
-    `centroid`,
-    `sizes`,
-    `dsize`,
-    `bsphere`,
-    `distanceFromPlane`,
-    `distanceFromLine`,
-    `distanceFromPoint`,
-    `directionalSize`,
-    `directionalWidth`,
-    `directionalExtremes`,
-    `__str__`. Refer to the correponding :class:`Coords` method for their usage.
+    :meth:`x`,
+    :meth:`y`,
+    :meth:`z`,
+    :meth:`bbox`,
+    :meth:`center`,
+    :meth:`centroid`,
+    :meth:`sizes`,
+    :meth:`dsize`,
+    :meth:`bsphere`,
+    :meth:`distanceFromPlane`,
+    :meth:`distanceFromLine`,
+    :meth:`distanceFromPoint`,
+    :meth:`directionalSize`,
+    :meth:`directionalWidth`,
+    :meth:`directionalExtremes`,
+    :meth:`__str__`.
+    Refer to the correponding :class:`Coords` method for their usage.
 
     The following :class:`Coords` transformation methods can be directly applied
     to a :class:`Geometry` object or a derived class object. The return value

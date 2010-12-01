@@ -324,7 +324,7 @@ def pointsAt(F,t):
     
     F is a plex 2 Formex and t is an array with F.nelems() float values which
     are interpreted as local parameters along the edges of the Formex, such
-    that the first node has value 0.0 and the last has vaue 1.0.
+    that the first node has value 0.0 and the last has value 1.0.
     The return value is a :class:`coords.Coords` array with the points at values t.
     """
     f = F.coords
@@ -1894,7 +1894,6 @@ maxprop  = %s
 
         ..warning :: This method currently only works for plexitude 2 or 3!
         
-        - `F`: a Formex of plexitude 2 or 3.
         - `p`,`n`: a point and normal vector defining the cutting plane.
           In case of plexitude 3, p and n can be sequences of points and vector,
           allowing to cut with multiple planes.
@@ -1908,7 +1907,7 @@ maxprop  = %s
         of the plane will return unaltered. Elements that are crossing the
         plane will be cut and split up into multiple parts.
         
-        When with side = '+' or '-' (or 'positive'or 'negative'), only one
+        When side = '+' or '-' (or 'positive'or 'negative'), only one
         of the sides is returned.
 
         The other arguments (atol,newprops) are currently specific for the

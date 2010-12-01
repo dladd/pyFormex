@@ -748,8 +748,17 @@ def undraw(itemlist):
     pf.app.processEvents()
     
 
-def view(v,wait=False):
-    """Show a named view, either a builtin or a user defined."""
+def view(v,wait=True):
+    """Show a named view, either a builtin or a user defined.
+
+    This shows the current scene from another viewing angle.
+    Switching views of a scene is much faster than redrawing a scene.
+    Therefore this function is prefered over :func:`draw` when the actors
+    in the scene remain unchanged and only the camera viewpoint changes.
+
+    Just like :func:`draw`, this function obeys the drawing lock mechanism,
+    and by default it will restart the lock to retard the next draing operation.
+    """
     pf.GUI.drawlock.wait()
     if v != 'last':
         angles = pf.canvas.view_angles.get(v)
@@ -968,7 +977,14 @@ def clear_canvas():
 
 
 def clear():
-    """Clear the canvas"""
+    """Clear the canvas.
+
+    Removes everything from the current scene and displays an empty
+    background.
+
+    This function waits for the drawing lock to be released, but will
+    not reset it.
+    """
     pf.GUI.drawlock.wait()
     clear_canvas()
     pf.canvas.update()
@@ -979,6 +995,66 @@ def redraw():
     pf.canvas.update()
 
 
+def delay(s):
+    """Set the draw delay in seconds.
+    
+    s is a possibly fractional time in seconds.
+    After this call, draw operations will respect this draw wait time.
+    """
+    s = float(s)
+    pf.GUI.drawwait = s
+
+
+def wait(relock=True):
+    """Wait until the drawing lock is released.
+
+    This uses the drawing lock mechanism to pause. The drawing lock
+    ensures that subsequent draws are retarded to give the user the time
+    to view. This use of this function is prefered over that of
+    :func:`pause` or :func:`sleep`, because it allows your script to
+    continue the numerical computations while waiting to draw the next
+    screen.
+
+    This function can be used to retard other functions than `
+    """
+    print "waiting %s" % pf.GUI.drawwait
+    pf.GUI.drawlock.wait()
+    if relock:
+        pf.GUI.drawlock.lock()
+        
+    
+
+def fforward():
+    """Releases the drawing lock mechanism indefinely.
+
+    Releasing the drawing lock indefinely means that the lock will not
+    be set again and your script will execute till the end.
+    """
+    pf.GUI.drawlock.free()
+
+
+def step():
+    """Perform one step of a script.
+
+    A step is a set of instructions until the next draw operation.
+    If a script is running, this just releases the draw lock.
+    Else, it starts the script in step mode.
+    """
+    import script
+    #if script.scriptRunning:
+    if pf.GUI.drawlock.locked:
+        pf.GUI.drawlock.release()
+    else:
+        if ack("""
+STEP MODE is currently only possible with specially designed,
+very well behaving scripts. If you're not sure what you are
+doing, you should cancel the operation now.
+
+Are you REALLY SURE you want to run this script in step mode?
+"""):
+            play(step=True)
+ 
+    
 
 def pause(msg="Use the Step or Continue button to proceed",timeout=None):
     """Pause the execution until an external event occurs or timeout.
@@ -1002,43 +1078,7 @@ def pause(msg="Use the Step or Continue button to proceed",timeout=None):
     if timeout is None:
         timeout = widgets.input_timeout
     repeat(_continue_,timeout)
-
-
-def step():
-    """Perform one step of a script.
-
-    A step is a set of instructions until the next draw operation.
-    If a script is running, this just releases the draw lock.
-    Else, it starts the script in step mode.
-    """
-    import script
-    #if script.scriptRunning:
-    if pf.GUI.drawlock.locked:
-        pf.GUI.drawlock.release()
-    else:
-        if ack("""
-STEP MODE is currently only possible with specially designed,
-very well behaving scripts. If you're not sure what you are
-doing, you should cancel the operation now.
-
-Are you REALLY SURE you want to run this script in step mode?
-"""):
-            play(step=True)
-        
-
-def fforward():
-    pf.GUI.drawlock.free()
-
-
-def delay(s):
-    """Set the draw delay in seconds.
-    
-    s is a possibly fractional time in seconds.
-    After this call, draw operations will respect this draw wait time.
-    """
-    s = float(s)
-    pf.GUI.drawwait = s
-    
+   
 
 
 ################### EXPERIMENTAL STUFF: AVOID! ###############

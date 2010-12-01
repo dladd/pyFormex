@@ -340,23 +340,6 @@ def merge():
     export({name:S})
     selection.set(name)
     selection.draw()
-   
-
-
-## def convert_stl_to_off():
-##     """Converts an stl to off format without reading it into pyFormex."""
-##     fn = askFilename(pf.cfg['workdir'],"STL files (*.stl)")
-##     if fn:     
-##         return surface.stl_to_off(fn,sanitize=False)
-
-
-## def sanitize_stl_to_off():
-##     """Sanitizes an stl to off format without reading it into pyFormex."""
-##     fn = askFilename(pf.cfg['workdir'],"STL files (*.stl)")
-##     if fn:     
-##         return surface.stl_to_off(fn,sanitize=True)
-
-
 
 
 def write_surface(types=['surface','gts','stl','off','neu','smesh']):
@@ -690,8 +673,7 @@ def scaleSelection():
         if res:
             scale = float(res['scale'])
             selection.remember(True)
-            for F in FL:
-                F.scale(scale)
+            selection.changeValues([F.scale(scale) for F in FL])
             selection.drawChanges()
 
             
@@ -704,8 +686,7 @@ def scale3Selection():
         if res:
             scale = res['scale']
             selection.remember(True)
-            for F in FL:
-                F.scale(scale)
+            selection.changeValues([F.scale(scale) for F in FL])
             selection.drawChanges()
 
 
@@ -720,8 +701,7 @@ def translateSelection():
             dir = res['direction']
             dist = res['distance']
             selection.remember(True)
-            for F in FL:
-                F.translate(dir,dist)
+            selection.changeValues([F.translate(dir,dist) for F in FL])
             selection.drawChanges()
 
 
@@ -730,8 +710,7 @@ def centerSelection():
     FL = selection.check()
     if FL:
         selection.remember(True)
-        for F in FL:
-            F.translate(-F.coords.center())
+        selection.changeValues([F.translate(-F.coords.center()) for F in FL])
         selection.drawChanges()
 
 
@@ -778,9 +757,7 @@ def rotate(mode='global'):
                 around = res['point']
         if res:
             selection.remember(True)
-            for F in FL:
-                print angle,axis,around
-                F.rotate(angle,axis,around)
+            selection.changeValues([F.rotate(angle,axis,around) for F in FL])
             selection.drawChanges()
 
 
@@ -802,39 +779,8 @@ def rollAxes():
     FL = selection.check()
     if FL:
         selection.remember(True)
-        for F in FL:
-            F.coords.rollAxes()
+        selection.changeValues([F.rollAxes() for F in FL])
         selection.drawChanges()
-
-
-def clip_surface():
-    """Clip the stl model."""
-    if not check_surface():
-        return
-    res = askItems([I('axis',0),
-                    I('begin',0.0),
-                    I('end',1.0),
-                    I('nodes','any'),
-                    ],caption='Clipping Parameters')
-    if res:
-        updateGUI()
-        nodes,elems = PF['old_surface'] = PF['surface']
-        F = Formex(nodes[elems])
-        bb = F.bbox()
-        pf.message("Original bbox: %s" % bb) 
-        xmi = bb[0][0]
-        xma = bb[1][0]
-        dx = xma-xmi
-        axis = int(res[0][1])
-        xc1 = xmi + float(res[1][1]) * dx
-        xc2 = xmi + float(res[2][1]) * dx
-        nodid = res[3][1]
-        #print(nodid)
-        clear()
-        draw(F,color='yellow')
-        w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
-        F = F.clip(w)
-        draw(F,color='red')
 
 
 def clipSelection():
@@ -851,13 +797,13 @@ def clipSelection():
                         ],caption='Clipping Parameters')
         if res:
             bb = bbox(FL)
-            axis = int(res['axis'])
+            axis = res['axis']
             xmi = bb[0][axis]
             xma = bb[1][axis]
             dx = xma-xmi
             xc1 = xmi + float(res['begin']) * dx
             xc2 = xmi + float(res['end']) * dx
-            selection.changeValues([ F.clip(F.test(nodes=res['nodes'],dir=axis,min=xc1,max=xc2)) for F in FL ])
+            selection.changeValues([F.clip(F.test(nodes=res['nodes'],dir=axis,min=xc1,max=xc2)) for F in FL])
             selection.drawChanges()
 
 
@@ -896,7 +842,7 @@ def clipAtPlane():
         selection.draw()
 
 
-def cutAtPlane():
+def cutWithPlane():
     """Cut the selection with a plane."""
     FL = selection.check()
     if not FL:
@@ -930,7 +876,7 @@ def cutAtPlane():
             selection.set(['%s/pos' % n for n in selection] + ['%s/neg' % n for n in selection])
             selection.draw()
         else:
-            [F.cutWithPlane(P,N,newprops=p,side=side,atol=atol) for F in FL]
+            selection.changeValues([F.cutWithPlane(P,N,newprops=p,side=side,atol=atol) for F in FL])
             selection.drawChanges()
 
 
@@ -958,12 +904,12 @@ def cutSelectionByPlanes():
                 else:
                     newprops = None
                 if side == 'both':
-                    Spos, Sneg = S.toFormex().cutAtPlane(p,n,newprops=newprops,side=side,atol=atol)
+                    Spos, Sneg = S.toFormex().cutWithPlane(p,n,newprops=newprops,side=side,atol=atol)
                 elif side == 'positive':
-                    Spos = S.toFormex().cutAtPlane(p,n,newprops=newprops,side=side,atol=atol)
+                    Spos = S.toFormex().cutWithPlane(p,n,newprops=newprops,side=side,atol=atol)
                     Sneg = Formex()
                 elif side == 'negative':
-                    Sneg = S.toFormex().cutAtPlane(p,n,newprops=newprops,side=side,atol=atol)
+                    Sneg = S.toFormex().cutWithPlane(p,n,newprops=newprops,side=side,atol=atol)
                     Spos = Formex()
                 if Spos.nelems() !=0:
                     Spos = TriSurface(Spos)
@@ -1057,48 +1003,26 @@ def spliner():
 
 ##################  Smooth the selected surface #############################
 
-def smoothLowPass():
-    """Smooth the selected surface using a low-pass filter."""
+def smooth():
+    """Smooth the selected surface."""
     S = selection.check(single=True)
     if S:
-        res = askItems([I('lambda_value',0.5),
-                        I('n_iterations',2),
-                        I('neighbourhood',1),
-                        ],'Low-pass filter')
+        res = askItems([
+            I('method','lowpass',itemtype='radio',choices=['lowpass','laplace','gts']),
+            I('iterations',1),
+            I('lambda_value',0.5,min=0.0,max=1.0),
+            I('neighbourhood',1),
+            I('alpha',0.0),
+            I('beta',0.2),
+            I('verbose',False),
+            ])
         if res:
             if not 0.0 <= res['lambda_value'] <= 1.0:
                 warning("Lambda should be between 0 and 1.")
                 return
-            if not mod(res['n_iterations'],2) == 0:
-                warning("An even number of iterations is required.")
-                return
             selection.remember(True)
-            S.smoothLowPass(res['n_iterations'],res['lambda_value'],res['neighbourhood'])
-            selection.drawChanges()
-
-
-def smoothLaplaceHC():
-    """Smooth the selected surface using a Laplace filter and HC algorithm."""
-    S = selection.check(single=True)
-    if S:
-        res = askItems([I('lambda_value',0.5),
-                        I('n_iterations',2),
-                        I('alpha',0.),
-                        I('beta',0.2),
-                        I('neighbourhood',1),
-                        ],'Laplace filter and HC algorithm')
-        if res:
-            if not 0.0 <= res['lambda_value'] <= 1.0:
-                warning("Lambda should be between 0 and 1.")
-                return
-            if not 0.0 <= res['alpha'] <= 1.0:
-                warning("Alpha should be between 0 and 1.")
-                return
-            if not 0.0 <= res['beta'] <= 1.0:
-                warning("Beta should be between 0 and 1.")
-                return            
-            selection.remember(True)
-            S.smoothLaplaceHC(res['n_iterations'],res['lambda_value'],res['alpha'],res['beta'],res['neighbourhood'])
+            S = S.smooth(**res)
+            selection.changeValues([S])
             selection.drawChanges()
 
 
@@ -1389,25 +1313,6 @@ def refine():
             selection.draw()
 
 
-def smooth():
-    S = selection.check(single=True)
-    if S:
-        res = askItems([I('lambda_value',0.5),
-                        I('n_iterations',2),
-                        I('fold_smoothing',None),
-                        I('verbose',False),
-                        ],'Laplacian Smoothing')
-        if res:
-            if not 0.0 <= res['lambda_value'] <= 1.0:
-                warning("Lambda should be between 0 and 1.")
-                return
-            selection.remember()
-            if res['fold_smoothing'] is not None:
-                res['fold_smoothing'] = float(res['fold_smoothing'])
-            S.smooth(**res)
-            selection.draw()
-
-
 def boolean():
     """Boolean operation on two surfaces.
 
@@ -1514,16 +1419,13 @@ def create_menu():
         ("&Clip/Cut",
          [("&Clip",clipSelection),
           ("&Clip At Plane",clipAtPlane),
-          ("&Cut At Plane",cutAtPlane),
+          ("&Cut With Plane",cutWithPlane),
           ("&Multiple Cut",cutSelectionByPlanes),
           ("&Intersection With Plane",intersectWithPlane),
           ("&Slicer",slicer),
           ("&Spliner",spliner),
            ]),
-        ("&Smoothing",
-         [("&Low-pass filter",smoothLowPass),
-         ("&Laplace and HC algorithm",smoothLaplaceHC),
-           ]),
+        ("&Smooth",smooth),
         ("&Undo Last Changes",selection.undoChanges),
         ("---",None),
         ('&GTS functions',

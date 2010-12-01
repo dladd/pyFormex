@@ -268,6 +268,11 @@ def anyPerpendicularVector(A):
     return B
 
 
+def perpendicularVector(A,B):
+    """Return vectors perpendicular on both A and B."""
+    return cross(A,B)
+    
+
 def projectionVOV(A,B):
     """Return the projection of vector of A on vector of B."""
     L = projection(A,B)
@@ -391,7 +396,7 @@ def intersectionPointsPWP(p1,n1,p2,n2,p3,n3):
     cross23 = cross(n2,n3)
     cross31 = cross(n3,n1)
     cross12 = cross(n1,n2)
-    denom = dotpr(n1,cross(n2,n3))[:,:,:,newaxis]
+    denom = dotpr(n1,cross23)[:,:,:,newaxis]
     return (dot1*cross23+dot2*cross31+dot3*cross12)/denom
 
 
@@ -419,7 +424,7 @@ def intersectionLinesPWP(p1,n1,p2,n2):
     cross23 = cross(n2,n3)
     cross31 = cross(n3,n1)
     cross12 = cross(n1,n2)
-    denom = dotpr(n1,cross(n2,n3))[:,:,newaxis]
+    denom = dotpr(n1,cross23)[:,:,newaxis]
     q = (dot1*cross23+dot2*cross31+dot3*cross12)/denom
     return q,n3
 
@@ -427,7 +432,7 @@ def intersectionLinesPWP(p1,n1,p2,n2):
 def intersectionPointsPOP(q,p,n):
     """Return the intersection points of perpendiculars from points q on planes (p,n).
 
-    This is equivalent to intersectionTimesPWP(q,p,n) but returns a (nq,np,3)
+    This is equivalent to intersectionTimesPOP(q,p,n) but returns a (nq,np,3)
     shaped array of intersection points instead of the parameter values.
     """
     t = intersectionTimesPOP(q,p,n)

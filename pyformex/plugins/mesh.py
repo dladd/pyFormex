@@ -334,7 +334,7 @@ class Mesh(Geometry):
         of the coordinates.
         """
         if isinstance(coords,Coords) and coords.shape == self.coords.shape:
-            return Mesh(coords,self.elems,self.prop,self.eltype)
+            return self.__class__(coords,self.elems,prop=self.prop,eltype=self.eltype)
         else:
             raise ValueError,"Invalid reinitialization of Mesh coords"
 
@@ -552,19 +552,6 @@ class Mesh(Geometry):
         faces. It is equivalent to ```self.getLowerEntities(2,unique)```
         """
         return self.getLowerEntities(2,unique)
-
-
-    def reverse(self):
-        """Return a Mesh where all elements have been reversed.
-
-        Reversing an element means reversing the order of its points.
-        This is equivalent to::
-        
-          Mesh(self.coords,self.elems[:,::-1])
-          
-        """
-        return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
-
     
     # ?? DOES THIS WORK FOR *ANY* MESH ??
     # What with a mesh of points, lines, ...
@@ -616,7 +603,7 @@ class Mesh(Geometry):
         By default, the resulting Mesh is compacted. Compaction can be
         switched off by setting `compact=False`.
         """
-        if self.props==None:
+        if self.prop==None:
             M = Mesh(self.coords,self.getBorder())
 
         else:
@@ -760,6 +747,48 @@ Size: %s
             wi = range(self.nelems())
             wi = delete(wi,selected)
             return self.select(wi,compact=compact)
+
+
+    def reverse(self):
+        """Return a Mesh where all elements have been reversed.
+
+        Reversing an element means reversing the order of its points.
+        This is equivalent to::
+        
+          Mesh(self.coords,self.elems[:,::-1])
+          
+        """
+        return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
+
+
+    def reflect(self,*args,**kargs):
+        """Reflect the Mesh in direction dir against plane at pos.
+
+        Parameters:
+
+        - `dir`: int: direction of the reflection (default 0)
+        - `pos`: float: offset of the mirror plane from origin (default 0.0)
+        - `inplace`: boolean: change the coordinates inplace (default False)
+        - `reverse`: boolean: revert the normals of the triangles
+          (default False).
+          Reflection of the coordinates of a 2D Mesh reverses the surface
+          sides. Setting this parameter True will cause an extra
+          reversion. This is what is expected in most 2D mirroring operations.
+          The default is False, because the Mesh object currently does not
+          know what the dimensionality of the Mesh is. The derived subclass
+          TriSurface however, will by default reverse the surface on
+          refelction operations.
+        """
+        print self.__class__
+        M = Geometry.reflect(self,*args,**kargs)
+        print M.__class__
+        if kargs.get('reverse',False) == True:
+            M = M.reverse()
+        print M.__class__
+        return M
+
+
+############# methods for mesh conversion ###############################
 
 
     def meanNodes(self,nodsel):

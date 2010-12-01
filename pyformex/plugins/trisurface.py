@@ -527,8 +527,8 @@ class TriSurface(Mesh):
             else:
                 raise RuntimeError,"Too many positional arguments"
 
-            if 'prop' in kargs:
-                self.setProp(kargs['prop'])
+        if 'prop' in kargs:
+            self.setProp(kargs['prop'])
 
 
 ###########################################################################
@@ -575,13 +575,20 @@ class TriSurface(Mesh):
         warnings.warn('warn_trisurface_getfaces')
         return Mesh.getFaces(self)
 
+
+###########################################################################
+    #
+    #   Operations that change the TriSurface itself
+    #
+    #  Make sure that you know what you're doing if you use these
+    #
     #
     # Changes to the geometry should by preference be done through the
     # __init__ function, to ensure consistency of the data.
     # Convenience functions are defined to change some of the data.
     #
 
-    def _set_coords(self,coords):
+    def setCoords(self,coords):
         """Change the coords."""
         self.__init__(coords,self.elems,prop=self.prop)
         return self
@@ -593,11 +600,6 @@ class TriSurface(Mesh):
     def setEdgesAndFaces(self,edges,faces):
         """Change the edges and faces."""
         self.__init__(self.coords,edges,faces,prop=self.prop)
-
-
-    def refresh(self):
-        # The object should now always be consistent
-        raise RuntimeError,"The implementation of TriSurface has changed!\n You should adopt your code to the new implementation, and no longer use 'refresh'"
 
 
     def append(self,S):
@@ -623,61 +625,13 @@ class TriSurface(Mesh):
             prop = concatenate((self.prop,p))
         self.__init__(coords,elems,prop=prop)
 
-       
-    def copy(self):
-        """Return a (deep) copy of the surface."""
-        S = TriSurface(self.coords.copy(),self.elems.copy())
-        if self.prop is not None:
-            S.setProp(self.prop.copy())
-        return S
-
-##    #this is already implemented with the same name in Mesh, and a TriSurface is also a Mesh.
-    ## def select(self,idx,compact=True):
-    ##     """Return a TriSurface which holds only elements with numbers in ids.
-
-    ##     idx can be a single element number or a list of numbers or
-    ##     any other index mechanism accepted by numpy's ndarray
-    ##     By default, the vertex list will be compressed to hold only those
-    ##     used in the selected elements.
-    ##     Setting compress==False will keep all original nodes in the surface.
-    ##     """
-    ##     S = TriSurface(self.coords, self.elems[idx])
-    ##     if self.prop is not None:
-    ##         S.setProp(self.prop[idx])
-    ##     if compact:
-    ##         S.compact()
-    ##     return S
-
-    # Some functions for offsetting a surface
-
-
-    # ?? IS THIS DIFFERENT FROM avgVertexNormals ??
-    def pointNormals(self):
-        """Compute the normal vectors at the points.
-        
-        The normal vector in a point is the average of the normal vectors of
-        all the neighbouring triangles.
-        The normal vectors are normalized before they are returned.
-        """
-        # get list of elements connected to each point
-        con = self.nodeConnections()
-        NP = self.areaNormals()[1][con] #self.normal doesn't work here???
-        w = where(con == -1)
-        NP[w] = 0.
-        NPA = NP.sum(axis=1)
-        NPA /= sqrt((NPA*NPA).sum(axis=-1)).reshape(-1,1)
-        return NPA
-
-    def offset(self,distance=1.):
-        """Offset a surface with a certain distance.
-        
-        All the nodes of the surface are translated over a specified distance
-        along their normal vector.
-        """
-        NPA = self.pointNormals()
-        coordsNew = self.coords + NPA*distance
-        return TriSurface(coordsNew,self.getElems())
    
+
+
+###########################################################################
+    #
+    #   read and write
+    #
 
     @classmethod
     def read(clas,fn,ftype=None):
@@ -742,12 +696,7 @@ class TriSurface(Mesh):
         else:
             print("Cannot save TriSurface as file %s" % fname)
 
-
-    @coordsmethod
-    def reflect(self,*args,**kargs):
-        if kargs.get('invert_normals',True) == True:
-            elems = self.getElems()
-            self.setElems(column_stack([elems[:,0],elems[:,2],elems[:,1]]))
+        
 
 
 ####################### TriSurface Data ######################
@@ -1114,6 +1063,38 @@ Total area: %s; Enclosed volume: %s
             return dist
 
 
+##################  Transform surface #############################
+    # All transformations now return a new surface
+
+    def offset(self,distance=1.):
+        """Offset a surface with a certain distance.
+        
+        All the nodes of the surface are translated over a specified distance
+        along their normal vector.
+        """
+        n = self.avgVertexNormals()
+        coordsNew = self.coords + NPA*distance
+        return TriSurface(coordsNew,self.getElems(),prop=self.prop)
+
+
+    def reflect(self,*args,**kargs):
+        """Reflect the Surface in direction dir against plane at pos.
+
+        Parameters:
+
+        - `dir`: int: direction of the reflection (default 0)
+        - `pos`: float: offset of the mirror plane from origin (default 0.0)
+        - `inplace`: boolean: change the coordinates inplace (default False)
+        - `reverse`: boolean: revert the normals of the triangles
+          (default True).
+          Reflection of the coordinates of a 2D Mesh reverses the surface
+          sides. Setting this parameter True will cause an extra
+          reversion. This is what is expected in most surface mirroring
+          operations.
+        """
+        return Mesh.reflect(self,*args,**kargs)
+    
+
 ##################  Partitioning a surface #############################
 
 
@@ -1344,8 +1325,22 @@ Total area: %s; Enclosed volume: %s
 
 
     def cutWithPlane(self,*args,**kargs):
-        """Cut a surface with a plane."""
-        self.__init__(self.toFormex().cutWithPlane(*args,**kargs))
+        """Cut a surface with a plane or a set of planes.
+
+        Cuts the surface with one or more plane and returns either one side
+        or both.
+
+        Parameters:
+        
+        - `p`,`n`: a point and normal vector defining the cutting plane.
+          p and n can be sequences of points and vector,
+          allowing to cut with multiple planes.
+          Both p and n have shape (3) or (npoints,3).
+
+        The parameters are the same as in :meth:`Formex.CutWithPlane`.
+        The returned surface will have its normals fixed wherever possible.
+        """
+        return TriSurface(self.toFormex().cutWithPlane(*args,**kargs)).fixNormals()
 
 
     def connectedElements(self,target,elemlist=None):
@@ -1499,19 +1494,45 @@ Total area: %s; Enclosed volume: %s
         P = Coords.interpolate(xmin,xmax,nplanes)
         return [ self.intersectionWithPlane(p,dir) for p in P ]
 
-
 ##################  Smooth a surface #############################
 
-    def smoothLowPass(self,n_iterations=2,lambda_value=0.5,neighbours=1):
-        """Smooth the surface using a low-pass filter.
+    
+    def smooth(self,method='lowpass',iterations=1,lambda_value=0.5,neighbourhood=1,alpha=0.0,beta=0.2,verbose=False):
+        """Smooth the surface.
+
+        Returns a TriSurface which is a smoothed version of the original.
+        Three smoothing methods are available: 'lowpass', 'laplace', and
+        'gts'. The first two are built-in, the latter uses the external
+        command `gtssmooth`.
+
+        Parameters:
         
-        This uses the nodes that are connected to the node via a shortest
-        path of minimum 1 and maximum 'neighbours' edges.
+        - `method`: 'lowpass', 'laplace', or 'gts'
+        - `iterations`: int: number of iterations
+        - `lambda_value`: float: lambda value used in the filters
+
+        Extra parameters for 'lowpass' and 'laplace':
+        
+        - `neighbourhood`: int: maximum number of edges to follow to define
+          node neighbourhood
+
+        Extra parameters for 'laplace':
+        
+        - `alpha`, `beta`: float: parameters for the laplace method.
+
+        Extra parameters for 'gts':
+        
+        - `verbose`: boolean: requests more verbose output of the `gtssmooth`
+          command
+
+        Returns: the smoothed TriSurface
         """
-        k = 0.1
-        mu_value = -lambda_value/(1-k*lambda_value)
+        method = method.lower()
+        if method == 'gts':
+            return self._gts_smooth(iterations,lambda_value,verbose)
+
         # find adjacency
-        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)[1:]
+        adj = adjacencyArrays(self.getEdges(),nsteps=neighbourhood)[1:]
         adj = column_stack(adj)
         # find interior vertices
         bound_edges = self.borderEdgeNrs()
@@ -1522,41 +1543,36 @@ Total area: %s; Enclosed volume: %s
         w[adj<0] = 0.
         val = (adj>=0).sum(-1).reshape(-1,1)
         w /= val
-        print val[0]
         w = w.reshape(adj.shape[0],adj.shape[1],1)
+
         # recalculate vertices
-        p = self.coords
-        for step in range(n_iterations/2):
-            p[inter_vertex] = p[inter_vertex] + lambda_value*(w[inter_vertex]*(p[adj[inter_vertex]]-p[inter_vertex].reshape(-1,1,3))).sum(1)
-            p[inter_vertex] = p[inter_vertex] + mu_value*(w[inter_vertex]*(p[adj[inter_vertex]]-p[inter_vertex].reshape(-1,1,3))).sum(1)
+        
+        if method == 'laplace':
+            xo = self.coords
+            x = self.coords.copy()
+            for step in range(iterations):
+                xn = x + lambda_value*(w*(x[adj]-x.reshape(-1,1,3))).sum(1)
+                xd = xn - (alpha*xo + (1-alpha)*x)
+                x[inter_vertex] = xn[inter_vertex] - (beta*xd[inter_vertex] + (1-beta)*(w[inter_vertex]*xd[adj[inter_vertex]]).sum(1))
+
+        else: # default: lowpass
+            k = 0.1
+            mu_value = -lambda_value/(1-k*lambda_value)
+            x = self.coords.copy()
+            for step in range(iterations):
+                x[inter_vertex] = x[inter_vertex] + lambda_value*(w[inter_vertex]*(x[adj[inter_vertex]]-x[inter_vertex].reshape(-1,1,3))).sum(1)
+                x[inter_vertex] = x[inter_vertex] + mu_value*(w[inter_vertex]*(x[adj[inter_vertex]]-x[inter_vertex].reshape(-1,1,3))).sum(1)
+                
+        return TriSurface(x,self.elems,prop=self.prop)
 
 
-    def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2,neighbours=1):
-        """Smooth the surface using a Laplace filter and HC algorithm.
+    def smoothLowPass(self,iterations=2,lambda_value=0.5,neighbours=1):
+        return self.smooth('lowpass',iterations/2,lambda_value,neighbours)
 
-        This uses the nodes that are connected to the node via a shortest
-        path of minimum 1 and maximum 'neighbours' edges.
-        """
-        # find adjacency
-        adj = adjacencyArrays(self.getEdges(),nsteps=neighbours)[1:]
-        adj = column_stack(adj)        
-        # find interior vertices
-        bound_edges = self.borderEdgeNrs()
-        inter_vertex = resize(True,self.ncoords())
-        inter_vertex[unique(self.getEdges()[bound_edges])] = False
-        # calculate weights
-        w = ones(adj.shape,dtype=float)
-        w[adj<0] = 0.
-        val = (adj>=0).sum(-1).reshape(-1,1)
-        w /= val
-        w = w.reshape(adj.shape[0],adj.shape[1],1)
-        # recalculate vertices
-        o = self.coords.copy()
-        p = self.coords
-        for step in range(n_iterations):
-            pn = p + lambda_value*(w*(p[adj]-p.reshape(-1,1,3))).sum(1)
-            b = pn - (alpha*o + (1-alpha)*p)
-            p[inter_vertex] = pn[inter_vertex] - (beta*b[inter_vertex] + (1-beta)*(w[inter_vertex]*b[adj[inter_vertex]]).sum(1))
+
+    def smoothLaplaceHC(self,iterations=2,lambda_value=0.5,alpha=0.,beta=0.2,neighbours=1):
+        return self.smooth('lowpass',iterations,lambda_value,neighbours,alpha,beta)
+
 
 
 ###################### Methods using admesh/GTS #############################
@@ -1643,6 +1659,9 @@ Total area: %s; Enclosed volume: %s
         os.remove(tmp)
         if sta or verbose:
             pf.message(out)
+        #
+        # WE SHOULD READ THIS FILES BACK !!!
+        #
    
 
     def coarsen(self,min_edges=None,max_cost=None,
@@ -1707,8 +1726,9 @@ Total area: %s; Enclosed volume: %s
         if sta or verbose:
             pf.message(out)
         pf.message("Reading coarsened model from %s" % tmp1)
-        self.__init__(*read_gts(tmp1))        
+        S = TriSurface.read(tmp1)        
         os.remove(tmp1)
+        return S
    
 
     def refine(self,max_edges=None,min_cost=None,log=False,verbose=False):
@@ -1750,11 +1770,12 @@ Total area: %s; Enclosed volume: %s
         if sta or verbose:
             pf.message(out)
         pf.message("Reading refined model from %s" % tmp1)
-        self.__init__(*read_gts(tmp1))        
+        S = TriSurface.read(tmp1)        
         os.remove(tmp1)
+        return S
 
 
-    def smooth(self,lambda_value=0.5,iterations=2,fold_smoothing=None,verbose=False):
+    def _gts_smooth(self,iterations=1,lambda_value=0.5,verbose=False):
         """Smooth the surface using gtssmooth.
 
         Smooth a surface by applying iterations of a Laplacian filter.
@@ -1766,14 +1787,13 @@ Total area: %s; Enclosed volume: %s
 
         - `lambda_value`: float: Laplacian filter parameter
         - `iterations`: int: number of iterations
-        - `fold_smoothing`: boolean: smooth only folds
         - `verbose`: boolean: print statistics about the surface
 
         See also: :meth:`smoothLowPass`, :meth:`smoothLaplaceHC`
         """
         cmd = 'gtssmooth'
-        if fold_smoothing:
-            cmd += ' -f %s' % fold_smoothing
+#        if fold_smoothing:
+#            cmd += ' -f %s' % fold_smoothing
         cmd += ' %s %s' % (lambda_value,iterations)
         if verbose:
             cmd += ' -v'
@@ -1788,12 +1808,10 @@ Total area: %s; Enclosed volume: %s
         if sta or verbose:
             pf.message(out)
         pf.message("Reading smoothed model from %s" % tmp1)
-        self.__init__(*read_gts(tmp1))        
+        S = TriSurface.read(tmp1)        
         os.remove(tmp1)
+        return S
 
-
-#### THIS FUNCTION RETURNS A NEW SURFACE
-#### WE MIGHT DO THIS IN FUTURE FOR ALL SURFACE PROCESSING
 
     def boolean(self,surf,op,intersection_curve=False,check=False,verbose=False):
         """Perform a boolean operation with another surface.
@@ -1842,11 +1860,6 @@ Total area: %s; Enclosed volume: %s
         S = TriSurface.read(tmp2)        
         os.remove(tmp2)
         return S
-
-
-    @deprecation("cutAtPlane has been renamed to cutWithPlane. Please use the new name.")
-    def cutAtPlane(self,*args,**kargs):
-        return cutWithPlane(*args,**kargs)
 
 
 ##########################################################################
@@ -2020,7 +2033,7 @@ def remove_triangles(elems,remove):
 
     return elems
 
-
+#####################################################################
 ### Some simple surfaces ###
 
 def Rectangle(nx,ny):
@@ -2029,7 +2042,11 @@ def Rectangle(nx,ny):
     return TriSurface(F)
 
 def Cube():
-    """Create a surface in the form of a cube"""
+    """Create the surface of a cube
+
+    Returns a TriSurface representing the surface of a unit cube.
+    Each face of the cube is represented by two triangles.
+    """
     back = Formex(mpattern('12-34'))
     fb = back.reverse() + back.translate(2,1)
     faces = fb + fb.rollAxes(1) + fb.rollAxes(2)

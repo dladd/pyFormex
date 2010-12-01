@@ -57,34 +57,34 @@ def bbox(objects):
     return Coords(concatenate(bboxes)).bbox()
 
 
-def coordsmethod(f):
-    """Decorator to apply a :class:`Coords` method to a 'coords' attribute.
+## def coordsmethod(f):
+##     """Decorator to apply a :class:`Coords` method to a 'coords' attribute.
 
-    Many classes that model geometry use a 'coords' attribute to store
-    the coordinates. This decorator can be used to apply the :class:`Coords` method
-    to that attribute, thus making the :class:`Coords` transformations available
-    to other classes.
+##     Many classes that model geometry use a 'coords' attribute to store
+##     the coordinates. This decorator can be used to apply the :class:`Coords` method
+##     to that attribute, thus making the :class:`Coords` transformations available
+##     to other classes.
 
-    The following lines show how to use the decorator.
-    These lines make the 'scale' method of the :class:`Coords` class available in
-    your class, with the same arguments::
+##     The following lines show how to use the decorator.
+##     These lines make the 'scale' method of the :class:`Coords` class available in
+##     your class, with the same arguments::
     
-       @coordsmethod
-       def scale(self,*args,**kargs):
-           pass
+##        @coordsmethod
+##        def scale(self,*args,**kargs):
+##            pass
     
-    The coordinates are changed inplane, so if you want to save the original
-    ones, you need to copy them before you use the transformation.
-    """
-    repl = getattr(Coords,f.__name__)
-    vargs = repl.func_code.co_varnames[:repl.func_code.co_argcount]
-    def newf(self,*args,**kargs):
-        vkargs = dict((k,v) for k,v in kargs.iteritems() if k in vargs)
-        self.coords = repl(self.coords,*args,**vkargs)
-        f(self,*args,**kargs)
-    newf.__name__ = f.__name__
-    newf.__doc__ = repl.__doc__
-    return newf
+##     The coordinates are changed inplane, so if you want to save the original
+##     ones, you need to copy them before you use the transformation.
+##     """
+##     repl = getattr(Coords,f.__name__)
+##     vargs = repl.func_code.co_varnames[:repl.func_code.co_argcount]
+##     def newf(self,*args,**kargs):
+##         vkargs = dict((k,v) for k,v in kargs.iteritems() if k in vargs)
+##         self.coords = repl(self.coords,*args,**vkargs)
+##         f(self,*args,**kargs)
+##     newf.__name__ = f.__name__
+##     newf.__doc__ = repl.__doc__
+##     return newf
 
 ###########################################################################
 ##
@@ -598,11 +598,14 @@ class Coords(ndarray):
         return out
 
 
-    def reflect(self,dir=0,pos=0,inplace=False):
+    def reflect(self,dir=0,pos=0.,inplace=False):
         """Reflect the coordinates in direction dir against plane at pos.
 
-        Default position of the plane is through the origin.
-        Default mirror direction is the z-direction.
+        Parameters:
+
+        - `dir`: int: direction of the reflection (default 0)
+        - `pos`: float: offset of the mirror plane from origin (default 0.0)
+        - `inplace`: boolean: change the coordinates inplace (default False)
         """
         if inplace:
             out = self
