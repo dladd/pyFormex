@@ -289,15 +289,8 @@ def mpattern(s):
     return l
 
 # Intersection functions
-#
-# !! These functions currently also exist as formex methods.
-# !! They only work on plex-2 formices.
-# !! Therefore it is not clear if they really belong in the formex class,
-# !! or should go to a specialized subclass
-# !! It is also not clear what their return value should be.
-# !! Until this is decided, we keep them here as global functions.
 
-
+@deprecation("\nUse Formex.intersectionWithPlane() or plugins.geomtools functions instead.")
 def intersectionWithPlane(F,p,n):
     """Return the intersection of a Formex F with the plane (p,n).
 
@@ -332,6 +325,7 @@ def pointsAt(F,t):
     return Coords((1.-t) * f[:,0,:] + t * f[:,1,:])
 
 
+@deprecation("\nUse Formex.intersectionWithPlane() or plugins.geomtools functions instead.")
 def intersectionPointsWithPlane(F,p,n):
     """Return the intersection points of a Formex with plane p,n.
 
@@ -344,7 +338,12 @@ def intersectionPointsWithPlane(F,p,n):
     """
     f = F.coords
     t = intersectionWithPlane(F,p,n).reshape((-1,1))
+    print t.shape
+    from plugins.geomtools import intersectionTimesSWP
+    t = intersectionTimesSWP(f,p,n).reshape((-1,1))
+    print t.shape
     return Formex((1.-t) * f[:,0,:] + t * f[:,1,:])
+
 
 
 def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
@@ -663,10 +662,10 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         else:
             return newp
     # get_new_prop
-
+    from plugins.geomtools import intersectionTimesSWP,intersectionPointsSWP
     C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
-    t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
-    P = column_stack([Ci.intersectionPointsWithPlane(p,n).coords for Ci in C])    
+    t = column_stack([intersectionTimesSWP(Ci.coords,p,n) for Ci in C])
+    P = column_stack([intersectionPointsSWP(Ci.coords,p,n) for Ci in C])    
     T = (t >= 0.)*(t <= 1.)
     d = F.coords.distanceFromPlane(p,n)
     U = abs(d) < atol
@@ -1403,6 +1402,19 @@ maxprop  = %s
             return Formex(self.coords[idx],self.prop[idx],self.eltype)
 
       
+    def cselect(self,idx):
+        """Return a Formex without the elements with numbers in ids.
+
+        idx can be a single element number or a list of numbers or
+        any other index mechanism accepted by numpy's ndarray
+
+        This is the complementary operaion of select
+        """
+        ok = ones(self.nelems())
+        ok[idx] = 0
+        return self.select(ok)
+
+      
     def selectNodes(self,idx):
         """Return a Formex which holds only some nodes of the parent.
 
@@ -1865,28 +1877,34 @@ maxprop  = %s
 
 
     def intersectionWithPlane(self,p,n):
-        """Return the intersection of a plex-2 Formex with the plane (p,n).
-    
-        This is equivalent with the function intersectionWithPlane(F,p,n).
+        """Return the intersection of a Formex with the plane (p,n).
+
+        Currently this only works for plex-2 and plex-3 Formices.
+
+        The intersection of the Formex with a plane specified by a point p
+        and normal n is returned. For a plex-2 Formex (lines), the returned
+        Formex will be of plexitude 1 (points). For a plex-3 Formex
+        (triangles) the returned Fomrex has plexitude 2 (lines).
         """
-        return intersectionWithPlane(self,p,n)
+        import warnings
+        warnings.warn("warn_formex_intersection")
+        if self.nplex() == 2:
+            from plugins.geomtools import intersectionPointsSWP
+            return intersectionPointsSWP(self.coords,p,n)
+        elif self.nplex() == 3:
+            return Formex(intersectionLinesWithPlane(self,p,n))
+        else:
+            # OTHER PLEXITUDES NEED TO BE IMPLEMENTED
+            raise ValueError,"Formex should be plex-2 or plex-3"
     
-    
+
+    @deprecation("\nUse Formex.intersectionWithPlane() instead.")
     def intersectionPointsWithPlane(self,p,n):
-        """Return the intersection points of a plex-2 Formex with plane (p,n).
-    
-        This is equivalent with the function intersectionWithPlane(F,p,n),
-        but returns a Formex instead of an array of points.
-        """
-        return Formex(intersectionPointsWithPlane(self,p,n))
+        return self.intersectionWithPlane(p,n)
 
-
+    @deprecation("\nUse Formex.intersectionWithPlane() instead.")
     def intersectionLinesWithPlane(self,p,n):
-        """Returns the intersection lines of a plex-3 Formex with plane (p,n).
-
-        This is equivalent with the function intersectionLinesWithPlane(F,p,n).
-        """
-        return Formex(intersectionLinesWithPlane(self,p,n))
+        return self.intersectionWithPlane(p,n)
 
 
     def cutWithPlane(self,p,n,side='',atol=None,newprops=None):
@@ -1918,10 +1936,11 @@ maxprop  = %s
             atol = 1.e-5*self.dsize()
         if self.nplex() == 2:
             return cut2AtPlane(self,p,n,side,atol,newprops)
-        if self.nplex() == 3:
+        elif self.nplex() == 3:
             return cut3AtPlane(self,p,n,side,atol,newprops)
-        # OTHER PLEXITUDES NEED TO BE IMPLEMENTED
-        raise ValueError,"Formex should be plex-2 or plex-3"
+        else:
+            # OTHER PLEXITUDES NEED TO BE IMPLEMENTED
+            raise ValueError,"Formex should be plex-2 or plex-3"
 
 
 # BV: withdrawn in 0.8.3

@@ -339,6 +339,14 @@ class Coords(ndarray):
         return sqrt(sum(d*d,-1))
 
 
+    def closestToPoint(self,p):
+        """Return the point closest to point p.
+
+        """
+        d = self.distanceFromPoint(p)
+        return self.reshape(-1,3)[d.argmin()]
+    
+
     def directionalSize(self,n,p=None,_points=False):
         """Return the extreme distances from the plane p,n.
 
@@ -1080,6 +1088,44 @@ class Coords(ndarray):
             f[...,i] *= s
         f += c
         return f
+
+
+    def projectOnSurface(self,S,n,ignore_errors=False):
+        """Project the Coords on a triangulated surface.
+
+        The points of the Coords are projected in the direction of the
+        vector n onto the surface S. 
+
+        Parameters:
+
+        - `S`: TriSurface: any triangulated surface
+        - `n`: int or vector: specifies the direction of the projection
+        - `ignore_errors`: if True, projective lines not cutting the
+          surface will result in NaN values. The default is to raise an error.
+
+        If successful, a Coords with the same structure as the
+        input is returned.
+        """
+        x = self.reshape(-1,3)
+        # Create planes through x in direction n
+        # WE SHOULD MOVE THIS TO arraytools?
+        from plugins.geomtools import anyPerpendicularVector
+        v1 = anyPerpendicularVector(n)
+        v2 = cross(n,v1)
+        # Create set of cuts with set of planes
+        cuts = [ S.intersectionWithPlane(xi,v1) for xi in x ]
+        # cut the cuts with second set of planes
+        points = [ c.toFormex().intersectionWithPlane(xi,v2) for c,xi in zip(cuts,x) ]
+        if ignore_errors :
+            points = [ p for p in points if p.shape[0] > 0 ]
+        else:
+            npts = [ p.shape[0] for p in points ]
+            if min(npts) == 0:
+                print npts
+                raise RuntimeError,"Some line has no intersection point"
+        # find the points closest to self
+        points = [ p.closestToPoint(xi) for p,xi in zip(points,x) ]
+        return Coords.concatenate(points)
 
 
     # Extra transformations implemented by plugins

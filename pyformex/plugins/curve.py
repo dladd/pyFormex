@@ -38,7 +38,7 @@ but special cases may be created for handling plane curves.
 from numpy import *
 from formex import *
 from geometry import Geometry
-from plugins.geomtools import triangleCircumCircle,intersectionTimesLWP
+from plugins.geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPointsSWP
 from plugins.mesh import Mesh
 
 
@@ -505,8 +505,7 @@ class PolyLine(Curve):
 
         for j in w:
             #print "%s -- %s" % (i,j)
-            P = Formex([self.coords[j:j+2]]).intersectionPointsWithPlane(p,n)
-            P = P.coords.reshape(1,3)
+            P = self.coords[j:j+2].intersectionPointsSWP(p,n).reshape(1,3)
             #print "%s -- %s cuts at %s" % (j,j+1,P)
             x = Coords.concatenate([Q,self.coords[i:j+1],P])
             #print "%s + %s + %s = %s" % (Q.shape[0],j-i,P.shape[0],x.shape[0])
@@ -534,6 +533,8 @@ class PolyLine(Curve):
             return res
 
 
+    # BV: I'm not sure what this does and if it belongs here
+    
     def distanceOfPoints(self,p,n,return_points=False):
         """Find the distances of points p, perpendicular to the vectors n.
         
@@ -566,7 +567,8 @@ class PolyLine(Curve):
             return OKpid,OKdist,OKpoints
         return OKpid,OKdist
 
-
+    # BV: same remark: what is this distance?
+    
     def distanceOfPolyLine(self,PL,ds,return_points=False):
         """Find the distances of the PolyLine PL.
         
@@ -874,6 +876,8 @@ Most likely because 'python-scipy' is not installed on your system.""")
         L = [ quad(self.length_intgrnd,0.,1.,args=(j,))[0] for j in range(self.nparts) ]
         return array(L)
 
+
+    # BV: This should go as a specialization in the approx() method
 
     def approx_by_subdivision(self,tol=1.e-3):
         """Return a PolyLine approximation of the curve.
@@ -1220,6 +1224,8 @@ def convertFormexToCurve(self,closed=False):
     elif self.nplex() == 4:
         control = self.coords[:,1:3,:]
         curve = BezierSpline(points,control=control,closed=closed)
+    else:
+        raise ValueError,"Can not convert %s-plex Formex to a Curve" % self.nplex()
     return curve
 
 Formex.toCurve = convertFormexToCurve

@@ -261,6 +261,7 @@ def anyPerpendicularVector(A):
     A is a (n,3) shaped array of vectors.
     The return value is a (n,3) shaped array of perpendicular vectors.
     """
+    A = asarray(A)
     x,y,z = hsplit(A,[1,2])
     n = zeros(x.shape,dtype=Float)
     t = (x!=0.)+(y!=0.)
@@ -289,6 +290,13 @@ def projectionVOP(A,n):
 
 
 ################## intersection tools ###############
+#
+#  IT SHOULD BE CLEARLY DOCUMENTED WHETHER NORMALS ARE REQUIRED
+#  TO BE NORMALIZED OR NOT
+#
+#  MAYBE WE SHOULD ADOPT CONVENTION TO USE m,n FOR NORMALIZED
+#  VECTORS, AND u,v,w for (possibly) unnormalized
+#
 
 def intersectionPointsLWL(q1,m1,q2,m2):
     """Return the intersection points of lines (q1,m1) and lines (q2,m2)
@@ -337,19 +345,6 @@ def intersectionTimesLWL(q1,m1,q2,m2):
     return t1,t2
 
 
-def intersectionPointsLWP(q,m,p,n):
-    """Return the intersection points of lines (q,m) with planes (p,n).
-
-    This is equivalent to intersectionTimesLWP(q,m,p,n) but returns a (nq,np,3)
-    shaped array of intersection points instead of the parameter values.
-    """
-    t = intersectionTimesLWP(q,m,p,n)
-    t = t[:,:,newaxis]
-    q = q[:,newaxis,:]
-    m = m[:,newaxis,:]
-    return q + t * m
-
-
 def intersectionTimesLWP(q,m,p,n):
     """Return the intersection of lines (q,m) with planes (p,n).
 
@@ -363,11 +358,74 @@ def intersectionTimesLWP(q,m,p,n):
         raise RuntimeError,"Expected q and m with same shape."
     if p.shape != n.shape:
         raise RuntimeError,"Expected p and n with same shape."
-    I1 = dotpr(p,n)
-    I2 = inner(q,n)
-    I3 = inner(m,n)
-    return (I1-I2)/I3
+    t =  (dotpr(p,n) - inner(q,n)) / inner(m,n)
+    return t
 
+
+def intersectionPointsLWP(q,m,p,n):
+    """Return the intersection points of lines (q,m) with planes (p,n).
+
+    This is like intersectionTimesLWP(q,m,p,n) but returns a (nq,np,3)
+    shaped array of intersection points instead of the parameter values.
+    """
+    t = intersectionTimesLWP(q,m,p,n)
+    t = t[:,:,newaxis]
+    q = q[:,newaxis,:]
+    m = m[:,newaxis,:]
+    return q + t * m
+
+
+def intersectionTimesSWP(S,p,n):
+    """Return the intersection of line segments S with the plane (p,n).
+
+    Parameters:
+
+    - `S`:  an (ns,2,3) array with line segments
+    ` `p`,`n`: (np,3) arrays with points and normals defining a set of planes
+
+    Returns: (ns,np) shaped array of parameter values t,
+    such that the intersection points are given by (1-t)*S[:,0] + t*S[:,1].
+
+    This function is comparable to intersectionTimesLWP, but ensures that
+    parameter values 0<=t<=1 are points inside the line segments.
+    """
+    p = asarray(p).reshape(-1,3)
+    n = asarray(n).reshape(-1,3)
+    if p.shape != n.shape:
+        raise RuntimeError,"Expected p and n with same shape."
+    n = normalize(n)
+    q0 = S[:,0,:]
+    q1 = S[:,1,:]
+    t = (dotpr(p,n) - inner(q0,n)) / inner((q1-q0),n)
+    return t
+
+
+def intersectionPointsSWP(S,p,n,return_all=False):
+    """Return the intersection points of line segments S with the plane (p,n).
+
+    Parameters:
+
+    - `S`:  an (ns,2,3) array with line segments
+    - `p`,`n`: (3,) or (np,3) arrays with points and normals defining a
+      single plane or a set of planes
+    - `return_all`: if True, all intersection points of the lines along the
+      segments are returned. Default is to return only the points that lie
+      on the segments.
+
+    Returns the intersection points as a Coords with shape (ns,np,3) if
+    return_all==True, else as a Coords with shape (n,3) where n <= ns*np.
+    """
+    t = intersectionTimesSWP(S,p,n)
+    tn = t[:,:,newaxis]
+    q0 = S[:,:1,:]
+    q1 = S[:,1:,:]
+    points = Coords((1.-tn)*q0 + tn*q1)
+    if not return_all:
+        # Find points inside segments
+        ok = (t >= 0.0) * (t <= 1.0)
+        points = points[ok]
+    return points
+     
 
 def intersectionPointsPWP(p1,n1,p2,n2,p3,n3):
     """Return the intersection points of planes (p1,n1), (p2,n2) and (p3,n3).

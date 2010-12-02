@@ -1374,7 +1374,6 @@ Total area: %s; Enclosed volume: %s
         """
         n = asarray(n)
         p = asarray(p)
-        
         # The vertices are classified based on their distance d from the plane:
         # - inside: d = 0
         # - up: d > 0
@@ -1390,6 +1389,7 @@ Total area: %s; Enclosed volume: %s
 
         # If there is no intersection, we're done
         if S.nelems() == 0:
+            raise
             return Mesh(Coords(),[])
         
         Mparts = []
@@ -1409,7 +1409,7 @@ Total area: %s; Enclosed volume: %s
         if ind.size != 0:
             rev = inverseUniqueIndex(ind)
             M = Mesh(S.coords,edg[w])
-            x = M.toFormex().intersectionPointsWithPlane(p,n).coords.reshape(-1,3)
+            x = M.toFormex().intersectionWithPlane(p,n).reshape(-1,3)
         
         # For each triangle, compute the number of cutting edges
         cut = w[fac]
@@ -1482,7 +1482,7 @@ Total area: %s; Enclosed volume: %s
         A sequence of nplanes planes with normal dir is constructed
         at equal distances spread over the bbox of the surface.
 
-        The return value is a list of intersectionWithPlanes() return
+        The return value is a list of intersectionWithPlane() return
         values, i.e. a list of Meshes, one for every cutting plane.
         In each Mesh the simply connected parts are identified by
         property number.
