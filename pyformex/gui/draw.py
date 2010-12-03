@@ -995,14 +995,21 @@ def redraw():
     pf.canvas.update()
 
 
-def delay(s):
-    """Set the draw delay in seconds.
+def delay(s=None):
+    """Get/Set the draw delay time.
+
+    Returns the current setting of the draw wait time (in seconds).
+    This drawing delay is obeyed by drawing and viewing operations.
     
-    s is a possibly fractional time in seconds.
-    After this call, draw operations will respect this draw wait time.
+    A parameter may be given to set the delay time to a new value.
+    It should be convertable to a float.
+    The function still returns the old setting. This may be practical
+    to save that value to restore it later.
     """
-    s = float(s)
-    pf.GUI.drawwait = s
+    saved = pf.GUI.drawwait
+    if s is not None:
+        pf.GUI.drawwait = float(s)
+    return saved
 
 
 def wait(relock=True):
@@ -1017,7 +1024,6 @@ def wait(relock=True):
 
     This function can be used to retard other functions than `
     """
-    print "waiting %s" % pf.GUI.drawwait
     pf.GUI.drawlock.wait()
     if relock:
         pf.GUI.drawlock.lock()
@@ -1251,36 +1257,44 @@ def zoom(f):
     pf.canvas.update()
 
 
-def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
-    """Fly through the current scene along the flypath.
+def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
+    """Fly through the current scene along the specified path.
 
-    - `flypath`: a PolyLine or plex-2 Formex.
+    This function moves the camera through the subsequent points
+    of a path, looing at the next point of the path, and keeping
+    the upvector of the camera oriented along the specified direction.
+    
+    - `path`: a PolyLine or plex-2 Formex specifyin the camera path.
+    - `upvector`: the direction of the vertical axis of the camera.
+    - `sleeptime`: a delay between subsequent images, to slow down
+      the camera movement.
     """
     from plugins.curve import PolyLine
-    
-    if type(path) is str:
-        path = named(path)
-    if not path:
-        warning("You have to define a flypath first!")
-        return
 
-    if isinstance(path,PolyLine):
-        path = path.toFormex() 
-    if path.nplex() != 2:
-        warning("The flypath should be a plex-2 Formex!")
-        
+    try:
+        if not isinstance(path,Formex):
+            path = path.toFormex() 
+        if not path.nplex() in (2,3):
+            raise ValueError
+    except:
+        raise ValueError,"The camera path should be (convertible to) a plex-2 or plex-3 Formex!"
+
+    if sleeptime is None:
+        sleeptime = pf.cfg['draw/flywait']
+    saved = delay(sleeptime)
+    saved1 = pf.GUI.actions['Continue'].isEnabled()
+    pf.GUI.actions['Continue'].setEnabled(True)
+    
     for eye,center in path:
         pf.debug("Eye: %s; Center: %s" % (eye,center))
         pf.canvas.camera.lookAt(eye,center,upvector)
+        wait()
         pf.canvas.display()
         pf.canvas.update()
         image.saveNext()
-        if sleeptime is None:
-            sleeptime = pf.cfg['draw/flywait']
-        sleeptime = float(sleeptime)
-        if sleeptime > 0.0:
-            sleep(sleeptime)
 
+    delay(saved)
+    pf.GUI.actions['Continue'].setEnabled(saved1)
     pf.canvas.camera.setCenter(*center)
     pf.canvas.camera.setDist(coords.length(center-eye))
     pf.canvas.update()

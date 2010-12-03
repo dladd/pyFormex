@@ -1926,11 +1926,36 @@ def inputAnyOld(item,parent=None):
 
     return inputAny(name,value,itemtype,**options)
 
-    
+
 def updateDialogItems(data,newdata):
     """Update the input data fields with new data values
 
     - data: a list of dialog items, as required by an InputDialog.
+    - newdata: a dictionary with new values for (some of) the items.
+
+    The data items with a name occurring as a key in newdata will have
+    their value replaced with the corresponding value in newdata, unless
+    this value is None. 
+
+    The user should make sure to set only values of the proper type!
+    """
+    import warnings
+    warnings.warn("warn_widgets_updatedialogitems")
+    if newdata:
+        for d in data:
+            print d
+            if d.get('itemtype',None) in [ 'group', 'tab' ]:
+                updateDialogItems(d['items'],newdata)
+            else:
+                newval = newdata.get(d['name'],None)
+                if newval is not None:
+                    d['value'] = newval
+ 
+
+def updateOldDialogItems(data,newdata):
+    """Update the input data fields with new data values
+
+    - data: a list of dialog items, as required by an OldInputDialog.
     - newdata: a dictionary with new values for (some of) the items.
 
     The values in data which have a matching key in newdata will be
@@ -1941,7 +1966,7 @@ def updateDialogItems(data,newdata):
     if newdata:
         if type(data) is dict:
             for d in data:
-                updateDialogItems(data[d],newdata)
+                updateOldDialogItems(data[d],newdata)
         else:
             for d in data:
                 v = newdata.get(d[0],None)
