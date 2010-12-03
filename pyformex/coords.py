@@ -1113,6 +1113,7 @@ class Coords(ndarray):
         v1 = anyPerpendicularVector(n)
         v2 = cross(n,v1)
         # Create set of cuts with set of planes
+        print type(S)
         cuts = [ S.intersectionWithPlane(xi,v1) for xi in x ]
         # cut the cuts with second set of planes
         points = [ c.toFormex().intersectionWithPlane(xi,v2) for c,xi in zip(cuts,x) ]

@@ -90,8 +90,9 @@ scaled_image = None
 
 # read the teapot surface
 T = TriSurface.read(getcfg('datadir')+'/teapot.off')
+print type(T)
 xmin,xmax = T.bbox()
-T= T.translate(-T.center()).scale(1./(xmax[0]-xmin[0])).scale(4.).setProp(2)
+T= T.trl(-T.center()).scale(4./(xmax[0]-xmin[0])).setProp(2)
 draw(T)
 
 # default image file
@@ -155,6 +156,7 @@ patch = makeGrid(kx,ky,'Quad4').toMesh()
 d0 = drawImage(mH0,base,patch)
 
 if method == 'projection':
+    print type(T)
     pts = mH0.coords.projectOnSurface(T,[0.,0.,1.])
     dg1=d1 = None
 
@@ -169,10 +171,10 @@ else:
     pause('Creating intersection with surface > STEP')
     pts, il, it, mil=intersectSurfaceWithSegments2(T, x, max1xperline=True)
 
-if len(x) != len(pts):
-    print "Some of the lines do not intersect the surface:"
-    print " %d lines, %d intersections %d missing" % (len(x),len(pts),len(mil))
-    exit()
+    if len(x) != len(pts):
+        print "Some of the lines do not intersect the surface:"
+        print " %d lines, %d intersections %d missing" % (len(x),len(pts),len(mil))
+        exit()
     
 dp=draw(pts, marksize=6, color='white')
 print pts.shape

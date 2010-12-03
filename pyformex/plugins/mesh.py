@@ -330,13 +330,13 @@ class Mesh(Geometry):
     def _set_coords(self,coords):
         """Replace the current coords with new ones.
 
-        Returns a Mesh exactly like the current except for the position
-        of the coordinates.
+        Returns a Mesh or subclass exactly like the current except
+        for the position of the coordinates.
         """
         if isinstance(coords,Coords) and coords.shape == self.coords.shape:
-            return Mesh(coords,self.elems,self.prop,self.eltype)
+            return self.__class__(coords,self.elems,prop=self.prop,eltype=self.eltype)
         else:
-            raise ValueError,"Invalid reinitialization of Mesh coords"
+            raise ValueError,"Invalid reinitialization of %s coords" % self.__class__
 
 
     def setProp(self,prop=None):
