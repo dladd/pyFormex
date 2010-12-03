@@ -28,6 +28,9 @@ topics = ['geometry','curve','mesh']
 techniques = ['sweep',]
 """
 from plugins import curve
+from gui.widgets import simpleInputItem as I, groupInputItem as G
+
+
 import simple
 import re
 
@@ -42,17 +45,6 @@ rfuncs = [
 #    'custom',
 ]
 
-spiral_data = [
-    ['nmod',100,{'text':'Number of cells along spiral'}],
-    ['turns',2.5,{'text':'Number of 360 degree turns'}],
-    ['rfunc',None,{'text':'Spiral function','choices':rfuncs}],
-    ['coeffs',(1.,0.5,0.2),{'text':'Coefficients in the spiral function'}],
-    ['spiral3d',0.0,{'text':'Out of plane factor'}],
-    ['spread',False,{'text':'Spread points evenly along spiral'}],
-    ['nwires',1,{'text':'Number of spirals'}],
-    ['sweep',False,{'text':'Sweep a cross section along the spiral'}],
-    ]
-
 
 # get the plane line patterns from simple module
 cross_sections_2d = {}
@@ -61,10 +53,12 @@ for cs in simple.Pattern:
         cross_sections_2d[cs] = simple.Pattern[cs]
 # add some more patterns
 cross_sections_2d.update({
-    'channel' : '1223',
-    'sigma' : '16253',
-    'H-beam' : '11/322/311',
     'swastika':'12+23+34+41',
+    'channel' : '1223',
+    'H-beam' : '11/322/311',
+    'sigma' : '16253',
+    'octagon':'15263748',
+    'Z-beam': '353',
     })
 # define some plane surface patterns
 cross_sections_3d = {
@@ -75,17 +69,25 @@ cross_sections_3d = {
 
 
 sweep_data = [
-    ['cross_section',None,'select',{'text':'Shape of cross section','choices':cross_sections_2d.keys()+cross_sections_3d.keys()}],
-    ['cross_rotate',0.,{'text':'Cross section rotation angle before sweeping'}],
-    ['cross_upvector','2',{'text':'Cross section vector that keeps its orientation'}],
-    ['cross_scale',0.,{'text':'Cross section scaling factor'}],
+    I('cross_section','cross','select',text='Shape of cross section',choices=cross_sections_2d.keys()+cross_sections_3d.keys()),
+    I('cross_rotate',0.,text='Cross section rotation angle before sweeping'),
+    I('cross_upvector','2',text='Cross section vector that keeps its orientation'),
+    I('cross_scale',0.,text='Cross section scaling factor'),
     ]
 
 
-input_data = {
-    'Spiral Data' : spiral_data,
-    'Sweep Data' : sweep_data,
-}
+input_data = [
+    I('nmod',100,text='Number of cells along spiral'),
+    I('turns',2.5,text='Number of 360 degree turns'),
+    I('rfunc',None,text='Spiral function',choices=rfuncs),
+    I('coeffs',(1.,0.5,0.2),text='Coefficients in the spiral function'),
+    I('spiral3d',0.0,text='Out of plane factor'),
+    I('spread',False,text='Spread points evenly along spiral'),
+    I('nwires',1,text='Number of spirals'),
+    I('sweep',False,text='Sweep a cross section along the spiral'),
+    G('Sweep Data',sweep_data),
+    I('flyalong',False,text='Fly along the spiral'),
+   ]
 
 def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:0):
     """Perform a spiral transformation on a coordinate array"""
@@ -166,24 +168,29 @@ def show():
         drawSpiralCurves(PL,nwires,blue,red)
 
 
-    if not sweep:
-        return
+    if sweep:
 
-    CS = createCrossSection()
-    draw(CS)
+        CS = createCrossSection()
+        draw(CS)
 
-    print CS.shape()
-    draw(CS)
-    return
-    structure = CS.sweep(PL,normal=[1.,0.,0.],upvector=eval(cross_upvector),avgdir=True)
-    clear()
-    smoothwire()
-    print structure.shape()
-    draw(structure,color='red',bkcolor='cyan')
+        #print CS.shape()
+        draw(CS)
+        wait()
+        structure = CS.sweep(PL,normal=[1.,0.,0.],upvector=eval(cross_upvector),avgdir=True)
+        clear()
+        smoothwire()
+        #print structure.shape()
+        draw(structure,color='red',bkcolor='cyan')
 
-    if nwires > 1:
-        structure = structure.toFormex().rosette(nwires,360./nwires).toMesh()
-        draw(structure,color='orange')
+        if nwires > 1:
+            structure = structure.toFormex().rosette(nwires,360./nwires).toMesh()
+            draw(structure,color='orange')
+
+    if flyalong:
+        flyAlong(PL.scale(1.1).trl([0.0,0.0,0.2]),upvector=[0.,0.,1.],sleeptime=0.1)
+
+        view('front')
+
 
 
 def close():
@@ -206,10 +213,15 @@ def timeOut():
 
 
 # Update the data items from saved values
-saved_data = pf.PF.get('Sweep_data',{})
-widgets.updateDialogItems(input_data,pf.PF.get('Sweep_data',{}))
+try:
+    saved_data = pf.PF.get('Sweep_data',{})
+    print saved_data
+    widgets.updateDialogItems(input_data,pf.PF.get('Sweep_data',{}))
+except:
+    raise
+
 # Create the modeless dialog widget
-dialog = widgets.OldInputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
+dialog = widgets.InputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
 # The examples style requires a timeout action
 dialog.timeout = timeOut
 # Show the dialog and let the user have fun
