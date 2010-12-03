@@ -77,6 +77,8 @@ warn_trisurface_getfaces = "TriSurface.getFaces now returns the faces' node numb
 
 warn_mesh_select_default_compacted = "Mesh.select now by default compacts the Mesh. Use the `compact=False` argument if you do not want the compaction."
 
+warn_widgets_updatedialogitems = "gui.widgets.updateDialogItems now expects data in the new InputItem format. Use gui.widgets.updateOldDialogItems for use with old data format."
+
 warn_formex_intersection = "The Formex intersection functions have changed: Formex.intersectionWithPlane(p,n) now returns the intersection with a plane for a plex-2 or plex-3 Formex."
 
 # End
