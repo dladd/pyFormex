@@ -77,7 +77,6 @@ pf.GUI.setBusy()
 #draw.logfile = open('pyformex.log','w')
     
 clear()
-view('iso')
 smoothwire()
 transparent()
 
@@ -94,6 +93,12 @@ if res == "Help":
 
 ndim = int(res[0])
 
+
+if ndim == 2:
+    view('front')
+else:
+    view('iso')
+    
 for i in range(ndim):
     a = a.extrude(n[i],1.,i)
     
@@ -102,48 +107,55 @@ drawNumbers(a)
 
 clear()
 m = a.toMesh().setProp(1)
+export({'mesh':m})
 draw(m)
 drawNumbers(m)
-message("%s elements" % m.nelems())
+pause("%s elements" % m.nelems())
 
-export({'mesh':m})
 
-pause('')
 flat()
 e = Mesh(m.coords,m.getEdges()).setProp(2)
 clear()
 draw(e)
 drawNumbers(e)
-message("%s edges" % e.nelems())
+pause("%s edges" % e.nelems())
 
-pause('')
 e = Mesh(m.coords,m.getEdges(unique=True)).setProp(2)
 clear()
 draw(e)
 drawNumbers(e)
-message("%s unique edges" % e.nelems())
+pause("%s unique edges" % e.nelems())
 
-pause('')
 smoothwire()
 e = Mesh(m.coords,m.getFaces()).setProp(3)
 clear()
 draw(e)
 drawNumbers(e)
-message("%s faces" % e.nelems())
+pause("%s faces" % e.nelems())
 
-pause('')
 e = Mesh(m.coords,m.getFaces(unique=True)).setProp(3)
 clear()
 draw(e)
 drawNumbers(e)
-message("%s unique faces" % e.nelems())
+pause("%s unique faces" % e.nelems())
 
-pause('')
 e = Mesh(m.coords,m.getBorder()).setProp(4)
+export({'border':e})
 clear()
 draw(e)
 drawNumbers(e)
-message("%s border elements" % e.nelems())
+pause("%s border elements" % e.nelems())
 
+clear()
+m = m.setProp(arange(m.nelems()))
+draw(m)
+drawNumbers(m)
+pause("mesh with properties")
 
-export({'border':e})
+e = m.getBorderMesh()
+clear()
+draw(e)
+drawNumbers(e)
+message("border elements inherit the properties")
+
+# End

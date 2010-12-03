@@ -584,7 +584,7 @@ class Mesh(Geometry):
         return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
 
-    def getBorder(self):
+    def getBorder(self,return_indices=False):
         """Return the border of the Mesh.
 
         This returns a Connectivity table with the border of the Mesh.
@@ -592,17 +592,30 @@ class Mesh(Geometry):
         mesh itself. These entities become part of the border if they
         are connected to only one element.
 
+        If return_indices==True, it returns also an (nborder,2) index
+        for inverse lookup of the higher entity (column 0) and its local
+        border part number (column 1).
+
         The returned Connectivity can be used together with the
         Mesh.coords to construct a Mesh of the border geometry.
-        See also getBorderMesh.
+        See also :meth:`getBorderMesh`.
         """
         sel = self.getLowerEntitiesSelector(-1)
         hi,lo = self.elems.insertLevel(sel)
         hiinv = hi.inverse()
         ncon = (hiinv>=0).sum(axis=1)
-        brd = (ncon<=1)   # < 1 should not occur 
-        brd = lo[brd]
-        return brd
+        isbrd = (ncon<=1)   # < 1 should not occur 
+        brd = lo[isbrd]
+        if not return_indices:
+            return brd
+        
+        # return indices where the border elements come from
+        binv = hiinv[isbrd]
+        enr = binv[binv >= 0]  # element number
+        a = hi[enr]
+        b = arange(lo.shape[0])[isbrd].reshape(-1,1)
+        fnr = where(a==b)[1]   # local border part number
+        return brd,column_stack([enr,fnr])
 
 
     def getBorderMesh(self,compact=True):
@@ -616,24 +629,20 @@ class Mesh(Geometry):
         By default, the resulting Mesh is compacted. Compaction can be
         switched off by setting `compact=False`.
         """
-        if self.props==None:
+        if self.prop==None:
             M = Mesh(self.coords,self.getBorder())
 
         else:
-            kp = self.propSet()
-            p = self.splitProp()
-            brd = Mesh.concatenate( [Mesh(p[k].coords,p[k].getBorder()).setProp(k) for k in  kp] ).renumber()
-            ind,ok = brd.elems.testDoubles()
-            #remove repeated faces with different props
-            testdoubles = ind[ok*roll(ok, -1, 0)]
-            M = brd.select(testdoubles,compact=False)
+            brd,indices = self.getBorder(return_indices=True)
+            enr = indices[:,0]
+            M = Mesh(self.coords,brd,prop=self.prop[enr])
 
         if compact:
             M._compact()
         return M
 
 
-    # This needs clean up
+    # BV: This needs clean up
     def neighborsByNode(self, elsel=None):
         """_For each element index in the list elsel,
 
