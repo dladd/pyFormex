@@ -431,6 +431,12 @@ def sectionizeSelection():
 ##            flytruCircles(ctr)
     selection.draw()
 
+def fly():
+    path = named('flypath')
+    if path is not None:
+        flyAlong(path)
+    else:
+        warning("You should define the flypath first")
 
 
 ################### menu #################
@@ -484,7 +490,7 @@ def create_menu():
         ("&Create Parts",createParts),
         ("&Sectionize Selection",sectionizeSelection),
         ("---",None),
-        ("&Fly",flyAlong),
+        ("&Fly",fly),
         ("---",None),
         ("&Reload menu",reload_menu),
         ("&Close",close_menu),

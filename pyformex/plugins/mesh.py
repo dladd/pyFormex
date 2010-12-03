@@ -334,7 +334,7 @@ class Mesh(Geometry):
         of the coordinates.
         """
         if isinstance(coords,Coords) and coords.shape == self.coords.shape:
-            return self.__class__(coords,self.elems,prop=self.prop,eltype=self.eltype)
+            return Mesh(coords,self.elems,self.prop,self.eltype)
         else:
             raise ValueError,"Invalid reinitialization of Mesh coords"
 
@@ -552,6 +552,19 @@ class Mesh(Geometry):
         faces. It is equivalent to ```self.getLowerEntities(2,unique)```
         """
         return self.getLowerEntities(2,unique)
+
+
+    def reverse(self):
+        """Return a Mesh where all elements have been reversed.
+
+        Reversing an element means reversing the order of its points.
+        This is equivalent to::
+        
+          Mesh(self.coords,self.elems[:,::-1])
+          
+        """
+        return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
+
     
     # ?? DOES THIS WORK FOR *ANY* MESH ??
     # What with a mesh of points, lines, ...
@@ -603,7 +616,7 @@ class Mesh(Geometry):
         By default, the resulting Mesh is compacted. Compaction can be
         switched off by setting `compact=False`.
         """
-        if self.prop==None:
+        if self.props==None:
             M = Mesh(self.coords,self.getBorder())
 
         else:
@@ -616,7 +629,7 @@ class Mesh(Geometry):
             M = brd.select(testdoubles,compact=False)
 
         if compact:
-            M = M.compact()
+            M._compact()
         return M
 
 
@@ -677,10 +690,14 @@ Size: %s
         return self.__class__(coords,index[self.elems],prop=self.prop,eltype=self.eltype)
     
 
-    def compact(self):
+    # Since this is used in only a few places, we could
+    # throw it away and only use compact()
+    def _compact(self):
         """Remove unconnected nodes and renumber the mesh.
 
-        Beware! This function changes the object in place.
+        Beware! This function changes the object in place and therefore
+        returns nothing. It is mostly intended for internal use.
+        Normal users should use compact().
         """
         nodes = unique(self.elems)
         if nodes.size == 0:
@@ -693,6 +710,26 @@ Size: %s
             else:
                 elems = self.elems
             self.__init__(coords,elems,prop=self.prop,eltype=self.eltype)
+    
+
+    def compact(self):
+        """Remove unconnected nodes and renumber the mesh.
+
+        Returns a mesh where all nodes that are not used in any
+        element have been removed, and the nodes are renumbered to
+        a compacter scheme.
+        """
+        nodes = unique(self.elems)
+        if nodes.size == 0:
+            self.__init__([],[])
+        
+        elif nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
+            coords = self.coords[nodes]
+            if nodes[-1] >= nodes.size:
+                elems = inverseUniqueIndex(nodes)[self.elems]
+            else:
+                elems = self.elems
+            self.__class__(coords,elems,prop=self.prop,eltype=self.eltype)
 
         return self
 
@@ -720,7 +757,7 @@ Size: %s
         if self.prop is not None:
             M.setProp(self.prop[selected])
         if compact:
-            M.compact()
+            M._compact()
         return M
 
 
@@ -747,48 +784,6 @@ Size: %s
             wi = range(self.nelems())
             wi = delete(wi,selected)
             return self.select(wi,compact=compact)
-
-
-    def reverse(self):
-        """Return a Mesh where all elements have been reversed.
-
-        Reversing an element means reversing the order of its points.
-        This is equivalent to::
-        
-          Mesh(self.coords,self.elems[:,::-1])
-          
-        """
-        return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
-
-
-    def reflect(self,*args,**kargs):
-        """Reflect the Mesh in direction dir against plane at pos.
-
-        Parameters:
-
-        - `dir`: int: direction of the reflection (default 0)
-        - `pos`: float: offset of the mirror plane from origin (default 0.0)
-        - `inplace`: boolean: change the coordinates inplace (default False)
-        - `reverse`: boolean: revert the normals of the triangles
-          (default False).
-          Reflection of the coordinates of a 2D Mesh reverses the surface
-          sides. Setting this parameter True will cause an extra
-          reversion. This is what is expected in most 2D mirroring operations.
-          The default is False, because the Mesh object currently does not
-          know what the dimensionality of the Mesh is. The derived subclass
-          TriSurface however, will by default reverse the surface on
-          refelction operations.
-        """
-        print self.__class__
-        M = Geometry.reflect(self,*args,**kargs)
-        print M.__class__
-        if kargs.get('reverse',False) == True:
-            M = M.reverse()
-        print M.__class__
-        return M
-
-
-############# methods for mesh conversion ###############################
 
 
     def meanNodes(self,nodsel):
@@ -1521,8 +1516,8 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
         raise ValueError,"Meshes are not compatible"
 
     # compact the node numbering schemes
-    mesh1 = mesh1.copy().compact()
-    mesh2 = mesh2.copy().compact()
+    mesh1 = mesh1.compact()
+    mesh2 = mesh2.compact()
 
     # Create the interpolations of the coordinates
     x = Coords.interpolate(mesh1.coords,mesh2.coords,n).reshape(-1,3)
