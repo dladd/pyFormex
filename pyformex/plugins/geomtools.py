@@ -381,7 +381,7 @@ def intersectionTimesSWP(S,p,n):
     Parameters:
 
     - `S`:  an (ns,2,3) array with line segments
-    ` `p`,`n`: (np,3) arrays with points and normals defining a set of planes
+    - `p`,`n`: (np,3) arrays with points and normals defining a set of planes
 
     Returns: (ns,np) shaped array of parameter values t,
     such that the intersection points are given by (1-t)*S[:,0] + t*S[:,1].

@@ -13,13 +13,13 @@
 
 .. automodule:: coords
    :synopsis: A structured collection of 3D coordinates.
-   :members: bbox,coordsmethod,origin
+   :members: bbox,origin
 
    ``Classes defined in module coords``
 
 
    .. autoclass:: Coords
-      :members: points,pshape,npoints,x,y,z,bbox,center,centroid,sizes,dsize,bsphere,distanceFromPlane,distanceFromLine,distanceFromPoint,directionalSize,directionalExtremes,directionalWidth,test,fprint,set,scale,translate,replicate,rotate,shear,reflect,affine,cylindrical,hyperCylindrical,toCylindrical,spherical,superSpherical,toSpherical,bump1,bump2,bump,flare,newmap,map,map1,mapd,egg,replace,swapAxes,rollAxes,projectOnPlane,projectOnSphere,projectOnCylinder,isopar,transformCS,split,fuse,append,actor
+      :members: points,pshape,npoints,x,y,z,bbox,center,centroid,sizes,dsize,bsphere,distanceFromPlane,distanceFromLine,distanceFromPoint,closestToPoint,directionalSize,directionalExtremes,directionalWidth,test,fprint,set,scale,translate,replicate,rotate,shear,reflect,affine,cylindrical,hyperCylindrical,toCylindrical,spherical,superSpherical,toSpherical,bump1,bump2,bump,flare,newmap,map,map1,mapd,egg,replace,swapAxes,rollAxes,projectOnPlane,projectOnSphere,projectOnCylinder,projectOnSurface,isopar,transformCS,split,fuse,append,actor
 
    .. autoclass:: CoordinateSystem
       :members: 

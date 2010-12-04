@@ -16,7 +16,7 @@ BuMPix Live Linux system
    system and how to use it to run pyFormex directly on nearly any
    computer system without having to install it.
 
-.. _sec:bumpix-live-linux:
+.. _sec:what-is-bumpix:
 
 What is BuMPix
 ==============

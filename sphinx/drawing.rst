@@ -214,6 +214,7 @@ following functions are available for manipulating the viewports.
 
 
 .. function:: viewport(n)
+   :noindex:
 
    Select the current viewport. All drawing related functions will henceforth
    operate on that viewport.

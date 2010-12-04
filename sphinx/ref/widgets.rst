@@ -13,7 +13,7 @@
 
 .. automodule:: widgets
    :synopsis: A collection of custom widgets used in the pyFormex GUI
-   :members: setInputTimeout,standardIcon,maxSize,addTimeOut,selectFont,getColor,defaultItemType,simpleInputItem,groupInputItem,tabInputItem,compatInputItem,convertInputItemList,inputAny,inputAnyOld,updateDialogItems,updateText,dialogButtons
+   :members: setInputTimeout,standardIcon,maxSize,addTimeOut,selectFont,getColor,defaultItemType,simpleInputItem,groupInputItem,tabInputItem,compatInputItem,convertInputItemList,inputAny,inputAnyOld,updateDialogItems,updateOldDialogItems,updateText,dialogButtons
 
    ``Classes defined in module widgets``
 

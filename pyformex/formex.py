@@ -661,11 +661,11 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
             return p[ind]
         else:
             return newp
-    # get_new_prop
+    
     from plugins.geomtools import intersectionTimesSWP,intersectionPointsSWP
     C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([intersectionTimesSWP(Ci.coords,p,n) for Ci in C])
-    P = column_stack([intersectionPointsSWP(Ci.coords,p,n) for Ci in C])    
+    P = column_stack([intersectionPointsSWP(Ci.coords,p,n,return_all=True) for Ci in C])    
     T = (t >= 0.)*(t <= 1.)
     d = F.coords.distanceFromPlane(p,n)
     U = abs(d) < atol

@@ -883,51 +883,56 @@ def cutWithPlane():
 def cutSelectionByPlanes():
     """Cut the selection with one or more planes, which are already created."""
     S = selection.check(single=True)
-    if S:
-        res1 = widgets.Selection(listAll(clas=Plane),
-                                'Known %sobjects' % selection.object_type(),
-                                mode='multi',sort=True).getResult()
-        if res1:
-            res2 = askItems([I('Tolerance',0.),
-                             I('Color by','side',itemtype='radio',choices=['side', 'element type']), 
-                             I('Side','both',itemtype='radio',choices=['positive','negative','both']),
-                             ],caption = 'Cutting parameters')
-            if res2:
-                planes = map(named, res1)
-                p = [plane.P for plane in planes]
-                n = [plane.n for plane in planes]
-                atol = res2['Tolerance']
-                color = res2['Color by']
-                side = res2['Side']
-                if color == 'element type':
-                    newprops = [1,2,2,3,4,5,6]
-                else:
-                    newprops = None
-                if side == 'both':
-                    Spos, Sneg = S.toFormex().cutWithPlane(p,n,newprops=newprops,side=side,atol=atol)
-                elif side == 'positive':
-                    Spos = S.toFormex().cutWithPlane(p,n,newprops=newprops,side=side,atol=atol)
-                    Sneg = Formex()
-                elif side == 'negative':
-                    Sneg = S.toFormex().cutWithPlane(p,n,newprops=newprops,side=side,atol=atol)
-                    Spos = Formex()
-                if Spos.nelems() !=0:
-                    Spos = TriSurface(Spos)
-                    if color == 'side':
-                        Spos.setProp(2)
-                else:
-                    Spos = None
-                if Sneg.nelems() != 0:
-                    Sneg = TriSurface(Sneg)
-                    if color == 'side':
-                        Sneg.setProp(3)
-                else:
-                    Sneg = None
-                name = selection.names[0]
-                export({name+"/pos":Spos})
-                export({name+"/neg":Sneg})
-                selection.set([name+"/pos",name+"/neg"]+res1)
-                selection.draw()
+    if not S:
+        return
+
+    planes = listAll(clas=Plane)
+    if len(planes) == 0:
+        warning("You have to first define some planes")
+        return
+        
+    res1 = widgets.Selection(planes,'Known %sobjects' % selection.object_type(),mode='multi',sort=True).getResult()
+    if res1:
+        res2 = askItems([I('Tolerance',0.),
+                         I('Color by','side',itemtype='radio',choices=['side', 'element type']), 
+                         I('Side','both',itemtype='radio',choices=['positive','negative','both']),
+                         ],caption = 'Cutting parameters')
+        if res2:
+            planes = map(named, res1)
+            p = [plane.P for plane in planes]
+            n = [plane.n for plane in planes]
+            atol = res2['Tolerance']
+            color = res2['Color by']
+            side = res2['Side']
+            if color == 'element type':
+                newprops = [1,2,2,3,4,5,6]
+            else:
+                newprops = None
+            if side == 'both':
+                Spos, Sneg = S.toFormex().cutWithPlane(p,n,newprops=newprops,side=side,atol=atol)
+            elif side == 'positive':
+                Spos = S.toFormex().cutWithPlane(p,n,newprops=newprops,side=side,atol=atol)
+                Sneg = Formex()
+            elif side == 'negative':
+                Sneg = S.toFormex().cutWithPlane(p,n,newprops=newprops,side=side,atol=atol)
+                Spos = Formex()
+            if Spos.nelems() !=0:
+                Spos = TriSurface(Spos)
+                if color == 'side':
+                    Spos.setProp(2)
+            else:
+                Spos = None
+            if Sneg.nelems() != 0:
+                Sneg = TriSurface(Sneg)
+                if color == 'side':
+                    Sneg.setProp(3)
+            else:
+                Sneg = None
+            name = selection.names[0]
+            export({name+"/pos":Spos})
+            export({name+"/neg":Sneg})
+            selection.set([name+"/pos",name+"/neg"]+res1)
+            selection.draw()
 
 
 def intersectWithPlane():

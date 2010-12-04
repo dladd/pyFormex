@@ -1389,7 +1389,6 @@ Total area: %s; Enclosed volume: %s
 
         # If there is no intersection, we're done
         if S.nelems() == 0:
-            raise
             return Mesh(Coords(),[])
         
         Mparts = []
@@ -1593,6 +1592,9 @@ Total area: %s; Enclosed volume: %s
         will be an orientable manifold. This is a necessary condition
         for the `gts` methods to be applicable.
         """
+        if self.nelems() == 0:
+            # Protect against impossible file handling for empty surfaces
+            return self
         tmp = tempfile.mktemp('.stl')
         pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'stl')

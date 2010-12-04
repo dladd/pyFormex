@@ -91,7 +91,9 @@ Projects
 
 Mesh
 ----
-- many new and improved functions
+- many new (e.g. projectOnSurface) and improved (e.g. getBorderMesh 
+  inherits properties from parent Mesh) Mesh methods. 
+- more Mesh conversions
 
 
 Plugins
@@ -118,6 +120,7 @@ New examples:
 .. - RotoTranslation
 .. - SurfaceProjection
 .. - BezierSpline
+.. - Carpetry
 
 - FeEx: 
   - direct run and postprocessing of calix jobs 

@@ -1192,9 +1192,8 @@ class Coords(ndarray):
 
         - the unique points as a :class:`Coords` object,
         - an integer (nnod) array holding an index in the unique
-
-        coordinates array for each of the original nodes. This index will
-        have the same shape as the pshape() of the coords array.
+          coordinates array for each of the original nodes. This index will
+          have the same shape as the pshape() of the coords array.
 
         The procedure works by first dividing the 3D space in a number of
         equally sized boxes, with a mean population of nodesperbox.
@@ -1216,6 +1215,10 @@ class Coords(ndarray):
         a different shift value (they should differ more than the tolerance).
         Specifying repeat=True will automatically do this.
         """
+        if self.size == 0:
+            # allow empty coords sets
+            return self,array([],dtype=Int).reshape(self.pshape())
+        
         if repeat:
             # Aplly twice with different shift value
             coords,index = self.fuse(nodesperbox,shift,rtol,atol,repeat=False)
