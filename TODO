@@ -77,13 +77,10 @@ Each task can have the following keys:
       dev: bverheg
       sta: PARTIAL
       rem: A single command line is available. 
+
+   - Replace the timeout functions with a TIMEOUT signal/slot 
       
    - Add an interactive Python aware editor widget
-      
-   - Generalize the timeout to all dialogs
-      dev: bverheg
-      sta: MOSTLY DONE
-      rem: Some specialized dialogs are still missing the timeout 
       
    - Copy viewport defaults to newly added viewports
       sta: TODO

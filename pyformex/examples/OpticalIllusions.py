@@ -498,23 +498,24 @@ def explain():
 
 def show():
     """Show the illusion"""
-    dialog.acceptData()
-    globals().update(dialog.results)
-    if Explain:
-        explain()
-    dialog.hide()
-    method[Illusion]()
-    dialog.show()
+    if dialog:
+        dialog.acceptData()
+        globals().update(dialog.results)
+        if Explain:
+            explain()
+        dialog.hide()
+        method[Illusion]()
+        dialog.show()
+
 
 def next():
     """Show the next illusion"""
     dialog.acceptData()
     ill = dialog.results['Illusion']
-    print ill,method._order
     i = (method._order.index(ill) + 1) % len(method._order)
-    print method._order[i]
     dialog.updateData({'Illusion':method._order[i]})
     show()
+
 
 def timeOut():
     """What to do when the dialog receives a timeout signal"""
@@ -544,14 +545,13 @@ def openDialog():
     
 
 if __name__ == "draw":
+    Illusion = None
+    Explain = False
     try:
         globals().update(pf.PF[gdname])
     except:
-        Illusion = None
-        Explain = False
+        pass
 
-
-    print Illusion,Explain
     close()
     openDialog()
     
