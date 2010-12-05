@@ -13,7 +13,7 @@ from pyformex.utils import runCommand
 
 import os,sys,commands,datetime
 
-now = datetime.datetime.now()
+now = datetime.datetime.now().replace(microsecond=0).isoformat(' ')
 print now
 
 curdir = os.path.dirname(__file__)
@@ -117,7 +117,7 @@ set key top left
 set xdata time
 set timefmt "%s"
 set format x "%s"
-set xlabel "Date (YY/MM)"
+set xlabel "Year/Month"
 #set ylabel "revision number"
 #set yrange [0:1.2]
 plot """ % (outfile,now,'%Y-%m-%d','%y\\n%m')

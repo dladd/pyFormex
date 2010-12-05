@@ -17,10 +17,12 @@ PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d _build/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
 MANDOCS= _build/html/*
-RSYNC= rsync -av -e ssh
+RSYNC= rsync -v -e ssh
+PDF= _build/latex/pyformex.pdf
 
-UPLOAD= shell.berlios.de:/home/groups/pyformex/
-DOCUPLOAD= ${UPLOAD}/htdocs/doc
+UPLOAD= shell.berlios.de:/home/groups
+DOCUPLOAD= ${UPLOAD}/pyformex/htdocs/doc
+FTPUPLOAD= ${UPLOAD}/ftp/pub/pyformex
 
 .PHONY: help clean ref html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
 
@@ -106,7 +108,9 @@ doctest:
 	      "results in _build/doctest/output.txt."
 
 
-pdf:	latex
+pdf: ${PDF}
+
+${PDF}: latex
 	make -C _build/latex all-pdf
 
 
@@ -123,7 +127,10 @@ pyformex.help: ../pyformex/pyformex
 
 # Transfer the files to BerliOS
 pub: 
-	${RSYNC} --exclude '.svn' --delete ${MANDOCS} ${DOCUPLOAD}
+	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${DOCUPLOAD}
+
+pubpdf: ${PDF}
+	${RSYNC} -t $< ${FTPUPLOAD}
 
 # and to our ftp server
 publocal:

@@ -48,10 +48,10 @@ This will create a pyformex-${VERSION}.tar.gz in dist/
 
 * Things that are (currently) for project manager only
 
-** Make a distribution available on our own FTP server
+** Make a distribution file available on our own FTP server
   make publocal
 
-** Make a distribution available on Berlios FTP server
+** Make a distribution file available on Berlios FTP server
   make pub
   
 ** Create an interim release (needs to be automated)
@@ -71,6 +71,7 @@ Set the final version in RELEASE (RELEASE==VERSION)
   make version
 Create up to date documentation
   make html
+  make pdf
 Stamp the files with the version
   make stampall
 Check in (creating the dist may modify some files)
@@ -85,7 +86,8 @@ Put the file on berlios ftp server
   name: ftp (anoniem)
   cd incoming
   lcd dist
-  put fullfilename
+  put fullfilename (pyformex-version.tar.gz)
+  quit
 Release the file via project administration
   inloggen
   project
@@ -104,6 +106,8 @@ Announce the release on the pyFormex news
     >> text: pyFormex Version released....
 Make the release available on Berlios FTP server
   make pub
+  make pubdoc
+  make pubpdf
 Make the release available on our local FTP server
   make publocal
 #Register with the python package index
@@ -112,11 +116,12 @@ Upload to the python package index
   make upload
 Add the release data to the database
   edt pyformex-releases.fdb
+Create statistics
+  make stats
 
 Bump the RELEASE and VERSION variables in the file RELEASE, then
   make bumpversion
   svn ci -m 'Bump version after release'
-
 
 (That was easy, uh?)
 

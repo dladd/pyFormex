@@ -102,16 +102,6 @@ libreset: ${LIBDIR}/Makefile
 ${LIBDIR}/Makefile: ${LIBDIR}/configure
 	cd ${LIBDIR} && ./configure
 
-# Create the Sphinx documentation
-html:
-	make -C ${SPHINXDIR} html
-
-pdf:
-	make -C ${SPHINXDIR} pdf
-
-pubdoc:
-	make -C ${SPHINXDIR} pub
-
 # Create the minutes of the user meeting
 minutes: 
 	make -C user
@@ -185,10 +175,28 @@ register:
 	python setup.py register
 
 upload:
-	python setup.py upload --show-response
+	python setup.py sdist upload --show-response
 
 # Tag the release in the svn repository
 tag:
 	svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
+
+# Creates statistics
+stats:
+	./create_revision_graph
+	./sloc.py
+
+# Create the Sphinx documentation
+html:
+	make -C ${SPHINXDIR} html
+
+pdf:
+	make -C ${SPHINXDIR} pdf
+
+pubdoc:
+	make -C ${SPHINXDIR} pub
+
+pubpdf:
+	make -C ${SPHINXDIR} pubpdf
 
 # End

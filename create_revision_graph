@@ -18,4 +18,5 @@ RECREV=$(head -n 1 pyformex.revisions | sed 's| .*||')
   svn log | gawk '/^r[0-9]+/{ sub("r","",$1); print $1, $5}' > pyformex.revisions
 }
 
+sed -i "s|Created.*\"|Created $(date +'%Y-%m-%d %H:%M:%S')\"|" pyformex-rev.gnu
 gnuplot pyformex-rev.gnu
