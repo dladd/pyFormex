@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex --gui
-# $Id: Pattern.py 85 2006-04-02 12:36:40Z bverheg $
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D

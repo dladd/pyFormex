@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: __init__.py 132 2006-09-19 20:20:57Z bverheg $
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D

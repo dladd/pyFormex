@@ -90,7 +90,6 @@ scaled_image = None
 
 # read the teapot surface
 T = TriSurface.read(getcfg('datadir')+'/teapot.off')
-print type(T)
 xmin,xmax = T.bbox()
 T= T.trl(-T.center()).scale(4./(xmax[0]-xmin[0])).setProp(2)
 draw(T)
@@ -101,6 +100,7 @@ viewer = ImageView(filename)
 
 px,py = 5,5 #control points for projection of patches
 kx,ky = 60,50 #number of cells in each patch
+scale = 0.8
 method='projection'
 
 res = askItems([
@@ -110,6 +110,7 @@ res = askItems([
     I('py',py,text='Number of patches in y-direction'),
     I('kx',kx,text='Width of a patch in pixels'), 
     I('ky',ky,text='Height of a patch in pixels'),
+    I('scale',scale,text='Scale factor'),
     I('method',method,choices=['projection','intersection']),
     ])
 
@@ -119,7 +120,7 @@ if not res:
 globals().update(res)
 
 nx,ny = px*kx,py*ky # pixels
-print 'the picture is reconstructed with %d x %d pixels'%(nx, ny)
+print 'The image is reconstructed with %d x %d pixels'%(nx, ny)
 
 F = Formex(mpattern('123')).replic2(nx,ny).centered()
 if image is None:
@@ -133,7 +134,7 @@ if image is None:
 color,colortable = image2glcolor(image.scaled(nx,ny))
 # Reorder by patch
 pcolor = color.reshape((py,ky,px,kx,3)).swapaxes(1,2).reshape(-1,kx*ky,3)
-print pcolor.shape
+#print pcolor.shape
 
 mH = makeGrid(px,py,'Quad8')
 
@@ -143,7 +144,7 @@ try:
     mH = mH.scale(ratioYX,1) # Keep original aspect ratio
 except: pass
 
-mH0 = mH.scale(0.8).translate([-0.5,-0.1,2.])
+mH0 = mH.scale(scale).translate([-0.5,-0.1,2.])
 
 dg0 = draw(mH0,mode='wireframe')
 zoomAll()
@@ -158,6 +159,8 @@ d0 = drawImage(mH0,base,patch)
 if method == 'projection':
     print type(T)
     pts = mH0.coords.projectOnSurface(T,[0.,0.,1.])
+    print mH0.shape
+    print pts.shape
     dg1=d1 = None
 
 

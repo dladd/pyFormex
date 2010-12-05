@@ -23,36 +23,24 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""WedgeHex
+print error("This is a simulated error, to demonstrate how an error message would be shown to the user.\nJust click OK and the error will go away.")
 
-level = 'normal'
-topics = ['mesh']
-techniques = ['revolve','degenerate'] 
-"""
+print warning("""
+<h1>This is a warning.</h1>
+A warning draws attention of the user on special conditions.<br/>
+Remark that we can use plain text or html.
+""")
 
-import simple
+print showInfo("""..
 
-clear()
-smoothwire()
+A text in ReST
+==============
 
-# create a 2D xy mesh
-nx,ny = 6,2
-G = simple.rectangle(1,1,1.,1.).replic2(nx,ny)
-M = G.toMesh()
-draw(M, color='red')
-view('iso')
+- The lowest level of message box is the *info* level.
+  It just displays information for the user.
+- ReST text is automatically detected if it starts with '..'.
 
-# create a 3D axial-symmetric mesh by REVOLVING
-n,a = 8,45.
-R = M.revolve(n,angle=a,axis=1,around=[1.,0.,0.])
-sleep(2)
-draw(R,color='yellow')
+""")
 
-# reduce the degenerate elements to WEDGE6
-sleep(2)
-clear()
-ML = R.splitDegenerate()
-ML = [ Mi.setProp(i) for i,Mi in enumerate(ML) ]
-draw(ML)
-
+print ask("Answer this question with yes or no",['Yes','No']) 
 # End

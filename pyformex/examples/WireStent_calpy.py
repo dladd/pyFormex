@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id: WireStent_calpy.py 147 2006-10-13 09:30:49Z bverheg $
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
