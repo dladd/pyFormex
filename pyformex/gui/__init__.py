@@ -1,7 +1,6 @@
-#!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
+##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -27,20 +26,5 @@
 This file is mainly here to flag the gui directory as a Python package.
 Global variables for the gui package may be defined here.
 """
-
-## def geomActor(object,**kargs):
-##     from actors import GeomActor
-##     return GeomActor(F,**kargs)
-
-
-## import coords
-## print coords.__dict__
-## k = dir(coords)
-## #.keys()
-## k.sort()
-## print k
-
-## coords.Coords.actor = geomActor
-
 
 # End

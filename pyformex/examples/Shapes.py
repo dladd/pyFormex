@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
+##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -22,15 +22,18 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Script Template
+"""Shapes
 
-This is a template file to show the general layout of a pyFormex script.
-In the current version, a pyFormex script should obey the following rules:
-- file name extension is '.py'
-- first (comment) line contains 'pyformex'
-The script starts by preference with a docstring (like this), composed of a
-short first line, a blank line and one or more lines explaining the intention
-of the script.
+This example illustrates how pyFormex can be used in education.
+I started this example when my daughter learned programming at school.
+She had to create this image using Java(Beans).
+It took days of wrestling with complex programming environments, compiling
+multiple files, endless checking and debugging java declaraions and code.
+I showed her how I could get to the same result with just a few lines of
+pyFormex code.
+
+Later I added some nice utilities to make it worthwile as a programming example.
+It would be nice now to add a GUI to create and position the shapes.
 """
    
 
@@ -45,7 +48,7 @@ def square():
     return Formex([[[0.,0.,0.],[1.,0.,0.],[1.,1.,0.],[0.,1.,0.]]])
 
 
-class Shape(object):
+class Shape(Geometry):
     def __init__(self,shape,size,position,color):
         self.shape = shape
         self.size = resize(size,(3))
@@ -63,8 +66,13 @@ class Shape(object):
 
     def hide(self):
         if self.A:
-            pf.canvas.undraw(self.A)
+            undraw(self.A)
             self.A = None
+
+    def redraw(self):
+        A = self.A
+        self.draw()
+        undraw(A)
 
     def setSize(size):
         self.size = size
@@ -79,18 +87,35 @@ class Shape(object):
         self.color = color
         self.draw()
 
+    def move(self,direction,step):
+        self.F = self.F.trl(direction,step)
+
 
 if __name__ == 'draw':
 
+    clear()
     smooth()
 
-    A = Shape('circle',10,[110.,80.],'yellow')
-    B = Shape('square',[10.,10.],[30.,30.],'white')
-    C = Shape('square',[80.,60.],[10.,0.],'red')
-    D = Shape('triangle',[100.,40.],[0.,60.],'green')
-    A.draw()
-    B.draw()
-    C.draw()
-    D.draw()
+    wall = Shape('square',[80.,60.],[10.,0.],'red')
+    window = Shape('square',[10.,10.],[30.,30.],'white')
+    roof = Shape('triangle',[100.,40.],[0.,60.],'green')
+    sun = Shape('circle',10,[110.,80.],'yellow')
+
+    delay(0)
+    window.draw()
+    wall.draw()
+    roof.draw()
+    sun.draw()
     zoomAll()
+
+    # lower the sun
+    delay(2)
+    setDrawOptions({'bbox':None})
+    sun.hide()
+    for y in range(10):
+        sun.move(1,-8)
+        sun.redraw()
+        
+    sun.hide()
+    
 # End

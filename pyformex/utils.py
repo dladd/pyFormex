@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.2 Release Sat Jun  5 10:49:53 2010
+##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -155,7 +155,7 @@ def checkModule(name=None):
         pass
     # make sure version is a string (e.g. gl2ps uses a float!)
     version = str(version)
-    _congratulations(name,version,'module',fatal,quiet=False)
+    _congratulations(name,version,'module',fatal,quiet=True)
     the_version[name] = version
     return version
 
@@ -197,7 +197,7 @@ def checkExternal(name=None,command=None,answer=None):
         version = m.group(1)
     else:
         version = ''
-    _congratulations(name,version,'program',quiet=False)
+    _congratulations(name,version,'program',quiet=True)
     the_external[name] = version
     return version
 
