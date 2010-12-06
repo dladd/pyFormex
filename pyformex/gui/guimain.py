@@ -125,7 +125,7 @@ class Board(QtGui.QTextEdit):
 #####################################
 
 
-class GUI(QtGui.QMainWindow):
+class Gui(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
 
     toolbar_area = { 'top': QtCore.Qt.TopToolBarArea,
@@ -651,6 +651,24 @@ class GUI(QtGui.QMainWindow):
         #print "RESTORED script canvas %s" % pf.canvas
 
 
+    def findDialog(self,name):
+        """Find the InputDialog with the specified name.
+
+        Returns the list with maching dialogs, possibly empty.
+        """
+        return self.findChildren(widgets.InputDialog,str(name))
+
+
+    def closeDialog(self,name):
+        """Close the InputDialog with the specified name.
+
+        Closest all the InputDialogs with the specified caption
+        owned by the GUI.
+        """
+        for w in self.findDialog(name):
+            w.close()
+
+
 def xwininfo(windowid=None,name=None):
     """Returns the X window info parsed as a dict.
 
@@ -908,7 +926,7 @@ You should seriously consider to bail out now!!!
 
     # create GUI, show it, run it
 
-    pf.GUI = GUI(windowname,
+    pf.GUI = Gui(windowname,
                  pf.cfg.get('gui/size',(800,600)),
                  pf.cfg.get('gui/pos',(0,0)),
                  pf.cfg.get('gui/bdsize',(800,600)),

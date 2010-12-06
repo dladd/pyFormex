@@ -63,6 +63,17 @@ def closeGui():
     pf.GUI.close()
 
 
+def closeDialog(name):
+    """Close the named dialog.
+
+    Closes the InputDialog with the given name. If multiple dialogs are
+    open with the same name, all these dialogs are closed.
+
+    This only works for dialogs owned by the pyFormex GUI.
+    """
+    pf.GUI.closeDialog(name)
+
+
 def showMessage(text,actions=['OK'],level='info',modal=True,**kargs):
     """Show a short message widget and wait for user acknowledgement.
 

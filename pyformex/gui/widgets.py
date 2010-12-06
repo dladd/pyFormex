@@ -1525,11 +1525,15 @@ class InputDialog(QtGui.QDialog):
             parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
         #self.setMaximumSize(*maxSize())
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         if flags is not None:
             self.setWindowFlags(flags)
         if caption is None:
             caption = 'pyFormex-dialog'
-        self.setWindowTitle(str(caption))
+        else:
+            caption = str(caption)
+        self.setObjectName(caption)
+        self.setWindowTitle(caption)
         if modal is not None:
             self.setModal(modal)
 
@@ -1718,6 +1722,16 @@ class InputDialog(QtGui.QDialog):
         QtGui.QDialog.show(self)
 
         addTimeOut(self,timeout,timeoutfunc)
+
+
+    ## def close(self):
+    ##     """Close and delete the dialog.
+
+    ##     """
+    ##     QtGui.QDialog.close(self)
+    ##     print self.parent()
+    ##     print self.parent().children()
+    ##     self.parent().removeChild(self)
         
         
     def acceptData(self,result=ACCEPTED):
