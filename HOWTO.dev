@@ -121,6 +121,7 @@ Create statistics
 
 Bump the RELEASE and VERSION variables in the file RELEASE, then
   make bumpversion
+  make lib	
   svn ci -m 'Bump version after release'
 
 (That was easy, uh?)

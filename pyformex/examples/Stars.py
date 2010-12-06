@@ -29,8 +29,6 @@ topics = ['geometry']
 techniques = ['color']
 
 """
-from numpy import random
-
 nstars = 200 # number of stars
 minpoints = 5 # minimum number of points in the stars
 maxpoints = 15# maximum number of points in the stars
