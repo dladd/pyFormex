@@ -30,8 +30,9 @@ techniques = ['persistence','interactive']
 """
 clear()
 alfabet = {
-    'A': '22144/61'
-    }
+    'A': '22144/61',
+    'C': '/13221',
+   }
 
  
 def plotChar(char):
@@ -54,6 +55,8 @@ globals().update(data)
 #draw(f)
 
 plotChar('A')
+plotChar('C')
+
 
 right = array([1.,0.,0.])
 print right

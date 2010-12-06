@@ -54,8 +54,8 @@ from plugins.mesh import Mesh
 #    subPoints(t,j): returns points with parameter values t of part j
 #    points(ndiv,extend=[0.,0.]): returns points obtained by dividing each
 #           part in ndiv sections at equal parameter distance.
-#    pointsOn(): the defining points situated on the curve
-#    pointsOff(): the defining points situated off the curve (control points)
+#    pointsOn(): the defining points placed on the curve
+#    pointsOff(): the defining points placeded off the curve (control points)
 
 
 class Curve(Geometry):
@@ -395,24 +395,13 @@ class PolyLine(Curve):
         import warnings
         warnings.warn('warn_polyline_avgdirections')
         d,w = self.directions(True)
-        #if self.closed:
         d1 = d
         d2 = roll(d,1,axis=0) # PREVIOUS DIRECTION
-        #else:
-        #    d1 = d[:-1]
-        #    d2 = d[1:]
-        ## if not self.closed:
-        ##     d = concatenate([d[:1],d],axis=0)
-        #print "expanded",d
         w = concatenate([w,w+1])
         if not self.closed:
             w = concatenate([[0,self.npoints()-1],w])
-        #print "Not averaging at %s" % w
         w = setdiff1d(arange(self.npoints()),w)
-        #d[w] = dd[w]
-        #print "Averaging at %s" % w
         d[w] = 0.5 * (d1[w]+d2[w])
-        #print "AVG Directions",d
         if return_doubles:
             return d,w
         else:
@@ -536,7 +525,7 @@ class PolyLine(Curve):
     # BV: I'm not sure what this does and if it belongs here
     
     def distanceOfPoints(self,p,n,return_points=False):
-        """Find the distances of points p, perpendicular to the vectors n.
+        """_Find the distances of points p, perpendicular to the vectors n.
         
         p is a (np,3) shaped array of points.
         n is a (np,3) shaped array of vectors.
@@ -570,7 +559,7 @@ class PolyLine(Curve):
     # BV: same remark: what is this distance?
     
     def distanceOfPolyLine(self,PL,ds,return_points=False):
-        """Find the distances of the PolyLine PL.
+        """_Find the distances of the PolyLine PL.
         
         PL is first discretised by calculating a set of points p and direction
         vectors n at equal distance of approximately ds along PL. The
@@ -656,7 +645,15 @@ class BezierSpline(Curve):
         If True, the curve will be continued from the last point back
         to the first to create a closed curve.
 
-          """
+    endzerocurv : boolean or tuple of two booleans.
+        Specifies the end conditions for an open curve.
+        If True, the end curvature will be forced to zero. The default is
+        to use maximal continuity of the curvature.
+        The value may be set to a tuple of two values to specify different
+        conditions for both ends.
+        This argument is ignored for a closed curve.
+
+        """
     coeffs = {
         1: matrix([
             [ 1.,  0.],
@@ -675,7 +672,7 @@ class BezierSpline(Curve):
             ]),
         }
 
-    def __init__(self,coords=None,deriv=None,curl=0.5,control=None,closed=False,degree=3):
+    def __init__(self,coords=None,deriv=None,curl=1./3.,control=None,closed=False,degree=3,endzerocurv=False):
         """Create a cubic spline curve."""
 
         if not degree > 0:
@@ -683,6 +680,9 @@ class BezierSpline(Curve):
 
         if degree > 3:
             raise ValueError,"Currently, the highest degree of BezierSpline cureves is limited to 3!"
+
+        if endzerocurv in [False,True]:
+            endzerocurv = (endzerocurv,endzerocurv)
 
         if coords is None:
             # All control points are given, in a single array
@@ -755,6 +755,25 @@ class BezierSpline(Curve):
                         p2 = coords - deriv*curl*roll(ampl,1,axis=0)
                         p2 = roll(p2,-1,axis=0)
                     else:
+                        # Fix the first and last derivs if they were autoset
+                        #print undefined
+                        #print deriv
+                        if undefined[0]:
+                            if endzerocurv[0]:
+                                # option curvature 0:
+                                deriv[0] =  [nan,nan,nan]
+                            else:
+                                # option max. continuity
+                                deriv[0] = 2.*deriv[0] - deriv[1]
+                        if undefined[-1]:
+                            if endzerocurv[1]:
+                                # option curvature 0:
+                                deriv[-1] =  [nan,nan,nan]
+                            else:
+                                # option max. continuity
+                                deriv[-1] = 2.*deriv[-1] - deriv[-2]
+                        #print deriv
+                        
                         p1 = coords[:-1] + deriv[:-1]*curl*ampl
                         p2 = coords[1:] - deriv[1:]*curl*ampl
                         if isnan(p1[0]).any():
@@ -981,10 +1000,10 @@ class CardinalSpline(BezierSpline):
     intervals of the point set).
     """
 
-    def __init__(self,coords,tension=0.0,closed=False):
+    def __init__(self,coords,tension=0.0,closed=False,endzerocurv=False):
         """Create a natural spline through the given points."""
         curl = (1.-tension)/3.
-        BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed)
+        BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed,endzerocurv=endzerocurv)
 
 
 ##############################################################################
@@ -1025,24 +1044,31 @@ class CardinalSpline2(Curve):
 class NaturalSpline(Curve):
     """A class representing a natural spline."""
 
-    def __init__(self,coords,endcond=['notaknot','notaknot'],closed=False):
+    def __init__(self,coords,closed=False,endzerocurv=False):
         """Create a natural spline through the given points.
 
         coords specifies the coordinates of a set of points. A natural spline
         is constructed through this points.
-        endcond specifies the end conditions in the first, resp. last point.
-        It can be 'notaknot' or 'secder'.
-        With 'notaknot', maximal continuity (up to the third derivative)
-        is obtained between the first two splines.
-        With 'secder', the spline ends with a zero second derivative.
-        If closed is True, the spline is closed, and endcond is ignored.
+
+        closed specifies whether the curve is closed or not.
+
+        endzerocurv specifies the end conditions for an open curve.
+        If True, the end curvature will forced to be zero. The default is
+        to use maximal continuity (up to the third derivative) between
+        the first two splines. The value may be set to a tuple of two
+        values to specify different end conditions for both ends.
+        This argument is ignored for a closed curve.
         """
         coords = Coords(coords)
         if closed:
             coords = Coords.concatenate([coords,coords[:1]])
         self.nparts = coords.shape[0] - 1
         self.closed = closed
-        self.endcond = endcond
+        if not closed:
+            if endzerocurv in [False,True]:
+                self.endzerocurv = (endzerocurv,endzerocurv)
+            else:
+                self.endzerocurv = endzerocurv
         self.coords = coords
         self.compute_coefficients()
 
@@ -1086,20 +1112,20 @@ class NaturalSpline(Curve):
             M[f+3, 0:4] = m[3, 4:]
 
         else:
-            if self.endcond[0] =='notaknot':
-                # third derivative is the same between the first 2 splines
-                M[f+2,  [0, 4]] = array([6.,-6.])
-            else:
+            if self.endzerocurv[0]:
                 # second derivatives at start is zero
                 M[f+2, 0:4] = m[3, 4:]
-
-            if self.endcond[1] =='notaknot':
-                # third derivative is the same between the last 2 splines
-                M[f+3, [f-4, f]] = array([6.,-6.])
             else:
+                # third derivative is the same between the first 2 splines
+                M[f+2,  [0, 4]] = array([6.,-6.])
+ 
+            if self.endzerocurv[1]:
                 # second derivatives at end is zero
                 M[f+3, f:f+4] = m[3, :4]
-
+            else:
+                # third derivative is the same between the last 2 splines
+                M[f+3, [f-4, f]] = array([6.,-6.])
+ 
         #calculate the coefficients
         C = linalg.solve(M,B)
         self.coeffs = array(C).reshape(-1,4,3)

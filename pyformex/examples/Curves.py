@@ -55,8 +55,8 @@ def BezierCurve(X,curl=None,closed=False):
 method = ODict([
     ('Bezier Spline', BezierSpline),
     ('Quadratic Bezier Spline', QuadBezierSpline),
-    ('Cardinal Spline (app)', CardinalSpline),
-    ('Cardinal Spline', CardinalSpline2),
+    ('Cardinal Spline', CardinalSpline),
+    ('Cardinal Spline2', CardinalSpline2),
     ('Natural Spline', NaturalSpline),
     ('Polyline', PolyLine),
     ('Bezier Curve', BezierCurve),
@@ -81,8 +81,8 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
     draw(P, color='black')
     drawNumbers(Formex(P))
     kargs = {'closed':closed}
-    if ctype in ['Natural Spline']:
-        kargs['endcond'] = [endcond,endcond]
+    if ctype in ['Natural Spline','Bezier Spline','Cardinal Spline']:
+        kargs['endzerocurv'] = (endcond,endcond)
     if ctype.startswith('Cardinal'):
         kargs['tension'] = tension
     if ctype in ['Bezier Spline']:
@@ -142,7 +142,7 @@ data_items = [
     I('DataSet','0',choices=map(str,range(len(dataset)))), 
     I('CurveType',choices=method.keys()),
     I('Closed',False),
-    I('EndCondition',choices=['notaknot','secder']),
+    I('EndCurvatureZero',False),
     I('Tension',0.0),
     I('Curl',0.5),
     I('Ndiv',10),
@@ -183,7 +183,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale,ShowDirections)
+        drawCurve(Type,int(DataSet),Closed,EndCurvatureZero,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale,ShowDirections)
         setDrawOptions({'bbox':None})
 
 def showAll():
