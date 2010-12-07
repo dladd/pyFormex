@@ -137,17 +137,19 @@ def showText(text,type=None,actions=[('OK',None)],modal=True,mono=False):
         return None
 
 
-def showFile(filename,mono=False):
+def showFile(filename,mono=False,**kargs):
     """Display a text file.
 
     This will use the :func:`showText()` function to display a text read
-    from a file. 
+    from a file.
+    By default this uses a monospaced font.
+    Other arguments may also be passed to ShowText.
     """
     try:
         f = file(filename,'r')
     except IOError:
         return
-    showText(f.read(),mono=mono)
+    showText(f.read(),mono=mono,**kargs)
     f.close()
     
   

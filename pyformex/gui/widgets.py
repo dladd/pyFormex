@@ -1793,8 +1793,8 @@ class InputDialog(QtGui.QDialog):
             
         self.show(timeout,modal=True)
         self.exec_()
-        self.activateWindow()
-        self.raise_()
+        #self.activateWindow()
+        #self.raise_()
         pf.app.processEvents()
         self._pos = self.saveGeometry()
         return self.results
@@ -2933,8 +2933,8 @@ class OldInputDialog(QtGui.QDialog):
             
         self.show(timeout,modal=True)
         self.exec_()
-        self.activateWindow()
-        self.raise_()
+        #self.activateWindow()
+        #self.raise_()
         pf.app.processEvents()
         self._pos = self.saveGeometry()
         return self.results
