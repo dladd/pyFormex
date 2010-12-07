@@ -1525,7 +1525,6 @@ class InputDialog(QtGui.QDialog):
             parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
         #self.setMaximumSize(*maxSize())
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         if flags is not None:
             self.setWindowFlags(flags)
         if caption is None:
@@ -1719,6 +1718,9 @@ class InputDialog(QtGui.QDialog):
         self.status = None
 
         self.setModal(modal)
+        if not modal:
+            print "DELETE ON CLOSE"
+            self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         QtGui.QDialog.show(self)
 
         addTimeOut(self,timeout,timeoutfunc)
