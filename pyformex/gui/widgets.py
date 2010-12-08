@@ -2490,6 +2490,8 @@ def dialogButtons(dialog,actions=None,default=None):
     """
     if actions is None:
         actions = [('Cancel',),('OK',)]
+    if default is None:
+        default = actions[-1][0].lower()
     but = QtGui.QHBoxLayout()
     spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
     but.addItem(spacer)
@@ -2506,7 +2508,7 @@ def dialogButtons(dialog,actions=None,default=None):
         else:
             slot = (dialog,Reject)
         dialog.connect(b,QtCore.SIGNAL("clicked()"),*slot)
-        if default is not None and n == default.lower():
+        if n == default:
             b.setDefault(True)
         but.addWidget(b)
     return but
