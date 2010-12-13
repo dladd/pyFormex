@@ -40,6 +40,7 @@ find good reason to use the :class:`Coords` class directly as well.
 from arraytools import *
 from lib import misc
 from pyformex import options
+from utils import deprecated,deprecation
 
 
 def bbox(objects):
@@ -1249,8 +1250,19 @@ class Coords(ndarray):
         return (x,s.reshape(self.shape[:-1]))
 
 
+# BV: Deprecated this function because it does not meet criteria for this module
+#
+# - Purpose/need is not obvious
+# - If needed, should work for all Coords, independent of their shape
+#   or their being fused or not.
+# - Return value should not be a possibly long list (is it? or is it an array?)
+#
+# This would better be implemented on Mesh objects, since the fuse operation
+# is actually creating all data for a Mesh anyway.
+#
+    @deprecation("Deprecated\n@DEV: See comments in source file")
     def findCoincidentCoords(self, coords):
-        """Find (almost) identical nodes of a set of coords into a reference set and returns indices.
+        """_Find (almost) identical nodes of a set of coords into a reference set and returns indices.
         
         self and coords two lists of unique (fused) coords.
         For each point-i of self, if there is a point-j of coords which holds the same coordinates
@@ -1265,6 +1277,7 @@ class Coords(ndarray):
         bmatch= olda[(olda>=lsc)+(olda==-1)]-lsc
         bmatch[bmatch<0]=-1
         return bmatch
+
 
     def append(self,coords):
         """Append coords to a Coords object.
@@ -1375,16 +1388,16 @@ class Coords(ndarray):
     # Convenient shorter notations
     rot = rotate
     trl = translate
-   
+
 
     # Deprecated functions
-    from utils import deprecated
+    
+    ## @deprecated(reflect)
+    ## def mirror(*args,**kargs):
+    ##     return reflect(*args,**kargs)
 
-    @deprecated(reflect)
-    def mirror(*args,**kargs):
-        return reflect(*args,**kargs)
 
-
+    # BV: Why do we need this ??
     def actor(self,**kargs):
 
         if self.npoints() == 0:
