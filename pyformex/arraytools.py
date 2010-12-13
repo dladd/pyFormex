@@ -837,6 +837,66 @@ def uniqueRows(A):
     return uniq,uniqid
 
 
+def inverseIndex(index,maxcon=4):
+    """Return an inverse index.
+
+    Index is an (nr,nc) array of integers, where only non-negative
+    integers are meaningful, and negative values are silently ignored.
+    A Connectivity is a suitable argument.
+
+    The inverse index is an integer array,
+    where row i contains all the row numbers of index that contain
+    the number i. Because the number of rows containing the number i
+    is usually not a constant, the resulting array will have a number
+    of columns mr corresponding to the highest row-occurrence of any
+    single number. Shorter rows are padded with -1 values to flag
+    non-existing entries.
+
+    Negative numbers in index are disregarded.
+    The return value is an (mr,mc) shaped integer array where:
+    - mr will be equal to the highest positive value in index, +1.
+    - mc will be equal to the highest multiplicity of any number in index.
+    
+    On entry, maxcon is an estimate for this value. The procedure will
+    automatically change it if needed.
+
+    Each row of the inverse index for a number that occurs less than mc
+    times in index, will be filled up with -1 values.
+
+    mult is the highest possible multiplicity of any number in a single
+    column of index.
+    """
+    if len(index.shape) != 2:
+        raise ValueError,"Index should be an integer array with dimension 2"
+    nr,nc = index.shape
+    mr = index.max() + 1
+    mc = maxcon*nc
+    # start with all -1 flags, maxcon*nc columns (because in each column
+    # of index, some number might appear with multiplicity maxcon)
+    inverse = zeros((mr,mc),dtype=index.dtype) - 1
+    i = 0 # column in inverse where we will store next result
+    c = 0 # column in index from which to process data
+    for c in range(nc):
+        col = index[:,c].copy()  # make a copy, because we will change it
+        while(col.max() >= 0):
+            # we still have values to process in this column
+            uniq,pos = unique(col,True)
+            #put the unique values at a unique position in inverse index
+            ok = uniq >= 0
+            if i >= inverse.shape[1]:
+                # no more columns available, expand it
+                inverse = concatenate([inverse,zeros_like(inverse)-1],axis=-1)
+            inverse[uniq[ok],i] = pos[ok]
+            i += 1
+            # remove the stored values from index
+            col[pos[ok]] = -1
+
+    inverse.sort(axis=-1)
+    maxc = inverse.max(axis=0)
+    inverse = inverse[:,maxc>=0]
+    return inverse
+
+
 if __name__ == "__main__":
 
     A = array([

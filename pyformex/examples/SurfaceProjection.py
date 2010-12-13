@@ -40,7 +40,6 @@ This example illustrates the use of intersectSurfaceWithLines and Coords.project
 """
 from plugins.trisurface import TriSurface
 import elements
-from connectivity import inverseIndex
 from gui.widgets import ImageView,simpleInputItem as I
 from gui.imagecolor import *
 

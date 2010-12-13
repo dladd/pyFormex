@@ -105,7 +105,7 @@ def readData(s,type,strict=False):
 
 
 def readAsciiTable(fn, header=True):
-    """Reads data from an ASCII text file (Table).
+    """_Reads data from an ASCII text file (Table).
     
     if header is True: first line is the header, the rest is a table (2D array)
     it returns the header and the 2D array of data as floats.
@@ -125,7 +125,7 @@ def readAsciiTable(fn, header=True):
     return h, data
 
 def writeAsciiTable(fn, h, d, fmtdata='e'):
-    """Writes an ASCII text file.
+    """_Writes an ASCII text file.
     
     The first line is the header h (tuple of strings, e.g. h=[ 'n0', 'n1', 'n2' ] ).
     The other lines contains the data d (2D array of floats) as a table. 

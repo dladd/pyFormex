@@ -34,14 +34,6 @@ adjacency of elements can easily be detected from common node numbers.
 
 from arraytools import *
 
-# THINGS TO DO:
-#
-# - RETURN SINGLE MAGIC INFORMATION ON ENCODING ? (codes,magic)
-# - COMPACT THE WHOLE ARRAY AT ONCE ?
-# - SORT VALUES IN THE axis=1 DIRECTION
-# - REPLACE magic3, ...
-# - ADD A FINAL RENUMBERING
-
  
 def enmagic2(cols,magic=0):
     """Encode two integer values into a single integer.
@@ -90,98 +82,8 @@ def demagic2(codes,magic):
     return cols
 
 
-# These are the equivalents for enmagic2 en demagic2 for any plexitude
-# The -2 versions however have a fastencode option
 
-## def enmagic(elems):
-##     elems.sort(axis=1)
-##     magic = elems.max(axis=0) + 1
-##     prod = magic.prod()
-##     #print "magic = %s" % magic
-##     #print "product = %s" % prod
-##     #print "2**63   = %s" % 2**63
-##     #if prod >= 2**63 or prod < 0:
-##     #    raise RuntimeError,"There may be overflow in enmagic! Use encode instead" 
-##     codes = elems[:,0].astype(int64)
-##     i = 0
-##     for m in magic[1:]:
-##         codes = codes * m
-##         i += 1
-##         codes = codes + elems[:,i]
-##     return codes,magic
-
-## def demagic(codes,magic):
-##     nelems = len(codes)
-##     nplex = len(magic)
-##     elems = zeros((nelems,nplex),int32)
-##     i = nplex-1
-##     while i > 0:
-##         m = magic[i]
-##         elems[:,i] = codes % m
-##         codes /= m
-##         i -= 1
-##     elems[:,0] = codes
-##     return elems
-
-
-def inverseIndex(index,maxcon=4):
-    """Return an inverse index.
-
-    Index is an (nr,nc) array of integers, where only non-negative
-    integers are meaningful, and negative values are silently ignored.
-    A Connectivity is a suitable argument.
-
-    The inverse index is an integer array,
-    where row i contains all the row numbers of index that contain
-    the number i. Because the number of rows containing the number i
-    is usually not a constant, the resulting array will have a number
-    of columns mr corresponding to the highest row-occurrence of any
-    single number. Shorter rows are padded with -1 values to flag
-    non-existing entries.
-
-    Negative numbers in index are disregarded.
-    The return value is an (mr,mc) shaped integer array where:
-    - mr will be equal to the highest positive value in index, +1.
-    - mc will be equal to the highest multiplicity of any number in index.
-    
-    On entry, maxcon is an estimate for this value. The procedure will
-    automatically change it if needed.
-
-    Each row of the reverse index for a number that occurs less than mc
-    times in index, will be filled up with -1 values.
-
-    mult is the highest possible multiplicity of any number in a single
-    column of index.
-    """
-    if len(index.shape) != 2:
-        raise ValueError,"Index should be an integer array with dimension 2"
-    nr,nc = index.shape
-    mr = index.max() + 1
-    mc = maxcon*nc
-    # start with all -1 flags, maxcon*nc columns (because in each column
-    # of index, some number might appear with multiplicity maxcon)
-    reverse = zeros((mr,mc),dtype=index.dtype) - 1
-    i = 0 # column in reverse where we will store next result
-    c = 0 # column in index from which to process data
-    for c in range(nc):
-        col = index[:,c].copy()  # make a copy, because we will change it
-        while(col.max() >= 0):
-            # we still have values to process in this column
-            uniq,pos = unique(col,True)
-            #put the unique values at a unique position in reverse index
-            ok = uniq >= 0
-            if i >= reverse.shape[1]:
-                # no more columns available, expand it
-                reverse = concatenate([reverse,zeros_like(reverse)-1],axis=-1)
-            reverse[uniq[ok],i] = pos[ok]
-            i += 1
-            # remove the stored values from index
-            col[pos[ok]] = -1
-
-    reverse.sort(axis=-1)
-    maxc = reverse.max(axis=0)
-    reverse = reverse[:,maxc>=0]
-    return reverse
+# BV: Should we make an InverseConnectivity class?
 
 
 ############################################################################

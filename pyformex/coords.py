@@ -40,7 +40,6 @@ find good reason to use the :class:`Coords` class directly as well.
 from arraytools import *
 from lib import misc
 from pyformex import options
-from connectivity import inverseIndex
 
 
 def bbox(objects):
@@ -57,35 +56,6 @@ def bbox(objects):
         bboxes = [ [o,o] ]
     return Coords(concatenate(bboxes)).bbox()
 
-
-## def coordsmethod(f):
-##     """Decorator to apply a :class:`Coords` method to a 'coords' attribute.
-
-##     Many classes that model geometry use a 'coords' attribute to store
-##     the coordinates. This decorator can be used to apply the :class:`Coords` method
-##     to that attribute, thus making the :class:`Coords` transformations available
-##     to other classes.
-
-##     The following lines show how to use the decorator.
-##     These lines make the 'scale' method of the :class:`Coords` class available in
-##     your class, with the same arguments::
-    
-##        @coordsmethod
-##        def scale(self,*args,**kargs):
-##            pass
-    
-##     The coordinates are changed inplane, so if you want to save the original
-##     ones, you need to copy them before you use the transformation.
-##     """
-##     repl = getattr(Coords,f.__name__)
-##     vargs = repl.func_code.co_varnames[:repl.func_code.co_argcount]
-##     def newf(self,*args,**kargs):
-##         vkargs = dict((k,v) for k,v in kargs.iteritems() if k in vargs)
-##         self.coords = repl(self.coords,*args,**vkargs)
-##         f(self,*args,**kargs)
-##     newf.__name__ = f.__name__
-##     newf.__doc__ = repl.__doc__
-##     return newf
 
 ###########################################################################
 ##
@@ -104,13 +74,13 @@ class Coords(ndarray):
     classes, which usually have more elaborated consistency checking
     and error handling.
     
-    :class:`Coords` is implemented as a float type :class:`numpy.ndarray`
-    whose last axis has a length equal to 3.
+    :class:`Coords` is implemented as a subclass of :class:`numpy.ndarray`,
+    and thus inherits all its methods.
+    The last axis of the :class:`Coords` always has a length equal to 3.
     Each set of 3 values along the last axis represents a single point
     in 3D cartesian space. The float datatype is only checked at creation
-    time. It is the responsibility
-    of the user to keep this consistent throughout the lifetime of the object.
-    a :class:`Coords` object inherits all the methods of the :class:`numpy.ndarray`.
+    time. It is the responsibility of the user to keep this consistent
+    throughout the lifetime of the object.
 
     `data`: If specified, data should evaluate to an (...,3) shaped array
     of floats. If no data are given, a single point (0.,0.,0.) will be created.
