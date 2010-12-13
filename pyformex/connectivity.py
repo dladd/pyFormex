@@ -195,19 +195,31 @@ class Connectivity(ndarray):
     """A class for handling element/node connectivity.
 
     A connectivity object is a 2-dimensional integer array with all
-    non-negative values.
-    In this implementation, all values should be smaller than 2**31.
-    Furthermore, all values in a row should be unique. This is not enforced
-    at creation time, but a method is provided to check the uniqueness.
+    non-negative values. Each row of the array defines an element by listing
+    the numbers of its lower entity types. A typical use is a :class:`Mesh`
+    object, where each element is defined in function of its nodes.
+    While in a Mesh the word `node` will normally refer to a geometrical
+    point, here we will use `node` for the lower entity whatever its nature
+    is. It doesn't even have to be a geometrical entity.
 
-    A new Connectivity object is created with the following syntax::
+    The current implementation limits a Connectivity object to numbers that
+    are smaller than 2**31.
+    
+    In a row (element), the same node number may occur more than once, though
+    usually all numbers in a row are different. Rows containing duplicate
+    numbers are called `degenerate` elements.
+
+    A new Connectivity object is created with the following syntax ::
+    
       Connectivity(data=[],dtyp=None,copy=False,nplex=0)
 
     Parameters:
     
-    - `data`: should be integer type and evaluate to an 2-dim array.
-    - `dtype`: can be specified to force an integer type.
-      By default set from data.
+    - `data`: should be compatible with an integer array with shape
+      `(nelems,nplex)`, where `nelems` is the number of elements and
+      `nplex` is the plexitude of the elements.
+    - `dtype`: can be specified to force an integer type but is set by
+      default from the passed `data`. 
     - `copy`: can be set True to force copying the data. By default, the
       specified data will be used without copying, if possible.
     - `nplex`: can be specified to force a check on the plexitude of the
@@ -218,7 +230,11 @@ class Connectivity(ndarray):
     A Connectivity object stores its maximum value found at creation time
     in an attribute `_max`.
     """
-
+    #
+    # :DEV
+    # Because we have a __new__ constructor here and no __init__,
+    # we should list the arguments explicitely in the docstring above.
+    #
     def __new__(self,data=[],dtyp=None,copy=False,nplex=0):
         """Create a new Connectivity object."""
         # Turn the data into an array, and copy if requested
@@ -265,10 +281,12 @@ class Connectivity(ndarray):
         return self.shape[1]
 
 
+###### Detecting degenerates and duplicates ##############
+
     def encode(self,permutations=True,return_magic=False):
         """Encode the element connectivities into single integer numbers.
 
-        Each row of numbers is encoded into a single integer value, so that
+        Each row of numbers is encoded into a single integer value, such that
         equal rows result in the same number and different rows yield
         different numbers. Furthermore, enough information can be kept to
         restore the original rows from these single integer numbers.
@@ -404,7 +422,6 @@ class Connectivity(ndarray):
         """
         return self[~self.testDegenerate()]
 
-
     
     def testDoubles(self,permutations=True):
     #    This algorithm is faster than encode,
@@ -461,34 +478,35 @@ class Connectivity(ndarray):
         return self[ind[ok]]
 
 
-    def selectNodes(self,nodsel):
-        """Return a connectivity table with a subset of the nodes.
+######### Creating intermediate levels ###################
 
-        `nodsel` is an object that can be converted to a 1-dim or 2-dim
-        array. Examples are a tuple of local node numbers, or a list
-        of such tuples all having the same length.
-        Each row of `nodsel` holds a list of local node numbers that
-        should be retained in the new Connectivity table.
-        """
-        nodsel = asarray(nodsel)
-        nplex = nodsel.shape[-1]
-        nodsel = nodsel.reshape(-1,nplex)
-        return Connectivity(self[:,nodsel].reshape(-1,nplex))
-
-
-    def insertLevel(self,nodsel):
+    def insertLevel(self,selector,lower_only=False):
         """Insert an extra hierarchical level in a Connectivity table.
 
         A Connectivity table identifies higher hierchical entities in function
-        of lower ones. This function will insert an extra hierarchical level.
+        of lower ones. This method inserts an extra hierarchical level.
         For example, if you have volumes defined in function of points,
         you can insert an intermediate level of edges, or faces.
-        The return value is a tuple of two Connectivities (hi,lo), where:
+        Multiple intermediate level entities may be created from each
+        element.
+
+        Paramaters:
+
+        - `selector`: an object that can be converted to a 1-dim or 2-dim
+          int array. Examples are a tuple of local node numbers, or a list
+          of such tuples all having the same length.
+          Each row of `selector` holds a list of the local node numbers that
+          should be retained in the new Connectivity table.
+        - `lower_only`: if True, only the definition of the new entities is
+          returned. This is equivalent with using :meth:`selectNodes`, which
+          is prefered when you do not need the higher level info. 
+        
+        Return value: a tuple of two Connectivities `hi`,`lo`, where:
     
-        - hi: defines the original elements in function of the intermediate
+        - `hi`: defines the original elements in function of the intermediate
           level ones,
-        - lo: defines the intermediate level items in function of the lowest
-          level ones.
+        - `lo`: defines the intermediate level items in function of the lowest
+          level ones (the orignial nodes).
           
         Intermediate level items that consist of the same items in any
         permutation order are collapsed to single items.
@@ -496,11 +514,20 @@ class Connectivity(ndarray):
         original elements, but it is undefined which of the collapsed
         sequences is returned.
 
-        There is currently no inverse operation, because the precise order
-        of the items in the collapsed rows is lost.
+        There is no inverse operation, because the precise order of the
+        items in the collapsed rows is lost.
+        See however :meth:`Mesh.getBorder` for an application where an
+        inverse index is possible, because the border only contains
+        unique rows.
         """
-        nmult,nplex = nodsel.shape
-        lo = self.selectNodes(nodsel)
+        # BV: We should turn selector into a Connectivity ?
+        sel = asarray(selector)             # make sure it is array
+        sel = sel.reshape(-1,sel.shape[-1]) # make sure it is 2D
+        nmult,nplex = sel.shape
+        lo = Connectivity(self[:,sel].reshape(-1,nplex))
+        if lower_only:
+            return lo
+        
         srt = lo.copy()
         srt.sort(axis=1)
         uniq,uniqid = uniqueRows(srt)
@@ -509,6 +536,26 @@ class Connectivity(ndarray):
         return hi,lo
 
     
+    def selectNodes(self,selector):
+        """Return a :class:`Connectivity` containing subsets of the nodes.
+
+        Parameters:
+
+        - `selector`: an object that can be converted to a 1-dim or 2-dim
+          int array. Examples are a tuple of local node numbers, or a list
+          of such tuples all having the same length.
+          Each row of `selector` holds a list of the local node numbers that
+          should be retained in the new Connectivity table.
+
+        Returns a :class:`Connectivity` object with shape `(nelems,nplex)`
+
+        This is equivalent to, but prefered above::
+
+           self.insertLevel(selector,lower_only=True)
+        """
+        return self.insertLevel(selector,lower_only=True)
+
+
     def untangle(self,ind=None):
         """Untangle a Connectivity into lower plexitude tables.
 
@@ -602,10 +649,11 @@ class Connectivity(ndarray):
         of the Connectivities.
         Finally, a list of bias values may be given to specify an offset in
         element number for the subsequent Connectivities.
-        If loop==False, the lecgth of the Connectivity will be the minimum length
-        of the Connectivities in clist, each minus its respective bias. By setting
-        loop=True however, each Connectivity will loop around if its end is
-        encountered, and the length of the result is the maximum length in clist.
+        If loop==False, the length of the Connectivity will be the minimum
+        length of the Connectivities in clist, each minus its respective bias.
+        By setting loop=True however, each Connectivity will loop around if
+        its end is encountered, and the length of the result is the maximum
+        length in clist.
         """
         try:
             m = len(clist)

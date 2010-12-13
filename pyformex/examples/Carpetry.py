@@ -73,6 +73,7 @@ minconv = 5
 minelems = 10000
 maxelems = 50000
 
+save = False
 
 def carpet(M):
     conversions = []
@@ -111,10 +112,14 @@ transparent(False)
 
 if pf.interactive:
     canvasSize(nx*200,ny*200)
+    #canvasSize(720,576)
     print "running interactively"
-    n = ask("How many?",['0','1000','100','10','1'])
+    n = 1#ask("How many?",['0','1000','100','10','1'])
     n = int(n)
-    print n
+    save = False#ack("Save images?")
+    if save:
+        image.save(filename='Carpetry-000.jpg',window=False,multi=True,hotkey=False,autosave=False,border=False,rootcrop=False,format=None,quality=95,verbose=False)
+
     A = None
     for i in range(n):
         carpet(M)
@@ -122,8 +127,13 @@ if pf.interactive:
         if A:
             undraw(A)
         A = B
+        if save:
+            image.saveNext()
 
 else:
+    import sys
+    print sys.argv
+    print argv
     canvasSize(nx*200,ny*200)
     print "just saving image"
     from gui import image,guimain

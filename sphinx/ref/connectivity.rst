@@ -19,7 +19,7 @@
 
 
    .. autoclass:: Connectivity
-      :members: nelems,nplex,encode,testDegenerate,listDegenerate,listNonDegenerate,removeDegenerate,testDoubles,listUnique,listDoubles,removeDoubles,selectNodes,insertLevel,untangle,tangle,inverse
+      :members: nelems,nplex,encode,testDegenerate,listDegenerate,listNonDegenerate,removeDegenerate,testDoubles,listUnique,listDoubles,removeDoubles,insertLevel,selectNodes,untangle,tangle,inverse
 
    ``Functions defined in module connectivity`` 
 

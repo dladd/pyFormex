@@ -37,4 +37,27 @@ The following images were created using the *lima* plugin of pyFormex.
 .. image:: ../images/lima.png
 .. image:: ../images/KochLine.png
 
+
+Carpet design
+-------------
+When working on implementing Mesh conversions in pyFormex, we came up
+with a little fun script that starting from a simple grid, applies
+subsequent random conversions and colorizes the final mesh elements based on some
+geometric property. 
+The resulting images were often of an amazing beauty and would serve very
+well as design for carpets. The image hereafter e.g. was produced
+from an initial rectangular grid of 4x3 squares and applying the following
+series of transformations: 'tri3-x', 'tri6', 'tri3-4', 'quad4',
+'tri3', 'tri6', 'tri3', 'tri3-4', 'tri6', 'quad4', 'tri3'. This
+resulted in 27648 triangles which were then colored by aspect ratio.
+The whole operation took pyFormex less than a second. 
+
+A script for creating such random designs is included with the
+pyFormex distribution, as the example named Carpetry.
+Running this small script, you can create thousands of free designs a
+day. So if you are a carpet manufacturer, you better fire your
+designer and install pyFormex at no cost.
+
+.. image:: ../images/Carpetry-101.png
+
 .. End

@@ -293,6 +293,8 @@ class Mesh(Geometry):
     def __init__(self,coords=None,elems=None,prop=None,eltype=None):
         """Initialize a new Mesh."""
         self.coords = self.elems = self.prop = self.eltype = None
+        self.ndim = -1
+        self.nodes = self.edges = self.faces = self.cells = None
 
         if coords is None:
             # Create an empty Mesh object
@@ -324,6 +326,7 @@ class Mesh(Geometry):
         if eltype is None:
             self.eltype = defaultEltype(self.nplex())
         else:
+            # THis should check that the eltype is known
             self.eltype = eltype
 
 
@@ -431,15 +434,24 @@ class Mesh(Geometry):
         The return value is a Coords object with nelems points.
         """
         return self.coords[self.elems].mean(axis=1)
-        
+
+
     
     def getCoords(self):
-        """Get the coords data."""
+        """Get the coords data.
+
+        Returns the full array of coordinates stored in the Mesh object.
+        Note that this may contain points that are not used in the mesh.
+        :meth:`compact` will remove the unused points.
+        """
         return self.coords
 
     
     def getElems(self):
-        """Get the elems data."""
+        """Get the elems data.
+
+        Returns the element connectivity data as stored in the object.
+        """
         return self.elems
 
 
@@ -516,6 +528,21 @@ class Mesh(Geometry):
         return ent
 
 
+    def getNodes(self):
+        """Return the set of unique node numbers in the Mesh.
+
+        This returns only the node numbers that are effectively used in
+        the connectivity table. For a compacted Mesh, it is equal to
+        ```arange(self.nelems)```.
+
+        This function also stores the result internally so that future
+        requests can return it without the need for computing.
+        """
+        if self.nodes is None:
+            self.nodes  = unique(self.elems)
+        return self.nodes
+
+
     def getPoints(self):
         """Return the nodal coordinates of the Mesh.
 
@@ -524,64 +551,67 @@ class Mesh(Geometry):
         the coords attribute.
         """
         return self.coords[self.getNodes()]
-
-
-    def getNodes(self):
-        """Return the set of unique node numbers in the Mesh.
-
-        This returns only the node numbers that are effectively used in
-        the connectivity table. For a compacted Mesh, it is equal to
-        the range(self.nelems).
-        """
-        return unique(self.elems)
         
 
-    def getEdges(self,unique=False):
-        """Return the edges of the elements.
+    def getEdges(self):
+        """Return the unique edges of all the elements in the Mesh.
 
         This is a convenient function to create a table with the element
-        edges. It is equivalent to  ```self.getLowerEntities(1,unique)```
+        edges. It is equivalent to ```self.getLowerEntities(1,unique=True)```
+
+        This function also stores the result internally so that future
+        requests can return it without the need for computing.
         """
-        return self.getLowerEntities(1,unique)
-
-
-    def getFaces(self,unique=False):
-        """Return the faces of the elements.
-
-        This is a convenient function to create a table with the element
-        faces. It is equivalent to ```self.getLowerEntities(2,unique)```
-        """
-        return self.getLowerEntities(2,unique)
-
-
-    def reverse(self):
-        """Return a Mesh where all elements have been reversed.
-
-        Reversing an element means reversing the order of its points.
-        This is equivalent to::
+        if self.edges is None:
+            self.edges = self.getLowerEntities(1,unique=True)
+        return self.edges
         
-          Mesh(self.coords,self.elems[:,::-1])
-          
+
+    def getFaces(self):
+        """Return the unique faces of all the elements in the Mesh.
+
+        This is a convenient function to create a table with the element
+        faces. It is equivalent to ```self.getLowerEntities(2,unique=True)```
+
+        This function also stores the result internally so that future
+        requests can return it without the need for computing.
         """
-        return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
+        from trisurface import TriSurface
+        if self.__class__ == TriSurface:
+            import warnings
+            warnings.warn('warn_trisurface_getfaces')
+
+        if self.faces is None:
+            self.faces = self.getLowerEntities(2,unique=True)
+        return self.faces
+        
+
+    def getCells(self):
+        """Return the cells of the elements.
+
+        This is a convenient function to create a table with the element
+        cells. It is equivalent to ```self.getLowerEntities(3,unique=True)```
+
+        This function also stores the result internally so that future
+        requests can return it without the need for computing.
+        """
+        if self.cells is None:
+            self.cells = self.getLowerEntities(3,unique=True)
+        return self.cells
+    
+    
+    ## def getEdges(self):
+    ##     """Get the edges data."""
+    ##     if self.edges is None:
+    ##         self.faces,self.edges = self.elems.untangle()
+    ##     return self.edges
 
     
-    # ?? DOES THIS WORK FOR *ANY* MESH ??
-    # What with a mesh of points, lines, ...
-    def getAngles(self, angle_spec=Deg):
-        """Returns the angles in Deg or Rad between the edges of a mesh.
-        
-        The returned angles are shaped  as (nelems, n1faces, n1vertices),
-        where n1faces are the number of faces in 1 element and the number
-        of vertices in 1 face.
-        """
-        mf = self.coords[self.getFaces()]
-        el = getattr(elements,self.eltype.capitalize())
-        v = mf - roll(mf,-1,axis=1)
-        v=normalize(v)
-        v1=-roll(v,+1,axis=1)
-        angfac= arccos( dotpr(v, v1) )/angle_spec
-        return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
+    def getFaceEdges(self):
+        """Get the faces' edge numbers."""
+        if self.face_edges is None:
+            self.face_edges,self.edges2 = self.elems.untangle()
+        return self.face_edges
 
 
     def getBorder(self,return_indices=False):
@@ -641,6 +671,37 @@ class Mesh(Geometry):
             M._compact()
         return M
 
+
+
+    def reverse(self):
+        """Return a Mesh where all elements have been reversed.
+
+        Reversing an element means reversing the order of its points.
+        This is equivalent to::
+        
+          Mesh(self.coords,self.elems[:,::-1])
+          
+        """
+        return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
+
+
+#############################################################################    
+    # ?? DOES THIS WORK FOR *ANY* MESH ??
+    # What with a mesh of points, lines, ...
+    def getAngles(self, angle_spec=Deg):
+        """Returns the angles in Deg or Rad between the edges of a mesh.
+        
+        The returned angles are shaped  as (nelems, n1faces, n1vertices),
+        where n1faces are the number of faces in 1 element and the number
+        of vertices in 1 face.
+        """
+        mf = self.coords[self.getFaces()]
+        el = getattr(elements,self.eltype.capitalize())
+        v = mf - roll(mf,-1,axis=1)
+        v=normalize(v)
+        v1=-roll(v,+1,axis=1)
+        angfac= arccos( dotpr(v, v1) )/angle_spec
+        return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
     # BV: This needs clean up
     def neighborsByNode(self, elsel=None):
@@ -898,6 +959,20 @@ Size: %s
             return {}
         else:
             return dict([(p,self.withProp(p)) for p in self.propSet()])
+
+
+    def splitRandom(self,n,compact=True):
+        """Split a mesh in n parts, distributing the elements randomly.
+
+        Returns a list of n Mesh objects, constituting together the same
+        Mesh as the original. The elements are randomly distributed over
+        the subMeshes.
+
+        By default, the Meshes are compacted. Compaction may be switched
+        off for efficiency reasons.
+        """
+        sel = random.randint(0,n,(self.nelems()))
+        return [ self.select(sel==i,compact=compact) for i in range(n) if i in sel ]
     
 
     def convert(self,totype):
@@ -957,20 +1032,6 @@ Size: %s
                 raise ValueError,"Unknown conversion step type '%s'" % steptype
 
         return mesh
-
-
-    def splitRandom(self,n,compact=True):
-        """Split a mesh in n parts, distributing the elements randomly.
-
-        Returns a list of n Mesh objects, constituting together the same
-        Mesh as the original. The elements are randomly distributed over
-        the subMeshes.
-
-        By default, the Meshes are compacted. Compaction may be switched
-        off for efficiency reasons.
-        """
-        sel = random.randint(0,n,(self.nelems()))
-        return [ self.select(sel==i,compact=compact) for i in range(n) if i in sel ]
 
 
     def convertRandom(self,choices):

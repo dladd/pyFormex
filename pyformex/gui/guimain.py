@@ -1050,14 +1050,6 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     pf.GUI.setBusy(False)
 
-    if os.path.isdir(pf.cfg['workdir']):
-        # Make the workdir the current dir
-        os.chdir(pf.cfg['workdir'])
-        pf.debug("Setting workdir to %s" % pf.cfg['workdir'])
-    else:
-        # Save the current dir as workdir
-        prefMenu.updateSettings({'workdir':os.getcwd(),'Save changes':True})
-
     pf.GUI.show()
     pf.GUI.update()
     pf.app_started = True
@@ -1086,6 +1078,14 @@ def runGUI():
             pye = True
             egg = ''.join(egg)
         draw.playScript(egg,pye=True)
+
+    if os.path.isdir(pf.cfg['workdir']):
+        # Make the workdir the current dir
+        os.chdir(pf.cfg['workdir'])
+        pf.debug("Setting workdir to %s" % pf.cfg['workdir'])
+    else:
+        # Save the current dir as workdir
+        prefMenu.updateSettings({'workdir':os.getcwd(),'Save changes':True})
 
     pf.interactive = True
     pf.debug("Start main loop")
