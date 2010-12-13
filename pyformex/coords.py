@@ -40,6 +40,7 @@ find good reason to use the :class:`Coords` class directly as well.
 from arraytools import *
 from lib import misc
 from pyformex import options
+from connectivity import inverseIndex
 
 
 def bbox(objects):
@@ -1277,6 +1278,23 @@ class Coords(ndarray):
         s = sel[argsort(srt)]  # and indices for old nodes
         return (x,s.reshape(self.shape[:-1]))
 
+
+    def findCoincidentCoords(self, coords):
+        """Find (almost) identical nodes of a set of coords into a reference set and returns indices.
+        
+        self and coords two lists of unique (fused) coords.
+        For each point-i of self, if there is a point-j of coords which holds the same coordinates
+        of point-i, its index is returned, otherwise -1 is returned at that position.
+        A list of len(self) indices is returned, where indices correspond either 
+        to points of coords or -1.
+        """
+        sn, si= self.append(coords).fuse()
+        ri= inverseIndex(si.reshape(-1, 1))
+        lsc=len(self)
+        olda= ri[si[:lsc]]
+        bmatch= olda[(olda>=lsc)+(olda==-1)]-lsc
+        bmatch[bmatch<0]=-1
+        return bmatch
 
     def append(self,coords):
         """Append coords to a Coords object.
