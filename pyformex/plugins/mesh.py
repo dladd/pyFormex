@@ -724,6 +724,35 @@ class Mesh(Geometry):
         return [ uf[i][uf[i]!=i] for i in range(len(uf)) ]
 
 
+    def node2nodeAdjacent(self):
+        """Finds node's adjacent nodes (connected by edge)"""
+        edg= self.getEdges()
+        nodedg= inverseIndex(edg)#edges
+        wh= [nodedg==-1]
+        nodedg0, nodedg1= edg[:, 0][nodedg],edg[:, 1][nodedg]#edges'first and second nodes
+        nodedg0[wh], nodedg1[wh]=-1, -1
+        nn1=concatenate([nodedg0, nodedg1], axis=1)#first ring of nodes
+        nn1 = [unique(fi)[1:] for fi in nn1]
+        nn1=[ nn1[i][nn1[i]!=i] for i in range(len(nn1)) ]
+        return nn1
+
+
+    def avgNodalScalarOnAdjacentNodes(self, val, iter=1):
+        """Smooth nodal scalar values by averaging over adjacent-by-edge nodes iter times. """
+        
+        if iter==0: return val
+        nadjn=self.node2nodeAdjacent()#nodes' adjacent nodes
+        lnadjn=[len(i) for i in nadjn]
+        lmax= max( lnadjn )
+        adjmatrix=zeros([self.ncoords(), lmax], float)
+        avgval=val#use info from mesh inner outer.
+        for i in range(iter):
+            for i in range( self.ncoords()  ):
+                adjmatrix[i, :len( nadjn[i]) ]=avgval[ nadjn[i]  ]#(ncoords, max_neighb)#TO BE IMPLEMENTED
+            avgval= sum(adjmatrix, axis=1)/lnadjn#node'adjacent avg
+        return avgval
+
+
     def report(self):
         """Create a report on the Mesh shape and size.
 
