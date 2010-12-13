@@ -28,6 +28,7 @@
 __all__ = ['splitFloat','readData']
 
 import re
+from numpy import *
 
 Float = re.compile('[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE]\d+)?')
 FloatString = re.compile('(?P<float>[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE]\d+)?)(?P<string>.*)')
