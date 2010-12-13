@@ -103,5 +103,59 @@ def readData(s,type,strict=False):
     return out
 
 
+def readAsciiTable(fn, header=True):
+    """Reads data from an ASCII text file (Table).
+    
+    if header is True: first line is the header, the rest is a table (2D array)
+    it returns the header and the 2D array of data as floats.
+    if header is False, there is no header.
+    it returns the header as None and the 2D array of data as floats.
+    """
+    fil=open(fn,'r')
+    line = fil.readline()
+    h = line.strip('\n').split()
+    data = fromfile(fil,sep=' ',dtype=float32)
+    if header==False:
+        h=asarray(h, dtype=float)
+        data=append(h, data)
+        return None, data.reshape (-1,len(h) )
+    if header==True:
+        data = data.reshape((-1,len(h)))
+    return h, data
+
+def writeAsciiTable(fn, h, d, fmtdata='e'):
+    """Writes an ASCII text file.
+    
+    The first line is the header h (tuple of strings, e.g. h=[ 'n0', 'n1', 'n2' ] ).
+    The other lines contains the data d (2D array of floats) as a table. 
+    If format of the data can be chosen with fmtdata:
+        1) fmtdata is 'e' , the data are written as scientific (1.123456e+01),
+        2) fmtdata is 'f' , the data are written as floats,
+        3)fmtdata is 'd' , the data are written as integers,
+        4) otherwise, the fmt is specified (e.g. fmtdata='d f f d'). In this case, there should be as many fmt as data columns"""
+    fil=open(fn,'w')
+    ncol= len(h)-1#number of columns-1
+    fmtH = '%s'+ncol*' %s' + '\n'
+    fil.write(fmtH %(tuple(h )))#header
+    if fmtdata==None:fmtdata='e'
+    if fmtdata=='e':
+        fmtD = '%e'+ncol*' %e' + '\n'
+    elif fmtdata=='f':
+        fmtD = '%f'+ncol*' %f' + '\n'
+    elif fmtdata=='d':
+        fmtD = '%d'+ncol*' %d' + '\n'
+    else:
+        dt= fmtdata.split(' ')
+        sdt='%'+dt[0]
+        for t in dt[1:]:
+            sdt=sdt+' %'+t
+        fmtD=sdt+'\n'
+    for ld in d:
+        fil.write(fmtD % (tuple(ld)))#line of data
+    fil.close()
+
+
+
+
 if __name__ == "__main__":
     print(readData('12, 13, 14.5e3, 12 inch, 1hr, 5MPa', ['int','float','kg','cm','s']))
