@@ -752,18 +752,24 @@ class Mesh(Geometry):
 
 
     def avgNodalScalarOnAdjacentNodes(self, val, iter=1):
-        """Smooth nodal scalar values by averaging over adjacent-by-edge nodes iter times. """
+        """Smooth nodal scalar values by averaging over adjacent nodes iter times.
+        
+        Nodal scalar values (val is a 1D array of self.ncoords() scalar values )
+        are averaged over adjacent nodes an number of time (iter)
+        in order to provide a smoothed mapping. 
+        """
         
         if iter==0: return val
-        nadjn=self.node2nodeAdjacent()#nodes' adjacent nodes
+        nadjn=self.node2nodeAdjacency()
+        nadjn=[x[x>=0] for x in nadjn]
         lnadjn=[len(i) for i in nadjn]
         lmax= max( lnadjn )
         adjmatrix=zeros([self.ncoords(), lmax], float)
-        avgval=val#use info from mesh inner outer.
+        avgval=val
         for i in range(iter):
             for i in range( self.ncoords()  ):
-                adjmatrix[i, :len( nadjn[i]) ]=avgval[ nadjn[i]  ]#(ncoords, max_neighb)#TO BE IMPLEMENTED
-            avgval= sum(adjmatrix, axis=1)/lnadjn#node'adjacent avg
+                adjmatrix[i, :len( nadjn[i]) ]=avgval[ nadjn[i]  ]
+            avgval= sum(adjmatrix, axis=1)/lnadjn
         return avgval
 
 
