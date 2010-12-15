@@ -30,7 +30,7 @@ It also contains some useful functions to create such models.
 """
 
 from formex import *
-from connectivity import Connectivity
+from connectivity import Connectivity,  adjacent
 import elements
 from utils import deprecation
 from geometry import Geometry
@@ -703,26 +703,16 @@ class Mesh(Geometry):
         angfac= arccos( dotpr(v, v1) )/angle_spec
         return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
-    # BV: This needs clean up
-    def neighborsByNode(self, elsel=None):
-        """_For each element index in the list elsel,
+    def nodeAdjacency(self):
+        """Find the elems adjacent to each elem via one or more nodes."""
+        
+        return adjacent(self.elems,inv=None)
 
-        it returns the list of neighbor elements (connected by one node at
-        least). If elsel is None, the neighbors of all elements are
-        calculated, but it is computationally expensive for big meshes.
-        """
-        if elsel==None:
-            elsel=range(self.nelems())
-        fnf = self.elems.inverse()#faces touched by node
-        fnf = fnf[self.elems[elsel]]#face, nodes belonging to face, faces touched by nodes)
-        ff = fnf.reshape(fnf.shape[0], fnf.shape[1]*fnf.shape[2] )#(faces touched faces)
-        #add -1 so everyone has at least once -1
-        ff = concatenate([ff, -ones([ff.shape[0]  ],  dtype=int).reshape(-1, 1)   ], 1)
-        #take unique on each row and remove the -1
-        uf = [unique(fi)[1:] for fi in ff]
-        #remove the face-i from the neighboors of face-i
-        return [ uf[i][uf[i]!=i] for i in range(len(uf)) ]
 
+    def nNodeAdjacent(self):
+        """Find the number of elems which are adjacent by node to each elem."""
+
+        return (self.nodeAdjacency() >=0).sum(axis=-1)
 
     def node2nodeAdjacent(self):
         """Finds node's adjacent nodes (connected by edge)"""
