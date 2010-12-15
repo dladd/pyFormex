@@ -745,6 +745,12 @@ class Mesh(Geometry):
         return nn1
 
 
+    def nNode2nodeAdjacent(self):
+        """Find the number of nodes  adjacent to each node via an edge of the mesh."""
+
+        return ( self.getEdges().inverse()  >=0).sum(axis=-1)
+
+
     def avgNodalScalarOnAdjacentNodes(self, val, iter=1):
         """Smooth nodal scalar values by averaging over adjacent-by-edge nodes iter times. """
         
