@@ -789,6 +789,27 @@ Size: %s
         return self.__class__(coords,index[self.elems],prop=self.prop,eltype=self.eltype)
     
 
+    def findCoincidentCoords(self, mesh1, **kargs):
+        """Finds coincident coord of a mesh inside an other mesh.
+        
+        Self and mesh1 are two fused meshes.
+        For each node of self, this function looks for a node of M1 with the same coordinates
+        and returns either its index or -1, if not found.
+        A list of self.ncoords() indices is returned.
+        
+        The operation can be tuned by specifying extra arguments
+        that will be passed to :meth:`Coords:fuse`.
+        """
+        m0=Mesh(self.coords, arange(self.ncoords() ))#currently Mesh(Coords) is not yet supported
+        m1=Mesh(mesh1.coords, arange(mesh1.ncoords() ))
+        c, E= mergeMeshes([m0, m1], **kargs)
+        E0=E[0].ravel()
+        inv= inverseIndex(E[1]).reshape(-1)
+        diff=E0.max()-len(inv)+1
+        inv=concatenate([ inv,[-1]*diff ])#only if diff>0
+        return inv[E0]
+
+
     # Since this is used in only a few places, we could
     # throw it away and only use compact()
     def _compact(self):
