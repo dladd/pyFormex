@@ -714,16 +714,34 @@ class Mesh(Geometry):
 
         return (self.nodeAdjacency() >=0).sum(axis=-1)
 
-    def node2nodeAdjacent(self):
-        """Finds node's adjacent nodes (connected by edge)"""
+
+    def node2nodeAdjacency(self):
+        """Finds the nodes adjacent to each node via an edge of the mesh.
+        
+        For each original node returns the index of the adjacent nodes,
+        which are connect to the original by an edge.
+        """
         edg= self.getEdges()
-        nodedg= inverseIndex(edg)#edges
+        nodedg= inverseIndex(edg)
         wh= [nodedg==-1]
-        nodedg0, nodedg1= edg[:, 0][nodedg],edg[:, 1][nodedg]#edges'first and second nodes
+        #edges' 2 nodes
+        nodedg0, nodedg1= edg[:, 0][nodedg],edg[:, 1][nodedg]
         nodedg0[wh], nodedg1[wh]=-1, -1
-        nn1=concatenate([nodedg0, nodedg1], axis=1)#first ring of nodes
-        nn1 = [unique(fi)[1:] for fi in nn1]
-        nn1=[ nn1[i][nn1[i]!=i] for i in range(len(nn1)) ]
+        #first ring of nodes
+        nn1=concatenate([nodedg0, nodedg1], axis=1) 
+        # remove the element itself
+        n=nn1.shape[0]
+        k =arange(n).reshape(n,-1)
+        nn1[nn1 == k.reshape(n,-1)] = -1
+        #remove columns full of -1
+        nn1.sort(axis=-1)
+        maxc = nn1.max(axis=0)
+        nn1 = nn1[:,maxc>=0]
+        # remove duplicate elements
+        nn1[nn1[:,:-1] == nn1[:,1:]] = -1
+        nn1.sort(axis=-1)
+        maxc = nn1.max(axis=0)
+        nn1 = nn1[:,maxc>=0]
         return nn1
 
 
