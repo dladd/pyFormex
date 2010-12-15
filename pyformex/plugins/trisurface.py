@@ -804,17 +804,17 @@ class TriSurface(Mesh):
         """Find the number of adjacent elems."""
         return (self.edgeAdjacency() >=0).sum(axis=-1)
 
+##this is now a mesh method
+#    def nodeAdjacency(self):
+#        """Find the elems adjacent to elems via one or two nodes."""
+#        if self.adj is None:
+#            self.adj = adjacent(self.elems,self.nodeConnections())
+#        return self.adj
 
-    def nodeAdjacency(self):
-        """Find the elems adjacent to elems via one or two nodes."""
-        if self.adj is None:
-            self.adj = adjacent(self.elems,self.nodeConnections())
-        return self.adj
-
-
-    def nNodeAdjacent(self):
-        """Find the number of adjacent elems."""
-        return (self.nodeAdjacency() >=0).sum(axis=-1)
+##this is now a mesh method
+#    def nNodeAdjacent(self):
+#        """Find the number of adjacent elems."""
+#        return (self.nodeAdjacency() >=0).sum(axis=-1)
 
 
     def surfaceType(self):
