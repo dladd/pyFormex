@@ -1408,11 +1408,11 @@ maxprop  = %s
         idx can be a single element number or a list of numbers or
         any other index mechanism accepted by numpy's ndarray
 
-        This is the complementary operaion of select
+        This is the complementary operation of select
         """
-        ok = ones(self.nelems())
-        ok[idx] = 0
-        return self.select(ok)
+        keep = arange(self.nelems())
+        keep[idx] = -1
+        return self.select(keep[keep>=0])
 
       
     def selectNodes(self,idx):

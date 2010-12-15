@@ -807,27 +807,42 @@ Size: %s
         """
         coords,index = self.coords.fuse(**kargs)
         return self.__class__(coords,index[self.elems],prop=self.prop,eltype=self.eltype)
-    
 
-    def findCoincidentCoords(self, mesh1, **kargs):
-        """Finds coincident coord of a mesh inside an other mesh.
-        
-        Self and mesh1 are two fused meshes.
-        For each node of self, this function looks for a node of M1 with the same coordinates
-        and returns either its index or -1, if not found.
-        A list of self.ncoords() indices is returned.
-        
-        The operation can be tuned by specifying extra arguments
-        that will be passed to :meth:`Coords:fuse`.
+
+    def matchCoords(self,mesh,**kargs):
+        """Match nodes of Mesh with nodes of self.
+
+        This is a convenience function equivalent to::
+
+           self.coords.match(mesh.coords,**kargs)
+
+        See also :meth:`Coords.match`
         """
-        m0=Mesh(self.coords, arange(self.ncoords() ))#currently Mesh(Coords) is not yet supported
-        m1=Mesh(mesh1.coords, arange(mesh1.ncoords() ))
-        c, E= mergeMeshes([m0, m1], **kargs)
-        E0=E[0].ravel()
-        inv= inverseIndex(E[1]).reshape(-1)
-        diff=E0.max()-len(inv)+1
-        inv=concatenate([ inv,[-1]*diff ])#only if diff>0
-        return inv[E0]
+        return self.coords.match(mesh.coords,**kargs)
+        
+
+    @deprecation("Mesh.findCoincidentNodes is deprecated. Use Coords.match or Mesh.matchCoords. Beware for order of arguments!")
+    def findCoincidentCoords(self,mesh,**kargs):
+        return mesh.coords.match(self.coords)
+    
+        ## """Finds coincident coord of a mesh inside an other mesh.
+        
+        ## Self and mesh1 are two fused meshes.
+        ## For each node of self, this function looks for a node of M1 with the same coordinates
+        ## and returns either its index or -1, if not found.
+        ## A list of self.ncoords() indices is returned.
+        
+        ## The operation can be tuned by specifying extra arguments
+        ## that will be passed to :meth:`Coords:fuse`.
+        ## """
+        ## m0=Mesh(self.coords, arange(self.ncoords() ))#currently Mesh(Coords) is not yet supported
+        ## m1=Mesh(mesh.coords, arange(mesh.ncoords() ))
+        ## c, E= mergeMeshes([m0, m1], **kargs)
+        ## E0=E[0].ravel()
+        ## inv= inverseIndex(E[1]).reshape(-1)
+        ## diff=E0.max()-len(inv)+1
+        ## inv=concatenate([ inv,[-1]*diff ])#only if diff>0
+        ## return inv[E0]
 
 
     # Since this is used in only a few places, we could
@@ -1584,10 +1599,11 @@ Size: %s
         return GeomActor(self,**kargs)
 
 
-    ################ DEPRECATED ###############
-    @deprecation("Mesh.unselect is deprecated. Use Mesh.cselect instead")
-    def unselect(self,*args,**kargs):
-        return self.cselect(*args,**kargs)
+    # BV: removed in 0.8.4
+    ## ################ DEPRECATED ###############
+    ## @deprecation("Mesh.unselect is deprecated. Use Mesh.cselect instead")
+    ## def unselect(self,*args,**kargs):
+    ##     return self.cselect(*args,**kargs)
 
 
 ######################## Functions #####################
@@ -1596,11 +1612,23 @@ Size: %s
 def mergeNodes(nodes,fuse=True,**kargs):
     """Merge all the nodes of a list of node sets.
 
-    Each item in nodes is a Coords array.
-    The return value is a tuple with:
+    Merging the nodes creates a single Coords object containing all nodes,
+    and the indices to find the points of the original node sets in the
+    merged set.
+
+    Parameters:
+
+    - `nodes`: a list of Coords objects, all having the same shape, except
+      possibly for their first dimension
+    - `fuse`: if True (default), coincident (or very close) points will
+      be fused to a single point
+    - `**kargs`: keyword arguments that are passed to the fuse operation
+
+    Returns:
     
-    - the coordinates of all unique nodes,
-    - a list of indices translating the old node numbers to the new.
+    - a Coords with the coordinates of all (unique) nodes,
+    - a list of indices translating the old node numbers to the new. These
+      numbers refer to the serialized Coords.
 
     The merging operation can be tuned by specifying extra arguments
     that will be passed to :meth:`Coords.fuse`.
@@ -1677,6 +1705,8 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
         
 # define this also as a Mesh method
 Mesh.connect = connectMesh
+
+
 def connectQuadraticMesh(mesh1,mesh2,n=1, eltype='Hex20'):
     """currently works for Quad8 only.
 
@@ -1689,6 +1719,7 @@ def connectQuadraticMesh(mesh1,mesh2,n=1, eltype='Hex20'):
     h20.elems=h20.elems[:, [0, 1, 2, 3, 8, 9, 10, 11, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19]]
     #finally fuse (needed after addMeanNodes) and renumber
     return h20
+
 
 def connectMeshSequence(ML,loop=False,**kargs):
     #print([Mi.eltype for Mi in ML])

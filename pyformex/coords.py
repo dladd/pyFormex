@@ -1162,7 +1162,7 @@ class Coords(ndarray):
         This method finds the points that are very close and replaces them
         with a single point. The return value is a tuple of two arrays:
 
-        - the unique points as a :class:`Coords` object,
+        - the unique points as a :class:`Coords` object with shape (npoints,3)
         - an integer (nnod) array holding an index in the unique
           coordinates array for each of the original nodes. This index will
           have the same shape as the pshape() of the coords array.
@@ -1248,6 +1248,39 @@ class Coords(ndarray):
         x = x[flag>0]          # extract unique nodes
         s = sel[argsort(srt)]  # and indices for old nodes
         return (x,s.reshape(self.shape[:-1]))
+
+
+    def match(self,coords,**kargs):
+        """Match points form another Coords object.
+
+        This method finds the points from `coords` that coincide with
+        (or are very close to) points of `self`.
+
+        Parameters:
+
+        - `coords`: a Coords object
+        - `**kargs`: keyword arguments that you want to pass to the
+          :meth:`fuse` method.
+
+        This method works by concatenating the serialized point sets of
+        both Coords and then fusing them.
+        
+        Returns:
+
+        - `matches`: an Int array with shape (nmatches,2)
+        - `coords`: a Coords with the fused coordinate set
+        - `index`: an index with the position of each of the serialized
+          points of the concatenation in the fused coordinate set. To find
+          the index of the points of the orginal coordinate sets, split
+          this index at the position self.npoints() and reshape the resulting
+          parts to `self.pshape()`, resp. `coords.pshape()`.
+          
+        """
+        x = Coords.concatenate([self.points(),coords.points()])
+        c,e = x.fuse(**kargs)
+        e0,e1 = e[:self.npoints()],e[self.npoints():]
+        matches = matchIndex(e0,e1)
+        return matches
 
 
     def append(self,coords):
@@ -1362,7 +1395,8 @@ class Coords(ndarray):
 
 
     # Deprecated functions
-    
+
+    # BV: removed in 0.8.4
     ## @deprecated(reflect)
     ## def mirror(*args,**kargs):
     ##     return reflect(*args,**kargs)

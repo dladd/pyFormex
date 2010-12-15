@@ -897,6 +897,34 @@ def inverseIndex(index,maxcon=4):
     return inverse
 
 
+def matchIndex(target,values):
+    """Find position of values in target.
+
+    This function finds the position in the array `target` of the elements
+    from the array `values`.
+    Both `target` and `values` are index arrays with all non-negative values.
+    The arrays are flattened before use.
+
+    Returns an index array with the same length as the flattened `values`.
+    For each number in `values`, the index contains the position of that value
+    in the array `target`, or -1 if that number does not occur in `target`.
+
+    If an element from `values` occurs more than once in `target`, it is
+    currently undefined which of the positions of that value in `target`
+    will be returned.
+
+    Remark that after `m = reciprocalIndex(target,values)` the array
+    `values[m]` equals `target` in all the non-negative positions of `m`.
+    """
+    target = target.reshape(-1,1)
+    values = values.reshape(-1)
+    inv = inverseIndex(target)[:,0]
+    diff = values.max()-len(inv)+1
+    if diff > 0:
+        inv = concatenate([inv,-ones((diff,),dtype=Int)])
+    return inv[values]
+
+
 if __name__ == "__main__":
 
     A = array([
@@ -919,6 +947,10 @@ if __name__ == "__main__":
     print(uniqid)
     AB = B.take(uniqid,axis=0)
     print(A-AB)
+
+    A = array([1,3,4,5,7,8,9])
+    B = array([0,6,7,1,2])
+    print matchIndex(A,B)
     
     
 # End

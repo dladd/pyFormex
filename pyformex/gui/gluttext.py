@@ -122,7 +122,10 @@ def glutFontHeight(font):
     return int(font[-2:])
 
 
-def glutRenderText(text,font):
+#
+# BV: !! gravity does not work yet!
+#
+def glutRenderText(text,font,gravity=''):
     """Draw a text in given font at the current rasterpoint.
 
     font should be one  of the legal fonts returned by glutFont().
@@ -132,6 +135,10 @@ def glutRenderText(text,font):
     """
     if type(font) == str:
         font = glutFont(font)
+    if gravity:
+        curpos = GL.glGetFloatv(GL.GL_CURRENT_RASTER_POSITION)
+        print curpos
+        GL.glRasterPos2f(curpos[0]-20.,curpos[1])
     for character in str(text):
         GLUT.glutBitmapCharacter(font, ord(character))
 
