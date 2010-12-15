@@ -1250,35 +1250,6 @@ class Coords(ndarray):
         return (x,s.reshape(self.shape[:-1]))
 
 
-# BV: Deprecated this function because it does not meet criteria for this module
-#
-# - Purpose/need is not obvious
-# - If needed, should work for all Coords, independent of their shape
-#   or their being fused or not.
-# - Return value should not be a possibly long list (is it? or is it an array?)
-#
-# This would better be implemented on Mesh objects, since the fuse operation
-# is actually creating all data for a Mesh anyway.
-#
-    @deprecation("Deprecated\n@DEV: See comments in source file")
-    def findCoincidentCoords(self, coords):
-        """_Find (almost) identical nodes of a set of coords into a reference set and returns indices.
-        
-        self and coords two lists of unique (fused) coords.
-        For each point-i of self, if there is a point-j of coords which holds the same coordinates
-        of point-i, its index is returned, otherwise -1 is returned at that position.
-        A list of len(self) indices is returned, where indices correspond either 
-        to points of coords or -1.
-        """
-        sn, si= self.append(coords).fuse()
-        ri= inverseIndex(si.reshape(-1, 1))
-        lsc=len(self)
-        olda= ri[si[:lsc]]
-        bmatch= olda[(olda>=lsc)+(olda==-1)]-lsc
-        bmatch[bmatch<0]=-1
-        return bmatch
-
-
     def append(self,coords):
         """Append coords to a Coords object.
 
