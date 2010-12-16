@@ -819,6 +819,19 @@ Size: %s
         See also :meth:`Coords.match`
         """
         return self.coords.match(mesh.coords,**kargs)
+    
+    
+    def matchElems(self, mesh,**kargs):
+        """Match elems of Mesh with elems of self.
+        
+        self and Mesh are same eltype meshes
+        and are both without Doubles.
+        
+        Elems are matched by their centroids.
+        """
+        c=Mesh(self.centroids(), arange(self.nelems() ))
+        mc=Mesh(mesh.centroids(), arange(mesh.nelems() ))
+        return c.matchCoords(mc,**kargs)
         
 
     @deprecation("Mesh.findCoincidentNodes is deprecated. Use Coords.match or Mesh.matchCoords. Beware for order of arguments!")
