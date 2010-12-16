@@ -695,7 +695,8 @@ class Mesh(Geometry):
         where n1faces are the number of faces in 1 element and the number
         of vertices in 1 face.
         """
-        mf = self.coords[self.getFaces()]
+        #mf = self.coords[self.getFaces()]
+        mf = self.coords[self.getLowerEntities(2,unique=False)]
         el = getattr(elements,self.eltype.capitalize())
         v = mf - roll(mf,-1,axis=1)
         v=normalize(v)
@@ -821,7 +822,7 @@ Size: %s
         return self.coords.match(mesh.coords,**kargs)
     
     
-    def matchElems(self, mesh,**kargs):
+    def matchElemsCentroids(self, mesh,**kargs):
         """Match elems of Mesh with elems of self.
         
         self and Mesh are same eltype meshes
