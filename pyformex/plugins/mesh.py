@@ -455,6 +455,19 @@ class Mesh(Geometry):
         return self.elems
 
 
+    def reorderElemsAs(self, neword):
+        """Reorder the elems.
+
+        Returns a new mesh with element reordered as ord.
+        ord should is a list or 1D array of self.nelems() integers.
+        """
+        
+        if prod(sort(neword) == arange( self.nelems() )):
+            return self.__class__(self.coords,self.elems[neword],prop=self.prop[neword],eltype=self.eltype)
+        else:
+            raise ValueError,"neword must have all %d elems' numbers" % self.nelems()
+
+
     def getLowerEntitiesSelector(self,level=-1,unique=False):
         """Get the entities of a lower dimensionality.
 
