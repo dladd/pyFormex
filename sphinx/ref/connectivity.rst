@@ -13,13 +13,13 @@
 
 .. automodule:: connectivity
    :synopsis: A class and functions for handling nodal connectivity.
-   :members: enmagic2,demagic2,inverseIndex,adjacencyList,adjacencyArray,adjacencyArrays,connected,adjacent,closedLoop,connectedLineElems
+   :members: enmagic2,demagic2,connected,adjacent,closedLoop,connectedLineElems,adjacencyList,adjacencyArray,adjacencyArrays
 
    ``Classes defined in module connectivity``
 
 
    .. autoclass:: Connectivity
-      :members: nelems,nplex,encode,testDegenerate,listDegenerate,listNonDegenerate,removeDegenerate,testDoubles,listUnique,listDoubles,removeDoubles,insertLevel,selectNodes,untangle,tangle,inverse
+      :members: nelems,nplex,encode,testDegenerate,listDegenerate,listNonDegenerate,removeDegenerate,testDoubles,listUnique,listDoubles,removeDoubles,renumber,insertLevel,selectNodes,untangle,tangle,inverse
 
    ``Functions defined in module connectivity`` 
 

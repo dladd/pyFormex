@@ -19,7 +19,7 @@
 
 
    .. autoclass:: Mesh
-      :members: setProp,getProp,maxProp,propSet,copy,toFormex,ndim,nelems,nplex,ncoords,shape,nedges,centroids,getCoords,getElems,getLowerEntitiesSelector,getLowerEntities,getNodes,getPoints,getEdges,getFaces,getCells,getFaceEdges,getBorder,getBorderMesh,reverse,getAngles,neighborsByNode,report,fuse,compact,select,cselect,meanNodes,addNodes,addMeanNodes,selectNodes,withProp,withoutProp,splitProp,splitRandom,convert,convertRandom,reduceDegenerate,splitDegenerate,renumber,extrude,revolve,sweep,test,clip,cclip,clipAtPlane,areas,volumes,volume,equiAngleSkew,actor
+      :members: setProp,getProp,maxProp,propSet,copy,toFormex,ndim,nelems,nplex,ncoords,shape,nedges,centroids,getCoords,getElems,getLowerEntitiesSelector,getLowerEntities,getNodes,getPoints,getEdges,getFaces,getCells,getFaceEdges,getBorder,getBorderMesh,reverse,nodeConnections,nNodeConnected,nodeAdjacency,nNodeAdjacent,getAngles,node2nodeAdjacency,nNode2nodeAdjacent,avgNodalScalarOnAdjacentNodes,report,fuse,matchCoords,matchElemsCentroids,compact,select,cselect,meanNodes,addNodes,addMeanNodes,selectNodes,withProp,withoutProp,splitProp,splitRandom,convert,convertRandom,reduceDegenerate,splitDegenerate,renumber,reorderElemsAs,extrude,revolve,sweep,test,clip,cclip,clipAtPlane,areas,volumes,volume,equiAngleSkew,actor
 
    ``Functions defined in module mesh`` 
 
