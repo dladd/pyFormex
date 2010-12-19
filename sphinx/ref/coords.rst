@@ -19,7 +19,7 @@
 
 
    .. autoclass:: Coords
-      :members: points,pshape,npoints,x,y,z,bbox,center,centroid,sizes,dsize,bsphere,distanceFromPlane,distanceFromLine,distanceFromPoint,closestToPoint,directionalSize,directionalExtremes,directionalWidth,test,fprint,set,scale,translate,replicate,rotate,shear,reflect,affine,cylindrical,hyperCylindrical,toCylindrical,spherical,superSpherical,toSpherical,bump1,bump2,bump,flare,newmap,map,map1,mapd,egg,replace,swapAxes,rollAxes,projectOnPlane,projectOnSphere,projectOnCylinder,projectOnSurface,isopar,transformCS,split,fuse,match,append,actor
+      :members: points,pshape,npoints,x,y,z,bbox,center,centroid,sizes,dsize,bsphere,distanceFromPlane,distanceFromLine,distanceFromPoint,closestToPoint,directionalSize,directionalExtremes,directionalWidth,test,fprint,set,scale,translate,rotate,shear,reflect,affine,replicate,cylindrical,hyperCylindrical,toCylindrical,spherical,superSpherical,toSpherical,bump1,bump2,bump,flare,map,map1,mapd,egg,replace,swapAxes,rollAxes,projectOnPlane,projectOnSphere,projectOnCylinder,projectOnSurface,isopar,transformCS,split,fuse,match,append,actor
 
    .. autoclass:: CoordinateSystem
       :members: 

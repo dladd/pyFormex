@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>12. elements — Element local coordinates and numbering. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="13. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
+    <link rel="prev" title="11. utils — A collection of miscellaneous utility functions." href="utils.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="widgets.html" title="13. widgets — A collection of custom widgets used in the pyFormex GUI"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-elements">
+<span id="elements-element-local-coordinates-and-numbering"></span><span id="sec-ref-elements"></span><h1>12. <a class="reference internal" href="#module-elements" title="elements: Element local coordinates and numbering."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> &#8212; Element local coordinates and numbering.<a class="headerlink" href="#module-elements" title="Permalink to this headline">¶</a></h1>
+<p>Element local coordinates and numbering.</p>
+<p>This modules allows for a consistent local numbering scheme throughout
+pyFormex. When interfacing with other programs, one should be aware
+that conversions may be necessary. Conversions to/from external programs
+should be done by the interface modules.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
+<dl class="class">
+<dt id="elements.Element">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Element</tt><a class="headerlink" href="#elements.Element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Element base class: an empty element.</p>
+<p>All derived classes should have a capitalized name: starting with
+an uppercase character and further only lower case and digits.</p>
+<p>Each element is defined by the following attributes:</p>
+<ul class="simple">
+<li><cite>vertices</cite>: the natural coordinates of its vertices,</li>
+<li><cite>edges</cite>: a list of edges, each defined by a couple of node numbers,</li>
+<li><cite>faces</cite>: a list of faces, each defined by a list of minimum 3 node
+numbers,</li>
+<li><cite>element</cite>: a list of all node numbers</li>
+<li><cite>drawfaces</cite>: a list of faces to be drawn, if different from faces. This
+is an optional attribute. If defined, it will be used instead of the
+<cite>faces</cite> attribute to draw the element. This can e.g. be used to draw
+approximate representations for higher order elements for which there
+is no correct drawing function.</li>
+</ul>
+<p>The vertices of the elements are defined in a unit space [0,1] in each
+axis direction.</p>
+<p>The elements guarantee a fixed local numbering scheme of the vertices.
+One should however not rely on a specific numbering scheme of edges, faces
+or elements.
+For solid elements, it is guaranteed that the vertices of all faces are
+numbered in a consecutive order spinning positively around the outward
+normal on the face.</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Point">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Point</tt><a class="headerlink" href="#elements.Point" title="Permalink to this definition">¶</a></dt>
+<dd><p>A single node element</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Line2">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Line2</tt><a class="headerlink" href="#elements.Line2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 2-node line segment</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Tri3">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Tri3</tt><a class="headerlink" href="#elements.Tri3" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 3-node triangle</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Tri6">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Tri6</tt><a class="headerlink" href="#elements.Tri6" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 6-node triangle</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Quad4">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Quad4</tt><a class="headerlink" href="#elements.Quad4" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 4-node quadrilateral</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Quad8">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Quad8</tt><a class="headerlink" href="#elements.Quad8" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 8-node quadrilateral</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Quad9">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Quad9</tt><a class="headerlink" href="#elements.Quad9" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 9-node quadrilateral</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Tet4">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Tet4</tt><a class="headerlink" href="#elements.Tet4" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 4-node tetrahedron</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Wedge6">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Wedge6</tt><a class="headerlink" href="#elements.Wedge6" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 6-node wedge element</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Hex8">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Hex8</tt><a class="headerlink" href="#elements.Hex8" title="Permalink to this definition">¶</a></dt>
+<dd><p>An 8-node hexahedron</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Hex20">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Hex20</tt><a class="headerlink" href="#elements.Hex20" title="Permalink to this definition">¶</a></dt>
+<dd><p>An 20-node hexahedron</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Icosa">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Icosa</tt><a class="headerlink" href="#elements.Icosa" title="Permalink to this definition">¶</a></dt>
+<dd><p>An icosahedron: a regular polyhedron with 20 triangular surfaces.</p>
+<p>nfaces = 20, nedges = 30, nvertices = 12</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="utils.html"
+                        title="previous chapter">11. <tt class="docutils literal"><span class="pre">utils</span></tt> &#8212; A collection of miscellaneous utility functions.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="widgets.html"
+                        title="next chapter">13. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="widgets.html" title="13. widgets — A collection of custom widgets used in the pyFormex GUI"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

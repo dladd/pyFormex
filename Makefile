@@ -190,6 +190,9 @@ stats:
 html:
 	make -C ${SPHINXDIR} html
 
+svndoc:
+	make -C ${SPHINXDIR} svndoc
+
 pdf:
 	make -C ${SPHINXDIR} pdf
 

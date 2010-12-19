@@ -20,6 +20,7 @@ MANDOCS= _build/html/*
 RSYNC= rsync -v -e ssh
 PDF= _build/latex/pyformex.pdf
 
+SVNDOC= ../pyformex/doc/html
 UPLOAD= shell.berlios.de:/home/groups
 DOCUPLOAD= ${UPLOAD}/pyformex/htdocs/doc
 FTPUPLOAD= ${UPLOAD}/ftp/pub/pyformex
@@ -124,6 +125,10 @@ ref:
 pyformex.help: ../pyformex/pyformex
 	../pyformex/pyformex --help > $@
 
+
+# Transfer the html docs to doc
+svndoc:
+	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${SVNDOC} 
 
 # Transfer the files to BerliOS
 pub: 

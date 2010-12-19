@@ -1,0 +1,853 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
+    <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="script.html" title="4. script — Basic pyFormex script functions"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-draw">
+<span id="draw-create-3d-graphical-representations"></span><span id="sec-ref-draw"></span><h1>5. <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-mod docutils literal"><span class="pre">draw</span></tt></a> &#8212; Create 3D graphical representations.<a class="headerlink" href="#module-draw" title="Permalink to this headline">¶</a></h1>
+<p>Create 3D graphical representations.</p>
+<p>The draw module provides the basic user interface to the OpenGL
+rendering capabilities of pyFormex.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">draw</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">draw</span></tt></p>
+<dl class="function">
+<dt id="draw.closeGui">
+<tt class="descclassname">draw.</tt><tt class="descname">closeGui</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.closeGui" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the GUI.</p>
+<p>Calling this function from a script closes the GUI and terminates
+pyFormex.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.closeDialog">
+<tt class="descclassname">draw.</tt><tt class="descname">closeDialog</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#draw.closeDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the named dialog.</p>
+<p>Closes the InputDialog with the given name. If multiple dialogs are
+open with the same name, all these dialogs are closed.</p>
+<p>This only works for dialogs owned by the pyFormex GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.showMessage">
+<tt class="descclassname">draw.</tt><tt class="descname">showMessage</tt><big>(</big><em>text, actions=['OK'], level='info', modal=True, **kargs</em><big>)</big><a class="headerlink" href="#draw.showMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show a short message widget and wait for user acknowledgement.</p>
+<p>There are three levels of messages: &#8216;info&#8217;, &#8216;warning&#8217; and &#8216;error&#8217;.
+They differ only in the icon that is shown next to the test.
+By default, the message widget has a single button with the text &#8216;OK&#8217;.
+The dialog is closed if the user clicks a button.
+The return value is the button text.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.showInfo">
+<tt class="descclassname">draw.</tt><tt class="descname">showInfo</tt><big>(</big><em>text, actions=['OK'], modal=True</em><big>)</big><a class="headerlink" href="#draw.showInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show an informational message and wait for user acknowledgement.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.warning">
+<tt class="descclassname">draw.</tt><tt class="descname">warning</tt><big>(</big><em>text, actions=['OK']</em><big>)</big><a class="headerlink" href="#draw.warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show a warning message and wait for user acknowledgement.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.error">
+<tt class="descclassname">draw.</tt><tt class="descname">error</tt><big>(</big><em>text, actions=['OK']</em><big>)</big><a class="headerlink" href="#draw.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show an error message and wait for user acknowledgement.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.ask">
+<tt class="descclassname">draw.</tt><tt class="descname">ask</tt><big>(</big><em>question</em>, <em>choices=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.ask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask a question and present possible answers.</p>
+<p>Return answer if accepted or default if rejected.
+The remaining arguments are passed to the InputDialog getResult method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.ack">
+<tt class="descclassname">draw.</tt><tt class="descname">ack</tt><big>(</big><em>question</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.ack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show a Yes/No question and return True/False depending on answer.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.showText">
+<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text, type=None, actions=[('OK', None)], modal=True, mono=False</em><big>)</big><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a text and wait for user response.</p>
+<p>This opens a TextBox widget and displays the text in the widget.
+Scrollbars will be added if the text is too large to display at once.</p>
+<p>The text can be plain text format. Some rich text formats will be 
+recognized and rendered appropriately. See widgets.TextBox.</p>
+<p><cite>mono=True</cite> forces the use of a monospaced font.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.showFile">
+<tt class="descclassname">draw.</tt><tt class="descname">showFile</tt><big>(</big><em>filename</em>, <em>mono=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.showFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a text file.</p>
+<p>This will use the <a class="reference internal" href="#draw.showText" title="draw.showText"><tt class="xref py py-func docutils literal"><span class="pre">showText()</span></tt></a> function to display a text read
+from a file.
+By default this uses a monospaced font.
+Other arguments may also be passed to ShowText.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.showDescription">
+<tt class="descclassname">draw.</tt><tt class="descname">showDescription</tt><big>(</big><em>filename=None</em><big>)</big><a class="headerlink" href="#draw.showDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the Description part of the docstring of a pyFormex script.</p>
+<p>If no file name is specified, the current script is used.
+If the script&#8217;s docstring has no Description part, a default text is
+shown.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.askItems">
+<tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>timeout=None</em>, <em>legacy=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.askItems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask the value of some items to the user.</p>
+<p>Create an interactive widget to let the user set the value of some items.
+&#8216;items&#8217; is a list of input items (basically [key,value] pairs).
+See the widgets.InputDialog class for complete description of the
+available input items.</p>
+<p>Two InputDialog classes are defined in gui.widgets.
+The OldInputDialog class is deprecated in favor of NewInputDialog, which
+has become the default as of pyFormex 0.8.3.
+The two classes differ in how the input is specified.
+In the new format, each input item is either a simpleInputItem, a
+groupInputItem or a tabInputItem.</p>
+<p>You can specify &#8216;legacy=False&#8217; to indicate that you are using the new
+format, or &#8216;legacy=True&#8217; if your data are in the old format.
+The default (&#8216;legacy = None&#8217;), will make this function try to detect
+the format and convert the input items to the proper new format.
+This conversion will work on most, but not all legacy formats that
+have been used in the past by pyFormex.
+Since the legacy format is scheduled to be withdrawn in future, users
+are encouraged to change their input to the new format.</p>
+<p>The remaining arguments are keyword arguments that are passed to the
+InputDialog.getResult method.
+A timeout (in seconds) can be specified to have the input dialog
+interrupted automatically.</p>
+<p>Return a dictionary with the results: for each input item there is a
+(key,value) pair. Returns an empty dictionary if the dialog was canceled.
+Sets the dialog timeout and accepted status in global variables.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.currentDialog">
+<tt class="descclassname">draw.</tt><tt class="descname">currentDialog</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.currentDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current dialog widget.</p>
+<p>This returns the dialog widget created by the askItems() function,
+while the dialog is still active. If no askItems() has been called
+or if the user already closed the dialog, None is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.dialogAccepted">
+<tt class="descclassname">draw.</tt><tt class="descname">dialogAccepted</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.dialogAccepted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the last askItems() dialog was accepted.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.dialogRejected">
+<tt class="descclassname">draw.</tt><tt class="descname">dialogRejected</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.dialogRejected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the last askItems() dialog was rejected.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.dialogTimedOut">
+<tt class="descclassname">draw.</tt><tt class="descname">dialogTimedOut</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.dialogTimedOut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the last askItems() dialog timed out.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.askFilename">
+<tt class="descclassname">draw.</tt><tt class="descname">askFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>exist=True</em>, <em>multi=False</em>, <em>change=True</em><big>)</big><a class="headerlink" href="#draw.askFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask for a file name or multiple file names using a file dialog.</p>
+<p>cur is a directory or filename. All the files matching the filter in that
+directory (or that file&#8217;s directory) will be shown.
+If cur is a file, it will be selected as the current filename.</p>
+<p>Unless the user cancels the operation, or the change parameter was set to
+False, the parent directory of the selected file will become the new
+working directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.askNewFilename">
+<tt class="descclassname">draw.</tt><tt class="descname">askNewFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em><big>)</big><a class="headerlink" href="#draw.askNewFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask a single new filename.</p>
+<p>This is a convenience function for calling askFilename with the
+arguments exist=False.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.askDirname">
+<tt class="descclassname">draw.</tt><tt class="descname">askDirname</tt><big>(</big><em>path=None</em>, <em>change=True</em><big>)</big><a class="headerlink" href="#draw.askDirname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interactively select a directory and change the current workdir.</p>
+<p>The user is asked to select a directory through the standard file
+dialog. Initially, the dialog shows all the subdirectories in the
+specified path, or by default in the current working directory.</p>
+<p>The selected directory becomes the new working directory, unless the
+user canceled the operation, or the change parameter was set to False.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.checkWorkdir">
+<tt class="descclassname">draw.</tt><tt class="descname">checkWorkdir</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.checkWorkdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ask the user to change the current workdir if it is not writable.</p>
+<p>Returns True if the new workdir is writable.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.printMessage">
+<tt class="descclassname">draw.</tt><tt class="descname">printMessage</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.printMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a message on the message board.</p>
+<p>If a logfile was opened, the message is also written to the log file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.draw">
+<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>view=None</em>, <em>bbox=None</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>shrink=None</em>, <em>marksize=None</em>, <em>wait=True</em>, <em>clear=None</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>flat=False</em><big>)</big><a class="headerlink" href="#draw.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw object(s) with specified settings and direct camera to it.</p>
+<p>The first argument is an object to be drawn. All other arguments are
+settings that influence how  the object is being drawn.</p>
+<p>F is either a Formex or a TriSurface object, or a name of such object
+(global or exported), or a list thereof.
+If F is a list, the draw() function is called repeatedly with each of
+ithe items of the list as first argument and with the remaining arguments
+unchanged.</p>
+<p>The remaining arguments are drawing options. If None, they are filled in
+from the current viewport drawing options.</p>
+<p>view is either the name of a defined view or &#8216;last&#8217; or None.
+Predefined views are &#8216;front&#8217;,&#8217;back&#8217;,&#8217;top&#8217;,&#8217;bottom&#8217;,&#8217;left&#8217;,&#8217;right&#8217;,&#8217;iso&#8217;.
+With view=None the camera settings remain unchanged (but might be changed
+interactively through the user interface). This may make the drawn object
+out of view!
+With view=&#8217;last&#8217;, the camera angles will be set to the same camera angles
+as in the last draw operation, undoing any interactive changes.
+The initial default view is &#8216;front&#8217; (looking in the -z direction).</p>
+<p>bbox specifies the 3D volume at which the camera will be aimed (using the
+angles set by view). The camera position wil be set so that the volume
+comes in view using the current lens (default 45 degrees).
+bbox is a list of two points or compatible (array with shape (2,3)).
+Setting the bbox to a volume not enclosing the object may make the object
+invisible on the canvas.
+The special value bbox=&#8217;auto&#8217; will use the bounding box of the objects
+getting drawn (object.bbox()), thus ensuring that the camera will focus
+on these objects.
+The special value bbox=None will use the bounding box of the previous
+drawing operation, thus ensuring that the camera&#8217;s target volume remains
+unchanged.</p>
+<p>color,colormap,linewidth,alpha,marksize are passed to the
+creation of the 3D actor.</p>
+<p>if color is None, it is drawn with the color specified on creation.
+if color == &#8216;prop&#8217; and a colormap was installed, props define color.
+else, color should be an array of RGB values, either with shape
+(3,) for a single color, or (nelems,3) for differently colored
+elements</p>
+<p>shrink is a floating point shrink factor that will be applied to object
+before drawing it.</p>
+<p>If the Formex has properties and a color list is specified, then the
+the properties will be used as an index in the color list and each member
+will be drawn with the resulting color.
+If color is one color value, the whole Formex will be drawn with
+that color.
+Finally, if color=None is specified, the whole Formex is drawn in black.</p>
+<p>Each draw action activates a locking mechanism for the next draw action,
+which will only be allowed after drawdelay seconds have elapsed. This
+makes it easier to see subsequent images and is far more elegant that an
+explicit sleep() operation, because all script processing will continue
+up to the next drawing instruction.
+The value of drawdelay is set in the config, or 2 seconds by default.
+The user can disable the wait cycle for the next draw operation by
+specifying wait=False. Setting drawdelay=0 will disable the waiting
+mechanism for all subsequent draw statements (until set &gt;0 again).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.focus">
+<tt class="descclassname">draw.</tt><tt class="descname">focus</tt><big>(</big><em>object</em><big>)</big><a class="headerlink" href="#draw.focus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the camera thus that object comes fully into view.</p>
+<p>object can be anything having a bbox() method or a list thereof.
+if no view is given, the default is used.</p>
+<p>The camera is moved with fixed axis directions to a place
+where the whole object can be viewed using a 45. degrees lens opening.
+This technique may change in future!</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.askDrawOptions">
+<tt class="descclassname">draw.</tt><tt class="descname">askDrawOptions</tt><big>(</big><em>d={}</em><big>)</big><a class="headerlink" href="#draw.askDrawOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interactively ask the Drawing options from the user.</p>
+<p>A dictionary may be specified to override the current defaults.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawVectors">
+<tt class="descclassname">draw.</tt><tt class="descname">drawVectors</tt><big>(</big><em>P</em>, <em>v</em>, <em>size=None</em>, <em>flat=True</em>, <em>**drawOptions</em><big>)</big><a class="headerlink" href="#draw.drawVectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a set of vectors.</p>
+<p>If size==None, draws the vectors v at the points P.
+If size is specified, draws the vectors size*normalize(v)
+P, v and size are single points
+or sets of points. If sets, they should be of the same size.</p>
+<p>Other drawoptions can be specified and will be passed to the draw function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawMarks">
+<tt class="descclassname">draw.</tt><tt class="descname">drawMarks</tt><big>(</big><em>X</em>, <em>M</em>, <em>color='black'</em>, <em>leader=''</em><big>)</big><a class="headerlink" href="#draw.drawMarks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a list of marks at points X.</p>
+<p>X is a Coords array.
+M is a list with the same length as X.
+The string representation of the marks are drawn at the corresponding
+3D coordinate.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawNumbers">
+<tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em><big>)</big><a class="headerlink" href="#draw.drawNumbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw numbers on all elements of F.</p>
+<p>Normally, the numbers are drawn at the centroids of the elements.
+A translation may be given to put the numbers out of the centroids,
+e.g. to put them in front of the objects to make them visible,
+or to allow to view a mark at the centroids.
+If an offset is specified, it is added to the shown numbers.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawVertexNumbers">
+<tt class="descclassname">draw.</tt><tt class="descname">drawVertexNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em><big>)</big><a class="headerlink" href="#draw.drawVertexNumbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw (local) numbers on all vertices of F.</p>
+<p>Normally, the numbers are drawn at the location of the vertices.
+A translation may be given to put the numbers out of the location,
+e.g. to put them in front of the objects to make them visible,
+or to allow to view a mark at the vertices.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawText3D">
+<tt class="descclassname">draw.</tt><tt class="descname">drawText3D</tt><big>(</big><em>P</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em><big>)</big><a class="headerlink" href="#draw.drawText3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a text at a 3D point P.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawAxes">
+<tt class="descclassname">draw.</tt><tt class="descname">drawAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.drawAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the axes of a CoordinateSystem.</p>
+<p>This draws an AxesActor corresponding to the specified Coordinatesystem.
+The arguments are the same as those of the AxesActor constructor.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawViewportAxes3D">
+<tt class="descclassname">draw.</tt><tt class="descname">drawViewportAxes3D</tt><big>(</big><em>pos</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#draw.drawViewportAxes3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw two viewport axes at a 3D position.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawBbox">
+<tt class="descclassname">draw.</tt><tt class="descname">drawBbox</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#draw.drawBbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the bbox of the actor A.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawActor">
+<tt class="descclassname">draw.</tt><tt class="descname">drawActor</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#draw.drawActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw an actor and update the screen.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.undraw">
+<tt class="descclassname">draw.</tt><tt class="descname">undraw</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#draw.undraw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an item or a number of items from the canvas.</p>
+<p>Use the return value from one of the draw... functions to remove
+the item that was drawn from the canvas.
+A single item or a list of items may be specified.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.view">
+<tt class="descclassname">draw.</tt><tt class="descname">view</tt><big>(</big><em>v</em>, <em>wait=True</em><big>)</big><a class="headerlink" href="#draw.view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show a named view, either a builtin or a user defined.</p>
+<p>This shows the current scene from another viewing angle.
+Switching views of a scene is much faster than redrawing a scene.
+Therefore this function is prefered over <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a> when the actors
+in the scene remain unchanged and only the camera viewpoint changes.</p>
+<p>Just like <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-func docutils literal"><span class="pre">draw()</span></tt></a>, this function obeys the drawing lock mechanism,
+and by default it will restart the lock to retard the next draing operation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.setTriade">
+<tt class="descclassname">draw.</tt><tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big><a class="headerlink" href="#draw.setTriade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle the display of the global axes on or off.</p>
+<p>If on is True, the axes triade is displayed, if False it is
+removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawText">
+<tt class="descclassname">draw.</tt><tt class="descname">drawText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>gravity='E'</em>, <em>font='helvetica'</em>, <em>size=14</em>, <em>color=None</em>, <em>zoom=None</em><big>)</big><a class="headerlink" href="#draw.drawText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show a text at position x,y using font.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.annotate">
+<tt class="descclassname">draw.</tt><tt class="descname">annotate</tt><big>(</big><em>annot</em><big>)</big><a class="headerlink" href="#draw.annotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw an annotation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.decorate">
+<tt class="descclassname">draw.</tt><tt class="descname">decorate</tt><big>(</big><em>decor</em><big>)</big><a class="headerlink" href="#draw.decorate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a decoration.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.createView">
+<tt class="descclassname">draw.</tt><tt class="descname">createView</tt><big>(</big><em>name</em>, <em>angles</em>, <em>addtogui=False</em><big>)</big><a class="headerlink" href="#draw.createView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new named view (or redefine an old).</p>
+<p>The angles are (longitude, latitude, twist).
+By default, the view is local to the script&#8217;s viewport.
+If gui is True, it is also added to the GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.setView">
+<tt class="descclassname">draw.</tt><tt class="descname">setView</tt><big>(</big><em>name</em>, <em>angles=None</em><big>)</big><a class="headerlink" href="#draw.setView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default view for future drawing operations.</p>
+<p>If no angles are specified, the name should be an existing view, or
+the predefined value &#8216;last&#8217;.
+If angles are specified, this is equivalent to createView(name,angles)
+followed by setView(name).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.bgcolor">
+<tt class="descclassname">draw.</tt><tt class="descname">bgcolor</tt><big>(</big><em>color</em>, <em>color2=None</em><big>)</big><a class="headerlink" href="#draw.bgcolor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the background color (and redraw).</p>
+<p>If one color is given, the background is a solid color.
+If two colors are given, the background color will get a vertical
+gradient with color on top and color2 at the bottom.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.fgcolor">
+<tt class="descclassname">draw.</tt><tt class="descname">fgcolor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#draw.fgcolor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default foreground color.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.lights">
+<tt class="descclassname">draw.</tt><tt class="descname">lights</tt><big>(</big><em>state=True</em><big>)</big><a class="headerlink" href="#draw.lights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the lights on or off</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.transparent">
+<tt class="descclassname">draw.</tt><tt class="descname">transparent</tt><big>(</big><em>state=True</em><big>)</big><a class="headerlink" href="#draw.transparent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the transparency mode on or off.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.set_material_value">
+<tt class="descclassname">draw.</tt><tt class="descname">set_material_value</tt><big>(</big><em>typ</em>, <em>val</em><big>)</big><a class="headerlink" href="#draw.set_material_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of one of the material lighting parameters</p>
+<p>typ is one of &#8216;ambient&#8217;,&#8217;specular&#8217;,&#8217;emission&#8217;,&#8217;shininess&#8217;
+val is a value between 0.0 and 1.0</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.linewidth">
+<tt class="descclassname">draw.</tt><tt class="descname">linewidth</tt><big>(</big><em>wid</em><big>)</big><a class="headerlink" href="#draw.linewidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth to be used in line drawings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.linestipple">
+<tt class="descclassname">draw.</tt><tt class="descname">linestipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big><a class="headerlink" href="#draw.linestipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth to be used in line drawings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.pointsize">
+<tt class="descclassname">draw.</tt><tt class="descname">pointsize</tt><big>(</big><em>siz</em><big>)</big><a class="headerlink" href="#draw.pointsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the size to be used in point drawings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.canvasSize">
+<tt class="descclassname">draw.</tt><tt class="descname">canvasSize</tt><big>(</big><em>width</em>, <em>height</em><big>)</big><a class="headerlink" href="#draw.canvasSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resize the canvas to (width x height).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.clear_canvas">
+<tt class="descclassname">draw.</tt><tt class="descname">clear_canvas</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.clear_canvas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the canvas.</p>
+<p>This is a low level function not intended for the user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.clear">
+<tt class="descclassname">draw.</tt><tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the canvas.</p>
+<p>Removes everything from the current scene and displays an empty
+background.</p>
+<p>This function waits for the drawing lock to be released, but will
+not reset it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.delay">
+<tt class="descclassname">draw.</tt><tt class="descname">delay</tt><big>(</big><em>s=None</em><big>)</big><a class="headerlink" href="#draw.delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/Set the draw delay time.</p>
+<p>Returns the current setting of the draw wait time (in seconds).
+This drawing delay is obeyed by drawing and viewing operations.</p>
+<p>A parameter may be given to set the delay time to a new value.
+It should be convertable to a float.
+The function still returns the old setting. This may be practical
+to save that value to restore it later.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.wait">
+<tt class="descclassname">draw.</tt><tt class="descname">wait</tt><big>(</big><em>relock=True</em><big>)</big><a class="headerlink" href="#draw.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait until the drawing lock is released.</p>
+<p>This uses the drawing lock mechanism to pause. The drawing lock
+ensures that subsequent draws are retarded to give the user the time
+to view. This use of this function is prefered over that of
+<a class="reference internal" href="#draw.pause" title="draw.pause"><tt class="xref py py-func docutils literal"><span class="pre">pause()</span></tt></a> or <a class="reference internal" href="#draw.sleep" title="draw.sleep"><tt class="xref py py-func docutils literal"><span class="pre">sleep()</span></tt></a>, because it allows your script to
+continue the numerical computations while waiting to draw the next
+screen.</p>
+<p>This function can be used to retard other functions than `</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.fforward">
+<tt class="descclassname">draw.</tt><tt class="descname">fforward</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.fforward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Releases the drawing lock mechanism indefinely.</p>
+<p>Releasing the drawing lock indefinely means that the lock will not
+be set again and your script will execute till the end.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.step">
+<tt class="descclassname">draw.</tt><tt class="descname">step</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform one step of a script.</p>
+<p>A step is a set of instructions until the next draw operation.
+If a script is running, this just releases the draw lock.
+Else, it starts the script in step mode.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.pause">
+<tt class="descclassname">draw.</tt><tt class="descname">pause</tt><big>(</big><em>msg='Use the Step or Continue button to proceed'</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#draw.pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pause the execution until an external event occurs or timeout.</p>
+<p>When the pause statement is executed, execution of the pyformex script
+is suspended until some external event forces it to proceed again.
+Clicking the STEP or CONTINUE button will produce such an event.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.sleep">
+<tt class="descclassname">draw.</tt><tt class="descname">sleep</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#draw.sleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sleep until key/mouse press in the canvas or until timeout</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.wakeup">
+<tt class="descclassname">draw.</tt><tt class="descname">wakeup</tt><big>(</big><em>mode=0</em><big>)</big><a class="headerlink" href="#draw.wakeup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wake up from the sleep function.</p>
+<p>This is the only way to exit the sleep() function.
+Default is to wake up from the current sleep. A mode &gt; 0
+forces wakeup for longer period.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.zoomRectangle">
+<tt class="descclassname">draw.</tt><tt class="descname">zoomRectangle</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.zoomRectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zoom a rectangle selected by the user.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.zoomBbox">
+<tt class="descclassname">draw.</tt><tt class="descname">zoomBbox</tt><big>(</big><em>bb</em><big>)</big><a class="headerlink" href="#draw.zoomBbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zoom thus that the specified bbox becomes visible.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.zoomAll">
+<tt class="descclassname">draw.</tt><tt class="descname">zoomAll</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.zoomAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zoom thus that all actors become visible.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.flyAlong">
+<tt class="descclassname">draw.</tt><tt class="descname">flyAlong</tt><big>(</big><em>path, upvector=[0.0, 1.0, 0.0], sleeptime=None</em><big>)</big><a class="headerlink" href="#draw.flyAlong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fly through the current scene along the specified path.</p>
+<p>This function moves the camera through the subsequent points
+of a path, looing at the next point of the path, and keeping
+the upvector of the camera oriented along the specified direction.</p>
+<ul class="simple">
+<li><cite>path</cite>: a PolyLine or plex-2 Formex specifyin the camera path.</li>
+<li><cite>upvector</cite>: the direction of the vertical axis of the camera.</li>
+<li><cite>sleeptime</cite>: a delay between subsequent images, to slow down
+the camera movement.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.viewport">
+<tt class="descclassname">draw.</tt><tt class="descname">viewport</tt><big>(</big><em>n=None</em><big>)</big><a class="headerlink" href="#draw.viewport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the current viewport.</p>
+<p>n is an integer number in the range of the number of viewports,
+or is one of the viewport objects in pyformex.GUI.viewports</p>
+<p>if n is None, selects the current GUI viewport for drawing</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.layout">
+<tt class="descclassname">draw.</tt><tt class="descname">layout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em><big>)</big><a class="headerlink" href="#draw.layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the viewports layout.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.addViewport">
+<tt class="descclassname">draw.</tt><tt class="descname">addViewport</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.addViewport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new viewport.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.removeViewport">
+<tt class="descclassname">draw.</tt><tt class="descname">removeViewport</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.removeViewport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the last viewport.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.linkViewport">
+<tt class="descclassname">draw.</tt><tt class="descname">linkViewport</tt><big>(</big><em>vp</em>, <em>tovp</em><big>)</big><a class="headerlink" href="#draw.linkViewport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Link viewport vp to viewport tovp.</p>
+<p>Both vp and tovp should be numbers of viewports.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.updateGUI">
+<tt class="descclassname">draw.</tt><tt class="descname">updateGUI</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.updateGUI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the GUI.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.highlightActors">
+<tt class="descclassname">draw.</tt><tt class="descname">highlightActors</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightActors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Highlight a selection of actors on the canvas.</p>
+<p>K is Collection of actors as returned by the pick() method.
+colormap is a list of two colors, for the actors not in, resp. in
+the Collection K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.highlightElements">
+<tt class="descclassname">draw.</tt><tt class="descname">highlightElements</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightElements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Highlight a selection of actor elements on the canvas.</p>
+<p>K is Collection of actor elements as returned by the pick() method.
+colormap is a list of two colors, for the elements not in, resp. in
+the Collection K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.highlightEdges">
+<tt class="descclassname">draw.</tt><tt class="descname">highlightEdges</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Highlight a selection of actor edges on the canvas.</p>
+<p>K is Collection of TriSurface actor edges as returned by the pick() method.
+colormap is a list of two colors, for the edges not in, resp. in
+the Collection K.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.highlightPoints">
+<tt class="descclassname">draw.</tt><tt class="descname">highlightPoints</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Highlight a selection of actor elements on the canvas.</p>
+<p>K is Collection of actor elements as returned by the pick() method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.highlightPartitions">
+<tt class="descclassname">draw.</tt><tt class="descname">highlightPartitions</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightPartitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Highlight a selection of partitions on the canvas.</p>
+<p>K is a Collection of actor elements, where each actor element is
+connected to a collection of property numbers, as returned by the
+partitionCollection() method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.removeHighlights">
+<tt class="descclassname">draw.</tt><tt class="descname">removeHighlights</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.removeHighlights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the highlights from the current viewport</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.set_selection_filter">
+<tt class="descclassname">draw.</tt><tt class="descname">set_selection_filter</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#draw.set_selection_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the selection filter mode</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.pick">
+<tt class="descclassname">draw.</tt><tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>filtr=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.pick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enter interactive picking mode and return selection.</p>
+<p>See viewport.py for more details.
+This function differs in that it provides default highlighting
+during the picking operation, a button to stop the selection operation</p>
+<p>If no filter is given, the available filters are presented in a combobox.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.highlight">
+<tt class="descclassname">draw.</tt><tt class="descname">highlight</tt><big>(</big><em>K</em>, <em>mode</em><big>)</big><a class="headerlink" href="#draw.highlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Highlight a Collection of actor/elements.</p>
+<p>K is usually the return value of a pick operation, but might also
+be set by the user.
+mode is one of the pick modes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.set_edit_mode">
+<tt class="descclassname">draw.</tt><tt class="descname">set_edit_mode</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#draw.set_edit_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the drawing edit mode.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawLinesInter">
+<tt class="descclassname">draw.</tt><tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>single=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.drawLinesInter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enter interactive drawing mode and return the line drawing.</p>
+<p>See viewport.py for more details.
+This function differs in that it provides default displaying
+during the drawing operation and a button to stop the drawing operation.</p>
+<p>The drawing can be edited using the methods &#8216;undo&#8217;, &#8216;clear&#8217; and &#8216;close&#8217;, which
+are presented in a combobox.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.showLineDrawing">
+<tt class="descclassname">draw.</tt><tt class="descname">showLineDrawing</tt><big>(</big><em>L</em><big>)</big><a class="headerlink" href="#draw.showLineDrawing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show a line drawing.</p>
+<p>L is usually the return value of an interactive draw operation, but
+might also be set by the user.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="script.html"
+                        title="previous chapter">4. <tt class="docutils literal docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="colors.html"
+                        title="next chapter">6. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="script.html" title="4. script — Basic pyFormex script functions"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,175 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>42. fe_post — A postprocessor for ABAQUS output files. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="43. postproc — Postprocessing functions" href="postproc.html" />
+    <link rel="prev" title="41. fe_abq — Exporting finite element models in Abaqus™ input file format." href="fe_abq.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="postproc.html" title="43. postproc — Postprocessing functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fe_abq.html" title="41. fe_abq — Exporting finite element models in Abaqus™ input file format."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-fe_post">
+<span id="fe-post-a-postprocessor-for-abaqus-output-files"></span><span id="sec-ref-fe-post"></span><h1>42. <a class="reference internal" href="#module-fe_post" title="fe_post: A postprocessor for ABAQUS output files."><tt class="xref py py-mod docutils literal"><span class="pre">fe_post</span></tt></a> &#8212; A postprocessor for ABAQUS output files.<a class="headerlink" href="#module-fe_post" title="Permalink to this headline">¶</a></h1>
+<p>A postprocessor for ABAQUS output files.</p>
+<p>The ABAQUS .fil output file can be scanned and translated into a pyFormex
+script with the &#8216;postabq&#8217; command. Use it as follows:</p>
+<div class="highlight-python"><pre>postabq job.fil &gt; job.py</pre>
+</div>
+<p>Then execute the created script from inside pyFormex.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_post</span></tt></p>
+<dl class="class">
+<dt id="fe_post.FeResult">
+<em class="property">class </em><tt class="descclassname">fe_post.</tt><tt class="descname">FeResult</tt><big>(</big><em>name='__FePost__'</em>, <em>datasize={'S': 6</em>, <em>'U': 3</em>, <em>'COORD': 3}</em><big>)</big><a class="headerlink" href="#fe_post.FeResult" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="fe_post.FeResult.Export">
+<tt class="descname">Export</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.Export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align on the last increment and export results</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_post.FeResult.do_nothing">
+<tt class="descname">do_nothing</tt><big>(</big><em>*arg</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.do_nothing" title="Permalink to this definition">¶</a></dt>
+<dd><p>A do nothing function to stand in for as yet undefined functions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_post.FeResult.getSteps">
+<tt class="descname">getSteps</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.getSteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the step keys.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_post.FeResult.getIncs">
+<tt class="descname">getIncs</tt><big>(</big><em>step</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.getIncs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the incs for given step.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_post.FeResult.getres">
+<tt class="descname">getres</tt><big>(</big><em>key</em>, <em>domain='nodes'</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.getres" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the results of the current step/inc for given key.</p>
+<p>The key may include a component to return only a single column
+of a multicolumn value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_post.FeResult.printSteps">
+<tt class="descname">printSteps</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.printSteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the steps/increments/resultcodes for which we have results.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_post</span></tt></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fe_abq.html"
+                        title="previous chapter">41. <tt class="docutils literal docutils literal docutils literal"><span class="pre">fe_abq</span></tt> &#8212; Exporting finite element models in Abaqus™ input file format.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="postproc.html"
+                        title="next chapter">43. <tt class="docutils literal"><span class="pre">postproc</span></tt> &#8212; Postprocessing functions</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="postproc.html" title="43. postproc — Postprocessing functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fe_abq.html" title="41. fe_abq — Exporting finite element models in Abaqus™ input file format."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,538 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>8. connectivity — A class and functions for handling nodal connectivity. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="9. simple — Predefined geometries with a simple shape." href="simple.html" />
+    <link rel="prev" title="7. geometry — A generic interface to the Coords transformation methods" href="geometry.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="simple.html" title="9. simple — Predefined geometries with a simple shape."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="geometry.html" title="7. geometry — A generic interface to the Coords transformation methods"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-connectivity">
+<span id="connectivity-a-class-and-functions-for-handling-nodal-connectivity"></span><span id="sec-ref-connectivity"></span><h1>8. <a class="reference internal" href="#module-connectivity" title="connectivity: A class and functions for handling nodal connectivity."><tt class="xref py py-mod docutils literal"><span class="pre">connectivity</span></tt></a> &#8212; A class and functions for handling nodal connectivity.<a class="headerlink" href="#module-connectivity" title="Permalink to this headline">¶</a></h1>
+<p>A class and functions for handling nodal connectivity.</p>
+<p>This module defines a specialized array class for representing nodal
+connectivity. This is e.g. used in mesh models, where geometry is
+represented by a set of numbered points (nodes) and the geometric elements
+are described by refering to the node numbers.
+In a mesh model, points common to adjacent elements are unique, and
+adjacency of elements can easily be detected from common node numbers.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">connectivity</span></tt></p>
+<dl class="class">
+<dt id="connectivity.Connectivity">
+<em class="property">class </em><tt class="descclassname">connectivity.</tt><tt class="descname">Connectivity</tt><a class="headerlink" href="#connectivity.Connectivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for handling element/node connectivity.</p>
+<p>A connectivity object is a 2-dimensional integer array with all
+non-negative values. Each row of the array defines an element by listing
+the numbers of its lower entity types. A typical use is a <tt class="xref py py-class docutils literal"><span class="pre">Mesh</span></tt>
+object, where each element is defined in function of its nodes.
+While in a Mesh the word <cite>node</cite> will normally refer to a geometrical
+point, here we will use <cite>node</cite> for the lower entity whatever its nature
+is. It doesn&#8217;t even have to be a geometrical entity.</p>
+<p>The current implementation limits a Connectivity object to numbers that
+are smaller than 2**31.</p>
+<p>In a row (element), the same node number may occur more than once, though
+usually all numbers in a row are different. Rows containing duplicate
+numbers are called <cite>degenerate</cite> elements.</p>
+<p>A new Connectivity object is created with the following syntax</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Connectivity</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span><span class="n">dtyp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">nplex</span><span class="o">=</span><span class="mf">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>data</cite>: should be compatible with an integer array with shape
+<cite>(nelems,nplex)</cite>, where <cite>nelems</cite> is the number of elements and
+<cite>nplex</cite> is the plexitude of the elements.</li>
+<li><cite>dtype</cite>: can be specified to force an integer type but is set by
+default from the passed <cite>data</cite>.</li>
+<li><cite>copy</cite>: can be set True to force copying the data. By default, the
+specified data will be used without copying, if possible.</li>
+<li><cite>nplex</cite>: can be specified to force a check on the plexitude of the
+data, or to set the plexitude for an empty Connectivity.
+An error will be raised if the specified data do not match the
+specified plexitude.</li>
+</ul>
+<p>A Connectivity object stores its maximum value found at creation time
+in an attribute <cite>_max</cite>.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="connectivity.Connectivity.nelems">
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nelems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of elements in the Connectivity table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.nplex">
+<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the plexitude of the elements in the Connectivity table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.encode">
+<tt class="descname">encode</tt><big>(</big><em>permutations=True</em>, <em>return_magic=False</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode the element connectivities into single integer numbers.</p>
+<p>Each row of numbers is encoded into a single integer value, such that
+equal rows result in the same number and different rows yield
+different numbers. Furthermore, enough information can be kept to
+restore the original rows from these single integer numbers.
+This is seldom needed however, because the original data are
+available from the Connectivity table itself.</p>
+<ul class="simple">
+<li>permutations: if True(default), two rows are considered equal if
+they contain the same numbers regardless of their order.
+If False, two rows are only equal if they contain the same
+numbers at the same position.</li>
+<li>return_magic: if True, return a codes,magic tuple. The default is
+to return only the codes.</li>
+</ul>
+<p>Return value(s):</p>
+<ul class="simple">
+<li>codes: an (nelems,) shaped array with the element code numbers,</li>
+<li>magic: the information needed to restore the original rows from
+the codes. See Connectivity.decode()</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.testDegenerate">
+<tt class="descname">testDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.testDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag the degenerate elements (rows).</p>
+<p>A degenerate element is a row which contains at least two
+equal values.</p>
+<p>This function returns an array with the value True or False
+for each row. The True values flag the degenerate rows.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.listDegenerate">
+<tt class="descname">listDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with the numbers of the degenerate elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.listNonDegenerate">
+<tt class="descname">listNonDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listNonDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with the numbers of the non-degenerate elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.removeDegenerate">
+<tt class="descname">removeDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.removeDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the degenerate elements from a Connectivity table.</p>
+<p>Degenerate elements are rows with repeating values.
+Returns a Connectivity with the degenerate elements removed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.testDoubles">
+<tt class="descname">testDoubles</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.testDoubles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the Connectivity list for doubles.</p>
+<p>By default, doubles are elements that consist of the same set of
+nodes, in any particular order. Setting permutations to False
+will only find the double rows that have matching values at
+every position.</p>
+<p>This function returns a tuple with two arrays:</p>
+<ul class="simple">
+<li>an index used to sort the elements</li>
+<li>a flags array with the value True for indices of the unique elements
+and False for those of the doubles.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.listUnique">
+<tt class="descname">listUnique</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listUnique" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with the numbers of the unique elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.listDoubles">
+<tt class="descname">listDoubles</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listDoubles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with the numbers of the double elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.removeDoubles">
+<tt class="descname">removeDoubles</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.removeDoubles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove doubles from a Connectivity list.</p>
+<p>By default, doubles are elements that consist of the same set of
+nodes, in any particular order. Setting permutations to False
+will only remove the double rows that have matching values at
+matching positions.</p>
+<p>Returns a new Connectivity with the double elements removed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.reorder">
+<tt class="descname">reorder</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.reorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reorder the elements of a Connectivity in a specified order.</p>
+<p>This does not actually reorder the elements itself, but returns
+an index with the order of the rows (elements) in the connectivity
+table that meets the specified requirements.</p>
+<p>Parameters:</p>
+<ul>
+<li><p class="first"><cite>order</cite>: specifies how to reorder the elements. It is either one
+of the special string values defined below, or else it is an index
+with length equal to the number of elements. The index should be
+a permutation of the numbers in <cite>range(self.nelems()</cite>. Each value
+gives of the number of the old element that should be placed at
+this position. Thus, the order values are the old element numbers
+on the position of the new element number.</p>
+<p><cite>order</cite> can also take one of the following predefined values,
+resulting in the corresponding renumbering scheme being generated:</p>
+<ul class="simple">
+<li>&#8216;nodes&#8217;: the elements are renumbered in order of their appearance
+in the inverse index, i.e. first are the elements connected to
+node 0, then the as yet unlisted elements connected to node 1, etc.</li>
+<li>&#8216;random&#8217;: the elements are randomly renumbered.</li>
+<li>&#8216;reverse&#8217;: the elements are renumbered in reverse order.</li>
+</ul>
+</li>
+</ul>
+<p>Returns: a 1-D integer array which is a permutation of
+<cite>arange(self.nelems()</cite>, such that taking the elements in this order
+will produce a Connectivity reordered as requested. In case an
+explicit order was specified as input, this order is returned after
+checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">3</span><span class="p">,</span><span class="mf">0</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">(</span><span class="s">&#39;reverse&#39;</span><span class="p">)]</span>
+<span class="go">Connectivity([[0, 1],</span>
+<span class="go">       [3, 0],</span>
+<span class="go">       [2, 3],</span>
+<span class="go">       [1, 2]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">(</span><span class="s">&#39;nodes&#39;</span><span class="p">)</span>
+<span class="go">array([3, 2, 0, 1])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">])]</span>
+<span class="go">Connectivity([[3, 0],</span>
+<span class="go">       [0, 1],</span>
+<span class="go">       [1, 2],</span>
+<span class="go">       [2, 3]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.insertLevel">
+<tt class="descname">insertLevel</tt><big>(</big><em>selector</em>, <em>lower_only=False</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.insertLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert an extra hierarchical level in a Connectivity table.</p>
+<p>A Connectivity table identifies higher hierchical entities in function
+of lower ones. This method inserts an extra hierarchical level.
+For example, if you have volumes defined in function of points,
+you can insert an intermediate level of edges, or faces.
+Multiple intermediate level entities may be created from each
+element.</p>
+<p>Paramaters:</p>
+<ul class="simple">
+<li><cite>selector</cite>: an object that can be converted to a 1-dim or 2-dim
+int array. Examples are a tuple of local node numbers, or a list
+of such tuples all having the same length.
+Each row of <cite>selector</cite> holds a list of the local node numbers that
+should be retained in the new Connectivity table.</li>
+<li><cite>lower_only</cite>: if True, only the definition of the new entities is
+returned. This is equivalent with using <a class="reference internal" href="#connectivity.Connectivity.selectNodes" title="connectivity.Connectivity.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>, which
+is prefered when you do not need the higher level info.</li>
+</ul>
+<p>Return value: a tuple of two Connectivities <cite>hi</cite>,`lo`, where:</p>
+<ul class="simple">
+<li><cite>hi</cite>: defines the original elements in function of the intermediate
+level ones,</li>
+<li><cite>lo</cite>: defines the intermediate level items in function of the lowest
+level ones (the orignial nodes).</li>
+</ul>
+<p>Intermediate level items that consist of the same items in any
+permutation order are collapsed to single items.
+The low level items respect the numbering order inside the
+original elements, but it is undefined which of the collapsed
+sequences is returned.</p>
+<p>There is no inverse operation, because the precise order of the
+items in the collapsed rows is lost.
+See however <tt class="xref py py-meth docutils literal"><span class="pre">Mesh.getBorder()</span></tt> for an application where an
+inverse index is possible, because the border only contains
+unique rows.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.selectNodes">
+<tt class="descname">selectNodes</tt><big>(</big><em>selector</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.selectNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference internal" href="#connectivity.Connectivity" title="connectivity.Connectivity"><tt class="xref py py-class docutils literal"><span class="pre">Connectivity</span></tt></a> containing subsets of the nodes.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>selector</cite>: an object that can be converted to a 1-dim or 2-dim
+int array. Examples are a tuple of local node numbers, or a list
+of such tuples all having the same length.
+Each row of <cite>selector</cite> holds a list of the local node numbers that
+should be retained in the new Connectivity table.</li>
+</ul>
+<p>Returns a <a class="reference internal" href="#connectivity.Connectivity" title="connectivity.Connectivity"><tt class="xref py py-class docutils literal"><span class="pre">Connectivity</span></tt></a> object with shape <cite>(nelems,nplex)</cite></p>
+<p>This is equivalent to, but prefered above:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">insertLevel</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span><span class="n">lower_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.untangle">
+<tt class="descname">untangle</tt><big>(</big><em>ind=None</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.untangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Untangle a Connectivity into lower plexitude tables.</p>
+<p>There is no point in untangling a plexitude 2 structure.
+Plexitudes lower than 2 can not be untangled.
+Default is to untangle to plex-2 data (as in polygon to line segment).</p>
+<p>Return a tuple edges,faces where</p>
+<ul class="simple">
+<li>edges is an (nedges,2) int array of edges connecting two node numbers.</li>
+<li>faces is an (nelems,nplex) int array with the edge numbers connecting
+each pair os subsequent nodes in the elements of elems.</li>
+</ul>
+<p>The order of the edges respects the node order, and starts with
+nodes 0-1.
+The node numbering in the edges is always lowest node number first.</p>
+<p>For untangled Connectivities obtained with the default indices,
+an inverse operation is available as hi.tangle(lo).
+Degenerate rows may come back as a permutation!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.tangle">
+<tt class="descname">tangle</tt><big>(</big><em>lo</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.tangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compress two hierarchical Connectivity levels to a single one.</p>
+<p>self and lo are two hierarchical Connectivity tables, representing
+higher and lower level respectively. This means that the elements
+of self hold numbers which point into lo to obtain the lowest level
+items.</p>
+<p>In the current implementation, the plexitude of lo should be 2!</p>
+<p>As an example, in a structure of triangles, hi could represent
+triangles defined by 3 edges and lo could represent edges defined
+by 2 vertices. The compress method will then result in a table
+with plexitude 3 defining the triangles in function of the vertices.</p>
+<p>This is the inverse operation of untangle (without specifying ind).
+The algorithm only works if all vertex numbers of an element are
+unique.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.inverse">
+<tt class="descname">inverse</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.inverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the inverse index of a Connectivity table</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">connectivity</span></tt></p>
+<dl class="function">
+<dt id="connectivity.enmagic2">
+<tt class="descclassname">connectivity.</tt><tt class="descname">enmagic2</tt><big>(</big><em>cols</em>, <em>magic=0</em><big>)</big><a class="headerlink" href="#connectivity.enmagic2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode two integer values into a single integer.</p>
+<p>cols is a (n,2) array of non-negative integers smaller than 2**31.
+The result is an (n) array of type int64, where each value is
+unique for each row of values in the input.
+The original input can be restored with demagic2.</p>
+<p>If a magic value larger than the maximum integer in the table is
+given, it will be used. If not, it will be taken as the maximum+1.
+A negative magic value triggers a fastencode scheme.</p>
+<p>The return value is a tuple with the codes and the magic used.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.demagic2">
+<tt class="descclassname">connectivity.</tt><tt class="descname">demagic2</tt><big>(</big><em>codes</em>, <em>magic</em><big>)</big><a class="headerlink" href="#connectivity.demagic2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode an integer number into two integers.</p>
+<p>The arguments <cite>codes</cite> and <cite>magic</cite> are the result of an enmagic2() operation.
+This will restore the original two values for the codes.</p>
+<p>A negative magic value flags the fastencode option.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.connected">
+<tt class="descclassname">connectivity.</tt><tt class="descname">connected</tt><big>(</big><em>index</em>, <em>i</em><big>)</big><a class="headerlink" href="#connectivity.connected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of elements connected to element i.</p>
+<p>index is a (nr,nc) shaped integer array.
+An element j of index is said to be connected to element i, if element j
+has at least one (non-negative) value in common with element i.</p>
+<p>The result is a sorted list of unique element numbers, not containing
+the element number i itself.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.adjacent">
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacent</tt><big>(</big><em>index</em>, <em>inv=None</em><big>)</big><a class="headerlink" href="#connectivity.adjacent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an index of connected elements.</p>
+<p>index is a (nr,nc) shaped integer array.
+An element j of index is said to be connected to element i, if element j
+has at least one (non-negative) value in common with element i.</p>
+<p>The result is an integer array with shape (nr,mc), where row i holds
+a sorted list of the elements that are connected to element i, padded with
+-1 values to create an equal list length for all elements.</p>
+<p>The result of this method provides the same information as repeated calls
+of connected(index,i), but may be more efficient if nr becomes large.</p>
+<p>The inverse index may be specified, if it was already computed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.closedLoop">
+<tt class="descclassname">connectivity.</tt><tt class="descname">closedLoop</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.closedLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a set of line elements form a closed curve.</p>
+<p>elems is a connection table of line elements, such as obtained
+from the fuse() method on a plex-2 Formex.</p>
+<p>The return value is a tuple of:</p>
+<ul class="simple">
+<li>return code:<ul>
+<li>0: the segments form a closed loop</li>
+<li>1: the segments form a single non-closed path</li>
+<li>2: the segments form multiple not connected paths</li>
+</ul>
+</li>
+<li>a new connection table which is equivalent to the input if it forms
+a closed loop. The new table has the elements in order of the loop.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.connectedLineElems">
+<tt class="descclassname">connectivity.</tt><tt class="descname">connectedLineElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.connectedLineElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partition a segmented curve into connected segments.</p>
+<p>The input argument is a (nelems,2) shaped array of integers.
+Each row holds the two vertex numbers of a single line segment.</p>
+<p>The return value is a list of (nsegi,2) shaped array of integers.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.adjacencyList">
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyList</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.adjacencyList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create adjacency lists for 2-node elements.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.adjacencyArray">
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyArray</tt><big>(</big><em>elems</em>, <em>maxcon=5</em><big>)</big><a class="headerlink" href="#connectivity.adjacencyArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create adjacency array for 2-node elements.</p>
+<p>elems is a (nr,2) shaped integer array.
+The result is an integer array with shape (nr,mc), where row i holds
+a sorted list of the nodes that are connected to node i, padded with
+-1 values to create an equal list length for all nodes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.adjacencyArrays">
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyArrays</tt><big>(</big><em>elems</em>, <em>nsteps=1</em><big>)</big><a class="headerlink" href="#connectivity.adjacencyArrays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create adjacency arrays for 2-node elements.</p>
+<p>elems is a (nr,2) shaped integer array.
+The result is a list of adjacency arrays, where row i of adjacency array j
+holds a sorted list of the nodes that are connected to node i via a shortest
+path of j elements, padded with -1 values to create an equal list length
+for all nodes.
+This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="geometry.html"
+                        title="previous chapter">7. <tt class="docutils literal docutils literal"><span class="pre">geometry</span></tt> &#8212; A generic interface to the Coords transformation methods</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="simple.html"
+                        title="next chapter">9. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="simple.html" title="9. simple — Predefined geometries with a simple shape."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="geometry.html" title="7. geometry — A generic interface to the Coords transformation methods"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

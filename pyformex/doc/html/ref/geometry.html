@@ -1,0 +1,238 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>7. geometry — A generic interface to the Coords transformation methods &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
+    <link rel="prev" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-geometry">
+<span id="geometry-a-generic-interface-to-the-coords-transformation-methods"></span><span id="sec-ref-geometry"></span><h1>7. <a class="reference internal" href="#module-geometry" title="geometry: A generic interface to the Coords transformation methods"><tt class="xref py py-mod docutils literal"><span class="pre">geometry</span></tt></a> &#8212; A generic interface to the Coords transformation methods<a class="headerlink" href="#module-geometry" title="Permalink to this headline">¶</a></h1>
+<p>A generic interface to the Coords transformation methods</p>
+<p>This module defines a generic Geometry superclass which adds all the
+possibilities of coordinate transformations offered by the
+Coords class to the derived classes.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geometry</span></tt></p>
+<dl class="class">
+<dt id="geometry.Geometry">
+<em class="property">class </em><tt class="descclassname">geometry.</tt><tt class="descname">Geometry</tt><a class="headerlink" href="#geometry.Geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>A generic geometry object allowing transformation of coords sets.</p>
+<p>The Geometry class is a generic parent class for all geometric classes,
+intended to make the Coords transformations available without explicit
+declaration. This class is not intended to be used directly, only
+through derived classes. Examples of derived classes are <tt class="xref py py-class docutils literal"><span class="pre">Formex</span></tt>,
+<tt class="xref py py-class docutils literal"><span class="pre">Mesh</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">Curve</span></tt>.</p>
+<p>There is no initialization to be done when constructing a new instance of
+this class. The class just defines a set of methods which operate on
+the attribute <cite>coords</cite>, which should be a Coords object.
+Most of the transformation methods of the Coords class are thus exported
+through the Geometry class to its derived classes, and when called, will
+get executed on the <cite>coords</cite> attribute. 
+The derived class constructor should make sure that the <cite>coords</cite> attribute
+exists, has the proper type and contains the coordinates of all the points
+that should get transformed under a Coords transformation.</p>
+<p>Derived classes can (and in most cases should) declare a method
+<cite>_set_coords(coords)</cite> returning an object that is identical to the
+original, except for its coords being replaced by new ones with the
+same array shape.</p>
+<p>The Geometry class provides two possible default implementations:</p>
+<ul class="simple">
+<li><cite>_set_coords_inplace</cite> sets the coords attribute to the provided new
+coords, thus changing the object itself, and returns itself,</li>
+<li><cite>_set_coords_copy</cite> creates a deep copy of the object before setting
+the coords attribute. The original object is unchanged, the returned
+one is the changed copy.</li>
+</ul>
+<p>When using the first method, a statement like <tt class="docutils literal"><span class="pre">`B</span> <span class="pre">=</span> <span class="pre">A.scale(0.5)`</span></tt>
+will result in both <cite>A</cite> and <cite>B</cite> pointing to the same scaled object,
+while with the second method, <cite>A</cite> would still be the untransformed
+object. Since the latter is in line with the design philosophy of
+pyFormex, it is set as the default <cite>_set_coords</cite> method.
+Most derived classes that are part of pyFormex however override this
+default and implement a more efficient copy method.</p>
+<p>The following <a class="reference internal" href="#geometry.Geometry" title="geometry.Geometry"><tt class="xref py py-class docutils literal"><span class="pre">Geometry</span></tt></a> methods return the value of the same
+method applied on the <cite>coords</cite> attribute:
+<tt class="xref py py-meth docutils literal"><span class="pre">x()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">y()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">z()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">bbox()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">center()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">centroid()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">sizes()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">dsize()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">bsphere()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">distanceFromPlane()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">distanceFromLine()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">distanceFromPoint()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">directionalSize()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">directionalWidth()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">directionalExtremes()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">__str__()</span></tt>.
+Refer to the correponding <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> method for their usage.</p>
+<p>The following <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> transformation methods can be directly applied
+to a <a class="reference internal" href="#geometry.Geometry" title="geometry.Geometry"><tt class="xref py py-class docutils literal"><span class="pre">Geometry</span></tt></a> object or a derived class object. The return value
+is a new object identical to the original, except for the coordinates,
+which will have been transformed by the specified method.
+Refer to the correponding <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> method for the usage of these
+methods:
+<cite>scale</cite>,
+<cite>translate</cite>,
+<cite>rotate</cite>,
+<cite>shear</cite>,
+<cite>reflect</cite>,
+<cite>affine</cite>,
+<cite>cylindrical</cite>,
+<cite>hyperCylindrical</cite>,
+<cite>toCylindrical</cite>,
+<cite>spherical</cite>,
+<cite>superSpherical</cite>,
+<cite>toSpherical</cite>,
+<cite>bump</cite>,
+<cite>bump1</cite>,
+<cite>bump2</cite>,
+<cite>flare</cite>,
+<cite>map</cite>,
+<cite>map1</cite>,
+<cite>mapd</cite>,
+<cite>replace</cite>,
+<cite>swapAxes</cite>,
+<cite>rollAxes</cite>,
+<cite>projectOnSphere</cite>,
+<cite>projectOnCylinder</cite>,
+<cite>rot</cite>,
+<cite>trl</cite>.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="geometry.Geometry.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.write">
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#geometry.Geometry.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Geometry to a .pgf file.</p>
+<p>If fil is a string, a file with that name is opened. Else fil should
+be an open file.
+The Geometry is then written to that file in a native format, using
+sep as separator between the coordinates.
+If fil is a string, the file is closed prior to returning.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geometry</span></tt></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="colors.html"
+                        title="previous chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="connectivity.html"
+                        title="next chapter">8. <tt class="docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

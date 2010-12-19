@@ -1,0 +1,632 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>29. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="30. mesh — Finite element meshes in pyFormex." href="mesh.html" />
+    <link rel="prev" title="28. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mesh.html" title="30. mesh — Finite element meshes in pyFormex."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="toolbar.html" title="28. toolbar — Toolbars for the pyFormex GUI."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-curve">
+<span id="curve-definition-of-curves-in-pyformex"></span><span id="sec-ref-curve"></span><h1>29. <a class="reference internal" href="#module-curve" title="curve: Definition of curves in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">curve</span></tt></a> &#8212; Definition of curves in pyFormex.<a class="headerlink" href="#module-curve" title="Permalink to this headline">¶</a></h1>
+<p>Definition of curves in pyFormex.</p>
+<p>This module defines classes and functions specialized for handling
+one-dimensional geometry in pyFormex. These may be straight lines, polylines,
+higher order curves and collections thereof. In general, the curves are 3D,
+but special cases may be created for handling plane curves.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">curve</span></tt></p>
+<dl class="class">
+<dt id="curve.Curve">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Curve</tt><a class="headerlink" href="#curve.Curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for curve type classes.</p>
+<p>This is a virtual class intended to be subclassed.
+It defines the common definitions for all curve types.
+The subclasses should at least define the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sub_points</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="curve.Curve.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values t in part j</p>
+<p>t can be an array of parameter values, j is a single segment number.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.sub_points_2">
+<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values,parts given by zip(t,j)</p>
+<p>t and j can both be arrays, but should have the same length.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.sub_directions">
+<tt class="descname">sub_directions</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the directions at values t in part j</p>
+<p>t can be an array of parameter values, j is a single segment number.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.sub_directions_2">
+<tt class="descname">sub_directions_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_directions_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the directions at values,parts given by zip(t,j)</p>
+<p>t and j can both be arrays, but should have the same length.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.pointsAt">
+<tt class="descname">pointsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Curve.pointsAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at parameter values t.</p>
+<p>Parameter values are floating point values. Their integer part
+is interpreted as the curve segment number, and the decimal part
+goes from 0 to 1 over the segment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.directionsAt">
+<tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Curve.directionsAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at parameter values t.</p>
+<p>Parameter values are floating point values. Their integer part
+is interpreted as the curve segment number, and the decimal part
+goes from 0 to 1 over the segment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.subPoints">
+<tt class="descname">subPoints</tt><big>(</big><em>div=10, extend=[0.0, 0.0]</em><big>)</big><a class="headerlink" href="#curve.Curve.subPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a series of points on the Curve.</p>
+<p>The parameter space of each segment is divided into ndiv parts.
+The coordinates of the points at these parameter values are returned
+as a Coords object.
+The extend parameter allows to extend the curve beyond the endpoints.
+The normal parameter space of each part is [0.0 .. 1.0]. The extend
+parameter will add a curve with parameter space [-extend[0] .. 0.0]
+for the first part, and a curve with parameter space
+[1.0 .. 1 + extend[0]] for the last part.
+The parameter step in the extensions will be adjusted slightly so
+that the specified extension is a multiple of the step size.
+If the curve is closed, the extend parameter is disregarded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.length">
+<tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total length of the curve.</p>
+<p>This is only available for curves that implement the &#8216;lengths&#8217;
+method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.approx">
+<tt class="descname">approx</tt><big>(</big><em>ndiv=None</em>, <em>ntot=None</em><big>)</big><a class="headerlink" href="#curve.Curve.approx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PolyLine approximation of the curve</p>
+<p>If no <cite>ntot</cite> is given, the curve is approximated by <cite>ndiv</cite>
+straight segments over each part of the curve.
+If <cite>ntot</cite> is given, the curve is approximated by <cite>ntot</cite>
+straight segments over the total curve. This is based on a
+first approximation with ndiv segments over each part.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.toFormex">
+<tt class="descname">toFormex</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a curve to a Formex.</p>
+<p>This creates a polyline approximation as a plex-2 Formex.
+This is mainly used for drawing curves that do not implement
+their own drawing routines.</p>
+<p>The method can be passed the same arguments as the <cite>approx</cite> method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.PolyLine">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">PolyLine</tt><big>(</big><em>coords=</em><span class="optional">[</span><span class="optional">]</span>, <em>control=None</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a series of straight line segments.</p>
+<p>coords is a (npts,3) shaped array of coordinates of the subsequent
+vertices of the polyline (or a compatible data object).
+If closed == True, the polyline is closed by connecting the last
+point to the first. This does not change the vertex data.</p>
+<p>The <cite>control</cite> parameter has the same meaning as <cite>coords</cite> and is added
+for symmetry with other Curve classes. If specified, it will override
+the <cite>coords</cite> argument.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="curve.PolyLine.toFormex">
+<tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the polyline as a Formex.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.toMesh">
+<tt class="descname">toMesh</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.toMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the polyLine to a plex-2 Mesh.</p>
+<p>This returned mesh is equivalent with the PolyLine, but does
+not guarantee the sequential order.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.PolyLine.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values t in part j</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.sub_points2">
+<tt class="descname">sub_points2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.PolyLine.sub_points2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at value,part pairs (t,j)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.sub_directions">
+<tt class="descname">sub_directions</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.PolyLine.sub_directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unit direction vectors at values t in part j.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.vectors">
+<tt class="descname">vectors</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the vectors of each point to the next one.</p>
+<p>The vectors are returned as a Coords object.
+If the curve is not closed, the number of vectors returned is
+one less than the number of points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.directions">
+<tt class="descname">directions</tt><big>(</big><em>return_doubles=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine.directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns unit vectors in the direction of the next point.</p>
+<p>This directions are returned as a Coords object with the same
+number of elements as the point set.</p>
+<p>If two subsequent points are identical, the first one gets
+the direction of the previous segment. If more than two subsequent
+points are equal, an invalid direction (NaN) will result.</p>
+<p>If the curve is not closed, the last direction is set equal to the
+penultimate.</p>
+<p>If return_doubles is True, the return value is a tuple of the direction
+and an index of the points that are identical with their follower.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.avgDirections">
+<tt class="descname">avgDirections</tt><big>(</big><em>return_doubles=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine.avgDirections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the average directions at points.</p>
+<p>For each point the returned direction is the average of the direction
+from the preceding point to the current, and the direction from the
+current to the next point.</p>
+<p>If the curve is open, the first and last direction are equal to the
+direction of the first, resp. last segment.</p>
+<p>Where two subsequent points are identical, the average directions
+are set equal to those of the segment ending in the first and the
+segment starting from the last.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.lengths">
+<tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the length of the parts of the curve.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.atLength">
+<tt class="descname">atLength</tt><big>(</big><em>div</em><big>)</big><a class="headerlink" href="#curve.PolyLine.atLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter values for relative curve lengths div.</p>
+<p><tt class="docutils literal"><span class="pre">div</span></tt> is a list of relative curve lengths (from 0.0 to 1.0).
+As a convenience, a single integer value may be specified,
+in which case the relative curve lengths are found by dividing
+the interval [0.0,1.0] in the specified number of subintervals.</p>
+<p>The function returns a list with the parameter values for the points
+at the specified relative lengths.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.reverse">
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the same curve with the parameter direction reversed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.split">
+<tt class="descname">split</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#curve.PolyLine.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the curve at point i.</p>
+<p>Returns a list of open PolyLines: one, if the PolyLine is closed or
+i is one of the endpoints of an open PolyLine, two in other cases.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.cutWithPlane">
+<tt class="descname">cutWithPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>side=''</em><big>)</big><a class="headerlink" href="#curve.PolyLine.cutWithPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the parts of the polyline at one or both sides of a plane.</p>
+<p>If side is &#8216;+&#8217; or &#8216;-&#8216;, return a list of PolyLines with the parts at
+the positive or negative side of the plane.</p>
+<p>For any other value, returns a tuple of two lists of PolyLines,
+the first one being the parts at the positive side.</p>
+<p>p is a point specified by 3 coordinates.
+n is the normal vector to a plane, specified by 3 components.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.distanceOfPoints">
+<tt class="descname">distanceOfPoints</tt><big>(</big><em>p</em>, <em>n</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine.distanceOfPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>_Find the distances of points p, perpendicular to the vectors n.</p>
+<p>p is a (np,3) shaped array of points.
+n is a (np,3) shaped array of vectors.</p>
+<p>The return value is a tuple OKpid,OKdist,OKpoints where:
+- OKpid is an array with the point numbers having a distance;
+- OKdist is an array with the distances for these points;
+- OKpoints is an array with the footpoints for these points
+and is only returned if return_points = True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.distanceOfPolyLine">
+<tt class="descname">distanceOfPolyLine</tt><big>(</big><em>PL</em>, <em>ds</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine.distanceOfPolyLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>_Find the distances of the PolyLine PL.</p>
+<p>PL is first discretised by calculating a set of points p and direction
+vectors n at equal distance of approximately ds along PL. The
+distance of PL is then calculated as the distances of the set (p,n).</p>
+<p>If return_points = True, two extra values are returned: an array
+with the points p and an array with the footpoints matching p.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.Polygon">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Polygon</tt><big>(</big><em>coords=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#curve.Polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Polygon is a closed PolyLine.</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.BezierSpline">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">BezierSpline</tt><big>(</big><em>coords=None</em>, <em>deriv=None</em>, <em>curl=0.33333333333333331</em>, <em>control=None</em>, <em>closed=False</em>, <em>degree=3</em>, <em>endzerocurv=False</em><big>)</big><a class="headerlink" href="#curve.BezierSpline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a cubic Bezier spline curve.</p>
+<p>A cubic Bezier spline is a continuous curve consisting of <cite>nparts</cite>
+successive parts and where each part is a cubic Bezier curve described
+by four control points (two end points which are on the curve, and two
+intermediate control points which are off the curve).
+Since the end point of one part is the begin point of the next part,
+a BezierSpline is described by ncontrol=3*nparts+1 control points if the
+curve is open, or ncontrol=3*nparts if the curve is closed.</p>
+<p>The constructor provides different ways to initialize the full set of
+control points. In many cases the off-curve control points can be
+generated automatically.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>coords</strong> : array_like (npoints,3)</p>
+<blockquote>
+<p>The points that are on the curve. For an open curve, npoints=nparts+1,
+for a closed curve, npoints = nparts.
+If not specified, the on-curve points should be included in the
+<cite>control</cite> argument.</p>
+</blockquote>
+<p><strong>deriv</strong> : array_like (npoints,3) or (2,3)</p>
+<blockquote>
+<p>If specified, it gives the direction of the curve at all points or at
+the endpoints only for a shape (2,3) array.
+For points where the direction is left unspecified or where the
+specified direction contains a <cite>NaN</cite> value, the direction
+is calculated as the average direction of the two
+line segments ending in the point. This will also be used
+for points where the specified direction contains a value <cite>NaN</cite>.
+In the two endpoints of an open curve however, this average
+direction can not be calculated: the two control points in these
+parts are set coincident.</p>
+</blockquote>
+<p><strong>curl</strong> : float</p>
+<blockquote>
+<p>The curl parameter can be set to influence the curliness of the curve
+in between two subsequent points. A value curl=0.0 results in
+straight segments. The higher the value, the more the curve becomes
+curled.</p>
+</blockquote>
+<p><strong>control</strong> : array(nparts,2,3) or array(ncontrol,3)</p>
+<blockquote>
+<p>If <cite>coords</cite> was specified, this should be a (nparts,2,3) array with
+the intermediate control points, two for each part.</p>
+<p>If <cite>coords</cite> was not specified, this should be the full array of
+<cite>ncontrol</cite> control points for the curve. The number of points should
+be a multiple of 3 plus 1. If the curve is closed, the last point is
+equal to the first and does not need to a multiple of 3 is
+also allowed, in which case the first point will be appended as last.</p>
+<p>If not specified, the control points are generated automatically from
+the <cite>coords</cite>, <cite>deriv</cite> and <cite>curl</cite> arguments.
+If specified, they override these parameters.</p>
+</blockquote>
+<p><strong>closed</strong> : boolean</p>
+<blockquote>
+<p>If True, the curve will be continued from the last point back
+to the first to create a closed curve.</p>
+</blockquote>
+<p><strong>endzerocurv</strong> : boolean or tuple of two booleans.</p>
+<blockquote class="last">
+<p>Specifies the end conditions for an open curve.
+If True, the end curvature will be forced to zero. The default is
+to use maximal continuity of the curvature.
+The value may be set to a tuple of two values to specify different
+conditions for both ends.
+This argument is ignored for a closed curve.</p>
+</blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="curve.BezierSpline.pointsOn">
+<tt class="descname">pointsOn</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.pointsOn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points on the curve.</p>
+<p>This returns a Coords object of shape [nparts+1]. For a closed curve,
+the last point will be equal to the first.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.pointsOff">
+<tt class="descname">pointsOff</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.pointsOff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points off the curve (the control points)</p>
+<p>This returns a Coords object of shape [nparts,ndegree-1], or
+an empty Coords if degree &lt;= 1.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.part">
+<tt class="descname">part</tt><big>(</big><em>j</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.part" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the points defining part j of the curve.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values t in part j.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.sub_directions">
+<tt class="descname">sub_directions</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.sub_directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unit direction vectors at values t in part j.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.length_intgrnd">
+<tt class="descname">length_intgrnd</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.length_intgrnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the arc length integrand at value t in part j.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.lengths">
+<tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the length of the parts of the curve.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.approx_by_subdivision">
+<tt class="descname">approx_by_subdivision</tt><big>(</big><em>tol=0.001</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.approx_by_subdivision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PolyLine approximation of the curve.</p>
+<p>tol is a tolerance value for the flatness of the curve.
+The flatness of each part is calculated as the maximum
+orthogonal distance of its intermediate control points
+from the straight segment through its end points.</p>
+<p>Parts for which the distance is larger than tol are subdivided
+using de Casteljau&#8217;s algorithm. The subdivision stops
+if all parts are sufficiently flat. The return value is a PolyLine
+connecting the end points of all parts.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.extend">
+<tt class="descname">extend</tt><big>(</big><em>extend=[1.0, 1.0]</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.extend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extend the curve beyond its endpoints.</p>
+<p>This function will add a Bezier curve before the first part and/or
+after the last part by applying de Casteljau&#8217;s algorithm on this part.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.reverse">
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the same curve with the parameter direction reversed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.CardinalSpline">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">CardinalSpline</tt><big>(</big><em>coords</em>, <em>tension=0.0</em>, <em>closed=False</em>, <em>endzerocurv=False</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a cardinal spline.</p>
+<p>Create a natural spline through the given points.</p>
+<p>The Cardinal Spline with given tension is a Bezier Spline with curl
+:math: <cite>curl = ( 1 - tension) / 3</cite>
+The separate class name is retained for compatibility and convenience. 
+See CardinalSpline2 for a direct implementation (it misses the end
+intervals of the point set).</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.CardinalSpline2">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">CardinalSpline2</tt><big>(</big><em>coords</em>, <em>tension=0.0</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a cardinal spline.</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.NaturalSpline">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">NaturalSpline</tt><big>(</big><em>coords</em>, <em>closed=False</em>, <em>endzerocurv=False</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a natural spline.</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.Arc3">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc3</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#curve.Arc3" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a circular arc.</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.Arc">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#curve.Arc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a circular arc.</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.Spiral">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Spiral</tt><big>(</big><em>turns=2.0</em>, <em>nparts=100</em>, <em>rfunc=None</em><big>)</big><a class="headerlink" href="#curve.Spiral" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a spiral curve.</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.QuadBezierSpline">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">QuadBezierSpline</tt><big>(</big><em>coords</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a Quadratic Bezier spline curve.</p>
+<p>This is a (deprecated) convenience class for BezierSpline with fixed
+value of degree=2. The constructor takes the same parameters as
+BezierSpline, except for degree, which is fixed to a value 2.</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">curve</span></tt></p>
+<dl class="function">
+<dt id="curve.circle">
+<tt class="descclassname">curve.</tt><tt class="descname">circle</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a spline approximation of a circle.</p>
+<p>The returned circle lies in the x,y plane, has its center at (0,0,0)
+and has a radius 1.</p>
+<p>In the current implementation it is approximated by a bezier spline
+with curl 0.375058 through 8 points.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="curve.vectorPairAngle">
+<tt class="descclassname">curve.</tt><tt class="descname">vectorPairAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#curve.vectorPairAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angle between the vectors v1 and v2.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="curve.convertFormexToCurve">
+<tt class="descclassname">curve.</tt><tt class="descname">convertFormexToCurve</tt><big>(</big><em>self</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.convertFormexToCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Formex to a Curve.</p>
+<p>The following Formices can be converted to a Curve:
+- plex 2 : to PolyLine
+- plex 3 : to QuadBezierSpline
+- plex 4 : to BezierSpline</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="toolbar.html"
+                        title="previous chapter">28. <tt class="docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mesh.html"
+                        title="next chapter">30. <tt class="docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mesh.html" title="30. mesh — Finite element meshes in pyFormex."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="toolbar.html" title="28. toolbar — Toolbars for the pyFormex GUI."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

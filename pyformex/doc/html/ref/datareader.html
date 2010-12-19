@@ -1,0 +1,169 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>38. datareader — Numerical data reader &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="39. properties — General framework for attributing properties to geometrical elements." href="properties.html" />
+    <link rel="prev" title="37. units — A Python wrapper for unit conversion of physical quantities." href="units.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="properties.html" title="39. properties — General framework for attributing properties to geometrical elements."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="units.html" title="37. units — A Python wrapper for unit conversion of physical quantities."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-datareader">
+<span id="datareader-numerical-data-reader"></span><span id="sec-ref-datareader"></span><h1>38. <a class="reference internal" href="#module-datareader" title="datareader: Numerical data reader"><tt class="xref py py-mod docutils literal"><span class="pre">datareader</span></tt></a> &#8212; Numerical data reader<a class="headerlink" href="#module-datareader" title="Permalink to this headline">¶</a></h1>
+<p>Numerical data reader</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">datareader</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">datareader</span></tt></p>
+<dl class="function">
+<dt id="datareader.splitFloat">
+<tt class="descclassname">datareader.</tt><tt class="descname">splitFloat</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#datareader.splitFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match a floating point number at the beginning of a string</p>
+<p>If the beginning of the string matches a floating point number,
+a list is returned with the float and the remainder of the string;
+if not, None is returned.
+Example: <tt class="docutils literal"><span class="pre">splitFloat('123e4rt345e6')</span></tt> returns <tt class="docutils literal"><span class="pre">[1230000.0,</span> <span class="pre">'rt345e6']</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="datareader.readData">
+<tt class="descclassname">datareader.</tt><tt class="descname">readData</tt><big>(</big><em>s</em>, <em>type</em>, <em>strict=False</em><big>)</big><a class="headerlink" href="#datareader.readData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read data from a line matching the &#8216;type&#8217; specification.</p>
+<p>This is a powerful function for reading, interpreting and converting
+numerical data from a string. Fields in the string s are separated by
+commas. The &#8216;type&#8217; argument is a list where each element specifies how
+the corresponding field should be interpreted. Available values are
+&#8216;int&#8217;, &#8216;float&#8217; or some unit (&#8216;kg&#8217;, &#8216;m&#8217;, etc.).
+If the type field is &#8216;int&#8217; or &#8216;float&#8217;, the data field is converted to
+the matching type.
+If the type field is a unit, the data field should be a number and a
+unit separated by space or not, or just a number. If it is just a number,
+its value is returned unchanged (as float). If the data contains a unit,
+the number is converted to the requested unit. It is an error if the
+datafield holds a non-conformable unit.
+The function returns a list of ints and/or floats (without the units).
+If the number of data fields is not equal to the number of type specifiers,
+the returned list will correspond to the shortest of both and the surplus
+data or types are ignored, UNLESS the strict flag has been set, in which
+case a RuntimError is raised.
+Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">readData</span><span class="p">(</span><span class="s">&#39;12, 13, 14.5e3, 12 inch, 1hr, 31kg &#39;</span><span class="p">,</span> <span class="p">[</span><span class="s">&#39;int&#39;</span><span class="p">,</span><span class="s">&#39;float&#39;</span><span class="p">,</span><span class="s">&#39;kg&#39;</span><span class="p">,</span><span class="s">&#39;cm&#39;</span><span class="p">,</span><span class="s">&#39;s&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>returns <tt class="docutils literal"><span class="pre">[12,</span> <span class="pre">13.0,</span> <span class="pre">14500.0,</span> <span class="pre">30.48,</span> <span class="pre">3600.0]</span></tt></p>
+<p>..warning</p>
+<div class="highlight-python"><pre>You need to have the GNU ``units`` command installed for the unit
+conversion to work. </pre>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="units.html"
+                        title="previous chapter">37. <tt class="docutils literal"><span class="pre">units</span></tt> &#8212; A Python wrapper for unit conversion of physical quantities.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="properties.html"
+                        title="next chapter">39. <tt class="docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="properties.html" title="39. properties — General framework for attributing properties to geometrical elements."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="units.html" title="37. units — A Python wrapper for unit conversion of physical quantities."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

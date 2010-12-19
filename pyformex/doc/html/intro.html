@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to pyFormex &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="index.html" />
+    <link rel="next" title="Installing pyFormex" href="install.html" />
+    <link rel="prev" title="pyFormex Documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing pyFormex"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="pyFormex Documentation"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+ 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cha-introduction">
+<span id="id1"></span><h1>Introduction to pyFormex<a class="headerlink" href="#cha-introduction" title="Permalink to this headline">¶</a></h1>
+<div class="topic">
+<p class="topic-title first">Abstract</p>
+<p>This part explains shortly what pyFormex is and what it is not.
+It sets the conditions under which you are allowed to use, modify and
+distribute the program.
+Next is a list of prerequisite software parts that you need to have
+installed in order to be able to run this program.
+We explain how to download and install pyFormex.
+Finally, you&#8217;ll find out what basic knowledge you should have in order
+to understand the tutorial and succesfully use pyFormex.</p>
+</div>
+<div class="section" id="what-is-pyformex">
+<span id="sec-what-is-pyformex"></span><h2>What is pyFormex?<a class="headerlink" href="#what-is-pyformex" title="Permalink to this headline">¶</a></h2>
+<p>You probably expect to find here a short definition of what pyFormex is and
+what it can do for you. I may have to disappoint you: describing the essence
+of pyFormex in a few lines is not easy to do, because the program can
+be (and is being) used for very different tasks.
+So I will give you two answers here: a short one and a long one.</p>
+<p>The short answer is that pyFormex is a program to
+<em>generate large structured sets of coordinates by means of subsequent
+mathematical transformations gathered in a script.</em>
+If you find this definition too dull, incomprehensible or just not
+descriptive enough, read on through this section and look at some of the
+examples in this documentation and on the <a class="reference external" href="http://pyformex.org">pyFormex website</a>.
+You will then probably have a better idea of what pyFormex is.</p>
+<p>The initial intent of pyFormex was the rapid design of three-dimensional
+structures with a geometry that can easier be obtained through mathematical
+description than through interactive generation of its subparts and
+assemblage thereof. Although the initial development of the program
+concentrated mostly on wireframe type structures, surface and solid elements
+have been part of pyFormex right from the beginning.
+There is already an extensive plugin for working with triangulated surfaces,
+and pyFormex is increasingly being used to generate solid meshes of
+structures.
+Still, many of the examples included with the pyFormex distribution are of
+wireframe type, and so are most of the examples in the <a class="reference internal" href="tutorial.html"><em>pyFormex tutorial</em></a>.</p>
+<p>A good illustration of what pyFormex can do and what it was intended for is
+the stent <a class="footnote-reference" href="#id5" id="id2">[1]</a> structure in the figure <a class="reference internal" href="#fig-wirestent-example"><em>WireStent example</em></a>.
+It is one of the many examples provided with pyFormex.</p>
+<div class="figure align-center" id="fig-wirestent-example">
+<img alt="A wire stent" src="_images/wirestent.png" />
+<p class="caption">WireStent example</p>
+</div>
+<p>The structure is composed of 22032 line segments, each defined by 2 points.
+Nobody in his right mind would ever even try to input all the 132192 coordinates
+of all the points describing that structure.
+With pyFormex, one could define the structure by the following sequence of
+operations, illustrated in the figure <a class="reference internal" href="#fig-wirestent-steps"><em>First three steps in building the WireStent example</em></a>:</p>
+<ol class="arabic simple">
+<li>Create a nearly planar base module of two crossing wires. The wires have a
+slight out-of-plane bend, to enable the crossing.</li>
+<li>Extend the base module with a mirrored and translated copy.</li>
+<li>Replicate the base module in both directions to create a (nearly
+planar) rectangular grid.</li>
+<li>Roll the planar grid into a cylinder.</li>
+</ol>
+<p>pyFormex provides all the operations needed to define the geometry in this
+way.</p>
+<div class="align-center figure align-center" id="fig-wirestent-steps">
+<img alt="A wire stent" src="_images/wirestent-steps.png" />
+<p class="caption">First three steps in building the WireStent example</p>
+</div>
+<p>pyFormex does not fit into a single category of traditional (mostly
+commercial) software packages, because it is not being developed as a
+program with a specific purpose, but rather as a collection of tools
+and scripts which we needed at some point in our research projects.
+Many of the tasks for which we now use pyFormex could be
+done also with some other software package, like a CAD program or a matrix
+calculation package or a solid modeler/renderer or a finite element pre- and
+postprocessor. Each of these is probably very well suited for the task
+it was designed for, but none provides all the features of pyFormex
+in a single consistent environment, and certainly not as free software.</p>
+<p>Perhaps the most important feature of pyFormex is that it was
+primarily intended to be an easy scripting language for creating
+geometrical models of 3D-structures. The graphical user interface
+(GUI) was only added as a convenient means to visualize the designed
+structure.  pyFormex can still run without user interface, and this
+makes it ideal for use in a batch toolchain. Anybody involved in the
+simulation of the mechanical behavior of materials and structures
+will testify that most of the work (often 80-90%) goes into the
+building of the model, not into the simulations itself. Repeatedly
+building a model for optimization of your structure quickly becomes
+cumbersome, unless you use a tool like pyFormex, allowing for
+automated and unattended building of model variants.</p>
+<p>The author of  pyFormex, professor in structural engineering and heavy
+computer user and programmer since mainframe times, deeply regrets that
+computing skills
+of nowadays engineering students are often limited to using graphical
+interfaces of mostly commercial packages.
+This greatly limits their skills, because in their way of thinking:
+&#8216;If there is no menu item to do some task, then it can not be done!&#8217;
+The hope to get some of them back into coding has been a stimulus in
+continuing our work on pyFormex. The strength of the scripting language
+and the elegance of Python have already attracted many users on this path.</p>
+<p>Finally, pyFormex is, and always will be, free software in both meanings
+of free: guaranteeing the freedom of the user (see <a class="reference internal" href="#sec-license"><em>License and Disclaimer</em></a>) and
+without charging a fee for it. <a class="footnote-reference" href="#id6" id="id3">[2]</a></p>
+</div>
+<div class="section" id="license-and-disclaimer">
+<span id="sec-license"></span><h2>License and Disclaimer<a class="headerlink" href="#license-and-disclaimer" title="Permalink to this headline">¶</a></h2>
+<p>pyFormex is ©2004-2010 Benedict Verhegghe</p>
+<p>This program is free software; you can redistribute it and/or modify it under
+the terms of the <a class="reference external" href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> (GNU GPL), as published by the <a class="reference external" href="http://fsf.org">Free Software Foundation</a>; either version 3 of the License,
+or (at your option) any later version.</p>
+<p>The full details of the <a class="reference external" href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a> are available in the <a class="reference internal" href="license.html"><em>GNU GENERAL PUBLIC LICENSE</em></a> part of the documentation, in the file COPYING included with the distribution, under the Help-&gt;License item of the pyFormex Graphical User Interface or from <a class="reference external" href="http://www.gnu.org/copyleft/gpl.html">http://www.gnu.org/copyleft/gpl.html</a>.</p>
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+</div>
+<div class="section" id="installation">
+<span id="sec-installation"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Information on how to obtain and install pyFormex can be found in the <a class="reference internal" href="install.html"><em>Installing pyFormex</em></a> document.</p>
+</div>
+<div class="section" id="using-pyformex">
+<span id="sec-using"></span><h2>Using pyFormex<a class="headerlink" href="#using-pyformex" title="Permalink to this headline">¶</a></h2>
+<p>Once you have installed and want to start using pyFormex, you will probably
+be looking for help on how to do it.</p>
+<p>If you are new to pyFormex, you should start with the <a class="reference internal" href="tutorial.html"><em>pyFormex tutorial</em></a>, which
+will guide you step by step, using short examples, through the basic concepts
+of Python, NumPy and pyFormex. You have to understand there is a lot to learn
+at first, but afterwards the rewards will prove to be huge. You can skip the
+sections on Python and NumPy if you already have some experience with it.</p>
+<p>If you have used pyFormex before or you are of the adventurous type that does
+not want to be told where to go and how to do it, skip the tutorial and go
+directly to the <a class="reference internal" href="user-guide.html"><em>pyFormex user guide</em></a>. It provides the most thorough information
+of all aspects of pyFormex.</p>
+</div>
+<div class="section" id="getting-help">
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Permalink to this headline">¶</a></h2>
+<p>If you get stuck somewhere with using (or installing) pyFormex and you
+need help, the best way is to go to the <a class="reference external" href="http://pyformex.org">pyFormex website</a> and ask for help
+on one of the <a class="reference external" href="http://developer.berlios.de/forum/?group_id=2717">Forums</a>. There&#8217;s a good change you will get helped quickly
+there. Remember though that pyFormex is a free and open source software
+project and its developers are not paid to develop or maintain pyFormex,
+they just do this because they find pyFormex very helpful in their normal
+daily activities.</p>
+<p>If you are a professional pyFormex user and require guaranteed support,
+you can check with <a class="reference external" href="http://www.feops.com">FEops</a>, a young company providing services with and
+support for pyFormex. <a class="footnote-reference" href="#id6" id="id4">[2]</a></p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>A stent is a tubular structure that is e.g. used to reopen
+(and keep open) obstructed blood vessels.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Third parties may offer pyFormex extensions and/or professional
+support that are fee-based.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="index.html">Documentation</a></h3>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to pyFormex</a><ul>
+<li><a class="reference internal" href="#what-is-pyformex">What is pyFormex?</a></li>
+<li><a class="reference internal" href="#license-and-disclaimer">License and Disclaimer</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#using-pyformex">Using pyFormex</a></li>
+<li><a class="reference internal" href="#getting-help">Getting Help</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">pyFormex Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Installing pyFormex</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing pyFormex"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="pyFormex Documentation"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

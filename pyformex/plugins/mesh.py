@@ -1284,7 +1284,6 @@ Size: %s
           A Mesh equivalent with self but with the elements ordered as specified.
 
         See also: :meth:`Connectivity.reorder`
-
         """
         order = self.elems.reorder(order)
         return self.__class__(self.coords,self.elems[order],prop=self.prop[order],eltype=self.eltype)

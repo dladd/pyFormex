@@ -25,14 +25,15 @@
 """A structured collection of 3D coordinates.
 
 The :mod:`coords` module defines the :class:`Coords` class, which is the basic
-data structure in pyFormex to store coordinates of points in a 3D space.
+data structure in pyFormex to store the coordinates of points in a 3D space.
 
 This module implements a data class for storing large sets of 3D coordinates
 and provides an extensive set of methods for transforming these coordinates.
-The :class:`Coords` class is used by other classes, such as Formex and Surface,
-which thus inherit the same transformation capabilities.
-In future, other geometrical data models may (and should) also derive from
-the :class:`Coords` class.
+Most of pyFormex's classes which represent geometry (e.g. :class:`Geometry`,
+:class:`Formex`, :class:`Mesh`, :class:`TriSurface`, :class:`Curve`) use a
+:class:`Coords` object to store their coordinates, and thus inherit all the
+transformation methods of this class.
+
 While the user will mostly use the higher level classes, he might occasionally
 find good reason to use the :class:`Coords` class directly as well.
 """
@@ -46,9 +47,28 @@ from utils import deprecated,deprecation
 def bbox(objects):
     """Compute the bounding box of a list of objects.
 
-    All the objects in list should have the `bbox` method.
-    The result is the enclosing bbox of all the objects in the list.
-    Objects returning a None bbox are ignored.
+    The bounding box of an object is the smallest rectangular cuboid
+    in the global Cartesian coordinates, such that no points of the
+    objects lie outside that cuboid.
+    
+    Parameters:
+
+    - `objects`: a list of objects which all should have the method
+      :meth:`bbox`. The resulting bounding encloses all the objects
+      in the list. Objects whose :meth:`bbox` method returns `None`
+      are ignored.
+
+    Returns:
+      A Coords object with two points: the first contains the minimal
+      coordinate values, the second has the maximal ones. 
+
+    Example::
+    
+      >>> from formex import *
+      >>> bbox([Coords([-1.,1.,0.]),Formex(pattern('5'))])
+      Coords([[-1.,  0.,  0.],
+             [ 1.,  1.,  0.]], dtype=float32)
+      
     """
     bboxes = [f.bbox() for f in objects if hasattr(f,'bbox') and not isnan(f.bbox()).any()]
     bboxes = [bb for bb in bboxes if bb is not None]
@@ -83,16 +103,31 @@ class Coords(ndarray):
     time. It is the responsibility of the user to keep this consistent
     throughout the lifetime of the object.
 
-    `data`: If specified, data should evaluate to an (...,3) shaped array
-    of floats. If no data are given, a single point (0.,0.,0.) will be created.
+    A new Coords object is created with the following syntax ::
+    
+      Coords(data=None,dtyp=Float,copy=False)
 
-    `dtyp`: The datatype to be used. It not specified, the datatype of `data`
-    is used, or the default :data:`Float` (which is equivalent to
-    :data:`numpy.float32`).
+    Parameters:
 
-    `copy`: If ``True``, the data are copied. By default, the original data are
-    used if possible, e.g. if a correctly shaped and typed
-    :class:`numpy.ndarray` is specified.
+    - `data`: array_like of type float.
+      The last axis should have a length of 1, 2 or 3, bu will always be
+      expanded to 3.
+      If no data are specified, an empty Coords with shape (0,3) is created.
+
+    - `dtyp`: the float datatype to be used.
+      It not specified, the datatype of `data` is used, or the default
+      :data:`Float` (which is equivalent to :data:`numpy.float32`). 
+
+    - `copy`: boolean.
+      If ``True``, the data are copied. The default setting will try to use
+      the original data if possible, e.g. if `data` is a correctly shaped and
+      typed :class:`numpy.ndarray`.
+
+    Example:
+    
+      >>> Coords([1.,0.])
+      Coords([ 1.,  0.,  0.], dtype=float32)
+      
     """
             
     def __new__(clas, data=None, dtyp=Float, copy=False):
@@ -197,11 +232,19 @@ class Coords(ndarray):
     def bbox(self):
         """Return the bounding box of a set of points.
 
-        The bounding box is the smallest rectangular volume in global
-        coordinates, such at no points are outside the box.
-        It is returned as a :class:`Coords` object with shape (2,3):
-        the first point holds the minimal coordinates and the second point
-        has the maximal ones.
+        The bounding box is the smallest rectangular volume in the global
+        coordinates, such that no point of the :class:`Coords` are outside
+        that volume.
+
+        Returns:
+          A Coords object with shape(2,3): the first point contains the
+          minimal coordinates, the second has the maximal ones. 
+
+        Example::
+
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).bbox()
+          [[ 0.  0.  0.]
+           [ 3.  3.  0.]]
         """
         if self.size > 0:
             s = self.points()
@@ -217,6 +260,13 @@ class Coords(ndarray):
 
         The center of a :class:`Coords` is the center of its bbox().
         The return value is a (3,) shaped :class:`Coords` object.
+        
+        Example::
+
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).center()
+          [ 1.5  1.5  0. ]
+
+        See also: :meth:`centroid`
         """
         X0,X1 = self.bbox()
         return 0.5 * (X0+X1)
@@ -228,6 +278,13 @@ class Coords(ndarray):
         The centroid of a :class:`Coords` is the point whose coordinates
         are the mean values of all points.
         The return value is a (3,) shaped :class:`Coords` object.
+        
+        Example::
+
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).centroid()
+          [ 1.  1.  0.]
+          
+        See also: :meth:`center`
         """
         return self.points().mean(axis=0)
 
@@ -316,7 +373,7 @@ class Coords(ndarray):
 
         """
         d = self.distanceFromPoint(p)
-        return self.reshape(-1,3)[d.argmin()]
+        return self.points()[d.argmin()]
     
 
     def directionalSize(self,n,p=None,_points=False):
@@ -465,6 +522,14 @@ class Coords(ndarray):
         In the latter case, dir (a single axis number or a list) may be given
         to specify the direction(s) to scale. The default is to produce a
         homothetic scaling.
+
+        Example::
+
+          >>> print Coords([1.,1.,1.]).scale(2)
+          [ 2.  2.  2.]
+          >>> print Coords([1.,1.,1.]).scale([2,3,4])
+          [ 2.  3.  4.]
+          
         """
         if inplace:
             out = self
@@ -493,12 +558,18 @@ class Coords(ndarray):
         If a distance value is given, the translation vector is multiplied
         with this value before it is added to the coordinates.
 
-        Thus, the following lines are all equivalent::
-        
-           F.translate(1)
-           F.translate(1,1)
-           F.translate([0,1,0])
-           F.translate([0,2,0],0.5)
+        Example::
+
+          >>> x = Coords([1.,1.,1.])
+          >>> print x.translate(1)
+          [ 1.  2.  1.]
+          >>> print x.translate(1,1.)
+          [ 1.  2.  1.]
+          >>> print x.translate([0,1,0])
+          [ 1.  2.  1.]
+          >>> print x.translate([0,2,0],0.5)
+          [ 1.  2.  1.]
+          
         """
         if inplace:
             out = self
@@ -511,27 +582,6 @@ class Coords(ndarray):
             vector *= distance
         out += vector
         return out
-
-
-    def replicate(self,n,vector,distance=None):
-        """Replicate a Coords n times with fixed step in any direction.
-
-        Returns a Coords object with shape (n,) + self.shape, thus having
-        an extra first axis.
-        Each element along the axis 0 is equal to the previous element
-        translated over (vector,distance). Here, vector and distance are
-        interpreted just like in the translate() method.
-        The first element along the axis 0 is identical to the original Coords.
-        """
-        if type(vector) is int:
-            vector = unitVector(vector)
-        vector = Coords(vector,copy=True)
-        if distance is not None:
-            vector *= distance 
-        f = resize(self,(n,)+self.shape)
-        for i in range(1,n):
-            f[i] += i*vector
-        return Coords(f)
     
 
     def rotate(self,angle,axis=2,around=None,inplace=False):
@@ -614,6 +664,27 @@ class Coords(ndarray):
         if vec is not None:
             out += vec
         return out
+
+
+    def replicate(self,n,vector,distance=None):
+        """Replicate a Coords n times with fixed step in any direction.
+
+        Returns a Coords object with shape (n,) + self.shape, thus having
+        an extra first axis.
+        Each element along the axis 0 is equal to the previous element
+        translated over (vector,distance). Here, vector and distance are
+        interpreted just like in the translate() method.
+        The first element along the axis 0 is identical to the original Coords.
+        """
+        if type(vector) is int:
+            vector = unitVector(vector)
+        vector = Coords(vector,copy=True)
+        if distance is not None:
+            vector *= distance 
+        f = resize(self,(n,)+self.shape)
+        for i in range(1,n):
+            f[i] += i*vector
+        return Coords(f)
 #
 #
 #   B. Non-Affine transformations.
@@ -852,7 +923,6 @@ class Coords(ndarray):
         """
         ix,iz = dir
         bb = self.bbox()
-        #print("BBOX before:%s" % bb)
         if end == 0:
             xmin = bb[0][ix]
             endx = self.test(dir=ix,max=xmin+xf)
@@ -861,39 +931,9 @@ class Coords(ndarray):
             xmax = bb[1][ix]
             endx = self.test(dir=ix,min=xmax-xf)
             func = lambda x: (1.-(xmax-x)/xf) ** exp
-        #print(x.shape)
-        #print(endx.shape)
-        #print(x[endx,ix].shape)
-        #print("max func val: %s " % func(x[endx,ix]).max())
         x = self.copy()
         x[endx,iz] += f * func(x[endx,ix])
         return x
-        #print("BBOX after:%s" % x.bbox())
-
-
-    # NEW implementation flattens coordinate sets to ease use of
-    # complicated functions
-    def newmap(self,func):
-        """Return a :class:`Coords` mapped by a 3-D function.
-
-        This is one of the versatile mapping functions.
-        func is a numerical function which takes three arguments and produces
-        a list of three output values. The coordinates [x,y,z] will be
-        replaced by func(x,y,z).
-        The function must be applicable to arrays, so it should
-        only include numerical operations and functions understood by the
-        numpy module.
-        This method is one of several mapping methods. See also map1 and mapd.
-        Example: ``E.map(lambda x,y,z: [2*x,3*y,4*z])``
-        is equivalent with ``E.scale([2,3,4])``
-        """
-        x,y,z = func(self[...,0].flat,self[...,1].flat,self[...,2].flat)
-        shape = list(self.shape)
-        shape[2] = 1
-        #print(shape,reshape(x,shape))
-        f = concatenate([reshape(x,shape),reshape(y,shape),reshape(z,shape)],2)
-        #print(f.shape)
-        return f
 
 
     def map(self,func):
@@ -907,12 +947,19 @@ class Coords(ndarray):
         only include numerical operations and functions understood by the
         numpy module.
         This method is one of several mapping methods. See also map1 and mapd.
-        Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
-        is equivalent with E.scale([2,3,4])
+
+        Example::
+
+          >>> print Coords([[1.,1.,1.]]).map(lambda x,y,z: [2*x,3*y,4*z])
+          [[ 2.  3.  4.]]
+
         """
-        f = zeros_like(self)
-        f[...,0],f[...,1],f[...,2] = func(self[...,0],self[...,1],self[...,2])
-        return f
+        # flatten coordinate sets to ease use of complicated functions
+        # we should probably do this for map1 and mapd too
+        X = self.points()
+        f = zeros_like(X)
+        f[...,0],f[...,1],f[...,2] = func(X.x(),X.y(),X.z())
+        return f.reshape(self.shape)
 
 
     def map1(self,dir,func,x=None):
@@ -1440,7 +1487,11 @@ class CoordinateSystem(Coords):
 # Creating special coordinate sets
 
 def origin():
-    """Return a single point with coordinates [0.,0.,0.]."""
+    """Return a single point with coordinates [0.,0.,0.].
+
+    Returns:
+      A :class:`Coords` object with shape(3,) holding three zero coordinates.
+    """
     return Coords(zeros((3),dtype=Float))
 
 

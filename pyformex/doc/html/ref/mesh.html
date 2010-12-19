@@ -1,0 +1,942 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>30. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="31. trisurface — Operations on triangulated surfaces." href="trisurface.html" />
+    <link rel="prev" title="29. curve — Definition of curves in pyFormex." href="curve.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trisurface.html" title="31. trisurface — Operations on triangulated surfaces."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="curve.html" title="29. curve — Definition of curves in pyFormex."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-mesh">
+<span id="mesh-finite-element-meshes-in-pyformex"></span><span id="sec-ref-mesh"></span><h1>30. <a class="reference internal" href="#module-mesh" title="mesh: Finite element meshes in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">mesh</span></tt></a> &#8212; Finite element meshes in pyFormex.<a class="headerlink" href="#module-mesh" title="Permalink to this headline">¶</a></h1>
+<p>Finite element meshes in pyFormex.</p>
+<p>This module defines the Mesh class, which can be used to describe discrete
+geometrical models like those used in Finite Element models.
+It also contains some useful functions to create such models.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mesh</span></tt></p>
+<dl class="class">
+<dt id="mesh.Mesh">
+<em class="property">class </em><tt class="descclassname">mesh.</tt><tt class="descname">Mesh</tt><big>(</big><em>coords=None</em>, <em>elems=None</em>, <em>prop=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mesh is a discrete geometrical model defined by nodes and elements.</p>
+<p>In the Mesh geometrical data model, coordinates of all points are gathered
+in a single twodimensional array &#8216;coords&#8217; with shape (ncoords,3) and the
+individual geometrical elements are described by indices into the &#8216;elems&#8217;
+array.
+This model has some advantages over the Formex data model, where all
+points of all element are stored by their coordinates:</p>
+<ul class="simple">
+<li>compacter storage, because coordinates of coinciding points do not
+need to be repeated,</li>
+<li>faster connectivity related algorithms.</li>
+</ul>
+<p>The downside is that geometry generating algorithms are far more complex
+and possibly slower.</p>
+<p>In pyFormex we therefore mostly use the Formex data model when creating
+geometry, but when we come to the point of exporting the geometry to
+file (and to other programs), a Mesh data model may be more adequate.</p>
+<p>The Mesh data model has at least the following attributes:</p>
+<ul class="simple">
+<li>coords: (ncoords,3) shaped Coords array,</li>
+<li>elems: (nelems,nplex) shaped array of int32 indices into coords. All
+values should be in the range 0 &lt;= value &lt; ncoords.</li>
+<li>prop: array of element property numbers, default None.</li>
+<li>eltype: string designing the element type, default None.</li>
+</ul>
+<p>If eltype is None, a default eltype is derived from the plexitude, by
+calling the defaultEltype function. For plexitudes without default type,
+or if the default type is not the wanted element type, the user should
+specify the element type himself.</p>
+<p>A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
+or by a single geometric object that provides a toMesh() method.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="mesh.Mesh.setProp">
+<tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.setProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or destroy the property array for the Mesh.</p>
+<p>A property array is a rank-1 integer array with dimension equal
+to the number of elements in the Mesh.
+You can specify a single value or a list/array of integer values.
+If the number of passed values is less than the number of elements,
+they wil be repeated. If you give more, they will be ignored.</p>
+<p>If a value None is given, the properties are removed from the Mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getProp">
+<tt class="descname">getProp</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the properties as a numpy array (ndarray)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.maxProp">
+<tt class="descname">maxProp</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.maxProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the highest property value used, or None</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.propSet">
+<tt class="descname">propSet</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.propSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with unique property values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy using the same data arrays</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.toFormex">
+<tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mesh to a Formex.</p>
+<p>The Formex inherits the element property numbers and eltype from
+the Mesh. Node property numbers however can not be translated to
+the Formex data model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nedges">
+<tt class="descname">nedges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nedges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of edges.</p>
+<p>This returns the number of rows that would be in getEdges(),
+without actually constructing the edges.
+The edges are not fused!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.centroids">
+<tt class="descname">centroids</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the centroids of all elements of the Mesh.</p>
+<p>The centroid of an element is the point whose coordinates
+are the mean values of all points of the element.
+The return value is a Coords object with nelems points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Mesh object.
+Note that this may contain points that are not used in the mesh.
+<a class="reference internal" href="#mesh.Mesh.compact" title="mesh.Mesh.compact"><tt class="xref py py-meth docutils literal"><span class="pre">compact()</span></tt></a> will remove the unused points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getElems">
+<tt class="descname">getElems</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the elems data.</p>
+<p>Returns the element connectivity data as stored in the object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getLowerEntitiesSelector">
+<tt class="descname">getLowerEntitiesSelector</tt><big>(</big><em>level=-1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getLowerEntitiesSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the entities of a lower dimensionality.</p>
+<p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Element local coordinates and numbering."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
+this returns a Connectivity table with the entities of a lower
+dimensionality. The full list of entities with increasing
+dimensionality  0,1,2,3 is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>If level is negative, the dimensionality returned is relative
+to that of the caller. If it is positive, it is taken absolute.
+Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
+returns the faces, while for a 2D element type, it returns the edges.
+For bothe meshes however,  getLowerEntities(+1) returns the edges.</p>
+<p>By default, all entities for all elements are returned and common
+entities will appear multiple times. Specifying unique=True will 
+return only the unique ones.</p>
+<p>The return value may be an empty table, if the element type does
+not have the requested entities (e.g. the &#8216;point&#8217; type).
+If the eltype is not defined, or the requested entity level is
+outside the range 0..3, the return value is None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getLowerEntities">
+<tt class="descname">getLowerEntities</tt><big>(</big><em>level=-1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getLowerEntities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the entities of a lower dimensionality.</p>
+<p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Element local coordinates and numbering."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
+this returns a Connectivity table with the entities of a lower
+dimensionality. The full list of entities with increasing
+dimensionality  0,1,2,3 is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>If level is negative, the dimensionality returned is relative
+to that of the caller. If it is positive, it is taken absolute.
+Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
+returns the faces, while for a 2D element type, it returns the edges.
+For both meshes however,  getLowerEntities(+1) returns the edges.</p>
+<p>By default, all entities for all elements are returned and common
+entities will appear multiple times. Specifying unique=True will 
+return only the unique ones.</p>
+<p>The return value may be an empty table, if the element type does
+not have the requested entities (e.g. the &#8216;point&#8217; type).
+If the eltype is not defined, or the requested entity level is
+outside the range 0..3, the return value is None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getNodes">
+<tt class="descname">getNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the set of unique node numbers in the Mesh.</p>
+<p>This returns only the node numbers that are effectively used in
+the connectivity table. For a compacted Mesh, it is equal to
+<tt class="docutils literal"><span class="pre">`arange(self.nelems)`</span></tt>.
+This function also stores the result internally so that future
+requests can return it without the need for computing it again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getPoints">
+<tt class="descname">getPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the nodal coordinates of the Mesh.</p>
+<p>This returns only those points that are effectively used in
+the connectivity table. For a compacted Mesh, it is equal to
+the coords attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getEdges">
+<tt class="descname">getEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unique edges of all the elements in the Mesh.</p>
+<p>This is a convenient function to create a table with the element
+edges. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(1,unique=True)`</span></tt>,
+but this also stores the result internally so that future
+requests can return it without the need for computing it again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getFaces">
+<tt class="descname">getFaces</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getFaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unique faces of all the elements in the Mesh.</p>
+<p>This is a convenient function to create a table with the element
+faces. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(2,unique=True)`</span></tt>,
+but this also stores the result internally so that future
+requests can return it without the need for computing it again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getCells">
+<tt class="descname">getCells</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getCells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cells of the elements.</p>
+<p>This is a convenient function to create a table with the element
+cells. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(3,unique=True)`</span></tt>,
+but this also stores the result internally so that future
+requests can return it without the need for computing it again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getFaceEdges">
+<tt class="descname">getFaceEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getFaceEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the faces&#8217; edge numbers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getBorder">
+<tt class="descname">getBorder</tt><big>(</big><em>return_indices=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the border of the Mesh.</p>
+<p>This returns a Connectivity table with the border of the Mesh.
+The border entities are of a lower hierarchical level than the
+mesh itself. These entities become part of the border if they
+are connected to only one element.</p>
+<p>If return_indices==True, it returns also an (nborder,2) index
+for inverse lookup of the higher entity (column 0) and its local
+border part number (column 1).</p>
+<p>The returned Connectivity can be used together with the
+Mesh.coords to construct a Mesh of the border geometry.
+See also <a class="reference internal" href="#mesh.Mesh.getBorderMesh" title="mesh.Mesh.getBorderMesh"><tt class="xref py py-meth docutils literal"><span class="pre">getBorderMesh()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getBorderMesh">
+<tt class="descname">getBorderMesh</tt><big>(</big><em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorderMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with the border elements.</p>
+<p>Returns a Mesh representing the border of the Mesh.
+The returned Mesh is of the next lower hierarchical level.
+If the Mesh has property numbers, the border elements inherit
+the property of the element to which they belong.</p>
+<p>By default, the resulting Mesh is compacted. Compaction can be
+switched off by setting <cite>compact=False</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.reverse">
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh where all elements have been reversed.</p>
+<p>Reversing an element means reversing the order of its points.
+This is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">elems</span><span class="p">[:,::</span><span class="o">-</span><span class="mf">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nodeConnections">
+<tt class="descname">nodeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nodeConnections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find and store the elems connected to nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nNodeConnected">
+<tt class="descname">nNodeConnected</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nNodeConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the number of elems connected to nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nodeAdjacency">
+<tt class="descname">nodeAdjacency</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nodeAdjacency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the elems adjacent to each elem via one or more nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nNodeAdjacent">
+<tt class="descname">nNodeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nNodeAdjacent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the number of elems which are adjacent by node to each elem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getAngles">
+<tt class="descname">getAngles</tt><big>(</big><em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getAngles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the angles in Deg or Rad between the edges of a mesh.</p>
+<p>The returned angles are shaped  as (nelems, n1faces, n1vertices),
+where n1faces are the number of faces in 1 element and the number
+of vertices in 1 face.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.node2nodeAdjacency">
+<tt class="descname">node2nodeAdjacency</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.node2nodeAdjacency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the nodes adjacent to each node via an edge of the mesh.</p>
+<p>For each original node returns the index of the adjacent nodes,
+which are connect to the original by an edge.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nNode2nodeAdjacent">
+<tt class="descname">nNode2nodeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nNode2nodeAdjacent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the number of nodes  adjacent to each node via an edge of the mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.avgNodalScalarOnAdjacentNodes">
+<tt class="descname">avgNodalScalarOnAdjacentNodes</tt><big>(</big><em>val</em>, <em>iter=1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.avgNodalScalarOnAdjacentNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smooth nodal scalar values by averaging over adjacent nodes iter times.</p>
+<p>Nodal scalar values (val is a 1D array of self.ncoords() scalar values )
+are averaged over adjacent nodes an number of time (iter)
+in order to provide a smoothed mapping.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.report">
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a report on the Mesh shape and size.</p>
+<p>The report contains the number of nodes, number of elements,
+plexitude, bbox and size.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.fuse">
+<tt class="descname">fuse</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.fuse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fuse the nodes of a Meshes.</p>
+<p>All nodes that are within the tolerance limits of each other
+are merged into a single node.</p>
+<p>The merging operation can be tuned by specifying extra arguments
+that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.matchCoords">
+<tt class="descname">matchCoords</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.matchCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match nodes of Mesh with nodes of self.</p>
+<p>This is a convenience function equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See also <tt class="xref py py-meth docutils literal"><span class="pre">Coords.match()</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.matchElemsCentroids">
+<tt class="descname">matchElemsCentroids</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.matchElemsCentroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match elems of Mesh with elems of self.</p>
+<p>self and Mesh are same eltype meshes
+and are both without Doubles.</p>
+<p>Elems are matched by their centroids.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.compact">
+<tt class="descname">compact</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.compact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove unconnected nodes and renumber the mesh.</p>
+<p>Returns a mesh where all nodes that are not used in any
+element have been removed, and the nodes are renumbered to
+a compacter scheme.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.select">
+<tt class="descname">select</tt><big>(</big><em>selected</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh only holding the selected elements.</p>
+<ul class="simple">
+<li><cite>selected</cite>: an object that can be used as an index in the
+<cite>elems</cite> array, e.g. a list of (integer) element numbers,
+or a boolean array with the same length as the <cite>elems</cite> array.</li>
+<li><cite>compact</cite>: boolean. If True (default), the returned Mesh will be
+compacted, i.e. the unused nodes are removed and the nodes are
+renumbered from zero. If False, returns the node set and numbers
+unchanged.</li>
+</ul>
+<p>Returns a Mesh (or subclass) with only the selected elements.</p>
+<p>See <cite>cselect</cite> for the complementary operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.cselect">
+<tt class="descname">cselect</tt><big>(</big><em>selected</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.cselect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a mesh without the selected elements.</p>
+<ul class="simple">
+<li><cite>selected</cite>: an object that can be used as an index in the
+<cite>elems</cite> array, e.g. a list of (integer) element numbers,
+or a boolean array with the same length as the <cite>elems</cite> array.</li>
+<li><cite>compact</cite>: boolean. If True (default), the returned Mesh will be
+compacted, i.e. the unused nodes are removed and the nodes are
+renumbered from zero. If False, returns the node set and numbers
+unchanged.</li>
+</ul>
+<p>Returns a Mesh with all but the selected elements.</p>
+<p>This is the complimentary operation of <cite>select</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.meanNodes">
+<tt class="descname">meanNodes</tt><big>(</big><em>nodsel</em><big>)</big><a class="headerlink" href="#mesh.Mesh.meanNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create nodes from the existing nodes of a mesh.</p>
+<p><cite>nodsel</cite> is a local node selector as in <a class="reference internal" href="#mesh.Mesh.selectNodes" title="mesh.Mesh.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>
+Returns the mean coordinates of the points in the selector as
+<cite>(nelems*nnod,3)</cite> array of coordinates, where nnod is the length
+of the node selector.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.addNodes">
+<tt class="descname">addNodes</tt><big>(</big><em>newcoords</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.addNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new nodes to elements.</p>
+<p><cite>newcoords</cite> is an <cite>(nelems,nnod,3)</cite> or`(nelems*nnod,3)` array of
+coordinates. Each element gets exactly <cite>nnod</cite> extra nodes from this
+array. The result is a Mesh with plexitude <cite>self.nplex() + nnod</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.addMeanNodes">
+<tt class="descname">addMeanNodes</tt><big>(</big><em>nodsel</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.addMeanNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new nodes to elements by averaging existing ones.</p>
+<p><cite>nodsel</cite> is a local node selector as in <a class="reference internal" href="#mesh.Mesh.selectNodes" title="mesh.Mesh.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>
+Returns a Mesh where the mean coordinates of the points in the
+selector are added to each element, thus increasing the plexitude
+by the length of the items in the selector.
+The new element type should be set to correct value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.selectNodes">
+<tt class="descname">selectNodes</tt><big>(</big><em>nodsel</em>, <em>eltype</em><big>)</big><a class="headerlink" href="#mesh.Mesh.selectNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a mesh with subsets of the original nodes.</p>
+<p><cite>nodsel</cite> is an object that can be converted to a 1-dim or 2-dim
+array. Examples are a tuple of local node numbers, or a list
+of such tuples all having the same length.
+Each row of <cite>nodsel</cite> holds a list of local node numbers that
+should be retained in the new connectivity table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.withProp">
+<tt class="descname">withProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#mesh.Mesh.withProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh which holds only the elements with property val.</p>
+<p>val is either a single integer, or a list/array of integers.
+The return value is a Mesh holding all the elements that
+have the property val, resp. one of the values in val.
+The returned Mesh inherits the matching properties.</p>
+<p>If the Mesh has no properties, a copy with all elements is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.withoutProp">
+<tt class="descname">withoutProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#mesh.Mesh.withoutProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh without the elements with property val.</p>
+<p>This is the complementary method of Mesh.withProp().
+val is either a single integer, or a list/array of integers.
+The return value is a Mesh holding all the elements that do not
+have the property val, resp. one of the values in val.
+The returned Mesh inherits the matching properties.</p>
+<p>If the Mesh has no properties, a copy with all elements is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.splitProp">
+<tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.splitProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partition a Mesh according to its propery values.</p>
+<p>Returns a dict with the property values as keys and the
+corresponding partitions as values. Each value is a Mesh instance.
+It the Mesh has no props, an empty dict is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.splitRandom">
+<tt class="descname">splitRandom</tt><big>(</big><em>n</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitRandom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a mesh in n parts, distributing the elements randomly.</p>
+<p>Returns a list of n Mesh objects, constituting together the same
+Mesh as the original. The elements are randomly distributed over
+the subMeshes.</p>
+<p>By default, the Meshes are compacted. Compaction may be switched
+off for efficiency reasons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.convert">
+<tt class="descname">convert</tt><big>(</big><em>totype</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mesh to another element type.</p>
+<p>Converting a Mesh from one element type to another can only be
+done if both element types are of the same dimensionality.
+Thus, 3D elements can only be converted to 3D elements.</p>
+<p>The conversion is done by splitting the elements in smaller parts
+and/or by adding new nodes to the elements.</p>
+<p>Not all conversions between elements of the same dimensionality
+are possible. The possible conversion strategies are implemented
+in a table. New strategies may be added however.</p>
+<p>The return value is a Mesh of the requested element type, representing
+the same geometry (possibly approximatively) as the original mesh.</p>
+<p>If the requested conversion is not implemented, an error is raised.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.convertRandom">
+<tt class="descname">convertRandom</tt><big>(</big><em>choices</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convertRandom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert choosing randomly between choices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.reduceDegenerate">
+<tt class="descname">reduceDegenerate</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reduceDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce degenerate elements to lower plexitude elements.</p>
+<p>This will try to reduce the degenerate elements of the mesh to elements
+of a lower plexitude. If a target element type is given, only the matching
+recuce scheme is tried. Else, all the target element types for which
+a reduce scheme from the Mesh eltype is available, will be tried.</p>
+<p>The result is a list of Meshes of which the last one contains the
+elements that could not be reduced and may be empty.
+Property numbers propagate to the children.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.splitDegenerate">
+<tt class="descname">splitDegenerate</tt><big>(</big><em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a Mesh in degenerate and non-degenerate elements.</p>
+<p>If autofix is True, the degenerate elements will be tested against
+known degeneration patterns, and the matching elements will be
+transformed to non-degenerate elements of a lower plexitude.</p>
+<p>The return value is a list of Meshes. The first holds the
+non-degenerate elements of the original Mesh. The last holds
+the remaining degenerate elements.
+The intermediate Meshes, if any, hold elements
+of a lower plexitude than the original. These may still contain
+degenerate elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.renumber">
+<tt class="descname">renumber</tt><big>(</big><em>order='elems'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.renumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renumber the nodes of a Mesh in the specified order.</p>
+<p>order is an index with length equal to the number of nodes. The
+index specifies the node number that should come at this position.
+Thus, the order values are the old node numbers on the new node
+number positions.</p>
+<p>order can also be a predefined value that will generate the node
+index automatically:</p>
+<ul class="simple">
+<li>&#8216;elems&#8217;: the nodes are number in order of their appearance in the
+Mesh connectivity.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.renumberElems">
+<tt class="descname">renumberElems</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.renumberElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renumber the elements of a Mesh.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>order</cite>: either a 1-D integer array with a permutation of
+<tt class="docutils literal"><span class="pre">arange(self.nelems())</span></tt>, specifying the requested order, or one of
+the following predefined strings:<ul>
+<li>&#8216;nodes&#8217;: order the elements in increasing node number order.</li>
+<li>&#8216;random&#8217;: number the elements in a random order.</li>
+<li>&#8216;reverse&#8217;: number the elements in.</li>
+</ul>
+</li>
+</ul>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A Mesh equivalent with self but with the elements ordered as specified.</dd>
+</dl>
+<p>See also: <tt class="xref py py-meth docutils literal"><span class="pre">Connectivity.reorder()</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.extrude">
+<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.extrude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extrude a Mesh in one of the axes directions.</p>
+<p>Returns a new Mesh obtained by extruding the given Mesh
+over n steps of length step in direction of axis dir.
+The returned Mesh has double plexitude of the original.</p>
+<p>This function is usually used to extrude points into lines,
+lines into surfaces and surfaces into volumes.
+By default it will try to fix the connectivity ordering where
+appropriate. If autofix is switched off, the connectivities
+are merely stacked, and the user may have to fix it himself.</p>
+<p>Currently, this function correctly transforms: point1 to line2,
+line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.revolve">
+<tt class="descname">revolve</tt><big>(</big><em>n</em>, <em>axis=0</em>, <em>angle=360.0</em>, <em>around=None</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.revolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revolve a Mesh around an axis.</p>
+<p>Returns a new Mesh obtained by revolving the given Mesh
+over an angle around an axis in n steps, while extruding
+the mesh from one step to the next.</p>
+<p>This function is usually used to extrude points into lines,
+lines into surfaces and surfaces into volumes.
+By default it will try to fix the connectivity ordering where
+appropriate. If autofix is switched off, the connectivities
+are merely stacked, and the user may have to fix it himself.</p>
+<p>Currently, this function correctly transforms: point1 to line2,
+line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.sweep">
+<tt class="descname">sweep</tt><big>(</big><em>path</em>, <em>autofix=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sweep a mesh along a path, creating an extrusion</p>
+<p>Returns a new Mesh obtained by sweeping the given Mesh
+over a path.
+The returned Mesh has double plexitude of the original.
+The operation is similar to the extrude() method, but the path
+can be any 3D curve.</p>
+<p>This function is usually used to extrude points into lines,
+lines into surfaces and surfaces into volumes.
+By default it will try to fix the connectivity ordering where
+appropriate. If autofix is switched off, the connectivities
+are merely stacked, and the user may have to fix it himself.</p>
+<p>Currently, this function correctly transforms: point1 to line2,
+line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.test">
+<tt class="descname">test</tt><big>(</big><em>nodes='all'</em>, <em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#mesh.Mesh.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag elements having nodal coordinates between min and max.</p>
+<p>This function is very convenient in clipping a Mesh in a specified
+direction. It returns a 1D integer array flagging (with a value 1 or
+True) the elements having nodal coordinates in the required range.
+Use where(result) to get a list of element numbers passing the test.
+Or directly use clip() or cclip() to create the clipped Mesh</p>
+<p>The test plane can be defined in two ways, depending on the value of dir.
+If dir == 0, 1 or 2, it specifies a global axis and min and max are
+the minimum and maximum values for the coordinates along that axis.
+Default is the 0 (or x) direction.</p>
+<p>Else, dir should be compaitble with a (3,) shaped array and specifies
+the direction of the normal on the planes. In this case, min and max
+are points and should also evaluate to (3,) shaped arrays.</p>
+<p>nodes specifies which nodes are taken into account in the comparisons.
+It should be one of the following:</p>
+<ul class="simple">
+<li>a single (integer) point number (&lt; the number of points in the Formex)</li>
+<li>a list of point numbers</li>
+<li>one of the special strings: &#8216;all&#8217;, &#8216;any&#8217;, &#8216;none&#8217;</li>
+</ul>
+<p>The default (&#8216;all&#8217;) will flag all the elements that have all their
+nodes between the planes x=min and x=max, i.e. the elements that
+fall completely between these planes. One of the two clipping planes
+may be left unspecified.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.clip">
+<tt class="descname">clip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.clip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with all the elements where t&gt;0.</p>
+<p>t should be a 1-D integer array with length equal to the number
+of elements of the Mesh.
+The resulting Mesh will contain all elements where t &gt; 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.cclip">
+<tt class="descname">cclip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.cclip" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the complement of clip, returning a Mesh where t&lt;=0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.clipAtPlane">
+<tt class="descname">clipAtPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>nodes='any'</em>, <em>side='+'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.clipAtPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Mesh clipped at plane (p,n).</p>
+<p>This is a convenience function returning the part of the Mesh
+at one side of the plane (p,n)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.areas">
+<tt class="descname">areas</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.areas" title="Permalink to this definition">¶</a></dt>
+<dd><p>area of elements</p>
+<p>For surface element the faces&#8217; area is returned.
+For volume elements the sum of the faces&#8217;areas is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.volumes">
+<tt class="descname">volumes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the signed volume of all the mesh elements</p>
+<p>For a &#8216;tet4&#8217; tetraeder Mesh, the volume of the elements is calculated
+as 1/3 * surface of base * height.</p>
+<p>For other Mesh types the volumes are calculated by first splitting
+the elements into tetraeder elements.</p>
+<p>The return value is an array of float values with length equal to the
+number of elements.
+If the Mesh conversion to tetraeder does not succeed, the return
+value is None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.volume">
+<tt class="descname">volume</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total volume of a Mesh.</p>
+<p>If the Mesh can not be converted to tet4 type, 0 is returned</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.equiAngleSkew">
+<tt class="descname">equiAngleSkew</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.equiAngleSkew" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the equiAngleSkew of the elements, a mesh quality parameter .</p>
+<p>It quantifies the skewness of the elements: normalize difference between
+the worst angle in each element and the ideal angle (angle in the face 
+of an equiangular element, qe).</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mesh</span></tt></p>
+<dl class="function">
+<dt id="mesh.vectorRotation">
+<tt class="descclassname">mesh.</tt><tt class="descname">vectorRotation</tt><big>(</big><em>vec1, vec2, upvec=[0.0, 0.0, 1.0]</em><big>)</big><a class="headerlink" href="#mesh.vectorRotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a rotation matrix for rotating vector vec1 to vec2</p>
+<p>The rotation matrix will be such that the plane of vec2 and the
+rotated upvec will be parallel to the original upvec.</p>
+<p>This function is like <a class="reference internal" href="arraytools.html#arraytools.rotMatrix" title="arraytools.rotMatrix"><tt class="xref py py-func docutils literal"><span class="pre">arraytools.rotMatrix()</span></tt></a>, but allows the
+specification of vec1.
+The returned matrix should be used in postmultiplication to the Coords.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.sweepCoords">
+<tt class="descclassname">mesh.</tt><tt class="descname">sweepCoords</tt><big>(</big><em>self, path, origin=[0.0, 0.0, 0.0], normal=0, upvector=2, avgdir=False, enddir=None, scalex=None, scaley=None</em><big>)</big><a class="headerlink" href="#mesh.sweepCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sweep a Coords object along a path, returning a series of copies.</p>
+<p>origin and normal define the local path position and direction on the mesh.</p>
+<p>At each point of the curve, a copy of the Coords object is created, with
+its origin in the curve&#8217;s point, and its normal along the curve&#8217;s direction.
+In case of a PolyLine, directions are pointing to the next point by default.
+If avgdir==True, average directions are taken at the intermediate points.
+Missing end directions can explicitely be set by enddir, and are by default
+taken along the last segment.
+If the curve is closed, endpoints are treated as any intermediate point,
+and the user should normally not specify enddir.</p>
+<p>At each point of the curve, the original Coords object can be scaled in x
+and y direction by specifying scalex and scaley. The number of values
+specified in scalex and scaly should be equal to the number of points on
+the curve.</p>
+<p>The return value is a sequence of the transformed Coords objects.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.defaultEltype">
+<tt class="descclassname">mesh.</tt><tt class="descname">defaultEltype</tt><big>(</big><em>nplex</em><big>)</big><a class="headerlink" href="#mesh.defaultEltype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default element type for a mesh with given plexitude.</p>
+<p>For the most common cases of plexitudes, we define a default element
+type. The full list of default types can be found in
+plugins.mesh._default_eltype.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.mergeNodes">
+<tt class="descclassname">mesh.</tt><tt class="descname">mergeNodes</tt><big>(</big><em>nodes</em>, <em>fuse=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.mergeNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge all the nodes of a list of node sets.</p>
+<p>Merging the nodes creates a single Coords object containing all nodes,
+and the indices to find the points of the original node sets in the
+merged set.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>nodes</cite>: a list of Coords objects, all having the same shape, except
+possibly for their first dimension</li>
+<li><cite>fuse</cite>: if True (default), coincident (or very close) points will
+be fused to a single point</li>
+<li><cite>**kargs</cite>: keyword arguments that are passed to the fuse operation</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li>a Coords with the coordinates of all (unique) nodes,</li>
+<li>a list of indices translating the old node numbers to the new. These
+numbers refer to the serialized Coords.</li>
+</ul>
+<p>The merging operation can be tuned by specifying extra arguments
+that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords.fuse()</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.mergeMeshes">
+<tt class="descclassname">mesh.</tt><tt class="descname">mergeMeshes</tt><big>(</big><em>meshes</em>, <em>fuse=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.mergeMeshes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge all the nodes of a list of Meshes.</p>
+<p>Each item in meshes is a Mesh instance.
+The return value is a tuple with:</p>
+<ul class="simple">
+<li>the coordinates of all unique nodes,</li>
+<li>a list of elems corresponding to the input list,
+but with numbers referring to the new coordinates.</li>
+</ul>
+<p>The merging operation can be tuned by specifying extra arguments
+that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.
+Setting fuse=False will merely concatenate all the mesh.coords, but
+not fuse them.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.connectMesh">
+<tt class="descclassname">mesh.</tt><tt class="descname">connectMesh</tt><big>(</big><em>mesh1</em>, <em>mesh2</em>, <em>n=1</em>, <em>n1=None</em>, <em>n2=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.connectMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect two meshes to form a hypermesh.</p>
+<p>mesh1 and mesh2 are two meshes with same topology (shape). 
+The two meshes are connected by a higher order mesh with n
+elements in the direction between the two meshes.
+n1 and n2 are node selection indices permitting a permutation of the
+nodes of the base sets in their appearance in the hypermesh.
+This can e.g. be used to achieve circular numbering of the hypermesh.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.connectQuadraticMesh">
+<tt class="descclassname">mesh.</tt><tt class="descname">connectQuadraticMesh</tt><big>(</big><em>mesh1</em>, <em>mesh2</em>, <em>n=1</em>, <em>eltype='Hex20'</em><big>)</big><a class="headerlink" href="#mesh.connectQuadraticMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>currently works for Quad8 only.</p>
+<p>Connect two Quad8 meshes to form a Hex20 mesh.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="curve.html"
+                        title="previous chapter">29. <tt class="docutils literal docutils literal"><span class="pre">curve</span></tt> &#8212; Definition of curves in pyFormex.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trisurface.html"
+                        title="next chapter">31. <tt class="docutils literal docutils literal"><span class="pre">trisurface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="trisurface.html" title="31. trisurface — Operations on triangulated surfaces."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="curve.html" title="29. curve — Definition of curves in pyFormex."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

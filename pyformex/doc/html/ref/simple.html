@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>9. simple — Predefined geometries with a simple shape. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="10. project — project.py" href="project.html" />
+    <link rel="prev" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="project.html" title="10. project — project.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-simple">
+<span id="simple-predefined-geometries-with-a-simple-shape"></span><span id="sec-ref-simple"></span><h1>9. <a class="reference internal" href="#module-simple" title="simple: Predefined geometries with a simple shape."><tt class="xref py py-mod docutils literal"><span class="pre">simple</span></tt></a> &#8212; Predefined geometries with a simple shape.<a class="headerlink" href="#module-simple" title="Permalink to this headline">¶</a></h1>
+<p>Predefined geometries with a simple shape.</p>
+<p>This module contains some functions, data and classes for generating
+Formex structures representing simple geometric shapes.
+You need to import this module in your scripts to have access to its
+contents.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">simple</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">simple</span></tt></p>
+<dl class="function">
+<dt id="simple.shape">
+<tt class="descclassname">simple.</tt><tt class="descname">shape</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#simple.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex with one of the predefined named shapes.</p>
+<p>This is a convenience function returning a plex-2 Formex constructed
+from one of the patterns defined in the simple.Pattern dictionary.
+Currently, the following pattern names are defined:
+&#8216;line&#8217;, &#8216;angle&#8217;, &#8216;square&#8217;, &#8216;plus&#8217;, &#8216;cross&#8217;, &#8216;diamond&#8217;, &#8216;rtriangle&#8217;, &#8216;cube&#8217;,
+&#8216;star&#8217;, &#8216;star3d&#8217;.
+See the Pattern example.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.regularGrid">
+<tt class="descclassname">simple.</tt><tt class="descname">regularGrid</tt><big>(</big><em>x0</em>, <em>x1</em>, <em>nx</em><big>)</big><a class="headerlink" href="#simple.regularGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a regular grid between points x0 and x1.</p>
+<p>x0 and x1 are n-dimensional points (usually 1D, 2D or 3D).
+The space between x0 and x1 is divided in nx equal parts. nx should have
+the same dimension as x0 and x1.
+The result is a rectangular grid of coordinates in an array with
+shape ( nx[0]+1, nx[1]+1, ..., n ).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.point">
+<tt class="descclassname">simple.</tt><tt class="descname">point</tt><big>(</big><em>x=0.0</em>, <em>y=0.0</em>, <em>z=0.0</em><big>)</big><a class="headerlink" href="#simple.point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex which is a point, by default at the origin.</p>
+<p>Each of the coordinates can be specified and is zero by default.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.line">
+<tt class="descclassname">simple.</tt><tt class="descname">line</tt><big>(</big><em>p1=[0.0, 0.0, 0.0], p2=[1.0, 0.0, 0.0], n=1</em><big>)</big><a class="headerlink" href="#simple.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex which is a line between two specified points.</p>
+<p>p1: first point, p2: second point
+The line is split up in n segments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.rect">
+<tt class="descclassname">simple.</tt><tt class="descname">rect</tt><big>(</big><em>p1=[0.0, 0.0, 0.0], p2=[1.0, 0.0, 0.0], nx=1, ny=1</em><big>)</big><a class="headerlink" href="#simple.rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex which is a the circumference of a rectangle.</p>
+<p>p1 and p2 are two opposite corner points of the rectangle.
+The edges of the rectangle are in planes parallel to the z-axis.
+There will always be two opposite edges that are parallel with the x-axis.
+The other two will only be parallel with the y-axis if both points
+have the same z-value, but in any case they will be parallel with the
+y-z plane.</p>
+<p>The edges parallel with the x-axis are divide in nx parts, the other
+ones in ny parts.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.rectangle">
+<tt class="descclassname">simple.</tt><tt class="descname">rectangle</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>b=None</em>, <em>h=None</em>, <em>bias=0.0</em>, <em>diag=None</em><big>)</big><a class="headerlink" href="#simple.rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex representing a rectangluar surface.</p>
+<p>The rectangle has a size(b,h) divided into (nx,ny) cells.</p>
+<p>The default b/h values are equal to nx/ny, resulting in a modular grid.
+The rectangle lies in the (x,y) plane, with one corner at [0,0,0].
+By default, the elements are quads. By setting diag=&#8217;u&#8217;,&#8217;d&#8217; of &#8216;x&#8217;,
+diagonals are added in /, resp. and both directions, to form triangles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.circle">
+<tt class="descclassname">simple.</tt><tt class="descname">circle</tt><big>(</big><em>a1=2.0</em>, <em>a2=0.0</em>, <em>a3=360.0</em>, <em>r=None</em>, <em>n=None</em>, <em>c=None</em><big>)</big><a class="headerlink" href="#simple.circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>A polygonal approximation to a circle or arc.</p>
+<p>All points generated by this function lie on a circle with unit radius at
+the origin in the x-y-plane.</p>
+<ul class="simple">
+<li><cite>a1</cite>: the angle enclosed between the start and end points of each line
+segment (dash angle).</li>
+<li><cite>a2</cite>: the angle enclosed between the start points of two subsequent line
+segments (module angle). If <tt class="docutils literal"><span class="pre">a2==0.0</span></tt>, <cite>a2</cite> will be taken equal to <cite>a1</cite>.</li>
+<li><cite>a3</cite>: the total angle enclosed between the first point of the first
+segment and the end point of the last segment (arc angle).</li>
+</ul>
+<p>All angles are given in degrees and are measured in the direction from
+x- to y-axis. The first point of the first segment is always on the x-axis.</p>
+<p>The default values produce a full circle (approximately).
+If $a3 &lt; 360$, the result is an arc.
+Large values of <cite>a1</cite> and <cite>a2</cite> result in polygones. Thus
+<cite>circle(120.)</cite> is an equilateral triangle and <cite>circle(60.)</cite>
+is regular hexagon.</p>
+<p>Remark that the default a2 == a1 produces a continuous line,
+while a2 &gt; a1 results in a dashed line.</p>
+<p>Three optional arguments can be added to scale and position the circle
+in 3D space:</p>
+<ul class="simple">
+<li><cite>r</cite>: the radius of the circle</li>
+<li><cite>n</cite>: the normal on the plane of the circle</li>
+<li><cite>c</cite>: the center of the circle</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.polygon">
+<tt class="descclassname">simple.</tt><tt class="descname">polygon</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#simple.polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regular polygon with n sides.</p>
+<p>Creates the circumference of a regular polygon with $n$ sides,
+inscribed in a circle with radius 1 and center at the origin.
+The first point lies on the axis 0. All points are in the (0,1) plane. 
+The return value is a plex-2 Formex. 
+This function is equivalent to circle(360./n).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.triangle">
+<tt class="descclassname">simple.</tt><tt class="descname">triangle</tt><big>(</big><big>)</big><a class="headerlink" href="#simple.triangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>An equilateral triangle with base [0,1] on axis 0.</p>
+<p>Returns an equilateral triangle with side length 1.
+The first point is the origin, the second points is on the axis 0.
+The return value is a plex-3 Formex.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.quadraticCurve">
+<tt class="descclassname">simple.</tt><tt class="descname">quadraticCurve</tt><big>(</big><em>x=None</em>, <em>n=8</em><big>)</big><a class="headerlink" href="#simple.quadraticCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a collection of curves.</p>
+<p>x is a (3,3) shaped array of coordinates, specifying 3 points.</p>
+<p>Return an array with 2*n+1 points lying on the quadratic curve through
+the points x. Each of the intervals [x0,x1] and [x1,x2] will be divided
+in n segments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.sphere2">
+<tt class="descclassname">simple.</tt><tt class="descname">sphere2</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=-90</em>, <em>top=90</em><big>)</big><a class="headerlink" href="#simple.sphere2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sphere consisting of line elements.</p>
+<p>A sphere with radius r is modeled by a regular grid of nx
+longitude circles, ny latitude circles and their diagonals.</p>
+<p>The 3 sets of lines can be distinguished by their property number:
+1: diagonals, 2: meridionals, 3: horizontals.</p>
+<p>The sphere caps can be cut off by specifying top and bottom latitude
+angles (measured in degrees from 0 at north pole to 180 at south pole.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.sphere3">
+<tt class="descclassname">simple.</tt><tt class="descname">sphere3</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=-90</em>, <em>top=90</em><big>)</big><a class="headerlink" href="#simple.sphere3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sphere consisting of surface triangles</p>
+<p>A sphere with radius r is modeled by the triangles fromed by a regular
+grid of nx longitude circles, ny latitude circles and their diagonals.</p>
+<p>The two sets of triangles can be distinguished by their property number:
+1: horizontal at the bottom, 2: horizontal at the top.</p>
+<p>The sphere caps can be cut off by specifying top and bottom latitude
+angles (measured in degrees from 0 at north pole to 180 at south pole.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.connectCurves">
+<tt class="descclassname">simple.</tt><tt class="descname">connectCurves</tt><big>(</big><em>curve1</em>, <em>curve2</em>, <em>n</em><big>)</big><a class="headerlink" href="#simple.connectCurves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect two curves to form a surface.</p>
+<p>curve1, curve2 are plex-2 Formices with the same number of elements.
+The two curves are connected by a surface of quadrilaterals, with n
+elements in the direction between the curves.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.sector">
+<tt class="descclassname">simple.</tt><tt class="descname">sector</tt><big>(</big><em>r</em>, <em>t</em>, <em>nr</em>, <em>nt</em>, <em>h=0.0</em>, <em>diag=None</em><big>)</big><a class="headerlink" href="#simple.sector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a Formex which is a sector of a circle/cone.</p>
+<p>A sector with radius r and angle t is modeled by dividing the
+radius in nr parts and the angle in nt parts and then creating
+straight line segments.
+If a nonzero value of h is given, a conical surface results with its
+top at the origin and the base circle of the cone at z=h.
+The default is for all points to be in the (x,y) plane.</p>
+<p>By default, a plex-4 Formex results. The central quads will collapse
+into triangles.
+If diag=&#8217;up&#8217; or diag = &#8216;down&#8217;, all quads are divided by an up directed
+diagonal and a plex-3 Formex results.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.cylinder">
+<tt class="descclassname">simple.</tt><tt class="descname">cylinder</tt><big>(</big><em>D</em>, <em>L</em>, <em>nt</em>, <em>nl</em>, <em>D1=None</em>, <em>angle=360.0</em>, <em>bias=0.0</em>, <em>diag=None</em><big>)</big><a class="headerlink" href="#simple.cylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a cylindrical or conical surface.</p>
+<p>Returns a Formex representing a cylindrical or (possibly truncated)
+conical surface around the z-axis. L is the length(height) of the
+cy;linder/cone and D is the base diameter. If D1 is specified,
+it is used as the diameter at the top. If no, it is taken equal to D,
+resulting in a cylindrical surface. Setting either D1 or D to zero
+results in a cone, other values will create a truncated cone.</p>
+<p>The surface has nt elements in circumferential direction and
+nl in longitudinal direction.
+By default, the elements are quads. Setting diag to &#8216;u&#8217; or &#8216;d&#8217; will
+put in an up or down diagonal to create triangles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.cuboid">
+<tt class="descclassname">simple.</tt><tt class="descname">cuboid</tt><big>(</big><em>xmin=[0.0, 0.0, 0.0], xmax=[1.0, 1.0, 1.0]</em><big>)</big><a class="headerlink" href="#simple.cuboid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a rectangular prism</p>
+<p>Creates a rectangular prism with faces parallel to the global
+axes through the points xmin and xmax.</p>
+<p>Returns a single element Formex with eltype &#8216;hex8&#8217;.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="connectivity.html"
+                        title="previous chapter">8. <tt class="docutils literal docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="project.html"
+                        title="next chapter">10. <tt class="docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="project.html" title="10. project — project.py"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

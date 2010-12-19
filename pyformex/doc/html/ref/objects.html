@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>50. objects — Selection of objects from the global dictionary. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="51. olist — Some convenient shortcuts for common list operations." href="olist.html" />
+    <link rel="prev" title="49. tools — tools.py" href="tools.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="olist.html" title="51. olist — Some convenient shortcuts for common list operations."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tools.html" title="49. tools — tools.py"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-objects">
+<span id="objects-selection-of-objects-from-the-global-dictionary"></span><span id="sec-ref-objects"></span><h1>50. <a class="reference internal" href="#module-objects" title="objects: Selection of objects from the global dictionary."><tt class="xref py py-mod docutils literal"><span class="pre">objects</span></tt></a> &#8212; Selection of objects from the global dictionary.<a class="headerlink" href="#module-objects" title="Permalink to this headline">¶</a></h1>
+<p>Selection of objects from the global dictionary.</p>
+<p>This is a support module for other pyFormex plugins.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">objects</span></tt></p>
+<dl class="class">
+<dt id="objects.Objects">
+<em class="property">class </em><tt class="descclassname">objects.</tt><tt class="descname">Objects</tt><big>(</big><em>clas=None</em>, <em>like=None</em>, <em>filter=None</em>, <em>namelist=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#objects.Objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>A selection of objects from the pyFormex Globals().</p>
+<p>The class provides facilities to filter the global objects by their type
+and select one or more objects by their name(s). The values of these
+objects can be changed and the changes can be undone.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="objects.Objects.object_type">
+<tt class="descname">object_type</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.object_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the type of objects in this selection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.set">
+<tt class="descname">set</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#objects.Objects.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the selection to a list of names.</p>
+<p>namelist can be a single object name or a list of names.
+This will also store the current values of the variables.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.append">
+<tt class="descname">append</tt><big>(</big><em>name</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#objects.Objects.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a name,value to a selection.</p>
+<p>If no value is given, its current value is used.
+If a value is given, it is exported.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the selection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.listAll">
+<tt class="descname">listAll</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.listAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with all selectable objects.</p>
+<p>This lists all the global names in pyformex.PF that match
+the class and/or filter (if specified).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.remember">
+<tt class="descname">remember</tt><big>(</big><em>copy=False</em><big>)</big><a class="headerlink" href="#objects.Objects.remember" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remember the current values of the variables in selection.</p>
+<p>If copy==True, the values are copied, so that the variables&#8217; current
+values can be changed inplace without affecting the remembered values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.changeValues">
+<tt class="descname">changeValues</tt><big>(</big><em>newvalues</em><big>)</big><a class="headerlink" href="#objects.Objects.changeValues" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the current values of selection by new ones.</p>
+<p>The old values are stored locally, to enable undo operations.</p>
+<p>This is only needed to change the values of objects that can not
+be changed inplace!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.undoChanges">
+<tt class="descname">undoChanges</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.undoChanges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Undo the last changes of the values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.check">
+<tt class="descname">check</tt><big>(</big><em>single=False</em>, <em>warn=True</em><big>)</big><a class="headerlink" href="#objects.Objects.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that we have a current selection.</p>
+<p>Returns the list of Objects corresponding to the current selection.
+If single==True, the selection should hold exactly one Object name and
+a single Object instance is returned.
+If there is no selection, or more than one in case of single==True,
+an error message is displayed and None is returned</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.odict">
+<tt class="descname">odict</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.odict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the currently selected items as a dictionary.</p>
+<p>Returns an ODict with the currently selected objects in the order
+of the selection.names.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.ask">
+<tt class="descname">ask</tt><big>(</big><em>mode='multi'</em><big>)</big><a class="headerlink" href="#objects.Objects.ask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the names of known objects and let the user select one or more.</p>
+<p>mode can be set to&#8217;single&#8217; to select a single item.
+This sets the current selection to the selected names.
+Return a list with the selected names or None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.ask1">
+<tt class="descname">ask1</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.ask1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select a single object from the list.</p>
+<p>Returns the object, not its name!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.forget">
+<tt class="descname">forget</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.forget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the selection from the globals.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.keep">
+<tt class="descname">keep</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.keep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove everything except the selection from the globals.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.printval">
+<tt class="descname">printval</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.printval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the selection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.printbbox">
+<tt class="descname">printbbox</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.printbbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the bbox of the current selection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.writeToFile">
+<tt class="descname">writeToFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#objects.Objects.writeToFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write objects to a geometry file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.Objects.readFromFile">
+<tt class="descname">readFromFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#objects.Objects.readFromFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read objects from a geometry file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="objects.DrawableObjects">
+<em class="property">class </em><tt class="descclassname">objects.</tt><tt class="descname">DrawableObjects</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects" title="Permalink to this definition">¶</a></dt>
+<dd><p>A selection of drawable objects from the globals().</p>
+<p><cite>annotations</cite>, if set, is a list of (func,active) tuples, where</p>
+<ul class="simple">
+<li><cite>func</cite> is a function that is to be called with the object name as
+argument to draw some annotation for the object,</li>
+<li><cite>active</cite> is a flag to signal if the annotation should be drawn or not.</li>
+</ul>
+<p>The default is to draw object name and element numbers.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="objects.DrawableObjects.ask">
+<tt class="descname">ask</tt><big>(</big><em>mode='multi'</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.ask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interactively sets the current selection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.drawChanges">
+<tt class="descname">drawChanges</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.drawChanges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws old and new version of a Formex with different colors.</p>
+<p>old and new can be a either Formex instances or names or lists thereof.
+old are drawn in yellow, new in the current color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.undoChanges">
+<tt class="descname">undoChanges</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.undoChanges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Undo the last changes of the values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.toggleAnnotation">
+<tt class="descname">toggleAnnotation</tt><big>(</big><em>i=0</em>, <em>onoff=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle the display of an annotation On or Off.</p>
+<p>If given, onoff is True or False. 
+If no onoff is given, this works as a toggle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.drawAnnotation">
+<tt class="descname">drawAnnotation</tt><big>(</big><em>i=0</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.drawAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw some annotation for the current selection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.removeAnnotation">
+<tt class="descname">removeAnnotation</tt><big>(</big><em>i=0</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.removeAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the annotation i.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.hasAnnotation">
+<tt class="descname">hasAnnotation</tt><big>(</big><em>i=0</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the status of annotation i</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.setProperty">
+<tt class="descname">setProperty</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.setProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the property of the current selection.</p>
+<p>prop should be a single integer value or None.
+If None is given, a value will be asked from the user.
+If a negative value is given, the property is removed.
+If a selected object does not have a setProp method, it is ignored.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">objects</span></tt></p>
+<dl class="function">
+<dt id="objects.draw_object_name">
+<tt class="descclassname">objects.</tt><tt class="descname">draw_object_name</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_object_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the name of an object at its center.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="objects.draw_elem_numbers">
+<tt class="descclassname">objects.</tt><tt class="descname">draw_elem_numbers</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_elem_numbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the numbers of an object&#8217;s elements.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="objects.draw_nodes">
+<tt class="descclassname">objects.</tt><tt class="descname">draw_nodes</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the numbers of an object&#8217;s nodes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="objects.draw_node_numbers">
+<tt class="descclassname">objects.</tt><tt class="descname">draw_node_numbers</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_node_numbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the numbers of an object&#8217;s nodes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="objects.draw_bbox">
+<tt class="descclassname">objects.</tt><tt class="descname">draw_bbox</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_bbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the bbox of an object.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tools.html"
+                        title="previous chapter">49. <tt class="docutils literal"><span class="pre">tools</span></tt> &#8212; tools.py</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="olist.html"
+                        title="next chapter">51. <tt class="docutils literal docutils literal"><span class="pre">olist</span></tt> &#8212; Some convenient shortcuts for common list operations.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="olist.html" title="51. olist — Some convenient shortcuts for common list operations."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tools.html" title="49. tools — tools.py"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

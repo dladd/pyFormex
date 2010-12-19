@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BuMPix Live Linux system &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="index.html" />
+    <link rel="next" title="GNU GENERAL PUBLIC LICENSE" href="license.html" />
+    <link rel="prev" title="pyFormex file formats" href="file_format.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="license.html" title="GNU GENERAL PUBLIC LICENSE"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="file_format.html" title="pyFormex file formats"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+ 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="bumpix-live-linux-system">
+<span id="cha-bumpix"></span><h1>BuMPix Live Linux system<a class="headerlink" href="#bumpix-live-linux-system" title="Permalink to this headline">¶</a></h1>
+<div class="topic">
+<p class="topic-title first">Abstract</p>
+<p>This document gives a short introduction on the BuMPix Live Linux
+system and how to use it to run pyFormex directly on nearly any
+computer system without having to install it.</p>
+</div>
+<div class="section" id="what-is-bumpix">
+<span id="sec-what-is-bumpix"></span><h2>What is BuMPix<a class="headerlink" href="#what-is-bumpix" title="Permalink to this headline">¶</a></h2>
+<p><cite>Bumpix Live</cite> is a fully featured Linux system including pyFormex that
+can be run from a single removable medium such as a CD or a USB key.
+BuMPix is still an experimental project, but new versions are already
+produced at regular intervals. While those are primarily intended for
+our students, the install images are made available for download on
+the <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix">Bumpix Live Linux</a> FTP server, so that anyone can use them.</p>
+<p>All you need to use the <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix">Bumpix Live Linux</a> is some proper PC
+hardware: the system boots and runs from the removable medium and
+leaves everything that is installed on the hard disk of the computer
+untouched.</p>
+<p>Because the size of the image (since version 0.4) exceeds that of a CD,
+we no longer produce CD-images (.iso) by default, but some older
+images remain avaliable on the server. New (reduced) CD
+images will only be created on request.
+On the other hand, USB-sticks of 2GB and larger have become very
+affordable and most computers nowadays can boot from a USB stick.
+USB sticks are also far more easy to work with than CD&#8217;s: you can
+create a persistent partition where you can save your changes, while a CD can not be changed.</p>
+<p>You can easily take your USB stick with you wherever you go, plug it into any
+available computer, and start or continue your previous pyFormex work.
+Some users even prefer this way to run pyFormex for that single reason.
+The Live system is also an excellent way to test and see what pyFormex can
+do for you, without having to install it. Or to demonstrate pyFormex to
+your friends or colleagues.</p>
+</div>
+<div class="section" id="obtain-a-bumpix-live-bootable-medium">
+<span id="sec-obtain-bumpix"></span><h2>Obtain a BuMPix Live bootable medium<a class="headerlink" href="#obtain-a-bumpix-live-bootable-medium" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="download-bumpix">
+<h3>Download BuMPix<a class="headerlink" href="#download-bumpix" title="Permalink to this headline">¶</a></h3>
+<p>The numbering scheme of the
+BuMPix images is independent from the pyFormex numbering. Just pick
+the <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix/bumpix-latest.img">latest BuMPix image</a> to get the most recent pyFormex available
+on USB stick. After you downloaded the .img file, write it to a USB
+stick as an image, not as file! Below, you find instructions on how to do
+this on a Linux system or on a Windows platform.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Make sure you&#8217;ve got the device designation correct, or
+you might end up overwriting your whole hard disk!</p>
+</div>
+<p>Also, be aware that the
+USB stick will no longer be usable to store your files under Windows.</p>
+</div>
+<div class="section" id="create-the-bumpix-usb-stick-under-linux">
+<h3>Create the BuMPix USB stick under Linux<a class="headerlink" href="#create-the-bumpix-usb-stick-under-linux" title="Permalink to this headline">¶</a></h3>
+<p>If you have an existing Linux system available, you can write the
+downloaded image to the USB-stick using the command:</p>
+<div class="highlight-python"><pre>dd if=bumpix-VERSION.img of=USBDEV</pre>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">bumpix-VERSION.img</span></tt> is the downloaded file and USBDEV
+is the device corresponding to your USB key. This should be
+<tt class="docutils literal"><span class="pre">/dev/sda</span></tt> or <tt class="docutils literal"><span class="pre">/dev/sdb</span></tt> or, generally, <tt class="docutils literal"><span class="pre">/dev/sd?</span></tt> where <tt class="docutils literal"><span class="pre">?</span></tt>
+is a single character from <tt class="docutils literal"><span class="pre">a-z</span></tt>. The value you should use depends
+on your hardware. You can find out the correct value by giving the command <tt class="docutils literal"><span class="pre">dmesg</span></tt>
+after you have plugged in the USB key. You will see messages mentioning the
+correct <tt class="docutils literal"><span class="pre">[sd?]</span></tt> device.</p>
+<p>The <tt class="docutils literal"><span class="pre">dd</span></tt> command above will overwrite everything on the specified device,
+so copy your files off the stick before you start, and make sure you&#8217;ve got the device designation correct.</p>
+</div>
+<div class="section" id="create-the-bumpix-usb-stick-under-windows">
+<h3>Create the BuMPix USB stick under Windows<a class="headerlink" href="#create-the-bumpix-usb-stick-under-windows" title="Permalink to this headline">¶</a></h3>
+<p>If you have no Linux machine available to create the USB key, there
+are ways to do this under Windows as well.
+We recommend to use <a class="reference external" href="http://www.chrysocome.net/dd">dd for Windows</a>. You can then proceed as follows.</p>
+<ul>
+<li><p class="first">Download <a class="reference external" href="http://www.chrysocome.net/dd">dd for Windows</a> to a folder, say <tt class="docutils literal"><span class="pre">C:\\download\ddWrite</span></tt>.</p>
+</li>
+<li><p class="first">Download the <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix/bumpix-latest.img">latest BuMPix image</a> to the same folder.</p>
+</li>
+<li><p class="first">Mount the target USB stick and look for the number of the mounted
+USB. This can be done with the command <tt class="docutils literal"><span class="pre">c:\\download\ddWrite</span> <span class="pre">dd</span> <span class="pre">--list</span></tt>.
+Look at the description (Removable media) and the size to make sure
+you&#8217;ve got the correct harddisk designation (e.g. <tt class="docutils literal"><span class="pre">harddisk1</span></tt>).</p>
+</li>
+<li><p class="first">Write the image to the USB stick with the command, substituting the
+harddisk designation found above:</p>
+<div class="highlight-python"><pre>dd if=c:\download\ddwrite\bumpix-0.4-b1.img of=\\?\device\harddisk1\partition0 bs=1M --progress</pre>
+</div>
+</li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">dd</span></tt> command above will overwrite everything on the specified device,
+so copy your files off the stick before you start, and make sure you&#8217;ve got the device designation correct.</p>
+</div>
+<div class="section" id="buy-a-usb-stick-with-bumpix">
+<h3>Buy a USB stick with BuMPix<a class="headerlink" href="#buy-a-usb-stick-with-bumpix" title="Permalink to this headline">¶</a></h3>
+<p>Alternatively,</p>
+<ul class="simple">
+<li>if you do not succeed in properly writing the image to a USB key, or</li>
+<li>if you just want an easy solution without any install troubles, or</li>
+<li>if you want to financially support the further development of pyFormex, or</li>
+<li>if you need a large number of pyFormex USB installations,</li>
+</ul>
+<p>you may be happy to know that we can provide ready-made BuMPix USB
+sticks with the <tt class="docutils literal"><span class="pre">pyformex.org</span></tt> logo at a cost hardly exceeding that
+of production and distribution.
+If you think this is the right choice for you, just <a class="reference external" href="mailto:benedict&#46;verhegghe&#37;&#52;&#48;ugent&#46;be">email us</a> for a quotation.</p>
+<div align="center" class="align-center"><img alt="pyFormex USB stick with BuMPix Live Linux" class="align-center" src="_images/pyformex_ufd.jpg" /></div>
+</div>
+</div>
+<div class="section" id="boot-your-bumpix-system">
+<span id="sec-boot-bumpix"></span><h2>Boot your BuMPix system<a class="headerlink" href="#boot-your-bumpix-system" title="Permalink to this headline">¶</a></h2>
+<p>Once the image has been written, reboot your computer from the USB
+stick. You may have to change your BIOS settings or use the boot menu
+to do that. On success, you will have a full Linux system running,
+containing pyFormex ready to use. There is even a start button in the
+toolbar at the bottom.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">More detailed documentation on how to use the system is
+currently under preparation. For now, feel free to <a class="reference external" href="mailto:benedict&#46;verhegghe&#37;&#52;&#48;ugent&#46;be">email us</a> if
+you have any problems or urgent questions. But first check that your
+question is not solved in the FAQ below.</p>
+</div>
+</div>
+<div class="section" id="faq">
+<span id="sec-bumpix-faq"></span><h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
+<p>A collection of hints and answers to frequently asked questions.</p>
+<ol class="arabic simple">
+<li>The initial user name is <cite>user</cite> and the password <cite>live</cite>.</li>
+<li>On shutdown/reboot, the system pauses with the advice to remove the
+USB stick before hitting <cite>ENTER</cite> to proceed. We advice not to do this:
+first hit <cite>ENTER</cite> and remove the USB stick when the screen goes black.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="index.html">Documentation</a></h3>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BuMPix Live Linux system</a><ul>
+<li><a class="reference internal" href="#what-is-bumpix">What is BuMPix</a></li>
+<li><a class="reference internal" href="#obtain-a-bumpix-live-bootable-medium">Obtain a BuMPix Live bootable medium</a><ul>
+<li><a class="reference internal" href="#download-bumpix">Download BuMPix</a></li>
+<li><a class="reference internal" href="#create-the-bumpix-usb-stick-under-linux">Create the BuMPix USB stick under Linux</a></li>
+<li><a class="reference internal" href="#create-the-bumpix-usb-stick-under-windows">Create the BuMPix USB stick under Windows</a></li>
+<li><a class="reference internal" href="#buy-a-usb-stick-with-bumpix">Buy a USB stick with BuMPix</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#boot-your-bumpix-system">Boot your BuMPix system</a></li>
+<li><a class="reference internal" href="#faq">FAQ</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="file_format.html"
+                        title="previous chapter">pyFormex file formats</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="license.html"
+                        title="next chapter">GNU GENERAL PUBLIC LICENSE</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="license.html" title="GNU GENERAL PUBLIC LICENSE"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="file_format.html" title="pyFormex file formats"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

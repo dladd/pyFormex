@@ -1,0 +1,196 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>46. dxf — &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="47. export — Classes and functions for exporting geometry in various formats." href="export.html" />
+    <link rel="prev" title="45. turtle — Turtle graphics for pyFormex" href="turtle.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="export.html" title="47. export — Classes and functions for exporting geometry in various formats."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="turtle.html" title="45. turtle — Turtle graphics for pyFormex"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-dxf">
+<span id="dxf"></span><span id="sec-ref-dxf"></span><h1>46. <a class="reference internal" href="#module-dxf" title="dxf"><tt class="xref py py-mod docutils literal"><span class="pre">dxf</span></tt></a> &#8212;<a class="headerlink" href="#module-dxf" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">dxf</span></tt></p>
+<dl class="class">
+<dt id="dxf.DxfExporter">
+<em class="property">class </em><tt class="descclassname">dxf.</tt><tt class="descname">DxfExporter</tt><big>(</big><em>filename</em>, <em>terminator='n'</em><big>)</big><a class="headerlink" href="#dxf.DxfExporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export geometry in DXF format.</p>
+<p>While we certainly do not want to promote proprietary software,
+some of our users occasionally needed to export some model in
+DXF format.
+This class provides a minimum of functionality.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="dxf.DxfExporter.write">
+<tt class="descname">write</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#dxf.DxfExporter.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a string to the dxf file.</p>
+<p>The string does not include the line terminator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dxf.DxfExporter.out">
+<tt class="descname">out</tt><big>(</big><em>code</em>, <em>data</em><big>)</big><a class="headerlink" href="#dxf.DxfExporter.out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output a string data item to the dxf file.</p>
+<p>code is the group code,
+data holds the data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dxf.DxfExporter.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#dxf.DxfExporter.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize and close the DXF file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dxf.DxfExporter.section">
+<tt class="descname">section</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#dxf.DxfExporter.section" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start a new section</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dxf.DxfExporter.endSection">
+<tt class="descname">endSection</tt><big>(</big><big>)</big><a class="headerlink" href="#dxf.DxfExporter.endSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>End the current section</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dxf.DxfExporter.entities">
+<tt class="descname">entities</tt><big>(</big><big>)</big><a class="headerlink" href="#dxf.DxfExporter.entities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the ENTITIES section</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dxf.DxfExporter.layer">
+<tt class="descname">layer</tt><big>(</big><em>layer</em><big>)</big><a class="headerlink" href="#dxf.DxfExporter.layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the layer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dxf.DxfExporter.line">
+<tt class="descname">line</tt><big>(</big><em>x</em>, <em>layer=0</em><big>)</big><a class="headerlink" href="#dxf.DxfExporter.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a line.</p>
+<p>x is a (2,3) shaped array</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">dxf</span></tt></p>
+<dl class="function">
+<dt id="dxf.exportDXF">
+<tt class="descclassname">dxf.</tt><tt class="descname">exportDXF</tt><big>(</big><em>filename</em>, <em>F</em><big>)</big><a class="headerlink" href="#dxf.exportDXF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a Formex to a DXF file</p>
+<p>Currently, only plex-2 Formices can be exported to DXF.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="turtle.html"
+                        title="previous chapter">45. <tt class="docutils literal"><span class="pre">turtle</span></tt> &#8212; Turtle graphics for pyFormex</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="export.html"
+                        title="next chapter">47. <tt class="docutils literal"><span class="pre">export</span></tt> &#8212; Classes and functions for exporting geometry in various formats.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="export.html" title="47. export — Classes and functions for exporting geometry in various formats."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="turtle.html" title="45. turtle — Turtle graphics for pyFormex"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,220 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyFormex file formats &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="index.html" />
+    <link rel="next" title="BuMPix Live Linux system" href="bumpix.html" />
+    <link rel="prev" title="59. misc — Python equivalents of the functions in lib.misc" href="ref/misc.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bumpix.html" title="BuMPix Live Linux system"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ref/misc.html" title="59. misc — Python equivalents of the functions in lib.misc"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+ 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pyformex-file-formats">
+<span id="cha-fileformat"></span><h1>pyFormex file formats<a class="headerlink" href="#pyformex-file-formats" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">December 18, 2010</td>
+</tr>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.8.4</td>
+</tr>
+<tr class="field"><th class="field-name">Author:</th><td class="field-body">Benedict Verhegghe &lt;<a class="reference external" href="mailto:benedict&#46;verhegghe&#37;&#52;&#48;ugent&#46;be">benedict<span>&#46;</span>verhegghe<span>&#64;</span>ugent<span>&#46;</span>be</a>&gt;</td>
+</tr>
+</tbody>
+</table>
+<div class="topic">
+<p class="topic-title first">Abstract</p>
+<p>This document describes the native file formats used by pyFormex.
+The are currently two file formats: the pyFormex Project File (.pyf)
+and the pyFormex Geometry File (.pgf/.formex).</p>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>pyFormex uses two native file formats to save data on a persistent medium:
+the pyFormex Project File (.pyf) and the pyFormex Geometry File (.pgf).</p>
+<p>A Project File can store any pyFormex data and is the prefered way
+to store your data for later reuse within pyFormex. The data in the resulting
+file can normally not be used by humans and can only be easily restored
+by pyFormex itself.</p>
+<p>The pyFormex Geometry File on the other hand can be used to exchange
+data between pyFormex projects or with other software. Because of its
+plain text format, the data can be read and evend edited by humans.
+You may also wish to save data in this format to make them accessible
+the need for pyFormex, or to bridge incompatible changes in pyFormex.</p>
+<p>Because the geometrical data in pyFormex can be quite voluminous, the
+format has been chosen so as to allow efficient read and write operations
+from inside pyFormex. If you want a nicer layout and efficiency is not your
+concern, you can used the <tt class="xref py py-meth docutils literal"><span class="pre">fprint()</span></tt> method of the geometry object.</p>
+</div>
+<div class="section" id="pyformex-project-file-format">
+<span id="sec-project-file-format"></span><h2>pyFormex Project File Format<a class="headerlink" href="#pyformex-project-file-format" title="Permalink to this headline">¶</a></h2>
+<p>A pyFormex project file is just a pickled Python dictionary stored on file,
+possibly with compression. Any pyFormex objects can be exported and stored on
+the project file. The resulting file is normally not readable for humans and
+because all the class definitions of the exported data have to be present,
+the file can only be read back by pyFormex itself.</p>
+<p>The format of the project file is therefore currently not further documented.
+See <a class="reference internal" href="projects.html"><em>Using Projects</em></a> for the use of project files from within pyFormex.</p>
+</div>
+<div class="section" id="pyformex-geometry-file-format-1-2">
+<span id="sec-geometry-file-format"></span><h2>pyFormex Geometry File Format 1.2<a class="headerlink" href="#pyformex-geometry-file-format-1-2" title="Permalink to this headline">¶</a></h2>
+<p>This describes the pyFormex Geometry File Format version 1.2 as drawn on
+2010-01-04. The version numbering is such that implementations of a later
+version are able to read an older version with the same major numbering.
+Thus, the 1.2 version still can read version 1.0 and 1.1 files.</p>
+<p>The prefered filename extension for pyFormex geometry files is &#8216;.pgf&#8217;,
+though this is not a requirement and the previously used &#8216;.formex&#8217; is
+certainly as valid as any other.</p>
+<p>The pyFormex Geometry File starts with a header line identify the file
+type and version, and possibly specifying some global variables:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Formex File Format 1.1 (http://pyformex.org)</span>
+</pre></div>
+</div>
+<p>The remainder of the file contains one or more data blocks, each of which
+consists of a header line followed by the numerical data. The header line
+starts with a &#8216;#&#8217;. The remainder of the line is a sequence of &#8216;keyword=value&#8217;
+strings separated with a semicolon and optional whitespace, such as in the
+following example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># nelems=692; nplex=2; props=True; eltype=None; sep=&#39; &#39;</span>
+</pre></div>
+</div>
+<p>The keywords in the data header specify the type and amount of that that
+will be read, and how they will be structured in arrays and converted to
+pyFormex objects. The example above specifies a Formex of plexitude 2 having
+692 elements with no specific element type but possessin property numbers.
+The separator used in the data is a single space.</p>
+<ul class="simple">
+<li>comment lines, stating with a &#8216;#&#8217;, but maybe holding invaluable information
+for the interpretation of the rest of the data,</li>
+<li>data blocks.</li>
+</ul>
+<p>Data blocks are written using <tt class="xref py py-func docutils literal"><span class="pre">numpy.tofile()</span></tt> and read back with
+<tt class="xref py py-func docutils literal"><span class="pre">numpy.fromfile()</span></tt>. All data items in a block are of the same type
+and are written as ASCII strings, separated by a constant string. The
+separator can be specified by the user and defaults to a single space,
+so that all data of a single block are written on one line, separated
+by a blank. When reading, newline characters will be silently ignored
+or used as a separator character as well. As a special case, if an
+empty string is specified as separator, the data will be written in
+binary mode.</p>
+<p>Each data block is preceded with a comments line with the following structure:</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="index.html">Documentation</a></h3>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyFormex file formats</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#pyformex-project-file-format">pyFormex Project File Format</a></li>
+<li><a class="reference internal" href="#pyformex-geometry-file-format-1-2">pyFormex Geometry File Format 1.2</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ref/misc.html"
+                        title="previous chapter">59. <tt class="docutils literal"><span class="pre">misc</span></tt> &#8212; Python equivalents of the functions in lib.misc</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="bumpix.html"
+                        title="next chapter">BuMPix Live Linux system</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="bumpix.html" title="BuMPix Live Linux system"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ref/misc.html" title="59. misc — Python equivalents of the functions in lib.misc"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

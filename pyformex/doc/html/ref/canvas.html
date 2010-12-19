@@ -1,0 +1,578 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>20. canvas — This implements an OpenGL drawing widget for painting 3D scenes. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="21. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
+    <link rel="prev" title="19. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="viewport.html" title="21. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gluttext.html" title="19. gluttext — 2D text decorations using GLUT fonts"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-canvas">
+<span id="canvas-this-implements-an-opengl-drawing-widget-for-painting-3d-scenes"></span><span id="sec-ref-canvas"></span><h1>20. <a class="reference internal" href="#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.<a class="headerlink" href="#module-canvas" title="Permalink to this headline">¶</a></h1>
+<p>This implements an OpenGL drawing widget for painting 3D scenes.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
+<dl class="class">
+<dt id="canvas.ActorList">
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">ActorList</tt><big>(</big><em>canvas</em><big>)</big><a class="headerlink" href="#canvas.ActorList" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="canvas.ActorList.add">
+<tt class="descname">add</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.ActorList.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an actor to an actorlist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.ActorList.delete">
+<tt class="descname">delete</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.ActorList.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an actor from an actorlist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.ActorList.redraw">
+<tt class="descname">redraw</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.ActorList.redraw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redraw (some) actors in the scene.</p>
+<p>This redraws the specified actors (recreating their display list).
+This should e.g. be used after changing an actor&#8217;s properties.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="canvas.CanvasSettings">
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">CanvasSettings</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings" title="Permalink to this definition">¶</a></dt>
+<dd><p>A collection of settings for an OpenGL Canvas.</p>
+<p>The canvas settings are a collection of settings and default values
+affecting the rendering in an individual viewport. Currently the
+following values are defined:</p>
+<ul class="simple">
+<li>bgcolor: the viewport background color</li>
+<li>bgcolor2: None for a single color background, bottom color for a
+graded background (the top color then being bgcolor)</li>
+<li>fgcolor: the default drawing color</li>
+<li>bkcolor: the default backface color</li>
+<li>slcolor: the highlight color</li>
+<li>colormap: the default color map to be used if color is an index</li>
+<li>bklormap: the default color map to be used if bkcolor is an index</li>
+</ul>
+<p>Any of these values can be set in the constructor using a keyword argument.
+All items that are not set, will get their value from the configuration
+file(s).</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="canvas.CanvasSettings.reset">
+<tt class="descname">reset</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset to defaults.</p>
+<p>If a dict is specified, these settings will override defaults.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.CanvasSettings.update">
+<tt class="descname">update</tt><big>(</big><em>d</em>, <em>strict=True</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update current values with the specified settings</p>
+<p>Returns the sanitized update values.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="canvas.Light">
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Light</tt><big>(</big><em>nr</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#canvas.Light" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="canvas.Lights">
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Lights</tt><big>(</big><em>nlights</em><big>)</big><a class="headerlink" href="#canvas.Lights" title="Permalink to this definition">¶</a></dt>
+<dd><p>An array of OpenGL lights.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="canvas.Lights.set_value">
+<tt class="descname">set_value</tt><big>(</big><em>i</em>, <em>key</em>, <em>value</em><big>)</big><a class="headerlink" href="#canvas.Lights.set_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an attribute of light i</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Lights.set">
+<tt class="descname">set</tt><big>(</big><em>i</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#canvas.Lights.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set all attributes of light i</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Lights.enable">
+<tt class="descname">enable</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Lights.enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable the lights</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="canvas.Canvas">
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Canvas</tt><a class="headerlink" href="#canvas.Canvas" title="Permalink to this definition">¶</a></dt>
+<dd><p>A canvas for OpenGL rendering.</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="canvas.Canvas.glLight">
+<tt class="descname">glLight</tt><big>(</big><em>onoff</em><big>)</big><a class="headerlink" href="#canvas.Canvas.glLight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle lights on/off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.hasLight">
+<tt class="descname">hasLight</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.hasLight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the status of the lighting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.resetDefaults">
+<tt class="descname">resetDefaults</tt><big>(</big><em>dict={}</em><big>)</big><a class="headerlink" href="#canvas.Canvas.resetDefaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the settings to their default values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setRenderMode">
+<tt class="descname">setRenderMode</tt><big>(</big><em>rm</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setRenderMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the rendermode.</p>
+<p>This changes the rendermode and redraws everything with the new mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>lw</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>repeat</em>, <em>pattern</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linestipple for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setPointSize">
+<tt class="descname">setPointSize</tt><big>(</big><em>sz</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setPointSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the size for point drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setBgColor">
+<tt class="descname">setBgColor</tt><big>(</big><em>color1</em>, <em>color2=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setBgColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the background color.</p>
+<p>If one color is specified, a solid background is set.
+If two colors are specified, a graded background is set
+and an object is created to display the background.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.createBackground">
+<tt class="descname">createBackground</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.createBackground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the background object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setFgColor">
+<tt class="descname">setFgColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setFgColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default foreground color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setSlColor">
+<tt class="descname">setSlColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setSlColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the highlight color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setLightValue">
+<tt class="descname">setLightValue</tt><big>(</big><em>nr</em>, <em>key</em>, <em>val</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setLightValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Re)Define a light on the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.enableLight">
+<tt class="descname">enableLight</tt><big>(</big><em>nr</em><big>)</big><a class="headerlink" href="#canvas.Canvas.enableLight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable an existing light.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.disableLight">
+<tt class="descname">disableLight</tt><big>(</big><em>nr</em><big>)</big><a class="headerlink" href="#canvas.Canvas.disableLight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable an existing light.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setTriade">
+<tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setTriade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle the display of the global axes on or off.</p>
+<p>If on is True, a triade of global axes is displayed, if False it is
+removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.glupdate">
+<tt class="descname">glupdate</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.glupdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush all OpenGL commands, making sure the display is updated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the canvas to the background color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setDefaults">
+<tt class="descname">setDefaults</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.setDefaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activate the canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.display">
+<tt class="descname">display</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Re)display all the actors in the scene.</p>
+<p>This should e.g. be used when actors are added to the scene,
+or after changing  camera position/orientation or lens.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.begin_2D_drawing">
+<tt class="descname">begin_2D_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.begin_2D_drawing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the canvas for 2D drawing on top of 3D canvas.</p>
+<p>The 2D drawing operation should be ended by calling end_2D_drawing. 
+It is assumed that you will not try to change/refresh the normal
+3D drawing cycle during this operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.end_2D_drawing">
+<tt class="descname">end_2D_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.end_2D_drawing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel the 2D drawing mode initiated by begin_2D_drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setBbox">
+<tt class="descname">setBbox</tt><big>(</big><em>bbox=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setBbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the bounding box of the scene you want to be visible.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.addActor">
+<tt class="descname">addActor</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a 3D actor to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeActor">
+<tt class="descname">removeActor</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a 3D actor from the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.addHighlight">
+<tt class="descname">addHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addHighlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a 3D actor highlight to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeHighlight">
+<tt class="descname">removeHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeHighlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a 3D actor highlight from the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.addAnnotation">
+<tt class="descname">addAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an annotation to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeAnnotation">
+<tt class="descname">removeAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an annotation from the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.addDecoration">
+<tt class="descname">addDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addDecoration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a 2D decoration to the canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeDecoration">
+<tt class="descname">removeDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeDecoration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a 2D decoration from the canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.remove">
+<tt class="descname">remove</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#canvas.Canvas.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a list of any actor/highlights/annotation/decoration items.</p>
+<p>This will remove the items from any of the canvas lists in which the
+item appears.
+itemlist can also be a single item instead of a list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeActors">
+<tt class="descname">removeActors</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeActors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all actors in actorlist (default = all) from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeHighlights">
+<tt class="descname">removeHighlights</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeHighlights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all highlights in actorlist (default = all) from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeAnnotations">
+<tt class="descname">removeAnnotations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAnnotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all annotations in actorlist (default = all) from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeDecorations">
+<tt class="descname">removeDecorations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeDecorations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all decorations in actorlist (default = all) from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.removeAll">
+<tt class="descname">removeAll</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all actors and decorations</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.redrawAll">
+<tt class="descname">redrawAll</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.redrawAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redraw all actors in the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setCamera">
+<tt class="descname">setCamera</tt><big>(</big><em>bbox=None</em>, <em>angles=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the camera looking under angles at bbox.</p>
+<p>This function sets the camera angles and adjusts the zooming.
+The camera distance remains unchanged.</p>
+<p>If a bbox is specified, the camera will be zoomed to make the whole
+bbox visible.
+If no bbox is specified, the current scene bbox will be used.
+If no current bbox has been set, it will be calculated as the
+bbox of the whole scene.</p>
+<p>If no camera angles are given, the camera orientation is kept.
+angles can be a set of 3 angles, or a string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.zoom">
+<tt class="descname">zoom</tt><big>(</big><em>f</em>, <em>dolly=True</em><big>)</big><a class="headerlink" href="#canvas.Canvas.zoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dolly zooming.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.project">
+<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big><a class="headerlink" href="#canvas.Canvas.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map the object coordinates (x,y,z) to window coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.unProject">
+<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big><a class="headerlink" href="#canvas.Canvas.unProject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map the window coordinates (x,y,z) to object coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.zoomRectangle">
+<tt class="descname">zoomRectangle</tt><big>(</big><em>x0</em>, <em>y0</em>, <em>x1</em>, <em>y1</em><big>)</big><a class="headerlink" href="#canvas.Canvas.zoomRectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangle zooming</p>
+<p>x0,y0,x1,y1 are pixel coordinates of the lower left and upper right
+corners of the area to zoom to the full window</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.zoomAll">
+<tt class="descname">zoomAll</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.zoomAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangle zooming</p>
+<p>x0,y0,x1,y1 are relative corners in (0,0)..(1,1) space</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.saveBuffer">
+<tt class="descname">saveBuffer</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.saveBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the current OpenGL buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.showBuffer">
+<tt class="descname">showBuffer</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.showBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the saved buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.draw_focus_rectangle">
+<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>width=2</em><big>)</big><a class="headerlink" href="#canvas.Canvas.draw_focus_rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the focus rectangle.</p>
+<p>The specified width is HALF of the line width</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.draw_cursor">
+<tt class="descname">draw_cursor</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#canvas.Canvas.draw_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw the cursor</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
+<dl class="function">
+<dt id="canvas.gl_pickbuffer">
+<tt class="descclassname">canvas.</tt><tt class="descname">gl_pickbuffer</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.gl_pickbuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the 2nd numbers in the openGL pick buffer.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="canvas.glLineStipple">
+<tt class="descclassname">canvas.</tt><tt class="descname">glLineStipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big><a class="headerlink" href="#canvas.glLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the line stipple pattern.</p>
+<p>When drawing lines, OpenGl can use a stipple pattern. The stipple
+is defined by two values: a pattern (on/off) of maximum 16 bits,
+used on the pixel level, and a multiplier factor for each bit.</p>
+<p>If factor &lt;= 0, the stippling is disabled.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="canvas.glSmooth">
+<tt class="descclassname">canvas.</tt><tt class="descname">glSmooth</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.glSmooth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable smooth shading</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="canvas.glFlat">
+<tt class="descclassname">canvas.</tt><tt class="descname">glFlat</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.glFlat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable smooth shading</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="canvas.onOff">
+<tt class="descclassname">canvas.</tt><tt class="descname">onOff</tt><big>(</big><em>onoff</em><big>)</big><a class="headerlink" href="#canvas.onOff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert On/Off strings to a boolean</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="canvas.glEnable">
+<tt class="descclassname">canvas.</tt><tt class="descname">glEnable</tt><big>(</big><em>facility</em>, <em>onoff</em><big>)</big><a class="headerlink" href="#canvas.glEnable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable/Disable an OpenGL facility, depending on onoff value</p>
+<p>facility is an OpenGL facility.
+onoff can be True or False to enable, resp. disable the facility, or
+None to leave it unchanged.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gluttext.html"
+                        title="previous chapter">19. <tt class="docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="viewport.html"
+                        title="next chapter">21. <tt class="docutils literal docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="viewport.html" title="21. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="gluttext.html" title="19. gluttext — 2D text decorations using GLUT fonts"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

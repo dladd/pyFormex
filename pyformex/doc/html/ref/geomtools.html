@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>32. geomtools — Basic geometrical operations. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="33. nurbs — Using NURBS in pyFormex." href="nurbs.html" />
+    <link rel="prev" title="31. trisurface — Operations on triangulated surfaces." href="trisurface.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nurbs.html" title="33. nurbs — Using NURBS in pyFormex."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="trisurface.html" title="31. trisurface — Operations on triangulated surfaces."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-geomtools">
+<span id="geomtools-basic-geometrical-operations"></span><span id="sec-ref-geomtools"></span><h1>32. <a class="reference internal" href="#module-geomtools" title="geomtools: Basic geometrical operations."><tt class="xref py py-mod docutils literal"><span class="pre">geomtools</span></tt></a> &#8212; Basic geometrical operations.<a class="headerlink" href="#module-geomtools" title="Permalink to this headline">¶</a></h1>
+<p>Basic geometrical operations.</p>
+<p>This module defines some basic operations on simple geometrical entities
+such as lines, triangles, circles, planes.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geomtools</span></tt></p>
+<dl class="class">
+<dt id="geomtools.Plane">
+<em class="property">class </em><tt class="descclassname">geomtools.</tt><tt class="descname">Plane</tt><big>(</big><em>P</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.Plane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geomtools</span></tt></p>
+<dl class="function">
+<dt id="geomtools.triangleInCircle">
+<tt class="descclassname">geomtools.</tt><tt class="descname">triangleInCircle</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.triangleInCircle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the incircles of the triangles x</p>
+<p>The incircle of a triangle is the largest circle that can be inscribed
+in the triangle.</p>
+<p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.</p>
+<p>Returns a tuple r,C,n with the radii, Center and unit normals of the
+incircles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.triangleCircumCircle">
+<tt class="descclassname">geomtools.</tt><tt class="descname">triangleCircumCircle</tt><big>(</big><em>x</em>, <em>bounding=False</em><big>)</big><a class="headerlink" href="#geomtools.triangleCircumCircle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the circumcircles of the triangles x</p>
+<p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.</p>
+<p>Returns a tuple r,C,n with the radii, Center and unit normals of the
+circles going through the vertices of each triangle.</p>
+<p>If bounding=True, this returns the triangle bounding circle.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.triangleBoundingCircle">
+<tt class="descclassname">geomtools.</tt><tt class="descname">triangleBoundingCircle</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.triangleBoundingCircle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the bounding circles of the triangles x</p>
+<p>The bounding circle is the smallest circle in the plane of the triangle
+such that all vertices of the triangle are on or inside the circle.
+If the triangle is acute, this is equivalent to the triangle&#8217;s
+circumcircle. It the triangle is obtuse, the longest edge is the
+diameter of the bounding circle.</p>
+<p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.</p>
+<p>Returns a tuple r,C,n with the radii, Center and unit normals of the
+bounding circles.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.triangleObtuse">
+<tt class="descclassname">geomtools.</tt><tt class="descname">triangleObtuse</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.triangleObtuse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks for obtuse triangles</p>
+<p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.</p>
+<p>Returns an (ntri) array of True/False values indicating whether the
+triangles are obtuse.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.lineIntersection">
+<tt class="descclassname">geomtools.</tt><tt class="descname">lineIntersection</tt><big>(</big><em>P1</em>, <em>D1</em>, <em>P2</em>, <em>D2</em><big>)</big><a class="headerlink" href="#geomtools.lineIntersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the intersection of 2 coplanar lines.</p>
+<p>The lines (P1,D1) and (P2,D2) are defined by a point and a direction
+vector. Let a and b be unit vectors along the lines, and c = P2-P1,
+let ld and d be the length and the unit vector of the cross product a*b,
+the intersection point X is then given by X = 0.5(P1+P2+sa*a+sb*b)
+where sa = det([c,b,d])/ld and sb = det([c,a,d])/ld</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.displaceLines">
+<tt class="descclassname">geomtools.</tt><tt class="descname">displaceLines</tt><big>(</big><em>A</em>, <em>N</em>, <em>C</em>, <em>d</em><big>)</big><a class="headerlink" href="#geomtools.displaceLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move all lines (A,N) over a distance a in the direction of point C.</p>
+<p>A,N are arrays with points and directions defining the lines.
+C is a point.
+d is a scalar or a list of scalars.
+All line elements of F are translated in the plane (line,C)
+over a distance d in the direction of the point C.
+Returns a new set of lines (A,N).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.segmentOrientation">
+<tt class="descclassname">geomtools.</tt><tt class="descname">segmentOrientation</tt><big>(</big><em>vertices</em>, <em>vertices2=None</em>, <em>point=None</em><big>)</big><a class="headerlink" href="#geomtools.segmentOrientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the orientation of a set of line segments.</p>
+<p>vertices and vertices2 are matching sets of points.
+point is a single point.
+All arguments are Coords objects.</p>
+<p>Line segments run between corresponding points of vertices and vertices2.
+If vertices2 is None, it is obtained by rolling the vertices one position
+foreward, thus corresponding to a closed polygon through the vertices).
+If point is None, it is taken as the center of vertices.</p>
+<p>The orientation algorithm checks whether the line segments turn
+positively around the point.</p>
+<p>Returns an array with +1/-1 for positive/negative oriented segments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.rotationAngle">
+<tt class="descclassname">geomtools.</tt><tt class="descname">rotationAngle</tt><big>(</big><em>A</em>, <em>B</em>, <em>m=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#geomtools.rotationAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return rotation angles and vectors for rotations of A to B.</p>
+<p>A and B are (n,3) shaped arrays where each line represents a vector.
+This function computes the rotation from each vector of A to the
+corresponding vector of B.
+If m is None, the return value is a tuple of an (n,) shaped array with
+rotation angles (by default in degrees) and an (n,3) shaped array with
+unit vectors along the rotation axis.
+If m is a (n,3) shaped array with vectors along the rotation axis, the
+return value is a (n,) shaped array with rotation angles.
+Specify angle_spec=Rad to get the angles in radians.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.anyPerpendicularVector">
+<tt class="descclassname">geomtools.</tt><tt class="descname">anyPerpendicularVector</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#geomtools.anyPerpendicularVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return arbitrary vectors perpendicular to vectors of A.</p>
+<p>A is a (n,3) shaped array of vectors.
+The return value is a (n,3) shaped array of perpendicular vectors.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.perpendicularVector">
+<tt class="descclassname">geomtools.</tt><tt class="descname">perpendicularVector</tt><big>(</big><em>A</em>, <em>B</em><big>)</big><a class="headerlink" href="#geomtools.perpendicularVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return vectors perpendicular on both A and B.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.projectionVOV">
+<tt class="descclassname">geomtools.</tt><tt class="descname">projectionVOV</tt><big>(</big><em>A</em>, <em>B</em><big>)</big><a class="headerlink" href="#geomtools.projectionVOV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the projection of vector of A on vector of B.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.projectionVOP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">projectionVOP</tt><big>(</big><em>A</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.projectionVOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the projection of vector of A on plane of B.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionPointsLWL">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsLWL</tt><big>(</big><em>q1</em>, <em>m1</em>, <em>q2</em>, <em>m2</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsLWL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of lines (q1,m1) and lines (q2,m2)</p>
+<p>with the perpendiculars between them.</p>
+<p>This is equivalent to intersectionTimesLWL(q1,m1,q2,m2) but returns a
+tuple of (nq1,nq2,3) shaped arrays of intersection points instead of the
+parameter values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionTimesLWL">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesLWL</tt><big>(</big><em>q1</em>, <em>m1</em>, <em>q2</em>, <em>m2</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesLWL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of lines (q1,m1) and lines (q2,m2)</p>
+<p>with the perpendiculars between them.</p>
+<p>q1/m1 is a (nq1,3) shaped array of points/vectors.
+q2/m2 is a (nq2,3) shaped array of points/vectors.</p>
+<p>The return value is a tuple of (nq1,nq2) shaped arrays of parameter
+values t1 and t2, such that the intersection points are given by
+q1+t1*m1 and q2+t2*m2.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionTimesLWP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesLWP</tt><big>(</big><em>q</em>, <em>m</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesLWP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of lines (q,m) with planes (p,n).</p>
+<p>q/m is a (nq,3) shaped array of points/vectors.
+p/n is a (np,3) shaped array of points/normals.</p>
+<p>The return value is a (nq,np) shaped array of parameter values t,
+such that the intersection points are given by q+t*m.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionPointsLWP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsLWP</tt><big>(</big><em>q</em>, <em>m</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsLWP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of lines (q,m) with planes (p,n).</p>
+<p>This is like intersectionTimesLWP(q,m,p,n) but returns a (nq,np,3)
+shaped array of intersection points instead of the parameter values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionTimesSWP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesSWP</tt><big>(</big><em>S</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesSWP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of line segments S with the plane (p,n).</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>S</cite>:  an (ns,2,3) array with line segments</li>
+<li><cite>p</cite>,`n`: (np,3) arrays with points and normals defining a set of planes</li>
+</ul>
+<p>Returns: (ns,np) shaped array of parameter values t,
+such that the intersection points are given by (1-t)*S[:,0] + t*S[:,1].</p>
+<p>This function is comparable to intersectionTimesLWP, but ensures that
+parameter values 0&lt;=t&lt;=1 are points inside the line segments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionPointsSWP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsSWP</tt><big>(</big><em>S</em>, <em>p</em>, <em>n</em>, <em>return_all=False</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsSWP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of line segments S with the plane (p,n).</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>S</cite>:  an (ns,2,3) array with line segments</li>
+<li><cite>p</cite>,`n`: (3,) or (np,3) arrays with points and normals defining a
+single plane or a set of planes</li>
+<li><cite>return_all</cite>: if True, all intersection points of the lines along the
+segments are returned. Default is to return only the points that lie
+on the segments.</li>
+</ul>
+<p>Returns the intersection points as a Coords with shape (ns,np,3) if
+return_all==True, else as a Coords with shape (n,3) where n &lt;= ns*np.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionPointsPWP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsPWP</tt><big>(</big><em>p1</em>, <em>n1</em>, <em>p2</em>, <em>n2</em>, <em>p3</em>, <em>n3</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsPWP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of planes (p1,n1), (p2,n2) and (p3,n3).</p>
+<p>p1/n1 is a (np1,3) shaped array of points/normals.
+p2/n2 is a (np2,3) shaped array of points/normals.
+p3/n3 is a (np3,3) shaped array of points/normals.</p>
+<p>The return value is a (np1,np2,np3,3) shaped array of intersection points.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionLinesPWP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionLinesPWP</tt><big>(</big><em>p1</em>, <em>n1</em>, <em>p2</em>, <em>n2</em><big>)</big><a class="headerlink" href="#geomtools.intersectionLinesPWP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection lines of planes (p1,n1) and (p2,n2).</p>
+<p>p1/n1 is a (np1,3) shaped array of points/normals.
+p2/n2 is a (np2,3) shaped array of points/normals.</p>
+<p>The return value is a tuple of (np1,np2,3) shaped arrays of intersection
+points q and vectors m, such that the intersection lines are given by q+t*m.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionPointsPOP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsPOP</tt><big>(</big><em>q</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsPOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of perpendiculars from points q on planes (p,n).</p>
+<p>This is equivalent to intersectionTimesPOP(q,p,n) but returns a (nq,np,3)
+shaped array of intersection points instead of the parameter values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionTimesPOP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesPOP</tt><big>(</big><em>q</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesPOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of perpendiculars from points q on planes (p,n).</p>
+<p>q is (nq,3) shaped array of points.
+p/n is a (np,3) shaped array of points/normals.</p>
+<p>The return value is a (nq,np) shaped array of parameter values t,
+such that the intersection points are given by q+t*n.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionPointsPOL">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsPOL</tt><big>(</big><em>p</em>, <em>q</em>, <em>m</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsPOL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of perpendiculars from points p on lines (q,m).</p>
+<p>This is equivalent to intersectionTimesPWL(p,q,m) but returns a (np,nq,3)
+shaped array of intersection points instead of the parameter values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionTimesPOL">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesPOL</tt><big>(</big><em>p</em>, <em>q</em>, <em>m</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesPOL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of perpendiculars from points p on lines (q,m).</p>
+<p>p is (np,3) shaped array of points.
+q/m is a (nq,3) shaped array of points/vectors.</p>
+<p>The return value is a (np,nq) shaped array of parameter values t,
+such that the intersection points are given by q+t*m.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.facetDistance">
+<tt class="descclassname">geomtools.</tt><tt class="descname">facetDistance</tt><big>(</big><em>X</em>, <em>Fp</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#geomtools.facetDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the closest perpendicular distance of points X to a set of facets.</p>
+<p>X is a (nX,3) shaped array of points.
+Fp is a (nF,nplex,3) shaped array of facet vertices.</p>
+<p>Note that some points may not have a normal with footpoint inside any
+of the facets.</p>
+<p>The return value is a tuple OKpid,OKdist,OKpoints where:</p>
+<ul class="simple">
+<li>OKpid is an array with the point numbers having a normal distance;</li>
+<li>OKdist is an array with the shortest distances for these points;</li>
+<li>OKpoints is an array with the closest footpoints for these points
+and is only returned if return_points = True.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.edgeDistance">
+<tt class="descclassname">geomtools.</tt><tt class="descname">edgeDistance</tt><big>(</big><em>X</em>, <em>Ep</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#geomtools.edgeDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the closest perpendicular distance of points X to a set of edges.</p>
+<p>X is a (nX,3) shaped array of points.
+Ep is a (nE,2,3) shaped array of edge vertices.</p>
+<p>Note that some points may not have a normal with footpoint inside any
+of the edges.</p>
+<p>The return value is a tuple OKpid,OKdist,OKpoints where:</p>
+<ul class="simple">
+<li>OKpid is an array with the point numbers having a normal distance;</li>
+<li>OKdist is an array with the shortest distances for these points;</li>
+<li>OKpoints is an array with the closest footpoints for these points
+and is only returned if return_points = True.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.vertexDistance">
+<tt class="descclassname">geomtools.</tt><tt class="descname">vertexDistance</tt><big>(</big><em>X</em>, <em>Vp</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#geomtools.vertexDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the closest distance of points X to a set of vertices.</p>
+<p>X is a (nX,3) shaped array of points.
+Vp is a (nV,3) shaped array of vertices.</p>
+<p>The return value is a tuple OKdist,OKpoints where:</p>
+<ul class="simple">
+<li>OKdist is an array with the shortest distances for the points;</li>
+<li>OKpoints is an array with the closest vertices for the points
+and is only returned if return_points = True.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.baryCoords">
+<tt class="descclassname">geomtools.</tt><tt class="descname">baryCoords</tt><big>(</big><em>S</em>, <em>P</em><big>)</big><a class="headerlink" href="#geomtools.baryCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the barycentric coordinates of points P wrt. simplexes S.</p>
+<p>S is a (nel,nplex,3) shaped array of n-simplexes (n=nplex-1) e.g.:</p>
+<ul class="simple">
+<li>1-simplex: line segment</li>
+<li>2-simplex: triangle</li>
+<li>3-simplex: tetrahedron</li>
+</ul>
+<p>P is a (npts,nel,3) shaped array of points.</p>
+<p>The return value is a (npts,nel,nplex) shaped array of barycentric
+coordinates BC, such that the points P are given by</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">BC</span><span class="p">[:,:,:,</span><span class="n">newaxis</span><span class="p">]</span><span class="o">*</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mf">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.insideSimplex">
+<tt class="descclassname">geomtools.</tt><tt class="descname">insideSimplex</tt><big>(</big><em>BC</em>, <em>bound=True</em><big>)</big><a class="headerlink" href="#geomtools.insideSimplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if points are in simplexes.</p>
+<p>BC is an array of barycentric coordinates, which sum up to one.
+If bound = True, a point lying on the boundary is considered to
+be inside the simplex.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trisurface.html"
+                        title="previous chapter">31. <tt class="docutils literal"><span class="pre">trisurface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nurbs.html"
+                        title="next chapter">33. <tt class="docutils literal"><span class="pre">nurbs</span></tt> &#8212; Using NURBS in pyFormex.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nurbs.html" title="33. nurbs — Using NURBS in pyFormex."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="trisurface.html" title="31. trisurface — Operations on triangulated surfaces."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

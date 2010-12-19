@@ -116,7 +116,6 @@ class Geometry(object):
     `map`,
     `map1`,
     `mapd`,
-    `newmap`,
     `replace`,
     `swapAxes`,
     `rollAxes`,
@@ -270,9 +269,6 @@ class Geometry(object):
         pass
     @_coords_transform
     def mapd(self,*args,**kargs):
-        pass
-    @_coords_transform
-    def newmap(self,*args,**kargs):
         pass
 
     @_coords_transform

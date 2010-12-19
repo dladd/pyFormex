@@ -1,0 +1,743 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="4. script — Basic pyFormex script functions" href="script.html" />
+    <link rel="prev" title="2. formex — Formex algebra in Python" href="formex.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="script.html" title="4. script — Basic pyFormex script functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="formex.html" title="2. formex — Formex algebra in Python"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-arraytools">
+<span id="arraytools-a-collection-of-numerical-array-utilities"></span><span id="sec-ref-arraytools"></span><h1>3. <a class="reference internal" href="#module-arraytools" title="arraytools: A collection of numerical array utilities."><tt class="xref py py-mod docutils literal"><span class="pre">arraytools</span></tt></a> &#8212; A collection of numerical array utilities.<a class="headerlink" href="#module-arraytools" title="Permalink to this headline">¶</a></h1>
+<p>A collection of numerical array utilities.</p>
+<p>These are general utility functions that depend only on the <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt>
+array model. All pyformex modules needing <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> should import
+everything from this module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">arraytools</span> <span class="kn">import</span> <span class="o">*</span> 
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">arraytools</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">arraytools</span></tt></p>
+<dl class="function">
+<dt id="arraytools.sind">
+<tt class="descclassname">arraytools.</tt><tt class="descname">sind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.sind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sin of an angle in degrees.</p>
+<p>For convenience, this can also be used with an angle in radians,
+by specifying <cite>angle_spec=Rad</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.cosd">
+<tt class="descclassname">arraytools.</tt><tt class="descname">cosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.cosd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cos of an angle in degrees.</p>
+<p>For convenience, this can also be used with an angle in radians,
+by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.tand">
+<tt class="descclassname">arraytools.</tt><tt class="descname">tand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.tand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the tan of an angle in degrees.</p>
+<p>For convenience, this can also be used with an angle in radians,
+by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.niceLogSize">
+<tt class="descclassname">arraytools.</tt><tt class="descname">niceLogSize</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#arraytools.niceLogSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the smallest integer e such that 10**e &gt; abs(f).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.niceNumber">
+<tt class="descclassname">arraytools.</tt><tt class="descname">niceNumber</tt><big>(</big><em>f</em>, <em>approx=&lt;ufunc 'floor'&gt;</em><big>)</big><a class="headerlink" href="#arraytools.niceNumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a nice number close to but not smaller than f.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.dotpr">
+<tt class="descclassname">arraytools.</tt><tt class="descname">dotpr</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.dotpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dot product of vectors of A and B in the direction of axis.</p>
+<p>The default axis is the last.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.length">
+<tt class="descclassname">arraytools.</tt><tt class="descname">length</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the length of the vectors of A in the direction of axis.</p>
+<p>The default axis is the last.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.normalize">
+<tt class="descclassname">arraytools.</tt><tt class="descname">normalize</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the vectors of A in the direction of axis.</p>
+<p>The default axis is the last.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.projection">
+<tt class="descclassname">arraytools.</tt><tt class="descname">projection</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.projection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the (signed) length of the projection of vector of A on B.</p>
+<p>The default axis is the last.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.norm">
+<tt class="descclassname">arraytools.</tt><tt class="descname">norm</tt><big>(</big><em>v</em>, <em>n=2</em><big>)</big><a class="headerlink" href="#arraytools.norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return thr <cite>n</cite>-norm of the vector <cite>v</cite>.</p>
+<p>Default is the quadratic norm (vector length).
+<cite>n == 1</cite> returns the sum.
+<tt class="docutils literal"><span class="pre">n</span> <span class="pre">&lt;=</span> <span class="pre">0</span></tt> returns the max absolute value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.solveMany">
+<tt class="descclassname">arraytools.</tt><tt class="descname">solveMany</tt><big>(</big><em>A</em>, <em>b</em><big>)</big><a class="headerlink" href="#arraytools.solveMany" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve many systems of linear equations.</p>
+<p>A is a (M,M,...) shaped array.
+b is a (M,...) shaped array.</p>
+<p>This solves all equations A[:,:,i].x = b[:,i].
+The return value is a (M,...) shaped array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.inside">
+<tt class="descclassname">arraytools.</tt><tt class="descname">inside</tt><big>(</big><em>p</em>, <em>mi</em>, <em>ma</em><big>)</big><a class="headerlink" href="#arraytools.inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if point p is inside bbox defined by points mi and ma</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.isClose">
+<tt class="descclassname">arraytools.</tt><tt class="descname">isClose</tt><big>(</big><em>values</em>, <em>target</em>, <em>rtol=1.0000000000000001e-05</em>, <em>atol=1e-08</em><big>)</big><a class="headerlink" href="#arraytools.isClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an array flagging the elements close to target.</p>
+<p><cite>values</cite> is a float array, <cite>target</cite> is a float value.
+<cite>values</cite> and <cite>target</cite> should be broadcastable to the same shape.</p>
+<p>The return value is a boolean array with shape of <cite>values</cite> flagging
+where the values are close to target.
+Two values <cite>a</cite> and <cite>b</cite> are considered close if
+<img class="math" src="../_images/math/111bff3a77cd73fc555142c0ffd7b4af849562f6.png" alt="| a - b | &lt; atol + rtol * | b |"/></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.anyVector">
+<tt class="descclassname">arraytools.</tt><tt class="descname">anyVector</tt><big>(</big><em>v</em><big>)</big><a class="headerlink" href="#arraytools.anyVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 3D vector.</p>
+<p>v is some data compatible with a (3)-shaped float array.
+Returns v as such an array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.unitVector">
+<tt class="descclassname">arraytools.</tt><tt class="descname">unitVector</tt><big>(</big><em>v</em><big>)</big><a class="headerlink" href="#arraytools.unitVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a unit vector in the direction of v.</p>
+<p><cite>v</cite> is either an integer specifying one of the global axes (0,1,2),
+or a 3-element array or compatible.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.rotationMatrix">
+<tt class="descclassname">arraytools.</tt><tt class="descname">rotationMatrix</tt><big>(</big><em>angle</em>, <em>axis=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.rotationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a rotation matrix over angle, optionally around axis.</p>
+<p>The angle is specified in degrees, unless angle_spec=Rad is specified.
+If axis==None (default), a 2x2 rotation matrix is returned.
+Else, axis should specifying the rotation axis in a 3D world. It is either
+one of 0,1,2, specifying a global axis, or a vector with 3 components
+specifying an axis through the origin.
+In either case a 3x3 rotation matrix is returned.
+Note that:</p>
+<ul class="simple">
+<li>rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0)</li>
+<li>rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1)</li>
+<li>rotationMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)</li>
+</ul>
+<p>but the latter functions calls are more efficient.
+The result is returned as an array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.rotMatrix">
+<tt class="descclassname">arraytools.</tt><tt class="descname">rotMatrix</tt><big>(</big><em>u, w=[0.0, 0.0, 1.0], n=3</em><big>)</big><a class="headerlink" href="#arraytools.rotMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a rotation matrix that rotates axis 0 to the given vector.</p>
+<p>u is a vector representing the 
+Return either a 3x3(default) or 4x4(if n==4) rotation matrix.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.rotationAnglesFromMatrix">
+<tt class="descclassname">arraytools.</tt><tt class="descname">rotationAnglesFromMatrix</tt><big>(</big><em>mat</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.rotationAnglesFromMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return rotation angles from rotation matrix mat.</p>
+<p>This returns the three angles around the global axes 0, 1 and 2.
+The angles are returned in degrees, unless angle_spec=Rad.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.growAxis">
+<tt class="descclassname">arraytools.</tt><tt class="descname">growAxis</tt><big>(</big><em>a</em>, <em>add</em>, <em>axis=-1</em>, <em>fill=0</em><big>)</big><a class="headerlink" href="#arraytools.growAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase the length of a single array axis.</p>
+<p>The specified axis of the array <cite>a</cite> is increased with a value <cite>add</cite> and
+the new elements all get the value <cite>fill</cite>.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>a</cite>: array</li>
+<li><cite>add</cite>: int
+The value to add to the axis length. If &lt;= 0, the unchanged array
+is returned.</li>
+<li><cite>axis</cite>: int
+The axis to change, default -1 (last).</li>
+<li><cite>fill</cite>: int or float
+The value to set the new elements to.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>An array with same dimension and type as <cite>a</cite>, but with a length along
+<cite>axis</cite> equal to <tt class="docutils literal"><span class="pre">a.shape[axis]</span> <span class="pre">+</span> <span class="pre">add</span></tt>. The new elements all have the
+value <cite>fill</cite>.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">growAxis</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">]],</span><span class="mf">2</span><span class="p">)</span>
+<span class="go">array([[1, 2, 3, 0, 0],</span>
+<span class="go">       [4, 5, 6, 0, 0]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.reorderAxis">
+<tt class="descclassname">arraytools.</tt><tt class="descname">reorderAxis</tt><big>(</big><em>a</em>, <em>order</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.reorderAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reorder the planes of an array along the specified axis.</p>
+<p>The elements of the array are reordered along the specified axis
+according to the specified order.</p>
+<p>Parameters:</p>
+<ul>
+<li><p class="first"><cite>a</cite>: array_like</p>
+</li>
+<li><p class="first"><cite>order</cite>: specifies how to reorder the elements. It is either one
+of the special string values defined below, or else it is an index
+holding a permutation of <cite>arange(self.nelems()</cite>. Each value specifies the
+index of the old element that should be placed at its position.
+Thus, the order values are the old index numbers at the position of the
+new index number.</p>
+<p><cite>order</cite> can also take one of the following predefined values,
+resulting in the corresponding renumbering scheme being generated:</p>
+<ul class="simple">
+<li>&#8216;reverse&#8217;: the elements along axis are placed in reverse order</li>
+<li>&#8216;random&#8217;: the elements along axis are placed in random order</li>
+</ul>
+</li>
+</ul>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>An array with the same elements of self, where only the order
+along the specified axis has been changed.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reorderAxis</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">]],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">])</span>
+<span class="go">array([[3, 1, 2],</span>
+<span class="go">       [6, 4, 5]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.reverseAxis">
+<tt class="descclassname">arraytools.</tt><tt class="descname">reverseAxis</tt><big>(</big><em>a</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.reverseAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse the elements along a computed axis.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reverseAxis</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">]],</span><span class="mf">0</span><span class="p">)</span>
+<span class="go">array([[4, 5, 6],</span>
+<span class="go">       [1, 2, 3]])</span>
+</pre></div>
+</div>
+<p>Remark: if the axis is known in advance, it may be more efficient to use
+an indexing operation, like <tt class="docutils literal"><span class="pre">a[:,:::-1,:]</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.addAxis">
+<tt class="descclassname">arraytools.</tt><tt class="descname">addAxis</tt><big>(</big><em>a</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#arraytools.addAxis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an additional axis with length 1 to an array.</p>
+<p>The new axis is inserted before the specified one. Default is to
+add it at the front.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.stack">
+<tt class="descclassname">arraytools.</tt><tt class="descname">stack</tt><big>(</big><em>al</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#arraytools.stack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stack a list of arrays along a new axis.</p>
+<p>al is a list of arrays all of the same shape.
+The return value is a new array with one extra axis, along which the
+input arrays are stacked. The position of the new axis can be specified,
+and is the first axis by default.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.checkArray">
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkArray</tt><big>(</big><em>a</em>, <em>shape=None</em>, <em>kind=None</em>, <em>allow=None</em><big>)</big><a class="headerlink" href="#arraytools.checkArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that an array a has the correct shape and type.</p>
+<p>The input <cite>a</cite> is anything that can be converted into a numpy array.
+Either <cite>shape</cite> and/or <cite>kind</cite> can be specified. and will then be checked.
+The dimensions where <cite>shape</cite> contains a -1 value are not checked. The
+number of dimensions should match.
+If <cite>kind</cite> does not match, but the value is included in <cite>allow</cite>,
+conversion to the requested type is attempted.</p>
+<p>Returns the array if valid; else, an error is raised.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.checkArray1D">
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkArray1D</tt><big>(</big><em>a</em>, <em>size=None</em>, <em>kind=None</em>, <em>allow=None</em><big>)</big><a class="headerlink" href="#arraytools.checkArray1D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that an array a has the correct size and type.</p>
+<p>Either size and or kind can be specified.
+If kind does not match, but is included in allow, conversion to the
+requested type is attempted.
+Returns the array if valid.
+Else, an error is raised.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.checkUniqueNumbers">
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkUniqueNumbers</tt><big>(</big><em>nrs</em>, <em>nmin=0</em>, <em>nmax=None</em><big>)</big><a class="headerlink" href="#arraytools.checkUniqueNumbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that an array contains a set of unique integers in a given range.</p>
+<p>This functions tests that all integer numbers in the array are within the
+range math:<cite>nmin &lt;= i &lt; nmax</cite></p>
+<p>nrs: an integer array of any shape.
+nmin: minimum allowed value. If set to None, the test is skipped.
+nmax: maximum allowed value + 1! If set to None, the test is skipped.
+Default range is [0,unlimited].</p>
+<p>If the numbers are no unique or one of the limits is passed, an error
+is raised. Else, the sorted list of unique values is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.readArray">
+<tt class="descclassname">arraytools.</tt><tt class="descname">readArray</tt><big>(</big><em>file</em>, <em>dtype</em>, <em>shape</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#arraytools.readArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read an array from an open file.</p>
+<p>This uses <tt class="xref py py-func docutils literal"><span class="pre">numpy.fromfile()</span></tt> to read an array with known shape and
+data type from an open file.
+The sep parameter can be specified as in fromfile.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.writeArray">
+<tt class="descclassname">arraytools.</tt><tt class="descname">writeArray</tt><big>(</big><em>file</em>, <em>array</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#arraytools.writeArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an array to an open file.</p>
+<p>This uses <tt class="xref py py-func docutils literal"><span class="pre">numpy.tofile()</span></tt> to write an array to an open file.
+The sep parameter can be specified as in tofile.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.cubicEquation">
+<tt class="descclassname">arraytools.</tt><tt class="descname">cubicEquation</tt><big>(</big><em>a</em>, <em>b</em>, <em>c</em>, <em>d</em><big>)</big><a class="headerlink" href="#arraytools.cubicEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve a cubiq equation using a direct method.</p>
+<p>a,b,c,d are the (floating point) coefficients of a third degree
+polynomial equation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mf">3</span>  <span class="o">+</span>  <span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mf">2</span>  <span class="o">+</span>  <span class="n">c</span> <span class="o">*</span> <span class="n">x</span>  <span class="o">+</span>  <span class="n">d</span>   <span class="o">=</span>   <span class="mf">0</span>
+</pre></div>
+</div>
+<p>This function computes the three roots (real and complex) of this equation
+and returns full information about their kind, sorting order, occurrence
+of double roots. It uses scaling of the variables to enhance the accuracy.</p>
+<p>The return value is a tuple (r1,r2,r3,kind), where r1,r2 and r3 are three
+float values and kind is an integer specifying the kind of roots.</p>
+<p>Depending on the value of <cite>kind</cite>, the roots are defined as follows:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">kind</th>
+<th class="head">roots</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>0</td>
+<td>three real roots r1 &lt; r2 &lt; r3</td>
+</tr>
+<tr><td>1</td>
+<td>three real roots r1 &lt; r2 = r3</td>
+</tr>
+<tr><td>2</td>
+<td>three real roots r1 = r2 &lt; r3</td>
+</tr>
+<tr><td>3</td>
+<td>three real roots r1 = r2 = r3</td>
+</tr>
+<tr><td>4</td>
+<td>one real root r1 and two complex conjugate roots with real
+part r2 and imaginary part r3; the complex roots are thus:
+r2+i*r3 en r2-i*r3, where i = sqrt(-1).</td>
+</tr>
+</tbody>
+</table>
+<p>If the coefficient a==0, a ValueError is raised.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cubicEquation</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mf">3.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">([1.0, 1.0, 1.0], 3)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.uniqueOrdered">
+<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueOrdered</tt><big>(</big><em>ar1</em>, <em>return_index=False</em>, <em>return_inverse=False</em><big>)</big><a class="headerlink" href="#arraytools.uniqueOrdered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the unique elements of an array.</p>
+<p>This works like numpy&#8217;s unique, but uses a stable sorting algorithm.
+The returned index may therefore hold other entries for multiply
+occurring values. In such case, uniqueOrdered returns the first
+occurrence in the flattened array.
+The unique elements and the inverse index are always the same as those
+returned by numpy&#8217;s unique.</p>
+<p>Parameters:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><cite>ar1</cite> <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
+<dd><p class="first last">This array will be flattened if it is not already 1-D.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><cite>return_index</cite> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">If True, also return the indices against <cite>ar1</cite> that result in the
+unique array.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><cite>return_inverse</cite> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd><p class="first last">If True, also return the indices against the unique array that
+result in <cite>ar1</cite>.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><cite>unique</cite> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd><p class="first last">The unique values.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><cite>unique_indices</cite> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray, optional</span></dt>
+<dd><p class="first last">The indices of the unique values. Only provided if <cite>return_index</cite> is
+True.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><cite>unique_inverse</cite> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray, optional</span></dt>
+<dd><p class="first last">The indices to reconstruct the original array. Only provided if
+<cite>return_inverse</cite> is True.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueOrdered</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]))</span>
+</pre></div>
+</div>
+<p>Notice the difference in the 4-th entry of the second array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.renumberIndex">
+<tt class="descclassname">arraytools.</tt><tt class="descname">renumberIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.renumberIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renumber an index sequentially.</p>
+<p>Given a one-dimensional integer array with only non-negative values,
+and <cite>nval</cite> being the number of different values in it, and you want to
+replace its elements with values in the range <cite>0..nval</cite>, such that
+identical numbers are always replaced with the same number and the
+new values at their first occurrence form an increasing sequence <cite>0..nval</cite>.
+This function will give you the old numbers corresponding with each
+position <cite>0..nval</cite>.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>index</cite>: array_like, 1-D, integer
+An array with non-negative integer values</li>
+</ul>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A 1-D integer array with length equal to <cite>nval</cite>, where <cite>nval</cite>
+is the number of different values in <cite>index</cite>, and holding the original
+values corresponding to the new value <cite>0..nval</cite>.</dd>
+<dt>Remark:</dt>
+<dd>Use <a class="reference internal" href="#arraytools.inverseUniqueIndex" title="arraytools.inverseUniqueIndex"><tt class="xref py py-func docutils literal"><span class="pre">inverseUniqueIndex()</span></tt></a> to find the inverse mapping
+needed to replace the values in the index by the new ones.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">renumberIndex</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
+<span class="go">array([0, 5, 2, 6])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">(</span><span class="n">renumberIndex</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">0</span><span class="p">]))[[</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">0</span><span class="p">]]</span>
+<span class="go">array([0, 1, 2, 2, 3, 0])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.inverseUniqueIndex">
+<tt class="descclassname">arraytools.</tt><tt class="descname">inverseUniqueIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.inverseUniqueIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse an index.</p>
+<p>Given a 1-D integer array with <em>unique</em> non-negative values, and
+<cite>max</cite> being the highest value in it, this function returns the position
+in the array of the values <cite>0..max</cite>. Values not occurring in input index
+get a value -1 in the inverse index.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>index</cite>: array_like, 1-D, integer
+An array with non-negative values, wihch all have to be unique.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A 1-D integer array with length <cite>max+1</cite>, with the positions in
+<cite>index</cite> of the values <cite>0..max</cite>, or -1 if the value does not occur in
+<cite>index</cite>.</dd>
+<dt>Remark:</dt>
+<dd>The inverse index translates the unique index numbers in a
+sequential index, so that
+<tt class="docutils literal"><span class="pre">inverseUniqueIndex(index)[index]</span> <span class="pre">==</span> <span class="pre">arange(1+index.max())</span></tt>.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">])</span>
+<span class="go">array([ 0, -1,  2, -1, -1,  1,  3])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">])[[</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">]]</span>
+<span class="go">array([0, 1, 2, 3])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.sortByColumns">
+<tt class="descclassname">arraytools.</tt><tt class="descname">sortByColumns</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#arraytools.sortByColumns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sort an array on all its columns, from left to right.</p>
+<p>The rows of a 2-dimensional array are sorted, first on the first
+column, then on the second to resolve ties, etc..</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>a</cite>: array_like, 2-D</li>
+</ul>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A 1-D integer array specifying the order in which the rows have to
+be taken to obtain an array sorted by columns.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sortByColumns</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">]])</span>
+<span class="go">array([0, 3, 1, 4, 2])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.uniqueRows">
+<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueRows</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#arraytools.uniqueRows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return (the indices of) the unique rows of a 2-D array.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>a</cite>: array_like, 2-D</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple">
+<li><cite>uniq</cite>: a 1-D integer array with the numbers of the unique rows from <cite>a</cite>.
+The order of the elements in <cite>uniq</cite> is determined by the sorting
+procedure, which in the current implementation is <a class="reference internal" href="#arraytools.sortByColumns" title="arraytools.sortByColumns"><tt class="xref py py-func docutils literal"><span class="pre">sortByColumns()</span></tt></a>.</li>
+<li><cite>uniqid</cite>: a 1-D integer array with length equal to <cite>a.shape[0]</cite> with the
+numbers of <cite>uniq</cite> corresponding to each of the rows of <cite>a</cite>.</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueRows</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">]])</span>
+<span class="go">(array([0, 3, 1, 2]), array([0, 2, 3, 1, 2]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.inverseIndex">
+<tt class="descclassname">arraytools.</tt><tt class="descname">inverseIndex</tt><big>(</big><em>index</em>, <em>maxcon=4</em><big>)</big><a class="headerlink" href="#arraytools.inverseIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an inverse index.</p>
+<p>An index is an array pointing at other items by their position.
+The inverse index is a collection of the reverse pointers.
+Negative values in the input index are disregarded.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>index</cite>: an array of integers, where only non-negative values are
+meaningful, and negative values are silently ignored. A Connectivity
+is a suitable argument.</li>
+<li><cite>maxcon</cite>: int: an initial estimate for the maximum number of rows a
+single element of index occurs at. The default will usually do well,
+because the procedure will automatically enlarge it when needed.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><p class="first">An (mr,mc) shaped integer array where:</p>
+<ul class="simple">
+<li><cite>mr</cite> will be equal to the highest positive value in index, +1.</li>
+<li><cite>mc</cite> will be equal to the highest row-multiplicity of any number
+in <cite>index</cite>.</li>
+</ul>
+<p class="last">Row <cite>i</cite> of the inverse index contains all the row numbers of <cite>index</cite>
+that contain the number <cite>i</cite>. Because the number of rows containing
+the number <cite>i</cite> is usually not a constant, the resulting array will have
+a number of columns <cite>mc</cite> corresponding to the highest row-occurrence of
+any single number. Shorter rows are padded with -1 values to flag
+non-existing entries.</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseIndex</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">]])</span>
+<span class="go">array([[ 0,  1,  3],</span>
+<span class="go">       [-1,  0,  2],</span>
+<span class="go">       [-1,  1,  2],</span>
+<span class="go">       [-1, -1,  3]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.matchIndex">
+<tt class="descclassname">arraytools.</tt><tt class="descname">matchIndex</tt><big>(</big><em>target</em>, <em>values</em><big>)</big><a class="headerlink" href="#arraytools.matchIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find position of values in target.</p>
+<p>This function finds the position in the array <cite>target</cite> of the elements
+from the array <cite>values</cite>.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>target</cite>: an index array with all non-negative values. If not 1-D, it
+will be flattened.</li>
+<li><cite>values</cite>: an index array with all non-negative values. If not 1-D, it
+will be flattened.</li>
+</ul>
+<p>Returns: an index array with the same size as <cite>values</cite>.
+For each number in <cite>values</cite>, the index contains the position of that value
+in the flattened <cite>target</cite>, or -1 if that number does not occur in <cite>target</cite>.
+If an element from <cite>values</cite> occurs more than once in <cite>target</cite>, it is
+currently undefined which of those positions is returned.</p>
+<p>Remark that after <tt class="docutils literal"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">matchIndex(target,values)</span></tt> the equality
+<tt class="docutils literal"><span class="pre">values[m]</span> <span class="pre">==</span> <span class="pre">target</span></tt> holds in all the non-negative positions of <cite>m</cite>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">9</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matchIndex</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
+<span class="go">array([-1, -1,  4,  0, -1])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="formex.html"
+                        title="previous chapter">2. <tt class="docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="script.html"
+                        title="next chapter">4. <tt class="docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="script.html" title="4. script — Basic pyFormex script functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="formex.html" title="2. formex — Formex algebra in Python"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

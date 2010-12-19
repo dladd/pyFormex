@@ -1,0 +1,173 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyFormex plugins &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="index.html" />
+    <link rel="up" title="pyFormex user guide" href="user-guide.html" />
+    <link rel="next" title="Configuring pyFormex" href="config.html" />
+    <link rel="prev" title="Using Widgets" href="widgets.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="config.html" title="Configuring pyFormex"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="widgets.html" title="Using Widgets"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="user-guide.html" accesskey="U">pyFormex user guide</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pyformex-plugins">
+<span id="cha-plugins"></span><h1>pyFormex plugins<a class="headerlink" href="#pyformex-plugins" title="Permalink to this headline">¶</a></h1>
+<div class="topic">
+<p class="topic-title first">Abstract</p>
+<p>This chapter describes how to create plugins for and documents some of the
+standard plugins that come with the pyFormex distribution.</p>
+</div>
+<div class="section" id="what-are-plugins">
+<span id="sec-plugins-def"></span><h2>What are plugins?<a class="headerlink" href="#what-are-plugins" title="Permalink to this headline">¶</a></h2>
+<p>From its inception was intended to be easily expandable. Its open  architecture
+allows educated users to change the behavior of and to extend its functionality
+in any way they want. There are no fixed rules to obey and there is no registrar
+to accept and/or validate the provided plugins. In , any  set of functions that
+are not an essential part of can be called a &#8216;plugin&#8217;, if its functionality can
+usefully be called from elsewhere and if the source can be placed inside the
+distribution.</p>
+<p>Thus, we distinct plugins from the vital parts of which comprehense the basic
+data types (Formex), the scripting facilities, the (OpenGL) drawing
+functionality and the graphical user interface. We also distinct plugins from
+normal (example and user) scripts because the latter will usually be intended to
+execute some specific task, while the former will often only provide some
+functionality without themselves performing some actions.</p>
+<p>To clarify this distinction, plugins are located in a separate subdirectory
+<tt class="docutils literal"><span class="pre">plugins</span></tt> of the tree. This directory should not be used for anything else.</p>
+<p>The extensions provided by the plugins usually fall within one of the following
+categories:</p>
+<dl class="docutils">
+<dt>Functional</dt>
+<dd>Extending the functionality by providing new data types and functions.</dd>
+<dt>External</dt>
+<dd>Providing access to external programs, either by dedicated interfaces or through
+the command shell and file system.</dd>
+<dt>GUI</dt>
+<dd>Extending the graphical user interface of .</dd>
+</dl>
+<p>The next section of this chapter gives some recommendations on how to structure
+the plugins so that they work well with . The remainder of the chapter discusses
+some of the most important plugins included with .</p>
+</div>
+<div class="section" id="how-to-create-a-plugin">
+<span id="sec-plugins-create"></span><h2>How to create a plugin.<a class="headerlink" href="#how-to-create-a-plugin" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="index.html">Documentation</a></h3>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyFormex plugins</a><ul>
+<li><a class="reference internal" href="#what-are-plugins">What are plugins?</a></li>
+<li><a class="reference internal" href="#how-to-create-a-plugin">How to create a plugin.</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="widgets.html"
+                        title="previous chapter">Using Widgets</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="config.html"
+                        title="next chapter">Configuring pyFormex</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="config.html" title="Configuring pyFormex"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="widgets.html" title="Using Widgets"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="user-guide.html" >pyFormex user guide</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>41. fe_abq — Exporting finite element models in Abaqus™ input file format. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.4-a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="42. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
+    <link rel="prev" title="40. fe — Finite Element Models in pyFormex." href="fe.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fe_post.html" title="42. fe_post — A postprocessor for ABAQUS output files."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fe.html" title="40. fe — Finite Element Models in pyFormex."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-fe_abq">
+<span id="fe-abq-exporting-finite-element-models-in-abaqustrade-input-file-format"></span><span id="sec-ref-fe-abq"></span><h1>41. <a class="reference internal" href="#module-fe_abq" title="fe_abq: Exporting finite element models in Abaqus\ |trade| input file format."><tt class="xref py py-mod docutils literal"><span class="pre">fe_abq</span></tt></a> &#8212; Exporting finite element models in Abaqus™ input file format.<a class="headerlink" href="#module-fe_abq" title="Permalink to this headline">¶</a></h1>
+<p>Exporting finite element models in Abaqus™ input file format.</p>
+<p>This module provides functions and classes to export finite element models
+from pyFormex in the Abaqus™ input format (.inp).
+The exporter handles the mesh geometry as well as model, node and element
+properties gathered in a <tt class="xref py py-class docutils literal"><span class="pre">PropertyDB</span></tt> database (see module
+<a class="reference internal" href="properties.html#module-properties" title="properties: General framework for attributing properties to geometrical elements."><tt class="xref py py-mod docutils literal"><span class="pre">properties</span></tt></a>).</p>
+<p>While this module provides only a small part of the Abaqus input file format,
+it suffices for most standard jobs. While we continue to expand the interface,
+depending on our own necessities or when asked by third parties, we do not
+intend to make this into a full implementation of the Abaqus input
+specification. If you urgently need some missing function, there is always
+the possibility to edit the resulting text file or to import it into the
+Abaqus environment for further processing.</p>
+<p>The module provides two levels of functionality: on the lowest level, there
+are functions that just generate a part of an Abaqus input file, conforming
+to the Abaqus™ Keywords manual.</p>
+<p>Then there are higher level functions that read data from the property module
+and write them to the Abaqus input file and some data classes to organize all
+the data involved with the finite element model.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_abq</span></tt></p>
+<dl class="class">
+<dt id="fe_abq.Step">
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Step</tt><big>(</big><em>analysis='STATIC', time=[0.0, 0.0, 0.0, 0.0], nlgeom='NO', tags=None, inc=None, sdi=None, timeinc=None, buckle='SUBSPACE', incr=0.10000000000000001, name=None, bulkvisc=None, out=None, res=None</em><big>)</big><a class="headerlink" href="#fe_abq.Step" title="Permalink to this definition">¶</a></dt>
+<dd><p>The basic logical unit in the simulation history.</p>
+<p>In Abaqus, a step is the smallest logical entity in the simulation
+history. It is typically a time step in a dynamic simulation, but it
+can also describe different loading states in a (quasi-)static simulation.</p>
+<p>Our Step class holds all the data describing the global step parameters.
+It combines the Abaqus &#8216;STEP&#8217;, &#8216;STATIC&#8217;, &#8216;DYNAMIC&#8217; and &#8216;BUCKLE&#8217; keyword
+commands (and even some more global parameter setting commands).</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>analysis</cite>: the analysis type, one of: &#8216;STATIC&#8217;, &#8216;DYNAMIC&#8217;, &#8216;EXPLICIT&#8217;,
+&#8216;PERTURBATION&#8217;, &#8216;BUCKLE&#8217;, &#8216;RIKS&#8217;</li>
+<li><cite>time</cite>: either
+- a single float value specifying the step time,
+- a list of 4 values: time inc, step time, min. time inc, max. time inc
+- for LANCZOS: a list of 5 values
+- for RIKS: a list of 8 values
+In most cases, only the step time should be specified.</li>
+<li><cite>nlgeom</cite>: &#8216;YES&#8217; ot &#8216;NO&#8217; (default)
+If &#8216;YES&#8217;, the analysis will be geometrically non-linear. Analysis type
+&#8216;RIKS&#8217; always sets <cite>nlgeom</cite> to &#8216;YES&#8217;, &#8216;BUCKLE&#8217; sets it to &#8216;NO&#8217;,
+&#8216;PERTURBATION&#8217; ignores <cite>nlgeom</cite>.</li>
+<li><cite>tags</cite>: a list of property tags to include in this step.
+If specified, only the property records having one of the listed values
+as their <cite>tag</cite> attribute will be included in this step.</li>
+<li><cite>inc</cite>:  the maximum number of increments in a step (the default is 100)</li>
+<li><cite>sdi</cite>: determines how severe discontinuities are accounted for</li>
+<li>timeinc:</li>
+<li><cite>buckle</cite>: specifies the BUCKLE type: &#8216;SUBSPACE&#8217; or &#8216;LANCZOS&#8217;</li>
+<li><cite>incr</cite>: the increment in &#8216;RIKS&#8217; type</li>
+<li><cite>bulkvisc</cite>:  a list of two floats (default: [0.06,1.2]), only used
+in Explicit steps.</li>
+<li><cite>out</cite> and <cite>res</cite>: specific output/result records for this step. They
+come in addition to the global ones.</li>
+</ul>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="fe_abq.Step.write">
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>propDB</em>, <em>out=</em><span class="optional">[</span><span class="optional">]</span>, <em>res=</em><span class="optional">[</span><span class="optional">]</span>, <em>resfreq=1</em>, <em>timemarks=False</em><big>)</big><a class="headerlink" href="#fe_abq.Step.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a load step.</p>
+<p>propDB is the properties database to use.</p>
+<p>Except for the step data itself, this will also write the passed
+output and result requests.
+out is a list of Output-instances.
+res is a list of Result-instances.
+resfreq and timemarks are global values only used by Explicit</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fe_abq.Output">
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Output</tt><big>(</big><em>kind=None</em>, <em>keys=None</em>, <em>set=None</em>, <em>type='FIELD'</em>, <em>variable='PRESELECT'</em>, <em>extra=''</em>, <em>**options</em><big>)</big><a class="headerlink" href="#fe_abq.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request for output to .odb and history.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>type</cite>: &#8216;FIELD&#8217; or &#8216;HISTORY&#8217;</li>
+<li><cite>kind</cite>: None, &#8216;NODE&#8217;, or &#8216;ELEMENT&#8217; (first character suffices)</li>
+<li><cite>extra</cite>: an extra string to be added to the command line. This
+allows to add Abaqus options not handled by this constructor.
+The string will be appended to the command line preceded by a comma.</li>
+</ul>
+<p>For kind==&#8217;&#8216;:</p>
+<ul class="simple">
+<li><cite>variable</cite>: &#8216;ALL&#8217;, &#8216;PRESELECT&#8217; or &#8216;&#8217;</li>
+</ul>
+<p>For kind==&#8217;NODE&#8217; or &#8216;ELEMENT&#8217;:</p>
+<ul class="simple">
+<li><cite>keys</cite>: a list of output identifiers (compatible with kind type)</li>
+<li><cite>set</cite>: a single item or a list of items, where each item is either
+a property number or a node/element set name for which the results
+should be written. If no set is specified, the default is &#8216;Nall&#8217;
+for kind==&#8217;NODE&#8217; and &#8216;Eall&#8217; for kind=&#8217;ELEMENT&#8217;</li>
+</ul>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="fe_abq.Output.fmt">
+<tt class="descname">fmt</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_abq.Output.fmt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format an output request.</p>
+<p>Return a string with the formatted output command.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="fe_abq.Result">
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Result</tt><big>(</big><em>kind</em>, <em>keys</em>, <em>set=None</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>time=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe_abq.Result" title="Permalink to this definition">¶</a></dt>
+<dd><p>A request for output of results on nodes or elements.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>kind</cite>: &#8216;NODE&#8217; or &#8216;ELEMENT&#8217; (first character suffices)</li>
+<li><cite>keys</cite>: a list of output identifiers (compatible with kind type)</li>
+<li><cite>set</cite>: a single item or a list of items, where each item is either
+a property number or a node/element set name for which the results
+should be written. If no set is specified, the default is &#8216;Nall&#8217;
+for kind==&#8217;NODE&#8217; and &#8216;Eall&#8217; for kind=&#8217;ELEMENT&#8217;</li>
+<li><cite>output</cite> is either <tt class="docutils literal"><span class="pre">FILE</span></tt> (for .fil output) or <tt class="docutils literal"><span class="pre">PRINT</span></tt> (for .dat
+output)(Abaqus/Standard only)</li>
+<li><cite>freq</cite> is the output frequency in increments (0 = no output)</li>
+</ul>
+<p>Extra keyword arguments are available: see the <cite>writeNodeResults</cite> and
+<cite>writeElemResults</cite> methods for details.</p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="fe_abq.AbqData">
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">AbqData</tt><big>(</big><em>model</em>, <em>prop</em>, <em>nprop=None</em>, <em>eprop=None</em>, <em>steps=</em><span class="optional">[</span><span class="optional">]</span>, <em>res=</em><span class="optional">[</span><span class="optional">]</span>, <em>out=</em><span class="optional">[</span><span class="optional">]</span>, <em>bound=None</em><big>)</big><a class="headerlink" href="#fe_abq.AbqData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains all data required to write the Abaqus input file.</p>
+<ul class="simple">
+<li><cite>model</cite> : a <tt class="xref py py-class docutils literal"><span class="pre">Model</span></tt> instance.</li>
+<li><cite>prop</cite> : the <cite>Property</cite> database.</li>
+<li><cite>steps</cite> : a list of <cite>Step</cite> instances.</li>
+<li><cite>res</cite> : a list of <cite>Result</cite> instances.</li>
+<li><cite>out</cite> : a list of <cite>Output</cite> instances.</li>
+<li><cite>bound</cite> : a tag or alist of the initial boundary conditions.
+The default is to apply ALL boundary conditions initially.
+Specify a (possibly non-existing) tag to override the default.</li>
+</ul>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="fe_abq.AbqData.write">
+<tt class="descname">write</tt><big>(</big><em>jobname=None</em>, <em>group_by_eset=True</em>, <em>group_by_group=False</em>, <em>header=''</em>, <em>create_part=False</em><big>)</big><a class="headerlink" href="#fe_abq.AbqData.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an Abaqus input file.</p>
+<ul class="simple">
+<li><cite>jobname</cite> : the name of the inputfile, with or without &#8216;.inp&#8217;
+extension. If None is specified, the output is written to sys.stdout
+An extra header text may be specified.</li>
+<li><cite>create_part</cite> : if True, the model will be created as an Abaqus Part,
+followed by and assembly of that part.</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_abq</span></tt></p>
+<dl class="function">
+<dt id="fe_abq.abqInputNames">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">abqInputNames</tt><big>(</big><em>job</em><big>)</big><a class="headerlink" href="#fe_abq.abqInputNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns corresponding Abq jobname and input filename.</p>
+<p>job can be either a jobname or input file name, with or without
+directory part, with or without extension (.inp)</p>
+<p>The Abq jobname is the basename without the extension.
+The abq filename is the abspath of the job with extension &#8216;.inp&#8217;</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.nsetName">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">nsetName</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#fe_abq.nsetName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the name for writing a node set property.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.esetName">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">esetName</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#fe_abq.esetName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the name for writing an element set property.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtCmd">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtCmd</tt><big>(</big><em>cmd='*'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtCmd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format a command.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtData1D">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtData1D</tt><big>(</big><em>data</em>, <em>npl=8</em>, <em>sep='</em>, <em>'</em>, <em>linesep='\n'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtData1D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format numerical data in lines with maximum npl items.</p>
+<p>data is a numeric array. The array is flattened and then the data are
+formatted in lines with maximum npl items, separated by sep.
+Lines are separated by linesep.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtData">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtData</tt><big>(</big><em>data</em>, <em>npl=8</em>, <em>sep='</em>, <em>'</em>, <em>linesep='\n'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format numerical data in lines with maximum npl items.</p>
+<p>data is a numeric array, which is coerced to be a 2D array, either by
+adding a first axis or by collapsing the first ndim-1 axies.
+Then the data are formatted in lines with maximum npl items, separated
+by sep. Lines are separated by linesep.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtHeading">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtHeading</tt><big>(</big><em>text=''</em><big>)</big><a class="headerlink" href="#fe_abq.fmtHeading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the heading of the Abaqus input file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtPart">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtPart</tt><big>(</big><em>name='Part-1'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtPart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start a new Part.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtMaterial">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtMaterial</tt><big>(</big><em>mat</em><big>)</big><a class="headerlink" href="#fe_abq.fmtMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a material section.</p>
+<p><cite>mat</cite> is the property dict of the material. The following keys are
+recognized and output accordingly:</p>
+<ul class="simple">
+<li><cite>name</cite>: if specified, and a material with this name has already been
+written, this function does nothing.</li>
+<li><cite>elasticity</cite>: one of &#8216;LINEAR&#8217;, &#8216;HYPERELASTIC&#8217;, &#8216;ANISOTROPIC HYPERELASTIC&#8217;,
+&#8216;USER&#8217;. Default is &#8216;LINEAR&#8217;. Defines the elastic behavior class of the
+material. The requirements for the other keys depend on this type.</li>
+<li><tt class="docutils literal"><span class="pre">LINEAR</span></tt>:<ul>
+<li>required:
+- young_modulus
+- shear_modulus</li>
+<li>optional:
+- poisson_ratio: calculated if None</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtTransform">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtTransform</tt><big>(</big><em>setname</em>, <em>csys</em><big>)</big><a class="headerlink" href="#fe_abq.fmtTransform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write transform command for the given set.</p>
+<ul class="simple">
+<li><cite>setname</cite> is the name of a node set</li>
+<li><cite>csys</cite> is a CoordSystem.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtFrameSection">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtFrameSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtFrameSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a frame section for the named element set.</p>
+<p>Recognized data fields in the property record:</p>
+<ul class="simple">
+<li>sectiontype GENERAL:<ul>
+<li>cross_section</li>
+<li>moment_inertia_11</li>
+<li>moment_inertia_12</li>
+<li>moment_inertia_22</li>
+<li>torsional_constant</li>
+</ul>
+</li>
+<li>sectiontype CIRC:<ul>
+<li>radius</li>
+</ul>
+</li>
+<li>sectiontype RECT:<ul>
+<li>width</li>
+<li>height</li>
+</ul>
+</li>
+<li>all sectiontypes:<ul>
+<li>young_modulus</li>
+<li>shear_modulus</li>
+</ul>
+</li>
+<li>optional:<ul>
+<li>density: density of the material</li>
+<li>yield_stress: yield stress of the material</li>
+<li>orientation: a vector specifying the direction cosines of the 1 axis</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtGeneralBeamSection">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtGeneralBeamSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtGeneralBeamSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a general beam section for the named element set.</p>
+<p>To specify a beam section when numerical integration over the section is not required.</p>
+<p>Recognized data fields in the property record:</p>
+<ul class="simple">
+<li>sectiontype GENERAL:<ul>
+<li>cross_section</li>
+<li>moment_inertia_11</li>
+<li>moment_inertia_12</li>
+<li>moment_inertia_22</li>
+<li>torsional_constant</li>
+</ul>
+</li>
+<li>sectiontype CIRC:<ul>
+<li>radius</li>
+</ul>
+</li>
+<li>sectiontype RECT:<ul>
+<li>width, height</li>
+</ul>
+</li>
+<li>all sectiontypes:<ul>
+<li>young_modulus</li>
+<li>shear_modulus or poisson_ration</li>
+</ul>
+</li>
+<li>optional:<ul>
+<li>density: density of the material (required in Abaqus/Explicit)</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtBeamSection">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtBeamSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtBeamSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a beam section for the named element set.</p>
+<p>To specify a beam section when numerical integration over the section is required.</p>
+<p>Recognized data fields in the property record:</p>
+<ul class="simple">
+<li>all sectiontypes: material</li>
+<li>sectiontype GENERAL:<ul>
+<li>cross_section</li>
+<li>moment_inertia_11</li>
+<li>moment_inertia_12</li>
+<li>moment_inertia_22</li>
+<li>torsional_constant</li>
+</ul>
+</li>
+<li>sectiontype CIRC:<ul>
+<li>radius</li>
+<li>intpoints1 (number of integration points in the first direction) optional</li>
+<li>intpoints2 (number of integration points in the second direction) optional</li>
+</ul>
+</li>
+<li>sectiontype RECT:<ul>
+<li>width, height</li>
+<li>intpoints1 (number of integration points in the first direction) optional</li>
+<li>intpoints2 (number of integration points in the second direction) optional</li>
+</ul>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtConnectorSection">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConnectorSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtConnectorSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a connector section.</p>
+<p>Optional data:</p>
+<ul class="simple">
+<li><cite>behavior</cite> : connector behavior name</li>
+<li><cite>orient</cite>  : connector orientation</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtSurface">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurface</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the surface definitions.</p>
+<p>Required:</p>
+<ul class="simple">
+<li>set: the elements/nodes in the surface, either numbers or a set name.</li>
+<li>name: the surface name</li>
+<li>surftype: &#8216;ELEMENT&#8217; or &#8216;NODE&#8217;</li>
+<li>label: face or edge identifier (only required for surftype = &#8216;NODE&#8217;)</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtSurfaceInteraction">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurfaceInteraction</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the interactions.</p>
+<p>Optional:</p>
+<ul class="simple">
+<li>cross_section (for node based interaction)</li>
+<li>friction : friction coeff</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtGeneralContact">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtGeneralContact</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtGeneralContact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the general contact.</p>
+<p>Only implemented on model level</p>
+<p>Required:</p>
+<ul class="simple">
+<li>interaction: interaction properties : name or Dict</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtContactPair">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtContactPair</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtContactPair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the contact pair.</p>
+<p>Required:</p>
+<ul class="simple">
+<li>master: master surface</li>
+<li>slave: slave surface</li>
+<li>interaction: interaction properties : name or Dict</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtOrientation">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtOrientation</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtOrientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the orientation.</p>
+<p>Optional:</p>
+<ul class="simple">
+<li>definition</li>
+<li>system: coordinate system</li>
+<li>a: a first point</li>
+<li>b: a second point</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeNodes">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeNodes</tt><big>(</big><em>fil</em>, <em>nodes</em>, <em>name='Nall'</em>, <em>nofs=1</em><big>)</big><a class="headerlink" href="#fe_abq.writeNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write nodal coordinates.</p>
+<p>The nodes are added to the named node set. 
+If a name different from &#8216;Nall&#8217; is specified, the nodes will also
+be added to a set named &#8216;Nall&#8217;.
+The nofs specifies an offset for the node numbers.
+The default is 1, because Abaqus numbering starts at 1.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeElems">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeElems</tt><big>(</big><em>fil</em>, <em>elems</em>, <em>type</em>, <em>name='Eall'</em>, <em>eid=None</em>, <em>eofs=1</em>, <em>nofs=1</em><big>)</big><a class="headerlink" href="#fe_abq.writeElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write element group of given type.</p>
+<p>elems is the list with the element node numbers.
+The elements are added to the named element set. 
+If a name different from &#8216;Eall&#8217; is specified, the elements will also
+be added to a set named &#8216;Eall&#8217;.
+The eofs and nofs specify offsets for element and node numbers.
+The default is 1, because Abaqus numbering starts at 1.
+If eid is specified, it contains the element numbers increased with eofs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeSet">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeSet</tt><big>(</big><em>fil</em>, <em>type</em>, <em>name</em>, <em>set</em>, <em>ofs=1</em><big>)</big><a class="headerlink" href="#fe_abq.writeSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a named set of nodes or elements (type=NSET|ELSET)</p>
+<p><cite>set</cite> : an ndarray. <cite>set</cite> can be a list of node/element numbers,
+in which case the <cite>ofs</cite> value will be added to them,
+or a list of names the name of another already defined set.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeSection">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeSection</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an element section.</p>
+<p>prop is a an element property record with a section and eltype attribute</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeBoundaries">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeBoundaries</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='MOD'</em><big>)</big><a class="headerlink" href="#fe_abq.writeBoundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write nodal boundary conditions.</p>
+<p>prop is a list of node property records that should be scanned for
+bound attributes to write.</p>
+<p>By default, the boundary conditions are applied as a modification of the
+existing boundary conditions, i.e. initial conditions and conditions from
+previous steps remain in effect.
+The user can set op=&#8217;NEW&#8217; to remove the previous conditions.
+This will also remove initial conditions!</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeDisplacements">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDisplacements</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='MOD'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDisplacements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write boundary conditions of type BOUNDARY, TYPE=DISPLACEMENT</p>
+<p>prop is a list of node property records that should be scanned for
+displ attributes to write.</p>
+<p>By default, the boundary conditions are applied as a modification of the
+existing boundary conditions, i.e. initial conditions and conditions from
+previous steps remain in effect.
+The user can set op=&#8217;NEW&#8217; to remove the previous conditions.
+This will also remove initial conditions!</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeCloads">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeCloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="headerlink" href="#fe_abq.writeCloads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write cloads.</p>
+<p>prop is a list of node property records that should be scanned for
+displ attributes to write.</p>
+<p>By default, the loads are applied as new values in the current step.
+The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeDloads">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDloads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write Dloads.</p>
+<p>prop is a list property records having an attribute dload</p>
+<p>By default, the loads are applied as new values in the current step.
+The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeDsloads">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDsloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDsloads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write Dsloads.</p>
+<p>prop is a list property records having an attribute dsload</p>
+<p>By default, the loads are applied as new values in the current step.
+The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeNodeOutput">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeNodeOutput</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Nall'</em><big>)</big><a class="headerlink" href="#fe_abq.writeNodeOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a request for nodal result output to the .odb file.</p>
+<ul class="simple">
+<li><cite>keys</cite>: a list of NODE output identifiers</li>
+<li><cite>set</cite>: a single item or a list of items, where each item is either
+a property number or a node set name for which the results should
+be written</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeNodeResult">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeNodeResult</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Nall'</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>globalaxes=False</em>, <em>lastmode=None</em>, <em>summary=False</em>, <em>total=False</em><big>)</big><a class="headerlink" href="#fe_abq.writeNodeResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a request for nodal result output to the .fil or .dat file.</p>
+<ul class="simple">
+<li><cite>keys</cite>: a list of NODE output identifiers</li>
+<li><cite>set</cite>: a single item or a list of items, where each item is either
+a property number or a node set name for which the results should
+be written</li>
+<li><cite>output</cite> is either <tt class="docutils literal"><span class="pre">FILE</span></tt> (for .fil output) or <tt class="docutils literal"><span class="pre">PRINT</span></tt> (for .dat
+output)(Abaqus/Standard only)</li>
+<li><cite>freq</cite> is the output frequency in increments (0 = no output)</li>
+</ul>
+<p>Extra arguments:</p>
+<ul class="simple">
+<li><cite>globalaxes</cite>: If &#8216;YES&#8217;, the requested output is returned in the global
+axes. Default is to use the local axes wherever defined.</li>
+</ul>
+<p>Extra arguments for output=``PRINT``:</p>
+<ul class="simple">
+<li><cite>summary</cite>: if True, a summary with minimum and maximum is written</li>
+<li><cite>total</cite>: if True, sums the values for each key</li>
+</ul>
+<p>Remark: the <cite>kind</cite> argument is not used, but is included so that we can
+easily call it with a <cite>Results</cite> dict as arguments</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeElemOutput">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeElemOutput</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Eall'</em><big>)</big><a class="headerlink" href="#fe_abq.writeElemOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a request for element output to the .odb file.</p>
+<ul class="simple">
+<li><cite>keys</cite>: a list of ELEMENT output identifiers</li>
+<li><cite>set</cite>: a single item or a list of items, where each item is either
+a property number or an element set name for which the results should
+be written</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeElemResult">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeElemResult</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Eall'</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>pos=None</em>, <em>summary=False</em>, <em>total=False</em><big>)</big><a class="headerlink" href="#fe_abq.writeElemResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a request for element result output to the .fil or .dat file.</p>
+<ul class="simple">
+<li><cite>keys</cite>: a list of ELEMENT output identifiers</li>
+<li><cite>set</cite>: a single item or a list of items, where each item is either
+a property number or an element set name for which the results should
+be written</li>
+<li><cite>output</cite> is either <tt class="docutils literal"><span class="pre">FILE</span></tt> (for .fil output) or <tt class="docutils literal"><span class="pre">PRINT</span></tt> (for .dat
+output)(Abaqus/Standard only)</li>
+<li><cite>freq</cite> is the output frequency in increments (0 = no output)</li>
+</ul>
+<p>Extra arguments:</p>
+<ul>
+<li><p class="first"><cite>pos</cite>: Position of the points in the elements at which the results are
+written. Should be one of:</p>
+<ul class="simple">
+<li>&#8216;INTEGRATION POINTS&#8217; (default)</li>
+<li>&#8216;CENTROIDAL&#8217;</li>
+<li>&#8216;NODES&#8217;</li>
+<li>&#8216;AVERAGED AT NODES&#8217;</li>
+</ul>
+<p>Non-default values are only available for ABAQUS/Standard.</p>
+</li>
+</ul>
+<p>Extra arguments for output=&#8217;PRINT&#8217;:</p>
+<ul class="simple">
+<li><cite>summary</cite>: if True, a summary with minimum and maximum is written</li>
+<li><cite>total</cite>: if True, sums the values for each key</li>
+</ul>
+<p>Remark: the <tt class="docutils literal"><span class="pre">kind</span></tt> argument is not used, but is included so that we can
+easily call it with a Results dict as arguments</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeFileOutput">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeFileOutput</tt><big>(</big><em>fil</em>, <em>resfreq=1</em>, <em>timemarks=False</em><big>)</big><a class="headerlink" href="#fe_abq.writeFileOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the FILE OUTPUT command for Abaqus/Explicit</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeModelProps">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeModelProps</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeModelProps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write model props for this step</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.exportMesh">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">exportMesh</tt><big>(</big><em>filename</em>, <em>mesh</em>, <em>eltype=None</em>, <em>header=''</em><big>)</big><a class="headerlink" href="#fe_abq.exportMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a finite element mesh in Abaqus .inp format.</p>
+<p>This is a convenience function to quickly export a mesh to Abaqus
+without having to go through the whole setup of a complete
+finite element model.
+This just writes the nodes and elements specified in the mesh to
+the file with the specified name. The resulting file  can then be
+imported in Abaqus/CAE or manual be edited to create a full model.
+If an eltype is specified, it will oerride the value stored in the mesh.
+This should be used to set a correct Abaqus element type matchin the mesh.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fe.html"
+                        title="previous chapter">40. <tt class="docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fe_post.html"
+                        title="next chapter">42. <tt class="docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fe_post.html" title="42. fe_post — A postprocessor for ABAQUS output files."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fe.html" title="40. fe — Finite Element Models in pyFormex."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+    </div>
+  </body>
+</html>
