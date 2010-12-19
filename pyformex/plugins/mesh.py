@@ -295,7 +295,9 @@ class Mesh(Geometry):
         self.coords = self.elems = self.prop = self.eltype = None
         self.ndim = -1
         self.nodes = self.edges = self.faces = self.cells = None
-
+        self.edges2 = None
+        self.conn = self.econn = self.fconn = None 
+        
         if coords is None:
             # Create an empty Mesh object
             #print "EMPTY MESH"
@@ -455,19 +457,6 @@ class Mesh(Geometry):
         return self.elems
 
 
-    def reorderElemsAs(self, neword):
-        """Reorder the elems.
-
-        Returns a new mesh with element reordered as ord.
-        ord should is a list or 1D array of self.nelems() integers.
-        """
-        
-        if prod(sort(neword) == arange( self.nelems() )):
-            return self.__class__(self.coords,self.elems[neword],prop=self.prop[neword],eltype=self.eltype)
-        else:
-            raise ValueError,"neword must have all %d elems' numbers" % self.nelems()
-
-
     def getLowerEntitiesSelector(self,level=-1,unique=False):
         """Get the entities of a lower dimensionality.
 
@@ -547,9 +536,8 @@ class Mesh(Geometry):
         This returns only the node numbers that are effectively used in
         the connectivity table. For a compacted Mesh, it is equal to
         ```arange(self.nelems)```.
-
         This function also stores the result internally so that future
-        requests can return it without the need for computing.
+        requests can return it without the need for computing it again.
         """
         if self.nodes is None:
             self.nodes  = unique(self.elems)
@@ -570,10 +558,9 @@ class Mesh(Geometry):
         """Return the unique edges of all the elements in the Mesh.
 
         This is a convenient function to create a table with the element
-        edges. It is equivalent to ```self.getLowerEntities(1,unique=True)```
-
-        This function also stores the result internally so that future
-        requests can return it without the need for computing.
+        edges. It is equivalent to ```self.getLowerEntities(1,unique=True)```,
+        but this also stores the result internally so that future
+        requests can return it without the need for computing it again.
         """
         if self.edges is None:
             self.edges = self.getLowerEntities(1,unique=True)
@@ -584,10 +571,9 @@ class Mesh(Geometry):
         """Return the unique faces of all the elements in the Mesh.
 
         This is a convenient function to create a table with the element
-        faces. It is equivalent to ```self.getLowerEntities(2,unique=True)```
-
-        This function also stores the result internally so that future
-        requests can return it without the need for computing.
+        faces. It is equivalent to ```self.getLowerEntities(2,unique=True)```,
+        but this also stores the result internally so that future
+        requests can return it without the need for computing it again.
         """
         from trisurface import TriSurface
         if self.__class__ == TriSurface:
@@ -603,21 +589,13 @@ class Mesh(Geometry):
         """Return the cells of the elements.
 
         This is a convenient function to create a table with the element
-        cells. It is equivalent to ```self.getLowerEntities(3,unique=True)```
-
-        This function also stores the result internally so that future
-        requests can return it without the need for computing.
+        cells. It is equivalent to ```self.getLowerEntities(3,unique=True)```,
+        but this also stores the result internally so that future
+        requests can return it without the need for computing it again.
         """
         if self.cells is None:
             self.cells = self.getLowerEntities(3,unique=True)
         return self.cells
-    
-    
-    ## def getEdges(self):
-    ##     """Get the edges data."""
-    ##     if self.edges is None:
-    ##         self.faces,self.edges = self.elems.untangle()
-    ##     return self.edges
 
     
     def getFaceEdges(self):
@@ -685,7 +663,6 @@ class Mesh(Geometry):
         return M
 
 
-
     def reverse(self):
         """Return a Mesh where all elements have been reversed.
 
@@ -698,7 +675,34 @@ class Mesh(Geometry):
         return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
 
 
-#############################################################################    
+#############################################################################
+    # Adjacency #
+    
+
+    def nodeConnections(self):
+        """Find and store the elems connected to nodes."""
+        if self.conn is None:
+            self.conn = self.elems.inverse()
+        return self.conn
+    
+
+    def nNodeConnected(self):
+        """Find the number of elems connected to nodes."""
+        return (self.nodeConnections() >=0).sum(axis=-1)
+
+
+    def nodeAdjacency(self):
+        """Find the elems adjacent to each elem via one or more nodes."""
+        
+        return adjacent(self.elems,inv=None)
+
+
+    def nNodeAdjacent(self):
+        """Find the number of elems which are adjacent by node to each elem."""
+
+        return (self.nodeAdjacency() >=0).sum(axis=-1)
+
+    
     # ?? DOES THIS WORK FOR *ANY* MESH ??
     # What with a mesh of points, lines, ...
     def getAngles(self, angle_spec=Deg):
@@ -716,17 +720,6 @@ class Mesh(Geometry):
         v1=-roll(v,+1,axis=1)
         angfac= arccos( dotpr(v, v1) )/angle_spec
         return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
-
-    def nodeAdjacency(self):
-        """Find the elems adjacent to each elem via one or more nodes."""
-        
-        return adjacent(self.elems,inv=None)
-
-
-    def nNodeAdjacent(self):
-        """Find the number of elems which are adjacent by node to each elem."""
-
-        return (self.nodeAdjacency() >=0).sum(axis=-1)
 
 
     def node2nodeAdjacency(self):
@@ -1271,7 +1264,30 @@ Size: %s
         if order == 'elems':
             order = renumberIndex(self.elems)
         newnrs = inverseUniqueIndex(order)
-        return Mesh(self.coords[order],newnrs[self.elems],prop=self.prop,eltype=self.eltype)
+        return self.__class__(self.coords[order],newnrs[self.elems],prop=self.prop,eltype=self.eltype)
+
+
+    def renumberElems(self,order='nodes'):
+        """Renumber the elements of a Mesh.
+
+        Parameters:
+
+        - `order`: either a 1-D integer array with a permutation of
+          ``arange(self.nelems())``, specifying the requested order, or one of
+          the following predefined strings:
+
+          - 'nodes': order the elements in increasing node number order.
+          - 'random': number the elements in a random order.
+          - 'reverse': number the elements in. 
+
+        Returns:
+          A Mesh equivalent with self but with the elements ordered as specified.
+
+        See also: :meth:`Connectivity.reorder`
+
+        """
+        order = self.elems.reorder(order)
+        return self.__class__(self.coords,self.elems[order],prop=self.prop[order],eltype=self.eltype)
  
 
     def extrude(self,n,step=1.,dir=0,autofix=True):

@@ -376,7 +376,6 @@ def renumberMeshInElemsOrder():
     selection.set(names)
     clear()
     selection.draw()
-
     
 
 ################################## Menu #############################

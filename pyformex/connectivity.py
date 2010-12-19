@@ -33,7 +33,7 @@ adjacency of elements can easily be detected from common node numbers.
 """
 
 from arraytools import *
-
+from utils import deprecation
  
 def enmagic2(cols,magic=0):
     """Encode two integer values into a single integer.
@@ -380,6 +380,69 @@ class Connectivity(ndarray):
         return self[ind[ok]]
 
 
+    def reorder(self,order='nodes'):
+        """Reorder the elements of a Connectivity in a specified order.
+
+        This does not actually reorder the elements itself, but returns
+        an index with the order of the rows (elements) in the connectivity
+        table that meets the specified requirements.
+
+        Parameters:
+
+        - `order`: specifies how to reorder the elements. It is either one
+          of the special string values defined below, or else it is an index
+          with length equal to the number of elements. The index should be
+          a permutation of the numbers in `range(self.nelems()`. Each value
+          gives of the number of the old element that should be placed at
+          this position. Thus, the order values are the old element numbers
+          on the position of the new element number.
+
+          `order` can also take one of the following predefined values,
+          resulting in the corresponding renumbering scheme being generated:
+
+          - 'nodes': the elements are renumbered in order of their appearance
+            in the inverse index, i.e. first are the elements connected to
+            node 0, then the as yet unlisted elements connected to node 1, etc.
+          - 'random': the elements are randomly renumbered.
+          - 'reverse': the elements are renumbered in reverse order.
+
+        Returns: a 1-D integer array which is a permutation of
+        `arange(self.nelems()`, such that taking the elements in this order
+        will produce a Connectivity reordered as requested. In case an
+        explicit order was specified as input, this order is returned after
+        checking that it is indeed a permutation of `range(self.nelems()`.
+
+        Example:
+
+          >>> A = Connectivity([[1,2],[2,3],[3,0],[0,1]])
+          >>> A[A.reorder('reverse')]
+          Connectivity([[0, 1],
+                 [3, 0],
+                 [2, 3],
+                 [1, 2]])
+          >>> A.reorder('nodes')
+          array([3, 2, 0, 1])
+          >>> A[A.reorder([2,3,0,1])]
+          Connectivity([[3, 0],
+                 [0, 1],
+                 [1, 2],
+                 [2, 3]])
+         
+        """
+        if order == 'nodes':
+            a = sort(self,axis=-1)  # first sort rows
+            order = sortByColumns(a)
+        elif order == 'reverse':
+            order = arange(self.nelems()-1,-1,-1)
+        elif order == 'random':
+            order = random.permutation(self.nelems())
+        else:
+            order = asarray(order)
+            if not (order.dtype.kind=='i' and (sort(order) == arange(order.size)).all()):
+                raise ValueError,"order should be a permutation of range(%s)" % self.nelems()
+        return order
+
+
 ######### Creating intermediate levels ###################
 
     def insertLevel(self,selector,lower_only=False):
@@ -589,100 +652,6 @@ class Connectivity(ndarray):
 ############################################################################
 
 
-def adjacencyList(elems):
-    """Create adjacency lists for 2-node elements."""
-    if len(elems.shape) != 2 or elems.shape[1] != 2:
-        raise ValueError,"""Expected a set of 2-node elements."""
-    elems = elems.astype(int)
-    ok = [ where(elems==i) for i in range(elems.max()+1) ]
-    return [ list(elems[w[0],1-w[1]]) for w in ok ]
-
-
-def adjacencyArray(elems,maxcon=5):
-    """Create adjacency array for 2-node elements.
-
-    elems is a (nr,2) shaped integer array.
-    The result is an integer array with shape (nr,mc), where row i holds
-    a sorted list of the nodes that are connected to node i, padded with
-    -1 values to create an equal list length for all nodes.
-    """
-    if len(elems.shape) != 2 or elems.shape[1] != 2:
-        raise ValueError,"""Expected a set of 2-node elements."""
-    nr,nc = elems.shape
-    mr = elems.max() + 1
-    mc = maxcon*nc
-    # start with all -1 flags, maxcon*nc columns (because in each column
-    # of elems, some number might appear with multiplicity maxcon)
-    adj = zeros((mr,mc),dtype=elems.dtype) - 1
-    i = 0 # column in adj where we will store next result
-    for c in range(nc):
-        col = elems[:,c].copy()  # make a copy, because we will change it
-        while(col.max() >= 0):
-            # we still have values to process in this column
-            uniq,pos = unique(col,True)
-            #put the unique values at a unique position in reverse index
-            ok = uniq >= 0
-            if i >= adj.shape[1]:
-                # no more columns available, expand it
-                adj = concatenate([adj,zeros_like(adj)-1],axis=-1)
-            adj[uniq[ok],i] = elems[:,1-c][pos[ok]]
-            i += 1
-            # remove the stored values from elems
-            col[pos[ok]] = -1
-    adj.sort(axis=-1)
-    maxc = adj.max(axis=0)
-    adj = adj[:,maxc>=0]
-    return adj
-    
-
-def adjacencyArrays(elems,nsteps=1):
-    """Create adjacency arrays for 2-node elements.
-
-    elems is a (nr,2) shaped integer array.
-    The result is a list of adjacency arrays, where row i of adjacency array j
-    holds a sorted list of the nodes that are connected to node i via a shortest
-    path of j elements, padded with -1 values to create an equal list length
-    for all nodes.
-    This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.
-    """
-    if len(elems.shape) != 2 or elems.shape[1] != 2:
-        raise ValueError,"""Expected a set of 2-node elements."""
-    if nsteps < 1:
-        raise ValueError, """The shortest path should be at least 1."""
-    # Construct table of nodes connected to each node
-    adj1 = adjacencyArray(elems)
-    m = adj1.shape[0]
-    adj = [ arange(m).reshape(-1,1), adj1 ]
-    nodes = adj1
-    step = 2
-    while step <= nsteps and nodes.size > 0:
-        # Determine adjacent nodes
-        t = nodes < 0
-        nodes = adj1[nodes]
-        nodes[t] = -1
-        nodes = nodes.reshape((m,-1))
-        nodes.sort(axis=-1)
-        maxc = nodes.max(axis=0)
-        nodes = nodes[:,maxc>=0]
-        # Remove duplicate nodes
-        nodes[nodes[:,:-1] == nodes[:,1:]] = -1
-        nodes.sort(axis=-1)
-        maxc = nodes.max(axis=0)
-        nodes = nodes[:,maxc>=0]
-        # Remove nodes of lower adjacency
-        ladj = concatenate(adj[-2:],-1)
-        t = map(setmember1d,nodes,ladj)
-        t = asarray(t)
-        nodes[t] = -1
-        nodes.sort(axis=-1)
-        maxc = nodes.max(axis=0)
-        nodes = nodes[:,maxc>=0]
-        # Store current nodes
-        adj.append(nodes)
-        step += 1
-    return adj
-
-
 def connected(index,i):
     """Return the list of elements connected to element i.
 
@@ -717,7 +686,6 @@ def adjacent(index,inv=None):
     if inv is None:
         inv = inverseIndex(index)
     adj = inv[index].reshape((n,-1))
-    #print(adj)
     k =arange(n)
     # remove the element itself
     adj[adj == k.reshape(n,-1)] = -1
@@ -811,8 +779,113 @@ def connectedLineElems(elems):
     return parts
    
 
+############################################################################
+#
+# Deprecated
+#
 
-partitionSegmentedCurve = connectedLineElems
+@deprecation("partitionSegmentedCurve is deprecated. Use connectedLineElems instead.")
+def partitionSegmentedCurve(*args,**kargs):
+    return connectedLineElems(*args,**karg)
+
+
+#
+# BV: the following functions have to be checked for their need
+# and opportunity, and replaced by more general infrastrucuture
+#
+
+def adjacencyList(elems):
+    """Create adjacency lists for 2-node elements."""
+    if len(elems.shape) != 2 or elems.shape[1] != 2:
+        raise ValueError,"""Expected a set of 2-node elements."""
+    elems = elems.astype(int)
+    ok = [ where(elems==i) for i in range(elems.max()+1) ]
+    return [ list(elems[w[0],1-w[1]]) for w in ok ]
+
+
+def adjacencyArray(elems,maxcon=5):
+    """Create adjacency array for 2-node elements.
+
+    elems is a (nr,2) shaped integer array.
+    The result is an integer array with shape (nr,mc), where row i holds
+    a sorted list of the nodes that are connected to node i, padded with
+    -1 values to create an equal list length for all nodes.
+    """
+    if len(elems.shape) != 2 or elems.shape[1] != 2:
+        raise ValueError,"""Expected a set of 2-node elements."""
+    nr,nc = elems.shape
+    mr = elems.max() + 1
+    mc = maxcon*nc
+    # start with all -1 flags, maxcon*nc columns (because in each column
+    # of elems, some number might appear with multiplicity maxcon)
+    adj = zeros((mr,mc),dtype=elems.dtype) - 1
+    i = 0 # column in adj where we will store next result
+    for c in range(nc):
+        col = elems[:,c].copy()  # make a copy, because we will change it
+        while(col.max() >= 0):
+            # we still have values to process in this column
+            uniq,pos = unique(col,True)
+            #put the unique values at a unique position in reverse index
+            ok = uniq >= 0
+            if i >= adj.shape[1]:
+                # no more columns available, expand it
+                adj = concatenate([adj,zeros_like(adj)-1],axis=-1)
+            adj[uniq[ok],i] = elems[:,1-c][pos[ok]]
+            i += 1
+            # remove the stored values from elems
+            col[pos[ok]] = -1
+    adj.sort(axis=-1)
+    maxc = adj.max(axis=0)
+    adj = adj[:,maxc>=0]
+    return adj
+    
+
+def adjacencyArrays(elems,nsteps=1):
+    """Create adjacency arrays for 2-node elements.
+
+    elems is a (nr,2) shaped integer array.
+    The result is a list of adjacency arrays, where row i of adjacency array j
+    holds a sorted list of the nodes that are connected to node i via a shortest
+    path of j elements, padded with -1 values to create an equal list length
+    for all nodes.
+    This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.
+    """
+    if len(elems.shape) != 2 or elems.shape[1] != 2:
+        raise ValueError,"""Expected a set of 2-node elements."""
+    if nsteps < 1:
+        raise ValueError, """The shortest path should be at least 1."""
+    # Construct table of nodes connected to each node
+    adj1 = adjacencyArray(elems)
+    m = adj1.shape[0]
+    adj = [ arange(m).reshape(-1,1), adj1 ]
+    nodes = adj1
+    step = 2
+    while step <= nsteps and nodes.size > 0:
+        # Determine adjacent nodes
+        t = nodes < 0
+        nodes = adj1[nodes]
+        nodes[t] = -1
+        nodes = nodes.reshape((m,-1))
+        nodes.sort(axis=-1)
+        maxc = nodes.max(axis=0)
+        nodes = nodes[:,maxc>=0]
+        # Remove duplicate nodes
+        nodes[nodes[:,:-1] == nodes[:,1:]] = -1
+        nodes.sort(axis=-1)
+        maxc = nodes.max(axis=0)
+        nodes = nodes[:,maxc>=0]
+        # Remove nodes of lower adjacency
+        ladj = concatenate(adj[-2:],-1)
+        t = map(setmember1d,nodes,ladj)
+        t = asarray(t)
+        nodes[t] = -1
+        nodes.sort(axis=-1)
+        maxc = nodes.max(axis=0)
+        nodes = nodes[:,maxc>=0]
+        # Store current nodes
+        adj.append(nodes)
+        step += 1
+    return adj
 
 
 

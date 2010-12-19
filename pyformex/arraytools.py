@@ -90,18 +90,6 @@ Int = int32
 ##   some math functions
 ##
 #########################
-   
-
-def niceLogSize(f):
-    """Return the smallest integer e such that 10**e > abs(f)."""
-    return int(ceil(log10(abs(f))))
-   
-
-def niceNumber(f,approx=floor):
-    """Return a nice number close to but not smaller than f."""
-    n = int(approx(log10(f)))
-    m = int(str(f)[0])
-    return m*10**n
 
 # pi is defined in numpy
 # Deg is a multiplier to transform degrees to radians
@@ -110,8 +98,6 @@ Deg = pi/180.
 Rad = 1.
 
 # Convenience functions: trigonometric functions with argument in degrees
-# Should we keep this in ???
-
 
 def sind(arg,angle_spec=Deg):
     """Return the sin of an angle in degrees.
@@ -138,6 +124,18 @@ def tand(arg,angle_spec=Deg):
     by specifying ``angle_spec=Rad``.
     """
     return tan(arg*angle_spec)
+   
+
+def niceLogSize(f):
+    """Return the smallest integer e such that 10**e > abs(f)."""
+    return int(ceil(log10(abs(f))))
+   
+
+def niceNumber(f,approx=floor):
+    """Return a nice number close to but not smaller than f."""
+    n = int(approx(log10(f)))
+    m = int(str(f)[0])
+    return m*10**n
 
 
 def dotpr (A,B,axis=-1):
@@ -400,21 +398,33 @@ def growAxis(a,add,axis=-1,fill=0):
     The specified axis of the array `a` is increased with a value `add` and
     the new elements all get the value `fill`.
 
-    Parameters
-    ----------
-    a: ndarray
+    Parameters:
 
-    add: int
-        The value to add to the axis length. If <= 0, the unchanged array
-        is returned.
+    - `a`: array
 
-    axis: int
-        The axis to change, default -1 (last).
+    - `add`: int
+      The value to add to the axis length. If <= 0, the unchanged array
+      is returned.
 
-    fill: int or float
-        The value to set the new elements to.
+    - `axis`: int
+      The axis to change, default -1 (last).
+
+    - `fill`: int or float
+      The value to set the new elements to.
+
+    Returns:
+      An array with same dimension and type as `a`, but with a length along
+      `axis` equal to ``a.shape[axis] + add``. The new elements all have the
+      value `fill`.
+
+    Example:
+
+      >>> growAxis([[1,2,3],[4,5,6]],2)
+      array([[1, 2, 3, 0, 0],
+             [4, 5, 6, 0, 0]])
 
     """
+    a = asarray(a)
     if axis >= len(a.shape):
         raise ValueError,"No such axis number!"
     if add <= 0:
@@ -425,19 +435,63 @@ def growAxis(a,add,axis=-1,fill=0):
         return concatenate([a,fill * ones(missing,dtype=a.dtype)],axis=axis)
 
 
+def reorderAxis(a,order,axis=-1):
+    """Reorder the planes of an array along the specified axis.
+
+    The elements of the array are reordered along the specified axis
+    according to the specified order. 
+
+    Parameters:
+
+    - `a`: array_like
+    - `order`: specifies how to reorder the elements. It is either one
+      of the special string values defined below, or else it is an index
+      holding a permutation of `arange(self.nelems()`. Each value specifies the
+      index of the old element that should be placed at its position.
+      Thus, the order values are the old index numbers at the position of the
+      new index number.
+
+      `order` can also take one of the following predefined values,
+      resulting in the corresponding renumbering scheme being generated:
+
+      - 'reverse': the elements along axis are placed in reverse order
+      - 'random': the elements along axis are placed in random order
+
+    Returns:
+      An array with the same elements of self, where only the order
+      along the specified axis has been changed.
+
+    Example::
+    
+      >>> reorderAxis([[1,2,3],[4,5,6]],[2,0,1])
+      array([[3, 1, 2],
+             [6, 4, 5]])
+      
+    """
+    a = asarray(a)
+    n = a.shape[axis]
+    if order == 'reverse':
+        order = arange(n-1,-1,-1)
+    elif order == 'random':
+        order = random.permutation(n)
+    else:
+        order = asarray(order)
+    return a.take(order,axis)
+
+
 def reverseAxis(a,axis=-1):
     """Reverse the elements along a computed axis.
 
-    If the axis is known, it might be more efficient to use::
+    Example::
     
-      a[:,:::-1,:]
+      >>> reverseAxis([[1,2,3],[4,5,6]],0)
+      array([[4, 5, 6],
+             [1, 2, 3]])
+      
+    Remark: if the axis is known in advance, it may be more efficient to use
+    an indexing operation, like ``a[:,:::-1,:]``
     """
-    a = asarray(a)
-    try:
-        n = a.shape[axis]
-    except:
-        raise ValueError,"Invalid axis %s for array shape %s" % (axis,a.shape)
-    return a.take(arange(n-1,-1,-1),axis)
+    return reorderAxis(a,'reverse',axis)
 
 
 def addAxis(a,axis=0):
@@ -589,7 +643,16 @@ def cubicEquation(a,b,c,d):
     ====      ==========================================================
 
     If the coefficient a==0, a ValueError is raised.
+
+    Example:
+
+      >>> cubicEquation(1.,-3.,3.,-1.)
+      ([1.0, 1.0, 1.0], 3)
+      
     """
+    #
+    # BV: We should return the solution of a second degree equation if a==0
+    #
     if a == 0.0:
         raise ValueError,"Coeeficient a of cubiq equation should not be 0"
 
@@ -686,35 +749,35 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
     The unique elements and the inverse index are always the same as those
     returned by numpy's unique.
 
-    Parameters
-    ----------
-    ar1 : array_like
+    Parameters:
+    
+    - `ar1` : array_like
         This array will be flattened if it is not already 1-D.
-    return_index : bool, optional
+    - `return_index` : bool, optional
         If True, also return the indices against `ar1` that result in the
         unique array.
-    return_inverse : bool, optional
+    - `return_inverse` : bool, optional
         If True, also return the indices against the unique array that
         result in `ar1`.
 
-    Returns
-    -------
-    unique : ndarray
+    Returns:
+    
+    - `unique` : ndarray
         The unique values.
-    unique_indices : ndarray, optional
+    - `unique_indices` : ndarray, optional
         The indices of the unique values. Only provided if `return_index` is
         True.
-    unique_inverse : ndarray, optional
+    - `unique_inverse` : ndarray, optional
         The indices to reconstruct the original array. Only provided if
         `return_inverse` is True.
 
-    Examples
-    --------
-    >>> a = array([2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,7,8])
-    >>> numpy.unique(a,True)
-    (array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]))
-    >>> uniqueOrdered(a,True)
-    (array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]))
+    Example::
+    
+      >>> a = array([2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,7,8])
+      >>> unique(a,True)
+      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]))
+      >>> uniqueOrdered(a,True)
+      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]))
 
     Notice the difference in the 4-th entry of the second array.
 
@@ -753,27 +816,34 @@ def renumberIndex(index):
     """Renumber an index sequentially.
 
     Given a one-dimensional integer array with only non-negative values,
-    and `max` being the highest value in it, the elements are replaced
-    with new values in the range 0..max, such that identical numbers are
-    always replaced with the same number and the new values at their
-    first occurrence form an increasing sequence 0..max.
+    and `nval` being the number of different values in it, and you want to
+    replace its elements with values in the range `0..nval`, such that
+    identical numbers are always replaced with the same number and the
+    new values at their first occurrence form an increasing sequence `0..nval`.
+    This function will give you the old numbers corresponding with each
+    position `0..nval`.
+
+    Parameters:
     
-    The return value is a one-dimensional integer array with length equal to
-    max+1, holding the original values corresponding to the new value 0..max.
+    - `index`: array_like, 1-D, integer
+      An array with non-negative integer values
 
-    Parameters
-    ----------
-    index : array_like, 1d, integer
-        An array with non-negative integer values
+    Returns:
+      A 1-D integer array with length equal to `nval`, where `nval`
+      is the number of different values in `index`, and holding the original
+      values corresponding to the new value `0..nval`.
 
-    Returns
-    -------
-    index : ndarray, length `max`
-        The orginal values that have been replaced with 0..max.
+    Remark:
+      Use :func:`inverseUniqueIndex` to find the inverse mapping
+      needed to replace the values in the index by the new ones.
 
-    See also
-    --------
-    inverseUniqueIndex: find the inverse mapping.
+    Example::
+    
+      >>> renumberIndex([0,5,2,2,6,0])
+      array([0, 5, 2, 6])
+      >>> inverseUniqueIndex(renumberIndex([0,5,2,2,6,0]))[[0,5,2,2,6,0]]
+      array([0, 1, 2, 2, 3, 0])
+      
     """
     un,pos = uniqueOrdered(index,True)
     srt = pos.argsort()
@@ -784,49 +854,88 @@ def renumberIndex(index):
 def inverseUniqueIndex(index):
     """Inverse an index.
 
-    index is a one-dimensional integer array with *unique* non-negative values.
-
-    The return value is the inverse index: each value shows the position
-    of its index in the index array. The length of the inverse index is
-    equal to maximum value in index plus one. Values not occurring in index
+    Given a 1-D integer array with *unique* non-negative values, and
+    `max` being the highest value in it, this function returns the position
+    in the array of the values `0..max`. Values not occurring in input index
     get a value -1 in the inverse index.
 
-    Remark that inverseUniqueIndex(index)[index] == arange(1+index.max()).
-    The inverse index thus translates the unique index numbers in a
-    sequential index.
+    Parameters:
+    
+    - `index`: array_like, 1-D, integer
+      An array with non-negative values, wihch all have to be unique.
+
+    Returns:
+      A 1-D integer array with length `max+1`, with the positions in
+      `index` of the values `0..max`, or -1 if the value does not occur in
+      `index`.
+    
+    Remark:
+      The inverse index translates the unique index numbers in a
+      sequential index, so that
+      ``inverseUniqueIndex(index)[index] == arange(1+index.max())``.
+      
+
+    Example::
+    
+      >>> inverseUniqueIndex([0,5,2,6])
+      array([ 0, -1,  2, -1, -1,  1,  3])
+      >>> inverseUniqueIndex([0,5,2,6])[[0,5,2,6]]
+      array([0, 1, 2, 3])
+
     """
-    index = asarray(index)
-    inv = -ones(index.max()+1,dtype=index.dtype)
-    inv[index] = arange(index.size,dtype=inv.dtype)
+    ind = asarray(index)
+    inv = -ones(ind.max()+1,dtype=ind.dtype)
+    inv[ind] = arange(ind.size,dtype=inv.dtype)
     return inv
     
 
-def sortByColumns(A):
+def sortByColumns(a):
     """Sort an array on all its columns, from left to right.
 
     The rows of a 2-dimensional array are sorted, first on the first
     column, then on the second to resolve ties, etc..
 
-    The result value is an index returning the order in which the rows
-    have to be taken to obtain the sorted array.
+    Parameters:
+
+    - `a`: array_like, 2-D
+
+    Returns:
+      A 1-D integer array specifying the order in which the rows have to
+      be taken to obtain an array sorted by columns.
+    
+    Example::
+    
+      >>> sortByColumns([[1,2],[2,3],[3,2],[1,3],[2,3]])
+      array([0, 3, 1, 4, 2])
+      
     """
+    A = asarray(a)
     keys = [A[:,i] for i in range(A.shape[1]-1,-1,-1)]
     return lexsort(keys)
 
 
-def uniqueRows(A):
-    """Return (the indices of) the unique rows of an 2-d array.
+def uniqueRows(a):
+    """Return (the indices of) the unique rows of a 2-D array.
 
-    The input is an (nr,nc) shaped array.
-    The return value is a tuple of two indices:
+    Parameters:
+
+    - `a`: array_like, 2-D
+
+    Returns:
+
+    - `uniq`: a 1-D integer array with the numbers of the unique rows from `a`.
+      The order of the elements in `uniq` is determined by the sorting
+      procedure, which in the current implementation is :func:`sortByColumns`.
+    - `uniqid`: a 1-D integer array with length equal to `a.shape[0]` with the
+      numbers of `uniq` corresponding to each of the rows of `a`.
+
+    Example::
     
-    - uniq: an (nuniq) shaped array with the numbers of the unique rows from A
-    - uniqid: an (nr) shaped array with the numbers of uniq corresponding to
-      all the rows of the input array A.
-
-    The order of the rows in uniq is determined by the sorting procedure.
-    Currently, this is sortByColumns.
+      >>> uniqueRows([[1,2],[2,3],[3,2],[1,3],[2,3]])
+      (array([0, 3, 1, 2]), array([0, 2, 3, 1, 2]))
+      
     """
+    A = asarray(a)
     srt = sortByColumns(A)
     inv = inverseUniqueIndex(srt)
     A = A.take(srt,axis=0)
@@ -837,47 +946,62 @@ def uniqueRows(A):
     return uniq,uniqid
 
 
+#
+# BV: This is a candidate for the C-library
+#
+
 def inverseIndex(index,maxcon=4):
     """Return an inverse index.
 
-    Index is an (nr,nc) array of integers, where only non-negative
-    integers are meaningful, and negative values are silently ignored.
-    A Connectivity is a suitable argument.
+    An index is an array pointing at other items by their position.
+    The inverse index is a collection of the reverse pointers.
+    Negative values in the input index are disregarded.
 
-    The inverse index is an integer array,
-    where row i contains all the row numbers of index that contain
-    the number i. Because the number of rows containing the number i
-    is usually not a constant, the resulting array will have a number
-    of columns mr corresponding to the highest row-occurrence of any
-    single number. Shorter rows are padded with -1 values to flag
-    non-existing entries.
-
-    Negative numbers in index are disregarded.
-    The return value is an (mr,mc) shaped integer array where:
-    - mr will be equal to the highest positive value in index, +1.
-    - mc will be equal to the highest multiplicity of any number in index.
+    Parameters:
     
-    On entry, maxcon is an estimate for this value. The procedure will
-    automatically change it if needed.
+    - `index`: an array of integers, where only non-negative values are
+      meaningful, and negative values are silently ignored. A Connectivity
+      is a suitable argument.
+    - `maxcon`: int: an initial estimate for the maximum number of rows a
+      single element of index occurs at. The default will usually do well,
+      because the procedure will automatically enlarge it when needed.
 
-    Each row of the inverse index for a number that occurs less than mc
-    times in index, will be filled up with -1 values.
+    Returns:
+      An (mr,mc) shaped integer array where:
+    
+      - `mr` will be equal to the highest positive value in index, +1.
+      - `mc` will be equal to the highest row-multiplicity of any number
+        in `index`.
 
-    mult is the highest possible multiplicity of any number in a single
-    column of index.
+      Row `i` of the inverse index contains all the row numbers of `index`
+      that contain the number `i`. Because the number of rows containing
+      the number `i` is usually not a constant, the resulting array will have
+      a number of columns `mc` corresponding to the highest row-occurrence of
+      any single number. Shorter rows are padded with -1 values to flag
+      non-existing entries.
+
+    Example::
+    
+      >>> inverseIndex([[0,1],[0,2],[1,2],[0,3]])
+      array([[ 0,  1,  3],
+             [-1,  0,  2],
+             [-1,  1,  2],
+             [-1, -1,  3]])
+    
     """
-    if len(index.shape) != 2:
-        raise ValueError,"Index should be an integer array with dimension 2"
-    nr,nc = index.shape
-    mr = index.max() + 1
+    ind = asarray(index)
+    if len(ind.shape) != 2 or ind.dtype.kind != 'i':
+        raise ValueError,"nndex should be an integer array with dimension 2"
+    nr,nc = ind.shape
+    mr = ind.max() + 1
     mc = maxcon*nc
     # start with all -1 flags, maxcon*nc columns (because in each column
     # of index, some number might appear with multiplicity maxcon)
-    inverse = zeros((mr,mc),dtype=index.dtype) - 1
+    inverse = zeros((mr,mc),dtype=ind.dtype) - 1
     i = 0 # column in inverse where we will store next result
     c = 0 # column in index from which to process data
     for c in range(nc):
-        col = index[:,c].copy()  # make a copy, because we will change it
+        col = ind[:,c].copy()  # make a copy, because we will change it
         while(col.max() >= 0):
             # we still have values to process in this column
             uniq,pos = unique(col,True)
@@ -902,19 +1026,30 @@ def matchIndex(target,values):
 
     This function finds the position in the array `target` of the elements
     from the array `values`.
-    Both `target` and `values` are index arrays with all non-negative values.
-    The arrays are flattened before use.
 
-    Returns an index array with the same length as the flattened `values`.
+    Parameters:
+
+    - `target`: an index array with all non-negative values. If not 1-D, it
+      will be flattened.
+    - `values`: an index array with all non-negative values. If not 1-D, it
+      will be flattened.
+
+    Returns: an index array with the same size as `values`.
     For each number in `values`, the index contains the position of that value
-    in the array `target`, or -1 if that number does not occur in `target`.
-
+    in the flattened `target`, or -1 if that number does not occur in `target`.
     If an element from `values` occurs more than once in `target`, it is
-    currently undefined which of the positions of that value in `target`
-    will be returned.
+    currently undefined which of those positions is returned.
 
-    Remark that after `m = reciprocalIndex(target,values)` the array
-    `values[m]` equals `target` in all the non-negative positions of `m`.
+    Remark that after ``m = matchIndex(target,values)`` the equality
+    ``values[m] == target`` holds in all the non-negative positions of `m`.
+
+    Example::
+    
+      >>> A = array([1,3,4,5,7,8,9])
+      >>> B = array([0,6,7,1,2])
+      >>> matchIndex(A,B)
+      array([-1, -1,  4,  0, -1])
+
     """
     target = target.reshape(-1,1)
     values = values.reshape(-1)
@@ -923,34 +1058,5 @@ def matchIndex(target,values):
     if diff > 0:
         inv = concatenate([inv,-ones((diff,),dtype=Int)])
     return inv[values]
-
-
-if __name__ == "__main__":
-
-    A = array([
-        [1,2,3],
-        [2,3,4],
-        [5,6,7],
-        [3,4,5],
-        [1,2,3],
-        [2,3,4],
-        [3,4,5],
-        [5,6,7],
-        [1,2,3],
-        [2,3,4],
-        ])
-
-    uniq,uniqid = uniqueRows(A)
-    B = A[uniq]
-    print(B)
-
-    print(uniqid)
-    AB = B.take(uniqid,axis=0)
-    print(A-AB)
-
-    A = array([1,3,4,5,7,8,9])
-    B = array([0,6,7,1,2])
-    print matchIndex(A,B)
-    
     
 # End

@@ -30,7 +30,7 @@ Therefore, it can also be used as a standalone extension module in Python.
 """
 
 from coords import *
-from utils import deprecation,functionWasRenamed,functionBecameMethod
+from utils import deprecation,functionBecameMethod
 from geometry import Geometry
 
 
@@ -1943,12 +1943,6 @@ maxprop  = %s
             raise ValueError,"Formex should be plex-2 or plex-3"
 
 
-# BV: withdrawn in 0.8.3
-#    @deprecation("\nUse cutWithPlane() instead. Check arguments ")
-#    def cutAtPlane(self,p,n,newprops=None,side='+',atol=0.):
-#        return self.cutWithPlane(p,n,side=side,atol=atol,newprops=newprops)
-
-
 #################### Misc Operations #########################################
 
     def split(self,n=1):
@@ -2054,18 +2048,18 @@ maxprop  = %s
     # New users should avoid these functions!
     # They may (will) be removed in future.
 
-    ## BV: withdrawn in 0.8.3
-    ## @functionWasRenamed(reverse)
-    ## def reverseElements(self):
-    ##     pass
+    # BV: to be removed in 0.8.5
 
     @deprecation("`feModel()` is deprecated. Use `toMesh()` wherever possible.\n`fuse()` remains available with the same result as `feModel()`")
     def feModel(self,*args,**kargs):
         return self.fuse(*args,**kargs)
 
-    @deprecation("`nnodel` is deprecated: use `nplex` instead.")
-    def nnodel(self):
-        return self.nplex()
+
+    # BV: removed in 0.8.4
+    
+    ## @deprecation("`nnodel` is deprecated: use `nplex` instead.")
+    ## def nnodel(self):
+    ##     return self.nplex()
     
     nnodes = npoints
 
@@ -2160,7 +2154,7 @@ def interpolate(F,G,div,swap=False):
 #
 #  Testing
 #
-#  Some of the docstrings above hold test examples. They should be careflly 
+#  Some of the docstrings above hold test examples. They should be carefully 
 #  crafted to test the functionality of the Formex class.
 #
 #  Ad hoc test examples during development can be added to the test() function
@@ -2173,11 +2167,6 @@ def interpolate(F,G,div,swap=False):
 #  In both cases, the ad hoc tests are only run if the docstring tests
 #  are passed.
 #
-
-def _test():
-    """Run the examples in the docstrings."""
-    import doctest, formex
-    return doctest.testmod(formex)
 
 if __name__ == "__main__":
     

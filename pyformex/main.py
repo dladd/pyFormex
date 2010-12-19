@@ -227,6 +227,13 @@ def apply_config_changes(cfg):
             del cfg[key]
 
 
+def test_module(module):
+    """Run the doctests in the modules docstrings."""
+    import doctest
+    mod = __import__(module)
+    return doctest.testmod(mod)
+
+
 ###########################  app  ################################
 
 def run(argv=[]):
@@ -270,8 +277,7 @@ def run(argv=[]):
     parser = optparse.OptionParser(
         # THE Qapp options are removed, because it does not seem to work !!!
         # SEE the comments in the gui.startGUI function  
-        # usage = "usage: %prog [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]",
-        usage = "usage: %prog [<options>] [[ scriptname [scriptargs]] ...]",
+        usage = "usage: %prog [<options>] [ [ scriptname [scriptargs] ] ...]",
         version = pyformex.Version,
         description = pyformex.Description,
         formatter = optparse.TitledHelpFormatter(),
@@ -286,7 +292,7 @@ def run(argv=[]):
            ),
         MO("--interactive",'-i',
            action="store_true", dest="interactive", default=False,
-           help="go into interactive mode after processing the command line parameters. This is implied by the --gui option.",
+           help="Go into interactive mode after processing the command line parameters. This is implied by the --gui option.",
            ),
         MO("--force-dri",
            action="store_true", dest="dri", default=None,
@@ -344,6 +350,10 @@ def run(argv=[]):
         ##    action="store_true", dest="classify", default=False,
         ##    help="classify the examples in categories",
         ##    ),
+        MO("--testmodule",
+           action="store_true", dest="testmodule", default=False,
+           help="Run the docstring tests for the specified modules. All non-option arguments are interpreted as pyFormex module names, with . as path separator.",
+           ),
         MO("--test",
            action="store_true", dest="test", default=False,
            help="testing mode: only for developers!",
@@ -379,21 +389,32 @@ def run(argv=[]):
         sys.exit()
 
     pyformex.debug("Options: %s" % pyformex.options)
-   
-    if pyformex.options.remove:
-        remove_pyFormex(pyformexdir,pyformex.scriptdir)
-        
-    if pyformex.options.whereami or pyformex.options.debug :
-        print("Script started from %s" % pyformex.scriptdir)
-        print("I found pyFormex in %s " %  pyformexdir)
-        print("Current Python sys.path: %s" % sys.path)
 
-    if pyformex.options.detect or pyformex.options.debug :
-        print("Detecting all installed helper software")
-        utils.checkExternal()
-        print(utils.reportDetected())
 
-    if pyformex.options.whereami or pyformex.options.detect:
+    ########## Process special options which will not start pyFormex #######
+
+    if pyformex.options.remove or \
+       pyformex.options.whereami or \
+       pyformex.options.detect or \
+       pyformex.options.testmodule:
+
+        if pyformex.options.remove:
+            remove_pyFormex(pyformexdir,pyformex.scriptdir)
+
+        if pyformex.options.whereami or pyformex.options.debug :
+            print("Script started from %s" % pyformex.scriptdir)
+            print("I found pyFormex in %s " %  pyformexdir)
+            print("Current Python sys.path: %s" % sys.path)
+
+        if pyformex.options.detect or pyformex.options.debug :
+            print("Detecting all installed helper software")
+            utils.checkExternal()
+            print(utils.reportDetected())
+
+        if pyformex.options.testmodule:
+            for a in args:
+                test_module(a)
+
         sys.exit()
 
     ########### Read the config files  ####################
