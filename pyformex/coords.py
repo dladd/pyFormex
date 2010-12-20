@@ -129,7 +129,11 @@ class Coords(ndarray):
       Coords([ 1.,  0.,  0.], dtype=float32)
       
     """
-            
+    #
+    # :DEV
+    # Because we have a __new__ constructor here and no __init__,
+    # we have to list the arguments explicitely in the docstring above.
+    #
     def __new__(clas, data=None, dtyp=Float, copy=False):
         """Create a new instance of :class:`Coords`."""
         if data is None:

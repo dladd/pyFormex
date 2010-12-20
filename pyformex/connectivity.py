@@ -34,54 +34,6 @@ adjacency of elements can easily be detected from common node numbers.
 
 from arraytools import *
 from utils import deprecation
- 
-def enmagic2(cols,magic=0):
-    """Encode two integer values into a single integer.
-
-    cols is a (n,2) array of non-negative integers smaller than 2**31.
-    The result is an (n) array of type int64, where each value is
-    unique for each row of values in the input.
-    The original input can be restored with demagic2.
-
-    If a magic value larger than the maximum integer in the table is
-    given, it will be used. If not, it will be taken as the maximum+1.
-    A negative magic value triggers a fastencode scheme.
-
-    The return value is a tuple with the codes and the magic used.
-    """
-    cmax = cols.max()
-    if cmax >= 2**31 or cols.min() < 0:
-        raise ValueError,"Integer value too high (>= 2**31) in enmagic2"
-        
-    if cols.ndim != 2 or cols.shape[1] != 2:
-        raise ValueError,"Invalid array (type %s, shape %s) in enmagic2" % (cols.dtype,cols.shape)
-    
-    if magic < 0:
-        magic = -1
-        cols = array(cols,copy=True,dtype=int32,order='C')
-        codes = cols.view(int64)
-    else:
-        if magic <= cmax:
-            magic = cmax + 1
-        codes = cols[:,0].astype(int64) * magic + cols[:,1]
-    return codes,magic
-
-        
-def demagic2(codes,magic):
-    """Decode an integer number into two integers.
-
-    The arguments `codes` and `magic` are the result of an enmagic2() operation.
-    This will restore the original two values for the codes.
-
-    A negative magic value flags the fastencode option.
-    """
-    if magic < 0:
-        cols = codes.view(int32).reshape(-1,2)
-    else:
-        cols = column_stack([codes/magic,codes%magic]).astype(int32)
-    return cols
-
-
 
 # BV: Should we make an InverseConnectivity class?
 
@@ -100,8 +52,8 @@ class Connectivity(ndarray):
     non-negative values. Each row of the array defines an element by listing
     the numbers of its lower entity types. A typical use is a :class:`Mesh`
     object, where each element is defined in function of its nodes.
-    While in a Mesh the word `node` will normally refer to a geometrical
-    point, here we will use `node` for the lower entity whatever its nature
+    While in a Mesh the word 'node' will normally refer to a geometrical
+    point, here we will use 'node' for the lower entity whatever its nature
     is. It doesn't even have to be a geometrical entity.
 
     The current implementation limits a Connectivity object to numbers that
@@ -110,6 +62,8 @@ class Connectivity(ndarray):
     In a row (element), the same node number may occur more than once, though
     usually all numbers in a row are different. Rows containing duplicate
     numbers are called `degenerate` elements.
+    Rows containing the same node sets, albeit different permutations thereof,
+    are called 'double's.
 
     A new Connectivity object is created with the following syntax ::
     
@@ -131,11 +85,17 @@ class Connectivity(ndarray):
 
     A Connectivity object stores its maximum value found at creation time
     in an attribute `_max`.
+
+    Example:
+
+      >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]])._max
+      3
+      
     """
     #
     # :DEV
     # Because we have a __new__ constructor here and no __init__,
-    # we should list the arguments explicitely in the docstring above.
+    # we have to list the arguments explicitely in the docstring above.
     #
     def __new__(self,data=[],dtyp=None,copy=False,nplex=0):
         """Create a new Connectivity object."""
@@ -206,7 +166,13 @@ class Connectivity(ndarray):
     
         - codes: an (nelems,) shaped array with the element code numbers,
         - magic: the information needed to restore the original rows from
-          the codes. See Connectivity.decode() 
+          the codes. See Connectivity.decode()
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).encode(return_magic=True)
+          (array([0, 1, 3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])
+          
         """
         def compact_encode2(data):
             """Encode two columns of integers into a single column.
@@ -268,6 +234,14 @@ class Connectivity(ndarray):
           with argument return_magic=True.
 
         Returns a Connectivity table.
+
+        Example:
+        
+          >>> Connectivity.decode(array([0,1,3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])
+          Connectivity([[0, 1, 2],
+                 [0, 1, 3],
+                 [0, 2, 3]])
+
         """
 
         def compact_decode2(codes,magic,uniqa,uniqb):
@@ -298,21 +272,41 @@ class Connectivity(ndarray):
         A degenerate element is a row which contains at least two
         equal values. 
 
-        This function returns an array with the value True or False
-        for each row. The True values flag the degenerate rows.
+        Returns: a boolean array with shape (self.nelems(),).
+          The True values flag the degenerate rows.
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).testDegenerate()
+          array([False,  True, False], dtype=bool)
+          
         """
-        srt = self.copy()
+        srt = asarray(self.copy())
         srt.sort(axis=1)
         return (srt[:,:-1] == srt[:,1:]).any(axis=1)
         
 
     def listDegenerate(self):
-        """Return a list with the numbers of the degenerate elements."""
+        """Return a list with the numbers of the degenerate elements.
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).listDegenerate()
+          array([1])
+          
+        """
         return arange(self.nelems())[self.testDegenerate()]
 
 
     def listNonDegenerate(self):
-        """Return a list with the numbers of the non-degenerate elements."""
+        """Return a list with the numbers of the non-degenerate elements.
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).listNonDegenerate()
+          array([0, 2])
+
+        """
         return arange(self.nelems())[~self.testDegenerate()]
 
 
@@ -321,8 +315,16 @@ class Connectivity(ndarray):
 
         Degenerate elements are rows with repeating values.
         Returns a Connectivity with the degenerate elements removed.
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).removeDegenerate()
+          Connectivity([[0, 1, 2],
+                 [0, 3, 2]])
+
         """
         return self[~self.testDegenerate()]
+
 
     
     def testDoubles(self,permutations=True):
@@ -340,6 +342,12 @@ class Connectivity(ndarray):
         - an index used to sort the elements
         - a flags array with the value True for indices of the unique elements
           and False for those of the doubles.
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).testDoubles()
+          (array([0, 1, 2]), Connectivity([ True, False,  True], dtype=bool))
+          
         """
         if permutations:
             C = self.copy()
@@ -354,15 +362,29 @@ class Connectivity(ndarray):
         return ind,ok
     
 
-    def listUnique(self):
-        """Return a list with the numbers of the unique elements."""
-        ind,ok = self.testDoubles()
+    def listUnique(self,permutations=True):
+        """Return a list with the numbers of the unique elements.
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).listUnique()
+          array([0, 2])
+          
+        """
+        ind,ok = self.testDoubles(permutations)
         return ind[ok]
 
 
-    def listDoubles(self):
-        """Return a list with the numbers of the double elements."""
-        ind,ok = self.testDoubles()
+    def listDoubles(self,permutations=True):
+        """Return a list with the numbers of the double elements.
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).listDoubles()
+          array([1])
+          
+        """
+        ind,ok = self.testDoubles(permutations)
         return ind[~ok]
 
    
@@ -375,6 +397,12 @@ class Connectivity(ndarray):
         matching positions.
 
         Returns a new Connectivity with the double elements removed.
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).removeDoubles()
+          Connectivity([[0, 1, 2],
+                 [0, 3, 2]])
         """
         ind,ok = self.testDoubles(permutations)
         return self[ind[ok]]
@@ -778,6 +806,54 @@ def connectedLineElems(elems):
         elems = elems[elems!=-1].reshape(-1,2)
     return parts
    
+ 
+def enmagic2(cols,magic=0):
+    """Encode two integer values into a single integer.
+
+    cols is a (n,2) array of non-negative integers smaller than 2**31.
+    The result is an (n) array of type int64, where each value is
+    unique for each row of values in the input.
+    The original input can be restored with demagic2.
+
+    If a magic value larger than the maximum integer in the table is
+    given, it will be used. If not, it will be taken as the maximum+1.
+    A negative magic value triggers a fastencode scheme.
+
+    The return value is a tuple with the codes and the magic used.
+    """
+    cmax = cols.max()
+    if cmax >= 2**31 or cols.min() < 0:
+        raise ValueError,"Integer value too high (>= 2**31) in enmagic2"
+        
+    if cols.ndim != 2 or cols.shape[1] != 2:
+        raise ValueError,"Invalid array (type %s, shape %s) in enmagic2" % (cols.dtype,cols.shape)
+    
+    if magic < 0:
+        magic = -1
+        cols = array(cols,copy=True,dtype=int32,order='C')
+        codes = cols.view(int64)
+    else:
+        if magic <= cmax:
+            magic = cmax + 1
+        codes = cols[:,0].astype(int64) * magic + cols[:,1]
+    return codes,magic
+
+        
+def demagic2(codes,magic):
+    """Decode an integer number into two integers.
+
+    The arguments `codes` and `magic` are the result of an enmagic2() operation.
+    This will restore the original two values for the codes.
+
+    A negative magic value flags the fastencode option.
+    """
+    if magic < 0:
+        cols = codes.view(int32).reshape(-1,2)
+    else:
+        cols = column_stack([codes/magic,codes%magic]).astype(int32)
+    return cols
+
+
 
 ############################################################################
 #

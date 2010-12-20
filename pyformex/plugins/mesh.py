@@ -1000,7 +1000,7 @@ Size: %s
         return self.addNodes(newcoords,eltype)
 
 
-    def selectNodes(self,nodsel,eltype):
+    def selectNodes(self,nodsel,eltype=None):
         """Return a mesh with subsets of the original nodes.
 
         `nodsel` is an object that can be converted to a 1-dim or 2-dim

@@ -32,4 +32,6 @@ n1=arange(len(match))
 print "List of the %s matching nodes" % m.sum()
 print column_stack([match[m],n1[m]])
 
+draw(M.coords[match[m]],marksize=10)
+
 # End
