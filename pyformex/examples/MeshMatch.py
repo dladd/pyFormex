@@ -20,7 +20,7 @@ M = Formex(mpattern('123')).replic2(nx,ny).cselect(arange(4*nx,int(7.5*nx))).toM
 draw(M)
 drawNumbers(M.coords,color=red)
 
-M1 = Formex(mpattern('12')).replic2(int(1.2*nx),int(0.9*ny),bias=1,taper=-2).toMesh().setProp(2)
+M1 = Formex(mpattern('12')).replic2(int(0.6*nx),int(0.45*ny),bias=1,taper=-2).toMesh().scale(2).trl(1.,1).setProp(2)
 draw(M1)
 drawNumbers(M1.coords,color=yellow,trl=[0.,-0.25,0.])
 

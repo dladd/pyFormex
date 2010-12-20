@@ -26,7 +26,9 @@ from types import ListType, TupleType
 
 # set path to the pyformex modules
 parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0,parent)
+sys.path.insert(0,os.path.join(parent,'pyformex'))
+
+#print sys.path
 
 from pyformex.odict import ODict
 
@@ -35,14 +37,30 @@ def debug(s):
         print '.. DEBUG:'+str(s)
         
 
-def get_docs(fileName,dummy=None):
+import inspect
+def get_inspect(filename):
     '''Retrieve information from the parse tree of a source file.
 
-    fileName
+    filename
         Name of the file to read Python source code from.
     '''
-    source = open(fileName).read()
-    basename = os.path.basename(os.path.splitext(fileName)[0])
+    modname = inspect.getmodulename(filename)
+    print "MODULE %s" % modname
+    print inspect.getmoduleinfo(filename)
+    module = __import__(modname)
+    print inspect.getmembers(module)
+    
+
+
+
+def get_docs(filename):
+    '''Retrieve information from the parse tree of a source file.
+
+    filename
+        Name of the file to read Python source code from.
+    '''
+    source = open(filename).read()
+    basename = os.path.basename(os.path.splitext(filename)[0])
     ast = parser.suite(source)
     return ModuleInfo(ast.totuple(), basename)
 
@@ -493,11 +511,21 @@ def do_class(info):
     ##     #class_sig = sig_from_new()
     ##     args = info['__new__']._arglist
     ##     print args
-        
+
+    #print "CLASSINFO"
+    #print dir(info)
+    #print info.get_method_names()
+    #print info.get_method_names()
+    #print info.get_function_names()
+    
     names = [ n for n in info.get_method_names() if not n.startswith('_') ]
     ship_class(info._name,names)
 
 def do_module(info):
+    #print "MODULEINFO"
+    #print dir(info)
+    #print info.get_function_names()
+    
     ship_module(info._name,sanitize(info._docstring))
     names = [ n for n in info.get_function_names() if not n.startswith('_') and not info[n]._docstring.startswith('_') ]
     ship_functions(names)
@@ -519,14 +547,19 @@ defined in PYTHONFILE.""",
         option_list=[
         make_option('-d',"--debug", help="print debug info",
                     action="store_true", dest="debug", default=False),
+        make_option('-i',"--inspect", help="use the inspect module",
+                    action="store_true", dest="inspect", default=False),
         make_option('-c',"--continue", help="continue on errors",
                     action="store_false", dest="error", default=True),
         ])
     options, args = parser.parse_args(argv)
     
     for source in args:
-        info = get_docs(source)
-        do_module(info)
+        if options.inspect:
+            get_inspect(source)
+        else:
+            info = get_docs(source)
+            do_module(info)
 
 
 if __name__ == "__main__":
