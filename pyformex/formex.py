@@ -1356,7 +1356,8 @@ maxprop  = %s
         the Formices F and G.
         """
         return self.copy().append(other)
-
+    # BV: would Formex.concatenate([self,other]) be better?
+    #
 
     @classmethod
     def concatenate(clas,Flist):

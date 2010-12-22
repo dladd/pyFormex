@@ -531,7 +531,7 @@ class InputItem(QtGui.QHBoxLayout):
 
     Subclasses should initialize the superclass as follows::
     
-       InputItem.__init__(self,name,*args,**kargs)
+      InputItem.__init__(self,name,*args,**kargs)
 
     Subclasses should override:
     
@@ -540,8 +540,9 @@ class InputItem(QtGui.QHBoxLayout):
       the return value of the item.
     - setValue(): always, unless the field is readonly.
 
-    Subclasses can set validators on the input, like
-    ``input.setValidator(QtGui.QIntValidator(input))``
+    Subclasses can set validators on the input, like::
+    
+      input.setValidator(QtGui.QIntValidator(input))
     
     Subclasses can define a show() method e.g. to select the data in the
     input field on display of the dialog.
@@ -796,16 +797,18 @@ class InputText(InputItem):
 
 
 class InputBool(InputItem):
-    """A boolean input item."""
+    """A boolean input item.
+
+    Creates a new checkbox for the input of a boolean value.
+        
+    Displays the name next to a checkbox, which will initially be set
+    if value evaluates to True. (Does not use the label)
+    The value is either True or False,depending on the setting
+    of the checkbox.
+    """
     
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new checkbox for the input of a boolean value.
-        
-        Displays the name next to a checkbox, which will initially be set
-        if value evaluates to True. (Does not use the label)
-        The value is either True or False,depending on the setting
-        of the checkbox.
-        """
+        """Creates the input item."""
         if 'text' in kargs:
             text = kargs['text']
         else:
@@ -936,20 +939,22 @@ class InputRadio(InputItem):
 
     
 class InputPush(InputItem):
-    """A pushbuttons InputItem."""
+    """A pushbuttons InputItem.
+
+    Creates pushbuttons for the selection of a value from a list.
+
+    choices is a list/tuple of possible values.
+    default is the initial/default choice.
+    If default is not in the choices list, it is prepended.
+    If default is None, the first item of choices is taken as the default.
+    
+    The choices are presented to the user as a hbox with radio buttons,
+    of which the default will initially be selected.
+    If direction == 'v', the options are in a vbox. 
+    """
     
     def __init__(self,name,default=None,choices=[],direction='h',*args,**kargs):
-        """Creates pushbuttons for the selection of a value from a list.
-
-        choices is a list/tuple of possible values.
-        default is the initial/default choice.
-        If default is not in the choices list, it is prepended.
-        If default is None, the first item of choices is taken as the default.
-       
-        The choices are presented to the user as a hbox with radio buttons,
-        of which the default will initially be selected.
-        If direction == 'v', the options are in a vbox. 
-        """
+        """Create the pushbuttons"""
         if default is None:
             default = choices[0]
         elif default not in choices:
@@ -1235,15 +1240,16 @@ class InputButton(InputItem):
 
 
 class InputColor(InputItem):
-    """A color input item."""
+    """A color input item.
+    Creates a new color input field with a label in front.
+
+    The color input field is a button displaying the current color.
+    Clicking on the button opens a color dialog, and the returned
+    value is set in the button.
+    """
     
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new color input field with a label in front.
-
-        The color input field is a button displaying the current color.
-        Clicking on the button opens a color dialog, and the returned
-        value is set in the button.
-        """
+        """Create the color input item."""
         color = colors.colorName(value)
         self.input = QtGui.QPushButton(color)
         InputItem.__init__(self,name,*args,**kargs)
@@ -1407,8 +1413,10 @@ def tabInputItem(name,items=[],**kargs):
 def compatInputItem(name,value,itemtype=None,kargs={}):
     """A convenience function to create an InputItem dictionary
 
-    This function accepts InputItem data in the old format:
-    ( name, value, [ itemtype, [ optionsdict ] ] )
+    This function accepts InputItem data in the old format::
+    
+      ( name, value, [ itemtype, [ optionsdict ] ] )
+
     and turns them into a dictionary as required by the new
     InputItem format.
     """
@@ -2221,9 +2229,9 @@ class TableDialog(GenericDialog):
     def __init__(self,data,chead=None,rhead=None,title=None,parent=None,actions=[('OK',)],default='OK'):
         """Create the Table dialog.
         
-        data is a 2-D array of items, with nrow rows and ncol columns.
-        chead is an optional list of ncol column headers.
-        rhead is an optional list of nrow row headers.
+        - data is a 2-D array of items, with nrow rows and ncol columns.
+        - chead is an optional list of ncol column headers.
+        - rhead is an optional list of nrow row headers.
         """
         GenericDialog.__init__(self,
                                [Table(data,chead=chead,rhead=rhead,parent=self)],
@@ -2677,7 +2685,7 @@ class OldTableDialog(GenericDialog):
 
 
 class OldInputDialog(QtGui.QDialog):
-    """A dialog widget to set the value of one or more items.
+    """_A dialog widget to set the value of one or more items.
 
     While general input dialogs can be constructed from all the underlying
     Qt classes, this widget provides a way to construct fairly complex
@@ -2687,84 +2695,8 @@ class OldInputDialog(QtGui.QDialog):
     """
     
     def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False):
-        """Create a dialog asking the user for the value of items.
+        """_Deprecated
 
-        `items` is either a list of items, or a dict where each value is a
-        list of items or another dict (where each value is then a list of items).
-        If `items` is a dict, a tabbed widget will be created
-        with a tab for each (key,value) pair in the dict. If the value is
-        again a dict, then a box will be created for each (key,value) pair in
-        that subdict.
-
-        Each item in an `items` list is a list or tuple of the form
-        (name,value,type,options), where the fields have the following meaning:
-    
-        - name:  the name of the field,
-        - value: the initial or default value of the field,
-        - type:  the type of values the field can accept,
-        - options: a dict with options for the field.
-
-        At least the name and initial value need to be specified. The type
-        can often be determined from the initial value. Some types set the
-        initial value from an option if it was an empty string or None.
-        The options dictionary has both generic options, available for all
-        item types, and type specific options.
-
-        Each item specifies a single input field, and its value will be
-        contained in the results dictionary using the field name as a key.
-        
-        For each item a single input line is created in the dialog.
-        This line by default consists of a label displaying the field
-        name and a LineEdit widget where the initial value is displayed
-        and can be changed. Where appropriate, a validator function is attached
-        to it.
-
-        The following options are applicable to all item types:
-
-        - text: if specified, the text value will be displayed instead of
-          the name. The name value will remain the key in the return dict.
-          Use this field to display a more descriptive text for the user,
-          while using a short name for handling the value in your script.
-        - buttons:
-        - tooltip:
-
-        Currently, the following item types are available:
-
-        The item specific options:
-        - min
-        - max
-        - range: the range of values the field can accept,
-        - choices
-
-        The first two fields are mandatory. In many cases the type can be
-        determined from the value and no other fields are required. Thus:
-
-        - [ 'name', 'value' ] will accept any string (initial string = 'value'),
-        - [ 'name', True ] will show a checkbox with the item checked,
-        - [ 'name', 10 ] will accept any integer,
-        - [ 'name', 1.5 ] will accept any float.
-
-        Range settings for int and float types:
-
-        - [ 'name', 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive
-        - [ 'name', 1, float, 0.0, 1.0, 2 ] will accept a float in the range
-          from 0.0 to 1.0 with a maximum of two decimals.
-
-        Composed types:
-
-        - [ 'name', 'option1', 'select', ['option0','option1','option2']] will
-          present a combobox to select between one of the options.
-          The initial and default value is 'option1'.
-        - [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
-          present a group of radiobuttons to select between one of the options.
-          The initial and default value is 'option1'.
-          A variant 'vradio' aligns the options vertically. 
-        - [ 'name', 'option1', 'push', ['option0','option1','option2']] will
-          present a group of pushbuttons to select between one of the options.
-          The initial and default value is 'option1'.
-          A variant 'vpush' aligns the options vertically. 
-        - [ 'name', 'red', 'color' ] will present a color selection widget,
-          with 'red' as the initial choice.
         """
         import warnings
         warnings.warn('warn_old_input_dialog')

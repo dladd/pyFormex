@@ -34,9 +34,9 @@ but special cases may be created for handling plane curves.
 # Any copyright claims made by my employer should therefore be considered void.
 # Acknowledgements: Gianluca De Santis
 
-from arraytools import *
+from coords import *
 from geometry import Geometry
-from formex import Formex
+from formex import Formex,connect
 from mesh import Mesh
 from geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPointsSWP
 

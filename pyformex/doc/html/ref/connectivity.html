@@ -262,11 +262,14 @@ node 0, then the as yet unlisted elements connected to node 1, etc.</li>
 </ul>
 </li>
 </ul>
-<p>Returns: a 1-D integer array which is a permutation of
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A 1-D integer array which is a permutation of
 <cite>arange(self.nelems()</cite>, such that taking the elements in this order
 will produce a Connectivity reordered as requested. In case an
 explicit order was specified as input, this order is returned after
-checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</p>
+checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</dd>
+</dl>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">(</span><span class="s">&#39;reverse&#39;</span><span class="p">)]</span>
@@ -298,12 +301,13 @@ element.</p>
 <p>Paramaters:</p>
 <ul class="simple">
 <li><cite>selector</cite>: an object that can be converted to a 1-dim or 2-dim
-int array. Examples are a tuple of local node numbers, or a list
+integer array. Examples are a tuple of local node numbers, or a list
 of such tuples all having the same length.
 Each row of <cite>selector</cite> holds a list of the local node numbers that
 should be retained in the new Connectivity table.</li>
-<li><cite>lower_only</cite>: if True, only the definition of the new entities is
-returned. This is equivalent with using <a class="reference internal" href="#connectivity.Connectivity.selectNodes" title="connectivity.Connectivity.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>, which
+<li><cite>lower_only</cite>: if True, only the definition of the new (lower)
+entities is returned, complete without removing doubles.
+This is equivalent to using <a class="reference internal" href="#connectivity.Connectivity.selectNodes" title="connectivity.Connectivity.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>, which
 is prefered when you do not need the higher level info.</li>
 </ul>
 <p>Return value: a tuple of two Connectivities <cite>hi</cite>,`lo`, where:</p>
@@ -323,6 +327,15 @@ items in the collapsed rows is lost.
 See however <tt class="xref py py-meth docutils literal"><span class="pre">Mesh.getBorder()</span></tt> for an application where an
 inverse index is possible, because the border only contains
 unique rows.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">insertLevel</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span>
+<span class="go">(Connectivity([[0, 1],</span>
+<span class="go">       [1, 0],</span>
+<span class="go">       [2, 1]]), Connectivity([[0, 1],</span>
+<span class="go">       [0, 2],</span>
+<span class="go">       [0, 3]]))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -338,10 +351,26 @@ Each row of <cite>selector</cite> holds a list of the local node numbers that
 should be retained in the new Connectivity table.</li>
 </ul>
 <p>Returns a <a class="reference internal" href="#connectivity.Connectivity" title="connectivity.Connectivity"><tt class="xref py py-class docutils literal"><span class="pre">Connectivity</span></tt></a> object with shape <cite>(nelems,nplex)</cite></p>
-<p>This is equivalent to, but prefered above:</p>
+<p>This is equivalent to, but prefered above</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">insertLevel</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span><span class="n">lower_only</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">selectNodes</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span>
+<span class="go">Connectivity([[0, 1],</span>
+<span class="go">       [0, 2],</span>
+<span class="go">       [0, 2],</span>
+<span class="go">       [0, 1],</span>
+<span class="go">       [0, 3],</span>
+<span class="go">       [0, 2]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.inverse">
+<tt class="descname">inverse</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.inverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the inverse index of a Connectivity table</p>
 </dd></dl>
 
 <dl class="method">
@@ -383,10 +412,6 @@ The algorithm only works if all vertex numbers of an element are
 unique.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="connectivity.Connectivity.inverse">
-<tt class="descname">inverse</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.inverse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the inverse index of a Connectivity table</p>
 </dd></dl>
 
 <dl class="method">
@@ -475,29 +500,6 @@ a closed loop. The new table has the elements in order of the loop.</li>
 <p>The input argument is a (nelems,2) shaped array of integers.
 Each row holds the two vertex numbers of a single line segment.</p>
 <p>The return value is a list of (nsegi,2) shaped array of integers.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="connectivity.enmagic2">
-<tt class="descclassname">connectivity.</tt><tt class="descname">enmagic2</tt><big>(</big><em>cols</em>, <em>magic=0</em><big>)</big><a class="headerlink" href="#connectivity.enmagic2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode two integer values into a single integer.</p>
-<p>cols is a (n,2) array of non-negative integers smaller than 2**31.
-The result is an (n) array of type int64, where each value is
-unique for each row of values in the input.
-The original input can be restored with demagic2.</p>
-<p>If a magic value larger than the maximum integer in the table is
-given, it will be used. If not, it will be taken as the maximum+1.
-A negative magic value triggers a fastencode scheme.</p>
-<p>The return value is a tuple with the codes and the magic used.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="connectivity.demagic2">
-<tt class="descclassname">connectivity.</tt><tt class="descname">demagic2</tt><big>(</big><em>codes</em>, <em>magic</em><big>)</big><a class="headerlink" href="#connectivity.demagic2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode an integer number into two integers.</p>
-<p>The arguments <cite>codes</cite> and <cite>magic</cite> are the result of an enmagic2() operation.
-This will restore the original two values for the codes.</p>
-<p>A negative magic value flags the fastencode option.</p>
 </dd></dl>
 
 <dl class="function">

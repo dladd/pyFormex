@@ -13,7 +13,7 @@
 
 .. automodule:: connectivity
    :synopsis: A class and functions for handling nodal connectivity.
-   :members: connected,adjacent,closedLoop,connectedLineElems,enmagic2,demagic2,adjacencyList,adjacencyArray,adjacencyArrays
+   :members: connected,adjacent,closedLoop,connectedLineElems,adjacencyList,adjacencyArray,adjacencyArrays
 
    ``Classes defined in module connectivity``
 

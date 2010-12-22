@@ -39,26 +39,26 @@ def debug(s):
 
 import inspect
 def get_inspect(filename):
-    '''Retrieve information from the parse tree of a source file.
+    """Retrieve information from the parse tree of a source file.
 
     filename
         Name of the file to read Python source code from.
-    '''
+    """
     modname = inspect.getmodulename(filename)
     print "MODULE %s" % modname
     print inspect.getmoduleinfo(filename)
     module = __import__(modname)
-    print inspect.getmembers(module)
-    
+    classes = [ c for c in inspect.getmembers(module,inspect.isclass) if c[1].__module__ == modname ]
+    print classes
 
 
 
 def get_docs(filename):
-    '''Retrieve information from the parse tree of a source file.
+    """Retrieve information from the parse tree of a source file.
 
     filename
         Name of the file to read Python source code from.
-    '''
+    """
     source = open(filename).read()
     basename = os.path.basename(os.path.splitext(filename)[0])
     ast = parser.suite(source)

@@ -1375,7 +1375,7 @@ Size: %s
         """
         nplex = self.nplex()
         seq = sweepCoords(self.coords,path,**kargs)
-        ML = [ Mesh(x,self.elems) for x in seq ]
+        ML = [ Mesh(x,self.elems,prop=self.prop) for x in seq ]
         M = connectMeshSequence(ML)
 
         if autofix and nplex == 2:
@@ -1387,6 +1387,17 @@ Size: %s
 
         return M
 
+
+    def __add__(self,other):
+        """Return the sum of two Meshes.
+
+        The sum of the Meshes is simply the concatenation thereof.
+        It allows us to write simple expressions as M1+M2 to concatenate
+        the Meshes M1 and M2. Both meshes should be of the same plexitude
+        and have the same eltype.
+        """
+        return Mesh.concatenate([self,other])
+    
 
     @classmethod
     def concatenate(clas,meshes,**kargs):

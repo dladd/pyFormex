@@ -205,3 +205,4 @@ latex_logo = 'images/pyformex_logo_with_dome.png'
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+

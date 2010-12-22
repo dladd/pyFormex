@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
@@ -297,6 +296,12 @@ class Coords(ndarray):
         """Return the sizes of the :class:`Coords`.
 
         Return an array with the length of the bbox along the 3 axes.
+        
+        Example::
+
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).sizes()
+          [ 3.  3.  0.]
+          
         """
         X0,X1 = self.bbox()
         return X1-X0
@@ -305,7 +310,14 @@ class Coords(ndarray):
     def dsize(self):
         """Return an estimate of the global size of the :class:`Coords`.
 
-        This estimate is the length of the diagonal of the bbox()."""
+        This estimate is the length of the diagonal of the bbox().
+        
+        Example::
+
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).dsize()
+          4.24264
+          
+        """
         X0,X1 = self.bbox()
         return length(X1-X0)
 
@@ -314,8 +326,14 @@ class Coords(ndarray):
         """Return the diameter of the bounding sphere of the :class:`Coords`.
 
         The bounding sphere is the smallest sphere with center in the
-        center() of the :class:`Coords`, and such that no points of the :class:`Coords`
-        are lying outside the sphere.
+        center() of the :class:`Coords`, and such that no points of the
+        :class:`Coords` are lying outside the sphere.
+        
+        Example::
+
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).bsphere()
+          2.12132
+          
         """
         return self.distanceFromPoint(self.center()).max()
 
@@ -328,10 +346,16 @@ class Coords(ndarray):
         p is a point specified by 3 coordinates.
         n is the normal vector to a plane, specified by 3 components.
 
-        The return value is a [...] shaped array with the distance of
-        each point to the plane through p and having normal n.
+        The return value is a float array with shape ``self.pshape()`` with
+        the distance of each point to the plane through p and having normal n.
         Distance values are positive if the point is on the side of the
         plane indicated by the positive normal.
+        
+        Example::
+
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).distanceFromPlane([0.,0.,0.],[1.,0.,0.])
+          [[ 0.  3.  0.]]
+          
         """
         p = asarray(p).reshape((3))
         n = asarray(n).reshape((3))
@@ -350,6 +374,12 @@ class Coords(ndarray):
         The return value is a [...] shaped array with the distance of
         each point to the line through p with direction n.
         All distance values are positive or zero.
+
+        Example::
+
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).distanceFromLine([0.,0.,0.],[1.,0.,0.])
+          [[ 0.  0.  3.]]
+          
         """
         p = asarray(p)#.reshape((3))
         n = asarray(n)#.reshape((3))
@@ -366,6 +396,11 @@ class Coords(ndarray):
         The return value is a [...] shaped array with the distance of
         each point to point p.
         All distance values are positive or zero.
+        Example::
+
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).distanceFromPoint([0.,0.,0.])
+          [[ 0.  3.  3.]]
+          
         """
         p = asarray(p).reshape((3))
         d = self-p

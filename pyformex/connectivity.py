@@ -34,6 +34,8 @@ adjacency of elements can easily be detected from common node numbers.
 
 from arraytools import *
 from utils import deprecation
+_future_deprecation = "This functionality is deprecated and will probably be removed in future, unless you explain to the developers why they should retain it."
+
 
 # BV: Should we make an InverseConnectivity class?
 
@@ -143,7 +145,7 @@ class Connectivity(ndarray):
         return self.shape[1]
 
 
-###### Detecting degenerates and duplicates ##############
+############### Detecting degenerates and duplicates ##############
 
 
     def testDegenerate(self):
@@ -205,11 +207,10 @@ class Connectivity(ndarray):
         """
         return self[~self.testDegenerate()]
 
-
     
     def testDoubles(self,permutations=True):
     #    This algorithm is faster than encode,
-    #    but for nplex=2 a enmagic2 would probably still be faster.
+    #    but for nplex=2 enmagic2 would probably still be faster.
         """Test the Connectivity list for doubles.
 
         By default, doubles are elements that consist of the same set of
@@ -314,11 +315,12 @@ class Connectivity(ndarray):
           - 'random': the elements are randomly renumbered.
           - 'reverse': the elements are renumbered in reverse order.
 
-        Returns: a 1-D integer array which is a permutation of
-        `arange(self.nelems()`, such that taking the elements in this order
-        will produce a Connectivity reordered as requested. In case an
-        explicit order was specified as input, this order is returned after
-        checking that it is indeed a permutation of `range(self.nelems()`.
+        Returns:
+          A 1-D integer array which is a permutation of
+          `arange(self.nelems()`, such that taking the elements in this order
+          will produce a Connectivity reordered as requested. In case an
+          explicit order was specified as input, this order is returned after
+          checking that it is indeed a permutation of `range(self.nelems()`.
 
         Example:
 
@@ -346,7 +348,8 @@ class Connectivity(ndarray):
             order = random.permutation(self.nelems())
         else:
             order = asarray(order)
-            if not (order.dtype.kind=='i' and (sort(order) == arange(order.size)).all()):
+            if not (order.dtype.kind == 'i' and \
+                    (sort(order) == arange(order.size)).all()):
                 raise ValueError,"order should be a permutation of range(%s)" % self.nelems()
         return order
 
@@ -366,12 +369,13 @@ class Connectivity(ndarray):
         Paramaters:
 
         - `selector`: an object that can be converted to a 1-dim or 2-dim
-          int array. Examples are a tuple of local node numbers, or a list
+          integer array. Examples are a tuple of local node numbers, or a list
           of such tuples all having the same length.
           Each row of `selector` holds a list of the local node numbers that
           should be retained in the new Connectivity table.
-        - `lower_only`: if True, only the definition of the new entities is
-          returned. This is equivalent with using :meth:`selectNodes`, which
+        - `lower_only`: if True, only the definition of the new (lower)
+          entities is returned, complete without removing doubles.
+          This is equivalent to using :meth:`selectNodes`, which
           is prefered when you do not need the higher level info. 
         
         Return value: a tuple of two Connectivities `hi`,`lo`, where:
@@ -392,6 +396,16 @@ class Connectivity(ndarray):
         See however :meth:`Mesh.getBorder` for an application where an
         inverse index is possible, because the border only contains
         unique rows.
+
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).insertLevel([[0,1],[0,2]])
+          (Connectivity([[0, 1],
+                 [1, 0],
+                 [2, 1]]), Connectivity([[0, 1],
+                 [0, 2],
+                 [0, 3]]))
+           
         """
         # BV: We should turn selector into a Connectivity ?
         sel = asarray(selector)             # make sure it is array
@@ -422,14 +436,82 @@ class Connectivity(ndarray):
 
         Returns a :class:`Connectivity` object with shape `(nelems,nplex)`
 
-        This is equivalent to, but prefered above::
+        This is equivalent to, but prefered above ::
 
            self.insertLevel(selector,lower_only=True)
+           
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).selectNodes([[0,1],[0,2]])
+          Connectivity([[0, 1],
+                 [0, 2],
+                 [0, 2],
+                 [0, 1],
+                 [0, 3],
+                 [0, 2]])
+
         """
         return self.insertLevel(selector,lower_only=True)
+    
+
+    def tangle(self,lo):
+        # BV: This  should then be renamed 'combine'
+        """Compress two hierarchical Connectivity levels to a single one.
+
+        self and lo are two hierarchical Connectivity tables, representing
+        higher and lower level respectively. This means that the elements
+        of self hold numbers which point into lo to obtain the lowest level
+        items.
+
+        In the current implementation, the plexitude of lo should be 2!
+
+        As an example, in a structure of triangles, hi could represent
+        triangles defined by 3 edges and lo could represent edges defined
+        by 2 vertices. The compress method will then result in a table
+        with plexitude 3 defining the triangles in function of the vertices.
+
+        This is the inverse operation of untangle (without specifying ind).
+        The algorithm only works if all vertex numbers of an element are
+        unique.
+        """
+        if self.shape[1] < 3:
+            raise ValueError,"Can only tangle plexitudes >2 Connectivities"
+        if lo.shape[1] != 2:
+            raise ValueError,"Expected plexitudes ==2 for tangle argument"
+        elems = lo[self]
+        elems1 = roll(elems,-1,axis=1)
+        for i in range(elems.shape[1]):
+            flags = (elems[:,i,1] != elems1[:,i,0]) * (elems[:,i,1] != elems1[:,i,1])
+            elems[flags,i] = roll(elems[flags,i],1,axis=1)
+        return Connectivity(elems[:,:,0])
 
 
+    def inverse(self):
+        """Return the inverse index of a Connectivity table.
+
+        This returns the inverse index of the Connectivity, as computed
+        by :func:`arraytools.inverseIndex`. See 
+           
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).inverse()
+          array([[ 0,  1,  2],
+                 [-1,  0,  1],
+                 [-1,  0,  2],
+                 [-1,  1,  2]])
+        """
+        return inverseIndex(self)
+
+
+######################################################################
+    # BV: the methods below should probably be deprecated,
+    # after a check that they are not essential
+
+    
     def untangle(self,ind=None):
+        # BV: This could/should be replaced with insertLevel
+        # or become a Mesh method
+        # and should then be renamed 'resolve'
         """Untangle a Connectivity into lower plexitude tables.
 
         There is no point in untangling a plexitude 2 structure.
@@ -468,44 +550,9 @@ class Connectivity(ndarray):
                 raise ValueError,"ind should be a (n,2) shaped array!"
 
         return self.insertLevel(ind)
-    
-
-    def tangle(self,lo):
-        """Compress two hierarchical Connectivity levels to a single one.
-
-        self and lo are two hierarchical Connectivity tables, representing
-        higher and lower level respectively. This means that the elements
-        of self hold numbers which point into lo to obtain the lowest level
-        items.
-
-        In the current implementation, the plexitude of lo should be 2!
-
-        As an example, in a structure of triangles, hi could represent
-        triangles defined by 3 edges and lo could represent edges defined
-        by 2 vertices. The compress method will then result in a table
-        with plexitude 3 defining the triangles in function of the vertices.
-
-        This is the inverse operation of untangle (without specifying ind).
-        The algorithm only works if all vertex numbers of an element are
-        unique.
-        """
-        if self.shape[1] < 3:
-            raise ValueError,"Can only tangle plexitudes >2 Connectivities"
-        if lo.shape[1] != 2:
-            raise ValueError,"Expected plexitudes ==2 for tangle argument"
-        elems = lo[self]
-        elems1 = roll(elems,-1,axis=1)
-        for i in range(elems.shape[1]):
-            flags = (elems[:,i,1] != elems1[:,i,0]) * (elems[:,i,1] != elems1[:,i,1])
-            elems[flags,i] = roll(elems[flags,i],1,axis=1)
-        return Connectivity(elems[:,:,0])
 
 
-    def inverse(self):
-        """Return the inverse index of a Connectivity table"""
-        return inverseIndex(self)
-
-
+    @deprecation(_future_deprecation)
     def encode(self,permutations=True,return_magic=False):
         """Encode the element connectivities into single integer numbers.
 
@@ -534,6 +581,7 @@ class Connectivity(ndarray):
           >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).encode(return_magic=True)
           (array([0, 1, 3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])
           
+        *The use of this function is deprecated.*
         """
         def compact_encode2(data):
             """Encode two columns of integers into a single column.
@@ -579,6 +627,7 @@ class Connectivity(ndarray):
             return codes
 
 
+    @deprecation(_future_deprecation)
     @staticmethod
     def decode(codes,magic):
         """Decode element codes into a Connectivity table.
@@ -603,6 +652,7 @@ class Connectivity(ndarray):
                  [0, 1, 3],
                  [0, 2, 3]])
 
+        *The use of this function is deprecated.*
         """
 
         def compact_decode2(codes,magic,uniqa,uniqb):
@@ -629,9 +679,10 @@ class Connectivity(ndarray):
 
     @classmethod
     def connect(clas,clist,nodid=None,bias=None,loop=False):
-        """Return a Connectivity which connects the nodes of the Connectivity list.
+        """Connect nodes from multiple Connectivity objects.
 
-        clist is a list of Connectivities, nodid is an optional list of nod ids and
+        clist is a list of Connectivities, nodid is an optional list of node
+        indices and
         bias is an optional list of element bias values. All lists should have
         the same length.
 
@@ -806,8 +857,15 @@ def connectedLineElems(elems):
         parts.append(loop[loop!=-1].reshape(-1,2))
         elems = elems[elems!=-1].reshape(-1,2)
     return parts
+
+
+############################################################################
+#
+# Deprecated
+#
+
    
- 
+@deprecation(_future_deprecation)
 def enmagic2(cols,magic=0):
     """Encode two integer values into a single integer.
 
@@ -821,6 +879,8 @@ def enmagic2(cols,magic=0):
     A negative magic value triggers a fastencode scheme.
 
     The return value is a tuple with the codes and the magic used.
+
+    *The use of this function is deprecated.*
     """
     cmax = cols.max()
     if cmax >= 2**31 or cols.min() < 0:
@@ -840,6 +900,7 @@ def enmagic2(cols,magic=0):
     return codes,magic
 
         
+@deprecation(_future_deprecation)
 def demagic2(codes,magic):
     """Decode an integer number into two integers.
 
@@ -847,6 +908,8 @@ def demagic2(codes,magic):
     This will restore the original two values for the codes.
 
     A negative magic value flags the fastencode option.
+    
+    *The use of this function is deprecated.*
     """
     if magic < 0:
         cols = codes.view(int32).reshape(-1,2)
@@ -854,12 +917,6 @@ def demagic2(codes,magic):
         cols = column_stack([codes/magic,codes%magic]).astype(int32)
     return cols
 
-
-
-############################################################################
-#
-# Deprecated
-#
 
 @deprecation("partitionSegmentedCurve is deprecated. Use connectedLineElems instead.")
 def partitionSegmentedCurve(*args,**kargs):
