@@ -896,7 +896,7 @@ Size: %s
         """
         nodes = unique(self.elems)
         if nodes.size == 0:
-            self.__init__([],[])
+            return self.__class__([],[])
         
         elif nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
             coords = self.coords[nodes]
@@ -904,9 +904,10 @@ Size: %s
                 elems = inverseUniqueIndex(nodes)[self.elems]
             else:
                 elems = self.elems
-            self.__class__(coords,elems,prop=self.prop,eltype=self.eltype)
-
-        return self
+            return self.__class__(coords,elems,prop=self.prop,eltype=self.eltype)
+        
+        else:
+            return self
 
 
     def select(self,selected,compact=True):
