@@ -86,7 +86,7 @@ numbers are called <cite>degenerate</cite> elements.
 Rows containing the same node sets, albeit different permutations thereof,
 are called &#8216;double&#8217;s.</p>
 <p>A new Connectivity object is created with the following syntax</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Connectivity</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span><span class="n">dtyp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">nplex</span><span class="o">=</span><span class="mf">0</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Connectivity</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span><span class="n">dtyp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">nplex</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Parameters:</p>
@@ -106,11 +106,10 @@ specified plexitude.</li>
 <p>A Connectivity object stores its maximum value found at creation time
 in an attribute <cite>_max</cite>.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">_max</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">_max</span>
 <span class="go">3</span>
 </pre></div>
 </div>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="connectivity.Connectivity.nelems">
 <tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nelems" title="Permalink to this definition">¶</a></dt>
@@ -124,37 +123,6 @@ in an attribute <cite>_max</cite>.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="connectivity.Connectivity.encode">
-<tt class="descname">encode</tt><big>(</big><em>permutations=True</em>, <em>return_magic=False</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.encode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encode the element connectivities into single integer numbers.</p>
-<p>Each row of numbers is encoded into a single integer value, such that
-equal rows result in the same number and different rows yield
-different numbers. Furthermore, enough information can be kept to
-restore the original rows from these single integer numbers.
-This is seldom needed however, because the original data are
-available from the Connectivity table itself.</p>
-<ul class="simple">
-<li>permutations: if True(default), two rows are considered equal if
-they contain the same numbers regardless of their order.
-If False, two rows are only equal if they contain the same
-numbers at the same position.</li>
-<li>return_magic: if True, return a codes,magic tuple. The default is
-to return only the codes.</li>
-</ul>
-<p>Return value(s):</p>
-<ul class="simple">
-<li>codes: an (nelems,) shaped array with the element code numbers,</li>
-<li>magic: the information needed to restore the original rows from
-the codes. See Connectivity.decode()</li>
-</ul>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">return_magic</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">(array([0, 1, 3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
 <dt id="connectivity.Connectivity.testDegenerate">
 <tt class="descname">testDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.testDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag the degenerate elements (rows).</p>
@@ -165,7 +133,7 @@ equal values.</p>
 <dd>The True values flag the degenerate rows.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">testDegenerate</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">testDegenerate</span><span class="p">()</span>
 <span class="go">array([False,  True, False], dtype=bool)</span>
 </pre></div>
 </div>
@@ -176,7 +144,7 @@ equal values.</p>
 <tt class="descname">listDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the degenerate elements.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDegenerate</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDegenerate</span><span class="p">()</span>
 <span class="go">array([1])</span>
 </pre></div>
 </div>
@@ -187,7 +155,7 @@ equal values.</p>
 <tt class="descname">listNonDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listNonDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the non-degenerate elements.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listNonDegenerate</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listNonDegenerate</span><span class="p">()</span>
 <span class="go">array([0, 2])</span>
 </pre></div>
 </div>
@@ -200,7 +168,7 @@ equal values.</p>
 <p>Degenerate elements are rows with repeating values.
 Returns a Connectivity with the degenerate elements removed.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">removeDegenerate</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">removeDegenerate</span><span class="p">()</span>
 <span class="go">Connectivity([[0, 1, 2],</span>
 <span class="go">       [0, 3, 2]])</span>
 </pre></div>
@@ -222,7 +190,7 @@ every position.</p>
 and False for those of the doubles.</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">testDoubles</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">testDoubles</span><span class="p">()</span>
 <span class="go">(array([0, 1, 2]), Connectivity([ True, False,  True], dtype=bool))</span>
 </pre></div>
 </div>
@@ -233,7 +201,7 @@ and False for those of the doubles.</li>
 <tt class="descname">listUnique</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listUnique" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the unique elements.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listUnique</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listUnique</span><span class="p">()</span>
 <span class="go">array([0, 2])</span>
 </pre></div>
 </div>
@@ -244,7 +212,7 @@ and False for those of the doubles.</li>
 <tt class="descname">listDoubles</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listDoubles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the double elements.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDoubles</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDoubles</span><span class="p">()</span>
 <span class="go">array([1])</span>
 </pre></div>
 </div>
@@ -260,7 +228,7 @@ will only remove the double rows that have matching values at
 matching positions.</p>
 <p>Returns a new Connectivity with the double elements removed.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">removeDoubles</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">removeDoubles</span><span class="p">()</span>
 <span class="go">Connectivity([[0, 1, 2],</span>
 <span class="go">       [0, 3, 2]])</span>
 </pre></div>
@@ -300,7 +268,7 @@ will produce a Connectivity reordered as requested. In case an
 explicit order was specified as input, this order is returned after
 checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">3</span><span class="p">,</span><span class="mf">0</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">(</span><span class="s">&#39;reverse&#39;</span><span class="p">)]</span>
 <span class="go">Connectivity([[0, 1],</span>
 <span class="go">       [3, 0],</span>
@@ -308,7 +276,7 @@ checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</p
 <span class="go">       [1, 2]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">(</span><span class="s">&#39;nodes&#39;</span><span class="p">)</span>
 <span class="go">array([3, 2, 0, 1])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])]</span>
 <span class="go">Connectivity([[3, 0],</span>
 <span class="go">       [0, 1],</span>
 <span class="go">       [1, 2],</span>
@@ -419,6 +387,37 @@ unique.</p>
 <dt id="connectivity.Connectivity.inverse">
 <tt class="descname">inverse</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.inverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the inverse index of a Connectivity table</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.encode">
+<tt class="descname">encode</tt><big>(</big><em>permutations=True</em>, <em>return_magic=False</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode the element connectivities into single integer numbers.</p>
+<p>Each row of numbers is encoded into a single integer value, such that
+equal rows result in the same number and different rows yield
+different numbers. Furthermore, enough information can be kept to
+restore the original rows from these single integer numbers.
+This is seldom needed however, because the original data are
+available from the Connectivity table itself.</p>
+<ul class="simple">
+<li>permutations: if True(default), two rows are considered equal if
+they contain the same numbers regardless of their order.
+If False, two rows are only equal if they contain the same
+numbers at the same position.</li>
+<li>return_magic: if True, return a codes,magic tuple. The default is
+to return only the codes.</li>
+</ul>
+<p>Return value(s):</p>
+<ul class="simple">
+<li>codes: an (nelems,) shaped array with the element code numbers,</li>
+<li>magic: the information needed to restore the original rows from
+the codes. See Connectivity.decode()</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">return_magic</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">(array([0, 1, 3]), [(2, array([0, 1]), array([2, 3])), (2, array([0]), array([1, 2]))])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -543,7 +542,7 @@ This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="geometry.html"
-                        title="previous chapter">7. <tt class="docutils literal"><span class="pre">geometry</span></tt> &#8212; A generic interface to the Coords transformation methods</a></p>
+                        title="previous chapter">7. <tt class="docutils literal docutils literal"><span class="pre">geometry</span></tt> &#8212; A generic interface to the Coords transformation methods</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="simple.html"
                         title="next chapter">9. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
@@ -588,7 +587,7 @@ This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
     </div>
   </body>
 </html>

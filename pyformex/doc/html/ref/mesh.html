@@ -98,7 +98,6 @@ or if the default type is not the wanted element type, the user should
 specify the element type himself.</p>
 <p>A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
 or by a single geometric object that provides a toMesh() method.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="mesh.Mesh.setProp">
 <tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.setProp" title="Permalink to this definition">¶</a></dt>
@@ -318,7 +317,7 @@ switched off by setting <cite>compact=False</cite>.</p>
 <dd><p>Return a Mesh where all elements have been reversed.</p>
 <p>Reversing an element means reversing the order of its points.
 This is equivalent to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">elems</span><span class="p">[:,::</span><span class="o">-</span><span class="mf">1</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">elems</span><span class="p">[:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -936,7 +935,7 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
     </div>
   </body>
 </html>

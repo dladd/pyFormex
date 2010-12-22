@@ -84,7 +84,6 @@ for which we porvide do-nothing defaults here:</p>
 <li><cite>nelems()</cite>:</li>
 <li><cite>pickGL()</cite>:</li>
 </ul>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.Actor.bbox">
 <tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.Actor.bbox" title="Permalink to this definition">¶</a></dt>
@@ -97,21 +96,18 @@ for which we porvide do-nothing defaults here:</p>
 <dt id="actors.TranslatedActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">TranslatedActor</tt><big>(</big><em>A</em>, <em>trl=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.TranslatedActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An Actor translated to another position.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="actors.RotatedActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">RotatedActor</tt><big>(</big><em>A</em>, <em>rot=(1.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>twist=0.0</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.RotatedActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An Actor rotated to another position.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="actors.CubeActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">CubeActor</tt><big>(</big><em>size=1.0, color=[(1.0, 0.0, 0.0), (0.0, 1.0, 1.0), (0.0, 1.0, 0.0), (1.0, 0.0, 1.0), (0.0, 0.0, 1.0), (1.0, 1.0, 0.0)], **kargs</em><big>)</big><a class="headerlink" href="#actors.CubeActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor with cubic shape and 6 colored sides.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.CubeActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.CubeActor.drawGL" title="Permalink to this definition">¶</a></dt>
@@ -124,7 +120,6 @@ for which we porvide do-nothing defaults here:</p>
 <dt id="actors.SphereActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">SphereActor</tt><big>(</big><em>size=1.0</em>, <em>color=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.SphereActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor representing a sphere.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.SphereActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.SphereActor.drawGL" title="Permalink to this definition">¶</a></dt>
@@ -137,7 +132,6 @@ for which we porvide do-nothing defaults here:</p>
 <dt id="actors.BboxActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">BboxActor</tt><big>(</big><em>bbox</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.BboxActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draws a bbox.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.BboxActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.BboxActor.drawGL" title="Permalink to this definition">¶</a></dt>
@@ -158,7 +152,6 @@ coordinate planes. This can be modified by the following parameters:</p>
 color: a set of three colors to use for x,y,z axes.
 colored_axes = False: draw black axes.
 draw_planes = False: do not draw the coordinate planes.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.AxesActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.AxesActor.drawGL" title="Permalink to this definition">¶</a></dt>
@@ -176,7 +169,6 @@ and three colored triangles representing the coordinate planes.
 The size and position of the axes can be changed.</p>
 <p>colored_axes = False draws black axes.
 draw_planes = False suppress the drawing of the coordinate planes.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.TriadeActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.TriadeActor.drawGL" title="Permalink to this definition">¶</a></dt>
@@ -189,7 +181,6 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 <dt id="actors.GridActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GridActor</tt><big>(</big><em>nx=(1</em>, <em>1</em>, <em>1)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>dx=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.20000000000000001</em>, <em>lines=True</em>, <em>planes=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.GridActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draws a (set of) grid(s) in one of the coordinate planes.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.GridActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.GridActor.drawGL" title="Permalink to this definition">¶</a></dt>
@@ -202,7 +193,6 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 <dt id="actors.CoordPlaneActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">CoordPlaneActor</tt><big>(</big><em>nx=(1</em>, <em>1</em>, <em>1)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>dx=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.5</em>, <em>lines=True</em>, <em>planes=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.CoordPlaneActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draws a set of 3 coordinate planes.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.CoordPlaneActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.CoordPlaneActor.drawGL" title="Permalink to this definition">¶</a></dt>
@@ -215,7 +205,6 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 <dt id="actors.PlaneActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">PlaneActor</tt><big>(</big><em>nx=(2</em>, <em>2</em>, <em>2)</em>, <em>ox=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>size=((0.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>(0.0</em>, <em>1.0</em>, <em>1.0))</em>, <em>linecolor=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>linewidth=None</em>, <em>planecolor=(1.0</em>, <em>1.0</em>, <em>1.0)</em>, <em>alpha=0.5</em>, <em>lines=True</em>, <em>planes=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.PlaneActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>A plane in a 3D scene.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.PlaneActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.PlaneActor.drawGL" title="Permalink to this definition">¶</a></dt>
@@ -229,7 +218,6 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">GeomActor</tt><big>(</big><em>data</em>, <em>elems=None</em>, <em>eltype=None</em>, <em>color=None</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=1.0</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>marksize=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.GeomActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor representing a geometrical model.</p>
 <p>The model can either be in Formex or Mesh format.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="actors.GeomActor.vertices">
 <tt class="descname">vertices</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.vertices" title="Permalink to this definition">¶</a></dt>
@@ -343,7 +331,7 @@ of its parent, but the eltype will be retained.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
     </div>
   </body>
 </html>

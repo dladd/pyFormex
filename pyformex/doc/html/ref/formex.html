@@ -149,7 +149,6 @@ methods:
 <cite>projectOnCylinder</cite>,
 <cite>rot</cite>,
 <cite>trl</cite>.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="formex.Formex.element">
 <tt class="descname">element</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#formex.Formex.element" title="Permalink to this definition">¶</a></dt>
@@ -289,7 +288,7 @@ connectivity table with integers pointing to the corresponding vertex.</p>
 <p>Coordinates are separated by commas, points are separated
 by semicolons and grouped between brackets, elements are
 separated by commas and grouped between braces:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">]],[[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">]]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]],[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
 <span class="go">{[1.0,0.0,0.0; 0.0,1.0,0.0], [0.0,1.0,0.0; 1.0,2.0,0.0]}</span>
 </pre></div>
@@ -450,7 +449,7 @@ permutation of the other&#8217;s.</p>
 <dd><p>Return a Formex where all elements have been reversed.</p>
 <p>Reversing an element means reversing the order of its points.
 This is equivalent to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">selectNodes</span><span class="p">(</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nplex</span><span class="p">()</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="o">-</span><span class="mf">1</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">selectNodes</span><span class="p">(</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nplex</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -868,23 +867,23 @@ elements filling up the parts at the positive/negative side.</li>
 <li>with side = &#8216;&#8217;: two Formices of the same plexitude, one representing
 the positive side and one representing the negative side.</li>
 </ul>
-<p>Let <img class="math" src="../_images/math/1c2bf95e3a347dc8b88814e23e3609308823d8da.png" alt="dist"/> be the signed distance of the vertices to a plane.
+<p>Let <span class="math">dist</span> be the signed distance of the vertices to a plane.
 The elements located completely at the positive or negative side of
-a plane have three vertices for which <img class="math" src="../_images/math/2c3354b1a3c611400aef7c077658d58ede9551fd.png" alt="|dist| &gt; atol"/>.
+a plane have three vertices for which <span class="math">|dist| &gt; atol</span>.
 The elements intersecting a plane can have one or more vertices for which
-<img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>.
+<span class="math">|dist| &lt; atol</span>.
 These vertices are projected on the plane so that their distance is zero.</p>
 <p>If the Formex has a property set, the new elements will get the property
 numbers defined in newprops. This is a list of 7 property numbers flagging
 elements with following properties:</p>
 <ol class="arabic simple" start="0">
-<li>no vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, triangle after cut</li>
-<li>no vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, triangle 1 from quad after cut</li>
-<li>no vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, triangle 2 from quad after cut</li>
-<li>one vertex with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, two vertices at pos. or neg. side</li>
-<li>one vertex with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, one vertex at pos. side, one at neg.</li>
-<li>two vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, one vertex at pos. or neg. side</li>
-<li>three vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/></li>
+<li>no vertices with <span class="math">|dist| &lt; atol</span>, triangle after cut</li>
+<li>no vertices with <span class="math">|dist| &lt; atol</span>, triangle 1 from quad after cut</li>
+<li>no vertices with <span class="math">|dist| &lt; atol</span>, triangle 2 from quad after cut</li>
+<li>one vertex with <span class="math">|dist| &lt; atol</span>, two vertices at pos. or neg. side</li>
+<li>one vertex with <span class="math">|dist| &lt; atol</span>, one vertex at pos. side, one at neg.</li>
+<li>two vertices with <span class="math">|dist| &lt; atol</span>, one vertex at pos. or neg. side</li>
+<li>three vertices with <span class="math">|dist| &lt; atol</span></li>
 </ol>
 </dd></dl>
 
@@ -1000,7 +999,7 @@ interpolations.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
     </div>
   </body>
 </html>

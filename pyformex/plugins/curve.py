@@ -34,12 +34,11 @@ but special cases may be created for handling plane curves.
 # Any copyright claims made by my employer should therefore be considered void.
 # Acknowledgements: Gianluca De Santis
 
-#from pyformex import debug
-from numpy import *
-from formex import *
+from arraytools import *
 from geometry import Geometry
-from plugins.geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPointsSWP
-from plugins.mesh import Mesh
+from formex import Formex
+from mesh import Mesh
+from geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPointsSWP
 
 
 ##############################################################################
@@ -604,56 +603,55 @@ class BezierSpline(Curve):
     control points. In many cases the off-curve control points can be
     generated automatically.
 
-    Parameters
-    ----------
+    Parameters:
     
-    coords : array_like (npoints,3)
-        The points that are on the curve. For an open curve, npoints=nparts+1,
-        for a closed curve, npoints = nparts.
-        If not specified, the on-curve points should be included in the
-        `control` argument.
-    deriv : array_like (npoints,3) or (2,3)
-        If specified, it gives the direction of the curve at all points or at
-        the endpoints only for a shape (2,3) array.
-        For points where the direction is left unspecified or where the
-        specified direction contains a `NaN` value, the direction
-        is calculated as the average direction of the two
-        line segments ending in the point. This will also be used
-        for points where the specified direction contains a value `NaN`.
-        In the two endpoints of an open curve however, this average
-        direction can not be calculated: the two control points in these
-        parts are set coincident.
-    curl : float         
-        The curl parameter can be set to influence the curliness of the curve
-        in between two subsequent points. A value curl=0.0 results in
-        straight segments. The higher the value, the more the curve becomes
-        curled.
-    control : array(nparts,2,3) or array(ncontrol,3)
-        If `coords` was specified, this should be a (nparts,2,3) array with
-        the intermediate control points, two for each part.
-        
-        If `coords` was not specified, this should be the full array of
-        `ncontrol` control points for the curve. The number of points should
-        be a multiple of 3 plus 1. If the curve is closed, the last point is
-        equal to the first and does not need to a multiple of 3 is
-        also allowed, in which case the first point will be appended as last.
+    - `coords` : array_like (npoints,3)
+      The points that are on the curve. For an open curve, npoints=nparts+1,
+      for a closed curve, npoints = nparts.
+      If not specified, the on-curve points should be included in the
+      `control` argument.
+    - deriv : array_like (npoints,3) or (2,3)
+      If specified, it gives the direction of the curve at all points or at
+      the endpoints only for a shape (2,3) array.
+      For points where the direction is left unspecified or where the
+      specified direction contains a `NaN` value, the direction
+      is calculated as the average direction of the two
+      line segments ending in the point. This will also be used
+      for points where the specified direction contains a value `NaN`.
+      In the two endpoints of an open curve however, this average
+      direction can not be calculated: the two control points in these
+      parts are set coincident.
+    - curl : float         
+      The curl parameter can be set to influence the curliness of the curve
+      in between two subsequent points. A value curl=0.0 results in
+      straight segments. The higher the value, the more the curve becomes
+      curled.
+    - control : array(nparts,2,3) or array(ncontrol,3)
+      If `coords` was specified, this should be a (nparts,2,3) array with
+      the intermediate control points, two for each part.
+      
+      If `coords` was not specified, this should be the full array of
+      `ncontrol` control points for the curve. The number of points should
+      be a multiple of 3 plus 1. If the curve is closed, the last point is
+      equal to the first and does not need to a multiple of 3 is
+      also allowed, in which case the first point will be appended as last.
 
-        If not specified, the control points are generated automatically from
-        the `coords`, `deriv` and `curl` arguments.
-        If specified, they override these parameters.
-    closed : boolean
-        If True, the curve will be continued from the last point back
-        to the first to create a closed curve.
+      If not specified, the control points are generated automatically from
+      the `coords`, `deriv` and `curl` arguments.
+      If specified, they override these parameters.
+    - closed : boolean
+      If True, the curve will be continued from the last point back
+      to the first to create a closed curve.
 
-    endzerocurv : boolean or tuple of two booleans.
-        Specifies the end conditions for an open curve.
-        If True, the end curvature will be forced to zero. The default is
-        to use maximal continuity of the curvature.
-        The value may be set to a tuple of two values to specify different
-        conditions for both ends.
-        This argument is ignored for a closed curve.
+    - endzerocurv : boolean or tuple of two booleans.
+      Specifies the end conditions for an open curve.
+      If True, the end curvature will be forced to zero. The default is
+      to use maximal continuity of the curvature.
+      The value may be set to a tuple of two values to specify different
+      conditions for both ends.
+      This argument is ignored for a closed curve.
 
-        """
+    """
     coeffs = {
         1: matrix([
             [ 1.,  0.],
@@ -1151,14 +1149,6 @@ def circle():
     """
     pts = Formex([1.0,0.0,0.0]).rosette(8,45.).coords.reshape(-1,3)
     return BezierSpline(pts,curl=0.375058,closed=True)
-
-
-def vectorPairAngle(v1,v2):
-    """Return the angle between the vectors v1 and v2."""
-    v1 = asarray(v1)
-    v2 = asarray(v2)
-    cosangle = dotpr(v1,v2) / sqrt(dotpr(v1,v1)*dotpr(v2,v2))
-    return arccos(cosangle)
 
 
 class Arc3(Curve):

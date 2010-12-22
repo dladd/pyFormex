@@ -21,7 +21,11 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Menus for the pyFormex GUI."""
+"""Menus for the pyFormex GUI.
+
+This modules implements specialized classes and functions for building
+the pyFormex GUI menu system.
+"""
 
 import pyformex
 from pyformex.gui import *
@@ -557,6 +561,5 @@ def createMenuData():
     return MenuData
 
 
-__all__ = [ 'BaseMenu', 'Menu', 'MenuBar', 'DAction', 'ActionList' ]
     
 # End

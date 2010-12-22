@@ -1058,5 +1058,94 @@ def matchIndex(target,values):
     if diff > 0:
         inv = concatenate([inv,-ones((diff,),dtype=Int)])
     return inv[values]
+
+# Working with sets of vectors
+
+def vectorLength(vec):
+    """Return the lengths of a set of vectors.
+
+    vec is an (n,3) shaped array holding a collection of vectors.
+    The result is an (n,) shaped array with the length of each vector.
+    """
+    return length(vec)
+
+
+def vectorNormalize(vec):
+    """Normalize a set of vectors.
+
+    vec is a (n,3) shaped arrays holding a collection of vectors.
+    The result is a tuple of two arrays:
+
+    - length (n): the length of the vectors vec
+    - normal (n,3): unit-length vectors along vec.
+    """
+    length = vectorLength(vec)
+    normal = vec / length.reshape((-1,1))
+    return length,normal
+
+
+def vectorPairAreaNormals(vec1,vec2):
+    """Compute area of and normals on parallellograms formed by vec1 and vec2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is a tuple of two arrays:
+    
+    - area (n) : the area of the parallellogram formed by vec1 and vec2.
+    - normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
+    
+    These are calculated from the cross product of vec1 and vec2, which indeed
+    gives area * normal.
+
+    Note that where two vectors are parallel, an area zero will results and
+    an axis with components NaN.
+    """
+    normal = cross(vec1,vec2)
+    area = vectorLength(normal)
+    normal /= area.reshape((-1,1))
+    return area,normal
+
+
+def vectorPairArea(vec1,vec2):
+    """Compute area of the parallellogram formed by a vector pair vec1,vec2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is an (n) shaped array with the area of the parallellograms
+    formed by each pair of vectors (vec1,vec2).
+    """
+    return vectorPairAreaNormals(vec1,vec2)[0]
+
+
+def vectorPairNormals(vec1,vec2):
+    """Compute vectors normal to vec1 and vec2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is an (n,3) shaped array of unit length vectors normal to
+    each couple (edg1,edg2).
+    """
+    return vectorPairAreaNormals(vec1,vec2)[1]
+        
+
+def vectorTripleProduct(vec1,vec2,vec3):
+    """Compute triple product vec1 . (vec2 x vec3).
+
+    vec1, vec2, vec3 are (n,3) shaped arrays holding collections of vectors.
+    The result is a (n,) shaped array with the triple product of each set
+    of corresponding vectors fromvec1,vec2,vec3.
+    This is also the square of the volume of the parallellepid formex by
+    the 3 vectors.
+    """
+    return dotpr(vec1,cross(vec2,vec3))
+
+
+def vectorPairCosAngle(v1,v2):
+    """Return the cosinus of the angle between the vectors v1 and v2."""
+    v1 = asarray(v1)
+    v2 = asarray(v2)
+    return dotpr(v1,v2) / sqrt(dotpr(v1,v1)*dotpr(v2,v2))
+
+
+def vectorPairAngle(v1,v2):
+    """Return the angle (in radians) between the vectors v1 and v2."""
+    return arccos(vectorPairCosAngle(v1,v2))
     
 # End

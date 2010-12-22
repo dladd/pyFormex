@@ -75,7 +75,6 @@ The subclasses should at least define the following:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">sub_points</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="curve.Curve.sub_points">
 <tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points" title="Permalink to this definition">¶</a></dt>
@@ -181,7 +180,6 @@ point to the first. This does not change the vertex data.</p>
 <p>The <cite>control</cite> parameter has the same meaning as <cite>coords</cite> and is added
 for symmetry with other Curve classes. If specified, it will override
 the <cite>coords</cite> argument.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="curve.PolyLine.toFormex">
 <tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.toFormex" title="Permalink to this definition">¶</a></dt>
@@ -326,7 +324,6 @@ with the points p and an array with the footpoints matching p.</p>
 <dt id="curve.Polygon">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Polygon</tt><big>(</big><em>coords=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#curve.Polygon" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Polygon is a closed PolyLine.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -343,20 +340,16 @@ curve is open, or ncontrol=3*nparts if the curve is closed.</p>
 <p>The constructor provides different ways to initialize the full set of
 control points. In many cases the off-curve control points can be
 generated automatically.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters :</th><td class="field-body"><p class="first"><strong>coords</strong> : array_like (npoints,3)</p>
-<blockquote>
-<p>The points that are on the curve. For an open curve, npoints=nparts+1,
+<p>Parameters:</p>
+<ul>
+<li><p class="first"><cite>coords</cite> : array_like (npoints,3)
+The points that are on the curve. For an open curve, npoints=nparts+1,
 for a closed curve, npoints = nparts.
 If not specified, the on-curve points should be included in the
 <cite>control</cite> argument.</p>
-</blockquote>
-<p><strong>deriv</strong> : array_like (npoints,3) or (2,3)</p>
-<blockquote>
-<p>If specified, it gives the direction of the curve at all points or at
+</li>
+<li><p class="first">deriv : array_like (npoints,3) or (2,3)
+If specified, it gives the direction of the curve at all points or at
 the endpoints only for a shape (2,3) array.
 For points where the direction is left unspecified or where the
 specified direction contains a <cite>NaN</cite> value, the direction
@@ -366,17 +359,15 @@ for points where the specified direction contains a value <cite>NaN</cite>.
 In the two endpoints of an open curve however, this average
 direction can not be calculated: the two control points in these
 parts are set coincident.</p>
-</blockquote>
-<p><strong>curl</strong> : float</p>
-<blockquote>
-<p>The curl parameter can be set to influence the curliness of the curve
+</li>
+<li><p class="first">curl : float         
+The curl parameter can be set to influence the curliness of the curve
 in between two subsequent points. A value curl=0.0 results in
 straight segments. The higher the value, the more the curve becomes
 curled.</p>
-</blockquote>
-<p><strong>control</strong> : array(nparts,2,3) or array(ncontrol,3)</p>
-<blockquote>
-<p>If <cite>coords</cite> was specified, this should be a (nparts,2,3) array with
+</li>
+<li><p class="first">control : array(nparts,2,3) or array(ncontrol,3)
+If <cite>coords</cite> was specified, this should be a (nparts,2,3) array with
 the intermediate control points, two for each part.</p>
 <p>If <cite>coords</cite> was not specified, this should be the full array of
 <cite>ncontrol</cite> control points for the curve. The number of points should
@@ -386,26 +377,20 @@ also allowed, in which case the first point will be appended as last.</p>
 <p>If not specified, the control points are generated automatically from
 the <cite>coords</cite>, <cite>deriv</cite> and <cite>curl</cite> arguments.
 If specified, they override these parameters.</p>
-</blockquote>
-<p><strong>closed</strong> : boolean</p>
-<blockquote>
-<p>If True, the curve will be continued from the last point back
+</li>
+<li><p class="first">closed : boolean
+If True, the curve will be continued from the last point back
 to the first to create a closed curve.</p>
-</blockquote>
-<p><strong>endzerocurv</strong> : boolean or tuple of two booleans.</p>
-<blockquote class="last">
-<p>Specifies the end conditions for an open curve.
+</li>
+<li><p class="first">endzerocurv : boolean or tuple of two booleans.
+Specifies the end conditions for an open curve.
 If True, the end curvature will be forced to zero. The default is
 to use maximal continuity of the curvature.
 The value may be set to a tuple of two values to specify different
 conditions for both ends.
 This argument is ignored for a closed curve.</p>
-</blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Methods</p>
+</li>
+</ul>
 <dl class="method">
 <dt id="curve.BezierSpline.pointsOn">
 <tt class="descname">pointsOn</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.pointsOn" title="Permalink to this definition">¶</a></dt>
@@ -492,42 +477,36 @@ after the last part by applying de Casteljau&#8217;s algorithm on this part.</p>
 The separate class name is retained for compatibility and convenience. 
 See CardinalSpline2 for a direct implementation (it misses the end
 intervals of the point set).</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="curve.CardinalSpline2">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">CardinalSpline2</tt><big>(</big><em>coords</em>, <em>tension=0.0</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a cardinal spline.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="curve.NaturalSpline">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">NaturalSpline</tt><big>(</big><em>coords</em>, <em>closed=False</em>, <em>endzerocurv=False</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a natural spline.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="curve.Arc3">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc3</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#curve.Arc3" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a circular arc.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="curve.Arc">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#curve.Arc" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a circular arc.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="curve.Spiral">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Spiral</tt><big>(</big><em>turns=2.0</em>, <em>nparts=100</em>, <em>rfunc=None</em><big>)</big><a class="headerlink" href="#curve.Spiral" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a spiral curve.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -537,7 +516,6 @@ intervals of the point set).</p>
 <p>This is a (deprecated) convenience class for BezierSpline with fixed
 value of degree=2. The constructor takes the same parameters as
 BezierSpline, except for degree, which is fixed to a value 2.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">curve</span></tt></p>
@@ -549,12 +527,6 @@ BezierSpline, except for degree, which is fixed to a value 2.</p>
 and has a radius 1.</p>
 <p>In the current implementation it is approximated by a bezier spline
 with curl 0.375058 through 8 points.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="curve.vectorPairAngle">
-<tt class="descclassname">curve.</tt><tt class="descname">vectorPairAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#curve.vectorPairAngle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the angle between the vectors v1 and v2.</p>
 </dd></dl>
 
 <dl class="function">
@@ -626,7 +598,7 @@ with curl 0.375058 through 8 points.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
     </div>
   </body>
 </html>

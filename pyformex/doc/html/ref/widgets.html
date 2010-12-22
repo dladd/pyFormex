@@ -83,7 +83,6 @@ Default mode is to accept any filename. You can specify exist=True
 to accept only existing files. Or set exist=True and multi=True to
 accept multiple files.
 If dir==True, a single existing directory is asked.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.FileSelection.getFilename">
 <tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#widgets.FileSelection.getFilename" title="Permalink to this definition">¶</a></dt>
@@ -98,7 +97,6 @@ If the user hits CANCEL or ESC, None is returned.</p>
 <dt id="widgets.ProjectSelection">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ProjectSelection</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>compression=4</em>, <em>ignore_signature=True</em><big>)</big><a class="headerlink" href="#widgets.ProjectSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A file selection dialog specialized for opening projects.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -114,7 +112,6 @@ saved. If unchecked, only the current OpenGL viewport is saved.</li>
 window. This mode is required if you want to include the window
 decorations.</li>
 </ul>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -123,14 +120,12 @@ decorations.</li>
 <dd><p>A docked selection widget.</p>
 <p>A widget that is docked in the main window and contains a modeless
 dialog for selecting items.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="widgets.ModelessSelection">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ModelessSelection</tt><big>(</big><em>slist=</em><span class="optional">[</span><span class="optional">]</span>, <em>title='Selection Dialog'</em>, <em>mode=None</em>, <em>sort=False</em>, <em>func=None</em>, <em>width=None</em>, <em>height=None</em><big>)</big><a class="headerlink" href="#widgets.ModelessSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A modeless dialog for selecting one or more items from a list.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.ModelessSelection.setSelected">
 <tt class="descname">setSelected</tt><big>(</big><em>selected</em>, <em>bool</em><big>)</big><a class="headerlink" href="#widgets.ModelessSelection.setSelected" title="Permalink to this definition">¶</a></dt>
@@ -155,7 +150,6 @@ value.</p>
 <ul class="simple">
 <li><cite>slist</cite>: a list of items that are initially selected.</li>
 </ul>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.Selection.setSelected">
 <tt class="descname">setSelected</tt><big>(</big><em>selected</em><big>)</big><a class="headerlink" href="#widgets.Selection.setSelected" title="Permalink to this definition">¶</a></dt>
@@ -209,7 +203,6 @@ the return value of the item.</li>
 <tt class="docutils literal"><span class="pre">input.setValidator(QtGui.QIntValidator(input))</span></tt></p>
 <p>Subclasses can define a show() method e.g. to select the data in the
 input field on display of the dialog.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputItem.name">
 <tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputItem.name" title="Permalink to this definition">¶</a></dt>
@@ -242,7 +235,6 @@ input field on display of the dialog.</p>
 <dd><p>An unchangeable input field with a label in front.</p>
 <p>It is just like an InputString, but the text can not be edited.</p>
 <p>There are no specific options.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputInfo.value">
 <tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputInfo.value" title="Permalink to this definition">¶</a></dt>
@@ -258,7 +250,6 @@ input field on display of the dialog.</p>
 <p>The value is displayed as a string.</p>
 <p>By default, the text format will be guessed to be either plain text,
 ReStructuredText ot html. Specify plain=True to display in plain text.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputLabel.setValue">
 <tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputLabel.setValue" title="Permalink to this definition">¶</a></dt>
@@ -277,7 +268,6 @@ will be eval&#8217;ed before returning.</p>
 <ul class="simple">
 <li><cite>max</cite>: the maximum number of characters in the string.</li>
 </ul>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputString.show">
 <tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputString.show" title="Permalink to this definition">¶</a></dt>
@@ -301,7 +291,6 @@ ReStructuredText ot html.</p>
 <p>Specify plain=True to display in plain text.</p>
 <p>If the type of value is not a string, the input text will be eval&#8217;ed
 before returning.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputText.show">
 <tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputText.show" title="Permalink to this definition">¶</a></dt>
@@ -326,7 +315,6 @@ before returning.</p>
 <dt id="widgets.InputBool">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBool</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputBool" title="Permalink to this definition">¶</a></dt>
 <dd><p>A boolean input item.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputBool.text">
 <tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputBool.text" title="Permalink to this definition">¶</a></dt>
@@ -361,7 +349,6 @@ If default is None, the first item of choices is taken as the default.</p>
 initially be set to the default value.</p>
 <p>An optional <cite>onselect</cite> function may be specified, which will be called
 whenever the current selection changes.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputCombo.value">
 <tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputCombo.value" title="Permalink to this definition">¶</a></dt>
@@ -388,7 +375,6 @@ If default is None, the first item of choices is taken as the default.</p>
 <p>The choices are presented to the user as a hbox with radio buttons,
 of which the default will initially be pressed.
 If direction == &#8216;v&#8217;, the options are in a vbox.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputRadio.value">
 <tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputRadio.value" title="Permalink to this definition">¶</a></dt>
@@ -407,7 +393,6 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dt id="widgets.InputPush">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPush</tt><big>(</big><em>name</em>, <em>default=None</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputPush" title="Permalink to this definition">¶</a></dt>
 <dd><p>A pushbuttons InputItem.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputPush.setText">
 <tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big><a class="headerlink" href="#widgets.InputPush.setText" title="Permalink to this definition">¶</a></dt>
@@ -442,7 +427,6 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <ul class="simple">
 <li><cite>min</cite>, <cite>max</cite>: range of the scale (integer)</li>
 </ul>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputInteger.show">
 <tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputInteger.show" title="Permalink to this definition">¶</a></dt>
@@ -467,7 +451,6 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dt id="widgets.InputFloat">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloat</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFloat" title="Permalink to this definition">¶</a></dt>
 <dd><p>An float input item.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputFloat.show">
 <tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloat.show" title="Permalink to this definition">¶</a></dt>
@@ -492,7 +475,6 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dt id="widgets.InputFloatTable">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloatTable</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFloatTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>A table of floats input item.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputFloatTable.show">
 <tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloatTable.show" title="Permalink to this definition">¶</a></dt>
@@ -524,7 +506,6 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <li><cite>func</cite>: an optional function to be called whenever the value is
 changed. The function takes a float/integer argument.</li>
 </ul>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -541,14 +522,12 @@ changed. The function receives the input field as argument. With
 this argument, the fields attirbutes like name, value, text, can
 be retrieved.</li>
 </ul>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="widgets.InputPoint">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPoint</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 3D point/vector input item.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputPoint.value">
 <tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputPoint.value" title="Permalink to this definition">¶</a></dt>
@@ -577,7 +556,6 @@ input value is passed as an argument. The function should return the
 value to be set, or None if it is to be unchanged.
 If no function is specified, the value can not be changed.</li>
 </ul>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputButton.doFunc">
 <tt class="descname">doFunc</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputButton.doFunc" title="Permalink to this definition">¶</a></dt>
@@ -590,7 +568,6 @@ If no function is specified, the value can not be changed.</li>
 <dt id="widgets.InputColor">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputColor</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>A color input item.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputColor.setValue">
 <tt class="descname">setValue</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#widgets.InputColor.setValue" title="Permalink to this definition">¶</a></dt>
@@ -603,7 +580,6 @@ If no function is specified, the value can not be changed.</li>
 <dt id="widgets.InputFont">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFont</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFont" title="Permalink to this definition">¶</a></dt>
 <dd><p>An input item to select a font.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -620,7 +596,6 @@ acceptData() is called.</li>
 specified in the dict.</li>
 </ul>
 <p>The return value of this item is an ODict.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputWidget.text">
 <tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputWidget.text" title="Permalink to this definition">¶</a></dt>
@@ -645,7 +620,6 @@ specified in the dict.</li>
 <dt id="widgets.InputGroup">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputGroup</tt><big>(</big><em>name</em>, <em>items</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>A boxed group of InputItems.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputGroup.value">
 <tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputGroup.value" title="Permalink to this definition">¶</a></dt>
@@ -711,7 +685,6 @@ autoprefix.</li>
 <li>flags:</li>
 <li>modal:</li>
 </ul>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.InputDialog.add_items">
 <tt class="descname">add_items</tt><big>(</big><em>items</em>, <em>form</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.add_items" title="Permalink to this definition">¶</a></dt>
@@ -810,7 +783,6 @@ Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
 This means that an item at row i and column j can be addressed as
 data[i][j].
 Optional lists of column and row headers can be specified.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.TableModel.flags">
 <tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#widgets.TableModel.flags" title="Permalink to this definition">¶</a></dt>
@@ -830,7 +802,6 @@ and row numbers.</li>
 <li><cite>edit</cite>: if True (default), the data can be edited. Set to False to make
 the data readonly.</li>
 </ul>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -848,7 +819,6 @@ TableModel doesn&#8217;t.</li>
 <li><cite>label</cite>: currently unused (intended to display an optional label
 in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are specified.</li>
 </ul>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -860,7 +830,6 @@ in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are s
 <li><cite>caption</cite>:</li>
 <li><cite>parent</cite>:</li>
 </ul>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -878,7 +847,6 @@ an &#8216;OK&#8217; button is displayed to close the dialog. Can be set to None
 to avoid creation of a button box.</li>
 <li><cite>default</cite>: the default action, &#8216;OK&#8217; by default.</li>
 </ul>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -886,7 +854,6 @@ to avoid creation of a button box.</li>
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableDialog</tt><big>(</big><em>data, chead=None, rhead=None, title=None, parent=None, actions=[('OK',)], default='OK'</em><big>)</big><a class="headerlink" href="#widgets.TableDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog widget to show/edit a two-dimensional array of items.</p>
 <p>A convenience class representing a Table within a dialog.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -916,7 +883,6 @@ a modal dialog is created, i.e. the user will have to click a button
 or hit the ESC key before he can continue.</p>
 <p>If you want a modeless dialog, allowing the user to continue while the
 message stays open, use the <tt class="xref py py-meth docutils literal"><span class="pre">show()</span></tt> mehod to display it.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.MessageBox.addCheck">
 <tt class="descname">addCheck</tt><big>(</big><em>text</em><big>)</big><a class="headerlink" href="#widgets.MessageBox.addCheck" title="Permalink to this definition">¶</a></dt>
@@ -963,7 +929,6 @@ dialog is created, i.e. the user will have to click a button or hit the
 ESC key before he can continue.</p>
 <p>If you want a modeless dialog, allowing the user to continue while the
 message stays open, use the <tt class="xref py py-meth docutils literal"><span class="pre">show()</span></tt> mehod to display it.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -973,14 +938,12 @@ message stays open, use the <tt class="xref py py-meth docutils literal"><span c
 <p>Possible choices are &#8216;OK&#8217; and &#8216;CANCEL&#8217;.
 The function returns True if the OK button was clicked or &#8216;ENTER&#8217;
 was pressed, False if the &#8216;CANCEL&#8217; button was pressed or ESC was pressed.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="widgets.InputBox">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBox</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#widgets.InputBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget accepting a line of input.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -998,7 +961,6 @@ should be specified.</li>
 specified if one of the buttons actions is widgets.ACCEPTED or
 widgets.REJECTED.</li>
 </ul>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -1010,7 +972,6 @@ widgets.REJECTED.</li>
 <dt id="widgets.CoordsBox">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">CoordsBox</tt><big>(</big><em>ndim=3</em>, <em>readonly=False</em>, <em>*args</em><big>)</big><a class="headerlink" href="#widgets.CoordsBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget displaying the coordinates of a point.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.CoordsBox.getValues">
 <tt class="descname">getValues</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.CoordsBox.getValues" title="Permalink to this definition">¶</a></dt>
@@ -1029,7 +990,6 @@ widgets.REJECTED.</li>
 <dt id="widgets.ImageView">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ImageView</tt><big>(</big><em>image=None</em>, <em>maxheight=None</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.ImageView" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget displaying an image.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.ImageView.showImage">
 <tt class="descname">showImage</tt><big>(</big><em>image</em><big>)</big><a class="headerlink" href="#widgets.ImageView.showImage" title="Permalink to this definition">¶</a></dt>
@@ -1046,7 +1006,6 @@ gui.image.image_formats_qtr provides a list.</p>
 <dt id="widgets.OldTableDialog">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">OldTableDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>tab=False</em><big>)</big><a class="headerlink" href="#widgets.OldTableDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog widget to show two-dimensional arrays of items.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -1057,7 +1016,6 @@ gui.image.image_formats_qtr provides a list.</p>
 Qt classes, this widget provides a way to construct fairly complex
 input dialogs with a minimum of effort.</p>
 <p>The input dialog can be modal or non-modal dialog.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="widgets.OldInputDialog.add_input_items">
 <tt class="descname">add_input_items</tt><big>(</big><em>items</em>, <em>layout</em><big>)</big><a class="headerlink" href="#widgets.OldInputDialog.add_input_items" title="Permalink to this definition">¶</a></dt>
@@ -1392,7 +1350,7 @@ is given, it is set to the LAST button.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
     </div>
   </body>
 </html>

@@ -166,7 +166,7 @@ The return value is a (M,...) shaped array.</p>
 <p>The return value is a boolean array with shape of <cite>values</cite> flagging
 where the values are close to target.
 Two values <cite>a</cite> and <cite>b</cite> are considered close if
-<img class="math" src="../_images/math/111bff3a77cd73fc555142c0ffd7b4af849562f6.png" alt="| a - b | &lt; atol + rtol * | b |"/></p>
+<span class="math">| a - b | &lt; atol + rtol * | b |</span></p>
 </dd></dl>
 
 <dl class="function">
@@ -245,7 +245,7 @@ The value to set the new elements to.</li>
 value <cite>fill</cite>.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">growAxis</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">]],</span><span class="mf">2</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">growAxis</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],</span><span class="mi">2</span><span class="p">)</span>
 <span class="go">array([[1, 2, 3, 0, 0],</span>
 <span class="go">       [4, 5, 6, 0, 0]])</span>
 </pre></div>
@@ -282,7 +282,7 @@ resulting in the corresponding renumbering scheme being generated:</p>
 along the specified axis has been changed.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reorderAxis</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">]],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reorderAxis</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="go">array([[3, 1, 2],</span>
 <span class="go">       [6, 4, 5]])</span>
 </pre></div>
@@ -294,7 +294,7 @@ along the specified axis has been changed.</dd>
 <tt class="descclassname">arraytools.</tt><tt class="descname">reverseAxis</tt><big>(</big><em>a</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.reverseAxis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reverse the elements along a computed axis.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reverseAxis</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">]],</span><span class="mf">0</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reverseAxis</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span>
 <span class="go">array([[4, 5, 6],</span>
 <span class="go">       [1, 2, 3]])</span>
 </pre></div>
@@ -382,7 +382,7 @@ The sep parameter can be specified as in tofile.</p>
 <dd><p>Solve a cubiq equation using a direct method.</p>
 <p>a,b,c,d are the (floating point) coefficients of a third degree
 polynomial equation:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mf">3</span>  <span class="o">+</span>  <span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mf">2</span>  <span class="o">+</span>  <span class="n">c</span> <span class="o">*</span> <span class="n">x</span>  <span class="o">+</span>  <span class="n">d</span>   <span class="o">=</span>   <span class="mf">0</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span>  <span class="o">+</span>  <span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>  <span class="o">+</span>  <span class="n">c</span> <span class="o">*</span> <span class="n">x</span>  <span class="o">+</span>  <span class="n">d</span>   <span class="o">=</span>   <span class="mi">0</span>
 </pre></div>
 </div>
 <p>This function computes the three roots (real and complex) of this equation
@@ -486,7 +486,7 @@ True.</p>
 </li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueOrdered</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
@@ -522,9 +522,9 @@ values corresponding to the new value <cite>0..nval</cite>.</dd>
 needed to replace the values in the index by the new ones.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">renumberIndex</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">renumberIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 <span class="go">array([0, 5, 2, 6])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">(</span><span class="n">renumberIndex</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">0</span><span class="p">]))[[</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">(</span><span class="n">renumberIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">]))[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
 <span class="go">array([0, 1, 2, 2, 3, 0])</span>
 </pre></div>
 </div>
@@ -554,9 +554,9 @@ sequential index, so that
 <tt class="docutils literal"><span class="pre">inverseUniqueIndex(index)[index]</span> <span class="pre">==</span> <span class="pre">arange(1+index.max())</span></tt>.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
 <span class="go">array([ 0, -1,  2, -1, -1,  1,  3])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">])[[</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">6</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">])[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span>
 <span class="go">array([0, 1, 2, 3])</span>
 </pre></div>
 </div>
@@ -578,7 +578,7 @@ column, then on the second to resolve ties, etc..</p>
 be taken to obtain an array sorted by columns.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sortByColumns</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sortByColumns</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 <span class="go">array([0, 3, 1, 4, 2])</span>
 </pre></div>
 </div>
@@ -601,7 +601,7 @@ procedure, which in the current implementation is <a class="reference internal" 
 numbers of <cite>uniq</cite> corresponding to each of the rows of <cite>a</cite>.</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueRows</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueRows</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 <span class="go">(array([0, 3, 1, 2]), array([0, 2, 3, 1, 2]))</span>
 </pre></div>
 </div>
@@ -640,7 +640,7 @@ non-existing entries.</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseIndex</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseIndex</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 <span class="go">array([[ 0,  1,  3],</span>
 <span class="go">       [-1,  0,  2],</span>
 <span class="go">       [-1,  1,  2],</span>
@@ -670,12 +670,89 @@ currently undefined which of those positions is returned.</p>
 <p>Remark that after <tt class="docutils literal"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">matchIndex(target,values)</span></tt> the equality
 <tt class="docutils literal"><span class="pre">values[m]</span> <span class="pre">==</span> <span class="pre">target</span></tt> holds in all the non-negative positions of <cite>m</cite>.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">9</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">matchIndex</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
 <span class="go">array([-1, -1,  4,  0, -1])</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.vectorLength">
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorLength</tt><big>(</big><em>vec</em><big>)</big><a class="headerlink" href="#arraytools.vectorLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the lengths of a set of vectors.</p>
+<p>vec is an (n,3) shaped array holding a collection of vectors.
+The result is an (n,) shaped array with the length of each vector.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.vectorNormalize">
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorNormalize</tt><big>(</big><em>vec</em><big>)</big><a class="headerlink" href="#arraytools.vectorNormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize a set of vectors.</p>
+<p>vec is a (n,3) shaped arrays holding a collection of vectors.
+The result is a tuple of two arrays:</p>
+<ul class="simple">
+<li>length (n): the length of the vectors vec</li>
+<li>normal (n,3): unit-length vectors along vec.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.vectorPairAreaNormals">
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAreaNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairAreaNormals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute area of and normals on parallellograms formed by vec1 and vec2.</p>
+<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+The result is a tuple of two arrays:</p>
+<ul class="simple">
+<li>area (n) : the area of the parallellogram formed by vec1 and vec2.</li>
+<li>normal (n,3) : (normalized) vectors normal to each couple (vec1,2).</li>
+</ul>
+<p>These are calculated from the cross product of vec1 and vec2, which indeed
+gives area * normal.</p>
+<p>Note that where two vectors are parallel, an area zero will results and
+an axis with components NaN.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.vectorPairArea">
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairArea</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute area of the parallellogram formed by a vector pair vec1,vec2.</p>
+<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+The result is an (n) shaped array with the area of the parallellograms
+formed by each pair of vectors (vec1,vec2).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.vectorPairNormals">
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairNormals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute vectors normal to vec1 and vec2.</p>
+<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+The result is an (n,3) shaped array of unit length vectors normal to
+each couple (edg1,edg2).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.vectorTripleProduct">
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorTripleProduct</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>vec3</em><big>)</big><a class="headerlink" href="#arraytools.vectorTripleProduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute triple product vec1 . (vec2 x vec3).</p>
+<p>vec1, vec2, vec3 are (n,3) shaped arrays holding collections of vectors.
+The result is a (n,) shaped array with the triple product of each set
+of corresponding vectors fromvec1,vec2,vec3.
+This is also the square of the volume of the parallellepid formex by
+the 3 vectors.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.vectorPairCosAngle">
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairCosAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairCosAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cosinus of the angle between the vectors v1 and v2.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.vectorPairAngle">
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angle (in radians) between the vectors v1 and v2.</p>
 </dd></dl>
 
 </div>
@@ -737,7 +814,7 @@ currently undefined which of those positions is returned.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
     </div>
   </body>
 </html>

@@ -60,6 +60,8 @@
   <div class="section" id="module-menu">
 <span id="menu-menus-for-the-pyformex-gui"></span><span id="sec-ref-menu"></span><h1>14. <a class="reference internal" href="#module-menu" title="menu: Menus for the pyFormex GUI."><tt class="xref py py-mod docutils literal"><span class="pre">menu</span></tt></a> &#8212; Menus for the pyFormex GUI.<a class="headerlink" href="#module-menu" title="Permalink to this headline">¶</a></h1>
 <p>Menus for the pyFormex GUI.</p>
+<p>This modules implements specialized classes and functions for building
+the pyFormex GUI menu system.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">menu</span></tt></p>
 <dl class="class">
 <dt id="menu.BaseMenu">
@@ -80,7 +82,6 @@ Subclasses should implement at least the following methods:</p>
 <li>insertMenu(before,text,menu)</li>
 </ul>
 <p>QtGui.Menu and QtGui.MenuBar provide these methods.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="menu.BaseMenu.actionList">
 <tt class="descname">actionList</tt><big>(</big><big>)</big><a class="headerlink" href="#menu.BaseMenu.actionList" title="Permalink to this definition">¶</a></dt>
@@ -180,14 +181,12 @@ items in the menu: the new items will be inserted before that one.</p>
 <dt id="menu.Menu">
 <em class="property">class </em><tt class="descclassname">menu.</tt><tt class="descname">Menu</tt><big>(</big><em>title='UserMenu'</em>, <em>parent=None</em>, <em>before=None</em>, <em>tearoff=False</em>, <em>items=None</em><big>)</big><a class="headerlink" href="#menu.Menu" title="Permalink to this definition">¶</a></dt>
 <dd><p>A popup/pulldown menu.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="menu.MenuBar">
 <em class="property">class </em><tt class="descclassname">menu.</tt><tt class="descname">MenuBar</tt><big>(</big><em>title='TopMenuBar'</em><big>)</big><a class="headerlink" href="#menu.MenuBar" title="Permalink to this definition">¶</a></dt>
 <dd><p>A menu bar allowing easy menu creation.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -197,7 +196,6 @@ items in the menu: the new items will be inserted before that one.</p>
 <p>When triggered, this action sends a signal (default &#8216;Clicked&#8217;) with a
 custom string as parameter. The connected slot can then act depending
 on this parameter.</p>
-<p class="rubric">Methods</p>
 </dd></dl>
 
 <dl class="class">
@@ -209,7 +207,6 @@ The actions can be presented in a menu and/or a toolbar.
 On activating one of the menu or toolbar buttons, a given signal is
 emitted with the button string as parameter. A fixed function can be
 connected to this signal to act dependent on the string value.</p>
-<p class="rubric">Methods</p>
 <dl class="method">
 <dt id="menu.ActionList.add">
 <tt class="descname">add</tt><big>(</big><em>name</em>, <em>icon=None</em>, <em>text=None</em><big>)</big><a class="headerlink" href="#menu.ActionList.add" title="Permalink to this definition">¶</a></dt>
@@ -266,10 +263,10 @@ to their default operating mode.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="widgets.html"
-                        title="previous chapter">13. <tt class="docutils literal docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
+                        title="previous chapter">13. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="colorscale.html"
-                        title="next chapter">15. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
+                        title="next chapter">15. <tt class="docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -311,7 +308,7 @@ to their default operating mode.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
     </div>
   </body>
 </html>
