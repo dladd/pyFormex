@@ -763,46 +763,46 @@ class TriSurface(Mesh):
         data = (ctr,Iaxes,Iprin,I)
         return data
 
-
-    def edgeConnections(self):
-        """Find the elems connected to edges."""
-        if self.econn is None:
-            self.econn = self.getFaceEdges().inverse()
-        return self.econn
+##moved to mesh,py
+#    def edgeConnections(self):
+#        """Find the elems connected to edges."""
+#        if self.econn is None:
+#            self.econn = self.getFaceEdges().inverse()
+#        return self.econn
     
-
-    def nodeConnections(self):
-        """Find the elems connected to nodes."""
-        if self.conn is None:
-            self.conn = self.elems.inverse()
-        return self.conn
+##moved to mesh,py
+#    def nodeConnections(self):
+#        """Find the elems connected to nodes."""
+#        if self.conn is None:
+#            self.conn = self.elems.inverse()
+#        return self.conn
     
-
-    def nEdgeConnected(self):
-        """Find the number of elems connected to edges."""
-        return (self.edgeConnections() >=0).sum(axis=-1)
+##moved to mesh,py
+#    def nEdgeConnected(self):
+#        """Find the number of elems connected to edges."""
+#        return (self.edgeConnections() >=0).sum(axis=-1)
     
+##moved to mesh,py
+#    def nNodeConnected(self):
+#        """Find the number of elems connected to nodes."""
+#        return (self.nodeConnections() >=0).sum(axis=-1)
 
-    def nNodeConnected(self):
-        """Find the number of elems connected to nodes."""
-        return (self.nodeConnections() >=0).sum(axis=-1)
+##moved to mesh,py
+#    def edgeAdjacency(self):
+#        """Find the elems adjacent to elems via an edge."""
+#        if self.eadj is None:
+#            nfaces = self.nfaces()
+#            rfaces = self.edgeConnections()
+#            # this gives all adjacent elements including element itself
+#            adj = rfaces[self.getFaceEdges()].reshape(nfaces,-1)
+#            fnr = arange(nfaces).reshape(nfaces,-1)
+#            self.eadj = adj[adj != fnr].reshape((nfaces,-1))
+#        return self.eadj
 
-
-    def edgeAdjacency(self):
-        """Find the elems adjacent to elems via an edge."""
-        if self.eadj is None:
-            nfaces = self.nfaces()
-            rfaces = self.edgeConnections()
-            # this gives all adjacent elements including element itself
-            adj = rfaces[self.getFaceEdges()].reshape(nfaces,-1)
-            fnr = arange(nfaces).reshape(nfaces,-1)
-            self.eadj = adj[adj != fnr].reshape((nfaces,-1))
-        return self.eadj
-
-
-    def nEdgeAdjacent(self):
-        """Find the number of adjacent elems."""
-        return (self.edgeAdjacency() >=0).sum(axis=-1)
+##moved to mesh,py
+#    def nEdgeAdjacent(self):
+#        """Find the number of adjacent elems."""
+#        return (self.edgeAdjacency() >=0).sum(axis=-1)
 
 ##this is now a mesh method
 #    def nodeAdjacency(self):
