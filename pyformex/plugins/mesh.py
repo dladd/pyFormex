@@ -660,6 +660,8 @@ class Mesh(Geometry):
 
         if compact:
             M._compact()
+        if self.eltype=='hex20':M.eltype='quad8'
+        if self.eltype=='tet10':M.eltype='tri6'      
         return M
 
 
