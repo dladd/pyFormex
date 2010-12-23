@@ -1049,9 +1049,12 @@ Size: %s
         
         If the Mesh has no properties, a copy with all elements is returned.
         """
-        wi = range(len(self.propSet()))
-        wi = delete(wi, val)
-        return self.withProp(wi)
+        ps=self.propSet()
+        if type(val)==int:
+            t=ps==val
+        else:
+            t=sum([ps==v for v in val], axis=0)
+        return self.withProp(ps[t==0])
 
 
     def splitProp(self):
