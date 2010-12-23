@@ -295,7 +295,7 @@ class Mesh(Geometry):
         self.coords = self.elems = self.prop = self.eltype = None
         self.ndim = -1
         self.nodes = self.edges = self.faces = self.cells = None
-        self.edges2 = None
+        self.edges2 = self.face_edges  = self.eadj = None
         self.conn = self.econn = self.fconn = None 
         
         if coords is None:
@@ -681,21 +681,55 @@ class Mesh(Geometry):
     # Adjacency #
     
 
+    def edgeConnections(self):
+        """Find the elems connected to edges."""
+        
+        if self.econn is None:
+            self.econn = self.getFaceEdges().inverse()
+        return self.econn
+
+
     def nodeConnections(self):
         """Find and store the elems connected to nodes."""
+        
         if self.conn is None:
             self.conn = self.elems.inverse()
         return self.conn
     
 
+    def nEdgeConnected(self):
+        """Find the number of elems connected to edges."""
+        
+        return (self.edgeConnections() >=0).sum(axis=-1)
+
+
     def nNodeConnected(self):
         """Find the number of elems connected to nodes."""
+        
         return (self.nodeConnections() >=0).sum(axis=-1)
+
+
+    def edgeAdjacency(self):
+        """Find the elems adjacent to elems via an edge."""
+        
+        if self.eadj is None:
+            nelems = self.nelems()
+            rfaces = self.edgeConnections()
+            # this gives all adjacent elements including element itself
+            adj = rfaces[self.getFaceEdges()].reshape(nelems,-1)
+            fnr = arange(nelems).reshape(nelems,-1)
+            self.eadj = adj[adj != fnr].reshape((nelems,-1))
+        return self.eadj
+
+
+    def nEdgeAdjacent(self):
+        """Find the number of adjacent elems."""
+        return (self.edgeAdjacency() >=0).sum(axis=-1)
 
 
     def nodeAdjacency(self):
         """Find the elems adjacent to each elem via one or more nodes."""
-        
+
         return adjacent(self.elems,inv=None)
 
 
@@ -703,6 +737,12 @@ class Mesh(Geometry):
         """Find the number of elems which are adjacent by node to each elem."""
 
         return (self.nodeAdjacency() >=0).sum(axis=-1)
+
+
+
+    
+
+
 
     
     # ?? DOES THIS WORK FOR *ANY* MESH ??
