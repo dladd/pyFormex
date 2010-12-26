@@ -1,3 +1,17 @@
+DEBUG: Using the (slower) Python misc functions
+DEBUG: Using the (slower) Python misc functions
+DEBUG: LOADING IMAGE FORMATS
+DEBUG: 
+Qt image types for saving: ['bmp', 'ico', 'jpeg', 'jpg', 'png', 'ppm', 'tif', 'tiff', 'xbm', 'xpm']
+Qt image types for input: ['bmp', 'gif', 'ico', 'jpeg', 'jpg', 'mng', 'pbm', 'pgm', 'png', 'ppm', 'svg', 'tif', 'tiff', 'xbm', 'xpm']
+gl2ps image types: []
+image types converted from EPS: []
+DEBUG: LOADING IMAGE FORMATS
+DEBUG: 
+Qt image types for saving: ['bmp', 'ico', 'jpeg', 'jpg', 'png', 'ppm', 'tif', 'tiff', 'xbm', 'xpm']
+Qt image types for input: ['bmp', 'gif', 'ico', 'jpeg', 'jpg', 'mng', 'pbm', 'pgm', 'png', 'ppm', 'svg', 'tif', 'tiff', 'xbm', 'xpm']
+gl2ps image types: []
+image types converted from EPS: []
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- draw
 .. CREATED WITH py2rst.py: DO NOT EDIT
@@ -13,7 +27,7 @@
 
 .. automodule:: draw
    :synopsis: Create 3D graphical representations.
-   :members: closeGui,closeDialog,showMessage,showInfo,warning,error,ask,ack,showText,showFile,showDescription,askItems,currentDialog,dialogAccepted,dialogRejected,dialogTimedOut,askFilename,askNewFilename,askDirname,askImageFile,checkWorkdir,printMessage,draw,focus,setDrawOptions,showDrawOptions,askDrawOptions,reset,resetAll,shrink,drawVectors,drawPlane,drawMarks,drawNumbers,drawVertexNumbers,drawText3D,drawAxes,drawViewportAxes3D,drawBbox,drawActor,undraw,view,setTriade,drawText,annotate,unannotate,decorate,undecorate,createView,setView,frontView,backView,leftView,rightView,topView,bottomView,isoView,bgcolor,fgcolor,renderMode,wireframe,smooth,smoothwire,flat,flatwire,smooth_avg,lights,transparent,perspective,timeout,set_material_value,set_light,set_light_value,linewidth,linestipple,pointsize,canvasSize,clear_canvas,clear,redraw,delay,wait,fforward,step,pause,sleep,wakeup,printbbox,printviewportsettings,reportCamera,zoom_factor,pan_factor,rot_factor,zoomIn,zoomOut,panRight,panLeft,panUp,panDown,rotRight,rotLeft,rotUp,rotDown,twistLeft,twistRight,transLeft,transRight,transDown,transUp,dollyIn,dollyOut,lockCamera,unlockCamera,zoomRectangle,zoomBbox,zoomAll,zoom,flyAlong,viewport,layout,addViewport,removeViewport,linkViewport,updateGUI,highlightActors,highlightElements,highlightEdges,highlightPoints,highlightPartitions,removeHighlights,set_selection_filter,pick,pickActors,pickElements,pickPoints,pickEdges,highlight,pickNumbers,set_edit_mode,drawLinesInter,showLineDrawing,setLocalAxes,setGlobalAxes
+   :members: closeGui,closeDialog,showMessage,showInfo,warning,error,ask,ack,showText,showFile,showDescription,askItems,currentDialog,dialogAccepted,dialogRejected,dialogTimedOut,askFilename,askNewFilename,askDirname,checkWorkdir,message,printMessage,draw,focus,askDrawOptions,drawVectors,drawMarks,drawNumbers,drawVertexNumbers,drawText3D,drawAxes,drawViewportAxes3D,drawBbox,drawActor,undraw,view,setTriade,drawText,annotate,decorate,createView,setView,bgcolor,fgcolor,lights,transparent,set_material_value,linewidth,linestipple,pointsize,canvasSize,clear_canvas,clear,delay,wait,fforward,step,pause,sleep,wakeup,zoomRectangle,zoomBbox,zoomAll,flyAlong,viewport,layout,addViewport,removeViewport,linkViewport,updateGUI,highlightActors,highlightElements,highlightEdges,highlightPoints,highlightPartitions,removeHighlights,set_selection_filter,pick,highlight,set_edit_mode,drawLinesInter,showLineDrawing
 
    ``Classes defined in module draw``
 

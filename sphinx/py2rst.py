@@ -18,15 +18,12 @@ Usage:  py2tex.py PYTHONFILE [> outputfile.tex]
 
 import os,sys
 
-import parser
-import symbol
-import token
-import types
-from types import ListType, TupleType
-
 # set path to the pyformex modules
 parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0,os.path.join(parent,'pyformex'))
+pyformexdir = os.path.join(parent,'pyformex')
+for d in [ 'plugins', 'gui' ]:
+    sys.path.insert(0,os.path.join(pyformexdir,d))
+sys.path.insert(0,pyformexdir)
 
 #print sys.path
 
@@ -35,396 +32,69 @@ from pyformex.odict import ODict
 def debug(s):
     if options.debug:
         print '.. DEBUG:'+str(s)
-        
 
 import inspect
-def get_inspect(filename):
+
+
+def filter_names(info):
+    return [ i for i in info if not i[0].startswith('_') ]
+
+
+def filter_docstrings(info):
+    return [ i for i in info if not (i[1].__doc__ is None or i[1].__doc__.startswith('_')) ]
+
+def filter_module(info,modname):
+    return [ i for i in info if i[1].__module__ == modname]
+
+def function_key(i):
+    return i[1].func_code.co_firstlineno
+
+
+def do_class(name,obj):
+    # get class methods #
+    methods = inspect.getmembers(obj,inspect.ismethod)
+    methods = filter_names(methods)
+    methods = filter_docstrings(methods)
+    methods = sorted(methods,key=function_key)
+    names = [ f[0] for f in methods ]
+    ship_class(name,names)
+
+
+def do_module(filename):
     """Retrieve information from the parse tree of a source file.
 
     filename
         Name of the file to read Python source code from.
     """
     modname = inspect.getmodulename(filename)
-    print "MODULE %s" % modname
-    print inspect.getmoduleinfo(filename)
+    #print "MODULE %s" % modname
+    #print inspect.getmoduleinfo(filename)
     module = __import__(modname)
     classes = [ c for c in inspect.getmembers(module,inspect.isclass) if c[1].__module__ == modname ]
-    print classes
+    classes = filter_names(classes)
+    classes = filter_docstrings(classes)
 
+    # Functions #
+    functions = [ c for c in inspect.getmembers(module,inspect.isfunction) if c[1].__module__ == modname ]
+    functions = filter_names(functions)
+    functions = filter_docstrings(functions)
+    functions = sorted(functions,key=function_key)
+    #print "FUNCTIONS"
+    names = [ f[0] for f in functions ]
+    #print names
 
-
-def get_docs(filename):
-    """Retrieve information from the parse tree of a source file.
-
-    filename
-        Name of the file to read Python source code from.
-    """
-    source = open(filename).read()
-    basename = os.path.basename(os.path.splitext(filename)[0])
-    ast = parser.suite(source)
-    return ModuleInfo(ast.totuple(), basename)
-
-
-class SuiteInfoBase:
-    _docstring = ''
-    _name = ''
-    _arglist = ''
-
-    def __init__(self, tree = None):
-        self._class_info = ODict()
-        self._function_info = ODict()
-        self.arglist = None
-        if tree:
-            self._extract_info(tree)
-
-    def _extract_info(self, tree):
-        # extract docstring
-        if len(tree) == 2:
-            found, vars = match(DOCSTRING_STMT_PATTERN[1], tree[1])
-        else:
-            found, vars = match(DOCSTRING_STMT_PATTERN, tree[3])
-        if found:
-            self._docstring = eval(vars['docstring'])
-        # discover inner definitions
-        for node in tree[1:]:
-            found, vars = match(COMPOUND_STMT_PATTERN, node)
-            if found:
-                cstmt = vars['compound']
-                if cstmt[0] == symbol.funcdef:
-                    i = 1
-                    class_method = False
-                    coords_method = False
-                    deprecated = False
-                    while i < len(cstmt) and cstmt[i][1] != 'def':
-                        if cstmt[i][1][:3] == CLASS_METHOD_PATTERN:
-                            class_method = True
-                        elif cstmt[i][1][:3] == COORDS_METHOD_PATTERN:
-                            coords_method = True
-                        elif cstmt[i][1][:3] == DEPRECATED_PATTERN:
-                            deprecated = True
-                            # LEAVE DEPRECATED FUNCTIONS OUT OF MANUAL
-                            break
-                        else:
-                            #print cstmt[i][1][:3]
-                            print ".. POPPING %s" % str(cstmt[i])
-                            print ".. MATCHING %s" % str(cstmt[i][1][:3])
-                            #raise
-                        i += 1
-                    # LEAVE DEPRECATED FUNCTIONS OUT OF MANUAL
-                    if deprecated:
-                        continue
-                    if cstmt[i][1] == 'def':
-                        name = cstmt[i+1][1]
-                        self._function_info[name] = FunctionInfo(cstmt)
-                        found, vars = match(DOCSTRING_STMT_PATTERN, tree[1])
-                        args = cstmt[i+2][2]
-                        self._function_info[name]._arglist = ParameterInfo(args)
-                elif cstmt[0] == symbol.classdef:
-                    name = cstmt[2][1]
-                    self._class_info[name] = ClassInfo(cstmt)
-
-    def get_docstring(self):
-        return self._docstring
-
-    def get_name(self):
-        return self._name
-
-    def get_class_names(self):
-        return self._class_info.keys()
-
-    def get_class_info(self, name):
-        return self._class_info[name]
-
-    def __getitem__(self, name):
-        try:
-            return self._class_info[name]
-        except KeyError:
-            return self._function_info[name]
-
-
-class SuiteFuncInfo:
-    #  Mixin class providing access to function names and info.
-
-    def get_function_names(self):
-        return self._function_info.keys()
-
-    def get_function_info(self, name):
-        return self._function_info[name]
-
-
-class FunctionInfo(SuiteInfoBase, SuiteFuncInfo):
-    def __init__(self, tree = None):
-        self.class_method = False
-        self.coords_method = False
-        i = 1
-        while i < len(tree) and tree[i][1] != 'def':
-            if tree[i][1][:3] == CLASS_METHOD_PATTERN:
-                self.class_method = True
-            elif tree[i][1][:3] == COORDS_METHOD_PATTERN:
-                self.coords_method = True
-            else:
-                print ".. POPPING %s" % str(tree[i])
-            i += 1
-            #print i,tree[i+1][1]
-        self._name = tree[i+1][1]
-        SuiteInfoBase.__init__(self, tree and tree[-1] or None)
-
-
-class ClassInfo(SuiteInfoBase):
-    def __init__(self, tree = None):
-        self._name = tree[2][1]
-        SuiteInfoBase.__init__(self, tree and tree[-1] or None)
-
-    def get_method_names(self):
-        return self._function_info.keys()
-
-    def get_method_info(self, name):
-        return self._function_info[name]
-
-
-class ModuleInfo(SuiteInfoBase, SuiteFuncInfo):
-    def __init__(self, tree = None, name = "<string>"):
-        self._name = name
-        SuiteInfoBase.__init__(self, tree)
-        if tree:
-            found, vars = match(DOCSTRING_STMT_PATTERN, tree[1])
-            if found:
-                self._docstring = vars["docstring"]
-
-
-def match(pattern, data, vars=None):
-    """Match `data' to `pattern', with variable extraction.
-
-    pattern
-        Pattern to match against, possibly containing variables.
-
-    data
-        Data to be checked and against which variables are extracted.
-
-    vars
-        Dictionary of variables which have already been found.  If not
-        provided, an empty dictionary is created.
-
-    The `pattern' value may contain variables of the form ['varname'] which
-    are allowed to match anything.  The value that is matched is returned as
-    part of a dictionary which maps 'varname' to the matched value.  'varname'
-    is not required to be a string object, but using strings makes patterns
-    and the code which uses them more readable.
-
-    This function returns two values: a boolean indicating whether a match
-    was found and a dictionary mapping variable names to their associated
-    values.
-    """
-    if vars is None:
-        vars = ODict()
-    if type(pattern) is ListType:       # 'variables' are ['varname']
-        vars[pattern[0]] = data
-        return 1, vars
-    if type(pattern) is not TupleType:
-        return (pattern == data), vars
-    if len(data) != len(pattern):
-        #print "%s != %s" %  (len(data), len(pattern))
-        return 0, vars
-    for pattern, data in map(None, pattern, data):
-        same, vars = match(pattern, data, vars)
-        if not same:
-            #print "BREAK AT PATTERN "+str(pattern)
-            #print "BREAK WITH DATA  "+str(data)
-            break
-    return same, vars
-
-
-#  This pattern identifies compound statements, allowing them to be readily
-#  differentiated from simple statements.
-#
-COMPOUND_STMT_PATTERN = (
-    symbol.stmt,
-    (symbol.compound_stmt, ['compound'])
-    )
-
-
-#  This pattern will match a 'stmt' node which *might* represent a docstring;
-#  docstrings require that the statement which provides the docstring be the
-#  first statement in the class or function, which this pattern does not check.
-#
-DOCSTRING_STMT_PATTERN = (
-    symbol.stmt,
-    (symbol.simple_stmt,
-     (symbol.small_stmt,
-      (symbol.expr_stmt,
-       (symbol.testlist,
-        (symbol.test,
-         (symbol.or_test,                # BV added by testing
-          (symbol.and_test,
-           (symbol.not_test,
-            (symbol.comparison,
-             (symbol.expr,
-              (symbol.xor_expr,
-               (symbol.and_expr,
-                (symbol.shift_expr,
-                 (symbol.arith_expr,
-                  (symbol.term,
-                   (symbol.factor,
-                    (symbol.power,
-                     (symbol.atom,
-                      (token.STRING, ['docstring'])
-                      ))))))))))))))))),
-     (token.NEWLINE, '')
-     ))
-
-
-PARAMETER_VALUE_PATTERN = (
-    symbol.test,
-    (symbol.or_test,
-     (symbol.and_test,
-      (symbol.not_test,
-       (symbol.comparison,
-        (symbol.expr,
-         (symbol.xor_expr,
-          (symbol.and_expr,
-           (symbol.shift_expr,
-            (symbol.arith_expr,
-             (symbol.term,
-              (symbol.factor,
-               (symbol.power,['parvalue'])
-                 ))))))))))))
-
-# The previous does not allow parameters of type DD.bb.cc
-# The following does, but rebuildAtom can not yet restore it
-
-PARAMETER_VALUE_PATTERN1 = (
-    symbol.test,
-    (symbol.or_test,
-     (symbol.and_test,
-      (symbol.not_test,
-       (symbol.comparison,
-        (symbol.expr,
-         (symbol.xor_expr,
-          (symbol.and_expr,
-           (symbol.shift_expr,
-            (symbol.arith_expr,
-             (symbol.term,
-              (symbol.factor,['parvalue'])
-                 )))))))))))
-
-PARAMETER_VALUE_PATTERN2 = (
-    symbol.test,
-    (symbol.or_test,
-     (symbol.and_test,
-      (symbol.not_test,
-       (symbol.comparison,
-        (symbol.expr,
-         (symbol.xor_expr,
-          (symbol.and_expr,
-           (symbol.shift_expr,
-            (symbol.arith_expr,
-             (symbol.term,
-              (symbol.factor,
-               (token.MINUS,'-'),
-              (symbol.factor,
-               (symbol.power,['parvalue']),
-                 )))))))))))))
-
-
-CLASS_METHOD_PATTERN = (259, (50, '@'), (287, (1, 'classmethod')), )
-COORDS_METHOD_PATTERN = (259, (50, '@'), (287, (1, 'coordsmethod')), )
-DEPRECATED_PATTERN = (259, (50, '@'), (287, (1, 'deprecated')), )
-
-PARAMETERS_PATTERN = (
-    symbol.parameters,
-    (token.LPAR, '('),
-    (symbol.varargslist, ['arglist']),
-    (token.RPAR, ')'),
-    )
-
-
-def rebuildAtom(node):
-    if type(node) is TupleType and node[0] == symbol.atom:
-        s = ''
-        for i in node[1:]:
-            debug("S (0) is '%s'" % s) 
-            if len(i) == 2 and i[0] < 256:
-                # This is a token: just add it
-                s += str(i[1])
-                debug("S (1) is '%s'" % s)
-            elif i[0] == symbol.listmaker:
-#                s += '['
-#                debug("LIST"+str(i[1:]))
-                debug("S (3) is '%s'" % s) 
-                for k in i[1:]:
-                    s += rebuildAtom(k)
-                    debug("S (4) '%s'" % s) 
-#                    s += ','
-#                    debug("S (5) '%s'" % s) 
-#                s += ']'
-                debug("S (6) is '%s'" % s) 
-            else:
-                s += "!!%s!!" % str(i)
-                debug("S (7) is '%s'" % s) 
-        debug("S (8) is '%s'" % s) 
-        return s
-
-    elif node[0] == 12:
-        return ','
-
-    elif node[0] == 303:
-        return findParameterValue(node)
-
-    if options.error:
-        print node
-        raise RuntimeError,"ALAS, NOTHING!"
-    return ''
-       
-
-def findParameterValue(data):
-    debug("VALUE TO MATCH " + str(data))
-    s = ''
-
-    for i,pattern in enumerate([
-        PARAMETER_VALUE_PATTERN,
-#        PARAMETER_VALUE_PATTERN1,
-        PARAMETER_VALUE_PATTERN2,
-        ]):
-        debug("TRYING PATTERN %s: %s" %(i,pattern))
-        found,vars = match(pattern,data)
-        if found:
-            if i == 2:
-                s += '-'
-            break
-
-    if not found:
-        if options.error:
-            raise RuntimeError,"ALAS, CAN NOT CONTINUE!"
-        else:
-            print ".. HELP "+str(data)
-
-    return s+rebuildAtom(vars['parvalue'])
+    # Shipout
     
-
-def ParameterInfo(node):
-    #found, vars = match(PARAMETERS_PATTERN, node)
-    #print node
-    args = []
-    name = None
-    value = None
-    for i in node[1:]:
-        if i[0] == symbol.fpdef:
-            name = i[1][1]
-            value = None
-        elif i[0] == 12:
-            args.append((name,value))
-            name = None
-        elif i[0] == 22:
-            value = '???'
-        elif i[0] == 303:
-            value = findParameterValue(i)
-        else:
-            pass#print i[0]
-    if name is not None:
-        args.append((name,value))
-    #print "ARGS=%s" % args
-    return args
-        
+    ship_module(modname,module.__doc__)
+    #print names
+    ship_functions(names)
+    ship_class_init(modname)
+    for c in classes:
+        do_class(*c)
+    ship_functions_init(modname)
+    ship_end()
+    
+       
 
 ############# Output formatting ##########################
 
@@ -498,44 +168,6 @@ def ship_functions_init(name):
 """ % name
 
 
-def get_new_sig(source,clas):
-    return '()'
-
-def do_class(info):
-    if info._name.startswith('_'):
-        return
-    ## if '__new__' in info.get_method_names():
-    ##     info._arglist = info['__new__']._arglist
-    ##     print source
-    ##     print dir(info)
-    ##     #class_sig = sig_from_new()
-    ##     args = info['__new__']._arglist
-    ##     print args
-
-    #print "CLASSINFO"
-    #print dir(info)
-    #print info.get_method_names()
-    #print info.get_method_names()
-    #print info.get_function_names()
-    
-    names = [ n for n in info.get_method_names() if not n.startswith('_') ]
-    ship_class(info._name,names)
-
-def do_module(info):
-    #print "MODULEINFO"
-    #print dir(info)
-    #print info.get_function_names()
-    
-    ship_module(info._name,sanitize(info._docstring))
-    names = [ n for n in info.get_function_names() if not n.startswith('_') and not info[n]._docstring.startswith('_') ]
-    ship_functions(names)
-    ship_class_init(info._name)
-    for k in info.get_class_names():
-        do_class(info[k])
-    ship_functions_init(info._name)
-    ship_end()
-
-
 def main(argv):
     global options,source
     from optparse import OptionParser,make_option
@@ -547,19 +179,13 @@ defined in PYTHONFILE.""",
         option_list=[
         make_option('-d',"--debug", help="print debug info",
                     action="store_true", dest="debug", default=False),
-        make_option('-i',"--inspect", help="use the inspect module",
-                    action="store_true", dest="inspect", default=False),
         make_option('-c',"--continue", help="continue on errors",
                     action="store_false", dest="error", default=True),
         ])
     options, args = parser.parse_args(argv)
     
     for source in args:
-        if options.inspect:
-            get_inspect(source)
-        else:
-            info = get_docs(source)
-            do_module(info)
+        do_module(source)
 
 
 if __name__ == "__main__":

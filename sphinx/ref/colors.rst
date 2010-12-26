@@ -13,7 +13,7 @@
 
 .. automodule:: colors
    :synopsis: Definition of some RGB colors and color conversion functions
-   :members: GLColor,colorName,createColorDict,closestColorName,RGBA,GREY,grey
+   :members: GLColor,colorName,closestColorName,RGBA,GREY
 
    ``Classes defined in module colors``
 

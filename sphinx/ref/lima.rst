@@ -19,7 +19,7 @@
 
 
    .. autoclass:: Lima
-      :members: status,addRule,translate,grow
+      :members: status,addRule,translate
 
    ``Functions defined in module lima`` 
 

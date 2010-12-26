@@ -13,7 +13,7 @@
 
 .. automodule:: utils
    :synopsis: A collection of miscellaneous utility functions.
-   :members: checkVersion,hasModule,hasExternal,checkModule,checkExternal,reportDetected,procInfo,strNorm,prefixFiles,matchMany,matchCount,matchAny,matchNone,matchAll,listTree,removeTree,setSaneLocale,dos2unix,unix2dos,all_image_extensions,fileDescription,findIcon,projectName,splitme,mergeme,mtime,timeEval,countLines,runCommand,spawn,killProcesses,changeExt,tildeExpand,is_pyFormex,splitEndDigits,splitStartDigits,prefixDict,subDict,stuur,interrogate,deprecation,deprecated,functionWasRenamed,functionBecameMethod,filterWarning
+   :members: checkVersion,hasModule,hasExternal,checkModule,checkExternal,strNorm,prefixFiles,matchMany,matchCount,matchAny,matchNone,matchAll,listTree,removeTree,setSaneLocale,all_image_extensions,fileDescription,findIcon,projectName,mtime,timeEval,countLines,runCommand,spawn,killProcesses,changeExt,tildeExpand,is_pyFormex,splitEndDigits,splitStartDigits,prefixDict,subDict,stuur,interrogate
 
    ``Classes defined in module utils``
 

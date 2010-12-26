@@ -206,3 +206,21 @@ latex_logo = 'images/pyformex_logo_with_dome.png'
 # If false, no module index is generated.
 #latex_use_modindex = True
 
+def setup(app):
+    from sphinx.ext.autodoc import cut_lines
+    app.connect('autodoc-process-docstring', cut_lines(2, what=['module']))
+##     app.connect('autodoc-skip-member', autodoc_skip_member1)
+
+    
+## def autodoc_skip_member1(app,what,name,obj,skip,options):
+##     #from sphinx.ext.autodoc import autodoc_skip_member
+##     print obj
+##     print skip
+##     if obj.__doc__ is not None:
+##         skip |= obj.__doc__[0] == '_'
+##     return skip
+
+
+
+
+# End

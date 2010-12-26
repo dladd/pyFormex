@@ -1,3 +1,4 @@
+DEBUG: Using the (slower) Python misc functions
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- coords
 .. CREATED WITH py2rst.py: DO NOT EDIT
@@ -18,11 +19,11 @@
    ``Classes defined in module coords``
 
 
-   .. autoclass:: Coords
-      :members: points,pshape,npoints,x,y,z,bbox,center,centroid,sizes,dsize,bsphere,distanceFromPlane,distanceFromLine,distanceFromPoint,closestToPoint,directionalSize,directionalExtremes,directionalWidth,test,fprint,set,scale,translate,rotate,shear,reflect,affine,replicate,cylindrical,hyperCylindrical,toCylindrical,spherical,superSpherical,toSpherical,bump1,bump2,bump,flare,map,map1,mapd,egg,replace,swapAxes,rollAxes,projectOnPlane,projectOnSphere,projectOnCylinder,projectOnSurface,isopar,transformCS,split,fuse,match,append,actor
-
    .. autoclass:: CoordinateSystem
-      :members: 
+      :members: points,pshape,ncoords,npoints,x,y,z,bbox,center,centroid,sizes,dsize,bsphere,distanceFromPlane,distanceFromLine,distanceFromPoint,closestToPoint,directionalSize,directionalExtremes,directionalWidth,test,fprint,set,scale,translate,trl,rot,rotate,shear,reflect,affine,replicate,cylindrical,toCylindrical,spherical,superSpherical,toSpherical,bump1,bump2,bump,flare,map,map1,mapd,egg,replace,swapAxes,rollAxes,projectOnPlane,projectOnSphere,projectOnCylinder,projectOnSurface,isopar,transformCS,split,fuse,match,append,concatenate,fromstring,fromfile,interpolate
+
+   .. autoclass:: Coords
+      :members: points,pshape,ncoords,npoints,x,y,z,bbox,center,centroid,sizes,dsize,bsphere,distanceFromPlane,distanceFromLine,distanceFromPoint,closestToPoint,directionalSize,directionalExtremes,directionalWidth,test,fprint,set,scale,translate,trl,rot,rotate,shear,reflect,affine,replicate,cylindrical,toCylindrical,spherical,superSpherical,toSpherical,bump1,bump2,bump,flare,map,map1,mapd,egg,replace,swapAxes,rollAxes,projectOnPlane,projectOnSphere,projectOnCylinder,projectOnSurface,isopar,transformCS,split,fuse,match,append,concatenate,fromstring,fromfile,interpolate
 
    ``Functions defined in module coords`` 
 

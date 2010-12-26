@@ -1,3 +1,17 @@
+DEBUG: Using the (slower) Python misc functions
+DEBUG: Using the (slower) Python misc functions
+DEBUG: LOADING IMAGE FORMATS
+DEBUG: 
+Qt image types for saving: ['bmp', 'ico', 'jpeg', 'jpg', 'png', 'ppm', 'tif', 'tiff', 'xbm', 'xpm']
+Qt image types for input: ['bmp', 'gif', 'ico', 'jpeg', 'jpg', 'mng', 'pbm', 'pgm', 'png', 'ppm', 'svg', 'tif', 'tiff', 'xbm', 'xpm']
+gl2ps image types: []
+image types converted from EPS: []
+DEBUG: LOADING IMAGE FORMATS
+DEBUG: 
+Qt image types for saving: ['bmp', 'ico', 'jpeg', 'jpg', 'png', 'ppm', 'tif', 'tiff', 'xbm', 'xpm']
+Qt image types for input: ['bmp', 'gif', 'ico', 'jpeg', 'jpg', 'mng', 'pbm', 'pgm', 'png', 'ppm', 'svg', 'tif', 'tiff', 'xbm', 'xpm']
+gl2ps image types: []
+image types converted from EPS: []
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- section2d
 .. CREATED WITH py2rst.py: DO NOT EDIT
@@ -19,7 +33,7 @@
 
 
    .. autoclass:: planeSection
-      :members: sectionChar
+      :members: 
 
    ``Functions defined in module section2d`` 
 

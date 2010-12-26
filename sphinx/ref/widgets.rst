@@ -13,142 +13,139 @@
 
 .. automodule:: widgets
    :synopsis: A collection of custom widgets used in the pyFormex GUI
-   :members: setInputTimeout,standardIcon,maxSize,addTimeOut,selectFont,getColor,defaultItemType,simpleInputItem,groupInputItem,tabInputItem,compatInputItem,convertInputItemList,inputAny,inputAnyOld,updateDialogItems,updateOldDialogItems,updateText,dialogButtons
+   :members: maxSize,addTimeOut,selectFont,getColor,defaultItemType,simpleInputItem,groupInputItem,tabInputItem,compatInputItem,convertInputItemList,inputAny,inputAnyOld,updateDialogItems,updateOldDialogItems,updateText,dialogButtons
 
    ``Classes defined in module widgets``
 
 
-   .. autoclass:: Options
-      :members: 
-
-   .. autoclass:: FileSelection
-      :members: show,getFilename
-
-   .. autoclass:: ProjectSelection
-      :members: getResult
-
-   .. autoclass:: SaveImageDialog
-      :members: getResult
-
-   .. autoclass:: DockedSelection
-      :members: setSelected,getResult
-
-   .. autoclass:: ModelessSelection
-      :members: setSelected,getResult
-
-   .. autoclass:: Selection
-      :members: setSelected,getResult
-
-   .. autoclass:: InputItem
-      :members: name,text,value,setValue
-
-   .. autoclass:: InputInfo
-      :members: value
-
-   .. autoclass:: InputLabel
-      :members: setValue,layoutMinimumWidth,setSize
-
-   .. autoclass:: InputString
-      :members: show,value
-
-   .. autoclass:: InputText
-      :members: show,value,setValue
-
-   .. autoclass:: InputBool
-      :members: text,value,setValue
-
-   .. autoclass:: InputCombo
-      :members: value,setValue
-
-   .. autoclass:: InputRadio
-      :members: value,setValue
-
-   .. autoclass:: InputPush
-      :members: setText,setIcon,value,setValue
-
-   .. autoclass:: InputInteger
-      :members: show,value,setValue
-
-   .. autoclass:: InputFloat
-      :members: show,value,setValue
-
-   .. autoclass:: InputFloatTable
-      :members: show,value,setValue
-
-   .. autoclass:: InputSlider
-      :members: set_value
-
-   .. autoclass:: InputFSlider
-      :members: set_value
-
-   .. autoclass:: InputPoint
-      :members: value,setValue
-
-   .. autoclass:: InputButton
-      :members: doFunc
-
-   .. autoclass:: InputColor
-      :members: setColor,setValue
-
-   .. autoclass:: InputFont
-      :members: setFont
-
-   .. autoclass:: InputWidget
-      :members: text,value,setValue
-
-   .. autoclass:: InputGroup
-      :members: value,setValue
-
-   .. autoclass:: InputDialog
-      :members: add_items,add_tab,add_group,add_input,timeout,timedOut,show,acceptData,updateData,getResults
-
-   .. autoclass:: TableModel
-      :members: makeEditable,rowCount,columnCount,data,headerData,insertRows,removeRows,flags,setData
-
    .. autoclass:: ArrayModel
-      :members: setData
-
-   .. autoclass:: Table
-      :members: 
-
-   .. autoclass:: Tabs
-      :members: 
-
-   .. autoclass:: GenericDialog
-      :members: add
-
-   .. autoclass:: TableDialog
-      :members: 
-
-   .. autoclass:: MessageBox
-      :members: addCheck,show,getResult,updateText
-
-   .. autoclass:: WarningBox
-      :members: 
-
-   .. autoclass:: TextBox
-      :members: getResult,updateText
-
-   .. autoclass:: InputBox
-      :members: 
+      :members: flags
 
    .. autoclass:: ButtonBox
-      :members: setText,setIcon
-
-   .. autoclass:: ComboBox
-      :members: setIndex
+      :members: 
 
    .. autoclass:: CoordsBox
       :members: getValues,setValues
 
+   .. autoclass:: DockedSelection
+      :members: 
+
+   .. autoclass:: FileSelection
+      :members: getFilename
+
+   .. autoclass:: GenericDialog
+      :members: 
+
    .. autoclass:: ImageView
       :members: showImage
+
+   .. autoclass:: InputBool
+      :members: name,text,value,setValue
+
+   .. autoclass:: InputBox
+      :members: 
+
+   .. autoclass:: InputButton
+      :members: name,text,value,setValue,doFunc
+
+   .. autoclass:: InputColor
+      :members: name,text,value,setValue
+
+   .. autoclass:: InputCombo
+      :members: name,text,value,setValue
+
+   .. autoclass:: InputDialog
+      :members: add_items,add_tab,add_group,add_input,timeout,timedOut,show,acceptData,updateData,getResult,getResults
+
+   .. autoclass:: InputFSlider
+      :members: name,text,show,value,setValue
+
+   .. autoclass:: InputFloat
+      :members: name,text,show,value,setValue
+
+   .. autoclass:: InputFloatTable
+      :members: name,text,show,value,setValue
+
+   .. autoclass:: InputFont
+      :members: name,text,value,setValue
+
+   .. autoclass:: InputGroup
+      :members: name,text,value,setValue
+
+   .. autoclass:: InputInfo
+      :members: name,text,setValue,value
+
+   .. autoclass:: InputInteger
+      :members: name,text,show,value,setValue
+
+   .. autoclass:: InputItem
+      :members: name,text,value,setValue
+
+   .. autoclass:: InputLabel
+      :members: name,text,value,setValue
+
+   .. autoclass:: InputPoint
+      :members: name,text,value,setValue
+
+   .. autoclass:: InputPush
+      :members: name,text,setText,setIcon,value,setValue
+
+   .. autoclass:: InputRadio
+      :members: name,text,value,setValue
+
+   .. autoclass:: InputSlider
+      :members: name,text,show,value,setValue
+
+   .. autoclass:: InputString
+      :members: name,text,setValue,show,value
+
+   .. autoclass:: InputText
+      :members: name,text,show,value,setValue
+
+   .. autoclass:: InputWidget
+      :members: name,text,value,setValue
+
+   .. autoclass:: MessageBox
+      :members: addCheck,getResult
+
+   .. autoclass:: ModelessSelection
+      :members: setSelected,getResult
+
+   .. autoclass:: NewInputDialog
+      :members: add_items,add_tab,add_group,add_input,timeout,timedOut,show,acceptData,updateData,getResult,getResults
 
    .. autoclass:: OldTableDialog
       :members: 
 
-   .. autoclass:: OldInputDialog
-      :members: add_input_items,timeout,timedOut,show,acceptData,updateData,getResult
+   .. autoclass:: Options
+      :members: 
+
+   .. autoclass:: ProjectSelection
+      :members: getFilename
+
+   .. autoclass:: SaveImageDialog
+      :members: getFilename
+
+   .. autoclass:: Selection
+      :members: setSelected,getResult
+
+   .. autoclass:: Table
+      :members: 
+
+   .. autoclass:: TableDialog
+      :members: 
+
+   .. autoclass:: TableModel
+      :members: flags
+
+   .. autoclass:: Tabs
+      :members: 
+
+   .. autoclass:: TextBox
+      :members: 
+
+   .. autoclass:: WarningBox
+      :members: 
 
    ``Functions defined in module widgets`` 
 

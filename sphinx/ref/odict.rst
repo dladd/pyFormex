@@ -17,11 +17,11 @@
    ``Classes defined in module odict``
 
 
+   .. autoclass:: KeyedList
+      :members: update,sort,keys,values,pos,items
+
    .. autoclass:: ODict
       :members: update,sort,keys,values,items,pos
-
-   .. autoclass:: KeyedList
-      :members: items
 
    ``Functions defined in module odict`` 
 

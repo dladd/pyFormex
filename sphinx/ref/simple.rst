@@ -1,3 +1,4 @@
+DEBUG: Using the (slower) Python misc functions
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- simple
 .. CREATED WITH py2rst.py: DO NOT EDIT

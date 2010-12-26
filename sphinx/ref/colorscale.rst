@@ -17,11 +17,11 @@
    ``Classes defined in module colorscale``
 
 
-   .. autoclass:: ColorScale
-      :members: scale,color
-
    .. autoclass:: ColorLegend
       :members: overflow,color
+
+   .. autoclass:: ColorScale
+      :members: scale,color
 
    ``Functions defined in module colorscale`` 
 

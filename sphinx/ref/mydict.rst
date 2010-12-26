@@ -18,11 +18,11 @@
    ``Classes defined in module mydict``
 
 
-   .. autoclass:: Dict
+   .. autoclass:: CDict
       :members: update,get,setdefault
 
-   .. autoclass:: CDict
-      :members: 
+   .. autoclass:: Dict
+      :members: update,get,setdefault
 
    ``Functions defined in module mydict`` 
 

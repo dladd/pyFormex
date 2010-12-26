@@ -1,3 +1,15 @@
+DEBUG: LOADING IMAGE FORMATS
+DEBUG: 
+Qt image types for saving: ['bmp', 'ico', 'jpeg', 'jpg', 'png', 'ppm', 'tif', 'tiff', 'xbm', 'xpm']
+Qt image types for input: ['bmp', 'gif', 'ico', 'jpeg', 'jpg', 'mng', 'pbm', 'pgm', 'png', 'ppm', 'svg', 'tif', 'tiff', 'xbm', 'xpm']
+gl2ps image types: []
+image types converted from EPS: []
+DEBUG: LOADING IMAGE FORMATS
+DEBUG: 
+Qt image types for saving: ['bmp', 'ico', 'jpeg', 'jpg', 'png', 'ppm', 'tif', 'tiff', 'xbm', 'xpm']
+Qt image types for input: ['bmp', 'gif', 'ico', 'jpeg', 'jpg', 'mng', 'pbm', 'pgm', 'png', 'ppm', 'svg', 'tif', 'tiff', 'xbm', 'xpm']
+gl2ps image types: []
+image types converted from EPS: []
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- image
 .. CREATED WITH py2rst.py: DO NOT EDIT
@@ -13,7 +25,7 @@
 
 .. automodule:: image
    :synopsis: Saving OpenGL renderings to image files.
-   :members: imageFormats,initialize,checkImageFormat,imageFormatFromExt,save_canvas,save_window,save_main_window,save_rect,save,saveNext,saveIcon,autoSaveOn,createMovie,saveMovie
+   :members: initialize,imageFormats,checkImageFormat,imageFormatFromExt,save_canvas,save_window,save_main_window,save_rect,save,saveImage,saveNext,saveIcon,autoSaveOn,createMovie,saveMovie
 
    ``Classes defined in module image``
 
