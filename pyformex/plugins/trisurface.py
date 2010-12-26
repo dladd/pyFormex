@@ -548,32 +548,13 @@ class TriSurface(Mesh):
     def shape(self):
         """Return the number of points, edges, faces of the TriSurface."""
         return self.ncoords(),self.nedges(),self.nfaces()
- 
-    #
-    # In the new implementation, TriSurface is derived from a Mesh,
-    # thus the base information is (coords,elems).
-    # Edges and Faces should always be retrieved with getEdges() and
-    # getFaceEdges(). coords and elems can directly be used as attributes
-    # and should always be kept in a consistent state.
-    #
-    
-    def getEdges(self):
-        """Get the edges data."""
-        if self.edges is None:
-            self.faces,self.edges = self.elems.untangle()
-        return self.edges
+
     
     def getFaceEdges(self):
         """Get the faces' edge numbers."""
-        if self.faces is None:
-            self.faces,self.edges = self.elems.untangle()
-        return self.faces
-    
-    def getFaces(self):
-        """Get the faces' node numbers."""
-        import warnings
-        warnings.warn('warn_trisurface_getfaces')
-        return Mesh.getFaces(self)
+        if self.face_edges is None:
+            self.face_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
+        return self.face_edges
 
 
 ###########################################################################
@@ -755,66 +736,13 @@ class TriSurface(Mesh):
     def inertia(self):
         """Return inertia related quantities of the surface.
         
-        This returns the center of gravity, the principal axes of inertia, the principal
-        moments of inertia and the inertia tensor.
+        This returns the center of gravity, the principal axes of inertia,
+        the principal moments of inertia and the inertia tensor.
         """
         ctr,I = inertia.inertia(self.centroids(),mass=self.facetArea().reshape(-1,1))
         Iprin,Iaxes = inertia.principal(I,sort=True,right_handed=True)
         data = (ctr,Iaxes,Iprin,I)
         return data
-
-##moved to mesh,py
-#    def edgeConnections(self):
-#        """Find the elems connected to edges."""
-#        if self.econn is None:
-#            self.econn = self.getFaceEdges().inverse()
-#        return self.econn
-    
-##moved to mesh,py
-#    def nodeConnections(self):
-#        """Find the elems connected to nodes."""
-#        if self.conn is None:
-#            self.conn = self.elems.inverse()
-#        return self.conn
-    
-##moved to mesh,py
-#    def nEdgeConnected(self):
-#        """Find the number of elems connected to edges."""
-#        return (self.edgeConnections() >=0).sum(axis=-1)
-    
-##moved to mesh,py
-#    def nNodeConnected(self):
-#        """Find the number of elems connected to nodes."""
-#        return (self.nodeConnections() >=0).sum(axis=-1)
-
-##moved to mesh,py
-#    def edgeAdjacency(self):
-#        """Find the elems adjacent to elems via an edge."""
-#        if self.eadj is None:
-#            nfaces = self.nfaces()
-#            rfaces = self.edgeConnections()
-#            # this gives all adjacent elements including element itself
-#            adj = rfaces[self.getFaceEdges()].reshape(nfaces,-1)
-#            fnr = arange(nfaces).reshape(nfaces,-1)
-#            self.eadj = adj[adj != fnr].reshape((nfaces,-1))
-#        return self.eadj
-
-##moved to mesh,py
-#    def nEdgeAdjacent(self):
-#        """Find the number of adjacent elems."""
-#        return (self.edgeAdjacency() >=0).sum(axis=-1)
-
-##this is now a mesh method
-#    def nodeAdjacency(self):
-#        """Find the elems adjacent to elems via one or two nodes."""
-#        if self.adj is None:
-#            self.adj = adjacent(self.elems,self.nodeConnections())
-#        return self.adj
-
-##this is now a mesh method
-#    def nNodeAdjacent(self):
-#        """Find the number of adjacent elems."""
-#        return (self.nodeAdjacency() >=0).sum(axis=-1)
 
 
     def surfaceType(self):
@@ -893,8 +821,9 @@ class TriSurface(Mesh):
         return [ surfaceInsideBorder(b,method).setProp(i) for i,b in enumerate(self.border()) ]
 
 
+    # BV: There are too many of these! cfr getBorder,
     def boundaryEdges(self):
-        """Returns the border edges of a surface, grouped by id property. """
+        """_Returns the border edges of a surface, grouped by id property. """
         be=Mesh(self.coords, self.getEdges()[self.borderEdges()] )#.renumber()
         be.elems=be.elems.removeDegenerate().removeDoubles()
         parts = connectedLineElems(be.elems)
@@ -902,9 +831,9 @@ class TriSurface(Mesh):
         elems = concatenate(parts,axis=0)
         return Mesh(be.coords,elems,prop=prop)
     
-    
+    # BV: There are too many of these!
     def boundaryFiller(self):
-        """Fills the holes of a surface by creating extra faces at the boundary edges. Original surface and boundaries are returned with different id prop."""
+        """_Fills the holes of a surface by creating extra faces at the boundary edges. Original surface and boundaries are returned with different id prop."""
         brd=self.boundaryEdges()
         Brd=[ brd.withProp(p).compact() for p in brd.propSet() ]
         if self.prop==None:self=self.setProp(0)

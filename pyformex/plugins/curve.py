@@ -1159,9 +1159,14 @@ class Arc3(Curve):
 
         The arc is specified by 3 non-colinear points.
         """
-        self.coords = Coords(coords)
         self.nparts = 1
         self.closed = False
+        self._set_coords(Coords(coords))
+
+
+    def _set_coords(self,coords):
+        C = self.copy()
+        C._set_coords_inplace(coords)
         if self.coords.shape != (3,3):
             raise ValueError,"Expected 3 points"
         
@@ -1170,6 +1175,8 @@ class Arc3(Curve):
         self.angles = vectorPairAngle(Coords([1.,0.,0.]),self.coords-self.center)
         print("Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal))
         print("ANGLES=%s" % (self.angles))
+        return C
+
 
     def sub_points(self,t,j):
         a = t*(self.angles[-1]-self.angles[0])

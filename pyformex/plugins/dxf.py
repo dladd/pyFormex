@@ -22,6 +22,11 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
+"""Export geometry in DXF format.
+
+This module allows to export some simple geometrical items in DXF format.
+"""
+
 from simple import *
 from numpy import *
 

@@ -295,12 +295,11 @@ class Mesh(Geometry):
         self.coords = self.elems = self.prop = self.eltype = None
         self.ndim = -1
         self.nodes = self.edges = self.faces = self.cells = None
-        self.edges2 = self.face_edges  = self.eadj = None
+        self.face_edges = self.eadj = None
         self.conn = self.econn = self.fconn = None 
         
         if coords is None:
             # Create an empty Mesh object
-            #print "EMPTY MESH"
             return
 
         if elems is None:
@@ -597,13 +596,6 @@ class Mesh(Geometry):
             self.cells = self.getLowerEntities(3,unique=True)
         return self.cells
 
-    
-    def getFaceEdges(self):
-        """Get the faces' edge numbers."""
-        if self.face_edges is None:
-            self.face_edges,self.edges2 = self.elems.untangle()
-        return self.face_edges
-
 
     def getBorder(self,return_indices=False):
         """Return the border of the Mesh.
@@ -660,8 +652,6 @@ class Mesh(Geometry):
 
         if compact:
             M._compact()
-        if self.eltype=='hex20':M.eltype='quad8'
-        if self.eltype=='tet10':M.eltype='tri6'      
         return M
 
 
@@ -681,32 +671,39 @@ class Mesh(Geometry):
     # Adjacency #
     
 
+    def nodeConnections(self):
+        """Find and store the elems connected to nodes."""
+        if self.conn is None:
+            self.conn = self.elems.inverse()
+        return self.conn
+    
+
+    def nNodeConnected(self):
+        """Find the number of elems connected to nodes."""
+        return (self.nodeConnections() >=0).sum(axis=-1)
+
+
     def edgeConnections(self):
-        """Find the elems connected to edges."""
+        """Find and store the elems connected to edges."""
         
         if self.econn is None:
             self.econn = self.getFaceEdges().inverse()
         return self.econn
 
 
-    def nodeConnections(self):
-        """Find and store the elems connected to nodes."""
-        
-        if self.conn is None:
-            self.conn = self.elems.inverse()
-        return self.conn
-    
-
     def nEdgeConnected(self):
         """Find the number of elems connected to edges."""
-        
         return (self.edgeConnections() >=0).sum(axis=-1)
 
 
-    def nNodeConnected(self):
-        """Find the number of elems connected to nodes."""
-        
-        return (self.nodeConnections() >=0).sum(axis=-1)
+    def nodeAdjacency(self):
+        """Find the elems adjacent to each elem via one or more nodes."""
+        return adjacent(self.elems,inv=None)
+
+
+    def nNodeAdjacent(self):
+        """Find the number of elems which are adjacent by node to each elem."""
+        return (self.nodeAdjacency() >=0).sum(axis=-1)
 
 
     def edgeAdjacency(self):
@@ -727,28 +724,20 @@ class Mesh(Geometry):
         return (self.edgeAdjacency() >=0).sum(axis=-1)
 
 
-    def nodeAdjacency(self):
-        """Find the elems adjacent to each elem via one or more nodes."""
+    # BV: THis should be generalized to any elements having faces
+    # now only for tri3
+    def getFaceEdges(self):
+        """Get the faces' edge numbers."""
+        if self.face_edges is None:
+            self.face_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
+        return self.face_edges
 
-        return adjacent(self.elems,inv=None)
-
-
-    def nNodeAdjacent(self):
-        """Find the number of elems which are adjacent by node to each elem."""
-
-        return (self.nodeAdjacency() >=0).sum(axis=-1)
-
-
-
-    
-
-
-
-    
+    # BV: Should be made dependent on getFaces
+    # or a function??
     # ?? DOES THIS WORK FOR *ANY* MESH ??
     # What with a mesh of points, lines, ...
     def getAngles(self, angle_spec=Deg):
-        """Returns the angles in Deg or Rad between the edges of a mesh.
+        """_Returns the angles in Deg or Rad between the edges of a mesh.
         
         The returned angles are shaped  as (nelems, n1faces, n1vertices),
         where n1faces are the number of faces in 1 element and the number
@@ -764,8 +753,9 @@ class Mesh(Geometry):
         return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
 
+    # BV: Should be made a method of a connection graph
     def node2nodeAdjacency(self):
-        """Finds the nodes adjacent to each node via an edge of the mesh.
+        """_Finds the nodes adjacent to each node via an edge of the mesh.
         
         For each original node returns the index of the adjacent nodes,
         which are connect to the original by an edge.
@@ -795,13 +785,15 @@ class Mesh(Geometry):
 
 
     def nNode2nodeAdjacent(self):
-        """Find the number of nodes  adjacent to each node via an edge of the mesh."""
+        """_Find the number of nodes  adjacent to each node via an edge of the mesh."""
 
         return ( self.getEdges().inverse()  >=0).sum(axis=-1)
 
 
+    # BV: name is way too complex
+    # should not be a mesh method, but of some MeshValue class? Field?
     def avgNodalScalarOnAdjacentNodes(self, val, iter=1):
-        """Smooth nodal scalar values by averaging over adjacent nodes iter times.
+        """_Smooth nodal scalar values by averaging over adjacent nodes iter times.
         
         Nodal scalar values (val is a 1D array of self.ncoords() scalar values )
         are averaged over adjacent nodes an number of time (iter)
@@ -886,25 +878,6 @@ Size: %s
     @deprecation("Mesh.findCoincidentNodes is deprecated. Use Coords.match or Mesh.matchCoords. Beware for order of arguments!")
     def findCoincidentCoords(self,mesh,**kargs):
         return mesh.coords.match(self.coords)
-    
-        ## """Finds coincident coord of a mesh inside an other mesh.
-        
-        ## Self and mesh1 are two fused meshes.
-        ## For each node of self, this function looks for a node of M1 with the same coordinates
-        ## and returns either its index or -1, if not found.
-        ## A list of self.ncoords() indices is returned.
-        
-        ## The operation can be tuned by specifying extra arguments
-        ## that will be passed to :meth:`Coords:fuse`.
-        ## """
-        ## m0=Mesh(self.coords, arange(self.ncoords() ))#currently Mesh(Coords) is not yet supported
-        ## m1=Mesh(mesh.coords, arange(mesh.ncoords() ))
-        ## c, E= mergeMeshes([m0, m1], **kargs)
-        ## E0=E[0].ravel()
-        ## inv= inverseIndex(E[1]).reshape(-1)
-        ## diff=E0.max()-len(inv)+1
-        ## inv=concatenate([ inv,[-1]*diff ])#only if diff>0
-        ## return inv[E0]
 
 
     # Since this is used in only a few places, we could

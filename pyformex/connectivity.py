@@ -90,8 +90,8 @@ class Connectivity(ndarray):
 
     Example:
 
-      >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]])._max
-      3
+      >>> Connectivity([[0,1,2],[0,1,3],[0,3,2],[0,5,3]])._max
+      5
       
     """
     #
@@ -137,11 +137,23 @@ class Connectivity(ndarray):
 
 
     def nelems(self):
-        """Return the number of elements in the Connectivity table."""
+        """Return the number of elements in the Connectivity table.
+
+        Example:
+
+          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2],[0,5,3]]).nelems()
+          4
+        """
         return self.shape[0]
     
     def nplex(self):
-        """Return the plexitude of the elements in the Connectivity table."""
+        """Return the plexitude of the elements in the Connectivity table.
+
+        Example:
+
+          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2],[0,5,3]]).nplex()
+          3
+        """
         return self.shape[1]
 
 
@@ -366,7 +378,7 @@ class Connectivity(ndarray):
         Multiple intermediate level entities may be created from each
         element.
 
-        Paramaters:
+        Parameters:
 
         - `selector`: an object that can be converted to a 1-dim or 2-dim
           integer array. Examples are a tuple of local node numbers, or a list
@@ -422,6 +434,23 @@ class Connectivity(ndarray):
         lo = lo[uniq]
         return hi,lo
 
+
+    def inverse(self):
+        """Return the inverse index of a Connectivity table.
+
+        This returns the inverse index of the Connectivity, as computed
+        by :func:`arraytools.inverseIndex`. See 
+           
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).inverse()
+          array([[ 0,  1,  2],
+                 [-1,  0,  1],
+                 [-1,  0,  2],
+                 [-1,  1,  2]])
+        """
+        return inverseIndex(self)
+
     
     def selectNodes(self,selector):
         """Return a :class:`Connectivity` containing subsets of the nodes.
@@ -451,11 +480,11 @@ class Connectivity(ndarray):
                  [0, 2]])
 
         """
-        return self.insertLevel(selector,lower_only=True)
+        sel = Connectivity(selector)
+        return Connectivity(self[:,sel].reshape(-1,sel.nplex()))
     
 
-    def tangle(self,lo):
-        # BV: This  should then be renamed 'combine'
+    def combine(self,lo):
         """Compress two hierarchical Connectivity levels to a single one.
 
         self and lo are two hierarchical Connectivity tables, representing
@@ -473,7 +502,15 @@ class Connectivity(ndarray):
         This is the inverse operation of untangle (without specifying ind).
         The algorithm only works if all vertex numbers of an element are
         unique.
+
+        Example:
+
+          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).combine([[0,1],[0,2],[1,2],[1,3],[2,3]])
+          Connectivity([[1, 0, 2],
+                 [1, 2, 3],
+                 [0, 3, 2]])
         """
+        lo = Connectivity(lo) 
         if self.shape[1] < 3:
             raise ValueError,"Can only tangle plexitudes >2 Connectivities"
         if lo.shape[1] != 2:
@@ -484,29 +521,16 @@ class Connectivity(ndarray):
             flags = (elems[:,i,1] != elems1[:,i,0]) * (elems[:,i,1] != elems1[:,i,1])
             elems[flags,i] = roll(elems[flags,i],1,axis=1)
         return Connectivity(elems[:,:,0])
-
-
-    def inverse(self):
-        """Return the inverse index of a Connectivity table.
-
-        This returns the inverse index of the Connectivity, as computed
-        by :func:`arraytools.inverseIndex`. See 
-           
-        Example:
-        
-          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).inverse()
-          array([[ 0,  1,  2],
-                 [-1,  0,  1],
-                 [-1,  0,  2],
-                 [-1,  1,  2]])
-        """
-        return inverseIndex(self)
-
+    
 
 ######################################################################
     # BV: the methods below should probably be deprecated,
     # after a check that they are not essential
 
+    @deprecation("tangle has been renamed to combine") 
+    def tangle(self,*args,**kargs):
+        return self.combine(*args,**kargs)
+    
     
     def untangle(self,ind=None):
         # BV: This could/should be replaced with insertLevel
@@ -549,12 +573,13 @@ class Connectivity(ndarray):
             if ind.ndim != 2 or ind.shape[-1] != 2:
                 raise ValueError,"ind should be a (n,2) shaped array!"
 
+        print "SELECTOR",ind
         return self.insertLevel(ind)
 
 
     @deprecation(_future_deprecation)
     def encode(self,permutations=True,return_magic=False):
-        """Encode the element connectivities into single integer numbers.
+        """_Encode the element connectivities into single integer numbers.
 
         Each row of numbers is encoded into a single integer value, such that
         equal rows result in the same number and different rows yield
@@ -865,7 +890,7 @@ def connectedLineElems(elems):
 #
 
    
-@deprecation(_future_deprecation)
+#@deprecation(_future_deprecation)
 def enmagic2(cols,magic=0):
     """Encode two integer values into a single integer.
 
