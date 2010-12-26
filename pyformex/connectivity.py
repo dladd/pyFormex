@@ -451,20 +451,26 @@ class Connectivity(ndarray):
         original elements, but it is undefined which of the collapsed
         sequences is returned.
 
-        There is no inverse operation, because the precise order of the
-        items in the collapsed rows is lost.
+        Because the precise order of the data in the collapsed rows is lost,
+        it is in general not possible to restore the exact original table
+        from the two result tables.
         See however :meth:`Mesh.getBorder` for an application where an
-        inverse index is possible, because the border only contains
+        inverse operation is possible, because the border only contains
         unique rows.
+        See also :meth:`Mesh.combine`, which is an almost inverse operation
+        for the general case, if the selector is complete.
+        The resulting rows may however be permutations of the original.
 
         Example:
         
-          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).insertLevel([[0,1],[0,2]])
-          (Connectivity([[0, 1],
-                 [1, 0],
-                 [2, 1]]), Connectivity([[0, 1],
-                 [0, 2],
-                 [0, 3]]))
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).insertLevel([[0,1],[1,2],[2,0]])
+          (Connectivity([[0, 3, 1],
+                 [1, 3, 0],
+                 [2, 4, 1]]), Connectivity([[0, 1],
+                 [2, 0],
+                 [0, 3],
+                 [1, 2],
+                 [3, 2]]))
            
         """
         sel = Connectivity(selector)
@@ -475,37 +481,40 @@ class Connectivity(ndarray):
         return hi,lo
     
 
+    # BV: This is currently far from general!!!
+    # should probably be move to Mesh/TriSurface if needed there
     def combine(self,lo):
-        """Compress two hierarchical Connectivity levels to a single one.
+        """Combine two hierarchical Connectivity levels to a single one.
 
         self and lo are two hierarchical Connectivity tables, representing
         higher and lower level respectively. This means that the elements
         of self hold numbers which point into lo to obtain the lowest level
         items.
 
-        In the current implementation, the plexitude of lo should be 2!
+        *In the current implementation, the plexitude of lo should be 2!*
 
         As an example, in a structure of triangles, hi could represent
         triangles defined by 3 edges and lo could represent edges defined
-        by 2 vertices. The compress method will then result in a table
+        by 2 vertices. This method will then result in a table
         with plexitude 3 defining the triangles in function of the vertices.
 
-        This is the inverse operation of untangle (without specifying ind).
+        This is the inverse operation of :meth:`insertLevel` with a selector
+        which is complete.
         The algorithm only works if all vertex numbers of an element are
         unique.
 
         Example:
 
-          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).combine([[0,1],[0,2],[1,2],[1,3],[2,3]])
-          Connectivity([[1, 0, 2],
-                 [1, 2, 3],
+          >>> hi,lo = Connectivity([[0,1,2],[0,2,1],[0,3,2]]).insertLevel([[0,1],[1,2],[2,0]])
+          >>> hi.combine(lo)
+          Connectivity([[0, 1, 2],
+                 [0, 2, 1],
                  [0, 3, 2]])
+
         """
         lo = Connectivity(lo) 
-        if self.shape[1] < 3:
-            raise ValueError,"Can only tangle plexitudes >2 Connectivities"
-        if lo.shape[1] != 2:
-            raise ValueError,"Expected plexitudes ==2 for tangle argument"
+        if self.shape[1] < 2 or lo.shape[1] != 2:
+            raise ValueError,"Can only combine plex>=2 with plex==2"
         elems = lo[self]
         elems1 = roll(elems,-1,axis=1)
         for i in range(elems.shape[1]):
@@ -1037,56 +1046,5 @@ def adjacencyArrays(elems,nsteps=1):
         step += 1
     return adj
 
-
-
-############################################################################
-#
-# Testing
-#
-
-if __name__ == "__main__":
-
-    import sys
-    import utils
-
-    def test_unique():
-        C = Connectivity(random.randint(8,size=(20,3)))
-        D = utils.timeEval("C.removeDoubles()",globals())
-        print "%s UNIQUE ELEMENTS" % D.shape[0]
-        print C
-        print D
-        print C.listDoubles()
-        print C.listUnique()
-    
-    def test_encoding():
-        print "========== test encoding and decoding =========="
-        for nplex in range(1,5):
-            print "PLEXITUDE %s" % nplex
-            C = Connectivity(random.randint(10,size=(200,nplex)))
-            #print C
-            D = C.copy()     
-            C.sort(axis=1)
-            codes,magic = C.encode(return_magic=True)
-            print "  %s ERRORS" % (Connectivity.decode(codes,magic) - C).sum()
-
-            D = C.removeDoubles()
-            print "  %s UNIQUE ELEMENTS" % D.shape[0]
-            #print D
-
-    def test_untangle():
-        print "========== test untangling and tangling =========="
-        for nplex in range(3,5):
-            print "PLEXITUDE %s" % nplex
-            C = Connectivity(random.randint(10,size=(10,nplex))).removeDegenerate()
-            print C
-            D,E = C.untangle()
-            print D
-            print E
-            F = D.tangle(E)
-            print F
-            print "  %s ERRORS" % (F - C).sum()
-
-
-    test_untangle()
 
 # End
