@@ -145,6 +145,7 @@ class Connectivity(ndarray):
           4
         """
         return self.shape[0]
+
     
     def nplex(self):
         """Return the plexitude of the elements in the Connectivity table.
@@ -366,7 +367,54 @@ class Connectivity(ndarray):
         return order
 
 
+    def inverse(self):
+        """Return the inverse index of a Connectivity table.
+
+        This returns the inverse index of the Connectivity, as computed
+        by :func:`arraytools.inverseIndex`. See 
+           
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).inverse()
+          array([[ 0,  1,  2],
+                 [-1,  0,  1],
+                 [-1,  0,  2],
+                 [-1,  1,  2]])
+        """
+        return inverseIndex(self)
+
+
 ######### Creating intermediate levels ###################
+
+    def selectNodes(self,selector):
+        """Return a :class:`Connectivity` containing subsets of the nodes.
+
+        Parameters:
+
+        - `selector`: an object that can be converted to a 1-dim or 2-dim
+          int array. Examples are a tuple of local node numbers, or a list
+          of such tuples all having the same length.
+          Each row of `selector` holds a list of the local node numbers that
+          should be retained in the new Connectivity table.
+
+        Returns a :class:`Connectivity` object with shape
+        `(self.nelems*selector.nelems,selector.nplex)`. This function
+        does not collapse the double elements.
+           
+        Example:
+        
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).selectNodes([[0,1],[0,2]])
+          Connectivity([[0, 1],
+                 [0, 2],
+                 [0, 2],
+                 [0, 1],
+                 [0, 3],
+                 [0, 2]])
+
+        """
+        sel = Connectivity(selector)
+        return Connectivity(self[:,sel].reshape(-1,sel.nplex()))
+
 
     def insertLevel(self,selector,lower_only=False):
         """Insert an extra hierarchical level in a Connectivity table.
@@ -419,69 +467,12 @@ class Connectivity(ndarray):
                  [0, 3]]))
            
         """
-        # BV: We should turn selector into a Connectivity ?
-        sel = asarray(selector)             # make sure it is array
-        sel = sel.reshape(-1,sel.shape[-1]) # make sure it is 2D
-        nmult,nplex = sel.shape
-        lo = Connectivity(self[:,sel].reshape(-1,nplex))
-        if lower_only:
-            return lo
-        
-        srt = lo.copy()
-        srt.sort(axis=1)
-        uniq,uniqid = uniqueRows(srt)
-        hi = Connectivity(uniqid.reshape(-1,nmult))
+        sel = Connectivity(selector)
+        lo = self.selectNodes(sel)
+        uniq,uniqid = uniqueRows(lo,permutations=True)
+        hi = Connectivity(uniqid.reshape(-1,sel.nelems()))
         lo = lo[uniq]
         return hi,lo
-
-
-    def inverse(self):
-        """Return the inverse index of a Connectivity table.
-
-        This returns the inverse index of the Connectivity, as computed
-        by :func:`arraytools.inverseIndex`. See 
-           
-        Example:
-        
-          >>> Connectivity([[0,1,2],[0,1,3],[0,3,2]]).inverse()
-          array([[ 0,  1,  2],
-                 [-1,  0,  1],
-                 [-1,  0,  2],
-                 [-1,  1,  2]])
-        """
-        return inverseIndex(self)
-
-    
-    def selectNodes(self,selector):
-        """Return a :class:`Connectivity` containing subsets of the nodes.
-
-        Parameters:
-
-        - `selector`: an object that can be converted to a 1-dim or 2-dim
-          int array. Examples are a tuple of local node numbers, or a list
-          of such tuples all having the same length.
-          Each row of `selector` holds a list of the local node numbers that
-          should be retained in the new Connectivity table.
-
-        Returns a :class:`Connectivity` object with shape `(nelems,nplex)`
-
-        This is equivalent to, but prefered above ::
-
-           self.insertLevel(selector,lower_only=True)
-           
-        Example:
-        
-          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).selectNodes([[0,1],[0,2]])
-          Connectivity([[0, 1],
-                 [0, 2],
-                 [0, 2],
-                 [0, 1],
-                 [0, 3],
-                 [0, 2]])
-
-        """
-        sel = Connectivity(selector)
-        return Connectivity(self[:,sel].reshape(-1,sel.nplex()))
     
 
     def combine(self,lo):

@@ -565,8 +565,22 @@ def checkArray1D(a,size=None,kind=None,allow=None):
                 a = a.astype(Float)
         return a
     except:
-        print("Expected size %s, kind %s, got: %s" % (size,kind,a))
-    raise ValueError
+        raise ValueError,"Expected size %s, kind %s, got: %s" % (size,kind,a)
+    
+
+def checkArrayDim(a,ndim=-1):
+    """Check that an array has the correct dimensionality.
+
+    Returns asarray(a) if ndim < 0 or a.ndim == ndim
+    Else, an error is raised.
+    """
+    try:
+        aa = asarray(a)
+        if (ndim >= 0 and aa.ndim != ndim):
+            raise
+        return aa
+    except:
+        raise ValueError,"Expected an array with %s dimensions" % ndim
               
 
 def checkUniqueNumbers(nrs,nmin=0,nmax=None):
@@ -909,23 +923,28 @@ def sortByColumns(a):
       array([0, 3, 1, 4, 2])
       
     """
-    A = asarray(a)
+    A = checkArrayDim(a,2)
     keys = [A[:,i] for i in range(A.shape[1]-1,-1,-1)]
     return lexsort(keys)
 
 
-def uniqueRows(a):
+def uniqueRows(a,permutations=False):
     """Return (the indices of) the unique rows of a 2-D array.
 
     Parameters:
 
     - `a`: array_like, 2-D
+    - `permutations`: bool
+      If True, rows which are permutations of the same data are considered
+      equal. The default is to consider permutations as different.
 
     Returns:
 
     - `uniq`: a 1-D integer array with the numbers of the unique rows from `a`.
       The order of the elements in `uniq` is determined by the sorting
       procedure, which in the current implementation is :func:`sortByColumns`.
+      If `permutations==True`, `a` is sorted along its axis -1 before calling
+      this sorting function. 
     - `uniqid`: a 1-D integer array with length equal to `a.shape[0]` with the
       numbers of `uniq` corresponding to each of the rows of `a`.
 
@@ -933,14 +952,22 @@ def uniqueRows(a):
     
       >>> uniqueRows([[1,2],[2,3],[3,2],[1,3],[2,3]])
       (array([0, 3, 1, 2]), array([0, 2, 3, 1, 2]))
-      
+      >>> uniqueRows([[1,2],[2,3],[3,2],[1,3],[2,3]],permutations=True)
+      (array([0, 3, 1]), array([0, 2, 2, 1, 2]))
+    
     """
-    A = asarray(a)
+    A = array(a,copy=permutations)
+    if A.ndim != 2:
+        raise ValueError
+    if permutations:
+        A.sort(axis=-1)
     srt = sortByColumns(A)
-    inv = inverseUniqueIndex(srt)
     A = A.take(srt,axis=0)
     ok = (A != roll(A,1,axis=0)).any(axis=1)
+    if not ok[0]: # all doubles -> should result in one unique element
+        ok[0] = True
     w = where(ok)[0]
+    inv = inverseUniqueIndex(srt)
     uniqid = w.searchsorted(inv,side='right')-1
     uniq = srt[ok]
     return uniq,uniqid
