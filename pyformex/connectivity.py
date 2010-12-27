@@ -422,12 +422,20 @@ class Connectivity(ndarray):
                  [-1, -1,  1],
                  [-1, -1, -1],
                  [-1, -1,  0]])
+          >>> Connectivity([[0,1,2],[0,1,3],[2,4,5]]).adjacency('n')
+          array([[-1,  1,  2,  3],
+                 [-1,  0,  2,  3],
+                 [ 0,  1,  4,  5],
+                 [-1, -1,  0,  1],
+                 [-1, -1,  2,  5],
+                 [-1, -1,  2,  4]])
+                 
         """
         inv = self.inverse()
         if kind == 'e':
             adj = inv[self].reshape((self.nelems(),-1))
         elif kind == 'n':
-            adj = concatenate([where(inv>=0,self[:,0][inv],inv),where(inv>=0,self[:,1][inv],inv)],axis=1)
+            adj = concatenate([where(inv>=0,self[:,i][inv],inv) for i in range(self.nplex())],axis=1)
         else:
             raise ValueError,"kind should be 'e' or 'n', got %s" % str(kind) 
         return reduceAdjacency(adj)
