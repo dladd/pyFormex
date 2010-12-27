@@ -36,9 +36,9 @@ import utils
 
 
 if utils.checkVersion('python','2.6') >= 0:
-    from itertools import combinations
+    from itertools import combinations,permutations
 else:
-    # Provide our own implementation of combinations
+    # Provide our own implementation of combinations,permutations
     def combinations(iterable, r):
         # combinations('ABCD', 2) --> AB AC AD BC BD CD
         # combinations(range(4), 3) --> 012 013 023 123
@@ -58,6 +58,32 @@ else:
             for j in range(i+1, r):
                 indices[j] = indices[j-1] + 1
             yield tuple(pool[i] for i in indices)
+
+    def permutations(iterable, r=None):
+        # permutations('ABCD', 2) --> AB AC AD BA BC BD CA CB CD DA DB DC
+        # permutations(range(3)) --> 012 021 102 120 201 210
+        pool = tuple(iterable)
+        n = len(pool)
+        if r is None:
+            r = n
+        if r > n:
+            return
+        indices = range(n)
+        cycles = range(n, n-r, -1)
+        yield tuple(pool[i] for i in indices[:r])
+        while n:
+            for i in reversed(range(r)):
+                cycles[i] -= 1
+                if cycles[i] == 0:
+                    indices[i:] = indices[i+1:] + indices[i:i+1]
+                    cycles[i] = n - i
+                else:
+                    j = cycles[i]
+                    indices[i], indices[-j] = indices[-j], indices[i]
+                    yield tuple(pool[i] for i in indices[:r])
+                    break
+            else:
+                return
 
 # Define a wrapper function for old versions of numpy
 
@@ -220,34 +246,6 @@ def solveMany(A,b):
     x = column_stack([ linalg.solve(A[:,:,i],b[:,i]) for i in range(b.shape[1])])
     return x.reshape(shape)
 
-
-# Build-in function for Python 2.6
-def permutations(iterable, r=None):
-    # This function should get a docstring !!
-    # permutations('ABCD', 2) --> AB AC AD BA BC BD CA CB CD DA DB DC
-    # permutations(range(3)) --> 012 021 102 120 201 210
-    pool = tuple(iterable)
-    n = len(pool)
-    if r is None:
-        r = n
-    if r > n:
-        return
-    indices = range(n)
-    cycles = range(n, n-r, -1)
-    yield tuple(pool[i] for i in indices[:r])
-    while n:
-        for i in reversed(range(r)):
-            cycles[i] -= 1
-            if cycles[i] == 0:
-                indices[i:] = indices[i+1:] + indices[i:i+1]
-                cycles[i] = n - i
-            else:
-                j = cycles[i]
-                indices[i], indices[-j] = indices[-j], indices[i]
-                yield tuple(pool[i] for i in indices[:r])
-                break
-        else:
-            return
 
 
 def inside(p,mi,ma):
@@ -1026,7 +1024,6 @@ def inverseIndex(index,maxcon=4):
     # of index, some number might appear with multiplicity maxcon)
     inverse = zeros((mr,mc),dtype=ind.dtype) - 1
     i = 0 # column in inverse where we will store next result
-    c = 0 # column in index from which to process data
     for c in range(nc):
         col = ind[:,c].copy()  # make a copy, because we will change it
         while(col.max() >= 0):

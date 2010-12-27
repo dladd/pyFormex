@@ -33,7 +33,7 @@ import pyformex as pf
 from formex import *
 from plugins import tetgen
 from plugins.mesh import Mesh
-from connectivity import Connectivity,closedLoop,connectedLineElems,adjacencyArrays,adjacent,adjacencyArray
+from connectivity import Connectivity,closedLoop,connectedLineElems,adjacencyArrays
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from gui.drawable import interpolateNormals
 from plugins.geomtools import projectionVOP,rotationAngle,facetDistance,edgeDistance,vertexDistance, triangleBoundingCircle
@@ -460,9 +460,8 @@ class TriSurface(Mesh):
     def __init__(self,*args,**kargs):
         """Create a new surface."""
         Mesh.__init__(self)
-        self.edges = self.faces = None
         self.areas = self.normals = None
-        self.econn = self.conn = self.eadj = self.adj = None
+        self.adj = None
         if hasattr(self,'edglen'):
             del self.edglen
             
@@ -517,7 +516,7 @@ class TriSurface(Mesh):
                 if faces.max() >= edges.shape[0]:
                     raise ValueError,"Some edge number is too high"
 
-                elems = faces.tangle(edges)
+                elems = faces.combine(edges)
                 Mesh.__init__(self,coords,elems,None,'tri3')
                 
                 # since we have the extra data available, keep them

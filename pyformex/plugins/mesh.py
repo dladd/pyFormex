@@ -30,7 +30,7 @@ It also contains some useful functions to create such models.
 """
 
 from formex import *
-from connectivity import Connectivity,  adjacent
+from connectivity import Connectivity
 import elements
 from utils import deprecation
 from geometry import Geometry
@@ -669,6 +669,15 @@ class Mesh(Geometry):
 
 #############################################################################
     # Adjacency #
+
+
+    # BV: THis should be generalized to any elements having faces
+    # now only for tri3
+    def getFaceEdges(self):
+        """Get the faces' edge numbers."""
+        if self.face_edges is None:
+            self.face_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
+        return self.face_edges
     
 
     def nodeConnections(self):
@@ -683,6 +692,8 @@ class Mesh(Geometry):
         return (self.nodeConnections() >=0).sum(axis=-1)
 
 
+
+    # BV THIS IS NOT GENERAL !!!
     def edgeConnections(self):
         """Find and store the elems connected to edges."""
         
@@ -698,7 +709,7 @@ class Mesh(Geometry):
 
     def nodeAdjacency(self):
         """Find the elems adjacent to each elem via one or more nodes."""
-        return adjacent(self.elems,inv=None)
+        return self.elems.adjacency()
 
 
     def nNodeAdjacent(self):
@@ -708,29 +719,21 @@ class Mesh(Geometry):
 
     def edgeAdjacency(self):
         """Find the elems adjacent to elems via an edge."""
-        
-        if self.eadj is None:
-            nelems = self.nelems()
-            rfaces = self.edgeConnections()
-            # this gives all adjacent elements including element itself
-            adj = rfaces[self.getFaceEdges()].reshape(nelems,-1)
-            fnr = arange(nelems).reshape(nelems,-1)
-            self.eadj = adj[adj != fnr].reshape((nelems,-1))
-        return self.eadj
+        return self.getFaceEdges().adjacency()
+        ## if self.eadj is None:
+        ##     nelems = self.nelems()
+        ##     rfaces = self.edgeConnections()
+        ##     # this gives all adjacent elements including element itself
+        ##     adj = rfaces[self.getFaceEdges()].reshape(nelems,-1)
+        ##     fnr = arange(nelems).reshape(nelems,-1)
+        ##     self.eadj = adj[adj != fnr].reshape((nelems,-1))
+        ## return self.eadj
 
 
     def nEdgeAdjacent(self):
         """Find the number of adjacent elems."""
         return (self.edgeAdjacency() >=0).sum(axis=-1)
 
-
-    # BV: THis should be generalized to any elements having faces
-    # now only for tri3
-    def getFaceEdges(self):
-        """Get the faces' edge numbers."""
-        if self.face_edges is None:
-            self.face_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
-        return self.face_edges
 
     # BV: Should be made dependent on getFaces
     # or a function??
@@ -753,41 +756,48 @@ class Mesh(Geometry):
         return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
 
-    # BV: Should be made a method of a connection graph
-    def node2nodeAdjacency(self):
-        """_Finds the nodes adjacent to each node via an edge of the mesh.
+    # BV: REMOVED node2nodeAdjacency:
+    #
+    # Either use
+    #  - self.elems.nodeAdjacency() (gives nodes connected by elements)
+    #  - self.getEdges().nodeAdjacency() (gives nodes connected by edges)
+    
+    
+    ## # BV: Should be made a method of a connection graph
+    ## def node2nodeAdjacency(self):
+    ##     """_Finds the nodes adjacent to each node via an edge of the mesh.
         
-        For each original node returns the index of the adjacent nodes,
-        which are connect to the original by an edge.
-        """
-        edg= self.getEdges()
-        nodedg= inverseIndex(edg)
-        wh= [nodedg==-1]
-        #edges' 2 nodes
-        nodedg0, nodedg1= edg[:, 0][nodedg],edg[:, 1][nodedg]
-        nodedg0[wh], nodedg1[wh]=-1, -1
-        #first ring of nodes
-        nn1=concatenate([nodedg0, nodedg1], axis=1) 
-        # remove the element itself
-        n=nn1.shape[0]
-        k =arange(n).reshape(n,-1)
-        nn1[nn1 == k.reshape(n,-1)] = -1
-        #remove columns full of -1
-        nn1.sort(axis=-1)
-        maxc = nn1.max(axis=0)
-        nn1 = nn1[:,maxc>=0]
-        # remove duplicate elements
-        nn1[nn1[:,:-1] == nn1[:,1:]] = -1
-        nn1.sort(axis=-1)
-        maxc = nn1.max(axis=0)
-        nn1 = nn1[:,maxc>=0]
-        return nn1
+    ##     For each original node returns the index of the adjacent nodes,
+    ##     which are connect to the original by an edge.
+    ##     """
+    ##     edg= self.getEdges()
+    ##     nodedg= inverseIndex(edg)
+    ##     wh= [nodedg==-1]
+    ##     #edges' 2 nodes
+    ##     nodedg0, nodedg1= edg[:, 0][nodedg],edg[:, 1][nodedg]
+    ##     nodedg0[wh], nodedg1[wh]=-1, -1
+    ##     #first ring of nodes
+    ##     nn1=concatenate([nodedg0, nodedg1], axis=1) 
+    ##     # remove the element itself
+    ##     n=nn1.shape[0]
+    ##     k =arange(n).reshape(n,-1)
+    ##     nn1[nn1 == k.reshape(n,-1)] = -1
+    ##     #remove columns full of -1
+    ##     nn1.sort(axis=-1)
+    ##     maxc = nn1.max(axis=0)
+    ##     nn1 = nn1[:,maxc>=0]
+    ##     # remove duplicate elements
+    ##     nn1[nn1[:,:-1] == nn1[:,1:]] = -1
+    ##     nn1.sort(axis=-1)
+    ##     maxc = nn1.max(axis=0)
+    ##     nn1 = nn1[:,maxc>=0]
+    ##     return nn1
 
 
-    def nNode2nodeAdjacent(self):
-        """_Find the number of nodes  adjacent to each node via an edge of the mesh."""
+    ## def nNode2nodeAdjacent(self):
+    ##     """_Find the number of nodes  adjacent to each node via an edge of the mesh."""
 
-        return ( self.getEdges().inverse()  >=0).sum(axis=-1)
+    ##     return ( self.getEdges().inverse()  >=0).sum(axis=-1)
 
 
     # BV: name is way too complex
