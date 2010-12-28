@@ -827,6 +827,43 @@ class Connectivity(ndarray):
 
 ############################################################################
 
+def sortAdjacency(adj):
+    """Sort an adjacency table.
+
+    An adjacency table is an integer array where each row lists the numbers
+    of the items that are connected to the item with number equal to the row
+    index. Rows are padded with -1 value to create rows of equal length.
+
+    This function sorts the rows of the adjacency table in ascending order
+    and removes all columns containing only -1 values.
+
+    Paramaters:
+
+    - `adj`: an 2-D integer array with values >=0 or -1
+   
+    Returns: an integer array with shape (adj.shape[0],maxc), with
+    maxc <= adj.shape[1], where the rows are sorted in ascending order
+    and where columns with only -1 values are removed.
+
+    Example:
+
+      >>> a = array([[ 0,  2,  1, -1],
+      ...            [-1,  3,  1, -1],
+      ...            [ 3, -1,  0,  1],
+      ...            [-1, -1, -1, -1]])
+      >>> sortAdjacency(a)
+      array([[ 0,  1,  2],
+             [-1,  1,  3],
+             [ 0,  1,  3],
+             [-1, -1, -1]])
+
+    """
+    adj.sort(axis=-1)      # sort rows
+    maxc = adj.max(axis=0) # find maximum per column
+    adj = adj[:,maxc>=0]   # retain columns with non-negative maximum
+    return adj
+
+
 def reduceAdjacency(adj):
     """Reduce an adjacency table.
 
@@ -870,16 +907,10 @@ def reduceAdjacency(adj):
     """
     adj = checkArrayDim(adj,2)
     n = adj.shape[0]
-    # remove the item i itself
-    adj[adj == arange(n).reshape(n,-1)] = -1
-    adj.sort(axis=-1)
-    maxc = adj.max(axis=0)
-    adj = adj[:,maxc>=0]
-    # remove duplicate items
-    adj[adj[:,:-1] == adj[:,1:]] = -1
-    adj.sort(axis=-1)
-    maxc = adj.max(axis=0)
-    adj = adj[:,maxc>=0]
+    adj[adj == arange(n).reshape(n,-1)] = -1 # remove the item i
+    adj = sortAdjacency(adj)
+    adj[adj[:,:-1] == adj[:,1:]] = -1 #remove duplicate items
+    adj = sortAdjacency(adj)
     return adj
 
 # BV: This could become one of the schemes of Connectivity.reorder 
@@ -1155,22 +1186,13 @@ def adjacencyArrays(elems,nsteps=1):
         nodes = adj1[nodes]
         nodes[t] = -1
         nodes = nodes.reshape((m,-1))
-        nodes.sort(axis=-1)
-        maxc = nodes.max(axis=0)
-        nodes = nodes[:,maxc>=0]
-        # Remove duplicate nodes
-        nodes[nodes[:,:-1] == nodes[:,1:]] = -1
-        nodes.sort(axis=-1)
-        maxc = nodes.max(axis=0)
-        nodes = nodes[:,maxc>=0]
+        nodes = reduceAdjacency(nodes)
         # Remove nodes of lower adjacency
         ladj = concatenate(adj[-2:],-1)
-        t = map(setmember1d,nodes,ladj)
+        t = [ in1d(n,l,assume_unique=True) for n,l in zip (nodes,ladj) ]
         t = asarray(t)
         nodes[t] = -1
-        nodes.sort(axis=-1)
-        maxc = nodes.max(axis=0)
-        nodes = nodes[:,maxc>=0]
+        nodes = sortAdjacency(nodes)
         # Store current nodes
         adj.append(nodes)
         step += 1
