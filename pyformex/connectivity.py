@@ -85,13 +85,13 @@ class Connectivity(ndarray):
       An error will be raised if the specified data do not match the
       specified plexitude.
 
-    A Connectivity object stores its maximum value found at creation time
-    in an attribute `_max`.
-
     Example:
 
-      >>> Connectivity([[0,1,2],[0,1,3],[0,3,2],[0,5,3]])._max
-      5
+      >>> print Connectivity([[0,1,2],[0,1,3],[0,3,2],[0,5,3]])
+      [[0 1 2]
+       [0 1 3]
+       [0 3 2]
+       [0 5 3]]
       
     """
     #
@@ -101,6 +101,7 @@ class Connectivity(ndarray):
     #
     def __new__(self,data=[],dtyp=None,copy=False,nplex=0,allow_negative=False):
         """Create a new Connectivity object."""
+        
         # Turn the data into an array, and copy if requested
         ar = array(data, dtype=dtyp, copy=copy)
         if ar.ndim < 2:
@@ -593,6 +594,7 @@ class Connectivity(ndarray):
         pairs. In each element the nodes are sorted.
 
         Example:
+        
           >>> print [ i for i in combinations(range(3),2) ]
           [(0, 1), (0, 2), (1, 2)]
           >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).resolve()
@@ -608,10 +610,84 @@ class Connectivity(ndarray):
         lo.sort(axis=1)
         ind = sortByColumns(lo)
         return lo[ind]
+
+
+#######################################################################
+    # class and static methods #
+
+    @staticmethod
+    def connect(clist,nodid=None,bias=None,loop=False):
+        """Connect nodes from multiple Connectivity objects.
+
+        clist is a list of Connectivities, nodid is an optional list of node
+        indices and
+        bias is an optional list of element bias values. All lists should have
+        the same length.
+
+        The returned Connectivity has a plexitude equal to the number of
+        Connectivities in clist. Each element of the new Connectivity consist
+        of a node from the corresponding element of each of the Connectivities
+        in clist. By default this will be the first node of that element,
+        but a nodid list may be given to specify the node id to be used for each
+        of the Connectivities.
+        Finally, a list of bias values may be given to specify an offset in
+        element number for the subsequent Connectivities.
+        If loop==False, the length of the Connectivity will be the minimum
+        length of the Connectivities in clist, each minus its respective bias.
+        By setting loop=True however, each Connectivity will loop around if
+        its end is encountered, and the length of the result is the maximum
+        length in clist.
+
+        Example:
+
+          >>> a = Connectivity([[0,1],[2,3],[4,5]])
+          >>> b = Connectivity([[10,11,12],[13,14,15]])
+          >>> c = Connectivity([[20,21],[22,23]])
+          >>> print Connectivity.connect([a,b,c])
+          [[ 0 10 20]
+           [ 2 13 22]]
+          >>> print Connectivity.connect([a,b,c],nodid=[1,0,1])
+          [[ 1 10 21]
+           [ 3 13 23]]
+          >>> print Connectivity.connect([a,b,c],bias=[1,0,1])
+          [[ 2 10 22]]
+          >>> print Connectivity.connect([a,b,c],bias=[1,0,1],loop=True)
+          [[ 2 10 22]
+           [ 4 13 20]
+           [ 0 10 22]]
+          
+        """
+        try:
+            m = len(clist)
+            for i in range(m):
+                if isinstance(clist[i],Connectivity):
+                    pass
+                elif isinstance(clist[i],ndarray):
+                    clist[i] = Connectivity(clist[i])
+                else:
+                    raise TypeError
+        except TypeError:
+            raise TypeError,'Connectivity.connect(): first argument should be a list of Connectivities'
+
+        if not nodid:
+            nodid = [ 0 for i in range(m) ]
+        if not bias:
+            bias = [ 0 for i in range(m) ]
+        if loop:
+            n = max([ clist[i].nelems() for i in range(m) ])
+        else:
+            n = min([ clist[i].nelems() - bias[i] for i in range(m) ])
+        f = zeros((n,m),dtype=Int)
+        for i,j,k in zip(range(m),nodid,bias):
+            v = clist[i][k:k+n,j]
+            if loop and k > 0:
+                v = concatenate([v,clist[i][:k,j]])
+            f[:,i] = resize(v,(n))
+        return Connectivity(f)
     
 
 ######################################################################
-    # BV: the methods below should probably be deprecated,
+    # BV: the methods below should probably be removed,
     # after a check that they are not essential
 
     @deprecation("tangle has been renamed to combine") 
@@ -749,77 +825,6 @@ class Connectivity(ndarray):
         return Connectivity(column_stack(data))
 
 
-    @classmethod
-    def connect(clas,clist,nodid=None,bias=None,loop=False):
-        """Connect nodes from multiple Connectivity objects.
-
-        clist is a list of Connectivities, nodid is an optional list of node
-        indices and
-        bias is an optional list of element bias values. All lists should have
-        the same length.
-
-        The returned Connectivity has a plexitude equal to the number of
-        Connectivities in clist. Each element of the new Connectivity consist
-        of a node from the corresponding element of each of the Connectivities
-        in clist. By default this will be the first node of that element,
-        but a nodid list may be given to specify the node id to be used for each
-        of the Connectivities.
-        Finally, a list of bias values may be given to specify an offset in
-        element number for the subsequent Connectivities.
-        If loop==False, the length of the Connectivity will be the minimum
-        length of the Connectivities in clist, each minus its respective bias.
-        By setting loop=True however, each Connectivity will loop around if
-        its end is encountered, and the length of the result is the maximum
-        length in clist.
-
-        Example:
-
-          >>> a = Connectivity([[0,1],[2,3],[4,5]])
-          >>> b = Connectivity([[10,11,12],[13,14,15]])
-          >>> c = Connectivity([[20,21],[22,23]])
-          >>> print Connectivity.connect([a,b,c])
-          [[ 0 10 20]
-           [ 2 13 22]]
-          >>> print Connectivity.connect([a,b,c],nodid=[1,0,1])
-          [[ 1 10 21]
-           [ 3 13 23]]
-          >>> print Connectivity.connect([a,b,c],bias=[1,0,1])
-          [[ 2 10 22]]
-          >>> print Connectivity.connect([a,b,c],bias=[1,0,1],loop=True)
-          [[ 2 10 22]
-           [ 4 13 20]
-           [ 0 10 22]]
-          
-        """
-        try:
-            m = len(clist)
-            for i in range(m):
-                if isinstance(clist[i],Connectivity):
-                    pass
-                elif isinstance(clist[i],ndarray):
-                    clist[i] = Connectivity(clist[i])
-                else:
-                    raise TypeError
-        except TypeError:
-            raise TypeError,'Connectivity.connect(): first argument should be a list of Connectivities'
-
-        if not nodid:
-            nodid = [ 0 for i in range(m) ]
-        if not bias:
-            bias = [ 0 for i in range(m) ]
-        if loop:
-            n = max([ clist[i].nelems() for i in range(m) ])
-        else:
-            n = min([ clist[i].nelems() - bias[i] for i in range(m) ])
-        f = zeros((n,m),dtype=Int)
-        for i,j,k in zip(range(m),nodid,bias):
-            v = clist[i][k:k+n,j]
-            if loop and k > 0:
-                v = concatenate([v,clist[i][:k,j]])
-            f[:,i] = resize(v,(n))
-        return Connectivity(f)
-
-
 ############################################################################
 
 def reduceAdjacency(adj):
@@ -848,12 +853,12 @@ def reduceAdjacency(adj):
 
     Example:
 
-      >>> a = array([[ 0,  0,  0,  1,  2,  5], \
-                     [-1,  0,  1, -1,  1,  3], \
-                     [-1, -1,  0, -1, -1,  2], \
-                     [-1, -1,  1, -1, -1,  3], \
-                     [-1, -1, -1, -1, -1, -1], \
-                     [-1, -1,  0, -1, -1,  5]])
+      >>> a = array([[ 0,  0,  0,  1,  2,  5],
+      ...            [-1,  0,  1, -1,  1,  3],
+      ...            [-1, -1,  0, -1, -1,  2],
+      ...            [-1, -1,  1, -1, -1,  3],
+      ...            [-1, -1, -1, -1, -1, -1],
+      ...            [-1, -1,  0, -1, -1,  5]])
       >>> reduceAdjacency(a)
       array([[ 1,  2,  5],
              [-1,  0,  3],
@@ -865,35 +870,60 @@ def reduceAdjacency(adj):
     """
     adj = checkArrayDim(adj,2)
     n = adj.shape[0]
-    # remove the element itself
+    # remove the item i itself
     adj[adj == arange(n).reshape(n,-1)] = -1
     adj.sort(axis=-1)
     maxc = adj.max(axis=0)
     adj = adj[:,maxc>=0]
-    # remove duplicate elements
+    # remove duplicate items
     adj[adj[:,:-1] == adj[:,1:]] = -1
     adj.sort(axis=-1)
     maxc = adj.max(axis=0)
     adj = adj[:,maxc>=0]
     return adj
 
+# BV: This could become one of the schemes of Connectivity.reorder 
 
 def closedLoop(elems):
-    """Check if a set of line elements form a closed curve.
+    """Check if a set of line segments form a closed polyline.
 
-    elems is a connection table of line elements, such as obtained
-    from the fuse() method on a plex-2 Formex.
+    Parameters:
 
-    The return value is a tuple of:
+    - `elems`: Connectivity-like with plexitude 2
+
+    Returns: a tuple (return_code,table):
     
-    - return code:
+    - `return_code`: an integer with one of the following values:
     
       - 0: the segments form a closed loop
       - 1: the segments form a single non-closed path
       - 2: the segments form multiple not connected paths
       
-    - a new connection table which is equivalent to the input if it forms
-      a closed loop. The new table has the elements in order of the loop.
+    - `table`:
+
+      - if return_code is 0 or 1: a Connectivity table equivalent
+        to the input, but with the elements and their nodes sorted in order.
+      - if return_code is 2: a table with a singly connected part in the
+        top rows, followed by -1 values for th unconnected elements.
+
+    Example:
+
+      >>> closedLoop([[0,1],[1,2],[0,4],[4,2]])
+      (0, Connectivity([[0, 1],
+             [1, 2],
+             [2, 4],
+             [4, 0]]))
+             
+      >>> closedLoop([[0,1],[1,2],[0,4]])
+      (1, Connectivity([[2, 1],
+             [1, 0],
+             [0, 4]]))
+             
+      >>> closedLoop([[0,1],[0,2],[0,3],[4,5]])
+      (2, Connectivity([[ 1,  0],
+             [ 0,  2],
+             [-1, -1],
+             [-1, -1]]))
     """
     def reverse_table(tbl,nrows):
         """Reverse the table of a connected line
@@ -903,6 +933,8 @@ def closedLoop(elems):
         tbl[:nrows] = reverseAxis(reverseAxis(tbl[:nrows],0),1)
 
 
+    elems = Connectivity(elems)
+    
     srt = zeros_like(elems) - 1
     ie = 0
     je = 0
@@ -941,14 +973,35 @@ def closedLoop(elems):
     return ret,srt
 
 
+# BV: this could become a Connectivity function splitByConnection
+
 def connectedLineElems(elems):
     """Partition a segmented curve into connected segments.
     
     The input argument is a (nelems,2) shaped array of integers.
     Each row holds the two vertex numbers of a single line segment.
 
-    The return value is a list of (nsegi,2) shaped array of integers. 
+    The return value is a list of (nsegi,2) shaped array of integers.
+
+    Example:
+    
+      >>> connectedLineElems([[0,1],[1,2],[0,4],[4,2]])
+      [Connectivity([[0, 1],
+             [1, 2],
+             [2, 4],
+             [4, 0]])]
+             
+      >>> connectedLineElems([[0,1],[1,2],[0,4]])
+      [Connectivity([[2, 1],
+             [1, 0],
+             [0, 4]])]
+             
+      >>> connectedLineElems([[0,1],[0,2],[0,3],[4,5]])
+      [Connectivity([[1, 0],
+             [0, 2]]), Connectivity([[0, 3]]), Connectivity([[4, 5]])]
+             
     """
+    elems = Connectivity(elems)
     parts = []
     while elems.size != 0:
         closed,loop = closedLoop(elems)
@@ -1054,59 +1107,6 @@ def adjacencyList(elems):
 @deprecation("adjacencyArray is deprecated. Use Connectivity().adjaccency('n')")
 def adjacencyArray(index,maxcon=5):
     return Connectivity(index).adjacency('n')
-    ## """Create adjacency array for 2-node elements.
-
-    ## elems is a (nr,2) shaped integer array.
-    ## The result is an integer array with shape (nr,mc), where row i holds
-    ## a sorted list of the nodes that are connected to node i, padded with
-    ## -1 values to create an equal list length for all nodes.
-
-    ## Example:
-
-    ##   >>> a = Connectivity([[0,1],[0,2],[1,3],[0,5]])
-    ##   >>> adjacencyArray(a)
-    ##   array([[ 1,  2,  5],
-    ##          [-1,  0,  3],
-    ##          [-1, -1,  0],
-    ##          [-1, -1,  1],
-    ##          [-1, -1, -1],
-    ##          [-1, -1,  0]])
-    ##   >>> a.adjacency('n')
-
-             
-    ##   #>>> a.resolve()
-    ##   #>>> b = inverseIndex(a); b
-    ##   #>>> a[b]
-      
-    ## """
-    ## ind = asarray(index)
-    ## if len(ind.shape) != 2 or ind.shape[1] != 2:
-    ##     raise ValueError,"""Expected a set of 2-node elements."""
-    ## nr,nc = ind.shape
-    ## mr = ind.max() + 1
-    ## mc = maxcon*nc
-    ## # start with all -1 flags, maxcon*nc columns (because in each column
-    ## # of ind, some number might appear with multiplicity maxcon)
-    ## inverse = zeros((mr,mc),dtype=ind.dtype) - 1
-    ## i = 0 # column in inverse where we will store next result
-    ## for c in range(nc):
-    ##     col = ind[:,c].copy()  # make a copy, because we will change it
-    ##     while(col.max() >= 0):
-    ##         # we still have values to process in this column
-    ##         uniq,pos = unique(col,True)
-    ##         #put the unique values at a unique position in reverse index
-    ##         ok = uniq >= 0
-    ##         if i >= inverse.shape[1]:
-    ##             # no more columns available, expand it
-    ##             inverse = concatenate([inverse,zeros_like(inverse)-1],axis=-1)
-    ##         inverse[uniq[ok],i] = ind[:,1-c][pos[ok]]
-    ##         i += 1
-    ##         # remove the stored values from ind
-    ##         col[pos[ok]] = -1
-    ## inverse.sort(axis=-1)
-    ## maxc = inverse.max(axis=0)
-    ## inverse = inverse[:,maxc>=0]
-    ## return inverse
 
     
 # BV: Can this be replaced with a nodefront walker?
@@ -1119,6 +1119,24 @@ def adjacencyArrays(elems,nsteps=1):
     path of j elements, padded with -1 values to create an equal list length
     for all nodes.
     This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.
+
+    Example:
+
+    >>> adjacencyArrays([[0,1],[1,2],[2,3],[3,4],[4,0]],3)
+    [array([[0],
+           [1],
+           [2],
+           [3],
+           [4]]), array([[1, 4],
+           [0, 2],
+           [1, 3],
+           [2, 4],
+           [0, 3]]), array([[2, 3],
+           [3, 4],
+           [0, 4],
+           [0, 1],
+           [1, 2]]), array([], shape=(5, 0), dtype=int64)]
+
     """
     elems = Connectivity(elems)
     if len(elems.shape) != 2 or elems.shape[1] != 2:

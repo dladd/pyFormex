@@ -33,7 +33,7 @@ import pyformex as pf
 from formex import *
 from plugins import tetgen
 from plugins.mesh import Mesh
-from connectivity import Connectivity,closedLoop,connectedLineElems,adjacencyArrays
+from connectivity import Connectivity,connectedLineElems,adjacencyArrays
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from gui.drawable import interpolateNormals
 from plugins.geomtools import projectionVOP,rotationAngle,facetDistance,edgeDistance,vertexDistance, triangleBoundingCircle
