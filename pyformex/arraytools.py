@@ -157,11 +157,29 @@ def niceLogSize(f):
     return int(ceil(log10(abs(f))))
    
 
-def niceNumber(f,approx=floor):
-    """Return a nice number close to but not smaller than f."""
-    n = int(approx(log10(f)))
-    m = int(str(f)[0])
-    return m*10**n
+def niceNumber(f,below=False):
+    """Return a nice number close to f.
+
+    f is a float number, whose sign is disregarded.
+
+    A number close to abs(f) but having only 1 significant digit is returned.
+    By default, the value is above abs(f). Setting below=True returns a
+    value above.
+
+    Example:
+
+    >>> [ str(niceNumber(f)) for f in [ 0.0837, 0.837, 8.37, 83.7, 93.7] ]
+    ['0.09', '0.9', '9.0', '90.0', '100.0']
+    >>> [ str(niceNumber(f,below=True)) for f in [ 0.0837, 0.837, 8.37, 83.7, 93.7] ]
+    ['0.08', '0.8', '8.0', '80.0', '90.0']
+
+    """
+    fa = abs(f)
+    s = "%.0e" % fa
+    m,n = map(int,s.split('e'))
+    if not below:
+        m = m+1
+    return m*10.**n
 
 
 def dotpr (A,B,axis=-1):
@@ -388,6 +406,29 @@ def rotationAnglesFromMatrix(mat,angle_spec=Deg):
     elif w == [0,1,5,8]:
         ry = pi - ry
     return rx / angle_spec, ry / angle_spec, rz / angle_spec
+
+
+def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
+    """Return a rotation matrix for rotating vector vec1 to vec2
+
+    The rotation matrix will be such that the plane of vec2 and the
+    rotated upvec will be parallel to the original upvec.
+
+    This function is like :func:`arraytools.rotMatrix`, but allows the
+    specification of vec1.
+    The returned matrix should be used in postmultiplication to the Coords.
+    """
+    u = normalize(vec1)
+    u1 = normalize(vec2)
+    w = normalize(upvec)
+    v = normalize(cross(w,u))
+    w = normalize(cross(u,v))
+    v1 = normalize(cross(w,u1))
+    w1 = normalize(cross(u1,v1))
+    mat1 = column_stack([u,v,w])
+    mat2 = row_stack([u1,v1,w1])
+    mat = dot(mat1,mat2)
+    return mat
 
 
 def growAxis(a,add,axis=-1,fill=0):
@@ -970,6 +1011,39 @@ def uniqueRows(a,permutations=False):
     uniq = srt[ok]
     return uniq,uniqid
 
+
+def argNearestValue(values,target):
+    """Return the index of the item nearest to target.
+
+    Parameters:
+
+    - `values`: a list of float values
+    - `target`: a float value
+
+    Returns: the position of the item in `values` that is
+    nearest to `target`.
+
+    Example:
+    
+    >>> argNearestValue([0.1,0.5,0.9],0.7)
+    1
+    """
+    v = array(values).ravel()
+    c = v - target
+    return argmin(c*c)
+
+
+def nearestValue(values,target):
+    """Return the item nearest to target.
+
+    ``values``: a list of float values
+    
+    ``target``: a single value
+
+    Return value: the item in ``values`` values that is
+    nearest to ``target``.
+    """
+    return values[argNearestValue(values,target)]
 
 #
 # BV: This is a candidate for the C-library

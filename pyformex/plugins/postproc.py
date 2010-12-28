@@ -28,8 +28,7 @@ Postprocessing means collecting a geometrical model and computed values
 from a numerical simulation, and render the values on the domain.
 """
 
-from numpy import *
-
+from arraytools import *
 
 
 # Some functions to calculate a scalar value from a vector
@@ -45,41 +44,6 @@ def max(A):
 
 def min(A):
     return asarray(A).min(axis=-1)
-   
-
-def niceNumber(f,approx=floor):
-    """Returns a nice number close to but not smaller than f."""
-    n = int(approx(log10(f)))
-    m = int(str(f)[0])
-    return m*10**n
-
-
-def argNearestValue(values,target):
-    """Return the index of the item nearest to target.
-
-    ``values``: a list of float values
-    
-    ``target``: a single value
-
-    Return value: the position of the item in ``values`` values that is
-    nearest to ``target``.
-    """
-    v = array(values).ravel()
-    c = v - target
-    return argmin(c*c)
-
-
-def nearestValue(values,target):
-    """Return the item nearest to target.
-
-    ``values``: a list of float values
-    
-    ``target``: a single value
-
-    Return value: the item in ``values`` values that is
-    nearest to ``target``.
-    """
-    return values[argNearestValue(values,target)]
 
 
 def frameScale(nframes=10,cycle='up',shape='linear'):

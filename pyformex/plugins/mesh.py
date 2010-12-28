@@ -39,30 +39,6 @@ from simple import regularGrid
 
 #################### This first section holds experimental stuff!! #####
 
-# This should probably go to formex or coords module
-
-def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
-    """Return a rotation matrix for rotating vector vec1 to vec2
-
-    The rotation matrix will be such that the plane of vec2 and the
-    rotated upvec will be parallel to the original upvec.
-
-    This function is like :func:`arraytools.rotMatrix`, but allows the
-    specification of vec1.
-    The returned matrix should be used in postmultiplication to the Coords.
-    """
-    u = normalize(vec1)
-    u1 = normalize(vec2)
-    w = normalize(upvec)
-    v = normalize(cross(w,u))
-    w = normalize(cross(u,v))
-    v1 = normalize(cross(w,u1))
-    w1 = normalize(cross(u1,v1))
-    mat1 = column_stack([u,v,w])
-    mat2 = row_stack([u1,v1,w1])
-    mat = dot(mat1,mat2)
-    return mat
-
 
 # Should probably be made a Coords method
 # But that would make the coords module dependent on a plugin

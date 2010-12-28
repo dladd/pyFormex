@@ -22,10 +22,11 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Element local coordinates and numbering.
+"""Definition of elements.
 
-This modules allows for a consistent local numbering scheme throughout
-pyFormex. When interfacing with other programs, one should be aware
+This modules allows for a consistent local numbering scheme of element
+connectivities throughout pyFormex.
+When interfacing with other programs, one should be aware
 that conversions may be necessary. Conversions to/from external programs
 should be done by the interface modules.
 """ 
@@ -369,23 +370,37 @@ class Icosa(Element):
 
     element = range(12)
 
-# Keep a list of all element types
-_element_types = [ o for o in globals().values() if isinstance(o,type) and issubclass(o,Element) ]
+# Keep a dict of all element types
+ElementDict = dict([ (o.__name__,o) for o in globals().values() if isinstance(o,type) and issubclass(o,Element) ])
+del ElementDict['Element']
 
-# Interrogate element types
-def elementTypes(ndim=None):
+
+def elementType(name):
+    """Return the named element type"""
+    try:
+        return ElementDict[name.capitalize()]
+    except:
+        ValueError,"Unknown element name: %s" % str(name)
+        
+
+def elementNames(ndim=None):
+    """Return the names of available elements.
+
+    If a value is specified for ndim, only the elements with the matching
+    dimensionality are returned.
+    """
     if ndim is None:
-        eltypes = _element_types
+        names = ElementDict.keys()
     else:
-        eltypes = [ e for e in _element_types if e.ndim == ndim ]
-    names = [ e.__name__ for e in eltypes ]
+        names = [ k for k,v in ElementDict.items() if v.ndim == ndim ]
     names.sort()
     return names
 
+
 def printElementTypes():
-    print "Available Element Types: %s" % elementTypes()        
+    print "Available Element Types: %s" % elementNames()        
     for ndim in range(4):
-        print "  %s-dimensional elements: %s" % (ndim,elementTypes(ndim)        )
+        print "  %s-dimensional elements: %s" % (ndim,elementNames(ndim)        )
 
 if __name__ == "__main__":
 
