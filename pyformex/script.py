@@ -36,7 +36,7 @@ import utils
 
 ########################
 # Imported here only to make it available in scripts
-from plugins.mesh import Mesh
+from mesh import Mesh
 
 ########################
 

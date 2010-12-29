@@ -42,9 +42,10 @@ import marks
 import image
 import canvas
 import colors
-import coords
 
-from plugins import trisurface,tools,mesh,fe
+from coords import Coords,bbox
+from mesh import Mesh
+from plugins import trisurface,tools,fe
 
 from script import *
 from signals import *
@@ -477,7 +478,7 @@ def draw(F,
 
         bbox = save_bbox
         if bbox == 'auto':
-            bbox = coords.bbox(actor)
+            bbox = bbox(actor)
             pf.canvas.setCamera(bbox,view)
             pf.canvas.update()
                 
@@ -571,7 +572,7 @@ def _setFocus(object,bbox,view):
         if view == 'last':
             view = pf.canvas.options['view']
         if bbox == 'auto':
-            bbox = coords.bbox(object)
+            bbox = bbox(object)
         pf.canvas.setCamera(bbox,view)
     pf.canvas.update()
 
@@ -586,7 +587,7 @@ def focus(object):
     where the whole object can be viewed using a 45. degrees lens opening.
     This technique may change in future!
     """
-    pf.canvas.setCamera(bbox=coords.bbox(object))
+    pf.canvas.setCamera(bbox=bbox(object))
     pf.canvas.update()
 
     
@@ -684,7 +685,7 @@ def drawNumbers(F,color='black',trl=None,offset=0,leader=''):
     or to allow to view a mark at the centroids.
     If an offset is specified, it is added to the shown numbers.
     """
-    if not isinstance(F,coords.Coords):
+    if not isinstance(F,Coords):
         F = F.centroids()
     if trl is not None:
         F = F.trl(trl)
@@ -1262,7 +1263,7 @@ def zoomBbox(bb):
 def zoomAll():
     """Zoom thus that all actors become visible."""
     if pf.canvas.actors:
-        zoomBbox(coords.bbox(pf.canvas.actors))
+        zoomBbox(bbox(pf.canvas.actors))
 
 # Can this be replaced with zoomIn/Out?
 def zoom(f):
@@ -1309,7 +1310,7 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
     delay(saved)
     pf.GUI.actions['Continue'].setEnabled(saved1)
     pf.canvas.camera.setCenter(*center)
-    pf.canvas.camera.setDist(coords.length(center-eye))
+    pf.canvas.camera.setDist(length(center-eye))
     pf.canvas.update()
 
 

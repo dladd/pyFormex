@@ -30,15 +30,17 @@ techniques = ['dialog','elements']
 
 """
 
-import elements
+from elements import *
 from formex import *
 import utils
 
 def showElement(eltype):
-    if not hasattr(elements,eltype):
-        exit()
+    #try:
+    el = elementType(eltype)
+    print el
+    #except:
+    #    return
         
-    el = getattr(elements,eltype)()
     v = array(el.vertices)
     e = array(el.edges)
     s = array([el.element])
@@ -58,7 +60,7 @@ if __name__ == "draw":
     view('iso')
     ElemList = []
     for ndim in [2,3]:
-        ElemList += elements.elementNames(ndim)
+        ElemList += elementTypes(ndim)
         
     res = askItems([('Element Type',None,'select',['All',]+ElemList),],legacy=True)
     if not res:

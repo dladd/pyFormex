@@ -29,9 +29,9 @@ from OpenGL import GL,GLU
 
 from drawable import *
 from formex import *
-import elements
+from elements import elementType
+from mesh import Mesh
 
-from plugins.mesh import Mesh
 from plugins.trisurface import TriSurface
 from marks import TextMark
 
@@ -699,10 +699,7 @@ class GeomActor(Actor):
                     GL.glDisable(GL.GL_CULL_FACE)
                    
         else:
-            try:
-                el = getattr(elements,self.eltype.capitalize())
-            except:
-                raise ValueError,"Invalid eltype %s" % str(self.eltype)
+            el = elementType(self.eltype)
             if mode=='wireframe' :
                 drawEdges(self.coords,self.elems,el.edges,color)    
             else:

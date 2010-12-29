@@ -32,7 +32,7 @@ techniques = ['color']
 """
 
 from plugins import curve
-from plugins.mesh import Mesh,connectMesh
+from mesh import Mesh,connectMesh
 import simple
 
 

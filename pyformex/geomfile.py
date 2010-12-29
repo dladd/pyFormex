@@ -31,7 +31,7 @@ pyFormex Geometry File Format.
 import utils
 from coords import *
 from formex import Formex
-from plugins.mesh import Mesh
+from mesh import Mesh
 from odict import ODict
 from pyformex import message,debug
 

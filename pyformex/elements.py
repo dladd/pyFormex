@@ -32,9 +32,7 @@ should be done by the interface modules.
 """ 
 from numpy import array
 from olist import collectOnLength
-from math import sqrt
-
-golden_ratio = 0.5 * (1.0 + sqrt(5.))
+from odict import ODict
 
 
 class Element(object):
@@ -65,29 +63,75 @@ class Element(object):
     For solid elements, it is guaranteed that the vertices of all faces are
     numbered in a consecutive order spinning positively around the outward
     normal on the face.
+
+    The list of available element types can be found by:
+    
+    >>> printElementTypes()
+    Available Element Types:
+      0-dimensional elements: ['point']
+      1-dimensional elements: ['line2']
+      2-dimensional elements: ['tri3', 'tri6', 'quad4', 'quad8', 'quad9']
+      3-dimensional elements: ['tet4', 'tet10', 'wedge6', 'hex8', 'hex20', 'icosa']
+    
     """
+    proposed_changes = """..
 
-    ndim = 0
-    vertices = []
-    edges = []
-    faces = []
-    element = []
-    conversion = {}
+    
+Proposed changes in the Element class
+=====================================
 
-    def nvertices(self):
+- nnodes = nvertices
+
+- nodal coordinates are specified as follows:
+
+  - in symmetry directions: between -1 and +1, centered on 0
+  - in non-symmetry directions: between 0 and +1, aligned on 0
+
+- getCoords() : return coords as is
+- getAlignedCoords(): return coords between 0 ad 1 and aligned on 0 in all
+  directions
+
+- Make the elements into Element class instances instead of subclasses?
+
+
+"""
+
+    collection = ODict() # the full collection with all defined elements
+    
+    
+    def __init__(self,name,doc,ndim,vertices,edges,faces,element=[],conversions={}):
+        self.doc = doc
+        self.ndim = ndim
+        self.vertices = vertices
+        self.edges = edges
+        self.faces = faces
+        if not element:
+            element = range(self.nplex())
+        self.element = element
+        self.conversions = conversions
+        # add to the collection
+        name = name.lower()
+        Element.collection[name] = self
+
+
+    def nplex(self):
         return len(self.vertices)
+    
+    nvertices = nplex
+    nnodes = nplex
+    
     def nedges(self):
         return len(self.edges)
+    
     def nfaces(self):
         return len(self.faces)
 
     def getFaces(self):
         return collectOnLength(self.faces)
 
-    @classmethod
-    def toFormex(clas):
-        x = array(clas.vertices)
-        e = array(clas.element)
+    def toFormex(self):
+        x = array(self.vertices)
+        e = array(self.element)
         return Formex(x[e])
 
     def toMesh(self):
@@ -96,175 +140,174 @@ class Element(object):
         e = array(self.element)
         return Mesh(x,e)
 
+    def name(self):
+        for k,v in Element.collection.items():
+            if v == self:
+                return k
+        return 'unregistered_element'
+
+    def report(self):
+        print "Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (self.name(),self.ndim,self.nplex(),self.nedges(),self.nfaces())
+  
+
+    @classmethod
+    def listAll(clas):
+        return Element.collection.keys()
+            
+    @classmethod
+    def printAll(clas):
+        for k,v in Element.collection.items():
+            print "Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (k,v.ndim,v.nplex(),v.nedges(),v.nfaces())
+        
+
 # BV
 # Should we use Coords objects for the vertices and arrays for the rest?
 
-class Point(Element):
-    """A single node element"""
-    ndim = 0
-    
-    vertices = [ ( 0.0, 0.0, 0.0 ) ]
+#####################################################
+# Define the collection of default pyFormex elements 
 
-    edges = [ ]
 
-    faces = [ ]
+Point = Element(
+    'point',"A single point",
+    ndim = 0,
+    vertices = [ ( 0.0, 0.0, 0.0 ) ],
+    edges = [ ],
+    faces = [ ],
+    )
 
-    element = vertices[0]
-    
 
-class Line2(Element):
-    """A 2-node line segment"""
-    ndim = 1
-    
+Line2 = Element(
+    'line2',"A 2-node line segment",
+    ndim = 1,
     vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
-                 ]
-
-    edges = [ (0,1) ]
-
-    faces = [ ]
-
-    element = edges[0]
+                 ],
+    edges = [ (0,1) ],
+    faces = [ ],
+    )
 
 
-class Tri3(Element):
-    """A 3-node triangle"""
-    ndim = 2
-    
+Tri3 = Element(
+    'tri3',"A 3-node triangle",
+    ndim = 2,
     vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
-                 ]
-
-    edges = [ (0,1), (1,2), (2,0) ]
-
-    faces = [ (0,1,2), ]
-
-    element = faces[0]
+                 ],
+    edges = [ (0,1), (1,2), (2,0) ],
+    faces = [ (0,1,2), ],
+    )
 
 
-class Tri6(Element):
-    """A 6-node triangle"""
-    ndim = 2
-    
+Tri6 = Element(
+    'tri6',"A 6-node triangle",
+    ndim = 2,
     vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
                  ( 0.5, 0.0, 0.0 ),
                  ( 0.5, 0.5, 0.0 ),
                  ( 0.0, 0.5, 0.0 ),
-                 ]
-                 
-    edges = [ (0,3), (3,1),(1,4),(4,2), (2,5), (5,0) ]
-    #edges = [ (0,1), (1,2), (2,0) ]
+                 ],    
+    edges = [ (0,3), (3,1),(1,4),(4,2), (2,5), (5,0) ],
+    faces = [ (0,1,2,3,4,5), ],
+    )
+Tri6.drawfaces =  [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]
 
-    faces = [ (0,1,2, 3, 4, 5), ]
-    #faces = [ (0,1,2), ]
 
-    element = faces[0]
-
-    drawfaces =  [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]#For Benedict: if drawn like that, the contours of the face are well represented. Should we use this drawing trick for the faces of all quadratic elements?
-    #drawfaces = Tri3.faces
-
-class Quad4(Element):
-    """A 4-node quadrilateral"""
-    ndim = 2
-    
+Quad4 = Element(
+    'quad4',"A 4-node quadrilateral",
+    ndim = 2,
     vertices = [ (  0.0,  0.0, 0.0 ),
                  (  1.0,  0.0, 0.0 ),
                  (  1.0,  1.0, 0.0 ),
                  (  0.0,  1.0, 0.0 ),
-                 ]
-
-    edges = [ (0,1), (1,2), (2,3), (3,0) ]
-
-    faces = [ (0,1,2,3), ]
-
-    element = faces[0]
-
-    conversion = {
-        'Tri3' : [ (0,1,2), (2,3,0) ],
+                 ],
+    edges = [ (0,1), (1,2), (2,3), (3,0) ],
+    faces = [ (0,1,2,3), ],
+    conversions = {
+        'tri3' : [ (0,1,2), (2,3,0) ],
         }
+    )
 
 
-class Quad8(Element):
-    """A 8-node quadrilateral"""
-    ndim = 2
-    
+Quad8 = Element(
+    'quad8',"A 8-node quadrilateral",
+    ndim = 2,
     vertices = Quad4.vertices + [ (  0.5,  0.0, 0.0 ),
                                   (  1.0,  0.5, 0.0 ),
                                   (  0.5,  1.0, 0.0 ),
                                   (  0.0,  0.5, 0.0 ),
-                                  ]
-
-    edges = [ (0,4),(4,1),  (1,5), (5,2), (2,6), (6,3), (3,7) , (7,0)]
-    #edges = [ (0,1), (1,2), (2,3), (3,0) ]
-    
-    faces = [ (0,1,2,3,4,5,6,7), ]
-
-    element = faces[0]
-    
-    drawfaces =[(0, 4, 7),(1, 5, 4),(2, 6, 5), (3, 7, 6),  (4, 5, 6), (4, 6, 7)]
-    #drawfaces = Quad4.faces
-    
+                                  ],
+    edges = [ (0,4),(4,1),  (1,5), (5,2), (2,6), (6,3), (3,7) , (7,0)],
+    faces = [ (0,1,2,3,4,5,6,7), ],
+    )    
+Quad8.drawfaces = [(0,4,7),(1,5,4),(2,6,5), (3,7,6), (4,5,6), (4,6,7)],
 
 
-class Quad9(Element):
-    """A 9-node quadrilateral"""
-    ndim = 2
-    
-    vertices = Quad8.vertices + [ (  0.5,  0.5, 0.0 ), ]
+Quad9 = Element(
+    'quad9',"A 9-node quadrilateral",
+    ndim = 2,
+    vertices = Quad8.vertices + [ (  0.5,  0.5, 0.0 ), ],
+    edges = Quad8.edges,
+    faces = [ (0,1,2,3,4,5,6,7,8), ],
+    )
+Quad9.drawfaces = [(0,4,8), (4,1,8), (1,5,8), (5,2,8), (2,6,8),(6,3,8), (3,7,8), (7,0,8) ],
 
-    edges = Quad8.edges
+######### 3D ###################
 
-    faces = [ (0,1,2,3,4,5,6,7,8), ]
-
-    element = faces[0]
-
-    drawfaces =[(0, 4, 8),(4, 1,8),(1, 5, 8), (5, 2, 8), (2, 6, 8),(6, 3, 8), (3, 7, 8), (7, 0, 8) ]
-    #drawfaces = Quad4.faces
-
-
-class Tet4(Element):
-    """A 4-node tetrahedron"""
-    ndim = 3
-    
+Tet4 = Element(
+    'tet4',"A 4-node tetrahedron",
+    ndim = 3,
     vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
                  ( 0.0, 0.0, 1.0 ),
-                 ]
-
-    edges = [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ]
-
-    faces = [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ]
-
-    element = [ 0,1,2,3 ]
+                 ],
+    edges = [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ],
+    faces = [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ],
+    )
 
 
-class Wedge6(Element):
-    """A 6-node wedge element"""
-    ndim = 3
-    
+Tet10 = Element(
+    'tet10',"A 10-node tetrahedron",
+    ndim = 3,
+    vertices = [ ( 0.0, 0.0, 0.0 ),
+                 ( 1.0, 0.0, 0.0 ),
+                 ( 0.0, 1.0, 0.0 ),
+                 ( 0.0, 0.0, 1.0 ),
+                 ( 0.5, 0.0, 0.0 ),
+                 ( 0.0, 0.5, 0.0 ),
+                 ( 0.0, 0.0, 0.5 ),
+                 ( 0.5, 0.5, 0.0 ),
+                 ( 0.0, 0.5, 0.5 ),
+                 ( 0.5, 0.0, 0.5 ),
+                 ( 0.5, 0.5, 0.5 ),
+                 ],
+# BV: This needs further specification!
+    edges = Tet4.edges,
+    faces = Tet4.faces,
+    )
+
+
+Wedge6 = Element(
+    'wedge6',"A 6-node wedge element",
+    ndim = 3,
     vertices = [ ( 0.0, 0.0, 1.0 ),
                  ( 1.0, 0.0, 1.0 ),
                  ( 0.0, 1.0, 1.0 ),
                  ( 0.0, 0.0,-1.0 ),
                  ( 1.0, 0.0,-1.0 ),
                  ( 0.0, 1.0,-1.0 ),
-                 ]
-
-    edges = [ (0,1), (1,2), (2,0), (0,3), (1,4), (2,5), (3,4), (4,5), (5,3) ]
-
-    faces = [ (0,1,2), (3,5,4), (0,3,4,1), (1,4,5,2), (2,5,3,0) ]
-
-    element = [ 0,1,2,3,4,5 ]
+                 ],
+    edges = [ (0,1), (1,2), (2,0), (0,3), (1,4), (2,5), (3,4), (4,5), (5,3) ],
+    faces = [ (0,1,2), (3,5,4), (0,3,4,1), (1,4,5,2), (2,5,3,0) ],
+    )
 
 
-class Hex8(Element):
-    """An 8-node hexahedron"""
-    ndim = 3
-    
+Hex8 = Element(
+    'hex8',"An 8-node hexahedron",
+    ndim = 3,
     vertices = [ ( 0.0, 0.0, 0.0 ),  
                  ( 1.0, 0.0, 0.0 ),
                  ( 1.0, 1.0, 0.0 ),
@@ -273,23 +316,19 @@ class Hex8(Element):
                  ( 1.0, 0.0, 1.0 ),
                  ( 1.0, 1.0, 1.0 ),
                  ( 0.0, 1.0, 1.0 ),
-                 ]
-    
+                 ],
     edges = [ (0,1), (1,2), (2,3), (3,0),
               (4,5), (5,6), (6,7), (7,4),
-              (0,4), (1,5), (2,6), (3,7) ]
-    
+              (0,4), (1,5), (2,6), (3,7) ],
     faces = [ (0,4,7,3), (1,2,6,5),
               (0,1,5,4), (3,7,6,2),
-              (0,3,2,1), (4,5,6,7) ]
+              (0,3,2,1), (4,5,6,7) ],
+    )
 
-    element = [ 0,1,2,3,4,5,6,7 ]
 
-
-class Hex20(Element):
-    """An 20-node hexahedron"""
-    ndim = 3
-    
+Hex20 = Element(
+    'hex20',"An 20-node hexahedron",
+    ndim = 3,
     vertices = Hex8.vertices + [
         (  0.5,  0.0, 0.0 ),
         (  1.0,  0.5, 0.0 ),
@@ -303,36 +342,32 @@ class Hex20(Element):
         (  1.0,  0.0, 0.5 ),
         (  1.0,  1.0, 0.5 ),
         (  0.0,  1.0, 0.5 )
-        ]
-
+        ],
     # This draws the edges as straight lines, but through the midpoints
     edges = [ (0,8), (8,1), (1,9), (9,2), (2,10),(10,3),(3,11),(11,0),
               (4,12),(12,5),(5,13),(13,6),(6,14),(14,7),(7,15),(15,4),
-              (0,16),(16,4),(1,17),(17,5),(2,18),(18,6),(3,19),(19,7) ]
-
+              (0,16),(16,4),(1,17),(17,5),(2,18),(18,6),(3,19),(19,7) ],
     faces = [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
               (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
-              (0,3,2,1,11,10,9, 8), (4,5,6,7,12,13,14,15) ]
-    
+              (0,3,2,1,11,10,9, 8), (4,5,6,7,12,13,14,15) ],
     ## faces = [ (2,4,7,11,19,16,14,9), ]# (0,8,12,15,17,10,5,3),
     ##           #(0,1,2,9,14,13,12,8), (19,11,7,6,5,10,17,18),
     ##           #(12,13,14,16,19,18,17,15), (0,3,5,6,7,4,2,1) ]
+    )
+Hex20.drawfaces = array(Hex20.faces)[:, Quad8.drawfaces].reshape(-1, 3)
 
-    element = range(20)
+##########################################################  
+# This element added just for fun, no practical importance
 
-    #drawfaces = Hex8.faces
-    drawfaces=array(faces)[:, Quad8.drawfaces].reshape(-1, 3)
-    
+from arraytools import golden_ratio as phi
 
-class Icosa(Element):
-    """An icosahedron: a regular polyhedron with 20 triangular surfaces.
+Icosa = Element(
+    'icosa',
+    """An icosahedron: a regular polyhedron with 20 triangular surfaces.,
 
     nfaces = 20, nedges = 30, nvertices = 12
-    """
-    ndim = 3
-    
-    phi = golden_ratio
-    
+    """,
+    ndim = 3,
     vertices = [ ( 0.0, 1.0, phi ),
                  ( 0.0,-1.0, phi ),
                  ( 0.0, 1.0,-phi ),
@@ -345,63 +380,113 @@ class Icosa(Element):
                  ( phi, 0.0,-1.0 ),
                  (-phi, 0.0, 1.0 ),
                  (-phi, 0.0,-1.0 ),
-                 ]
-
+                 ],
     edges = [ (0,1),  (0,8), (1,8), (0,10),(1,10),
               (2,3),  (2,9), (3,9), (2,11),(3,11),
               (4,5),  (4,0), (5,0), (4,2), (5,2),
               (6,7),  (6,1), (7,1), (6,3), (7,3),
               (8,9),  (8,4), (9,4), (8,6), (9,6),
               (10,11),(10,5),(11,5),(10,7),(11,7),
-              ]
-    
+              ],
     faces = [ (0,1,8),  (1,0,10),
               (2,3,11), (3,2,9),
               (4,5,0),  (5,4,2),
               (6,7,3),  (7,6,1),
               (8,9,4),  (9,8,6),
               (10,11,7),(11,10,5),
-              
               (0,8,4),  (1,6,8),
               (0,5,10), (1,10,7),
               (2,11,5), (3,7,11),
               (2,4,9),  (3,9,6),
-              ]
-
-    element = range(12)
-
-# Keep a dict of all element types
-ElementDict = dict([ (o.__name__,o) for o in globals().values() if isinstance(o,type) and issubclass(o,Element) ])
-del ElementDict['Element']
+              ],
+    )
 
 
-def elementType(name):
-    """Return the named element type"""
+# list of default element type per plexitude
+_default_eltype = {
+    1 : Point,
+    2 : Line2,
+    3 : Tri3,
+    4 : Quad4,
+    6 : Wedge6,
+    8 : Hex8,
+    }
+
+
+def elementType(name=None,nplex=-1):
+    """Return the requested element type
+
+    Parameters:
+
+    - `name`: a string (case ignored) with the name of an element.
+      If not specified, or the named element does not exist, the default
+      element for the specified plexitude is returned.
+    - `nplex`: plexitude of the element. If specified and the named element
+      exists, a check will be made that it is of the correct plexitude.
+      If `name` did not resolve the element, the default element type for
+      this plexitude is returned, or an error is raised if there is no
+      default.
+
+    Returns: a subclass of :class:`Element`
+
+    Errors: if neither `name` nor `nplex` can resolve into an element type,
+      an error is raised.
+
+    Example:
+    
+    >>> elementType('tri3').name()
+    'tri3'
+    >>> elementType(nplex=2).name()
+    'line2'
+    >>> try:
+    ...     elementType('tri3',4)
+    ... except:
+    ...     print "No such element"
+    No such element
+    """
+    if isinstance(name,Element):
+        return name
+    
+    eltype = None
     try:
-        return ElementDict[name.capitalize()]
+        eltype = Element.collection[name.lower()]
+        if not (nplex >= 0 and nplex != eltype.nplex()):
+            return eltype
     except:
-        ValueError,"Unknown element name: %s" % str(name)
+        pass
+    if eltype is None:
+        try:
+            return _default_eltype[nplex]
+        except:
+            pass
         
+    raise ValueError("There is no element with name '%s' and plexitude '%s'" % (str(name),str(nplex)))
 
-def elementNames(ndim=None):
+
+def elementTypes(ndim=None):
     """Return the names of available elements.
 
     If a value is specified for ndim, only the elements with the matching
     dimensionality are returned.
     """
     if ndim is None:
-        names = ElementDict.keys()
+        return Element.collection.keys()
     else:
-        names = [ k for k,v in ElementDict.items() if v.ndim == ndim ]
-    names.sort()
-    return names
-
+        return [ k for k,v in Element.collection.items() if v.ndim==ndim] 
 
 def printElementTypes():
-    print "Available Element Types: %s" % elementNames()        
+    """Print all available element types.
+
+    Prints a list of the names of all availabale element types,
+    grouped by their dimensionality.
+    """
+    print "Available Element Types:"        
     for ndim in range(4):
         print "  %s-dimensional elements: %s" % (ndim,elementNames(ndim)        )
 
-if __name__ == "__main__":
 
+
+if __name__ == "__main__":
     printElementTypes()
+
+# End

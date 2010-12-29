@@ -34,7 +34,7 @@ techniques = []
 """
 
 from plugins.section2d import *
-from plugins.mesh import Mesh
+from mesh import Mesh
 import simple,connectivity,mydict
 
 

@@ -29,7 +29,7 @@ Interface with flavia FE result files.
 (C) 2010 Benedict Verhegghe.
 """
 from arraytools import *
-from plugins.mesh import Mesh,mergeMeshes
+from mesh import Mesh,mergeMeshes
 from plugins.fe_post import FeResult
 import shlex
 

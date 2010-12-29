@@ -37,7 +37,7 @@ from gui.draw import *
 from plugins import formex_menu
 from plugins.objects import DrawableObjects
 from plugins.fe import *
-from plugins.mesh import *
+from mesh import *
 
 
 ##################### select, read and write ##########################

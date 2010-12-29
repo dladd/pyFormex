@@ -10,7 +10,7 @@ techniques = ['draw','replicate','match']
 transparent()
 smoothwire()
 clear()
-from plugins.mesh import Mesh
+from mesh import Mesh
 
 n=5
 nx=4*n

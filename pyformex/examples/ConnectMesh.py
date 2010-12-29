@@ -32,7 +32,7 @@ techniques = ['color']
 """
 
 import simple
-from plugins.mesh import Mesh,connectMesh
+from mesh import Mesh,connectMesh
 
 clear()
 smoothwire()

@@ -31,7 +31,7 @@ It also contains some useful functions to create such models.
 
 from formex import *
 from connectivity import Connectivity
-import elements
+from elements import elementType
 from utils import deprecation
 from geometry import Geometry
 from simple import regularGrid
@@ -109,26 +109,6 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,end
                  ]
         
     return sequence
-
-
-_default_eltype = {
-    1 : 'point',
-    2 : 'line2',
-    3 : 'tri3',
-    4 : 'quad4',
-    6 : 'wedge6',
-    8 : 'hex8',
-    }
-
-
-def defaultEltype(nplex):
-    """Default element type for a mesh with given plexitude.
-
-    For the most common cases of plexitudes, we define a default element
-    type. The full list of default types can be found in
-    plugins.mesh._default_eltype.
-    """
-    return _default_eltype.get(nplex,None)
 
 
 ########################################################################
@@ -245,10 +225,12 @@ class Mesh(Geometry):
     - elems: (nelems,nplex) shaped array of int32 indices into coords. All
       values should be in the range 0 <= value < ncoords.
     - prop: array of element property numbers, default None.
-    - eltype: string designing the element type, default None.
+    - eltype: an Element subclass or a string designing the element type,
+      default None.
     
     If eltype is None, a default eltype is derived from the plexitude, by
-    calling the defaultEltype function. For plexitudes without default type,
+    calling the elements.elementType function.
+    For plexitudes without default type,
     or if the default type is not the wanted element type, the user should
     specify the element type himself.
 
@@ -300,11 +282,7 @@ class Mesh(Geometry):
 
         self.setProp(prop)
 
-        if eltype is None:
-            self.eltype = defaultEltype(self.nplex())
-        else:
-            # THis should check that the eltype is known
-            self.eltype = eltype
+        self.eltype = elementType(eltype,self.nplex())
 
 
     def _set_coords(self,coords):
@@ -377,6 +355,8 @@ class Mesh(Geometry):
     
     def ndim(self):
         return 3
+    def ngrade(self):
+        return self.eltype.ndim
     def nelems(self):
         return self.elems.shape[0]
     def nplex(self):
@@ -396,8 +376,7 @@ class Mesh(Geometry):
         The edges are not fused!
         """
         try:
-            el = getattr(elements,self.eltype.capitalize())
-            return self.nelems() * len(el.edges)
+            return self.nelems() * self.eltype.nedges()
         except:
             return 0
     
@@ -457,19 +436,14 @@ class Mesh(Geometry):
         If the eltype is not defined, or the requested entity level is
         outside the range 0..3, the return value is None.
         """
-        try:
-            el = getattr(elements,self.eltype.capitalize())
-        except:
-            return None
-
         if level < 0:
-            level = el.ndim + level
+            level = self.eltype.ndim + level
 
         if level < 0 or level > 3:
             return None
 
         attr = ['points', 'edges', 'faces', 'cells'][level]
-        return array(getattr(el,attr))
+        return array(getattr(self.eltype,attr))
 
 
     def getLowerEntities(self,level=-1,unique=False):
@@ -550,7 +524,7 @@ class Mesh(Geometry):
         but this also stores the result internally so that future
         requests can return it without the need for computing it again.
         """
-        from trisurface import TriSurface
+        from plugins.trisurface import TriSurface
         if self.__class__ == TriSurface:
             import warnings
             warnings.warn('warn_trisurface_getfaces')
@@ -715,6 +689,8 @@ class Mesh(Geometry):
     # or a function??
     # ?? DOES THIS WORK FOR *ANY* MESH ??
     # What with a mesh of points, lines, ...
+    # Also, el.faces can contain items of different length
+    @deprecation("The use of this function is discouraged!")
     def getAngles(self, angle_spec=Deg):
         """_Returns the angles in Deg or Rad between the edges of a mesh.
         
@@ -724,11 +700,11 @@ class Mesh(Geometry):
         """
         #mf = self.coords[self.getFaces()]
         mf = self.coords[self.getLowerEntities(2,unique=False)]
-        el = getattr(elements,self.eltype.capitalize())
         v = mf - roll(mf,-1,axis=1)
         v=normalize(v)
         v1=-roll(v,+1,axis=1)
         angfac= arccos( dotpr(v, v1) )/angle_spec
+        el = self.eltype
         return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
 
@@ -737,43 +713,6 @@ class Mesh(Geometry):
     # Either use
     #  - self.elems.nodeAdjacency() (gives nodes connected by elements)
     #  - self.getEdges().nodeAdjacency() (gives nodes connected by edges)
-    
-    
-    ## # BV: Should be made a method of a connection graph
-    ## def node2nodeAdjacency(self):
-    ##     """_Finds the nodes adjacent to each node via an edge of the mesh.
-        
-    ##     For each original node returns the index of the adjacent nodes,
-    ##     which are connect to the original by an edge.
-    ##     """
-    ##     edg= self.getEdges()
-    ##     nodedg= inverseIndex(edg)
-    ##     wh= [nodedg==-1]
-    ##     #edges' 2 nodes
-    ##     nodedg0, nodedg1= edg[:, 0][nodedg],edg[:, 1][nodedg]
-    ##     nodedg0[wh], nodedg1[wh]=-1, -1
-    ##     #first ring of nodes
-    ##     nn1=concatenate([nodedg0, nodedg1], axis=1) 
-    ##     # remove the element itself
-    ##     n=nn1.shape[0]
-    ##     k =arange(n).reshape(n,-1)
-    ##     nn1[nn1 == k.reshape(n,-1)] = -1
-    ##     #remove columns full of -1
-    ##     nn1.sort(axis=-1)
-    ##     maxc = nn1.max(axis=0)
-    ##     nn1 = nn1[:,maxc>=0]
-    ##     # remove duplicate elements
-    ##     nn1[nn1[:,:-1] == nn1[:,1:]] = -1
-    ##     nn1.sort(axis=-1)
-    ##     maxc = nn1.max(axis=0)
-    ##     nn1 = nn1[:,maxc>=0]
-    ##     return nn1
-
-
-    ## def nNode2nodeAdjacent(self):
-    ##     """_Find the number of nodes  adjacent to each node via an edge of the mesh."""
-
-    ##     return ( self.getEdges().inverse()  >=0).sum(axis=-1)
 
 
     # BV: name is way too complex
@@ -1106,6 +1045,7 @@ Size: %s
         """
         
         fromtype = self.eltype
+        totype = elementType(totype)
         if totype == fromtype:
             return self
 
@@ -1319,7 +1259,7 @@ Size: %s
             M.elems[:,-nplex:] = M.elems[:,-1:-(nplex+1):-1].copy()
 
         if autofix:
-            M.eltype = defaultEltype(M.nplex())
+            M.eltype = elementType(nplex=M.nplex())
 
         return M
 
@@ -1353,7 +1293,7 @@ Size: %s
             n2 = [1,0]
 
         if autofix:
-            eltype = defaultEltype(2*self.nplex())
+            eltype = elementType(nplex=2*self.nplex())
 
         CL = [ connectMesh(m1,m2,1,n1,n2,eltype) for (m1,m2) in zip(ML[:-1],ML[1:]) ]
         return Mesh.concatenate(CL)
@@ -1387,7 +1327,7 @@ Size: %s
             M.elems[:,-nplex:] = M.elems[:,-1:-(nplex+1):-1].copy()
 
         if autofix:
-            M.eltype = defaultEltype(M.nplex())
+            M.eltype = elementType(M.nplex())
 
         return M
 
@@ -1564,7 +1504,7 @@ Size: %s
         
             For the most common cases of plexitudes, we define a default face
             type. The full list of default types can be found in
-            plugins.mesh._default_facetype.
+            mesh._default_facetype.
             """
             return _default_surfacetype.get(nplex,None)
         def areaNormals(x):

@@ -37,7 +37,7 @@ This example illustrates the use of the Mesh conversion techniques and the
 creation of colored value plots on surfaces.
 
 """
-from plugins import mesh,trisurface,surface_menu
+from plugins import trisurface,surface_menu
 
 def atExit():
     pf.cfg['gui/autozoomfactor'] = saved_autozoomfactor

@@ -122,6 +122,8 @@ Int = int32
 # Rad is a multiplier to transform radians to radians
 Deg = pi/180.
 Rad = 1.
+golden_ratio = 0.5 * (1.0 + sqrt(5.))
+
 
 # Convenience functions: trigonometric functions with argument in degrees
 

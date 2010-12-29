@@ -30,7 +30,7 @@ techniques = ['intersection']
 
 """
 from plugins.trisurface import TriSurface
-from plugins.mesh import Mesh
+from mesh import Mesh
 
 reset()
 smooth()

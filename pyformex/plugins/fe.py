@@ -32,7 +32,7 @@ from coords import *
 from connectivity import *
 from geometry import Geometry
 #from numpy import *
-from plugins.mesh import Mesh,mergeMeshes
+from mesh import Mesh,mergeMeshes
 from utils import deprecation
 import warnings
 

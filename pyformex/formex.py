@@ -1156,7 +1156,7 @@ class Formex(Geometry):
         are fused into a single point, and elements are defined by a
         connectivity table with integers pointing to the corresponding vertex.
         """
-        from plugins.mesh import Mesh
+        from mesh import Mesh
         x,e = self.fuse(*args,**kargs)
         return Mesh(x,e,prop=self.prop,eltype=self.eltype)
 

@@ -29,7 +29,7 @@ topics = ['FEA']
 techniques = ['dialog', 'animation', 'persistence', 'color'] 
 """
 
-from plugins.mesh import Mesh
+from mesh import Mesh
 from plugins.properties import *
 ############################
 # Load the needed calpy modules    
