@@ -142,8 +142,19 @@ class Coords(ndarray):
             ar = ndarray((0,3),dtype=dtyp)
         else:
             # turn the data into an array, and copy if requested
-            ar = array(data, dtype=dtyp, copy=copy)
-            
+            # DO NOT ADD ndmin=1 HERE ! (see below)
+            ar = array(data,dtype=dtyp,copy=copy)
+
+        #
+        # The Coords object needs to be at least 1-D array, no a scalar
+        # We could force 'ar' above to be at least 1-D, but that would 
+        # turn every scalar into a 1-D vector, which would circumvent
+        # detection of input errors (e.g. with translation, where input
+        # can be either a vector or an axis number)
+        #
+        if ar.ndim == 0:
+            raise ValueError,"Expected array data, not a scalar"
+        
         if ar.shape[-1] == 3:
             pass
         elif ar.shape[-1] in [1,2]:

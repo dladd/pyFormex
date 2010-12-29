@@ -20,8 +20,9 @@ M = Formex(mpattern('123')).replic2(nx,ny).cselect(arange(4*nx,int(7.5*nx))).toM
 draw(M)
 drawNumbers(M.coords,color=red)
 
-M1 = Formex(mpattern('12')).replic2(int(0.6*nx),int(0.45*ny),bias=1,taper=-2).toMesh().scale(2).trl(1.,1).setProp(2)
+M1 = Formex(mpattern('12')).replic2(int(0.6*nx),int(0.45*ny),bias=1,taper=-2).toMesh().scale(2).trl(1,1.).setProp(2)
 draw(M1)
+zoomAll()
 drawNumbers(M1.coords,color=yellow,trl=[0.,-0.25,0.])
 
 match = M.matchCoords(M1)
@@ -32,6 +33,7 @@ n1=arange(len(match))
 print "List of the %s matching nodes" % m.sum()
 print column_stack([match[m],n1[m]])
 
-draw(M.coords[match[m]],marksize=10)
+draw(M.coords[match[m]],marksize=10,bbox='last')
+
 
 # End

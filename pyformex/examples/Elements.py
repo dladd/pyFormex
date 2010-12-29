@@ -58,7 +58,7 @@ if __name__ == "draw":
     view('iso')
     ElemList = []
     for ndim in [2,3]:
-        ElemList += elements.elementTypes(ndim)
+        ElemList += elements.elementNames(ndim)
         
     res = askItems([('Element Type',None,'select',['All',]+ElemList),],legacy=True)
     if not res:
