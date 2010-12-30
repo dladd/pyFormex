@@ -43,7 +43,7 @@ import image
 import canvas
 import colors
 
-from coords import Coords,bbox
+import coords
 from mesh import Mesh
 from plugins import trisurface,tools,fe
 
@@ -478,7 +478,7 @@ def draw(F,
 
         bbox = save_bbox
         if bbox == 'auto':
-            bbox = bbox(actor)
+            bbox = coords.bbox(actor)
             pf.canvas.setCamera(bbox,view)
             pf.canvas.update()
                 
@@ -572,7 +572,7 @@ def _setFocus(object,bbox,view):
         if view == 'last':
             view = pf.canvas.options['view']
         if bbox == 'auto':
-            bbox = bbox(object)
+            bbox = coords.bbox(object)
         pf.canvas.setCamera(bbox,view)
     pf.canvas.update()
 
@@ -587,7 +587,7 @@ def focus(object):
     where the whole object can be viewed using a 45. degrees lens opening.
     This technique may change in future!
     """
-    pf.canvas.setCamera(bbox=bbox(object))
+    pf.canvas.setCamera(bbox=coords.bbox(object))
     pf.canvas.update()
 
     
@@ -685,7 +685,7 @@ def drawNumbers(F,color='black',trl=None,offset=0,leader=''):
     or to allow to view a mark at the centroids.
     If an offset is specified, it is added to the shown numbers.
     """
-    if not isinstance(F,Coords):
+    if not isinstance(F,coords.Coords):
         F = F.centroids()
     if trl is not None:
         F = F.trl(trl)

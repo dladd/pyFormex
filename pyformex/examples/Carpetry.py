@@ -38,6 +38,7 @@ creation of colored value plots on surfaces.
 
 """
 from plugins import trisurface,surface_menu
+from elements import *
 
 def atExit():
     pf.cfg['gui/autozoomfactor'] = saved_autozoomfactor
@@ -63,6 +64,9 @@ smoothwire()
 transparent()
 
 M = Formex(origin()).extrude(nx,1.,0).extrude(ny,1.,1).toMesh().setProp(1)
+draw(M)
+export({'M':M})
+exit()
 
 V = surface_menu.SelectableStatsValues
 possible_keys = [ k for k in V.keys() if not V[k][1] ][:-1]
@@ -75,18 +79,24 @@ maxelems = 50000
 
 save = False
 
+delay(20)
+
 def carpet(M):
     conversions = []
     nconv = random.randint(minconv,maxconv)
 
     while (len(conversions) < nconv and M.nelems() < maxelems) or M.nelems() < minelems:
-        possible_conversions = mesh._conversions_[M.eltype].keys()
+        possible_conversions = M.eltype.conversions.keys()
         i = random.randint(len(possible_conversions))
         conv = possible_conversions[i]
         conversions.append(conv)
+        clear()
+        draw(M)
+        print "%s -> %s" % (M.eltype,conv)
         M = M.convert(conv)
+        print "type %s, plex %s" % (M.eltype,M.nplex())
 
-    if M.eltype != 'tri3':
+    if M.eltype != Tri3:
         M = M.convert('tri3')
         conversions.append('tri3')
 

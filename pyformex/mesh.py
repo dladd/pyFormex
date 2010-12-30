@@ -39,142 +39,6 @@ from simple import regularGrid
 
 #################### This first section holds experimental stuff!! #####
 
-
-# Should probably be made a Coords method
-# But that would make the coords module dependent on a plugin
-def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,enddir=None,scalex=None,scaley=None):
-    """ Sweep a Coords object along a path, returning a series of copies.
-
-    origin and normal define the local path position and direction on the mesh.
-    
-    At each point of the curve, a copy of the Coords object is created, with
-    its origin in the curve's point, and its normal along the curve's direction.
-    In case of a PolyLine, directions are pointing to the next point by default.
-    If avgdir==True, average directions are taken at the intermediate points.
-    Missing end directions can explicitely be set by enddir, and are by default
-    taken along the last segment.
-    If the curve is closed, endpoints are treated as any intermediate point,
-    and the user should normally not specify enddir.
-    
-    At each point of the curve, the original Coords object can be scaled in x
-    and y direction by specifying scalex and scaley. The number of values
-    specified in scalex and scaly should be equal to the number of points on
-    the curve.
-
-    The return value is a sequence of the transformed Coords objects.
-    """
-    points = path.coords
-    if avgdir:
-        directions = path.avgDirections()
-    else:
-         directions = path.directions()
-
-    missing = points.shape[0] - directions.shape[0]
-    if missing == 1:
-        lastdir = (points[-1] - points[-2]).reshape(1,3)
-        directions = concatenate([directions,lastdir],axis=0)
-    elif missing == 2:
-        lastdir = (points[-1] - points[-2]).reshape(1,3)
-        firstdir = (points[1] - points[0]).reshape(1,3)
-        directions = concatenate([firstdir,directions,lastdir],axis=0)
-
-    if enddir:
-        for i,j in enumerate([0,-1]):
-            if enddir[i]:
-                directions[j] = Coords(enddir[i])
-
-    directions = normalize(directions)
-
-    if type(normal) is int:
-        normal = unitVector(normal)
-
-    if type(upvector) is int:
-        upvector = Coords(unitVector(upvector))
-        
-    if scalex is not None:
-        if len(scalex) != points.shape[0]:
-            raise ValueError,"The number of scale values in x-direction differs from the number of copies that will be created."
-    else:
-        scalex = ones(points.shape[0])
-        
-    if scaley is not None:
-        if len(scaley) != points.shape[0]:
-            raise ValueError,"The number of scale values in y-direction differs from the number of copies that will be created."
-    else:
-        scaley = ones(points.shape[0])
-    
-    base = self.translate(-Coords(origin))
-    sequence = [ base.scale([scx,scy,1.]).rotate(vectorRotation(normal,d,upvector)).translate(p)
-                 for scx,scy,d,p in zip(scalex,scaley,directions,points)
-                 ]
-        
-    return sequence
-
-
-########################################################################
-## Mesh conversions ##
-######################
-
-_conversions_ = {
-    'tri3': {
-        'tri3-4' : [ ('v', 'tri6'), ],
-        'tri6'   : [ ('m', [ (0,1), (1,2), (2,0) ]), ],
-        'quad4'  : [ ('v', 'tri6'), ],
-    },
-    'tri6': {
-        'tri3'   : [ ('s', [ (0,1,2) ]), ],
-        'tri3-4' : [ ('s', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]), ],
-        'quad4'  : [ ('m', [ (0,1,2), ]),
-                     ('s', [ (0,3,6,5),(1,4,6,3),(2,5,6,4) ]),
-                     ],
-        },
-    'quad4': {
-        'tri3'   : 'tri3-u',
-        'tri3-r' : [ ('r', ['tri3-u','tri3-d']), ],
-        'tri3-u' : [ ('s', [ (0,1,2), (2,3,0) ]), ],
-        'tri3-d' : [ ('s', [ (0,1,3), (2,3,1) ]), ],
-        'tri3-x' : [ ('m', [ (0,1,2,3) ]),
-                     ('s', [ (0,1,4),(1,2,4),(2,3,4),(3,0,4) ]),
-                     ],
-        'quad8'  : [ ('m', [ (0,1), (1,2), (2,3), (3,0) ]), ],
-        'quad4-4': [ ('v', 'quad9'), ],
-        'quad9'  : [ ('v', 'quad8'), ],
-        },
-    'quad8': {
-        'tri3'   : [ ('v', 'quad9'), ],
-        'tri3-v' : [ ('s', [ (0,4,7),(1,5,4),(2,6,5),(3,7,6),(5,6,4),(7,4,6) ]), ],
-        'tri3-h' : [ ('s', [ (0,4,7),(1,5,4),(2,6,5),(3,7,6),(4,5,7),(6,7,5) ]), ],
-        'quad4'  : [ ('s', [ (0,1,2,3) ]), ],
-        'quad4-4': [ ('v', 'quad9'), ],
-        'quad9'  : [ ('m', [ (4,5,6,7) ]), ],
-        },
-    'quad9': {
-        'quad8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
-        'quad4'  : [ ('v', 'quad8'), ],
-        'quad4-4': [ ('s', [ (0,4,8,7),(4,1,5,8),(7,8,6,3),(8,5,2,6) ]), ],
-        'tri3'   : 'tri3-d',
-        'tri3-d' : [ ('s', [ (0,4,7),(4,1,5),(5,2,6),(6,3,7),
-                      (7,4,8),(4,5,8),(5,6,8),(6,7,8) ]), ],
-        'tri3-x' : [ ('s', [ (0,4,8),(4,1,8),(1,5,8),(5,2,8),
-                      (2,6,8),(6,3,8),(3,7,8),(7,0,8) ]), ],
-        },
-    'wedge6': {
-        'tet4'  : [ ('s', [ (0,1,2,3),(1,2,3,4),(2,3,4,5) ]), ],
-        },
-    'hex8': {
-        'wedge6': [ ('s', [ (0,1,2,4,5,6),(2,3,0,6,7,4) ]), ],
-        'tet4'  : [ ('s', [ (0,1,2,5),(2,3,0,7),(5,7,6,2),(7,5,4,0),(0,5,2,7) ]), ],
-        'hex20' : [ ('m', [ (0,1), (1,2), (2,3), (3,0),
-                            (4,5), (5,6), (6,7), (7,4),
-                            (0,4), (1,5), (2,6), (3,7), ]), ],
-        },
-    'hex20': {
-        'hex8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
-        'tet4'  : [ ('v', 'hex8'), ],
-        },
-    }
-
-
 # degenerate patterns
 _reductions_ = {
     'hex8': {
@@ -925,6 +789,7 @@ Size: %s
         newnodes = arange(newcoords.shape[0]).reshape(self.elems.shape[0],-1) + self.coords.shape[0]
         elems = Connectivity(concatenate([self.elems,newnodes],axis=-1))
         coords = Coords.concatenate([self.coords,newcoords])
+        #print "OLD plex = %s, NEW plex = %s, eltype = %s" % (self.nplex(),elems.nplex(),eltype)
         return Mesh(coords,elems,self.prop,eltype)
 
 
@@ -1044,18 +909,16 @@ Size: %s
         If the requested conversion is not implemented, an error is raised.
         """
         
-        fromtype = self.eltype
-        totype = elementType(totype)
-        if totype == fromtype:
+        if totype == self.eltype.name():
             return self
 
-        strategy = _conversions_[fromtype].get(totype,None)
+        strategy = self.eltype.conversions.get(totype,None)
 
         while not type(strategy) is list:
             # This allows for aliases in the conversion database
-            strategy = _conversions_[fromtype].get(strategy,None)
+            strategy = self.eltype.conversions.get(strategy,None)
             if strategy is None:
-                raise ValueError,"Don't know how to convert %s -> %s" % (fromtype,totype)
+                raise ValueError,"Don't know how to convert %s -> %s" % (self.eltype,totype)
 
         # 'r' and 'v' steps can only be the first and only step
         steptype,stepdata = strategy[0]

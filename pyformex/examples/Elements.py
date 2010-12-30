@@ -24,7 +24,7 @@
 ##
 """Elements
 
-level = 'beginner'
+level = 'normal'
 topics = ['geometry','mesh']
 techniques = ['dialog','elements']
 
@@ -32,16 +32,29 @@ techniques = ['dialog','elements']
 
 from elements import *
 from formex import *
+from gui.widgets import simpleInputItem as I
 import utils
 
-def showElement(eltype):
-    #try:
+def showElement(eltype,deformed,reduced):
     el = elementType(eltype)
-    print el
-    #except:
-    #    return
+    ndim = 3
+    if reduced:
+        ndim = el.ndim
+    if ndim == 3:
+        view('iso')
+    else:
+        view('front')
         
-    v = array(el.vertices)
+    v = Coords(el.vertices)
+    if deformed:
+        dv = ( random.rand(v.size).reshape(v.shape) - 0.5 ) * 0.1
+        v += dv
+        if ndim < 3:
+            v[...,2] = 0.0
+        if ndim < 2:
+            v[...,1] = 0.0
+            
+            
     e = array(el.edges)
     s = array([el.element])
     
@@ -57,22 +70,27 @@ def showElement(eltype):
         
 if __name__ == "draw":
 
-    view('iso')
     ElemList = []
     for ndim in [2,3]:
         ElemList += elementTypes(ndim)
         
-    res = askItems([('Element Type',None,'select',['All',]+ElemList),],legacy=True)
+    res = askItems([
+        I('Element Type',choices=['All',]+ElemList),
+        I('Deformed',False),
+        I('Reduced dimensionality',False),
+        ])
     if not res:
         exit()
         
     eltype = res['Element Type']
+    deformed = res['Deformed']
+    reduced = res['Reduced dimensionality']
     if eltype == 'All':
         ellist = ElemList
     else:
         ellist = [eltype]
     for el in ellist:
-        showElement(el)
+        showElement(el,deformed,reduced)
     
     
 # End

@@ -99,7 +99,7 @@ Proposed changes in the Element class
     collection = ODict() # the full collection with all defined elements
     
     
-    def __init__(self,name,doc,ndim,vertices,edges,faces,element=[],conversions={}):
+    def __init__(self,name,doc,ndim,vertices,edges,faces,element=[],conversions={},drawedges=None,drawfaces=None):
         self.doc = doc
         self.ndim = ndim
         self.vertices = vertices
@@ -109,6 +109,10 @@ Proposed changes in the Element class
             element = range(self.nplex())
         self.element = element
         self.conversions = conversions
+        if drawedges:
+            self.drawedges = drawedges
+        if drawfaces:
+            self.drawfaces = drawfaces
         # add to the collection
         name = name.lower()
         Element.collection[name] = self
@@ -145,6 +149,9 @@ Proposed changes in the Element class
             if v == self:
                 return k
         return 'unregistered_element'
+
+    def __str__(self):
+        return self.name()
 
     def report(self):
         print "Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (self.name(),self.ndim,self.nplex(),self.nedges(),self.nfaces())
@@ -209,10 +216,11 @@ Tri6 = Element(
                  ( 0.5, 0.5, 0.0 ),
                  ( 0.0, 0.5, 0.0 ),
                  ],    
-    edges = [ (0,3), (3,1),(1,4),(4,2), (2,5), (5,0) ],
+    edges = [ (0,3,1),(1,4,2), (2,5,0) ],
     faces = [ (0,1,2,3,4,5), ],
+    drawedges = [ (0,3), (3,1),(1,4),(4,2), (2,5), (5,0) ],
+    drawfaces = [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]
     )
-Tri6.drawfaces =  [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]
 
 
 Quad4 = Element(
@@ -225,9 +233,6 @@ Quad4 = Element(
                  ],
     edges = [ (0,1), (1,2), (2,3), (3,0) ],
     faces = [ (0,1,2,3), ],
-    conversions = {
-        'tri3' : [ (0,1,2), (2,3,0) ],
-        }
     )
 
 
@@ -239,11 +244,10 @@ Quad8 = Element(
                                   (  0.5,  1.0, 0.0 ),
                                   (  0.0,  0.5, 0.0 ),
                                   ],
-    edges = [ (0,4),(4,1),  (1,5), (5,2), (2,6), (6,3), (3,7) , (7,0)],
+    edges = [ (0,4), (4,1), (1,5), (5,2), (2,6), (6,3), (3,7), (7,0) ],
     faces = [ (0,1,2,3,4,5,6,7), ],
-    )    
-Quad8.drawfaces = [(0,4,7),(1,5,4),(2,6,5), (3,7,6), (4,5,6), (4,6,7)],
-
+    drawfaces = [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ],
+)
 
 Quad9 = Element(
     'quad9',"A 9-node quadrilateral",
@@ -251,8 +255,8 @@ Quad9 = Element(
     vertices = Quad8.vertices + [ (  0.5,  0.5, 0.0 ), ],
     edges = Quad8.edges,
     faces = [ (0,1,2,3,4,5,6,7,8), ],
-    )
-Quad9.drawfaces = [(0,4,8), (4,1,8), (1,5,8), (5,2,8), (2,6,8),(6,3,8), (3,7,8), (7,0,8) ],
+    drawfaces = [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ],
+)
 
 ######### 3D ###################
 
@@ -350,11 +354,71 @@ Hex20 = Element(
     faces = [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
               (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
               (0,3,2,1,11,10,9, 8), (4,5,6,7,12,13,14,15) ],
-    ## faces = [ (2,4,7,11,19,16,14,9), ]# (0,8,12,15,17,10,5,3),
-    ##           #(0,1,2,9,14,13,12,8), (19,11,7,6,5,10,17,18),
-    ##           #(12,13,14,16,19,18,17,15), (0,3,5,6,7,4,2,1) ]
-    )
+)
+# We can not set this at __init__ time
 Hex20.drawfaces = array(Hex20.faces)[:, Quad8.drawfaces].reshape(-1, 3)
+
+
+########## element type conversions ##################################
+
+Tri3.conversions =  {
+    'tri3-4' : [ ('v', 'tri6'), ],
+    'tri6'   : [ ('m', [ (0,1), (1,2), (2,0) ]), ],
+    'quad4'  : [ ('v', 'tri6'), ],
+    }
+Tri6.conversions = {
+    'tri3'   : [ ('s', [ (0,1,2) ]), ],
+    'tri3-4' : [ ('s', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]), ],
+    'quad4'  : [ ('m', [ (0,1,2), ]),
+                 ('s', [ (0,3,6,5),(1,4,6,3),(2,5,6,4) ]),
+                 ],
+    }
+Quad4.conversions = {
+    'tri3'   : 'tri3-u',
+    'tri3-r' : [ ('r', ['tri3-u','tri3-d']), ],
+    'tri3-u' : [ ('s', [ (0,1,2), (2,3,0) ]), ],
+    'tri3-d' : [ ('s', [ (0,1,3), (2,3,1) ]), ],
+    'tri3-x' : [ ('m', [ (0,1,2,3) ]),
+                 ('s', [ (0,1,4),(1,2,4),(2,3,4),(3,0,4) ]),
+                 ],
+    'quad8'  : [ ('m', [ (0,1), (1,2), (2,3), (3,0) ]), ],
+    'quad4-4': [ ('v', 'quad9'), ],
+    'quad9'  : [ ('v', 'quad8'), ],
+    }
+Quad8.conversions = {
+    'tri3'   : [ ('v', 'quad9'), ],
+    'tri3-v' : [ ('s', [ (0,4,7),(1,5,4),(2,6,5),(3,7,6),(5,6,4),(7,4,6) ]), ],
+    'tri3-h' : [ ('s', [ (0,4,7),(1,5,4),(2,6,5),(3,7,6),(4,5,7),(6,7,5) ]), ],
+    'quad4'  : [ ('s', [ (0,1,2,3) ]), ],
+    'quad4-4': [ ('v', 'quad9'), ],
+    'quad9'  : [ ('m', [ (4,5,6,7) ]), ],
+    }
+Quad9.conversions = {
+    'quad8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
+    'quad4'  : [ ('v', 'quad8'), ],
+    'quad4-4': [ ('s', [ (0,4,8,7),(4,1,5,8),(7,8,6,3),(8,5,2,6) ]), ],
+    'tri3'   : 'tri3-d',
+    'tri3-d' : [ ('s', [ (0,4,7),(4,1,5),(5,2,6),(6,3,7),
+                         (7,4,8),(4,5,8),(5,6,8),(6,7,8) ]), ],
+    'tri3-x' : [ ('s', [ (0,4,8),(4,1,8),(1,5,8),(5,2,8),
+                         (2,6,8),(6,3,8),(3,7,8),(7,0,8) ]), ],
+    }
+Wedge6.conversions = {
+    'tet4'  : [ ('s', [ (0,1,2,3),(1,2,3,4),(2,3,4,5) ]), ],
+    }
+Hex8.conversions = {
+    'wedge6': [ ('s', [ (0,1,2,4,5,6),(2,3,0,6,7,4) ]), ],
+    'tet4'  : [ ('s', [ (0,1,2,5),(2,3,0,7),(5,7,6,2),(7,5,4,0),(0,5,2,7) ]), ],
+    'hex20' : [ ('m', [ (0,1), (1,2), (2,3), (3,0),
+                        (4,5), (5,6), (6,7), (7,4),
+                        (0,4), (1,5), (2,6), (3,7), ]), ],
+    }
+Hex20.conversions = {
+    'hex8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
+    'tet4'  : [ ('v', 'hex8'), ],
+    }
+
+
 
 ##########################################################  
 # This element added just for fun, no practical importance
@@ -421,11 +485,8 @@ def elementType(name=None,nplex=-1):
     - `name`: a string (case ignored) with the name of an element.
       If not specified, or the named element does not exist, the default
       element for the specified plexitude is returned.
-    - `nplex`: plexitude of the element. If specified and the named element
-      exists, a check will be made that it is of the correct plexitude.
-      If `name` did not resolve the element, the default element type for
-      this plexitude is returned, or an error is raised if there is no
-      default.
+    - `nplex`: plexitude of the element. If specified and no element name
+      was given, the default element type for this plexitude is returned.
 
     Returns: a subclass of :class:`Element`
 
@@ -450,8 +511,11 @@ def elementType(name=None,nplex=-1):
     eltype = None
     try:
         eltype = Element.collection[name.lower()]
-        if not (nplex >= 0 and nplex != eltype.nplex()):
-            return eltype
+        #print "TEST %s (%s)" % (eltype,nplex)
+        # TESTING WOULD BREAK SOME INVALID ELTYPE SETTINGS in mesh
+        # MAYBE INTRODUCE None/INvalidElement for no valid eltype
+        #if not (nplex >= 0 and nplex != eltype.nplex()):
+        return eltype
     except:
         pass
     if eltype is None:
@@ -482,7 +546,7 @@ def printElementTypes():
     """
     print "Available Element Types:"        
     for ndim in range(4):
-        print "  %s-dimensional elements: %s" % (ndim,elementNames(ndim)        )
+        print "  %s-dimensional elements: %s" % (ndim,elementTypes(ndim)        )
 
 
 

@@ -1545,6 +1545,73 @@ def origin():
     return Coords(zeros((3),dtype=Float))
 
 
+def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,enddir=None,scalex=None,scaley=None):
+    """ Sweep a Coords object along a path, returning a series of copies.
+
+    origin and normal define the local path position and direction on the mesh.
+    
+    At each point of the curve, a copy of the Coords object is created, with
+    its origin in the curve's point, and its normal along the curve's direction.
+    In case of a PolyLine, directions are pointing to the next point by default.
+    If avgdir==True, average directions are taken at the intermediate points.
+    Missing end directions can explicitely be set by enddir, and are by default
+    taken along the last segment.
+    If the curve is closed, endpoints are treated as any intermediate point,
+    and the user should normally not specify enddir.
+    
+    At each point of the curve, the original Coords object can be scaled in x
+    and y direction by specifying scalex and scaley. The number of values
+    specified in scalex and scaly should be equal to the number of points on
+    the curve.
+
+    The return value is a sequence of the transformed Coords objects.
+    """
+    points = path.coords
+    if avgdir:
+        directions = path.avgDirections()
+    else:
+         directions = path.directions()
+
+    missing = points.shape[0] - directions.shape[0]
+    if missing == 1:
+        lastdir = (points[-1] - points[-2]).reshape(1,3)
+        directions = concatenate([directions,lastdir],axis=0)
+    elif missing == 2:
+        lastdir = (points[-1] - points[-2]).reshape(1,3)
+        firstdir = (points[1] - points[0]).reshape(1,3)
+        directions = concatenate([firstdir,directions,lastdir],axis=0)
+
+    if enddir:
+        for i,j in enumerate([0,-1]):
+            if enddir[i]:
+                directions[j] = Coords(enddir[i])
+
+    directions = normalize(directions)
+
+    if type(normal) is int:
+        normal = unitVector(normal)
+
+    if type(upvector) is int:
+        upvector = Coords(unitVector(upvector))
+        
+    if scalex is not None:
+        if len(scalex) != points.shape[0]:
+            raise ValueError,"The number of scale values in x-direction differs from the number of copies that will be created."
+    else:
+        scalex = ones(points.shape[0])
+        
+    if scaley is not None:
+        if len(scaley) != points.shape[0]:
+            raise ValueError,"The number of scale values in y-direction differs from the number of copies that will be created."
+    else:
+        scaley = ones(points.shape[0])
+    
+    base = self.translate(-Coords(origin))
+    sequence = [ base.scale([scx,scy,1.]).rotate(vectorRotation(normal,d,upvector)).translate(p)
+                 for scx,scy,d,p in zip(scalex,scaley,directions,points)
+                 ]
+        
+    return sequence
 
 
 ##############################################################################

@@ -37,8 +37,8 @@ from gui.draw import *
 from plugins import formex_menu
 from plugins.objects import DrawableObjects
 from plugins.fe import *
+from elements import *
 from mesh import *
-
 
 ##################### select, read and write ##########################
 
@@ -317,14 +317,14 @@ def convertMesh():
         return
 
     meshes = [ named(n) for n in selection.names ]
-    eltypes = set([ m.eltype for m in meshes if m.eltype is not None])
+    eltypes = set([ m.eltype.name() for m in meshes if m.eltype is not None])
     print "eltypes in selected meshes: %s" % eltypes
     if len(eltypes) > 1:
         warning("I can only convert meshes with the same element type\nPlease narrow your selection before trying conversion.")
         return
     if len(eltypes) == 1:
-        fromtype = eltypes.pop()
-        choices = ["%s -> %s" % (fromtype,to) for to in mesh._conversions_.get(fromtype,{}).keys()]
+        fromtype = elementType(eltypes.pop())
+        choices = ["%s -> %s" % (fromtype,to) for to in fromtype.conversions.keys()]
         if len(choices) == 0:
             warning("Sorry, can not convert a %s mesh"%fromtype)
             return
