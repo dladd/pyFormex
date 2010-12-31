@@ -174,6 +174,15 @@ Proposed changes in the Element class
 # Define the collection of default pyFormex elements 
 
 
+## NoElement = Element(
+##     'noelem',"No defined element type",
+##     ndim = 0,
+##     vertices = [],
+##     edges = [],
+##     faces = [],
+##     )
+
+
 Point = Element(
     'point',"A single point",
     ndim = 0,
@@ -499,14 +508,17 @@ def elementType(name=None,nplex=-1):
     'tri3'
     >>> elementType(nplex=2).name()
     'line2'
-    >>> try:
-    ...     elementType('tri3',4)
-    ... except:
-    ...     print "No such element"
-    No such element
     """
+    ## >>> try:
+    ## ...     elementType('tri3',4)
+    ## ... except:
+    ## ...     print "No such element"
+    ## No such element
+
+
     if isinstance(name,Element):
         return name
+    
     
     eltype = None
     try:
@@ -523,8 +535,12 @@ def elementType(name=None,nplex=-1):
             return _default_eltype[nplex]
         except:
             pass
-        
-    raise ValueError("There is no element with name '%s' and plexitude '%s'" % (str(name),str(nplex)))
+
+    return None
+
+    #return NoElement
+    
+    #raise ValueError("There is no element with name '%s' and plexitude '%s'" % (str(name),str(nplex)))
 
 
 def elementTypes(ndim=None):
