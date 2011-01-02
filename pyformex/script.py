@@ -268,6 +268,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
+    from geometry import Geometry
     global scriptDisabled,scriptRunning,exitrequested
     #pf.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
     # (We only allow one script executing at a time!)
@@ -356,7 +357,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                 pf.debug('Error while calling script exit function')
                 
         if pf.cfg['autoglobals']:
-            exportNames.extend(listAll(clas=formex.Formex,dic=g))
+            exportNames.extend(listAll(clas=Geometry,dic=g))
         pf.PF.update([(k,g[k]) for k in exportNames])
 
         scriptRunning = False # release the lock in case of an error

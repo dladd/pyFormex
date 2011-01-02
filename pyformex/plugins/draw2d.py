@@ -1,4 +1,3 @@
-#!/usr/bin/env pyformex
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
@@ -198,7 +197,6 @@ def draw_circle():
     return draw_object('circle')
 
 
-
 def objectName(actor):
     """Find the exported name corresponding to a canvas actor"""
     if hasattr(actor,'object'):
@@ -211,7 +209,6 @@ def objectName(actor):
                 return name
     return None
         
-
 
 def splitPolyLine(c):
     """Interactively split the specified polyline"""
@@ -308,63 +305,5 @@ def updateData(data,newdata):
             if v is not None:
                 d[1] = v
     
-
-    
-################################## Menu #############################
-
-_menu = 'Draw'
-
-def create_menu(before='help'):
-    """Create the menu."""
-    MenuData = [
-        ("&Select drawable",drawable.ask),
-        ("&Set grid",create_grid),
-        ("&Remove grid",remove_grid),
-        ("---",None),
-        ("&Toggle Preview",toggle_preview,{'checkable':True}),
-        ("---",None),
-        ("&Draw Points",draw_points),
-        ("&Draw Polyline",draw_polyline),
-        ("&Draw Spline",draw_spline),
-        ("&Draw Circle",draw_circle),
-        ("---",None),
-        ("&Split Curve",split_curve),
-        ("---",None),
-        ("&Reload Menu",reload_menu),
-        ("&Close Menu",close_menu),
-        ("Test menu",test_menu),
-        ]
-    w = menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before=before)
-    return w
-
-def show_menu(before='help'):
-    """Show the menu."""
-    if not pf.GUI.menu.action(_menu):
-        create_menu(before=before)
-
-def close_menu():
-    """Close the menu."""
-    pf.GUI.menu.removeItem(_menu)
-
-
-def reload_menu():
-    """Reload the menu."""
-    before = pf.GUI.menu.nextitem(_menu)
-    print "Menu %s was before %s" % (_menu,before)
-    close_menu()
-    import plugins
-    plugins.refresh('draw2d')
-    show_menu(before=before)
-    setDrawOptions({'bbox':'last'})
-    print pf.GUI.menu.actionList()
-
-def test_menu():
-    print "TEST2"
-    
-####################################################################
-
-if __name__ == "draw":
-    # If executed as a pyformex script
-    reload_menu()
 
 # End

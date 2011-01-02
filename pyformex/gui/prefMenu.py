@@ -116,8 +116,8 @@ def settings():
 
 
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
-
-    plugin_items = [ I('_plugins/'+name,name in pf.cfg['gui/plugins'],text=label) for (label,name) in plugins.plugin_menus ]
+ 
+    plugin_items = [ I('_plugins/'+name,name in pf.cfg['gui/plugins'],text=name.capitalize().replace('_',' ')) for name in plugins.plugin_menus ]
     #print plugin_items
 
     appearence = [
