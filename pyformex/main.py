@@ -43,7 +43,7 @@ if svnversion:
         
 You should probably rebuild the pyFormex library first.
 
-Do 'make lib' in %s
+Do 'make' in %s/lib
 """ % pyformexdir
     startup_warnings += msg
 

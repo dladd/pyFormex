@@ -29,11 +29,13 @@ pyFormex Geometry File Format.
 """
 
 import utils
+import filewrite
 from coords import *
 from formex import Formex
 from mesh import Mesh
 from odict import ODict
 from pyformex import message,debug
+
 
 import os
 
@@ -54,7 +56,7 @@ class GeometryFile(object):
 
     _version_ = '1.5'
 
-    def __init__(self,fil,mode=None,sep=' '):
+    def __init__(self,fil,mode=None,sep=' ',ifmt=' ',ffmt=' '):
         """Create the GeometryFile object."""
         isname = type(fil) == str
         if isname:
@@ -69,6 +71,7 @@ class GeometryFile(object):
         self.writing = self.fil.mode[0] in 'wa'
         if self.writing:
             self.sep = sep
+            self.fmt = {'i':ifmt,'f':ffmt}
         if self.isname:
             if mode[0] == 'w':
                 self.writeHeader()
@@ -113,13 +116,34 @@ class GeometryFile(object):
         self.fil.write("# pyFormex Geometry File (http://pyformex.org) version='%s'; sep='%s'\n" % (self._version_,self.sep))
 
 
-    def writeData(self,data,sep):
-        """Write an array of data to a pyFormex geometry file."""
+    def writeData(self,data,sep,fmt=None):
+        """Write an array of data to a pyFormex geometry file.
+
+        If fmt is None, the data are written using numpy.tofile, with
+        the specified separator.
+        If fmt is specified,
+        """
         if not self.writing:
             raise RuntimeError,"File is not opened for writing"
-        data.tofile(self.fil,sep)
-        self.fil.write('\n')
-        
+        kind = data.dtype.kind
+        if fmt is None:
+            fmt = self.fmt[kind]
+
+        filewrite.writeData(data,self.fil,fmt)
+            
+        ## if fmt is None:
+        ##     data.tofile(self.fil,sep)
+        ##     self.fil.write('\n')
+        ## else:
+        ##     from lib.misc import tofile_int32,tofile_float32
+        ##     val = data.reshape(-1,data.shape[-1])
+        ##     if kind == 'i':
+        ##         val = val.astype(int32)
+        ##         tofile_int32(val,self.fil,'%i ')
+        ##     elif kind == 'f':
+        ##         val = val.astype(float32)
+        ##         tofile_float32(val,self.fil,'%f ')
+            
 
     def write(self,geom,name=None,sep=None):
         """Write any geometry object to the geometry file.
@@ -150,11 +174,13 @@ class GeometryFile(object):
         else:
             try:
                 writefunc = getattr(self,'write'+geom.__class__.__name__)
-                #print writefunc
-                writefunc(geom,name,sep)
             except:
                 message("Can not (yet) write objects of type %s to geometry file: skipping" % type(geom))
-
+            try:
+                writefunc(geom,name,sep)
+            except:
+                message("Error while writing objects of type %s to geometry file: skipping" % type(geom))
+                raise
 
 
     def writeFormex(self,F,name=None,sep=None):
@@ -167,7 +193,7 @@ class GeometryFile(object):
         if sep is None:
             sep = self.sep
         hasprop = F.prop is not None
-        head = "# objtype='Formex'; nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'" % (F.nelems(),F.nplex(),hasprop,F.eltype,sep)
+        head = "# objtype='Formex'; nelems=%s; nplex=%s; props=%s; eltype='%s'; sep='%s'" % (F.nelems(),F.nplex(),hasprop,F.eltype,sep)
         if name:
             head += "; name='%s'" % name 
         self.fil.write(head+'\n')
@@ -191,7 +217,7 @@ class GeometryFile(object):
         if sep is None:
             sep = self.sep
         hasprop = F.prop is not None
-        head = "# objtype=%r; ncoords=%r; nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.eltype,sep)
+        head = "# objtype='%s'; ncoords=%s; nelems=%s; nplex=%s; props=%s; eltype='%s'; sep='%s'" % (objtype,F.ncoords(),F.nelems(),F.nplex(),hasprop,F.eltype,sep)
         if name:
             head += "; name='%s'" % name 
         self.fil.write(head+'\n')
@@ -221,7 +247,7 @@ class GeometryFile(object):
         """
         if sep is None:
             sep = self.sep
-        head = "# objtype='%s'; ncoords=%r; closed=%r; sep='%s'" % (F.__class__.__name__,F.coords.shape[0],F.closed,sep)
+        head = "# objtype='%s'; ncoords=%s; closed=%s; sep='%s'" % (F.__class__.__name__,F.coords.shape[0],F.closed,sep)
         if name:
             head += "; name='%s'" % name
         if extra:
@@ -408,8 +434,6 @@ class GeometryFile(object):
         from plugins.curve import BezierSpline
         ndim = 3
         coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
-        #print coords
-        #print coords.shape
         return BezierSpline(control=coords,closed=closed,degree=degree)
 
 
@@ -424,7 +448,6 @@ class GeometryFile(object):
         ndim = 3
         coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
         control = readArray(self.fil,Float,(nparts,2,ndim),sep=sep)
-        #print coords.shape,control.shape
         return BezierSpline(coords,control=control,closed=closed)
 
 

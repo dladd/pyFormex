@@ -1454,7 +1454,7 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    return menu.Menu('Surface',items=MenuData,parent=pf.GUI.menu,before='Help')
+    return menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before='Help')
 
 
 def show_menu():

@@ -397,7 +397,6 @@ file_description = {
     'img': 'Images (*.png *.jpg *.eps *.gif)',
     'png': 'PNG images (*.png)',
     'icon': 'Icons (*.xpm)',
-    'formex': 'Formex files (*.formex)',
     'gts': 'GTS files (*.gts)',
     'stl': 'STL files (*.stl)',
     'off': 'OFF files (*.off)',
@@ -423,6 +422,48 @@ def fileDescription(ftype):
         return map(fileDescription,ftype)
     ftype = ftype.lower()
     return file_description.get(ftype,"%s files (*.%s)" % (ftype.upper(),ftype))
+
+
+def fileType(ftype):
+    """Normalize a filetype string.
+
+    The string is converted to lower case and a leading dot is removed.
+    This makes it fit for use with a filename extension.
+
+    Example:
+
+    >>> fileType('pdf')
+    'pdf'
+    >>> fileType('.pdf')
+    'pdf'
+    >>> fileType('PDF')
+    'pdf'
+    >>> fileType('.PDF')
+    'pdf'
+    
+    """
+    ftype = ftype.lower()
+    if len(ftype) > 0 and ftype[0] == '.':
+        ftype = ftype[1:]
+    return ftype
+
+
+def fileTypeFromExt(fname):
+    """Derive the file type from the file name.
+
+    The derived file type is the file extension part in lower case and
+    without the leading dot.
+
+    Example:
+
+    >>> fileTypeFromExt('pyformex.pdf')
+    'pdf'
+    >>> fileTypeFromExt('.pyformexrc')
+    ''
+    >>> fileTypeFromExt('pyformex')
+    ''
+    """
+    return fileType(os.path.splitext(fname)[1])
 
 
 def findIcon(name):
@@ -567,7 +608,7 @@ def is_pyFormex(filename):
     return ok
     
 
-
+# BV: We could turn this into a factory
 
 class NameSequence(object):
     """A class for autogenerating sequences of names.
@@ -586,20 +627,21 @@ class NameSequence(object):
     This makes it possible to put the numeric part anywhere inside the
     names.
 
-    Examples:
+    Example:
 
-    - ``NameSequence('hallo.98')`` generates the names
-      hallo.98, hallo.99, hallo.100, ...
-    - ``NameSequence('hallo','.png')`` generates the names
-      hallo-000.png, hallo-001.png, ...
-    - ``NameSequence('/home/user/hallo23','5.png')`` generates the names
-      /home/user/hallo235.png, /home/user/hallo245.png, ...
+    >>> N = NameSequence('hallo.98')
+    >>> [ N.next() for i in range(3) ]
+    ['hallo.98', 'hallo.99', 'hallo.100']
+    >>> NameSequence('hallo','.png').next()
+    'hallo-000.png'
+    >>> N = NameSequence('/home/user/hallo23','5.png')
+    >>> [ N.next() for i in range(2) ]
+    ['/home/user/hallo235.png', '/home/user/hallo245.png']
+
     """
     
     def __init__(self,name,ext=''):
-        """Create a new NameSequence from name,ext.
-
-        """
+        """Create a new NameSequence from name,ext."""
         base,number = splitEndDigits(name)
         if len(number) > 0:
             self.nr = int(number)

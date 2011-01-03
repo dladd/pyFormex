@@ -235,7 +235,7 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    return menu.Menu('Jobs',items=MenuData,parent=pf.GUI.menu,before='help')
+    return menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before='help')
 
 
 def show_menu():

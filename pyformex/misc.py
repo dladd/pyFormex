@@ -28,11 +28,11 @@ The functions in this module should be exact emulations of the
 external functions in the compiled library.
 """
 
-# There should be no other imports here than array
-from pyformex.arraytools import *
+# There should be no other imports here than numpy
+import numpy as np
 
 
-def _fuse2(x,val,flag,sel,tol):
+def _fuse(x,val,flag,sel,tol):
     """Fusing nodes.
 
     This is a low level function performing the internal loop of
@@ -55,25 +55,6 @@ def _fuse2(x,val,flag,sel,tol):
             nexti += 1
 
 
-def _fuse(x,val,flag,sel,tol):
-    """Fusing nodes.
-
-    This is a low level function performing the internal loop of
-    the fuse operation. It is not intended to be called by the user.
-    """
-    nnod = val.shape[0]
-    for i in range(nnod):
-        j = i-1
-        while j>=0 and val[i]==val[j]:
-            if allclose(x[i],x[j],rtol=tol,atol=tol):
-                # node i is same as node j
-                flag[i] = 0
-                sel[i] = sel[j]
-                sel[i+1:nnod] -= 1
-                break
-            j = j-1
-
-
 def nodalSum(val,elems,work,avg):
     """Compute the nodal sum of values defined on elements.
 
@@ -86,7 +67,7 @@ def nodalSum(val,elems,work,avg):
 
     The summation is done inplace, so there is no return value!
     """
-    nodes = unique(elems)
+    nodes = np.unique(elems)
     for i in nodes:
         wi = where(elems==i)
         vi = val[wi]
@@ -97,6 +78,14 @@ def nodalSum(val,elems,work,avg):
             vi = vi.sum(axis=0)
         work[i] = vi
         val[wi] = vi
+
+
+
+## def tofile_int32(val,fn,fmt):
+##     fil = open(fn,'a')
+##     for row in val:
+##         fil.write(fmt % tuple(row))
+##     fil.close()
 
 
 # End

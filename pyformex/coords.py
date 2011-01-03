@@ -1341,7 +1341,7 @@ class Coords(ndarray):
         flag = ones((nnod,),dtype=int32)   # 1 = new, 0 = existing node
         # new fusing algorithm
         sel = arange(nnod).astype(int32)      # replacement unique node nr
-        misc._fuse2(x,val,flag,sel,tol)     # fuse the close points
+        misc._fuse(x,val,flag,sel,tol)     # fuse the close points
         x = x[flag>0]          # extract unique nodes
         s = sel[argsort(srt)]  # and indices for old nodes
         return (x,s.reshape(self.shape[:-1]))

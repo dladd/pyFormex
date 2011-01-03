@@ -440,6 +440,8 @@ def fly():
 
 ################### menu #################
 
+_menu = 'Formex'
+
 def create_menu():
     """Create the Formex menu."""
     MenuData = [
@@ -494,18 +496,18 @@ def create_menu():
         ("&Reload menu",reload_menu),
         ("&Close",close_menu),
         ]
-    return menu.Menu('Formex',items=MenuData,parent=pf.GUI.menu,before='help')
+    return menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before='help')
 
     
 def show_menu():
     """Show the Tools menu."""
-    if not pf.GUI.menu.item('Formex'):
+    if not pf.GUI.menu.item(_menu):
         create_menu()
 
 
 def close_menu():
     """Close the Tools menu."""
-    m = pf.GUI.menu.item('Formex')
+    m = pf.GUI.menu.item(_menu)
     if m :
         m.remove()
       
@@ -513,15 +515,14 @@ def close_menu():
 def reload_menu():
     """Reload the Postproc menu."""
     close_menu()
-#    reload(plugins.formex_menu)
     show_menu()
 
 
+####################################################################
+######### What to do when the script is executed ###################
+
 if __name__ == "draw":
     reload_menu()
-    
-elif __name__ == "__main__":
-    print(__doc__)
 
 # End
 

@@ -30,20 +30,98 @@ static char __doc__[] = "_misc module\n\
 This module provides accelerated versions of some pyFormex functions.\n\
 \n";
 
-/**************************************************** isclose ****/
-/* Check if two floats are equal within a given tolerance */
-/* int isclose(float a, float b, float rtol, float atol) */
-/* { */
-/*   printf("Compare %e %e %e %e\n",a,b,rtol,atol);  */
-/*   int ok; */
-/*   ok = fabs(a-b) < atol + rtol * fabs(b); */
-/*   printf("  a-b: %e; atol+rtol*b %e\n",fabs(a-b),atol + rtol * fabs(b)); */
-/*   printf("  ok: %d\n",ok); */
-/*   return ok; */
-/* } */
+/**************************************************** tofile_float32 ****/
+/* Write an array to file */
+/*
+   Use:  tofile_float32(data,file,format)
+   The elements of a 2-D array are written in row order with the given format
+   to the open file. After each row, a newline is written.
+*/
+    
+
+static PyObject * tofile_float32(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL, *arg2=NULL;
+  PyObject *arr1=NULL;
+  FILE *fp;
+  char *fmt; /* single element format */
+
+  if (!PyArg_ParseTuple(args, "OOs", &arg1, &arg2, &fmt)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr1 == NULL) return NULL;
+  fp = PyFile_AsFile(arg2);
+  if (!fp) goto fail;
+
+  float *val;
+  val = (float *)PyArray_DATA(arr1);
+  npy_intp * dims;
+  dims = PyArray_DIMS(arg1);
+  int nr,nc;
+  nr = dims[0];
+  nc = dims[1];
+
+  int i,j;
+  for (i=0; i<nr*nc; i+=nc) {
+    for (j=0; j<nc; j++) {
+      fprintf(fp,fmt,val[i+j]);
+    }
+    fprintf(fp,"\n");
+  }
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_INCREF(Py_None);
+  return Py_None;
+
+ fail:
+  Py_XDECREF(arr1);
+  return NULL;
+}
+
+/**************************************************** tofile_int32 ****/
+/* Write an array to file */
+
+static PyObject * tofile_int32(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL, *arg2=NULL;
+  PyObject *arr1=NULL;
+  FILE *fp;
+  char *fmt; /* single element format */
+
+  if (!PyArg_ParseTuple(args, "OOs", &arg1, &arg2, &fmt)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1, NPY_INT, NPY_IN_ARRAY);
+  if (arr1 == NULL) return NULL;
+  fp = PyFile_AsFile(arg2);
+  if (!fp) goto fail;
+
+  int *val;
+  val = (int *)PyArray_DATA(arr1);
+  npy_intp * dims;
+  dims = PyArray_DIMS(arg1);
+  int nr,nc;
+  nr = dims[0];
+  nc = dims[1];
+
+  int i,j;
+  for (i=0; i<nr*nc; i+=nc) {
+    for (j=0; j<nc; j++) {
+      fprintf(fp,fmt,val[i+j]);
+    }
+    fprintf(fp,"\n");
+  }
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_INCREF(Py_None);
+  return Py_None;
+
+ fail:
+  Py_XDECREF(arr1);
+  return NULL;
+}
 
 
-/**************************************************** coords.fuse ****/
+/**************************************************** coords_fuse ****/
 /* Fuse nodes : new and much faster algorithm */
 /* args:  x, val, flag, sel, tol
      x   : (nnod,3) coordinates
@@ -53,7 +131,7 @@ This module provides accelerated versions of some pyFormex functions.\n\
      sel : (nnod) 
      tol : tolerance for defining equality of coordinates
 */  
-static PyObject * coords_fuse2(PyObject *dummy, PyObject *args)
+static PyObject * coords_fuse(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
@@ -110,79 +188,6 @@ static PyObject * coords_fuse2(PyObject *dummy, PyObject *args)
   return Py_None;
  fail:
   printf("Error Cleanup\n");
-  Py_XDECREF(arr1);
-  Py_XDECREF(arr2);
-  Py_XDECREF(arr3);
-  Py_XDECREF(arr4);
-  return NULL;
-}
-
-
-/**************************************************** coords.fuse ****/
-/* Fuse nodes : new and much faster algorithm */
-/* args:  x, val, flag, sel, tol
-     x   : (nnod,3) coordinates
-     val : (nnod) gives the point a code, such that only points with equal val
-         are close. points in x are sorted according to val.
-     flag: (nnod) initially 1, set to 0 if point is fused with another.
-     sel : (nnod) 
-     tol : tolerance for defining equality of coordinates
-*/  
-static PyObject * coords_fuse(PyObject *dummy, PyObject *args)
-{
-  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
-  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
-  float *x;
-  int *flag;
-  int *val,*sel;
-  float tol;
-  if (!PyArg_ParseTuple(args, "OOOOf", &arg1, &arg2, &arg3, &arg4, &tol)) return NULL;
-  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr1 == NULL) return NULL;
-  arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
-  if (arr2 == NULL) goto fail;
-  arr3 = PyArray_FROM_OTF(arg3, NPY_INT, NPY_INOUT_ARRAY);
-  if (arr3 == NULL) goto fail;
-  arr4 = PyArray_FROM_OTF(arg4, NPY_INT, NPY_INOUT_ARRAY);
-  if (arr4 == NULL) goto fail;
-  /* We suppose the dimensions are correct*/
-  npy_intp * dims;
-  dims = PyArray_DIMS(arg1);
-  int nnod;
-  nnod = dims[0];
-  x = (float *)PyArray_DATA(arr1);
-  val = (int *)PyArray_DATA(arr2);
-  flag = (int *)PyArray_DATA(arr3);
-  sel = (int *)PyArray_DATA(arr4);
-  int i,j,ki,kj;
-
-  for (i=0; i<nnod; i++) {
-    ki = 3*i;
-    j = i-1;
-    while (j >= 0 && val[i]==val[j]) {
-      kj = 3*j;
-      if ( fabs(x[ki]-x[kj]) < tol && \
-	   fabs(x[ki+1]-x[kj+1]) < tol && \
-	   fabs(x[ki+2]-x[kj+2]) < tol ) {
-	flag[i] = 0;
-	sel[i] = sel[j];
-	j = i+1;
-	while (j < nnod) --sel[j++];
-	break;
-      }
-      j = j-1;
-    }
-  }
-
-  /* Clean up and return */
-  Py_DECREF(arr1);
-  Py_DECREF(arr2);
-  Py_DECREF(arr3);
-  Py_DECREF(arr4);
-  Py_INCREF(Py_None);
-  return Py_None;
- fail:
-  //printf("Error Cleanup\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
@@ -334,11 +339,13 @@ static PyObject * nodal_sum_1(PyObject *dummy, PyObject *args)
 }
 
 
+/********************************************************/
 /* The methods defined in this module */
 static PyMethodDef __methods__[] = {
-    {"_fuse2", coords_fuse2, METH_VARARGS, "Fuse nodes."},
     {"_fuse", coords_fuse, METH_VARARGS, "Fuse nodes."},
     {"nodalSum", nodal_sum, METH_VARARGS, "Nodal sum."},
+    {"tofile_float32", tofile_float32, METH_VARARGS, "Write float32 array to file."},
+    {"tofile_int32", tofile_int32, METH_VARARGS, "Write int32 array to file."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 

@@ -257,11 +257,12 @@ class ScriptMenu(QtGui.QMenu):
             n = len(self.ext)
             files = [ f[:-n] for f in files ]
 
-        filtr = lambda s:utils.is_pyFormex(self.fileName(s))
-        files = filter(filtr,files)
+        files = self.filterFiles(files)
+        ## filtr = lambda s:utils.is_pyFormex(self.fileName(s))
+        ## files = filter(filtr,files)
 
-        if self.max > 0 and len(files) > self.max:
-            files = files[:self.max]
+        ## if self.max > 0 and len(files) > self.max:
+        ##     files = files[:self.max]
 
         files.sort()
         return files

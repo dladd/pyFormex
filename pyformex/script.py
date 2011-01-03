@@ -624,7 +624,7 @@ def checkRevision(rev,comp='>='):
    
 ################### read and write files #################################
 
-def writeGeomFile(filename,objects,sep=' ',mode='w'):
+def writeGeomFile(filename,objects,sep=' ',mode='w',shortlines=False):
     """Save geometric objects to a pyFormex Geometry File.
 
     A pyFormex Geometry File can store multiple geometrical objects in a
@@ -645,6 +645,8 @@ def writeGeomFile(filename,objects,sep=' ',mode='w'):
     Returns the number of objects written to the file.
     """
     f = geomfile.GeometryFile(filename,mode='w',sep=sep)
+    if shortlines:
+        f.fmt = {'i':'%i ','f':'%f '}
     f.write(objects)
     f.close()
     return len(objects)

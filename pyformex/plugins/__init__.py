@@ -23,13 +23,12 @@
 ##
 """pyFormex plugins initialisation.
 
-Currently, this does nothing. The file should be kept though, because it is
-needed to flag this directory as a Python module.
+This module contains the functions to detect and load the pyFormex
+plugin menus.
 """
 
 import pyformex as pf
 from types import ModuleType
-from gettext import gettext as _
 
 
 def load(plugin):
@@ -37,21 +36,27 @@ def load(plugin):
     # import is done here to defer loading until possible
     __import__('plugins.'+plugin)
     module = globals().get(plugin,None)
-    #reload(module)
     if type(module) is ModuleType and hasattr(module,'show_menu'):
         module.show_menu()
 
 
 def refresh(plugin):
     """Reload the named plugin"""
+    __import__('plugins.'+plugin)
     module = globals().get(plugin,None)
-    reload(module)
+    if type(module) is ModuleType and hasattr(module,'show_menu'):
+        reload(module)
+    else:
+        error("No such module: %s" % plugin)
+   
 
-
-def refresh_menu(plugin):
-    """Reload the named plugin"""
-    module = globals().get(plugin,None)
-    reload(module)
+## def refresh_menu(plugin):
+##     """Reload the named plugin"""
+##     module = globals().get(plugin,None)
+##     if type(module) is ModuleType and hasattr(module,'show_menu'):
+##         reload(module)
+##     else:
+##         print "Type of %s id %s" % (plugin,type(module))
 
 
 def loaded_modules():
@@ -63,21 +68,53 @@ def find_plugin_menus():
     """Return a list of plugin menus in the pyFormex 'plugins' directory.
 
     """
-    #
-    # This will be replaced with a directory search
-    #
-    return [ 'formex_menu',
-             'surface_menu',
-             'mesh_menu',
-             'tools_menu',
-             'draw2d_menu',
-             'jobs_menu',
-             'postproc_menu',
-             ]
+    ## import os
+    ## import utils
+    ## plugindir = os.path.join(pf.cfg['pyformexdir'],'plugins')
+    ## files = utils.listTree(plugindir,listdirs=False,excludedirs=['.*'],includefiles=['.*_menu.py$'])
+    ## files = [ os.path.basename(f) for f in files ]
+    ## files = [ os.path.splitext(f)[0] for f in files ]
+    ## print files
+    ## return files
+    ## #
+    ## # This will be replaced with a directory search
+    ## #
+    # We prefer a fixed order of plugin menus
+    return [
+        'geometry_menu',
+        'formex_menu',
+        'surface_menu',
+        'mesh_menu',
+        'tools_menu',
+        'draw2d_menu',
+        'jobs_menu',
+        'postproc_menu',
+        ]
 
 plugin_menus = find_plugin_menus()
 
 
+def pluginMenus():
+    """Return a list of plugin name and description.
+
+    Returns a list of tuples (name,description).
+    The name is the base name of the corresponding module file.
+    The description is the text string displayed to the user. It is
+    a beautified version of the plugin name.
+    """
+    return [ (name,name.capitalize().replace('_',' ')) for name in plugin_menus ]
+
+
+def create_plugin_menu(parent=None,before=None): 	 
+    from gui import menu
+    loadmenu = menu.Menu('&Load plugins',parent=parent,before=before)
+    loadactions = menu.ActionList(function=load,menu=loadmenu) 	 
+    for name,text in pluginMenus():
+        loadactions.add(name,icon=None,text=text)
+        
+    return loadactions
+
+         
 def loadConfiguredPlugins(ok_plugins=None):
     if ok_plugins is None:
         ok_plugins = pf.cfg['gui/plugins']

@@ -1727,7 +1727,7 @@ class InputDialog(QtGui.QDialog):
 
         self.setModal(modal)
         if not modal:
-            print "DELETE ON CLOSE"
+            #print "DELETE ON CLOSE"
             self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         QtGui.QDialog.show(self)
 
@@ -2650,7 +2650,7 @@ class ImageView(QtGui.QLabel):
             image = QtGui.QImage(filename)
             if image.isNull():
                 raise ValueError,"Cannot load image file %s" % filename
-        print("Size %sx%s" % (image.width(),image.height()))
+        #print("Size %sx%s" % (image.width(),image.height()))
         self.setPixmap(QtGui.QPixmap.fromImage(image))
         self.filename = filename
         self.image = image 

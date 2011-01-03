@@ -6,9 +6,14 @@ but to be loaded into pyFormex using the plugin facility.
 """
 
 import pyformex as pf
-from geometry import Geometry
 import utils
 from odict import ODict
+
+from geometry import Geometry
+from geomfile import GeometryFile
+from formex import Formex
+from mesh import Mesh
+from trisurface import TriSurface
 
 from gui import actors
 from gui import menu
@@ -22,484 +27,224 @@ import commands, os, timer
 ##################### select, read and write ##########################
 
 selection = objects.DrawableObjects(clas=Geometry)
+drawable = pf.GUI.drawable
 
 
 setSelection = selection.set
 drawSelection = selection.draw
+drawAll = drawable.draw
+
+autoName = dict([(clas,utils.NameSequence(clas)) for clas in [ 'Formex', 'Mesh', 'TriSurface' ]])
 
 
-def readSelection(select=True,draw=True,multi=True):
-    """Read a Formex (or list) from asked file name(s).
+def autoName(clas):
+    """Return the next autoenerated name for objects of type clas."""
+    if type(clas) is not str:
+        clas = clas.__class__.__name__
+    print "CLASS %s" % clas
+    return autoName[clas].next()
+    
 
-    If select is True (default), this becomes the current selection.
+def readGeometry(filename,filetype=None):
+    """Read geometry from a stored file.
+
+    This is a wrapper function over several other functions specialized
+    for some file type. Some file types require the existence of more
+    than one file, may need to write intermediate files, or may call
+    external programs.
+    
+    The return value is a dictionary with named geometry objects read from
+    the file.
+
+    If no filetype is given, it is derived from the filename extension.
+    Currently the following file types can be handled. 
+
+    'pgf': pyFormex Geometry File. This is the native pyFormex geometry
+        file format. It can store multiple parts of different type, together
+        with their name.
+    'surface': a global filetype for any of the following surface formats:
+        'stl', 'gts', 'off',
+    'stl': 
+    """
+    res = {}
+    if filetype is None:
+        filetype = utils.fileTypeFromExt(filename)
+        
+    print "Reading file of type %s" % filetype
+
+    if filetype == 'pgf':
+        res = GeometryFile(filename).read()
+
+    #elif filetype == 'pyf':
+
+    elif filetype in ['surface','stl','off','gts','smesh','neu']:
+        surf = TriSurface.read(filename)
+        res = {autoName(TriSurface):surf}
+
+    else:
+        error("Can not import from file %s of type %s" % (filename,filetype))
+        
+    return res
+
+
+def importGeometry(select=True,draw=True,clas=Geometry):
+    """Read geometry from file.
+    
+    If select is True (default), the imported geometry becomes the current
+    selection.
     If select and draw are True (default), the selection is drawn.
     """
-    types = utils.fileDescription(['pgf','all'])
-    fn = askFilename(pf.cfg['workdir'],types,multi=multi)
+    types = utils.fileDescription(['pgf','pyf','surface','off','stl','gts','smesh','neu','all'])
+    cur = pf.cfg['workdir']
+    fn = askFilename(cur=cur,filter=types)
     if fn:
-        if not multi:
-            fn = [ fn ]
-        chdir(fn[0])
-        res = ODict()
-        pf.GUI.setBusy()
-        for f in fn:
-            res.update(readGeomFile(f))
-        pf.GUI.setBusy(False)
+        message("Reading geometry file %s" % fn)
+        res = readGeometry(fn)
         export(res)
+        #selection.readFromFile(fn)
+        print res.keys()
         if select:
-            oknames = [ k for k in res if isinstance(res[k],Formex) ]
-            selection.set(oknames)
-            pf.message("Set Formex selection to %s" % oknames)
+            selection.set(res.keys())
             if draw:
                 selection.draw()
-    return fn
+                zoomAll()
 
 
-def writeSelection():
-    """Writes the currently selected Formices to a Geometry File."""
-    F = selection.check()
-    if F:
-        types = utils.fileDescription(['pgf','all'])
-        name = selection.names[0]
-        fn = askNewFilename(os.path.join(pf.cfg['workdir'],"%s.pgf" % name),
-                            filter=types)
-        if fn:
-            if not (fn.endswith('.pgf') or fn.endswith('.formex')):
-                fn += '.pgf'
-            pf.message("Creating pyFormex Geometry File '%s'" % fn)
-            chdir(fn)
-            selection.writeToFile(fn)
-            pf.message("Contents: %s" % selection.names)
-    
+def writeGeometry(obj,filename,filetype=None,shortlines=False):
+    """Write the geometry items in objdict to the specified file.
 
-def printSize():
-    for s in selection.names:
-        S = named(s)
-        pf.message("Formex %s has shape %s" % (s,S.shape()))
-
-
-################### Change attributes of Formex #######################
-
-
-def shrink():
-    """Toggle the shrink mode"""
-    if selection.shrink is None:
-        selection.shrink = 0.8
-    else:
-        selection.shrink = None
-    selection.draw()
-
-
-#################### CoordPlanes ####################################
-
-_bbox = None
-
-def showBbox():
-    """Draw the bbox on the current selection."""
-    global _bbox
-    FL = selection.check()
-    if FL:
-        bb = bbox(FL)
-        pf.message("Bbox of selection: %s" % bb)
-        nx = array([4,4,4])
-        _bbox = actors.CoordPlaneActor(nx=nx,ox=bb[0],dx=(bb[1]-bb[0])/nx)
-        pf.canvas.addAnnotation(_bbox)
-        pf.canvas.update()
-
-def removeBbox():
-    """Remove the bbox of the current selection."""
-    global _bbox
-    if _bbox:
-        pf.canvas.removeAnnotation(_bbox)
-        _bbox = None
-
-
-#################### Axes ####################################
-
-def unitAxes():
-    """Create a set of three axes."""
-    Hx = Formex(pattern('1'),5).translate([-0.5,0.0,0.0])
-    Hy = Hx.rotate(90)
-    Hz = Hx.rotate(-90,1)
-    Hx.setProp(4)
-    Hy.setProp(5)
-    Hz.setProp(6)
-    return Formex.concatenate([Hx,Hy,Hz])    
-
-
-def showPrincipal():
-    """Show the principal axes."""
-    F = selection.check(single=True)
-    if not F:
-        return
-    # compute the axes
-    C,I = inertia.inertia(F.coords)
-    pf.message("Center of gravity: %s" % C)
-    pf.message("Inertia tensor: %s" % I)
-    Iprin,Iaxes = inertia.principal(I,sort=True,right_handed=True)
-    pf.message("Principal Values: %s" % Iprin)
-    pf.message("Principal Directions: %s" % Iaxes)
-    data = (C,I,Iprin,Iaxes)
-    # now display the axes
-    siz = F.dsize()
-    H = unitAxes().scale(1.1*siz).affine(Iaxes.transpose(),C)
-    A = 0.1*siz * Iaxes.transpose()
-    G = Formex([[C,C+Ax] for Ax in A],3)
-    draw([G,H])
-    export({'principalAxes':H,'_principal_data_':data})
-    return data
-
-
-def rotatePrincipal():
-    """Rotate the selection according to the last shown principal axes."""
-    try:
-        data = named('_principal_data_')
-    except:
-        data = showPrincipal() 
-    FL = selection.check()
-    if FL:
-        ctr = data[0]
-        rot = data[3]
-        selection.changeValues([ F.trl(-ctr).rot(rot).trl(ctr) for F in FL ])
-        selection.drawChanges()
-
-
-def transformPrincipal():
-    """Transform the selection according to the last shown principal axes.
-
-    This is analog to rotatePrincipal, but positions the Formex at its center.
     """
-    try:
-        data = named('_principal_data_')
-    except:
-        data = showPrincipal() 
-    FL = selection.check()
-    if FL:
-        ctr = data[0]
-        rot = data[3]
-        selection.changeValues([ F.trl(-ctr).rot(rot) for F in FL ])
-        selection.drawChanges()
-
-
-
-################### Perform operations on Formex #######################
-    
-
-def scaleSelection():
-    """Scale the selection."""
-    FL = selection.check()
-    if FL:
-        res = askItems([['scale',1.0]],
-                       caption = 'Scale Factor')
-        if res:
-            scale = float(res['scale'])
-            selection.changeValues([ F.scale(scale) for F in FL ])
-            selection.drawChanges()
-
-            
-def scale3Selection():
-    """Scale the selection with 3 scale values."""
-    FL = selection.check()
-    if FL:
-        res = askItems([['x-scale',1.0],['y-scale',1.0],['z-scale',1.0]],
-                       caption = 'Scaling Factors')
-        if res:
-            scale = map(float,[res['%c-scale'%c] for c in 'xyz'])
-            selection.changeValues([ F.scale(scale) for F in FL ])
-            selection.drawChanges()
-
-
-def translateSelection():
-    """Translate the selection."""
-    FL = selection.check()
-    if FL:
-        res = askItems([['direction',0],['distance','1.0']],
-                       caption = 'Translation Parameters')
-        if res:
-            dir = int(res['direction'])
-            dist = float(res['distance'])
-            selection.changeValues([ F.translate(dir,dist) for F in FL ])
-            selection.drawChanges()
-
-
-def centerSelection():
-    """Center the selection."""
-    FL = selection.check()
-    if FL:
-        selection.changeValues([ F.translate(-F.center()) for F in FL ])
-        selection.drawChanges()
-
-
-def rotateSelection():
-    """Rotate the selection."""
-    FL = selection.check()
-    if FL:
-        res = askItems([['axis',2],['angle','90.0']])
-        if res:
-            axis = int(res['axis'])
-            angle = float(res['angle'])
-            selection.changeValues([ F.rotate(angle,axis) for F in FL ])
-            selection.drawChanges()
-
-
-def rotateAround():
-    """Rotate the selection."""
-    FL = selection.check()
-    if FL:
-        res = askItems([['axis',2],['angle','90.0'],['around','[0.0,0.0,0.0]']])
-        if res:
-            axis = int(res['axis'])
-            angle = float(res['angle'])
-            around = eval(res['around'])
-            pf.debug('around = %s'%around)
-            selection.changeValues([ F.rotate(angle,axis,around) for F in FL ])
-            selection.drawChanges()
-
-
-def rollAxes():
-    """Rotate the selection."""
-    FL = selection.check()
-    if FL:
-        selection.changeValues([ F.rollAxes() for F in FL ])
-        selection.drawChanges()
-            
+    if filetype is None:
+        filetype = utils.fileTypeFromExt(filename)
         
-def clipSelection():
-    """Clip the selection."""
-    FL = selection.check()
-    if FL:
-        res = askItems([['axis',0],['begin',0.0],['end',1.0],['nodes','all','select',['all','any','none']]],caption='Clipping Parameters')
-        if res:
-            bb = bbox(FL)
-            axis = int(res['axis'])
-            xmi = bb[0][axis]
-            xma = bb[1][axis]
-            dx = xma-xmi
-            xc1 = xmi + float(res['begin']) * dx
-            xc2 = xmi + float(res['end']) * dx
-            selection.changeValues([ F.clip(F.test(nodes=res['nodes'],dir=axis,min=xc1,max=xc2)) for F in FL ])
-            selection.drawChanges()
+    print "Writing file of type %s" % filetype
+
+    if filetype in [ 'pgf', 'pyf' ]:
+        # Can write anything
+        if filetype == 'pgf':
+            res = writeGeomFile(filename,obj,shortlines=shortlines)
+
+    else:
+        error("Don't know how to export in '%s' format" % filetype)
         
+    return res
 
-def cutSelection():
-    """Cut the selection with a plane."""
-    FL = selection.check()
-    FLnot = [ F for F in FL if F.nplex() not in [2,3] ]
-    if FLnot:
-        warning("Currently I can only cut Formices with plexitude 2 or 3.\nPlease change your selection.")
+
+def exportGeometry(types=['pgf','all'],shortlines=False):
+    """Write geometry to file."""
+    drawable.ask()
+    if not drawable.check():
         return
     
-    dsize = bbox(FL).dsize()
-    if dsize > 0.:
-        esize = 10 ** (niceLogSize(dsize)-5)
-    else:
-        esize = 1.e-5
-    
-    res = askItems([['Point',(0.0,0.0,0.0)],
-                    ['Normal',(1.0,0.0,0.0)],
-                    ['New props',[1,2,2,3,4,5,6]],
-                    ['Side','positive', 'radio', ['positive','negative','both']],
-                    ['Tolerance',esize],
-                    ],caption = 'Define the cutting plane')
-    if res:
-        P = res['Point']
-        N = res['Normal']
-        atol = res['Tolerance']
-        p = res['New props']
-        side = res['Side']
-        if side == 'both':
-            G = [F.cutWithPlane(P,N,side=side,atol=atol,newprops=p) for F in FL]
-            draw(G[0])
-            G_pos = [ g[0] for g in G ]
-            G_neg = [ g[1] for g in G ]
-            export(dict([('%s/pos' % n,g) for n,g in zip(selection,G_pos)]))
-            export(dict([('%s/neg' % n,g) for n,g in zip(selection,G_neg)]))
-            selection.set(['%s/pos' % n for n in selection] + ['%s/neg' % n for n in selection])
-            selection.draw()
-        else:
-            selection.changeValues([ F.cutWithPlane(P,N,side=side,atol=atol,newprops=p) for F in FL ])
-            selection.drawChanges()
+    filter = utils.fileDescription(types)
+    cur = pf.cfg['workdir']
+    fn = askNewFilename(cur=cur,filter=filter)
+    if fn:
+        message("Writing geometry file %s" % fn)
+        res = writeGeometry(drawable.odict(),fn,shortlines=shortlines)
+        pf.message("Contents: %s" % res)
 
-
-def concatenateSelection():
-    """Concatenate the selection."""
-    FL = selection.check()
-    if FL:
-        plexitude = array([ F.nplex() for F in FL ])
-        if plexitude.min() == plexitude.max():
-            res = askItems([['name','combined']],'Name for the concatenation')
-            if res:
-                name = res['name']
-                export({name:Formex.concatenate(FL)})
-                selection.set(name)
-                selection.draw()
-        else:
-            warning('You can only concatenate Formices with the same plexitude!')
-    
-
-def partitionSelection():
-    """Partition the selection."""
-    F = selection.check(single=True)
-    if not F:
-        return
-
-    name = selection[0]
-    pf.message("Partitioning Formex '%s'" % name)
-    cuts = partition.partition(F)
-    pf.message("Subsequent cutting planes: %s" % cuts)
-    if ack('Save cutting plane data?'):
-        types = [ 'Text Files (*.txt)', 'All Files (*)' ]
-        fn = askNewFilename(pf.cfg['workdir'],types)
-        if fn:
-            chdir(fn)
-            fil = file(fn,'w')
-            fil.write("%s\n" % cuts)
-            fil.close()
-    
-
-def createParts():
-    """Create parts of the current selection, based on property values."""
-    F = selection.check(single=True)
-    if not F:
-        return
-
-    name = selection[0]
-    partition.splitProp(F,name)
-
-
-def sectionizeSelection():
-    """Sectionize the selection."""
-    F = selection.check(single=True)
-    if not F:
-        return
-
-    name = selection[0]
-    pf.message("Sectionizing Formex '%s'" % name)
-    ns,th,segments = sectionize.createSegments(F)
-    if not ns:
-        return
-    
-    sections,ctr,diam = sectionize.sectionize(F,segments,th)
-    #pf.message("Centers: %s" % ctr)
-    #pf.message("Diameters: %s" % diam)
-    if ack('Save section data?'):
-        types = [ 'Text Files (*.txt)', 'All Files (*)' ]
-        fn = askNewFilename(pf.cfg['workdir'],types)
-        if fn:
-            chdir(fn)
-            fil = file(fn,'w')
-            fil.write("%s\n" % ctr)
-            fil.write("%s\n" % diam)
-            fil.close()
-    if ack('Draw circles?'):
-        circles = sectionize.drawCircles(sections,ctr,diam)
-        ctrline = sectionize.connectPoints(ctr)
-        if ack('Draw circles on Formex ?'):
-            sectionize.drawAllCircles(F,circles)
-        circles = Formex.concatenate(circles)
-        circles.setProp(3)
-        ctrline.setProp(1)
-        draw(ctrline,color='red')
-        export({'circles':circles,'ctrline':ctrline,'flypath':ctrline})
-        if ack('Fly through the Formex ?'):
-            flyAlong(ctrline)
-##        if ack('Fly through in smooth mode ?'):
-##            smooth()
-##            flytruCircles(ctr)
-    selection.draw()
-
-def fly():
-    path = named('flypath')
-    if path is not None:
-        flyAlong(path)
-    else:
-        warning("You should define the flypath first")
-
+def exportPgf():
+    exportGeometry(['pgf'])
+def exportPgfShortlines():
+    exportGeometry(['pgf'],shortlines=True)
+def exportOff():
+    exportGeometry(['off'])
+ 
 
 ################### menu #################
-
+ 
+_menu = 'Geometry'
+   
 def create_menu():
-    """Create the Formex menu."""
+    """Create the plugin menu."""
     MenuData = [
-        ("&Read Geometry File(s)",readSelection),
-        ("&Write Geometry File",writeSelection),
-        ("&Select",selection.ask),
-        ("&Draw Selection",selection.draw),
-        ("&Forget Selection",selection.forget),
-        ("---",None),
-        ("Print &Information",
-         [('&Data Size',printSize),
-          ('&Bounding Box',selection.printbbox),
+        ("&Import Geometry",importGeometry),
+        ("&Export",
+         [("pyFormex Geometry File (.pgf)",exportPgf),
+          ("pyFormex Geometry File with short lines",exportPgfShortlines),
+          ("Object File Format (.off)",exportOff),
           ]),
-        ("&Set Property",selection.setProperty),
-        ("&Shrink",shrink),
-        ("Toggle &Annotations",
-         [("&Names",selection.toggleNames,dict(checkable=True)),
-          ("&Numbers",selection.toggleNumbers,dict(checkable=True)),
-          ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
-          ]),
-        ("---",None),
-        ("&Bbox",
-         [('&Show Bbox Planes',showBbox),
-          ('&Remove Bbox Planes',removeBbox),
-          ]),
-        ("&Transform",
-         [("&Scale Selection",scaleSelection),
-          ("&Scale non-uniformly",scale3Selection),
-          ("&Translate",translateSelection),
-          ("&Center",centerSelection),
-          ("&Rotate",rotateSelection),
-          ("&Rotate Around",rotateAround),
-          ("&Roll Axes",rollAxes),
-          ]),
-        ("&Clip/Cut",
-         [("&Clip",clipSelection),
-          ("&Cut With Plane",cutSelection),
-          ]),
-        ("&Undo Last Changes",selection.undoChanges),
-        ("---",None),
-        ("Show &Principal Axes",showPrincipal),
-        ("Rotate to &Principal Axes",rotatePrincipal),
-        ("Transform to &Principal Axes",transformPrincipal),
-        ("---",None),
-        ("&Concatenate Selection",concatenateSelection),
-        ("&Partition Selection",partitionSelection),
-        ("&Create Parts",createParts),
-        ("&Sectionize Selection",sectionizeSelection),
-        ("---",None),
-        ("&Fly",fly),
+        ## ("&Select",selection.ask),
+        ## ("&Draw Selection",selection.draw),
+        ## ("&Forget Selection",selection.forget),
+        ## ("---",None),
+        ## ("Print &Information",
+        ##  [('&Data Size',printSize),
+        ##   ('&Bounding Box',selection.printbbox),
+        ##   ]),
+        ## ("&Set Property",selection.setProperty),
+        ## ("&Shrink",shrink),
+        ## ("Toggle &Annotations",
+        ##  [("&Names",selection.toggleNames,dict(checkable=True)),
+        ##   ("&Numbers",selection.toggleNumbers,dict(checkable=True)),
+        ##   ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
+        ##   ]),
+        ## ("---",None),
+        ## ("&Bbox",
+        ##  [('&Show Bbox Planes',showBbox),
+        ##   ('&Remove Bbox Planes',removeBbox),
+        ##   ]),
+        ## ("&Transform",
+        ##  [("&Scale Selection",scaleSelection),
+        ##   ("&Scale non-uniformly",scale3Selection),
+        ##   ("&Translate",translateSelection),
+        ##   ("&Center",centerSelection),
+        ##   ("&Rotate",rotateSelection),
+        ##   ("&Rotate Around",rotateAround),
+        ##   ("&Roll Axes",rollAxes),
+        ##   ]),
+        ## ("&Clip/Cut",
+        ##  [("&Clip",clipSelection),
+        ##   ("&Cut With Plane",cutSelection),
+        ##   ]),
+        ## ("&Undo Last Changes",selection.undoChanges),
+        ## ("---",None),
+        ## ("Show &Principal Axes",showPrincipal),
+        ## ("Rotate to &Principal Axes",rotatePrincipal),
+        ## ("Transform to &Principal Axes",transformPrincipal),
+        ## ("---",None),
+        ## ("&Concatenate Selection",concatenateSelection),
+        ## ("&Partition Selection",partitionSelection),
+        ## ("&Create Parts",createParts),
+        ## ("&Sectionize Selection",sectionizeSelection),
+        ## ("---",None),
+        ## ("&Fly",fly),
         ("---",None),
         ("&Reload menu",reload_menu),
         ("&Close",close_menu),
         ]
-    return menu.Menu('Formex',items=MenuData,parent=pf.GUI.menu,before='help')
+    return menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before='help')
 
     
 def show_menu():
     """Show the Tools menu."""
-    if not pf.GUI.menu.item('Formex'):
+    if not pf.GUI.menu.item(_menu):
         create_menu()
 
 
 def close_menu():
     """Close the Tools menu."""
-    m = pf.GUI.menu.item('Formex')
+    m = pf.GUI.menu.item(_menu)
     if m :
         m.remove()
       
 
 def reload_menu():
     """Reload the Postproc menu."""
+    from plugins import refresh
     close_menu()
-#    reload(plugins.formex_menu)
+    refresh('geometry_menu')
     show_menu()
 
 
+####################################################################
+######### What to do when the script is executed ###################
+
 if __name__ == "draw":
+
     reload_menu()
-    
-elif __name__ == "__main__":
-    print(__doc__)
+
 
 # End
 

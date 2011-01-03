@@ -1032,14 +1032,12 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # Create databases
     createDatabases()
  
-    # PLugin menus
+    # Plugin menus
     import plugins
-    ## filemenu = pf.GUI.menu.item('file')
-    ## pf.gui.saveobj = plugins.create_plugin_menus(filemenu,before='options')
-    ## # Load configured plugins, ignore if not found
+    filemenu = pf.GUI.menu.item('file')
+    pf.gui.saveobj = plugins.create_plugin_menu(filemenu,before='History')
+    # Load configured plugins, ignore if not found
     plugins.loadConfiguredPlugins()
-    #for p in pf.cfg['gui/plugins']:
-    #    plugins.load(p)
 
     pf.GUI.setBusy(False)
     pf.GUI.addStatusBarButtons()
