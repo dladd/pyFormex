@@ -478,7 +478,7 @@ def run(argv=[]):
     # Set Revision and run svnclean if we run from an SVN version
     if svnversion:
         setRevision()
-        svnclean = './pyformex/svnclean'
+        svnclean = os.path.join(pyformexdir,'svnclean')
         if os.path.exists(svnclean):
             try:
                 utils.runCommand(svnclean)

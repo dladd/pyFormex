@@ -65,10 +65,11 @@ The viewport switching functions have changed: interactive changes through the
 GUI are now decoupled from changes by the script.
 This may result in unwanted effects if your script relied on the old (coupled)
 functionality.
+"""
 
-If you notice any unexpected behaviour, please tell the developers about it
-through the `forums <%s>`_ or `bug system <%s>`_.
-""" % (pf.cfg.get('help/forums',''),pf.cfg.get('help/bugs',''))
+## If you notice any unexpected behaviour, please tell the developers about it
+## through the `forums <%s>`_ or `bug system <%s>`_.
+## """ % (pf.cfg.get('help/forums',''),pf.cfg.get('help/bugs',''))
 
 warn_viewport_linking = "Linking viewports is an experimental feature and is not fully functional yet."
 

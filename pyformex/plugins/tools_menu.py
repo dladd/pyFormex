@@ -505,8 +505,7 @@ def sendMail():
     print msg
     to = res['to'].split(',')
     cc = res['cc'].split(',')
-    sendmail.sendmail(message=msg,sender='bene@bump',to='bene@bump')
-    #sendmail.sendmail(message=msg,sender=res['sender'],to=to+cc)
+    sendmail.sendmail(message=msg,sender=res['sender'],to=to+cc)
     print "Mail has been sent to %s" % to 
     if cc:
         print "  with copy to %s" % cc
