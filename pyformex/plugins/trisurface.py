@@ -636,8 +636,6 @@ class TriSurface(Mesh):
         else:
             print("Cannot save TriSurface as file %s" % fname)
 
-
-
 ####################### TriSurface Data ######################
 
 

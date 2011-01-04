@@ -118,387 +118,6 @@ class Options:
     def __init__(self):
         pass
 
-###################### File Selection Dialog #########################
-
-class FileSelection(QtGui.QFileDialog):
-    """A file selection dialog.
-
-    You can specify a default path/filename that will be suggested initially.
-    If a pattern is specified, only matching files will be shown.
-    A pattern can be something like ``Images (*.png *.jpg)`` or a list
-    of such strings.
-    Default mode is to accept any filename. You can specify exist=True
-    to accept only existing files. Or set exist=True and multi=True to
-    accept multiple files.
-    If dir==True, a single existing directory is asked.
-    """
-    
-    def __init__(self,path='.',pattern='*.*',exist=False,multi=False,dir=False):
-        """The constructor shows the widget."""
-        QtGui.QFileDialog.__init__(self)
-        if os.path.isfile(path):
-            self.setDirectory(os.path.dirname(path))
-            self.selectFile(path)
-        else:
-            self.setDirectory(path)
-        if type(pattern) == str:
-            self.setFilter(pattern)
-        else: # should be a list of patterns
-            self.setFilters(pattern)
-        if dir:
-            mode = QtGui.QFileDialog.Directory
-            caption = "Select a directory"
-        elif exist:
-            if multi:
-                mode = QtGui.QFileDialog.ExistingFiles
-                caption = "Select existing files"
-            else:
-                mode = QtGui.QFileDialog.ExistingFile
-                caption = "Open existing file"
-        else:
-            mode = QtGui.QFileDialog.AnyFile
-            caption = "Save file as"
-        self.setFileMode(mode)
-        self.setWindowTitle(caption)
-        if exist:
-            self.setLabelText(QtGui.QFileDialog.Accept,'Open')
-        else:
-            self.setLabelText(QtGui.QFileDialog.Accept,'Save')
-##         if self.sidebar:
-##             urls = self.sidebarUrls()
-##             for f in self.sidebar:
-##                 urls.append(QtCore.QUrl.fromLocalFile(f))
-##             self.setSidebarUrls(urls)
-##         for p in self.sidebarUrls():
-##             pf.message(p.toString())
-
-    timeout = "accept()"
-
-    def show(self,timeout=None,timeoutfunc=None,modal=False):
-        self.setModal(modal)
-        QtGui.QFileDialog.show(self)
-        addTimeOut(self,timeout,timeoutfunc)
-        
-    def getFilename(self,timeout=None):
-        """Ask for a filename by user interaction.
-
-        Return the filename selected by the user.
-        If the user hits CANCEL or ESC, None is returned.
-        """
-        self.show(timeout,modal=True)
-        self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
-            files = map(str,self.selectedFiles())
-            if self.fileMode() == QtGui.QFileDialog.ExistingFiles:
-                return files
-            else:
-                return files[0]
-        else:
-            return None
-
-
-class ProjectSelection(FileSelection):
-    """A file selection dialog specialized for opening projects."""
-    def __init__(self,path=None,pattern=None,exist=False,compression=4,ignore_signature=True):
-        """Create the dialog."""
-        if path is None:
-            path = pf.cfg['workdir']
-        if pattern is None:
-            pattern = map(utils.fileDescription, ['pyf'])  
-        FileSelection.__init__(self,path,pattern,exist)
-        grid = self.layout()
-        nr,nc = grid.rowCount(),grid.columnCount()
-
-        if not exist:
-            self.cpr = InputSlider("Compression level (0-9)",compression,min=0,max=9)
-            self.cpw = QtGui.QWidget()
-            self.cpw.setLayout(self.cpr)
-            self.cpw.setToolTip("Higher compression levels result in smaller files, but higher load and save times.")
-            grid.addWidget(self.cpw,nr,0,1,-1)
-            nr += 1
-
-        if exist:
-            self.sig = QtGui.QCheckBox("Ignore Signature Version")
-            if ignore_signature:
-                self.sig.setCheckState(QtCore.Qt.Checked)
-            self.sig.setToolTip("Check this box to allow opening projects saved with an older version number in the header.")
-            grid.addWidget(self.sig,nr,0,1,-1)
-            nr += 1
-
-            self.leg = QtGui.QCheckBox("Allow Opening Legacy Format")
-            self.leg.setToolTip("Check this box to allow opening projects saved in the headerless legacy format.")
-            grid.addWidget(self.leg,nr,0,1,-1)
-            nr += 1
-
-
-    def getResult(self):
-        self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
-            opt = odict.ODict()
-            opt.fn = str(self.selectedFiles()[0])
-            opt.cpr = opt.sig = opt.leg = None
-            if hasattr(self,'cpr'):
-                opt.cpr = self.cpr.value()
-            if hasattr(self,'leg'):
-                opt.leg = self.leg.isChecked()
-            if hasattr(self,'sig'):
-                opt.sig = self.sig.isChecked()
-            return opt
-        else:
-            return None
-
-
-class SaveImageDialog(FileSelection):
-    """A dialog for saving to an image file.
-
-    The dialog contains the normal file selection widget plus some
-    extra fields to set the Save Image parameters:
-
-    - `Whole Window`: If checked, the whole pyFormex main window will be
-      saved. If unchecked, only the current OpenGL viewport is saved.
-
-    - `Crop Root`: If checked, the window will be cropped from the root
-      window. This mode is required if you want to include the window
-      decorations.
-
-    
-    """
-    def __init__(self,path=None,pattern=None,exist=False,multi=False):
-        """Create the dialog."""
-        if path is None:
-            path = pf.cfg['workdir']
-        if pattern is None:
-            pattern = map(utils.fileDescription, ['img','icon','all'])  
-        FileSelection.__init__(self,path,pattern,exist)
-        grid = self.layout()
-        nr,nc = grid.rowCount(),grid.columnCount()
-        import image
-        formats = ['From Extension'] + image.imageFormats() 
-        self.fmt_ = QtGui.QLabel("Format/Quality:")
-        self.fmt = QtGui.QComboBox()
-        self.fmt.addItems(formats)
-        self.qua = QtGui.QLineEdit('-1')
-        self.win = QtGui.QCheckBox("Whole Window")
-        self.roo = QtGui.QCheckBox("Crop Root")
-        self.bor = QtGui.QCheckBox("Add Border")
-        self.mul = QtGui.QCheckBox("Multi mode")
-        self.hot = QtGui.QCheckBox("Activate '%s' hotkey" % pf.cfg['keys/save'])
-        self.aut = QtGui.QCheckBox('Autosave mode')
-        self.mul.setChecked(multi)
-        self.hot.setChecked(multi)
-        self.win.setToolTip("If checked, the whole window is saved;\nelse, only the Canvas is saved.")
-        self.roo.setToolTip("If checked, the window will be cropped from the root window.\nThis mode is required if you want to include the window decorations.")
-        self.bor.setToolTip("If checked when the whole window is saved,\nthe window decorations will be included as well.")
-        self.mul.setToolTip("If checked, multiple images can be saved\nwith autogenerated names.")
-        self.hot.setToolTip("If checked, a new image can be saved\nby hitting the 'S' key when focus is in the Canvas.")
-        self.aut.setToolTip("If checked, a new image will saved\non each draw() operation")
-        grid.addWidget(self.fmt_,nr,0,)
-        grid.addWidget(self.fmt,nr,1)
-        grid.addWidget(self.qua,nr,2)
-        nr += 1
-        grid.addWidget(self.win,nr,0)
-        grid.addWidget(self.roo,nr,1)
-        grid.addWidget(self.bor,nr,2)
-        nr += 1
-        grid.addWidget(self.mul,nr,0)
-        grid.addWidget(self.hot,nr,1)
-        grid.addWidget(self.aut,nr,2)
-
-    def getResult(self):
-        self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
-            opt = Options()
-            opt.fm = str(self.fmt.currentText())
-            opt.qu = int(self.qua.text())
-            opt.fn = str(self.selectedFiles()[0])
-            opt.wi = self.win.isChecked()
-            opt.rc = self.roo.isChecked()
-            opt.bo = self.bor.isChecked()
-            opt.mu = self.mul.isChecked()
-            opt.hk = self.hot.isChecked()
-            opt.au = self.aut.isChecked()
-            return opt
-        else:
-            return None
-        
-
-def selectFont():
-    """Ask the user to select a font.
-
-    A font selection dialog widget is displayed and the user is requested
-    to select a font.
-    Returns a font if the user exited the dialog with the :guilabel:`OK`
-    button.
-    Returns None if the user clicked :guilabel:`CANCEL`.
-    """
-    font,ok = QtGui.QFontDialog.getFont()
-    if ok:
-        return font
-    else:
-        return None
-
-
-class DockedSelection(QtGui.QDockWidget):
-    """A docked selection widget.
-
-    A widget that is docked in the main window and contains a modeless
-    dialog for selecting items.
-    """
-    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None):
-        QtGui.QDockWidget.__init__(self)
-        self.setWidget(ModelessSelection(slist,title,mode,sort,func))
-    
-    def setSelected(self,selected,bool):
-        self.widget().setSelected(selected,bool)
-    
-    def getResult(self):
-        res = self.widget().getResult()
-        return res
-
-
-class ModelessSelection(QtGui.QDialog):
-    """A modeless dialog for selecting one or more items from a list."""
-    
-    selection_mode = {
-        None: QtGui.QAbstractItemView.NoSelection,
-        'single': QtGui.QAbstractItemView.SingleSelection,
-        'multi': QtGui.QAbstractItemView.MultiSelection,
-        'contiguous': QtGui.QAbstractItemView.ContiguousSelection,
-        'extended': QtGui.QAbstractItemView.ExtendedSelection,
-        }
-    
-    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None,width=None,height=None):
-        """Create the SelectionList dialog."""
-        QtGui.QDialog.__init__(self)
-        self.setWindowTitle(title)
-        # Selection List
-        self.listw = QtGui.QListWidget()
-        if width is not None:
-            self.listw.setMaximumWidth(width)
-        if height is not None:
-            self.listw.setMaximumHeight(height)
-        self.listw.addItems(slist)
-        if sort:
-            self.listw.sortItems()
-        self.listw.setSelectionMode(self.selection_mode[mode])
-        grid = QtGui.QGridLayout()
-        grid.addWidget(self.listw,0,0,1,1)
-        self.setLayout(grid)
-        if func:
-            self.connect(self.listw,QtCore.SIGNAL("itemClicked(QListWidgetItem *)"),func)
-    
-
-    def setSelected(self,selected,bool):
-        """Mark the specified items as selected."""
-        for s in selected:
-            for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
-                # OBSOLETE: should be changed with Qt version 4.2 or later
-                self.listw.setItemSelected(i,bool)
-                # SHOULD BECOME:
-                # i.setSelected(True) # requires Qt 4.2
-                # i.setCheckState(QtCore.Qt.Checked)
-
-                
-    def getResult(self):
-        """Return the list of selected values.
-
-        If the user cancels the selection operation, the return value is None.
-        Else, the result is always a list, possibly empty or with a single
-        value.
-        """
-        res = [i.text() for i in self.listw.selectedItems()]
-        return map(str,res)
-
-
-class Selection(QtGui.QDialog):
-    """A dialog for selecting one or more items from a list.
-
-    - `slist`: a list of items that are initially selected.
-    """
-    
-    selection_mode = {
-        None: QtGui.QAbstractItemView.NoSelection,
-        'single': QtGui.QAbstractItemView.SingleSelection,
-        'multi': QtGui.QAbstractItemView.MultiSelection,
-        'contiguous': QtGui.QAbstractItemView.ContiguousSelection,
-        'extended': QtGui.QAbstractItemView.ExtendedSelection,
-        }
-    
-    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
-        """Create the SelectionList dialog."""
-        QtGui.QDialog.__init__(self)
-        self.setWindowTitle(title)
-        # Selection List
-        self.listw = QtGui.QListWidget()
-        self.listw.addItems(slist)
-        self.listw.setSelectionMode(self.selection_mode[mode])
-        if sort:
-            self.listw.sortItems()
-        if selected:
-            self.setSelected(selected)
-        # Accept/Cancel Buttons
-        acceptButton = QtGui.QPushButton('OK')
-        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,Accept)
-        cancelButton = QtGui.QPushButton('Cancel')
-        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,Reject)
-        # Putting it all together
-        grid = QtGui.QGridLayout()
-        grid.setColumnStretch(1,1)
-        grid.setColumnMinimumWidth(1,250)
-        grid.addWidget(self.listw,0,0,1,-1)
-        grid.addWidget(acceptButton,1,0)
-        grid.addWidget(cancelButton,1,1)
-        self.setLayout(grid)
-    
-
-    def setSelected(self,selected):
-        """Mark the specified items as selected."""
-        for s in selected:
-            for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
-                i.setSelected(True)
-                i.setCheckState(QtCore.Qt.Checked)
-
-                
-    def getResult(self):
-        """Return the list of selected values.
-
-        If the user cancels the selection operation, the return value is None.
-        Else, the result is always a list, possibly empty or with a single
-        value.
-        """
-        self.exec_()
-        if self.result() == QtGui.QDialog.Accepted:
-            res = [ i.text() for i in self.listw.selectedItems() ]
-            return map(str,res)
-        else:
-            return None
-        
-
-# !! The QtGui.QColorDialog can not be instantiated or subclassed.
-# !! The color selection dialog is created by the static getColor
-# !! function.
-
-def getColor(col=None,caption=None):
-    """Create a color selection dialog and return the selected color.
-
-    col is the initial selection.
-    If a valid color is selected, its string name is returned, usually as
-    a hex #RRGGBB string. If the dialog is canceled, None is returned.
-    """
-    if type(col) == tuple:
-        col = QtGui.QColor.fromRgb(*col)
-    else:
-        col = QtGui.QColor(col)
-    dia = QtGui.QColorDialog
-    #myButton = QtGui.QPushButton('MY')
-    #dia.layout()
-    col = dia.getColor(col)
-    if col.isValid():
-        return str(col.name())
-    else:
-        return None
-
-
 #####################################################################
 ########### General Input Dialog ####################################
 #####################################################################
@@ -567,6 +186,15 @@ class InputItem(QtGui.QHBoxLayout):
 
         if 'data' in kargs:
             self.data = kargs['data']
+
+        if 'enabled' in kargs:
+            try:
+                self.input.setEnabled(kargs['enabled'])
+            except:
+                print "Can not set enabled: %s,%s" % (name,kargs)
+
+        if 'enabledby' in kargs:
+            self.enabledby = kargs['enabled']
 
         if 'readonly' in kargs:
             try:
@@ -818,6 +446,7 @@ class InputBool(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
         self.insertWidget(1,self.input)
+
 
     def text(self):
         """Return the displayed text."""
@@ -1329,8 +958,8 @@ class InputWidget(InputItem):
             self.input.setValue(val)
 
 
-    
 class InputGroup(InputItem):
+    # BV: This is unfinished work
     """A boxed group of InputItems."""
     
     def __init__(self,name,items,*args,**kargs):
@@ -1435,6 +1064,7 @@ def compatInputItem(name,value,itemtype=None,kargs={}):
     return item
    
 
+
 def convertInputItemList(items):
     """Convert a list of InputItems from old to new format.
 
@@ -1469,7 +1099,6 @@ def convertInputItemList(items):
     pf.debug("Converting old style input data to new style")
     return map(convert_item,items)
     
-
 
 class InputDialog(QtGui.QDialog):
     """A dialog widget to interactively set the value of one or more items.
@@ -1524,10 +1153,15 @@ class InputDialog(QtGui.QDialog):
       autoprefix.
     - flags:
     - modal:
+
+    - `enablers`: a dictionary of key,value pairs where key is an input item
+      name of a boolean field, and value is the name of another field or
+      group or tab. Checking the boolean field will enable/disable the
+      target field/group/tab.
           
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,flat=None,modal=None):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers={}):
         """Create a dialog asking the user for the value of items."""
         if parent is None:
             parent = pf.GUI
@@ -1545,6 +1179,7 @@ class InputDialog(QtGui.QDialog):
             self.setModal(modal)
 
         self.fields = []
+        self.groups = {}
         self.results = odict.ODict()
         self._pos = None
         self.store = store
@@ -1578,6 +1213,19 @@ class InputDialog(QtGui.QDialog):
         else:
             self.setLayout(self.form)
         self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
+
+
+        # add the enablers
+        for k,v in enablers.items():
+            #print "Enabler %s -> %s" % (k,v)
+            src = self[k].input
+            for vi in v:
+                tgt = self[vi]
+                if isinstance(tgt,InputItem):
+                    tgt = tgt.input
+                #print "%s, %s" % (src,tgt)
+                if src and tgt:
+                    src.connect(src,QtCore.SIGNAL("stateChanged(int)"),tgt.setEnabled)
 
 
     def add_items(self,items,form):
@@ -1656,11 +1304,14 @@ class InputDialog(QtGui.QDialog):
         w.setLayout(self.groupform)
         w.setTitle(name)
         if 'checkable' in extra:
-            w.setCheckable(extra.get('checkable',False))
-            w.setChecked(extra.get('checked',False))
+            w.setCheckable(extra['checkable'])
+            w.setChecked(extra['checkable'])
+        if 'enabled' in extra:
+            w.setEnabled(extra['enabled'])
         self.forms.pop()
         self.forms[-1].addWidget(w)
         self.groupform = None
+        self.groups[name] = w
 
                 
     def add_input(self,item):
@@ -1698,7 +1349,7 @@ class InputDialog(QtGui.QDialog):
         if len(items) > 0:
             return items[0]
         else:
-            return None
+            return self.groups.get(name,None)
 
 
     def timeout(self):
@@ -1996,6 +1647,387 @@ def updateOldDialogItems(data,newdata):
                 v = newdata.get(d[0],None)
                 if v is not None:
                     d[1] = v
+
+
+###################### File Selection Dialog #########################
+
+class FileSelection(QtGui.QFileDialog):
+    """A file selection dialog.
+
+    You can specify a default path/filename that will be suggested initially.
+    If a pattern is specified, only matching files will be shown.
+    A pattern can be something like ``Images (*.png *.jpg)`` or a list
+    of such strings.
+    Default mode is to accept any filename. You can specify exist=True
+    to accept only existing files. Or set exist=True and multi=True to
+    accept multiple files.
+    If dir==True, a single existing directory is asked.
+    """
+    
+    def __init__(self,path='.',pattern='*.*',exist=False,multi=False,dir=False):
+        """The constructor shows the widget."""
+        QtGui.QFileDialog.__init__(self)
+        if os.path.isfile(path):
+            self.setDirectory(os.path.dirname(path))
+            self.selectFile(path)
+        else:
+            self.setDirectory(path)
+        if type(pattern) == str:
+            self.setFilter(pattern)
+        else: # should be a list of patterns
+            self.setFilters(pattern)
+        if dir:
+            mode = QtGui.QFileDialog.Directory
+            caption = "Select a directory"
+        elif exist:
+            if multi:
+                mode = QtGui.QFileDialog.ExistingFiles
+                caption = "Select existing files"
+            else:
+                mode = QtGui.QFileDialog.ExistingFile
+                caption = "Open existing file"
+        else:
+            mode = QtGui.QFileDialog.AnyFile
+            caption = "Save file as"
+        self.setFileMode(mode)
+        self.setWindowTitle(caption)
+        if exist:
+            self.setLabelText(QtGui.QFileDialog.Accept,'Open')
+        else:
+            self.setLabelText(QtGui.QFileDialog.Accept,'Save')
+##         if self.sidebar:
+##             urls = self.sidebarUrls()
+##             for f in self.sidebar:
+##                 urls.append(QtCore.QUrl.fromLocalFile(f))
+##             self.setSidebarUrls(urls)
+##         for p in self.sidebarUrls():
+##             pf.message(p.toString())
+
+    timeout = "accept()"
+
+    def show(self,timeout=None,timeoutfunc=None,modal=False):
+        self.setModal(modal)
+        QtGui.QFileDialog.show(self)
+        addTimeOut(self,timeout,timeoutfunc)
+        
+    def getFilename(self,timeout=None):
+        """Ask for a filename by user interaction.
+
+        Return the filename selected by the user.
+        If the user hits CANCEL or ESC, None is returned.
+        """
+        self.show(timeout,modal=True)
+        self.exec_()
+        if self.result() == QtGui.QDialog.Accepted:
+            files = map(str,self.selectedFiles())
+            if self.fileMode() == QtGui.QFileDialog.ExistingFiles:
+                return files
+            else:
+                return files[0]
+        else:
+            return None
+
+
+class ProjectSelection(FileSelection):
+    """A file selection dialog specialized for opening projects."""
+    def __init__(self,path=None,pattern=None,exist=False,compression=4,ignore_signature=True):
+        """Create the dialog."""
+        if path is None:
+            path = pf.cfg['workdir']
+        if pattern is None:
+            pattern = map(utils.fileDescription, ['pyf'])  
+        FileSelection.__init__(self,path,pattern,exist)
+        grid = self.layout()
+        nr,nc = grid.rowCount(),grid.columnCount()
+
+        if not exist:
+            self.cpr = InputSlider("Compression level (0-9)",compression,min=0,max=9)
+            self.cpw = QtGui.QWidget()
+            self.cpw.setLayout(self.cpr)
+            self.cpw.setToolTip("Higher compression levels result in smaller files, but higher load and save times.")
+            grid.addWidget(self.cpw,nr,0,1,-1)
+            nr += 1
+
+        if exist:
+            self.sig = QtGui.QCheckBox("Ignore Signature Version")
+            if ignore_signature:
+                self.sig.setCheckState(QtCore.Qt.Checked)
+            self.sig.setToolTip("Check this box to allow opening projects saved with an older version number in the header.")
+            grid.addWidget(self.sig,nr,0,1,-1)
+            nr += 1
+
+            self.leg = QtGui.QCheckBox("Allow Opening Legacy Format")
+            self.leg.setToolTip("Check this box to allow opening projects saved in the headerless legacy format.")
+            grid.addWidget(self.leg,nr,0,1,-1)
+            nr += 1
+
+
+    def getResult(self):
+        self.exec_()
+        if self.result() == QtGui.QDialog.Accepted:
+            opt = odict.ODict()
+            opt.fn = str(self.selectedFiles()[0])
+            opt.cpr = opt.sig = opt.leg = None
+            if hasattr(self,'cpr'):
+                opt.cpr = self.cpr.value()
+            if hasattr(self,'leg'):
+                opt.leg = self.leg.isChecked()
+            if hasattr(self,'sig'):
+                opt.sig = self.sig.isChecked()
+            return opt
+        else:
+            return None
+
+
+class SaveImageDialog(FileSelection):
+    """A dialog for saving to an image file.
+
+    The dialog contains the normal file selection widget plus some
+    extra fields to set the Save Image parameters:
+
+    - `Whole Window`: If checked, the whole pyFormex main window will be
+      saved. If unchecked, only the current OpenGL viewport is saved.
+
+    - `Crop Root`: If checked, the window will be cropped from the root
+      window. This mode is required if you want to include the window
+      decorations.
+
+    
+    """
+    def __init__(self,path=None,pattern=None,exist=False,multi=False):
+        """Create the dialog."""
+        if path is None:
+            path = pf.cfg['workdir']
+        if pattern is None:
+            pattern = map(utils.fileDescription, ['img','icon','all'])  
+        FileSelection.__init__(self,path,pattern,exist)
+        grid = self.layout()
+        nr,nc = grid.rowCount(),grid.columnCount()
+        import image
+        formats = ['From Extension'] + image.imageFormats() 
+        self.fmt_ = QtGui.QLabel("Format/Quality:")
+        self.fmt = QtGui.QComboBox()
+        self.fmt.addItems(formats)
+        self.qua = QtGui.QLineEdit('-1')
+        self.win = QtGui.QCheckBox("Whole Window")
+        self.roo = QtGui.QCheckBox("Crop Root")
+        self.bor = QtGui.QCheckBox("Add Border")
+        self.mul = QtGui.QCheckBox("Multi mode")
+        self.hot = QtGui.QCheckBox("Activate '%s' hotkey" % pf.cfg['keys/save'])
+        self.aut = QtGui.QCheckBox('Autosave mode')
+        self.mul.setChecked(multi)
+        self.hot.setChecked(multi)
+        self.win.setToolTip("If checked, the whole window is saved;\nelse, only the Canvas is saved.")
+        self.roo.setToolTip("If checked, the window will be cropped from the root window.\nThis mode is required if you want to include the window decorations.")
+        self.bor.setToolTip("If checked when the whole window is saved,\nthe window decorations will be included as well.")
+        self.mul.setToolTip("If checked, multiple images can be saved\nwith autogenerated names.")
+        self.hot.setToolTip("If checked, a new image can be saved\nby hitting the 'S' key when focus is in the Canvas.")
+        self.aut.setToolTip("If checked, a new image will saved\non each draw() operation")
+        grid.addWidget(self.fmt_,nr,0,)
+        grid.addWidget(self.fmt,nr,1)
+        grid.addWidget(self.qua,nr,2)
+        nr += 1
+        grid.addWidget(self.win,nr,0)
+        grid.addWidget(self.roo,nr,1)
+        grid.addWidget(self.bor,nr,2)
+        nr += 1
+        grid.addWidget(self.mul,nr,0)
+        grid.addWidget(self.hot,nr,1)
+        grid.addWidget(self.aut,nr,2)
+
+    def getResult(self):
+        self.exec_()
+        if self.result() == QtGui.QDialog.Accepted:
+            opt = Options()
+            opt.fm = str(self.fmt.currentText())
+            opt.qu = int(self.qua.text())
+            opt.fn = str(self.selectedFiles()[0])
+            opt.wi = self.win.isChecked()
+            opt.rc = self.roo.isChecked()
+            opt.bo = self.bor.isChecked()
+            opt.mu = self.mul.isChecked()
+            opt.hk = self.hot.isChecked()
+            opt.au = self.aut.isChecked()
+            return opt
+        else:
+            return None
+        
+
+def selectFont():
+    """Ask the user to select a font.
+
+    A font selection dialog widget is displayed and the user is requested
+    to select a font.
+    Returns a font if the user exited the dialog with the :guilabel:`OK`
+    button.
+    Returns None if the user clicked :guilabel:`CANCEL`.
+    """
+    font,ok = QtGui.QFontDialog.getFont()
+    if ok:
+        return font
+    else:
+        return None
+
+
+class DockedSelection(QtGui.QDockWidget):
+    """A docked selection widget.
+
+    A widget that is docked in the main window and contains a modeless
+    dialog for selecting items.
+    """
+    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None):
+        QtGui.QDockWidget.__init__(self)
+        self.setWidget(ModelessSelection(slist,title,mode,sort,func))
+    
+    def setSelected(self,selected,bool):
+        self.widget().setSelected(selected,bool)
+    
+    def getResult(self):
+        res = self.widget().getResult()
+        return res
+
+
+class ModelessSelection(QtGui.QDialog):
+    """A modeless dialog for selecting one or more items from a list."""
+    
+    selection_mode = {
+        None: QtGui.QAbstractItemView.NoSelection,
+        'single': QtGui.QAbstractItemView.SingleSelection,
+        'multi': QtGui.QAbstractItemView.MultiSelection,
+        'contiguous': QtGui.QAbstractItemView.ContiguousSelection,
+        'extended': QtGui.QAbstractItemView.ExtendedSelection,
+        }
+    
+    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None,width=None,height=None):
+        """Create the SelectionList dialog."""
+        QtGui.QDialog.__init__(self)
+        self.setWindowTitle(title)
+        # Selection List
+        self.listw = QtGui.QListWidget()
+        if width is not None:
+            self.listw.setMaximumWidth(width)
+        if height is not None:
+            self.listw.setMaximumHeight(height)
+        self.listw.addItems(slist)
+        if sort:
+            self.listw.sortItems()
+        self.listw.setSelectionMode(self.selection_mode[mode])
+        grid = QtGui.QGridLayout()
+        grid.addWidget(self.listw,0,0,1,1)
+        self.setLayout(grid)
+        if func:
+            self.connect(self.listw,QtCore.SIGNAL("itemClicked(QListWidgetItem *)"),func)
+    
+
+    def setSelected(self,selected,bool):
+        """Mark the specified items as selected."""
+        for s in selected:
+            for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
+                # OBSOLETE: should be changed with Qt version 4.2 or later
+                self.listw.setItemSelected(i,bool)
+                # SHOULD BECOME:
+                # i.setSelected(True) # requires Qt 4.2
+                # i.setCheckState(QtCore.Qt.Checked)
+
+                
+    def getResult(self):
+        """Return the list of selected values.
+
+        If the user cancels the selection operation, the return value is None.
+        Else, the result is always a list, possibly empty or with a single
+        value.
+        """
+        res = [i.text() for i in self.listw.selectedItems()]
+        return map(str,res)
+
+
+class Selection(QtGui.QDialog):
+    """A dialog for selecting one or more items from a list.
+
+    - `slist`: a list of items that are initially selected.
+    """
+    
+    selection_mode = {
+        None: QtGui.QAbstractItemView.NoSelection,
+        'single': QtGui.QAbstractItemView.SingleSelection,
+        'multi': QtGui.QAbstractItemView.MultiSelection,
+        'contiguous': QtGui.QAbstractItemView.ContiguousSelection,
+        'extended': QtGui.QAbstractItemView.ExtendedSelection,
+        }
+    
+    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
+        """Create the SelectionList dialog."""
+        QtGui.QDialog.__init__(self)
+        self.setWindowTitle(title)
+        # Selection List
+        self.listw = QtGui.QListWidget()
+        self.listw.addItems(slist)
+        self.listw.setSelectionMode(self.selection_mode[mode])
+        if sort:
+            self.listw.sortItems()
+        if selected:
+            self.setSelected(selected)
+        # Accept/Cancel Buttons
+        acceptButton = QtGui.QPushButton('OK')
+        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,Accept)
+        cancelButton = QtGui.QPushButton('Cancel')
+        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,Reject)
+        # Putting it all together
+        grid = QtGui.QGridLayout()
+        grid.setColumnStretch(1,1)
+        grid.setColumnMinimumWidth(1,250)
+        grid.addWidget(self.listw,0,0,1,-1)
+        grid.addWidget(acceptButton,1,0)
+        grid.addWidget(cancelButton,1,1)
+        self.setLayout(grid)
+    
+
+    def setSelected(self,selected):
+        """Mark the specified items as selected."""
+        for s in selected:
+            for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
+                i.setSelected(True)
+                i.setCheckState(QtCore.Qt.Checked)
+
+                
+    def getResult(self):
+        """Return the list of selected values.
+
+        If the user cancels the selection operation, the return value is None.
+        Else, the result is always a list, possibly empty or with a single
+        value.
+        """
+        self.exec_()
+        if self.result() == QtGui.QDialog.Accepted:
+            res = [ i.text() for i in self.listw.selectedItems() ]
+            return map(str,res)
+        else:
+            return None
+        
+
+# !! The QtGui.QColorDialog can not be instantiated or subclassed.
+# !! The color selection dialog is created by the static getColor
+# !! function.
+
+def getColor(col=None,caption=None):
+    """Create a color selection dialog and return the selected color.
+
+    col is the initial selection.
+    If a valid color is selected, its string name is returned, usually as
+    a hex #RRGGBB string. If the dialog is canceled, None is returned.
+    """
+    if type(col) == tuple:
+        col = QtGui.QColor.fromRgb(*col)
+    else:
+        col = QtGui.QColor(col)
+    dia = QtGui.QColorDialog
+    #myButton = QtGui.QPushButton('MY')
+    #dia.layout()
+    col = dia.getColor(col)
+    if col.isValid():
+        return str(col.name())
+    else:
+        return None
 
 
 ########################### Table widgets ###########################

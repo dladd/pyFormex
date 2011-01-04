@@ -86,9 +86,11 @@ input_data = [
     I('spread',False,text='Spread points evenly along spiral'),
     I('nwires',1,text='Number of spirals'),
     I('sweep',False,text='Sweep a cross section along the spiral'),
-    G('Sweep Data',sweep_data),
+    G('Sweep Data',sweep_data,enabled=False),
     I('flyalong',False,text='Fly along the spiral'),
    ]
+
+input_enablers = {'sweep':('Sweep Data','spread')}
 
 def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:0):
     """Perform a spiral transformation on a coordinate array"""
@@ -222,7 +224,7 @@ except:
     raise
 
 # Create the modeless dialog widget
-dialog = widgets.InputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
+dialog = widgets.InputDialog(input_data,enablers=input_enablers,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
 # The examples style requires a timeout action
 dialog.timeout = timeOut
 # Show the dialog and let the user have fun
