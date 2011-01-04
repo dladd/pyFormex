@@ -30,6 +30,8 @@ a triangulated surface.
 
 import pyformex as pf
 
+import filewrite as filewrite
+
 from formex import *
 from plugins import tetgen
 from mesh import Mesh
@@ -183,21 +185,6 @@ def read_gambit_neutral(fn):
 
 
 # Output of surface file formats
-
-def write_gts(fn,nodes,edges,faces):
-    if nodes.shape[1] != 3 or edges.shape[1] != 2 or faces.shape[1] != 3:
-        raise runtimeError, "Invalid arguments or shape"
-    fil = file(fn,'w')
-    fil.write("%d %d %d\n" % (nodes.shape[0],edges.shape[0],faces.shape[0]))
-    for nod in nodes:
-        fil.write("%s %s %s\n" % tuple(nod))
-    for edg in edges+1:
-        fil.write("%d %d\n" % tuple(edg))
-    for fac in faces+1:
-        fil.write("%d %d %d\n" % tuple(fac))
-    fil.write("#GTS file written by %s\n" % pf.Version)
-    fil.close()
-
 
 def write_stla(f,x):
     """Export an x[n,3,3] float array as an ascii .stl file."""
@@ -661,7 +648,7 @@ class TriSurface(Mesh):
         if ftype == 'pgf':
             Geometry.write(self,fname)
         elif ftype == 'gts':
-            write_gts(fname,self.coords,self.getEdges(),self.getFaceEdges())
+            filewrite.writeGTS(fname,self.coords,self.getEdges(),self.getFaceEdges())
             pf.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','neu','smesh']:
             if ftype == 'stl':

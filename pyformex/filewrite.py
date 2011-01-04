@@ -12,7 +12,8 @@ other formats.
 
 
 """
-
+import pyformex as pf
+from numpy import int32,float32
 from lib.misc import tofile_int32,tofile_float32
 
 
@@ -53,11 +54,25 @@ def writeData(data,fil,fmt=' '):
     else:
         val = data.reshape(-1,data.shape[-1])
         if kind == 'i':
-            tofile_int32(val.astype(int32),fname,'%i ')
+            tofile_int32(val.astype(int32),fil,'%i ')
         elif kind == 'f':
-            tofile_float32(val.astype(float32),fname,'%f ')
+            tofile_float32(val.astype(float32),fil,'%f ')
         else:
             raise ValueError,"Can not write data fo type %s" % data.dtype
+
+
+# Output of surface file formats
+
+def writeGTS(fn,coords,edges,faces):
+    if coords.shape[1] != 3 or edges.shape[1] != 2 or faces.shape[1] != 3:
+        raise runtimeError, "Invalid arguments or shape"
+    fil = file(fn,'w')
+    fil.write("%d %d %d\n" % (coords.shape[0],edges.shape[0],faces.shape[0]))
+    writeData(coords,fil,'%f ')
+    writeData(edges+1,fil,'%i ')
+    writeData(faces+1,fil,'%i ')
+    fil.write("#GTS file written by %s\n" % pf.Version)
+    fil.close()
 
 
 # End
