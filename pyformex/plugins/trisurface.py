@@ -208,31 +208,6 @@ def write_stla(f,x):
         f.close()
 
 
-def write_stlb(f,x):
-    """Export an x[n,3,3] float array as an binary .stl file."""
-    print("Cannot write binary STL files yet!" % fn)
-    pass
-
-
-def write_gambit_neutral(fn,nodes,elems):
-    print("Cannot write Gambit neutral files yet!" % fn)
-    pass
-
-
-def write_off(fn,nodes,elems):
-    if nodes.shape[1] != 3 or elems.shape[1] < 3:
-        raise runtimeError, "Invalid arguments or shape"
-    fil = file(fn,'w')
-    fil.write("OFF\n")
-    fil.write("%d %d 0\n" % (nodes.shape[0],elems.shape[0]))
-    for nod in nodes:
-        fil.write("%s %s %s\n" % tuple(nod))
-    format = "%d %%d %%d %%d\n" % elems.shape[1]
-    for el in elems:
-        fil.write(format % tuple(el))
-    fil.close()
-
-
 def write_smesh(fn,nodes,elems):
     tetgen.writeSurface(fn,nodes,elems)
 
@@ -650,20 +625,17 @@ class TriSurface(Mesh):
         elif ftype == 'gts':
             filewrite.writeGTS(fname,self.coords,self.getEdges(),self.getFaceEdges())
             pf.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
-        elif ftype in ['stl','off','neu','smesh']:
+        elif ftype in ['stl','off','smesh']:
             if ftype == 'stl':
                 write_stla(fname,self.coords[self.elems])
             elif ftype == 'off':
-                write_off(fname,self.coords,self.elems)
-            elif ftype == 'neu':
-                write_gambit_neutral(fname,self.coords,self.elems)
+                filewrite.writeOFF(fname,self.coords,self.elems)
             elif ftype == 'smesh':
                 write_smesh(fname,self.coords,self.elems)
             pf.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nelems()))
         else:
             print("Cannot save TriSurface as file %s" % fname)
 
-        
 
 
 ####################### TriSurface Data ######################

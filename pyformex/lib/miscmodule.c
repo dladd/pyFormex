@@ -61,9 +61,9 @@ static PyObject * tofile_float32(PyObject *dummy, PyObject *args)
   nc = dims[1];
 
   int i,j;
-  for (i=0; i<nr*nc; i+=nc) {
+  for (i=0; i<nr; i++) {
     for (j=0; j<nc; j++) {
-      fprintf(fp,fmt,val[i+j]);
+      fprintf(fp,fmt,*(val++));
     }
     fprintf(fp,"\n");
   }
@@ -103,9 +103,9 @@ static PyObject * tofile_int32(PyObject *dummy, PyObject *args)
   nc = dims[1];
 
   int i,j;
-  for (i=0; i<nr*nc; i+=nc) {
+  for (i=0; i<nr; i++) {
     for (j=0; j<nc; j++) {
-      fprintf(fp,fmt,val[i+j]);
+      fprintf(fp,fmt,*(val++));
     }
     fprintf(fp,"\n");
   }
@@ -117,6 +117,122 @@ static PyObject * tofile_int32(PyObject *dummy, PyObject *args)
 
  fail:
   Py_XDECREF(arr1);
+  return NULL;
+}
+
+/**************************************************** tofile_ifloat32 ****/
+/* Write an indexed array to file */
+/*
+   Use:  tofile_ifloat32(ind,data,file,format)
+   This is like tofile_float32, but each row from data is preceded with an 
+   index number from ind.
+*/
+    
+
+static PyObject * tofile_ifloat32(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL;
+  PyObject *arr1=NULL, *arr2=NULL;
+  FILE *fp;
+  char *fmt; /* single element format */
+
+  if (!PyArg_ParseTuple(args, "OOOs", &arg1, &arg2, &arg3, &fmt)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1, NPY_INT, NPY_IN_ARRAY);
+  if (arr1 == NULL) return NULL;
+  arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr2 == NULL) goto fail;
+  fp = PyFile_AsFile(arg3);
+  if (!fp) goto fail;
+
+  float *val;
+  val = (float *)PyArray_DATA(arr2);
+  npy_intp * dims;
+  dims = PyArray_DIMS(arg2);
+  int nr,nc;
+  nr = dims[0];
+  nc = dims[1];
+
+  int *ind;
+  ind = (int *)PyArray_DATA(arr1);
+  dims = PyArray_DIMS(arg1);
+  if (dims[0] != nr) goto fail;
+
+  int i,j;
+  for (i=0; i<nr; i++) {
+    fprintf(fp,"%i ",*(ind++));
+    for (j=0; j<nc; j++) {
+      fprintf(fp,fmt,*(val++));
+    }
+    fprintf(fp,"\n");
+  }
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  Py_INCREF(Py_None);
+  return Py_None;
+
+ fail:
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  return NULL;
+}
+
+/**************************************************** tofile_iint32 ****/
+/* Write an indexed array to file */
+/*
+   Use:  tofile_iint32(ind,data,file,format)
+   This is like tofile_int32, but each row from data is preceded with an 
+   index number from ind.
+*/
+    
+
+static PyObject * tofile_iint32(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL;
+  PyObject *arr1=NULL, *arr2=NULL;
+  FILE *fp;
+  char *fmt; /* single element format */
+
+  if (!PyArg_ParseTuple(args, "OOOs", &arg1, &arg2, &arg3, &fmt)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1, NPY_INT, NPY_IN_ARRAY);
+  if (arr1 == NULL) return NULL;
+  arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
+  if (arr2 == NULL) goto fail;
+  fp = PyFile_AsFile(arg3);
+  if (!fp) goto fail;
+
+  int *val;
+  val = (int *)PyArray_DATA(arr2);
+  npy_intp * dims;
+  dims = PyArray_DIMS(arg2);
+  int nr,nc;
+  nr = dims[0];
+  nc = dims[1];
+
+  int *ind;
+  ind = (int *)PyArray_DATA(arr1);
+  dims = PyArray_DIMS(arg1);
+  if (dims[0] != nr) goto fail;
+
+  int i,j;
+  for (i=0; i<nr; i++) {
+    fprintf(fp,"%i ",*(ind++));
+    for (j=0; j<nc; j++) {
+      fprintf(fp,fmt,*(val++));
+    }
+    fprintf(fp,"\n");
+  }
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  Py_INCREF(Py_None);
+  return Py_None;
+
+ fail:
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
   return NULL;
 }
 
@@ -346,6 +462,8 @@ static PyMethodDef __methods__[] = {
     {"nodalSum", nodal_sum, METH_VARARGS, "Nodal sum."},
     {"tofile_float32", tofile_float32, METH_VARARGS, "Write float32 array to file."},
     {"tofile_int32", tofile_int32, METH_VARARGS, "Write int32 array to file."},
+    {"tofile_ifloat32", tofile_ifloat32, METH_VARARGS, "Write indexed float32 array to file."},
+    {"tofile_iint32", tofile_iint32, METH_VARARGS, "Write indexed int32 array to file."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 

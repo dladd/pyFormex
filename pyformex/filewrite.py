@@ -13,7 +13,7 @@ other formats.
 
 """
 import pyformex as pf
-from numpy import int32,float32
+import numpy as np
 from lib import misc
 
 
@@ -54,18 +54,83 @@ def writeData(data,fil,fmt=' '):
     else:
         val = data.reshape(-1,data.shape[-1])
         if kind == 'i':
-            misc.tofile_int32(val.astype(int32),fil,'%i ')
+            misc.tofile_int32(val.astype(np.int32),fil,fmt)
         elif kind == 'f':
-            misc.tofile_float32(val.astype(float32),fil,'%f ')
+            misc.tofile_float32(val.astype(np.float32),fil,fmt)
         else:
             raise ValueError,"Can not write data fo type %s" % data.dtype
+
+
+def writeIData(data,fil,fmt,ind=1):
+    """Write an indexed array of numerical data to an open file.
+
+    ind = i: autoindex from i
+          array: use these indices  
+    """
+    kind = data.dtype.kind
+    val = data.reshape(-1,data.shape[-1])
+    nrows = val.shape[0]
+    if type(ind) is int:
+        ind = ind + np.arange(nrows)
+    else:
+        ind = ind.reshape(-1)
+        if ind.shape[0] != nrows:
+            raise ValueError,"Index should have same length as data"
+        
+    if kind == 'i':
+        raise ImplementationError
+        misc.tofile_int32(val.astype(np.int32),fil,fmt)
+    elif kind == 'f':
+        misc.tofile_ifloat32(ind.astype(np.int32),val.astype(np.float32),fil,fmt)
+    else:
+        raise ValueError,"Can not write data fo type %s" % data.dtype
+
+
+# Output of mesh file formats
+
+def writeOFF(fn,coords,elems):
+    """Write a mesh of polygons to a file in OFF format.
+
+    Parameters:
+
+    - `fn`: file name, by preference ending on '.off'
+    - `coords`: float array with shape (ncoords,3), with the coordinates of
+      `ncoords` vertices.
+    - `elems`: int array with shape (nelems,nplex), with the definition of
+      `nelems` polygon elements.
+    """
+    if coords.dtype.kind != 'f' or coords.ndim != 2 or coords.shape[1] != 3 or elems.dtype.kind != 'i' or elems.ndim != 2:
+        raise runtimeError, "Invalid type or shape of argument(s)"
+    
+    fil = file(fn,'w')
+    fil.write("OFF\n")
+    fil.write("%d %d 0\n" % (coords.shape[0],elems.shape[0]))
+    writeData(coords,fil,'%f ')
+    nelems = np.zeros_like(elems[:,:1])
+    nelems.fill(elems.shape[1])
+    elemdata = np.column_stack([nelems,elems])
+    writeData(elemdata,fil,'%i ')
+    fil.close()
 
 
 # Output of surface file formats
 
 def writeGTS(fn,coords,edges,faces):
-    if coords.shape[1] != 3 or edges.shape[1] != 2 or faces.shape[1] != 3:
-        raise runtimeError, "Invalid arguments or shape"
+    """Write a mesh of triangles to a file in GTS format.
+
+    Parameters:
+
+    - `fn`: file name, by preference ending on '.gts'
+    - `coords`: float array with shape (ncoords,3), with the coordinates of
+      `ncoords` vertices.
+    - `edges`: int array with shape (nedges,2), with the definition of
+      `nedges` edges in function of the vertex indices.
+    - `faces`: int array with shape (nfaces,3), with the definition of
+      `nfaces` triangles in function of the edge indices.
+    """
+    if coords.dtype.kind != 'f' or coords.ndim != 2 or coords.shape[1] != 3 or edges.dtype.kind != 'i' or edges.ndim != 2 or edges.shape[1] != 2 or faces.dtype.kind != 'i' or faces.ndim != 2 or faces.shape[1] != 3:
+        raise runtimeError, "Invalid type or shape of argument(s)"
+
     fil = file(fn,'w')
     fil.write("%d %d %d\n" % (coords.shape[0],edges.shape[0],faces.shape[0]))
     writeData(coords,fil,'%f ')
