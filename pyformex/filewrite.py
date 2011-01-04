@@ -14,7 +14,7 @@ other formats.
 """
 import pyformex as pf
 from numpy import int32,float32
-from lib.misc import tofile_int32,tofile_float32
+from lib import misc
 
 
 def writeData(data,fil,fmt=' '):
@@ -54,9 +54,9 @@ def writeData(data,fil,fmt=' '):
     else:
         val = data.reshape(-1,data.shape[-1])
         if kind == 'i':
-            tofile_int32(val.astype(int32),fil,'%i ')
+            misc.tofile_int32(val.astype(int32),fil,'%i ')
         elif kind == 'f':
-            tofile_float32(val.astype(float32),fil,'%f ')
+            misc.tofile_float32(val.astype(float32),fil,'%f ')
         else:
             raise ValueError,"Can not write data fo type %s" % data.dtype
 

@@ -81,11 +81,12 @@ def nodalSum(val,elems,work,avg):
 
 
 
-## def tofile_int32(val,fn,fmt):
-##     fil = open(fn,'a')
-##     for row in val:
-##         fil.write(fmt % tuple(row))
-##     fil.close()
+def tofile_int32(val,fil,fmt):
+    fmt = fmt * val.shape[-1]
+    for row in val:
+        fil.write(fmt % tuple(row))
+        fil.write('\n')
 
+tofile_float32 = tofile_int32
 
 # End
