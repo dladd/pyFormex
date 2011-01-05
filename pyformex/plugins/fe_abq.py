@@ -136,7 +136,7 @@ def fmtData(data,npl=8,sep=', ',linesep='\n'):
     """
     data = asarray(data)
     data = data.reshape(-1,data.shape[-1])
-    return linesep.join([fmtData1D(row,npl,sep,linesep) for row in data])
+    return linesep.join([fmtData1D(row,npl,sep,linesep) for row in data])+linesep
 
 
 def fmtHeading(text=''):
@@ -247,8 +247,7 @@ def fmtMaterial(mat):
             raise ValueError,"Plastic data should be 2-dim array"
         ## if mat.plastic.shape[1] > 8:
         ##     raise ValueError,"Plastic data array should have max. 8 columns"
-        
-        out += fmtData(mat.plastic.shape)
+        out += fmtData(mat.plastic)
 
     if mat.damping == 'Yes':
         out += "*DAMPING"
@@ -269,7 +268,7 @@ def fmtTransform(setname,csys):
     
     """
     out = "*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys)
-    out += fmtData(csys.data)
+    out += fmtData(csys.data.reshape(-1))
     return out
 
 
