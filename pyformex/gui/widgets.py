@@ -112,12 +112,6 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
         raise ValueError,"Could not start the timeout timer"
 
 
-class Options:
-    "An empty class to allow easy attribute syntax"
-    def __init__(self):
-        pass
-
-
 #####################################################################
 ########### General Input Dialog ####################################
 #####################################################################
@@ -244,6 +238,7 @@ class InputInfo(InputItem):
     """An unchangeable input field with a label in front.
 
     It is just like an InputString, but the text can not be edited.
+    The value should be a simple string without newlines.
     
     There are no specific options.
     """
@@ -260,10 +255,11 @@ class InputInfo(InputItem):
         return self._value_
 
 
+
 class InputLabel(InputItem):
     """An unchangeable information field.
 
-    The value is displayed as a string.
+    The value is displayed as a string, but may contain more complex texts.
     
     By default, the text format will be guessed to be either plain text,
     ReStructuredText ot html. Specify plain=True to display in plain text.
@@ -340,9 +336,7 @@ class InputLabel(InputItem):
 ## 00392                      : q->layout()->totalMinimumSize().height();
 ## 00393     q->setFixedSize(width, height);
 ## 00394 }
-        
     
-
 
 class InputString(InputItem):
     """A string input field with a label in front.
@@ -375,7 +369,6 @@ class InputString(InputItem):
             return s
         else:
             return eval(s)
-
 
 
 class InputText(InputItem):
@@ -1585,7 +1578,7 @@ def inputAny(name,value,itemtype=str,**options):
                 
 
 def inputAnyOld(item,parent=None):
-    """Create an InputItem with the old data style.
+    """_Create an InputItem with the old data style.
 
     This translates the data from the legacy InputItem data to the
     new style required by InputAny.
@@ -1669,7 +1662,7 @@ def updateDialogItems(data,newdata):
  
 
 def updateOldDialogItems(data,newdata):
-    """Update the input data fields with new data values
+    """_Update the input data fields with new data values
 
     - data: a list of dialog items, as required by an OldInputDialog.
     - newdata: a dictionary with new values for (some of) the items.
@@ -1879,7 +1872,7 @@ class SaveImageDialog(FileSelection):
     def getResult(self):
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            opt = Options()
+            opt = odict.ODict()
             opt.fm = str(self.fmt.currentText())
             opt.qu = int(self.qua.text())
             opt.fn = str(self.selectedFiles()[0])
@@ -2651,6 +2644,8 @@ class ComboBox(QtGui.QWidget):
 
 ############################# Coords box ###########################
 
+# BV: this should be merged into InputPoint
+
 class CoordsBox(QtGui.QWidget):
     """A widget displaying the coordinates of a point.
 
@@ -2726,9 +2721,9 @@ class ImageView(QtGui.QLabel):
 ############################# Deprecated Features ###########################
 
 class OldTableDialog(GenericDialog):
-    """A dialog widget to show two-dimensional arrays of items."""
+    """_A dialog widget to show two-dimensional arrays of items."""
     def __init__(self,items,caption=None,parent=None,tab=False):
-        """Create the Table dialog.
+        """_Create the Table dialog.
         
         If tab = False, a dialog with one table is created and items
         should be a list [table_header,table_data].
