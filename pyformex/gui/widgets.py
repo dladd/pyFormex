@@ -760,7 +760,7 @@ class InputSlider(InputInteger):
         self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),self.set_value)
         if kargs.has_key('func'):
             self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),kargs['func'])            
-        self.addWidget(self.slider)
+        self.layout().addWidget(self.slider)
 
     def set_value(self,val):
         val = int(val)
@@ -800,7 +800,7 @@ class InputFSlider(InputFloat):
         #self.slider.setPageStep(5)
         self.slider.setTracking(1)
         self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),self.set_value)
-        self.addWidget(self.slider)
+        self.layout().addWidget(self.slider)
 
     def set_value(self,val):
         val = float(val)
