@@ -1334,13 +1334,16 @@ class InputDialog(QtGui.QDialog):
         self.forms.append(self.groupform)
         if self.autoprefix:
             saveprefix = self.prefix
-            self.prefix += name+'/'
+            self.prefix = name+'/'
         self.add_items(items,self.groupform)
         if self.autoprefix:
             self.prefix = saveprefix
         #self.groupform.addStretch()
         w.setLayout(self.groupform)
-        w.setTitle(name)
+        if 'text' in extra:
+            w.setTitle(extra['text'])
+        else:
+            w.setTitle(name)
         if 'checkable' in extra:
             w.setCheckable(extra['checkable'])
             w.setChecked(extra['checkable'])
