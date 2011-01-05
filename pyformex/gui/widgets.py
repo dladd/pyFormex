@@ -64,7 +64,6 @@ def standardIcon(label):
         return label
 
 
-
 def maxSize():
     """Return the maximum widget size.
 
@@ -118,12 +117,13 @@ class Options:
     def __init__(self):
         pass
 
+
 #####################################################################
 ########### General Input Dialog ####################################
 #####################################################################
 
     
-class InputItem(QtGui.QHBoxLayout):
+class InputItem(QtGui.QWidget):
     """A single input item, usually with a label in front.
 
     The created widget is a QHBoxLayout which can be embedded in the vertical
@@ -168,8 +168,13 @@ class InputItem(QtGui.QHBoxLayout):
     """
     
     def __init__(self,name,*args,**kargs):
-        """Creates a horizontal box layout and puts the label in it."""
-        QtGui.QHBoxLayout.__init__(self,*args)
+        """Creates a widget with a horizontal box layout and puts the label in it."""
+        
+        QtGui.QWidget.__init__(self,*args)
+        layout = QtGui.QHBoxLayout()
+        #layout.setSpacing(0)
+        layout.setMargin(0)
+        self.setLayout(layout)
         self.key = str(name)
         if 'text' in kargs:
             text = kargs['text']
@@ -182,19 +187,13 @@ class InputItem(QtGui.QHBoxLayout):
                 self.label.setPixmap(text)
             else:
                 self.label.setText(text)
-            self.addWidget(self.label)
+            layout.addWidget(self.label)
 
         if 'data' in kargs:
             self.data = kargs['data']
 
         if 'enabled' in kargs:
-            try:
-                self.input.setEnabled(kargs['enabled'])
-            except:
-                print "Can not set enabled: %s,%s" % (name,kargs)
-
-        if 'enabledby' in kargs:
-            self.enabledby = kargs['enabled']
+            self.setEnabled(kargs['enabled'])
 
         if 'readonly' in kargs:
             try:
@@ -219,8 +218,7 @@ class InputItem(QtGui.QHBoxLayout):
 
         if 'buttons' in kargs and 'parent' in kargs:
             self.buttons = dialogButtons(kargs['parent'],kargs['buttons'])
-            self.addLayout(self.buttons)
-            
+            self.layout().addItem(self.buttons)
 
     def name(self):
         """Return the name of the InputItem."""
@@ -239,11 +237,8 @@ class InputItem(QtGui.QHBoxLayout):
 
     def setValue(self,val):
         """Change the widget's value."""
-        #print "CHANGING THE VALUE OF FIELD %s" % self.name()
-        #print "TO: %s" % str(val)
         self.input.setText(str(val))
-        #print "TO: %s" % self.value()
-
+        
 
 class InputInfo(InputItem):
     """An unchangeable input field with a label in front.
@@ -258,7 +253,7 @@ class InputInfo(InputItem):
         self.input.setReadOnly(True)
         InputItem.__init__(self,name,*args,**kargs)
         self._value_ = value
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def value(self):
         """Return the widget's value."""
@@ -281,7 +276,7 @@ class InputLabel(InputItem):
         self.input.setMaximumSize(int(0.75*maxw),maxh)
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
         self.label.setWordWrap(True)
         self.setSize()
 
@@ -366,7 +361,7 @@ class InputString(InputItem):
         if max>0:
             self.input.setMaxLength(max)
         self._is_string_ = type(value) == str
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def show(self):
         """Select all text on first display.""" 
@@ -401,7 +396,7 @@ class InputText(InputItem):
         self.input =  QtGui.QTextEdit()
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def show(self):
         """Select all text on first display.""" 
@@ -445,7 +440,7 @@ class InputBool(InputItem):
         self.input = QtGui.QCheckBox(text)
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
 
     def text(self):
@@ -497,7 +492,7 @@ class InputCombo(InputItem):
         if callable(onselect):
             self.connect(self.input,QtCore.SIGNAL("currentIndexChanged(const QString &)"),onselect)
         self.setValue(default)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def value(self):
         """Return the widget's value."""
@@ -549,7 +544,7 @@ class InputRadio(InputItem):
 
         self.rb[choices.index(default)].setChecked(True)
         self.input.setLayout(self.hbox)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def value(self):
         """Return the widget's value."""
@@ -608,7 +603,7 @@ class InputPush(InputItem):
 
         self.rb[choices.index(default)].setChecked(True)
         self.input.setLayout(self.hbox)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def setText(self,text,index=0):
         """Change the text on button index."""
@@ -652,7 +647,7 @@ class InputInteger(InputItem):
         if kargs.has_key('max'):
             self.validator.setTop(int(kargs['max']))
         self.input.setValidator(self.validator)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def show(self):
         """Select all text on first display.""" 
@@ -684,7 +679,7 @@ class InputFloat(InputItem):
         if kargs.has_key('dec'):
             self.validator.setDecimals(int(kargs['dec']))
         self.input.setValidator(self.validator)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def show(self):
         """Select all text on first display.""" 
@@ -718,7 +713,7 @@ class InputFloatTable(InputItem):
 
         self.input = ArrayTable(value,rhead=rhead,chead=chead)
         InputItem.__init__(self,name,*args,**kargs)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def show(self):
         """Select all text on first display.""" 
@@ -822,7 +817,7 @@ class InputPoint(InputItem):
         """Creates a new point input field with a label in front."""
         self.input = CoordsBox()
         InputItem.__init__(self,name,*args,**kargs)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
         self.setValue(value)
 
     def value(self):
@@ -858,7 +853,7 @@ class InputButton(InputItem):
         self.setValue(value)
         if self.func:
             self.connect(self.input,QtCore.SIGNAL("clicked()"),self.doFunc)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     
     def doFunc(self):
@@ -884,7 +879,7 @@ class InputColor(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(color)
         self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setColor)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     
     def setColor(self):
@@ -910,7 +905,7 @@ class InputFont(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
         self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setFont)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
 
     def setFont(self):
@@ -941,7 +936,7 @@ class InputWidget(InputItem):
         kargs['text'] = '' # Force no label
         self.input = value
         InputItem.__init__(self,name,*args,**kargs)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def text(self):
         """Return the displayed text."""
@@ -985,7 +980,7 @@ class InputGroup(InputItem):
 
         self.rb[choices.index(default)].setChecked(True)
         self.input.setLayout(self.hbox)
-        self.insertWidget(1,self.input)
+        self.layout().insertWidget(1,self.input)
 
     def value(self):
         """Return the widget's value."""
@@ -1098,7 +1093,30 @@ def convertInputItemList(items):
         return items
     pf.debug("Converting old style input data to new style")
     return map(convert_item,items)
+
+
+# define a function to have the same name as for InputItem
+def enableItem(self,*args):
+    #print "TRY %s, %s" % (self.name(),self.enabled_by)
+    try:
+        src,val = self.enabled_by
+        #print "%s, %s, %s" % (self.name(),self.enabled_by,src.value())
+        self.setEnabled(src.value() == val)
+    except:
+        import warnings
+        warnings.warn("Error in a dialog item enabler. This should not happen!")
+        pass
     
+
+InputItem.enableItem = enableItem
+QtGui.QGroupBox.enableItem = enableItem
+QtGui.QTabWidget.enableItem = enableItem
+
+def nameGroupBox(self):
+    return self.title()
+QtGui.QGroupBox.name = nameGroupBox
+## QtGui.QTabWidget.disable = disableGroup
+
 
 class InputDialog(QtGui.QDialog):
     """A dialog widget to interactively set the value of one or more items.
@@ -1161,7 +1179,7 @@ class InputDialog(QtGui.QDialog):
           
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers={}):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[]):
         """Create a dialog asking the user for the value of items."""
         if parent is None:
             parent = pf.GUI
@@ -1216,16 +1234,36 @@ class InputDialog(QtGui.QDialog):
 
 
         # add the enablers
-        for k,v in enablers.items():
-            #print "Enabler %s -> %s" % (k,v)
-            src = self[k].input
-            for vi in v:
-                tgt = self[vi]
-                if isinstance(tgt,InputItem):
-                    tgt = tgt.input
-                #print "%s, %s" % (src,tgt)
-                if src and tgt:
-                    src.connect(src,QtCore.SIGNAL("stateChanged(int)"),tgt.setEnabled)
+        for en in enablers:
+            #print "Enabler %s " % str(en)
+            src = self[en[0]]
+            if src:
+                val = en[1]
+                for t in en[2:]:
+                    tgt = self[t]
+                    #print "%s" % (tgt)
+                    if tgt:
+                        tgt.enabled_by = (src,val)
+                        signal = None
+                        if isinstance(src,InputBool):
+                            signal = "stateChanged(int)"
+                            # emit the signal to adjust initial state
+                            src.input.emit(QtCore.SIGNAL(signal),0)
+                        elif isinstance(src,InputRadio):
+                            # BV: this does not work
+                            signal = "buttonClicked(int)"
+                            # emit the signal to adjust initial state
+                            src.input.emit(QtCore.SIGNAL(signal),0)
+                        elif isinstance(src,InputCombo):
+                            signal = "currentIndexChanged(int)"
+                            #print src,src.input,signal
+                            # emit the signal to adjust initial state
+                            src.input.emit(QtCore.SIGNAL(signal),0)
+
+                        #print "ENABLER %s, %s" % (src.__class__.__name__,signal) 
+
+                        if signal:
+                            src.connect(src.input,QtCore.SIGNAL(signal),tgt.enableItem)
 
 
     def add_items(self,items,form):
@@ -1340,7 +1378,7 @@ class InputDialog(QtGui.QDialog):
 
         field = inputAny(**item)
         self.fields.append(field)
-        self.forms[-1].addLayout(field)
+        self.forms[-1].addWidget(field)
     
 
     def __getitem__(self,name):
@@ -2493,16 +2531,16 @@ class TextBox(QtGui.QDialog):
         updateText(self._t,text,format)
 
 
-############################# Input box ###########################
+## ############################# Input box ###########################
 
-class InputBox(QtGui.QWidget):
-    """A widget accepting a line of input.
+## class InputBox(QtGui.QWidget):
+##     """A widget accepting a line of input.
 
-    """
-    def __init__(self,*args):
-        QtGui.QWidget.__init__(self,*args)
-        layout = InputString('Input:','')
-        self.setLayout(layout)
+##     """
+##     def __init__(self,*args):
+##         QtGui.QWidget.__init__(self,*args)
+##         layout = InputString('Input:','')
+##         self.setLayout(layout)
 
 
 
@@ -2554,7 +2592,7 @@ def dialogButtons(dialog,actions=None,default=None):
     return but
 
 
-class ButtonBox(QtGui.QWidget):
+class ButtonBox(InputPush):
     """A box with action buttons.
 
     - `name`: a label to be displayed in front of the button box. An empty
@@ -2568,28 +2606,21 @@ class ButtonBox(QtGui.QWidget):
       widgets.REJECTED.
     """
     def __init__(self,name,actions=[],parent=None,stretch=[-1,-1]):
-        QtGui.QWidget.__init__(self,parent)
-        s = InputPush(name,None,[a[0] for a in actions])
+        InputPush.__init__(self,name,None,[a[0] for a in actions])
+        s = self.layout()
         for i in [0,-1]:
             if stretch[i] >= 0:
                 s.insertStretch(i,stretch[i])
         s.setSpacing(0)
         s.setMargin(0)
-        for r,f in zip(s.rb,[a[1] for a in actions]):
+        for r,f in zip(self.rb,[a[1] for a in actions]):
             if f is None:
                 f = Accept
             if callable(f):
                 self.connect(r,QtCore.SIGNAL("clicked()"),f)
             else:
                 self.connect(r,QtCore.SIGNAL("clicked()"),parent,f)
-        self.setLayout(s)
         self.buttons = s
-
-    def setText(self,text,index=0):
-        self.buttons.setText(text,index)
-
-    def setIcon(self,icon,index=0):
-        self.buttons.setIcon(icon,index)
 
     def __str__(self):
         s = ''
@@ -2801,7 +2832,7 @@ class OldInputDialog(QtGui.QDialog):
             ## except:
             ##     print "inputAny ERROR for %s" % str(item)
             line = inputAnyOld(item,parent=self)
-            layout.addLayout(line)
+            layout.addWidget(line)
             self.fields.append(line)
 
 

@@ -90,7 +90,7 @@ input_data = [
     I('flyalong',False,text='Fly along the spiral'),
    ]
 
-input_enablers = {'sweep':('Sweep Data','spread')}
+input_enablers = [('sweep',True,'Sweep Data')]
 
 def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:0):
     """Perform a spiral transformation on a coordinate array"""
@@ -208,27 +208,32 @@ def timeOut():
     """What to do on a InputDialog timeout event.
 
     As a policy, all pyFormex examples should behave well on a
-    dialog timeout.
-    Most users can simply ignore this.
+    dialog timeout. This is important for developers.
+    Most normal users can simply ignore it.
     """
     show()
     close()
 
 
-# Update the data items from saved values
-try:
-    saved_data = pf.PF.get('Sweep_data',{})
-    print saved_data
-    widgets.updateDialogItems(input_data,pf.PF.get('Sweep_data',{}))
-except:
-    raise
+if __name__ == 'draw':
 
-# Create the modeless dialog widget
-dialog = widgets.InputDialog(input_data,enablers=input_enablers,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
-# The examples style requires a timeout action
-dialog.timeout = timeOut
-# Show the dialog and let the user have fun
-dialog.show()
+    # Update the data items from saved values
+    try:
+        saved_data = pf.PF.get('Sweep_data',{})
+        print saved_data
+        widgets.updateDialogItems(input_data,pf.PF.get('Sweep_data',{}))
+    except:
+        raise
+
+
+    # Create the modeless dialog widget
+    dialog = widgets.InputDialog(input_data,enablers=input_enablers,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
+
+    # Examples style requires a timeout action
+    dialog.timeout = timeOut
+
+    # Show the dialog and let the user have fun
+    dialog.show()
 
 # End
 

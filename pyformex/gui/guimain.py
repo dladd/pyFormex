@@ -386,7 +386,7 @@ class Gui(QtGui.QMainWindow):
 
 
     def addInputBox(self):
-        self.input = widgets.InputBox()
+        self.input = widgets.InputString('Input:','')
         self.statusbar.addWidget(self.input)
 
 

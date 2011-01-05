@@ -29,7 +29,6 @@ topic = ['geometry']
 techniques = ['dialog','persistence']
 """
 
-
 from simple import rectangle
 from utils import NameSequence
 from gui.widgets import *
