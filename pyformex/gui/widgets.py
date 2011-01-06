@@ -35,6 +35,7 @@ import pyformex as pf
 import colors
 import odict
 import utils
+import warnings
 
 # timeout value for all widgets providing timeout feature
 #  (currently: InputDialog, MessageBox)
@@ -594,7 +595,7 @@ class InputPush(InputItem):
             self.hbox.addWidget(rb)
             self.rb.append(rb)
 
-        self.rb[choices.index(default)].setChecked(True)
+        self.rb[choices.index(default)].setDown(True)
         self.input.setLayout(self.hbox)
         self.layout().insertWidget(1,self.input)
 
@@ -609,7 +610,8 @@ class InputPush(InputItem):
     def value(self):
         """Return the widget's value."""
         for rb in self.rb:
-            if rb.isChecked():
+#            if rb.isChecked():
+            if rb.isDown():
                 return str(rb.text())
         return ''
 
@@ -617,9 +619,8 @@ class InputPush(InputItem):
         """Change the widget's value."""
         val = str(val)
         for rb in self.rb:
-            if rb.text() == val:
-                rb.setChecked(True)
-                break
+            rb.setChecked(rb.text() == val)
+            rb.setDown(rb.text() == val)
 
 
 class InputInteger(InputItem):
@@ -1096,7 +1097,6 @@ def enableItem(self,*args):
         #print "%s, %s, %s" % (self.name(),self.enabled_by,src.value())
         self.setEnabled(src.value() == val)
     except:
-        import warnings
         warnings.warn("Error in a dialog item enabler. This should not happen!")
         pass
     
@@ -1284,22 +1284,14 @@ class InputDialog(QtGui.QDialog):
             elif isinstance(item,QtGui.QWidget):
                 form.addWidget(item)
 
-            elif type(item) is tuple:
-                import warnings
-                warnings.warn('warn_group_tab_items')
-           
-                if form == self.form:
-                    self.add_tab(item[0],item[1])
-
-                elif form == self.tabform:
-                    self.add_group(item[0],item[1])
-
-                else:
-                    raise ValueError,"Too deep nesting of input items at item %s" % item
+            else:
+                raise ValueError,"Invalid input item (type %s). Expected a dict or a QWidget." % type(item)
 
 
     def add_tab(self,name,items,**extra):
         """Add a Tab page of input items."""
+        if self.tabform:
+            raise ValueError,"Currently you can not stack multiple levels of Tab InputItems"
         if self.tab is None:
             self.tab = QtGui.QTabWidget()
             self.form.addWidget(self.tab)
@@ -1309,7 +1301,7 @@ class InputDialog(QtGui.QDialog):
         self.forms.append(self.tabform)
         if self.autoprefix:
             saveprefix = self.prefix
-            self.prefix += name+'/'
+            self.prefix = name+'/'
         self.add_items(items,self.tabform)
         if self.autoprefix:
             self.prefix = saveprefix
@@ -1322,6 +1314,8 @@ class InputDialog(QtGui.QDialog):
 
     def add_group(self,name,items,**extra):
         """Add a group of input items."""
+        if self.groupform:
+            raise ValueError,"Currently you can not stack multiple levels of Group InputItems"
         w = QtGui.QGroupBox()
         self.groupform = QtGui.QVBoxLayout()
         self.forms.append(self.groupform)
@@ -1564,7 +1558,9 @@ def inputAny(name,value,itemtype=str,**options):
 
     elif itemtype in ['push','hpush','vpush']:
         options['direction'] = itemtype[0]
-        line = InputPush(name,value,**options)
+        #line = InputPush(name,value,**options)
+        # currently, push is not available but replaced with radio
+        line = InputRadio(name,value,**options)
 
     elif itemtype == 'font':
         line = InputFont(name,value,**options)
@@ -1648,7 +1644,6 @@ def updateDialogItems(data,newdata):
 
     The user should make sure to set only values of the proper type!
     """
-    import warnings
     warnings.warn("warn_widgets_updatedialogitems")
     if newdata:
         for d in data:
@@ -2730,7 +2725,6 @@ class OldTableDialog(GenericDialog):
         If tab = True, a dialog with multiple pages is created and items
         should be a list of pages [page_header,table_header,table_data].
         """
-        import warnings
         warnings.warn('warn_old_table_dialog')
         
         GenericDialog.__init__(self,[],title=caption,parent=parent)
@@ -2759,7 +2753,6 @@ class OldInputDialog(QtGui.QDialog):
         """_Deprecated
 
         """
-        import warnings
         warnings.warn('warn_old_input_dialog')
         
         if parent is None:

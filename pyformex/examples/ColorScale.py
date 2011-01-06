@@ -46,9 +46,9 @@ input_data = [
     I('predef',True,text='Use a predefined color palette'),
     I('palet',text='Predefined color palette',choices=Palette.keys(),enabled=True),
     G('Custom Color palette',[
-        I('maxcol',[1.,0.,0.],text='Maximum color'),
-        I('medcol',[1.,1.,0.],text='Medium color'),
-        I('mincol',[1.,1.,1.],text='Minimum color'),
+        I('maxcol',[1.,0.,0.],text='Maximum color',itemtype='color'),
+        I('medcol',[1.,1.,0.],text='Medium color',itemtype='color'),
+        I('mincol',[1.,1.,1.],text='Minimum color',itemtype='color'),
         ],enabled=False),
     I('maxexp',1.0,text='High exponent'),
     I('minexp',1.0,text='Low exponent'),
@@ -59,10 +59,11 @@ input_data = [
     I('scale',0,text='Scaling exponent'),
     I('lefttext',True,text='Text left of colorscale'),
     I('font','hv18',text='Font',choices=GLUTFONTS.keys()),
-    I('position',[400,50],text='Position'),
-    I('size',(100,600),text='Size'),
     I('header','Currently not displayed',text='Header',enabled=False),
     I('gravity','Notused',text='Gravity',enabled=False),
+    I('autosize',True,text='Autosize'),
+    I('size',(100,600),text='Size'),
+    I('position',[400,50],text='Position'),
     ]
 
 input_enablers = [
@@ -70,6 +71,7 @@ input_enablers = [
     ('predef',True,'palet'),
     ('predef',False,'Custom Color palette'),
     ('showgrid',True,'linewidth'),
+    ('autosize',False,'size'),
     ]
 
 
@@ -78,18 +80,20 @@ def show():
     global medval,medcol,palet,minexp,grid
     
     clear()
+    lights(False)
     dialog.acceptData()
     res = dialog.results
     globals().update(res)
 
+    
     if valrange == 'Minimum-Maximum':
         medval = None
-        if not predef:
-            medcol = None
+#        if not predef:
+#            medcol = None
         minexp = None
-        
+
     if not predef:
-        palet = [mincol,medcol,maxcol]
+        palet = map(GLColor,[mincol,medcol,maxcol])
 
     if showgrid:
         if ncolors <= 50:
@@ -100,7 +104,14 @@ def show():
         grid = 0
 
     x,y = position
-    w,h = size
+
+    if autosize:
+        mw,mh = pf.canvas.Size()
+        h = int(0.9*(mh-y))
+        w = min(0.1*mw,100)
+    else:
+        w,h = size
+
     # ok, now draw it
     drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,grid,linewidth,lefttext,font,x,y,w,h)     
 

@@ -104,16 +104,16 @@ class ColorScale:
         mival..maxval are scaled to the range -1..+1.
 
         If two exponents were specified, scaling is done independently in
-        one of the intervals minval..midval or midval..maxval resulting into
-        resp. the interval -1..0 or 0..1.
+        the intervals minval..midval and midval..maxval, mapped resp. using
+        exp2 and exp onto the intevals -1..0 and 0..1.
         """
         if self.exp2 == None:
             return stuur(val,[self.xmin,self.x0,self.xmax],[-1.,0.,1.],self.exp)
 
         if val < self.x0:
-            return stuur(val,[self.xmin,(self.x0+self.xmin)/2,self.x0],[-1.,-0.5,0.],self.exp)
+            return stuur(val,[self.xmin,(self.x0+self.xmin)/2,self.x0],[-1.,-0.5,0.],self.exp2)
         else:
-            return stuur(val,[self.x0,(self.x0+self.xmax)/2,self.xmax],[0.,0.5,1.0],1./self.exp2)
+            return stuur(val,[self.x0,(self.x0+self.xmax)/2,self.xmax],[0.,0.5,1.0],1./self.exp)
 
 
     def color(self,val):
