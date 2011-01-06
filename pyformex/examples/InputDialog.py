@@ -29,7 +29,7 @@ input_text = [
     I('text','A multiline text input field',text='itemtype text',itemtype='text',tooltip='This is a multiline text input field'),
     ]
 input_select = [
-    I('bool',False,text='itemtype bool',tooltip='This is a boolean field that can only get the values True or False, by checking or unchecking the box'),
+    I('bool',False,text='itemtype bool',stretch='ba',tooltip='This is a boolean field that can only get the values True or False, by checking or unchecking the box'),
     I('select','Third',text='itemtype select',choices=['First','Second','Third','Fourth'],tooltip='This is a an input field allowing you to select one of a set of predefined values'),
     I('radio','Third',text='itemtype (h)radio',itemtype='radio',choices=['First','Second','Third','Fourth'],tooltip="Like 'select', this allows selecting one of a set of predefined values"),
     I('vradio','Third',text='itemtype vradio',itemtype='vradio',choices=['First','Second','Third','Fourth'],tooltip="Like 'radio', but items are placed vertically"),
@@ -49,9 +49,9 @@ input_special = [
     I('color',colors.pyformex_pink,itemtype='color',text='Color',tooltip='An inputfield allowing to select a color. The current color is pyFormex pink.'),
     ]
 
-## input_tabgroup = [
-##     G('group1',input_special),
-##     G('group2',input_special),
+input_tabgroup = [
+    G('group1',input_text,text='Text input group'),
+    G('group2',input_select,text='Select input group'),
 ##     ## G('group3',[
 ##     T('tab1',input_special),
 ##     T('tab2',input_special),
@@ -62,7 +62,7 @@ input_special = [
 ##     ##     T('tab5',input_special),
 ##     ##     T('tab6',input_special),
 ##     ##     ]),
-##     ]
+    ]
 
 input_data = [
 #    I('intro',"""This dialog illustrates the capabilities of the pyFormex's InputDialog class and associated InputItem widgets.""",itemtype='info'),
@@ -70,11 +70,11 @@ input_data = [
     T('Selection',input_select),
     T('Numerical',input_numerical),
     T('Special',input_special),
-##     T('Tabs/Groups',input_tabgroup),
+    T('TabGroup',input_tabgroup,text='Tabs and Groups'),
     ]
 
 input_enablers = [
-##     ('valrange','Minimum-Medium-Maximum','medval','medcol'),
+    ('TabGroup/group2/bool',True,'TabGroup/group1','TabGroup/group2/radio'),
 ##     ('predef',True,'palet'),
 ##     ('predef',False,'Custom Color palette'),
 ##     ('showgrid',True,'linewidth'),

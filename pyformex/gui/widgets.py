@@ -182,7 +182,11 @@ class InputItem(QtGui.QWidget):
                 self.label.setPixmap(text)
             else:
                 self.label.setText(text)
+            if 'b' in kargs.get('stretch',''):
+                layout.addStretch()
             layout.addWidget(self.label)
+            if 'a' in kargs.get('stretch',''):
+                layout.addStretch()
 
         if 'data' in kargs:
             self.data = kargs['data']
@@ -254,7 +258,6 @@ class InputInfo(InputItem):
     def value(self):
         """Return the widget's value."""
         return self._value_
-
 
 
 class InputLabel(InputItem):
@@ -1228,13 +1231,13 @@ class InputDialog(QtGui.QDialog):
 
         # add the enablers
         for en in enablers:
-            #print "Enabler %s " % str(en)
+            print "Enabler %s " % str(en)
             src = self[en[0]]
             if src:
                 val = en[1]
                 for t in en[2:]:
                     tgt = self[t]
-                    #print "%s" % (tgt)
+                    print "%s" % (tgt)
                     if tgt:
                         tgt.enabled_by = (src,val)
                         signal = None
@@ -1253,13 +1256,13 @@ class InputDialog(QtGui.QDialog):
                             # emit the signal to adjust initial state
                             src.input.emit(QtCore.SIGNAL(signal),0)
 
-                        #print "ENABLER %s, %s" % (src.__class__.__name__,signal) 
+                        print "ENABLER %s, %s" % (src.__class__.__name__,signal) 
 
                         if signal:
                             src.connect(src.input,QtCore.SIGNAL(signal),tgt.enableItem)
 
 
-    def add_items(self,items,form):
+    def add_items(self,items,form,prefix=''):
         """Add input items to form.
 
         items is a list of input item data
@@ -1269,17 +1272,20 @@ class InputDialog(QtGui.QDialog):
             #print item
             #print type(item)
             if isinstance(item,dict):
-                if self.prefix:
-                    item['name'] = self.prefix + item['name']
+                ## if self.prefix:
+                ##     #
+                ##     # BV: THIS IS NOT SOUND, BECAUSE IT CHANGES THE DATA!
+                ##     #
+                ##     item['name'] = self.prefix + item['name']
 
                 if item.get('itemtype',None) == 'tab':
-                    self.add_tab(**item)
+                    self.add_tab(prefix=prefix,**item)
 
                 elif item.get('itemtype',None) == 'group':
-                    self.add_group(**item)
+                    self.add_group(prefix=prefix,**item)
 
                 else:
-                    self.add_input(item)
+                    self.add_input(prefix=prefix,**item)
 
             elif isinstance(item,QtGui.QWidget):
                 form.addWidget(item)
@@ -1288,7 +1294,7 @@ class InputDialog(QtGui.QDialog):
                 raise ValueError,"Invalid input item (type %s). Expected a dict or a QWidget." % type(item)
 
 
-    def add_tab(self,name,items,**extra):
+    def add_tab(self,prefix,name,items,**extra):
         """Add a Tab page of input items."""
         if self.tabform:
             raise ValueError,"Currently you can not stack multiple levels of Tab InputItems"
@@ -1298,54 +1304,43 @@ class InputDialog(QtGui.QDialog):
             
         w = QtGui.QWidget()
         self.tabform = QtGui.QVBoxLayout()
-        self.forms.append(self.tabform)
-        if self.autoprefix:
-            saveprefix = self.prefix
-            self.prefix = name+'/'
-        self.add_items(items,self.tabform)
-        if self.autoprefix:
-            self.prefix = saveprefix
-        self.tabform.addStretch()
         w.setLayout(self.tabform)
-        self.tab.addTab(w,name)
+        self.tab.addTab(w,extra.get('text',name))
+        if self.autoprefix:
+            prefix += name+'/'
+        self.forms.append(self.tabform)
+        self.add_items(items,self.tabform,prefix=prefix)
         self.forms.pop()
+        self.tabform.addStretch()
         self.tabform = None
 
 
-    def add_group(self,name,items,**extra):
+    def add_group(self,prefix,name,items,**extra):
         """Add a group of input items."""
         if self.groupform:
             raise ValueError,"Currently you can not stack multiple levels of Group InputItems"
         w = QtGui.QGroupBox()
+        self.groups[prefix+name] = w
+        self.forms[-1].addWidget(w)
         self.groupform = QtGui.QVBoxLayout()
-        self.forms.append(self.groupform)
-        if self.autoprefix:
-            saveprefix = self.prefix
-            self.prefix = name+'/'
-        self.add_items(items,self.groupform)
-        if self.autoprefix:
-            self.prefix = saveprefix
-        #self.groupform.addStretch()
         w.setLayout(self.groupform)
-        if 'text' in extra:
-            w.setTitle(extra['text'])
-        else:
-            w.setTitle(name)
+        w.setTitle(extra.get('text',name))
         if 'checkable' in extra:
             w.setCheckable(extra['checkable'])
             w.setChecked(extra['checkable'])
         if 'enabled' in extra:
             w.setEnabled(extra['enabled'])
+        if self.autoprefix:
+            prefix += name+'/'
+        self.forms.append(self.groupform)
+        self.add_items(items,self.groupform,prefix=prefix)
         self.forms.pop()
-        self.forms[-1].addWidget(w)
         self.groupform = None
-        self.groups[name] = w
 
                 
-    def add_input(self,item):
+    def add_input(self,prefix,**item):
         """Add a single input item."""
-        if not 'name' in item:
-            item['name'] = self.autoname.next()
+        item['name'] = prefix + item.get('name',self.autoname.next())
         if not 'value' in item:
             # no value: try to find one
             if 'choices' in item:

@@ -83,6 +83,7 @@ def show():
     lights(False)
     dialog.acceptData()
     res = dialog.results
+    print res
     globals().update(res)
 
     
@@ -153,7 +154,7 @@ if __name__ == 'draw':
         pass
 
     # Create the modeless dialog widget
-    dialog = widgets.InputDialog(input_data,enablers=input_enablers,caption='ColorScale Dialog',actions = [('Close',close),('Show',show)],default='Show')
+    dialog = widgets.InputDialog(input_data,enablers=input_enablers,caption='ColorScale Dialog',actions = [('Close',close),('Show',show)],default='Show',autoprefix=True)
 
     # Examples style requires a timeout action
     dialog.timeout = timeOut
