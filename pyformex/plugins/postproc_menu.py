@@ -161,7 +161,7 @@ tbl = None
 def showfields():
     """Show the table of field acronyms."""
     global tbl
-    tbl = widgets.Table(res_types,['acronym','description'],actions=[('Cancel',),('Ok',),('Print',tblIndex)])
+    tbl = widgets.Table(result_types.items(),['acronym','description'],actions=[('Cancel',),('Ok',),('Print',tblIndex)])
     tbl.show()
    
 
@@ -508,7 +508,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
 ########## Postproc results dialog #######
 
-res_types = [
+result_types = ODict([
     ('','None'),
     ('U','[Displacement]'),
     ('U0','X-Displacement'),
@@ -537,45 +537,25 @@ res_types = [
     ('COORD1','Y-Coordinate'),
     ('COORD2','Z-Coordinate'),
     ('Computed','Distance from a point'),
+    ])
+
+
+input_items = [
+    dict(name='feresult',text='FE Result DB',value='',itemtype='info'),
+    dict(name='elgroup',text='Element Group',choices=['--ALL--',]),
+    dict(name='restype',text='Type of result',choices=result_types.values()),
+    dict(name='loadcase',text='Load case',value=0),
+    dict(name='autoscale',text='Autocalculate deformation scale',value=True),
+    dict(name='dscale',text='Deformation scale',value=100.),
+    dict(name='showref',text='Show undeformed configuration',value=True),
+    dict(name='animate',text='Animate results',value=False),
+    dict(name='shape',text='Amplitude shape',value='linear',itemtype='radio',choices=['linear','sine']),
+    dict(name='cycle',text='Animation cycle',value='updown',itemtype='radio',choices=['up','updown','revert']),
+    dict(name='count',text='Number of cycles',value=5),
+    dict(name='nframes',text='Number of frames',value=10),
+    dict(name='sleeptime',text='Animation sleeptime',value=0.1), 
     ]
 
-res_dict = ODict(res_types)
-
-dia_full = [
-    ['feresult','FE Result DB','','info'],
-    ['elgroup','Element Group',None,'select',['--ALL--',]],
-    ['resindex','Type of result',None,'select',res_dict.values()],
-    ['loadcase','Load case',0],
-    ['autoscale','Autocalculate deformation scale',True],
-    ['dscale','Deformation scale',100.],
-    ['showref','Show undeformed configuration',True],
-    ['animate','Animate results',False],
-    ['shape','Amplitude shape','linear','radio',['linear','sine']],
-    ['cycle','Animation cycle','updown','radio',['up','updown','revert']],
-    ['count','Number of cycles',5],
-    ['nframes','Number of frames',10],
-    ['sleeptime','Animation sleeptime',0.1], 
-    ]
-
-
-new_vals = dict(
-    feresult = 'some result DB',
-    elgroup = '',
-    resindex = 'Y-Displacement',
-    loadcase = 1,
-    autoscale = False,
-    dscale = 35.5,
-    showref = True,
-    animate = True,
-    shape = 'sine',
-    cycle = 'revert',
-    count = 3,
-    nframes = 999,
-    sleeptime = 1,
-    )
-
-dia_dict = ODict([ (c[0],c[1:]) for c in dia_full ])
-dia_defaults = dict([ (c[0],c[2]) for c in dia_full ])
 
 selection = Objects(clas=FeResult)
 dialog = None
@@ -584,7 +564,7 @@ DB = None
 
 def show():
     """Show the results"""
-    data = dialog_getdata()
+    data = dialog_getresults()
     #print(data)
     globals().update(data)
     nodes = DB.nodes
@@ -611,7 +591,7 @@ def show():
     txt = 'No Results'
     val = None
     if resindex > 0:
-        key = res_dict.keys()[resindex]
+        key = result_types.keys()[resindex]
         print("RESULT KEY = %s" % key)
         if key == 'Computed':
             if askPoint():
@@ -621,40 +601,9 @@ def show():
             if key == 'U':
                 val = norm2(val)
     if val is not None:
-        txt = res_dict.values()[resindex]
+        txt = result_types.values()[resindex]
     showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
     return val
-
-
-def newvals():
-    reset(new_vals)
-
-
-def dialog_getdata():
-    """Return the dialog data with short keys."""
-    dialog.acceptData()
-    data = dialog.results
-    data = dict([ (c[0],data[c[1]]) for c in dia_full ])
-    data['resindex'] = res_dict.values().index(data['resindex'])
-    return data
-
-    
-def dialog_update(data):
-    # data is a dict with short keys/data
-    vals = {}
-    for v in data:
-        d = dia_dict[v]
-        vals[d[0]] = data[v]
-    print(vals)
-    dialog.updateData(vals)
-
-
-def reset(data=None):
-    # data is a dict with short keys/data
-    if data is None:
-        data = dia_defaults
-    pf.PF['__PostProcMenu_data__'] = data
-    dialog_update(data)
 
 
 def setDB(db):
@@ -664,7 +613,7 @@ def setDB(db):
         DB = db
     else:
         DB = None
-    pf.PF['__PostProcMenu_result__'] = DB
+    pf.PF['PostProcMenu_result'] = DB
 
     
 def selectDB(db=None):
@@ -779,36 +728,57 @@ def checkDB():
     return isinstance(DB,FeResult)
 
 
-def open_results_dialog():
+def dialog_getresults():
+    """Return the dialog data with short keys."""
+    dialog.acceptData()
+    data = dialog.results
+    data['resindex'] = result_types.values().index(data['restype'])
+    return data
+
+
+def dialog_reset(data=None):
+    # data is a dict with short keys/data
+    if data is None:
+        data = dict((i['name'],i.get('value',None)) for i in input_items)
+    dialog.updateData(data)
+
+
+def open_dialog():
     global dialog
     if not checkDB():
         warning("No results database was selected!")
         return
     close_dialog()
-    data = pf.PF.get('__PostProcMenu_data__',dia_defaults)
-    print("SAVED DATA",data)
-    for k,v in data.items():
-        dia_dict[k][1] = v
+
+    actions = [
+        ('Close',close_dialog),
+        ('Reset',reset),
+        # ('Select DB',selectDB),
+        ('Show',show),
+        # ('Show Fields',showfields),
+        # ('Show Attr',showattr),
+        ]
+    dialog = widgets.InputDialog(input_items,caption='Results Dialog',actions=actions,default='Show')
+    # Update the data items from saved values
+    try:
+        newdata = named('PostProcMenu_data')
+        print newdata
+    except:
+        newdata = {}
+        pass
     if selection.check(single=True):
-        dia_dict['feresult'][1] = selection.names[0]
+        newdata['feresult'] = selection.names[0]
     if DB:
-        dia_dict['elgroup'][3] = ['--ALL--',] + DB.elems.keys()
-    actions = [('Close',close_dialog),
-               ('Reset',reset),
-#               ('Select DB',selectDB),
-               ('Show',show),
-#               ('NewVals',newvals),
-#               ('Show Fields',showfields),
-#               ('Show Attr',showattr),
-               ]
-    dialog = widgets.OldInputDialog(dia_dict.values(),caption='Results Dialog',actions=actions,default='Show')
+        newdata['elgroup'] = ['--ALL--',] + DB.elems.keys()
+    dialog.updateData(newdata)
     dialog.show()
-    pf.PF['__PostProcMenu_dialog__'] = dialog
+    #pf.PF['__PostProcMenu_dialog__'] = dialog
 
 
 def close_dialog():
     global dialog
     if dialog:
+        pf.PF['PostProcMenu_data'] = dialog_getresults()
         dialog.close()
         dialog = None
     if tbl:
@@ -841,7 +811,7 @@ def create_menu():
         ("Show Geometry",showModel),
 #        ("Select Step/Inc",P.selectStepInc),
 #        ("Show Results",P.postProc),
-        ("Results Dialog",open_results_dialog),
+        ("Results Dialog",open_dialog),
         ("---",None),
         ("&Reload menu",reload_menu),
         ("&Close menu",close_menu),
@@ -864,7 +834,7 @@ def reload_menu():
     """Reload the Postproc menu."""
     global DB
     close_menu()
-    DB =  pf.PF.get('__PostProcMenu_result__',None)
+    DB = pf.PF.get('PostProcMenu_result',None)
     print("Current database %s" % DB)
     import plugins
     plugins.refresh('postproc_menu')

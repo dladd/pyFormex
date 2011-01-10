@@ -48,6 +48,7 @@ input_numerical = [
 input_special = [
     I('color',colors.pyformex_pink,itemtype='color',text='Color',tooltip='An inputfield allowing to select a color. The current color is pyFormex pink.'),
     I('font','',itemtype='font'),
+    I('point',[0.,0.,0.],itemtype='point'),
     ]
 
 input_tabgroup = [
@@ -59,7 +60,6 @@ input_tabgroup = [
     ]
 
 input_data = [
-#    I('intro',"""This dialog illustrates the capabilities of the pyFormex's InputDialog class and associated InputItem widgets.""",itemtype='info'),
     T('Text',input_text),
     T('Selection',input_select),
     T('Numerical',input_numerical),
@@ -70,9 +70,6 @@ input_data = [
 input_enablers = [
     ('tabgroup/enable1',True,'tabgroup/group1','tabgroup/group2/radio'),
     ('tabgroup/enable2',True,'tabgroup/group2','tabgroup/group3','tabgroup/group1/info'),
-##     ('predef',True,'palet'),
-##     ('predef',False,'Custom Color palette'),
-##     ('showgrid',True,'linewidth'),
     ]
 
 

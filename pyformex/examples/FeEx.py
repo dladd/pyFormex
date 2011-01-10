@@ -688,7 +688,7 @@ stop
             if showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name,actions=['Cancel','OK']) == 'OK':
                 postproc_menu.selection.set(name)
                 postproc_menu.selectDB(DB)
-                postproc_menu.open_results_dialog()
+                postproc_menu.open_dialog()
     
 
 ##############################################################################
@@ -984,7 +984,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     if showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name,actions=['Cancel','OK']) == 'OK':
         postproc_menu.selection.set(name)
         postproc_menu.selectDB(DB)
-        postproc_menu.open_results_dialog()
+        postproc_menu.open_dialog()
     
 
 def autoRun(quadratic=False):

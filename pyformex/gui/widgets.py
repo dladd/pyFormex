@@ -950,15 +950,29 @@ class InputWidget(InputItem):
             self.input.setValue(val)
 
 
+class InputForm(QtGui.QVBoxLayout):
+    """An input form.
+
+    The input form is a layout box in which the items are layed out
+    vertically. The layout can also contain any number of tab widgets
+    in which items can be layed out using tab pages.
+    """
+    
+    def __init__(self):
+        QtGui.QVBoxLayout.__init__(self)
+        self.tabs = []      # list of tab widgets in this form
+        self.last = None    # last added itemtype
+
+
 class InputGroup(QtGui.QGroupBox):
-    # BV: This is unfinished work
     """A boxed group of InputItems."""
     
     def __init__(self,name,*args,**kargs):
         QtGui.QGroupBox.__init__(self,*args)
         self.key = name
         self.input = self
-        self.form = QtGui.QVBoxLayout()
+        self.tab = None
+        self.form = InputForm()
         self.setLayout(self.form)
         self.setTitle(kargs.get('text',name))
         if 'checked' in kargs:
@@ -983,6 +997,20 @@ class InputGroup(QtGui.QGroupBox):
             return self.setChecked(val)
         else:
             return None
+
+
+class InputTab(QtGui.QWidget):
+    """A tab page in an input form."""
+    
+    def __init__(self,name,tab,*args,**kargs):
+        QtGui.QWidget.__init__(self,*args)
+        self.key = name
+        self.form = InputForm()
+        self.setLayout(self.form)
+        tab.addTab(self,kargs.get('text',name))
+
+    def name(self):
+        return self.key
 
 
 def defaultItemType(item):
@@ -1097,9 +1125,9 @@ InputItem.enableItem = enableItem
 QtGui.QGroupBox.enableItem = enableItem
 QtGui.QTabWidget.enableItem = enableItem
 
-def nameGroupBox(self):
-    return self.title()
-QtGui.QGroupBox.name = nameGroupBox
+## def nameGroupBox(self):
+##     return self.title()
+## QtGui.QGroupBox.name = nameGroupBox
 ## QtGui.QTabWidget.disable = disableGroup
 
 
@@ -1195,11 +1223,8 @@ class InputDialog(QtGui.QDialog):
             self.flat = flat
             
         # create the form with the input fields
-        self.tab = None
-        self.form = QtGui.QVBoxLayout()
-        self.tabform = None
-        self.groupform = None
-        self.forms = [self.form]
+        self.tab = None  # tabwidget for all the tabs in this form
+        self.form = InputForm()
         self.add_items(items,self.form)
 
         # add the action buttons
@@ -1261,17 +1286,24 @@ class InputDialog(QtGui.QDialog):
         for item in items:
             if isinstance(item,dict):
 
-                if item.get('itemtype',None) == 'tab':
+                itemtype = item.get('itemtype',None)
+                
+                if itemtype == 'tab':
                     self.add_tab(form,prefix=prefix,**item)
 
-                elif item.get('itemtype',None) == 'group':
+                elif itemtype == 'group':
                     self.add_group(form,prefix=prefix,**item)
 
                 else:
                     self.add_input(form,prefix=prefix,**item)
 
+                form.last = itemtype
+                
             elif isinstance(item,QtGui.QWidget):
+                # this allows including widgets which are not
+                # input fields
                 form.addWidget(item)
+                form.last = None
 
             else:
                 raise ValueError,"Invalid input item (type %s). Expected a dict or a QWidget." % type(item)
@@ -1279,47 +1311,24 @@ class InputDialog(QtGui.QDialog):
 
     def add_tab(self,form,prefix,name,items,**extra):
         """Add a Tab page of input items."""
-        if self.tabform:
-            raise ValueError,"Currently you can not stack multiple levels of Tab InputItems"
-        if self.tab is None:
-            self.tab = QtGui.QTabWidget()
-            self.form.addWidget(self.tab)
+        if form.last == 'tab':
+            # Add to previous tab widget
+            tab = form.tabs[-1]
+        else:
+            # Create a new tab widget
+            tab = QtGui.QTabWidget()
+            form.addWidget(tab)
+            form.tabs.append(tab)
             
-        w = QtGui.QWidget()
-        self.tabform = QtGui.QVBoxLayout()
-        w.setLayout(self.tabform)
-        self.tab.addTab(w,extra.get('text',name))
+        w = InputTab(prefix+name,tab,**extra)
         if self.autoprefix:
             prefix += name+'/'
-        #form.append(self.tabform)
-        self.add_items(items,self.tabform,prefix=prefix)
-        #self.forms.pop()
-        self.tabform.addStretch()
-        self.tabform = None
+        self.add_items(items,w.form,prefix=prefix)
+        w.form.addStretch() # makes items in tab align to top
 
 
     def add_group(self,form,prefix,name,items,**extra):
         """Add a group of input items."""
-        if self.groupform:
-            raise ValueError,"Currently you can not stack multiple levels of Group InputItems"
-        ## w = QtGui.QGroupBox()
-        ## self.groups[prefix+name] = w
-        ## self.forms[-1].addWidget(w)
-        ## self.groupform = QtGui.QVBoxLayout()
-        ## w.setLayout(self.groupform)
-        ## w.setTitle(extra.get('text',name))
-        ## if 'checkable' in extra:
-        ##     w.setCheckable(extra['checkable'])
-        ##     w.setChecked(extra['checkable'])
-        ##     fld = inputBoll(
-        ## if 'enabled' in extra:
-        ##     w.setEnabled(extra['enabled'])
-        ## if self.autoprefix:
-        ##     prefix += name+'/'
-        ## self.forms.append(self.groupform)
-        ## self.add_items(items,self.groupform,prefix=prefix)
-        ## self.forms.pop()
-        ## self.groupform = None
         w = InputGroup(prefix+name,**extra)
         form.addWidget(w)
         if w.isCheckable:
@@ -1364,7 +1373,8 @@ class InputDialog(QtGui.QDialog):
         if len(items) > 0:
             return items[0]
         else:
-            return self.groups.get(name,None)
+            raise ValueError,"No input field named: %s" % name 
+            #return self.groups.get(name,None)
 
 
     def timeout(self):
