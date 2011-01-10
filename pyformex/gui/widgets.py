@@ -978,7 +978,10 @@ class InputGroup(QtGui.QGroupBox):
 
     def setValue(self,val):
         """Change the widget's value."""
-        return self.setChecked(val)
+        if self.isCheckable():
+            return self.setChecked(val)
+        else:
+            return None
 
 
 def defaultItemType(item):
