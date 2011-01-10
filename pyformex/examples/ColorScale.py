@@ -43,13 +43,13 @@ input_data = [
     I('maxval',12.0,text='Maximum value'),
     I('medval',0.0,text='Medium value'),
     I('minval',-6.0,text='Minimum value'),
-    I('predef',True,text='Use a predefined color palette'),
-    I('palet',text='Predefined color palette',choices=Palette.keys(),enabled=True),
-    G('Custom Color palette',[
+#    I('predef',True,text='Use a predefined color palette'),
+    I('palet',text='Predefined color palette',choices=Palette.keys()),
+    G('custom',text='Custom Color palette',items=[
         I('maxcol',[1.,0.,0.],text='Maximum color',itemtype='color'),
         I('medcol',[1.,1.,0.],text='Medium color',itemtype='color'),
         I('mincol',[1.,1.,1.],text='Minimum color',itemtype='color'),
-        ],enabled=False),
+        ],checked=False),
     I('maxexp',1.0,text='High exponent'),
     I('minexp',1.0,text='Low exponent'),
     I('ncolors',12,text='Number of colors'),
@@ -68,8 +68,8 @@ input_data = [
 
 input_enablers = [
     ('valrange','Minimum-Medium-Maximum','medval','medcol'),
-    ('predef',True,'palet'),
-    ('predef',False,'Custom Color palette'),
+    ('custom',False,'palet'),
+#    ('predef',False,'Custom Color palette'),
     ('showgrid',True,'linewidth'),
     ('autosize',False,'size'),
     ]
@@ -93,7 +93,7 @@ def show():
 #            medcol = None
         minexp = None
 
-    if not predef:
+    if custom:
         palet = map(GLColor,[mincol,medcol,maxcol])
 
     if showgrid:
@@ -154,7 +154,7 @@ if __name__ == 'draw':
         pass
 
     # Create the modeless dialog widget
-    dialog = widgets.InputDialog(input_data,enablers=input_enablers,caption='ColorScale Dialog',actions = [('Close',close),('Show',show)],default='Show',autoprefix=True)
+    dialog = widgets.InputDialog(input_data,enablers=input_enablers,caption='ColorScale Dialog',actions = [('Close',close),('Show',show)],default='Show')
 
     # Examples style requires a timeout action
     dialog.timeout = timeOut

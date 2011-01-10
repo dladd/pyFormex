@@ -957,12 +957,13 @@ class InputGroup(QtGui.QGroupBox):
     def __init__(self,name,*args,**kargs):
         QtGui.QGroupBox.__init__(self,*args)
         self.key = name
+        self.input = self
         self.form = QtGui.QVBoxLayout()
         self.setLayout(self.form)
         self.setTitle(kargs.get('text',name))
-        if 'checkable' in kargs:
-            self.setCheckable(kargs['checkable'])
-            self.setChecked(kargs['checkable'])
+        if 'checked' in kargs:
+            self.setCheckable(True)
+            self.setChecked(kargs['checked'])
         if 'enabled' in kargs:
             self.setEnabled(kargs['enabled'])
 
@@ -1237,7 +1238,10 @@ class InputDialog(QtGui.QDialog):
                             signal = QtCore.SIGNAL("buttonClicked(int)")
                         elif isinstance(src,InputCombo):
                             signal = QtCore.SIGNAL("currentIndexChanged(int)")
- 
+                        elif isinstance(src,InputGroup):
+                            signal = QtCore.SIGNAL("clicked(bool)")
+                        else:
+                            raise ValueError,"Can not enable from a %s input field" % type(src.input)
 
                         if signal:
                             init_signals.append((src.input,signal))

@@ -32,6 +32,7 @@ techniques = ['dialog']
 import simple
 from gui import widgets
 
+
 def cone(r0,r1,h,t=360.,nr=1,nt=24,diag=None):
     """Constructs a Formex which is (a sector of) a
     circle / (truncated) cone / cylinder.
@@ -114,9 +115,13 @@ nr=2    # number of elements along height
 nt=12   # number of elements along circumference
 diag=''
 
-items = [ [n,globals()[n]] for n in ['r0','r1','h','t', 'nr','nt','diag'] ]
-items[-1].extend(['radio',['','u','d']])
-dialog = widgets.OldInputDialog(items)
+items = [
+    widgets.simpleInputItem(n,globals()[n])
+    for n in ['r0','r1','h','t', 'nr','nt']
+    ] + [
+    widgets.simpleInputItem('diag',diag,itemtype='radio',choices=['','u','d'])
+    ]
+dialog = widgets.InputDialog(items)
 
 
 while not dialog.result() == widgets.TIMEOUT:
@@ -134,6 +139,6 @@ while not dialog.result() == widgets.TIMEOUT:
     draw(H)
     exit()
     
-exit()
+#exit()
 
 # End
