@@ -447,6 +447,7 @@ def updateCanvas():
 
 def updateStyle():
     pf.GUI.setAppearence()
+ 
 
 def updateToolbars():
     pf.GUI.updateToolBars()

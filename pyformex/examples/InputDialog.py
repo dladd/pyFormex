@@ -47,6 +47,7 @@ input_numerical = [
 
 input_special = [
     I('color',colors.pyformex_pink,itemtype='color',text='Color',tooltip='An inputfield allowing to select a color. The current color is pyFormex pink.'),
+    I('font','',itemtype='font'),
     ]
 
 input_tabgroup = [

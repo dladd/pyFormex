@@ -909,7 +909,7 @@ class InputFont(InputItem):
         font = selectFont()
         if font:
             self.setValue(font.toString())
-            pf.GUI.setFont(font)
+            #pf.GUI.setFont(font)
     
 
 class InputWidget(InputItem):
@@ -1231,13 +1231,13 @@ class InputDialog(QtGui.QDialog):
 
         # add the enablers
         for en in enablers:
-            print "Enabler %s " % str(en)
+            #print "Enabler %s " % str(en)
             src = self[en[0]]
             if src:
                 val = en[1]
                 for t in en[2:]:
                     tgt = self[t]
-                    print "%s" % (tgt)
+                    #print "%s" % (tgt)
                     if tgt:
                         tgt.enabled_by = (src,val)
                         signal = None
@@ -1256,7 +1256,7 @@ class InputDialog(QtGui.QDialog):
                             # emit the signal to adjust initial state
                             src.input.emit(QtCore.SIGNAL(signal),0)
 
-                        print "ENABLER %s, %s" % (src.__class__.__name__,signal) 
+                        #print "ENABLER %s, %s" % (src.__class__.__name__,signal) 
 
                         if signal:
                             src.connect(src.input,QtCore.SIGNAL(signal),tgt.enableItem)
@@ -1642,7 +1642,7 @@ def updateDialogItems(data,newdata):
     warnings.warn("warn_widgets_updatedialogitems")
     if newdata:
         for d in data:
-            print d
+            #print d
             if d.get('itemtype',None) in [ 'group', 'tab' ]:
                 updateDialogItems(d['items'],newdata)
             else:
