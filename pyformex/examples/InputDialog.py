@@ -51,18 +51,11 @@ input_special = [
     ]
 
 input_tabgroup = [
+    I('enable1',False,text='Enable group 1'),
     G('group1',input_text,text='Text input group'),
+    I('enable2',False,text='Enable group 2'),
     G('group2',input_select,text='Select input group'),
-##     ## G('group3',[
-##     T('tab1',input_special),
-##     T('tab2',input_special),
-##     T('tab3',input_special),
-##     ##     ]),
-##     ## G('group4',[
-##     ##     T('tab4',input_special),
-##     ##     T('tab5',input_special),
-##     ##     T('tab6',input_special),
-##     ##     ]),
+    G('group3',input_special,text='Special input group',checkable=True,checked=True),
     ]
 
 input_data = [
@@ -71,11 +64,12 @@ input_data = [
     T('Selection',input_select),
     T('Numerical',input_numerical),
     T('Special',input_special),
-    T('TabGroup',input_tabgroup,text='Tabs and Groups'),
+    T('tabgroup',input_tabgroup,text='Tabs and Groups'),
     ]
 
 input_enablers = [
-    ('TabGroup/group2/bool',True,'TabGroup/group1','TabGroup/group2/radio'),
+    ('tabgroup/enable1',True,'tabgroup/group1','tabgroup/group2/radio'),
+    ('tabgroup/enable2',True,'tabgroup/group2','tabgroup/group3','tabgroup/group1/info'),
 ##     ('predef',True,'palet'),
 ##     ('predef',False,'Custom Color palette'),
 ##     ('showgrid',True,'linewidth'),

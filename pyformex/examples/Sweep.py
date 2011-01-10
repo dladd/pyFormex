@@ -69,14 +69,6 @@ cross_sections_3d = {
     }
 
 
-sweep_data = [
-    I('cross_section','cross','select',text='Shape of cross section',choices=cross_sections_2d.keys()+cross_sections_3d.keys()),
-    I('cross_rotate',0.,text='Cross section rotation angle before sweeping'),
-    I('cross_upvector','2',text='Cross section vector that keeps its orientation'),
-    I('cross_scale',0.,text='Cross section scaling factor'),
-    ]
-
-
 input_data = [
     I('nmod',100,text='Number of cells along spiral'),
     I('turns',2.5,text='Number of 360 degree turns'),
@@ -85,12 +77,15 @@ input_data = [
     I('spiral3d',0.0,text='Out of plane factor'),
     I('spread',False,text='Spread points evenly along spiral'),
     I('nwires',1,text='Number of spirals'),
-    I('sweep',False,text='Sweep a cross section along the spiral'),
-    G('Sweep Data',sweep_data,enabled=False),
+    G('sweep',text='Sweep Data',checkable=True,items= [
+        I('cross_section','cross','select',text='Shape of cross section',choices=cross_sections_2d.keys()+cross_sections_3d.keys()),
+        I('cross_rotate',0.,text='Cross section rotation angle before sweeping'),
+        I('cross_upvector','2',text='Cross section vector that keeps its orientation'),
+        I('cross_scale',0.,text='Cross section scaling factor'),
+        ]),
     I('flyalong',False,text='Fly along the spiral'),
    ]
 
-input_enablers = [('sweep',True,'Sweep Data')]
 
 def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:0):
     """Perform a spiral transformation on a coordinate array"""
@@ -157,8 +152,8 @@ def show():
     """Accept the data and draw according to them"""
     clear()
     dialog.acceptData()
-    res = dialog.results
-    globals().update(res)
+    #print dialog.results
+    globals().update(dialog.results)
 
     PL = createSpiralCurve(turns,nmod)
     drawSpiralCurves(PL,nwires,red,blue)
@@ -227,7 +222,7 @@ if __name__ == 'draw':
 
 
     # Create the modeless dialog widget
-    dialog = widgets.InputDialog(input_data,enablers=input_enablers,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
+    dialog = widgets.InputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
 
     # Examples style requires a timeout action
     dialog.timeout = timeOut

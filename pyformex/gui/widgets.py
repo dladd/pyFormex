@@ -950,50 +950,35 @@ class InputWidget(InputItem):
             self.input.setValue(val)
 
 
-class InputGroup(InputItem):
+class InputGroup(QtGui.QGroupBox):
     # BV: This is unfinished work
     """A boxed group of InputItems."""
     
-    def __init__(self,name,items,*args,**kargs):
-        if default is None:
-            default = choices[0]
-        elif default not in choices:
-            choices[0:0] = [ default ]
-        self.input = QtGui.QGroupBox()
-        InputItem.__init__(self,name,*args,**kargs)
-        if direction == 'v':
-            self.hbox = QtGui.QVBoxLayout()
-            self.hbox.setContentsMargins(0,10,0,10)
-        else:
-            self.hbox = QtGui.QHBoxLayout()
-            self.hbox.setContentsMargins(10,0,10,0)
-        self.rb = []
-        self.hbox.addStretch(1)
-        
-        for v in choices:
-            rb = QtGui.QRadioButton(v)
-            self.hbox.addWidget(rb)
-            self.rb.append(rb)
+    def __init__(self,name,*args,**kargs):
+        QtGui.QGroupBox.__init__(self,*args)
+        self.key = name
+        self.form = QtGui.QVBoxLayout()
+        self.setLayout(self.form)
+        self.setTitle(kargs.get('text',name))
+        if 'checkable' in kargs:
+            self.setCheckable(kargs['checkable'])
+            self.setChecked(kargs['checkable'])
+        if 'enabled' in kargs:
+            self.setEnabled(kargs['enabled'])
 
-        self.rb[choices.index(default)].setChecked(True)
-        self.input.setLayout(self.hbox)
-        self.layout().insertWidget(1,self.input)
+    def name(self):
+        return self.key
 
     def value(self):
         """Return the widget's value."""
-        for rb in self.rb:
-            if rb.isChecked():
-                return str(rb.text())
-        return ''
+        if self.isCheckable():
+            return self.isChecked()
+        else:
+            return None
 
     def setValue(self,val):
         """Change the widget's value."""
-        val = str(val)
-        for rb in self.rb:
-            if rb.text() == val:
-                rb.setChecked(True)
-                break
-
+        return self.setChecked(val)
 
 
 def defaultItemType(item):
@@ -1230,6 +1215,7 @@ class InputDialog(QtGui.QDialog):
 
 
         # add the enablers
+        init_signals = []
         for en in enablers:
             #print "Enabler %s " % str(en)
             src = self[en[0]]
@@ -1242,24 +1228,21 @@ class InputDialog(QtGui.QDialog):
                         tgt.enabled_by = (src,val)
                         signal = None
                         if isinstance(src,InputBool):
-                            signal = "stateChanged(int)"
-                            # emit the signal to adjust initial state
-                            src.input.emit(QtCore.SIGNAL(signal),0)
+                            signal = QtCore.SIGNAL("stateChanged(int)")
                         elif isinstance(src,InputRadio):
                             # BV: this does not work
-                            signal = "buttonClicked(int)"
-                            # emit the signal to adjust initial state
-                            src.input.emit(QtCore.SIGNAL(signal),0)
+                            signal = QtCore.SIGNAL("buttonClicked(int)")
                         elif isinstance(src,InputCombo):
-                            signal = "currentIndexChanged(int)"
-                            #print src,src.input,signal
-                            # emit the signal to adjust initial state
-                            src.input.emit(QtCore.SIGNAL(signal),0)
-
-                        #print "ENABLER %s, %s" % (src.__class__.__name__,signal) 
+                            signal = QtCore.SIGNAL("currentIndexChanged(int)")
+ 
 
                         if signal:
-                            src.connect(src.input,QtCore.SIGNAL(signal),tgt.enableItem)
+                            init_signals.append((src.input,signal))
+                            src.connect(src.input,signal,tgt.enableItem)
+                            
+        # emit the signal to adjust initial state
+        for src,signal in init_signals:
+            src.emit(signal,0)
 
 
     def add_items(self,items,form,prefix=''):
@@ -1269,23 +1252,16 @@ class InputDialog(QtGui.QDialog):
         layout is the widget layout where the input widgets will be added
         """
         for item in items:
-            #print item
-            #print type(item)
             if isinstance(item,dict):
-                ## if self.prefix:
-                ##     #
-                ##     # BV: THIS IS NOT SOUND, BECAUSE IT CHANGES THE DATA!
-                ##     #
-                ##     item['name'] = self.prefix + item['name']
 
                 if item.get('itemtype',None) == 'tab':
-                    self.add_tab(prefix=prefix,**item)
+                    self.add_tab(form,prefix=prefix,**item)
 
                 elif item.get('itemtype',None) == 'group':
-                    self.add_group(prefix=prefix,**item)
+                    self.add_group(form,prefix=prefix,**item)
 
                 else:
-                    self.add_input(prefix=prefix,**item)
+                    self.add_input(form,prefix=prefix,**item)
 
             elif isinstance(item,QtGui.QWidget):
                 form.addWidget(item)
@@ -1294,7 +1270,7 @@ class InputDialog(QtGui.QDialog):
                 raise ValueError,"Invalid input item (type %s). Expected a dict or a QWidget." % type(item)
 
 
-    def add_tab(self,prefix,name,items,**extra):
+    def add_tab(self,form,prefix,name,items,**extra):
         """Add a Tab page of input items."""
         if self.tabform:
             raise ValueError,"Currently you can not stack multiple levels of Tab InputItems"
@@ -1308,38 +1284,47 @@ class InputDialog(QtGui.QDialog):
         self.tab.addTab(w,extra.get('text',name))
         if self.autoprefix:
             prefix += name+'/'
-        self.forms.append(self.tabform)
+        #form.append(self.tabform)
         self.add_items(items,self.tabform,prefix=prefix)
-        self.forms.pop()
+        #self.forms.pop()
         self.tabform.addStretch()
         self.tabform = None
 
 
-    def add_group(self,prefix,name,items,**extra):
+    def add_group(self,form,prefix,name,items,**extra):
         """Add a group of input items."""
         if self.groupform:
             raise ValueError,"Currently you can not stack multiple levels of Group InputItems"
-        w = QtGui.QGroupBox()
-        self.groups[prefix+name] = w
-        self.forms[-1].addWidget(w)
-        self.groupform = QtGui.QVBoxLayout()
-        w.setLayout(self.groupform)
-        w.setTitle(extra.get('text',name))
-        if 'checkable' in extra:
-            w.setCheckable(extra['checkable'])
-            w.setChecked(extra['checkable'])
-        if 'enabled' in extra:
-            w.setEnabled(extra['enabled'])
+        ## w = QtGui.QGroupBox()
+        ## self.groups[prefix+name] = w
+        ## self.forms[-1].addWidget(w)
+        ## self.groupform = QtGui.QVBoxLayout()
+        ## w.setLayout(self.groupform)
+        ## w.setTitle(extra.get('text',name))
+        ## if 'checkable' in extra:
+        ##     w.setCheckable(extra['checkable'])
+        ##     w.setChecked(extra['checkable'])
+        ##     fld = inputBoll(
+        ## if 'enabled' in extra:
+        ##     w.setEnabled(extra['enabled'])
+        ## if self.autoprefix:
+        ##     prefix += name+'/'
+        ## self.forms.append(self.groupform)
+        ## self.add_items(items,self.groupform,prefix=prefix)
+        ## self.forms.pop()
+        ## self.groupform = None
+        w = InputGroup(prefix+name,**extra)
+        form.addWidget(w)
+        if w.isCheckable:
+            self.fields.append(w)
+
         if self.autoprefix:
             prefix += name+'/'
-        self.forms.append(self.groupform)
-        self.add_items(items,self.groupform,prefix=prefix)
-        self.forms.pop()
-        self.groupform = None
+        self.add_items(items,w.form,prefix=prefix)
 
                 
-    def add_input(self,prefix,**item):
-        """Add a single input item."""
+    def add_input(self,form,prefix,**item):
+        """Add a single input item to the form."""
         item['name'] = prefix + item.get('name',self.autoname.next())
         if not 'value' in item:
             # no value: try to find one
@@ -1363,7 +1348,7 @@ class InputDialog(QtGui.QDialog):
 
         field = inputAny(**item)
         self.fields.append(field)
-        self.forms[-1].addWidget(field)
+        form.addWidget(field)
     
 
     def __getitem__(self,name):
