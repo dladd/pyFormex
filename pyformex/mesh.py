@@ -590,7 +590,7 @@ class Mesh(Geometry):
         """
         
         if iter==0: return val
-        nadjn=self.node2nodeAdjacency()
+        nadjn=self.getEdges().adjacency(kind='n')
         nadjn=[x[x>=0] for x in nadjn]
         lnadjn=[len(i) for i in nadjn]
         lmax= max( lnadjn )
