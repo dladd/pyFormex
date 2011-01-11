@@ -214,7 +214,7 @@ class Mesh(Geometry):
         the Mesh. Node property numbers however can not be translated to
         the Formex data model.
         """
-        return Formex(self.coords[self.elems],self.prop,self.eltype)
+        return Formex(self.coords[self.elems],self.prop,self.eltype.name())
 
     
     def ndim(self):
