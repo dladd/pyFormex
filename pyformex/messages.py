@@ -38,22 +38,6 @@ def getMessage(msg):
     return globals().get(msg,msg)
 
 
-warn_askitems_changed = """.. warn_askitems_changed
-
-askItems
---------
-The default operation of askItems has changed!
-It will now by default try to convert the items to use the new InputDialog.
-
-The old InputDialog will still be available for some time by using the
-'legacy = True' argument, but we advice you to switch to the newer InputItem
-format as soon as possible.
-
-Using 'legacy = False' will force the use of the new format.
-
-The default 'legacy=None' tries to convert old data when they are found and
-when they are convertible.
-"""
 
 warn_drawaxes_changed = "The syntax of drawAxes has changed. The use of the 'pos' argument is deprecated. Use an appropriate CoordinateSystem instead."
 
@@ -80,13 +64,6 @@ Please use a dictionary format with itemtype='group' or itemtype='tag',
 or use the functions widgets.tabInputItem or widgets.groupInputItem
 """
 
-warn_old_input_dialog = """
-InputDialog
------------
-The default InputDialog has changed! See the related help item for more info.
-For some time, you will be able to use OldInputDialog to get the old behavior.
-We advise you however to convert your program to using the new InputDialog.
-"""
 
 warn_old_table_dialog = "The use of OldTableDialog is deprecated. Please use a combination of the Dialog, Tabs and Table widgets."
 

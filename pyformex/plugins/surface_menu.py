@@ -553,7 +553,7 @@ def showStatisticsDialog():
         
     dispmodes = ['On Domain','Histogram','Cumulative Histogram']
     keys = SelectableStatsValues.keys()
-    _stat_dia = widgets.NewInputDialog(
+    _stat_dia = widgets.InputDialog(
         caption='Surface Statistics',items=[
             I('Value',itemtype='vradio',choices=keys),
             I('neighbours',text='Curvature Neighbourhood',value=1),

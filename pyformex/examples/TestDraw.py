@@ -136,7 +136,7 @@ def timeOut():
     close()
 
 # Create the non-modal dialog widget and show it
-dialog = widgets.NewInputDialog(items,caption='Drawing parameters',actions = [('Close',close),('Show',show)],default='Show')
+dialog = widgets.InputDialog(items,caption='Drawing parameters',actions = [('Close',close),('Show',show)],default='Show')
 dialog.timeout = timeOut
 dialog.show()
         

@@ -337,7 +337,7 @@ def edit_point(pt):
         res = dia.results
         return [ res[i] for i in 'xyz' ]
         
-    dia = widgets.NewInputDialog(
+    dia = widgets.InputDialog(
         items = [I(x=x,y=y,z=z),]
         )
     dia.show()

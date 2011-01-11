@@ -116,6 +116,9 @@ Release 0.9
       
 Release 0.9.1
 -------------
+
+**Remove the old InputDialog**
+
 **Fix all docstrings for the sphinx system**
 
 **Finish the tutorial and user guide**

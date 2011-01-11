@@ -84,7 +84,7 @@ def setBgColor2():
     itemlist = [C('top',color,'color',{'text':'Top background color'}),
                 C('bottom',color2,'color',{'text':'Bottom background color'}),
                 ]
-    _the_dialog = widgets.NewInputDialog(itemlist,'Config Dialog')
+    _the_dialog = widgets.InputDialog(itemlist,'Config Dialog')
     res = _the_dialog.getResult()
     pf.debug(res)
     if res:
@@ -114,7 +114,7 @@ def setLineWidth():
     """Change the default line width."""
     lw = pf.canvas.settings.linewidth
     itemlist = [C('Line Width', lw, 'float')]
-    res = widgets.NewInputDialog(itemlist,'Choose default line width').getResult()
+    res = widgets.InputDialog(itemlist,'Choose default line width').getResult()
     if res:
         pf.canvas.setLineWidth(res['Line Width'])
 
@@ -122,7 +122,7 @@ def setLineWidth():
 def setCanvasSize():
     """Save the current viewport size"""
     itemlist = [I('w',pf.canvas.width()),I('h',pf.canvas.height())]
-    res = widgets.NewInputDialog(itemlist,'Set Canvas Size').getResult()
+    res = widgets.InputDialog(itemlist,'Set Canvas Size').getResult()
     if res:
         pf.canvas.resize(int(res['w']),int(res['h']))
 
@@ -142,7 +142,7 @@ def viewportSettings():
                 I('slcolor', s.slcolor, itemtype='color'),
                 I('Store these settings as defaults', False),
                 ]
-    res = widgets.NewInputDialog(itemlist,'Config Dialog').getResult()
+    res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
     if res:
         pf.debug(res)
         pf.canvas.setRenderMode(res['rendermode'])
@@ -165,7 +165,7 @@ def viewportLayout():
                 C('Viewport layout direction',current,'select',{'choices':directions}),
                 C('Number of viewports per row/column',pf.GUI.viewports.ncols),
                 ]
-    res = widgets.NewInputDialog(itemlist,'Config Dialog').getResult()
+    res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
     if res:
         pf.debug(res)
         nvps = res['Number of viewports']
@@ -194,7 +194,7 @@ def canvasSettings():
         pf.canvas.camera.setClip(10**v*dist,10.*dist)
         pf.canvas.update()
         
-    dia = widgets.NewInputDialog(
+    dia = widgets.InputDialog(
         caption='Canvas Settings',
         items=[
             C('near',-1.0,'slider',{'min':-100,'max':100,'scale':0.01,'func': set_near_clip,'text':'Near clipping plane'}),
@@ -212,7 +212,7 @@ def openglSettings():
     def close():
         dia.close()
         
-    dia = widgets.NewInputDialog(
+    dia = widgets.InputDialog(
         caption='OpenGL Settings',
         items=[
             C('Line Smoothing','Off','radio',{'choices':['On','Off']}),

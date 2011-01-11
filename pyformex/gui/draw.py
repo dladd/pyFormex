@@ -186,7 +186,7 @@ ask for help on the pyFormex forums.
 _dialog_widget = None
 _dialog_result = None
 
-def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
+def askItems(items,caption=None,timeout=None,**kargs):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -195,7 +195,7 @@ def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
     available input items.
 
     Two InputDialog classes are defined in gui.widgets.
-    The OldInputDialog class is deprecated in favor of NewInputDialog, which
+    The OldInputDialog class is deprecated in favor of InputDialog, which
     has become the default as of pyFormex 0.8.3.
     The two classes differ in how the input is specified.
     In the new format, each input item is either a simpleInputItem, a
@@ -220,22 +220,11 @@ def askItems(items,caption=None,timeout=None,legacy=None,**kargs):
     Sets the dialog timeout and accepted status in global variables.
     """
     global _dialog_widget,_dialog_result
-    if legacy is None:
-        # check for new style items
-        newitems = [ isinstance(i,dict) for i in items ]
-        newitems = sum(newitems) == len(newitems)
-        if newitems:
-            legacy = False
-        else:
-            import warnings
-            warnings.warn('warn_askitems_changed')
-            items = widgets.convertInputItemList(items)
-            legacy = False
-
-    if legacy:
-        w = widgets.OldInputDialog(items,caption,**kargs)
-    else:
-        w = widgets.NewInputDialog(items,caption,**kargs)
+    if 'legacy' in kargs:
+        warnings.warn("The use of the 'legacy' argument in askitems is deprecated.")
+    # convert items, allows for sloppy style
+    items = [ widgets.convertInputItem(i) for i in items ]
+    w = widgets.InputDialog(items,caption,**kargs)
         
     _dialog_widget = w
     _dialog_result = None

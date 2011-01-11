@@ -74,10 +74,6 @@ from plugins.curve import *
 
 ##############################################################################
 
-#
-#  !!!!!!!!!!! THIS IS WORK I PROGRESS ! DO NOT USE !!!!!!!!!!!!!!!!!!
-#
-#
 
 def rollCurvePoints(curve,n=1):
     """Roll the points of a closed curve.
@@ -313,9 +309,7 @@ res = askItems([
     I('align',False),
     I('aligndir',1),
     I('alignmax',True),
-    ],
-               #actions=[('HELP',showDescription),('CANCEL',),('OK',)],
-               legacy=False)
+    ])
 
 if not res:
     exit()

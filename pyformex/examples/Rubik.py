@@ -243,7 +243,7 @@ def timeOut():
     shuffle()
     close()
 
-dia = widgets.NewInputDialog(
+dia = widgets.InputDialog(
     caption='Cube',
     items=[
         I('n', 3,  text='Number of elements on a row', itemtype='slider', min=2, max=10, ticks=1),

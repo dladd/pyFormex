@@ -43,6 +43,7 @@ input_numerical = [
     I('boundedf',23.7,text='a bounded float',min=23.5,max=23.9,tooltip='A bounded float input field. This value is e.g. bounded to the interval [23.5,23.9]'),
     I('slider',3,text='a integer slider',min=0,max=10,itemtype='slider',tooltip='An integer input field accompanied by a slider to set the value.'),
     I('fslider',23.7,text='a float slider',min=23.5,max=23.9,itemtype='fslider',tooltip='A float input field accompanied by a slider to set the value.'),
+    I('ivector',[640,400],text='an integer vector',tooltip='An integer vector input field'),
     ]
 
 input_special = [

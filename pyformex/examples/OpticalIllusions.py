@@ -531,7 +531,7 @@ def openDialog():
         I('Explain',Explain,text='Show explanation'),
         ]
 
-    dialog = widgets.NewInputDialog(
+    dialog = widgets.InputDialog(
         data_items,
         caption='Optical illusions',
         actions = [('Done',close),

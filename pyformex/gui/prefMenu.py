@@ -147,7 +147,7 @@ def settings():
         I('mail/server',pf.cfg.get('mail/server','localhost'),text="Outgoing mail server")
         ]
 
-    dia = widgets.NewInputDialog(
+    dia = widgets.InputDialog(
         caption='pyFormex Settings',
         store=pf.cfg,
         items=[
@@ -207,7 +207,7 @@ def askConfigPreferences(items,prefix=None,store=None):
     itemlist = [ I(i,store[i]) for i in items ] + [
         I('_save_',True,text='Save changes')
         ]
-    res = widgets.NewInputDialog(itemlist,'Config Dialog',pf.GUI).getResult()
+    res = widgets.InputDialog(itemlist,'Config Dialog',pf.GUI).getResult()
     pf.debug(res)
     if res and store==pf.cfg:
         updateSettings(res)
@@ -271,9 +271,11 @@ def createLightDialogItems(light=0):
     #print "DICT %s" % dir(pf.canvas.lights.lights[light])
     
     items = [
-        { 'name': 'enabled','text':'enabled' } ] + [
-        I(name=k,text=k,itemtype='slider',min=0,max=100,scale=0.01,func=set_light_value,data=light)  for k in [ 'ambient', 'diffuse',  'specular' ] ] + [
-        {'name': 'position','text':'position'}
+        I('enabled',False),
+        ] + [
+        I(k,val[k],itemtype='slider',min=0,max=100,scale=0.01,func=set_light_value,data=light)  for k in [ 'ambient', 'diffuse',  'specular' ]
+        ] + [
+        I('position',val['position']),
         ]
     return items
 
@@ -287,8 +289,8 @@ def showLighting():
 
 def setLighting():
     mat_items = [
-        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value} for a in [ 'ambient', 'specular', 'emission'] ] + [
-        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':128,'scale':1.,'func':set_mat_value} for a in ['shininess'] ]
+        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'specular', 'emission'] ] + [
+        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':128,'scale':1.,'func':set_mat_value } for a in ['shininess'] ]
 
     enabled = [ pf.cfg['render/light%s'%light] is not None and pf.cfg['render/light%s'%light]['enabled']  for light in range(8) ]
     pf.debug("ENABLED LIGHTS")
@@ -298,7 +300,12 @@ def setLighting():
     choices = pf.canvas.light_model.keys()
     # DO NOT ALLOW THE LIGHT MODEL TO BE CHANGED
     choices = [ 'ambient and diffuse' ]
-    items = [ {'name':'lightmodel','value':pf.canvas.lightmodel,'choices':choices,'tooltip':"""The light model defines which light components are set by the color setting functions. The default light model is 'ambient and diffuse'. The other modes are experimentally. Use them only if you know what you are doing."""}, ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
+    items = [
+        {'name':'lightmodel','value':pf.canvas.lightmodel,'choices':choices,'tooltip':"""The light model defines which light components are set by the color setting functions. The default light model is 'ambient and diffuse'. The other modes are experimentally. Use them only if you know what you are doing."""},
+        G('material',mat_items)
+        ] + [
+        T('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]
+        ]
     #print items
 
     dia = None
@@ -329,7 +336,7 @@ def setLighting():
         dia.close()
         
     def createDialog():  
-        dia = widgets.NewInputDialog(
+        dia = widgets.InputDialog(
             caption='pyFormex Settings',
             store=pf.cfg,
             items=items,
@@ -402,7 +409,7 @@ def createScriptDirsDialog():
     from scriptMenu import reloadScriptMenu
     scr = pf.cfg['scriptdirs']
     _table = widgets.Table(scr,chead=['Label','Path'])
-    _dia = widgets.Dialog(
+    _dia = widgets.GenericDialog(
         widgets=[_table],
         title='Script paths',
         actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadScriptMenu),('Save',saveTable),('OK',)],

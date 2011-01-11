@@ -77,7 +77,7 @@ input_data = [
     I('spiral3d',0.0,text='Out of plane factor'),
     I('spread',False,text='Spread points evenly along spiral'),
     I('nwires',1,text='Number of spirals'),
-    G('sweep',text='Sweep Data',checkable=True,items= [
+    G('sweep',text='Sweep Data',checked=True,items= [
         I('cross_section','cross','select',text='Shape of cross section',choices=cross_sections_2d.keys()+cross_sections_3d.keys()),
         I('cross_rotate',0.,text='Cross section rotation angle before sweeping'),
         I('cross_upvector','2',text='Cross section vector that keeps its orientation'),
@@ -215,7 +215,7 @@ if __name__ == 'draw':
     # Update the data items from saved values
     try:
         saved_data = pf.PF.get('Sweep_data',{})
-        print saved_data
+        #print saved_data
         widgets.updateDialogItems(input_data,pf.PF.get('Sweep_data',{}))
     except:
         raise

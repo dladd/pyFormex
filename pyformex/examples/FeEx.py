@@ -109,12 +109,13 @@ def createRectPart(res=None):
         else:
             return
     if res is None:
-        res = askItems([I('x0',x0,tooltip='The x-value of one of the corners'),
-                        I('y0',y0),
-                        I('x2',x2),I('y2',y2),
-                        I('nx',nx),I('ny',ny),
-                        I('eltype',eltype,itemtype='radio',choices=['quad','tri-u','tri-d']),
-                        ],legacy=False)
+        res = askItems([
+            I('x0',x0,tooltip='The x-value of one of the corners'),
+            I('y0',y0),
+            I('x2',x2),I('y2',y2),
+            I('nx',nx),I('ny',ny),
+            I('eltype',eltype,itemtype='radio',choices=['quad','tri-u','tri-d']),
+            ])
     if res:
         globals().update(res)
         if x0 > x2:
