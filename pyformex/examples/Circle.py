@@ -78,10 +78,11 @@ draw(F)
 
 # And now something more fancy: connect 1 out of 15 points of the circles
 
-res = askItems([['Connect circles',True],
-                ['Create Triangles',True],
-                ['Fly Through',True],
-                ])
+res = askItems([
+    ('Connect circles',True),
+    ('Create Triangles',True),
+    ('Fly Through',True),
+    ])
 
 if res:
 

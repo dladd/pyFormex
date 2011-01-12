@@ -1458,10 +1458,14 @@ def removeHighlights():
 selection_filters = [ 'none', 'single', 'closest', 'connected' ]
 
 
-def set_selection_filter(i):
-    """Set the selection filter mode"""
-    if i in range(len(selection_filters)):
-        pf.canvas.start_selection(None,selection_filters[i])
+def set_selection_filter(s):
+    """Set the selection filter mode
+
+    s is one of the strings in selection_filters
+    """
+    s = str(s)
+    if s in selection_filters:
+        pf.canvas.start_selection(None,s)
 
     
 def pick(mode='actor',filtr=None,oneshot=False,func=None):
@@ -1483,10 +1487,9 @@ def pick(mode='actor',filtr=None,oneshot=False,func=None):
         filters = selection_filters
     else:
         filters = selection_filters[:3]
-    filter_combo = widgets.ComboBox('Filter:',filters,set_selection_filter)
+    filter_combo = widgets.InputCombo('Filter:',None,choices=filters,onselect=set_selection_filter)
     if filtr is not None and filtr in selection_filters:
-        i = selection_filters.index(filtr)
-        filter_combo.setIndex(i)
+        filter_combo.setValue(filtr)
     
     if func is None:
         func = highlight_funcs.get(mode,None)
@@ -1540,10 +1543,11 @@ LineDrawing = None
 edit_modes = ['undo', 'clear','close']
 
 
-def set_edit_mode(i):
+def set_edit_mode(s):
     """Set the drawing edit mode."""
-    if i in range(len(edit_modes)):
-        pf.canvas.edit_drawing(edit_modes[i])
+    s = str(s)
+    if s in edit_modes:
+        pf.canvas.edit_drawing(s)
 
 
 def drawLinesInter(mode ='line',single=False,func=None):
@@ -1563,7 +1567,7 @@ def drawLinesInter(mode ='line',single=False,func=None):
         func = showLineDrawing
     drawing_buttons = widgets.ButtonBox('Drawing:',[('Cancel',pf.canvas.cancel_drawing),('OK',pf.canvas.accept_drawing)])
     pf.GUI.statusbar.addWidget(drawing_buttons)
-    edit_combo = widgets.ComboBox('Edit:',edit_modes,set_edit_mode)
+    edit_combo = widgets.InputCombo('Edit:',None,choices=edit_modes,onselect=set_edit_mode)
     pf.GUI.statusbar.addWidget(edit_combo)
     lines = pf.canvas.drawLinesInter(mode,single,func)
     pf.GUI.statusbar.removeWidget(drawing_buttons)

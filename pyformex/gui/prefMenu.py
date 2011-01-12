@@ -261,7 +261,7 @@ def set_light_value(field):
     draw.set_light_value(light,key,val)
     
 
-def createLightDialogItems(light=0):
+def createLightDialogItems(light=0,enabled=True):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     tgt = 'render/light%s'%light
     val = pf.cfg[tgt]
@@ -271,7 +271,7 @@ def createLightDialogItems(light=0):
     #print "DICT %s" % dir(pf.canvas.lights.lights[light])
     
     items = [
-        I('enabled',False),
+        I('enabled',enabled),
         ] + [
         I(k,val[k],itemtype='slider',min=0,max=100,scale=0.01,func=set_light_value,data=light)  for k in [ 'ambient', 'diffuse',  'specular' ]
         ] + [
@@ -288,6 +288,7 @@ def showLighting():
 
 
 def setLighting():
+    #nlights = pf.cfg['render/nlights']
     mat_items = [
         {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'specular', 'emission'] ] + [
         {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':128,'scale':1.,'func':set_mat_value } for a in ['shininess'] ]
@@ -295,19 +296,19 @@ def setLighting():
     enabled = [ pf.cfg['render/light%s'%light] is not None and pf.cfg['render/light%s'%light]['enabled']  for light in range(8) ]
     pf.debug("ENABLED LIGHTS")
 
-    #items = [ ('material',mat_items) ] + [ ('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]]
-
     choices = pf.canvas.light_model.keys()
     # DO NOT ALLOW THE LIGHT MODEL TO BE CHANGED
     choices = [ 'ambient and diffuse' ]
     items = [
         {'name':'lightmodel','value':pf.canvas.lightmodel,'choices':choices,'tooltip':"""The light model defines which light components are set by the color setting functions. The default light model is 'ambient and diffuse'. The other modes are experimentally. Use them only if you know what you are doing."""},
-        G('material',mat_items)
+        G('material',mat_items),
+#        I('nlights',4,text='Number of lights'),
         ] + [
-        T('light%s'%light, createLightDialogItems(light)) for light in range(8) if enabled[light]
+        T('light%s'%light, createLightDialogItems(light,True)) for light in range(8) if enabled[light]
         ]
-    #print items
 
+#    enablers = [
+#        ('
     dia = None
     
     def close():
@@ -317,15 +318,16 @@ def setLighting():
         dia.acceptData()
         res = dia.results
         pf.debug(res)
-        pf.cfg['render/lightmodel'] = res['render/lightmodel']
+        pf.cfg['render/lightmodel'] = res['lightmodel']
         pf.canvas.resetLighting()
         pf.app.processEvents()
-        mt = utils.subDict(res,'render/material/')
-        l0 = utils.subDict(res,'render/light0/')
-        res = dict([ i for i in res.items() if not (i[0].startswith('render/material/') or  i[0].startswith('render/light0/'))])
+        mt = utils.subDict(res,'material/')
+        l0 = utils.subDict(res,'light0/')
+        res = dict([ i for i in res.items() if not (i[0].startswith('material/') or  i[0].startswith('light0/'))])
         res['_save_'] = save
-        res['render/material'] = mt
-        res['render/light0'] =l0
+        res['material'] = mt
+        res['light0'] = l0
+        print "SET LIGHT",res
         updateSettings(res)
 
     def acceptAndSave():

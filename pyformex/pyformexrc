@@ -160,14 +160,15 @@ avgnormaltreshold = 0.5
 
 lightmodel = 'ambient and diffuse'
 material = {'ambient':0.3,'diffuse':0.3,'specular':0.6,'emission':0.2,'shininess':1.}
+
 light0 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(1.,1.,1.,0.)}
-## light1 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(-1.,1.,1.,0.)}
-## light2 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(0.,0.,1.,0.)}
-## light3 = {'enabled':False,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(1.,-1.,1.,0.)}
-## light4 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(1.,1.,-1.,0.)}
-## light5 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(-1.,1.,-1.,0.)}
-## light6 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(-1.,-1.,-1.,0.)}
-## light7 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(1.,-1.,-1.,0.)}
+light1 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(-1.,1.,1.,0.)}
+light2 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(0.,0.,1.,0.)}
+light3 = {'enabled':False,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(1.,-1.,1.,0.)}
+light4 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(1.,1.,-1.,0.)}
+light5 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(-1.,1.,-1.,0.)}
+light6 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(-1.,-1.,-1.,0.)}
+light7 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(1.,-1.,-1.,0.)}
 
 
 
