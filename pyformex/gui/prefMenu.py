@@ -66,6 +66,8 @@ def updateSettings(res,save=None):
             changed = True
             
         # if not saved, set in cfg
+        print "Setting %s = %s" % (k,res[k])
+        print pf.cfg.keys()
         if pf.cfg[k] != res[k]:
             pf.cfg[k] = res[k]
             changed = True
@@ -293,7 +295,7 @@ def setLighting():
         {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'specular', 'emission'] ] + [
         {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':128,'scale':1.,'func':set_mat_value } for a in ['shininess'] ]
 
-    enabled = [ pf.cfg['render/light%s'%light] is not None and pf.cfg['render/light%s'%light]['enabled']  for light in range(8) ]
+    enabled = [ pf.cfg['render/light%s'%light] is not None and pf.cfg['render/light%s'%light].get('enabled',False) for light in range(8) ]
     pf.debug("ENABLED LIGHTS")
 
     choices = pf.canvas.light_model.keys()
@@ -324,10 +326,11 @@ def setLighting():
         mt = utils.subDict(res,'material/')
         l0 = utils.subDict(res,'light0/')
         res = dict([ i for i in res.items() if not (i[0].startswith('material/') or  i[0].startswith('light0/'))])
-        res['_save_'] = save
         res['material'] = mt
         res['light0'] = l0
         print "SET LIGHT",res
+        res = utils.prefixDict(res,'render/')
+        res['_save_'] = save
         updateSettings(res)
 
     def acceptAndSave():
