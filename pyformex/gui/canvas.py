@@ -446,6 +446,7 @@ class Canvas(object):
     def resetLighting(self):
         self.lightmodel = pf.cfg['render/lightmodel']
         self.ambient = pf.cfg['render/material/ambient']
+        self.diffuse = pf.cfg['render/material/diffuse']
         self.specular = pf.cfg['render/material/specular']
         self.emission = pf.cfg['render/material/emission']
         self.shininess = pf.cfg['render/material/shininess']

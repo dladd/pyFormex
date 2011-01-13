@@ -290,12 +290,12 @@ def showLighting():
 
 
 def setLighting():
-    #nlights = pf.cfg['render/nlights']
+    nlights = pf.cfg['render/nlights']
     mat_items = [
-        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'specular', 'emission'] ] + [
-        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':128,'scale':1.,'func':set_mat_value } for a in ['shininess'] ]
+        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'diffuse', 'specular', 'emission'] ] + [
+        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':1,'max':64,'scale':1.,'func':set_mat_value } for a in ['shininess'] ]
 
-    enabled = [ pf.cfg['render/light%s'%light] is not None and pf.cfg['render/light%s'%light].get('enabled',False) for light in range(8) ]
+    enabled = [ pf.cfg['render/light%s'%light] is not None and pf.cfg['render/light%s'%light].get('enabled',False) for light in range(nlights) ]
     pf.debug("ENABLED LIGHTS")
 
     choices = pf.canvas.light_model.keys()
@@ -306,11 +306,13 @@ def setLighting():
         G('material',mat_items),
 #        I('nlights',4,text='Number of lights'),
         ] + [
-        T('light%s'%light, createLightDialogItems(light,True)) for light in range(8) if enabled[light]
+        T('light%s'%light, createLightDialogItems(light,True)) for light in range(nlights)
         ]
 
-#    enablers = [
-#        ('
+    enablers = [
+        ('lightmodel','','material/ambient','material/diffuse'),
+        ]
+
     dia = None
     
     def close():
@@ -318,17 +320,17 @@ def setLighting():
         
     def accept(save=False):
         dia.acceptData()
-        res = dia.results
-        pf.debug(res)
-        pf.cfg['render/lightmodel'] = res['lightmodel']
-        pf.canvas.resetLighting()
-        pf.app.processEvents()
-        mt = utils.subDict(res,'material/')
-        l0 = utils.subDict(res,'light0/')
-        res = dict([ i for i in res.items() if not (i[0].startswith('material/') or  i[0].startswith('light0/'))])
-        res['material'] = mt
-        res['light0'] = l0
-        print "SET LIGHT",res
+        print(dia.results)
+        res = {}
+        res['material'] = utils.subDict(dia.results,'material/')
+        for i in range(8):
+            key = 'light%s/'%i
+            res[key] = utils.subDict(res,key)
+        rest = [ k for k in dia.results.keys() if not (k.startswith('material') or  k.startswith('light')) ]
+        rest = dict((k,dia.results[k]) for k in rest)
+        print "REST",rest
+        res.update(rest)
+        print "SET LIGHTING",res
         res = utils.prefixDict(res,'render/')
         res['_save_'] = save
         updateSettings(res)
@@ -343,7 +345,8 @@ def setLighting():
     def createDialog():  
         dia = widgets.InputDialog(
             caption='pyFormex Settings',
-            store=pf.cfg,
+            enablers = enablers,
+            #store=pf.cfg,
             items=items,
             prefix='render/',
             autoprefix=True,
