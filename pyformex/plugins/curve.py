@@ -39,7 +39,7 @@ from geometry import Geometry
 from formex import Formex,connect
 from mesh import Mesh
 from geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPointsSWP
-
+from utils import deprecation
 
 ##############################################################################
 # THIS IS A PROPOSAL FOR THE CURVE API!
@@ -364,8 +364,6 @@ class PolyLine(Curve):
         If return_doubles is True, the return value is a tuple of the direction
         and an index of the points that are identical with their follower.
         """
-        import warnings
-        warnings.warn('warn_polyline_directions')
         d = normalize(self.vectors())
         w = where(isnan(d).any(axis=-1))[0]
         d[w] = d[w-1]  
@@ -391,8 +389,6 @@ class PolyLine(Curve):
         are set equal to those of the segment ending in the first and the
         segment starting from the last.
         """
-        import warnings
-        warnings.warn('warn_polyline_avgdirections')
         d,w = self.directions(True)
         d1 = d
         d2 = roll(d,1,axis=0) # PREVIOUS DIRECTION
@@ -862,10 +858,6 @@ class BezierSpline(Curve):
         T = dot(U,C)
         T = normalize(T)
         return T
-
-
-    # deprecated
-    sub_tangents = sub_directions
     
     def length_intgrnd(self,t,j):
         """Return the arc length integrand at value t in part j."""
@@ -982,6 +974,11 @@ Most likely because 'python-scipy' is not installed on your system.""")
         """Return the same curve with the parameter direction reversed."""
         control = reverseAxis(self.coords,axis=0)
         return BezierSpline(control=control,closed=self.closed,degree=self.degree)
+
+
+    @deprecation("sub_tangents is deprecated: use sub_directions instead.")
+    def sub_tangents(self,*args,**kargs):
+        return self.sub_directions(*args,**kargs)
 
 
 ##############################################################################
@@ -1235,7 +1232,7 @@ def convertFormexToCurve(self,closed=False):
 
     The following Formices can be converted to a Curve:
     - plex 2 : to PolyLine
-    - plex 3 : to QuadBezierSpline
+    - plex 3 : to BezierSpline with degree=2
     - plex 4 : to BezierSpline
     """
     points = Coords.concatenate([self.coords[:,0,:],self.coords[-1:,-1,:]],axis=0)
@@ -1243,7 +1240,7 @@ def convertFormexToCurve(self,closed=False):
         curve = PolyLine(points,closed=closed)
     elif self.nplex() == 3:
         control = self.coords[:,1,:]
-        curve = QuadBezierSpline(points,control=control,closed=closed)
+        curve = BezierSpline(points,control=control,closed=closed,degree=2)
     elif self.nplex() == 4:
         control = self.coords[:,1:3,:]
         curve = BezierSpline(points,control=control,closed=closed)
@@ -1267,10 +1264,9 @@ class QuadBezierSpline(BezierSpline):
     BezierSpline, except for degree, which is fixed to a value 2.
     """
 
+    @deprecation("The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead.")
     def __init__(self,coords,**kargs):
         """Create a natural spline through the given points."""
-        import warnings
-        warnings.warn('warn_quadbezierspline')
         kargs['degree'] = 2
         BezierSpline.__init__(self,coords,**kargs)
 

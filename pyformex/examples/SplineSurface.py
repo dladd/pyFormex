@@ -87,10 +87,8 @@ def rollCurvePoints(curve,n=1):
     if (isinstance(curve,PolyLine) or isinstance(curve,BezierSpline)) and curve.closed:
         if isinstance(curve,PolyLine):
             mult = 1
-        elif isinstance(curve,QuadBezierSpline):
-            mult = 2
         else:
-            mult = 3
+            mult = curve.degree
         curve.coords[:-1] = roll(curve.coords[:-1],-mult*n,axis=0)
         curve.coords[-1] = curve.coords[0]
     else:

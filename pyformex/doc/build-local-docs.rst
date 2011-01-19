@@ -1,4 +1,4 @@
-.. $Id$  Build local documentation
+.. $Id$
 
 How to build pyFormex documentation
 ===================================

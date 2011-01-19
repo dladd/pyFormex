@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ##
 ## This file is part of pyFormex 0.7 Release Fri Apr  4 18:41:11 2008
 ## pyFormex is a Python implementation of Formex algebra
@@ -14,6 +14,9 @@
 
 instdir=$(pyformex --whereami | grep '^Script' | sed 's|.* ||')
 echo "Executables installed in $instdir"
+
+# install postabq here, because installing from setup.py creates a failure
+# if postabq was not compiled
 [ -d "$instdir" ] && install -m 0755 pyformex/lib/postabq $instdir
 
 # install the .desktop file on xdg compliant systems

@@ -57,7 +57,8 @@ OTHERSTAMPABLE= setup.py Makefile\
 	${PYFORMEXDIR}/pyformexrc \
 	${EXAMPLEDATA} \
 	${LIBDIR}/Makefile.in \
-	${addprefix ${DOCDIR}/, README ReleaseNotes}
+	${addprefix ${DOCDIR}/, README ReleaseNotes} \
+	post-install
 
 NONSTAMPABLE= ${DOC}/COPYING 
 
@@ -158,7 +159,7 @@ ${LATEST}: ${PKGDIR}/${PKGVER}
 
 ${PKGDIR}/${PKGVER}: version MANIFEST.in
 	@echo "Creating ${PKGDIR}/${PKGVER}"
-	python setup.py sdist --no-defaults
+	python setup.py sdist --no-defaults | tee makedist.log
 
 MANIFEST.in: create_manifest.py
 	python create_manifest.py >$@

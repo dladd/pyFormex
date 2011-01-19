@@ -59,7 +59,7 @@ class build_ext(_build_ext):
     Our own builder runs a configuration procedure first, and if
     the configuration does not succeed, the Extension is not built.
     This forms no problem for installing pyFormex, because the
-    extensions are optional, and replaced with pure Python functions
+    extensions are optional, and are replaced with pure Python functions
     if the Extensions are not installed.
     """
 
@@ -77,7 +77,7 @@ class build_ext(_build_ext):
         """Configure the extensions and if successful, build them."""
         ## The current building process will probably not work on
         ## non-posix systems.
-        ## If anybody knows how to do it, please go ahead and emove this.
+        ## If anybody knows how to do it, please go ahead and remove this.
         if os.name != 'posix':
             print("!! The acceleration library is not available for your platform.\n!! You should consider switching to Linux (or some other Posix) Platform.")
             return
@@ -85,6 +85,7 @@ class build_ext(_build_ext):
         if self.configure():
             print("Compiling the pyFormex acceleration library")
             _build_ext.run(self)
+            # Should we compile postabq even if configure failed?
             print("Compiling the pyFormex postabq converter")
             cmd = "cd pyformex/lib;make postabq"
             sta,out = commands.getstatusoutput(cmd)
@@ -126,7 +127,7 @@ transformations.
               'data/*',
               ] + DOC_FILES
           },
-      scripts=['pyformex/pyformex','pyformex-viewer','pyformex/lib/postabq'],
+      scripts=['pyformex/pyformex','pyformex-viewer'],#,'pyformex/lib/postabq'],
       data_files=DATA_FILES,
       classifiers=[
           'Development Status :: 4 - Beta',
