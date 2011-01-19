@@ -1432,6 +1432,7 @@ Size: %s
     
 
     # ?? IS THIS DEFINED FOR *ANY* MESH ??
+    #this is define for every linear surface or linear volume mesh.
     def equiAngleSkew(self):
         """Returns the equiAngleSkew of the elements, a mesh quality parameter .
        
@@ -1443,9 +1444,9 @@ Size: %s
         eangsh= eang.shape
         eang= eang.reshape(eangsh[0], eangsh[1]*eangsh[2])
         eang.max(axis=1), eang.min(axis=1)
-        eangMax, eangmin=eang.max(axis=1), eang.min(axis=1)
-        el = getattr(elements,self.eltype.capitalize())
-        nedginface= len( el.faces[0] )
+        eangMax, eangmin=eang.max(axis=1), eang.min(axis=1)        
+        f= self.eltype.getFaces()
+        nedginface=len( array(f[ f.keys()[0] ], int)[0] )
         qe=180.*(nedginface-2.)/nedginface
         extremeAngles= [ (eangMax-qe)/(180.-qe), (qe-eangmin)/qe ]
         return array(extremeAngles).max(axis=0)
