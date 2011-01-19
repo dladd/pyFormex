@@ -123,6 +123,8 @@ bumprelease:
 	OLD=$$(expr "${RELEASE}" : '.*\([0-9])*\)$$');NEW=$$(expr $$OLD + 1);sed -i "/^RELEASE=/s|$$OLD$$|$$NEW|" RELEASE
 	make version
 
+revision:
+	sed -i "s|__revision__ = .*|__revision__ = '$$(svnversion)'|" ${PYFORMEXDIR}/__init__.py
 
 version: ${PYFORMEXDIR}/__init__.py setup.py ${LIBDIR}/configure.ac ${SPHINXDIR}/conf.py
 
@@ -157,7 +159,7 @@ dist: ${LATEST}
 ${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
 
-${PKGDIR}/${PKGVER}: version MANIFEST.in
+${PKGDIR}/${PKGVER}: revision version MANIFEST.in
 	@echo "Creating ${PKGDIR}/${PKGVER}"
 	python setup.py sdist --no-defaults | tee makedist.log
 

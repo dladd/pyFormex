@@ -112,7 +112,7 @@ def printcfg(key):
 def setRevision():
     sta,out = utils.runCommand('cd %s && svnversion' % pyformex.cfg['pyformexdir'],quiet=True)
     if sta == 0 and not out.startswith('exported'):
-        pyformex.__revision__ = "$Rev: %s $" % out.strip()
+        pyformex.__revision__ = out.strip()
 
 
 def remove_pyFormex(pyformexdir,scriptdir):
@@ -278,7 +278,7 @@ def run(argv=[]):
         # THE Qapp options are removed, because it does not seem to work !!!
         # SEE the comments in the gui.startGUI function  
         usage = "usage: %prog [<options>] [ [ scriptname [scriptargs] ] ...]",
-        version = pyformex.Version,
+        version = utils.FullVersion(),
         description = pyformex.Description,
         formatter = optparse.TitledHelpFormatter(),
         option_list=[

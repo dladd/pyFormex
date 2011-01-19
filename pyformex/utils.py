@@ -202,8 +202,12 @@ def checkExternal(name=None,command=None,answer=None):
     return version
 
 
+def FullVersion():
+    return "%s (Rev. %s)" % (pf.Version,pf.__revision__)
+
+
 def reportDetected():
-    s = "%s (%s)\n\n" % (pf.Version,pf.__revision__)
+    s = "%s\n\n" % FullVersion()
     s += "Python version: %s\n" % sys.version
     s += "Operating system: %s\n\n" % sys.platform
     s += "Detected Python Modules:\n"
@@ -217,7 +221,6 @@ def reportDetected():
         #    v = 'Not Found'
         s += "%s (%s)\n" % ( k,v)
     return s
-
 
     
 def procInfo(title):
