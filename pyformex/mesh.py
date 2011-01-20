@@ -485,12 +485,15 @@ class Mesh(Geometry):
     # Adjacency #
 
 
-    # BV: THis should be generalized to any elements having faces
-    # now only for tri3
+    ## BV: THis should be generalized to any elements having faces
+    # GDS: it works but it should probable be renamed as getElemEdges,
+    #as it works well both for surfaces and volumes.
     def getFaceEdges(self):
         """Get the faces' edge numbers."""
         if self.face_edges is None:
-            self.face_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
+            ##self.face_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
+            sel=self.getLowerEntitiesSelector(1)
+            self.face_edges,self.edges = self.elems.insertLevel(sel)
         return self.face_edges
     
 
@@ -507,7 +510,8 @@ class Mesh(Geometry):
 
 
 
-    # BV THIS IS NOT GENERAL !!!
+    ## BV THIS IS NOT GENERAL !!!
+    # GDS, now it should work correctly, after changing getFaceEdges 
     def edgeConnections(self):
         """Find and store the elems connected to edges."""
         
