@@ -324,8 +324,8 @@ def setLighting():
         res = {}
         res['material'] = utils.subDict(dia.results,'material/')
         for i in range(8):
-            key = 'light%s/'%i
-            res[key] = utils.subDict(res,key)
+            key = 'light%s'%i
+            res[key] = utils.subDict(res,key+'/')
         rest = [ k for k in dia.results.keys() if not (k.startswith('material') or  k.startswith('light')) ]
         rest = dict((k,dia.results[k]) for k in rest)
         print "REST",rest
