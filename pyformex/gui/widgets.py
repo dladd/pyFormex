@@ -33,7 +33,7 @@ import os,types
 from PyQt4 import QtCore, QtGui
 import pyformex as pf
 import colors
-import odict
+import odict,mydict
 import utils
 import warnings
 
@@ -1810,7 +1810,7 @@ class ProjectSelection(FileSelection):
     def getResult(self):
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            opt = odict.ODict()
+            opt = mydict.Dict()
             opt.fn = str(self.selectedFiles()[0])
             opt.cpr = opt.sig = opt.leg = None
             if hasattr(self,'cpr'):
@@ -1820,8 +1820,9 @@ class ProjectSelection(FileSelection):
             if hasattr(self,'sig'):
                 opt.sig = self.sig.isChecked()
             return opt
+
         else:
-            return None
+            return {}
 
 
 class SaveImageDialog(FileSelection):
@@ -1877,10 +1878,11 @@ class SaveImageDialog(FileSelection):
         grid.addWidget(self.hot,nr,1)
         grid.addWidget(self.aut,nr,2)
 
+
     def getResult(self):
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            opt = odict.ODict()
+            opt = mydict.Dict()
             opt.fm = str(self.fmt.value())
             opt.qu = int(self.qua.text())
             opt.fn = str(self.selectedFiles()[0])
@@ -1891,8 +1893,9 @@ class SaveImageDialog(FileSelection):
             opt.hk = self.hot.isChecked()
             opt.au = self.aut.isChecked()
             return opt
+        
         else:
-            return None
+            return {}
         
 
 def selectFont():
