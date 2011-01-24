@@ -286,7 +286,24 @@ class CanvasSettings(Dict):
 
 
 ############### OpenGL Lighting #################################
-    
+
+class Material(object):
+    def __init__(self,ambient=0.2,diffuse=0.2,specular=0.9,emission=0.1,shininess=2.0):
+        #print ambient,diffuse,specular,emission,shininess
+        self.ambient = float(ambient)
+        self.diffuse = float(diffuse)
+        self.specular = float(specular)
+        self.emission = float(emission)
+        self.shininess = float(shininess)
+
+    def activate(self):   
+        GL.glMaterialfv(fill_mode,GL.GL_AMBIENT,colors.GREY(self.ambient))
+        GL.glMaterialfv(fill_mode,GL.GL_DIFFUSE,colors.GREY(self.diffuse))
+        GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
+        GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
+        GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
+        
+
 
 class Light(object):
 
@@ -322,32 +339,60 @@ class Light(object):
 """ % (self.light-GL.GL_LIGHT0,self.ambient,self.diffuse,self.specular,self.position)
     
 
-class Lights(object):
-    """An array of OpenGL lights.
+## class Lights(object):
+##     """An array of OpenGL lights.
 
-    """
-    def __init__(self,nlights):
-        self.lights = [ Light(i) for i in range(nlights) ]
+##     """
+##     def __init__(self,nlights):
+##         self.lights = [ Light(i) for i in range(nlights) ]
 
-    def set_value(self,i,key,value):
-        """Set an attribute of light i"""
-        self.lights[i].set_value(key,value)
+##     def set_value(self,i,key,value):
+##         """Set an attribute of light i"""
+##         self.lights[i].set_value(key,value)
         
-    def set(self,i,**kargs):
-        """Set all attributes of light i"""
-        self.lights[i].set(**kargs)
+##     def set(self,i,**kargs):
+##         """Set all attributes of light i"""
+##         self.lights[i].set(**kargs)
 
-    def enable(self):
-        """Enable the lights"""
-        [ i.enable() for i in self.lights if i.enabled ]
+##     def enable(self):
+##         """Enable the lights"""
+##         [ i.enable() for i in self.lights if i.enabled ]
 
-    def disable(self):
-        [ i.disable() for i in self.lights ]
+##     def disable(self):
+##         [ i.disable() for i in self.lights ]
 
-    def __str__(self):
-        return ''.join([i.__str__() for i in self.lights if i.enabled ])
+##     def __str__(self):
+##         return ''.join([i.__str__() for i in self.lights if i.enabled ])
 
 
+class LightProfile(object):
+
+    light_model = {
+        'ambient': GL.GL_AMBIENT,
+        'diffuse': GL.GL_DIFFUSE,
+        'ambient and diffuse': GL.GL_AMBIENT_AND_DIFFUSE,
+        'emission': GL.GL_EMISSION,
+        'specular': GL.GL_SPECULAR,
+        }
+    
+    def __init__(self,model,ambient,lights):
+        self.model = self.light_model[model]
+        self.ambient = ambient
+        self.lights = lights
+
+    def activate(self):
+        GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
+        GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
+        GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        GL.glLoadIdentity()
+        for light in self.lights:
+            light.enable()
+        GL.glPopMatrix()
+        GL.glColorMaterial(fill_mode,self.model)
+        GL.glEnable(GL.GL_COLOR_MATERIAL)
+        
 
 
 ##################################################################
@@ -360,15 +405,6 @@ class Canvas(object):
     rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
                    'smooth_avg']
 
-    light_model = {
-        'ambient': GL.GL_AMBIENT,
-        'diffuse': GL.GL_DIFFUSE,
-        'ambient and diffuse': GL.GL_AMBIENT_AND_DIFFUSE,
-        'emission': GL.GL_EMISSION,
-        'specular': GL.GL_SPECULAR,
-        }
-    
-
     def __init__(self):
         """Initialize an empty canvas with default settings."""
         self.actors = ActorList(self)
@@ -379,8 +415,8 @@ class Canvas(object):
         self.background = None
         self.bbox = None
         self.resetLighting()
-        self.lights = Lights(8)
-        self.resetLights()
+        ## self.lights = Lights(8)
+        ## self.resetLights()
         self.setBbox()
         self.settings = CanvasSettings()
         self.mode2D = False
@@ -402,30 +438,31 @@ class Canvas(object):
         return self.width(),self.height()
     
 
-    def glLightSpec(self):
-        GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
-        GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
-        GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPushMatrix()
-        GL.glLoadIdentity()
-        self.lights.enable()
-        GL.glPopMatrix()
+    ## def glLightSpec(self):
+    ##     GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
+    ##     GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
+    ##     GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
+    ##     GL.glMatrixMode(GL.GL_MODELVIEW)
+    ##     GL.glPushMatrix()
+    ##     GL.glLoadIdentity()
+    ##     self.lights.enable()
+    ##     GL.glPopMatrix()
         
-        GL.glMaterialfv(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE,colors.GREY(self.ambient))
-        GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
-        GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
-        GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
+    ##     GL.glMaterialfv(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE,colors.GREY(self.ambient))
+    ##     GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
+    ##     GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
+    ##     GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
 
-        # What component to drive by color commands
-        GL.glColorMaterial(fill_mode,self.light_model[self.lightmodel])
-        GL.glEnable(GL.GL_COLOR_MATERIAL)
+    ##     # What component to drive by color commands
+    ##     GL.glColorMaterial(fill_mode,self.light_model[self.lightmodel])
+    ##     GL.glEnable(GL.GL_COLOR_MATERIAL)
 
 
     def glLight(self,onoff):
         """Toggle lights on/off."""
         if onoff:
-            self.glLightSpec()
+            self.lightprof.activate()
+            self.material.activate()
             GL.glEnable(GL.GL_LIGHTING)
         else:
             GL.glDisable(GL.GL_LIGHTING)
@@ -440,23 +477,31 @@ class Canvas(object):
         """Return all the settings to their default values."""
         self.settings.reset(dict)
         self.resetLighting()
-        self.resetLights()
+        ## self.resetLights()
 
+
+    def setMaterial(self,matname):
+        self.matname = matname
+        self.material = Material(**pf.cfg['material/%s' % self.matname])
+        
 
     def resetLighting(self):
         self.lightmodel = pf.cfg['render/lightmodel']
-        self.ambient = pf.cfg['render/material/ambient']
-        self.diffuse = pf.cfg['render/material/diffuse']
-        self.specular = pf.cfg['render/material/specular']
-        self.emission = pf.cfg['render/material/emission']
-        self.shininess = pf.cfg['render/material/shininess']
+        self.ambient = pf.cfg['render/ambient']
+        self.matname = pf.cfg['render/material']
+        self.lightset = pf.cfg['render/lights']
+        self.material = Material(**pf.cfg['material/%s' % self.matname])
+        lights = [ Light(int(light[-1:]),**pf.cfg['light/%s' % light]) for light in self.lightset ]
+        #print lights
+        #lights = [ Light(light) for light in lights ]
+        self.lightprof = LightProfile(self.lightmodel,self.ambient,lights)
 
         
-    def resetLights(self):
-        for i in range(8):
-            light = pf.cfg.get('render/light%d' % i, None)
-            if light is not None:
-                self.lights.set(i,**light)
+    ## def resetLights(self):
+    ##     for i in range(8):
+    ##         light = pf.cfg.get('render/light%d' % i, None)
+    ##         if light is not None:
+    ##             self.lights.set(i,**light)
 
 
     def setRenderMode(self,rm):
@@ -472,15 +517,15 @@ class Canvas(object):
             self.redrawAll()
 
 
-    def setTransparency(self,mode):
-        self.alphablend = mode
+    def setTransparency(self,onoff):
+        self.alphablend = onoff
 
-    def setLighting(self,mode):
-        self.lighting = mode
+    def setLighting(self,onoff):
+        self.lighting = onoff
         self.glLight(self.lighting)
 
-    def setAveragedNormals(self,mode):
-        self.avgnormals = mode
+    def setAveragedNormals(self,onoff):
+        self.avgnormals = onoff
         change = (self.rendermode == 'smooth' and self.avgnormals) or \
                  (self.rendermode == 'smooth_avg' and not self.avgnormals)
         if change:
@@ -565,18 +610,18 @@ class Canvas(object):
     ##             self.setSlColor(v)
         
         
-    def setLightValue(self,nr,key,val):
-        """(Re)Define a light on the scene."""
-        self.lights.set_value(nr,key,val)
-        self.lights.enable(nr)
+    ## def setLightValue(self,nr,key,val):
+    ##     """(Re)Define a light on the scene."""
+    ##     self.lights.set_value(nr,key,val)
+    ##     self.lights.enable(nr)
 
-    def enableLight(self,nr):
-        """Enable an existing light."""
-        self.lights[nr].enable()
+    ## def enableLight(self,nr):
+    ##     """Enable an existing light."""
+    ##     self.lights[nr].enable()
 
-    def disableLight(self,nr):
-        """Disable an existing light."""
-        self.lights[nr].disable()
+    ## def disableLight(self,nr):
+    ##     """Disable an existing light."""
+    ##     self.lights[nr].disable()
 
 
     def setTriade(self,on=None,pos='lb',siz=100):
@@ -677,7 +722,7 @@ class Canvas(object):
         glLineStipple(*self.settings.linestipple)
         GL.glPointSize(self.settings.pointsize)
         if self.rendermode.startswith('smooth'):
-            self.glLightSpec()
+            self.lighting = True
         self.glLight(self.lighting)
 
     

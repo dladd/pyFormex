@@ -267,8 +267,8 @@ def createLightDialogItems(light=0,enabled=True):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     tgt = 'render/light%s'%light
     val = pf.cfg[tgt]
-    #print "LIGHT %s" % light
-    #print "CFG %s " % val
+    print "LIGHT %s" % light
+    print "CFG %s " % val
     #print "DICT %s" % pf.canvas.lights.lights[light].__dict__
     #print "DICT %s" % dir(pf.canvas.lights.lights[light])
     
@@ -320,17 +320,15 @@ def setLighting():
         
     def accept(save=False):
         dia.acceptData()
-        print(dia.results)
+        #print "RESULTS",dia.results
         res = {}
         res['material'] = utils.subDict(dia.results,'material/')
         for i in range(8):
             key = 'light%s'%i
-            res[key] = utils.subDict(res,key+'/')
+            res[key] = utils.subDict(dia.results,key+'/')
         rest = [ k for k in dia.results.keys() if not (k.startswith('material') or  k.startswith('light')) ]
         rest = dict((k,dia.results[k]) for k in rest)
-        print "REST",rest
         res.update(rest)
-        print "SET LIGHTING",res
         res = utils.prefixDict(res,'render/')
         res['_save_'] = save
         updateSettings(res)
@@ -363,6 +361,20 @@ def setLighting():
     #if res:
     #    updateSettings({tgt:res})
     #    pf.canvas.resetLights()
+
+
+def setMaterial():
+    vp = pf.GUI.viewports.current
+    mats = pf.refcfg['material']
+    mats.update(pf.prefcfg['material'])
+    mats.update(pf.cfg['material'])
+    res = draw.askItems([
+        I('material',vp.matname,choices=mats.keys()),
+        ])
+    if res:
+        vp.setMaterial(res['material'])
+        vp.update()
+        
 
 
 def setScriptDirs():
@@ -491,8 +503,8 @@ MenuData = [
         (_('Avg&Normal Size'),setAvgNormalSize), 
         (_('&Pick Size'),setPickSize), 
         (_('&Render Mode'),setRenderMode),
-        (_('&Lighting'),setLighting),
-        (_('&Show Lighting'),showLighting),
+        (_('&Material Parameters'),setMaterial),
+        ## (_('&Show Lighting'),showLighting),
         ('---',None),
         (_('&Save Preferences Now'),savePreferences),
 #        (_('&Make current settings the defaults'),savePreferences),

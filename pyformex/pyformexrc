@@ -154,22 +154,33 @@ localaxes = True     # by default, buttons rotate/pan in local axes
 [pick]
 size=(12,12) # size of the pick window
 
-[render]
-mode = 'wireframe'
-avgnormaltreshold = 0.5
 
-lightmodel = 'ambient and diffuse'
-material = {'ambient':0.3,'diffuse':0.3,'specular':0.8,'emission':0.1,'shininess':2.}
+[material]
+default = dict(ambient=0.3,diffuse=0.3,specular=0.8)
+matte = dict(ambient=0.9,diffuse=0.9,specular=0.1)
+plastic = dict(ambient=0.9,diffuse=0.9,specular=0.7)
+metal = dict(ambient=0.1,diffuse=0.1,specular=0.9)
 
-nlights=3
-light0 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(1.,1.,1.,0.)}
-light1 = {'enabled':True,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(-1.,1.,1.,0.)}
-light2 = {'enabled':False,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(0.,0.,1.,0.)}
+[light]
+light0 = {'enabled':True,'ambient':0.3,'diffuse':1.0,'specular':0.2,'position':(1.,1.,1.,0.)}
+light1 = {'enabled':True,'ambient':0.0,'diffuse':1.0,'specular':0.2,'position':(-1.,1.,1.,0.)}
+light2 = {'enabled':False,'ambient':0.0,'diffuse':1.0,'specular':0.2,'position':(0.,0.,1.,0.)}
 #light3 = {'enabled':False,'ambient':0.6,'diffuse':0.7,'specular':0.2,'position':(1.,-1.,1.,0.)}
 #light4 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(1.,1.,-1.,0.)}
 #light5 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(-1.,1.,-1.,0.)}
 #light6 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(-1.,-1.,-1.,0.)}
 #light7 = {'enabled':False,'ambient':0.6,'diffuse':0.5,'specular':0.3,'position':(1.,-1.,-1.,0.)}
+
+
+[render]
+mode = 'wireframe'
+avgnormaltreshold = 0.5
+
+lightmodel = 'ambient and diffuse'
+ambient = 0.2
+
+material = 'default' # the name of a material defined above
+lights= ['light0','light1'] # a list of enabled lights
 
 
 
