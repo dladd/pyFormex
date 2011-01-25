@@ -288,13 +288,20 @@ class CanvasSettings(Dict):
 ############### OpenGL Lighting #################################
 
 class Material(object):
-    def __init__(self,ambient=0.2,diffuse=0.2,specular=0.9,emission=0.1,shininess=2.0):
-        #print ambient,diffuse,specular,emission,shininess
+    def __init__(self,name,ambient=0.2,diffuse=0.2,specular=0.9,emission=0.1,shininess=2.0):
+        self.name = str(name)
         self.ambient = float(ambient)
         self.diffuse = float(diffuse)
         self.specular = float(specular)
         self.emission = float(emission)
         self.shininess = float(shininess)
+
+
+    def setValues(**kargs):
+        for k in kargs:
+            if hasattr(self,k):
+                setattr(self,k,float(kargs[k]))
+
 
     def activate(self):   
         GL.glMaterialfv(fill_mode,GL.GL_AMBIENT,colors.GREY(self.ambient))
@@ -302,7 +309,32 @@ class Material(object):
         GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
         GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
         GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
+
+
+    def __str__(self):
+        return """MATERIAL: %s
+    ambient:  %s
+    diffuse:  %s
+    specular: %s
+    emission: %s
+    shininess: %s
+""" % (self.name,self.ambient,self.diffuse,self.specular,self.emission,self.shininess)
         
+
+
+def getMaterials():
+    mats = pf.refcfg['material']
+    mats.update(pf.prefcfg['material'])
+    mats.update(pf.cfg['material'])
+    return mats
+
+
+def createMaterials():
+    mats = getMaterials()
+    matdb = {}
+    for m in mats:
+        matdb[m] = Material(m,**mats[m])
+    return matdb
 
 
 class Light(object):
@@ -436,26 +468,6 @@ class Canvas(object):
 
     def Size(self):
         return self.width(),self.height()
-    
-
-    ## def glLightSpec(self):
-    ##     GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
-    ##     GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
-    ##     GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
-    ##     GL.glMatrixMode(GL.GL_MODELVIEW)
-    ##     GL.glPushMatrix()
-    ##     GL.glLoadIdentity()
-    ##     self.lights.enable()
-    ##     GL.glPopMatrix()
-        
-    ##     GL.glMaterialfv(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE,colors.GREY(self.ambient))
-    ##     GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
-    ##     GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
-    ##     GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
-
-    ##     # What component to drive by color commands
-    ##     GL.glColorMaterial(fill_mode,self.light_model[self.lightmodel])
-    ##     GL.glEnable(GL.GL_COLOR_MATERIAL)
 
 
     def glLight(self,onoff):
@@ -480,28 +492,22 @@ class Canvas(object):
         ## self.resetLights()
 
 
+    def setAmbient(self,ambient):
+        """Set the global ambient lighting for the canvas"""
+        self.lightprof.ambient = float(ambient)
+        
     def setMaterial(self,matname):
-        self.matname = matname
-        self.material = Material(**pf.cfg['material/%s' % self.matname])
+        """Set the default material light properties for the canvas"""
+        self.material = pf.GUI.materials[matname]
         
 
     def resetLighting(self):
+        """Change the light parameters"""
         self.lightmodel = pf.cfg['render/lightmodel']
-        self.ambient = pf.cfg['render/ambient']
-        self.matname = pf.cfg['render/material']
+        self.setMaterial(pf.cfg['render/material'])
         self.lightset = pf.cfg['render/lights']
-        self.material = Material(**pf.cfg['material/%s' % self.matname])
         lights = [ Light(int(light[-1:]),**pf.cfg['light/%s' % light]) for light in self.lightset ]
-        #print lights
-        #lights = [ Light(light) for light in lights ]
-        self.lightprof = LightProfile(self.lightmodel,self.ambient,lights)
-
-        
-    ## def resetLights(self):
-    ##     for i in range(8):
-    ##         light = pf.cfg.get('render/light%d' % i, None)
-    ##         if light is not None:
-    ##             self.lights.set(i,**light)
+        self.lightprof = LightProfile(self.lightmodel,pf.cfg['render/ambient'],lights)
 
 
     def setRenderMode(self,rm):

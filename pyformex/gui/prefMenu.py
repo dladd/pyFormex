@@ -236,23 +236,13 @@ def setPickSize():
     w,h = pf.cfg['pick/size']
     res = draw.askItems([['w',w],['h',h]])
     pf.prefcfg['pick/size'] = (int(res['w']),int(res['h']))
-        
-    
-def setRenderMode():
-    from canvas import Canvas
-    res = draw.askItems([('render/mode',None,'vradio',{'text':'Render Mode','choices':Canvas.rendermodes})])
-    if res:
-        rendermode = res['render/mode']
-        if hasattr(draw,rendermode):
-            getattr(draw,rendermode)()
-        updateSettings(res)
             
 
 def set_mat_value(field):
     key = field.text()
     val = field.value()
-    #print key,val
-    draw.set_material_value(key,val)
+    mat = pf.GUI.viewports.current
+    mat.setValues({key:val})
 
 
 def set_light_value(field):
@@ -289,28 +279,163 @@ def showLighting():
     print pf.cfg['render']
 
 
-def setLighting():
-    nlights = pf.cfg['render/nlights']
-    mat_items = [
-        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'diffuse', 'specular', 'emission'] ] + [
-        {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':1,'max':64,'scale':1.,'func':set_mat_value } for a in ['shininess'] ]
+## def setLighting():
+##     nlights = pf.cfg['render/nlights']
+##     mat_items = [
+##         {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'diffuse', 'specular', 'emission'] ] + [
+##         {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':1,'max':64,'scale':1.,'func':set_mat_value } for a in ['shininess'] ]
 
-    enabled = [ pf.cfg['render/light%s'%light] is not None and pf.cfg['render/light%s'%light].get('enabled',False) for light in range(nlights) ]
-    pf.debug("ENABLED LIGHTS")
+##     enabled = [ pf.cfg['render/light%s'%light] is not None and pf.cfg['render/light%s'%light].get('enabled',False) for light in range(nlights) ]
+##     pf.debug("ENABLED LIGHTS")
 
-    choices = pf.canvas.light_model.keys()
-    # DO NOT ALLOW THE LIGHT MODEL TO BE CHANGED
-    choices = [ 'ambient and diffuse' ]
+##     choices = pf.canvas.light_model.keys()
+##     # DO NOT ALLOW THE LIGHT MODEL TO BE CHANGED
+##     choices = [ 'ambient and diffuse' ]
+##     items = [
+##         {'name':'lightmodel','value':pf.canvas.lightmodel,'choices':choices,'tooltip':"""The light model defines which light components are set by the color setting functions. The default light model is 'ambient and diffuse'. The other modes are experimentally. Use them only if you know what you are doing."""},
+##         G('material',mat_items),
+## #        I('nlights',4,text='Number of lights'),
+##         ] + [
+##         T('light%s'%light, createLightDialogItems(light,True)) for light in range(nlights)
+##         ]
+
+##     enablers = [
+##         ('lightmodel','','material/ambient','material/diffuse'),
+##         ]
+
+##     dia = None
+    
+##     def close():
+##         dia.close()
+        
+##     def accept(save=False):
+##         dia.acceptData()
+##         #print "RESULTS",dia.results
+##         res = {}
+##         res['material'] = utils.subDict(dia.results,'material/')
+##         for i in range(8):
+##             key = 'light%s'%i
+##             res[key] = utils.subDict(dia.results,key+'/')
+##         rest = [ k for k in dia.results.keys() if not (k.startswith('material') or  k.startswith('light')) ]
+##         rest = dict((k,dia.results[k]) for k in rest)
+##         res.update(rest)
+##         res = utils.prefixDict(res,'render/')
+##         res['_save_'] = save
+##         updateSettings(res)
+
+##     def acceptAndSave():
+##         accept(save=True)
+
+##     def addLight():
+##         accept(save=False)
+##         dia.close()
+        
+##     def createDialog():  
+##         dia = widgets.InputDialog(
+##             caption='pyFormex Settings',
+##             enablers = enablers,
+##             #store=pf.cfg,
+##             items=items,
+##             prefix='render/',
+##             autoprefix=True,
+##             actions=[
+##                 ('Close',close),
+##                 ('Accept and Save',acceptAndSave),
+##                 ('Apply',accept),
+##                 ]
+##             )
+##         return dia
+
+##     dia = createDialog()
+##     dia.show()
+##     #if res:
+##     #    updateSettings({tgt:res})
+##     #    pf.canvas.resetLights()
+
+
+def setRenderMode():
+    import canvas
+
+    vp = pf.GUI.viewports.current
+    dia = None
+
+    def enableLightParams(mode):
+        print "enableLightParams %s" % dia
+        if dia is None:
+            return
+        mode = str(mode)
+        on = mode.startswith('smooth')
+        print "ON = %s" % on
+        for f in ['ambient','material']:
+            print dia['render/'+f]
+            dia['render/'+f].setEnabled(on)
+        
+    
+    def close():
+        dia.close()
+        
+    def accept(save=False):
+        dia.acceptData()
+        res = dia.results
+        res['_save_'] = save
+        print res
+        updateSettings(res)
+        print pf.cfg
+        vp.resetLighting()
+        if pf.cfg['render/mode'] != vp.rendermode:
+            vp.setRenderMode(pf.cfg['render/mode'])
+        #print "VP"
+        #print pf.cfg['render/mode'],pf.cfg['render/ambient'],pf.cfg['render/material']
+        #print vp.rendermode,vp.lightprof.ambient,vp.material.name
+        #vp.setRenderMode(res['mode'])
+        #vp.setAmbient(res['ambient'])
+        #vp.setMaterial(res['material'])
+        #print "AGAIN",vp.rendermode,vp.lightprof.ambient,vp.material.name
+        vp.update()
+
+    def acceptAndSave():
+        accept(save=True)
+        
+    def createDialog():  
+        matnames = pf.GUI.materials.keys()
+        items = [
+            I('mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes,onselect=enableLightParams),
+            I('ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
+            I('material',vp.material.name,text='Material',choices=matnames),
+            ]
+        dia = widgets.InputDialog(
+            caption='pyFormex Settings',
+            #enablers = enablers,
+            #store=pf.cfg,
+            items=items,
+            prefix='render/',
+            #autoprefix=True,
+            actions=[
+                ('Close',close),
+                ('Accept and Save',acceptAndSave),
+                ('Apply',accept),
+                ]
+            )
+        enableLightParams(vp.rendermode)
+        return dia
+
+    dia = createDialog()
+    dia.show()
+
+
+def changeMaterial():
+    vp = pf.GUI.viewports.current
+    mats = getMaterials()
+    matnames = mats.keys()
+    matname = vp.matname
+    mat = vp.material
+    print mat
     items = [
-        {'name':'lightmodel','value':pf.canvas.lightmodel,'choices':choices,'tooltip':"""The light model defines which light components are set by the color setting functions. The default light model is 'ambient and diffuse'. The other modes are experimentally. Use them only if you know what you are doing."""},
-        G('material',mat_items),
-#        I('nlights',4,text='Number of lights'),
+        I('material',pf.cfg['render/material'],choices=matnames),
         ] + [
-        T('light%s'%light, createLightDialogItems(light,True)) for light in range(nlights)
-        ]
-
-    enablers = [
-        ('lightmodel','','material/ambient','material/diffuse'),
+        {'name':a,'text':a,'value':mat[a],'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'diffuse', 'specular', 'emission']
+        ] + [
+        {'name':a,'text':a,'value':mat[a],'itemtype':'slider','min':1,'max':64,'scale':1.,'func':set_mat_value } for a in ['shininess']
         ]
 
     dia = None
@@ -320,34 +445,25 @@ def setLighting():
         
     def accept(save=False):
         dia.acceptData()
-        #print "RESULTS",dia.results
         res = {}
-        res['material'] = utils.subDict(dia.results,'material/')
-        for i in range(8):
-            key = 'light%s'%i
-            res[key] = utils.subDict(dia.results,key+'/')
-        rest = [ k for k in dia.results.keys() if not (k.startswith('material') or  k.startswith('light')) ]
-        rest = dict((k,dia.results[k]) for k in rest)
-        res.update(rest)
-        res = utils.prefixDict(res,'render/')
+        res['render/material'] = dia.results['default']
         res['_save_'] = save
-        updateSettings(res)
+        print res
+        #updateSettings(res)
+        vp.setMaterial(dia.results['current'])
+        vp.update()
 
     def acceptAndSave():
         accept(save=True)
-
-    def addLight():
-        accept(save=False)
-        dia.close()
         
     def createDialog():  
         dia = widgets.InputDialog(
             caption='pyFormex Settings',
-            enablers = enablers,
+            #enablers = enablers,
             #store=pf.cfg,
             items=items,
-            prefix='render/',
-            autoprefix=True,
+            #prefix='render/',
+            #autoprefix=True,
             actions=[
                 ('Close',close),
                 ('Accept and Save',acceptAndSave),
@@ -358,22 +474,6 @@ def setLighting():
 
     dia = createDialog()
     dia.show()
-    #if res:
-    #    updateSettings({tgt:res})
-    #    pf.canvas.resetLights()
-
-
-def setMaterial():
-    vp = pf.GUI.viewports.current
-    mats = pf.refcfg['material']
-    mats.update(pf.prefcfg['material'])
-    mats.update(pf.cfg['material'])
-    res = draw.askItems([
-        I('material',vp.matname,choices=mats.keys()),
-        ])
-    if res:
-        vp.setMaterial(res['material'])
-        vp.update()
         
 
 
@@ -502,8 +602,9 @@ MenuData = [
         (_('Avg&Normal Treshold'),setAvgNormalTreshold), 
         (_('Avg&Normal Size'),setAvgNormalSize), 
         (_('&Pick Size'),setPickSize), 
-        (_('&Render Mode'),setRenderMode),
-        (_('&Material Parameters'),setMaterial),
+        (_('&Rendering'),setRenderMode),
+        #(_('&Set Material Type'),setMaterial),
+        #(_('&Change Material Parameters'),changeMaterial),
         ## (_('&Show Lighting'),showLighting),
         ('---',None),
         (_('&Save Preferences Now'),savePreferences),

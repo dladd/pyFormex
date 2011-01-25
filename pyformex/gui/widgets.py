@@ -1139,7 +1139,7 @@ def convertInputItem(data):
     raise ValueError,"Invalid inputItem data: %s" % str(data)
 
 
-# define a function to have the same neabling name as for InputItem
+# define a function to have the same enabling name as for InputItem
 def enableItem(self,*args):
     #print "TRY %s, %s" % (self.name(),self.enabled_by)
     try:
@@ -1255,7 +1255,7 @@ class InputDialog(QtGui.QDialog):
         # create the form with the input fields
         self.tab = None  # tabwidget for all the tabs in this form
         self.form = InputForm()
-        self.add_items(items,self.form)
+        self.add_items(items,self.form,self.prefix)
 
         # add the action buttons
         but = dialogButtons(self,actions,default)

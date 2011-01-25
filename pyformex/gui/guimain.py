@@ -283,6 +283,11 @@ class Gui(QtGui.QMainWindow):
         self.drawwait = pf.cfg['draw/wait']
         self.drawlock = drawlock.DrawLock()
 
+        # Materials and Lights database
+        self.materials = canvas.createMaterials()
+        for m in self.materials:
+            print self.materials[m]
+
 
     def createView(self,name,angles):
         """Create a new view and add it to the list of predefined views.
