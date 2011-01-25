@@ -297,10 +297,14 @@ class Material(object):
         self.shininess = float(shininess)
 
 
-    def setValues(**kargs):
+    def setValues(self,**kargs):
+        print "setValues",kargs
         for k in kargs:
+            print k,kargs[k]
             if hasattr(self,k):
+                print getattr(self,k)
                 setattr(self,k,float(kargs[k]))
+                print getattr(self,k)
 
 
     def activate(self):   
@@ -353,11 +357,11 @@ class Light(object):
         setattr(self,key,value)
 
     def enable(self):
-        GL.glLightfv(self.light,GL.GL_POSITION,self.position)
+        GL.glEnable(self.light)
         GL.glLightfv(self.light,GL.GL_AMBIENT,self.ambient)
         GL.glLightfv(self.light,GL.GL_DIFFUSE,self.diffuse)
         GL.glLightfv(self.light,GL.GL_SPECULAR,self.specular)
-        GL.glEnable(self.light)
+        GL.glLightfv(self.light,GL.GL_POSITION,self.position)
 
     def disable(self):
         GL.glDisable(self.light)
@@ -369,32 +373,6 @@ class Light(object):
     specular color: %s
     position: %s
 """ % (self.light-GL.GL_LIGHT0,self.ambient,self.diffuse,self.specular,self.position)
-    
-
-## class Lights(object):
-##     """An array of OpenGL lights.
-
-##     """
-##     def __init__(self,nlights):
-##         self.lights = [ Light(i) for i in range(nlights) ]
-
-##     def set_value(self,i,key,value):
-##         """Set an attribute of light i"""
-##         self.lights[i].set_value(key,value)
-        
-##     def set(self,i,**kargs):
-##         """Set all attributes of light i"""
-##         self.lights[i].set(**kargs)
-
-##     def enable(self):
-##         """Enable the lights"""
-##         [ i.enable() for i in self.lights if i.enabled ]
-
-##     def disable(self):
-##         [ i.disable() for i in self.lights ]
-
-##     def __str__(self):
-##         return ''.join([i.__str__() for i in self.lights if i.enabled ])
 
 
 class LightProfile(object):
@@ -413,6 +391,9 @@ class LightProfile(object):
         self.lights = lights
 
     def activate(self):
+        GL.glEnable(GL.GL_LIGHTING)
+        GL.glEnable(GL.GL_COLOR_MATERIAL)
+        GL.glColorMaterial(fill_mode,self.model)
         GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
         GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
         GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
@@ -422,8 +403,6 @@ class LightProfile(object):
         for light in self.lights:
             light.enable()
         GL.glPopMatrix()
-        GL.glColorMaterial(fill_mode,self.model)
-        GL.glEnable(GL.GL_COLOR_MATERIAL)
         
 
 

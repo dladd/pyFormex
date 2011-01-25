@@ -239,11 +239,13 @@ def setPickSize():
             
 
 def set_mat_value(field):
-    key = field.text()
+    key = field.text().replace('material/','')
     val = field.value()
-    mat = pf.GUI.viewports.current
-    mat.setValues({key:val})
-
+    vp = pf.GUI.viewports.current
+    mat = vp.material
+    mat.setValues(**{key:val})
+    print vp.material
+    vp.update()
 
 def set_light_value(field):
     light = field.data
@@ -272,11 +274,11 @@ def createLightDialogItems(light=0,enabled=True):
     return items
 
 
-def showLighting():
-    print "ACCORDING TO CANVAS:"
-    print pf.canvas.lights
-    print "ACCORDING TO CFG:"
-    print pf.cfg['render']
+## def showLighting():
+##     print "ACCORDING TO CANVAS:"
+##     print pf.canvas.lights
+##     print "ACCORDING TO CFG:"
+##     print pf.cfg['render']
 
 
 ## def setLighting():
@@ -360,37 +362,36 @@ def setRenderMode():
     dia = None
 
     def enableLightParams(mode):
-        print "enableLightParams %s" % dia
         if dia is None:
             return
         mode = str(mode)
         on = mode.startswith('smooth')
-        print "ON = %s" % on
         for f in ['ambient','material']:
-            print dia['render/'+f]
             dia['render/'+f].setEnabled(on)
-        
+        dia['material'].setEnabled(on)
     
     def close():
         dia.close()
         
     def accept(save=False):
         dia.acceptData()
-        res = dia.results
+        print "RESULTS",dia.results
+        if dia.results['render/mode'].startswith('smooth'):
+            res = utils.subDict(dia.results,'render/',strip=False)
+            matname = dia.results['render/material']
+            res['material/%s' % matname] = utils.subDict(dia.results,'material/')
+        else:
+            res = {'render/mode':dia.results['render/mode']}
         res['_save_'] = save
-        print res
+        print "RES",res
         updateSettings(res)
         print pf.cfg
+        vp = pf.GUI.viewports.current
         vp.resetLighting()
-        if pf.cfg['render/mode'] != vp.rendermode:
-            vp.setRenderMode(pf.cfg['render/mode'])
-        #print "VP"
-        #print pf.cfg['render/mode'],pf.cfg['render/ambient'],pf.cfg['render/material']
-        #print vp.rendermode,vp.lightprof.ambient,vp.material.name
-        #vp.setRenderMode(res['mode'])
-        #vp.setAmbient(res['ambient'])
-        #vp.setMaterial(res['material'])
-        #print "AGAIN",vp.rendermode,vp.lightprof.ambient,vp.material.name
+        #if pf.cfg['render/mode'] != vp.rendermode:
+        print "SETMODE %s" % pf.cfg['render/mode']
+        vp.setRenderMode(pf.cfg['render/mode'])
+        print vp.rendermode
         vp.update()
 
     def acceptAndSave():
@@ -398,21 +399,28 @@ def setRenderMode():
         
     def createDialog():  
         matnames = pf.GUI.materials.keys()
+        mat = vp.material
+        mat_items = [
+            I(a,text=a,value=getattr(mat,a),itemtype='slider',min=0,max=100,scale=0.01,func=set_mat_value) for a in [ 'ambient', 'diffuse', 'specular', 'emission']
+            ] + [
+            I(a,text=a,value=getattr(mat,a),itemtype='slider',min=1,max=128,scale=1.,func=set_mat_value) for a in ['shininess']
+            ]
         items = [
-            I('mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes,onselect=enableLightParams),
-            I('ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
-            I('material',vp.material.name,text='Material',choices=matnames),
+            I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes,onselect=enableLightParams),
+            I('render/ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
+            I('render/material',vp.material.name,text='Material',choices=matnames),
+            G('material',text='Material Parameters',items=mat_items),
             ]
         dia = widgets.InputDialog(
             caption='pyFormex Settings',
             #enablers = enablers,
             #store=pf.cfg,
             items=items,
-            prefix='render/',
-            #autoprefix=True,
+            #prefix='render/',
+            autoprefix=True,
             actions=[
                 ('Close',close),
-                ('Accept and Save',acceptAndSave),
+                ('Apply and Save',acceptAndSave),
                 ('Apply',accept),
                 ]
             )
@@ -421,60 +429,6 @@ def setRenderMode():
 
     dia = createDialog()
     dia.show()
-
-
-def changeMaterial():
-    vp = pf.GUI.viewports.current
-    mats = getMaterials()
-    matnames = mats.keys()
-    matname = vp.matname
-    mat = vp.material
-    print mat
-    items = [
-        I('material',pf.cfg['render/material'],choices=matnames),
-        ] + [
-        {'name':a,'text':a,'value':mat[a],'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'diffuse', 'specular', 'emission']
-        ] + [
-        {'name':a,'text':a,'value':mat[a],'itemtype':'slider','min':1,'max':64,'scale':1.,'func':set_mat_value } for a in ['shininess']
-        ]
-
-    dia = None
-    
-    def close():
-        dia.close()
-        
-    def accept(save=False):
-        dia.acceptData()
-        res = {}
-        res['render/material'] = dia.results['default']
-        res['_save_'] = save
-        print res
-        #updateSettings(res)
-        vp.setMaterial(dia.results['current'])
-        vp.update()
-
-    def acceptAndSave():
-        accept(save=True)
-        
-    def createDialog():  
-        dia = widgets.InputDialog(
-            caption='pyFormex Settings',
-            #enablers = enablers,
-            #store=pf.cfg,
-            items=items,
-            #prefix='render/',
-            #autoprefix=True,
-            actions=[
-                ('Close',close),
-                ('Accept and Save',acceptAndSave),
-                ('Apply',accept),
-                ]
-            )
-        return dia
-
-    dia = createDialog()
-    dia.show()
-        
 
 
 def setScriptDirs():

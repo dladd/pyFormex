@@ -709,17 +709,21 @@ def prefixDict(d,prefix=''):
     return dict([ (prefix+k,v) for k,v in d.items() ])
 
 
-def subDict(d,prefix=''):
+def subDict(d,prefix='',strip=True):
     """Return a dict with the items whose key starts with prefix.
 
     - `d`: a dict where all the keys are strings.
     - `prefix`: a string
+    - `strip`: if True (default), the prefix is stripped from the keys.
     
     The return value is a dict with all the items from d whose key starts
     with prefix. The keys in the returned dict will have the prefix
-    stripped off.
+    stripped off, unless strip=False is specified.
     """
-    return dict([ (k.replace(prefix,'',1),v) for k,v in d.items() if k.startswith(prefix)])
+    if strip:
+        return dict([ (k.replace(prefix,'',1),v) for k,v in d.items() if k.startswith(prefix)])
+    else:
+        return dict([ (k,v) for k,v in d.items() if k.startswith(prefix)])
 
     
 def stuur(x,xval,yval,exp=2.5):

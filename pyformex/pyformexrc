@@ -177,7 +177,7 @@ mode = 'wireframe'
 avgnormaltreshold = 0.5
 
 lightmodel = 'ambient and diffuse'
-ambient = 0.3
+ambient = 0.2
 
 material = 'default' # the name of a material defined above
 lights= ['light0','light1'] # a list of enabled lights

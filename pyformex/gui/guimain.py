@@ -285,8 +285,8 @@ class Gui(QtGui.QMainWindow):
 
         # Materials and Lights database
         self.materials = canvas.createMaterials()
-        for m in self.materials:
-            print self.materials[m]
+        ## for m in self.materials:
+        ##     print self.materials[m]
 
 
     def createView(self,name,angles):
