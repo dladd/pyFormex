@@ -293,6 +293,9 @@ class Amplitude(object):
         if definition == 'TABULAR':
             self.data = checkArray(data,(-1,2),'f','i')
             self.type = definition 
+        if definition == 'SMOOTH STEP':             
+            self.data = checkArray(data,(-1,2),'f','i')
+            self.type = definition 
             
 ###################################################
 ############ Utility routines #####################

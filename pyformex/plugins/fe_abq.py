@@ -199,6 +199,7 @@ def fmtMaterial(mat):
     ## ========================
 
     ## USER MATERIAL
+    ## depvar = nr of dependand variables (24 for the nitinol umat)
     ## elasticity=user
     ## constants= list  of int sorted abaqus parameter
     
@@ -234,6 +235,8 @@ def fmtMaterial(mat):
         #TO DO: add possibility to define local orientations!!!"
             
     elif mat.elasticity == 'user':
+        if mat.depvar is not None:
+            out += "*DEPVAR\n%s\n" % mat.depvar
         out += "*USER MATERIAL, CONSTANTS=%s\n" % len(mat.constants)
         out += fmtData(mat.constants)
     
@@ -467,8 +470,27 @@ def fmtConnectorSection(el,setname):
     return out
 
 
-def fmtConnectorBehavior(fil,name):
-    return "*CONNECTOR BEHAVIOR, NAME=%s\n" % name
+def fmtConnectorBehavior(prop):
+    """ Write a connector behavior.
+    Implemented: Elasticity,  Stop
+    Examples: 
+    Elasticity
+    P.Prop(name='connbehavior1',ConnectorBehavior='',Elasticity=dict(component=[1,2,3,4,5,6],value=[1,1,1,1,1,1]))
+    Stop:
+    P.Prop(name='connbehavior3',ConnectorBehavior='',Stop=dict(component=[1,2,3,4,5,6],lowerlimit=[1,1,1,1,1,1], upperlimit=[2, 2, 2, 2,2,2]))
+    """
+    out = ''
+    for p in prop:
+        out += '*CONNECTOR BEHAVIOR, NAME=%s\n' % p.name
+        if p.Elasticity:
+            for j in range(len(p.Elasticity['component'])):
+                out += '*CONNECTOR ELASTICITY, COMPONENT=%s\n' % p.Elasticity['component'][j]
+                out += '%s ,\n' % p.Elasticity['value'][j]
+        if p.Stop:
+            for j in range(len(p.Stop['component'])):
+                out += '*CONNECTOR STOP, COMPONENT=%s\n' % p.Stop['component'][j]
+                out += '%s , %s\n'% (p.Stop['lowerlimit'][j], p.Stop['upperlimit'][j])
+    return out
 
 
 def fmtShellSection(el,setname,matname):
@@ -502,22 +524,57 @@ def fmtSurface(prop):
                 out += "%s, %s\n" % (e,p.label)
     return out
 
- 
-def fmtSurfaceInteraction(prop):
-    """Format the interactions.
+def fmtAnalyticalSurface(prop):
+    """Format the analytical surface rigid body.
 
-    Optional:
+    Required:
 
-    - cross_section (for node based interaction)
-    - friction : friction coeff
+    - nodeset: refnode.
+    - name: the surface name
+    - surftype: 'ELEMENT' or 'NODE'
+    - label: face or edge identifier (only required for surftype = 'NODE')
+    Example: P.Prop(name='AnalySurf', nodeset = 'REFNOD', analyticalsurface='')
     """
     out = ''
     for p in prop:
-        out += "*SURFACE INTERACTION, NAME=%s\n" % (p.name)
+        out += "*RIGID BODY, ANALYTICAL SURFACE = %s, REFNOD=%s\n" % (p.name,p.nodeset)
+    return out
+ 
+def fmtSurfaceInteraction(prop):
+    """Format the interactions.
+    Required:
+    -name
+    
+    Optional:
+    - cross_section (for node based interaction)
+    - friction : friction coeff or 'rough'
+    - surface behavior: no separation
+    - surface behavior: pressureoverclosure 
+    """
+    out = ''
+    for p in prop:
+        out += "*Surface Interaction, name=%s\n" % (p.name)
         if p.cross_section is not None:
             out += "%s\n" % p.cross_section
         if p.friction is not None:
-            out += "*FRICTION\n%s\n" % float(p.friction)
+            if p.friction == 'rough':
+                out += "*FRICTION, ROUGH\n"
+            else:
+                out += "*FRICTION\n%s\n" % float(p.friction)
+        if p.surfacebehavior:
+            out += "*Surface Behavior"
+            print "writing Surface Behavior"
+            if p.noseparation == True:
+                out += ", no separation"
+            if p.pressureoverclosure:	
+                if p.pressureoverclosure[0] == 'soft':
+                    out += ", pressure-overclosure=%s\n" % p.pressureoverclosure[1]
+                    out += "%s" % fmtData(p.pressureoverclosure[2:])
+                elif p.pressureoverclosure[0] == 'hard':
+                    out += ", penalty=%s\n" % p.pressureoverclosure[1]
+                    out += "%s" % fmtData(p.pressureoverclosure[2:])
+            else:
+                out += "\n"
     return out
 
 
@@ -529,6 +586,10 @@ def fmtGeneralContact(prop):
     Required:
 
     - interaction: interaction properties : name or Dict
+    Optional:
+    - Exclusions (exl)
+    Example:
+    P.Prop(generalinteraction=Interaction(name ='contactprop1'),exl =[['surf11', 'surf12'],['surf21',surf22]])
     """
     out = ''
     for p in prop:
@@ -536,10 +597,13 @@ def fmtGeneralContact(prop):
             intername = p.generalinteraction
         else:
             intername = p.generalinteraction.name
-            out += fmtSurfaceInteraction([p.generalinteraction])
-            
+            out += fmtSurfaceInteraction([p.generalinteraction])            
         out += "*Contact\n" 
         out += "*Contact Inclusions, ALL EXTERIOR\n"
+        if p.exl:
+            out += "*Contact Exclusions\n"
+            for ex in p.exl:
+                out += "%s, %s\n" % (ex[0], ex[1])
         out += "*Contact property assignment\n"
         out += ", , %s\n" % intername
     return out
@@ -553,6 +617,10 @@ def fmtContactPair(prop):
     - master: master surface
     - slave: slave surface
     - interaction: interaction properties : name or Dict
+    
+    Example:
+    P.Prop(name='contact0',interaction=Interaction(name ='contactprop', surfacebehavior=True, pressureoverclosure=['hard','linear',0.0, 0.0, 0.001])
+    , master ='quadtubeINTSURF1',  slave='hexstentEXTSURF', contacttype='NODE TO SURFACE')
     """
     out = ''
     for p in prop:
@@ -562,10 +630,56 @@ def fmtContactPair(prop):
             intername = p.interaction.name
             out += fmtSurfaceInteraction([p.interaction])
             
-        out += "*Contact Pair, interaction=%s\n" % intername
+        out += "*Contact Pair, interaction=%s" % intername
+        if p.contacttype is not None:
+            out += ", type=%s\n" % p.contacttype
+        else:
+            out+="\n"
         out += "%s, %s\n" % (p.slave,p.master)
     return out
 
+def fmtConstraint(prop):
+    """Format Tie constraint
+    Required:
+    
+    -name
+    -adjust (yes or no)
+    -slave
+    -master
+    
+    Optional:
+    -type (surf2surf, node2surf)
+    -no rotation
+    
+    Example:
+    P.Prop(constraint='1', name = 'constr1', adjust = 'no', master = 'hexstentbarSURF', slave = 'hexstentEXTSURF',type='NODE TO SURFACE')    
+    """
+    for p in prop:
+        out =''
+        out +="*Tie, name=%s, adjust=%s" % (p.name, p.adjust)
+        if p.type is not None:
+            out+=",type = %s" % p.type
+        if p.norotation == True:
+            out+=", NO ROTATION"
+        out +="\n"
+        out +="%s, %s\n" % (p.slave, p.master)
+    return out
+
+	
+def fmtInitialConditions(prop):
+    """Format initial conditions:
+    Required:
+    -type
+    -nodes
+    -data
+    Example: P.Prop(initialcondition='', nodes ='Nall', type = 'TEMPERATURE', data = 37.)
+    """
+    
+    for p in prop:
+        out ="*Initial Conditions, type = %s\n" % p.type
+        out +="%s,%.2f\n" % (p.nodes, p.data)
+    return out
+    
 
 def fmtOrientation(prop):
     """Format the orientation.
@@ -718,7 +832,7 @@ def writeSection(fil,prop):
     setname = esetName(prop)
     el = prop.section
     eltype = prop.eltype.upper()
-
+    control = el.control
     mat = el.material
     if mat is not None:
         fil.write(fmtMaterial(mat))
@@ -759,7 +873,10 @@ def writeSection(fil,prop):
     ##########################
     elif eltype in surface_elems:
         if el.sectiontype.upper() == 'SURFACE':
-            fil.write("*SURFACE SECTION, ELSET=%s \n" % setname)
+            if el.density:
+                fil.write("""*SURFACE SECTION, ELSET=%s, DENSITY=%f \n""" % (setname, el.density))
+            else:
+                fil.write("""*SURFACE SECTION, ELSET=%s \n""" % setname)
     
     ############
     ## MEMBRANE elements
@@ -774,11 +891,19 @@ def writeSection(fil,prop):
     ############
     ## 3DSOLID elements
     ##########################
+    #Section controls: add enhanced hourglassing
+    #first elementset: set control=' '
+    #other elementsets: set control=True (or something else)
     elif eltype in solid3d_elems:
         if el.sectiontype.upper() == '3DSOLID':
             if mat is not None:
-                fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
-%s \n""" % (setname,mat.name,1.))
+                if control is None:
+                    fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s\n%s \n""" % (setname,mat.name,1.))
+                elif control is ' ':
+                    fil.write("""*SOLID SECTION, ELSET=%s, CONTROLS=SECCONTROL, MATERIAL=%s\n%s \n""" % (setname,mat.name,1.))
+                    fil.write("*SECTION CONTROLS, name = SECCONTROL, HOURGLASS=ENHANCED\n")
+                elif control is not ' ':
+                    fil.write("""*SOLID SECTION, ELSET=%s, CONTROLS=SECCONTROL, MATERIAL=%s\n%s \n""" % (setname,mat.name,1.))
 
     ############
     ## 2D SOLID elements
@@ -849,7 +974,6 @@ def writeDisplacements(fil,prop,op='MOD'):
         for v in p.displ:
             dof = v[0]+1
             fil.write("%s, %s, %s, %s\n" % (setname,dof,dof,v[1]))
-
             
 def writeCloads(fil,prop,op='NEW'):
     """Write cloads.
@@ -1145,7 +1269,7 @@ class Step(Dict):
     def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
                  tags=None,inc=None,sdi=None,timeinc=None,
                  buckle='SUBSPACE',incr=0.1,
-                 name=None,bulkvisc=None,out=None,res=None):
+                 name=None,bulkvisc=None,out=None,res=None, stab=None,allsdtol=0,cont='no', unsymm='NO'):
         """Create a new analysis step."""
         
         self.analysis = analysis.upper()
@@ -1169,6 +1293,10 @@ class Step(Dict):
         self.bulkvisc = bulkvisc
         self.out = out
         self.res = res
+        self.stab = stab
+        self.allsdtol = allsdtol
+        self.cont=cont
+        self.unsymm=unsymm
 
 
     def write(self,fil,propDB,out=[],res=[],resfreq=1,timemarks=False):
@@ -1197,7 +1325,13 @@ class Step(Dict):
             cmd += ',CONVERT SDI=%s' % self.sdi        
         fil.write("%s\n" % cmd)
         if self.analysis in ['STATIC','DYNAMIC']:
-            fil.write("*%s\n" % self.analysis)
+            fil.write("*%s" % self.analysis)
+            if self.unsymm=='YES':
+                fil.write(", unsymm=YES")
+            if self.stab:
+                fil.write(",STABILIZE = %s, ALLSDTOL = %s, CONTINUE = %s\n" % (self.stab,self.allsdtol,self.cont))
+            else:
+                fil.write("\n")
         elif self.analysis == 'EXPLICIT':
             fil.write("*DYNAMIC, EXPLICIT\n")
         elif self.analysis == 'BUCKLE':
@@ -1359,7 +1493,21 @@ class Result(Dict):
                             'freq':freq})
         self.update(dict(**kargs))
 
-
+class Interaction(Dict):
+    """A Dict for setting surface interactions
+    pressureoverclosure is an array = ['hard'/'soft','linear'/'nonlinear'/'exponential'/'tabular'/.., value1,value2,value3,... ]
+    Leave empty for default hard contact
+    'hard' will set penalty contact, either 'linear' or 'nonlinear'
+    'soft' will set soft pressure-overclosure, combine with 'linear'/'exponential'/'tabular'/'scale factor'
+    for needed values on dataline: see abaqus keyword manual
+    """
+    def __init__(self, name=None, cross_section=1, friction=0.0, surfacebehavior = None, noseparation = False, pressureoverclosure = None):
+        self.name = name
+        self.cross_section = cross_section
+        self.friction =friction
+        self.surfacebehavior = surfacebehavior
+        self.noseparation = noseparation
+        self.pressureoverclosure = pressureoverclosure
 ############################################################ AbqData
         
 class AbqData(object):
@@ -1514,12 +1662,23 @@ Script: %s
         if prop:
             pf.message("Writing orientations")
             fil.write(fmtOrientation(prop))
+            
+        prop = self.prop.getProp('',attr=['ConnectorBehavior'])
+        if prop:
+            pf.message("Writing Connector Behavior")
+            fil.write(fmtConnectorBehavior(prop))
 
         prop = self.prop.getProp('',attr=['surftype'])
         if prop:
             pf.message("Writing surfaces")
             fil.write(fmtSurface(prop))
-            prop = self.prop.getProp('',attr=['interaction'])
+            
+        prop = self.prop.getProp('',attr=['analyticalsurface'])
+        if prop:
+            pf.message("Writing analytical surfaces")
+            fil.write(fmtAnalyticalSurface(prop))
+            
+        prop = self.prop.getProp('',attr=['interaction'])
         if prop:       
             pf.message("Writing contact pairs")
             fil.write(fmtContactPair(prop))
@@ -1528,6 +1687,16 @@ Script: %s
         if prop:  
                 pf.message("Writing general contact")
                 fil.write(fmtGeneralContact(prop))
+                
+        prop = self.prop.getProp('',attr=['constraint'])
+        if prop:  
+                pf.message("Writing constraints")
+                fil.write(fmtConstraint(prop))
+                
+        prop = self.prop.getProp('',attr=['initialcondition'])
+        if prop:  
+                pf.message("Writing initial conditions")
+                fil.write(fmtInitialConditions(prop))
 
         prop = self.prop.getProp('n',tag=self.bound,attr=['bound'])
         if prop:
