@@ -290,12 +290,12 @@ class Amplitude(object):
     
     def __init__(self,data,definition='TABULAR'):
         """Create a new amplitude."""
-        if definition == 'TABULAR':
+        if definition in [ 'TABULAR', 'SMOOTH STEP' ]:
             self.data = checkArray(data,(-1,2),'f','i')
-            self.type = definition 
-        if definition == 'SMOOTH STEP':             
-            self.data = checkArray(data,(-1,2),'f','i')
-            self.type = definition 
+            self.type = definition
+        else:
+            raise ValueError,"Expected definition = 'TABULAR' or 'SMOOTH STEP'"
+
             
 ###################################################
 ############ Utility routines #####################
