@@ -355,7 +355,7 @@ def createLightDialogItems(light=0,enabled=True):
 ##     #    pf.canvas.resetLights()
 
 
-def setRenderMode():
+def setRendering():
     import canvas
 
     vp = pf.GUI.viewports.current
@@ -391,7 +391,7 @@ def setRenderMode():
             pf.cfg['material/%s' % matname] = matdata
             pf.GUI.materials[matname] = canvas.Material(matname,**matdata)
         else:
-            res = {'render/mode':dia.results['render/mode']}
+            res = utils.selectDict(dia.results,['render/mode','render/lighting'])
         res['_save_'] = save
         print "RES",res
         updateSettings(res)
@@ -399,10 +399,12 @@ def setRenderMode():
         vp = pf.GUI.viewports.current
         vp.resetLighting()
         #if pf.cfg['render/mode'] != vp.rendermode:
-        print "SETMODE %s" % pf.cfg['render/mode']
-        vp.setRenderMode(pf.cfg['render/mode'])
-        print vp.rendermode
+        print "SETMODE %s %s" % (pf.cfg['render/mode'],pf.cfg['render/lighting'])
+        vp.setRenderMode(pf.cfg['render/mode'],pf.cfg['render/lighting'])
+        print vp.rendermode,vp.lighting
         vp.update()
+        toolbar.updateLightButton()
+        
 
     def acceptAndSave():
         accept(save=True)
@@ -416,14 +418,19 @@ def setRenderMode():
             I(a,text=a,value=getattr(mat,a),itemtype='slider',min=1,max=128,scale=1.,func=set_mat_value) for a in ['shininess']
             ]
         items = [
-            I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes,onselect=enableLightParams),
+            I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes),#,onselect=enableLightParams),
+            I('render/lighting',vp.lighting,text='Use Lighting'),
             I('render/ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
             I('render/material',vp.material.name,text='Material',choices=matnames,onselect=updateLightParams),
             G('material',text='Material Parameters',items=mat_items),
             ]
+
+        enablers = [
+            ('render/lighting',True,'render/ambient','render/material','material'),
+            ]
         dia = widgets.InputDialog(
             caption='pyFormex Settings',
-            #enablers = enablers,
+            enablers = enablers,
             #store=pf.cfg,
             items=items,
             #prefix='render/',
@@ -566,7 +573,7 @@ MenuData = [
         (_('Avg&Normal Treshold'),setAvgNormalTreshold), 
         (_('Avg&Normal Size'),setAvgNormalSize), 
         (_('&Pick Size'),setPickSize), 
-        (_('&Rendering'),setRenderMode),
+        (_('&Rendering'),setRendering),
         #(_('&Set Material Type'),setMaterial),
         #(_('&Change Material Parameters'),changeMaterial),
         ## (_('&Show Lighting'),showLighting),

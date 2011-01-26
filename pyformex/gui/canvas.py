@@ -435,8 +435,10 @@ class Canvas(object):
         self.settings = CanvasSettings()
         self.mode2D = False
         self.rendermode = pf.cfg['render/mode']
+        self.lighting = pf.cfg['render/lighting']
+        if self.lighting not in [True,False]:
+            self.lighting = self.rendermode.startswith('smooth')
         self.polygonfill = False
-        self.lighting = True
         self.avgnormals = False
         self.alphablend = False
         self.dynamouse = True  # dynamic mouse action works on mouse move
@@ -492,17 +494,32 @@ class Canvas(object):
         self.lightprof = LightProfile(self.lightmodel,pf.cfg['render/ambient'],lights)
 
 
-    def setRenderMode(self,rm):
-        """Set the rendermode.
+    def setRenderMode(self,mode,lighting=None):
+        """Set the rendering mode.
 
-        This changes the rendermode and redraws everything with the new mode.
+        This sets or changes the rendermode and lighting attributes.
+        If lighting is not specified, it is set depending on the rendermode.
+        
+        If the canvas has not been initialized, this merely sets the
+        attributes self.rendermode and self.lighting.
+        If the canvas was already initialized (it has a camera), and one of
+        the specified settings is fdifferent from the existing, the new mode
+        is set, the canvas is re-initialized according to the newly set mode,
+        and everything is redrawn with the new mode.
         """
-        if rm != self.rendermode:
-            if rm not in Canvas.rendermodes:
-                rm = Canvas.rendermodes[0]
-            self.rendermode = rm
-            self.glinit(self.rendermode)
+        if mode not in Canvas.rendermodes:
+            mode = Canvas.rendermodes[0]
+        if lighting not in [True,False]:
+            lighting = mode.startswith('smooth')
+
+        if mode != self.rendermode or lighting != self.lighting:
+            self.rendermode = mode
+            self.lighting = lighting
+            print "GLINIT %s %s" % (self.rendermode,self.lighting)
+            self.glinit()
             self.redrawAll()
+        else:
+            print "KEEP MODE  %s %s" % (self.rendermode,self.lighting)
 
 
     def setTransparency(self,onoff):
@@ -637,14 +654,14 @@ class Canvas(object):
         #pf.debug("view angles: %s" % self.view_angles)
 
 
-    def glinit(self,mode=None):
-        if mode:
-            self.rendermode = mode
+    def glinit(self):
+        """Initialize the rendering machine.
 
-
-        ## if self.settings.bgcolor2 is not None self.settings.bgcolor != self.settings.bgcolor2:
+        The rendering machine is initialized according to:
+        - self.rendermode: one of
+        - self.lighting
+        """
         self.setBgColor(self.settings.bgcolor,self.settings.bgcolor2)
-
         self.clear()
         #GL.glClearColor(*colors.RGBA(self.default.bgcolor))# Clear The Background Color
         GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
@@ -652,17 +669,12 @@ class Canvas(object):
         GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
         #GL.glEnable(GL.GL_CULL_FACE)
         
-
-        # On initializing a rendering mode, we also set default lighting
         if self.rendermode == 'wireframe':
             if self.background:
                 glSmooth()
                 glFill()
             else:
-                #glFlat()
                 glLine()
-            self.setLighting(False)
-
                 
         elif self.rendermode.startswith('flat'):
             if self.background:
@@ -670,16 +682,15 @@ class Canvas(object):
             else:
                 glFlat()
             glFill()
-            self.setLighting(False)
                
         elif self.rendermode.startswith('smooth'):
             glSmooth()
             glFill()
-            self.setLighting(True)
             
         else:
             raise RuntimeError,"Unknown rendering mode"
 
+        self.setLighting(self.lighting)
 
         if self.rendermode.endswith('wire'):
             GL.glEnable(GL.GL_POLYGON_OFFSET_FILL)

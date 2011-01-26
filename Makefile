@@ -192,6 +192,7 @@ stats:
 # Create the Sphinx documentation
 html:
 	make -C ${SPHINXDIR} html
+	@echo "Remember to do 'make svndoc' to make the new docs available in pyformex-svn"
 
 svndoc:
 	make -C ${SPHINXDIR} svndoc

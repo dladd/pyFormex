@@ -725,6 +725,18 @@ def subDict(d,prefix='',strip=True):
     else:
         return dict([ (k,v) for k,v in d.items() if k.startswith(prefix)])
 
+
+def selectDict(d,keys):
+    """Return a dict with the items whose key is in keys.
+
+    - `d`: a dict where all the keys are strings.
+    - `keys`: a set of key values
+    
+    The return value is a dict with all the items from d whose key
+    is in keys.
+    """
+    return dict([ item for item in d.items() if item[0] in keys ])
+
     
 def stuur(x,xval,yval,exp=2.5):
     """Returns a (non)linear response on the input x.

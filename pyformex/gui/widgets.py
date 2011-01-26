@@ -119,51 +119,94 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
 
     
 class InputItem(QtGui.QWidget):
-    """A single input item, usually with a label in front.
+    """A single input item.
 
-    The created widget is a QHBoxLayout which can be embedded in the vertical
-    layout of a dialog.
+    This is the base class for widgets holding a single input item.
+    A single input item is any item that is treated as a unit and
+    refered to by a single name.
     
-    This is a super class for all input items. It just creates a label.
-    The input field(s) should be added by the dedicated subclass.
-
-    The constructor has one required argument: ``name``. It is the name used
-    to identify the item and should be unique for all InputItems in the same
-    dialog. 
-    Other (optional) positional parameters are passed to the QHBoxLayout
-    constructor.
-
-    By default the constructor adds a label to the QHBoxLayout, with text set
-    by the ``text`` keyword argument or (by default) by the name of the item.
-    Use the ``text`` argument if you want the displayed text to be different
-    from the items name.
-    A ``text=''`` parameter will suppress the label. This is e.g. used in the
-    InputBoolean constructor, where the text is displayed by the input field.
-
-    The superclass also defines default values for the text(), value() and
-    setValue() methods.
-
-    Subclasses should initialize the superclass as follows::
+    This base class is rarely used directly. Most of the components
+    of an InputDialog are subclasses of hereof, each specialized in
+    some form of input data or representation. There is e.g. an
+    InputInteger class to input an integer number and an InputString
+    for the input of a string.
+    The base class groups the functionality that is common to the
+    different input widgets.
     
+    The InputItem widget holds a horizontal layout box (QHBoxLayout)
+    to group its its components. In most cases there are just two components:
+    a label with the name of the field, and the actual input field.
+    Other components, such as buttons or sliders, may be added. This is
+    often done in subclasses.
+    
+    The constructor has one required argument: `name`. Other
+    (optional) positional parameters are passed to the QtGui.QWidget
+    constructor. The remaining keyword parameters are options that
+    somehow change the default behavior of the InputItem class.
+
+    Parameters:
+
+    - `name`: the name used to identify the item. It should be unique for
+      all InputItems in the same InputDialog. It will be used as a key in
+      the dictionary that returns all the input values in the dialog. It will
+      also be used as the label to display in front of the input field, in
+      case no `text` value was specified.
+    - `text`: if specified, this text will be displayed in the label in front
+      of the input field. This allows for showing descriptive texts for the
+      input fields in the dialog, while keeping short and simple names for
+      the items in the programming.
+      `text` can be set to an empty string to suppress the creation of a label
+      in front of the input field. This is useful if the input field
+      widget itself already provides a label (see e.g. InputBoolean).
+      `text` can also be a QtGui.QPixmap, allowing for icons to be used
+      as labels.
+    - `buttons`: a list of (label,function) tuples. For each tuple a button
+      will be added after the input field. The button displays the text and
+      when pressed, the specified function will be executed. The function
+      takes no arguments.
+    - `data`: any extra data that you want to be stored into the widget.
+      These data are not displayed, but can be useful in the functioning of
+      the widget.
+    - `enabled`: boolean. If False, the InputItem will not be enabled, meaning
+      that the user can not enter any values there. Disabled fields are usually
+      displayed in a greyed-out fashion.
+    - `readonly`: boolean. If True, the data are read-only and can not be
+      changed by the user. Unlike disabled items, they are displayed in a
+      normal fashion.
+    - `tooltip`: A descriptive text which is only shown when the user pauses
+      the cursor for some time on the widget. It can be used to give
+      more comprehensive explanation to first time users.
+      
+    Subclasses should have an ``__init__()`` method which first constructs
+    a proper widget for the input field, and stores it in the attribute
+    ``self.input``. Then the baseclass should be properly initialized, passing
+    any optional parameters::
+
+      self.input = SomeInputWidget()
       InputItem.__init__(self,name,*args,**kargs)
 
-    Subclasses should override:
+    Subclasses should also override the following default methods of
+    the InputItem base class:
     
-    - text(): if they called the superclass __init__() method with ``text=''``;
-    - value(): if they did not create a self.input widget who's text() is
-      the return value of the item.
-    - setValue(): always, unless the field is readonly.
+    - text(): if the subclass calls the superclass __init__() method with
+      a value ``text=''``. This method should return the value of the
+      displayed text.
+    - value(): if the value of the input field is not given by
+      ``self.input.text()``, i.e. in most cases. This method should
+      return the value of the input field.
+    - setValue(val): always, unless the field is readonly. This method should
+      change the value of the input widget to the specified value.
 
     Subclasses can set validators on the input, like::
     
-      input.setValidator(QtGui.QIntValidator(input))
+      self.input.setValidator(QtGui.QIntValidator(self.input))
     
     Subclasses can define a show() method e.g. to select the data in the
     input field on display of the dialog.
     """
     
     def __init__(self,name,*args,**kargs):
-        """Creates a widget with a horizontal box layout and puts the label in it."""
+        """Create a widget with a horizontal box layout"""
         QtGui.QWidget.__init__(self,*args)
         layout = QtGui.QHBoxLayout()
         #layout.setSpacing(0)
@@ -207,12 +250,13 @@ class InputItem(QtGui.QWidget):
                 pass
             
         if 'tooltip' in kargs:
-            if hasattr(self,'label'):
-                self.label.setToolTip(kargs['tooltip'])
-        try:
-            self.input.setToolTip(kargs['tooltip'])
-        except:
-            pass
+            self.setToolTip(kargs['tooltip'])
+        ##     if hasattr(self,'label'):
+        ##         self.label.setToolTip(kargs['tooltip'])
+        ## try:
+        ##     self.input.setToolTip(kargs['tooltip'])
+        ## except:
+        ##     pass
 
         if 'buttons' in kargs:
             print kargs
