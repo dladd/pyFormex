@@ -220,7 +220,7 @@ def apply_config_changes(cfg):
     for key in [
         'input/timeout','filterwarnings',
         'render/ambient','render/diffuse','render/specular','render/emission',
-        'canvas/propcolors','Save changes',
+        'render/material','canvas/propcolors','Save changes',
         ]:
         if key in cfg.keys():
             print("DELETING CONFIG VARIABLE %s" % key)

@@ -298,13 +298,13 @@ class Material(object):
 
 
     def setValues(self,**kargs):
-        print "setValues",kargs
+        #print "setValues",kargs
         for k in kargs:
-            print k,kargs[k]
+            #print k,kargs[k]
             if hasattr(self,k):
-                print getattr(self,k)
+                #print getattr(self,k)
                 setattr(self,k,float(kargs[k]))
-                print getattr(self,k)
+                #print getattr(self,k)
 
 
     def activate(self):   
@@ -314,6 +314,11 @@ class Material(object):
         GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
         GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
 
+
+    def dict(self):
+        """Return the material light parameters as a dict"""
+        return dict([(k,getattr(self,k)) for k in ['ambient','diffuse','specular','emission','shininess']])
+    
 
     def __str__(self):
         return """MATERIAL: %s
@@ -391,7 +396,7 @@ class LightProfile(object):
         self.lights = lights
 
     def activate(self):
-        GL.glEnable(GL.GL_LIGHTING)
+        #GL.glEnable(GL.GL_LIGHTING)
         GL.glEnable(GL.GL_COLOR_MATERIAL)
         GL.glColorMaterial(fill_mode,self.model)
         GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
@@ -426,8 +431,6 @@ class Canvas(object):
         self.background = None
         self.bbox = None
         self.resetLighting()
-        ## self.lights = Lights(8)
-        ## self.resetLights()
         self.setBbox()
         self.settings = CanvasSettings()
         self.mode2D = False
@@ -658,8 +661,7 @@ class Canvas(object):
             else:
                 #glFlat()
                 glLine()
-            self.lighting = False
-            self.glLight(False)
+            self.setLighting(False)
 
                 
         elif self.rendermode.startswith('flat'):
@@ -668,14 +670,12 @@ class Canvas(object):
             else:
                 glFlat()
             glFill()
-            self.lighting = False
-            self.glLight(False)
+            self.setLighting(False)
                
         elif self.rendermode.startswith('smooth'):
             glSmooth()
             glFill()
-            self.lighting = True
-            self.glLight(True)
+            self.setLighting(True)
             
         else:
             raise RuntimeError,"Unknown rendering mode"
@@ -706,8 +706,8 @@ class Canvas(object):
         GL.glLineWidth(self.settings.linewidth)
         glLineStipple(*self.settings.linestipple)
         GL.glPointSize(self.settings.pointsize)
-        if self.rendermode.startswith('smooth'):
-            self.lighting = True
+        #if self.rendermode.startswith('smooth'):
+        #    self.resetLighting()
         self.glLight(self.lighting)
 
     

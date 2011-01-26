@@ -369,6 +369,13 @@ def setRenderMode():
         for f in ['ambient','material']:
             dia['render/'+f].setEnabled(on)
         dia['material'].setEnabled(on)
+
+    def updateLightParams(matname):
+        matname=str(matname)
+        mat = pf.GUI.materials[matname]
+        val = utils.prefixDict(mat.dict(),'material/')
+        print "UPDATE",val
+        dia.updateData(val)
     
     def close():
         dia.close()
@@ -379,7 +386,10 @@ def setRenderMode():
         if dia.results['render/mode'].startswith('smooth'):
             res = utils.subDict(dia.results,'render/',strip=False)
             matname = dia.results['render/material']
-            res['material/%s' % matname] = utils.subDict(dia.results,'material/')
+            matdata = utils.subDict(dia.results,'material/')
+            # Currently, set both in cfg and Material db
+            pf.cfg['material/%s' % matname] = matdata
+            pf.GUI.materials[matname] = canvas.Material(matname,**matdata)
         else:
             res = {'render/mode':dia.results['render/mode']}
         res['_save_'] = save
@@ -408,7 +418,7 @@ def setRenderMode():
         items = [
             I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes,onselect=enableLightParams),
             I('render/ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
-            I('render/material',vp.material.name,text='Material',choices=matnames),
+            I('render/material',vp.material.name,text='Material',choices=matnames,onselect=updateLightParams),
             G('material',text='Material Parameters',items=mat_items),
             ]
         dia = widgets.InputDialog(

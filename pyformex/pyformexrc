@@ -156,8 +156,8 @@ size=(12,12) # size of the pick window
 
 
 [material]
-default = dict(ambient=0.3,diffuse=0.3,specular=0.6)
 matte = dict(ambient=0.8,diffuse=0.8,specular=0.2)
+default = dict(ambient=0.3,diffuse=0.3,specular=0.6)
 plastic = dict(ambient=0.9,diffuse=0.9,specular=0.7)
 metal = dict(ambient=0.1,diffuse=0.1,specular=0.9)
 
