@@ -57,9 +57,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-marks">
+  <p>DEBUG: Using the (slower) Python misc functions
+DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; marks
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-marks">
 <span id="marks-opengl-marks-for-annotating-3d-actors"></span><span id="sec-ref-marks"></span><h1>18. <a class="reference internal" href="#module-marks" title="marks: OpenGL marks for annotating 3D actors."><tt class="xref py py-mod docutils literal"><span class="pre">marks</span></tt></a> &#8212; OpenGL marks for annotating 3D actors.<a class="headerlink" href="#module-marks" title="Permalink to this headline">¶</a></h1>
-<p>OpenGL marks for annotating 3D actors.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">marks</span></tt></p>
 <dl class="class">
 <dt id="marks.Mark">
@@ -70,18 +74,96 @@
 <dd>pos    : 3D point where the mark will be drawn
 draw() : function to draw the mark</dd>
 </dl>
+<dl class="method">
+<dt id="marks.Mark.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#marks.Mark.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the OpenGL drawing functions to display the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.Mark.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#marks.Mark.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.Mark.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#marks.Mark.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.Mark.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#marks.Mark.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.Mark.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#marks.Mark.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="marks.AxesMark">
 <em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">AxesMark</tt><big>(</big><em>pos</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#marks.AxesMark" title="Permalink to this definition">¶</a></dt>
 <dd><p>Two viewport axes drawn at a 3D position.</p>
+<dl class="method">
+<dt id="marks.AxesMark.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#marks.AxesMark.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.AxesMark.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#marks.AxesMark.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.AxesMark.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#marks.AxesMark.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.AxesMark.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#marks.AxesMark.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="marks.TextMark">
 <em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">TextMark</tt><big>(</big><em>pos</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em><big>)</big><a class="headerlink" href="#marks.TextMark" title="Permalink to this definition">¶</a></dt>
 <dd><p>A text drawn at a 3D position.</p>
+<dl class="method">
+<dt id="marks.TextMark.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#marks.TextMark.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.TextMark.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#marks.TextMark.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.TextMark.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#marks.TextMark.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.TextMark.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#marks.TextMark.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -92,6 +174,30 @@ draw() : function to draw the mark</dd>
 <dt id="marks.MarkList.drawpick">
 <tt class="descname">drawpick</tt><big>(</big><big>)</big><a class="headerlink" href="#marks.MarkList.drawpick" title="Permalink to this definition">¶</a></dt>
 <dd><p>This functions mimicks the drawing of a number list for picking.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.MarkList.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#marks.MarkList.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.MarkList.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#marks.MarkList.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.MarkList.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#marks.MarkList.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="marks.MarkList.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#marks.MarkList.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
 </dd></dl>
 
 </dd></dl>

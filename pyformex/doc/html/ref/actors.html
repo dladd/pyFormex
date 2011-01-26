@@ -57,9 +57,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-actors">
+  <p>DEBUG: Using the (slower) Python misc functions
+DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; actors
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-actors">
 <span id="actors-opengl-actors-for-populating-the-3d-scene"></span><span id="sec-ref-actors"></span><h1>16. <a class="reference internal" href="#module-actors" title="actors: OpenGL actors for populating the 3D scene."><tt class="xref py py-mod docutils literal"><span class="pre">actors</span></tt></a> &#8212; OpenGL actors for populating the 3D scene.<a class="headerlink" href="#module-actors" title="Permalink to this headline">¶</a></h1>
-<p>OpenGL actors for populating the 3D scene.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">actors</span></tt></p>
 <dl class="class">
 <dt id="actors.Actor">
@@ -90,18 +94,78 @@ for which we porvide do-nothing defaults here:</p>
 <dd><p>Default implementation for bbox().</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="actors.Actor.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.Actor.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the OpenGL drawing functions to display the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.Actor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.Actor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.Actor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.Actor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.Actor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.Actor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="actors.TranslatedActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">TranslatedActor</tt><big>(</big><em>A</em>, <em>trl=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.TranslatedActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An Actor translated to another position.</p>
+<dl class="method">
+<dt id="actors.TranslatedActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.TranslatedActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.TranslatedActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.TranslatedActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.TranslatedActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.TranslatedActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="actors.RotatedActor">
 <em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">RotatedActor</tt><big>(</big><em>A</em>, <em>rot=(1.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>twist=0.0</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#actors.RotatedActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An Actor rotated to another position.</p>
+<dl class="method">
+<dt id="actors.RotatedActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.RotatedActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.RotatedActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.RotatedActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.RotatedActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.RotatedActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -112,6 +176,24 @@ for which we porvide do-nothing defaults here:</p>
 <dt id="actors.CubeActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.CubeActor.drawGL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the cube.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.CubeActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.CubeActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.CubeActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.CubeActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.CubeActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.CubeActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
 </dd></dl>
 
 </dd></dl>
@@ -126,6 +208,24 @@ for which we porvide do-nothing defaults here:</p>
 <dd><p>Draw the cube.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="actors.SphereActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.SphereActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.SphereActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.SphereActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.SphereActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.SphereActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -136,6 +236,24 @@ for which we porvide do-nothing defaults here:</p>
 <dt id="actors.BboxActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.BboxActor.drawGL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Always draws a wireframe model of the bbox.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.BboxActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.BboxActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.BboxActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.BboxActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.BboxActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.BboxActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
 </dd></dl>
 
 </dd></dl>
@@ -158,6 +276,24 @@ draw_planes = False: do not draw the coordinate planes.</p>
 <dd><p>Draw the axes.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="actors.AxesActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.AxesActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.AxesActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.AxesActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.AxesActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.AxesActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -175,6 +311,24 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 <dd><p>Draw the triade.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="actors.TriadeActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.TriadeActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.TriadeActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.TriadeActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.TriadeActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.TriadeActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -185,6 +339,24 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 <dt id="actors.GridActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.GridActor.drawGL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the grid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GridActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.GridActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GridActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.GridActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GridActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.GridActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
 </dd></dl>
 
 </dd></dl>
@@ -199,6 +371,24 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 <dd><p>Draw the grid.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="actors.CoordPlaneActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.CoordPlaneActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.CoordPlaneActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.CoordPlaneActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.CoordPlaneActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.CoordPlaneActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -209,6 +399,24 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 <dt id="actors.PlaneActor.drawGL">
 <tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.PlaneActor.drawGL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the grid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.PlaneActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.PlaneActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.PlaneActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.PlaneActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.PlaneActor.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#actors.PlaneActor.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
 </dd></dl>
 
 </dd></dl>
@@ -222,6 +430,18 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 <dt id="actors.GeomActor.vertices">
 <tt class="descname">vertices</tt><big>(</big><big>)</big><a class="headerlink" href="#actors.GeomActor.vertices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the vertives as a 2-dim array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
 </dd></dl>
 
 <dl class="method">

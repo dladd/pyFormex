@@ -57,9 +57,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-script">
+  <p>DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; script
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-script">
 <span id="script-basic-pyformex-script-functions"></span><span id="sec-ref-script"></span><h1>4. <a class="reference internal" href="#module-script" title="script: Basic pyFormex script functions"><tt class="xref py py-mod docutils literal"><span class="pre">script</span></tt></a> &#8212; Basic pyFormex script functions<a class="headerlink" href="#module-script" title="Permalink to this headline">¶</a></h1>
-<p>Basic pyFormex script functions</p>
 <p>The <a class="reference internal" href="#module-script" title="script: Basic pyFormex script functions"><tt class="xref py py-mod docutils literal"><span class="pre">script</span></tt></a> module provides the basic functions available
 in all pyFormex scripts. These functions are available in GUI and NONGUI
 applications, without the need to explicitely importing the <a class="reference internal" href="#module-script" title="script: Basic pyFormex script functions"><tt class="xref py py-mod docutils literal"><span class="pre">script</span></tt></a>
@@ -310,7 +313,7 @@ comp: a string used in the comparison.</p>
 
 <dl class="function">
 <dt id="script.writeGeomFile">
-<tt class="descclassname">script.</tt><tt class="descname">writeGeomFile</tt><big>(</big><em>filename</em>, <em>objects</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#script.writeGeomFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">writeGeomFile</tt><big>(</big><em>filename</em>, <em>objects</em>, <em>sep=' '</em>, <em>mode='w'</em>, <em>shortlines=False</em><big>)</big><a class="headerlink" href="#script.writeGeomFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save geometric objects to a pyFormex Geometry File.</p>
 <p>A pyFormex Geometry File can store multiple geometrical objects in a
 native format that can be efficiently read back into pyformex.

@@ -57,9 +57,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-formex">
+  <p>DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; formex
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-formex">
 <span id="formex-formex-algebra-in-python"></span><span id="sec-ref-formex"></span><h1>2. <a class="reference internal" href="#module-formex" title="formex: Formex algebra in Python"><tt class="xref py py-mod docutils literal"><span class="pre">formex</span></tt></a> &#8212; Formex algebra in Python<a class="headerlink" href="#module-formex" title="Permalink to this headline">¶</a></h1>
-<p>Formex algebra in Python</p>
 <p>This module is a Python implementation of most functions of Formex algebra.
 It forms the basis of pyFormex, but predates it and is fairly independent.
 Therefore, it can also be used as a standalone extension module in Python.</p>
@@ -281,6 +284,18 @@ connectivity table with integers pointing to the corresponding vertex.</p>
 <dd><p>Return formatted information about a Formex.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="formex.Formex.point2str">
+<em class="property">classmethod </em><tt class="descname">point2str</tt><big>(</big><em>clas</em>, <em>point</em><big>)</big><a class="headerlink" href="#formex.Formex.point2str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string representation of a point</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="formex.Formex.element2str">
+<em class="property">classmethod </em><tt class="descname">element2str</tt><big>(</big><em>clas</em>, <em>elem</em><big>)</big><a class="headerlink" href="#formex.Formex.element2str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string representation of an element</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="formex.Formex.asFormex">
 <tt class="descname">asFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.asFormex" title="Permalink to this definition">¶</a></dt>
@@ -309,6 +324,17 @@ the words &#8220;with prop&#8221; and a list of the properties.</p>
 <dd><p>Return string representation as a numpy array.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="formex.Formex.setPrintFunction">
+<em class="property">classmethod </em><tt class="descname">setPrintFunction</tt><big>(</big><em>clas</em>, <em>func</em><big>)</big><a class="headerlink" href="#formex.Formex.setPrintFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose the default formatting for printing formices.</p>
+<p>This sets how formices will be formatted by a print statement.
+Currently there are two available functions: asFormex, asArray.
+The user may create its own formatting method.
+This is a class method. It should be used asfollows:
+Formex.setPrintFunction(Formex.asArray).</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="formex.Formex.setProp">
 <tt class="descname">setProp</tt><big>(</big><em>p=None</em><big>)</big><a class="headerlink" href="#formex.Formex.setProp" title="Permalink to this definition">¶</a></dt>
@@ -331,6 +357,22 @@ get a copy with the sum.
 &gt;&gt;&gt; G = F.append(F)
 &gt;&gt;&gt; print(F)
 {[1.0,1.0,1.0], [1.0,1.0,1.0]}</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="formex.Formex.concatenate">
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>Flist</em><big>)</big><a class="headerlink" href="#formex.Formex.concatenate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate all formices in Flist.</p>
+<p>This is a class method, not an instance method!
+&gt;&gt;&gt; F = Formex([[[1,2,3]]],1)
+&gt;&gt;&gt; print(Formex.concatenate([F,F,F]))
+{[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}</p>
+<p>Formex.concatenate([F,G,H]) is functionally equivalent with F+G+H.
+The latter is simpler to write for a list with a few elements.
+If the list becomes large, or the number of items in the list
+is not fixed, the concatenate method is easier (and faster).
+We made it a class method and not a global function, because that
+would interfere with NumPy&#8217;s own concatenate function.</p>
 </dd></dl>
 
 <dl class="method">
@@ -681,6 +723,469 @@ sep as separator between the coordinates.
 If fil is a string, the file is closed prior to returning.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="formex.Formex.read">
+<em class="property">classmethod </em><tt class="descname">read</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#formex.Formex.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a Formex from file.</p>
+<p>fil is a filename or a file object.
+If the file is in a valid Formex file format, the Formex is read and
+returned. Otherwise, None is returned.
+Valid Formex file formats are described in the manual.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="formex.Formex.fromstring">
+<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="headerlink" href="#formex.Formex.fromstring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a <a class="reference internal" href="#formex.Formex" title="formex.Formex"><tt class="xref py py-class docutils literal"><span class="pre">Formex</span></tt></a> from coodinates in a string.</p>
+<p>This uses the <tt class="xref py py-meth docutils literal"><span class="pre">Coords.fromstring()</span></tt> method to read coordinates
+from a string and restructures them into a Formex of the specified
+plexitude.</p>
+<dl class="docutils">
+<dt>fil: a string containing a single sequence of float numbers separated</dt>
+<dd>by whitespace and a possible separator string.</dd>
+<dt>sep: the separator used between the coordinates. If not a space,</dt>
+<dd>all extra whitespace is ignored.</dd>
+<dt>ndim: number of coordinates per point. Should be 1, 2 or 3 (default).</dt>
+<dd>If 1, resp. 2, the coordinate string only holds x, resp. x,y
+values.</dd>
+<dt>count: total number of coordinates to read. This should be a multiple</dt>
+<dd>of 3. The default is to read all the coordinates in the string.
+<tt class="docutils literal"><span class="pre">count</span></tt> can be used to force an error condition if the string
+does not contain the expected number of values.</dd>
+</dl>
+<p>The return value is a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.affine">
+<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a general affine transform of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p><cite>mat</cite>: a 3x3 float matrix</p>
+<p><cite>vec</cite>: a length 3 list or array of floats</p>
+<p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.bump">
+<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.bump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a bump.</p>
+<p>A bump is a modification of a set of coordinates by a non-matching
+point. It can produce various effects, but one of the most common
+uses is to force a surface to be indented by some point.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+(!! func(0) should be different from 0)
+dist is the direction in which the distance is measured : this can
+be one of the axes, or a list of one or more axes.
+If only 1 axis is specified, the effect is like function bump1
+If 2 axes are specified, the effect is like bump2
+This function can take 3 axes however.
+Default value is the set of 3 axes minus the direction of modification.
+This function is then equivalent to bump2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.bump1">
+<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.bump1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a one-dimensional bump.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies the axis of the modified coordinates;</li>
+<li><cite>a</cite> is the point that forces the bumping;</li>
+<li><cite>dist</cite> specifies the direction in which the distance is measured;</li>
+<li><cite>func</cite> is a function that calculates the bump intensity from distance
+and should be such that <tt class="docutils literal"><span class="pre">func(0)</span> <span class="pre">!=</span> <span class="pre">0</span></tt>.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.bump2">
+<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.bump2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a two-dimensional bump.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+!! func(0) should be different from 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.cylindrical">
+<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.cylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cylindrical to cartesian after scaling.</p>
+<p>dir specifies which coordinates are interpreted as resp.
+distance(r), angle(theta) and height(z). Default order is [r,theta,z].
+scale will scale the coordinate values prior to the transformation.
+(scale is given in order r,theta,z).
+The resulting angle is interpreted in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.egg">
+<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.egg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the coordinates to an egg-shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.flare">
+<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.flare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a flare at the end of a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> block.</p>
+<p>The flare extends over a distance <tt class="docutils literal"><span class="pre">xf</span></tt> at the start (<tt class="docutils literal"><span class="pre">end=0</span></tt>)
+or end (<tt class="docutils literal"><span class="pre">end=1</span></tt>) in direction <tt class="docutils literal"><span class="pre">dir[0]</span></tt> of the coords block,
+and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f</span></tt> in the <tt class="docutils literal"><span class="pre">dir[1]</span></tt> direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.isopar">
+<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.isopar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an isoparametric transformation on a Coords.</p>
+<p>This is a convenience method to transform a Coords object through
+an isoparametric transformation. It is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <tt class="xref py py-mod docutils literal"><span class="pre">plugins.isopar</span></tt> for more details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.map">
+<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> mapped by a 3-D function.</p>
+<p>This is one of the versatile mapping functions.
+func is a numerical function which takes three arguments and produces
+a list of three output values. The coordinates [x,y,z] will be
+replaced by func(x,y,z).
+The function must be applicable to arrays, so it should
+only include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map1 and mapd.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
+<span class="go">[[ 2.  3.  4.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.map1">
+<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.map1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> where coordinate i is mapped by a 1-D function.</p>
+<p><cite>func</cite> is a numerical function which takes one argument and produces
+one result. The coordinate dir will be replaced by func(coord[x]).
+If no x is specified, x is taken equal to dir. 
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map and mapd.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.mapd">
+<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.mapd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps one coordinate by a function of the distance to a point.</p>
+<p><cite>func</cite> a numerical function which takes one argument and produces
+one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
+where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+<tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> module.
+By default, the distance d is calculated in 3-D, but one can specify
+a limited set of axes to calculate a 2-D or 1-D distance.
+This method is one of several mapping methods. See also
+<tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#formex.Formex.map1" title="formex.Formex.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.projectOnCylinder">
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> on a cylinder with axis parallel to a global axis.</p>
+<p>The default cylinder has its axis along the x-axis and a unit radius.
+No points of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> should belong to the axis..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.projectOnSphere">
+<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> on a sphere.</p>
+<p>The default sphere is a unit sphere at the origin.
+The center of the sphere should not be part of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.reflect">
+<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>dir</cite>: int: direction of the reflection (default 0)</li>
+<li><cite>pos</cite>: float: offset of the mirror plane from origin (default 0.0)</li>
+<li><cite>inplace</cite>: boolean: change the coordinates inplace (default False)</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.replace">
+<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the coordinates along the axes i by those along j.</p>
+<p>i and j are lists of axis numbers or single axis numbers.
+replace ([0,1,2],[1,2,0]) will roll the axes by 1.
+replace ([0,1],[1,0]) will swap axes 0 and 1.
+An optionally third argument may specify another <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object to take
+the coordinates from. It should have the same dimensions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.rollAxes">
+<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.rollAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roll the axes over the given amount.</p>
+<p>Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
+2 becomes 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.rot">
+<tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.rot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.rotate">
+<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.scale">
+<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy scaled with scale[i] in direction i.</p>
+<p>The scale should be a list of 3 scaling factors for the 3 axis
+directions, or a single scaling factor.
+In the latter case, dir (a single axis number or a list) may be given
+to specify the direction(s) to scale. The default is to produce a
+homothetic scaling.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">[ 2.  2.  2.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="go">[ 2.  3.  4.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.shear">
+<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.shear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
+<p>The coordinate dir is replaced with (dir + skew * dir1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.spherical">
+<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from spherical to cartesian after scaling.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).</li>
+<li><cite>scale</cite> will scale the coordinate values prior to the transformation.</li>
+</ul>
+<p>Angles are interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.</p>
+<p>If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.superSpherical">
+<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.superSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a superspherical transformation.</p>
+<p>superSpherical is much like spherical, but adds some extra
+parameters to enable the creation of virtually any surface.</p>
+<p>Just like with spherical(), the input coordinates are interpreted as
+the longitude, latitude and distance in a spherical coordinate system.</p>
+<p><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).
+Angles are then interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.
+If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+<p><cite>scale</cite> will scale the coordinate values prior to the transformation.</p>
+<p>The <cite>n</cite> and <cite>e</cite> parameters define exponential transformations of the
+north_south (latitude), resp. the east_west (longitude) coordinates.
+Default values of 1 result in a circle.</p>
+<p><cite>k</cite> adds &#8216;eggness&#8217; to the shape: a difference between the northern and
+southern hemisphere. Values &gt; 0 enlarge the southern hemishpere and
+shrink the northern.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.swapAxes">
+<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.swapAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swap coordinate axes i and j.</p>
+<p>Beware! This is different from numpy&#8217;s swapaxes() method !</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.toCylindrical">
+<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to cylindrical coordinates.</p>
+<p>dir specifies which coordinates axes are parallel to respectively the
+cylindrical axes distance(r), angle(theta) and height(z). Default
+order is [x,y,z].
+The angle value is given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.toSpherical">
+<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.toSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to spherical coordinates.</p>
+<p><cite>dir</cite> specifies which coordinates axes are parallel to respectively
+the spherical axes distance(r), longitude(theta) and latitude(phi).
+Latitude is the elevation angle measured from equator in direction
+of north pole(90). South pole is -90.
+Default order is [0,1,2], thus the equator plane is the (x,y)-plane.</p>
+<p>The returned angle values are given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.transformCS">
+<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.transformCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a CoordinateSystem transformation on the Coords.</p>
+<p>This method transforms the Coords object by the transformation that
+turns the initial CoordinateSystem into the currentCoordinateSystem.</p>
+<p>currentCS and initialCS are CoordSystem or (4,3) shaped Coords
+instances. If initialCS is None, the global (x,y,z) axes are used.</p>
+<p>E.g. the default initialCS and currentCS equal to:</p>
+<div class="highlight-python"><pre> 0.  1.  0.
+-1.  0.  0.
+ 0.  0.  1.
+ 0.  0.  0.</pre>
+</div>
+<p>result in a rotation of 90 degrees around the z-axis.</p>
+<p>This is a convenience function equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">isopar</span><span class="p">(</span><span class="s">&#39;tet4&#39;</span><span class="p">,</span><span class="n">currentCS</span><span class="p">,</span><span class="n">initialCS</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.translate">
+<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.trl">
+<tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.trl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="formex.Formex.fromfile">
+<em class="property">classmethod </em><tt class="descname">fromfile</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em><big>)</big><a class="headerlink" href="#formex.Formex.fromfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the coordinates of a Formex from a file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.nnodes">
+<tt class="descname">nnodes</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.nnodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of points in the formex.</p>
+<p>This is the product of the number of elements in the formex
+with the number of nodes per element.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.rep">
+<tt class="descname">rep</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em><big>)</big><a class="headerlink" href="#formex.Formex.rep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex with n replications in direction dir with step.</p>
+<p>The original Formex is the first of the n replicas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.ros">
+<tt class="descname">ros</tt><big>(</big><em>n, angle, axis=2, point=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#formex.Formex.ros" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Formex with n rotational replications with angular
+step angle around an axis parallel with one of the coordinate axes
+going through the given point. axis is the number of the axis (0,1,2).
+point must be given as a list (or array) of three coordinates.
+The original Formex is the first of the n replicas.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">formex</span></tt></p>
@@ -867,23 +1372,23 @@ elements filling up the parts at the positive/negative side.</li>
 <li>with side = &#8216;&#8217;: two Formices of the same plexitude, one representing
 the positive side and one representing the negative side.</li>
 </ul>
-<p>Let <span class="math">dist</span> be the signed distance of the vertices to a plane.
+<p>Let <img class="math" src="../_images/math/1c2bf95e3a347dc8b88814e23e3609308823d8da.png" alt="dist"/> be the signed distance of the vertices to a plane.
 The elements located completely at the positive or negative side of
-a plane have three vertices for which <span class="math">|dist| &gt; atol</span>.
+a plane have three vertices for which <img class="math" src="../_images/math/2c3354b1a3c611400aef7c077658d58ede9551fd.png" alt="|dist| &gt; atol"/>.
 The elements intersecting a plane can have one or more vertices for which
-<span class="math">|dist| &lt; atol</span>.
+<img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>.
 These vertices are projected on the plane so that their distance is zero.</p>
 <p>If the Formex has a property set, the new elements will get the property
 numbers defined in newprops. This is a list of 7 property numbers flagging
 elements with following properties:</p>
 <ol class="arabic simple" start="0">
-<li>no vertices with <span class="math">|dist| &lt; atol</span>, triangle after cut</li>
-<li>no vertices with <span class="math">|dist| &lt; atol</span>, triangle 1 from quad after cut</li>
-<li>no vertices with <span class="math">|dist| &lt; atol</span>, triangle 2 from quad after cut</li>
-<li>one vertex with <span class="math">|dist| &lt; atol</span>, two vertices at pos. or neg. side</li>
-<li>one vertex with <span class="math">|dist| &lt; atol</span>, one vertex at pos. side, one at neg.</li>
-<li>two vertices with <span class="math">|dist| &lt; atol</span>, one vertex at pos. or neg. side</li>
-<li>three vertices with <span class="math">|dist| &lt; atol</span></li>
+<li>no vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, triangle after cut</li>
+<li>no vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, triangle 1 from quad after cut</li>
+<li>no vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, triangle 2 from quad after cut</li>
+<li>one vertex with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, two vertices at pos. or neg. side</li>
+<li>one vertex with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, one vertex at pos. side, one at neg.</li>
+<li>two vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, one vertex at pos. or neg. side</li>
+<li>three vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/></li>
 </ol>
 </dd></dl>
 

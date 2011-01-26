@@ -57,9 +57,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-tetgen">
+  <p>DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; tetgen
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-tetgen">
 <span id="tetgen-read-write-tetgen-format-files"></span><span id="sec-ref-tetgen"></span><h1>48. <a class="reference internal" href="#module-tetgen" title="tetgen: read/write tetgen format files."><tt class="xref py py-mod docutils literal"><span class="pre">tetgen</span></tt></a> &#8212; read/write tetgen format files.<a class="headerlink" href="#module-tetgen" title="Permalink to this headline">¶</a></h1>
-<p>read/write tetgen format files.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tetgen</span></tt></p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tetgen</span></tt></p>
 <dl class="function">
@@ -118,21 +121,21 @@ Returns a tuple of (nodes,elems).</p>
 
 <dl class="function">
 <dt id="tetgen.writeNodes">
-<tt class="descclassname">tetgen.</tt><tt class="descname">writeNodes</tt><big>(</big><em>fn</em>, <em>nodes</em><big>)</big><a class="headerlink" href="#tetgen.writeNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">writeNodes</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>offset=0</em><big>)</big><a class="headerlink" href="#tetgen.writeNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a tetgen .node file.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tetgen.writeSmesh">
-<tt class="descclassname">tetgen.</tt><tt class="descname">writeSmesh</tt><big>(</big><em>fn</em>, <em>facets</em>, <em>nodes=None</em>, <em>holes=None</em>, <em>regions=None</em><big>)</big><a class="headerlink" href="#tetgen.writeSmesh" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">writeSmesh</tt><big>(</big><em>fn</em>, <em>facets</em>, <em>coords=None</em>, <em>holes=None</em>, <em>regions=None</em><big>)</big><a class="headerlink" href="#tetgen.writeSmesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a tetgen .smesh file.</p>
 <p>Currently it only writes the facets of a triangular surface mesh.
-Nodes should be written independently to a .node file.</p>
+Coords should be written independently to a .node file.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tetgen.writeSurface">
-<tt class="descclassname">tetgen.</tt><tt class="descname">writeSurface</tt><big>(</big><em>fn</em>, <em>nodes</em>, <em>elems</em><big>)</big><a class="headerlink" href="#tetgen.writeSurface" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">writeSurface</tt><big>(</big><em>fn</em>, <em>coords</em>, <em>elems</em><big>)</big><a class="headerlink" href="#tetgen.writeSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a tetgen surface model to .node and .smesh files.</p>
 <p>The provided file name is the .node or the .smesh filename.</p>
 </dd></dl>

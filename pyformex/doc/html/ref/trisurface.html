@@ -57,9 +57,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-trisurface">
+  <p>DEBUG: Using the (slower) Python misc functions
+DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; trisurface
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-trisurface">
 <span id="trisurface-operations-on-triangulated-surfaces"></span><span id="sec-ref-trisurface"></span><h1>31. <a class="reference internal" href="#module-trisurface" title="trisurface: Operations on triangulated surfaces."><tt class="xref py py-mod docutils literal"><span class="pre">trisurface</span></tt></a> &#8212; Operations on triangulated surfaces.<a class="headerlink" href="#module-trisurface" title="Permalink to this headline">¶</a></h1>
-<p>Operations on triangulated surfaces.</p>
 <p>A triangulated surface is a surface consisting solely of triangles.
 Any surface in space, no matter how complex, can be approximated with
 a triangulated surface.</p>
@@ -83,27 +87,23 @@ an (ntri,3) integer array of edges numbers.</li>
 <p>Additionally, a keyword argument prop= may be specified to
 set property values.</p>
 <dl class="method">
+<dt id="trisurface.TriSurface.areas">
+<tt class="descname">areas</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.areas" title="Permalink to this definition">¶</a></dt>
+<dd><p>area of elements</p>
+<p>For surface element the faces&#8217; area is returned.
+For volume elements the sum of the faces&#8217;areas is returned.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.shape">
 <tt class="descname">shape</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of points, edges, faces of the TriSurface.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.getEdges">
-<tt class="descname">getEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getEdges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the edges data.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="trisurface.TriSurface.getFaceEdges">
 <tt class="descname">getFaceEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getFaceEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the faces&#8217; edge numbers.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.getFaces">
-<tt class="descname">getFaces</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getFaces" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the faces&#8217; node numbers.</p>
 </dd></dl>
 
 <dl class="method">
@@ -131,6 +131,22 @@ set property values.</p>
 <p>This just merges the data sets, and does not check
 whether the surfaces intersect or are connected!
 This is intended mostly for use inside higher level functions.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="trisurface.TriSurface.read">
+<em class="property">classmethod </em><tt class="descname">read</tt><big>(</big><em>clas</em>, <em>fn</em>, <em>ftype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a surface from file.</p>
+<p>If no file type is specified, it is derived from the filename
+extension.
+Currently supported file types:</p>
+<ul class="simple">
+<li>.stl (ASCII or BINARY)</li>
+<li>.gts</li>
+<li>.off</li>
+<li>.neu (Gambit Neutral)</li>
+<li>.smesh (Tetgen)</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -184,44 +200,8 @@ principal directions.</p>
 <dt id="trisurface.TriSurface.inertia">
 <tt class="descname">inertia</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.inertia" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return inertia related quantities of the surface.</p>
-<p>This returns the center of gravity, the principal axes of inertia, the principal
-moments of inertia and the inertia tensor.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.edgeConnections">
-<tt class="descname">edgeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.edgeConnections" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the elems connected to edges.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.nodeConnections">
-<tt class="descname">nodeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nodeConnections" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the elems connected to nodes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.nEdgeConnected">
-<tt class="descname">nEdgeConnected</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nEdgeConnected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the number of elems connected to edges.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.nNodeConnected">
-<tt class="descname">nNodeConnected</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nNodeConnected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the number of elems connected to nodes.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.edgeAdjacency">
-<tt class="descname">edgeAdjacency</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.edgeAdjacency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the elems adjacent to elems via an edge.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.nEdgeAdjacent">
-<tt class="descname">nEdgeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nEdgeAdjacent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the number of adjacent elems.</p>
+<p>This returns the center of gravity, the principal axes of inertia,
+the principal moments of inertia and the inertia tensor.</p>
 </dd></dl>
 
 <dl class="method">
@@ -271,18 +251,6 @@ closed curve will be filled with triangles, thus effectively
 creating a closed surface.</p>
 <p>There are two methods, corresponding with the methods of
 the surfaceInsideBorder.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.boundaryEdges">
-<tt class="descname">boundaryEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.boundaryEdges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the border edges of a surface, grouped by id property.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.boundaryFiller">
-<tt class="descname">boundaryFiller</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.boundaryFiller" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fills the holes of a surface by creating extra faces at the boundary edges. Original surface and boundaries are returned with different id prop.</p>
 </dd></dl>
 
 <dl class="method">
@@ -549,7 +517,7 @@ non self-intersecting manifold. This is a necessary condition
 for the use of the <cite>gts</cite> methods: split, coarsen, refine, boolean.</p>
 <p>Returns 0 if the surface passes the tests, nonzero if not.
 A full report is printed out.</p>
-<p>The <a class="reference internal" href="#trisurface.TriSurface.fixNormals" title="trisurface.TriSurface.fixNormals"><tt class="xref py py-meth docutils literal"><span class="pre">fixNormals()</span></tt></a> and <tt class="xref py py-meth docutils literal"><span class="pre">reverse()</span></tt> methods may be used to fix
+<p>The <a class="reference internal" href="#trisurface.TriSurface.fixNormals" title="trisurface.TriSurface.fixNormals"><tt class="xref py py-meth docutils literal"><span class="pre">fixNormals()</span></tt></a> and <a class="reference internal" href="#trisurface.TriSurface.reverse" title="trisurface.TriSurface.reverse"><tt class="xref py py-meth docutils literal"><span class="pre">reverse()</span></tt></a> methods may be used to fix
 the normals of an otherwise correct closed manifold.</p>
 </dd></dl>
 
@@ -633,6 +601,1043 @@ if one of them is, the set of self-intersecting faces is written
 </ul>
 </dd></dl>
 
+<dl class="method">
+<dt id="trisurface.TriSurface.affine">
+<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a general affine transform of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p><cite>mat</cite>: a 3x3 float matrix</p>
+<p><cite>vec</cite>: a length 3 list or array of floats</p>
+<p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.bump">
+<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.bump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a bump.</p>
+<p>A bump is a modification of a set of coordinates by a non-matching
+point. It can produce various effects, but one of the most common
+uses is to force a surface to be indented by some point.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+(!! func(0) should be different from 0)
+dist is the direction in which the distance is measured : this can
+be one of the axes, or a list of one or more axes.
+If only 1 axis is specified, the effect is like function bump1
+If 2 axes are specified, the effect is like bump2
+This function can take 3 axes however.
+Default value is the set of 3 axes minus the direction of modification.
+This function is then equivalent to bump2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.bump1">
+<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.bump1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a one-dimensional bump.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies the axis of the modified coordinates;</li>
+<li><cite>a</cite> is the point that forces the bumping;</li>
+<li><cite>dist</cite> specifies the direction in which the distance is measured;</li>
+<li><cite>func</cite> is a function that calculates the bump intensity from distance
+and should be such that <tt class="docutils literal"><span class="pre">func(0)</span> <span class="pre">!=</span> <span class="pre">0</span></tt>.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.bump2">
+<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.bump2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a two-dimensional bump.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+!! func(0) should be different from 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.cylindrical">
+<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.cylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cylindrical to cartesian after scaling.</p>
+<p>dir specifies which coordinates are interpreted as resp.
+distance(r), angle(theta) and height(z). Default order is [r,theta,z].
+scale will scale the coordinate values prior to the transformation.
+(scale is given in order r,theta,z).
+The resulting angle is interpreted in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.egg">
+<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.egg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the coordinates to an egg-shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.flare">
+<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.flare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a flare at the end of a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> block.</p>
+<p>The flare extends over a distance <tt class="docutils literal"><span class="pre">xf</span></tt> at the start (<tt class="docutils literal"><span class="pre">end=0</span></tt>)
+or end (<tt class="docutils literal"><span class="pre">end=1</span></tt>) in direction <tt class="docutils literal"><span class="pre">dir[0]</span></tt> of the coords block,
+and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f</span></tt> in the <tt class="docutils literal"><span class="pre">dir[1]</span></tt> direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.isopar">
+<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.isopar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an isoparametric transformation on a Coords.</p>
+<p>This is a convenience method to transform a Coords object through
+an isoparametric transformation. It is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <tt class="xref py py-mod docutils literal"><span class="pre">plugins.isopar</span></tt> for more details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.map">
+<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> mapped by a 3-D function.</p>
+<p>This is one of the versatile mapping functions.
+func is a numerical function which takes three arguments and produces
+a list of three output values. The coordinates [x,y,z] will be
+replaced by func(x,y,z).
+The function must be applicable to arrays, so it should
+only include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map1 and mapd.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
+<span class="go">[[ 2.  3.  4.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.map1">
+<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.map1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> where coordinate i is mapped by a 1-D function.</p>
+<p><cite>func</cite> is a numerical function which takes one argument and produces
+one result. The coordinate dir will be replaced by func(coord[x]).
+If no x is specified, x is taken equal to dir. 
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map and mapd.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.mapd">
+<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.mapd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps one coordinate by a function of the distance to a point.</p>
+<p><cite>func</cite> a numerical function which takes one argument and produces
+one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
+where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+<tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> module.
+By default, the distance d is calculated in 3-D, but one can specify
+a limited set of axes to calculate a 2-D or 1-D distance.
+This method is one of several mapping methods. See also
+<tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#trisurface.TriSurface.map1" title="trisurface.TriSurface.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.projectOnCylinder">
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> on a cylinder with axis parallel to a global axis.</p>
+<p>The default cylinder has its axis along the x-axis and a unit radius.
+No points of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> should belong to the axis..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.projectOnSphere">
+<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> on a sphere.</p>
+<p>The default sphere is a unit sphere at the origin.
+The center of the sphere should not be part of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.replace">
+<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the coordinates along the axes i by those along j.</p>
+<p>i and j are lists of axis numbers or single axis numbers.
+replace ([0,1,2],[1,2,0]) will roll the axes by 1.
+replace ([0,1],[1,0]) will swap axes 0 and 1.
+An optionally third argument may specify another <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object to take
+the coordinates from. It should have the same dimensions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.rollAxes">
+<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.rollAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roll the axes over the given amount.</p>
+<p>Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
+2 becomes 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.rot">
+<tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.rot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.rotate">
+<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.scale">
+<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy scaled with scale[i] in direction i.</p>
+<p>The scale should be a list of 3 scaling factors for the 3 axis
+directions, or a single scaling factor.
+In the latter case, dir (a single axis number or a list) may be given
+to specify the direction(s) to scale. The default is to produce a
+homothetic scaling.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">[ 2.  2.  2.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="go">[ 2.  3.  4.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.shear">
+<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.shear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
+<p>The coordinate dir is replaced with (dir + skew * dir1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.spherical">
+<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from spherical to cartesian after scaling.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).</li>
+<li><cite>scale</cite> will scale the coordinate values prior to the transformation.</li>
+</ul>
+<p>Angles are interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.</p>
+<p>If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.superSpherical">
+<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.superSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a superspherical transformation.</p>
+<p>superSpherical is much like spherical, but adds some extra
+parameters to enable the creation of virtually any surface.</p>
+<p>Just like with spherical(), the input coordinates are interpreted as
+the longitude, latitude and distance in a spherical coordinate system.</p>
+<p><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).
+Angles are then interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.
+If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+<p><cite>scale</cite> will scale the coordinate values prior to the transformation.</p>
+<p>The <cite>n</cite> and <cite>e</cite> parameters define exponential transformations of the
+north_south (latitude), resp. the east_west (longitude) coordinates.
+Default values of 1 result in a circle.</p>
+<p><cite>k</cite> adds &#8216;eggness&#8217; to the shape: a difference between the northern and
+southern hemisphere. Values &gt; 0 enlarge the southern hemishpere and
+shrink the northern.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.swapAxes">
+<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.swapAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swap coordinate axes i and j.</p>
+<p>Beware! This is different from numpy&#8217;s swapaxes() method !</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.toCylindrical">
+<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to cylindrical coordinates.</p>
+<p>dir specifies which coordinates axes are parallel to respectively the
+cylindrical axes distance(r), angle(theta) and height(z). Default
+order is [x,y,z].
+The angle value is given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.toSpherical">
+<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.toSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to spherical coordinates.</p>
+<p><cite>dir</cite> specifies which coordinates axes are parallel to respectively
+the spherical axes distance(r), longitude(theta) and latitude(phi).
+Latitude is the elevation angle measured from equator in direction
+of north pole(90). South pole is -90.
+Default order is [0,1,2], thus the equator plane is the (x,y)-plane.</p>
+<p>The returned angle values are given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.transformCS">
+<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.transformCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a CoordinateSystem transformation on the Coords.</p>
+<p>This method transforms the Coords object by the transformation that
+turns the initial CoordinateSystem into the currentCoordinateSystem.</p>
+<p>currentCS and initialCS are CoordSystem or (4,3) shaped Coords
+instances. If initialCS is None, the global (x,y,z) axes are used.</p>
+<p>E.g. the default initialCS and currentCS equal to:</p>
+<div class="highlight-python"><pre> 0.  1.  0.
+-1.  0.  0.
+ 0.  0.  1.
+ 0.  0.  0.</pre>
+</div>
+<p>result in a rotation of 90 degrees around the z-axis.</p>
+<p>This is a convenience function equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">isopar</span><span class="p">(</span><span class="s">&#39;tet4&#39;</span><span class="p">,</span><span class="n">currentCS</span><span class="p">,</span><span class="n">initialCS</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.translate">
+<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.trl">
+<tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.trl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.setProp">
+<tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or destroy the property array for the Mesh.</p>
+<p>A property array is a rank-1 integer array with dimension equal
+to the number of elements in the Mesh.
+You can specify a single value or a list/array of integer values.
+If the number of passed values is less than the number of elements,
+they wil be repeated. If you give more, they will be ignored.</p>
+<p>If a value None is given, the properties are removed from the Mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getProp">
+<tt class="descname">getProp</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the properties as a numpy array (ndarray)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.maxProp">
+<tt class="descname">maxProp</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.maxProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the highest property value used, or None</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.propSet">
+<tt class="descname">propSet</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.propSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with unique property values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy using the same data arrays</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.toFormex">
+<tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mesh to a Formex.</p>
+<p>The Formex inherits the element property numbers and eltype from
+the Mesh. Node property numbers however can not be translated to
+the Formex data model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.centroids">
+<tt class="descname">centroids</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the centroids of all elements of the Mesh.</p>
+<p>The centroid of an element is the point whose coordinates
+are the mean values of all points of the element.
+The return value is a Coords object with nelems points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getCoords">
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the coords data.</p>
+<p>Returns the full array of coordinates stored in the Mesh object.
+Note that this may contain points that are not used in the mesh.
+<a class="reference internal" href="#trisurface.TriSurface.compact" title="trisurface.TriSurface.compact"><tt class="xref py py-meth docutils literal"><span class="pre">compact()</span></tt></a> will remove the unused points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getElems">
+<tt class="descname">getElems</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the elems data.</p>
+<p>Returns the element connectivity data as stored in the object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getLowerEntitiesSelector">
+<tt class="descname">getLowerEntitiesSelector</tt><big>(</big><em>level=-1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getLowerEntitiesSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the entities of a lower dimensionality.</p>
+<p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
+this returns a Connectivity table with the entities of a lower
+dimensionality. The full list of entities with increasing
+dimensionality  0,1,2,3 is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>If level is negative, the dimensionality returned is relative
+to that of the caller. If it is positive, it is taken absolute.
+Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
+returns the faces, while for a 2D element type, it returns the edges.
+For bothe meshes however,  getLowerEntities(+1) returns the edges.</p>
+<p>By default, all entities for all elements are returned and common
+entities will appear multiple times. Specifying unique=True will 
+return only the unique ones.</p>
+<p>The return value may be an empty table, if the element type does
+not have the requested entities (e.g. the &#8216;point&#8217; type).
+If the eltype is not defined, or the requested entity level is
+outside the range 0..3, the return value is None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getLowerEntities">
+<tt class="descname">getLowerEntities</tt><big>(</big><em>level=-1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getLowerEntities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the entities of a lower dimensionality.</p>
+<p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
+this returns a Connectivity table with the entities of a lower
+dimensionality. The full list of entities with increasing
+dimensionality  0,1,2,3 is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>If level is negative, the dimensionality returned is relative
+to that of the caller. If it is positive, it is taken absolute.
+Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
+returns the faces, while for a 2D element type, it returns the edges.
+For both meshes however,  getLowerEntities(+1) returns the edges.</p>
+<p>By default, all entities for all elements are returned and common
+entities will appear multiple times. Specifying unique=True will 
+return only the unique ones.</p>
+<p>The return value may be an empty table, if the element type does
+not have the requested entities (e.g. the &#8216;point&#8217; type).
+If the eltype is not defined, or the requested entity level is
+outside the range 0..3, the return value is None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getNodes">
+<tt class="descname">getNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the set of unique node numbers in the Mesh.</p>
+<p>This returns only the node numbers that are effectively used in
+the connectivity table. For a compacted Mesh, it is equal to
+<tt class="docutils literal"><span class="pre">`arange(self.nelems)`</span></tt>.
+This function also stores the result internally so that future
+requests can return it without the need for computing it again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getPoints">
+<tt class="descname">getPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the nodal coordinates of the Mesh.</p>
+<p>This returns only those points that are effectively used in
+the connectivity table. For a compacted Mesh, it is equal to
+the coords attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getEdges">
+<tt class="descname">getEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unique edges of all the elements in the Mesh.</p>
+<p>This is a convenient function to create a table with the element
+edges. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(1,unique=True)`</span></tt>,
+but this also stores the result internally so that future
+requests can return it without the need for computing it again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getFaces">
+<tt class="descname">getFaces</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getFaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unique faces of all the elements in the Mesh.</p>
+<p>This is a convenient function to create a table with the element
+faces. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(2,unique=True)`</span></tt>,
+but this also stores the result internally so that future
+requests can return it without the need for computing it again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getCells">
+<tt class="descname">getCells</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getCells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cells of the elements.</p>
+<p>This is a convenient function to create a table with the element
+cells. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(3,unique=True)`</span></tt>,
+but this also stores the result internally so that future
+requests can return it without the need for computing it again.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getBorder">
+<tt class="descname">getBorder</tt><big>(</big><em>return_indices=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getBorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the border of the Mesh.</p>
+<p>This returns a Connectivity table with the border of the Mesh.
+The border entities are of a lower hierarchical level than the
+mesh itself. These entities become part of the border if they
+are connected to only one element.</p>
+<p>If return_indices==True, it returns also an (nborder,2) index
+for inverse lookup of the higher entity (column 0) and its local
+border part number (column 1).</p>
+<p>The returned Connectivity can be used together with the
+Mesh.coords to construct a Mesh of the border geometry.
+See also <a class="reference internal" href="#trisurface.TriSurface.getBorderMesh" title="trisurface.TriSurface.getBorderMesh"><tt class="xref py py-meth docutils literal"><span class="pre">getBorderMesh()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.getBorderMesh">
+<tt class="descname">getBorderMesh</tt><big>(</big><em>compact=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getBorderMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with the border elements.</p>
+<p>Returns a Mesh representing the border of the Mesh.
+The returned Mesh is of the next lower hierarchical level.
+If the Mesh has property numbers, the border elements inherit
+the property of the element to which they belong.</p>
+<p>By default, the resulting Mesh is compacted. Compaction can be
+switched off by setting <cite>compact=False</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.reverse">
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh where all elements have been reversed.</p>
+<p>Reversing an element means reversing the order of its points.
+This is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">elems</span><span class="p">[:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.nodeConnections">
+<tt class="descname">nodeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nodeConnections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find and store the elems connected to nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.nNodeConnected">
+<tt class="descname">nNodeConnected</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nNodeConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the number of elems connected to nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.edgeConnections">
+<tt class="descname">edgeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.edgeConnections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find and store the elems connected to edges.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.nEdgeConnected">
+<tt class="descname">nEdgeConnected</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nEdgeConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the number of elems connected to edges.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.nodeAdjacency">
+<tt class="descname">nodeAdjacency</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nodeAdjacency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the elems adjacent to each elem via one or more nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.nNodeAdjacent">
+<tt class="descname">nNodeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nNodeAdjacent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the number of elems which are adjacent by node to each elem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.edgeAdjacency">
+<tt class="descname">edgeAdjacency</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.edgeAdjacency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the elems adjacent to elems via an edge.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.nEdgeAdjacent">
+<tt class="descname">nEdgeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nEdgeAdjacent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the number of adjacent elems.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.report">
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a report on the Mesh shape and size.</p>
+<p>The report contains the number of nodes, number of elements,
+plexitude, bbox and size.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.fuse">
+<tt class="descname">fuse</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.fuse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fuse the nodes of a Meshes.</p>
+<p>All nodes that are within the tolerance limits of each other
+are merged into a single node.</p>
+<p>The merging operation can be tuned by specifying extra arguments
+that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.matchCoords">
+<tt class="descname">matchCoords</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.matchCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match nodes of Mesh with nodes of self.</p>
+<p>This is a convenience function equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See also <tt class="xref py py-meth docutils literal"><span class="pre">Coords.match()</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.matchElemsCentroids">
+<tt class="descname">matchElemsCentroids</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.matchElemsCentroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match elems of Mesh with elems of self.</p>
+<p>self and Mesh are same eltype meshes
+and are both without Doubles.</p>
+<p>Elems are matched by their centroids.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.compact">
+<tt class="descname">compact</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.compact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove unconnected nodes and renumber the mesh.</p>
+<p>Returns a mesh where all nodes that are not used in any
+element have been removed, and the nodes are renumbered to
+a compacter scheme.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.select">
+<tt class="descname">select</tt><big>(</big><em>selected</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh only holding the selected elements.</p>
+<ul class="simple">
+<li><cite>selected</cite>: an object that can be used as an index in the
+<cite>elems</cite> array, e.g. a list of (integer) element numbers,
+or a boolean array with the same length as the <cite>elems</cite> array.</li>
+<li><cite>compact</cite>: boolean. If True (default), the returned Mesh will be
+compacted, i.e. the unused nodes are removed and the nodes are
+renumbered from zero. If False, returns the node set and numbers
+unchanged.</li>
+</ul>
+<p>Returns a Mesh (or subclass) with only the selected elements.</p>
+<p>See <cite>cselect</cite> for the complementary operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.cselect">
+<tt class="descname">cselect</tt><big>(</big><em>selected</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.cselect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a mesh without the selected elements.</p>
+<ul class="simple">
+<li><cite>selected</cite>: an object that can be used as an index in the
+<cite>elems</cite> array, e.g. a list of (integer) element numbers,
+or a boolean array with the same length as the <cite>elems</cite> array.</li>
+<li><cite>compact</cite>: boolean. If True (default), the returned Mesh will be
+compacted, i.e. the unused nodes are removed and the nodes are
+renumbered from zero. If False, returns the node set and numbers
+unchanged.</li>
+</ul>
+<p>Returns a Mesh with all but the selected elements.</p>
+<p>This is the complimentary operation of <cite>select</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.meanNodes">
+<tt class="descname">meanNodes</tt><big>(</big><em>nodsel</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.meanNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create nodes from the existing nodes of a mesh.</p>
+<p><cite>nodsel</cite> is a local node selector as in <a class="reference internal" href="#trisurface.TriSurface.selectNodes" title="trisurface.TriSurface.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>
+Returns the mean coordinates of the points in the selector as
+<cite>(nelems*nnod,3)</cite> array of coordinates, where nnod is the length
+of the node selector.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.addNodes">
+<tt class="descname">addNodes</tt><big>(</big><em>newcoords</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.addNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new nodes to elements.</p>
+<p><cite>newcoords</cite> is an <cite>(nelems,nnod,3)</cite> or`(nelems*nnod,3)` array of
+coordinates. Each element gets exactly <cite>nnod</cite> extra nodes from this
+array. The result is a Mesh with plexitude <cite>self.nplex() + nnod</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.addMeanNodes">
+<tt class="descname">addMeanNodes</tt><big>(</big><em>nodsel</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.addMeanNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new nodes to elements by averaging existing ones.</p>
+<p><cite>nodsel</cite> is a local node selector as in <a class="reference internal" href="#trisurface.TriSurface.selectNodes" title="trisurface.TriSurface.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>
+Returns a Mesh where the mean coordinates of the points in the
+selector are added to each element, thus increasing the plexitude
+by the length of the items in the selector.
+The new element type should be set to correct value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.selectNodes">
+<tt class="descname">selectNodes</tt><big>(</big><em>nodsel</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.selectNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a mesh with subsets of the original nodes.</p>
+<p><cite>nodsel</cite> is an object that can be converted to a 1-dim or 2-dim
+array. Examples are a tuple of local node numbers, or a list
+of such tuples all having the same length.
+Each row of <cite>nodsel</cite> holds a list of local node numbers that
+should be retained in the new connectivity table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.withProp">
+<tt class="descname">withProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.withProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh which holds only the elements with property val.</p>
+<p>val is either a single integer, or a list/array of integers.
+The return value is a Mesh holding all the elements that
+have the property val, resp. one of the values in val.
+The returned Mesh inherits the matching properties.</p>
+<p>If the Mesh has no properties, a copy with all elements is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.withoutProp">
+<tt class="descname">withoutProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.withoutProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh without the elements with property val.</p>
+<p>This is the complementary method of Mesh.withProp().
+val is either a single integer, or a list/array of integers.
+The return value is a Mesh holding all the elements that do not
+have the property val, resp. one of the values in val.
+The returned Mesh inherits the matching properties.</p>
+<p>If the Mesh has no properties, a copy with all elements is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.splitProp">
+<tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partition a Mesh according to its propery values.</p>
+<p>Returns a dict with the property values as keys and the
+corresponding partitions as values. Each value is a Mesh instance.
+It the Mesh has no props, an empty dict is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.splitRandom">
+<tt class="descname">splitRandom</tt><big>(</big><em>n</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitRandom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a mesh in n parts, distributing the elements randomly.</p>
+<p>Returns a list of n Mesh objects, constituting together the same
+Mesh as the original. The elements are randomly distributed over
+the subMeshes.</p>
+<p>By default, the Meshes are compacted. Compaction may be switched
+off for efficiency reasons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.convert">
+<tt class="descname">convert</tt><big>(</big><em>totype</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mesh to another element type.</p>
+<p>Converting a Mesh from one element type to another can only be
+done if both element types are of the same dimensionality.
+Thus, 3D elements can only be converted to 3D elements.</p>
+<p>The conversion is done by splitting the elements in smaller parts
+and/or by adding new nodes to the elements.</p>
+<p>Not all conversions between elements of the same dimensionality
+are possible. The possible conversion strategies are implemented
+in a table. New strategies may be added however.</p>
+<p>The return value is a Mesh of the requested element type, representing
+the same geometry (possibly approximatively) as the original mesh.</p>
+<p>If the requested conversion is not implemented, an error is raised.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.convertRandom">
+<tt class="descname">convertRandom</tt><big>(</big><em>choices</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.convertRandom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert choosing randomly between choices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.reduceDegenerate">
+<tt class="descname">reduceDegenerate</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.reduceDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce degenerate elements to lower plexitude elements.</p>
+<p>This will try to reduce the degenerate elements of the mesh to elements
+of a lower plexitude. If a target element type is given, only the matching
+recuce scheme is tried. Else, all the target element types for which
+a reduce scheme from the Mesh eltype is available, will be tried.</p>
+<p>The result is a list of Meshes of which the last one contains the
+elements that could not be reduced and may be empty.
+Property numbers propagate to the children.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.splitDegenerate">
+<tt class="descname">splitDegenerate</tt><big>(</big><em>autofix=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a Mesh in degenerate and non-degenerate elements.</p>
+<p>If autofix is True, the degenerate elements will be tested against
+known degeneration patterns, and the matching elements will be
+transformed to non-degenerate elements of a lower plexitude.</p>
+<p>The return value is a list of Meshes. The first holds the
+non-degenerate elements of the original Mesh. The last holds
+the remaining degenerate elements.
+The intermediate Meshes, if any, hold elements
+of a lower plexitude than the original. These may still contain
+degenerate elements.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.renumber">
+<tt class="descname">renumber</tt><big>(</big><em>order='elems'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.renumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renumber the nodes of a Mesh in the specified order.</p>
+<p>order is an index with length equal to the number of nodes. The
+index specifies the node number that should come at this position.
+Thus, the order values are the old node numbers on the new node
+number positions.</p>
+<p>order can also be a predefined value that will generate the node
+index automatically:</p>
+<ul class="simple">
+<li>&#8216;elems&#8217;: the nodes are number in order of their appearance in the
+Mesh connectivity.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.renumberElems">
+<tt class="descname">renumberElems</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.renumberElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renumber the elements of a Mesh.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>order</cite>: either a 1-D integer array with a permutation of
+<tt class="docutils literal"><span class="pre">arange(self.nelems())</span></tt>, specifying the requested order, or one of
+the following predefined strings:<ul>
+<li>&#8216;nodes&#8217;: order the elements in increasing node number order.</li>
+<li>&#8216;random&#8217;: number the elements in a random order.</li>
+<li>&#8216;reverse&#8217;: number the elements in.</li>
+</ul>
+</li>
+</ul>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A Mesh equivalent with self but with the elements ordered as specified.</dd>
+</dl>
+<p>See also: <tt class="xref py py-meth docutils literal"><span class="pre">Connectivity.reorder()</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.extrude">
+<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.extrude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extrude a Mesh in one of the axes directions.</p>
+<p>Returns a new Mesh obtained by extruding the given Mesh
+over n steps of length step in direction of axis dir.
+The returned Mesh has double plexitude of the original.</p>
+<p>This function is usually used to extrude points into lines,
+lines into surfaces and surfaces into volumes.
+By default it will try to fix the connectivity ordering where
+appropriate. If autofix is switched off, the connectivities
+are merely stacked, and the user may have to fix it himself.</p>
+<p>Currently, this function correctly transforms: point1 to line2,
+line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.revolve">
+<tt class="descname">revolve</tt><big>(</big><em>n</em>, <em>axis=0</em>, <em>angle=360.0</em>, <em>around=None</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.revolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revolve a Mesh around an axis.</p>
+<p>Returns a new Mesh obtained by revolving the given Mesh
+over an angle around an axis in n steps, while extruding
+the mesh from one step to the next.</p>
+<p>This function is usually used to extrude points into lines,
+lines into surfaces and surfaces into volumes.
+By default it will try to fix the connectivity ordering where
+appropriate. If autofix is switched off, the connectivities
+are merely stacked, and the user may have to fix it himself.</p>
+<p>Currently, this function correctly transforms: point1 to line2,
+line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.sweep">
+<tt class="descname">sweep</tt><big>(</big><em>path</em>, <em>autofix=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sweep a mesh along a path, creating an extrusion</p>
+<p>Returns a new Mesh obtained by sweeping the given Mesh
+over a path.
+The returned Mesh has double plexitude of the original.
+The operation is similar to the extrude() method, but the path
+can be any 3D curve.</p>
+<p>This function is usually used to extrude points into lines,
+lines into surfaces and surfaces into volumes.
+By default it will try to fix the connectivity ordering where
+appropriate. If autofix is switched off, the connectivities
+are merely stacked, and the user may have to fix it himself.</p>
+<p>Currently, this function correctly transforms: point1 to line2,
+line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="trisurface.TriSurface.concatenate">
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>meshes</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.concatenate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate a list of meshes of the same plexitude and eltype</p>
+<p>Merging of the nodes can be tuned by specifying extra arguments
+that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.test">
+<tt class="descname">test</tt><big>(</big><em>nodes='all'</em>, <em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag elements having nodal coordinates between min and max.</p>
+<p>This function is very convenient in clipping a Mesh in a specified
+direction. It returns a 1D integer array flagging (with a value 1 or
+True) the elements having nodal coordinates in the required range.
+Use where(result) to get a list of element numbers passing the test.
+Or directly use clip() or cclip() to create the clipped Mesh</p>
+<p>The test plane can be defined in two ways, depending on the value of dir.
+If dir == 0, 1 or 2, it specifies a global axis and min and max are
+the minimum and maximum values for the coordinates along that axis.
+Default is the 0 (or x) direction.</p>
+<p>Else, dir should be compaitble with a (3,) shaped array and specifies
+the direction of the normal on the planes. In this case, min and max
+are points and should also evaluate to (3,) shaped arrays.</p>
+<p>nodes specifies which nodes are taken into account in the comparisons.
+It should be one of the following:</p>
+<ul class="simple">
+<li>a single (integer) point number (&lt; the number of points in the Formex)</li>
+<li>a list of point numbers</li>
+<li>one of the special strings: &#8216;all&#8217;, &#8216;any&#8217;, &#8216;none&#8217;</li>
+</ul>
+<p>The default (&#8216;all&#8217;) will flag all the elements that have all their
+nodes between the planes x=min and x=max, i.e. the elements that
+fall completely between these planes. One of the two clipping planes
+may be left unspecified.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.clip">
+<tt class="descname">clip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.clip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with all the elements where t&gt;0.</p>
+<p>t should be a 1-D integer array with length equal to the number
+of elements of the Mesh.
+The resulting Mesh will contain all elements where t &gt; 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.cclip">
+<tt class="descname">cclip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.cclip" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the complement of clip, returning a Mesh where t&lt;=0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.clipAtPlane">
+<tt class="descname">clipAtPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>nodes='any'</em>, <em>side='+'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.clipAtPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Mesh clipped at plane (p,n).</p>
+<p>This is a convenience function returning the part of the Mesh
+at one side of the plane (p,n)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.volumes">
+<tt class="descname">volumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the signed volume of all the mesh elements</p>
+<p>For a &#8216;tet4&#8217; tetraeder Mesh, the volume of the elements is calculated
+as 1/3 * surface of base * height.</p>
+<p>For other Mesh types the volumes are calculated by first splitting
+the elements into tetraeder elements.</p>
+<p>The return value is an array of float values with length equal to the
+number of elements.
+If the Mesh conversion to tetraeder does not succeed, the return
+value is None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.equiAngleSkew">
+<tt class="descname">equiAngleSkew</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.equiAngleSkew" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the equiAngleSkew of the elements, a mesh quality parameter .</p>
+<p>It quantifies the skewness of the elements: normalize difference between
+the worst angle in each element and the ideal angle (angle in the face 
+of an equiangular element, qe).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.connect">
+<tt class="descname">connect</tt><big>(</big><em>mesh1</em>, <em>mesh2</em>, <em>n=1</em>, <em>n1=None</em>, <em>n2=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect two meshes to form a hypermesh.</p>
+<p>mesh1 and mesh2 are two meshes with same topology (shape). 
+The two meshes are connected by a higher order mesh with n
+elements in the direction between the two meshes.
+n1 and n2 are node selection indices permitting a permutation of the
+nodes of the base sets in their appearance in the hypermesh.
+This can e.g. be used to achieve circular numbering of the hypermesh.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">trisurface</span></tt></p>
@@ -702,12 +1707,6 @@ Returns a nodes,elems tuple.</p>
 <dt id="trisurface.write_stla">
 <tt class="descclassname">trisurface.</tt><tt class="descname">write_stla</tt><big>(</big><em>f</em>, <em>x</em><big>)</big><a class="headerlink" href="#trisurface.write_stla" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export an x[n,3,3] float array as an ascii .stl file.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="trisurface.write_stlb">
-<tt class="descclassname">trisurface.</tt><tt class="descname">write_stlb</tt><big>(</big><em>f</em>, <em>x</em><big>)</big><a class="headerlink" href="#trisurface.write_stlb" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export an x[n,3,3] float array as an binary .stl file.</p>
 </dd></dl>
 
 <dl class="function">

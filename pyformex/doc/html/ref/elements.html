@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>12. elements — Element local coordinates and numbering. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>12. elements — Definition of elements. &mdash; pyFormex v0.8.4-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -58,16 +58,16 @@
           <div class="body">
             
   <div class="section" id="module-elements">
-<span id="elements-element-local-coordinates-and-numbering"></span><span id="sec-ref-elements"></span><h1>12. <a class="reference internal" href="#module-elements" title="elements: Element local coordinates and numbering."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> &#8212; Element local coordinates and numbering.<a class="headerlink" href="#module-elements" title="Permalink to this headline">¶</a></h1>
-<p>Element local coordinates and numbering.</p>
-<p>This modules allows for a consistent local numbering scheme throughout
-pyFormex. When interfacing with other programs, one should be aware
+<span id="elements-definition-of-elements"></span><span id="sec-ref-elements"></span><h1>12. <a class="reference internal" href="#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> &#8212; Definition of elements.<a class="headerlink" href="#module-elements" title="Permalink to this headline">¶</a></h1>
+<p>This modules allows for a consistent local numbering scheme of element
+connectivities throughout pyFormex.
+When interfacing with other programs, one should be aware
 that conversions may be necessary. Conversions to/from external programs
 should be done by the interface modules.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
 <dl class="class">
 <dt id="elements.Element">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Element</tt><a class="headerlink" href="#elements.Element" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Element</tt><big>(</big><em>name</em>, <em>doc</em>, <em>ndim</em>, <em>vertices</em>, <em>edges</em>, <em>faces</em>, <em>element=</em><span class="optional">[</span><span class="optional">]</span>, <em>conversions={}</em>, <em>drawedges=None</em>, <em>drawfaces=None</em><big>)</big><a class="headerlink" href="#elements.Element" title="Permalink to this definition">¶</a></dt>
 <dd><p>Element base class: an empty element.</p>
 <p>All derived classes should have a capitalized name: starting with
 an uppercase character and further only lower case and digits.</p>
@@ -92,82 +92,60 @@ or elements.
 For solid elements, it is guaranteed that the vertices of all faces are
 numbered in a consecutive order spinning positively around the outward
 normal on the face.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Point">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Point</tt><a class="headerlink" href="#elements.Point" title="Permalink to this definition">¶</a></dt>
-<dd><p>A single node element</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Line2">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Line2</tt><a class="headerlink" href="#elements.Line2" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 2-node line segment</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Tri3">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Tri3</tt><a class="headerlink" href="#elements.Tri3" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 3-node triangle</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Tri6">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Tri6</tt><a class="headerlink" href="#elements.Tri6" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 6-node triangle</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Quad4">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Quad4</tt><a class="headerlink" href="#elements.Quad4" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 4-node quadrilateral</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Quad8">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Quad8</tt><a class="headerlink" href="#elements.Quad8" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 8-node quadrilateral</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Quad9">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Quad9</tt><a class="headerlink" href="#elements.Quad9" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 9-node quadrilateral</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Tet4">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Tet4</tt><a class="headerlink" href="#elements.Tet4" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 4-node tetrahedron</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Wedge6">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Wedge6</tt><a class="headerlink" href="#elements.Wedge6" title="Permalink to this definition">¶</a></dt>
-<dd><p>A 6-node wedge element</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Hex8">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Hex8</tt><a class="headerlink" href="#elements.Hex8" title="Permalink to this definition">¶</a></dt>
-<dd><p>An 8-node hexahedron</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Hex20">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Hex20</tt><a class="headerlink" href="#elements.Hex20" title="Permalink to this definition">¶</a></dt>
-<dd><p>An 20-node hexahedron</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="elements.Icosa">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Icosa</tt><a class="headerlink" href="#elements.Icosa" title="Permalink to this definition">¶</a></dt>
-<dd><p>An icosahedron: a regular polyhedron with 20 triangular surfaces.</p>
-<p>nfaces = 20, nedges = 30, nvertices = 12</p>
+<p>The list of available element types can be found by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">printElementTypes</span><span class="p">()</span>
+<span class="go">Available Element Types:</span>
+<span class="go">  0-dimensional elements: [&#39;point&#39;]</span>
+<span class="go">  1-dimensional elements: [&#39;line2&#39;]</span>
+<span class="go">  2-dimensional elements: [&#39;tri3&#39;, &#39;tri6&#39;, &#39;quad4&#39;, &#39;quad8&#39;, &#39;quad9&#39;]</span>
+<span class="go">  3-dimensional elements: [&#39;tet4&#39;, &#39;tet10&#39;, &#39;wedge6&#39;, &#39;hex8&#39;, &#39;hex20&#39;, &#39;icosa&#39;]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
+<dl class="function">
+<dt id="elements.elementType">
+<tt class="descclassname">elements.</tt><tt class="descname">elementType</tt><big>(</big><em>name=None</em>, <em>nplex=-1</em><big>)</big><a class="headerlink" href="#elements.elementType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the requested element type</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>name</cite>: a string (case ignored) with the name of an element.
+If not specified, or the named element does not exist, the default
+element for the specified plexitude is returned.</li>
+<li><cite>nplex</cite>: plexitude of the element. If specified and no element name
+was given, the default element type for this plexitude is returned.</li>
+</ul>
+<p>Returns: a subclass of <a class="reference internal" href="#elements.Element" title="elements.Element"><tt class="xref py py-class docutils literal"><span class="pre">Element</span></tt></a></p>
+<dl class="docutils">
+<dt>Errors: if neither <cite>name</cite> nor <cite>nplex</cite> can resolve into an element type,</dt>
+<dd>an error is raised.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">elementType</span><span class="p">(</span><span class="s">&#39;tri3&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+<span class="go">&#39;tri3&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">elementType</span><span class="p">(</span><span class="n">nplex</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+<span class="go">&#39;line2&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="elements.elementTypes">
+<tt class="descclassname">elements.</tt><tt class="descname">elementTypes</tt><big>(</big><em>ndim=None</em><big>)</big><a class="headerlink" href="#elements.elementTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the names of available elements.</p>
+<p>If a value is specified for ndim, only the elements with the matching
+dimensionality are returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="elements.printElementTypes">
+<tt class="descclassname">elements.</tt><tt class="descname">printElementTypes</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.printElementTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print all available element types.</p>
+<p>Prints a list of the names of all availabale element types,
+grouped by their dimensionality.</p>
+</dd></dl>
+
 </div>
 
 

@@ -57,9 +57,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-decors">
+  <p>DEBUG: Using the (slower) Python misc functions
+DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; decors
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-decors">
 <span id="decors-2d-decorations-for-the-opengl-canvas"></span><span id="sec-ref-decors"></span><h1>17. <a class="reference internal" href="#module-decors" title="decors: 2D decorations for the OpenGL canvas."><tt class="xref py py-mod docutils literal"><span class="pre">decors</span></tt></a> &#8212; 2D decorations for the OpenGL canvas.<a class="headerlink" href="#module-decors" title="Permalink to this headline">¶</a></h1>
-<p>2D decorations for the OpenGL canvas.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">decors</span></tt></p>
 <dl class="class">
 <dt id="decors.Decoration">
@@ -77,18 +81,96 @@ allowed in a display list.</p>
 </dl>
 </li>
 </ul>
+<dl class="method">
+<dt id="decors.Decoration.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Decoration.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the OpenGL drawing functions to display the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Decoration.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Decoration.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Decoration.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#decors.Decoration.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Decoration.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#decors.Decoration.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Decoration.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#decors.Decoration.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="decors.Mark">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Mark</tt><big>(</big><em>x</em>, <em>y</em>, <em>mark='dot'</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Mark" title="Permalink to this definition">¶</a></dt>
 <dd><p>A mark at a fixed position on the canvas.</p>
+<dl class="method">
+<dt id="decors.Mark.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Mark.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Mark.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#decors.Mark.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Mark.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#decors.Mark.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Mark.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#decors.Mark.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="decors.Line">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Line</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Line" title="Permalink to this definition">¶</a></dt>
 <dd><p>A straight line on the canvas.</p>
+<dl class="method">
+<dt id="decors.Line.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Line.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Line.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#decors.Line.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Line.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#decors.Line.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Line.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#decors.Line.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -110,30 +192,156 @@ for the horizontal. The default(empty) string will center the text.</li>
 <dd><p>Draw the text.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="decors.GlutText.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.GlutText.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.GlutText.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#decors.GlutText.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.GlutText.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#decors.GlutText.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.GlutText.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#decors.GlutText.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="decors.Text">
+<tt class="descclassname">decors.</tt><tt class="descname">Text</tt><a class="headerlink" href="#decors.Text" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#decors.GlutText" title="decors.GlutText"><tt class="xref py py-class docutils literal"><span class="pre">GlutText</span></tt></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="decors.ColorLegend">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorlegend</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>font=None</em>, <em>size=None</em>, <em>dec=2</em>, <em>scale=0</em>, <em>grid=0</em>, <em>linewidth=None</em>, <em>lefttext=False</em>, <em>nlabels=-1</em><big>)</big><a class="headerlink" href="#decors.ColorLegend" title="Permalink to this definition">¶</a></dt>
 <dd><p>A viewport decoration showing a colorscale legend.</p>
+<dl class="method">
+<dt id="decors.ColorLegend.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.ColorLegend.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.ColorLegend.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#decors.ColorLegend.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.ColorLegend.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#decors.ColorLegend.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.ColorLegend.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#decors.ColorLegend.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="decors.Rectangle">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Rectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.Rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D-rectangle on the canvas.</p>
+<dl class="method">
+<dt id="decors.Rectangle.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Rectangle.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Rectangle.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#decors.Rectangle.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Rectangle.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#decors.Rectangle.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Rectangle.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#decors.Rectangle.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="decors.Grid">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Grid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx=1</em>, <em>ny=1</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D-grid on the canvas.</p>
+<dl class="method">
+<dt id="decors.Grid.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Grid.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Grid.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#decors.Grid.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Grid.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#decors.Grid.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Grid.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#decors.Grid.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="decors.LineDrawing">
 <em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">LineDrawing</tt><big>(</big><em>data</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.LineDrawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>A collection of straight lines on the canvas.</p>
+<dl class="method">
+<dt id="decors.LineDrawing.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.LineDrawing.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.LineDrawing.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#decors.LineDrawing.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.LineDrawing.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#decors.LineDrawing.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.LineDrawing.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#decors.LineDrawing.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -157,6 +365,36 @@ position (&#8216;b&#8217;, &#8216;c&#8217; or &#8216;t&#8217;).</p>
 string or a tuple of 3 strings.</p>
 </li>
 </ul>
+<dl class="method">
+<dt id="decors.Triade.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Triade.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the OpenGL drawing functions to display the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Triade.pickGL">
+<tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Triade.pickGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimick the OpenGL drawing functions to pick (from) the actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Triade.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#decors.Triade.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Triade.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#decors.Triade.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="decors.Triade.setColor">
+<tt class="descname">setColor</tt><big>(</big><em>color=None</em>, <em>colormap=None</em>, <em>ncolors=1</em><big>)</big><a class="headerlink" href="#decors.Triade.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color of the Drawable.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">decors</span></tt></p>

@@ -57,35 +57,14 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-canvas">
+  <p>DEBUG: Using the (slower) Python misc functions
+DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; canvas
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-canvas">
 <span id="canvas-this-implements-an-opengl-drawing-widget-for-painting-3d-scenes"></span><span id="sec-ref-canvas"></span><h1>20. <a class="reference internal" href="#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.<a class="headerlink" href="#module-canvas" title="Permalink to this headline">¶</a></h1>
-<p>This implements an OpenGL drawing widget for painting 3D scenes.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
-<dl class="class">
-<dt id="canvas.ActorList">
-<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">ActorList</tt><big>(</big><em>canvas</em><big>)</big><a class="headerlink" href="#canvas.ActorList" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="canvas.ActorList.add">
-<tt class="descname">add</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.ActorList.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an actor to an actorlist.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.ActorList.delete">
-<tt class="descname">delete</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.ActorList.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove an actor from an actorlist.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.ActorList.redraw">
-<tt class="descname">redraw</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.ActorList.redraw" title="Permalink to this definition">¶</a></dt>
-<dd><p>Redraw (some) actors in the scene.</p>
-<p>This redraws the specified actors (recreating their display list).
-This should e.g. be used after changing an actor&#8217;s properties.</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="canvas.CanvasSettings">
 <em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">CanvasSettings</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings" title="Permalink to this definition">¶</a></dt>
@@ -120,33 +99,27 @@ file(s).</p>
 <p>Returns the sanitized update values.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="canvas.Light">
-<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Light</tt><big>(</big><em>nr</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#canvas.Light" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="class">
-<dt id="canvas.Lights">
-<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Lights</tt><big>(</big><em>nlights</em><big>)</big><a class="headerlink" href="#canvas.Lights" title="Permalink to this definition">¶</a></dt>
-<dd><p>An array of OpenGL lights.</p>
-<dl class="method">
-<dt id="canvas.Lights.set_value">
-<tt class="descname">set_value</tt><big>(</big><em>i</em>, <em>key</em>, <em>value</em><big>)</big><a class="headerlink" href="#canvas.Lights.set_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set an attribute of light i</p>
+<dl class="classmethod">
+<dt id="canvas.CanvasSettings.checkDict">
+<em class="property">classmethod </em><tt class="descname">checkDict</tt><big>(</big><em>clas</em>, <em>dict</em>, <em>strict=True</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings.checkDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform a dict to acceptable settings.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="canvas.Lights.set">
-<tt class="descname">set</tt><big>(</big><em>i</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#canvas.Lights.set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set all attributes of light i</p>
+<dt id="canvas.CanvasSettings.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="canvas.Lights.enable">
-<tt class="descname">enable</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Lights.enable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable the lights</p>
+<dt id="canvas.CanvasSettings.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
 </dd></dl>
 
 </dd></dl>
@@ -171,6 +144,24 @@ file(s).</p>
 <dt id="canvas.Canvas.resetDefaults">
 <tt class="descname">resetDefaults</tt><big>(</big><em>dict={}</em><big>)</big><a class="headerlink" href="#canvas.Canvas.resetDefaults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all the settings to their default values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setAmbient">
+<tt class="descname">setAmbient</tt><big>(</big><em>ambient</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setAmbient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the global ambient lighting for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.setMaterial">
+<tt class="descname">setMaterial</tt><big>(</big><em>matname</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default material light properties for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.resetLighting">
+<tt class="descname">resetLighting</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.resetLighting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the light parameters</p>
 </dd></dl>
 
 <dl class="method">
@@ -223,24 +214,6 @@ and an object is created to display the background.</p>
 <dt id="canvas.Canvas.setSlColor">
 <tt class="descname">setSlColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setSlColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the highlight color.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.setLightValue">
-<tt class="descname">setLightValue</tt><big>(</big><em>nr</em>, <em>key</em>, <em>val</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setLightValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>(Re)Define a light on the scene.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.enableLight">
-<tt class="descname">enableLight</tt><big>(</big><em>nr</em><big>)</big><a class="headerlink" href="#canvas.Canvas.enableLight" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable an existing light.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="canvas.Canvas.disableLight">
-<tt class="descname">disableLight</tt><big>(</big><em>nr</em><big>)</big><a class="headerlink" href="#canvas.Canvas.disableLight" title="Permalink to this definition">¶</a></dt>
-<dd><p>Disable an existing light.</p>
 </dd></dl>
 
 <dl class="method">
@@ -527,7 +500,7 @@ None to leave it unchanged.</p>
                         title="previous chapter">19. <tt class="docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="viewport.html"
-                        title="next chapter">21. <tt class="docutils literal docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
+                        title="next chapter">21. <tt class="docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

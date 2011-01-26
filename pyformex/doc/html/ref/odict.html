@@ -59,7 +59,6 @@
             
   <div class="section" id="module-odict">
 <span id="odict-specialized-dictionary-type-structures"></span><span id="sec-ref-odict"></span><h1>53. <a class="reference internal" href="#module-odict" title="odict: Specialized dictionary type structures."><tt class="xref py py-mod docutils literal"><span class="pre">odict</span></tt></a> &#8212; Specialized dictionary type structures.<a class="headerlink" href="#module-odict" title="Permalink to this headline">¶</a></h1>
-<p>Specialized dictionary type structures.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">odict</span></tt></p>
 <dl class="class">
 <dt id="odict.ODict">
@@ -126,6 +125,41 @@ item.</p>
 <dt id="odict.KeyedList.items">
 <tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#odict.KeyedList.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the key+value lists in order of the keys.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="odict.KeyedList.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#odict.KeyedList.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the ODict object.</p>
+<p>The new keys will be appended to the existing, but the order of the
+added keys is undetemined if data is a dict object. If data is an ODict
+its order will be respected..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="odict.KeyedList.sort">
+<tt class="descname">sort</tt><big>(</big><em>keys</em><big>)</big><a class="headerlink" href="#odict.KeyedList.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the order of the keys.</p>
+<p>keys should be a list containing exactly all the keys from self.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="odict.KeyedList.keys">
+<tt class="descname">keys</tt><big>(</big><big>)</big><a class="headerlink" href="#odict.KeyedList.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the keys in order.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="odict.KeyedList.values">
+<tt class="descname">values</tt><big>(</big><big>)</big><a class="headerlink" href="#odict.KeyedList.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the values in order of the keys.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="odict.KeyedList.pos">
+<tt class="descname">pos</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#odict.KeyedList.pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the position of the specified key.</p>
+<p>If the key is not in the ODict, None is returned</p>
 </dd></dl>
 
 </dd></dl>

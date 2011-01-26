@@ -57,58 +57,18 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-fe_post">
+  <p>DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; fe_post
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-fe_post">
 <span id="fe-post-a-postprocessor-for-abaqus-output-files"></span><span id="sec-ref-fe-post"></span><h1>42. <a class="reference internal" href="#module-fe_post" title="fe_post: A postprocessor for ABAQUS output files."><tt class="xref py py-mod docutils literal"><span class="pre">fe_post</span></tt></a> &#8212; A postprocessor for ABAQUS output files.<a class="headerlink" href="#module-fe_post" title="Permalink to this headline">¶</a></h1>
-<p>A postprocessor for ABAQUS output files.</p>
 <p>The ABAQUS .fil output file can be scanned and translated into a pyFormex
 script with the &#8216;postabq&#8217; command. Use it as follows:</p>
 <div class="highlight-python"><pre>postabq job.fil &gt; job.py</pre>
 </div>
 <p>Then execute the created script from inside pyFormex.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_post</span></tt></p>
-<dl class="class">
-<dt id="fe_post.FeResult">
-<em class="property">class </em><tt class="descclassname">fe_post.</tt><tt class="descname">FeResult</tt><big>(</big><em>name='__FePost__'</em>, <em>datasize={'S': 6</em>, <em>'U': 3</em>, <em>'COORD': 3}</em><big>)</big><a class="headerlink" href="#fe_post.FeResult" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="fe_post.FeResult.Export">
-<tt class="descname">Export</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.Export" title="Permalink to this definition">¶</a></dt>
-<dd><p>Align on the last increment and export results</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.do_nothing">
-<tt class="descname">do_nothing</tt><big>(</big><em>*arg</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.do_nothing" title="Permalink to this definition">¶</a></dt>
-<dd><p>A do nothing function to stand in for as yet undefined functions.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.getSteps">
-<tt class="descname">getSteps</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.getSteps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return all the step keys.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.getIncs">
-<tt class="descname">getIncs</tt><big>(</big><em>step</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.getIncs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return all the incs for given step.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.getres">
-<tt class="descname">getres</tt><big>(</big><em>key</em>, <em>domain='nodes'</em><big>)</big><a class="headerlink" href="#fe_post.FeResult.getres" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the results of the current step/inc for given key.</p>
-<p>The key may include a component to return only a single column
-of a multicolumn value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe_post.FeResult.printSteps">
-<tt class="descname">printSteps</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_post.FeResult.printSteps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the steps/increments/resultcodes for which we have results.</p>
-</dd></dl>
-
-</dd></dl>
-
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_post</span></tt></p>
 </div>
 

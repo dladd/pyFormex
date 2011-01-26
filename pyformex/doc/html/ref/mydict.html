@@ -59,9 +59,7 @@
             
   <div class="section" id="module-mydict">
 <span id="mydict"></span><span id="sec-ref-mydict"></span><h1>52. <a class="reference internal" href="#module-mydict" title="mydict"><tt class="xref py py-mod docutils literal"><span class="pre">mydict</span></tt></a> &#8212;<a class="headerlink" href="#module-mydict" title="Permalink to this headline">¶</a></h1>
-<p>Extensions to Pythons built-in dictionary class:
-Dict is a dictionary with default values and alternate attribute syntax.
-CDict is a Dict with lookup cascading into the next level Dict&#8217;s
+<p>CDict is a Dict with lookup cascading into the next level Dict&#8217;s
 if the key is not found in the CDict itself.</p>
 <p>(C) 2005,2008 Benedict Verhegghe
 Distributed under the GNU GPL version 3 or later</p>
@@ -143,7 +141,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="mydict.CDict">
-<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">CDict</tt><big>(</big><em>data={}</em>, <em>default=&lt;function returnNone at 0x35f0668&gt;</em><big>)</big><a class="headerlink" href="#mydict.CDict" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">CDict</tt><big>(</big><em>data={}</em>, <em>default=&lt;function returnNone at 0x2c61b90&gt;</em><big>)</big><a class="headerlink" href="#mydict.CDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>A cascading Dict: properties not in Dict are searched in all Dicts.</p>
 <p>This is equivalent to the Dict class, except that if a key is not found
 and the CDict has items with values that are themselves instances
@@ -153,6 +151,30 @@ of CDict&#8217;s. The cascade will stop if you use a Dict.
 There is no way to guarantee in which order the (Cascading)Dict&#8217;s are
 visited, so if multiple Dicts on the same level hold the same key,
 you should know yourself what you are doing.</p>
+<dl class="method">
+<dt id="mydict.CDict.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#mydict.CDict.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mydict.CDict.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#mydict.CDict.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mydict.CDict.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#mydict.CDict.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mydict</span></tt></p>

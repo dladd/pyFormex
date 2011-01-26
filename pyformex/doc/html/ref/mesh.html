@@ -57,9 +57,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-mesh">
+  <p>DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; mesh
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-mesh">
 <span id="mesh-finite-element-meshes-in-pyformex"></span><span id="sec-ref-mesh"></span><h1>30. <a class="reference internal" href="#module-mesh" title="mesh: Finite element meshes in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">mesh</span></tt></a> &#8212; Finite element meshes in pyFormex.<a class="headerlink" href="#module-mesh" title="Permalink to this headline">¶</a></h1>
-<p>Finite element meshes in pyFormex.</p>
 <p>This module defines the Mesh class, which can be used to describe discrete
 geometrical models like those used in Finite Element models.
 It also contains some useful functions to create such models.</p>
@@ -90,10 +93,12 @@ file (and to other programs), a Mesh data model may be more adequate.</p>
 <li>elems: (nelems,nplex) shaped array of int32 indices into coords. All
 values should be in the range 0 &lt;= value &lt; ncoords.</li>
 <li>prop: array of element property numbers, default None.</li>
-<li>eltype: string designing the element type, default None.</li>
+<li>eltype: an Element subclass or a string designing the element type,
+default None.</li>
 </ul>
 <p>If eltype is None, a default eltype is derived from the plexitude, by
-calling the defaultEltype function. For plexitudes without default type,
+calling the elements.elementType function.
+For plexitudes without default type,
 or if the default type is not the wanted element type, the user should
 specify the element type himself.</p>
 <p>A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
@@ -181,7 +186,7 @@ Note that this may contain points that are not used in the mesh.
 <dt id="mesh.Mesh.getLowerEntitiesSelector">
 <tt class="descname">getLowerEntitiesSelector</tt><big>(</big><em>level=-1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getLowerEntitiesSelector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the entities of a lower dimensionality.</p>
-<p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Element local coordinates and numbering."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
+<p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
 this returns a Connectivity table with the entities of a lower
 dimensionality. The full list of entities with increasing
 dimensionality  0,1,2,3 is:</p>
@@ -206,7 +211,7 @@ outside the range 0..3, the return value is None.</p>
 <dt id="mesh.Mesh.getLowerEntities">
 <tt class="descname">getLowerEntities</tt><big>(</big><em>level=-1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getLowerEntities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the entities of a lower dimensionality.</p>
-<p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Element local coordinates and numbering."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
+<p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
 this returns a Connectivity table with the entities of a lower
 dimensionality. The full list of entities with increasing
 dimensionality  0,1,2,3 is:</p>
@@ -278,12 +283,6 @@ requests can return it without the need for computing it again.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.getFaceEdges">
-<tt class="descname">getFaceEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getFaceEdges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the faces&#8217; edge numbers.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="mesh.Mesh.getBorder">
 <tt class="descname">getBorder</tt><big>(</big><em>return_indices=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the border of the Mesh.</p>
@@ -323,6 +322,12 @@ This is equivalent to:</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.getFaceEdges">
+<tt class="descname">getFaceEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getFaceEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the faces&#8217; edge numbers.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.nodeConnections">
 <tt class="descname">nodeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nodeConnections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find and store the elems connected to nodes.</p>
@@ -332,6 +337,18 @@ This is equivalent to:</p>
 <dt id="mesh.Mesh.nNodeConnected">
 <tt class="descname">nNodeConnected</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nNodeConnected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the number of elems connected to nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.edgeConnections">
+<tt class="descname">edgeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.edgeConnections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find and store the elems connected to edges.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nEdgeConnected">
+<tt class="descname">nEdgeConnected</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nEdgeConnected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the number of elems connected to edges.</p>
 </dd></dl>
 
 <dl class="method">
@@ -347,35 +364,15 @@ This is equivalent to:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.getAngles">
-<tt class="descname">getAngles</tt><big>(</big><em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getAngles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the angles in Deg or Rad between the edges of a mesh.</p>
-<p>The returned angles are shaped  as (nelems, n1faces, n1vertices),
-where n1faces are the number of faces in 1 element and the number
-of vertices in 1 face.</p>
+<dt id="mesh.Mesh.edgeAdjacency">
+<tt class="descname">edgeAdjacency</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.edgeAdjacency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the elems adjacent to elems via an edge.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.node2nodeAdjacency">
-<tt class="descname">node2nodeAdjacency</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.node2nodeAdjacency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds the nodes adjacent to each node via an edge of the mesh.</p>
-<p>For each original node returns the index of the adjacent nodes,
-which are connect to the original by an edge.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mesh.Mesh.nNode2nodeAdjacent">
-<tt class="descname">nNode2nodeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nNode2nodeAdjacent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the number of nodes  adjacent to each node via an edge of the mesh.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mesh.Mesh.avgNodalScalarOnAdjacentNodes">
-<tt class="descname">avgNodalScalarOnAdjacentNodes</tt><big>(</big><em>val</em>, <em>iter=1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.avgNodalScalarOnAdjacentNodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Smooth nodal scalar values by averaging over adjacent nodes iter times.</p>
-<p>Nodal scalar values (val is a 1D array of self.ncoords() scalar values )
-are averaged over adjacent nodes an number of time (iter)
-in order to provide a smoothed mapping.</p>
+<dt id="mesh.Mesh.nEdgeAdjacent">
+<tt class="descname">nEdgeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nEdgeAdjacent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the number of adjacent elems.</p>
 </dd></dl>
 
 <dl class="method">
@@ -682,6 +679,14 @@ are merely stacked, and the user may have to fix it himself.</p>
 line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="mesh.Mesh.concatenate">
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>meshes</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.concatenate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate a list of meshes of the same plexitude and eltype</p>
+<p>Merging of the nodes can be tuned by specifying extra arguments
+that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="mesh.Mesh.test">
 <tt class="descname">test</tt><big>(</big><em>nodes='all'</em>, <em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#mesh.Mesh.test" title="Permalink to this definition">¶</a></dt>
@@ -772,49 +777,425 @@ the worst angle in each element and the ideal angle (angle in the face
 of an equiangular element, qe).</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="mesh.Mesh.affine">
+<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a general affine transform of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p><cite>mat</cite>: a 3x3 float matrix</p>
+<p><cite>vec</cite>: a length 3 list or array of floats</p>
+<p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.bump">
+<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.bump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a bump.</p>
+<p>A bump is a modification of a set of coordinates by a non-matching
+point. It can produce various effects, but one of the most common
+uses is to force a surface to be indented by some point.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+(!! func(0) should be different from 0)
+dist is the direction in which the distance is measured : this can
+be one of the axes, or a list of one or more axes.
+If only 1 axis is specified, the effect is like function bump1
+If 2 axes are specified, the effect is like bump2
+This function can take 3 axes however.
+Default value is the set of 3 axes minus the direction of modification.
+This function is then equivalent to bump2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.bump1">
+<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.bump1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a one-dimensional bump.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies the axis of the modified coordinates;</li>
+<li><cite>a</cite> is the point that forces the bumping;</li>
+<li><cite>dist</cite> specifies the direction in which the distance is measured;</li>
+<li><cite>func</cite> is a function that calculates the bump intensity from distance
+and should be such that <tt class="docutils literal"><span class="pre">func(0)</span> <span class="pre">!=</span> <span class="pre">0</span></tt>.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.bump2">
+<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.bump2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a two-dimensional bump.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+!! func(0) should be different from 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.cylindrical">
+<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.cylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cylindrical to cartesian after scaling.</p>
+<p>dir specifies which coordinates are interpreted as resp.
+distance(r), angle(theta) and height(z). Default order is [r,theta,z].
+scale will scale the coordinate values prior to the transformation.
+(scale is given in order r,theta,z).
+The resulting angle is interpreted in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.egg">
+<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.egg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the coordinates to an egg-shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.flare">
+<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.flare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a flare at the end of a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> block.</p>
+<p>The flare extends over a distance <tt class="docutils literal"><span class="pre">xf</span></tt> at the start (<tt class="docutils literal"><span class="pre">end=0</span></tt>)
+or end (<tt class="docutils literal"><span class="pre">end=1</span></tt>) in direction <tt class="docutils literal"><span class="pre">dir[0]</span></tt> of the coords block,
+and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f</span></tt> in the <tt class="docutils literal"><span class="pre">dir[1]</span></tt> direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.isopar">
+<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.isopar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an isoparametric transformation on a Coords.</p>
+<p>This is a convenience method to transform a Coords object through
+an isoparametric transformation. It is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <tt class="xref py py-mod docutils literal"><span class="pre">plugins.isopar</span></tt> for more details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.map">
+<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> mapped by a 3-D function.</p>
+<p>This is one of the versatile mapping functions.
+func is a numerical function which takes three arguments and produces
+a list of three output values. The coordinates [x,y,z] will be
+replaced by func(x,y,z).
+The function must be applicable to arrays, so it should
+only include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map1 and mapd.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
+<span class="go">[[ 2.  3.  4.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.map1">
+<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.map1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> where coordinate i is mapped by a 1-D function.</p>
+<p><cite>func</cite> is a numerical function which takes one argument and produces
+one result. The coordinate dir will be replaced by func(coord[x]).
+If no x is specified, x is taken equal to dir. 
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map and mapd.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.mapd">
+<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.mapd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps one coordinate by a function of the distance to a point.</p>
+<p><cite>func</cite> a numerical function which takes one argument and produces
+one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
+where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+<tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> module.
+By default, the distance d is calculated in 3-D, but one can specify
+a limited set of axes to calculate a 2-D or 1-D distance.
+This method is one of several mapping methods. See also
+<tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#mesh.Mesh.map1" title="mesh.Mesh.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.projectOnCylinder">
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> on a cylinder with axis parallel to a global axis.</p>
+<p>The default cylinder has its axis along the x-axis and a unit radius.
+No points of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> should belong to the axis..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.projectOnSphere">
+<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> on a sphere.</p>
+<p>The default sphere is a unit sphere at the origin.
+The center of the sphere should not be part of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.reflect">
+<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>dir</cite>: int: direction of the reflection (default 0)</li>
+<li><cite>pos</cite>: float: offset of the mirror plane from origin (default 0.0)</li>
+<li><cite>inplace</cite>: boolean: change the coordinates inplace (default False)</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.replace">
+<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the coordinates along the axes i by those along j.</p>
+<p>i and j are lists of axis numbers or single axis numbers.
+replace ([0,1,2],[1,2,0]) will roll the axes by 1.
+replace ([0,1],[1,0]) will swap axes 0 and 1.
+An optionally third argument may specify another <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object to take
+the coordinates from. It should have the same dimensions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.rollAxes">
+<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.rollAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roll the axes over the given amount.</p>
+<p>Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
+2 becomes 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.rot">
+<tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.rot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.rotate">
+<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.scale">
+<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy scaled with scale[i] in direction i.</p>
+<p>The scale should be a list of 3 scaling factors for the 3 axis
+directions, or a single scaling factor.
+In the latter case, dir (a single axis number or a list) may be given
+to specify the direction(s) to scale. The default is to produce a
+homothetic scaling.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">[ 2.  2.  2.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="go">[ 2.  3.  4.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.shear">
+<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.shear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
+<p>The coordinate dir is replaced with (dir + skew * dir1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.spherical">
+<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from spherical to cartesian after scaling.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).</li>
+<li><cite>scale</cite> will scale the coordinate values prior to the transformation.</li>
+</ul>
+<p>Angles are interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.</p>
+<p>If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.superSpherical">
+<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.superSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a superspherical transformation.</p>
+<p>superSpherical is much like spherical, but adds some extra
+parameters to enable the creation of virtually any surface.</p>
+<p>Just like with spherical(), the input coordinates are interpreted as
+the longitude, latitude and distance in a spherical coordinate system.</p>
+<p><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).
+Angles are then interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.
+If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+<p><cite>scale</cite> will scale the coordinate values prior to the transformation.</p>
+<p>The <cite>n</cite> and <cite>e</cite> parameters define exponential transformations of the
+north_south (latitude), resp. the east_west (longitude) coordinates.
+Default values of 1 result in a circle.</p>
+<p><cite>k</cite> adds &#8216;eggness&#8217; to the shape: a difference between the northern and
+southern hemisphere. Values &gt; 0 enlarge the southern hemishpere and
+shrink the northern.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.swapAxes">
+<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.swapAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swap coordinate axes i and j.</p>
+<p>Beware! This is different from numpy&#8217;s swapaxes() method !</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.toCylindrical">
+<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to cylindrical coordinates.</p>
+<p>dir specifies which coordinates axes are parallel to respectively the
+cylindrical axes distance(r), angle(theta) and height(z). Default
+order is [x,y,z].
+The angle value is given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.toSpherical">
+<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.toSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to spherical coordinates.</p>
+<p><cite>dir</cite> specifies which coordinates axes are parallel to respectively
+the spherical axes distance(r), longitude(theta) and latitude(phi).
+Latitude is the elevation angle measured from equator in direction
+of north pole(90). South pole is -90.
+Default order is [0,1,2], thus the equator plane is the (x,y)-plane.</p>
+<p>The returned angle values are given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.transformCS">
+<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.transformCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a CoordinateSystem transformation on the Coords.</p>
+<p>This method transforms the Coords object by the transformation that
+turns the initial CoordinateSystem into the currentCoordinateSystem.</p>
+<p>currentCS and initialCS are CoordSystem or (4,3) shaped Coords
+instances. If initialCS is None, the global (x,y,z) axes are used.</p>
+<p>E.g. the default initialCS and currentCS equal to:</p>
+<div class="highlight-python"><pre> 0.  1.  0.
+-1.  0.  0.
+ 0.  0.  1.
+ 0.  0.  0.</pre>
+</div>
+<p>result in a rotation of 90 degrees around the z-axis.</p>
+<p>This is a convenience function equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">isopar</span><span class="p">(</span><span class="s">&#39;tet4&#39;</span><span class="p">,</span><span class="n">currentCS</span><span class="p">,</span><span class="n">initialCS</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.translate">
+<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.trl">
+<tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.trl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.write">
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Geometry to a .pgf file.</p>
+<p>If fil is a string, a file with that name is opened. Else fil should
+be an open file.
+The Geometry is then written to that file in a native format, using
+sep as separator between the coordinates.
+If fil is a string, the file is closed prior to returning.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.connect">
+<tt class="descname">connect</tt><big>(</big><em>mesh1</em>, <em>mesh2</em>, <em>n=1</em>, <em>n1=None</em>, <em>n2=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect two meshes to form a hypermesh.</p>
+<p>mesh1 and mesh2 are two meshes with same topology (shape). 
+The two meshes are connected by a higher order mesh with n
+elements in the direction between the two meshes.
+n1 and n2 are node selection indices permitting a permutation of the
+nodes of the base sets in their appearance in the hypermesh.
+This can e.g. be used to achieve circular numbering of the hypermesh.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mesh</span></tt></p>
-<dl class="function">
-<dt id="mesh.vectorRotation">
-<tt class="descclassname">mesh.</tt><tt class="descname">vectorRotation</tt><big>(</big><em>vec1, vec2, upvec=[0.0, 0.0, 1.0]</em><big>)</big><a class="headerlink" href="#mesh.vectorRotation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a rotation matrix for rotating vector vec1 to vec2</p>
-<p>The rotation matrix will be such that the plane of vec2 and the
-rotated upvec will be parallel to the original upvec.</p>
-<p>This function is like <a class="reference internal" href="arraytools.html#arraytools.rotMatrix" title="arraytools.rotMatrix"><tt class="xref py py-func docutils literal"><span class="pre">arraytools.rotMatrix()</span></tt></a>, but allows the
-specification of vec1.
-The returned matrix should be used in postmultiplication to the Coords.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh.sweepCoords">
-<tt class="descclassname">mesh.</tt><tt class="descname">sweepCoords</tt><big>(</big><em>self, path, origin=[0.0, 0.0, 0.0], normal=0, upvector=2, avgdir=False, enddir=None, scalex=None, scaley=None</em><big>)</big><a class="headerlink" href="#mesh.sweepCoords" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sweep a Coords object along a path, returning a series of copies.</p>
-<p>origin and normal define the local path position and direction on the mesh.</p>
-<p>At each point of the curve, a copy of the Coords object is created, with
-its origin in the curve&#8217;s point, and its normal along the curve&#8217;s direction.
-In case of a PolyLine, directions are pointing to the next point by default.
-If avgdir==True, average directions are taken at the intermediate points.
-Missing end directions can explicitely be set by enddir, and are by default
-taken along the last segment.
-If the curve is closed, endpoints are treated as any intermediate point,
-and the user should normally not specify enddir.</p>
-<p>At each point of the curve, the original Coords object can be scaled in x
-and y direction by specifying scalex and scaley. The number of values
-specified in scalex and scaly should be equal to the number of points on
-the curve.</p>
-<p>The return value is a sequence of the transformed Coords objects.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh.defaultEltype">
-<tt class="descclassname">mesh.</tt><tt class="descname">defaultEltype</tt><big>(</big><em>nplex</em><big>)</big><a class="headerlink" href="#mesh.defaultEltype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default element type for a mesh with given plexitude.</p>
-<p>For the most common cases of plexitudes, we define a default element
-type. The full list of default types can be found in
-plugins.mesh._default_eltype.</p>
-</dd></dl>
-
 <dl class="function">
 <dt id="mesh.mergeNodes">
 <tt class="descclassname">mesh.</tt><tt class="descname">mergeNodes</tt><big>(</big><em>nodes</em>, <em>fuse=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.mergeNodes" title="Permalink to this definition">¶</a></dt>

@@ -57,9 +57,25 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-draw">
+  <p>DEBUG: Using the (slower) Python misc functions
+DEBUG: Using the (slower) Python misc functions
+DEBUG: LOADING IMAGE FORMATS
+DEBUG:
+Qt image types for saving: [&#8216;bmp&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
+Qt image types for input: [&#8216;bmp&#8217;, &#8216;gif&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;mng&#8217;, &#8216;pbm&#8217;, &#8216;pgm&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;svg&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
+gl2ps image types: []
+image types converted from EPS: []
+DEBUG: LOADING IMAGE FORMATS
+DEBUG:
+Qt image types for saving: [&#8216;bmp&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
+Qt image types for input: [&#8216;bmp&#8217;, &#8216;gif&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;mng&#8217;, &#8216;pbm&#8217;, &#8216;pgm&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;svg&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
+gl2ps image types: []
+image types converted from EPS: []
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; draw
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-draw">
 <span id="draw-create-3d-graphical-representations"></span><span id="sec-ref-draw"></span><h1>5. <a class="reference internal" href="#module-draw" title="draw: Create 3D graphical representations."><tt class="xref py py-mod docutils literal"><span class="pre">draw</span></tt></a> &#8212; Create 3D graphical representations.<a class="headerlink" href="#module-draw" title="Permalink to this headline">¶</a></h1>
-<p>Create 3D graphical representations.</p>
 <p>The draw module provides the basic user interface to the OpenGL
 rendering capabilities of pyFormex.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">draw</span></tt></p>
@@ -156,14 +172,14 @@ shown.</p>
 
 <dl class="function">
 <dt id="draw.askItems">
-<tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>timeout=None</em>, <em>legacy=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.askItems" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>timeout=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.askItems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask the value of some items to the user.</p>
 <p>Create an interactive widget to let the user set the value of some items.
 &#8216;items&#8217; is a list of input items (basically [key,value] pairs).
 See the widgets.InputDialog class for complete description of the
 available input items.</p>
 <p>Two InputDialog classes are defined in gui.widgets.
-The OldInputDialog class is deprecated in favor of NewInputDialog, which
+The OldInputDialog class is deprecated in favor of InputDialog, which
 has become the default as of pyFormex 0.8.3.
 The two classes differ in how the input is specified.
 In the new format, each input item is either a simpleInputItem, a
@@ -253,6 +269,13 @@ user canceled the operation, or the change parameter was set to False.</p>
 <dl class="function">
 <dt id="draw.printMessage">
 <tt class="descclassname">draw.</tt><tt class="descname">printMessage</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.printMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a message on the message board.</p>
+<p>If a logfile was opened, the message is also written to the log file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.message">
+<tt class="descclassname">draw.</tt><tt class="descname">message</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print a message on the message board.</p>
 <p>If a logfile was opened, the message is also written to the log file.</p>
 </dd></dl>
@@ -740,8 +763,9 @@ partitionCollection() method.</p>
 
 <dl class="function">
 <dt id="draw.set_selection_filter">
-<tt class="descclassname">draw.</tt><tt class="descname">set_selection_filter</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#draw.set_selection_filter" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">set_selection_filter</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.set_selection_filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the selection filter mode</p>
+<p>s is one of the strings in selection_filters</p>
 </dd></dl>
 
 <dl class="function">
@@ -765,7 +789,7 @@ mode is one of the pick modes.</p>
 
 <dl class="function">
 <dt id="draw.set_edit_mode">
-<tt class="descclassname">draw.</tt><tt class="descname">set_edit_mode</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#draw.set_edit_mode" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">set_edit_mode</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.set_edit_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the drawing edit mode.</p>
 </dd></dl>
 

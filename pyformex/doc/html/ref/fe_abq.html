@@ -57,9 +57,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-fe_abq">
+  <p>DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; fe_abq
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-fe_abq">
 <span id="fe-abq-exporting-finite-element-models-in-abaqustrade-input-file-format"></span><span id="sec-ref-fe-abq"></span><h1>41. <a class="reference internal" href="#module-fe_abq" title="fe_abq: Exporting finite element models in Abaqus\ |trade| input file format."><tt class="xref py py-mod docutils literal"><span class="pre">fe_abq</span></tt></a> &#8212; Exporting finite element models in Abaqus™ input file format.<a class="headerlink" href="#module-fe_abq" title="Permalink to this headline">¶</a></h1>
-<p>Exporting finite element models in Abaqus™ input file format.</p>
 <p>This module provides functions and classes to export finite element models
 from pyFormex in the Abaqus™ input format (.inp).
 The exporter handles the mesh geometry as well as model, node and element
@@ -128,6 +131,30 @@ res is a list of Result-instances.
 resfreq and timemarks are global values only used by Explicit</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="fe_abq.Step.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#fe_abq.Step.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_abq.Step.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Step.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_abq.Step.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Step.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -161,6 +188,30 @@ for kind==&#8217;NODE&#8217; and &#8216;Eall&#8217; for kind=&#8217;ELEMENT&#821
 <p>Return a string with the formatted output command.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="fe_abq.Output.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#fe_abq.Output.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_abq.Output.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Output.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_abq.Output.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Output.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -181,6 +232,30 @@ output)(Abaqus/Standard only)</li>
 </ul>
 <p>Extra keyword arguments are available: see the <cite>writeNodeResults</cite> and
 <cite>writeElemResults</cite> methods for details.</p>
+<dl class="method">
+<dt id="fe_abq.Result.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#fe_abq.Result.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_abq.Result.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Result.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_abq.Result.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Result.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">

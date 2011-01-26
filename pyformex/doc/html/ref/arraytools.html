@@ -59,7 +59,6 @@
             
   <div class="section" id="module-arraytools">
 <span id="arraytools-a-collection-of-numerical-array-utilities"></span><span id="sec-ref-arraytools"></span><h1>3. <a class="reference internal" href="#module-arraytools" title="arraytools: A collection of numerical array utilities."><tt class="xref py py-mod docutils literal"><span class="pre">arraytools</span></tt></a> &#8212; A collection of numerical array utilities.<a class="headerlink" href="#module-arraytools" title="Permalink to this headline">¶</a></h1>
-<p>A collection of numerical array utilities.</p>
 <p>These are general utility functions that depend only on the <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt>
 array model. All pyformex modules needing <tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> should import
 everything from this module:</p>
@@ -100,8 +99,19 @@ by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</spa
 
 <dl class="function">
 <dt id="arraytools.niceNumber">
-<tt class="descclassname">arraytools.</tt><tt class="descname">niceNumber</tt><big>(</big><em>f</em>, <em>approx=&lt;ufunc 'floor'&gt;</em><big>)</big><a class="headerlink" href="#arraytools.niceNumber" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a nice number close to but not smaller than f.</p>
+<tt class="descclassname">arraytools.</tt><tt class="descname">niceNumber</tt><big>(</big><em>f</em>, <em>below=False</em><big>)</big><a class="headerlink" href="#arraytools.niceNumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a nice number close to f.</p>
+<p>f is a float number, whose sign is disregarded.</p>
+<p>A number close to abs(f) but having only 1 significant digit is returned.
+By default, the value is above abs(f). Setting below=True returns a
+value above.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">niceNumber</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span> <span class="mf">0.0837</span><span class="p">,</span> <span class="mf">0.837</span><span class="p">,</span> <span class="mf">8.37</span><span class="p">,</span> <span class="mf">83.7</span><span class="p">,</span> <span class="mf">93.7</span><span class="p">]</span> <span class="p">]</span>
+<span class="go">[&#39;0.09&#39;, &#39;0.9&#39;, &#39;9.0&#39;, &#39;90.0&#39;, &#39;100.0&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">niceNumber</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">below</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span> <span class="mf">0.0837</span><span class="p">,</span> <span class="mf">0.837</span><span class="p">,</span> <span class="mf">8.37</span><span class="p">,</span> <span class="mf">83.7</span><span class="p">,</span> <span class="mf">93.7</span><span class="p">]</span> <span class="p">]</span>
+<span class="go">[&#39;0.08&#39;, &#39;0.8&#39;, &#39;8.0&#39;, &#39;80.0&#39;, &#39;90.0&#39;]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -166,7 +176,7 @@ The return value is a (M,...) shaped array.</p>
 <p>The return value is a boolean array with shape of <cite>values</cite> flagging
 where the values are close to target.
 Two values <cite>a</cite> and <cite>b</cite> are considered close if
-<span class="math">| a - b | &lt; atol + rtol * | b |</span></p>
+<img class="math" src="../_images/math/111bff3a77cd73fc555142c0ffd7b4af849562f6.png" alt="| a - b | &lt; atol + rtol * | b |"/></p>
 </dd></dl>
 
 <dl class="function">
@@ -219,6 +229,17 @@ Return either a 3x3(default) or 4x4(if n==4) rotation matrix.</p>
 <dd><p>Return rotation angles from rotation matrix mat.</p>
 <p>This returns the three angles around the global axes 0, 1 and 2.
 The angles are returned in degrees, unless angle_spec=Rad.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.vectorRotation">
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorRotation</tt><big>(</big><em>vec1, vec2, upvec=[0.0, 0.0, 1.0]</em><big>)</big><a class="headerlink" href="#arraytools.vectorRotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a rotation matrix for rotating vector vec1 to vec2</p>
+<p>The rotation matrix will be such that the plane of vec2 and the
+rotated upvec will be parallel to the original upvec.</p>
+<p>This function is like <a class="reference internal" href="#arraytools.rotMatrix" title="arraytools.rotMatrix"><tt class="xref py py-func docutils literal"><span class="pre">arraytools.rotMatrix()</span></tt></a>, but allows the
+specification of vec1.
+The returned matrix should be used in postmultiplication to the Coords.</p>
 </dd></dl>
 
 <dl class="function">
@@ -342,6 +363,14 @@ conversion to the requested type is attempted.</p>
 If kind does not match, but is included in allow, conversion to the
 requested type is attempted.
 Returns the array if valid.
+Else, an error is raised.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.checkArrayDim">
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkArrayDim</tt><big>(</big><em>a</em>, <em>ndim=-1</em><big>)</big><a class="headerlink" href="#arraytools.checkArrayDim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that an array has the correct dimensionality.</p>
+<p>Returns asarray(a) if ndim &lt; 0 or a.ndim == ndim
 Else, an error is raised.</p>
 </dd></dl>
 
@@ -586,25 +615,60 @@ be taken to obtain an array sorted by columns.</dd>
 
 <dl class="function">
 <dt id="arraytools.uniqueRows">
-<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueRows</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#arraytools.uniqueRows" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueRows</tt><big>(</big><em>a</em>, <em>permutations=False</em><big>)</big><a class="headerlink" href="#arraytools.uniqueRows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return (the indices of) the unique rows of a 2-D array.</p>
 <p>Parameters:</p>
 <ul class="simple">
 <li><cite>a</cite>: array_like, 2-D</li>
+<li><cite>permutations</cite>: bool
+If True, rows which are permutations of the same data are considered
+equal. The default is to consider permutations as different.</li>
 </ul>
 <p>Returns:</p>
 <ul class="simple">
 <li><cite>uniq</cite>: a 1-D integer array with the numbers of the unique rows from <cite>a</cite>.
 The order of the elements in <cite>uniq</cite> is determined by the sorting
-procedure, which in the current implementation is <a class="reference internal" href="#arraytools.sortByColumns" title="arraytools.sortByColumns"><tt class="xref py py-func docutils literal"><span class="pre">sortByColumns()</span></tt></a>.</li>
+procedure, which in the current implementation is <a class="reference internal" href="#arraytools.sortByColumns" title="arraytools.sortByColumns"><tt class="xref py py-func docutils literal"><span class="pre">sortByColumns()</span></tt></a>.
+If <cite>permutations==True</cite>, <cite>a</cite> is sorted along its axis -1 before calling
+this sorting function.</li>
 <li><cite>uniqid</cite>: a 1-D integer array with length equal to <cite>a.shape[0]</cite> with the
 numbers of <cite>uniq</cite> corresponding to each of the rows of <cite>a</cite>.</li>
 </ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueRows</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 <span class="go">(array([0, 3, 1, 2]), array([0, 2, 3, 1, 2]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueRows</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span><span class="n">permutations</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">(array([0, 3, 1]), array([0, 2, 2, 1, 2]))</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.argNearestValue">
+<tt class="descclassname">arraytools.</tt><tt class="descname">argNearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="headerlink" href="#arraytools.argNearestValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the index of the item nearest to target.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>values</cite>: a list of float values</li>
+<li><cite>target</cite>: a float value</li>
+</ul>
+<p>Returns: the position of the item in <cite>values</cite> that is
+nearest to <cite>target</cite>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">argNearestValue</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.9</span><span class="p">],</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.nearestValue">
+<tt class="descclassname">arraytools.</tt><tt class="descname">nearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="headerlink" href="#arraytools.nearestValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the item nearest to target.</p>
+<p><tt class="docutils literal"><span class="pre">values</span></tt>: a list of float values</p>
+<p><tt class="docutils literal"><span class="pre">target</span></tt>: a single value</p>
+<p>Return value: the item in <tt class="docutils literal"><span class="pre">values</span></tt> values that is
+nearest to <tt class="docutils literal"><span class="pre">target</span></tt>.</p>
 </dd></dl>
 
 <dl class="function">

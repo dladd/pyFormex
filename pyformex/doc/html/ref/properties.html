@@ -59,7 +59,6 @@
             
   <div class="section" id="module-properties">
 <span id="properties-general-framework-for-attributing-properties-to-geometrical-elements"></span><span id="sec-ref-properties"></span><h1>39. <a class="reference internal" href="#module-properties" title="properties: General framework for attributing properties to geometrical elements."><tt class="xref py py-mod docutils literal"><span class="pre">properties</span></tt></a> &#8212; General framework for attributing properties to geometrical elements.<a class="headerlink" href="#module-properties" title="Permalink to this headline">¶</a></h1>
-<p>General framework for attributing properties to geometrical elements.</p>
 <p>Properties can really be just about any Python object.
 Properties can be attributed to a set of geometrical elements.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">properties</span></tt></p>
@@ -76,18 +75,108 @@ args and kargs can be used to specify arguments for the
 FlatDB constructor.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="properties.Database.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.Database.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.Database.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.Database.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.Database.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.Database.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="properties.MaterialDB">
 <em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">MaterialDB</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.MaterialDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing material properties.</p>
+<dl class="method">
+<dt id="properties.MaterialDB.readDatabase">
+<tt class="descname">readDatabase</tt><big>(</big><em>filename</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#properties.MaterialDB.readDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import all records from a database file.</p>
+<p>For now, it can only read databases using flatkeydb.
+args and kargs can be used to specify arguments for the
+FlatDB constructor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.MaterialDB.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.MaterialDB.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.MaterialDB.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.MaterialDB.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.MaterialDB.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.MaterialDB.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="properties.SectionDB">
 <em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">SectionDB</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.SectionDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing section properties.</p>
+<dl class="method">
+<dt id="properties.SectionDB.readDatabase">
+<tt class="descname">readDatabase</tt><big>(</big><em>filename</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#properties.SectionDB.readDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import all records from a database file.</p>
+<p>For now, it can only read databases using flatkeydb.
+args and kargs can be used to specify arguments for the
+FlatDB constructor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.SectionDB.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.SectionDB.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.SectionDB.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.SectionDB.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.SectionDB.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.SectionDB.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -160,18 +249,90 @@ If the argument is a string, this string will be used as a key to
 search in &#8216;self.matDB&#8217;.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="properties.ElemSection.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.ElemSection.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.ElemSection.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.ElemSection.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.ElemSection.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.ElemSection.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="properties.ElemLoad">
 <em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">ElemLoad</tt><big>(</big><em>label=None</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#properties.ElemLoad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Distributed loading on an element.</p>
+<dl class="method">
+<dt id="properties.ElemLoad.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.ElemLoad.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.ElemLoad.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.ElemLoad.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.ElemLoad.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.ElemLoad.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="properties.EdgeLoad">
 <em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">EdgeLoad</tt><big>(</big><em>edge=-1</em>, <em>label=None</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#properties.EdgeLoad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Distributed loading on an element edge.</p>
+<dl class="method">
+<dt id="properties.EdgeLoad.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.EdgeLoad.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.EdgeLoad.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.EdgeLoad.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.EdgeLoad.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.EdgeLoad.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -303,6 +464,30 @@ in the Model.</li>
 <li>dload: an ElemLoad specifying a distributed load on the element.</li>
 <li>ampl: the name of an Amplitude</li>
 </ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.PropertyDB.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.PropertyDB.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="properties.PropertyDB.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
 </dd></dl>
 
 </dd></dl>

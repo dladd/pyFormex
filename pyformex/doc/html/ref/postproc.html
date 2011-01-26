@@ -59,37 +59,10 @@
             
   <div class="section" id="module-postproc">
 <span id="postproc-postprocessing-functions"></span><span id="sec-ref-postproc"></span><h1>43. <a class="reference internal" href="#module-postproc" title="postproc: Postprocessing functions"><tt class="xref py py-mod docutils literal"><span class="pre">postproc</span></tt></a> &#8212; Postprocessing functions<a class="headerlink" href="#module-postproc" title="Permalink to this headline">¶</a></h1>
-<p>Postprocessing functions</p>
 <p>Postprocessing means collecting a geometrical model and computed values
 from a numerical simulation, and render the values on the domain.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">postproc</span></tt></p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">postproc</span></tt></p>
-<dl class="function">
-<dt id="postproc.niceNumber">
-<tt class="descclassname">postproc.</tt><tt class="descname">niceNumber</tt><big>(</big><em>f</em>, <em>approx=&lt;ufunc 'floor'&gt;</em><big>)</big><a class="headerlink" href="#postproc.niceNumber" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a nice number close to but not smaller than f.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="postproc.argNearestValue">
-<tt class="descclassname">postproc.</tt><tt class="descname">argNearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="headerlink" href="#postproc.argNearestValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the index of the item nearest to target.</p>
-<p><tt class="docutils literal"><span class="pre">values</span></tt>: a list of float values</p>
-<p><tt class="docutils literal"><span class="pre">target</span></tt>: a single value</p>
-<p>Return value: the position of the item in <tt class="docutils literal"><span class="pre">values</span></tt> values that is
-nearest to <tt class="docutils literal"><span class="pre">target</span></tt>.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="postproc.nearestValue">
-<tt class="descclassname">postproc.</tt><tt class="descname">nearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="headerlink" href="#postproc.nearestValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the item nearest to target.</p>
-<p><tt class="docutils literal"><span class="pre">values</span></tt>: a list of float values</p>
-<p><tt class="docutils literal"><span class="pre">target</span></tt>: a single value</p>
-<p>Return value: the item in <tt class="docutils literal"><span class="pre">values</span></tt> values that is
-nearest to <tt class="docutils literal"><span class="pre">target</span></tt>.</p>
-</dd></dl>
-
 <dl class="function">
 <dt id="postproc.frameScale">
 <tt class="descclassname">postproc.</tt><tt class="descname">frameScale</tt><big>(</big><em>nframes=10</em>, <em>cycle='up'</em>, <em>shape='linear'</em><big>)</big><a class="headerlink" href="#postproc.frameScale" title="Permalink to this definition">¶</a></dt>

@@ -57,9 +57,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-coords">
+  <p>DEBUG: Using the (slower) Python misc functions
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; coords
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-coords">
 <span id="coords-a-structured-collection-of-3d-coordinates"></span><span id="sec-ref-coords"></span><h1>1. <a class="reference internal" href="#module-coords" title="coords: A structured collection of 3D coordinates."><tt class="xref py py-mod docutils literal"><span class="pre">coords</span></tt></a> &#8212; A structured collection of 3D coordinates.<a class="headerlink" href="#module-coords" title="Permalink to this headline">¶</a></h1>
-<p>A structured collection of 3D coordinates.</p>
 <p>The <a class="reference internal" href="#module-coords" title="coords: A structured collection of 3D coordinates."><tt class="xref py py-mod docutils literal"><span class="pre">coords</span></tt></a> module defines the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> class, which is the basic
 data structure in pyFormex to store the coordinates of points in a 3D space.</p>
 <p>This module implements a data class for storing large sets of 3D coordinates
@@ -71,6 +74,871 @@ transformation methods of this class.</p>
 <p>While the user will mostly use the higher level classes, he might occasionally
 find good reason to use the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> class directly as well.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">coords</span></tt></p>
+<dl class="class">
+<dt id="coords.CoordinateSystem">
+<em class="property">class </em><tt class="descclassname">coords.</tt><tt class="descname">CoordinateSystem</tt><a class="headerlink" href="#coords.CoordinateSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CoordinateSystem defines a coordinate system in 3D space.</p>
+<p>The coordinate system is defined by and stored as a set of four points:
+three endpoints of the unit vectors along the axes at the origin, and
+the origin itself as fourth point.</p>
+<p>The constructor takes a (4,3) array as input. The default constructs
+the standard global Cartesian axes system:</p>
+<div class="highlight-python"><pre>1.  0.  0.
+0.  1.  0.
+0.  0.  1.
+0.  0.  0.</pre>
+</div>
+<dl class="method">
+<dt id="coords.CoordinateSystem.points">
+<tt class="descname">points</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object as a simple set of points.</p>
+<p>This reshapes the array to a 2-dimensional array, flattening
+the structure of the points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.pshape">
+<tt class="descname">pshape</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.pshape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the shape of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p>This is the shape of the <a class="reference external" href="http://numpy.scipy.org">NumPy</a> array with the last axis removed.
+The full shape of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array can be obtained from
+its shape attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.ncoords">
+<tt class="descname">ncoords</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.ncoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total number of points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.npoints">
+<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.npoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total number of points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.x">
+<tt class="descname">x</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the X-coordinates of all points.</p>
+<p>Returns an array with all the X-coordinates in the Coords.
+The returned array has the same shape as the Coords array along
+its first ndim-1 axes.
+This is equivalent with</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.y">
+<tt class="descname">y</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Y-coordinates of all points.</p>
+<p>Returns an array with all the Y-coordinates in the Coords.
+The returned array has the same shape as the Coords array along
+its first ndim-1 axes.
+This is equivalent with</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.z">
+<tt class="descname">z</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Z-coordinates of all points.</p>
+<p>Returns an array with all the Z-coordinates in the Coords.
+The returned array has the same shape as the Coords array along
+its first ndim-1 axes.
+This is equivalent with</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.bbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the bounding box of a set of points.</p>
+<p>The bounding box is the smallest rectangular volume in the global
+coordinates, such that no point of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> are outside
+that volume.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A Coords object with shape(2,3): the first point contains the
+minimal coordinates, the second has the maximal ones.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span>
+<span class="go">[[ 0.  0.  0.]</span>
+<span class="go"> [ 3.  3.  0.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.center">
+<tt class="descname">center</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the center of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+<p>The center of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> is the center of its bbox().
+The return value is a (3,) shaped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
+<span class="go">[ 1.5  1.5  0. ]</span>
+</pre></div>
+</div>
+<p>See also: <a class="reference internal" href="#coords.CoordinateSystem.centroid" title="coords.CoordinateSystem.centroid"><tt class="xref py py-meth docutils literal"><span class="pre">centroid()</span></tt></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.centroid">
+<tt class="descname">centroid</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.centroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the centroid of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+<p>The centroid of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> is the point whose coordinates
+are the mean values of all points.
+The return value is a (3,) shaped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
+<span class="go">[ 1.  1.  0.]</span>
+</pre></div>
+</div>
+<p>See also: <a class="reference internal" href="#coords.CoordinateSystem.center" title="coords.CoordinateSystem.center"><tt class="xref py py-meth docutils literal"><span class="pre">center()</span></tt></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.sizes">
+<tt class="descname">sizes</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.sizes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sizes of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+<p>Return an array with the length of the bbox along the 3 axes.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">sizes</span><span class="p">()</span>
+<span class="go">[ 3.  3.  0.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.dsize">
+<tt class="descname">dsize</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.dsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an estimate of the global size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+<p>This estimate is the length of the diagonal of the bbox().</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">dsize</span><span class="p">()</span>
+<span class="go">4.24264</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.bsphere">
+<tt class="descname">bsphere</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.bsphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the diameter of the bounding sphere of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+<p>The bounding sphere is the smallest sphere with center in the
+center() of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>, and such that no points of the
+<a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> are lying outside the sphere.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">bsphere</span><span class="p">()</span>
+<span class="go">2.12132</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.distanceFromPlane">
+<tt class="descname">distanceFromPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.distanceFromPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the distance of all points from the plane (p,n).</p>
+<p>p is a point specified by 3 coordinates.
+n is the normal vector to a plane, specified by 3 components.</p>
+<p>The return value is a float array with shape <tt class="docutils literal"><span class="pre">self.pshape()</span></tt> with
+the distance of each point to the plane through p and having normal n.
+Distance values are positive if the point is on the side of the
+plane indicated by the positive normal.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPlane</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="go">[[ 0.  3.  0.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.distanceFromLine">
+<tt class="descname">distanceFromLine</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.distanceFromLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the distance of all points from the line (p,n).</p>
+<p>p,n are (1,3) or (npts,3) arrays defining 1 or npts lines
+p is a point on the line specified by 3 coordinates.
+n is a vector specifying the direction of the line through p.</p>
+<p>The return value is a [...] shaped array with the distance of
+each point to the line through p with direction n.
+All distance values are positive or zero.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromLine</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="go">[[ 0.  0.  3.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.distanceFromPoint">
+<tt class="descname">distanceFromPoint</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.distanceFromPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the distance of all points from the point p.</p>
+<p>p is a single point specified by 3 coordinates.</p>
+<p>The return value is a [...] shaped array with the distance of
+each point to point p.
+All distance values are positive or zero.
+Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPoint</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="go">[[ 0.  3.  3.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.closestToPoint">
+<tt class="descname">closestToPoint</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.closestToPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the point closest to point p.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.directionalSize">
+<tt class="descname">directionalSize</tt><big>(</big><em>n</em>, <em>p=None</em>, <em>_points=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.directionalSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the extreme distances from the plane p,n.</p>
+<p>The direction n can be specified by a 3 component vector or by
+a single integer 0..2 designing one of the coordinate axes.</p>
+<p>p is any point in space. If not specified, it is taken as the
+center() of the Coords.</p>
+<p>The return value is a tuple of two float values specifying the
+extreme distances from the plane p,n.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.directionalExtremes">
+<tt class="descname">directionalExtremes</tt><big>(</big><em>n</em>, <em>p=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.directionalExtremes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return extremal planes in the direction n.</p>
+<p><cite>n</cite> and <cite>p</cite> have the same meaning as in <cite>directionalSize</cite>.</p>
+<p>The return value is a list of two points on the line (p,n),
+such that the planes with normal n through these points define
+the extremal planes of the Coords.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.directionalWidth">
+<tt class="descname">directionalWidth</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.directionalWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the width of a Coords in the given direction.</p>
+<p>The direction can be specified by a 3 component vector or by
+a single integer 0..2 designating one of the coordinate axes.</p>
+<p>The return value is the thickness of the object in the direction n.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.test">
+<tt class="descname">test</tt><big>(</big><em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag points having coordinates between min and max.</p>
+<p>This function is very convenient in clipping a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> in a
+specified
+direction. It returns a 1D integer array flagging (with a value 1 or
+True) the elements having nodal coordinates in the required range.
+Use where(result) to get a list of element numbers passing the test.
+Or directly use clip() or cclip() to create the clipped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+<p>The test plane can be define in two ways depending on the value of dir.
+If dir == 0, 1 or 2, it specifies a global axis and min and max are
+the minimum and maximum values for the coordinates along that axis.
+Default is the 0 (or x) direction.</p>
+<p>Else, dir should be compatible with a (3,) shaped array and specifies
+the direction of the normal on the planes. In this case, min and max
+are points and should also evaluate to (3,) shaped arrays.</p>
+<p>One of the two clipping planes may be left unspecified.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.fprint">
+<tt class="descname">fprint</tt><big>(</big><em>fmt='%10.3e %10.3e %10.3e'</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.fprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formatted printing of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p>The supplied format should contain 3 formatting sequences for the
+three coordinates of a point.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.set">
+<tt class="descname">set</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the coordinates from those in the given array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.scale">
+<tt class="descname">scale</tt><big>(</big><em>scale</em>, <em>dir=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy scaled with scale[i] in direction i.</p>
+<p>The scale should be a list of 3 scaling factors for the 3 axis
+directions, or a single scaling factor.
+In the latter case, dir (a single axis number or a list) may be given
+to specify the direction(s) to scale. The default is to produce a
+homothetic scaling.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">[ 2.  2.  2.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="go">[ 2.  3.  4.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.translate">
+<tt class="descname">translate</tt><big>(</big><em>vector</em>, <em>distance=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.trl">
+<tt class="descname">trl</tt><big>(</big><em>vector</em>, <em>distance=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.trl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.rot">
+<tt class="descname">rot</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.rot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.rotate">
+<tt class="descname">rotate</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.shear">
+<tt class="descname">shear</tt><big>(</big><em>dir</em>, <em>dir1</em>, <em>skew</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.shear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
+<p>The coordinate dir is replaced with (dir + skew * dir1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.reflect">
+<tt class="descname">reflect</tt><big>(</big><em>dir=0</em>, <em>pos=0.0</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>dir</cite>: int: direction of the reflection (default 0)</li>
+<li><cite>pos</cite>: float: offset of the mirror plane from origin (default 0.0)</li>
+<li><cite>inplace</cite>: boolean: change the coordinates inplace (default False)</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.affine">
+<tt class="descname">affine</tt><big>(</big><em>mat</em>, <em>vec=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a general affine transform of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p><cite>mat</cite>: a 3x3 float matrix</p>
+<p><cite>vec</cite>: a length 3 list or array of floats</p>
+<p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.replicate">
+<tt class="descname">replicate</tt><big>(</big><em>n</em>, <em>vector</em>, <em>distance=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replicate a Coords n times with fixed step in any direction.</p>
+<p>Returns a Coords object with shape (n,) + self.shape, thus having
+an extra first axis.
+Each element along the axis 0 is equal to the previous element
+translated over (vector,distance). Here, vector and distance are
+interpreted just like in the translate() method.
+The first element along the axis 0 is identical to the original Coords.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.cylindrical">
+<tt class="descname">cylindrical</tt><big>(</big><em>dir=[0, 1, 2], scale=[1.0, 1.0, 1.0], angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.cylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cylindrical to cartesian after scaling.</p>
+<p>dir specifies which coordinates are interpreted as resp.
+distance(r), angle(theta) and height(z). Default order is [r,theta,z].
+scale will scale the coordinate values prior to the transformation.
+(scale is given in order r,theta,z).
+The resulting angle is interpreted in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.toCylindrical">
+<tt class="descname">toCylindrical</tt><big>(</big><em>dir=[0, 1, 2], angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to cylindrical coordinates.</p>
+<p>dir specifies which coordinates axes are parallel to respectively the
+cylindrical axes distance(r), angle(theta) and height(z). Default
+order is [x,y,z].
+The angle value is given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.spherical">
+<tt class="descname">spherical</tt><big>(</big><em>dir=[0, 1, 2], scale=[1.0, 1.0, 1.0], angle_spec=0.017453292519943295, colat=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from spherical to cartesian after scaling.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).</li>
+<li><cite>scale</cite> will scale the coordinate values prior to the transformation.</li>
+</ul>
+<p>Angles are interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.</p>
+<p>If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.superSpherical">
+<tt class="descname">superSpherical</tt><big>(</big><em>n=1.0, e=1.0, k=0.0, dir=[0, 1, 2], scale=[1.0, 1.0, 1.0], angle_spec=0.017453292519943295, colat=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.superSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a superspherical transformation.</p>
+<p>superSpherical is much like spherical, but adds some extra
+parameters to enable the creation of virtually any surface.</p>
+<p>Just like with spherical(), the input coordinates are interpreted as
+the longitude, latitude and distance in a spherical coordinate system.</p>
+<p><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).
+Angles are then interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.
+If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+<p><cite>scale</cite> will scale the coordinate values prior to the transformation.</p>
+<p>The <cite>n</cite> and <cite>e</cite> parameters define exponential transformations of the
+north_south (latitude), resp. the east_west (longitude) coordinates.
+Default values of 1 result in a circle.</p>
+<p><cite>k</cite> adds &#8216;eggness&#8217; to the shape: a difference between the northern and
+southern hemisphere. Values &gt; 0 enlarge the southern hemishpere and
+shrink the northern.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.toSpherical">
+<tt class="descname">toSpherical</tt><big>(</big><em>dir=[0, 1, 2], angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.toSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from cartesian to spherical coordinates.</p>
+<p><cite>dir</cite> specifies which coordinates axes are parallel to respectively
+the spherical axes distance(r), longitude(theta) and latitude(phi).
+Latitude is the elevation angle measured from equator in direction
+of north pole(90). South pole is -90.
+Default order is [0,1,2], thus the equator plane is the (x,y)-plane.</p>
+<p>The returned angle values are given in degrees.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.bump1">
+<tt class="descname">bump1</tt><big>(</big><em>dir</em>, <em>a</em>, <em>func</em>, <em>dist</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.bump1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with a one-dimensional bump.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies the axis of the modified coordinates;</li>
+<li><cite>a</cite> is the point that forces the bumping;</li>
+<li><cite>dist</cite> specifies the direction in which the distance is measured;</li>
+<li><cite>func</cite> is a function that calculates the bump intensity from distance
+and should be such that <tt class="docutils literal"><span class="pre">func(0)</span> <span class="pre">!=</span> <span class="pre">0</span></tt>.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.bump2">
+<tt class="descname">bump2</tt><big>(</big><em>dir</em>, <em>a</em>, <em>func</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.bump2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with a two-dimensional bump.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+!! func(0) should be different from 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.bump">
+<tt class="descname">bump</tt><big>(</big><em>dir</em>, <em>a</em>, <em>func</em>, <em>dist=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.bump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with a bump.</p>
+<p>A bump is a modification of a set of coordinates by a non-matching
+point. It can produce various effects, but one of the most common
+uses is to force a surface to be indented by some point.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+(!! func(0) should be different from 0)
+dist is the direction in which the distance is measured : this can
+be one of the axes, or a list of one or more axes.
+If only 1 axis is specified, the effect is like function bump1
+If 2 axes are specified, the effect is like bump2
+This function can take 3 axes however.
+Default value is the set of 3 axes minus the direction of modification.
+This function is then equivalent to bump2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.flare">
+<tt class="descname">flare</tt><big>(</big><em>xf, f, dir=[0, 2], end=0, exp=1.0</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.flare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a flare at the end of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> block.</p>
+<p>The flare extends over a distance <tt class="docutils literal"><span class="pre">xf</span></tt> at the start (<tt class="docutils literal"><span class="pre">end=0</span></tt>)
+or end (<tt class="docutils literal"><span class="pre">end=1</span></tt>) in direction <tt class="docutils literal"><span class="pre">dir[0]</span></tt> of the coords block,
+and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f</span></tt> in the <tt class="docutils literal"><span class="pre">dir[1]</span></tt> direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.map">
+<tt class="descname">map</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> mapped by a 3-D function.</p>
+<p>This is one of the versatile mapping functions.
+func is a numerical function which takes three arguments and produces
+a list of three output values. The coordinates [x,y,z] will be
+replaced by func(x,y,z).
+The function must be applicable to arrays, so it should
+only include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map1 and mapd.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
+<span class="go">[[ 2.  3.  4.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.map1">
+<tt class="descname">map1</tt><big>(</big><em>dir</em>, <em>func</em>, <em>x=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.map1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> where coordinate i is mapped by a 1-D function.</p>
+<p><cite>func</cite> is a numerical function which takes one argument and produces
+one result. The coordinate dir will be replaced by func(coord[x]).
+If no x is specified, x is taken equal to dir. 
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map and mapd.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.mapd">
+<tt class="descname">mapd</tt><big>(</big><em>dir</em>, <em>func</em>, <em>point</em>, <em>dist=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.mapd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps one coordinate by a function of the distance to a point.</p>
+<p><cite>func</cite> a numerical function which takes one argument and produces
+one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
+where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+<tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> module.
+By default, the distance d is calculated in 3-D, but one can specify
+a limited set of axes to calculate a 2-D or 1-D distance.
+This method is one of several mapping methods. See also
+<tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#coords.CoordinateSystem.map1" title="coords.CoordinateSystem.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.egg">
+<tt class="descname">egg</tt><big>(</big><em>k</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.egg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps the coordinates to an egg-shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.replace">
+<tt class="descname">replace</tt><big>(</big><em>i</em>, <em>j</em>, <em>other=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace the coordinates along the axes i by those along j.</p>
+<p>i and j are lists of axis numbers or single axis numbers.
+replace ([0,1,2],[1,2,0]) will roll the axes by 1.
+replace ([0,1],[1,0]) will swap axes 0 and 1.
+An optionally third argument may specify another <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object to take
+the coordinates from. It should have the same dimensions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.swapAxes">
+<tt class="descname">swapAxes</tt><big>(</big><em>i</em>, <em>j</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.swapAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swap coordinate axes i and j.</p>
+<p>Beware! This is different from numpy&#8217;s swapaxes() method !</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.rollAxes">
+<tt class="descname">rollAxes</tt><big>(</big><em>n=1</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.rollAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Roll the axes over the given amount.</p>
+<p>Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
+2 becomes 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>P</em>, <em>n</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> on the plane(s) (P,n)</p>
+<p>P and n define a plane or a set of planes by a point P and the normal
+n. If a set of planes, there should be exactly ncoords planes.
+Each of P and n thus can have shape (ncoords,3) or (1,3) or (3,).</p>
+<p>Return a Coords with same shape as original, with the base points
+of the lines through all the points of self, perpendicular to the
+plane(s) (P,n), i.e. the projection of the points on the plane(s).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.projectOnSphere">
+<tt class="descname">projectOnSphere</tt><big>(</big><em>radius=1.0, center=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> on a sphere.</p>
+<p>The default sphere is a unit sphere at the origin.
+The center of the sphere should not be part of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.projectOnCylinder">
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>radius=1.0, dir=0, center=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> on a cylinder with axis parallel to a global axis.</p>
+<p>The default cylinder has its axis along the x-axis and a unit radius.
+No points of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> should belong to the axis..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.projectOnSurface">
+<tt class="descname">projectOnSurface</tt><big>(</big><em>S</em>, <em>n</em>, <em>ignore_errors=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.projectOnSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project the Coords on a triangulated surface.</p>
+<p>The points of the Coords are projected in the direction of the
+vector n onto the surface S.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>S</cite>: TriSurface: any triangulated surface</li>
+<li><cite>n</cite>: int or vector: specifies the direction of the projection</li>
+<li><cite>ignore_errors</cite>: if True, projective lines not cutting the
+surface will result in NaN values. The default is to raise an error.</li>
+</ul>
+<p>If successful, a Coords with the same structure as the
+input is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.isopar">
+<tt class="descname">isopar</tt><big>(</big><em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.isopar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an isoparametric transformation on a Coords.</p>
+<p>This is a convenience method to transform a Coords object through
+an isoparametric transformation. It is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <tt class="xref py py-mod docutils literal"><span class="pre">plugins.isopar</span></tt> for more details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.transformCS">
+<tt class="descname">transformCS</tt><big>(</big><em>currentCS</em>, <em>initialCS=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.transformCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a CoordinateSystem transformation on the Coords.</p>
+<p>This method transforms the Coords object by the transformation that
+turns the initial CoordinateSystem into the currentCoordinateSystem.</p>
+<p>currentCS and initialCS are CoordSystem or (4,3) shaped Coords
+instances. If initialCS is None, the global (x,y,z) axes are used.</p>
+<p>E.g. the default initialCS and currentCS equal to:</p>
+<div class="highlight-python"><pre> 0.  1.  0.
+-1.  0.  0.
+ 0.  0.  1.
+ 0.  0.  0.</pre>
+</div>
+<p>result in a rotation of 90 degrees around the z-axis.</p>
+<p>This is a convenience function equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">isopar</span><span class="p">(</span><span class="s">&#39;tet4&#39;</span><span class="p">,</span><span class="n">currentCS</span><span class="p">,</span><span class="n">initialCS</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.split">
+<tt class="descname">split</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the coordinate array in blocks along first axis.</p>
+<p>The result is a sequence of arrays with shape self.shape[1:].
+Raises an error if self.ndim &lt; 2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.fuse">
+<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1.0000000000000001e-05</em>, <em>atol=1.0000000000000001e-05</em>, <em>repeat=True</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.fuse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find (almost) identical nodes and return a compressed set.</p>
+<p>This method finds the points that are very close and replaces them
+with a single point. The return value is a tuple of two arrays:</p>
+<ul class="simple">
+<li>the unique points as a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object with shape (npoints,3)</li>
+<li>an integer (nnod) array holding an index in the unique
+coordinates array for each of the original nodes. This index will
+have the same shape as the pshape() of the coords array.</li>
+</ul>
+<p>The procedure works by first dividing the 3D space in a number of
+equally sized boxes, with a mean population of nodesperbox.
+The boxes are numbered in the 3 directions and a unique integer scalar
+is computed, that is then used to sort the nodes.
+Then only nodes inside the same box are compared on almost equal
+coordinates, using the numpy allclose() function. Two coordinates are
+considered close if they are within a relative tolerance rtol or
+absolute tolerance atol. See numpy for detail. The default atol is
+set larger than in numpy, because pyformex typically runs with single
+precision.
+Close nodes are replaced by a single one.</p>
+<p>Running the procedure once does not guarantee to find all close nodes:
+two close nodes might be in adjacent boxes. The performance hit for
+testing adjacent boxes is rather high, and the probability of separating
+two close nodes with the computed box limits is very small.
+Therefore, the most sensible way is to run the procedure twice, with
+a different shift value (they should differ more than the tolerance).
+Specifying repeat=True will automatically do this.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.match">
+<tt class="descname">match</tt><big>(</big><em>coords</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match points form another Coords object.</p>
+<p>This method finds the points from <cite>coords</cite> that coincide with
+(or are very close to) points of <cite>self</cite>.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>coords</cite>: a Coords object</li>
+<li><cite>**kargs</cite>: keyword arguments that you want to pass to the
+<a class="reference internal" href="#coords.CoordinateSystem.fuse" title="coords.CoordinateSystem.fuse"><tt class="xref py py-meth docutils literal"><span class="pre">fuse()</span></tt></a> method.</li>
+</ul>
+<p>This method works by concatenating the serialized point sets of
+both Coords and then fusing them.</p>
+<p>Returns:</p>
+<ul class="simple">
+<li><cite>matches</cite>: an Int array with shape (nmatches,2)</li>
+<li><cite>coords</cite>: a Coords with the fused coordinate set</li>
+<li><cite>index</cite>: an index with the position of each of the serialized
+points of the concatenation in the fused coordinate set. To find
+the index of the points of the orginal coordinate sets, split
+this index at the position self.npoints() and reshape the resulting
+parts to <cite>self.pshape()</cite>, resp. <cite>coords.pshape()</cite>.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.append">
+<tt class="descname">append</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append coords to a Coords object.</p>
+<p>The appended coords should have matching dimensions in all
+but the first axis.</p>
+<p>Returns the concatenated Coords object, without changing the current.</p>
+<p>This is comparable to <tt class="xref py py-func docutils literal"><span class="pre">numpy.append()</span></tt>, but the result
+is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object, the default axis is the first one
+instead of the last, and it is a method rather than a function.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="coords.CoordinateSystem.concatenate">
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>L</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.concatenate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate a list of <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p>All <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object in the list L should have the same shape
+except for the length of the specified axis.
+This function is equivalent to the numpy concatenate, but makes
+sure the result is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object,and the default axis
+is the first one instead of the last.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="coords.CoordinateSystem.fromstring">
+<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.fromstring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object with data from a string.</p>
+<p>This convenience function uses the <tt class="xref py py-func docutils literal"><span class="pre">numpy.fromstring()</span></tt>
+function to read coordinates from a string.</p>
+<p><cite>fil</cite>: a string containing a single sequence of float numbers separated
+by whitespace and a possible separator string.</p>
+<p><cite>sep</cite>: the separator used between the coordinates. If not a space,
+all extra whitespace is ignored.</p>
+<p><cite>ndim</cite>: number of coordinates per point. Should be 1, 2 or 3 (default).
+If 1, resp. 2, the coordinate string only holds x, resp. x,y
+values.</p>
+<p><cite>count</cite>: total number of coordinates to read. This should be a multiple
+of 3. The default is to read all the coordinates in the string.
+count can be used to force an error condition if the string
+does not contain the expected number of values.</p>
+<p>The return value is  Coords object.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="coords.CoordinateSystem.fromfile">
+<em class="property">classmethod </em><tt class="descname">fromfile</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.fromfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> from file.</p>
+<p>This convenience function uses the numpy fromfile function to read
+the coordinates from file.
+You just have to make sure that the coordinates are read in order
+(X,Y,Z) for subsequent points, and that the total number of
+coordinates read is a multiple of 3.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="coords.CoordinateSystem.interpolate">
+<em class="property">classmethod </em><tt class="descname">interpolate</tt><big>(</big><em>clas</em>, <em>F</em>, <em>G</em>, <em>div</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.interpolate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create interpolations between two <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+<p>F and G are two <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the same shape.
+v is a list of floating point values.
+The result is the concatenation of the interpolations of F and G at all
+the values in div.
+An interpolation of F and G at value v is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> H where each
+coordinate Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
+Thus, a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> interpolate(F,G,[0.,0.5,1.0]) will contain all points of
+F and G and all points with mean coordinates between those of F and G.</p>
+<p>As a convenience, if an integer is specified for div, it is taken as a
+number of divisions for the interval [0..1].
+Thus, interpolate(F,G,n) is equivalent with
+interpolate(F,G,arange(0,n+1)/float(n))</p>
+<p>The resulting <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array has an extra axis (the first).
+Its shape is (n,) + F.shape, where n is the number of divisions.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="coords.Coords">
 <em class="property">class </em><tt class="descclassname">coords.</tt><tt class="descname">Coords</tt><a class="headerlink" href="#coords.Coords" title="Permalink to this definition">¶</a></dt>
@@ -132,6 +1000,12 @@ its shape attribute.</p>
 <dl class="method">
 <dt id="coords.Coords.npoints">
 <tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.npoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total number of points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.ncoords">
+<tt class="descname">ncoords</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.ncoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total number of points.</p>
 </dd></dl>
 
@@ -228,6 +1102,11 @@ The return value is a (3,) shaped <a class="reference internal" href="#coords.Co
 <tt class="descname">sizes</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.sizes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sizes of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>Return an array with the length of the bbox along the 3 axes.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">sizes</span><span class="p">()</span>
+<span class="go">[ 3.  3.  0.]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -235,6 +1114,11 @@ The return value is a (3,) shaped <a class="reference internal" href="#coords.Co
 <tt class="descname">dsize</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.dsize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an estimate of the global size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>This estimate is the length of the diagonal of the bbox().</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">dsize</span><span class="p">()</span>
+<span class="go">4.24264</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -242,8 +1126,13 @@ The return value is a (3,) shaped <a class="reference internal" href="#coords.Co
 <tt class="descname">bsphere</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.bsphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the diameter of the bounding sphere of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>The bounding sphere is the smallest sphere with center in the
-center() of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>, and such that no points of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>
-are lying outside the sphere.</p>
+center() of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>, and such that no points of the
+<a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> are lying outside the sphere.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">bsphere</span><span class="p">()</span>
+<span class="go">2.12132</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -252,10 +1141,15 @@ are lying outside the sphere.</p>
 <dd><p>Return the distance of all points from the plane (p,n).</p>
 <p>p is a point specified by 3 coordinates.
 n is the normal vector to a plane, specified by 3 components.</p>
-<p>The return value is a [...] shaped array with the distance of
-each point to the plane through p and having normal n.
+<p>The return value is a float array with shape <tt class="docutils literal"><span class="pre">self.pshape()</span></tt> with
+the distance of each point to the plane through p and having normal n.
 Distance values are positive if the point is on the side of the
 plane indicated by the positive normal.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPlane</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="go">[[ 0.  3.  0.]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -268,6 +1162,11 @@ n is a vector specifying the direction of the line through p.</p>
 <p>The return value is a [...] shaped array with the distance of
 each point to the line through p with direction n.
 All distance values are positive or zero.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromLine</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="go">[[ 0.  0.  3.]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -277,7 +1176,12 @@ All distance values are positive or zero.</p>
 <p>p is a single point specified by 3 coordinates.</p>
 <p>The return value is a [...] shaped array with the distance of
 each point to point p.
-All distance values are positive or zero.</p>
+All distance values are positive or zero.
+Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPoint</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<span class="go">[[ 0.  3.  3.]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -818,22 +1722,113 @@ is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><
 instead of the last, and it is a method rather than a function.</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="coords.Coords.concatenate">
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>L</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#coords.Coords.concatenate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate a list of <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p>All <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object in the list L should have the same shape
+except for the length of the specified axis.
+This function is equivalent to the numpy concatenate, but makes
+sure the result is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object,and the default axis
+is the first one instead of the last.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="coords.CoordinateSystem">
-<em class="property">class </em><tt class="descclassname">coords.</tt><tt class="descname">CoordinateSystem</tt><a class="headerlink" href="#coords.CoordinateSystem" title="Permalink to this definition">¶</a></dt>
-<dd><p>A CoordinateSystem defines a coordinate system in 3D space.</p>
-<p>The coordinate system is defined by and stored as a set of four points:
-three endpoints of the unit vectors along the axes at the origin, and
-the origin itself as fourth point.</p>
-<p>The constructor takes a (4,3) array as input. The default constructs
-the standard global Cartesian axes system:</p>
-<div class="highlight-python"><pre>1.  0.  0.
-0.  1.  0.
-0.  0.  1.
-0.  0.  0.</pre>
+<dl class="classmethod">
+<dt id="coords.Coords.fromstring">
+<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="headerlink" href="#coords.Coords.fromstring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object with data from a string.</p>
+<p>This convenience function uses the <tt class="xref py py-func docutils literal"><span class="pre">numpy.fromstring()</span></tt>
+function to read coordinates from a string.</p>
+<p><cite>fil</cite>: a string containing a single sequence of float numbers separated
+by whitespace and a possible separator string.</p>
+<p><cite>sep</cite>: the separator used between the coordinates. If not a space,
+all extra whitespace is ignored.</p>
+<p><cite>ndim</cite>: number of coordinates per point. Should be 1, 2 or 3 (default).
+If 1, resp. 2, the coordinate string only holds x, resp. x,y
+values.</p>
+<p><cite>count</cite>: total number of coordinates to read. This should be a multiple
+of 3. The default is to read all the coordinates in the string.
+count can be used to force an error condition if the string
+does not contain the expected number of values.</p>
+<p>The return value is  Coords object.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="coords.Coords.fromfile">
+<em class="property">classmethod </em><tt class="descname">fromfile</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#coords.Coords.fromfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> from file.</p>
+<p>This convenience function uses the numpy fromfile function to read
+the coordinates from file.
+You just have to make sure that the coordinates are read in order
+(X,Y,Z) for subsequent points, and that the total number of
+coordinates read is a multiple of 3.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="coords.Coords.interpolate">
+<em class="property">classmethod </em><tt class="descname">interpolate</tt><big>(</big><em>clas</em>, <em>F</em>, <em>G</em>, <em>div</em><big>)</big><a class="headerlink" href="#coords.Coords.interpolate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create interpolations between two <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+<p>F and G are two <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the same shape.
+v is a list of floating point values.
+The result is the concatenation of the interpolations of F and G at all
+the values in div.
+An interpolation of F and G at value v is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> H where each
+coordinate Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
+Thus, a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> interpolate(F,G,[0.,0.5,1.0]) will contain all points of
+F and G and all points with mean coordinates between those of F and G.</p>
+<p>As a convenience, if an integer is specified for div, it is taken as a
+number of divisions for the interval [0..1].
+Thus, interpolate(F,G,n) is equivalent with
+interpolate(F,G,arange(0,n+1)/float(n))</p>
+<p>The resulting <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array has an extra axis (the first).
+Its shape is (n,) + F.shape, where n is the number of divisions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.rot">
+<tt class="descname">rot</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.rot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.trl">
+<tt class="descname">trl</tt><big>(</big><em>vector</em>, <em>distance=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.trl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">[ 1.  2.  1.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[ 1.  2.  1.]</span>
+</pre></div>
 </div>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">coords</span></tt></p>
@@ -873,6 +1868,26 @@ coordinate values, the second has the maximal ones.</dd>
 <dt>Returns:</dt>
 <dd>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object with shape(3,) holding three zero coordinates.</dd>
 </dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="coords.sweepCoords">
+<tt class="descclassname">coords.</tt><tt class="descname">sweepCoords</tt><big>(</big><em>self, path, origin=[0.0, 0.0, 0.0], normal=0, upvector=2, avgdir=False, enddir=None, scalex=None, scaley=None</em><big>)</big><a class="headerlink" href="#coords.sweepCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sweep a Coords object along a path, returning a series of copies.</p>
+<p>origin and normal define the local path position and direction on the mesh.</p>
+<p>At each point of the curve, a copy of the Coords object is created, with
+its origin in the curve&#8217;s point, and its normal along the curve&#8217;s direction.
+In case of a PolyLine, directions are pointing to the next point by default.
+If avgdir==True, average directions are taken at the intermediate points.
+Missing end directions can explicitely be set by enddir, and are by default
+taken along the last segment.
+If the curve is closed, endpoints are treated as any intermediate point,
+and the user should normally not specify enddir.</p>
+<p>At each point of the curve, the original Coords object can be scaled in x
+and y direction by specifying scalex and scaley. The number of values
+specified in scalex and scaly should be equal to the number of points on
+the curve.</p>
+<p>The return value is a sequence of the transformed Coords objects.</p>
 </dd></dl>
 
 </div>

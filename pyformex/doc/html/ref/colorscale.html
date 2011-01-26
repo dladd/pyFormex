@@ -59,7 +59,6 @@
             
   <div class="section" id="module-colorscale">
 <span id="colorscale-color-mapping-of-a-range-of-values"></span><span id="sec-ref-colorscale"></span><h1>15. <a class="reference internal" href="#module-colorscale" title="colorscale: Color mapping of a range of values."><tt class="xref py py-mod docutils literal"><span class="pre">colorscale</span></tt></a> &#8212; Color mapping of a range of values.<a class="headerlink" href="#module-colorscale" title="Permalink to this headline">¶</a></h1>
-<p>Color mapping of a range of values.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">colorscale</span></tt></p>
 <dl class="class">
 <dt id="colorscale.ColorScale">
@@ -79,8 +78,8 @@ on the canvas.</p>
 <p>If the ColorScale has only one exponent, values in the range
 mival..maxval are scaled to the range -1..+1.</p>
 <p>If two exponents were specified, scaling is done independently in
-one of the intervals minval..midval or midval..maxval resulting into
-resp. the interval -1..0 or 0..1.</p>
+the intervals minval..midval and midval..maxval, mapped resp. using
+exp2 and exp onto the intevals -1..0 and 0..1.</p>
 </dd></dl>
 
 <dl class="method">

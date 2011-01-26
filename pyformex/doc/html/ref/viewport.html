@@ -57,9 +57,25 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-viewport">
+  <p>DEBUG: Using the (slower) Python misc functions
+DEBUG: Using the (slower) Python misc functions
+DEBUG: LOADING IMAGE FORMATS
+DEBUG:
+Qt image types for saving: [&#8216;bmp&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
+Qt image types for input: [&#8216;bmp&#8217;, &#8216;gif&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;mng&#8217;, &#8216;pbm&#8217;, &#8216;pgm&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;svg&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
+gl2ps image types: []
+image types converted from EPS: []
+DEBUG: LOADING IMAGE FORMATS
+DEBUG:
+Qt image types for saving: [&#8216;bmp&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
+Qt image types for input: [&#8216;bmp&#8217;, &#8216;gif&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;mng&#8217;, &#8216;pbm&#8217;, &#8216;pgm&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;svg&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
+gl2ps image types: []
+image types converted from EPS: []
+.. $Id$  -<em>- rst -</em>-
+.. pyformex reference manual &#8212; viewport
+.. CREATED WITH py2rst.py: DO NOT EDIT</p>
+<div class="section" id="module-viewport">
 <span id="viewport-interactive-opengl-canvas-embedded-in-a-qt4-widget"></span><span id="sec-ref-viewport"></span><h1>21. <a class="reference internal" href="#module-viewport" title="viewport: Interactive OpenGL Canvas embedded in a Qt4 widget."><tt class="xref py py-mod docutils literal"><span class="pre">viewport</span></tt></a> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.<a class="headerlink" href="#module-viewport" title="Permalink to this headline">¶</a></h1>
-<p>Interactive OpenGL Canvas embedded in a Qt4 widget.</p>
 <p>This module implements user interaction with the OpenGL canvas defined in
 module <a class="reference internal" href="canvas.html#module-canvas" title="canvas: This implements an OpenGL drawing widget for painting 3D scenes."><tt class="xref py py-mod docutils literal"><span class="pre">canvas</span></tt></a>.
 <cite>QtCanvas</cite> is a single interactive OpenGL canvas, while <cite>MultiCanvas</cite>
@@ -79,18 +95,6 @@ implements a dynamic array of multiple canvases.</p>
 <dt id="viewport.CursorShapeHandler.setCursorShapeFromFunc">
 <tt class="descname">setCursorShapeFromFunc</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#viewport.CursorShapeHandler.setCursorShapeFromFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the cursor shape to shape</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="viewport.CanvasMouseHandler">
-<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CanvasMouseHandler</tt><a class="headerlink" href="#viewport.CanvasMouseHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>A class for handling the mouse events on the Canvas.</p>
-<dl class="method">
-<dt id="viewport.CanvasMouseHandler.getMouseFunc">
-<tt class="descname">getMouseFunc</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.CanvasMouseHandler.getMouseFunc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the mouse function bound to self.button and self.mod</p>
 </dd></dl>
 
 </dd></dl>
@@ -488,6 +492,315 @@ On RELEASE, add the line to the drawing.</p>
 <dd><p>Process a wheel event.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="viewport.QtCanvas.glLight">
+<tt class="descname">glLight</tt><big>(</big><em>onoff</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.glLight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle lights on/off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.hasLight">
+<tt class="descname">hasLight</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.hasLight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the status of the lighting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.resetDefaults">
+<tt class="descname">resetDefaults</tt><big>(</big><em>dict={}</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.resetDefaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the settings to their default values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setRenderMode">
+<tt class="descname">setRenderMode</tt><big>(</big><em>rm</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setRenderMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the rendermode.</p>
+<p>This changes the rendermode and redraws everything with the new mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>lw</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>repeat</em>, <em>pattern</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linestipple for line rendering.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setPointSize">
+<tt class="descname">setPointSize</tt><big>(</big><em>sz</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setPointSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the size for point drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setBgColor">
+<tt class="descname">setBgColor</tt><big>(</big><em>color1</em>, <em>color2=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setBgColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the background color.</p>
+<p>If one color is specified, a solid background is set.
+If two colors are specified, a graded background is set
+and an object is created to display the background.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.createBackground">
+<tt class="descname">createBackground</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.createBackground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the background object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setFgColor">
+<tt class="descname">setFgColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setFgColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default foreground color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setSlColor">
+<tt class="descname">setSlColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setSlColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the highlight color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setLightValue">
+<tt class="descname">setLightValue</tt><big>(</big><em>nr</em>, <em>key</em>, <em>val</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setLightValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Re)Define a light on the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.enableLight">
+<tt class="descname">enableLight</tt><big>(</big><em>nr</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.enableLight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable an existing light.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.disableLight">
+<tt class="descname">disableLight</tt><big>(</big><em>nr</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.disableLight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable an existing light.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setTriade">
+<tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setTriade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle the display of the global axes on or off.</p>
+<p>If on is True, a triade of global axes is displayed, if False it is
+removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.glupdate">
+<tt class="descname">glupdate</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.glupdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush all OpenGL commands, making sure the display is updated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the canvas to the background color.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setDefaults">
+<tt class="descname">setDefaults</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setDefaults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activate the canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.display">
+<tt class="descname">display</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Re)display all the actors in the scene.</p>
+<p>This should e.g. be used when actors are added to the scene,
+or after changing  camera position/orientation or lens.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.begin_2D_drawing">
+<tt class="descname">begin_2D_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.begin_2D_drawing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the canvas for 2D drawing on top of 3D canvas.</p>
+<p>The 2D drawing operation should be ended by calling end_2D_drawing. 
+It is assumed that you will not try to change/refresh the normal
+3D drawing cycle during this operation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.end_2D_drawing">
+<tt class="descname">end_2D_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.end_2D_drawing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel the 2D drawing mode initiated by begin_2D_drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setBbox">
+<tt class="descname">setBbox</tt><big>(</big><em>bbox=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setBbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the bounding box of the scene you want to be visible.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.addActor">
+<tt class="descname">addActor</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.addActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a 3D actor to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.removeActor">
+<tt class="descname">removeActor</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.removeActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a 3D actor from the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.addHighlight">
+<tt class="descname">addHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.addHighlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a 3D actor highlight to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.removeHighlight">
+<tt class="descname">removeHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.removeHighlight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a 3D actor highlight from the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.addAnnotation">
+<tt class="descname">addAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.addAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an annotation to the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.removeAnnotation">
+<tt class="descname">removeAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.removeAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an annotation from the 3D scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.addDecoration">
+<tt class="descname">addDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.addDecoration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a 2D decoration to the canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.removeDecoration">
+<tt class="descname">removeDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.removeDecoration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a 2D decoration from the canvas.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.remove">
+<tt class="descname">remove</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a list of any actor/highlights/annotation/decoration items.</p>
+<p>This will remove the items from any of the canvas lists in which the
+item appears.
+itemlist can also be a single item instead of a list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.removeActors">
+<tt class="descname">removeActors</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.removeActors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all actors in actorlist (default = all) from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.removeHighlights">
+<tt class="descname">removeHighlights</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.removeHighlights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all highlights in actorlist (default = all) from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.removeAnnotations">
+<tt class="descname">removeAnnotations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.removeAnnotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all annotations in actorlist (default = all) from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.removeDecorations">
+<tt class="descname">removeDecorations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.removeDecorations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all decorations in actorlist (default = all) from the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.removeAll">
+<tt class="descname">removeAll</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.removeAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all actors and decorations</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.redrawAll">
+<tt class="descname">redrawAll</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.redrawAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redraw all actors in the scene.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setCamera">
+<tt class="descname">setCamera</tt><big>(</big><em>bbox=None</em>, <em>angles=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the camera looking under angles at bbox.</p>
+<p>This function sets the camera angles and adjusts the zooming.
+The camera distance remains unchanged.</p>
+<p>If a bbox is specified, the camera will be zoomed to make the whole
+bbox visible.
+If no bbox is specified, the current scene bbox will be used.
+If no current bbox has been set, it will be calculated as the
+bbox of the whole scene.</p>
+<p>If no camera angles are given, the camera orientation is kept.
+angles can be a set of 3 angles, or a string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.zoom">
+<tt class="descname">zoom</tt><big>(</big><em>f</em>, <em>dolly=True</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.zoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dolly zooming.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.project">
+<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map the object coordinates (x,y,z) to window coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.unProject">
+<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.unProject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map the window coordinates (x,y,z) to object coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.zoomRectangle">
+<tt class="descname">zoomRectangle</tt><big>(</big><em>x0</em>, <em>y0</em>, <em>x1</em>, <em>y1</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.zoomRectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangle zooming</p>
+<p>x0,y0,x1,y1 are pixel coordinates of the lower left and upper right
+corners of the area to zoom to the full window</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.zoomAll">
+<tt class="descname">zoomAll</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.zoomAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangle zooming</p>
+<p>x0,y0,x1,y1 are relative corners in (0,0)..(1,1) space</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.saveBuffer">
+<tt class="descname">saveBuffer</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.saveBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the current OpenGL buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.showBuffer">
+<tt class="descname">showBuffer</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.showBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the saved buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.draw_focus_rectangle">
+<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>width=2</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.draw_focus_rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the focus rectangle.</p>
+<p>The specified width is HALF of the line width</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.draw_cursor">
+<tt class="descname">draw_cursor</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.draw_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw the cursor</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -549,6 +862,18 @@ viewports are laid out columnwise over nrows rows.</p>
 <dt id="viewport.MultiCanvas.link">
 <tt class="descname">link</tt><big>(</big><em>vp</em>, <em>to</em><big>)</big><a class="headerlink" href="#viewport.MultiCanvas.link" title="Permalink to this definition">¶</a></dt>
 <dd><p>Link viewport vp to to</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="viewport.CanvasMouseHandler">
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CanvasMouseHandler</tt><a class="headerlink" href="#viewport.CanvasMouseHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for handling the mouse events on the Canvas.</p>
+<dl class="method">
+<dt id="viewport.CanvasMouseHandler.getMouseFunc">
+<tt class="descname">getMouseFunc</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.CanvasMouseHandler.getMouseFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mouse function bound to self.button and self.mod</p>
 </dd></dl>
 
 </dd></dl>
