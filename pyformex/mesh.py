@@ -653,7 +653,7 @@ Size: %s
         See also :meth:`Coords.match`
         """
         return self.coords.match(mesh.coords,**kargs)
-    
+        
     
     def matchElemsCentroids(self, mesh,**kargs):
         """Match elems of Mesh with elems of self.
@@ -667,7 +667,28 @@ Size: %s
         mc=Mesh(mesh.centroids(), arange(mesh.nelems() ))
         return c.matchCoords(mc,**kargs)
         
-
+    
+     #~ FI It has been tested on quad4-quad4, hex8-quad4, tet4-tri3
+    def matchFaces(self,mesh):
+        """Match faces of mesh with faces of self.
+            
+            self and Mesh can be same eltype meshes or different eltype but of the 
+            same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
+            and are both without Doubles.
+            
+            Returns the indices array of the elems of self that matches the faces of mesh
+        """
+        sel = self.getLowerEntitiesSelector(2)
+        hi,lo = self.elems.insertLevel(sel)
+        hiinv = hi.inverse()
+        fm=Mesh(self.coords,self.getFaces())
+        mesh=Mesh(mesh.coords,mesh.getFaces())
+        c=fm.matchElemsCentroids(mesh)
+        hiinv = hiinv[c]
+        enr =  unique(hiinv[hiinv >= 0])  # element number
+        return enr
+    
+    
     @deprecation("Mesh.findCoincidentNodes is deprecated. Use Coords.match or Mesh.matchCoords. Beware for order of arguments!")
     def findCoincidentCoords(self,mesh,**kargs):
         return mesh.coords.match(self.coords)
@@ -787,7 +808,7 @@ Size: %s
 
         `newcoords` is an `(nelems,nnod,3)` or`(nelems*nnod,3)` array of
         coordinates. Each element gets exactly `nnod` extra nodes from this
-	array. The result is a Mesh with plexitude `self.nplex() + nnod`.
+        array. The result is a Mesh with plexitude `self.nplex() + nnod`.
         """
         newcoords = newcoords.reshape(-1,3)
         newnodes = arange(newcoords.shape[0]).reshape(self.elems.shape[0],-1) + self.coords.shape[0]
