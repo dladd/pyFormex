@@ -158,6 +158,8 @@ def fmtPart(name='Part-1'):
 
 
 materialswritten=[]
+
+#FI   few lines of documentation about plastic and the damping needed
 def fmtMaterial(mat):
     """Write a material section.
     
@@ -179,10 +181,24 @@ def fmtMaterial(mat):
       - (opt) poisson_ratio: it is calculated if None
 
     - 'HYERELASTIC':
-
+    
+      required
       - model: one of 'ogden', 'polynomial' or 'reduced polynomial'
-      - constants: 
-
+      - constants: list of all parameter required for the model (see Abaqus documentation)
+      
+      optional
+      - order: order of the model. If blank will be automatically calculated from the len of the constants list
+        
+        example:
+        
+        intimaMat= {
+            'name': 'intima',
+            'density': 0.1, # Not Used, but Abaqus does not like a material without
+            'elasticity':'hyperelastic',
+            'type':'reduced polynomial',
+            'constants': [6.79E-03, 5.40E-01, -1.11, 10.65, -7.27, 1.63, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        }
+      
     - 'ANISOTROPIC HYPERELASTIC':
  
     - 'USER':
@@ -212,29 +228,50 @@ def fmtMaterial(mat):
     
     out ="*MATERIAL, NAME=%s\n" % mat.name
     materialswritten.append(mat.name)
+    print materialswritten
     
     if mat.elasticity is None or mat.elasticity == 'linear':
         if mat.poisson_ratio is None and mat.shear_modulus is not None:
             mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
 
-        out += """*ELASTIC
-%s,%s
-""" % (float(mat.young_modulus), float(mat.poisson_ratio))
+        out += '*ELASTIC\n%s,%s\n' % (float(mat.young_modulus), float(mat.poisson_ratio))
     
-    elif mat.elasticity == 'hyperelastic':
-        out += "*HYPERELASTIC, %s" % mat.type
-        if mat.type == 'ogden' or mat.type == 'polynomial' or mat.type == 'reduced polynomial':
-            
-            ord = 1
+    elif mat.elasticity.lower() == 'hyperelastic':
+        out += "*HYPERELASTIC, %s" % mat.type.upper()
+        
+        if mat.type.lower() == 'ogden':     
             if mat.has_key('order'):
-                ord = mat.order
-            out += ", N=%s\n" % ord
+                order=mat.order
+            else:
+                order=len(mat.constants)/3.
+            if len(order)%3!=0 :
+                raise ValueError,"Wrong number of parameters"
+        
+        if mat.type.lower() == 'polynomial':
+            ord=(-5. + (25.+8.*len(mat.constants))**0.5)/2. # Nparameters = ((N+1)*(N+2))/2 + N-1 --> Inverse to find order N
+            if mat.has_key('order'):
+                order=mat.order
+            else:
+                order=ord
+            if int(ord)!=order:
+                    raise ValueError,"Wrong number of parameters"
+                
+        if mat.type.lower() == 'reduced polynomial':
+            if mat.has_key('order'):
+                order=mat.order
+            else:
+                order=len(mat.constants)/2.
+            if len(mat.constants)%2!=0:
+                raise ValueError,"Wrong number of parameters"
+        
+        out += ", N=%i\n" %order
+        out += fmtData(mat.constants)
     
-    elif mat.elasticity == 'anisotropic hyperelastic':
+    elif mat.elasticity.lower() == 'anisotropic hyperelastic':
         out += "*ANISOTROPIC HYPERELASTIC, HOLZAPFEL\n"
         #TO DO: add possibility to define local orientations!!!"
             
-    elif mat.elasticity == 'user':
+    elif mat.elasticity.lower() == 'user':
         if mat.depvar is not None:
             out += "*DEPVAR\n%s\n" % mat.depvar
         out += "*USER MATERIAL, CONSTANTS=%s\n" % len(mat.constants)
@@ -251,14 +288,15 @@ def fmtMaterial(mat):
         ## if mat.plastic.shape[1] > 8:
         ##     raise ValueError,"Plastic data array should have max. 8 columns"
         out += fmtData(mat.plastic)
-
-    if mat.damping == 'Yes':
-        out += "*DAMPING"
-        if mat.alpha is not None:
-            out +=", ALPHA = %s" %mat.alpha
-        if mat.beta is not None:
-            out +=", BETA = %s" %mat.beta
-        out += '\n'
+    
+    if mat.damping is not None:
+        if mat.damping == 'yes':
+            out += "*DAMPING"
+            if mat.alpha is not None:
+                out +=", ALPHA = %s" %mat.alpha
+            if mat.beta is not None:
+                out +=", BETA = %s" %mat.beta
+            out += '\n'
 
     return out
 
