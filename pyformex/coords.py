@@ -632,6 +632,33 @@ class Coords(ndarray):
             vector *= distance
         out += vector
         return out
+
+
+    def align(self,alignment='---'):
+        """Align the Coords along the global axes.
+
+        Alignment involves a translation such that the bounding box
+        of the Coords object becomes aligned on the origin of the global axes.
+        The requested alignment is determined by a string of three characters,
+        one for each of the coordinate axes. The character determines how
+        the structure is aligned in the corresponding direction:
+
+        - '-': aligned on the minimal value of the bounding box,
+        - '+': aligned on the maximal value of the bounding box,
+        - '0': aligned on the middle value of the bounding box.
+        Any other value will make the alignment in that direction unchanged.
+
+        The default alignment string '---' results in a translation which puts
+        all the points in the octant with all positive coordinate values.
+        A string '000' will center the object around the origin.
+        """
+        trl = zeros(3)
+        bb = self.bbox()
+        al = { '-': bb[0], '+': bb[1], '0': 0.5*(bb[0]+bb[1]) }
+        for i,c in enumerate(alignment):
+            if c in al:
+                trl[i] = -al[c][i]
+        return self.translate(trl)
     
 
     def rotate(self,angle,axis=2,around=None,inplace=False):

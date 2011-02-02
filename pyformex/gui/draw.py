@@ -869,8 +869,8 @@ def fgcolor(color):
     pf.canvas.setFgColor(color)
 
 
-def renderMode(mode,avg=False):
-    pf.canvas.setRenderMode(mode)
+def renderMode(mode,avg=False,light=None):
+    pf.canvas.setRenderMode(mode,light)
     pf.canvas.update()
     toolbar.updateNormalsButton()
     toolbar.updateLightButton()

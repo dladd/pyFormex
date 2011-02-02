@@ -501,7 +501,7 @@ class TriSurface(Mesh):
         return self.getEdges().shape[0]
 
     def nfaces(self):
-        return self.getFaceEdges().shape[0]
+        return self.getElemEdges().shape[0]
 
     def vertices(self):
         return self.coords
@@ -511,7 +511,7 @@ class TriSurface(Mesh):
         return self.ncoords(),self.nedges(),self.nfaces()
 
     
-    def getFaceEdges(self):
+    def getElemEdges(self):
         """Get the faces' edge numbers."""
         if self.face_edges is None:
             self.face_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
@@ -623,7 +623,7 @@ class TriSurface(Mesh):
         if ftype == 'pgf':
             Geometry.write(self,fname)
         elif ftype == 'gts':
-            filewrite.writeGTS(fname,self.coords,self.getEdges(),self.getFaceEdges())
+            filewrite.writeGTS(fname,self.coords,self.getEdges(),self.getElemEdges())
             pf.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','smesh']:
             if ftype == 'stl':
@@ -827,7 +827,7 @@ class TriSurface(Mesh):
         self.areaNormals()
         edg = self.coords[self.getEdges()]
         edglen = length(edg[:,1]-edg[:,0])
-        facedg = edglen[self.getFaceEdges()]
+        facedg = edglen[self.getElemEdges()]
         edgmin = facedg.min(axis=-1)
         edgmax = facedg.max(axis=-1)
         altmin = 2*self.areas / edgmax
@@ -1021,7 +1021,7 @@ Total area: %s; Enclosed volume: %s
             prop += front_increment
 
             # Determine border
-            edges = unique(self.getFaceEdges()[elems])
+            edges = unique(self.getElemEdges()[elems])
             edges = edges[todo[edges]]
             if edges.size > 0:
                 # flag edges as done
@@ -1279,7 +1279,7 @@ Total area: %s; Enclosed volume: %s
         Mparts = []
         coords = S.coords
         edg = S.getEdges()
-        fac = S.getFaceEdges()
+        fac = S.getElemEdges()
         ele = S.elems
         d = S.distanceFromPlane(p,n)
 

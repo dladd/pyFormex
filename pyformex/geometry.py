@@ -214,6 +214,9 @@ class Geometry(object):
     def translate(self,*args,**kargs):
         pass
     @_coords_transform
+    def align(self,*args,**kargs):
+        pass
+    @_coords_transform
     def rotate(self,*args,**kargs):
         pass
     @_coords_transform

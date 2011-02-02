@@ -169,25 +169,25 @@ def fmtMaterial(mat):
 
     - `elasticity`: one of 'LINEAR', 'HYPERELASTIC', 'ANISOTROPIC HYPERELASTIC',
       'USER'. Default is 'LINEAR'. Defines the elastic behavior class of the
-      material. The requirements for the other keys depend on this type.
+      material. The requirements for the other keys depend on this type. The
+      fields labeled (opt) are optional.
 
-    - ``LINEAR``:
+    - 'LINEAR':
     
-      - required:
-        - young_modulus
-        - shear_modulus
-        
-      - optional:
-        - poisson_ratio: calculated if None
+      - young_modulus
+      - shear_modulus
+      - (opt) poisson_ratio: it is calculated if None
 
+    - 'HYERELASTIC':
+
+      - model: one of 'ogden', 'polynomial' or 'reduced polynomial'
+      - constants: 
+
+    - 'ANISOTROPIC HYPERELASTIC':
+ 
+    - 'USER':
+  
     """
-    ## ========================
-    
-    ## HYPERELASTIC
-    
-    ## elasticity=str hyperelastic
-    ## model=str ogden , polynomial , reduced polynomial
-    ## constants= list  of int sorted abaqus parameter
 
     ## ========================
 

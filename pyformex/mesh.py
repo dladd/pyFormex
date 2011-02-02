@@ -117,7 +117,7 @@ class Mesh(Geometry):
         self.coords = self.elems = self.prop = self.eltype = None
         self.ndim = -1
         self.nodes = self.edges = self.faces = self.cells = None
-        self.face_edges = self.eadj = None
+        self.elem_edges = self.eadj = None
         self.conn = self.econn = self.fconn = None 
         
         if coords is None:
@@ -243,7 +243,6 @@ class Mesh(Geometry):
             return self.nelems() * self.eltype.nedges()
         except:
             return 0
-    
 
 
     def centroids(self):
@@ -254,7 +253,6 @@ class Mesh(Geometry):
         The return value is a Coords object with nelems points.
         """
         return self.coords[self.elems].mean(axis=1)
-
 
     
     def getCoords(self):
@@ -289,7 +287,7 @@ class Mesh(Geometry):
         to that of the caller. If it is positive, it is taken absolute.
         Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
         returns the faces, while for a 2D element type, it returns the edges.
-        For bothe meshes however,  getLowerEntities(+1) returns the edges.
+        For both meshes however,  getLowerEntities(+1) returns the edges.
 
         By default, all entities for all elements are returned and common
         entities will appear multiple times. Specifying unique=True will 
@@ -411,6 +409,21 @@ class Mesh(Geometry):
         return self.cells
 
 
+    def getElemEdges(self):
+        """Defines the elements in function of its edges.
+
+        This returns a Connectivity table with the elements defined in
+        function of the edges. It is equivalent to
+        ```self.elems.insertLevel(self.getLowerEntitiesSelector(1))```
+        but it also stores the definition of the edges and the returned
+        element to edge connectivity.
+        """
+        if self.elem_edges is None:
+            sel = self.getLowerEntitiesSelector(1)
+            self.elem_edges,self.edges = self.elems.insertLevel(sel)
+        return self.elem_edges
+
+
     def getBorder(self,return_indices=False):
         """Return the border of the Mesh.
 
@@ -483,18 +496,6 @@ class Mesh(Geometry):
 
 #############################################################################
     # Adjacency #
-
-
-    ## BV: THis should be generalized to any elements having faces
-    # GDS: it works but it should probable be renamed as getElemEdges,
-    #as it works well both for surfaces and volumes.
-    def getFaceEdges(self):
-        """Get the faces' edge numbers."""
-        if self.face_edges is None:
-            ##self.face_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
-            sel=self.getLowerEntitiesSelector(1)
-            self.face_edges,self.edges = self.elems.insertLevel(sel)
-        return self.face_edges
     
 
     def nodeConnections(self):
@@ -509,14 +510,10 @@ class Mesh(Geometry):
         return (self.nodeConnections() >=0).sum(axis=-1)
 
 
-
-    ## BV THIS IS NOT GENERAL !!!
-    # GDS, now it should work correctly, after changing getFaceEdges 
     def edgeConnections(self):
         """Find and store the elems connected to edges."""
-        
         if self.econn is None:
-            self.econn = self.getFaceEdges().inverse()
+            self.econn = self.getElemEdges().inverse()
         return self.econn
 
 
@@ -537,15 +534,7 @@ class Mesh(Geometry):
 
     def edgeAdjacency(self):
         """Find the elems adjacent to elems via an edge."""
-        return self.getFaceEdges().adjacency()
-        ## if self.eadj is None:
-        ##     nelems = self.nelems()
-        ##     rfaces = self.edgeConnections()
-        ##     # this gives all adjacent elements including element itself
-        ##     adj = rfaces[self.getFaceEdges()].reshape(nelems,-1)
-        ##     fnr = arange(nelems).reshape(nelems,-1)
-        ##     self.eadj = adj[adj != fnr].reshape((nelems,-1))
-        ## return self.eadj
+        return self.getElemEdges().adjacency()
 
 
     def nEdgeAdjacent(self):
@@ -667,16 +656,19 @@ Size: %s
         mc=Mesh(mesh.centroids(), arange(mesh.nelems() ))
         return c.matchCoords(mc,**kargs)
         
-    
-     #~ FI It has been tested on quad4-quad4, hex8-quad4, tet4-tri3
+
+    # BV: I'm not sure that we need this. Looks like it can or should
+    # be replaced with a method applied on the BorderMesh
+    #~ FI It has been tested on quad4-quad4, hex8-quad4, tet4-tri3
     def matchFaces(self,mesh):
         """Match faces of mesh with faces of self.
             
-            self and Mesh can be same eltype meshes or different eltype but of the 
-            same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
-            and are both without Doubles.
+        self and Mesh can be same eltype meshes or different eltype but of the 
+        same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
+        and are both without Doubles.
             
-            Returns the indices array of the elems of self that matches the faces of mesh
+        Returns the indices array of the elems of self that matches
+        the faces of mesh
         """
         sel = self.getLowerEntitiesSelector(2)
         hi,lo = self.elems.insertLevel(sel)

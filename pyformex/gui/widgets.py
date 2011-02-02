@@ -1359,6 +1359,14 @@ class InputDialog(QtGui.QDialog):
         layout is the widget layout where the input widgets will be added
         """
         for item in items:
+
+            if isinstance(item,list) or isinstance(item,tuple):
+                warnings.warn("warn_deprecated_inputitem")
+                try:
+                    item = compatInputItem(*item)
+                except:
+                    pass
+                
             if isinstance(item,dict):
 
                 itemtype = item.get('itemtype',None)
@@ -1379,7 +1387,7 @@ class InputDialog(QtGui.QDialog):
                 # input fields
                 form.addWidget(item)
                 form.last = None
-
+                    
             else:
                 raise ValueError,"Invalid input item (type %s). Expected a dict or a QWidget." % type(item)
 
