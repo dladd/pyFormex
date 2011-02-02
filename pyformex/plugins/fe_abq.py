@@ -1269,7 +1269,7 @@ class Step(Dict):
     def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
                  tags=None,inc=None,sdi=None,timeinc=None,
                  buckle='SUBSPACE',incr=0.1,
-                 name=None,bulkvisc=None,out=None,res=None, stab=None,allsdtol=0,cont='no', unsymm='NO'):
+                 name=None,bulkvisc=None,out=None,res=None, stab=None,allsdtol=None,contin=None, unsymm=None):
         """Create a new analysis step."""
         
         self.analysis = analysis.upper()
@@ -1285,6 +1285,13 @@ class Step(Dict):
         elif self.analysis == 'BUCKLE':
             self.nlgeom = 'NO'
             self.buckle = buckle
+        elif self.analysis in ['STATIC', 'DYNAMIC']:
+            self.nlgeom = nlgeom
+            self.unsymm=unsymm
+            if self.analysis =='STATIC':
+                self.stab=stab
+                self.allsdtol=allsdtol
+                self.contin=contin
         else:
             self.nlgeom = nlgeom
         self.tags = tags
@@ -1293,10 +1300,7 @@ class Step(Dict):
         self.bulkvisc = bulkvisc
         self.out = out
         self.res = res
-        self.stab = stab
-        self.allsdtol = allsdtol
-        self.cont=cont
-        self.unsymm=unsymm
+
 
 
     def write(self,fil,propDB,out=[],res=[],resfreq=1,timemarks=False):
@@ -1322,16 +1326,20 @@ class Step(Dict):
         if self.inc:
             cmd += ',INC=%s' % self.inc
         if self.sdi:
-            cmd += ',CONVERT SDI=%s' % self.sdi        
+            cmd += ',CONVERT SDI=%s' % self.sdi
+        if self.analysis in ['STATIC','DYNAMIC']:            
+            if self.unsymm is not None:
+                cmd += ",UNSYMM = %s" %self.unsymm
         fil.write("%s\n" % cmd)
-        if self.analysis in ['STATIC','DYNAMIC']:
-            fil.write("*%s" % self.analysis)
-            if self.unsymm=='YES':
-                fil.write(", unsymm=YES")
-            if self.stab:
-                fil.write(",STABILIZE = %s, ALLSDTOL = %s, CONTINUE = %s\n" % (self.stab,self.allsdtol,self.cont))
-            else:
-                fil.write("\n")
+        if self.analysis =='STATIC':
+            fil.write("*STATIC")
+            if  self.stab is not None:
+                fil.write(",STABILIZE = %s" %self.stab)
+            if self.allsdtol is not None:
+                fil.write(",ALLSDTOL = %s" %self.allsdtol)
+            if self.contin is not None:
+                 fil.write(",CONTINUE = %s" %self.contin)
+            fil.write("\n")
         elif self.analysis == 'EXPLICIT':
             fil.write("*DYNAMIC, EXPLICIT\n")
         elif self.analysis == 'BUCKLE':
