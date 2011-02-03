@@ -46,7 +46,7 @@ f1 = Formex([[[0,0],[1,0]],[[1,0],[1,1]]]).replic2(8,8,1,1,0,1,1,-1) + Formex([[
 show(f1)
 #
 message("Remove some of the bars")
-f1 = f1.remove(Formex([[[1,0],[1,1]]]).replic(4,2,0))
+f1 = f1.remove(Formex([[[2,0],[3,1]]]).replic(3,2,0))
 show(f1)
 #
 message("Transform the octant into a circular sector")
@@ -55,8 +55,8 @@ f1.setProp(1)
 f2.setProp(2)
 show(f1+f2)
 clear()
-draw(f2)
-exit()
+#draw(f2)
+
 #
 message("Make circular copies to obtain a full circle")
 show(f1+f2.rosette(6,60.))

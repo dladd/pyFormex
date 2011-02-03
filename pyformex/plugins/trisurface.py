@@ -513,9 +513,9 @@ class TriSurface(Mesh):
     
     def getElemEdges(self):
         """Get the faces' edge numbers."""
-        if self.face_edges is None:
-            self.face_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
-        return self.face_edges
+        if self.elem_edges is None:
+            self.elem_edges,self.edges = self.elems.insertLevel([[0,1],[1,2],[2,0]])
+        return self.elem_edges
 
 
 ###########################################################################

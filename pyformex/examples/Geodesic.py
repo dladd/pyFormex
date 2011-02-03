@@ -33,31 +33,33 @@ techniques = ['dialog', 'color']
 clear()
 view('front')
 
-m=n=5
-res = askItems([('m',m),('n',n)])
+m=n=6
+f=0.8
+res = askItems([('m',m),('n',n),('f',f)])
 if not res:
     exit()
 
 m = res['m']
 n = res['n']
+f = res['f']
 
 v=0.5*sqrt(3.)
 a = Formex([[[0,0],[1,0],[0.5,v]]],1)
 aa = Formex([[[1,0],[1.5,v],[0.5,v]]],2)
 draw(a+aa)
-pause()
+#pause()
 
 d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1)
 dd = aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1)
 clear()
 draw(d+dd)
-pause()
+#pause()
 
 e = (d+dd).rosette(6,60,point=[m*0.5,m*v,0])
 draw(e)
-pause()
+#pause()
 
-f = e.mapd(2,lambda d:0.8*sqrt((m+1)**2-d**2),e.center(),[0,1])
+f = e.mapd(2,lambda d:f*sqrt((m+1)**2-d**2),e.center(),[0,1])
 clear()
 draw(f)
 
