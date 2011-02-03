@@ -1259,7 +1259,17 @@ def writeModelProps(fil,prop):
 ## Some classes to store all the required information
 ################################################## 
         
-        
+#FI- SBD The Step Class has been changed. most of the keywords have been removed.
+# we kept the analysis values has they were before, but we added three new kewords
+# in which to store all the parameter (see Example).The default values for riks buckle have been removed
+# but we left infos in the documentation.
+#At the moment we didn t find any exception at least for what we used so far 
+#but maybe the stepOption=Dict(),analysisOption=Dict(),extra=str added keywords
+# can be all tuple (Dict, list/array) for any additional line of values to be added. 
+# lines
+#         if res and self.analysis == 'EXPLICIT':
+#            writeFileOutput(fil,resfreq,timemarks)
+# should be removed and change also the OUTPUT class (see comments)
 class Step(Dict):
     """The basic logical unit in the simulation history.
 
@@ -1277,38 +1287,65 @@ class Step(Dict):
       'PERTURBATION', 'BUCKLE', 'RIKS'
     - `time`: either
       - a single float value specifying the step time,
-      - a list of 4 values: time inc, step time, min. time inc, max. time inc
+      - a list  of 2 values (special cases with analysis=EXPLICIT)
+      - a list  of 4 values: time inc, step time, min. time inc, max. time inc (all the other cases)
       - for LANCZOS: a list of 5 values
       - for RIKS: a list of 8 values
       In most cases, only the step time should be specified.
       
     - `nlgeom`: 'YES' ot 'NO' (default)
-      If 'YES', the analysis will be geometrically non-linear. Analysis type
-      'RIKS' always sets `nlgeom` to 'YES', 'BUCKLE' sets it to 'NO',
+      If 'YES', the analysis will be geometrically non-linear. For Analysis type
+      'RIKS'  set `nlgeom` to 'YES', 'BUCKLE' set it to 'NO',
       'PERTURBATION' ignores `nlgeom`.
     - `tags`: a list of property tags to include in this step.
       If specified, only the property records having one of the listed values
       as their `tag` attribute will be included in this step.
-    - `inc`:  the maximum number of increments in a step (the default is 100)
-    - `sdi`: determines how severe discontinuities are accounted for
-    - timeinc: 
-    - `buckle`: specifies the BUCKLE type: 'SUBSPACE' or 'LANCZOS'
-    - `incr`: the increment in 'RIKS' type
-    - `bulkvisc`:  a list of two floats (default: [0.06,1.2]), only used
-      in Explicit steps.
     - `out` and `res`: specific output/result records for this step. They
       come in addition to the global ones.
-
+      
+    - stepOption is a  Dict of optional parameters to be added at a step level at the FIRST line. it is placed after the *STEP keyword i.e
+        *STEP, NLGEOM=YES,INC=10000,UNSYMM = YES
+        It has keys name equal to the ABAQUS keywords and value equal to parameter setting
+        if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)
+    
+     -subheading is a string printed as an additionanal subheading (not important normally)
+    
+    - analysisOption is a  Dict of optional parameters to be added at a step level at the SECOND line. it is placed after the analysis keyword i.e
+        *STATIC, STABILIZE=0.0002,CONTINUE=NO
+        with keys name equal to the ABAQUS keywords and value equal to parameter setting
+        if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)
+    
+    -extra string of any extra keyword to be added at a step level after the time line (see example below)
+    
+    Examples on stepOption ,  analysisOption, extra
+    
+    stepOption standard analysis, not needed for explicit
+        Dict({'UNSYMM':'YES'/'NO','CONVERT SDI':'YES'/'NO','AMPLITUDE':'STEP'/'RAMP','INC':100})
+    
+    analysisOption:
+        static, riks
+            Dict({'STABILIZE':0.0002,'CONTINUE':'NO'/'YES','ALLSDTOL':0.05,'DIRECT':'NO STOP','FACTOR':1.,'INCR':0.1 (for riks)})
+        dynamic (implicit)
+            Dict({'APPLICATION':'QUASI-STATIC'/'MODERATE DISSIPATION'/'TRANSIENT FIDELITY'})
+        dynamic explicit
+            Dict({'DIRECT USER CONTROL':'' / 'ELEMENT BY ELEMENT':'' / 'FIXED TIME INCREMENTATION':'',\
+            'IMPROVED DT METHOD'='NO'/'YES','SCALE FACTOR':1.})
+        buckle
+            Dict({'EIGENSOLVER':'SUBSPACE'})
+    
+    extra 
+        extra='*BULK VISCOSITY\n0.12, 0.06\n'
+        
+    
     """
 
     analysis_types = [ 'STATIC', 'DYNAMIC', 'EXPLICIT', \
                        'PERTURBATION', 'BUCKLE', 'RIKS' ]
     
-    def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
-                 tags=None,inc=None,sdi=None,timeinc=None,
-                 buckle='SUBSPACE',incr=0.1,
-                 name=None,bulkvisc=None,out=None,res=None, stab=None,allsdtol=None,contin=None, unsymm=None):
+    def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',subheading=None,\
+                tags=None,name=None,out=None,res=None,stepOption=None,analysisOption=None,extra=''):
         """Create a new analysis step."""
+        
         
         self.analysis = analysis.upper()
         self.name = name
@@ -1316,29 +1353,15 @@ class Step(Dict):
             raise ValueError,'analysis should be one of %s' % analysis_types
         if type(time) == float:
             time = [ 0., time, 0., 0. ]
+        
         self.time = time
-        if self.analysis == 'RIKS':
-            #self.nlgeom = 'YES'
-            self.incr = incr
-        elif self.analysis == 'BUCKLE':
-            self.nlgeom = 'NO'
-            self.buckle = buckle
-        elif self.analysis in ['STATIC', 'DYNAMIC']:
-            self.nlgeom = nlgeom
-            self.unsymm=unsymm
-            if self.analysis =='STATIC':
-                self.stab=stab
-                self.allsdtol=allsdtol
-                self.contin=contin
-        else:
-            self.nlgeom = nlgeom
+        self.nlgeom = nlgeom
         self.tags = tags
-        self.inc = inc
-        self.sdi = sdi
-        self.bulkvisc = bulkvisc
         self.out = out
         self.res = res
-
+        self.stepOption=stepOption
+        self.analysisOption=analysisOption
+        self.subheading=subheading
 
 
     def write(self,fil,propDB,out=[],res=[],resfreq=1,timemarks=False):
@@ -1354,47 +1377,44 @@ class Step(Dict):
         """
         cmd = '*STEP'
         if self.name:
-            cmd += ', %s' % self.name
+            cmd += ',NAME = %s' % self.name
         if self.analysis == 'PERTURBATION':
             cmd += ', PERTURBATION'
-        else:
-            cmd += ', NLGEOM=%s' % self.nlgeom
-            if self.analysis == 'RIKS':
-                cmd += ', INCR=%s' % self.incr
-        if self.inc:
-            cmd += ',INC=%s' % self.inc
-        if self.sdi:
-            cmd += ',CONVERT SDI=%s' % self.sdi
-        if self.analysis in ['STATIC','DYNAMIC']:            
-            if self.unsymm is not None:
-                cmd += ",UNSYMM = %s" %self.unsymm
+        
+        cmd += ', NLGEOM=%s' % self.nlgeom
+        
+        if stepOptions is not None:
+            for i in stepOptions.keys():
+                cmd+=','+i.upper()
+                if stepOptions[i] != '':
+                    cmd+='=%s' %stepOptions[i]
+                    
         fil.write("%s\n" % cmd)
+        fil.write(self.subheading+'\n')
+        
         if self.analysis =='STATIC':
             fil.write("*STATIC")
-            if  self.stab is not None:
-                fil.write(",STABILIZE = %s" %self.stab)
-            if self.allsdtol is not None:
-                fil.write(",ALLSDTOL = %s" %self.allsdtol)
-            if self.contin is not None:
-                 fil.write(",CONTINUE = %s" %self.contin)
-            fil.write("\n")
         elif self.analysis == 'EXPLICIT':
-            fil.write("*DYNAMIC, EXPLICIT\n")
+            fil.write("*DYNAMIC, EXPLICIT")
+        elif self.analysis == 'DYNAMIC':
+            fil.write("*DYNAMIC")
         elif self.analysis == 'BUCKLE':
-            fil.write("*BUCKLE, EIGENSOLVER=%s\n" % self.buckle)
+            fil.write("*BUCKLE")
         elif self.analysis == 'PERTURBATION':
             fil.write("*STATIC")
         elif self.analysis == 'RIKS':
             fil.write("*STATIC, RIKS")
-            
-                      
-        fil.write("%s, %s, %s, %s\n" % tuple(self.time))
-
-        if self.analysis == 'EXPLICIT':
-            if self.bulkvisc is not None:
-                fil.write("""*BULK VISCOSITY
-%s, %s
-""" % self.bulkvisc)
+        
+        cmd=''
+        if analysisOptions is not None:
+            for i in analysisOptions.keys():
+                cmd+=','+i.upper()
+                if analysisOptions[i] != '':
+                    cmd+='=%s' % analysisOptions[i]
+                    
+        fil.write("%s\n" % cmd)
+        
+        fil.write(("%s"+",%s"*(len(self.time)-1)+'\n') % tuple(self.time))               
 
         prop = propDB.getProp('n',tag=self.tags,attr=['bound'])
         if prop:
@@ -1448,7 +1468,8 @@ class Step(Dict):
                 writeElemResult(fil,**i)
         fil.write("*END STEP\n")
 
-    
+#FI-SDB Remove **options the OUTPUT class 
+# should be used only extra but examples are needed
 class Output(Dict):
     """A request for output to .odb and history.
 
