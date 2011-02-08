@@ -116,12 +116,9 @@ def grow(rule='',clearing=True,text=True,ngen=-1,colors=True,viewports=False):
         drawText(rule,40,60,size=24)
 
     a,r,g,t = limas[rule]
-    #print "NGEN default %s" % g
-    #print "NGEN requested %s" % ngen
     if ngen >= 0:
         # respect the requested number of generations
         g = ngen
-    #print "NGEN executed %s" % g
     L = lima.Lima(a,r)
     # show the axiom
     show(0,L,t,clearing,text)
@@ -164,11 +161,11 @@ if __name__ == "draw":
     defaults = pf.PF.get('__Lima__data',defaults)
 
     res = askItems([
-        ('rule',defaults['rule'],'select',{'text':'Production rule','choices':choices,'onselect':setDefaultGenerations}),
-        ('ngen',defaults['ngen'],{'text':'Number of generations (-1 = default)'}),
-        ('colors',defaults['colors'],{'text':'Use different colors per generation'}),
-        ('clearing',defaults['clearing'],{'text':'Clear screen between generations'}),
-        ('viewports',defaults['viewports'],{'text':'Use a separate viewport for each generation'}),
+        dict(name='rule',value=defaults['rule'],text='Production rule',choices=choices,onselect=setDefaultGenerations),
+        dict(name='ngen',value=defaults['ngen'],text='Number of generations (-1 = default)'),
+        dict(name='colors',value=defaults['colors'],text='Use different colors per generation'),
+        dict(name='clearing',value=defaults['clearing'],text='Clear screen between generations'),
+        dict(name='viewports',value=defaults['viewports'],text='Use a separate viewport for each generation'),
         ])
 
     if res:

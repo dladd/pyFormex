@@ -27,7 +27,6 @@
 This module allows to export some simple geometrical items in DXF format.
 """
 
-from simple import *
 from numpy import *
 
 class DxfExporter(object):
@@ -126,7 +125,8 @@ def exportDXF(filename,F):
 # An example
 
 if __name__ == 'draw':
-    chdir(__file__)
+    #chdir(__file__)
+    from simple import circle
     c = circle(360./20.,360./20.,360.)
     draw(c)
     exportDXF('circle1.dxf',c)
