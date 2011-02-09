@@ -1160,7 +1160,7 @@ Total area: %s; Enclosed volume: %s
         return self.partitionByNodeFront()
 
 
-    def partitionByAngle(self,angle=60.,firstprop=0, sortedbyarea=False):
+    def partitionByAngle(self,angle=60.,firstprop=0, sortedbyarea=None):
         """Partition the surface by splitting it at sharp edges.
 
         The surface is partitioned in parts in which all elements can be
@@ -1173,7 +1173,8 @@ Total area: %s; Enclosed volume: %s
         corresponding to the part number. The lowest property number will be
         firstprop.
         
-        If sortedbyarea is True, the parts will be ordered by area.
+        If sortedbyarea is 'up' or 'down' the parts will be ordered by 
+        increasing or decreasign area.
         """
         conn = self.edgeConnections()
         # Flag edges that connect two faces
@@ -1188,6 +1189,7 @@ Total area: %s; Enclosed volume: %s
         if sortedbyarea:
             a= [a[p==j].sum() for j in unique(p)]
             x2=argsort(a)
+            if sortedbyarea=='down':x2=x2[::-1]
             p2=p.copy()
             for i, j in enumerate(x2):
                 p2[p==j]=i
