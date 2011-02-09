@@ -53,7 +53,7 @@ from mydict import Dict,CDict
 import pyformex as pf
 from datetime import datetime
 import os,sys
-
+from utils import deprecation
 
 ##################################################
 ## Some Abaqus .inp format output routines
@@ -125,7 +125,6 @@ def fmtData1D(data,npl=8,sep=', ',linesep='\n'):
         sep.join(map(str,data[i:i+npl])) for i in range(0,len(data),npl)
         ])
 
-
 def fmtData(data,npl=8,sep=', ',linesep='\n'):
     """Format numerical data in lines with maximum npl items.
 
@@ -139,6 +138,40 @@ def fmtData(data,npl=8,sep=', ',linesep='\n'):
     return linesep.join([fmtData1D(row,npl,sep,linesep) for row in data])+linesep
 
 
+
+#~ FI addOptions and removePropOptions allows to manipulate keywords of the porperty database
+# They help the other functions to have more general purpose. I.e. a property Dict is passed for a specific 
+# keyword. the Dict is cleaned (removePropOptions) from the required keys to be written (to wit the keywords in the old versions of fe_abq) 
+#or the ones that need to be checked while the rest is added as keyword option (addOptions).see class Step,writeModelProps,writeStepExtra  for use
+def addOptions(option):
+    '''add option after an abaqus keyword
+    
+    -option is a Dict type
+        It has keys name equal to the ABAQUS keywords and value equal to parameter setting
+        if an ABAQUS keyword does not have a value to be the Dict value must be an empty string
+
+    '''
+    cmd=''
+    for k in option.keys():
+        cmd+=' , '+k
+        if option[k] != '':
+            cmd+='= %s' % option[k]
+        cmd=cmd.upper()
+    return cmd
+
+#~ FI  see comments before addOptions
+def removePropOptions(d,opName):
+    '''delete all key option in d contained in opName
+    d is Dict 
+    opName is list of string (keys names to be deleted)
+    '''
+    for k in  d.keys():
+        if k in opName:
+            del d[k]
+    return d
+
+
+    
 def fmtHeading(text=''):
     """Format the heading of the Abaqus input file."""
     out = """**  Abaqus input file created by %s (%s)
@@ -531,6 +564,67 @@ def fmtConnectorBehavior(prop):
     return out
 
 
+
+#~ FI need more documentation and examples
+# this sholud be extended to all the element types that has the property SOLID SECTION. now it is only for 3dsolid
+    
+def fmtSolidSection(el,setname):
+    '''
+    this function should be modified to create a general function for all the element types that has the property SOLID SECTION. now it is only for 3dsolid
+    
+    REQUIRED
+    
+    - material/composite (mutually exclusive)
+    - elset
+    - refnode (REQUIRED only for plane stress elements and acoustic infinite elements)
+    - orientation (REQUIRED only for anisotropic materials, OPTIONAL otherwise)
+    
+    el.seccontrol is a Dict
+    REQUIRED
+        el.seccontrol.name = name of the section control
+    OPTIONAL
+        el.seccontrol.data = list or array of optional line for hourglass control and bulk viscosity
+        
+        All other  keys  have name equal to the ABAQUS keywords and value equal to parameter setting
+        if an ABAQUS keyword does not have a value to be the Dict value must be an empty string
+        
+    el.material see fmtMaterial documentation
+    
+    EXAMPLE
+    control=Dict({'name':'StentControl','hourglass':'enhanced',})
+    P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,seccontrol=control))
+    '''
+    
+    out = ''
+    if el.sectiontype.upper() == '3DSOLID':
+        
+        if mat is not None:
+            out += "*SOLID SECTION, ELSET=%s, MATERIAL=%s" % (setname,el.material.name) 
+        
+        if el.seccontrol is not None:
+            out += ", CONTROLS=%s" %el.seccontrol.name
+        
+        if el.orientation is not None:
+            out += ", ORIENTATION=%s" % (el.orientation.name)
+        out += '\n'
+        
+        if el.thickness is not None:
+            out += '%s\n'%float(el.thickness)
+        
+        if el.seccontrol is not None:
+            if el.seccontrol.name is not None:
+                # add the only required parameter
+                out +="*SECTION CONTROLS, NAME=%s" %el.seccontrol.name
+                out+=addOptions(removeDictKey(el.seccontrol,['name','data']))
+                out+='\n'           
+                # add  data line for 
+                if el.seccontrol.data is not None:
+                   out+=fmtData(el.seccontrol.data)
+            else:
+                raise ValueError,"A section control name need to be specified"
+        
+    return out
+
 def fmtShellSection(el,setname,matname):
     out = ''
     if el.sectiontype.upper() == 'SHELL':
@@ -870,7 +964,6 @@ def writeSection(fil,prop):
     setname = esetName(prop)
     el = prop.section
     eltype = prop.eltype.upper()
-    control = el.control
     mat = el.material
     if mat is not None:
         fil.write(fmtMaterial(mat))
@@ -934,15 +1027,7 @@ def writeSection(fil,prop):
     #other elementsets: set control=True (or something else)
     elif eltype in solid3d_elems:
         if el.sectiontype.upper() == '3DSOLID':
-            if mat is not None:
-                if control is None:
-                    fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s\n%s \n""" % (setname,mat.name,1.))
-                elif control is ' ':
-                    fil.write("""*SOLID SECTION, ELSET=%s, CONTROLS=SECCONTROL, MATERIAL=%s\n%s \n""" % (setname,mat.name,1.))
-                    fil.write("*SECTION CONTROLS, name = SECCONTROL, HOURGLASS=ENHANCED\n")
-                elif control is not ' ':
-                    fil.write("""*SOLID SECTION, ELSET=%s, CONTROLS=SECCONTROL, MATERIAL=%s\n%s \n""" % (setname,mat.name,1.))
-
+            fil.write(fmtSolidSection(el,setname))
     ############
     ## 2D SOLID elements
     ##########################
@@ -967,30 +1052,73 @@ def writeSection(fil,prop):
     else:
         pf.warning('Sorry, elementtype %s is not yet supported' % eltype)
 
-
-def writeBoundaries(fil,prop,op='MOD'):
+#~ FI  writeDisplacements  has been included in writeBoundaries
+# the previous one didnt allow to add option like 'USER' for disp subroutine
+# in this way the function is more general as it  allows also other kind of boundary conditions
+# i. e type= velocity or type = acceleration to be added in the extra Dict
+#~ the op option has been removed it needs to be included in extra.
+# the previous default parameter (OP= MOD) is also deflaut to abaqus and
+# does not need to be specified
+#~ the key ampl can be also icluded in extra but has not been removed
+# I will suggest to remove writeDisplacements or set this function equal to writeBoundaries
+def writeBoundaries(fil,prop):
     """Write nodal boundary conditions.
 
     prop is a list of node property records that should be scanned for
-    bound attributes to write.
-
+    bound attributes to write. prop contains
+    
+    REQUIRED
+    -bound  : a string (for prescribed conditions)
+                : a list of 6 integer (of values 0 or 1). where 1 the boundary is written 
+                : a list of tuple ( )
+    OPTIONAL
+    -ampl     : an amplitude name
+    -extra    : Dict type.It has keys name equal to the ABAQUS keywords and value equal to parameter setting
+                if an ABAQUS keyword does not have a value to be the Dict value must be an empty string
+    
     By default, the boundary conditions are applied as a modification of the
     existing boundary conditions, i.e. initial conditions and conditions from
     previous steps remain in effect.
-    The user can set op='NEW' to remove the previous conditions.
-    This will also remove initial conditions!
+    
+    EXAMPLES
+    P.nodeProp(tag='init',set=arange(100),name='catheter',bound='pinned')
+    
+    P.nodeProp(tag='init',set=arange(100),name='catheter',bound=[0,1,1,0,0,0])
+    
+    !!!!This works like writeDisplacements
+    ampname='amp'
+    times = [0,1];values = [0,1]
+    amp = Amplitude(data=column_stack([times,values]))
+    P.Prop(amplitude=amp,name=ampname)
+    P.nodeProp(tag='step1',set='catheter',bound=[(0,5.3),(1,3.5)],ampl=ampname)
+    
+    extra= Dict({'user':''})
+    P.nodeProp(tag='step1',set='catheter',bound=[(0,5.4),(1,3.5)],extra=extra)
     """
     for p in prop:
         setname = nsetName(p)
-        fil.write("*BOUNDARY, OP=%s\n" % op)
+        fil.write("*BOUNDARY")
+        
+        if p.ampl is not None:
+            fil.write(", AMPLITUDE=%s" % p.ampl)
+        
+        if p.extra is not None:
+           fil.write(addOptions(p.extra))
+           
+        fil.write("\n")
+        
         if isinstance(p.bound,str):
             fil.write("%s, %s\n" % (setname,p.bound))
-        else:
+        elif isinstance(p.bound[0],int):
             for b in range(6):
                 if p.bound[b]==1:
                     fil.write("%s, %s\n" % (setname,b+1))
+        elif isinstance(p.bound[0],tuple):
+            for b in p.bound:
+                dof = b[0]+1
+                fil.write(fmtData(setname,dof,dof,b[1]))
 
-
+#~ FI see writeBoundaries comments
 def writeDisplacements(fil,prop,op='MOD'):
     """Write boundary conditions of type BOUNDARY, TYPE=DISPLACEMENT
 
@@ -1248,13 +1376,58 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
     fil.write("\n")
 
     
+
+#~ Fi this function works like the previous one(if extra is a str)
+# but now extra can be also a list of Dict .This is more convenient  if more addictional lines
+# need to be written at the step level for type history.
+# This function is very similar to writeStepExtra maybe can be merged
 def writeModelProps(fil,prop):
-    """Write model props for this step"""
+    """Write model props for this step
+    extra : str 
+             : list of Dict. each Dict is a new line.Only 2 keys are dedicated
+                
+                REQUIRED
+                    -keyword =  abaqus keyword name
+                    
+                OPTIONAL
+                    -data = list or array of numerical data for any additional data line
+                
+                    All other keys have name equal to the ABAQUS keywords and value equal to parameter setting
+                    if an ABAQUS keyword does not have a value to be the Dict value must be an empty string
+                
+                EXAMPLE
+                P.Prop(tag='step1',extra='*CONTACT CONTROLS , AUTOMATIC TOLERANCES\n')
+                P.Prop(tag='step1',extra=[Dict({'keyword':'CONTACT CONTROLS','AUTOMATIC TOLERANCES':''})])
+    """
     for p in prop:
         if p.extra:
-            fil.write(p.extra)
+            if isinstance(p.extra,str):
+                fil.write(p.extra)
+            elif isinstance(p.extra,list):
+                cmd=''
+                for l in p.extra:
+                    l=CDict(l) # to avoid keyerrors if l.data is not a key
+                    cmd+='*%s'%l['keyword']
+                    cmd+=addOptions(removePropOptions(l,['keyword','data']))
+                    cmd+='\n'
+                    if l.data is not None:
+                        cmd+=fmtData(l.data)
+                fil.write(cmd.upper())
 
-
+#~ FI see comments for writeModelProps
+def writeStepExtra(fil,extra):
+    if isinstance(extra,str):
+        fil.write(extra)
+    elif isinstance(extra,list):
+        cmd=''
+        for l in extra:
+            l=CDict(l) # to avoid keyerrors if l.data is not a key
+            cmd+='*%s'%l['keyword']
+            cmd+=addOptions(removePropOptions(l,['keyword','data']))
+            cmd+='\n'
+            if l.data is not None:
+                cmd+=fmtData(l.data)
+        fil.write(cmd.upper())
 ##################################################
 ## Some classes to store all the required information
 ################################################## 
@@ -1315,7 +1488,20 @@ class Step(Dict):
         with keys name equal to the ABAQUS keywords and value equal to parameter setting
         if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)
     
-    -extra string of any extra keyword to be added at a step level after the time line (see example below)
+    -extra : str  for any extra keyword to be added at a step level after the time line
+              : list of Dict for any extra keyword to be added at a step level after the time line. Each Dict is a separate line (see example below)
+
+                Only 2 keys are dedicated:
+                
+                REQUIRED
+                    -keyword =  abaqus keyword name
+                
+                OPTIONAL
+                    -data = list or array of numerical data for any additional data line
+                
+                All the other keys are optional and must have name equal to the ABAQUS keywords and value equal to parameter setting
+                if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)
+    
     
     Examples on stepOption ,  analysisOption, extra
     
@@ -1333,8 +1519,10 @@ class Step(Dict):
         buckle
             Dict({'EIGENSOLVER':'SUBSPACE'})
     
-    extra 
+    extra:
         extra='*BULK VISCOSITY\n0.12, 0.06\n'
+        
+        extra=[Dict({'keyword':'BULK VISCOSITY','data':[0.12, 0.06]})]
         
     
     """
@@ -1343,7 +1531,7 @@ class Step(Dict):
                        'PERTURBATION', 'BUCKLE', 'RIKS' ]
     
     def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',subheading=None,\
-                tags=None,name=None,out=None,res=None,stepOption=None,analysisOption=None,extra=''):
+                tags=None,name=None,out=None,res=None,stepOptions=None,analysisOptions=None,extra=None):
         """Create a new analysis step."""
         
         
@@ -1359,9 +1547,10 @@ class Step(Dict):
         self.tags = tags
         self.out = out
         self.res = res
-        self.stepOption=stepOption
-        self.analysisOption=analysisOption
+        self.stepOptions=stepOptions
+        self.analysisOptions=analysisOptions
         self.subheading=subheading
+        self.extra=extra
 
 
     def write(self,fil,propDB,out=[],res=[],resfreq=1,timemarks=False):
@@ -1383,14 +1572,12 @@ class Step(Dict):
         
         cmd += ', NLGEOM=%s' % self.nlgeom
         
-        if stepOptions is not None:
-            for i in stepOptions.keys():
-                cmd+=','+i.upper()
-                if stepOptions[i] != '':
-                    cmd+='=%s' %stepOptions[i]
-                    
-        fil.write("%s\n" % cmd)
-        fil.write(self.subheading+'\n')
+        if self.stepOptions is not None:
+            cmd+=addOptions(self.stepOptions)
+        cmd += '\n'
+        
+        if self.subheading is not None:
+            fil.write(self.subheading+'\n')
         
         if self.analysis =='STATIC':
             fil.write("*STATIC")
@@ -1406,15 +1593,16 @@ class Step(Dict):
             fil.write("*STATIC, RIKS")
         
         cmd=''
-        if analysisOptions is not None:
-            for i in analysisOptions.keys():
-                cmd+=','+i.upper()
-                if analysisOptions[i] != '':
-                    cmd+='=%s' % analysisOptions[i]
-                    
-        fil.write("%s\n" % cmd)
+        if self.analysisOptions is not None:
+            cmd+=addOptions(self.analysisOptions)
+        cmd+='\n'
+        fil.write(cmd)             
         
-        fil.write(("%s"+",%s"*(len(self.time)-1)+'\n') % tuple(self.time))               
+        if self.extra is not None:
+            writeStepExtra(fil,self.extra)
+        
+        #~ fil.write(("%s"+",%s"*(len(self.time)-1)+'\n') % tuple(self.time))               
+        fil.write(fmtData(self.time))               
 
         prop = propDB.getProp('n',tag=self.tags,attr=['bound'])
         if prop:
