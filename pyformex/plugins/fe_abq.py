@@ -1575,6 +1575,7 @@ class Step(Dict):
         if self.stepOptions is not None:
             cmd+=addOptions(self.stepOptions)
         cmd += '\n'
+        fil.write(cmd)
         
         if self.subheading is not None:
             fil.write(self.subheading+'\n')
