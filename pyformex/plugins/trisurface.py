@@ -1160,7 +1160,7 @@ Total area: %s; Enclosed volume: %s
         return self.partitionByNodeFront()
 
 
-    def partitionByAngle(self,angle=60.,firstprop=0,startat=0):
+    def partitionByAngle(self,angle=60.,firstprop=0, sortedbyarea=False):
         """Partition the surface by splitting it at sharp edges.
 
         The surface is partitioned in parts in which all elements can be
@@ -1172,16 +1172,27 @@ Total area: %s; Enclosed volume: %s
         The partitioning is returned as a property type array having a value
         corresponding to the part number. The lowest property number will be
         firstprop.
+        
+        If sortedbyarea is True, the parts will be ordered by area.
         """
         conn = self.edgeConnections()
         # Flag edges that connect two faces
         conn2 = (conn >= 0).sum(axis=-1) == 2
         # compute normals and flag small angles over edges
         cosangle = cosd(angle)
-        n = self.areaNormals()[1][conn[conn2]]
+        a, n= self.areaNormals()
+        n = n[conn[conn2]]
         small_angle = ones(conn2.shape,dtype=bool)
         small_angle[conn2] = dotpr(n[:,0],n[:,1]) >= cosangle
-        return firstprop + self.partitionByEdgeFront(small_angle)
+        p=self.partitionByEdgeFront(small_angle)
+        if sortedbyarea:
+            a= [a[p==j].sum() for j in unique(p)]
+            x2=argsort(a)
+            p2=p.copy()
+            for i, j in enumerate(x2):
+                p2[p==j]=i
+            p=p2
+        return firstprop + p
 
 
     def splitByConnection(self):
