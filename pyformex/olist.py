@@ -63,12 +63,17 @@ def flatten(a,recurse=False):
 
     By default, lists are flattened one level deep.
     If recurse=True, flattening recurses through all sublists.
+
+    >>> flatten([[[3.,2,],6.5,],[5],6,'hi'])
+    [[3.0, 2], 6.5, 5, 6, 'hi']
+    >>> flatten([[[3.,2,],6.5,],[5],6,'hi'],True)
+    [3.0, 2, 6.5, 5, 6, 'hi']
     """
     r = []
     for i in a:
         if type(i) == list:
             if recurse:
-                r.extend(flatten(i))
+                r.extend(flatten(i,True))
             else:
                 r.extend(i)
         else:
