@@ -1353,59 +1353,6 @@ Size: %s
         return self.clip(self.test(nodes=nodes,dir=n,min=p))
 
 
-    ## THIS NEEDS WORK ###
-    ## surfacetype is also eltype ??
-    
-    def areas(self):
-        """area of elements
-        
-        For surface element the faces' area is returned.
-        For volume elements the sum of the faces'areas is returned.
-        
-        """
-        
-        #In case of quadratic faces, the face's area should be 
-        #the area inside the polygon of face vertices or 
-        #the area of the equivalent linear face?
-        
-        ##this function would require some changes (here proposed inside the function as starting):
-        ##create a _default_surfacetype to create quad8 instead of hex8 ?maybe also a _default_volumetype to create tet4 instead of quad4 ?
-        ##areaNormals cannot be imported from trisurface. Move it to mesh.py or upper?
-        
-        _default_surfacetype = {
-        3 : 'tri3',
-        4 : 'quad4',
-        6 : 'tri6',
-        8 : 'quad8',
-        9 : 'quad9',
-        }
-        def defaultSurfacetype(nplex):
-            """Default face type for a surface mesh with given plexitude.
-        
-            For the most common cases of plexitudes, we define a default face
-            type. The full list of default types can be found in
-            mesh._default_facetype.
-            """
-            return _default_surfacetype.get(nplex,None)
-        def areaNormals(x):
-            """Compute the area and normal vectors of a collection of triangles.
-        
-            x is an (ntri,3,3) array of coordinates.
-        
-            Returns a tuple of areas,normals.
-            The normal vectors are normalized.
-            The area is always positive.
-            """
-            area,normals = vectorPairAreaNormals(x[:,1]-x[:,0],x[:,2]-x[:,1])
-            area *= 0.5
-            return area,normals
-            
-        nfacperel= len(getattr(elements,self.eltype.capitalize()).faces)#nfaces per elem
-        mf=Mesh(self.coords, self.getFaces(unique=False))#mesh of all faces
-        mf.eltype = defaultSurfacetype(mf.nplex())
-        ntriperfac= mf.select([0]).convert('tri3').nelems()#how many tri per face
-        elfacarea= areaNormals( mf.convert('tri3').toFormex()[:])[0].reshape(self.nelems(), nfacperel*ntriperfac)#elems'faces'areas
-        return elfacarea.sum(axis=1)#elems'areas
     
 
     def volumes(self):

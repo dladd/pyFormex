@@ -838,6 +838,7 @@ def startGUI(args):
     # NOT acknowledged and neither are they removed!!
 
 
+    pf.debug("Setting application attributes")
     pf.app.setOrganizationName("pyformex.org")
     pf.app.setOrganizationDomain("pyformex.org")
     pf.app.setApplicationName("pyFormex")
@@ -850,11 +851,13 @@ def startGUI(args):
     #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("aboutToQuit()"),quitGUI)
 
     # Check if we have DRI
+    pf.debug("Setting OpenGL format")
     viewport.setOpenGLFormat()
     dri = viewport.opengl_format.directRendering()
 
 
     # Check for existing pyFormex processes
+    pf.debug("Checking for running pyFormex")
     windowname,running = findOldProcesses()
 
     while len(running) > 0:
@@ -919,6 +922,7 @@ You should seriously consider to bail out now!!!
 
         
     # Load the splash image
+    pf.debug("Loading the splash image")
     splash = None
     if os.path.exists(pf.cfg['gui/splash']):
         pf.debug('Loading splash %s' % pf.cfg['gui/splash'])
@@ -931,6 +935,7 @@ You should seriously consider to bail out now!!!
 
     # create GUI, show it, run it
 
+    pf.debug("Creating the GUI")
     pf.GUI = Gui(windowname,
                  pf.cfg.get('gui/size',(800,600)),
                  pf.cfg.get('gui/pos',(0,0)),
@@ -1053,6 +1058,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     pf.GUI.setBusy(False)
 
+    pf.debug("Showing the GUI")
     pf.GUI.show()
     pf.GUI.update()
     pf.app_started = True

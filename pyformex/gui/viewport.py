@@ -118,15 +118,37 @@ def setOpenGLFormat():
        --alpha : enable the alpha buffer 
     """
     global opengl_format
+    pf.debug("Get OpenGL Format")
     fmt = QtOpenGL.QGLFormat.defaultFormat()
+    pf.debug("Got OpenGL Format")
+    print fmt
+    print "hallo"
+    print "OpenGL: %s" % fmt.hasOpenGL(),
+    print "OpenGL Version: %s" % int(fmt.openGLVersionFlags()),
+    print "OpenGLOverlays: %s" % fmt.hasOpenGLOverlays(),
+    print "Double Buffer: %s" % fmt.doubleBuffer(),
+    print "Depth Buffer: %s" % fmt.depth(),
+    print "RGBA: %s" % fmt.rgba(),
+    print "Alpha Channel: %s" % fmt.alpha(),
+    print "Accumulation Buffer: %s" % fmt.accum(),
+    print "Stencil Buffer: %s" % fmt.stencil(),
+    print "Stereo: %s" % fmt.stereo(),
+    print "Direct Rendering: %s" % fmt.directRendering(),
+    print "Overlay: %s" % fmt.hasOverlay(),
+    print "Plane: %s" % fmt.plane(),
+    print "Multisample Buffers: %s" % fmt.sampleBuffers(),
+    pf.debug(OpenGLFormat(fmt))
     if pf.options.dri is not None:
         fmt.setDirectRendering(pf.options.dri)
 ##     if pf.options.alpha:
 ##         fmt.setAlpha(True)
+    pf.debug("Set OpenGL Format")
+    pf.debug(OpenGLFormat(fmt))
     QtOpenGL.QGLFormat.setDefaultFormat(fmt)
+    #QtOpenGL.QGLFormat.setOverlayFormat(fmt)
+    #fmt.setDirectRendering(False)
     opengl_format = fmt
-    if pf.options.debug:
-        print(OpenGLFormat())
+    pf.debug(OpenGLFormat(fmt))
     return fmt
 
 def getOpenGLContext():
@@ -139,34 +161,23 @@ def OpenGLFormat(fmt=None):
     """Some information about the OpenGL format."""
     if fmt is None:
         fmt = opengl_format
-    s = """
-OpenGL: %s
-OpenGL Version: %s
-OpenGLOverlays: %s
-Double Buffer: %s
-Depth Buffer: %s
-RGBA: %s
-Alpha Channel: %s
-Accumulation Buffer: %s
-Stencil Buffer: %s
-Stereo: %s
-Direct Rendering: %s
-Overlay: %s
-Plane: %s
-Multisample Buffers: %s
-""" % (fmt.hasOpenGL(),
-       int(fmt.openGLVersionFlags()),
-       fmt.hasOpenGLOverlays(),
-       fmt.doubleBuffer(),fmt.depth(),
-       fmt.rgba(),fmt.alpha(),
-       fmt.accum(),
-       fmt.stencil(),
-       fmt.stereo(),
-       fmt.directRendering(),
-       fmt.hasOverlay(),
-       fmt.plane(),
-       fmt.sampleBuffers()
-       )
+    s = '\n'.join([
+        "OpenGL: %s" % fmt.hasOpenGL(),
+        "OpenGL Version: %s" % int(fmt.openGLVersionFlags()),
+        ## "OpenGLOverlays: %s" % fmt.hasOpenGLOverlays(),
+        ## "Double Buffer: %s" % fmt.doubleBuffer(),
+        ## "Depth Buffer: %s" % fmt.depth(),
+        ## "RGBA: %s" % fmt.rgba(),
+        ## "Alpha Channel: %s" % fmt.alpha(),
+        ## "Accumulation Buffer: %s" % fmt.accum(),
+        ## "Stencil Buffer: %s" % fmt.stencil(),
+        ## "Stereo: %s" % fmt.stereo(),
+        ## "Direct Rendering: %s" % fmt.directRendering(),
+        ## "Overlay: %s" % fmt.hasOverlay(),
+        ## "Plane: %s" % fmt.plane(),
+        ## "Multisample Buffers: %s" % fmt.sampleBuffers(),
+        ''
+        ])
     return s
 
 
