@@ -560,7 +560,7 @@ class Mesh(Geometry):
         v = mf - roll(mf,-1,axis=1)
         v=normalize(v)
         v1=-roll(v,+1,axis=1)
-        angfac= arccos( dotpr(v, v1) )/angle_spec
+        angfac= arccos( clip(dotpr(v, v1), -1., 1. ))/angle_spec
         el = self.eltype
         return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
