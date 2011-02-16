@@ -643,7 +643,7 @@ def partitionByAngle():
     if S:
         res  = askItems([I('angle',60.),
                          I('firstprop',1),
-                         I('startat',0)
+                         #I('startat',0)
                          ])
         pf.app.processEvents()
         if res:
@@ -1296,8 +1296,9 @@ def coarsen():
                 res['min_edges'] = None
             if res['max_cost'] <= 0:
                 res['max_cost'] = None
-            S.coarsen(**res)
-            selection.draw()
+            S=S.coarsen(**res)
+            selection.changeValues([S])
+            selection.drawChanges()
 
 
 def refine():
@@ -1314,8 +1315,9 @@ def refine():
                 res['max_edges'] = None
             if res['min_cost'] <= 0:
                 res['min_cost'] = None
-            S.refine(**res)
-            selection.draw()
+            S=S.refine(**res)
+            selection.changeValues([S])
+            selection.drawChanges()
 
 
 def boolean():
