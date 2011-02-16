@@ -99,12 +99,14 @@ Proposed changes in the Element class
     collection = ODict() # the full collection with all defined elements
     
     
-    def __init__(self,name,doc,ndim,vertices,edges,faces,element=[],conversions={},drawedges=None,drawfaces=None):
+    def __init__(self,name,doc,ndim,vertices,edges,faces,element=[],conversions={},drawedges=None,drawfaces=None,facetype=None,edgetype=None):
         self.doc = doc
         self.ndim = ndim
         self.vertices = vertices
         self.edges = edges
         self.faces = faces
+        self.edgetype = edgetype
+        self.facetype = facetype
         if not element:
             element = range(self.nplex())
         self.element = element
@@ -203,6 +205,19 @@ Line2 = Element(
     )
 
 
+Line3 = Element(
+    'line3',"A 3-node quadratic line segment",
+    ndim = 1,
+    vertices = [ ( 0.0, 0.0, 0.0 ),
+                 ( 1.0, 0.0, 0.0 ),
+                 ( 0.5, 0.0, 0.0 ),
+                 ],
+    edges = [ (0,1,2) ], 
+    drawedges = [ (0,2), (2,1) ],
+    faces = [ ],
+    )
+
+
 Tri3 = Element(
     'tri3',"A 3-node triangle",
     ndim = 2,
@@ -210,7 +225,7 @@ Tri3 = Element(
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
                  ],
-    edges = [ (0,1), (1,2), (2,0) ],
+    edges = [ (0,1), (1,2), (2,0) ], edgetype=Line2, 
     faces = [ (0,1,2), ],
     )
 
@@ -240,7 +255,7 @@ Quad4 = Element(
                  (  1.0,  1.0, 0.0 ),
                  (  0.0,  1.0, 0.0 ),
                  ],
-    edges = [ (0,1), (1,2), (2,3), (3,0) ],
+    edges = [ (0,1), (1,2), (2,3), (3,0) ], edgetype=Line2, 
     faces = [ (0,1,2,3), ],
     )
 
@@ -253,8 +268,9 @@ Quad8 = Element(
                                   (  0.5,  1.0, 0.0 ),
                                   (  0.0,  0.5, 0.0 ),
                                   ],
-    edges = [ (0,4), (4,1), (1,5), (5,2), (2,6), (6,3), (3,7), (7,0) ],
+    edges = [ (0,1,4), (1,2,5), (2,3,6), (3,0,7), ], edgetype=Line3, 
     faces = [ (0,1,2,3,4,5,6,7), ],
+    drawedges = [ (0,4), (4,1), (1,5), (5,2), (2,6), (6,3), (3,7), (7,0) ],
     drawfaces = [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ],
 )
 
@@ -262,7 +278,7 @@ Quad9 = Element(
     'quad9',"A 9-node quadrilateral",
     ndim = 2,
     vertices = Quad8.vertices + [ (  0.5,  0.5, 0.0 ), ],
-    edges = Quad8.edges,
+    edges = Quad8.edges, edgetype=Quad8.edgetype, 
     faces = [ (0,1,2,3,4,5,6,7,8), ],
     drawfaces = [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ],
 )
@@ -277,7 +293,7 @@ Tet4 = Element(
                  ( 0.0, 1.0, 0.0 ),
                  ( 0.0, 0.0, 1.0 ),
                  ],
-    edges = [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ],
+    edges = [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ], edgetype=Line2, 
     faces = [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ],
     )
 

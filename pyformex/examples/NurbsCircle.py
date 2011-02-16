@@ -281,6 +281,11 @@ for w,c in zip(weight,colors):
 
 export(L)
 
+draw(simple.circle(2,4),linewidth=3)
+xm = 0.5*(pts[0]+pts[2])
+xn = 0.5*(xm+pts[1])
+draw([xm,pts[1],xn],marksize=20)
+
 zoomAll()
 exit()
 ## for order,color in zip(range(2,5),[cyan,magenta,yellow]):
