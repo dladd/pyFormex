@@ -1345,7 +1345,7 @@ def boolean():
         SA = pf.PF[res['surface 1']]
         SB = pf.PF[res['surface 2']]
         SC = SA.boolean(SB,op=res['operation'].strip()[0],
-                        inter=res['output intersection curve'],
+                        intersection_curve=res['output intersection curve'],
                         check=res['check self intersection'],
                         verbose=res['verbose'])
         export({'__auto__':SC})
