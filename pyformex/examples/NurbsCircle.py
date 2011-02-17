@@ -179,6 +179,7 @@ class NurbsActor(Actor):
         GLU.gluBeginCurve(nurb)
         mode = GL.GL_MAP1_VERTEX_4
         #print "DRAW CONTROL",self.object.control
+        print self.object.knots.shape,self.object.control.shape
         GLU.gluNurbsCurve(nurb,self.object.knots,self.object.control,mode)
         GLU.gluEndCurve(nurb)
 
@@ -244,9 +245,26 @@ def drawThePoints(N,n,color=None):
     draw(P,color=color)
     drawNumbers(P,color=color)
 
+
+def drawLine3(lines,tangent=True):
+    """Draw a set of quadratic line segments.
+
+    lines is a 3-plex Formex.
+    For each element in the Formex, a quadratic line is drawn between
+    the first and last points. The tangents at both points are directed to
+    the middle point.
+    """
+    for e in lines:
+        x = Coords4(e)
+        knots = [0.,0.,0.,1.,1.,1.]
+        C = NurbsCurve(x,knots=knots,order=3,closed=False)
+        draw(C)
+    
+
                          
 clear()
 linewidth(2)
+flat()
 
 
 sq2 = sqrt(0.5)
@@ -284,9 +302,18 @@ export(L)
 draw(simple.circle(2,4),linewidth=3)
 xm = 0.5*(pts[0]+pts[2])
 xn = 0.5*(xm+pts[1])
-draw([xm,pts[1],xn],marksize=20)
+draw([xm,pts[1],xn],marksize=10)
 
 zoomAll()
+
+pause()
+clear()
+smoothwire()
+grid = simple.rectangle(4,3,diag='d')
+draw(grid)
+print grid.shape()
+drawLine3(grid)
+
 exit()
 ## for order,color in zip(range(2,5),[cyan,magenta,yellow]):
 ##     if order > len(pts):
