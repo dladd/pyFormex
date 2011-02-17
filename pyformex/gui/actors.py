@@ -674,7 +674,7 @@ class GeomActor(Actor):
             
         elif self.eltype == 'nurbs' and (nplex == 3 or nplex == 4):
             pf.debug("DRAWING WITH drawNurbsCurves")
-            drawNurbsCurves(self.coords,color)
+            drawNurbsCurves(self.coords,color=color)
             
         elif self.eltype is None:
             # polygons

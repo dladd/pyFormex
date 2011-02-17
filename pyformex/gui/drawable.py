@@ -196,6 +196,69 @@ def drawBezierPoints(x,color=None,granularity=100):
     drawBezier(x,color=None,objtype=GL.GL_POINTS,granularity=granularity)
 
 
+def drawNurbsCurves(x,knots=None,color=None,samplingTolerance=1.0):
+    """Draw a collection of Nurbs curves.
+
+    x: (nctrl,ndim) or (ncurve,nctrl,ndim) float array: control points,
+       specifying either a single curve or ncurve curves defined by the
+       same number of control points. ndim can be 3 or 4. If 4, the 4-th
+       coordinate is interpreted as a weight for that point.
+    knots: (nknots) or (ncurve,nkots) float array: knot vector, contianing the
+       parameter values to be used in the nurbs definition. Remark that
+       nknots must be larger than nctrl. The order of the curve is
+       nknots-nctrl and the degree of the curve is order-1.
+       If a single knot vector is given, the same is used for all curves.
+       Otherwise, the number of knot vectors must match the number of nurbs
+       curves.
+       If no knot vector is given, one is constructed with containing
+       nctrl values 0 and nctrl values 1. This is suitable for creating
+       open curves of degree nctrl-1 between the end points.
+
+    Limitation: currently color is not handled, so the color has to be set
+    in advance and the curve can only have a single color.
+
+    """
+    nctrl,ndim = x.shape[-2:]
+    mode = {3:GL.GL_MAP1_VERTEX_3, 4:GL.GL_MAP1_VERTEX_4}[ndim]
+    x = x.reshape(-1,nctrl,ndim)
+    if knots is None:
+        knots = array([0.]*nctrl + [1.]*nctrl)
+        print knots
+    ki = knots
+    nurb = GLU.gluNewNurbsRenderer()
+    GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
+    for i,xi in enumerate(x):
+        if knots.ndim > 1:
+            ki = knots[i]
+        GLU.gluBeginCurve(nurb)
+        GLU.gluNurbsCurve(nurb,ki,xi,mode)
+        GLU.gluEndCurve(nurb)
+
+
+## def drawNurbsCurves(x,color=None):
+##     """Draw a collection of curves.
+
+##     x is an (nlines,4,3) or (nlines,3,3) shaped array of coordinates.
+
+##     If color is given it is an (nlines,3) array of RGB values.
+##     """
+##     nurb = GLU.gluNewNurbsRenderer()
+##     if not nurb:
+##         raise RuntimeError,"Could not create a new NURBS renderer"
+##         return
+    
+##     if x.shape[1] == 4:
+##         knots = array([0.,0.,0.,0.,1.0,1.0,1.0,1.0])
+##     if x.shape[1] == 3:
+##         knots = array([0.,0.,0.,1.0,1.0,1.0])
+##     for i,xi in enumerate(x):
+##         if color is not None:
+##             GL.glColor3fv(color[i])
+##         GLU.gluBeginCurve(nurb)
+##         GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
+##         GLU.gluEndCurve(nurb)
+
+
 def color_multiplex(color,nparts):
     """Multiplex a color array over nparts of the elements.
 
@@ -377,6 +440,7 @@ def nodalSum2(val,elems,tol):
         ai /= ni.reshape(ai.shape[0],-1)
         val[wi] = ai
 
+
 def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
     """Compute the nodal sum of values defined on elements.
 
@@ -449,30 +513,6 @@ def drawQuadraticCurves(x,color=None,n=8):
         for p in P:
             GL.glVertex3fv(p)
         GL.glEnd()
-
-
-def drawNurbsCurves(x,color=None):
-    """Draw a collection of curves.
-
-    x is an (nlines,4,3) or (nlines,3,3) shaped array of coordinates.
-
-    If color is given it is an (nlines,3) array of RGB values.
-    """
-    nurb = GLU.gluNewNurbsRenderer()
-    if not nurb:
-        raise RuntimeError,"Could not create a new NURBS renderer"
-        return
-    
-    if x.shape[1] == 4:
-        knots = array([0.,0.,0.,0.,1.0,1.0,1.0,1.0])
-    if x.shape[1] == 3:
-        knots = array([0.,0.,0.,1.0,1.0,1.0])
-    for i,xi in enumerate(x):
-        if color is not None:
-            GL.glColor3fv(color[i])
-        GLU.gluBeginCurve(nurb)
-        GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
-        GLU.gluEndCurve(nurb)
 
     
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
