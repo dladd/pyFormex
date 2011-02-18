@@ -13,6 +13,8 @@ initialize() function once.
 from mesh import Mesh
 from elements import elementType
 from trisurface import areaNormals
+from formex import *
+from connectivity import Connectivity
 
 ##############################################################################
 #
@@ -60,6 +62,59 @@ Volume: %s
 #
 # Define other functions here
 #
+
+
+##GDS: needed for function ring.
+##remove if it is already in pyFormex
+def removeAllDoubles(hi):
+    """
+    It returns only values that appear only once.
+    
+    hi is an array of integers.
+    """
+    hiinv = Connectivity(hi).inverse()
+    ncon = (hiinv>=0).sum(axis=1)
+    return arange(len(ncon))[ncon==1].reshape(-1) 
+
+
+##GDS: needed for function ring.
+##remove if it is already in pyFormex
+def removeInteg(a, b):
+    """
+    Remove the values of b that are found in a.
+    
+    a and b are two arrays of integers.   
+    a=array([1, 2, 4, 5, 3, 6])
+    b=array([1, 4, 3, 7])
+    removeInt(a, b)
+    array([2,5,6])
+    """
+    a, b=array(a), array(b)
+    ib= matchIndex(a, b)#in case b has values that are not in a
+    c=b[ib!=-1]
+    hi=append(a, c)
+    return removeAllDoubles(hi)
+
+
+def rings(adj, sources, step=1, onlyRing=False):
+    """
+    It finds the elems connected to sources by node.
+    
+    Sources is a list of elem indices.
+    adj is the adjacency table and should be calulated before as
+    adj=mesh.elems.adjacency(kind='e').
+    If onlyRing is True only the ring at the last step is returned. 
+    If onlyRing is False all rings are returned.
+    """
+    newring=sources
+    for i in range(step):
+        ring=newring
+        newring=unique(adj[ ring])[1:]
+    if onlyRing:
+        ring=removeInteg(newring,  ring)
+    else:
+        ring=removeInteg(newring,  sources)
+    return ring
 
 ## THIS NEEDS WORK ###
 ## surfacetype is also eltype ??
