@@ -96,25 +96,26 @@ def removeInteg(a, b):
     return removeAllDoubles(hi)
 
 
-def rings(adj, sources, step=1, onlyRing=False):
+def rings(adj, sources, step=1):
     """
-    It finds the elems connected to sources by node.
+    It finds the rings of elems connected to sources by node.
     
     Sources is a list of elem indices.
     adj is the adjacency table and should be calulated before as
-    adj=mesh.elems.adjacency(kind='e').
-    If onlyRing is True only the ring at the last step is returned. 
-    If onlyRing is False all rings are returned.
+    adj=mesh.elems.adjacency(kind='e')
+    A list of rings is returned, from zero (equal to sources) to step.
+    If step is None, all rings are returned.
     """
-    newring=sources
+
+    R=[sources]
+    if step is None:
+        step=len(adj)
     for i in range(step):
-        ring=newring
-        newring=unique(adj[ ring])[1:]
-    if onlyRing:
-        ring=removeInteg(newring,  ring)
-    else:
-        ring=removeInteg(newring,  sources)
-    return ring
+        newring=unique(adj[ R[-1] ])[1:]
+        R.append(removeInteg(newring,  concatenate(R) ))
+        if len(R[-1])==0:
+            return R[:-1]
+    return R
 
 ## THIS NEEDS WORK ###
 ## surfacetype is also eltype ??
