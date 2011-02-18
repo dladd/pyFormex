@@ -111,8 +111,8 @@ def rings(adj, sources, step=1):
     if step is None:
         step=len(adj)
     for i in range(step):
-        newring=unique(adj[ R[-1] ])[1:]
-        R.append(removeInteg(newring,  concatenate(R) ))
+        newring=unique(adj[ R[-1] ])
+        R.append(removeInteg(newring[newring>-1],  concatenate(R) ))
         if len(R[-1])==0:
             return R[:-1]
     return R
