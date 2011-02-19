@@ -214,20 +214,24 @@ def drawNurbsCurves(x,knots=None,color=None,samplingTolerance=1.0):
        nctrl values 0 and nctrl values 1. This is suitable for creating
        open curves of degree nctrl-1 between the end points.
 
-    Limitation: currently color is not handled, so the color has to be set
-    in advance and the curve can only have a single color.
-
+    If color is given it is an (ncurves,3) array of RGB values.
     """
     nctrl,ndim = x.shape[-2:]
     mode = {3:GL.GL_MAP1_VERTEX_3, 4:GL.GL_MAP1_VERTEX_4}[ndim]
     x = x.reshape(-1,nctrl,ndim)
+    if color is not None:
+        color = color.reshape(-1,3)
     if knots is None:
         knots = array([0.]*nctrl + [1.]*nctrl)
         print knots
     ki = knots
     nurb = GLU.gluNewNurbsRenderer()
+    if not nurb:
+        raise RuntimeError,"Could not create a new NURBS renderer"
     GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
     for i,xi in enumerate(x):
+##         if color is not None:
+##             GL.glColor3fv(color[i])
         if knots.ndim > 1:
             ki = knots[i]
         GLU.gluBeginCurve(nurb)
@@ -235,28 +239,23 @@ def drawNurbsCurves(x,knots=None,color=None,samplingTolerance=1.0):
         GLU.gluEndCurve(nurb)
 
 
-## def drawNurbsCurves(x,color=None):
-##     """Draw a collection of curves.
+def drawQuadraticCurves(x,color=None):
+    """Draw a collection of curves.
 
-##     x is an (nlines,4,3) or (nlines,3,3) shaped array of coordinates.
+    x is a (nlines,3,3) shaped array of coordinates.
+    For each element a quadratic curve through its 3 points is drawn.
 
-##     If color is given it is an (nlines,3) array of RGB values.
-##     """
-##     nurb = GLU.gluNewNurbsRenderer()
-##     if not nurb:
-##         raise RuntimeError,"Could not create a new NURBS renderer"
-##         return
-    
-##     if x.shape[1] == 4:
-##         knots = array([0.,0.,0.,0.,1.0,1.0,1.0,1.0])
-##     if x.shape[1] == 3:
-##         knots = array([0.,0.,0.,1.0,1.0,1.0])
-##     for i,xi in enumerate(x):
-##         if color is not None:
-##             GL.glColor3fv(color[i])
-##         GLU.gluBeginCurve(nurb)
-##         GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
-##         GLU.gluEndCurve(nurb)
+    This uses the drawNurbsCurves function for the actual drawing.
+    The difference between drawQuadraticCurves(x) and drawNurbsCurves(x)
+    is that in the former, the middle point is laying on the curve, while
+    in the latter case, the middle point defines the tangents in the end
+    points.
+
+    If color is given it is an (nlines,3) array of RGB values.
+    """
+    x = x.copy()
+    x[:,1,:] = 2*x[:,1,:] - 0.5*(x[:,0,:] + x[:,2,:])
+    drawNurbsCurves(x,color)
 
 
 def color_multiplex(color,nparts):
@@ -492,27 +491,6 @@ def interpolateNormals(coords,elems,atNodes=False,treshold=None):
     n = polygonNormals(coords[elems])
     n = nodalSum(n,elems,return_all=not atNodes,direction_treshold=treshold)
     return normalize(n)
-
-
-def drawQuadraticCurves(x,color=None,n=8):
-    """Draw a collection of curves.
-
-    x is a (nlines,3,3) shaped array of coordinates.
-    For each member a quadratic curve through its points is drawn.
-    The quadratic curve is approximated with 2*n straight segments.
-
-    If color is given it is an (nlines,3) array of RGB values.
-    """
-    H = simple.quadraticCurve(identity(3),n)
-    for i in range(x.shape[0]):
-        if color is not None:
-            GL.glColor3fv(color[i])
-        P = dot(H,x[i])
-        pf.debug("P.shape=%s"%str(P.shape))
-        GL.glBegin(GL.GL_LINE_STRIP)
-        for p in P:
-            GL.glVertex3fv(p)
-        GL.glEnd()
 
     
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):

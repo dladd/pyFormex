@@ -426,8 +426,6 @@ class PlaneActor(Actor):
 
 ###########################################################################
 
-quadratic_curve_ndiv = 8
-
 
 class GeomActor(Actor):
     """An OpenGL actor representing a geometrical model.
@@ -663,17 +661,12 @@ class GeomActor(Actor):
             drawPoints(coords,color,alpha,marksize)
 
         elif nplex == 2:
-            #save = pf.canvas.hasLight()
-            #pf.canvas.glLight(False)
             drawLines(self.coords,self.elems,color)
-            #pf.canvas.glLight(save)
         
-        elif self.eltype == 'curve' and nplex == 3:
-            pf.debug("DRAWING WITH drawQuadraticCurves")
-            drawQuadraticCurves(self.coords,color,n=quadratic_curve_ndiv)
+        elif nplex == 3 and self.eltype in ['curve','line3']:
+            drawQuadraticCurves(self.coords,color)
             
-        elif self.eltype == 'nurbs' and (nplex == 3 or nplex == 4):
-            pf.debug("DRAWING WITH drawNurbsCurves")
+        elif self.eltype == 'nurbs' and nplex in [3,4]:
             drawNurbsCurves(self.coords,color=color)
             
         elif self.eltype is None:
