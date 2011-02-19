@@ -230,8 +230,8 @@ def drawNurbsCurves(x,knots=None,color=None,samplingTolerance=1.0):
         raise RuntimeError,"Could not create a new NURBS renderer"
     GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
     for i,xi in enumerate(x):
-##         if color is not None:
-##             GL.glColor3fv(color[i])
+        if color is not None:
+            GL.glColor3fv(color[i])
         if knots.ndim > 1:
             ki = knots[i]
         GLU.gluBeginCurve(nurb)
@@ -253,8 +253,7 @@ def drawQuadraticCurves(x,color=None):
 
     If color is given it is an (nlines,3) array of RGB values.
     """
-    x = x.copy()
-    x[:,1,:] = 2*x[:,1,:] - 0.5*(x[:,0,:] + x[:,2,:])
+    x[...,1,:] = 2*x[...,1,:] - 0.5*(x[...,0,:] + x[...,2,:])
     drawNurbsCurves(x,color)
 
 
@@ -271,7 +270,7 @@ def color_multiplex(color,nparts):
     return color.reshape(-1,3)
 
 
-def draw_parts(x,e,mode,color=None,alpha=1.0):
+def draw_poly(x,e,mode,color=None,alpha=1.0):
     """Draw a collection of faces.
 
     (x,e) are one of:
@@ -301,7 +300,7 @@ def draw_parts(x,e,mode,color=None,alpha=1.0):
     drawPolygons(x,e,mode,color,alpha)
 
 
-def drawEdges(x,e,edges,color=None):
+def drawEdges(x,e,edges,eltype=None,color=None):
     """Draw the edges of a geometry.
 
     This function draws the edges of a geometry collection, usually of a higher
@@ -310,26 +309,45 @@ def drawEdges(x,e,edges,color=None):
 
     The geometry is specified by x or (x,e)
     The edges are specified by a list of lists. Each list defines a single
-    edge of the solid, in local vertex numbers (0..nplex-1). 
+    edge of the solid, in local vertex numbers (0..nplex-1).
+
+    If eltype is None, the edges are drawn as polygons. Other allowed values
+    are: 'line3'
     """
     pf.debug("drawEdges")
-    fa = asarray(edges)
-    if e is None:
-        coords = x[:,fa,:]
-        elems = None
-    else:
-        coords = x
-        elems = e[:,fa]
-    pf.debug("COORDS SHAPE: %s" % str(coords.shape))
-    if elems is not None:
-        pf.debug("ELEMS SHAPE: %s" % str(elems.shape))
-    if color is not None and color.ndim==3:
-        pf.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
-        # select the colors of the matching points
-        color = color[:,fa,:]#.reshape((-1,)+color.shape[-2:])
-        color = color.reshape((-1,)+color.shape[-2:])
-        pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
-    draw_parts(coords,elems,'wireframe',color,1.0)
+    # We may have edges with different plexitudes!
+    # We collect them according to plexitude.
+    # But first convert to a list, so that we can call this function
+    # with an array too (in case of a single plexitude)
+    edges = list(edges)
+    for edg in olist.collectOnLength(edges).itervalues():
+        fa = asarray(edg)
+        nplex = fa.shape[1]
+        if e is None:
+            coords = x[:,fa,:]
+            elems = None
+        else:
+            coords = x
+            elems = e[:,fa]
+        pf.debug("COORDS SHAPE: %s" % str(coords.shape))
+        if elems is not None:
+            pf.debug("ELEMS SHAPE: %s" % str(elems.shape))
+        if color is not None and color.ndim==3:
+            pf.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
+            # select the colors of the matching points
+            color = color[:,fa,:]#.reshape((-1,)+color.shape[-2:])
+            color = color.reshape((-1,)+color.shape[-2:])
+            pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
+
+        print "NPLEX %s" % nplex
+        if nplex == 3:
+            if elems is not None:
+                coords = coords[elems]
+            print "DRAWING line3 edges %s" % str(coords.shape)
+            drawQuadraticCurves(coords,color)
+        else:
+            print "DRAW POLYGONS"
+            draw_poly(coords,elems,'wireframe',color,1.0)
 
 
 def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
@@ -368,7 +386,7 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
             color = color[:,fa,:]
             color = color.reshape((-1,)+color.shape[-2:])
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
-        draw_parts(coords,elems,mode,color,alpha)
+        draw_poly(coords,elems,mode,color,alpha)
 
 
 def drawAtPoints(x,mark,color=None):

@@ -694,11 +694,13 @@ class GeomActor(Actor):
         else:
             el = elementType(self.eltype)
             if mode=='wireframe' :
+                edgetype = None
                 if hasattr(el,'drawedges'):
                     edges = el.drawedges
                 else:
                     edges = el.edges
-                drawEdges(self.coords,self.elems,edges,color)    
+                    edgetype = el.edgetype
+                drawEdges(self.coords,self.elems,edges,edgetype,color)    
             else:
                 if hasattr(el,'drawfaces'):
                     faces = el.drawfaces

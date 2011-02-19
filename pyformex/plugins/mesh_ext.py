@@ -11,10 +11,10 @@ initialize() function once.
 """
 
 from mesh import Mesh
-from elements import elementType
+from elements import elementType,_default_facetype
 from trisurface import areaNormals
-from formex import *
-from connectivity import Connectivity
+#from formex import *
+#from connectivity import Connectivity
 
 ##############################################################################
 #
@@ -60,40 +60,6 @@ Volume: %s
 
 ##############################################################################
 #
-# Define other functions here
-#
-
-
-##GDS: needed for function ring.
-##remove if it is already in pyFormex
-def removeAllDoubles(hi):
-    """
-    It returns only values that appear only once.
-    
-    hi is an array of integers.
-    """
-    hiinv = Connectivity(hi).inverse()
-    ncon = (hiinv>=0).sum(axis=1)
-    return arange(len(ncon))[ncon==1].reshape(-1) 
-
-
-##GDS: needed for function ring.
-##remove if it is already in pyFormex
-def removeInteg(a, b):
-    """
-    Remove the values of b that are found in a.
-    
-    a and b are two arrays of integers.   
-    a=array([1, 2, 4, 5, 3, 6])
-    b=array([1, 4, 3, 7])
-    removeInt(a, b)
-    array([2,5,6])
-    """
-    a, b=array(a), array(b)
-    ib= matchIndex(a, b)#in case b has values that are not in a
-    c=b[ib!=-1]
-    hi=append(a, c)
-    return removeAllDoubles(hi)
 
 
 def rings(adj, sources, step=1):
@@ -112,7 +78,7 @@ def rings(adj, sources, step=1):
         step=len(adj)
     for i in range(step):
         newring=unique(adj[ R[-1] ])
-        R.append(removeInteg(newring[newring>-1],  concatenate(R) ))
+        R.append(setdiff1d(newring[newring>-1],concatenate(R)))
         if len(R[-1])==0:
             return R[:-1]
     return R
@@ -135,13 +101,6 @@ def areas(self):
     ##this function would require some changes (here proposed inside the function as starting):
     ##create a _default_surfacetype to create quad8 instead of hex8 ?maybe also a _default_volumetype to create tet4 instead of quad4 ?
 
-    _default_surfacetype = {
-    3 : 'tri3',
-    4 : 'quad4',
-    6 : 'tri6',
-    8 : 'quad8',
-    9 : 'quad9',
-    }
     def defaultSurfacetype(nplex):
         """Default face type for a surface mesh with given plexitude.
 

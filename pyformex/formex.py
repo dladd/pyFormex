@@ -1887,8 +1887,6 @@ maxprop  = %s
         Formex will be of plexitude 1 (points). For a plex-3 Formex
         (triangles) the returned Fomrex has plexitude 2 (lines).
         """
-        import warnings
-        warnings.warn("warn_formex_intersection")
         if self.nplex() == 2:
             from plugins.geomtools import intersectionPointsSWP
             return intersectionPointsSWP(self.coords,p,n)

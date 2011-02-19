@@ -53,7 +53,7 @@ functionality.
 
 warn_viewport_linking = "Linking viewports is an experimental feature and is not fully functional yet."
 
-warn_avoid_sleep = "The sleep function is not yet fully functional and its use should currently be avoided. Use pause or the drawwait setting instead!"
+warn_avoid_sleep = "The sleep function is not yet fully functional and its use should currently be avoided. Use the delay and pause functions, or the drawwait setting instead!"
 
 warn_old_table_dialog = "The use of OldTableDialog is deprecated. Please use a combination of the Dialog, Tabs and Table widgets."
 
@@ -64,7 +64,5 @@ warn_mesh_select_default_compacted = "Mesh.select now by default compacts the Me
 warn_widgets_updatedialogitems = "gui.widgets.updateDialogItems now expects data in the new InputItem format. Use gui.widgets.updateOldDialogItems for use with old data format."
 
 warn_deprecated_inputitem = "Using a list or tuple as InputItem data is deprecated. Please use the new dict format."
-
-warn_formex_intersection = "The Formex intersection functions have changed: Formex.intersectionWithPlane(p,n) now returns the intersection with a plane for a plex-2 or plex-3 Formex."
 
 # End

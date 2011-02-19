@@ -57,8 +57,9 @@ def showElement(eltype,deformed,reduced):
             
     e = array(el.edges)
     s = array([el.element])
-    
-    F = [ Formex(v), Formex(v[e]), Formex(v[s],eltype=eltype) ]
+
+    # This will not work for elements with edges of different plexitude!
+    F = [ Formex(v), Formex(v[e],eltype=el.edgetype), Formex(v[s],eltype=eltype) ]
     smooth()
     for Fi in F:
         clear()
