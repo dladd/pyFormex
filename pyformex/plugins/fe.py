@@ -204,7 +204,7 @@ class Model(Geometry):
 
         
 def mergedModel(meshes,**kargs):
-    """Returns the fe Model obtained from merging individual models.
+    """Returns the fe Model obtained from merging individual meshes.
 
     The input arguments are (coords,elems) tuples.
     The return value is a merged fe Model.

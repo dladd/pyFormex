@@ -253,8 +253,9 @@ def drawQuadraticCurves(x,color=None):
 
     If color is given it is an (nlines,3) array of RGB values.
     """
-    x[...,1,:] = 2*x[...,1,:] - 0.5*(x[...,0,:] + x[...,2,:])
-    drawNurbsCurves(x,color)
+    xx = x.copy()
+    xx[...,1,:] = 2*x[...,1,:] - 0.5*(x[...,0,:] + x[...,2,:])
+    drawNurbsCurves(xx,color)
 
 
 def color_multiplex(color,nparts):

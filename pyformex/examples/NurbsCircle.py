@@ -54,6 +54,8 @@ import simple
 from plugins.curve import *
 from plugins.nurbs import *
 from gui.actors import Actor
+from gui.drawable import drawNurbsCurves
+import olist
 import lib._nurbs_ as nu
 
 class NurbsCurve():
@@ -66,7 +68,7 @@ class NurbsCurve():
 
     convenient solutions:
     OPEN:
-      nparts = (npoints-1) / degree
+      nparts = (ncontrol-1) / degree
       nintern = 
     """
     
@@ -106,15 +108,21 @@ class NurbsCurve():
             if closed:
                 knots = unitRange(nctrl+order)
             else:
-                knots = concatenate([[0.]*(order-1),unitRange(nctrl-order+2),[1.]*(order-1)])
+                degree = order-1
+                nparts = (nctrl-1) / degree
+                print nparts
+                knots = [0.] + [ [float(i)]*degree for i in range(nparts+1) ] + [float(nparts)]
+                knots = olist.flatten(knots)
         nknots = len(knots)                                                  
+
+        print "Nurbs curve of order %s with %s control points and %s knots" % (order,nctrl,nknots)
+        print "KNOTS",knots
+
         if nknots != nctrl+order:
             
             raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
 
 
-        print "Nurbs curve of order %s with %s control points and %s knots" % (order,nctrl,nknots)
-        print "KNOTS",knots
        
         self.control = control
         self.knots = asarray(knots)
@@ -171,17 +179,7 @@ class NurbsActor(Actor):
 
         
     def drawGL(self,**kargs):
-        if self.color is not None:
-            GL.glColor3fv(self.color)
-            
-        nurb = GLU.gluNewNurbsRenderer()
-        GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,self.samplingTolerance)
-        GLU.gluBeginCurve(nurb)
-        mode = GL.GL_MAP1_VERTEX_4
-        #print "DRAW CONTROL",self.object.control
-        print self.object.knots.shape,self.object.control.shape
-        GLU.gluNurbsCurve(nurb,self.object.knots,self.object.control,mode)
-        GLU.gluEndCurve(nurb)
+        drawNurbsCurves(self.object.control,self.object.knots,color=self.color)
 
 
 
@@ -239,27 +237,11 @@ def drawThePoints(N,n,color=None):
     print "Umin = %s, Umax = %s" % (umin,umax)
     u = umin + arange(n+1) * (umax-umin) / float(n)
     print u
-    u = [0.25,0.5,0.75]
+    #u = [0.25,0.5,0.75]
     P = N.pointsAt(u)
     print P
     draw(P,color=color)
-    drawNumbers(P,color=color)
-
-
-def drawLine3(lines,tangent=True):
-    """Draw a set of quadratic line segments.
-
-    lines is a 3-plex Formex.
-    For each element in the Formex, a quadratic line is drawn between
-    the first and last points. The tangents at both points are directed to
-    the middle point.
-    """
-    for e in lines:
-        x = Coords4(e)
-        knots = [0.,0.,0.,1.,1.,1.]
-        C = NurbsCurve(x,knots=knots,order=3,closed=False)
-        draw(C)
-    
+    #drawNumbers(P,color=color)
 
                          
 clear()
@@ -279,40 +261,88 @@ pts = Coords([
     [0.,-1.,0.],
     [1.,-1.,0.],
     [1.,0.,0.],
+    [2.,0.,0.],
+    [3.,0.,0.],
+    [4.,0.,0.],
     ])
 
-pts = pts[:5]
-order = [ 2,3,4 ]
+#    3*0    -     2*1     -    3*2    : 8 = 5+3
+#    nctrl = nparts * degree + 1 
+#    nknots = nctrl + degree + 1
+#    nknots = (nparts+1) * degree + 2
+#
+# degree  nparts  nctrl   nknots
+#    2      1       3        6
+#    2      2       5        8
+#    2      3       7       10
+#    2      4       9       12
+#    3      1       4        8
+#    3      2       7       11
+#    3      3      10       14
+#    3      4      13       17
+#    4      1       5       10 
+#    4      2       9       14
+#    4      3      13       18
+#    5      1       6       12
+#    5      2      11       17
+#    5      3      16       22
+#    6      1       7       14       
+#    6      2      13       20
+#    7      1       8       16
+#    8      1       9       18
+
+orders = [ 2,3,4 ]
 weight = [0.,0.5,sqrt(0.5),1.,sqrt(2.),2,10]
-colors = [red,green,blue,cyan,magenta,yellow,black]
-o = 3
-knots = [0.,0.,0.,1.,1.,2.,2.,2.]
-#knots = None
+colors = [red,green,blue,cyan,magenta,yellow,white]
+
+# This should be a valid combination of ntrl/degree
+# drawing is only done if degree <= 7
+nctrl = 8
+degree = 7
+
+pts = pts[:nctrl]
+
+#knots = [0.,0.,0.,1.,1.,2.,2.,3.,3.,3.]
+#knots = [0.,0.,0.,1.,2.,3.,4.,5.,5.,5.]
+knots = None
 L = {}
+draw(pts)
+drawNumbers(pts)
+draw(PolyLine(pts))
 for w,c in zip(weight,colors):
     qc = Coords4(pts)
-    qc[1::2].deNormalize(w)
-    C = NurbsCurve(qc,knots=knots,order=o,closed=False)
+    for i in range(1,degree):
+        qc[i::degree].deNormalize(w)
+    print qc
+    C = NurbsCurve(qc,knots=knots,order=degree+1,closed=False)
     draw(C,color=c)
     drawThePoints(C,10,color=c)
     L["wt-%s" % w] = C
 
 export(L)
 
+zoomAll()
+exit()
+
 draw(simple.circle(2,4),linewidth=3)
 xm = 0.5*(pts[0]+pts[2])
 xn = 0.5*(xm+pts[1])
 draw([xm,pts[1],xn],marksize=10)
 
-zoomAll()
-
 pause()
 clear()
-smoothwire()
+wireframe()
+transparent(False)
+lights(False)
 grid = simple.rectangle(4,3,diag='d')
-draw(grid)
+draw(grid,color=blue)
 print grid.shape()
-drawLine3(grid)
+grid.eltype='nurbs'
+draw(grid,color=red)
+print grid.shape()
+grid.eltype='curve'
+draw(grid,color=yellow)
+print grid.shape()
 
 exit()
 ## for order,color in zip(range(2,5),[cyan,magenta,yellow]):
