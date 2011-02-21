@@ -25,9 +25,9 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 
-static char __doc__[] = "_misc module\n\
+static char __doc__[] = "misc module\n\
 \n\
-This module provides accelerated versions of some pyFormex functions.\n\
+This module provides accelerated versions of miscellaneous pyFormex functions.\n\
 \n";
 
 /**************************************************** tofile_float32 ****/
@@ -37,7 +37,6 @@ This module provides accelerated versions of some pyFormex functions.\n\
    The elements of a 2-D array are written in row order with the given format
    to the open file. After each row, a newline is written.
 */
-    
 
 static PyObject * tofile_float32(PyObject *dummy, PyObject *args)
 {
@@ -457,7 +456,7 @@ static PyObject * nodal_sum_1(PyObject *dummy, PyObject *args)
 
 /********************************************************/
 /* The methods defined in this module */
-static PyMethodDef __methods__[] = {
+static PyMethodDef _methods_[] = {
     {"_fuse", coords_fuse, METH_VARARGS, "Fuse nodes."},
     {"nodalSum", nodal_sum, METH_VARARGS, "Nodal sum."},
     {"tofile_float32", tofile_float32, METH_VARARGS, "Write float32 array to file."},
@@ -470,8 +469,8 @@ static PyMethodDef __methods__[] = {
 /* Initialize the module */
 PyMODINIT_FUNC initmisc(void)
 {
-  (void) Py_InitModule3("misc", __methods__, __doc__);
-    import_array(); /* Get access to numpy array API */
+  (void) Py_InitModule3("misc", _methods_, __doc__);
+  import_array(); /* Get access to numpy array API */
 }
 
 /* End */

@@ -251,6 +251,7 @@ class Coords(ndarray):
         that volume.
 
         Returns:
+        
           A Coords object with shape(2,3): the first point contains the
           minimal coordinates, the second has the maximal ones. 
 
@@ -646,6 +647,7 @@ class Coords(ndarray):
         - '-': aligned on the minimal value of the bounding box,
         - '+': aligned on the maximal value of the bounding box,
         - '0': aligned on the middle value of the bounding box.
+        
         Any other value will make the alignment in that direction unchanged.
 
         The default alignment string '---' results in a translation which puts

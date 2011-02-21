@@ -84,7 +84,7 @@ class NurbsCurve():
         if order <= 0:
             raise ValueError,"Length of knot vector (%s) must be larger than number of control points (%s)" % (len(knots),nctrl)
 
-        control = toCoords4(control)
+        control = Coords4(control)
         if wts is not None:
             control.deNormalize(wts)
         #print "CONTROL",control
@@ -148,16 +148,21 @@ class NurbsCurve():
         u = asarray(u).astype(double)
 
         try:
-            print "U",u
-            pts = nu.bspeval(self.order()-1,ctrl.transpose(),knots,u)
-            print pts.shape
-            print pts
-            pts = pts[:3] / pts[3:]
-            return Coords(pts[:3].transpose())
+            pts = nu.bspeval(self.order()-1,ctrl,knots,u)
+            if isnan(pts).any():
+                print "We got a NaN"
+                raise RuntimeError
         except:
-            print "SOME ERROR OCCURRED"
-            return Coords()
+            raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
 
+        if pts.shape[-1] == 4:
+            pts = Coords4(pts).toCoords()
+            print pts.shape
+        else:
+            pts = Coords(pts)
+            print pts.shape
+        return pts
+        
 
     def actor(self,**kargs):
         """Graphical representation"""
@@ -241,7 +246,7 @@ def drawThePoints(N,n,color=None):
     P = N.pointsAt(u)
     print P
     draw(P,color=color)
-    #drawNumbers(P,color=color)
+    drawNumbers(P,color=color)
 
                          
 clear()
@@ -251,7 +256,7 @@ flat()
 
 sq2 = sqrt(0.5)
 closed=False
-pts = Coords([
+allpts = Coords([
     [1.,0.,0.],
     [1.,1.,0.],
     [0.,1.,0.],
@@ -297,29 +302,52 @@ colors = [red,green,blue,cyan,magenta,yellow,white]
 
 # This should be a valid combination of ntrl/degree
 # drawing is only done if degree <= 7
-nctrl = 8
-degree = 7
 
-pts = pts[:nctrl]
+def demo_weights():
+    nctrl = 8
+    degree = 7
+    pts = allpts[:nctrl]
+    knots = None
+    L = {}
+    draw(pts)
+    drawNumbers(pts)
+    draw(PolyLine(pts))
+    for w,c in zip(weight,colors):
+        qc = Coords4(pts)
+        for i in range(1,degree):
+            qc[i::degree].deNormalize(w)
+        print qc
+        C = NurbsCurve(qc,knots=knots,order=degree+1,closed=False)
+        draw(C,color=c)
+        drawThePoints(C,10,color=c)
+        L["wt-%s" % w] = C
+    export(L)
 
-#knots = [0.,0.,0.,1.,1.,2.,2.,3.,3.,3.]
-#knots = [0.,0.,0.,1.,2.,3.,4.,5.,5.,5.]
-knots = None
-L = {}
-draw(pts)
-drawNumbers(pts)
-draw(PolyLine(pts))
-for w,c in zip(weight,colors):
-    qc = Coords4(pts)
-    for i in range(1,degree):
-        qc[i::degree].deNormalize(w)
-    print qc
-    C = NurbsCurve(qc,knots=knots,order=degree+1,closed=False)
-    draw(C,color=c)
-    drawThePoints(C,10,color=c)
-    L["wt-%s" % w] = C
+def demo_knots():
+    C = Formex(pattern('21412')).toCurve()
+    pts = C.coords
+    print pts
+    draw(C)
+    nctrl = C.ncoords()
+    degree = 2
+    nparts = (nctrl-1)/degree
+    knots = [
+#        None,
+#        [0.,0.,0.,1.,1.,2.,2.,3.,3.,3.],
+#        [0.,0.,0.,1.,2.,3.,4.,5.,5.,5.],
+        [0.,0.,0.,1.,2.,3.,4.,4.,4.],
+        ]
+    L = {}
+    draw(pts)
+    drawNumbers(pts)
+    draw(PolyLine(pts))
+    for k,c in zip(knots,colors):
+        C = NurbsCurve(pts,knots=k,order=degree+1,closed=False)
+        draw(C,color=c)
+        drawThePoints(C,4*nparts,color=c)
 
-export(L)
+
+demo_knots()
 
 zoomAll()
 exit()

@@ -89,6 +89,7 @@ class Geometry(object):
     :meth:`directionalWidth`,
     :meth:`directionalExtremes`,
     :meth:`__str__`.
+    
     Refer to the correponding :class:`Coords` method for their usage.
 
     The following :class:`Coords` transformation methods can be directly applied

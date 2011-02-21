@@ -34,9 +34,9 @@
 #include <math.h>
 
 
-static char _nurbs_module__doc__[] = "_nurbs_ module. Version 0.1\n\
+static char __doc__[] = "_nurbs_ module. Version 0.1\n\
 \n\
-This module implements low level NURBS functions.\n\
+This module implements low level NURBS functions for pyFormex.\n\
 \n";
 
 int min(int a, int b)
@@ -80,6 +80,15 @@ static void freematrix(double **mat)
 {
   free(mat[0]);
   free(mat);
+}
+
+static void print_mat(double **mat,int nrows,int ncols)
+{
+  int i,j;
+  for (i=0;  i<nrows; i++) {
+    for (j=0; j<ncols; j++) printf(" %e",mat[i][j]);
+    printf("\n");
+  } 
 }
 
 // Compute logarithm of the gamma function
@@ -140,7 +149,7 @@ static PyObject * _nurbs_bincoeff(PyObject *self, PyObject *args)
   return Py_BuildValue("d",ret);
 }
 
-// Find the knot span of the parametric point u. 
+// Find the knot span index of the parametric point u. 
 //
 // INPUT:
 //
@@ -154,44 +163,35 @@ static PyObject * _nurbs_bincoeff(PyObject *self, PyObject *args)
 //   s - knot span
 //
 // Algorithm A2.1 from 'The NURBS BOOK' pg68.
-static int _findspan(int n, int p, double u, double *U, int nU)
+static int _findspan(int n, int p, double u, double *U)
 {
   int low, high, mid;
   int cnt=0;
-  printf("findspan %d %d %f\n",n,p,u);
 
   // special case
   if (u == U[n+1]) return(n);
     
   // do binary search
-  //low = p;
-  //high = n + 1;
-  // BV !!!
-  low = 0;
-  high = nU-1;
+  low = p;
+  high = n + 1;
   mid = (low + high) / 2;
-  printf("low = %d, high = %d, mid = %d\n",low,high,mid);
-  while (u < U[mid] || u > U[mid+1])
-  {
-    printf("mid = %d\n",mid);
-    printf("%f < %f < %f\n",U[mid],u,U[mid+1]);
-    if (u < U[mid])
+  while (u < U[mid] || u >= U[mid+1]) {
+    if (u < U[mid]) 
       high = mid;
-    else
+    else 
       low = mid;
     mid = (low + high) / 2;
     cnt ++;
     if (cnt > 20) break;
   }  
-
   return(mid);
 }
 
-// Basis Function. 
+// Compute the nonvanshing basis functions. 
 //
 // INPUT:
 //
-//   i - knot span  ( from FindSpan() )
+//   i - knot span  ( from _findspan() )
 //   u - parametric point
 //   p - spline degree
 //   U - knot sequence
@@ -211,23 +211,28 @@ static void _basisfuns(int i, double u, int p, double *U, double *N)
   double *left  = (double*) malloc((p+1)*sizeof(double));
   double *right = (double*) malloc((p+1)*sizeof(double));
   
+  //printf("_basisfuns\n");
+  //printf("i=%d; u=%f; p=%d\n",i,u,p);
   N[0] = 1.0;
-  for (j = 1; j <= p; j++)
-  {
+  for (j = 1; j <= p; j++) {
+    //printf("j=%d\n",j);
     left[j]  = u - U[i+1-j];
     right[j] = U[i+j] - u;
     saved = 0.0;
-    
-    for (r = 0; r < j; r++)
-    {
+    //print_mat(&left,1,p+1);
+    //print_mat(&right,1,p+1);
+    for (r = 0; r < j; r++) {
+      // printf("r=%d; left:%f; right:%f\n",r,left[j-r],right[r+1]);
       temp = N[r] / (right[r+1] + left[j-r]);
       N[r] = saved + right[r+1] * temp;
       saved = left[j-r] * temp;
+      //printf("temp:%f; saed:%f\n",temp,saved);
+      //print_mat(&N,1,p+1);
     } 
-
     N[j] = saved;
+    //print_mat(&N,1,p+1);
   }
-  
+
   free(left);
   free(right);
 }
@@ -238,44 +243,49 @@ static char bspeval__doc__[] =
 INPUT:\n\
 \n\
  d - spline degree       integer\n\
- c - control points      double  matrix(mc,nc)\n\
+ c - control points      double  matrix(nc,mc)\n\
  k - knot sequence       double  vector(nk)\n\
  u - parametric points   double  vector(nu)\n\
 \n\
 OUTPUT:\n\
 \n\
-   p - evaluated points    double  matrix(mc,nu)\n\
+   p - evaluated points    double  matrix(nu,mc)\n\
 \n\
 Modified version of Algorithm A3.1 from 'The NURBS BOOK' pg82.\n\
 \n";
 
-static void _bspeval(int d, double **ctrl, int mc, int nc, double *k, int nk, double *u, int nu, double **pnt)
+static void _bspeval(int d, double **ctrl, int nc, int mc, double *k, int nk, double *u, int nu, double **pnt)
 {
-  int i, s, tmp1, row, col;
+  int i, s, tmp1, r, c;
   double tmp2;
   
-  printf("This is the evaluator\n");
+  //printf("This is the evaluator\n");
   // space for the basis functions
-  printf("Allocating space\n");
+  //printf("Allocating space\n");
   double *N = (double*) malloc((d+1)*sizeof(double));
 
-  for (col = 0; col < nc; col++) printf("%f %f %f\n",ctrl[0][col],ctrl[1][col],ctrl[2][col]);
+  /* //printf("Degree: %d\n",d); */
+  /* printf("Control\n"); */
+  /* print_mat(ctrl,nc,mc); */
+  /* printf("Knots\n"); */
+  /* print_mat(&k,1,nk); */
+  /* printf("Param\n"); */
+  /* print_mat(&u,1,nu); */
 
   // for each parametric point i
-  for (col = 0; col < nu; col++) {
-    printf("point %d = %f\n",col,u[col]);
-    // find the span of u[col]
-    s = _findspan(nc-1, d, u[col], k,nk);
-    printf("span %d\n",s);
-    _basisfuns(s, u[col], d, k, N);
-    for (i = 0; i <= d; i++) printf("basis %d = %f\n",i,N[i]);
-    for (row = 0; row < mc; row++) pnt[row][col] = 0.0;
-
+  for (r = 0; r < nu; r++) {
+    //printf("point %d = %f\n",r,u[r]);
+    // find the span of u[r]
+    s = _findspan(nc-1,d,u[r],k);
+    //printf("span %d\n",s);
+    _basisfuns(s, u[r], d, k, N);
+    //for (i = 0; i <= d; i++) printf("basis %d = %f\n",i,N[i]);
+    for (c = 0; c < mc; c++) pnt[r][c] = 0.0;
     tmp1 = s - d;
-    for (row = 0; row < mc; row++) {
+    for (c = 0; c < mc; c++) {
       tmp2 = 0.0;   
-      for (i = 0; i <= d; i++) tmp2 += N[i] * ctrl[row][tmp1+i];
-      pnt[row][col] = tmp2;
+      for (i = 0; i <= d; i++) tmp2 += N[i] * ctrl[tmp1+i][c];
+      pnt[r][c] = tmp2;
     }
   }
   free(N);
@@ -306,26 +316,26 @@ static PyObject * _nurbs_bspeval(PyObject *self, PyObject *args)
   ctrl_dim = PyArray_DIMS(arr1);
   k_dim = PyArray_DIMS(arr2);
   u_dim = PyArray_DIMS(arr3);
-  mc = ctrl_dim[0];
-  nc = ctrl_dim[1];
+  nc = ctrl_dim[0];
+  mc = ctrl_dim[1];
   nk = k_dim[0];
   nu = u_dim[0];
   ctrl = (double *)PyArray_DATA(arr1);
   k = (double *)PyArray_DATA(arr2);
   u = (double *)PyArray_DATA(arr3);
-  dim[0] = mc;
-  dim[1] = nu;
-  printf("%d %d %d %d %d\n",d,mc,nc,nk,nu);
+  dim[0] = nu;
+  dim[1] = mc;
+  printf("%d %d %d %d %d\n",d,nc,mc,nk,nu);
 
   /* Create the return array */
   ret = PyArray_SimpleNew(2,dim, NPY_DOUBLE);
   printf("got new array\n");
   pnt = (double *)PyArray_DATA(ret);
 
-  ctrlmat = vec2mat(ctrl, mc, nc);
-  pntmat = vec2mat(pnt, mc, nu);
+  ctrlmat = vec2mat(ctrl, nc, mc);
+  pntmat = vec2mat(pnt, nu, mc);
   printf("converted to matrices\n");
-  _bspeval(d, ctrlmat, mc, nc, k, nk, u, nu, pntmat);
+  _bspeval(d, ctrlmat, nc, mc, k, nk, u, nu, pntmat);
   printf("return from computations\n");
   free(ctrlmat);
   free(pntmat);
@@ -477,7 +487,7 @@ static void _bspdeval(int d, double **c, int mc, int nc, double *k, int nk,
     for (i = 0; i < mc; i++)
       p[l][i] = 0.0;
 
-  s = _findspan(nc-1, d, u, k,nk);
+  s = _findspan(nc-1, d, u, k);
   _dersbasisfuns(d, k, nk, u, s, n, dN);
 
   for (l = 0; l <= du; l++)
@@ -549,8 +559,8 @@ static void _bspkntins(int d, double **ctrl, int mc, int nc, double *k, int nk,
   r = nu - 1;
 
   m = n + d + 1;
-  a = _findspan(n, d, u[0], k,nk);
-  b = _findspan(n, d, u[r], k,nk);
+  a = _findspan(n, d, u[0], k);
+  b = _findspan(n, d, u[r], k);
   ++b;
 
   for (q = 0; q < mc; q++)
@@ -1017,7 +1027,7 @@ static PyObject * _nurbs_bspbezdecom(PyObject *self, PyObject *args)
 	return Py_BuildValue("O", ic);
 }
 
-static PyMethodDef _nurbs_methods[] =
+static PyMethodDef _methods_[] =
 {
 	{"bincoeff", _nurbs_bincoeff, METH_VARARGS, bincoeff__doc__},
 	{"bspeval", _nurbs_bspeval, METH_VARARGS, bspeval__doc__},
@@ -1029,11 +1039,10 @@ static PyMethodDef _nurbs_methods[] =
 };
 
 /* Initialize the module */
-PyMODINIT_FUNC init_nurbs_()
+PyMODINIT_FUNC init_nurbs_(void)
 {
-	PyObject *m;
-	m = Py_InitModule3("_nurbs_", _nurbs_methods, _nurbs_module__doc__);
-	import_array(); /* Get access to numpy array API */
+  (void) Py_InitModule3("_nurbs_", _methods_, __doc__);
+  import_array(); /* Get access to numpy array API */
 }
 
 /* End */

@@ -166,4 +166,69 @@ A collection of hints and answers to frequently asked questions.
    USB stick before hitting `ENTER` to proceed. We advice not to do this:
    first hit `ENTER` and remove the USB stick when the screen goes black.
 
+
+
+Upgrade the pyFormex version on a BuMPix-0.6.1 USB stick
+========================================================
+
+This describes how you can upgrade (or downgrade) the pyFormex version
+on your BuMPix 0.6.1 USB key. You need to have network connection to
+do this.
+
+* First, we need to fix some file ownerships. Open a Terminal and do
+  the following ::
+
+   sudo -i
+   chown -R user:user /home/user
+   exit
+
+* Then, add your own bin directory to the PATH::
+
+   echo 'export PATH=~/bin:$PATH' >> ~/.bash_profile
+  
+* Change the configuration of your teminal. Click
+  ``Edit -> Profiles -> Edit -> Title and Command``
+  and check the option 'Run command as a login shell'.
+
+* Close the terminal and open a new one. Check that the previous
+  operation went correct::
+
+   echo $PATH
+
+* This should start with '/home/user/bin'. If ok, then do::
+      
+   cd bin
+   chmod +x pyformex-svn
+   ls
+
+* You should now see a green 'pyformex-svn' script. Execute it as follows::
+
+   ./pyformex-svn install makelib symlink
+   ls
+
+* If everything went well, you should now also have a blue 'pyformex'
+  link. Test it::
+
+   cd ..
+   pyformex
+
+* The latest svn version of pyFormex should start. If ok, close it and
+  you can make this the default version to start from the pyFormex
+  button in the top panel. Right click on the button, then
+  'Properties'. Change the Command to::
+
+   bin/pyformex --redirect
+
+* Now you should always have the updated pyformex running, from the
+  command line as well as from the panel button. Next time you want to
+  upgrade (or downgrade), you can just do::
+
+   cd pyformex-svn
+   svn up
+
+* or, for a downgrade, add a specific revision number::
+
+   svn up -r 1833
+
+
 .. End

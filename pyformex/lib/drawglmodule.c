@@ -33,6 +33,12 @@
 #include <numpy/arrayobject.h>
 #include <GL/gl.h>
 
+static char __doc__[] = "drawgl module\n\
+\n\
+This module provides accelerated versions of the pyFormex basic\n\
+OpenGL drawing functions.\n\
+\n";
+
 
 /************************ LIBRARY VERSION *******************/
 /*
@@ -657,7 +663,7 @@ pick_polygon_elems(PyObject *dummy, PyObject *args)
 
 
 /***************** The methods defined in this module **************/
-static PyMethodDef Methods[] = {
+static PyMethodDef _methods_[] = {
     {"get_version", get_version, METH_VARARGS, "Return library version."},
     {"draw_polygons", draw_polygons, METH_VARARGS, "Draw polygons."},
     {"pick_polygons", pick_polygons, METH_VARARGS, "Pick polygons."},
@@ -667,11 +673,10 @@ static PyMethodDef Methods[] = {
 };
 
 /* Initialize the module */
-PyMODINIT_FUNC
-initdrawgl(void)
+PyMODINIT_FUNC initdrawgl(void)
 {
-    (void) Py_InitModule("drawgl", Methods);
-    import_array(); /* Get access to numpy array API */
+  (void) Py_InitModule3("drawgl", _methods_, __doc__);
+  import_array(); /* Get access to numpy array API */
 }
 
 /* End */
