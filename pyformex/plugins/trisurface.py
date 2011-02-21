@@ -981,6 +981,7 @@ Total area: %s; Enclosed volume: %s
 
 ##################  Partitioning a surface #############################
 
+    from plugins.mesh_ext import nodeFront, walkNodeFront, partitionByNodeFront, partitionByConnection, splitByConnection, largestByConnection
 
     def edgeFront(self,startat=0,okedges=None,front_increment=1):
         """Generator function returning the frontal elements.
@@ -1042,43 +1043,43 @@ Total area: %s; Enclosed volume: %s
                 elems = elems[[0]]
                 prop += 1
 
-
-    def nodeFront(self,startat=0,front_increment=1):
-        """Generator function returning the frontal elements.
-
-        startat is an element number or list of numbers of the starting front.
-        On first call, this function returns the starting front.
-        Each next() call returns the next front.
-        """
-        p = -ones((self.nfaces()),dtype=int)
-        if self.nfaces() <= 0:
-            return
-        # Construct table of elements connected to each element
-        adj = self.nodeAdjacency()
-
-        # Remember nodes left for processing
-        todo = ones((self.npoints(),),dtype=bool)
-        elems = clip(asarray(startat),0,self.nfaces())
-        prop = 0
-        while elems.size > 0:
-            # Store prop value for current elems
-            p[elems] = prop
-            yield p
-
-            prop += front_increment
-
-            # Determine adjacent elements
-            elems = unique(adj[elems])
-            elems = elems[(elems >= 0) * (p[elems] < 0) ]
-            if elems.size > 0:
-                continue
-
-            # No more elements in this part: start a new one
-            elems = where(p<0)[0]
-            if elems.size > 0:
-                # Start a new part
-                elems = elems[[0]]
-                prop += 1
+##GDS moved to mesh_ext.py
+#    def nodeFront(self,startat=0,front_increment=1):
+#        """Generator function returning the frontal elements.
+#
+#        startat is an element number or list of numbers of the starting front.
+#        On first call, this function returns the starting front.
+#        Each next() call returns the next front.
+#        """
+#        p = -ones((self.nfaces()),dtype=int)
+#        if self.nfaces() <= 0:
+#            return
+#        # Construct table of elements connected to each element
+#        adj = self.nodeAdjacency()
+#
+#        # Remember nodes left for processing
+#        todo = ones((self.npoints(),),dtype=bool)
+#        elems = clip(asarray(startat),0,self.nfaces())
+#        prop = 0
+#        while elems.size > 0:
+#            # Store prop value for current elems
+#            p[elems] = prop
+#            yield p
+#
+#            prop += front_increment
+#
+#            # Determine adjacent elements
+#            elems = unique(adj[elems])
+#            elems = elems[(elems >= 0) * (p[elems] < 0) ]
+#            if elems.size > 0:
+#                continue
+#
+#            # No more elements in this part: start a new one
+#            elems = where(p<0)[0]
+#            if elems.size > 0:
+#                # Start a new part
+#                elems = elems[[0]]
+#                prop += 1
 
 
     def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
@@ -1089,14 +1090,14 @@ Total area: %s; Enclosed volume: %s
                 break
         return p
 
-
-    def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
-        for p in self.nodeFront(startat=startat,front_increment=front_increment):   
-            if nsteps > 0:
-                nsteps -= 1
-            elif nsteps == 0:
-                break
-        return p
+##GDS moved to mesh_ext.py
+#    def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
+#        for p in self.nodeFront(startat=startat,front_increment=front_increment):   
+#            if nsteps > 0:
+#                nsteps -= 1
+#            elif nsteps == 0:
+#                break
+#        return p
 
 
     def growSelection(self,sel,mode='node',nsteps=1):
@@ -1130,33 +1131,34 @@ Total area: %s; Enclosed volume: %s
         return firstprop + self.walkEdgeFront(startat=startat,okedges=okedges,front_increment=0)
     
 
-    def partitionByNodeFront(self,firstprop=0,startat=0):
-        """Detects different parts of the surface using a frontal method.
+##GDS moved to mesh_ext.py
+#    def partitionByNodeFront(self,firstprop=0,startat=0):
+#        """Detects different parts of the surface using a frontal method.
+#
+#        okedges flags the edges where the two adjacent triangles are to be
+#        in the same part of the surface.
+#        startat is a list of elements that are in the first part.
+#        
+#        The partitioning is returned as a property type array having a value
+#        corresponding to the part number. The lowest property number will be
+#        firstprop.
+#        """
+#        return firstprop + self.walkNodeFront(startat=startat,front_increment=0)
 
-        okedges flags the edges where the two adjacent triangles are to be
-        in the same part of the surface.
-        startat is a list of elements that are in the first part.
-        
-        The partitioning is returned as a property type array having a value
-        corresponding to the part number. The lowest property number will be
-        firstprop.
-        """
-        return firstprop + self.walkNodeFront(startat=startat,front_increment=0)
-
-
-    def partitionByConnection(self):
-        """Detect the connected parts of a surface.
-
-        The surface is partitioned in parts in which all elements are
-        connected. Two elements are connected if it is possible to draw a
-        continuous (poly)line from a point in one element to a point in
-        the other element without leaving the surface.
-        
-        The partitioning is returned as a property type array having a value
-        corresponding to the part number. The lowest property number will be
-        firstprop.
-        """
-        return self.partitionByNodeFront()
+##GDS moved to mesh_ext.py
+#    def partitionByConnection(self):
+#        """Detect the connected parts of a surface.
+#
+#        The surface is partitioned in parts in which all elements are
+#        connected. Two elements are connected if it is possible to draw a
+#        continuous (poly)line from a point in one element to a point in
+#        the other element without leaving the surface.
+#        
+#        The partitioning is returned as a property type array having a value
+#        corresponding to the part number. The lowest property number will be
+#        firstprop.
+#        """
+#        return self.partitionByNodeFront()
 
 
     def partitionByAngle(self,angle=60.,firstprop=0, sortedbyarea=None):
@@ -1195,30 +1197,30 @@ Total area: %s; Enclosed volume: %s
             p=p2
         return firstprop + p
 
+##GDS moved to mesh_ext.py
+#    def splitByConnection(self):
+#        """Split the surface into connected parts.
+#
+#        Returns a list of surfaces that each form a connected part.
+#        """
+#        split = self.splitProp(self.partitionByConnection())
+#        if split:
+#            return split.values()
+#        else:
+#            return [ self ]
 
-    def splitByConnection(self):
-        """Split the surface into connected parts.
-
-        Returns a list of surfaces that each form a connected part.
-        """
-        split = self.splitProp(self.partitionByConnection())
-        if split:
-            return split.values()
-        else:
-            return [ self ]
-
-
-    def largestByConnection(self):
-        """Return the largest connected part of the surface."""
-        p = self.partitionByConnection()
-        nparts = p.max()+1
-        if nparts == 1:
-            return self,nparts
-        else:
-            t = [ p == pi for pi in range(nparts) ]
-            n = [ ti.sum() for ti in t ]
-            w = array(n).argmax()
-            return self.clip(t[w]),nparts
+##GDS moved to mesh_ext.py
+#    def largestByConnection(self):
+#        """Return the largest connected part of the surface."""
+#        p = self.partitionByConnection()
+#        nparts = p.max()+1
+#        if nparts == 1:
+#            return self,nparts
+#        else:
+#            t = [ p == pi for pi in range(nparts) ]
+#            n = [ ti.sum() for ti in t ]
+#            w = array(n).argmax()
+#            return self.clip(t[w]),nparts
 
 
     def cutWithPlane(self,*args,**kargs):
