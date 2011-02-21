@@ -13,7 +13,7 @@ initialize() function once.
 from mesh import Mesh
 from elements import elementType,_default_facetype
 from trisurface import areaNormals
-#from formex import *
+from formex import *
 #from connectivity import Connectivity
 
 ##############################################################################
@@ -61,27 +61,114 @@ Volume: %s
 ##############################################################################
 #
 
+#GDS connectivity functions valid for all mesh types, moved from trisurface.py
+def nodeFront(self,startat=0,front_increment=1):
+    """Generator function returning the frontal elements.
 
-def rings(adj, sources, step=1):
+    startat is an element number or list of numbers of the starting front.
+    On first call, this function returns the starting front.
+    Each next() call returns the next front.
+    """
+    p = -ones((self.nelems()),dtype=int)
+    if self.nelems() <= 0:
+        return
+    # Construct table of elements connected to each element
+    adj = self.nodeAdjacency()
+
+    # Remember nodes left for processing
+    todo = ones((self.npoints(),),dtype=bool)
+    elems = clip(asarray(startat),0,self.nelems())
+    prop = 0
+    while elems.size > 0:
+        # Store prop value for current elems
+        p[elems] = prop
+        yield p
+
+        prop += front_increment
+
+        # Determine adjacent elements
+        elems = unique(adj[elems])
+        elems = elems[(elems >= 0) * (p[elems] < 0) ]
+        if elems.size > 0:
+            continue
+
+        # No more elements in this part: start a new one
+        elems = where(p<0)[0]
+        if elems.size > 0:
+            # Start a new part
+            elems = elems[[0]]
+            prop += 1
+
+def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
+    for p in self.nodeFront(startat=startat,front_increment=front_increment):   
+        if nsteps > 0:
+            nsteps -= 1
+        elif nsteps == 0:
+            break
+    return p
+
+def partitionByNodeFront(self,firstprop=0,startat=0):
+    """Detects different parts of the Mesh using a frontal method.
+
+    okedges flags the edges where the two adjacent elems are to be
+    in the same part of the Mesh.
+    startat is a list of elements that are in the first part.
+    The partitioning is returned as a property type array having a value
+    corresponding to the part number. The lowest property number will be
+    firstprop.
+    """
+    return firstprop +self.walkNodeFront( startat=startat,front_increment=0)
+
+def partitionByConnection(self):
+    """Detect the connected parts of a Mesh.
+
+    The Mesh is partitioned in parts in which all elements are
+    connected. Two elements are connected if it is possible to draw a
+    continuous (poly)line from a point in one element to a point in
+    the other element without leaving the Mesh.
+    The partitioning is returned as a property type array having a value
+    corresponding to the part number. The lowest property number will be
+    firstprop.
+    """
+    return self.partitionByNodeFront()
+
+def splitByConnection(self):
+    """Split the Mesh into connected parts.
+
+    Returns a list of Meshes that each form a connected part.
+    """
+    split = self.setProp(self.partitionByConnection()).splitProp()
+    if split:
+        return split.values()
+    else:
+        return [ self ]
+
+def largestByConnection(self):
+    """Return the largest connected part of the Mesh."""
+    p = self.partitionByConnection()
+    nparts = p.max()+1
+    if nparts == 1:
+        return self,nparts
+    else:
+        t = [ p == pi for pi in range(nparts) ]
+        n = [ ti.sum() for ti in t ]
+        w = array(n).argmax()
+        return self.clip(t[w]),nparts
+
+########################################
+
+def rings(self, sources, nrings):
     """
     It finds the rings of elems connected to sources by node.
     
     Sources is a list of elem indices.
-    adj is the adjacency table and should be calulated before as
-    adj=mesh.elems.adjacency(kind='e')
     A list of rings is returned, from zero (equal to sources) to step.
-    If step is None, all rings are returned.
+    If step is -1, all rings are returned.
     """
+    r=self.walkNodeFront(startat=sources,nsteps=nrings, front_increment=1)
+    ar, rr= arange(len(r)), range(r.max()+1)
+    return [ar[r==i] for i in rr ]
 
-    R=[sources]
-    if step is None:
-        step=len(adj)
-    for i in range(step):
-        newring=unique(adj[ R[-1] ])
-        R.append(setdiff1d(newring[newring>-1],concatenate(R)))
-        if len(R[-1])==0:
-            return R[:-1]
-    return R
 
 ## THIS NEEDS WORK ###
 ## surfacetype is also eltype ??
@@ -159,7 +246,13 @@ def _auto_initialize():
     Mesh.report = report
     Mesh.areas = areas
     Mesh.area = area
-    
+    Mesh.nodeFront = nodeFront
+    Mesh.walkNodeFront = walkNodeFront
+    Mesh.partitionByNodeFront = partitionByNodeFront
+    Mesh.partitionByConnection = partitionByConnection
+    Mesh.splitByConnection = splitByConnection
+    Mesh.largestByConnection = largestByConnection
+    Mesh.rings = rings
 
 _auto_initialize()
 
