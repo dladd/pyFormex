@@ -957,7 +957,7 @@ Total area: %s; Enclosed volume: %s
         along their normal vector.
         """
         n = self.avgVertexNormals()
-        coordsNew = self.coords + NPA*distance
+        coordsNew = self.coords + n*distance
         return TriSurface(coordsNew,self.getElems(),prop=self.prop)
 
 
@@ -1505,19 +1505,29 @@ Total area: %s; Enclosed volume: %s
         os.remove(tmp1)    
         return S.setProp(self.prop)
 
-
+    #1 GDS: maybe it should be renamed as isSelfIntersecting()
+    #2 in case of self intersecting, maybe a read_GTS should be 
+    #   used to output the bad triangles.
+    #3 why the returned sta codes are different ?
     def check(self,verbose=False):
         """Check the surface using gtscheck.
 
-        Checks whether the surface is a closed, orientable,
-        non self-intersecting manifold. This is a necessary condition
-        for the use of the `gts` methods: split, coarsen, refine, boolean.
+        Checks whether the surface is orientable,
+        non self-intersecting manifold. For the use of the `gts` methods (split, 
+        coarsen, refine, boolean), this is a necessary condition; additionally,
+        the surface has to be closed (check this with the :meth:`isClosedManifold`).
 
-        Returns 0 if the surface passes the tests, nonzero if not.
-        A full report is printed out. 
-
+        Returns 0 if the surface passes the test, nonzero if not.
+        A full report is printed out.
+        
+        If surface is not an orientable manifold returns 512.
         The :meth:`fixNormals` and :meth:`reverse` methods may be used to fix
         the normals of an otherwise correct closed manifold.
+        
+        If surface is an orientable manifold but is self-intersecting, 
+        returns 768 and the self intersecting triangles.
+
+
         """
         cmd = 'gtscheck'
         if verbose:
@@ -1531,8 +1541,28 @@ Total area: %s; Enclosed volume: %s
         os.remove(tmp)
         pf.message(out)
         if sta == 0:
-            pf.message('The surface is a closed, orientable non self-intersecting manifold')
-        return sta
+            pf.message('The surface is an orientable non self-intersecting manifold')
+            return sta, None
+        if sta==512:#why 512? according to gtscheck -h should be 2
+            pf.message('The surface is not an orientable manifold, try first fixNormals()')
+            return sta, None
+        if sta==768:#why 768? according to gtscheck -h should be 3
+            pf.message('The surface is an orientable manifold but is self-intersecting')
+            outs= out.split('\n')
+            first=0
+            if verbose:
+                first=27
+            [nfa, ned, nve]= [int(item) for item in outs[first].split(' ')[0:3] ]
+            d=outs[first+1: len(outs)]
+            ive, ied, ifa= d[0:nfa], d[nfa:nfa+ned], d[nfa+ned:nfa+ned+nve]
+            ve=asarray( [ [float(item2) for  item2 in item1.split(' ')] for item1 in ive] )
+            ed=asarray( [ [int(item2) for  item2 in item1.split(' ')] for item1 in ied] )
+            fa=asarray( [ [int(item2) for  item2 in item1.split(' ')] for item1 in ifa] )
+            return sta, TriSurface(ve,ed-1,  fa-1.)
+        else:
+            pf.message('Status of gtscheck not understood')
+            return sta, None
+
  
 
     def split(self,base,verbose=False):
