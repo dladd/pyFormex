@@ -1511,7 +1511,7 @@ Total area: %s; Enclosed volume: %s
     #2 in case of self intersecting, maybe a read_GTS should be 
     #   used to output the bad triangles.
     #3 why the returned sta codes are different ?
-    def check(self,verbose=False):
+    def check(self,verbose=False, matched=True):
         """Check the surface using gtscheck.
 
         Checks whether the surface is orientable,
@@ -1527,7 +1527,8 @@ Total area: %s; Enclosed volume: %s
         the normals of an otherwise correct closed manifold.
         
         If surface is an orientable manifold but is self-intersecting, 
-        returns 768 and the self intersecting triangles.
+        returns 768 and the self intersecting triangles. If matched is True,
+        the intersecting triangles are returned as element indices of self.
 
 
         """
@@ -1560,7 +1561,10 @@ Total area: %s; Enclosed volume: %s
             ve=asarray( [ [float(item2) for  item2 in item1.split(' ')] for item1 in ive] )
             ed=asarray( [ [int(item2) for  item2 in item1.split(' ')] for item1 in ied] )
             fa=asarray( [ [int(item2) for  item2 in item1.split(' ')] for item1 in ifa] )
-            return sta, TriSurface(ve,ed-1,  fa-1.)
+            if matched:
+                return sta, self.matchElemsCentroids( TriSurface(ve,ed-1,  fa-1.) )
+            else:
+                return sta, TriSurface(ve,ed-1,  fa-1.)
         else:
             pf.message('Status of gtscheck not understood')
             return sta, None
