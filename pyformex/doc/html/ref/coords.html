@@ -163,11 +163,10 @@ This is equivalent with</p>
 <p>The bounding box is the smallest rectangular volume in the global
 coordinates, such that no point of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> are outside
 that volume.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A Coords object with shape(2,3): the first point contains the
-minimal coordinates, the second has the maximal ones.</dd>
-</dl>
+<p>Returns:</p>
+<blockquote>
+A Coords object with shape(2,3): the first point contains the
+minimal coordinates, the second has the maximal ones.</blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span>
 <span class="go">[[ 0.  0.  0.]</span>
@@ -439,6 +438,26 @@ with this value before it is added to the coordinates.</p>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.align">
+<tt class="descname">align</tt><big>(</big><em>alignment='---'</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align the Coords along the global axes.</p>
+<p>Alignment involves a translation such that the bounding box
+of the Coords object becomes aligned on the origin of the global axes.
+The requested alignment is determined by a string of three characters,
+one for each of the coordinate axes. The character determines how
+the structure is aligned in the corresponding direction:</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
+<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
+<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+</ul>
+<p>Any other value will make the alignment in that direction unchanged.</p>
+<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
+all the points in the octant with all positive coordinate values.
+A string &#8216;000&#8217; will center the object around the origin.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1055,11 +1074,10 @@ This is equivalent with</p>
 <p>The bounding box is the smallest rectangular volume in the global
 coordinates, such that no point of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> are outside
 that volume.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A Coords object with shape(2,3): the first point contains the
-minimal coordinates, the second has the maximal ones.</dd>
-</dl>
+<p>Returns:</p>
+<blockquote>
+A Coords object with shape(2,3): the first point contains the
+minimal coordinates, the second has the maximal ones.</blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span>
 <span class="go">[[ 0.  0.  0.]</span>
@@ -1301,6 +1319,26 @@ with this value before it is added to the coordinates.</p>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.align">
+<tt class="descname">align</tt><big>(</big><em>alignment='---'</em><big>)</big><a class="headerlink" href="#coords.Coords.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align the Coords along the global axes.</p>
+<p>Alignment involves a translation such that the bounding box
+of the Coords object becomes aligned on the origin of the global axes.
+The requested alignment is determined by a string of three characters,
+one for each of the coordinate axes. The character determines how
+the structure is aligned in the corresponding direction:</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
+<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
+<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+</ul>
+<p>Any other value will make the alignment in that direction unchanged.</p>
+<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
+all the points in the octant with all positive coordinate values.
+A string &#8216;000&#8217; will center the object around the origin.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1907,7 +1945,7 @@ the curve.</p>
                         title="previous chapter">pyFormex reference manual</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="formex.html"
-                        title="next chapter">2. <tt class="docutils literal docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
+                        title="next chapter">2. <tt class="docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

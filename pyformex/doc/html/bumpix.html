@@ -189,6 +189,70 @@ USB stick before hitting <cite>ENTER</cite> to proceed. We advice not to do this
 first hit <cite>ENTER</cite> and remove the USB stick when the screen goes black.</li>
 </ol>
 </div>
+<div class="section" id="upgrade-the-pyformex-version-on-a-bumpix-0-6-1-usb-stick">
+<h2>Upgrade the pyFormex version on a BuMPix-0.6.1 USB stick<a class="headerlink" href="#upgrade-the-pyformex-version-on-a-bumpix-0-6-1-usb-stick" title="Permalink to this headline">¶</a></h2>
+<p>This describes how you can upgrade (or downgrade) the pyFormex version
+on your BuMPix 0.6.1 USB key. You need to have network connection to
+do this.</p>
+<ul>
+<li><p class="first">First, we need to fix some file ownerships. Open a Terminal and do
+the following</p>
+<div class="highlight-python"><pre>sudo -i
+chown -R user:user /home/user
+exit</pre>
+</div>
+</li>
+<li><p class="first">Then, add your own bin directory to the PATH:</p>
+<div class="highlight-python"><pre>echo 'export PATH=~/bin:$PATH' &gt;&gt; ~/.bash_profile</pre>
+</div>
+</li>
+<li><p class="first">Change the configuration of your teminal. Click
+<tt class="docutils literal"><span class="pre">Edit</span> <span class="pre">-&gt;</span> <span class="pre">Profiles</span> <span class="pre">-&gt;</span> <span class="pre">Edit</span> <span class="pre">-&gt;</span> <span class="pre">Title</span> <span class="pre">and</span> <span class="pre">Command</span></tt>
+and check the option &#8216;Run command as a login shell&#8217;.</p>
+</li>
+<li><p class="first">Close the terminal and open a new one. Check that the previous
+operation went correct:</p>
+<div class="highlight-python"><pre>echo $PATH</pre>
+</div>
+</li>
+<li><p class="first">This should start with &#8216;/home/user/bin&#8217;. If ok, then do:</p>
+<div class="highlight-python"><pre>cd bin
+chmod +x pyformex-svn
+ls</pre>
+</div>
+</li>
+<li><p class="first">You should now see a green &#8216;pyformex-svn&#8217; script. Execute it as follows:</p>
+<div class="highlight-python"><pre>./pyformex-svn install makelib symlink
+ls</pre>
+</div>
+</li>
+<li><p class="first">If everything went well, you should now also have a blue &#8216;pyformex&#8217;
+link. Test it:</p>
+<div class="highlight-python"><pre>cd ..
+pyformex</pre>
+</div>
+</li>
+<li><p class="first">The latest svn version of pyFormex should start. If ok, close it and
+you can make this the default version to start from the pyFormex
+button in the top panel. Right click on the button, then
+&#8216;Properties&#8217;. Change the Command to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">bin</span><span class="o">/</span><span class="n">pyformex</span> <span class="o">--</span><span class="n">redirect</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now you should always have the updated pyformex running, from the
+command line as well as from the panel button. Next time you want to
+upgrade (or downgrade), you can just do:</p>
+<div class="highlight-python"><pre>cd pyformex-svn
+svn up</pre>
+</div>
+</li>
+<li><p class="first">or, for a downgrade, add a specific revision number:</p>
+<div class="highlight-python"><pre>svn up -r 1833</pre>
+</div>
+</li>
+</ul>
+</div>
 </div>
 
 
@@ -214,6 +278,7 @@ first hit <cite>ENTER</cite> and remove the USB stick when the screen goes black
 </li>
 <li><a class="reference internal" href="#boot-your-bumpix-system">Boot your BuMPix system</a></li>
 <li><a class="reference internal" href="#faq">FAQ</a></li>
+<li><a class="reference internal" href="#upgrade-the-pyformex-version-on-a-bumpix-0-6-1-usb-stick">Upgrade the pyFormex version on a BuMPix-0.6.1 USB stick</a></li>
 </ul>
 </li>
 </ul>

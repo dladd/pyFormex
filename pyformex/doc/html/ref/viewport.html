@@ -511,10 +511,35 @@ On RELEASE, add the line to the drawing.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="viewport.QtCanvas.setAmbient">
+<tt class="descname">setAmbient</tt><big>(</big><em>ambient</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setAmbient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the global ambient lighting for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.setMaterial">
+<tt class="descname">setMaterial</tt><big>(</big><em>matname</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default material light properties for the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.resetLighting">
+<tt class="descname">resetLighting</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.resetLighting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the light parameters</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="viewport.QtCanvas.setRenderMode">
-<tt class="descname">setRenderMode</tt><big>(</big><em>rm</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setRenderMode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the rendermode.</p>
-<p>This changes the rendermode and redraws everything with the new mode.</p>
+<tt class="descname">setRenderMode</tt><big>(</big><em>mode</em>, <em>lighting=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setRenderMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the rendering mode.</p>
+<p>This sets or changes the rendermode and lighting attributes.
+If lighting is not specified, it is set depending on the rendermode.</p>
+<p>If the canvas has not been initialized, this merely sets the
+attributes self.rendermode and self.lighting.
+If the canvas was already initialized (it has a camera), and one of
+the specified settings is fdifferent from the existing, the new mode
+is set, the canvas is re-initialized according to the newly set mode,
+and everything is redrawn with the new mode.</p>
 </dd></dl>
 
 <dl class="method">
@@ -563,29 +588,20 @@ and an object is created to display the background.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="viewport.QtCanvas.setLightValue">
-<tt class="descname">setLightValue</tt><big>(</big><em>nr</em>, <em>key</em>, <em>val</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setLightValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>(Re)Define a light on the scene.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="viewport.QtCanvas.enableLight">
-<tt class="descname">enableLight</tt><big>(</big><em>nr</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.enableLight" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable an existing light.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="viewport.QtCanvas.disableLight">
-<tt class="descname">disableLight</tt><big>(</big><em>nr</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.disableLight" title="Permalink to this definition">¶</a></dt>
-<dd><p>Disable an existing light.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="viewport.QtCanvas.setTriade">
 <tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setTriade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the display of the global axes on or off.</p>
 <p>If on is True, a triade of global axes is displayed, if False it is
 removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="viewport.QtCanvas.glinit">
+<tt class="descname">glinit</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.glinit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the rendering machine.</p>
+<p>The rendering machine is initialized according to:
+- self.rendermode: one of
+- self.lighting</p>
 </dd></dl>
 
 <dl class="method">
@@ -929,10 +945,10 @@ The default OpenGL format can be changed by command line options:</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="canvas.html"
-                        title="previous chapter">20. <tt class="docutils literal docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
+                        title="previous chapter">20. <tt class="docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="camera.html"
-                        title="next chapter">22. <tt class="docutils literal docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
+                        title="next chapter">22. <tt class="docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

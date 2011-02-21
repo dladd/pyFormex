@@ -120,6 +120,7 @@
     <dd><dl>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.addNodes">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
+    <dt><a href="ref/fe_abq.html#fe_abq.addOptions">addOptions() (in module fe_abq)</a></dt>
     <dt><a href="ref/lima.html#lima.Lima.addRule">addRule() (lima.Lima method)</a></dt>
     <dt><a href="ref/properties.html#properties.ElemSection.addSection">addSection() (properties.ElemSection method)</a></dt>
     <dt><a href="ref/widgets.html#widgets.addTimeOut">addTimeOut() (in module widgets)</a></dt>
@@ -152,6 +153,13 @@
       <dt><a href="ref/geometry.html#geometry.Geometry.affine">(geometry.Geometry method)</a></dt>
       <dt><a href="ref/mesh.html#mesh.Mesh.affine">(mesh.Mesh method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.affine">(trisurface.TriSurface method)</a></dt>
+  </dl></dd>
+    <dt><a href="ref/coords.html#coords.CoordinateSystem.align">align() (coords.CoordinateSystem method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/coords.html#coords.Coords.align">(coords.Coords method)</a></dt>
+      <dt><a href="ref/geometry.html#geometry.Geometry.align">(geometry.Geometry method)</a></dt>
+      <dt><a href="ref/mesh.html#mesh.Mesh.align">(mesh.Mesh method)</a></dt>
+      <dt><a href="ref/trisurface.html#trisurface.TriSurface.align">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
     <dt><a href="ref/utils.html#utils.all_image_extensions">all_image_extensions() (in module utils)</a></dt>
     <dt><a href="ref/properties.html#properties.Amplitude">Amplitude (class in properties)</a></dt>
@@ -192,10 +200,6 @@
     <dt><a href="ref/trisurface.html#trisurface.areaNormals">areaNormals() (in module trisurface)</a></dt>
     <dd><dl>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.areaNormals">(trisurface.TriSurface method)</a></dt>
-  </dl></dd>
-    <dt><a href="ref/mesh.html#mesh.Mesh.areas">areas() (mesh.Mesh method)</a></dt>
-    <dd><dl>
-      <dt><a href="ref/trisurface.html#trisurface.TriSurface.areas">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
     <dt><a href="ref/arraytools.html#arraytools.argNearestValue">argNearestValue() (in module arraytools)</a></dt>
     <dt><a href="ref/widgets.html#widgets.ArrayModel">ArrayModel (class in widgets)</a></dt>
@@ -631,7 +635,6 @@
       <dt><a href="ref/curve.html#curve.QuadBezierSpline.directionsAt">(curve.QuadBezierSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.Spiral.directionsAt">(curve.Spiral method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/viewport.html#viewport.QtCanvas.disableLight">disableLight() (viewport.QtCanvas method)</a></dt>
     <dt><a href="ref/geomtools.html#geomtools.displaceLines">displaceLines() (in module geomtools)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.display">display() (canvas.Canvas method)</a></dt>
     <dd><dl>
@@ -781,7 +784,6 @@
 </dl></td>
   <td width="33%" valign="top"><dl>
     <dt><a href="ref/viewport.html#viewport.QtCanvas.emit_done">emit_done() (viewport.QtCanvas method)</a></dt>
-    <dt><a href="ref/viewport.html#viewport.QtCanvas.enableLight">enableLight() (viewport.QtCanvas method)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.end_2D_drawing">end_2D_drawing() (canvas.Canvas method)</a></dt>
     <dd><dl>
       <dt><a href="ref/viewport.html#viewport.QtCanvas.end_2D_drawing">(viewport.QtCanvas method)</a></dt>
@@ -877,13 +879,16 @@
     <dt><a href="ref/flatkeydb.html#flatkeydb.FlatDB">FlatDB (class in flatkeydb)</a></dt>
     <dt><a href="ref/flatkeydb.html#module-flatkeydb">flatkeydb (module)</a></dt>
     <dt><a href="ref/olist.html#olist.flatten">flatten() (in module olist)</a></dt>
-</dl></td>
-  <td width="33%" valign="top"><dl>
     <dt><a href="ref/draw.html#draw.flyAlong">flyAlong() (in module draw)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.Output.fmt">fmt() (fe_abq.Output method)</a></dt>
+    <dt><a href="ref/fe_abq.html#fe_abq.fmtAnalyticalSurface">fmtAnalyticalSurface() (in module fe_abq)</a></dt>
+</dl></td>
+  <td width="33%" valign="top"><dl>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtBeamSection">fmtBeamSection() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtCmd">fmtCmd() (in module fe_abq)</a></dt>
+    <dt><a href="ref/fe_abq.html#fe_abq.fmtConnectorBehavior">fmtConnectorBehavior() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtConnectorSection">fmtConnectorSection() (in module fe_abq)</a></dt>
+    <dt><a href="ref/fe_abq.html#fe_abq.fmtConstraint">fmtConstraint() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtContactPair">fmtContactPair() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtData">fmtData() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtData1D">fmtData1D() (in module fe_abq)</a></dt>
@@ -891,9 +896,11 @@
     <dt><a href="ref/fe_abq.html#fe_abq.fmtGeneralBeamSection">fmtGeneralBeamSection() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtGeneralContact">fmtGeneralContact() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtHeading">fmtHeading() (in module fe_abq)</a></dt>
+    <dt><a href="ref/fe_abq.html#fe_abq.fmtInitialConditions">fmtInitialConditions() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtMaterial">fmtMaterial() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtOrientation">fmtOrientation() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtPart">fmtPart() (in module fe_abq)</a></dt>
+    <dt><a href="ref/fe_abq.html#fe_abq.fmtSolidSection">fmtSolidSection() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtSurface">fmtSurface() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtSurfaceInteraction">fmtSurfaceInteraction() (in module fe_abq)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.fmtTransform">fmtTransform() (in module fe_abq)</a></dt>
@@ -949,6 +956,7 @@
       <dt><a href="ref/canvas.html#canvas.CanvasSettings.get">(canvas.CanvasSettings method)</a></dt>
       <dt><a href="ref/collection.html#collection.Collection.get">(collection.Collection method)</a></dt>
       <dt><a href="ref/config.html#config.Config.get">(config.Config method)</a></dt>
+      <dt><a href="ref/fe_abq.html#fe_abq.Interaction.get">(fe_abq.Interaction method)</a></dt>
       <dt><a href="ref/fe_abq.html#fe_abq.Output.get">(fe_abq.Output method)</a></dt>
       <dt><a href="ref/fe_abq.html#fe_abq.Result.get">(fe_abq.Result method)</a></dt>
       <dt><a href="ref/fe_abq.html#fe_abq.Step.get">(fe_abq.Step method)</a></dt>
@@ -988,14 +996,14 @@
     <dd><dl>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.getEdges">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
+    <dt><a href="ref/mesh.html#mesh.Mesh.getElemEdges">getElemEdges() (mesh.Mesh method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/trisurface.html#trisurface.TriSurface.getElemEdges">(trisurface.TriSurface method)</a></dt>
+  </dl></dd>
     <dt><a href="ref/fe.html#fe.Model.getElems">getElems() (fe.Model method)</a></dt>
     <dd><dl>
       <dt><a href="ref/mesh.html#mesh.Mesh.getElems">(mesh.Mesh method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.getElems">(trisurface.TriSurface method)</a></dt>
-  </dl></dd>
-    <dt><a href="ref/mesh.html#mesh.Mesh.getFaceEdges">getFaceEdges() (mesh.Mesh method)</a></dt>
-    <dd><dl>
-      <dt><a href="ref/trisurface.html#trisurface.TriSurface.getFaceEdges">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
     <dt><a href="ref/mesh.html#mesh.Mesh.getFaces">getFaces() (mesh.Mesh method)</a></dt>
     <dd><dl>
@@ -1050,6 +1058,10 @@
     <dt><a href="ref/colors.html#colors.GLColor">GLColor() (in module colors)</a></dt>
     <dt><a href="ref/canvas.html#canvas.glEnable">glEnable() (in module canvas)</a></dt>
     <dt><a href="ref/canvas.html#canvas.glFlat">glFlat() (in module canvas)</a></dt>
+    <dt><a href="ref/canvas.html#canvas.Canvas.glinit">glinit() (canvas.Canvas method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/viewport.html#viewport.QtCanvas.glinit">(viewport.QtCanvas method)</a></dt>
+  </dl></dd>
     <dt><a href="ref/canvas.html#canvas.Canvas.glLight">glLight() (canvas.Canvas method)</a></dt>
     <dd><dl>
       <dt><a href="ref/viewport.html#viewport.QtCanvas.glLight">(viewport.QtCanvas method)</a></dt>
@@ -1154,9 +1166,9 @@
     <dt><a href="ref/widgets.html#widgets.InputString">InputString (class in widgets)</a></dt>
     <dt><a href="ref/widgets.html#widgets.InputTab">InputTab (class in widgets)</a></dt>
     <dt><a href="ref/widgets.html#widgets.InputText">InputText (class in widgets)</a></dt>
+    <dt><a href="ref/widgets.html#widgets.InputWidget">InputWidget (class in widgets)</a></dt>
 </dl></td>
   <td width="33%" valign="top"><dl>
-    <dt><a href="ref/widgets.html#widgets.InputWidget">InputWidget (class in widgets)</a></dt>
     <dt><a href="ref/flatkeydb.html#flatkeydb.FlatDB.insert">insert() (flatkeydb.FlatDB method)</a></dt>
     <dt><a href="ref/menu.html#menu.BaseMenu.insert_action">insert_action() (menu.BaseMenu method)</a></dt>
     <dd><dl>
@@ -1181,6 +1193,7 @@
     <dt><a href="ref/connectivity.html#connectivity.Connectivity.insertLevel">insertLevel() (connectivity.Connectivity method)</a></dt>
     <dt><a href="ref/arraytools.html#arraytools.inside">inside() (in module arraytools)</a></dt>
     <dt><a href="ref/geomtools.html#geomtools.insideSimplex">insideSimplex() (in module geomtools)</a></dt>
+    <dt><a href="ref/fe_abq.html#fe_abq.Interaction">Interaction (class in fe_abq)</a></dt>
     <dt><a href="ref/units.html#units.UnitsSystem.International">International() (units.UnitsSystem method)</a></dt>
     <dt><a href="ref/coords.html#coords.CoordinateSystem.interpolate">interpolate() (coords.CoordinateSystem class method)</a></dt>
     <dd><dl>
@@ -1428,6 +1441,10 @@
     <dd><dl>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.matchElemsCentroids">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
+    <dt><a href="ref/mesh.html#mesh.Mesh.matchFaces">matchFaces() (mesh.Mesh method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/trisurface.html#trisurface.TriSurface.matchFaces">(trisurface.TriSurface method)</a></dt>
+  </dl></dd>
     <dt><a href="ref/arraytools.html#arraytools.matchIndex">matchIndex() (in module arraytools)</a></dt>
     <dt><a href="ref/utils.html#utils.matchMany">matchMany() (in module utils)</a></dt>
     <dt><a href="ref/utils.html#utils.matchNone">matchNone() (in module utils)</a></dt>
@@ -1446,9 +1463,9 @@
     <dt><a href="ref/menu.html#module-menu">menu (module)</a></dt>
     <dt><a href="ref/menu.html#menu.MenuBar">MenuBar (class in menu)</a></dt>
     <dt><a href="ref/fe.html#fe.mergedModel">mergedModel() (in module fe)</a></dt>
-    <dt><a href="ref/mesh.html#mesh.mergeMeshes">mergeMeshes() (in module mesh)</a></dt>
 </dl></td>
   <td width="33%" valign="top"><dl>
+    <dt><a href="ref/mesh.html#mesh.mergeMeshes">mergeMeshes() (in module mesh)</a></dt>
     <dt><a href="ref/mesh.html#mesh.mergeNodes">mergeNodes() (in module mesh)</a></dt>
     <dt><a href="ref/mesh.html#mesh.Mesh">Mesh (class in mesh)</a></dt>
     <dt><a href="ref/mesh.html#module-mesh">mesh (module)</a></dt>
@@ -1958,6 +1975,7 @@
       <dt><a href="ref/menu.html#menu.MenuBar.removeItem">(menu.MenuBar method)</a></dt>
   </dl></dd>
     <dt><a href="ref/properties.html#properties.RemoveListItem">RemoveListItem() (in module properties)</a></dt>
+    <dt><a href="ref/fe_abq.html#fe_abq.removePropOptions">removePropOptions() (in module fe_abq)</a></dt>
     <dt><a href="ref/utils.html#utils.removeTree">removeTree() (in module utils)</a></dt>
 </dl></td>
   <td width="33%" valign="top"><dl>
@@ -2023,6 +2041,9 @@
   </dl></dd>
     <dt><a href="ref/menu.html#menu.resetGUI">resetGUI() (in module menu)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.resetLighting">resetLighting() (canvas.Canvas method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/viewport.html#viewport.QtCanvas.resetLighting">(viewport.QtCanvas method)</a></dt>
+  </dl></dd>
     <dt><a href="ref/viewport.html#viewport.QtCanvas.resetOptions">resetOptions() (viewport.QtCanvas method)</a></dt>
     <dt><a href="ref/menu.html#menu.resetWarnings">resetWarnings() (in module menu)</a></dt>
     <dt><a href="ref/formex.html#formex.Formex.resized">resized() (formex.Formex method)</a></dt>
@@ -2190,6 +2211,7 @@
       <dt><a href="ref/mesh.html#mesh.Mesh.select">(mesh.Mesh method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.select">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
+    <dt><a href="ref/utils.html#utils.selectDict">selectDict() (in module utils)</a></dt>
     <dt><a href="ref/widgets.html#widgets.selectFont">selectFont() (in module widgets)</a></dt>
     <dt><a href="ref/widgets.html#widgets.Selection">Selection (class in widgets)</a></dt>
     <dt><a href="ref/connectivity.html#connectivity.Connectivity.selectNodes">selectNodes() (connectivity.Connectivity method)</a></dt>
@@ -2213,6 +2235,9 @@
     <dt><a href="ref/draw.html#draw.set_selection_filter">set_selection_filter() (in module draw)</a></dt>
     <dt><a href="ref/actors.html#actors.GeomActor.setAlpha">setAlpha() (actors.GeomActor method)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.setAmbient">setAmbient() (canvas.Canvas method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/viewport.html#viewport.QtCanvas.setAmbient">(viewport.QtCanvas method)</a></dt>
+  </dl></dd>
     <dt><a href="ref/camera.html#camera.Camera.setAngles">setAngles() (camera.Camera method)</a></dt>
     <dt><a href="ref/camera.html#camera.Camera.setArea">setArea() (camera.Camera method)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.setBbox">setBbox() (canvas.Canvas method)</a></dt>
@@ -2270,6 +2295,7 @@
     <dt><a href="ref/canvas.html#canvas.CanvasSettings.setdefault">setdefault() (canvas.CanvasSettings method)</a></dt>
     <dd><dl>
       <dt><a href="ref/config.html#config.Config.setdefault">(config.Config method)</a></dt>
+      <dt><a href="ref/fe_abq.html#fe_abq.Interaction.setdefault">(fe_abq.Interaction method)</a></dt>
       <dt><a href="ref/fe_abq.html#fe_abq.Output.setdefault">(fe_abq.Output method)</a></dt>
       <dt><a href="ref/fe_abq.html#fe_abq.Result.setdefault">(fe_abq.Result method)</a></dt>
       <dt><a href="ref/fe_abq.html#fe_abq.Step.setdefault">(fe_abq.Step method)</a></dt>
@@ -2299,7 +2325,6 @@
       <dt><a href="ref/widgets.html#widgets.InputPush.setIcon">(widgets.InputPush method)</a></dt>
   </dl></dd>
     <dt><a href="ref/camera.html#camera.Camera.setLens">setLens() (camera.Camera method)</a></dt>
-    <dt><a href="ref/viewport.html#viewport.QtCanvas.setLightValue">setLightValue() (viewport.QtCanvas method)</a></dt>
     <dt><a href="ref/actors.html#actors.Actor.setLineStipple">setLineStipple() (actors.Actor method)</a></dt>
     <dd><dl>
       <dt><a href="ref/actors.html#actors.AxesActor.setLineStipple">(actors.AxesActor method)</a></dt>
@@ -2359,6 +2384,9 @@
       <dt><a href="ref/viewport.html#viewport.QtCanvas.setLineWidth">(viewport.QtCanvas method)</a></dt>
   </dl></dd>
     <dt><a href="ref/canvas.html#canvas.Canvas.setMaterial">setMaterial() (canvas.Canvas method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/viewport.html#viewport.QtCanvas.setMaterial">(viewport.QtCanvas method)</a></dt>
+  </dl></dd>
     <dt><a href="ref/properties.html#properties.PropertyDB.setMaterialDB">setMaterialDB() (properties.PropertyDB method)</a></dt>
     <dt><a href="ref/camera.html#camera.Camera.setModelView">setModelView() (camera.Camera method)</a></dt>
     <dt><a href="ref/viewport.html#viewport.setOpenGLFormat">setOpenGLFormat() (in module viewport)</a></dt>
@@ -2922,6 +2950,7 @@
     <dt><a href="ref/canvas.html#canvas.CanvasSettings.update">update() (canvas.CanvasSettings method)</a></dt>
     <dd><dl>
       <dt><a href="ref/config.html#config.Config.update">(config.Config method)</a></dt>
+      <dt><a href="ref/fe_abq.html#fe_abq.Interaction.update">(fe_abq.Interaction method)</a></dt>
       <dt><a href="ref/fe_abq.html#fe_abq.Output.update">(fe_abq.Output method)</a></dt>
       <dt><a href="ref/fe_abq.html#fe_abq.Result.update">(fe_abq.Result method)</a></dt>
       <dt><a href="ref/fe_abq.html#fe_abq.Step.update">(fe_abq.Step method)</a></dt>

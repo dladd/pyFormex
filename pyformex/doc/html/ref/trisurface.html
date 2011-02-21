@@ -87,22 +87,14 @@ an (ntri,3) integer array of edges numbers.</li>
 <p>Additionally, a keyword argument prop= may be specified to
 set property values.</p>
 <dl class="method">
-<dt id="trisurface.TriSurface.areas">
-<tt class="descname">areas</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.areas" title="Permalink to this definition">¶</a></dt>
-<dd><p>area of elements</p>
-<p>For surface element the faces&#8217; area is returned.
-For volume elements the sum of the faces&#8217;areas is returned.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="trisurface.TriSurface.shape">
 <tt class="descname">shape</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of points, edges, faces of the TriSurface.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.getFaceEdges">
-<tt class="descname">getFaceEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getFaceEdges" title="Permalink to this definition">¶</a></dt>
+<dt id="trisurface.TriSurface.getElemEdges">
+<tt class="descname">getElemEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getElemEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the faces&#8217; edge numbers.</p>
 </dd></dl>
 
@@ -387,7 +379,7 @@ firstprop.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.partitionByAngle">
-<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>firstprop=0</em>, <em>startat=0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>firstprop=0</em>, <em>sortedbyarea=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition the surface by splitting it at sharp edges.</p>
 <p>The surface is partitioned in parts in which all elements can be
 reach without ever crossing a sharp edge angle. More precisely,
@@ -397,6 +389,8 @@ angle (in degrees), will belong to the same part.</p>
 <p>The partitioning is returned as a property type array having a value
 corresponding to the part number. The lowest property number will be
 firstprop.</p>
+<p>If sortedbyarea is &#8216;up&#8217; or &#8216;down&#8217; the parts will be ordered by 
+increasing or decreasign area.</p>
 </dd></dl>
 
 <dl class="method">
@@ -608,6 +602,26 @@ if one of them is, the set of self-intersecting faces is written
 <p><cite>mat</cite>: a 3x3 float matrix</p>
 <p><cite>vec</cite>: a length 3 list or array of floats</p>
 <p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.align">
+<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align the Coords along the global axes.</p>
+<p>Alignment involves a translation such that the bounding box
+of the Coords object becomes aligned on the origin of the global axes.
+The requested alignment is determined by a string of three characters,
+one for each of the coordinate axes. The character determines how
+the structure is aligned in the corresponding direction:</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
+<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
+<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+</ul>
+<p>Any other value will make the alignment in that direction unchanged.</p>
+<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
+all the points in the octant with all positive coordinate values.
+A string &#8216;000&#8217; will center the object around the origin.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1067,7 +1081,7 @@ dimensionality  0,1,2,3 is:</p>
 to that of the caller. If it is positive, it is taken absolute.
 Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
 returns the faces, while for a 2D element type, it returns the edges.
-For bothe meshes however,  getLowerEntities(+1) returns the edges.</p>
+For both meshes however,  getLowerEntities(+1) returns the edges.</p>
 <p>By default, all entities for all elements are returned and common
 entities will appear multiple times. Specifying unique=True will 
 return only the unique ones.</p>
@@ -1275,6 +1289,17 @@ that will be passed to <tt class="xref py py-meth docutils literal"><span class=
 <p>self and Mesh are same eltype meshes
 and are both without Doubles.</p>
 <p>Elems are matched by their centroids.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.matchFaces">
+<tt class="descname">matchFaces</tt><big>(</big><em>mesh</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.matchFaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match faces of mesh with faces of self.</p>
+<p>self and Mesh can be same eltype meshes or different eltype but of the 
+same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
+and are both without Doubles.</p>
+<p>Returns the indices array of the elems of self that matches
+the faces of mesh</p>
 </dd></dl>
 
 <dl class="method">
@@ -1726,9 +1751,8 @@ the sum of this array will represent the volume inside the surface.</p>
 <dl class="function">
 <dt id="trisurface.curvature">
 <tt class="descclassname">trisurface.</tt><tt class="descname">curvature</tt><big>(</big><em>coords</em>, <em>elems</em>, <em>edges</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#trisurface.curvature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate curvature parameters at the nodes</p>
-<p>(according to Dong and Wang 2005;
-Koenderink and Van Doorn 1992).
+<dd><p>Calculate curvature parameters at the nodes.</p>
+<p>Algorithms based on Dong and Wang 2005; Koenderink and Van Doorn 1992.
 This uses the nodes that are connected to the node via a shortest
 path of &#8216;neighbours&#8217; edges.
 Eight values are returned: the Gaussian and mean curvature, the
@@ -1878,10 +1902,10 @@ Beware: this may take a lot of time if level is 8 or higher.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="mesh.html"
-                        title="previous chapter">30. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
+                        title="previous chapter">30. <tt class="docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="geomtools.html"
-                        title="next chapter">32. <tt class="docutils literal docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
+                        title="next chapter">32. <tt class="docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

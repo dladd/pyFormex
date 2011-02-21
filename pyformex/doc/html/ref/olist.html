@@ -106,6 +106,12 @@ order of the items in the lists.</p>
 <dd><p>Flatten a nested list.</p>
 <p>By default, lists are flattened one level deep.
 If recurse=True, flattening recurses through all sublists.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">flatten</span><span class="p">([[[</span><span class="mf">3.</span><span class="p">,</span><span class="mi">2</span><span class="p">,],</span><span class="mf">6.5</span><span class="p">,],[</span><span class="mi">5</span><span class="p">],</span><span class="mi">6</span><span class="p">,</span><span class="s">&#39;hi&#39;</span><span class="p">])</span>
+<span class="go">[[3.0, 2], 6.5, 5, 6, &#39;hi&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">flatten</span><span class="p">([[[</span><span class="mf">3.</span><span class="p">,</span><span class="mi">2</span><span class="p">,],</span><span class="mf">6.5</span><span class="p">,],[</span><span class="mi">5</span><span class="p">],</span><span class="mi">6</span><span class="p">,</span><span class="s">&#39;hi&#39;</span><span class="p">],</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">[3.0, 2, 6.5, 5, 6, &#39;hi&#39;]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -141,10 +147,10 @@ keys, holding the original indices of the items in the lists.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="objects.html"
-                        title="previous chapter">50. <tt class="docutils literal docutils literal"><span class="pre">objects</span></tt> &#8212; Selection of objects from the global dictionary.</a></p>
+                        title="previous chapter">50. <tt class="docutils literal"><span class="pre">objects</span></tt> &#8212; Selection of objects from the global dictionary.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="mydict.html"
-                        title="next chapter">52. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mydict</span></tt> &#8212;</a></p>
+                        title="next chapter">52. <tt class="docutils literal"><span class="pre">mydict</span></tt> &#8212;</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

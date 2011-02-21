@@ -84,8 +84,9 @@ the data involved with the finite element model.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_abq</span></tt></p>
 <dl class="class">
 <dt id="fe_abq.Step">
-<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Step</tt><big>(</big><em>analysis='STATIC', time=[0.0, 0.0, 0.0, 0.0], nlgeom='NO', tags=None, inc=None, sdi=None, timeinc=None, buckle='SUBSPACE', incr=0.10000000000000001, name=None, bulkvisc=None, out=None, res=None</em><big>)</big><a class="headerlink" href="#fe_abq.Step" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Step</tt><big>(</big><em>analysis='STATIC', time=[0.0, 0.0, 0.0, 0.0], nlgeom='NO', subheading=None, tags=None, name=None, out=None, res=None, stepOptions=None, analysisOptions=None, extra=None</em><big>)</big><a class="headerlink" href="#fe_abq.Step" title="Permalink to this definition">¶</a></dt>
 <dd><p>The basic logical unit in the simulation history.</p>
+<blockquote>
 <p>In Abaqus, a step is the smallest logical entity in the simulation
 history. It is typically a time step in a dynamic simulation, but it
 can also describe different loading states in a (quasi-)static simulation.</p>
@@ -93,32 +94,91 @@ can also describe different loading states in a (quasi-)static simulation.</p>
 It combines the Abaqus &#8216;STEP&#8217;, &#8216;STATIC&#8217;, &#8216;DYNAMIC&#8217; and &#8216;BUCKLE&#8217; keyword
 commands (and even some more global parameter setting commands).</p>
 <p>Parameters:</p>
-<ul class="simple">
-<li><cite>analysis</cite>: the analysis type, one of: &#8216;STATIC&#8217;, &#8216;DYNAMIC&#8217;, &#8216;EXPLICIT&#8217;,
-&#8216;PERTURBATION&#8217;, &#8216;BUCKLE&#8217;, &#8216;RIKS&#8217;</li>
-<li><cite>time</cite>: either
+<ul>
+<li><p class="first"><cite>analysis</cite>: the analysis type, one of: &#8216;STATIC&#8217;, &#8216;DYNAMIC&#8217;, &#8216;EXPLICIT&#8217;,
+&#8216;PERTURBATION&#8217;, &#8216;BUCKLE&#8217;, &#8216;RIKS&#8217;</p>
+</li>
+<li><p class="first"><cite>time</cite>: either
 - a single float value specifying the step time,
-- a list of 4 values: time inc, step time, min. time inc, max. time inc
+- a list  of 2 values (special cases with analysis=EXPLICIT)
+- a list  of 4 values: time inc, step time, min. time inc, max. time inc (all the other cases)
 - for LANCZOS: a list of 5 values
 - for RIKS: a list of 8 values
-In most cases, only the step time should be specified.</li>
-<li><cite>nlgeom</cite>: &#8216;YES&#8217; ot &#8216;NO&#8217; (default)
-If &#8216;YES&#8217;, the analysis will be geometrically non-linear. Analysis type
-&#8216;RIKS&#8217; always sets <cite>nlgeom</cite> to &#8216;YES&#8217;, &#8216;BUCKLE&#8217; sets it to &#8216;NO&#8217;,
-&#8216;PERTURBATION&#8217; ignores <cite>nlgeom</cite>.</li>
-<li><cite>tags</cite>: a list of property tags to include in this step.
+In most cases, only the step time should be specified.</p>
+</li>
+<li><p class="first"><cite>nlgeom</cite>: &#8216;YES&#8217; ot &#8216;NO&#8217; (default)
+If &#8216;YES&#8217;, the analysis will be geometrically non-linear. For Analysis type
+&#8216;RIKS&#8217;  set <cite>nlgeom</cite> to &#8216;YES&#8217;, &#8216;BUCKLE&#8217; set it to &#8216;NO&#8217;,
+&#8216;PERTURBATION&#8217; ignores <cite>nlgeom</cite>.</p>
+</li>
+<li><p class="first"><cite>tags</cite>: a list of property tags to include in this step.
 If specified, only the property records having one of the listed values
-as their <cite>tag</cite> attribute will be included in this step.</li>
-<li><cite>inc</cite>:  the maximum number of increments in a step (the default is 100)</li>
-<li><cite>sdi</cite>: determines how severe discontinuities are accounted for</li>
-<li>timeinc:</li>
-<li><cite>buckle</cite>: specifies the BUCKLE type: &#8216;SUBSPACE&#8217; or &#8216;LANCZOS&#8217;</li>
-<li><cite>incr</cite>: the increment in &#8216;RIKS&#8217; type</li>
-<li><cite>bulkvisc</cite>:  a list of two floats (default: [0.06,1.2]), only used
-in Explicit steps.</li>
-<li><cite>out</cite> and <cite>res</cite>: specific output/result records for this step. They
-come in addition to the global ones.</li>
+as their <cite>tag</cite> attribute will be included in this step.</p>
+</li>
+<li><p class="first"><cite>out</cite> and <cite>res</cite>: specific output/result records for this step. They
+come in addition to the global ones.</p>
+</li>
+<li><dl class="first docutils">
+<dt>stepOption is a  Dict of optional parameters to be added at a step level at the FIRST line. it is placed after the <a href="#id1"><span class="problematic" id="id2">*</span></a>STEP keyword i.e</dt>
+<dd><p class="first last"><a href="#id3"><span class="problematic" id="id4">*</span></a>STEP, NLGEOM=YES,INC=10000,UNSYMM = YES
+It has keys name equal to the ABAQUS keywords and value equal to parameter setting
+if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)</p>
+</dd>
+</dl>
+</li>
 </ul>
+<blockquote>
+-subheading is a string printed as an additionanal subheading (not important normally)</blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>analysisOption is a  Dict of optional parameters to be added at a step level at the SECOND line. it is placed after the analysis keyword i.e</dt>
+<dd><p class="first last"><a href="#id5"><span class="problematic" id="id6">*</span></a>STATIC, STABILIZE=0.0002,CONTINUE=NO
+with keys name equal to the ABAQUS keywords and value equal to parameter setting
+if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="docutils">
+<dt>-extra <span class="classifier-delimiter">:</span> <span class="classifier">str  for any extra keyword to be added at a step level after the time line</span></dt>
+<dd><p class="first">: list of Dict for any extra keyword to be added at a step level after the time line. Each Dict is a separate line (see example below)</p>
+<blockquote class="last">
+<p>Only 2 keys are dedicated:</p>
+<dl class="docutils">
+<dt>REQUIRED</dt>
+<dd>-keyword =  abaqus keyword name</dd>
+<dt>OPTIONAL</dt>
+<dd>-data = list or array of numerical data for any additional data line</dd>
+</dl>
+<p>All the other keys are optional and must have name equal to the ABAQUS keywords and value equal to parameter setting
+if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)</p>
+</blockquote>
+</dd>
+</dl>
+<p>Examples on stepOption ,  analysisOption, extra</p>
+<dl class="docutils">
+<dt>stepOption standard analysis, not needed for explicit</dt>
+<dd>Dict({&#8216;UNSYMM&#8217;:&#8217;YES&#8217;/&#8217;NO&#8217;,&#8217;CONVERT SDI&#8217;:&#8217;YES&#8217;/&#8217;NO&#8217;,&#8217;AMPLITUDE&#8217;:&#8217;STEP&#8217;/&#8217;RAMP&#8217;,&#8217;INC&#8217;:100})</dd>
+<dt>analysisOption:</dt>
+<dd><dl class="first last docutils">
+<dt>static, riks</dt>
+<dd>Dict({&#8216;STABILIZE&#8217;:0.0002,&#8217;CONTINUE&#8217;:&#8217;NO&#8217;/&#8217;YES&#8217;,&#8217;ALLSDTOL&#8217;:0.05,&#8217;DIRECT&#8217;:&#8217;NO STOP&#8217;,&#8217;FACTOR&#8217;:1.,&#8217;INCR&#8217;:0.1 (for riks)})</dd>
+<dt>dynamic (implicit)</dt>
+<dd>Dict({&#8216;APPLICATION&#8217;:&#8217;QUASI-STATIC&#8217;/&#8217;MODERATE DISSIPATION&#8217;/&#8217;TRANSIENT FIDELITY&#8217;})</dd>
+<dt>dynamic explicit</dt>
+<dd>Dict({&#8216;DIRECT USER CONTROL&#8217;:&#8217;&#8217; / &#8216;ELEMENT BY ELEMENT&#8217;:&#8217;&#8217; / &#8216;FIXED TIME INCREMENTATION&#8217;:&#8217;&#8216;,            &#8216;IMPROVED DT METHOD&#8217;=&#8217;NO&#8217;/&#8217;YES&#8217;,&#8217;SCALE FACTOR&#8217;:1.})</dd>
+<dt>buckle</dt>
+<dd>Dict({&#8216;EIGENSOLVER&#8217;:&#8217;SUBSPACE&#8217;})</dd>
+</dl>
+</dd>
+<dt>extra:</dt>
+<dd>extra=&#8217;<a href="#id7"><span class="problematic" id="id8">*</span></a>BULK VISCOSITY</dd>
+</dl>
+</blockquote>
+<p>0.12, 0.06
+&#8216;</p>
+<blockquote>
+extra=[Dict({&#8216;keyword&#8217;:&#8217;BULK VISCOSITY&#8217;,&#8217;data&#8217;:[0.12, 0.06]})]</blockquote>
 <dl class="method">
 <dt id="fe_abq.Step.write">
 <tt class="descname">write</tt><big>(</big><em>fil</em>, <em>propDB</em>, <em>out=</em><span class="optional">[</span><span class="optional">]</span>, <em>res=</em><span class="optional">[</span><span class="optional">]</span>, <em>resfreq=1</em>, <em>timemarks=False</em><big>)</big><a class="headerlink" href="#fe_abq.Step.write" title="Permalink to this definition">¶</a></dt>
@@ -259,6 +319,41 @@ default value if get found a KeyError.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="fe_abq.Interaction">
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Interaction</tt><big>(</big><em>name=None</em>, <em>cross_section=1</em>, <em>friction=0.0</em>, <em>surfacebehavior=None</em>, <em>noseparation=False</em>, <em>pressureoverclosure=None</em><big>)</big><a class="headerlink" href="#fe_abq.Interaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Dict for setting surface interactions
+pressureoverclosure is an array = [&#8216;hard&#8217;/&#8217;soft&#8217;,&#8217;linear&#8217;/&#8217;nonlinear&#8217;/&#8217;exponential&#8217;/&#8217;tabular&#8217;/.., value1,value2,value3,... ]
+Leave empty for default hard contact
+&#8216;hard&#8217; will set penalty contact, either &#8216;linear&#8217; or &#8216;nonlinear&#8217;
+&#8216;soft&#8217; will set soft pressure-overclosure, combine with &#8216;linear&#8217;/&#8217;exponential&#8217;/&#8217;tabular&#8217;/&#8217;scale factor&#8217;
+for needed values on dataline: see abaqus keyword manual</p>
+<dl class="method">
+<dt id="fe_abq.Interaction.update">
+<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#fe_abq.Interaction.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dictionary to the Dict object.</p>
+<p>The data can be a dict or Dict type object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_abq.Interaction.get">
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Interaction.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key or a default.</p>
+<p>This is the equivalent of the dict get method, except that it
+returns only the default value if the key was not found in self,
+and there is no _default_ method or it raised a KeyError.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe_abq.Interaction.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Interaction.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the setdefault function of a normal dictionary.</p>
+<p>This is the same as the get method, except that it also sets the
+default value if get found a KeyError.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="fe_abq.AbqData">
 <em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">AbqData</tt><big>(</big><em>model</em>, <em>prop</em>, <em>nprop=None</em>, <em>eprop=None</em>, <em>steps=</em><span class="optional">[</span><span class="optional">]</span>, <em>res=</em><span class="optional">[</span><span class="optional">]</span>, <em>out=</em><span class="optional">[</span><span class="optional">]</span>, <em>bound=None</em><big>)</big><a class="headerlink" href="#fe_abq.AbqData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains all data required to write the Abaqus input file.</p>
@@ -336,6 +431,25 @@ by sep. Lines are separated by linesep.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="fe_abq.addOptions">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">addOptions</tt><big>(</big><em>option</em><big>)</big><a class="headerlink" href="#fe_abq.addOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>add option after an abaqus keyword</p>
+<dl class="docutils">
+<dt>-option is a Dict type</dt>
+<dd>It has keys name equal to the ABAQUS keywords and value equal to parameter setting
+if an ABAQUS keyword does not have a value to be the Dict value must be an empty string</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.removePropOptions">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">removePropOptions</tt><big>(</big><em>d</em>, <em>opName</em><big>)</big><a class="headerlink" href="#fe_abq.removePropOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete all key option in d contained in opName
+d is Dict 
+opName is list of string (keys names to be deleted)</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="fe_abq.fmtHeading">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtHeading</tt><big>(</big><em>text=''</em><big>)</big><a class="headerlink" href="#fe_abq.fmtHeading" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the heading of the Abaqus input file.</p>
@@ -353,19 +467,45 @@ by sep. Lines are separated by linesep.</p>
 <dd><p>Write a material section.</p>
 <p><cite>mat</cite> is the property dict of the material. The following keys are
 recognized and output accordingly:</p>
-<ul class="simple">
-<li><cite>name</cite>: if specified, and a material with this name has already been
-written, this function does nothing.</li>
-<li><cite>elasticity</cite>: one of &#8216;LINEAR&#8217;, &#8216;HYPERELASTIC&#8217;, &#8216;ANISOTROPIC HYPERELASTIC&#8217;,
+<ul>
+<li><p class="first"><cite>name</cite>: if specified, and a material with this name has already been
+written, this function does nothing.</p>
+</li>
+<li><p class="first"><cite>elasticity</cite>: one of &#8216;LINEAR&#8217;, &#8216;HYPERELASTIC&#8217;, &#8216;ANISOTROPIC HYPERELASTIC&#8217;,
 &#8216;USER&#8217;. Default is &#8216;LINEAR&#8217;. Defines the elastic behavior class of the
-material. The requirements for the other keys depend on this type.</li>
-<li><tt class="docutils literal"><span class="pre">LINEAR</span></tt>:<ul>
-<li>required:
-- young_modulus
-- shear_modulus</li>
-<li>optional:
-- poisson_ratio: calculated if None</li>
+material. The requirements for the other keys depend on this type. The
+fields labeled (opt) are optional.</p>
+</li>
+<li><p class="first">&#8216;LINEAR&#8217;:</p>
+<ul class="simple">
+<li>young_modulus</li>
+<li>shear_modulus</li>
+<li>(opt) poisson_ratio: it is calculated if None</li>
 </ul>
+</li>
+<li><p class="first">&#8216;HYERELASTIC&#8217;:</p>
+<p>required
+- model: one of &#8216;ogden&#8217;, &#8216;polynomial&#8217; or &#8216;reduced polynomial&#8217;
+- constants: list of all parameter required for the model (see Abaqus documentation)</p>
+<p>optional
+- order: order of the model. If blank will be automatically calculated from the len of the constants list</p>
+<blockquote>
+<p>example:</p>
+<dl class="docutils">
+<dt>intimaMat= {</dt>
+<dd><p class="first last">&#8216;name&#8217;: &#8216;intima&#8217;,
+&#8216;density&#8217;: 0.1, # Not Used, but Abaqus does not like a material without
+&#8216;elasticity&#8217;:&#8217;hyperelastic&#8217;,
+&#8216;type&#8217;:&#8217;reduced polynomial&#8217;,
+&#8216;constants&#8217;: [6.79E-03, 5.40E-01, -1.11, 10.65, -7.27, 1.63, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</p>
+</dd>
+</dl>
+<p>}</p>
+</blockquote>
+</li>
+<li><p class="first">&#8216;ANISOTROPIC HYPERELASTIC&#8217;:</p>
+</li>
+<li><p class="first">&#8216;USER&#8217;:</p>
 </li>
 </ul>
 </dd></dl>
@@ -495,6 +635,46 @@ material. The requirements for the other keys depend on this type.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="fe_abq.fmtConnectorBehavior">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConnectorBehavior</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtConnectorBehavior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a connector behavior.
+Implemented: Elasticity,  Stop
+Examples: 
+Elasticity
+P.Prop(name=&#8217;connbehavior1&#8217;,ConnectorBehavior=&#8217;&#8216;,Elasticity=dict(component=[1,2,3,4,5,6],value=[1,1,1,1,1,1]))
+Stop:
+P.Prop(name=&#8217;connbehavior3&#8217;,ConnectorBehavior=&#8217;&#8216;,Stop=dict(component=[1,2,3,4,5,6],lowerlimit=[1,1,1,1,1,1], upperlimit=[2, 2, 2, 2,2,2]))</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtSolidSection">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSolidSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSolidSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>this function should be modified to create a general function for all the element types that has the property SOLID SECTION. now it is only for 3dsolid</p>
+<p>REQUIRED</p>
+<ul class="simple">
+<li>material/composite (mutually exclusive)</li>
+<li>elset</li>
+<li>refnode (REQUIRED only for plane stress elements and acoustic infinite elements)</li>
+<li>orientation (REQUIRED only for anisotropic materials, OPTIONAL otherwise)</li>
+</ul>
+<p>el.seccontrol is a Dict
+REQUIRED</p>
+<blockquote>
+el.seccontrol.name = name of the section control</blockquote>
+<dl class="docutils">
+<dt>OPTIONAL</dt>
+<dd><p class="first">el.seccontrol.data = list or array of optional line for hourglass control and bulk viscosity</p>
+<p class="last">All other  keys  have name equal to the ABAQUS keywords and value equal to parameter setting
+if an ABAQUS keyword does not have a value to be the Dict value must be an empty string</p>
+</dd>
+</dl>
+<p>el.material see fmtMaterial documentation</p>
+<p>EXAMPLE
+control=Dict({&#8216;name&#8217;:&#8217;StentControl&#8217;,&#8217;hourglass&#8217;:&#8217;enhanced&#8217;,})
+P.elemProp(set=&#8217;STENT&#8217;,eltype=&#8217;C3D8R&#8217;,section=ElemSection(section=stentSec,material=steel,seccontrol=control))</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="fe_abq.fmtSurface">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurface</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the surface definitions.</p>
@@ -508,14 +688,30 @@ material. The requirements for the other keys depend on this type.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="fe_abq.fmtAnalyticalSurface">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtAnalyticalSurface</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtAnalyticalSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the analytical surface rigid body.</p>
+<p>Required:</p>
+<ul class="simple">
+<li>nodeset: refnode.</li>
+<li>name: the surface name</li>
+<li>surftype: &#8216;ELEMENT&#8217; or &#8216;NODE&#8217;</li>
+<li>label: face or edge identifier (only required for surftype = &#8216;NODE&#8217;)</li>
+</ul>
+<p>Example: P.Prop(name=&#8217;AnalySurf&#8217;, nodeset = &#8216;REFNOD&#8217;, analyticalsurface=&#8217;&#8216;)</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="fe_abq.fmtSurfaceInteraction">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurfaceInteraction</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format the interactions.</p>
-<p>Optional:</p>
-<ul class="simple">
-<li>cross_section (for node based interaction)</li>
-<li>friction : friction coeff</li>
-</ul>
+<dd><p>Format the interactions.
+Required:
+-name</p>
+<p>Optional:
+- cross_section (for node based interaction)
+- friction : friction coeff or &#8216;rough&#8217;
+- surface behavior: no separation
+- surface behavior: pressureoverclosure</p>
 </dd></dl>
 
 <dl class="function">
@@ -527,6 +723,10 @@ material. The requirements for the other keys depend on this type.</li>
 <ul class="simple">
 <li>interaction: interaction properties : name or Dict</li>
 </ul>
+<p>Optional:
+- Exclusions (exl)
+Example:
+P.Prop(generalinteraction=Interaction(name =&#8217;contactprop1&#8217;),exl =[[&#8216;surf11&#8217;, &#8216;surf12&#8217;],[&#8216;surf21&#8217;,surf22]])</p>
 </dd></dl>
 
 <dl class="function">
@@ -539,6 +739,36 @@ material. The requirements for the other keys depend on this type.</li>
 <li>slave: slave surface</li>
 <li>interaction: interaction properties : name or Dict</li>
 </ul>
+<p>Example:
+P.Prop(name=&#8217;contact0&#8217;,interaction=Interaction(name =&#8217;contactprop&#8217;, surfacebehavior=True, pressureoverclosure=[&#8216;hard&#8217;,&#8217;linear&#8217;,0.0, 0.0, 0.001])
+, master =&#8217;quadtubeINTSURF1&#8217;,  slave=&#8217;hexstentEXTSURF&#8217;, contacttype=&#8217;NODE TO SURFACE&#8217;)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtConstraint">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConstraint</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtConstraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format Tie constraint
+Required:</p>
+<p>-name
+-adjust (yes or no)
+-slave
+-master</p>
+<p>Optional:
+-type (surf2surf, node2surf)
+-no rotation</p>
+<p>Example:
+P.Prop(constraint=&#8216;1&#8217;, name = &#8216;constr1&#8217;, adjust = &#8216;no&#8217;, master = &#8216;hexstentbarSURF&#8217;, slave = &#8216;hexstentEXTSURF&#8217;,type=&#8217;NODE TO SURFACE&#8217;)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtInitialConditions">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtInitialConditions</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtInitialConditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format initial conditions:
+Required:
+-type
+-nodes
+-data
+Example: P.Prop(initialcondition=&#8217;&#8216;, nodes =&#8217;Nall&#8217;, type = &#8216;TEMPERATURE&#8217;, data = 37.)</p>
 </dd></dl>
 
 <dl class="function">
@@ -596,15 +826,34 @@ or a list of names the name of another already defined set.</p>
 
 <dl class="function">
 <dt id="fe_abq.writeBoundaries">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeBoundaries</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='MOD'</em><big>)</big><a class="headerlink" href="#fe_abq.writeBoundaries" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeBoundaries</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeBoundaries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write nodal boundary conditions.</p>
 <p>prop is a list of node property records that should be scanned for
-bound attributes to write.</p>
+bound attributes to write. prop contains</p>
+<p>REQUIRED
+-bound  : a string (for prescribed conditions)</p>
+<blockquote>
+: a list of 6 integer (of values 0 or 1). where 1 the boundary is written 
+: a list of tuple ( )</blockquote>
+<p>OPTIONAL
+-ampl     : an amplitude name
+-extra    : Dict type.It has keys name equal to the ABAQUS keywords and value equal to parameter setting</p>
+<blockquote>
+if an ABAQUS keyword does not have a value to be the Dict value must be an empty string</blockquote>
 <p>By default, the boundary conditions are applied as a modification of the
 existing boundary conditions, i.e. initial conditions and conditions from
-previous steps remain in effect.
-The user can set op=&#8217;NEW&#8217; to remove the previous conditions.
-This will also remove initial conditions!</p>
+previous steps remain in effect.</p>
+<p>EXAMPLES
+P.nodeProp(tag=&#8217;init&#8217;,set=arange(100),name=&#8217;catheter&#8217;,bound=&#8217;pinned&#8217;)</p>
+<p>P.nodeProp(tag=&#8217;init&#8217;,set=arange(100),name=&#8217;catheter&#8217;,bound=[0,1,1,0,0,0])</p>
+<p>!!!!This works like writeDisplacements
+ampname=&#8217;amp&#8217;
+times = [0,1];values = [0,1]
+amp = Amplitude(data=column_stack([times,values]))
+P.Prop(amplitude=amp,name=ampname)
+P.nodeProp(tag=&#8217;step1&#8217;,set=&#8217;catheter&#8217;,bound=[(0,5.3),(1,3.5)],ampl=ampname)</p>
+<p>extra= Dict({&#8216;user&#8217;:&#8217;&#8216;})
+P.nodeProp(tag=&#8217;step1&#8217;,set=&#8217;catheter&#8217;,bound=[(0,5.4),(1,3.5)],extra=extra)</p>
 </dd></dl>
 
 <dl class="function">
@@ -743,7 +992,30 @@ easily call it with a Results dict as arguments</p>
 <dl class="function">
 <dt id="fe_abq.writeModelProps">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">writeModelProps</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeModelProps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write model props for this step</p>
+<dd><dl class="docutils">
+<dt>Write model props for this step</dt>
+<dd><dl class="first last docutils">
+<dt>extra <span class="classifier-delimiter">:</span> <span class="classifier">str </span></dt>
+<dd><p class="first">: list of Dict. each Dict is a new line.Only 2 keys are dedicated</p>
+<blockquote class="last">
+<dl class="docutils">
+<dt>REQUIRED</dt>
+<dd>-keyword =  abaqus keyword name</dd>
+<dt>OPTIONAL</dt>
+<dd><p class="first">-data = list or array of numerical data for any additional data line</p>
+<p class="last">All other keys have name equal to the ABAQUS keywords and value equal to parameter setting
+if an ABAQUS keyword does not have a value to be the Dict value must be an empty string</p>
+</dd>
+</dl>
+<p>EXAMPLE
+P.Prop(tag=&#8217;step1&#8217;,extra=&#8217;<a href="#id9"><span class="problematic" id="id10">*</span></a>CONTACT CONTROLS , AUTOMATIC TOLERANCES</p>
+</blockquote>
+</dd>
+</dl>
+</dd>
+<dt>&#8216;)</dt>
+<dd>P.Prop(tag=&#8217;step1&#8217;,extra=[Dict({&#8216;keyword&#8217;:&#8217;CONTACT CONTROLS&#8217;,&#8217;AUTOMATIC TOLERANCES&#8217;:&#8217;&#8216;})])</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -774,7 +1046,7 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="fe.html"
-                        title="previous chapter">40. <tt class="docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
+                        title="previous chapter">40. <tt class="docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="fe_post.html"
                         title="next chapter">42. <tt class="docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.</a></p>

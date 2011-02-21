@@ -197,7 +197,7 @@ dimensionality  0,1,2,3 is:</p>
 to that of the caller. If it is positive, it is taken absolute.
 Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
 returns the faces, while for a 2D element type, it returns the edges.
-For bothe meshes however,  getLowerEntities(+1) returns the edges.</p>
+For both meshes however,  getLowerEntities(+1) returns the edges.</p>
 <p>By default, all entities for all elements are returned and common
 entities will appear multiple times. Specifying unique=True will 
 return only the unique ones.</p>
@@ -283,6 +283,17 @@ requests can return it without the need for computing it again.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.getElemEdges">
+<tt class="descname">getElemEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getElemEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the elements in function of its edges.</p>
+<p>This returns a Connectivity table with the elements defined in
+function of the edges. It is equivalent to
+<tt class="docutils literal"><span class="pre">`self.elems.insertLevel(self.getLowerEntitiesSelector(1))`</span></tt>
+but it also stores the definition of the edges and the returned
+element to edge connectivity.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.getBorder">
 <tt class="descname">getBorder</tt><big>(</big><em>return_indices=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the border of the Mesh.</p>
@@ -319,12 +330,6 @@ This is equivalent to:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">Mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">elems</span><span class="p">[:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="method">
-<dt id="mesh.Mesh.getFaceEdges">
-<tt class="descname">getFaceEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getFaceEdges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the faces&#8217; edge numbers.</p>
 </dd></dl>
 
 <dl class="method">
@@ -411,6 +416,17 @@ that will be passed to <tt class="xref py py-meth docutils literal"><span class=
 <p>self and Mesh are same eltype meshes
 and are both without Doubles.</p>
 <p>Elems are matched by their centroids.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.matchFaces">
+<tt class="descname">matchFaces</tt><big>(</big><em>mesh</em><big>)</big><a class="headerlink" href="#mesh.Mesh.matchFaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match faces of mesh with faces of self.</p>
+<p>self and Mesh can be same eltype meshes or different eltype but of the 
+same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
+and are both without Doubles.</p>
+<p>Returns the indices array of the elems of self that matches
+the faces of mesh</p>
 </dd></dl>
 
 <dl class="method">
@@ -740,14 +756,6 @@ at one side of the plane (p,n)</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.areas">
-<tt class="descname">areas</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.areas" title="Permalink to this definition">¶</a></dt>
-<dd><p>area of elements</p>
-<p>For surface element the faces&#8217; area is returned.
-For volume elements the sum of the faces&#8217;areas is returned.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="mesh.Mesh.volumes">
 <tt class="descname">volumes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.volumes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the signed volume of all the mesh elements</p>
@@ -784,6 +792,26 @@ of an equiangular element, qe).</p>
 <p><cite>mat</cite>: a 3x3 float matrix</p>
 <p><cite>vec</cite>: a length 3 list or array of floats</p>
 <p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.align">
+<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align the Coords along the global axes.</p>
+<p>Alignment involves a translation such that the bounding box
+of the Coords object becomes aligned on the origin of the global axes.
+The requested alignment is determined by a string of three characters,
+one for each of the coordinate axes. The character determines how
+the structure is aligned in the corresponding direction:</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
+<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
+<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+</ul>
+<p>Any other value will make the alignment in that direction unchanged.</p>
+<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
+all the points in the octant with all positive coordinate values.
+A string &#8216;000&#8217; will center the object around the origin.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1271,10 +1299,10 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="curve.html"
-                        title="previous chapter">29. <tt class="docutils literal docutils literal"><span class="pre">curve</span></tt> &#8212; Definition of curves in pyFormex.</a></p>
+                        title="previous chapter">29. <tt class="docutils literal"><span class="pre">curve</span></tt> &#8212; Definition of curves in pyFormex.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="trisurface.html"
-                        title="next chapter">31. <tt class="docutils literal docutils literal"><span class="pre">trisurface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
+                        title="next chapter">31. <tt class="docutils literal"><span class="pre">trisurface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

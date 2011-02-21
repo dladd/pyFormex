@@ -121,8 +121,8 @@ method applied on the <cite>coords</cite> attribute:
 <tt class="xref py py-meth docutils literal"><span class="pre">directionalSize()</span></tt>,
 <tt class="xref py py-meth docutils literal"><span class="pre">directionalWidth()</span></tt>,
 <tt class="xref py py-meth docutils literal"><span class="pre">directionalExtremes()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">__str__()</span></tt>.
-Refer to the correponding <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> method for their usage.</p>
+<tt class="xref py py-meth docutils literal"><span class="pre">__str__()</span></tt>.</p>
+<p>Refer to the correponding <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> method for their usage.</p>
 <p>The following <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> transformation methods can be directly applied
 to a <a class="reference internal" href="#geometry.Geometry" title="geometry.Geometry"><tt class="xref py py-class docutils literal"><span class="pre">Geometry</span></tt></a> object or a derived class object. The return value
 is a new object identical to the original, except for the coordinates,
@@ -207,6 +207,26 @@ with this value before it is added to the coordinates.</p>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.align">
+<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align the Coords along the global axes.</p>
+<p>Alignment involves a translation such that the bounding box
+of the Coords object becomes aligned on the origin of the global axes.
+The requested alignment is determined by a string of three characters,
+one for each of the coordinate axes. The character determines how
+the structure is aligned in the corresponding direction:</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
+<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
+<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+</ul>
+<p>Any other value will make the alignment in that direction unchanged.</p>
+<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
+all the points in the octant with all positive coordinate values.
+A string &#8216;000&#8217; will center the object around the origin.</p>
 </dd></dl>
 
 <dl class="method">
@@ -582,10 +602,10 @@ If fil is a string, the file is closed prior to returning.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="colors.html"
-                        title="previous chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+                        title="previous chapter">6. <tt class="docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="connectivity.html"
-                        title="next chapter">8. <tt class="docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+                        title="next chapter">8. <tt class="docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

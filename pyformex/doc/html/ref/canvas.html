@@ -166,9 +166,16 @@ default value if get found a KeyError.</p>
 
 <dl class="method">
 <dt id="canvas.Canvas.setRenderMode">
-<tt class="descname">setRenderMode</tt><big>(</big><em>rm</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setRenderMode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the rendermode.</p>
-<p>This changes the rendermode and redraws everything with the new mode.</p>
+<tt class="descname">setRenderMode</tt><big>(</big><em>mode</em>, <em>lighting=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setRenderMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the rendering mode.</p>
+<p>This sets or changes the rendermode and lighting attributes.
+If lighting is not specified, it is set depending on the rendermode.</p>
+<p>If the canvas has not been initialized, this merely sets the
+attributes self.rendermode and self.lighting.
+If the canvas was already initialized (it has a camera), and one of
+the specified settings is fdifferent from the existing, the new mode
+is set, the canvas is re-initialized according to the newly set mode,
+and everything is redrawn with the new mode.</p>
 </dd></dl>
 
 <dl class="method">
@@ -222,6 +229,15 @@ and an object is created to display the background.</p>
 <dd><p>Toggle the display of the global axes on or off.</p>
 <p>If on is True, a triade of global axes is displayed, if False it is
 removed. The default (None) toggles between on and off.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.glinit">
+<tt class="descname">glinit</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.glinit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the rendering machine.</p>
+<p>The rendering machine is initialized according to:
+- self.rendermode: one of
+- self.lighting</p>
 </dd></dl>
 
 <dl class="method">
