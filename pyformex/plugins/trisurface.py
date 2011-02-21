@@ -234,10 +234,9 @@ def surface_volume(x,pt=None):
 
 
 def curvature(coords,elems,edges,neighbours=1):
-    """Calculate curvature parameters at the nodes
+    """Calculate curvature parameters at the nodes.
     
-    (according to Dong and Wang 2005;
-    Koenderink and Van Doorn 1992).
+    Algorithms based on Dong and Wang 2005; Koenderink and Van Doorn 1992.
     This uses the nodes that are connected to the node via a shortest
     path of 'neighbours' edges.
     Eight values are returned: the Gaussian and mean curvature, the
