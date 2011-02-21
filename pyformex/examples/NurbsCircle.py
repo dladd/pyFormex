@@ -53,165 +53,6 @@ from OpenGL import GL, GLU
 import simple
 from plugins.curve import *
 from plugins.nurbs import *
-from gui.actors import Actor
-from gui.drawable import drawNurbsCurves
-import olist
-import lib._nurbs_ as nu
-
-class NurbsCurve():
-
-    """A NURBS curve
-
-    order (2,3,4,...) = degree+1 = min. number of control points
-    ncontrol >= order
-    nknots = order + ncontrol >= 2*order
-
-    convenient solutions:
-    OPEN:
-      nparts = (ncontrol-1) / degree
-      nintern = 
-    """
-    
-    def __init__(self,control,degree=None,wts=None,knots=None,closed=False,blended=True):
-        self.closed = closed
-        nctrl = len(control)
-        
-        if degree is None:
-            if knots is None:
-                raise ValueError,'Either degree or knots has to be specified'
-            else:
-                degree = len(knots) - nctrl -1
-                if degree <= 0:
-                    raise ValueError,"Length of knot vector (%s) must be at least number of control points (%s) plus 2" % (len(knots),nctrl)
-
-        order = degree+1
-        control = Coords4(control)
-        if wts is not None:
-            control.deNormalize(wts)
-        #print "CONTROL",control
-
-        if closed:
-            if knots is None:
-                nextra = degree
-            else:
-                nextra = len(knots) - nctrl - order
-            nextra1 = (nextra+1) // 2
-            nextra2 = nextra-nextra1
-            print "extra %s = %s + %s" % (nextra,nextra1,nextra2)
-            control = Coords4(concatenate([control[-nextra1:],control,control[:nextra2]],axis=0))
-
-        nctrl = len(control)
-
-        if nctrl < order:
-            raise ValueError,"Number of control points (%s) must not be smaller than order (%s)" % (nctrl,order)
-
-        if knots is None:
-            knots = knotsVector(nctrl,degree,blended=blended,closed=closed)
-            print "KNOTS",knots
-
-        nknots = len(knots)
-        print "Nurbs curve of degree %s with %s control points and %s knots" % (degree,nctrl,nknots)
-        
-        if nknots != nctrl+order:
-            raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
-
-       
-        self.control = control
-        self.knots = asarray(knots)
-        self.degree = degree
-        self.closed = closed
-
-
-    def order(self):
-        return len(self.knots)-len(self.control)
-        
-    def bbox(self):
-        return self.control.toCoords().bbox()
-
-
-    def pointsAt(self,u=None,n=10):
-        if u is None:
-            umin = self.knots[0]
-            umax = self.knots[-1]
-            u = umin + arange(n+1) * (umax-umin) / n
-        
-        ctrl = self.control.astype(double)
-        knots = self.knots.astype(double)
-        u = asarray(u).astype(double)
-
-        try:
-            pts = nu.bspeval(self.order()-1,ctrl,knots,u)
-            if isnan(pts).any():
-                print "We got a NaN"
-                raise RuntimeError
-        except:
-            raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
-
-        if pts.shape[-1] == 4:
-            pts = Coords4(pts).toCoords()
-            print pts.shape
-        else:
-            pts = Coords(pts)
-            print pts.shape
-        return pts
-        
-
-    def actor(self,**kargs):
-        """Graphical representation"""
-        return NurbsActor(self,**kargs)
-
-
-class NurbsActor(Actor):
-
-    def __init__(self,data,color=None,**kargs):
-        from gui.drawable import saneColor
-        Actor.__init__(self)
-        self.object = data
-        self.color = saneColor(color)
-        self.samplingTolerance = 1.0
-
-        
-    def bbox(self):
-        return self.object.bbox()
-
-        
-    def drawGL(self,**kargs):
-        drawNurbsCurves(self.object.control,self.object.knots,color=self.color)
-
-    
-
-def unitRange(n):
-    """Divide the range 0..1 in n equidistant points"""
-    if n > 1:
-        return (arange(n) * (1.0/(n-1))).tolist()
-    elif n == 1:
-        return [0.5]
-    else:
-        return []
-
-
-def knotsVector(nctrl,degree,blended=True,closed=False):
-    """Compute knots vector for a fully blended Nurbs curve.
-
-    A Nurbs curve with nctrl points and of given degree needs a knots vector
-    nknots = nctrl+degree+1 values.
-    
-    """
-    nknots = nctrl+degree+1
-    if closed:
-        knots = unitRange(nknots)
-    else:
-        if blended:
-            npts = nknots - 2*degree
-            knots = [0.]*degree + unitRange(npts) + [1.]*degree
-        else:
-            nparts = (nctrl-1) / degree
-            if nparts*degree+1 != nctrl:
-                raise ValueError,"Discrete knot vectors can only be used if the number of control points is a multiple of the degree, plus one."
-            knots = [0.] + [ [float(i)]*degree for i in range(nparts+1) ] + [float(nparts)]
-            knots = olist.flatten(knots)
-            
-    return knots
 
 
 def askCurve():
@@ -350,27 +191,14 @@ def demo_knots():
     drawNumbers(pts)
     draw(PolyLine(pts))
 
-    c = red
-    C = NurbsCurve(pts[:-1],degree=degree,closed=True)
-    draw(C,color=c)
-    drawThePoints(C,20,color=c)
+    for degree,c1,c2 in zip([2,3,4],[red,blue,green],[magenta,cyan,yellow]):
+        C = NurbsCurve(pts[:-1],degree=degree,closed=True)
+        draw(C,color=c1)
+        drawThePoints(C,20,color=c1)
 
-    c = cyan
-    C = NurbsCurve(pts,degree=degree,closed=False)
-    draw(C,color=c)
-    drawThePoints(C,20,color=c)
-
-    degree = 3
-
-    c = magenta
-    C = NurbsCurve(pts[:-1],degree=degree,closed=True)
-    draw(C,color=c)
-    drawThePoints(C,20,color=c)
-
-    c = blue
-    C = NurbsCurve(pts,degree=degree,closed=False)
-    draw(C,color=c)
-    drawThePoints(C,20,color=c)
+        C = NurbsCurve(pts,degree=degree,closed=False)
+        draw(C,color=c2)
+        drawThePoints(C,20,color=c2)
 
 
 demo_knots()

@@ -29,8 +29,10 @@ The :mod:`nurbs` module defines functions and classes to manipulate
 NURBS curves and surface in pyFormex.
 """
 from coords import *
-from lib import _nurbs_
+from lib import _nurbs_ as nu
 from pyformex import options
+from gui.actors import NurbsActor
+import olist
 
 
 ###########################################################################
@@ -210,6 +212,148 @@ class Coords4(ndarray):
     def actor(self,**kargs):
         """Graphical representation"""
         return self.toCoords().actor()
+
+
+class NurbsCurve(object):
+
+    """A NURBS curve
+
+    The Nurbs curve is defined by nctrl control points, a degree (>= 1) and
+    a knot vector with knots = nctrl+degree+1 parameter values, in ascending
+    order.
+    The knot values are only defined upon a multiplicative constant, equal to
+    the largest value. Sensible default values are constructed automatically
+    by a call to the knotVector() function.
+
+    
+    order (2,3,4,...) = degree+1 = min. number of control points
+    ncontrol >= order
+    nknots = order + ncontrol >= 2*order
+
+    convenient solutions:
+    OPEN:
+      nparts = (ncontrol-1) / degree
+      nintern = 
+    """
+    
+    def __init__(self,control,degree=None,wts=None,knots=None,closed=False,blended=True):
+        self.closed = closed
+        nctrl = len(control)
+        
+        if degree is None:
+            if knots is None:
+                raise ValueError,'Either degree or knots has to be specified'
+            else:
+                degree = len(knots) - nctrl -1
+                if degree <= 0:
+                    raise ValueError,"Length of knot vector (%s) must be at least number of control points (%s) plus 2" % (len(knots),nctrl)
+
+        order = degree+1
+        control = Coords4(control)
+        if wts is not None:
+            control.deNormalize(wts)
+
+        if closed:
+            if knots is None:
+                nextra = degree
+            else:
+                nextra = len(knots) - nctrl - order
+            nextra1 = (nextra+1) // 2
+            nextra2 = nextra-nextra1
+            #print "extra %s = %s + %s" % (nextra,nextra1,nextra2)
+            control = Coords4(concatenate([control[-nextra1:],control,control[:nextra2]],axis=0))
+
+        nctrl = len(control)
+
+        if nctrl < order:
+            raise ValueError,"Number of control points (%s) must not be smaller than order (%s)" % (nctrl,order)
+
+        if knots is None:
+            knots = knotsVector(nctrl,degree,blended=blended,closed=closed)
+            #print "KNOTS",knots
+
+        nknots = len(knots)
+        #print "Nurbs curve of degree %s with %s control points and %s knots" % (degree,nctrl,nknots)
+        
+        if nknots != nctrl+order:
+            raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
+
+       
+        self.control = control
+        self.knots = asarray(knots)
+        self.degree = degree
+        self.closed = closed
+
+
+    def order(self):
+        return len(self.knots)-len(self.control)
+        
+    def bbox(self):
+        return self.control.toCoords().bbox()
+
+
+    def pointsAt(self,u=None,n=10):
+        if u is None:
+            umin = self.knots[0]
+            umax = self.knots[-1]
+            u = umin + arange(n+1) * (umax-umin) / n
+        
+        ctrl = self.control.astype(double)
+        knots = self.knots.astype(double)
+        u = asarray(u).astype(double)
+
+        try:
+            pts = nu.bspeval(self.order()-1,ctrl,knots,u)
+            if isnan(pts).any():
+                print "We got a NaN"
+                raise RuntimeError
+        except:
+            raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
+
+        if pts.shape[-1] == 4:
+            pts = Coords4(pts).toCoords()
+        else:
+            pts = Coords(pts)
+        return pts
+        
+
+    def actor(self,**kargs):
+        """Graphical representation"""
+        return NurbsActor(self,**kargs)
+    
+
+def unitRange(n):
+    """Divide the range 0..1 in n equidistant points"""
+    if n > 1:
+        return (arange(n) * (1.0/(n-1))).tolist()
+    elif n == 1:
+        return [0.5]
+    else:
+        return []
+
+
+def knotsVector(nctrl,degree,blended=True,closed=False):
+    """Compute knots vector for a fully blended Nurbs curve.
+
+    A Nurbs curve with nctrl points and of given degree needs a knots vector
+    nknots = nctrl+degree+1 values.
+    
+    """
+    nknots = nctrl+degree+1
+    if closed:
+        knots = unitRange(nknots)
+    else:
+        if blended:
+            npts = nknots - 2*degree
+            knots = [0.]*degree + unitRange(npts) + [1.]*degree
+        else:
+            nparts = (nctrl-1) / degree
+            if nparts*degree+1 != nctrl:
+                raise ValueError,"Discrete knot vectors can only be used if the number of control points is a multiple of the degree, plus one."
+            knots = [0.] + [ [float(i)]*degree for i in range(nparts+1) ] + [float(nparts)]
+            knots = olist.flatten(knots)
+            
+    return knots
 
 
 def toCoords4(x):

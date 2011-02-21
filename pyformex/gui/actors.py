@@ -758,4 +758,22 @@ class GeomActor(Actor):
         return GeomActor(x,e,eltype=self.eltype)
 
 
+class NurbsActor(Actor):
+
+    def __init__(self,data,color=None,**kargs):
+        from gui.drawable import saneColor
+        Actor.__init__(self)
+        self.object = data
+        self.color = saneColor(color)
+        self.samplingTolerance = 1.0
+
+        
+    def bbox(self):
+        return self.object.bbox()
+
+        
+    def drawGL(self,**kargs):
+        drawNurbsCurves(self.object.control,self.object.knots,color=self.color)
+
+
 # End
