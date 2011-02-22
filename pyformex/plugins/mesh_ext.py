@@ -169,6 +169,23 @@ def rings(self, sources, nrings):
     ar, rr= arange(len(r)), range(r.max()+1)
     return [ar[r==i] for i in rr ]
 
+def correctNegativeVolumes(self):
+    """Modify the connectivity of negative-volume elements to make
+    positive-volume elements.
+
+    Negative-volume elements (hex or tet with inconsistent face orientation)
+    may appear by error during geometrical trnasformations
+    (e.g. reflect, sweep, extrude, revolve).
+    This function fixes those elements.
+    Currently it only works with linear tet and hex.
+    """
+    vol=self.volumes()<0.
+    if self.eltype.name()=='tet4':
+        self.elems[vol]=self.elems[vol][:,  [0, 2, 1, 3]]
+    if self.eltype.name()=='hex8':
+        self.elems[vol]=self.elems[vol][:,  [4, 5, 6, 7, 0, 1, 2, 3]]
+    return self
+
 def scaledJacobian(self, scaled=True):
     """
     Returns a quality measure for volume meshes.
@@ -182,7 +199,7 @@ def scaledJacobian(self, scaled=True):
     quality requires a minimum of 0.2.
     Quadratic meshes are first converted to linear.
     If the mesh contain mainly negative Jacobians, it probably has negative
-    volumes and can be fixed with the correctHexMeshOrientation (it can be defined also for tet).
+    volumes and can be fixed with the  correctNegativeVolumes.
     """
     ne = self.nelems()
     if self.eltype.name()=='hex20':
@@ -301,6 +318,7 @@ def _auto_initialize():
     Mesh.splitByConnection = splitByConnection
     Mesh.largestByConnection = largestByConnection
     Mesh.rings = rings
+    Mesh.correctNegativeVolumes = correctNegativeVolumes
     Mesh.scaledJacobian = scaledJacobian
 _auto_initialize()
 
