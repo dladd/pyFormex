@@ -169,6 +169,54 @@ def rings(self, sources, nrings):
     ar, rr= arange(len(r)), range(r.max()+1)
     return [ar[r==i] for i in rr ]
 
+def scaledJacobian(self, scaled=True):
+    """
+    Returns a quality measure for volume meshes.
+    
+    If scaled if False, it returns the Jacobian at the corners of each element.
+    If scaled is True, it returns a quality metrics, being
+    the minumum value of the scaled Jacobian in each element (at one corner, 
+    the Jacobian divided by the volume of a perfect brick).
+    Each tet or hex element gives a value between -1 and 1. 
+    Acceptable elements have a positive scaled Jacobian. However, good 
+    quality requires a minimum of 0.2.
+    Quadratic meshes are first converted to linear.
+    If the mesh contain mainly negative Jacobians, it probably has negative
+    volumes and can be fixed with the correctHexMeshOrientation (it can be defined also for tet).
+    """
+    ne = self.nelems()
+    if self.eltype.name()=='hex20':
+        self = self.convert('hex8')
+    if self.eltype.name()=='tet10':
+        self = self.convert('tet4')      
+    if self.eltype.name()=='tet4':
+        iacre=array([
+        [[0, 1], [1, 2],[2, 0],[3, 2]],
+        [[0, 2], [1, 0],[2, 1],[3, 1]],
+        [[0, 3], [1, 3],[2, 3],[3, 0]],
+        ], dtype=int)
+        nc = 4
+    if self.eltype.name()=='hex8':
+        iacre=array([
+        [[0, 4], [1, 5],[2, 6],[3, 7], [4, 7], [5, 4],[6, 5],[7, 6]],
+        [[0, 1], [1, 2],[2, 3],[3, 0], [4, 5], [5, 6],[6, 7],[7, 4]],
+        [[0, 3], [1, 0],[2, 1],[3, 2], [4, 0], [5, 1],[6, 2],[7, 3]],
+        ], dtype=int)
+        nc = 8
+    acre = self.coords[self.elems][:, iacre]
+    vacre = acre[:, :,:,1]-acre[:, :,:,0]
+    cvacre = concatenate(vacre, axis=1)
+    if self.eltype.name()=='tet4': #Tet4 has Jacobian equal on every corner, but differnt scaled J
+        vacre = concatenate(vacre[:, :, 0], axis=1).reshape(-1, 2, 3)
+        J = vectorTripleProduct(*vacre).repeat(nc).reshape(ne, 4)
+    else: 
+        J = vectorTripleProduct(*cvacre).reshape(ne, nc)
+    if not scaled: 
+        return J
+    else:
+        normvol = prod(length(cvacre), axis=0).reshape(ne, nc)#volume of 3 nprmal edges
+        Jscaled = J/normvol
+        return Jscaled.min(axis=1)
 
 ## THIS NEEDS WORK ###
 ## surfacetype is also eltype ??
@@ -253,7 +301,7 @@ def _auto_initialize():
     Mesh.splitByConnection = splitByConnection
     Mesh.largestByConnection = largestByConnection
     Mesh.rings = rings
-
+    Mesh.scaledJacobian = scaledJacobian
 _auto_initialize()
 
 
