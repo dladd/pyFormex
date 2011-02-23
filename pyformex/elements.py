@@ -317,6 +317,31 @@ Tet10 = Element(
     )
 
 
+Tet14 = Element(
+    'tet14',"A 14-node tetrahedron",
+    ndim = 3,
+    vertices = Tet10.vertices + [ ( 1./3., 1./3., 0.0 ),
+                 ( 0.0, 1./3., 1./3. ),
+                 ( 1./3., 0.0, 1./3. ),
+                 ( 1./3., 1./3., 1./3. ),
+                 ],
+# BV: This needs further specification!
+    edges = Tet4.edges,
+    faces = Tet4.faces,
+    )
+    
+    
+Tet15 = Element(
+'tet15',"A 15-node tetrahedron",
+ndim = 3,
+vertices = Tet14.vertices + [ ( 0.25, 0.25, 0.25 ),
+             ],
+# BV: This needs further specification!
+edges = Tet4.edges,
+faces = Tet4.faces,
+)
+
+
 Wedge6 = Element(
     'wedge6',"A 6-node wedge element",
     ndim = 3,
@@ -432,10 +457,28 @@ Quad9.conversions = {
     }
 Tet4.conversions = {
     'tet10' : [ ('m', [ (0,1), (0,2), (0,3), (1,2), (2, 3), (1, 3)]), ],
+    'tet14'  : [ ('v', 'tet10'), ],
+    'tet15'  : [ ('v', 'tet14'), ],
+    'hex8'  : [ ('v', 'tet15'), ],
     }
 Tet10.conversions = {
     'tet4' :  [ ('s', [ (0,1,2,3,) ]), ],
-    #'hex8'#TODO
+    'tet14'  : [ ('m', [ (0,1, 2), (0, 2, 3), (0, 3, 1), (1, 2, 3), ]), ],
+    'tet15'  : [ ('v', 'tet14'), ],
+    'hex8'  : [ ('v', 'tet15'), ],
+    }
+Tet14.conversions = {
+    'tet10' :  [ ('s', [ (0,1,2,3,4, 5, 6, 7, 8, 9) ]), ],
+    'tet4' : [ ('v', 'tet10'), ],
+    'tet15'  : [ ('m', [ (0,1, 2, 3), ]), ],
+    'hex8'  : [ ('v', 'tet15'), ],
+    }
+Tet15.conversions = {
+    'tet14' :  [ ('s', [ (0,1,2,3,4, 5, 6, 7, 8, 9, 10, 11, 12, 13) ]), ],
+    'tet10' :  [ ('v', 'tet14'), ],
+    'tet4' :  [ ('v', 'tet10'), ],
+    'hex8' :  [ ('s', [ (0,4,10, 5, 6, 12, 14, 11), (4,1,7, 10, 12, 9, 13, 14),
+                       (5, 10, 7,2,11, 14, 13, 8), (6, 12, 14, 11, 3, 9, 13, 8) ]), ],
     }
 Wedge6.conversions = {
     'tet4'  : [ ('s', [ (0,1,2,3),(1,2,3,4),(2,3,4,5) ]), ],
