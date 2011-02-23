@@ -1,29 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
-##
-##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
-##  pyFormex is a tool for generating, manipulating and transforming 3D
-##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
-##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
-##  Distributed under the GNU General Public License version 3 or later.
-##
-##
-##  This program is free software: you can redistribute it and/or modify
-##  it under the terms of the GNU General Public License as published by
-##  the Free Software Foundation, either version 3 of the License, or
-##  (at your option) any later version.
-##
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU General Public License for more details.
-##
-##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see http://www.gnu.org/licenses/.
-##
 
-"""NurbsCircle
+"""Nurbs
 
 level = 'advanced'
 topics = ['geometry', 'curve']
@@ -31,24 +9,9 @@ techniques = ['nurbs','border']
 
 .. Description
 
-Nurbs Circle
-============
-
-The image shows a number of closed nurbs curves that were generated
-from the same set of 8 control points (shown in black, numbered 0..7).
-
-The nurbs curve are defined by the following parameters:
-
-:black: order 2 (degree 1: linear)
-:red: order 3 (degree 2: quadratic)
-:green: order 4 (degree 3: cubic)
-:blue: order 3, but using weights 1, sqrt(2)/2 for the midside,corner points respectively. This results in a perfect circle. The blue points on the curve are evaluated from the nurbs formulation, by dividing the parameter space in 20 equidistance parts.
-  
-The yellow curve is created with simple.circle and uses 180 line segments.
+Nurbs
+=====
 """
-
-
-from OpenGL import GL, GLU
 
 import simple
 from plugins.curve import *

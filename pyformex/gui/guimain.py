@@ -468,6 +468,7 @@ class Gui(QtGui.QMainWindow):
             self.curfile.setText(os.path.basename(filename))
             self.actions['Play'].setEnabled(self.canPlay)
             self.actions['Step'].setEnabled(self.canPlay)
+            self.actions['Stop'].setEnabled(self.canPlay)
             if self.canPlay:
                 icon = 'ok'
             else:

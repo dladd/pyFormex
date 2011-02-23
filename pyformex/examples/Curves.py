@@ -28,41 +28,15 @@ Examples showing the use of the 'curve' plugin
 
 level = 'normal'
 topics = ['geometry','curve']
-techniques = ['solve','widgets','persistence','import','spline']
+techniques = ['widgets','persistence','import','spline']
 """
 
 from plugins.curve import *
+from plugins.nurbs import *
 from odict import ODict
 from gui.widgets import InputDialog, simpleInputItem as I
 
-
-
-def BezierCurve(X,curl=None,closed=False):
-    """Create a Bezier curve give 4 points
-
-    This currently does not allow closed==True
-    """
-    ns = (X.shape[0]-1) / 3
-    ip = 3*arange(ns+1)
-    P = X[ip]
-    ip = 3*arange(ns)
-    ic = column_stack([ip+1,ip+2]).ravel()
-    C = X[ic].reshape(-1,2,3)
-    # always use False
-    return BezierSpline(P,control=C,closed=False)
-    
-
-method = ODict([
-    ('Bezier Spline', BezierSpline),
-    ('Quadratic Bezier Spline', QuadBezierSpline),
-#    ('Cardinal Spline', CardinalSpline),
-#    ('Cardinal Spline2', CardinalSpline2),
-    ('Natural Spline', NaturalSpline),
-    ('Polyline', PolyLine),
-    ('Bezier Curve', BezierCurve),
-])
-
-method_color = [ 'red','green','blue','cyan','magenta','yellow','white' ] 
+ctype_color = [ 'red','green','blue','cyan','magenta','yellow','white' ] 
 point_color = [ 'black','white' ] 
         
 open_or_closed = { True:'A closed', False:'An open' }
@@ -70,9 +44,17 @@ open_or_closed = { True:'A closed', False:'An open' }
 TA = None
 
 
+curvetypes = [
+    'PolyLine',
+    'Quadratic Bezier Spline',
+    'Cubic Bezier Spline',
+    'Natural Spline',
+    'Nurbs Curve',
+]
 
-def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False,scale=None,directions=False):
-    global TA
+
+def drawCurve(ctype,dset,closed,endcond,curl,ndiv,ntot,extend,spread,drawtype,cutWP=False,scale=None,directions=False):
+    global S,TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
     if TA is not None:
@@ -80,38 +62,47 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,dra
     TA = drawText(text,10,10,font='sans',size=20)
     draw(P, color='black')
     drawNumbers(Formex(P))
-    kargs = {'closed':closed}
-    if ctype in ['Natural Spline','Bezier Spline','Cardinal Spline']:
-        kargs['endzerocurv'] = (endcond,endcond)
-    if ctype.startswith('Cardinal'):
-        kargs['tension'] = tension
-    if ctype in ['Bezier Spline']:
-        curl = float(curl)
-        kargs['curl'] = curl
-    S = method[ctype](P,**kargs)
+    if ctype == 'PolyLine':
+        S = PolyLine(P,closed=closed)
+    elif ctype == 'Quadratic Bezier Spline':
+        S = BezierSpline(P,degree=2,closed=closed,curl=curl,endzerocurv=(endcond,endcond))
+    elif ctype == 'Cubic Bezier Spline':
+        S = BezierSpline(P,closed=closed,curl=curl,endzerocurv=(endcond,endcond))
+    elif ctype == 'Natural Spline':
+        S = NaturalSpline(P,closed=closed,endzerocurv=(endcond,endcond))
+        directions = False
+    elif ctype == 'Nurbs Curve':
+        S = NurbsCurve(P,closed=closed)
+        scale = None
+        directions = False
+        drawtype = 'Curve'
 
     if scale:
         S = S.scale(scale)
 
-    print "%s points on the curve" % S.pointsOn().shape[0]
-    draw(S.pointsOff(),color=red)
-    #print "coeffs %s" % S.coeffs
+    im = curvetypes.index(ctype)
+    print "%s control points" % S.coords.shape[0]
+    draw(S.coords,color=red)
 
-    if spread:
-        #print ndiv,ntot
-        PL = S.approx(ndiv=ndiv,ntot=ntot)
+    if drawtype == 'Curve':
+        draw(S,color=ctype_color[im])
+
     else:
-        #print ndiv,ntot
-        PL = S.approx(ndiv=ndiv)
-        
-    im = method.keys().index(ctype)
-    if cutWP:
-        PC = PL.cutWithPlane([0.,0.42,0.],[0.,1.,0.])
-        draw(PC[0],color=red)
-        draw(PC[1],color=green)
-    else:
-        draw(PL, color=method_color[im])
-    draw(PL.pointsOn(),color=black)
+        if spread:
+            #print ndiv,ntot
+            PL = S.approx(ndiv=ndiv,ntot=ntot)
+        else:
+            #print ndiv,ntot
+            PL = S.approx(ndiv=ndiv)
+
+        if cutWP:
+            PC = PL.cutWithPlane([0.,0.42,0.],[0.,1.,0.])
+            draw(PC[0],color=red)
+            draw(PC[1],color=green)
+        else:
+            draw(PL, color=ctype_color[im])
+        draw(PL.pointsOn(),color=black)
+
     
     if directions:
         t = arange(2*S.nparts+1)*0.5
@@ -140,10 +131,9 @@ dataset = [
 
 data_items = [
     I('DataSet','0',choices=map(str,range(len(dataset)))), 
-    I('CurveType',choices=method.keys()),
+    I('CurveType',choices=curvetypes),
     I('Closed',False),
     I('EndCurvatureZero',False),
-    I('Tension',0.0),
     I('Curl',1./3.),
     I('Ndiv',10),
     I('SpreadEvenly',False),
@@ -160,6 +150,7 @@ data_items = [
 clear()
 setDrawOptions({'bbox':'auto','view':'front'})
 linewidth(2)
+flat()
 
 dialog = None
 
@@ -178,12 +169,12 @@ def show(all=False):
     if Clear:
         clear()
     if all:
-        Types = method.keys()
+        Types = curvetypes
     else:
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,EndCurvatureZero,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale,ShowDirections)
+        drawCurve(Type,int(DataSet),Closed,EndCurvatureZero,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs,CutWithPlane,Scale,ShowDirections)
         setDrawOptions({'bbox':None})
 
 def showAll():

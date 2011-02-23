@@ -214,7 +214,13 @@ class Coords4(ndarray):
         return self.toCoords().actor()
 
 
-class NurbsCurve(object):
+class Geometry4(object):
+    def scale(self,*args,**kargs):
+        self.coords[...,:3] = Coords(self.coords[...,:3]).scale(*args,**kargs)
+        return self
+    
+
+class NurbsCurve(Geometry4):
 
     """A NURBS curve
 
@@ -242,7 +248,8 @@ class NurbsCurve(object):
         
         if degree is None:
             if knots is None:
-                raise ValueError,'Either degree or knots has to be specified'
+                #raise ValueError,'Either degree or knots has to be specified'
+                degree = min(nctrl-1,3)
             else:
                 degree = len(knots) - nctrl -1
                 if degree <= 0:
@@ -279,17 +286,17 @@ class NurbsCurve(object):
             raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
 
        
-        self.control = control
+        self.coords = control
         self.knots = asarray(knots)
         self.degree = degree
         self.closed = closed
 
 
     def order(self):
-        return len(self.knots)-len(self.control)
+        return len(self.knots)-len(self.coords)
         
     def bbox(self):
-        return self.control.toCoords().bbox()
+        return self.coords.toCoords().bbox()
 
 
     def pointsAt(self,u=None,n=10):
@@ -298,7 +305,7 @@ class NurbsCurve(object):
             umax = self.knots[-1]
             u = umin + arange(n+1) * (umax-umin) / n
         
-        ctrl = self.control.astype(double)
+        ctrl = self.coords.astype(double)
         knots = self.knots.astype(double)
         u = asarray(u).astype(double)
 
@@ -320,6 +327,7 @@ class NurbsCurve(object):
     def actor(self,**kargs):
         """Graphical representation"""
         return NurbsActor(self,**kargs)
+
     
 
 def unitRange(n):

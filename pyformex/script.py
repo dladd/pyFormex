@@ -341,6 +341,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                     exec scr in g
 
         except _Exit:
+            print "EXIT FROM SCRIPT"
             pass
         except _ExitAll:
             exitall = True
@@ -372,8 +373,8 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             pf.GUI.actions['Stop'].setEnabled(False)
 
     if exitall:
-        pf.debug("Calling exit() from playscript")
-        exit()
+        pf.debug("Calling quit() from playscript")
+        quit()
 
 
 def force_finish():
@@ -418,9 +419,13 @@ def breakpt(msg=None):
         raise _Exit
 
 
-## def raiseExit():
-##     pf.debug("RAISED EXIT")
-##     raise _Exit
+def raiseExit():
+    print "EEEEEEEEEEEEXXXXXXXXXXXXXXXXIIIIIIIIIIIIIIIITTTTTTTTTTTTTTTTTTT"
+    pf.debug("RAISED EXIT")
+    print scriptRunning
+    if pf.GUI:
+        pf.GUI.drawlock.release()   
+    raise _Exit,"EXIT REQUESTED FROM SCRIPT"
 
 
 def enableBreak(mode=True):
@@ -473,17 +478,24 @@ def play(fn=None,argv=[],step=False):
 
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
-    #print "SCRIPT.EXIT"
     if scriptRunning:
         if all:
-            raise _ExitAll # exit from pyformex
+            raise _ExitAll # ask exit from pyformex
         else:
-            raise _Exit # exit from script only
-    if pf.app and pf.app_started: # exit from GUI
+            raise _Exit # ask exit from script only
+
+
+def quit():
+    """Quit the pyFormex program
+
+    This is a hard exit from pyFormex. It is normally not called
+    directly, but results from an exit(True) call.
+    """
+    if pf.app and pf.app_started: # quit the QT app 
         pf.debug("draw.exit called while no script running")
-        pf.app.quit() # close GUI and exit pyformex
-    else: # the gui didn't even start
-        sys.exit(0) # exit from pyformex
+        pf.app.quit() # closes the GUI and exits pyformex
+    else: # the QT app didn't even start
+        sys.exit(0) # use Python to exit pyformex
         
 
 def processArgs(args):

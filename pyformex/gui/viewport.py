@@ -121,22 +121,22 @@ def setOpenGLFormat():
     pf.debug("Get OpenGL Format")
     fmt = QtOpenGL.QGLFormat.defaultFormat()
     pf.debug("Got OpenGL Format")
-    print fmt
-    print "hallo"
-    print "OpenGL: %s" % fmt.hasOpenGL(),
-    print "OpenGL Version: %s" % int(fmt.openGLVersionFlags()),
-    print "OpenGLOverlays: %s" % fmt.hasOpenGLOverlays(),
-    print "Double Buffer: %s" % fmt.doubleBuffer(),
-    print "Depth Buffer: %s" % fmt.depth(),
-    print "RGBA: %s" % fmt.rgba(),
-    print "Alpha Channel: %s" % fmt.alpha(),
-    print "Accumulation Buffer: %s" % fmt.accum(),
-    print "Stencil Buffer: %s" % fmt.stencil(),
-    print "Stereo: %s" % fmt.stereo(),
-    print "Direct Rendering: %s" % fmt.directRendering(),
-    print "Overlay: %s" % fmt.hasOverlay(),
-    print "Plane: %s" % fmt.plane(),
-    print "Multisample Buffers: %s" % fmt.sampleBuffers(),
+    ## print fmt
+    ## print "hallo"
+    ## print "OpenGL: %s" % fmt.hasOpenGL(),
+    ## print "OpenGL Version: %s" % int(fmt.openGLVersionFlags()),
+    ## print "OpenGLOverlays: %s" % fmt.hasOpenGLOverlays(),
+    ## print "Double Buffer: %s" % fmt.doubleBuffer(),
+    ## print "Depth Buffer: %s" % fmt.depth(),
+    ## print "RGBA: %s" % fmt.rgba(),
+    ## print "Alpha Channel: %s" % fmt.alpha(),
+    ## print "Accumulation Buffer: %s" % fmt.accum(),
+    ## print "Stencil Buffer: %s" % fmt.stencil(),
+    ## print "Stereo: %s" % fmt.stereo(),
+    ## print "Direct Rendering: %s" % fmt.directRendering(),
+    ## print "Overlay: %s" % fmt.hasOverlay(),
+    ## print "Plane: %s" % fmt.plane(),
+    ## print "Multisample Buffers: %s" % fmt.sampleBuffers(),
     pf.debug(OpenGLFormat(fmt))
     if pf.options.dri is not None:
         fmt.setDirectRendering(pf.options.dri)

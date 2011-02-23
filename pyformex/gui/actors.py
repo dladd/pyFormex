@@ -773,7 +773,7 @@ class NurbsActor(Actor):
 
         
     def drawGL(self,**kargs):
-        drawNurbsCurves(self.object.control,self.object.knots,color=self.color)
+        drawNurbsCurves(self.object.coords,self.object.knots,color=self.color)
 
 
 # End
