@@ -309,10 +309,9 @@ Tet10 = Element(
                  ( 0.5, 0.5, 0.0 ),
                  ( 0.0, 0.5, 0.5 ),
                  ( 0.5, 0.0, 0.5 ),
-                 #( 0.5, 0.5, 0.5 ),#GDS this is not needed!
                  ],
+    edges = [ (0,4,1), (1,7,2), (2,5,0), (0,6,3), (1,9,3), (2,8,3) ], edgetype='line3', 
 # BV: This needs further specification!
-    edges = Tet4.edges,
     faces = Tet4.faces,
     )
 
@@ -325,8 +324,8 @@ Tet14 = Element(
                  ( 1./3., 0.0, 1./3. ),
                  ( 1./3., 1./3., 1./3. ),
                  ],
+    edges = Tet10.edges, edgetype=Tet10.edgetype,
 # BV: This needs further specification!
-    edges = Tet4.edges,
     faces = Tet4.faces,
     )
     
@@ -336,8 +335,8 @@ Tet15 = Element(
 ndim = 3,
 vertices = Tet14.vertices + [ ( 0.25, 0.25, 0.25 ),
              ],
+edges = Tet10.edges, edgetype=Tet10.edgetype,
 # BV: This needs further specification!
-edges = Tet4.edges,
 faces = Tet4.faces,
 )
 
