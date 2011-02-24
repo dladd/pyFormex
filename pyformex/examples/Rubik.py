@@ -261,7 +261,7 @@ dia = widgets.InputDialog(
 if __name__ == "draw":
     transparent(False)
     clear()
-    #renderMode('flatwire')
+    renderMode('flatwire')
     cube = createCube()
     busy = False
     refresh()

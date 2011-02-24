@@ -18,41 +18,6 @@ from plugins.curve import *
 from plugins.nurbs import *
 
 
-def askCurve():
-    default = 'Angle'
-    res = askItems([('curve_type',default,'radio',['Circle','Angle']),('closed',False),('circle_npts',6)])
-
-    if not res:
-        exit()
-
-    clear()
-    globals().update(res)
-
-    if curve_type == 'Circle':
-        circle = simple.circle(a1=360./circle_npts)
-        draw(circle,color='magenta')
-        pts = circle[:,0]
-
-
-    elif curve_type == 'Angle':
-        F = Formex(simple.pattern('41'))
-        draw(F,color='magenta')
-        pts = F.coords.reshape(-1,3)
-
-    clear()
-    drawNumbers(pts)
-    print "Number of points: %s"%len(pts)
-    print "POLY"
-    PL = PolyLine(pts,closed=closed)
-    d = PL.directions()
-    dm = PL.avgDirections()
-    #w = PL.doubles()+1
-    #print PL.endOrDouble()
-    curve = BezierSpline(pts,closed=closed)
-    draw(curve.approx(100),color='red')
-    zoomAll()
-
-
 def expandNurbsCurve():
     def directions(self,u=None,n=10,d=1):
         print "DERIV",u
@@ -112,24 +77,6 @@ clear()
 linewidth(2)
 flat()
 
-
-sq2 = sqrt(0.5)
-closed=False
-allpts = Coords([
-    [1.,0.,0.],
-    [1.,1.,0.],
-    [0.,1.,0.],
-    [-1.,1.,0.],
-    [-1.,0.,0.],
-    [-1.,-1.,0.],
-    [0.,-1.,0.],
-    [1.,-1.,0.],
-    [1.,0.,0.],
-    [2.,0.,0.],
-    [3.,0.,0.],
-    [4.,0.,0.],
-    ])
-
 #    3*0    -     2*1     -    3*2    : 8 = 5+3
 #    nctrl = nparts * degree + 1 
 #    nknots = nctrl + degree + 1
@@ -155,10 +102,6 @@ allpts = Coords([
 #    7      1       8       16
 #    8      1       9       18
 
-orders = [ 2,3,4 ]
-weight = [0.,0.5,sqrt(0.5),1.,sqrt(2.),2,10]
-colors = [red,green,blue,cyan,magenta,yellow,white]
-
 # This should be a valid combination of ntrl/degree
 # drawing is only done if degree <= 7
 
@@ -183,45 +126,100 @@ def demo_weights():
     export(L)
 
 
-def raiseExit():
-    raise _Exit
+C = Formex(pattern('51414336')).toCurve()
 
-def demo_knots():
-    C = Formex(pattern('51414336')).toCurve()
+def drawControl():
     pts = C.coords
-    print pts
     draw(C)
     nctrl = C.ncoords()
     draw(pts)
     drawNumbers(pts)
-    draw(PolyLine(pts))
-    setDrawOptions({'bbox':None})
+    draw(PolyLine(pts),bbox='auto',view='front')
 
-    degree = 2
-    res = askItems([('degree',2),('closed',False),('clear',True)])
 
-    if not res:
-        return False
-    
+def drawNurbs(degree,closed,blended,weighted=False):
+    pts = C.coords
+    if closed:
+        pts = pts[:-1]
+        blended=True
+    if not blended:
+        npts = ((len(pts)-1) // degree) * degree + 1
+        pts = pts[:npts]
+    if weighted:
+        wts = array([1.]*len(pts))
+        wts[1::2] = 0.5
+        print wts,wts.shape
+    else:
+        wts=None
+    N = NurbsCurve(pts,wts=wts,degree=degree,closed=closed,blended=blended)
+    draw(N,color=red)
+    drawThePoints(N,20,color=black)
 
+
+clear()
+setDrawOptions({'bbox':None})
+linewidth(2)
+flat()
+drawControl()
+
+dialog = None
+
+
+def close():
+    global dialog
+    if dialog:
+        dialog.close()
+        dialog = None
+
+
+def show():
+    dialog.acceptData()
+    res = dialog.results
     if res['clear']:
         clear()
-
-    degree = res['degree']
-    closed = res['closed']
-
-    C = NurbsCurve(pts[:-1],degree=degree,closed=closed)
-    draw(C,color=red)
-    drawThePoints(C,20,color=black)
-    return True
+        drawControl()
+    export({'_Nurbs_data_':res})
+    del res['clear']  # remove non-argument items
+    drawNurbs(**res)
 
 
-ok = True
-while ok:
-    ok = demo_knots()
-    
+def showAll():
+    for closed,blended in [ (True,True), (False,True), (False,False)]:
+        for degree in range(6):
+            drawNurbs(degree=degree,closed=closed,blended=blended)
+            
 
-zoomAll()
+def timeOut():
+    showAll()
+    close()
+
+
+data_items = [
+    _I('degree',2),
+    _I('closed',False),
+    _I('blended',True,enabled=False),
+    _I('weighted',False),
+    _I('clear',True),
+    ]
+input_enablers = [
+    ('closed',False,'blended'),
+    ]
+  
+dialog = Dialog(
+    data_items,
+    enablers = input_enablers,
+    caption = 'Nurbs parameters',
+    actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
+    default = 'Show',
+    )
+
+if pf.PF.has_key('_Nurbs_data_'):
+    dialog.updateData(pf.PF['_Nurbs_data_'])
+
+dialog.timeout = timeOut
+dialog.show()
+       
+
 exit()
 
 draw(simple.circle(2,4),linewidth=3)

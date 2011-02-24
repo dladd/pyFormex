@@ -154,7 +154,8 @@ class Coords4(ndarray):
         """Denormalizes the homogeneous coordinates.
 
         This multiplies the homogeneous coordinates with the values w.
-        w normally is a constant or an array with shape self.shape[:-1].
+        w normally is a constant or an array with shape
+        self.shape[:-1] + (1,).
         It then multiplies all 4 coordinates of a point with the same
         value, thus resulting in a denormalization while keeping the
         position of the point unchanged.
@@ -258,7 +259,7 @@ class NurbsCurve(Geometry4):
         order = degree+1
         control = Coords4(control)
         if wts is not None:
-            control.deNormalize(wts)
+            control.deNormalize(wts.reshape(wts.shape[-1],1))
 
         if closed:
             if knots is None:
@@ -266,8 +267,9 @@ class NurbsCurve(Geometry4):
             else:
                 nextra = len(knots) - nctrl - order
             nextra1 = (nextra+1) // 2
+            #nextra1 = 0
             nextra2 = nextra-nextra1
-            #print "extra %s = %s + %s" % (nextra,nextra1,nextra2)
+            print "extra %s = %s + %s" % (nextra,nextra1,nextra2)
             control = Coords4(concatenate([control[-nextra1:],control,control[:nextra2]],axis=0))
 
         nctrl = len(control)

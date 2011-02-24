@@ -35,6 +35,10 @@ import numpy
 import utils
 import messages
 import widgets
+Dialog = widgets.InputDialog
+_I = widgets.simpleInputItem
+_G = widgets.groupInputItem
+_T = widgets.tabInputItem
 import toolbar
 import actors
 import decors

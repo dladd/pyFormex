@@ -196,7 +196,7 @@ def drawBezierPoints(x,color=None,granularity=100):
     drawBezier(x,color=None,objtype=GL.GL_POINTS,granularity=granularity)
 
 
-def drawNurbsCurves(x,knots=None,color=None,samplingTolerance=1.0):
+def drawNurbsCurves(x,knots,color=None,samplingTolerance=1.0):
     """Draw a collection of Nurbs curves.
 
     x: (nctrl,ndim) or (ncurve,nctrl,ndim) float array: control points,
@@ -210,24 +210,24 @@ def drawNurbsCurves(x,knots=None,color=None,samplingTolerance=1.0):
        If a single knot vector is given, the same is used for all curves.
        Otherwise, the number of knot vectors must match the number of nurbs
        curves.
-       If no knot vector is given, one is constructed with containing
-       nctrl values 0 and nctrl values 1. This is suitable for creating
-       open curves of degree nctrl-1 between the end points.
 
     If color is given it is an (ncurves,3) array of RGB values.
     """
+    nurb = GLU.gluNewNurbsRenderer()
+    if not nurb:
+        raise RuntimeError,"Could not create a new NURBS renderer"
     nctrl,ndim = x.shape[-2:]
+    nknots = asarray(knots).shape[-1]
+    order = nknots-nctrl
+    if  order > 8:
+        import warnings
+        warnings.warn('Nurbs curves of degree > 7 can currently not be drawn! You can create some approximation by evaluating the curve at some points.')
+        return
     mode = {3:GL.GL_MAP1_VERTEX_3, 4:GL.GL_MAP1_VERTEX_4}[ndim]
     x = x.reshape(-1,nctrl,ndim)
     if color is not None:
         color = color.reshape(-1,3)
-    if knots is None:
-        knots = array([0.]*nctrl + [1.]*nctrl)
-        print knots
     ki = knots
-    nurb = GLU.gluNewNurbsRenderer()
-    if not nurb:
-        raise RuntimeError,"Could not create a new NURBS renderer"
     GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
     for i,xi in enumerate(x):
         if color is not None:
@@ -255,7 +255,8 @@ def drawQuadraticCurves(x,color=None):
     """
     xx = x.copy()
     xx[...,1,:] = 2*x[...,1,:] - 0.5*(x[...,0,:] + x[...,2,:])
-    drawNurbsCurves(xx,color)
+    knots = array([0.,0.,0.,1.,1.,1.])
+    drawNurbsCurves(xx,knots,color=color)
 
 
 def color_multiplex(color,nparts):
