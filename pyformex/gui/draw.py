@@ -584,7 +584,17 @@ def focus(object):
     pf.canvas.update()
 
     
-def setDrawOptions(d):
+def setDrawOptions(kargs0={},**kargs):
+    """Set default values for the draw options.
+
+    Draw options are a set of options that hold default values for the
+    draw() function arguments and for some canvas settings.
+    The draw options can be specified either as a dictionary, or as
+    keyword arguments. 
+    """
+    d = {}
+    d.update(kargs0)
+    d.update(kargs)
     pf.canvas.setOptions(d)
 
     

@@ -119,7 +119,7 @@ def demo_weights():
         for i in range(1,degree):
             qc[i::degree].deNormalize(w)
         print qc
-        C = NurbsCurve(qc,knots=knots,order=degree+1,closed=False)
+        C = NurbsCurve(qc,knots=knots,degree=degree,closed=False)
         draw(C,color=c)
         drawThePoints(C,10,color=c)
         L["wt-%s" % w] = C
@@ -151,6 +151,7 @@ def drawNurbs(degree,closed,blended,weighted=False):
         print wts,wts.shape
     else:
         wts=None
+    print pts.shape
     N = NurbsCurve(pts,wts=wts,degree=degree,closed=closed,blended=blended)
     draw(N,color=red)
     drawThePoints(N,20,color=black)
