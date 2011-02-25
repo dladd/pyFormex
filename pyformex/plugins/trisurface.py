@@ -738,6 +738,17 @@ class TriSurface(Mesh):
         return self.surfaceType()[0] 
 
 
+    def nonManifoldEdges(self):
+        """
+        Finds edges and faces that are not Manifold.
+        
+        It returns the edges that connect 3 or more faces and the faces."""
+        conn=self.edgeConnections()
+        ed=(conn!=-1).sum(axis=1)>2
+        fa= unique1d(conn[ed])
+        return arange(len(ed))[ed], fa[fa!=-1]
+        
+
     def isClosedManifold(self):
         stype = self.surfaceType()
         return stype[0] and stype[1]
