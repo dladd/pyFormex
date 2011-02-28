@@ -1838,9 +1838,7 @@ class ProjectSelection(FileSelection):
         nr,nc = grid.rowCount(),grid.columnCount()
 
         if not exist:
-            self.cpr = InputSlider("Compression level (0-9)",compression,min=0,max=9)
-            self.cpw = QtGui.QWidget()
-            self.cpw.setLayout(self.cpr)
+            self.cpw = InputSlider("Compression level (0-9)",compression,min=0,max=9,ticks=1)
             self.cpw.setToolTip("Higher compression levels result in smaller files, but higher load and save times.")
             grid.addWidget(self.cpw,nr,0,1,-1)
             nr += 1

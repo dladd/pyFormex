@@ -1096,7 +1096,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Set the list of actor points inside the pick_window."""
         npickable = 0
         for a in self.actors:
-            #pf.debug("ADDING %s pickable points"%a.npoints())
+            pf.debug("ADDING %s pickable points"%a.npoints())
             npickable += a.npoints()
         self.pick_parts('point',npickable,store_closest=\
                         self.selection_filter == 'single' or\
