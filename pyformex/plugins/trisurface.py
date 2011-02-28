@@ -1580,7 +1580,34 @@ Total area: %s; Enclosed volume: %s
             pf.message('Status of gtscheck not understood')
             return sta, None
 
- 
+
+    def checkSelfIntersectionsWithTetgen(self,verbose=False):
+        """check self intersections using tetgen
+        
+        Returns couples of intersecting triangles
+        """
+        from plugins.tetgen import writeSurface
+        cmd = 'tetgen -d '
+        tmp = tempfile.mktemp('')
+        print tmp
+        pf.message("Writing temp file %s" % tmp)
+        writeSurface(tmp,self.coords, self.elems)
+        if verbose:
+            cmd += '-V '
+        cmd=cmd+ tmp
+        pf.message("Checking with command\n %s" % cmd)
+        sta,out = utils.runCommand(cmd)
+        if sta:
+            pf.message('Tetgen got an error')
+            return sta
+        os.remove(tmp+'.node')
+        os.remove(tmp+'.smesh')
+        os.remove(tmp+'.1.face')
+        os.remove(tmp+'.1.node')
+        if sta or verbose:
+            pf.message(out)
+        return asarray( [int(l.split(' ')[0]) for l in out.split(' #')[1:]]).reshape(-1, 2)-1
+
 
     def split(self,base,verbose=False):
         """Split the surface using gtssplit.
