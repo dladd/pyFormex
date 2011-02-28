@@ -29,7 +29,8 @@ connectivities throughout pyFormex.
 When interfacing with other programs, one should be aware
 that conversions may be necessary. Conversions to/from external programs
 should be done by the interface modules.
-""" 
+"""
+import pyformex
 from numpy import array
 from olist import collectOnLength
 from odict import ODict
@@ -402,6 +403,11 @@ Hex20 = Element(
               (0,3,2,1,11,10,9, 8), (4,5,6,7,12,13,14,15) ],
 )
 # We can not set this at __init__ time
+if pyformex.options.hex20edgeslinear:
+    from numpy import concatenate
+    edges = array(Hex20.edges)
+    Hex20.drawedges = concatenate([edges[:,:2],edges[:,-2:]],axis=0)
+    
 Hex20.drawfaces = array(Hex20.faces)[:, Quad8.drawfaces].reshape(-1, 3)
 
 

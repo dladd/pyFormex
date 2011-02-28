@@ -42,7 +42,6 @@ if svnversion:
         msg += """
         
 You should probably rebuild the pyFormex library first.
-
 Do 'make' in %s/lib
 Then restart pyformex.
 """ % pyformexdir
@@ -358,6 +357,10 @@ def run(argv=[]):
         MO("--test",
            action="store_true", dest="test", default=False,
            help="testing mode: only for developers!",
+           ),
+        MO("--hex20edgeslinear",
+           action="store_true", dest="hex20edgeslinear", default=False,
+           help="Temporary fix to work around a possible bug. This will draw the hex20 edges as two linear segments instead of one quadratic.",
            ),
         MO("--testfpbug",
            action="store_true", dest="fpbug", default=False,

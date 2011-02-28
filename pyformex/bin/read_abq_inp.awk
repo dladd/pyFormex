@@ -1,4 +1,4 @@
-#!/usr/bin/gawk -f
+#!/usr/bin/awk -f
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
@@ -29,7 +29,7 @@
 # input file and write it in a format that can be loaded easily into
 # pyFormex.
 #
-# Usage: gawk -f read_abq.awk ABAQUS_INPUT_FILE
+# Usage: awk -f read_abq.awk ABAQUS_INPUT_FILE
 #
 # In most cases however, the user will call this command from the pyFormex
 # GUI, using the Mesh plugin menu ("Convert Abaqus .inp file"), after which
