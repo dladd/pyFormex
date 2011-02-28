@@ -1600,13 +1600,16 @@ Total area: %s; Enclosed volume: %s
         if sta:
             pf.message('Tetgen got an error')
             return sta
-        os.remove(tmp+'.node')
-        os.remove(tmp+'.smesh')
-        os.remove(tmp+'.1.face')
-        os.remove(tmp+'.1.node')
+        try:
+            os.remove(tmp+'.node')
+            os.remove(tmp+'.smesh')
+            os.remove(tmp+'.1.face')
+            os.remove(tmp+'.1.node')
+        except:
+            pass
         if sta or verbose:
             pf.message(out)
-        return asarray( [int(l.split(' ')[0]) for l in out.split(' #')[1:]]).reshape(-1, 2)-1
+        return asarray( [int(l.split(' ')[0]) for l in out.split('acet #')[1:]]).reshape(-1, 2)-1
 
 
     def split(self,base,verbose=False):
