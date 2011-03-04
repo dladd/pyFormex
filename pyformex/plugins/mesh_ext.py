@@ -285,6 +285,18 @@ def area(self):
         return 0.0
 
 
+def tests(t):
+    """Intersection of multiple test operations.
+    
+    t is a list of n 1D boolean list, obtained by n Mesh.test operations.
+    A new 1D boolean list is returned.
+    t1=M.test(nodes=...)
+    t2=M.test(nodes=...)
+    T=tests( [t1, t2] ) is the intersection if t1 and t2 and can be used for Mesh.clip(T)
+    """
+    return array(t, int).sum(axis=0)==len(t)
+
+
 ##############################################################################
 #
 # Initialize
