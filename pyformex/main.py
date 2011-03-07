@@ -350,9 +350,13 @@ def run(argv=[]):
         ##    action="store_true", dest="classify", default=False,
         ##    help="classify the examples in categories",
         ##    ),
+        ## MO("--testmodule",
+        ##    action="store_true", dest="testmodule", default=False,
+        ##    help="Run the docstring tests for the specified modules. All non-option arguments are interpreted as pyFormex module names, with . as path separator.",
+        ##    ),
         MO("--testmodule",
-           action="store_true", dest="testmodule", default=False,
-           help="Run the docstring tests for the specified modules. All non-option arguments are interpreted as pyFormex module names, with . as path separator.",
+           action="store", dest="testmodule", default=None,
+           help="Run the docstring tests for module TESTMODULE. TESTMODULE is the name of the module, using . as path separator.",
            ),
         MO("--test",
            action="store_true", dest="test", default=False,
@@ -416,7 +420,7 @@ def run(argv=[]):
             print(utils.reportDetected())
 
         if pyformex.options.testmodule:
-            for a in args:
+            for a in pyformex.options.testmodule.split(','):
                 test_module(a)
 
         sys.exit()

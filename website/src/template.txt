@@ -43,7 +43,9 @@
         print '</ul>'
 #>
 <div class="menu">
-<li><a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page at Berlios</a></li>
+<li><a class="main" href="http://developer.berlios.de/forum/forum.php?forum_id=8348">Help Forum</a></li>
+<li><a class="main" href="http://developer.berlios.de/project/showfiles.php?group_id=2717">Downloads</a></li>
+<li><a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page</a></li>
 <li><a href="http://www.fsf.org/register_form?referrer=8491"><img src="<% path_to_root %>images/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></li>
 </div>
 </ul>

@@ -132,6 +132,9 @@ def sind(arg,angle_spec=Deg):
 
     For convenience, this can also be used with an angle in radians,
     by specifying `angle_spec=Rad`.
+
+    >>> print sind(30), sind(pi/6,Rad)
+    0.5 0.5
     """
     return sin(arg*angle_spec)
 
@@ -141,6 +144,9 @@ def cosd(arg,angle_spec=Deg):
 
     For convenience, this can also be used with an angle in radians,
     by specifying ``angle_spec=Rad``.
+
+    >>> print cosd(60), cosd(pi/3,Rad)
+    0.5 0.5
     """
     return cos(arg*angle_spec)
 
@@ -155,7 +161,14 @@ def tand(arg,angle_spec=Deg):
    
 
 def niceLogSize(f):
-    """Return the smallest integer e such that 10**e > abs(f)."""
+    """Return the smallest integer e such that 10**e > abs(f).
+
+    This returns the number of digits before the decimal point.
+
+    >>> print [ niceLogSize(a) for a in [1.3, 35679.23, 0.4, 0.00045676] ]
+    [1, 5, 0, -3]
+  
+    """
     return int(ceil(log10(abs(f))))
    
 
@@ -187,7 +200,17 @@ def niceNumber(f,below=False):
 def dotpr (A,B,axis=-1):
     """Return the dot product of vectors of A and B in the direction of axis.
 
-    The default axis is the last.
+    This multiplies the elements of the arrays A and B, and the sums the
+    result in the direction of the specified axis. Default is the last axis.
+    Thus, if A and B are sets of vectors in their last array direction, the
+    result is the dot product of vectors of A with vectors of B.
+    A and B should be broadcast compatible.
+
+    >>> A = array( [[1.0, 1.0], [1.0,-1.0], [0.0, 5.0]] )
+    >>> B = array( [[5.0, 3.0], [2.0, 3.0], [1.33,2.0]] )
+    >>> print dotpr(A,B)
+    [  8.  -1.  10.]
+
     """
     A = asarray(A)
     B = asarray(B)

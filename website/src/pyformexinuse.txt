@@ -12,11 +12,27 @@ restindex
 
 .. include:: links.inc
 
+.. _`Bifurcation stenting`: http://www.stent-ibitech.ugent.be/downloads/Peter_Mortier_posterEBR2008.pdf
+.. _`FE modeling of stents`: http://www.stent-ibitech.ugent.be/downloads/Poster_Peter_Mortier_NationalDay2007.pdf
+
+.. _`pyFormex GUI`: http://www.youtube.com/watch?v=ZFB1tRXIOJo
+.. _`Bifurcation meshing`: http://www.youtube.com/watch?v=T1pVFCzrmGI
+.. _`Image projection`: http://www.youtube.com/watch?v=0nscJWbl5rQ
+
 pyFormex in use
 ---------------
 Though still under development, pyFormex is already being used as a valuable and indispensable tool in several research projects. To give you an idea of what it can be used for, here are some links to past research using pyFormex.
 
+PDF documents
+.............
 - `Bifurcation stenting`_: Analysis of side branch access during bifurcation stenting.
 - `FE modeling of stents`_: Finite element analysis of bifurcation stenting.
+
+Videos (on YouTube)
+...................
+- `pyFormex GUI`_: Illustrating some aspects of the pyFormex GUI.
+- `Bifurcation meshing`_: Hexahedral meshing of a carotid
+  bifurcation. By Gianluca.
+- `Image projection`_: Projection  of a 2-D image on a 3-D surface. By Gianluca.
 
 .. End

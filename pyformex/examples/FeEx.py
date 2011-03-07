@@ -88,7 +88,11 @@ def reset():
     mesh_menu.selection.draw()
 
 def deleteAll():
-    resetData()
+    global parts,model,PDB
+    parts = []
+    model = None
+    PDB = None
+    mesh_menu.selection.set([])
     reset()
 
 ######################## parts ####################
