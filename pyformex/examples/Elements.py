@@ -1,4 +1,5 @@
 #!/usr/bin/env pyformex --gui
+# -*- coding: utf-8 -*-
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
@@ -60,14 +61,17 @@ def showElement(eltype,deformed,reduced):
 
     # This will not work for elements with edges of different plexitude!
     F = [ Formex(v), Formex(v[e],eltype=el.edgetype), Formex(v[s],eltype=eltype) ]
+    clear()
     smooth()
+    drawText(eltype,200,200,size=24,color=black)
     for Fi in F:
-        clear()
+        #clear()
         draw(Fi)
-        sleep(1)
+    wait()
     wireframe()
     drawVertexNumbers(Fi)
-    sleep(1)
+#    wait()
+    
         
 if __name__ == "draw":
 
@@ -90,6 +94,8 @@ if __name__ == "draw":
         ellist = ElemList
     else:
         ellist = [eltype]
+    clear()
+    delay(1)
     for el in ellist:
         showElement(el,deformed,reduced)
     

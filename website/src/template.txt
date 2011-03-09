@@ -43,10 +43,24 @@
         print '</ul>'
 #>
 <div class="menu">
+
 <li><a class="main" href="http://developer.berlios.de/forum/forum.php?forum_id=8348">Help Forum</a></li>
+
 <li><a class="main" href="http://developer.berlios.de/project/showfiles.php?group_id=2717">Downloads</a></li>
+
 <li><a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page</a></li>
+
 <li><a href="http://www.fsf.org/register_form?referrer=8491"><img src="<% path_to_root %>images/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></li>
+
+<li>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+
+</li>
 </div>
 </ul>
 </div>
