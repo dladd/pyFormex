@@ -65,7 +65,7 @@ def showElement(eltype,deformed,reduced):
     smooth()
     drawText(eltype,200,200,size=24,color=black)
     for Fi in F:
-        #clear()
+        clear()
         draw(Fi)
     wait()
     wireframe()
