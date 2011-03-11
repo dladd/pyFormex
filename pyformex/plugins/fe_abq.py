@@ -642,18 +642,22 @@ def fmtSurface(prop):
     - set: the elements/nodes in the surface, either numbers or a set name.
     - name: the surface name
     - surftype: 'ELEMENT' or 'NODE'
-    - label: face or edge identifier (only required for surftype = 'NODE')
+    - label: face or edge identifier (only required for surftype = 'ELEMENT')
+    This label can be a string, or a list of strings. This allows to use different
+    identifiers for the different elements in the surface.
     """
     out = ''
     for p in prop:
         out += "*SURFACE, NAME=%s, TYPE=%s\n" % (p.name,p.surftype)
-        for e in p.set:
+        for i,e in enumerate(p.set):
             if e.dtype.kind != 'S':
                 e += 1
             if p.label is None:
                 out += "%s\n" % e
-            else:
+            elif isinstance(p.label, str):
                 out += "%s, %s\n" % (e,p.label)
+            else:
+                out += "%s, %s\n" % (e,p.label[i])
     return out
 
 def fmtAnalyticalSurface(prop):
@@ -840,6 +844,35 @@ def fmtOrientation(prop):
             raise ValueError,"Orientation needs at least point a"
     return out
 
+def fmtEquation(prop):
+    """Format multi-point constraint using an equation
+    
+    Required:
+    - equation
+    
+    Equation should be a list, which contains the different terms of the equation.
+    Each term is again a list with three values:
+    - First value: node number
+    - Second value: degree of freedom
+    - Third value: coefficient
+    
+    Example: P.nodeProp(equation=[[209,1,1],[32,1,-1]])
+    
+    In this case, the displacement in Y-direction of node 209 and 32 should be equal.
+    """
+    
+    out = ''
+    nofs = 1
+    for p in prop:
+        out += "*EQUATION\n"
+        out += "%s\n" % asarray(p.equation).shape[0]
+        for i in p.equation:
+            dof = i[1]+1
+            out += "%s, %s, %s\n" % (i[0]+nofs,dof,i[2])
+    return out
+            
+            
+    
 
 ## The following output sections with possibly large data
 ## are written directly to file.
@@ -1101,7 +1134,10 @@ def writeBoundaries(fil,prop):
         
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
-        
+
+        if p.op is not None:
+            fil.write(", OP=%s" % p.op)  
+                    
         if p.extra is not None:
            fil.write(addOptions(p.extra))
            
@@ -1119,7 +1155,7 @@ def writeBoundaries(fil,prop):
                 fil.write(fmtData(setname,dof,dof,b[1]))
 
 #~ FI see writeBoundaries comments
-def writeDisplacements(fil,prop,op='MOD'):
+def writeDisplacements(fil,prop):
     """Write boundary conditions of type BOUNDARY, TYPE=DISPLACEMENT
 
     prop is a list of node property records that should be scanned for
@@ -1133,7 +1169,9 @@ def writeDisplacements(fil,prop,op='MOD'):
     """
     for p in prop:
         setname = nsetName(p)
-        fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s" % op)
+        fil.write("*BOUNDARY, TYPE=DISPLACEMENT")
+        if p.op is not None:
+            fil.write(", OP=%s" % p.op)                    
         if p.ampl is not None:
             fil.write(", AMPLITUDE=%s" % p.ampl)
         fil.write("\n")
@@ -1923,6 +1961,11 @@ Script: %s
         if prop:
             pf.message("Writing Connector Behavior")
             fil.write(fmtConnectorBehavior(prop))
+
+        prop = self.prop.getProp('n',attr=['equation'])
+        if prop:
+            pf.message("Writing constraint equations")
+            fil.write(fmtEquation(prop))
 
         prop = self.prop.getProp('',attr=['surftype'])
         if prop:

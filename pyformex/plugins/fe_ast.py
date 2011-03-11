@@ -1,6 +1,6 @@
 #!/usr/bin/env pyformex
 
-"""Exporting finite element models in code Aster mesh file format (.mail).
+"""Exporting finite element models in code Aster file formats (.mail and .comm).
 
 """
 
@@ -142,6 +142,52 @@ def fmtHeadingComm(text=''):
     return out
 
 
+def fmtEquation(prop):
+    """Format multi-point constraint using an equation
+    
+    Required:
+    - equation
+    
+    Optional:
+    - coefficient
+    
+    Equation should be a list, which contains the different terms of the equation.
+    Each term is again a list with three values:
+    - First value: node number
+    - Second value: degree of freedom
+    - Third value: multiplication coefficient of the term
+    
+    The sum of the different terms should be equal to the coefficient.
+    If this coefficient is not specified, the sum of the terms should be equal to zero.
+    
+    Example: P.nodeProp(equation=[[209,1,1],[32,1,-1]])
+    
+    In this case, the displacement in Y-direction of node 209 and 32 should be equal.
+    """
+    
+    dof = ['DX','DY','DZ']
+    out = 'equations = AFFE_CHAR_MECA(\n'
+    out += '    MODELE=Model,\n'
+    ##indent = 27*' '
+    out += '    LIAISON_DDL=(\n'
+    for p in prop:
+        l1 = '          _F(NOEUD=('
+        l2 = '             DDL=('
+        l3 = '             COEF_MULT=('
+        for i in p.equation:
+            l1 += '\'N%s\',' % i[0]
+            l2 += '\'%s\',' % dof[i[1]]
+            l3 += '%s,' % i[2]
+        out += l1 + '),\n' + l2 + '),\n' + l3 + '),\n'
+        coef = 0
+        if p.coefficient is not None:
+            coef = p.coefficient
+        out += '             COEF_IMPO=%s,),\n' % coef
+    out += '            ),\n'
+    out += '    );\n\n'
+    return out
+
+
 class AstData(object):
     """Contains all data required to write the Code Aster mesh (.mail) and command (.comm) files.
         
@@ -172,7 +218,7 @@ class AstData(object):
         self.type = type
 
 
-    def writeMesh(self,jobname=None,group_by_eset=True,group_by_group=False,header=''):
+    def writeMesh(self,jobname=None,header=''):
         """Write a Code Aster mesh file (.mail).
         """
         
@@ -207,19 +253,13 @@ Script: %s
             elif p.prop is not None:
                 # element set is specified by eprop nrs
                 if self.eprop is None:
-                    print(p)
-                    raise ValueError,"elemProp has a 'prop' field but no 'eprop'was specified"
+                    raise ValueError,"elemProp has a 'prop' field but no 'eprop' was specified"
                 set = where(self.eprop == p.prop)[0]
             else:
                 # default is all elements
                 set = range(telems)
             
-            print('Elements of type %s: %s' % (p.eltype,set))
-            
-            ## TO CHECK !!!!
-            ## names given to sets are now automically replaced by Eset_grp ...
-            
-            setname = esetName(p)
+            print('Writing elements of type %s: %s' % (p.eltype,set))    
             gl,gr = self.model.splitElems(set)
             elems = self.model.getElems(gr)
             for i,elnrs,els in zip(range(len(gl)),gl,elems):
@@ -230,11 +270,7 @@ Script: %s
                     pf.message("Writing %s elements from group %s" % (nels,i))
                     writeElems(fil,els,p.eltype,name=subsetname,eid=elnrs)
                     nelems += nels
-                    if group_by_eset:
-                        writeSet(fil,'ELSET',setname,[subsetname])
-                    if group_by_group:
-                        writeSet(fil,'ELSET',grpname,[subsetname])
-                    
+
         pf.message("Total number of elements: %s" % telems)
         if nelems != telems:
             pf.message("!! Number of elements written: %s !!" % nelems)
@@ -249,7 +285,7 @@ Script: %s
             elif p.prop is not None:
                 # set is specified by nprop nrs
                 if self.nprop is None:
-                    raise ValueError,"nodeProp has a 'prop' field but no 'nprop'was specified"
+                    raise ValueError,"nodeProp has a 'prop' field but no 'nprop' was specified"
                 set = where(self.nprop == p.prop)[0]
             else:
                 # default is all nodes
@@ -268,14 +304,13 @@ Script: %s
             elif p.prop is not None:
                 # element set is specified by eprop nrs
                 if self.eprop is None:
-                    print(p)
-                    raise ValueError,"elemProp has a 'prop' field but no 'eprop'was specified"
+                    raise ValueError,"elemProp has a 'prop' field but no 'eprop' was specified"
                 set = where(self.eprop == p.prop)[0]
             else:
                 # default is all elements
                 set = range(telems)
 
-            setname = nsetName(p)
+            setname = esetName(p)
             writeSet(fil,'ELSET',setname,set)
             
         
@@ -304,8 +339,10 @@ Script: %s
 """ % (jobname, datetime.now(), pf.scriptName, header)))
 
 
-        ## TO DO!!!
-
+        prop = self.prop.getProp('n',attr=['equation'])
+        if prop:
+            pf.message("Writing constraint equations")
+            fil.write(fmtEquation(prop))
 
         if filename is not None:
             fil.close()
