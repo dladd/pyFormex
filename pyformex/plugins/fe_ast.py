@@ -108,19 +108,20 @@ def writeSet(fil,type,name,set):
     `set` is a list of node/element numbers,
     in which case the `ofs` value will be added to them.
     """
-    if type == 'NSET':
-        fil.write('GROUP_NO nom = %s\n' % name)
-        cap = 'N'
-    elif type == 'ELSET':
-        fil.write('GROUP_MA nom = %s\n' % name)
-        cap = 'M'
-    else:
-        raise ValueError,"Type should be NSET or ELSET"
-        
-    for i in set:
-        fil.write('%s%d\n' % (cap,i))
-    fil.write('FINSF\n')
-    fil.write('%\n')
+    if not set.dtype.kind == 'S':
+        if type == 'NSET':
+            fil.write('GROUP_NO nom = %s\n' % name)
+            cap = 'N'
+        elif type == 'ELSET':
+            fil.write('GROUP_MA nom = %s\n' % name)
+            cap = 'M'
+        else:
+            raise ValueError,"Type should be NSET or ELSET"
+            
+        for i in set:
+            fil.write('%s%d\n' % (cap,i))
+        fil.write('FINSF\n')
+        fil.write('%\n')
 
 
 def fmtHeadingMesh(text=''):
@@ -146,6 +147,7 @@ def fmtEquation(prop):
     """Format multi-point constraint using an equation
     
     Required:
+    - name
     - equation
     
     Optional:
@@ -160,20 +162,19 @@ def fmtEquation(prop):
     The sum of the different terms should be equal to the coefficient.
     If this coefficient is not specified, the sum of the terms should be equal to zero.
     
-    Example: P.nodeProp(equation=[[209,1,1],[32,1,-1]])
+    Example: P.nodeProp(name='link',equation=[[209,1,1],[32,1,-1]])
     
     In this case, the displacement in Y-direction of node 209 and 32 should be equal.
     """
     
     dof = ['DX','DY','DZ']
-    out = 'equations = AFFE_CHAR_MECA(\n'
-    out += '    MODELE=Model,\n'
-    ##indent = 27*' '
-    out += '    LIAISON_DDL=(\n'
     for p in prop:
-        l1 = '          _F(NOEUD=('
-        l2 = '             DDL=('
-        l3 = '             COEF_MULT=('
+        out = '%s = AFFE_CHAR_MECA(\n' % p.name
+        out += '    MODELE=Model,\n'
+        out += '    LIAISON_DDL=(\n'
+        l1 = '        _F(NOEUD=('
+        l2 = '           DDL=('
+        l3 = '           COEF_MULT=('
         for i in p.equation:
             l1 += '\'N%s\',' % i[0]
             l2 += '\'%s\',' % dof[i[1]]
@@ -182,10 +183,97 @@ def fmtEquation(prop):
         coef = 0
         if p.coefficient is not None:
             coef = p.coefficient
-        out += '             COEF_IMPO=%s,),\n' % coef
-    out += '            ),\n'
+        out += '          COEF_IMPO=%s,),\n' % coef
+    out += '          ),\n'
     out += '    );\n\n'
     return out
+
+
+def fmtDisplacements(prop):
+    """Format nodal boundary conditions
+    
+    Required:
+    - set
+    - name
+    - displ
+    
+    Displ should be a a list of tuples (dofid,value)
+    
+    Set can be a list of node numbers, or a set name (string).
+    
+    Example 1: P.nodeProp(set='bottom',bound=[(0,0),(1,0),(2,0)])
+    Example 2: P.nodeProp(name='rot',set=[2],bound=[(3,30)])
+    
+    In the first example, the displacements of the nodes in the set 'bottom' are zero.
+    In the second example, a rotation is imposed around the X-axis on node number 2.
+    """
+    
+    dof = ['DX','DY','DZ','DRX','DRY','DRZ']
+    out = ''
+    for i,p in enumerate(prop):
+        out += 'displ%s = AFFE_CHAR_MECA(\n' % i
+        out += '    MODELE=Model,\n'
+        out += '    DDL_IMPO=\n'
+        out += '        _F(GROUP_NO=(\'%s\'),\n' % p.name.upper()
+        for j in p.displ:
+            out += '           %s=%s,\n' % (dof[j[0]],j[1])
+        out += '          ),\n'
+        out += '    );\n'
+    return out
+
+
+def fmtMaterial(prop):
+    """Write a material section.
+    """
+    
+    # TO DO!!!
+
+solid3d_elems = [
+    'HEXA8',]
+    
+
+def fmtSections(prop):
+    """Write element sections.
+
+    prop is a an element property record with a section and eltype attribute
+    """
+    
+    out1 = 'Model=AFFE_MODELE(\n'
+    out1 += '    MAILLAGE=Mesh,\n'
+    out1 += '    AFFE=(\n'
+    out2 = ''
+    out3 = 'Mat=AFFE_MATERIAU(\n'
+    out3 += '    MAILLAGE=Mesh,\n'
+    out3 += '    AFFE=(\n'
+
+    for p in prop:
+        setname = esetName(p)
+        el = p.section
+        eltype = p.eltype.upper()
+        mat = el.material
+        
+        out1 += '        _F(GROUP_MA=\'%s\',\n' % setname.upper()
+        out1 += '           PHENOMENE=\'MECANIQUE\',\n'      
+        
+        out3 += '        _F(GROUP_MA=\'%s\',\n' % setname.upper()
+        
+        if mat is not None:
+            #out2 += fmtMaterial(mat)
+            print 'hier'
+        ############
+        ## 3DSOLID elements
+        ##########################
+        if eltype in solid3d_elems:
+            if el.sectiontype.upper() == '3DSOLID':
+                out1 += '           MODELISATION=\'3D\'),\n'
+                out3 += '           MATER=%s),\n' % mat.name
+
+    out1 += '          ),\n'
+    out1 += '    );\n'
+    out3 += '          ),\n'
+    out3 += '    );\n'
+    
+    return out1 + out2 + out3
 
 
 class AstData(object):
@@ -243,10 +331,10 @@ Script: %s
 
 
         # write elements
-        pf.message("Writing elements")
+        pf.message("Writing elements and element sets")
         telems = self.model.celems[-1]
         nelems = 0
-        for p in self.prop.getProp('e',attr=['eltype']):
+        for p in self.prop.getProp('e'):
             if p.set is not None:
                 # element set is directly specified
                 set = p.set
@@ -259,17 +347,25 @@ Script: %s
                 # default is all elements
                 set = range(telems)
             
-            print('Writing elements of type %s: %s' % (p.eltype,set))    
-            gl,gr = self.model.splitElems(set)
-            elems = self.model.getElems(gr)
-            for i,elnrs,els in zip(range(len(gl)),gl,elems):
-                grpname = Eset('grp',i)
-                subsetname = Eset(p.nr,'grp',i,)
-                nels = len(els)
-                if nels > 0:
-                    pf.message("Writing %s elements from group %s" % (nels,i))
-                    writeElems(fil,els,p.eltype,name=subsetname,eid=elnrs)
-                    nelems += nels
+            setname = esetName(p)
+            
+            if p.has_key('eltype'):
+                print('Writing elements of type %s: %s' % (p.eltype,set))
+                gl,gr = self.model.splitElems(set)
+                elems = self.model.getElems(gr)
+    
+                elnrs = array([]).astype(int)
+                els = array([]).astype(int)
+                for i in elems:
+                    nels = len(i)
+                    if nels > 0:
+                        els = append(els,i).reshape(-1,i.shape[1])
+                        nelems += nels
+                writeElems(fil,els,p.eltype,name=setname,eid=set)
+                
+            else:
+                pf.message("Writing element sets")
+                writeSet(fil,'NSET',setname,set)
 
         pf.message("Total number of elements: %s" % telems)
         if nelems != telems:
@@ -295,23 +391,23 @@ Script: %s
             writeSet(fil,'NSET',setname,set)
 
 
-        # write element sets
-        pf.message("Writing element sets")
-        for p in self.prop.getProp('e',attr=['set'],noattr=['eltype']):
-            if p.set is not None:
-                # element set is directly specified
-                set = p.set
-            elif p.prop is not None:
-                # element set is specified by eprop nrs
-                if self.eprop is None:
-                    raise ValueError,"elemProp has a 'prop' field but no 'eprop' was specified"
-                set = where(self.eprop == p.prop)[0]
-            else:
-                # default is all elements
-                set = range(telems)
+        ## # write element sets
+        ## pf.message("Writing element sets")
+        ## for p in self.prop.getProp('e',noattr=['eltype']):
+            ## if p.set is not None:
+                ## # element set is directly specified
+                ## set = p.set
+            ## elif p.prop is not None:
+                ## # element set is specified by eprop nrs
+                ## if self.eprop is None:
+                    ## raise ValueError,"elemProp has a 'prop' field but no 'eprop' was specified"
+                ## set = where(self.eprop == p.prop)[0]
+            ## else:
+                ## # default is all elements
+                ## set = range(telems)
 
-            setname = esetName(p)
-            writeSet(fil,'ELSET',setname,set)
+            ## setname = esetName(p)
+            ## writeSet(fil,'ELSET',setname,set)
             
         
         fil.write('FIN')
@@ -337,12 +433,26 @@ Script: %s
 # %s
 #
 """ % (jobname, datetime.now(), pf.scriptName, header)))
-
+        
+        fil.write('DEBUT();\n')
+        fil.write('Mesh=LIRE_MAILLAGE(INFO=2,);\n')
+        
+        prop = self.prop.getProp('e',attr=['section','eltype'])
+        if prop:
+            pf.message("Writing element sections")
+            fil.write(fmtSections(prop))
+        
+        prop = self.prop.getProp('n',attr=['displ'])
+        if prop:
+            pf.message("Writing displacement boundary conditions")
+            fil.write(fmtDisplacements(prop))
 
         prop = self.prop.getProp('n',attr=['equation'])
         if prop:
             pf.message("Writing constraint equations")
             fil.write(fmtEquation(prop))
+
+        fil.write('FIN();\n')
 
         if filename is not None:
             fil.close()
