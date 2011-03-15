@@ -29,7 +29,7 @@ The :mod:`nurbs` module defines functions and classes to manipulate
 NURBS curves and surface in pyFormex.
 """
 from coords import *
-from lib import _nurbs_ as nu
+from lib import nurbs
 from pyformex import options
 from gui.actors import NurbsActor
 import olist
@@ -312,7 +312,7 @@ class NurbsCurve(Geometry4):
         u = asarray(u).astype(double)
 
         try:
-            pts = nu.bspeval(self.order()-1,ctrl,knots,u)
+            pts = nurbs.bspeval(self.order()-1,ctrl,knots,u)
             if isnan(pts).any():
                 print "We got a NaN"
                 raise RuntimeError

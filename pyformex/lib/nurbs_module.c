@@ -34,10 +34,15 @@
 #include <math.h>
 
 
-static char __doc__[] = "_nurbs_ module. Version 0.1\n\
+static char __doc__[] = "nurbs_ module. Version 0.1\n\
 \n\
 This module implements low level NURBS functions for pyFormex.\n\
 \n";
+
+
+
+
+/****** INTERNAL FUNCTIONS (not callable from Python ********/
 
 int min(int a, int b)
 {
@@ -141,7 +146,7 @@ static double _binomial(int n, int k)
   return floor(0.5+exp(_factln(n)-_factln(k)-_factln(n-k)));
 }
 
-static PyObject * _nurbs_binomial(PyObject *self, PyObject *args)
+static PyObject * nurbs_binomial(PyObject *self, PyObject *args)
 {
   int n, k;
   double ret;
@@ -150,6 +155,224 @@ static PyObject * _nurbs_binomial(PyObject *self, PyObject *args)
   ret = _binomial(n, k);
   return Py_BuildValue("d",ret);
 }
+
+
+/* _horner
+
+Compute the value of a polynomial using Horner's rule.
+
+Input:
+- a: double(n+1), coefficients of the polynomial, starting
+     from lowest degree
+- n: int, degree of the polynomial
+- u: double, parametric value where the polynomial is evaluated
+
+Returns:
+double, the value of the polynomial
+
+Algorithm A1.1 from The NURBS Book
+*/
+
+static double _horner(double *a, int n, double u)
+{
+  double c = a[n];
+  int i;
+  for (i = n-1; i>=0; --i) c = c * u + a[i];
+  return c;
+}
+
+
+/* /\* _horner */
+
+/* Compute the value of a polynom using Horner's rule. */
+
+/* Input: */
+/* - a: double(n+1,nd), nd-dimensional coefficients of the polynom, starting  */
+/*      from lowest degree */
+/* - n: int, degree of the polynom */
+/* - nd: int, number of dimensions  */
+/* - u: double(nu), parametric values where the polynom is evaluated */
+
+/* Output: */
+/* - c: double(nu,nd), nd-dimensional values of the polynom */
+/* *\/ */
+
+/* static void _horner(double *a, int n, int nd, double *u, int nu) */
+/* { */
+/*   int i,j,k; */
+/*   double c; */
+/*   for (i=0; i<nu; ++i) { */
+/*     for (j=0; j<nd; ++j) { */
+/*       c = a[n,j]; */
+/*       for (k=n-1; i>=0; --k) c = c * u[i] + a[k,j]; */
+/*       u[i,j] = c; */
+/*     } */
+/*   } */
+/* } */
+
+/* static char horner__doc__[] = */
+/* "Evaluate a polynom using Horner's rule.\n\ */
+/* \n\ */
+/* Params:\n\ */
+/* - a: double(n+1,nd), nd-dimensional coefficients of the polynom of degree n,\n\ */
+/*      starting from lowest degree\n\ */
+/* - u: double(nu), parametric values where the polynom is evaluated\n\ */
+/* \n\ */
+/* Returns:\n\ */
+/* - p: double(nu,3), nu nd-dimensonal points\n\ */
+/* \n\ */
+/* Extended algorithm A1.1 from 'The NURBS Book' p7.\n\ */
+/* \n"; */
+
+/* static PyObject * nurbs_horner(PyObject *self, PyObject *args) */
+/* { */
+/*   int n, nd, nu; */
+/*   npy_intp *a_dim, *u_dim, dim[2]; */
+/*   double *a, *u, *pnt; */
+/*   PyObject *arg1, *arg2; */
+/*   PyObject *arr1=NULL, *arr2=NULL, *ret=NULL; */
+
+/*   if (!PyArg_ParseTuple(args, "OO", &arg1, &arg2)) */
+/*     return NULL; */
+/*   arr1 = PyArray_FROM_OTF(arg1, NPY_DOUBLE, NPY_IN_ARRAY); */
+/*   if(arr1 == NULL) */
+/*     return NULL; */
+/*   arr2 = PyArray_FROM_OTF(arg2, NPY_DOUBLE, NPY_IN_ARRAY); */
+/*   if(arr2 == NULL) */
+/*     goto fail; */
+
+/*   /\* We suppose the dimensions are correct*\/ */
+/*   a_dim = PyArray_DIMS(arr1); */
+/*   u_dim = PyArray_DIMS(arr2); */
+/*   n = a_dim[0]; */
+/*   nd = a_dim[1]; */
+/*   nu = u_dim[0]; */
+/*   a = (double *)PyArray_DATA(arr1); */
+/*   u = (double *)PyArray_DATA(arr2); */
+
+/*   /\* Create the return array *\/ */
+/*   dim[0] = nu; */
+/*   dim[1] = nd; */
+/*   ret = PyArray_SimpleNew(2,dim, NPY_DOUBLE); */
+/*   pnt = (double *)PyArray_DATA(ret); */
+
+/*   /\* Compute *\/ */
+/*   int i,j; */
+/*   for (i=0; i<nu; i */
+/*   _bspeval(d, ctrl, nc, mc, k, nk, u, nu, pnt); */
+/*   //printf("pnt(%d,%d)\n",nu,mc); */
+/*   //print_mat(pnt,nu,mc); */
+
+/*   /\* Clean up and return *\/ */
+/*   Py_DECREF(arr1); */
+/*   Py_DECREF(arr2); */
+/*   Py_DECREF(arr3); */
+/*   return ret; */
+
+/*  fail: */
+/*   printf("error cleanup and return\n"); */
+/*   Py_XDECREF(arr1); */
+/*   Py_XDECREF(arr2); */
+/*   Py_XDECREF(arr3); */
+/*   return NULL; */
+/* } */
+
+/* _bernstein
+
+Compute the value of a Bernstein polynomial.
+
+Input:
+- i: int, index of the polynomial
+- n: int, degree of the polynomial
+- u: double, parametric value where the polynomial is evaluated
+
+Returns:
+The value of the Bernstein polynomial B(i,n) at parameter value u.
+
+Algorithm A1.2 from The NURBS Book. 
+*/
+
+static double _bernstein(int i, int n, double u)
+{
+  int j, k;
+  double u1;
+  double *temp  = (double*) malloc((n+1)*sizeof(double));
+  for (j=0; i<+n; j++) temp[j] = 0.0;
+  temp[n-i] = 1.0;
+  u1 = 1.0-u;
+  for (k=1; k<=n; k++)
+    for (j=n; j<=k; j--)
+      temp[j] = u1*temp[j] + u*temp[j-1];
+  return temp[n];
+}
+
+/* _allBernstein
+
+Compute the value of all n-th degree Bernstein polynomials.
+
+Input:
+- n: int, degree of the polynomials
+- u: double, parametric value where the polynomials are evaluated
+
+Output:
+- B: double(n+1), the value of all n-th degree Bernstein polynomials B(i,n)
+at parameter value u.
+
+Algorithm A1.3 from The NURBS Book. 
+*/
+
+static void _allBernstein(int n, double u, double *B)
+{
+  int j, k;
+  double u1, temp, saved;
+  B[0] = 1.0;
+  u1 = 1.0-u;
+  for (j=1; j<=n; j++) {
+    saved = 0.0;
+    for (k=0; k<j; k++) {
+      temp = B[k];
+      B[k] = saved + u1*temp;
+      saved = u * temp;
+    }
+    B[j] = saved;
+  }
+}
+
+static char allBernstein__doc__[] =
+"Compute the value of all n-th degree Bernstein polynomials.\n\
+\n\
+Input:\n\
+- n: int, degree of the polynomials\n\
+- u: double, parametric value where the polynomials are evaluated\n\
+\n\
+Returns:\n\
+double(n+1), the value of all n-th degree Bernstein polynomials B(i,n)\n\
+at parameter value u.\n\
+\n\
+Algorithm A1.3 from The NURBS Book.\n";
+
+static PyObject * nurbs_allBernstein(PyObject *self, PyObject *args)
+{
+  int n;
+  npy_intp dim[1];
+  double u, *B;
+  PyObject *ret=NULL;
+
+  if (!PyArg_ParseTuple(args, "id", &n, &u))
+    return NULL;
+
+  /* Create the return array */
+  dim[0] = n+1;
+  ret = PyArray_SimpleNew(1,dim, NPY_DOUBLE);
+  B = (double *)PyArray_DATA(ret);
+
+  /* Compute */
+  _allBernstein(n,u,B);
+
+  /* Return */
+  return ret;
+}
+
 
 // Find the knot span index of the parametric point u. 
 //
@@ -229,7 +452,6 @@ static void _basisfuns(int i, double u, int p, double *U, double *N)
   free(left);
   free(right);
 }
-
 // Compute the nonvanishing basis functions and their derivatives. 
 //
 // INPUT:
@@ -250,11 +472,11 @@ static void _dersbasisfuns(int i, double u, int p, int n, double *U, double *dN)
 {
   int j,k,r,s1,s2,rk,pk,j1,j2;
   double temp, saved, der;
-  double **ndu, **a, *left, *right;
+  double **ndu, *a, *left, *right;
 
   //printf("DersBasisFuns: i=%d, u=%f, p=%d, n=%d\n",i,u,p,n);
   ndu = matrix(p+1, p+1);
-  a = matrix(2,p+1);
+  a = (double *) malloc(2*(p+1)*sizeof(double));
   left = (double *) malloc((p+1)*sizeof(double));
   right = (double *) malloc((p+1)*sizeof(double));
 
@@ -280,28 +502,28 @@ static void _dersbasisfuns(int i, double u, int p, int n, double *U, double *dN)
 
   /* Compute the derivatives (Eq. 2.9) */
   for (r=0; r<=p; r++) {   /* Loop over function index */
-    s1 = 0; s2 = 1;       /* Alternate rows in array a */
-    a[0][0] = 1.0;
+    s1 = 0; s2 = p+1;      /* Alternate rows in array a */
+    a[0] = 1.0;
 
     /* Loop to compute kth derivative */
     for (k=1; k<=n; k++) {
       der = 0.0;
       rk = r-k;  pk = p-k;
       if (r >= k) {
-        a[s2][0] = a[s1][0] / ndu[pk+1][rk];
-        der = a[s2][0] * ndu[rk][pk];
+        a[s2] = a[s1] / ndu[pk+1][rk];
+        der = a[s2] * ndu[rk][pk];
       }
       if (rk >= -1) j1 = 1;
       else j1 = -rk;
       if (r-1 <= pk) j2 = k-1;
       else j2 = p-r;
       for (j=j1; j<=j2; j++) {
-        a[s2][j] = (a[s1][j] - a[s1][j-1]) / ndu[pk+1][rk+j];
-        der += a[s2][j] * ndu[rk+j][pk];
+        a[s2+j] = (a[s1+j] - a[s1+j-1]) / ndu[pk+1][rk+j];
+        der += a[s2+j] * ndu[rk+j][pk];
       }
       if (r <= pk) {
-        a[s2][k] = -a[s1][k-1] / ndu[pk+1][r];
-        der += a[s2][k] * ndu[r][pk];
+        a[s2+k] = -a[s1+k-1] / ndu[pk+1][r];
+        der += a[s2+k] * ndu[r][pk];
       }
       dN[k*(p+1)+r] = der;
       /* Switch rows */
@@ -317,7 +539,7 @@ static void _dersbasisfuns(int i, double u, int p, int n, double *U, double *dN)
   }
 
   freematrix(ndu);
-  freematrix(a);
+  free(a);
   free(left);
   free(right);
 }
@@ -362,7 +584,7 @@ static void _bspeval(int d, double *ctrl, int nc, int mc, double *k, int nk, dou
   free(N);
 } 
 
-static PyObject * _nurbs_bspeval(PyObject *self, PyObject *args)
+static PyObject * nurbs_bspeval(PyObject *self, PyObject *args)
 {
   int d, mc, nc, nk, nu;
   npy_intp *ctrl_dim, *k_dim, *u_dim, dim[2];
@@ -393,10 +615,10 @@ static PyObject * _nurbs_bspeval(PyObject *self, PyObject *args)
   ctrl = (double *)PyArray_DATA(arr1);
   k = (double *)PyArray_DATA(arr2);
   u = (double *)PyArray_DATA(arr3);
-  dim[0] = nu;
-  dim[1] = mc;
 
   /* Create the return array */
+  dim[0] = nu;
+  dim[1] = mc;
   ret = PyArray_SimpleNew(2,dim, NPY_DOUBLE);
   pnt = (double *)PyArray_DATA(ret);
 
@@ -471,7 +693,7 @@ static void _bspdeval(int d, double *c, int nc, int mc, double *k, int nk,
   free(dN);
 }
 
-static PyObject * _nurbs_bspdeval(PyObject *self, PyObject *args)
+static PyObject * nurbs_bspdeval(PyObject *self, PyObject *args)
 {
   int d, mc, nc, nk, n;
   npy_intp *ctrl_dim, *k_dim, dim[2];
@@ -595,7 +817,7 @@ static void _bspkntins(int d, double **ctrl, int mc, int nc, double *k, int nk,
   }
 }
 
-/* static PyObject * _nurbs_bspkntins(PyObject *self, PyObject *args) */
+/* static PyObject * nurbs_bspkntins(PyObject *self, PyObject *args) */
 /* { */
 /*   int d, mc, nc, nk, nu, dim[2]; */
 /*   double **ctrlmat, **icmat; */
@@ -854,7 +1076,7 @@ static void _bspkntins(int d, double **ctrl, int mc, int nc, double *k, int nk,
 /*   free(alfs); */
 /* } */
 
-/* static PyObject * _nurbs_bspdegelev(PyObject *self, PyObject *args) */
+/* static PyObject * nurbs_bspdegelev(PyObject *self, PyObject *args) */
 /* { */
 /* 	int d, mc, nc, nk, t, nh, dim[2]; */
 /* 	double **ctrlmat, **icmat; */
@@ -971,7 +1193,7 @@ static void _bspkntins(int d, double **ctrl, int mc, int nc, double *k, int nk,
 /*   free(alfs); */
 /* } */
 
-/* static PyObject * _nurbs_bspbezdecom(PyObject *self, PyObject *args) */
+/* static PyObject * nurbs_bspbezdecom(PyObject *self, PyObject *args) */
 /* { */
 /* 	int i, b, c, d, mc, nc, nk, m,  dim[2]; */
 /* 	double **ctrlmat, **icmat, *ks; */
@@ -1019,19 +1241,20 @@ static void _bspkntins(int d, double **ctrl, int mc, int nc, double *k, int nk,
 
 static PyMethodDef _methods_[] =
 {
-	{"binomial", _nurbs_binomial, METH_VARARGS, binomial__doc__},
-	{"bspeval", _nurbs_bspeval, METH_VARARGS, bspeval__doc__},
-	{"bspdeval", _nurbs_bspdeval, METH_VARARGS, bspdeval__doc__},
-	/* {"bspkntins", _nurbs_bspkntins, METH_VARARGS, bspkntins__doc__}, */
-	/* {"bspdegelev", _nurbs_bspdegelev, METH_VARARGS, bspdegelev__doc__}, */
-	/* {"bspbezdecom", _nurbs_bspbezdecom, METH_VARARGS, bspbezdecom__doc__}, */
+	{"binomial", nurbs_binomial, METH_VARARGS, binomial__doc__},
+	{"allBernstein", nurbs_allBernstein, METH_VARARGS, allBernstein__doc__},
+	{"bspeval", nurbs_bspeval, METH_VARARGS, bspeval__doc__},
+	{"bspdeval", nurbs_bspdeval, METH_VARARGS, bspdeval__doc__},
+	/* {"bspkntins", nurbs_bspkntins, METH_VARARGS, bspkntins__doc__}, */
+	/* {"bspdegelev", nurbs_bspdegelev, METH_VARARGS, bspdegelev__doc__}, */
+	/* {"bspbezdecom", nurbs_bspbezdecom, METH_VARARGS, bspbezdecom__doc__}, */
 	{NULL, NULL}
 };
 
 /* Initialize the module */
-PyMODINIT_FUNC init_nurbs_(void)
+PyMODINIT_FUNC initnurbs_(void)
 {
-  (void) Py_InitModule3("_nurbs_", _methods_, __doc__);
+  (void) Py_InitModule3("nurbs_", _methods_, __doc__);
   import_array(); /* Get access to numpy array API */
 }
 

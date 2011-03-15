@@ -25,10 +25,11 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 
-static char __doc__[] = "misc module\n\
+static char __doc__[] = "misc_ module\n\
 \n\
 This module provides accelerated versions of miscellaneous pyFormex functions.\n\
 \n";
+
 
 /**************************************************** tofile_float32 ****/
 /* Write an array to file */
@@ -467,9 +468,9 @@ static PyMethodDef _methods_[] = {
 };
 
 /* Initialize the module */
-PyMODINIT_FUNC initmisc(void)
+PyMODINIT_FUNC initmisc_(void)
 {
-  (void) Py_InitModule3("misc", _methods_, __doc__);
+  (void) Py_InitModule3("misc_", _methods_, __doc__);
   import_array(); /* Get access to numpy array API */
 }
 

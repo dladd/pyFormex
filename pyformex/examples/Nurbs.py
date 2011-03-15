@@ -31,7 +31,7 @@ def expandNurbsCurve():
         u = asarray(u).astype(double)
         
         try:
-            pts = nu.bspdeval(self.degree,ctrl,knots,u[0],1)
+            pts = nurbs.bspdeval(self.degree,ctrl,knots,u[0],1)
             if isnan(pts).any():
                 print "We got a NaN"
                 print pts

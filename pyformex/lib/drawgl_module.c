@@ -33,7 +33,7 @@
 #include <numpy/arrayobject.h>
 #include <GL/gl.h>
 
-static char __doc__[] = "drawgl module\n\
+static char __doc__[] = "drawgl_ module\n\
 \n\
 This module provides accelerated versions of the pyFormex basic\n\
 OpenGL drawing functions.\n\
@@ -673,9 +673,9 @@ static PyMethodDef _methods_[] = {
 };
 
 /* Initialize the module */
-PyMODINIT_FUNC initdrawgl(void)
+PyMODINIT_FUNC initdrawgl_(void)
 {
-  (void) Py_InitModule3("drawgl", _methods_, __doc__);
+  (void) Py_InitModule3("drawgl_", _methods_, __doc__);
   import_array(); /* Get access to numpy array API */
 }
 

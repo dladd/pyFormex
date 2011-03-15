@@ -271,6 +271,31 @@ def norm(v,n=2):
     return
 
 
+def horner(a,u):
+    """Compute the value of a polynom using Horner's rule.
+
+    Params:
+
+    - `a`: float(n+1,nd), `nd`-dimensional coefficients of the polynom of
+      degree `n`, starting from lowest degree.
+    - `u`: float(nu), parametric values where the polynom is evaluated
+
+    Returns:
+    float(nu,nd), nd-dimensional values of the polynom.
+
+    >>> print horner([[1.,1.,1.],[1.,2.,3.]],[0.5,1.0])
+    [[ 1.5  2.   2.5]
+     [ 2.   3.   4. ]]
+
+    """
+    a = asarray(a)
+    u = asarray(u).reshape(-1,1)
+    c = a[-1]
+    for i in range(-2,-1-len(a),-1):
+        c = c * u + a[i]
+    return c
+
+
 def solveMany(A,b):
     """Solve many systems of linear equations.
     

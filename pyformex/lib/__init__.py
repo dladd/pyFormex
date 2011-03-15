@@ -15,9 +15,9 @@ This tries to load the compiled libraries, and replaces those that failed
 to load with the (slower) Python versions.
 """
 
-__all__ = [ 'drawgl', 'misc', 'accelerated' ]
+__all__ = [ 'misc', 'nurbs', 'drawgl', 'accelerated' ]
 
-drawgl = misc = None
+misc = nurns = drawgl = None
 accelerated = []
 required_drawgl_version = 1
 
@@ -34,31 +34,42 @@ if options:
 if accelerate:
 
     try:
-        import misc
+        import misc_ as misc
         debug("Succesfully loaded the pyFormex compiled misc library")
         accelerated.append(misc)
     except ImportError:
         debug("Error while loading the pyFormex compiled misc library")
 
+    try:
+        import nurbs_ as nurbs
+        debug("Succesfully loaded the pyFormex compiled nurbs library")
+        accelerated.append(nurbs)
+    except ImportError:
+        debug("Error while loading the pyFormex compiled nurbs library")
+
     if gui: 
         try:
-            import drawgl
-            debug("Succesfully loaded the pyFormex compiled draw library")
+            import drawgl_ as drawgl
+            debug("Succesfully loaded the pyFormex compiled drawgl library")
             drawgl_version = drawgl.get_version()
             debug("Drawing library version %s" % drawgl_version)
             if not drawgl_version == required_drawgl_version:
                 raise RuntimeError,"Incorrect acceleration library version (have %s, required %s)\nIf you are running pyFormex directly from sources, this might mean you have to run 'make lib' in the top directory of your pyFormex source tree.\nElse, this probably means pyFormex was not correctly installed."
             accelerated.append(drawgl)
         except ImportError:
-            debug("Error while loading the pyFormex compiled draw library")
+            debug("Error while loading the pyFormex compiled drawgl library")
 
 if misc is None:
     debug("Using the (slower) Python misc functions")
-    import pyformex.misc as misc
+    import misc
+
+if nurbs is None:
+    debug("Using the (slower) Python nurbs functions")
+    import nurbs
 
 if gui and drawgl is None:
     debug("Using the (slower) Python draw functions")
-    import pyformex.gui.drawgl as drawgl
+    import drawgl
 
 
 # End
