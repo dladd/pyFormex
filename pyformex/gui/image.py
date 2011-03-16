@@ -168,6 +168,8 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,resolution=1,options=None):
         fnori=fn
         tel=0
         output = Image.new("RGBA", (resolution*w, resolution*h))
+        linew=canvas.settings.linewidth
+        canvas.setLineWidth(linew*resolution)
         area=canvas.camera.area
         for i in range(resolution):
             for j in range(resolution):            
@@ -181,7 +183,7 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,resolution=1,options=None):
                     pf.debug("Image format can be saved by Qt")
                     GL.glFlush()
                     qim = canvas.grabFrameBuffer()
-                    print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
+                    #print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
                     if qim.save(fn,fmt,quality):
                         sta = 0
                     else:
@@ -212,6 +214,7 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,resolution=1,options=None):
         
         output.save(fnori)
         canvas.camera.setArea(area[0][0],area[0][1],area[1][0],area[1][1],False)
+        canvas.setLineWidth(linew)
         canvas.update()
         canvas.makeCurrent()
         canvas.raise_()
