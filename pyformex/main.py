@@ -32,7 +32,7 @@ startup_messages = ''
 if svnversion:
     msg = ''
     libdir = os.path.join(pyformexdir,'lib')
-    libraries = [ 'miscmodule','drawglmodule' ]
+    libraries = [ 'misc_module','nurbs_module','drawgl_module' ]
     for lib in libraries:
         src = os.path.join(libdir,lib+'.c')
         obj = os.path.join(libdir,lib+'.so')
