@@ -378,4 +378,27 @@ def toCoords4(x):
 
 Coords.toCoords4 = toCoords4
 
+
+
+def pointsOnBezierCurve(P,u):
+    """Compute points on a Bezier curve
+
+    Parameters:
+    P is an array with n+1 points defining a Bezier curve of degree n.
+    u is a vector with nu parameter values between 0 and 1.
+
+    Returns:
+    An array with the nu points of the Bezier curve corresponding with the
+    specified parametric values.
+
+    See also:
+    example BezierCurve
+    """
+    n = P.shape[0]-1
+    B = nurbs.allBernstein(n,u).reshape(-1,1)
+    return (B*P).sum(axis=0)
+
+
+
+
 ### End
