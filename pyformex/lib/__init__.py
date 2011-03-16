@@ -17,7 +17,7 @@ to load with the (slower) Python versions.
 
 __all__ = [ 'misc', 'nurbs', 'drawgl', 'accelerated' ]
 
-misc = nurns = drawgl = None
+misc = nurbs = drawgl = None
 accelerated = []
 required_drawgl_version = 1
 
