@@ -32,12 +32,12 @@ startup_messages = ''
 if svnversion:
     msg = ''
     libdir = os.path.join(pyformexdir,'lib')
-    libraries = [ 'misc_module','nurbs_module','drawgl_module' ]
+    libraries = [ 'misc_','nurbs_','drawgl_' ]
     for lib in libraries:
-        src = os.path.join(libdir,lib+'.c')
-        obj = os.path.join(libdir,lib+'.so')
+        src = os.path.join(libdir,lib+'module.c')
+        obj = os.path.join(libdir,lib+'module.so')
         if not os.path.exists(obj) or os.path.getmtime(obj) < os.path.getmtime(src):
-            msg += "\nThe compiled library '%s' is not up to date!" % lib
+            msg += "\nThe compiled library '%smodule' is not up to date!" % lib
     if msg:
         msg += """
         
