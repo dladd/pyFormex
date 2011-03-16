@@ -3,13 +3,13 @@
 .. include:: links.inc
 
 =====================================
-pyFormex User Meeting 12 (2011-04-08)
+pyFormex User Meeting 12 (2011-03-10)
 =====================================
 
 
 Place and Date
 ==============
-These are the minutes of the pyFormex User Meeting of Tuesday April 08, 2010, at the Institute Biomedical Technology (IBiTech), Ghent University, Belgium.
+These are the minutes of the pyFormex User Meeting of Tuesday March 10, 2011, at the Institute Biomedical Technology (IBiTech), Ghent University, Belgium.
 
 
 Participants
@@ -18,11 +18,13 @@ The following pyFormex developers, users and enthusiasts were present.
 
 - Matthieu De Beule
 - Gianluca De Santis, secretary
-- Peter Mortier
 - Tomas Praet
 - Koen Van Canneyt
 - Sofie Van Cauter
 - Benedict Verhegghe
+- Francesco Iannaccone
+- Joris Bols
+- Sander De Bock
 
 
 Apologies
@@ -44,6 +46,7 @@ Approaching pyFormex 1.0
 
   - programming style: should be enhanced/enforced
   - docstrings: rst!!!
+  - doctest: use examples in documentation
   - planning: new features, important changes (function naming!)
 
 - Tasks (short term)
@@ -64,6 +67,9 @@ Approaching pyFormex 1.0
 - Test Suite (interactive?)
 
 - Support: forums, bugs, follow up
+
+  - Set e-mail notification of help section in forum
+  - Use the pyFormex forum (instead of Minerva) for students with questions
 
 - Promotion, Donations
 
@@ -91,6 +97,7 @@ Varia
 Date of the next meeting
 ========================
 The next meeting will be held at IBiTech in June 2011.
+Developers and users are encouraged to present changes and updates.
 
 
 .. The following directive makes sure the targets are included in footnotes.
