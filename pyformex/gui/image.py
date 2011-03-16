@@ -144,16 +144,14 @@ def imageFormatFromExt(ext):
 
 ##### LOW LEVEL FUNCTIONS ##########
 
-def save_canvas(canvas,fn,fmt='png',quality=-1,resolution=1,options=None):
-
+def save_canvas(canvas,fn,fmt='png',quality=-1,options=None):
     """Save the rendering on canvas as an image file.
 
     canvas specifies the qtcanvas rendering window.
     fn is the name of the file
     fmt is the image file format
-    resolution is the factor by which to multiply the default (=screen) resolution    
     """
-    # make sure we have the current content displayed (on top)    
+    # make sure we have the current content displayed (on top)
     canvas.makeCurrent()
     canvas.raise_()
     canvas.display()
@@ -162,89 +160,34 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,resolution=1,options=None):
     w = int(size.width())
     h = int(size.height())
     pf.debug("Saving image with current size %sx%s" % (w,h))
-    if resolution!=1:
-        import Image  #Does everybody have this installed by default?
-        print 'imported Image, making and merging images'
-        fnori=fn
-        tel=0
-        output = Image.new("RGBA", (resolution*w, resolution*h))
-        linew=canvas.settings.linewidth
-        canvas.setLineWidth(linew*resolution)
-        area=canvas.camera.area
-        for i in range(resolution):
-            for j in range(resolution):            
-                canvas.zoomRectangle(w*i/resolution,h*j/resolution,w/resolution*(i+1),h/resolution*(j+1))   
-                canvas.update()
-                canvas.makeCurrent()
-                canvas.raise_()
-                canvas.display()
-                fn=fnori[0:-4]+str(tel)+fnori[-4::]
-                if fmt in image_formats_qt:
-                    pf.debug("Image format can be saved by Qt")
-                    GL.glFlush()
-                    qim = canvas.grabFrameBuffer()
-                    #print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
-                    if qim.save(fn,fmt,quality):
-                        sta = 0
-                    else:
-                        sta = 1
-
-                elif fmt in image_formats_gl2ps:
-                    pf.debug("Image format can be saved by gl2ps")
-                    sta = save_PS(canvas,fn,fmt)
     
-                elif fmt in image_formats_fromeps:
-                    pf.debug("Image format can be converted from eps")
-                    fneps = os.path.splitext(fn)[0] + '.eps'
-                    delete = not os.path.exists(fneps)
-                    save_PS(canvas,fneps,'eps')
-                    if os.path.exists(fneps):
-                        cmd = 'pstopnm -portrait -stdout %s' % fneps
-                        if fmt != 'ppm':
-                            cmd += '| pnmto%s > %s' % (fmt,fn)
-                        utils.runCommand(cmd)
-                        if delete:
-                            os.remove(fneps)                     
-   
-                chunk = Image.open(fn)
-                output.paste(chunk, (w*i, h*(resolution-1-j)))
-                os.remove(fn)    
-                tel+=1
-                canvas.camera.setArea(area[0][0],area[0][1],area[1][0],area[1][1],False)
-        
-        output.save(fnori)
-        canvas.camera.setArea(area[0][0],area[0][1],area[1][0],area[1][1],False)
-        canvas.setLineWidth(linew)
-        canvas.update()
-        canvas.makeCurrent()
-        canvas.raise_()
-        canvas.display()                         
-    else:
-        if fmt in image_formats_qt:
-            pf.debug("Image format can be saved by Qt")
-            GL.glFlush()
-            qim = canvas.grabFrameBuffer()
-            print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
-            if qim.save(fn,fmt,quality):
-                sta = 0
-            else:
-                sta = 1
-        elif fmt in image_formats_gl2ps:
-            pf.debug("Image format can be saved by gl2ps")
-            sta = save_PS(canvas,fn,fmt)
+    if fmt in image_formats_qt:
+        pf.debug("Image format can be saved by Qt")
+        GL.glFlush()
+        qim = canvas.grabFrameBuffer()
+        print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
+        if qim.save(fn,fmt,quality):
+            sta = 0
+        else:
+            sta = 1
 
-        elif fmt in image_formats_fromeps:
-            pf.debug("Image format can be converted from eps")
-            fneps = os.path.splitext(fn)[0] + '.eps'
-            delete = not os.path.exists(fneps)
-            save_PS(canvas,fneps,'eps')
-            if os.path.exists(fneps):
-                cmd = 'pstopnm -portrait -stdout %s' % fneps
-                if fmt != 'ppm':
-                    cmd += '| pnmto%s > %s' % (fmt,fn)
-                utils.runCommand(cmd)
-                if delete:
-                    os.remove(fneps)    
+    elif fmt in image_formats_gl2ps:
+        pf.debug("Image format can be saved by gl2ps")
+        sta = save_PS(canvas,fn,fmt)
+
+    elif fmt in image_formats_fromeps:
+        pf.debug("Image format can be converted from eps")
+        fneps = os.path.splitext(fn)[0] + '.eps'
+        delete = not os.path.exists(fneps)
+        save_PS(canvas,fneps,'eps')
+        if os.path.exists(fneps):
+            cmd = 'pstopnm -portrait -stdout %s' % fneps
+            if fmt != 'ppm':
+                cmd += '| pnmto%s > %s' % (fmt,fn)
+            utils.runCommand(cmd)
+            if delete:
+                os.remove(fneps)
+
     return sta
 
 
@@ -355,7 +298,7 @@ def save_rect(x,y,w,h,filename,format,quality=-1):
 
 #### USER FUNCTIONS ################
 
-def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,quality=-1,resolution=1,verbose=False):
+def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,quality=-1,verbose=False):
     """Saves an image to file or Starts/stops multisave mode.
 
     With a filename and multi==False (default), the current viewport rendering
@@ -432,7 +375,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
             else:
                 sta = save_window(filename,format,quality)
         else:
-            sta = save_canvas(pf.canvas,filename,format,quality,resolution)
+            sta = save_canvas(pf.canvas,filename,format,quality)
         if sta:
             pf.debug("Error while saving image %s" % filename)
         else:
