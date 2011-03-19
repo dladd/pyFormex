@@ -883,6 +883,11 @@ def fgcolor(color):
     pf.canvas.setFgColor(color)
 
 
+def colormap(color=None):
+    """Gets/Sets the current canvas color map"""
+    return pf.canvas.settings.colormap
+
+
 def renderMode(mode,avg=False,light=None):
     pf.canvas.setRenderMode(mode,light)
     pf.canvas.update()

@@ -44,9 +44,9 @@ drawNumbers(C.coords)
 
 setDrawOptions({'bbox':None})
 n = 100
-for u in arange(n+1)*1.0/n:
-    P = pointsOnBezierCurve(C.coords,u)
-    draw(P)
+u = arange(n+1)*1.0/n
+P = pointsOnBezierCurve(C.coords,u)
+draw(P)
 
 # End
 

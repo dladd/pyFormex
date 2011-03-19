@@ -19,7 +19,8 @@ from plugins.nurbs import *
 
 
 def expandNurbsCurve():
-    def directions(self,u=None,n=10,d=1):
+    def derivatives(self,d=1,u=None,n=10):
+        """Returns the points and derivatives up to d at values u"""
         print "DERIV",u
         if u is None:
             umin = self.knots[0]
@@ -31,7 +32,7 @@ def expandNurbsCurve():
         u = asarray(u).astype(double)
         
         try:
-            pts = nurbs.bspdeval(self.degree,ctrl,knots,u[0],1)
+            pts = nurbs.curveDerivs(self.degree,d,ctrl,knots,u)
             if isnan(pts).any():
                 print "We got a NaN"
                 print pts
@@ -48,7 +49,7 @@ def expandNurbsCurve():
         else:
             pts = Coords(pts)
         return x,d
-    NurbsCurve.directions = directions
+    NurbsCurve.derivatives = derivatives
 
 
 def drawThePoints(N,n,color=None):
@@ -58,19 +59,15 @@ def drawThePoints(N,n,color=None):
     #umax = N.knots[-1]
     print "Umin = %s, Umax = %s" % (umin,umax)
     u = umin + arange(n+1) * (umax-umin) / float(n)
-    print u
-    #u = [0.25,0.5,0.75]
     P = N.pointsAt(u)    
     draw(P,color=color,marksize=5)
     drawNumbers(P,color=color)
-
-    for ui in u:
-        #x = N.pointsAt([ui])
-        #draw(x,marksize=10,color=yellow)
-        x,d = N.directions([ui])
-        print "Point %s: Dir %s" % (x,d)
-        draw(x,marksize=10,color=yellow)
-        draw(Formex([[x,x+0.5*d]]),color=yellow,linewidth=3)
+    
+    x,d = N.derivatives(5,u)[:2]
+    print "Point %s: Dir %s" % (x,d)
+    x1 = x+0.5*d
+    draw(x,marksize=10,color=yellow)
+    draw(connect([Formex(x),Formex(x1)]),color=yellow,linewidth=3)
 
 expandNurbsCurve()                         
 clear()
@@ -104,26 +101,6 @@ flat()
 
 # This should be a valid combination of ntrl/degree
 # drawing is only done if degree <= 7
-
-def demo_weights():
-    nctrl = 8
-    degree = 7
-    pts = allpts[:nctrl]
-    knots = None
-    L = {}
-    draw(pts)
-    drawNumbers(pts)
-    draw(PolyLine(pts))
-    for w,c in zip(weight,colors):
-        qc = Coords4(pts)
-        for i in range(1,degree):
-            qc[i::degree].deNormalize(w)
-        print qc
-        C = NurbsCurve(qc,knots=knots,degree=degree,closed=False)
-        draw(C,color=c)
-        drawThePoints(C,10,color=c)
-        L["wt-%s" % w] = C
-    export(L)
 
 
 C = Formex(pattern('51414336')).toCurve()

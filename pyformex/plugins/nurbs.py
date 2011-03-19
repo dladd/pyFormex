@@ -232,6 +232,10 @@ class NurbsCurve(Geometry4):
     the largest value. Sensible default values are constructed automatically
     by a call to the knotVector() function.
 
+    If no knots are given and no degree is specified, the degree is set to
+    the number of control points - 1 if the curve is blended. If not blended,
+    the degree is not set larger than 3.
+
     
     order (2,3,4,...) = degree+1 = min. number of control points
     ncontrol >= order
@@ -249,8 +253,9 @@ class NurbsCurve(Geometry4):
         
         if degree is None:
             if knots is None:
-                #raise ValueError,'Either degree or knots has to be specified'
-                degree = min(nctrl-1,3)
+                degree = nctrl-1
+                if not blended:
+                    degree = min(degree,3)
             else:
                 degree = len(knots) - nctrl -1
                 if degree <= 0:
@@ -312,7 +317,9 @@ class NurbsCurve(Geometry4):
         u = asarray(u).astype(double)
 
         try:
-            pts = nurbs.bspeval(self.order()-1,ctrl,knots,u)
+            print ctrl,knots,u
+            pts = nurbs.curvePoints(self.degree,ctrl,knots,u)
+            print pts
             if isnan(pts).any():
                 print "We got a NaN"
                 raise RuntimeError
@@ -324,11 +331,21 @@ class NurbsCurve(Geometry4):
         else:
             pts = Coords(pts)
         return pts
+
+
+    def knotPoints(self):
+        """Returns the points at the knot values.
+
+        The multiplicity of the knots is retained in the points set.
+        """
+        return self.pointsAt(self.knots)
         
 
     def actor(self,**kargs):
         """Graphical representation"""
         return NurbsActor(self,**kargs)
+
+    
 
     
 
@@ -379,7 +396,6 @@ def toCoords4(x):
 Coords.toCoords4 = toCoords4
 
 
-
 def pointsOnBezierCurve(P,u):
     """Compute points on a Bezier curve
 
@@ -390,15 +406,42 @@ def pointsOnBezierCurve(P,u):
     Returns:
     An array with the nu points of the Bezier curve corresponding with the
     specified parametric values.
+    ERROR: currently u is a single paramtric value!
 
     See also:
-    example BezierCurve
+    examples BezierCurve, Casteljou
+    """
+    u = asarray(u).ravel()
+    n = P.shape[0]-1
+    return Coords.concatenate([
+        (nurbs.allBernstein(n,ui).reshape(1,-1,1) * P).sum(axis=1)
+        for ui in u ],axis=0)
+
+
+def deCasteljou(P,u):
+    """Compute points on a Bezier curve using deCasteljou algorithm
+
+    Parameters:
+    P is an array with n+1 points defining a Bezier curve of degree n.
+    u is a single parameter value between 0 and 1.
+
+    Returns:
+    A list with point sets obtained in the subsequent deCasteljou
+    approximations. The first one is the set of control points, the last one
+    is the point on the Bezier curve.
+
+    This function works with Coords as well as Coords4 points. 
     """
     n = P.shape[0]-1
-    B = nurbs.allBernstein(n,u).reshape(-1,1)
-    return (B*P).sum(axis=0)
+    C = [P]
+    for k in range(n):
+        Q = C[-1]
+        Q = (1.-u) * Q[:-1] + u * Q[1:]
+        C.append(Q)
+    return C
 
 
-
+#def Horner2D():
+    
 
 ### End
