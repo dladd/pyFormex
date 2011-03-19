@@ -34,10 +34,11 @@ from simple import circle
 from odict import ODict
 from plugins.geomtools import triangleCircumCircle
 from plugins.curve import *
+from plugins.nurbs import *
 from plugins.tools_menu import *
 from plugins import objects
 
-draw_mode_2d = ['point','polyline','spline','circle']
+draw_mode_2d = ['point','polyline','curve','nurbs','circle']
 autoname = ODict([ (obj,utils.NameSequence(obj)) for obj in draw_mode_2d ])
 
 _preview = False
@@ -89,10 +90,16 @@ def drawnObject(points,mode='point'):
         return points
     elif mode == 'polyline':
         return PolyLine(points,closed=closed)
-    elif mode == 'spline' and points.ncoords() > 1:
+    elif mode == 'curve' and points.ncoords() > 1:
         curl = _obj_params.get('curl',None)
         closed = _obj_params.get('closed',None)
         return BezierSpline(points,curl=curl,closed=closed)
+    elif mode == 'nurbs':
+        degree = _obj_params.get('degree',None)
+        if points.ncoords() <= degree:
+            return None
+        closed = _obj_params.get('closed',None)
+        return NurbsCurve(points,degree=degree,closed=closed)
     elif mode == 'circle' and points.ncoords() % 3 == 0:
         R,C,N = triangleCircumCircle(points.reshape(-1,3,3))
         circles = [circle(r=r,c=c,n=n) for r,c,n in zip(R,C,N)]
@@ -116,11 +123,14 @@ def highlightDrawing(points,mode):
     pf.canvas.addHighlight(PA)
     obj = drawnObject(points,mode=mode)
     if obj is not None:
-        if hasattr(obj,'toFormex'):
-            F = obj.toFormex()
+        if mode == 'nurbs':
+            OA = obj.actor(color=pf.canvas.settings.slcolor)
         else:
-            F = Formex(obj)
-        OA = actors.GeomActor(F,color=pf.canvas.settings.slcolor)
+            if hasattr(obj,'toFormex'):
+                F = obj.toFormex()
+            else:
+                F = Formex(obj)
+                OA = actors.GeomActor(F,color=pf.canvas.settings.slcolor)
         OA.specular=0.0
         pf.canvas.addHighlight(OA)
     pf.canvas.update()
@@ -188,11 +198,16 @@ def draw_points(npoints=-1):
     return draw_object('point',npoints=npoints)
 def draw_polyline():
     return draw_object('polyline')
-def draw_spline():
+def draw_curve():
     global _obj_params
     res = askItems([('curl',1./3.),('closed',False)])
     _obj_params.update(res)
-    return draw_object('spline')
+    return draw_object('curve')
+def draw_nurbs():
+    global _obj_params
+    res = askItems([('degree',3),('closed',False)])
+    _obj_params.update(res)
+    return draw_object('nurbs')
 def draw_circle():
     return draw_object('circle')
 

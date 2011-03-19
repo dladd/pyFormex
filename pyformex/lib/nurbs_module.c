@@ -23,7 +23,7 @@
 //
 
 //
-// This is partly based on the Nurbs toolbox Python port by 
+// Part of this module was inspired by the Nurbs toolbox Python port by 
 // Runar Tenfjord (http://www.aria.uklinux.net/nurbs.php3)
 //
 // It was optimized and adapted to numpy by Benedict Verhegghe
@@ -1127,20 +1127,22 @@ static PyObject * nurbs_allBernstein(PyObject *self, PyObject *args)
 
 
 static char curvePoints_doc[] =
-"Evaluation of univariate B-Spline. \n\
+"Compute a point on a B-spline curve.\n\
 \n\
-INPUT:\n\
+Input:\n\
 \n\
- p - spline degree       integer\n\
- c - control points      double  matrix(nc,nd)\n\
- k - knot sequence       double  vector(nk)\n\
- u - parametric points   double  vector(nu)\n\
+- p: degree of the B-spline\n\
+- P: control points P(nc,nd)\n\
+- nc: number of control points\n\
+- nd: dimension of the points (3 or 4)\n\
+- U: knot sequence: U[0] .. U[m]\n\
+- u: parametric values: U[0] <= ui <= U[m]\n\
+- nu: number of parametric values\n\
 \n\
-OUTPUT:\n\
+Output:\n\
+- pnt: (nu,nd) points on the B-spline\n\
 \n\
-   p - evaluated points    double  matrix(nu,nd)\n\
-\n\
-Modified version of Algorithm A3.1 from 'The NURBS BOOK' pg82.\n\
+Modified algorithm A3.1 from 'The NURBS Book' pg82.\n\
 \n";
 
 static PyObject * nurbs_curvePoints(PyObject *self, PyObject *args)
@@ -1197,24 +1199,26 @@ static PyObject * nurbs_curvePoints(PyObject *self, PyObject *args)
   return NULL;
 }
 
-static char curveDerivs_doc[] =
-"Evaluate a B-Spline derivative curve.\n\
-\n\
-INPUT:\n\
-\n\
- p - spline degree       integer\n\
- c - control points      double  matrix(nc,nd)\n\
- k - knot sequence       double  vector(nk)\n\
- u - parametric point    double\n\
- n - nth derivative      integer\n\
-\n\
-OUTPUT:\n\
-\n\
- p - evaluated points    double  matrix(nd, n+1)\n\
-\n\
-Modified version of Algorithm A3.2 from 'The NURBS BOOK' pg93.\n\
-\n";
 
+static char curveDerivs_doc[] =
+"Compute derivatives of a B-spline curve.\n\
+\n\
+Input:\n\
+\n\
+- p: degree of the B-spline\n\
+- P: control points P(nc,nd)\n\
+- nc: number of control points\n\
+- nd: dimension of the points (3 or 4)\n\
+- U: knot sequence: U[0] .. U[m]\n\
+- u: parametric values: U[0] <= ui <= U[m]\n\
+- nu: number of parametric values\n\
+- n: number of derivatives to compute\n\
+\n\
+Output:\n\
+- pnt: (n+1,nu,nd) points and derivatives on the B-spline\n\
+\n\
+Modified algorithm A3.2 from 'The NURBS Book' pg93.\n\
+\n";
 
 static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
 {
