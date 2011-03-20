@@ -77,7 +77,7 @@ def draw2D(mode='point',npoints=-1,zplane=0.,coords=None,func=None):
     return pf.canvas.idraw(mode,npoints,zplane,func,coords,_preview)
 
 
-_obj_params = {}
+obj_params = {}
 
 def drawnObject(points,mode='point'):
     """Return the geometric object resulting from draw2D points"""
@@ -91,14 +91,14 @@ def drawnObject(points,mode='point'):
     elif mode == 'polyline':
         return PolyLine(points,closed=closed)
     elif mode == 'curve' and points.ncoords() > 1:
-        curl = _obj_params.get('curl',None)
-        closed = _obj_params.get('closed',None)
+        curl = obj_params.get('curl',None)
+        closed = obj_params.get('closed',None)
         return BezierSpline(points,curl=curl,closed=closed)
     elif mode == 'nurbs':
-        degree = _obj_params.get('degree',None)
+        degree = obj_params.get('degree',None)
         if points.ncoords() <= degree:
             return None
-        closed = _obj_params.get('closed',None)
+        closed = obj_params.get('closed',None)
         return NurbsCurve(points,degree=degree,closed=closed)
     elif mode == 'circle' and points.ncoords() % 3 == 0:
         R,C,N = triangleCircumCircle(points.reshape(-1,3,3))
@@ -161,11 +161,11 @@ def selectObject(mode=None):
 
 ###################################
 
-_zvalue = 0.
+the_zvalue = 0.
     
 def draw_object(mode,npoints=-1):
-    print "z value = %s" % _zvalue
-    points = drawPoints2D(mode,npoints=-1,zvalue=_zvalue)
+    print "z value = %s" % the_zvalue
+    points = drawPoints2D(mode,npoints=-1,zvalue=the_zvalue)
     if points is None:
         return
     print "POINTS %s" % points
@@ -190,6 +190,9 @@ def draw_object(mode,npoints=-1):
     draw(points,color='black',flat=True)
     if mode != 'point':
         draw(obj,color=color,flat=True)
+    if mode == 'nurbs':
+        print "DRAWING KNOTS"
+        draw(obj.knotPoints(),color=color,marksize=5)
     return name
     
             
@@ -199,14 +202,14 @@ def draw_points(npoints=-1):
 def draw_polyline():
     return draw_object('polyline')
 def draw_curve():
-    global _obj_params
+    global obj_params
     res = askItems([('curl',1./3.),('closed',False)])
-    _obj_params.update(res)
+    obj_params.update(res)
     return draw_object('curve')
 def draw_nurbs():
-    global _obj_params
+    global obj_params
     res = askItems([('degree',3),('closed',False)])
-    _obj_params.update(res)
+    obj_params.update(res)
     return draw_object('nurbs')
 def draw_circle():
     return draw_object('circle')

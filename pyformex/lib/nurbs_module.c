@@ -583,98 +583,74 @@ static void curveDerivs(int p, int n, double *P, int nc, int nd, double *U, doub
   free(dN);
 }
 
-static void _bspkntins(int p, double **ctrl, int nd, int nc, double *k, int nk, 
-              double *u, int nu, double **ictrl, double *ik)
+
+/* curveKnotRefine */
+/*
+Refine curve knot vector. 
+
+Input:
+
+- p: degree of the B-spline
+- P: control points P(nc,nd)
+- nc: number of control points = n+1
+- nd: dimension of the points (3 or 4)
+- U: knot sequence: U[0] .. U[m]   m = n+p+1 = nc+p
+- u: (nu) parametric values of new knots: U[0] <= u[i] <= U[m]
+- nu: number of knots to insert
+
+Output:
+- newP: (nc+nu,nd) new control points
+- newU: (nc+p+nu) new knot vector
+
+Modified algorithm A5.1 from 'The NURBS Book' pg164.
+*/
+
+static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double *u, int nu, double *newP, double *newU)
 {
-  int a, b, r, l, i, j, m, n, s, q, ind;
+  int a, b, r, l, i, j, k, m, n, q, ind;
   double alfa;
 
   n = nc - 1;
   r = nu - 1;
 
   m = n + p + 1;
-  a = findSpan(k,u[0],p,n);
-  b = findSpan(k,u[r],p,n);
-  ++b;
+  a = findSpan(U,u[0],p,n);
+  b = findSpan(U,u[r],p,n) + 1;
 
-  for (q = 0; q < nd; q++)
-  {
-    for (j = 0; j <= a-p; j++) ictrl[q][j] = ctrl[q][j];
-    for (j = b-1; j <= n; j++) ictrl[q][j+r+1] = ctrl[q][j];
-  }
-  for (j = 0; j <= a; j++)   ik[j] = k[j];
-  for (j = b+p; j <= m; j++) ik[j+r+1] = k[j];
+  for (j = 0; j < a-p; j++) 
+    for (q=0; q<nd; q++) newP[j*nd+q] = P[j*nd+q];
+  for (j = b-1; j <= n; j++)
+    for (q=0; q<nd; q++) newP[(j+r+1)*nd+q] = P[j*nd+q];
+
+  for (j = 0; j <= a; j++)   newU[j] = U[j];
+  for (j = b+p; j <= m; j++) newU[j+r+1] = U[j];
 
   i = b + p - 1;
-  s = b + p + r;
-  for (j = r; j >= 0; j--)
-  {
-    while (u[j] <= k[i] && i > a)
-    {
-      for (q = 0; q < nd; q++)
-        ictrl[q][s-p-1] = ctrl[q][i-p-1];
-      ik[s] = k[i];
-      --s;
+  k = b + p + r;
+  for (j = r; j >= 0; j--) {
+    while (u[j] <= U[i] && i > a) {
+      for (q=0; q<nd; q++) newP[(k-p-1)*nd+q] = P[(i-p-1)*nd+q];
+      newU[k] = U[i];
+      --k;
       --i;
     }
-    for (q = 0; q < nd; q++)
-      ictrl[q][s-p-1] = ictrl[q][s-p];
-    for (l = 1; l <= p; l++)
-    {
-      ind = s - p + l;
-      alfa = ik[s+l] - u[j];
+    for (q=0; q<nd; q++) newP[(k-p-1)*nd+q] = newP[(k-p)*nd+q];
+    for (l = 1; l <= p; l++) {
+      ind = k - p + l;
+      alfa = newU[k+l] - u[j];
       if (fabs(alfa) == 0.0)
-        for (q = 0; q < nd; q++)
-          ictrl[q][ind-1] = ictrl[q][ind];
-      else
-      {
-        alfa /= (ik[s+l] - k[i-p+l]);
-        for (q = 0; q < nd; q++)
-          ictrl[q][ind-1] = alfa*ictrl[q][ind-1]+(1.0-alfa)*ictrl[q][ind];
+        for (q=0; q<nd; q++) newP[(ind-1)*nd+q] = newP[ind*nd+q];
+      else {
+        alfa /= (newU[k+l] - U[i-p+l]);
+        for (q=0; q<nd; q++) 
+	  newP[(ind-1)*nd+q] = alfa*newP[(ind-1)*nd+q] + (1.0-alfa)*newP[ind*nd+q];
       }
     }
 
-    ik[s] = u[j];
-    --s;
+    newU[k] = u[j];
+    --k;
   }
 }
-
-/* static PyObject * nurbs_bspkntins(PyObject *self, PyObject *args) */
-/* { */
-/*   int p, nd, nc, nk, nu, dim[2]; */
-/*   double **ctrlmat, **icmat; */
-/*   PyObject *arg2, *arg3, *arg4; */
-/*   PyArrayObject *ctrl, *k, *u, *ic, *ik; */
-/*   if(!PyArg_ParseTuple(args, "iOOO", &p, &arg2, &arg3, &arg4)) */
-/*     return NULL; */
-/*   ctrl = (PyArrayObject *) PyArray_ContiguousFromObject(arg2, PyArray_DOUBLE, 2, 2); */
-/*   if(ctrl == NULL) */
-/*     return NULL; */
-/*   k = (PyArrayObject *) PyArray_ContiguousFromObject(arg3, PyArray_DOUBLE, 1, 1); */
-/*   if(k == NULL) */
-/*     return NULL; */
-/*   u = (PyArrayObject *) PyArray_ContiguousFromObject(arg4, PyArray_DOUBLE, 1, 1); */
-/*   if(u == NULL) */
-/*     return NULL; */
-/*   nd = ctrl->dimensions[0]; */
-/*   nc = ctrl->dimensions[1]; */
-/*   nk = k->dimensions[0]; */
-/*   nu = u->dimensions[0]; */
-/*   dim[0] = nd; */
-/*   dim[1] = nc + nu; */
-/*   ic = (PyArrayObject *) PyArray_FromDims(2, dim, PyArray_DOUBLE); */
-/*   ctrlmat = vec2mat(ctrl->data, nd, nc); */
-/*   icmat = vec2mat(ic->data, nd, nc + nu); */
-/*   dim[0] = nk + nu; */
-/*   ik = (PyArrayObject *) PyArray_FromDims(1, dim, PyArray_DOUBLE); */
-/*   _bspkntins(p, ctrlmat, nd, nc, (double *)k->data, nk, (double *)u->data, nu, icmat, (double *)ik->data); */
-/*   free(icmat); */
-/*   free(ctrlmat); */
-/*   Py_DECREF(ctrl); */
-/*   Py_DECREF(k); */
-/*   Py_DECREF(u); */
-/*   return Py_BuildValue("(OO)", (PyObject *)ic, (PyObject *)ik); */
-/* } */
 
 /* static char bspdegelev_doc[] = */
 /* "Degree elevate a B-Spline t times.\n\ */
@@ -1222,9 +1198,9 @@ Modified algorithm A3.2 from 'The NURBS Book' pg93.\n\
 
 static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
 {
-  int p, nd, nc, nk, nu, n;
-  npy_intp *ctrl_dim, *k_dim, *u_dim, dim[3];
-  double *ctrl, *k, *u, *pnt;
+  int p, nd, nc, nu, n;
+  npy_intp *P_dim, *U_dim, *u_dim, dim[3];
+  double *P, *U, *u, *pnt;
   PyObject *a1, *a2, *a3;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *ret=NULL;
 
@@ -1240,15 +1216,14 @@ static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
   if(arr3 == NULL)
     goto fail;
 
-  ctrl_dim = PyArray_DIMS(arr1);
-  k_dim = PyArray_DIMS(arr2);
+  P_dim = PyArray_DIMS(arr1);
+  U_dim = PyArray_DIMS(arr2);
   u_dim = PyArray_DIMS(arr3);
-  nc = ctrl_dim[0];
-  nd = ctrl_dim[1];
-  nk = k_dim[0];
+  nc = P_dim[0];
+  nd = P_dim[1];
   nu = u_dim[0];
-  ctrl = (double *)PyArray_DATA(arr1);
-  k = (double *)PyArray_DATA(arr2);
+  P = (double *)PyArray_DATA(arr1);
+  U = (double *)PyArray_DATA(arr2);
   u = (double *)PyArray_DATA(arr3);
 
   /* Create the return array */
@@ -1259,7 +1234,7 @@ static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
   pnt = (double *)PyArray_DATA(ret);
 
   /* Compute */
-  curveDerivs(p, n, ctrl, nc, nd, k, u, nu, pnt);
+  curveDerivs(p, n, P, nc, nd, U, u, nu, pnt);
 
   /* Clean up and return */
   Py_DECREF(arr1);
@@ -1275,23 +1250,81 @@ static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
   return NULL;
 }
 
-static char bspkntins_doc[] =
-"Insert Knot into a B-Spline.\n\
+static char curveKnotRefine_doc[] =
+"Refine curve knot vector.\n\
 \n\
-INPUT:\n\
+Input:\n\
 \n\
- p - spline degree       integer\n\
- c - control points      double  matrix(mc,nc)\n\
- k - knot sequence       double  vector(nk)\n\
- u - new knots           double  vector(nu)\n\
+- p: degree of the B-spline\n\
+- P: control points P(nc,nd)\n\
+- U: knot sequence: U[0] .. U[m] (m=nc+p)\n\
+- u: (nu) parametric values of new knots: U[0] <= u[i] <= U[m]\n\
 \n\
-OUTPUT:\n\
+Output:\n\
+- newP: (nc+nu,nd) new control points\n\
+- newU: (m+nu) new knot vector\n\
 \n\
- ic - new control points double  matrix(mc,nc+nu)\n\
- ik - new knot sequence  double  vector(nk+nu)\n\
-\n\
-Modified version of Algorithm A5.4 from 'The NURBS BOOK' pg164.\n\
+Modified algorithm A5.1 from 'The NURBS Book' pg164.\n\
 \n";
+
+static PyObject * nurbs_curveKnotRefine(PyObject *self, PyObject *args)
+{
+  int p, nd, nc, nk, nu;
+  npy_intp *P_dim, *U_dim, *u_dim, dim[2];
+  double *P, *U, *u, *newP, *newU;
+  PyObject *a1, *a2, *a3;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *ret1=NULL, *ret2=NULL;
+
+  if(!PyArg_ParseTuple(args, "iOOO", &p, &a1, &a2, &a3))
+    return NULL;
+  arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr1 == NULL)
+    return NULL;
+  arr2 = PyArray_FROM_OTF(a2, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr2 == NULL)
+    goto fail;
+  arr3 = PyArray_FROM_OTF(a3, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr3 == NULL)
+    goto fail;
+
+  P_dim = PyArray_DIMS(arr1);
+  U_dim = PyArray_DIMS(arr2);
+  u_dim = PyArray_DIMS(arr3);
+  nc = P_dim[0];
+  nd = P_dim[1];
+  nk = U_dim[0];
+  nu = u_dim[0];
+  P = (double *)PyArray_DATA(arr1);
+  U = (double *)PyArray_DATA(arr2);
+  u = (double *)PyArray_DATA(arr3);
+
+  /* Create the return arrays */
+  dim[0] = nc+nu;
+  dim[1] = nd;
+  ret1 = PyArray_SimpleNew(2,dim, NPY_DOUBLE);
+  newP = (double *)PyArray_DATA(ret1);
+  dim[0] = nk+nu;
+  ret2 = PyArray_SimpleNew(1,dim, NPY_DOUBLE);
+  newU = (double *)PyArray_DATA(ret2);
+
+  /* Compute */
+  curveKnotRefine(p, P, nc, nd, U, u, nu, newP, newU);
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  Py_DECREF(arr3);
+  //return ret1;
+  return Py_BuildValue("(OO)", ret1, ret2);
+
+ fail:
+  printf("error cleanup and return\n");
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
+  return NULL;
+}
+
 
 static PyMethodDef _methods_[] =
 {
@@ -1299,7 +1332,7 @@ static PyMethodDef _methods_[] =
 	{"allBernstein", nurbs_allBernstein, METH_VARARGS, allBernstein_doc},
 	{"curvePoints", nurbs_curvePoints, METH_VARARGS, curvePoints_doc},
 	{"curveDerivs", nurbs_curveDerivs, METH_VARARGS, curveDerivs_doc},
-	/* {"bspkntins", nurbs_bspkntins, METH_VARARGS, bspkntins_doc}, */
+	{"curveKnotRefine", nurbs_curveKnotRefine, METH_VARARGS, curveKnotRefine_doc},
 	/* {"bspdegelev", nurbs_bspdegelev, METH_VARARGS, bspdegelev_doc}, */
 	/* {"bspbezdecom", nurbs_bspbezdecom, METH_VARARGS, bspbezdecom_doc}, */
 	{NULL, NULL}

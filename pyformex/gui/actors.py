@@ -666,9 +666,6 @@ class GeomActor(Actor):
         elif nplex == 3 and self.eltype in ['curve','line3']:
             drawQuadraticCurves(self.coords,color)
             
-        elif self.eltype == 'nurbs' and nplex in [3,4]:
-            drawNurbsCurves(self.coords,color=color)
-            
         elif self.eltype is None:
             # polygons
             if mode=='wireframe' :

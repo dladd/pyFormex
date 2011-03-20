@@ -277,24 +277,24 @@ class NurbsCurve(Geometry4):
             print "extra %s = %s + %s" % (nextra,nextra1,nextra2)
             control = Coords4(concatenate([control[-nextra1:],control,control[:nextra2]],axis=0))
 
-        nctrl = len(control)
+        nctrl = control.shape[0]
 
         if nctrl < order:
             raise ValueError,"Number of control points (%s) must not be smaller than order (%s)" % (nctrl,order)
 
         if knots is None:
             knots = knotsVector(nctrl,degree,blended=blended,closed=closed)
-            #print "KNOTS",knots
+        else:
+            knots = asarray(knots).ravel()
 
-        nknots = len(knots)
-        #print "Nurbs curve of degree %s with %s control points and %s knots" % (degree,nctrl,nknots)
+        nknots = knots.shape[0]
         
         if nknots != nctrl+order:
             raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
 
        
         self.coords = control
-        self.knots = asarray(knots)
+        self.knots = knots
         self.degree = degree
         self.closed = closed
 
@@ -317,9 +317,7 @@ class NurbsCurve(Geometry4):
         u = asarray(u).astype(double)
 
         try:
-            print ctrl,knots,u
             pts = nurbs.curvePoints(self.degree,ctrl,knots,u)
-            print pts
             if isnan(pts).any():
                 print "We got a NaN"
                 raise RuntimeError
@@ -339,6 +337,22 @@ class NurbsCurve(Geometry4):
         The multiplicity of the knots is retained in the points set.
         """
         return self.pointsAt(self.knots)
+
+
+    def insertKnots(self,u):
+        """Insert a set of knots in the curve.
+
+        u is a vector with knot parameter values to be inserted into the
+        curve. The control points are adapted to keep the curve unchanged.
+
+        Returns a Nurbs curve equivalent with the original but with the
+        specified knot values inserted in the knot vector, and the control
+        points adapted.
+        """
+        if self.closed:
+            raise ValueError,"insertKnots currently does not work on closed curves"
+        newP,newU = nurbs.curveKnotRefine(self.degree,self.coords,self.knots,u)
+        return NurbsCurve(newP,degree=self.degree,knots=newU,closed=self.closed)
         
 
     def actor(self,**kargs):
@@ -380,7 +394,7 @@ def knotsVector(nctrl,degree,blended=True,closed=False):
             knots = [0.] + [ [float(i)]*degree for i in range(nparts+1) ] + [float(nparts)]
             knots = olist.flatten(knots)
             
-    return knots
+    return asarray(knots)
 
 
 def toCoords4(x):
