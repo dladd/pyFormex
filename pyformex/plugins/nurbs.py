@@ -317,7 +317,7 @@ class NurbsCurve(Geometry4):
         u = asarray(u).astype(double)
 
         try:
-            pts = nurbs.curvePoints(self.degree,ctrl,knots,u)
+            pts = nurbs.curvePoints(ctrl,knots,u)
             if isnan(pts).any():
                 print "We got a NaN"
                 raise RuntimeError
@@ -351,7 +351,7 @@ class NurbsCurve(Geometry4):
         """
         if self.closed:
             raise ValueError,"insertKnots currently does not work on closed curves"
-        newP,newU = nurbs.curveKnotRefine(self.degree,self.coords,self.knots,u)
+        newP,newU = nurbs.curveKnotRefine(self.coords,self.knots,u)
         return NurbsCurve(newP,degree=self.degree,knots=newU,closed=self.closed)
         
 

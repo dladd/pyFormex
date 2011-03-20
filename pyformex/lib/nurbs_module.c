@@ -23,10 +23,8 @@
 //
 
 //
-// Part of this module was inspired by the Nurbs toolbox Python port by 
+// This module is partly inspired by the Nurbs toolbox Python port by 
 // Runar Tenfjord (http://www.aria.uklinux.net/nurbs.php3)
-//
-// It was optimized and adapted to numpy by Benedict Verhegghe
 //
 
 #include "Python.h"
@@ -507,10 +505,12 @@ Output:
 
 Modified algorithm A3.1 from 'The NURBS Book' pg82.
 */
-static void curvePoints(int p, double *P, int nc, int nd, double *U, double *u, int nu, double *pnt)
+static void curvePoints(double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *pnt)
 {
-  int i, j, s, t;
+  int i, j, p, s, t;
   
+  p = nk - nc - 1;
+
   /* space for the basis functions */
   double *N = (double*) malloc((p+1)*sizeof(double));
 
@@ -550,9 +550,11 @@ Output:
 
 Modified algorithm A3.2 from 'The NURBS Book' pg93.
 */
-static void curveDerivs(int p, int n, double *P, int nc, int nd, double *U, double *u, int nu, double *pnt)
+static void curveDerivs(int n, double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *pnt)
 {
-  int i, j, l, s, t;
+  int i, j, l, p, s, t;
+
+  p = nk - nc - 1;
 
   /* number of nonzero derivatives to compute */
   int du = min(p,n);
@@ -605,15 +607,15 @@ Output:
 Modified algorithm A5.1 from 'The NURBS Book' pg164.
 */
 
-static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double *u, int nu, double *newP, double *newU)
+static void curveKnotRefine(double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *newP, double *newU)
 {
-  int a, b, r, l, i, j, k, m, n, q, ind;
+  int a, b, r, l, i, j, k, n, p, q, ind;
   double alfa;
 
+  p = nk - nc - 1;
   n = nc - 1;
   r = nu - 1;
 
-  m = n + p + 1;
   a = findSpan(U,u[0],p,n);
   b = findSpan(U,u[r],p,n) + 1;
 
@@ -623,7 +625,7 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
     for (q=0; q<nd; q++) newP[(j+r+1)*nd+q] = P[j*nd+q];
 
   for (j = 0; j <= a; j++)   newU[j] = U[j];
-  for (j = b+p; j <= m; j++) newU[j+r+1] = U[j];
+  for (j = b+p; j < nk; j++) newU[j+r+1] = U[j];
 
   i = b + p - 1;
   k = b + p + r;
@@ -652,6 +654,90 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
   }
 }
 
+/* curveDecompose */
+/*
+Decompose a Nurbs curve in Bezier segments. 
+
+Input:
+
+- p: degree of the B-spline
+- P: control points P(nc,nd)
+- nc: number of control points = n+1
+- nd: dimension of the points (3 or 4)
+- U: knot sequence: U[0] .. U[m]   m = n+p+1 = nc+p
+
+Output:
+
+- newP: (nb*p+1,nd) new control points
+- nb: number of Bezier segments 
+
+Modified algorithm A5.6 from 'The NURBS Book' pg173.
+*/
+  
+
+static void curveDecompose(double *P, int nc, int nd, double *U, int nk, double *newP)
+{
+  int i, j, p, s, m, r, a, b, mult, n, nb, ii, save, q;
+  double numer, alpha, *alfa;
+
+  n = nc - 1;
+  m = nk - 1;
+  p = m - n - 1;
+
+  alfa = (double *) malloc(p*sizeof(double));
+
+  a = p;
+  b = p+1;
+  nb = 0;
+  
+  /* First bezier segment */
+  for (i = 0; i < p*nd; i++) newP[i] = P[i];
+  return;
+
+  // Loop through knot vector */
+  while (b < m) {
+    i = b;
+    while (b < m && U[b] == U[b+1]) b++;
+    mult = b-i+1;
+    
+    if (mult < p) {
+      /* compute alfas */
+      numer = U[b] - U[a];
+      for (q = p; q > mult; q--)
+        alfa[q-mult-1] = numer / (U[a+q]-U[a]);
+
+      /* Insert knot U[b] r times */
+      r = p - mult;
+      for (j = 1; j <= r; j++) {
+        save = r - j;
+        s = mult + j; 	/* Number of new points */
+        for (q = p; q >= s; q--) {
+	  alpha = alfa[q-s];
+          for (ii = 0; ii < nd; ii++)
+            newP[(nb+q)*nd+ii] = alpha*newP[(nb+q)*nd+ii] + (1.0-alpha)*newP[(nb+q-1)*nd+ii];
+	}
+        for (ii = 0; ii < nd; ii++)
+          newP[(save+nb+p+1)*nd+ii] = newP[p*nd+ii];
+      }
+    }
+    // end of insert knot
+    nb += p;
+    if (b < m)
+    {
+      // setup for next pass thru loop
+      for (j = r; j <= p; j++)
+        for (ii = 0; ii < nd; ii++)
+          newP[(j+nb)*nd+ii] = P[(b-p+j)*nd+ii];
+      a = b;
+      b++;
+    }
+  }
+  // end while loop
+  
+  free(alfa);
+}
+
+
 /* static char bspdegelev_doc[] = */
 /* "Degree elevate a B-Spline t times.\n\ */
 /* \n\ */
@@ -666,28 +752,28 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /* Modified version of Algorithm A5.9 from 'The NURBS BOOK' pg206.\n\ */
 /* \n"; */
 
-/* static void _bspdegelev(int p, double **ctrl, int nd, int nc, double *k, int nk,  */
-/*                int t, int *nh, double **ictrl, double *ik) */
+/* static void _bspdegelev(int p, double **P, int nd, int nc, double *U,  */
+/*                int t, int *nh, double **newP, double *newU) */
 /* { */
-/*   int i, j, q, s, m, ph, ph2, mpi, mh, r, a, b, cind, oldr, mul; */
+/*   int i, j, q, s, m, ph, ph2, mpi, mh, r, a, b, cind, oldr, mult; */
 /*   int n, lbz, rbz, save, tr, kj, first, kind, last, bet, ii; */
 /*   double inv, ua, ub, numer, den, alf, gam; */
-/*   double **bezalfs, **bpts, **ebpts, **Nextbpts, *alfs;  */
+/*   double **bezalfa, **bpts, **ebpts, **Nextbpts, *alfa;  */
 
 /*   n = nc - 1; */
 
-/*   bezalfs = matrix(d+1,p+t+1); */
+/*   bezalfa = matrix(d+1,p+t+1); */
 /*   bpts = matrix(nd,p+1); */
 /*   ebpts = matrix(nd,p+t+1); */
 /*   Nextbpts = matrix(nd,p); */
-/*   alfs = (double *) malloc(p*sizeof(double)); */
+/*   alfa = (double *) malloc(p*sizeof(double)); */
 
 /*   m = n + p + 1; */
 /*   ph = p + t; */
 /*   ph2 = ph / 2; */
 
 /*   // compute bezier degree elevation coefficeients   */
-/*   bezalfs[0][0] = bezalfs[p][ph] = 1.0; */
+/*   bezalfa[0][0] = bezalfa[p][ph] = 1.0; */
 
 /*   for (i = 1; i <= ph2; i++) */
 /*   { */
@@ -695,14 +781,14 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /*     mpi = min(p,i); */
     
 /*     for (j = max(0,i-t); j <= mpi; j++) */
-/*       bezalfs[j][i] = inv * _binomial(p,j) * _binomial(t,i-j); */
+/*       bezalfa[j][i] = inv * _binomial(p,j) * _binomial(t,i-j); */
 /*   }     */
   
 /*   for (i = ph2+1; i <= ph-1; i++) */
 /*   { */
 /*     mpi = min(p, i); */
 /*     for (j = max(0,i-t); j <= mpi; j++) */
-/*       bezalfs[j][i] = bezalfs[p-j][ph-i]; */
+/*       bezalfa[j][i] = bezalfa[p-j][ph-i]; */
 /*   }        */
 
 /*   mh = ph; */
@@ -711,30 +797,30 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /*   a = p; */
 /*   b = p+1; */
 /*   cind = 1; */
-/*   ua = k[0]; */
+/*   ua = U[0]; */
 /*   for (ii = 0; ii < nd; ii++) */
-/*     ictrl[ii][0] = ctrl[ii][0]; */
+/*     newP[ii][0] = P[ii][0]; */
   
 /*   for (i = 0; i <= ph; i++) */
-/*     ik[i] = ua; */
+/*     newU[i] = ua; */
     
 /*   // initialise first bezier seg */
 /*   for (i = 0; i <= p; i++) */
 /*     for (ii = 0; ii < nd; ii++) */
-/*       bpts[ii][i] = ctrl[ii][i];   */
+/*       bpts[ii][i] = P[ii][i];   */
 
 /*   // big loop thru knot vector */
 /*   while (b < m) */
 /*   { */
 /*     i = b; */
-/*     while (b < m && k[b] == k[b+1]) */
+/*     while (b < m && U[b] == U[b+1]) */
 /*       b++; */
 
-/*     mul = b - i + 1; */
-/*     mh += mul + t; */
-/*     ub = k[b]; */
+/*     mult = b - i + 1; */
+/*     mh += mult + t; */
+/*     ub = U[b]; */
 /*     oldr = r; */
-/*     r = p - mul; */
+/*     r = p - mult; */
     
 /*     // insert knot u(b) r times */
 /*     if (oldr > 0) */
@@ -751,16 +837,16 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /*     { */
 /*       // insert knot to get bezier segment */
 /*       numer = ub - ua; */
-/*       for (q = p; q > mul; q--) */
-/*         alfs[q-mul-1] = numer / (k[a+q]-ua); */
+/*       for (q = p; q > mult; q--) */
+/*         alfa[q-mult-1] = numer / (U[a+q]-ua); */
 /*       for (j = 1; j <= r; j++)   */
 /*       { */
 /*         save = r - j; */
-/*         s = mul + j;             */
+/*         s = mult + j;             */
 
 /*         for (q = p; q >= s; q--) */
 /*           for (ii = 0; ii < nd; ii++) */
-/*             bpts[ii][q] = alfs[q-s]*bpts[ii][q]+(1.0-alfs[q-s])*bpts[ii][q-1]; */
+/*             bpts[ii][q] = alfa[q-s]*bpts[ii][q]+(1.0-alfa[q-s])*bpts[ii][q-1]; */
 
 /*         for (ii = 0; ii < nd; ii++) */
 /*           Nextbpts[ii][save] = bpts[ii][p]; */
@@ -776,17 +862,17 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /*       mpi = min(p, i); */
 /*       for (j = max(0,i-t); j <= mpi; j++) */
 /*         for (ii = 0; ii < nd; ii++) */
-/*           ebpts[ii][i] = ebpts[ii][i] + bezalfs[j][i]*bpts[ii][j]; */
+/*           ebpts[ii][i] = ebpts[ii][i] + bezalfa[j][i]*bpts[ii][j]; */
 /*     } */
 /*     // end of degree elevating bezier */
 
 /*     if (oldr > 1) */
 /*     { */
-/*       // must remove knot u=k[a] oldr times */
+/*       // must remove knot u=U[a] oldr times */
 /*       first = kind - 2; */
 /*       last = kind; */
 /*       den = ub - ua; */
-/*       bet = (ub-ik[kind-1]) / den; */
+/*       bet = (ub-newU[kind-1]) / den; */
       
 /*       // knot removal loop */
 /*       for (tr = 1; tr < oldr; tr++) */
@@ -800,15 +886,15 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /*           // for one removal step */
 /*           if (i < cind) */
 /*           { */
-/*             alf = (ub-ik[i])/(ua-ik[i]); */
+/*             alf = (ub-newU[i])/(ua-newU[i]); */
 /*             for (ii = 0; ii < nd; ii++) */
-/*               ictrl[ii][i] = alf * ictrl[ii][i] + (1.0-alf) * ictrl[ii][i-1]; */
+/*               newP[ii][i] = alf * newP[ii][i] + (1.0-alf) * newP[ii][i-1]; */
 /*           }         */
 /*           if (j >= lbz) */
 /*           { */
 /*             if (j-tr <= kind-ph+oldr) */
 /*             {   */
-/*               gam = (ub-ik[j-tr]) / den; */
+/*               gam = (ub-newU[j-tr]) / den; */
 /*               for (ii = 0; ii < nd; ii++) */
 /*                 ebpts[ii][kj] = gam*ebpts[ii][kj] + (1.0-gam)*ebpts[ii][kj+1]; */
 /*             } */
@@ -827,13 +913,13 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /*         last++; */
 /*       }                     */
 /*     } */
-/*     // end of removing knot n=k[a] */
+/*     // end of removing knot n=U[a] */
                   
 /*     // load the knot ua */
 /*     if (a != p) */
 /*       for (i = 0; i < ph-oldr; i++) */
 /*       { */
-/*         ik[kind] = ua; */
+/*         newU[kind] = ua; */
 /*         kind++; */
 /*       } */
 
@@ -841,7 +927,7 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /*     for (j = lbz; j <= rbz; j++) */
 /*     { */
 /*       for (ii = 0; ii < nd; ii++) */
-/*         ictrl[ii][cind] = ebpts[ii][j]; */
+/*         newP[ii][cind] = ebpts[ii][j]; */
 /*       cind++; */
 /*     } */
     
@@ -853,7 +939,7 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /*           bpts[ii][j] = Nextbpts[ii][j]; */
 /*       for (j = r; j <= p; j++) */
 /*         for (ii = 0; ii < nd; ii++) */
-/*           bpts[ii][j] = ctrl[ii][b-p+j]; */
+/*           bpts[ii][j] = P[ii][b-p+j]; */
 /*       a = b; */
 /*       b++; */
 /*       ua = ub; */
@@ -861,184 +947,22 @@ static void curveKnotRefine(int p, double *P, int nc, int nd, double *U, double 
 /*     else */
 /*       // end knot */
 /*       for (i = 0; i <= ph; i++) */
-/*         ik[kind+i] = ub; */
+/*         newU[kind+i] = ub; */
 /*   }                   */
 /*   // end while loop    */
   
 /*   *nh = mh - ph - 1; */
 
-/*   freematrix(bezalfs); */
+/*   freematrix(bezalfa); */
 /*   freematrix(bpts); */
 /*   freematrix(ebpts); */
 /*   freematrix(Nextbpts); */
-/*   free(alfs); */
+/*   free(alfa); */
 /* } */
 
-/* static PyObject * nurbs_bspdegelev(PyObject *self, PyObject *args) */
-/* { */
-/* 	int p, nd, nc, nk, t, nh, dim[2]; */
-/* 	double **ctrlmat, **icmat; */
-/* 	PyObject *arg2, *arg3; */
-/* 	PyArrayObject *ctrl, *k, *ic, *ik; */
-/* 	if(!PyArg_ParseTuple(args, "iOOi", &d, &arg2, &arg3, &t)) */
-/* 		return NULL; */
-/* 	ctrl = (PyArrayObject *) PyArray_ContiguousFromObject(arg2, PyArray_DOUBLE, 2, 2); */
-/* 	if(ctrl == NULL) */
-/* 		return NULL; */
-/* 	k = (PyArrayObject *) PyArray_ContiguousFromObject(arg3, PyArray_DOUBLE, 1, 1); */
-/* 	if(k == NULL) */
-/* 		return NULL; */
-/* 	nd = ctrl->dimensions[0]; */
-/* 	nc = ctrl->dimensions[1]; */
-/* 	nk = k->dimensions[0]; */
-/* 	dim[0] = nd; */
-/* 	dim[1] = nc*(t + 1); */
-/* 	ic = (PyArrayObject *) PyArray_FromDims(2, dim, PyArray_DOUBLE); */
-/* 	ctrlmat = vec2mat(ctrl->data, nd, nc); */
-/* 	icmat = vec2mat(ic->data, nd, nc*(t + 1)); */
-/* 	dim[0] = (t + 1)*nk; */
-/* 	ik = (PyArrayObject *) PyArray_FromDims(1, dim, PyArray_DOUBLE); */
-/* 	_bspdegelev(p, ctrlmat, nd, nc, (double *)k->data, nk, t, &nh, icmat, (double *)ik->data); */
-/* 	free(icmat); */
-/* 	free(ctrlmat); */
-/* 	Py_DECREF(ctrl); */
-/* 	Py_DECREF(k); */
-/* 	return Py_BuildValue("(OOi)", (PyObject *)ic, (PyObject *)ik, nh); */
-/* } */
-
-/* static char bspbezdecom_doc[] = */
-/* "Decompose a B-Spline to Bezier segments.\n\ */
-/* \n\ */
-/* INPUT:\n\ */
-/* \n\ */
-/*  n,p,U,Pw\n\ */
-/* \n\ */
-/* OUTPUT:\n\ */
-/* \n\ */
-/*  Qw\n\ */
-/* \n\ */
-/* Modified version of Algorithm A5.6 from 'The NURBS BOOK' pg173.\n\ */
-/* \n"; */
-
-/* static void _bspbezdecom(int p, double **ctrl, int nd, int nc, double *k, int nk,  */
-/*                double **ictrl) */
-/* { */
-/*   int i, j, s, m, r, a, b, mul, n, nb, ii, save, q; */
-/*   double ua, ub, numer; */
-/*   double *alfs;  */
-
-/*   n = nc - 1; */
-
-/*   alfs = (double *) malloc(d*sizeof(double)); */
-
-/*   m = n + p + 1; */
-/*   a = p; */
-/*   b = p+1; */
-/*   ua = k[0]; */
-/*   nb = 0; */
-  
-/*   // initialise first bezier seg */
-/*   for (i = 0; i <= p; i++) */
-/*     for (ii = 0; ii < nd; ii++) */
-/*       ictrl[ii][i] = ctrl[ii][i];   */
-
-/*   // big loop thru knot vector */
-/*   while (b < m) */
-/*   { */
-/*     i = b; */
-/*     while (b < m && k[b] == k[b+1]) */
-/*       b++; */
-
-/*     mul = b - i + 1; */
-/*     ub = k[b]; */
-/*     r = p - mul; */
-    
-/*     // insert knot u(b) r times */
-/*     if (r > 0) */
-/*     { */
-/*       // insert knot to get bezier segment */
-/*       numer = ub - ua; */
-/*       for (q = p; q > mul; q--) */
-/*         alfs[q-mul-1] = numer / (k[a+q]-ua); */
-/*       for (j = 1; j <= r; j++)   */
-/*       { */
-/*         save = r - j; */
-/*         s = mul + j;             */
-
-/*         for (q = p; q >= s; q--) */
-/*           for (ii = 0; ii < mc; ii++) */
-/*             ictrl[ii][q+nb] = alfs[q-s]*ictrl[ii][q+nb]+(1.0-alfs[q-s])*ictrl[ii][q-1+nb]; */
-
-/*         for (ii = 0; ii < mc; ii++) */
-/*           ictrl[ii][save+nb+p+1] = ictrl[ii][p];  */
-/*       }   */
-/*     } */
-/*     // end of insert knot */
-/*     nb += p; */
-/*     if (b < m) */
-/*     { */
-/*       // setup for next pass thru loop */
-/*       for (j = r; j <= p; j++) */
-/*         for (ii = 0; ii < mc; ii++) */
-/*           ictrl[ii][j+nb] = ctrl[ii][b-p+j]; */
-/*       a = b; */
-/*       b++; */
-/*       ua = ub; */
-/*     } */
-/*   }                  */
-/*   // end while loop    */
-  
-/*   free(alfs); */
-/* } */
-
-/* static PyObject * nurbs_bspbezdecom(PyObject *self, PyObject *args) */
-/* { */
-/* 	int i, b, c, p, mc, nc, nk, m,  dim[2]; */
-/* 	double **ctrlmat, **icmat, *ks; */
-/* 	PyObject *arg2, *arg3; */
-/* 	PyArrayObject *ctrl, *k, *ic; */
-/* 	if(!PyArg_ParseTuple(args, "iOO", &p, &arg2, &arg3)) */
-/* 		return NULL; */
-/* 	ctrl = (PyArrayObject *) PyArray_ContiguousFromObject(arg2, PyArray_DOUBLE, 2, 2); */
-/* 	if(ctrl == NULL) */
-/* 		return NULL; */
-/* 	k = (PyArrayObject *) PyArray_ContiguousFromObject(arg3, PyArray_DOUBLE, 1, 1); */
-/* 	if(k == NULL) */
-/* 		return NULL; */
-/* 	mc = ctrl->dimensions[0]; */
-/* 	nc = ctrl->dimensions[1]; */
-/* 	nk = k->dimensions[0]; */
-	
-/* 	i = p + 1; */
-/* 	c = 0; */
-/* 	m = nk - p - 1; */
-/* 	while (i < m) */
-/* 	{ */
-/* 		b = 1; */
-/* 		while (i < m && *(double *)(k->data + i * k->strides[0]) == *(double *)(k->data + (i + 1) * k->strides[0])) */
-/* 		{ */
-/* 			b++; */
-/* 			i++; */
-/* 		} */
-/* 		if(b < p)  */
-/* 			c = c + (p - b);  */
-/* 		i++; */
-/* 	} */
-/* 	dim[0] = mc; */
-/* 	dim[1] = nc+c; */
-/* 	ic = (PyArrayObject *) PyArray_FromDims(2, dim, PyArray_DOUBLE); */
-/* 	ctrlmat = vec2mat(ctrl->data, mc, nc); */
-/* 	icmat = vec2mat(ic->data, mc, nc+c); */
-/* 	_bspbezdecom(d, ctrlmat, mc, nc, (double *)k->data, nk, icmat); */
-/* 	free(icmat); */
-/* 	free(ctrlmat);  */
-/* 	Py_DECREF(ctrl); */
-/* 	Py_DECREF(k);  */
-/* 	return Py_BuildValue("O", ic); */
-/* } */
-
-
+/********************************************************/
 /****** EXPORTED FUNCTIONS (callable from Python ********/
+/********************************************************/
 
 static char _doc_[] = "nurbs_ module. Version 0.1\n\
 \n\
@@ -1123,13 +1047,13 @@ Modified algorithm A3.1 from 'The NURBS Book' pg82.\n\
 
 static PyObject * nurbs_curvePoints(PyObject *self, PyObject *args)
 {
-  int p, nd, nc, nk, nu;
-  npy_intp *ctrl_dim, *k_dim, *u_dim, dim[2];
-  double *ctrl, *k, *u, *pnt;
+  int nd, nc, nk, nu;
+  npy_intp *P_dim, *U_dim, *u_dim, dim[2];
+  double *P, *U, *u, *pnt;
   PyObject *a1, *a2, *a3;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *ret=NULL;
 
-  if (!PyArg_ParseTuple(args, "iOOO", &p, &a1, &a2, &a3))
+  if (!PyArg_ParseTuple(args, "OOO", &a1, &a2, &a3))
     return NULL;
   arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
   if(arr1 == NULL)
@@ -1141,15 +1065,15 @@ static PyObject * nurbs_curvePoints(PyObject *self, PyObject *args)
   if(arr3 == NULL)
     goto fail;
 
-  ctrl_dim = PyArray_DIMS(arr1);
-  k_dim = PyArray_DIMS(arr2);
+  P_dim = PyArray_DIMS(arr1);
+  U_dim = PyArray_DIMS(arr2);
   u_dim = PyArray_DIMS(arr3);
-  nc = ctrl_dim[0];
-  nd = ctrl_dim[1];
-  nk = k_dim[0];
+  nc = P_dim[0];
+  nd = P_dim[1];
+  nk = U_dim[0];
   nu = u_dim[0];
-  ctrl = (double *)PyArray_DATA(arr1);
-  k = (double *)PyArray_DATA(arr2);
+  P = (double *)PyArray_DATA(arr1);
+  U = (double *)PyArray_DATA(arr2);
   u = (double *)PyArray_DATA(arr3);
 
   /* Create the return array */
@@ -1159,7 +1083,7 @@ static PyObject * nurbs_curvePoints(PyObject *self, PyObject *args)
   pnt = (double *)PyArray_DATA(ret);
 
   /* Compute */
-  curvePoints(p, ctrl, nc, nd, k, u, nu, pnt);
+  curvePoints(P, nc, nd, U, nk, u, nu, pnt);
 
   /* Clean up and return */
   Py_DECREF(arr1);
@@ -1198,13 +1122,13 @@ Modified algorithm A3.2 from 'The NURBS Book' pg93.\n\
 
 static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
 {
-  int p, nd, nc, nu, n;
+  int nc, nd, nk, nu, n;
   npy_intp *P_dim, *U_dim, *u_dim, dim[3];
   double *P, *U, *u, *pnt;
   PyObject *a1, *a2, *a3;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *ret=NULL;
 
-  if(!PyArg_ParseTuple(args, "iiOOO", &p, &n, &a1, &a2, &a3))
+  if(!PyArg_ParseTuple(args, "OOOi", &a1, &a2, &a3, &n))
     return NULL;
   arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
   if(arr1 == NULL)
@@ -1221,6 +1145,7 @@ static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
   u_dim = PyArray_DIMS(arr3);
   nc = P_dim[0];
   nd = P_dim[1];
+  nk = U_dim[0];
   nu = u_dim[0];
   P = (double *)PyArray_DATA(arr1);
   U = (double *)PyArray_DATA(arr2);
@@ -1234,7 +1159,7 @@ static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
   pnt = (double *)PyArray_DATA(ret);
 
   /* Compute */
-  curveDerivs(p, n, P, nc, nd, U, u, nu, pnt);
+  curveDerivs(n, P, nc, nd, U, nk, u, nu, pnt);
 
   /* Clean up and return */
   Py_DECREF(arr1);
@@ -1255,9 +1180,8 @@ static char curveKnotRefine_doc[] =
 \n\
 Input:\n\
 \n\
-- p: degree of the B-spline\n\
 - P: control points P(nc,nd)\n\
-- U: knot sequence: U[0] .. U[m] (m=nc+p)\n\
+- U: knot sequence: U(nk) (nk = nc+p+1)\n\
 - u: (nu) parametric values of new knots: U[0] <= u[i] <= U[m]\n\
 \n\
 Output:\n\
@@ -1269,13 +1193,13 @@ Modified algorithm A5.1 from 'The NURBS Book' pg164.\n\
 
 static PyObject * nurbs_curveKnotRefine(PyObject *self, PyObject *args)
 {
-  int p, nd, nc, nk, nu;
+  int nd, nc, nk, nu;
   npy_intp *P_dim, *U_dim, *u_dim, dim[2];
   double *P, *U, *u, *newP, *newU;
   PyObject *a1, *a2, *a3;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *ret1=NULL, *ret2=NULL;
 
-  if(!PyArg_ParseTuple(args, "iOOO", &p, &a1, &a2, &a3))
+  if(!PyArg_ParseTuple(args, "OOO", &a1, &a2, &a3))
     return NULL;
   arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
   if(arr1 == NULL)
@@ -1308,7 +1232,7 @@ static PyObject * nurbs_curveKnotRefine(PyObject *self, PyObject *args)
   newU = (double *)PyArray_DATA(ret2);
 
   /* Compute */
-  curveKnotRefine(p, P, nc, nd, U, u, nu, newP, newU);
+  curveKnotRefine(P, nc, nd, U, nk, u, nu, newP, newU);
 
   /* Clean up and return */
   Py_DECREF(arr1);
@@ -1325,6 +1249,121 @@ static PyObject * nurbs_curveKnotRefine(PyObject *self, PyObject *args)
   return NULL;
 }
 
+static char curveDecompose_doc[] =
+"Decompose a Nurbs curve in Bezier segments.\n\
+\n\
+Input:\n\
+\n\
+- P: control points P(nc,nd)\n\
+- nc: number of control points = n+1\n\
+- nd: dimension of the points (3 or 4)\n\
+- U: knot sequence U(nk) with nk = nc+p+1 = nc+p\n\
+\n\
+Returns:\n\
+\n\
+- newP: (nb*p+1,nd) new control points defining nb Bezier segments\n\
+\n\
+Modified algorithm A5.6 from 'The NURBS Book' pg173.\n\
+\n";
+
+static PyObject * nurbs_curveDecompose(PyObject *self, PyObject *args)
+{
+  int nd, nc, nk;
+  npy_intp *P_dim, *U_dim, dim[2];
+  double *P, *U, *newP;
+  PyObject *a1, *a2;
+  PyObject *arr1=NULL, *arr2=NULL, *ret=NULL;
+
+  if(!PyArg_ParseTuple(args, "OO", &a1, &a2))
+    return NULL;
+  arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr1 == NULL)
+    return NULL;
+  arr2 = PyArray_FROM_OTF(a2, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr2 == NULL)
+    goto fail;
+
+  P_dim = PyArray_DIMS(arr1);
+  U_dim = PyArray_DIMS(arr2);
+  nc = P_dim[0];
+  nd = P_dim[1];
+  nk = U_dim[0];
+  P = (double *)PyArray_DATA(arr1);
+  U = (double *)PyArray_DATA(arr2);
+
+  /* Compute number of knots to insert */
+  int count = 0;
+  int m = nk - 1;
+  int p = nk - nc - 1;
+  int b = p + 1;
+  int i,mult;
+  printf("nc, nk, n, m, p = %d, %d, %d, %d, %d\n",nc,nk,nc-1,m,p);
+  while (b < m) {
+    i = b;
+    while (b < m && U[b] == U[b+1]) b++;
+    mult = b-i+1;
+    printf("b, i, mult = %d, %d, %d\n",b,i,mult);
+    if (mult < p) {
+      count += (p-mult);
+      printf("Count: %d\n",count);
+    }
+    b++;
+  }
+ 
+  /* Create the return arrays */
+  dim[0] = nc+count;
+  dim[1] = nd;
+  ret = PyArray_SimpleNew(2,dim, NPY_DOUBLE);
+  newP = (double *)PyArray_DATA(ret);
+
+  /* Compute */
+  curveDecompose(P, nc, nd, U, nk, newP);
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  return ret;
+
+ fail:
+  printf("error cleanup and return\n");
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  return NULL;
+}
+
+
+/* static PyObject * nurbs_bspdegelev(PyObject *self, PyObject *args) */
+/* { */
+/* 	int p, nd, nc, nk, t, nh, dim[2]; */
+/* 	double **ctrlmat, **icmat; */
+/* 	PyObject *arg2, *arg3; */
+/* 	PyArrayObject *ctrl, *k, *ic, *ik; */
+/* 	if(!PyArg_ParseTuple(args, "iOOi", &d, &arg2, &arg3, &t)) */
+/* 		return NULL; */
+/* 	ctrl = (PyArrayObject *) PyArray_ContiguousFromObject(arg2, PyArray_DOUBLE, 2, 2); */
+/* 	if(ctrl == NULL) */
+/* 		return NULL; */
+/* 	k = (PyArrayObject *) PyArray_ContiguousFromObject(arg3, PyArray_DOUBLE, 1, 1); */
+/* 	if(k == NULL) */
+/* 		return NULL; */
+/* 	nd = ctrl->dimensions[0]; */
+/* 	nc = ctrl->dimensions[1]; */
+/* 	nk = k->dimensions[0]; */
+/* 	dim[0] = nd; */
+/* 	dim[1] = nc*(t + 1); */
+/* 	ic = (PyArrayObject *) PyArray_FromDims(2, dim, PyArray_DOUBLE); */
+/* 	ctrlmat = vec2mat(ctrl->data, nd, nc); */
+/* 	icmat = vec2mat(ic->data, nd, nc*(t + 1)); */
+/* 	dim[0] = (t + 1)*nk; */
+/* 	ik = (PyArrayObject *) PyArray_FromDims(1, dim, PyArray_DOUBLE); */
+/* 	_bspdegelev(p, ctrlmat, nd, nc, (double *)k->data, nk, t, &nh, icmat, (double *)ik->data); */
+/* 	free(icmat); */
+/* 	free(ctrlmat); */
+/* 	Py_DECREF(ctrl); */
+/* 	Py_DECREF(k); */
+/* 	return Py_BuildValue("(OOi)", (PyObject *)ic, (PyObject *)ik, nh); */
+/* } */
+
 
 static PyMethodDef _methods_[] =
 {
@@ -1333,8 +1372,8 @@ static PyMethodDef _methods_[] =
 	{"curvePoints", nurbs_curvePoints, METH_VARARGS, curvePoints_doc},
 	{"curveDerivs", nurbs_curveDerivs, METH_VARARGS, curveDerivs_doc},
 	{"curveKnotRefine", nurbs_curveKnotRefine, METH_VARARGS, curveKnotRefine_doc},
+	{"curveDecompose", nurbs_curveDecompose, METH_VARARGS, curveDecompose_doc},
 	/* {"bspdegelev", nurbs_bspdegelev, METH_VARARGS, bspdegelev_doc}, */
-	/* {"bspbezdecom", nurbs_bspbezdecom, METH_VARARGS, bspbezdecom_doc}, */
 	{NULL, NULL}
 };
 

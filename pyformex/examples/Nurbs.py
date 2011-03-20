@@ -19,9 +19,9 @@ from plugins.nurbs import *
 
 
 def expandNurbsCurve():
-    def derivatives(self,d=1,u=None,n=10):
+    def derivatives(self,u=None,n=10,d=1):
         """Returns the points and derivatives up to d at values u"""
-        print "DERIV",u
+        #print "DERIV",u
         if u is None:
             umin = self.knots[0]
             umax = self.knots[-1]
@@ -32,7 +32,7 @@ def expandNurbsCurve():
         u = asarray(u).astype(double)
         
         try:
-            pts = nurbs.curveDerivs(self.degree,d,ctrl,knots,u)
+            pts = nurbs.curveDerivs(ctrl,knots,u,d)
             if isnan(pts).any():
                 print "We got a NaN"
                 print pts
