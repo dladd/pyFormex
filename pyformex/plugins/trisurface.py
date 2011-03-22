@@ -209,6 +209,10 @@ def write_stla(f,x):
 
 
 def write_smesh(fn,nodes,elems):
+    """Write a tetgen surface model to .node and .smesh files.
+
+    The provided file name is the .node or the .smesh filename.
+    """
     tetgen.writeSurface(fn,nodes,elems)
 
 
@@ -497,12 +501,15 @@ class TriSurface(Mesh):
     #
 
     def nedges(self):
+        """Return the number of edges of the TriSurface."""
         return self.getEdges().shape[0]
 
     def nfaces(self):
+        """Return the number of faces of the TriSurface."""
         return self.getElemEdges().shape[0]
 
     def vertices(self):
+        """Return the coordinates of the nodes of the TriSurface."""
         return self.coords
     
     def shape(self):
@@ -657,6 +664,7 @@ class TriSurface(Mesh):
 
 
     def facetArea(self):
+        """Return the area of the surface triangles."""
         return self.areaNormals()[0]
         
 
@@ -701,6 +709,7 @@ class TriSurface(Mesh):
 
 
     def surfaceType(self):
+        """Check whether the TriSurface is a manifold and if it's closed."""
         ncon = self.nEdgeConnected()
         nadj = self.nEdgeAdjacent()
         maxcon = ncon.max()
@@ -735,6 +744,11 @@ class TriSurface(Mesh):
         
 
     def isManifold(self):
+        """Check whether the TriSurface is a manifold.
+
+        A surface is a manifold if a small sphere exists that cuts the surface
+        to a surface that can continously be deformed to an open disk.
+        """
         return self.surfaceType()[0] 
 
 
@@ -750,6 +764,7 @@ class TriSurface(Mesh):
         
 
     def isClosedManifold(self):
+        """Check whether the TriSurface is a closed manifold."""
         stype = self.surfaceType()
         return stype[0] and stype[1]
 
@@ -846,21 +861,31 @@ class TriSurface(Mesh):
 
 
     def aspectRatio(self):
+        """Return the apect ratio of the triangles of the surface.
+
+        The aspect ratio of a triangle is the ratio of the longest edge
+        over the smallest altitude of the triangle.
+
+        Equilateral triangles have the smallest edge ratio (2 over square root 3).
+        """
         self._compute_data()
         return self.aspect
 
  
     def smallestAltitude(self):
+        """Return the smallest altitude of the triangles of the surface."""
         self._compute_data()
         return self.altmin
 
 
     def longestEdge(self):
+        """Return the longest edge of the triangles of the surface."""
         self._compute_data()
         return self.edgmax
 
 
     def shortestEdge(self):
+        """Return the shortest edge of the triangles of the surface."""
         self._compute_data()
         return self.edgmin
 
@@ -1094,6 +1119,13 @@ Total area: %s; Enclosed volume: %s
 
 
     def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
+        """Grow a selection using a frontal method.
+
+        Starting from element `startat`, grow a selection `nsteps` times
+        following the common edges of the triangles.
+
+        The property of each new front is augmented by `front_increment`.
+        """
         for p in self.edgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
             if nsteps > 0:
                 nsteps -= 1
@@ -1476,10 +1508,12 @@ Total area: %s; Enclosed volume: %s
 
 
     def smoothLowPass(self,iterations=2,lambda_value=0.5,neighbours=1):
+        """Apply a low pass smoothing to the surface."""
         return self.smooth('lowpass',iterations/2,lambda_value,neighbours)
 
 
     def smoothLaplaceHC(self,iterations=2,lambda_value=0.5,alpha=0.,beta=0.2,neighbours=1):
+        """Apply Laplace smoothing with shrinkage compensation to the surface."""
         return self.smooth('lowpass',iterations,lambda_value,neighbours,alpha,beta)
 
 
