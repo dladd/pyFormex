@@ -27,10 +27,10 @@
 This module initializes the pyFormex global variables and
 defines a few essential functions.
 """
-__version__ = "0.8.4-a1"
-__revision__ = '1805'
+__version__ = "0.8.4-a2"
+__revision__ = '1882M'
 Version = 'pyFormex %s' % __version__
-Copyright = 'Copyright (C) 2004-2010 Benedict Verhegghe'
+Copyright = 'Copyright (C) 2004-2011 Benedict Verhegghe'
 Url = 'http://pyformex.org'
 Description = "pyFormex is a tool for generating, manipulating and transforming large geometrical models of 3D structures by sequences of mathematical transformations."
 

@@ -18,18 +18,26 @@ from plugins.curve import *
 from plugins.nurbs import *
 
 
+def uniformParamValues(self,n):
+    """Create a set of uniform parameter values for the NurbsCurve"""
+    umin = self.knots[0]
+    umax = self.knots[-1]
+    u = umin + arange(n+1) * (umax-umin) / n
+    
+
 def expandNurbsCurve():
-    def derivatives(self,u=None,n=10,d=1):
-        """Returns the points and derivatives up to d at values u"""
-        #print "DERIV",u
-        if u is None:
-            umin = self.knots[0]
-            umax = self.knots[-1]
-            u = umin + arange(n+1) * (umax-umin) / n
-        
+    def derivatives(self,at,d=1):
+        """Returns the points and derivatives up to d at parameter values at"""
+        if type(at) is int:
+            u = self.uniformKnotValues(at)
+        else:
+            u = at
+            
+        # sanitize arguments for library call
         ctrl = self.coords.astype(double)
         knots = self.knots.astype(double)
         u = asarray(u).astype(double)
+        d = int(d)
         
         try:
             pts = nurbs.curveDerivs(ctrl,knots,u,d)
@@ -40,15 +48,11 @@ def expandNurbsCurve():
         except:
             raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
 
-        #print pts
-        if pts.shape[-1] == 4:
-            #pts = Coords4(pts).toCoords()
-            pts = Coords(pts[...,:3])
-            x = pts[0]
-            d = normalize(pts[1])
-        else:
-            pts = Coords(pts)
-        return x,d
+        # When using Coords4 normalized points, the derivatives all have w=0
+        # (the points represent directions). We just strip off the w=0.
+        return Coords(pts[...,:3])
+
+    NurbsCurve.uniformParamValues = uniformParamValues
     NurbsCurve.derivatives = derivatives
 
 
@@ -96,11 +100,16 @@ def drawThePoints(N,n,color=None):
     draw(P,color=color,marksize=5)
     drawNumbers(P,color=color)
     
-    x,d = N.derivatives(5,u)[:2]
+    XD = N.derivatives(u,5)[:3]
+    if XD.shape[-1] == 4:
+        XD = XD.toCoords()
+    x,d,dd = XD[:3]
     #print "Point %s: Dir %s" % (x,d)
-    x1 = x+0.5*d
+    x1 = x+0.1*d
+    x2 = x+0.01*dd
     draw(x,marksize=10,color=yellow)
     draw(connect([Formex(x),Formex(x1)]),color=yellow,linewidth=3)
+    #draw(connect([Formex(x),Formex(x2)]),color=cyan,linewidth=3)
 
 
 def drawNurbs(control,degree,closed,blended,weighted=False,Clear=False):
@@ -108,26 +117,27 @@ def drawNurbs(control,degree,closed,blended,weighted=False,Clear=False):
         clear()
 
     C = Formex(pattern(control)).toCurve()
-    pts = C.coords
-    draw(pts,marksize=10)
-    drawNumbers(pts,leader='P',trl=[0.02,0.02,0.])
+    X = C.coords
+    draw(C)
+    draw(X,marksize=10)
+    drawNumbers(X,leader='P',trl=[0.02,0.02,0.])
     if closed:
         # remove last point if it coincides with first
-        x,e = Coords.concatenate([pts[0],pts[-1]]).fuse()
+        x,e = Coords.concatenate([X[0],X[-1]]).fuse()
         if x.shape[0] == 1:
-            pts = pts[:-1]
+            X = X[:-1]
         blended=True
-    draw(PolyLine(pts,closed=closed),bbox='auto',view='front')
+    draw(PolyLine(X,closed=closed),bbox='auto',view='front')
     if not blended:
-        npts = ((len(pts)-1) // degree) * degree + 1
-        pts = pts[:npts]
+        nX = ((len(X)-1) // degree) * degree + 1
+        X = X[:nX]
     if weighted:
-        wts = array([1.]*len(pts))
+        wts = array([1.]*len(X))
         wts[1::2] = 0.5
         #print wts,wts.shape
     else:
         wts=None
-    N = NurbsCurve(pts,wts=wts,degree=degree,closed=closed,blended=blended)
+    N = NurbsCurve(X,wts=wts,degree=degree,closed=closed,blended=blended)
     draw(N,color=red)
     drawThePoints(N,20,color=black)
 

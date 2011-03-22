@@ -30,6 +30,7 @@ NURBS curves and surface in pyFormex.
 """
 from coords import *
 from lib import nurbs
+from plugins import curve
 from pyformex import options
 from gui.actors import NurbsActor
 import olist
@@ -353,6 +354,19 @@ class NurbsCurve(Geometry4):
             raise ValueError,"insertKnots currently does not work on closed curves"
         newP,newU = nurbs.curveKnotRefine(self.coords,self.knots,u)
         return NurbsCurve(newP,degree=self.degree,knots=newU,closed=self.closed)
+
+
+    def decompose(self):
+        """Decomposes a curve in subsequent Bezier curves.
+
+        Returns an equivalent unblended Nurbs.
+        """
+        X = nurbs.curveDecompose(self.coords,self.knots)
+        return NurbsCurve(X,degree=self.degree,blended=False)
+
+
+    def normalizeKnots(self):
+        self.knots = self.knots / self/knots[-1]
         
 
     def actor(self,**kargs):
@@ -377,7 +391,7 @@ def knotsVector(nctrl,degree,blended=True,closed=False):
     """Compute knots vector for a fully blended Nurbs curve.
 
     A Nurbs curve with nctrl points and of given degree needs a knots vector
-    nknots = nctrl+degree+1 values.
+    with nknots = nctrl+degree+1 values.
     
     """
     nknots = nctrl+degree+1
@@ -454,6 +468,12 @@ def deCasteljou(P,u):
         C.append(Q)
     return C
 
+
+def curveToNurbs(B):
+    """Convert a BezierSpline to NurbsCurve"""
+    return NurbsCurve(B.coords,degree=B.degree,closed=B.closed,blended=False)
+
+curve.BezierSpline.toNurbs = curveToNurbs
 
 #def Horner2D():
     

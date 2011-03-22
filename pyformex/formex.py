@@ -131,7 +131,7 @@ def polygonNormals(x):
     return vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
 
 
-def pattern(s):
+def pattern(s,connect=True):
     """Return a line segment pattern created from a string.
 
     This function creates a list of line segments where all points lie on
@@ -161,17 +161,17 @@ def pattern(s):
              G    D    H          7    4    8         g    d    h
              
     The special character '/' can be put before any character to make the
-    move without making a connection.
+    move without inserting an element.
     The effect of any other character is undefined.
     
     The resulting list is directly suited to initialize a Formex.
     """
     x = y = z = 0
     l = []
-    connect=True
+    insert = True
     for c in s:
         if c == "/":
-            connect = False
+            insert = False
             continue
         if c == "+":
             x = y = z = 0
@@ -215,9 +215,13 @@ def pattern(s):
                 pass
             else:
                 raise RuntimeError,"Unknown pattern character %c ignored" % c
-        if connect:
-            l.append([pos,[x,y,z]])
-        connect=True
+        if insert:
+            if connect:
+                element = [pos,[x,y,z]]
+            else:
+                element = [[x,y,z]]
+            l.append(element)
+        insert = True
     return l
 
 def mpattern(s):

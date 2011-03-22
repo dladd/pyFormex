@@ -37,7 +37,7 @@ from pyformex.utils import listTree
 
 DOC_FILES = [ f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
 
-EXT_MODULES = [ 'drawgl', 'misc', '_nurbs_' ]
+EXT_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
 
 DATA_FILES = [
               ('pixmaps', ['pyformex/icons/pyformex-64x64.png']),

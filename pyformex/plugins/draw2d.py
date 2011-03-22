@@ -130,7 +130,7 @@ def highlightDrawing(points,mode):
                 F = obj.toFormex()
             else:
                 F = Formex(obj)
-                OA = actors.GeomActor(F,color=pf.canvas.settings.slcolor)
+            OA = actors.GeomActor(F,color=pf.canvas.settings.slcolor)
         OA.specular=0.0
         pf.canvas.addHighlight(OA)
     pf.canvas.update()

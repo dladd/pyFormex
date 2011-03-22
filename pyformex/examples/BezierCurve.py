@@ -5,7 +5,7 @@
 
 level = 'normal'
 topics = ['geometry', 'curve']
-techniques = ['nurbs']
+techniques = []
 
 .. Description
 

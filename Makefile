@@ -74,7 +74,7 @@ PKGDIR= dist
 LATEST= ${PKGNAME}-latest.tar.gz
 
 # our local ftp server
-FTPLOCAL=bumps:/home/ftp/pub/pyformex
+FTPLOCAL=bumps:/var/ftp/pub/pyformex
 # ftp server on pyformex website
 FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 
@@ -163,8 +163,8 @@ ${PKGDIR}/${PKGVER}: revision version MANIFEST.in
 	@echo "Creating ${PKGDIR}/${PKGVER}"
 	python setup.py sdist --no-defaults | tee makedist.log
 
-MANIFEST.in: create_manifest.py
-	python create_manifest.py >$@
+MANIFEST.in: MANIFEST.py
+	python $< >$@
 
 # Publish the distribution to our ftp server and berlios
 publocal: 

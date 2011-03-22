@@ -72,7 +72,7 @@ def drawCurve(ctype,dset,closed,endcond,curl,ndiv,ntot,extend,spread,drawtype,cu
         S = NaturalSpline(P,closed=closed,endzerocurv=(endcond,endcond))
         directions = False
     elif ctype == 'Nurbs Curve':
-        S = NurbsCurve(P,closed=closed)
+        S = NurbsCurve(P,closed=closed)#,blended=closed)
         scale = None
         directions = False
         drawtype = 'Curve'

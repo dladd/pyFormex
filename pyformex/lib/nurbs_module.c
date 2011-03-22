@@ -677,7 +677,7 @@ Modified algorithm A5.6 from 'The NURBS Book' pg173.
 
 static void curveDecompose(double *P, int nc, int nd, double *U, int nk, double *newP)
 {
-  int i, j, p, s, m, r, a, b, mult, n, nb, ii, save, q;
+  int i, j, k, p, s, m, r, a, b, mult, n, nb, ii, save;
   double numer, alpha, *alfa;
 
   n = nc - 1;
@@ -691,8 +691,7 @@ static void curveDecompose(double *P, int nc, int nd, double *U, int nk, double 
   nb = 0;
   
   /* First bezier segment */
-  for (i = 0; i < p*nd; i++) newP[i] = P[i];
-  return;
+  for (i = 0; i < (p+1)*nd; i++) newP[i] = P[i];
 
   // Loop through knot vector */
   while (b < m) {
@@ -701,38 +700,46 @@ static void curveDecompose(double *P, int nc, int nd, double *U, int nk, double 
     mult = b-i+1;
     
     if (mult < p) {
+      printf("mult at %d is %d < %d\n",b,mult,p);
       /* compute alfas */
       numer = U[b] - U[a];
-      for (q = p; q > mult; q--)
-        alfa[q-mult-1] = numer / (U[a+q]-U[a]);
+      for (k = p; k > mult; k--)
+        alfa[k-mult-1] = numer / (U[a+k]-U[a]);
 
       /* Insert knot U[b] r times */
       r = p - mult;
       for (j = 1; j <= r; j++) {
         save = r - j;
         s = mult + j; 	/* Number of new points */
-        for (q = p; q >= s; q--) {
-	  alpha = alfa[q-s];
-          for (ii = 0; ii < nd; ii++)
-            newP[(nb+q)*nd+ii] = alpha*newP[(nb+q)*nd+ii] + (1.0-alpha)*newP[(nb+q-1)*nd+ii];
+        for (k = p; k >= s; k--) {
+	  alpha = alfa[k-s];
+	  printf("alpha = %f\n",alpha);
+          for (ii = 0; ii < nd; ii++) {
+            newP[(nb+k)*nd+ii] = alpha*newP[(nb+k)*nd+ii] + (1.0-alpha)*newP[(nb+k-1)*nd+ii];
+	    printf("Setting element %d to %f\n",(nb+k)*nd+ii,newP[(nb+k)*nd+ii]);
+	  }
 	}
-        for (ii = 0; ii < nd; ii++)
-          newP[(save+nb+p+1)*nd+ii] = newP[p*nd+ii];
+	if (b < m)
+	  /* Control point of next segment */
+	  for (ii = 0; ii < nd; ii++) {
+	    newP[(nb+p+save)*nd+ii] = newP[(nb+p)*nd+ii];
+	    printf("Copying element %d to %f\n",(nb+p+save)*nd+ii,newP[(nb+p+save)*nd+ii]);
+	  }
       }
     }
-    // end of insert knot
+    /* Bezier segment completed */
     nb += p;
-    if (b < m)
-    {
-      // setup for next pass thru loop
-      for (j = r; j <= p; j++)
-        for (ii = 0; ii < nd; ii++)
-          newP[(j+nb)*nd+ii] = P[(b-p+j)*nd+ii];
+    if (b < m) {
+      /* Initialize for next segment */
+      for (i = r; i <= p; i++)
+        for (ii = 0; ii < nd; ii++) {
+          newP[(nb+i)*nd+ii] = P[(b-p+i)*nd+ii];
+	  printf("Initializing element %d to %f\n",(nb+i)*nd+ii,newP[(nb+i)*nd+ii]);
+	}
       a = b;
       b++;
     }
   }
-  // end while loop
   
   free(alfa);
 }
@@ -1318,6 +1325,7 @@ static PyObject * nurbs_curveDecompose(PyObject *self, PyObject *args)
 
   /* Compute */
   curveDecompose(P, nc, nd, U, nk, newP);
+  print_mat(newP,nc+count,nd);
 
   /* Clean up and return */
   Py_DECREF(arr1);
