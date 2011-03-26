@@ -99,11 +99,11 @@ def toggleAvgNormals():
     selection.toggleAnnotation(3+ntoggles)
 
 
-selection.annotations.extend([[draw_edge_numbers,False],
-                              [draw_node_numbers,False],
-                              [draw_normals,False],
-                              [draw_avg_normals,False],
-                              ])
+## selection.annotations.extend([[draw_edge_numbers,False],
+##                               [draw_node_numbers,False],
+##                               [draw_normals,False],
+##                               [draw_avg_normals,False],
+##                               ])
 
 ##################### select, read and write ##########################
 

@@ -67,7 +67,7 @@ def updateSettings(res,save=None):
             
         # if not saved, set in cfg
         print "Setting %s = %s" % (k,res[k])
-        print pf.cfg.keys()
+        #print pf.cfg.keys()
         if pf.cfg[k] != res[k]:
             pf.cfg[k] = res[k]
             changed = True
@@ -244,7 +244,7 @@ def set_mat_value(field):
     vp = pf.GUI.viewports.current
     mat = vp.material
     mat.setValues(**{key:val})
-    print vp.material
+    #print vp.material
     vp.update()
 
 def set_light_value(field):

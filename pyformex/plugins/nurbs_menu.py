@@ -7,13 +7,50 @@
 
 from draw2d import *
 
+from plugins.objects import *
 from plugins import tools_menu
+from plugins.geometry_menu import autoname 
 
-selection = objects.DrawableObjects(clas=NurbsCurve)
-curvename = utils.NameSequence('Nurbs-0')
+# We subclass the DrawableObject to change its toggleAnnotation method
+class NurbsObjects(DrawableObjects):
+    def __init__(self):
+        DrawableObjects.__init__(self,clas=NurbsCurve)
+
+    def toggleAnnotation(self,i=0,onoff=None):
+        """Toggle mesh annotations on/off.
+
+        This functions is like DrawableObjects.toggleAnnotation but also
+        updates the mesh_menu when changes are made.
+        """
+        DrawableObjects.toggleAnnotation(self,i,onoff)
+        mesh_menu = pf.GUI.menu.item(_menu)
+        toggle_menu = mesh_menu.item("toggle annotations")
+        # This relies on the menu having the same items as the annotation list
+        action = toggle_menu.actions()[i]
+        action.setChecked(selection.hasAnnotation(i))
+
+selection = NurbsObjects()
 
 selection_PL = objects.DrawableObjects(clas=PolyLine)
 selection_BS = objects.DrawableObjects(clas=BezierSpline)
+
+ntoggles = len(selection.annotations)
+def toggleEdgeNumbers():
+    selection.toggleAnnotation(0+ntoggles)
+def toggleNodeNumbers():
+    print "SURFACE_MENU: %s" % selection
+    selection.toggleAnnotation(1+ntoggles)
+def toggleNormals():
+    selection.toggleAnnotation(2+ntoggles)
+def toggleAvgNormals():
+    selection.toggleAnnotation(3+ntoggles)
+
+
+## selection.annotations.extend([[draw_edge_numbers,False],
+##                               [draw_node_numbers,False],
+##                               [draw_normals,False],
+##                               [draw_avg_normals,False],
+##                               ])
 
 class _options:
     color = 'blue';
@@ -47,7 +84,7 @@ def createNurbsCurve(N,name=None):
 
     If no name is returned, the curve is not stored.
     """
-    an = autoname['nurbs']
+    an = autoname['nurbscurve']
     drawNurbs(N)
     if name is None:
         name = an.peek()
@@ -60,7 +97,10 @@ def createNurbsCurve(N,name=None):
     name = res['name']
     if name == an.peek():
         an.next()
+    print name
+    print pf.PF
     export({name:N})
+    print pf.PF
     selection.set([name])
     return name
 
@@ -118,7 +158,7 @@ def create_menu(before='help'):
         ("&Toggle Preview",toggle_preview,{'checkable':True}),
         ("---",None),
         ("&Create Nurbs Curve ",[
-            ("Interactive",createNurbsCurve),
+            ("Interactive",createInteractive),
             ("From Control Polygon",fromControlPolygon),
             ("Convert PolyLine",fromPolyLine),
 #            ("Convert BezierSpline",fromBezierSpline),

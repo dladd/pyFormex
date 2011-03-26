@@ -1070,9 +1070,23 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 def createDatabases():
     """Create unified database objects for all menus."""
     from plugins import objects
+    from geometry import Geometry
+    from formex import Formex
+    from mesh import Mesh
+    from plugins.trisurface import TriSurface
+    from plugins.curve import PolyLine,BezierSpline
+    from plugins.nurbs import NurbsCurve
     pf.GUI.database = objects.Objects()
     pf.GUI.drawable = objects.DrawableObjects()
-
+    pf.GUI.selection = {
+        'geometry' : objects.DrawableObjects(clas=Geometry),
+        'formex' : objects.DrawableObjects(clas=Formex),
+        'mesh' : objects.DrawableObjects(clas=Mesh),
+        'surface' : objects.DrawableObjects(clas=TriSurface),
+        'polyline' : objects.DrawableObjects(clas=PolyLine),
+        'nurbs' : objects.DrawableObjects(clas=NurbsCurve),
+        'curve' : objects.DrawableObjects(clas=BezierSpline),
+        }
 
 def runGUI():
     """Go into interactive mode"""

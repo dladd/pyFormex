@@ -210,7 +210,6 @@ def unix2dos():
 ##################### planes ##########################
 
 planes = objects.DrawableObjects(clas=Plane)
-pname = utils.NameSequence('Plane-0')
 
 def editPlane(plane,name):
     res = askItems([('Point',list(plane.point())),

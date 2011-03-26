@@ -24,8 +24,6 @@
 """mesh_menu.py
 
 Interactive menu for Mesh type objects
-
-(C) 2009 Benedict Verhegghe.
 """
 import pyformex
 
@@ -34,7 +32,7 @@ from connectivity import *
 from gui import menu
 from gui.draw import *
 from plugins import formex_menu
-from plugins.objects import DrawableObjects
+from plugins.objects import *
 from plugins.fe import *
 from elements import *
 from mesh import *
@@ -46,18 +44,18 @@ class MeshObjects(DrawableObjects):
     def __init__(self):
         DrawableObjects.__init__(self,clas=Mesh)
 
-    def toggleAnnotation(self,i=0,onoff=None):
-        """Toggle mesh annotations on/off.
+    ## def toggleAnnotation(self,i=0,onoff=None):
+    ##     """Toggle mesh annotations on/off.
 
-        This functions is like DrawableObjects.toggleAnnotation but also
-        updates the mesh_menu when changes are made.
-        """
-        DrawableObjects.toggleAnnotation(self,i,onoff)
-        mesh_menu = pf.GUI.menu.item(_menu)
-        toggle_menu = mesh_menu.item("toggle annotations")
-        # This relies on the menu having the same items as the annotation list
-        action = toggle_menu.actions()[i]
-        action.setChecked(selection.hasAnnotation(i))
+    ##     This functions is like DrawableObjects.toggleAnnotation but also
+    ##     updates the mesh_menu when changes are made.
+    ##     """
+    ##     DrawableObjects.toggleAnnotation(self,i,onoff)
+    ##     mesh_menu = pf.GUI.menu.item(_menu)
+    ##     toggle_menu = mesh_menu.item("toggle annotations")
+    ##     # This relies on the menu having the same items as the annotation list
+    ##     action = toggle_menu.actions()[i]
+    ##     action.setChecked(selection.hasAnnotation(i))
 
 selection = MeshObjects()
 
@@ -386,7 +384,7 @@ def create_menu():
     MenuData = [
         ("&Convert Abaqus .inp file",convert_inp),
         ("&Import Converted Model",importModel),
-        ("&Select Mesh(es)",selection.ask),
+        ## ("&Select Mesh(es)",selection.ask),
         ("&Draw Selection",selection.draw),
         ("&Forget Selection",selection.forget),
         ("&Convert to Formex",toFormex),
@@ -398,14 +396,14 @@ def create_menu():
         ("&Convert Mesh Eltype",convertMesh),
         ("&Renumber Mesh in Elems order",renumberMeshInElemsOrder),
         ("---",None),
-        ("Toggle &Annotations",
-         [("&Name",selection.toggleNames,dict(checked=selection.hasNames())),
-          ("&Element Numbers",selection.toggleNumbers,dict(checked=selection.hasNumbers())),
-          ("&Node Numbers",selection.toggleNodeNumbers,dict(checked=selection.hasNodeNumbers())),
-          ("&Node Marks",selection.toggleNodes,dict(checked=selection.hasNodeMarks())),
-          ('&Bounding Box',selection.toggleBbox,dict(checked=selection.hasBbox())),
-          ]),
-        ("---",None),
+        ## ("Toggle &Annotations",
+        ##  [("&Name",selection.toggleNames,dict(checked=draw_object_name in selection.annotations)),
+          ## ("&Element Numbers",selection.toggleNumbers,dict(checked=selection.hasNumbers())),
+          ## ("&Node Numbers",selection.toggleNodeNumbers,dict(checked=selection.hasNodeNumbers())),
+          ## ("&Node Marks",selection.toggleNodes,dict(checked=selection.hasNodeMarks())),
+          ## ('&Bounding Box',selection.toggleBbox,dict(checked=selection.hasBbox())),
+        ##   ]),
+        ## ("---",None),
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]

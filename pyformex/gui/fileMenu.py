@@ -339,7 +339,6 @@ def saveImage(multi=False):
     pat = map(utils.fileDescription, ['img','icon','all'])  
     dia = widgets.SaveImageDialog(pf.cfg['workdir'],pat,multi=multi)
     opt = dia.getResult()
-    print opt
     if opt:
         if opt.fm == 'From Extension':
             opt.fm = None
@@ -349,6 +348,7 @@ def saveImage(multi=False):
         image.save(filename=opt.fn,
                    format=opt.fm,
                    quality=opt.qu,
+                   size=opt.sz,
                    window=opt.wi,
                    multi=opt.mu,
                    hotkey=opt.hk,

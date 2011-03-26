@@ -304,6 +304,10 @@ class Coords(ndarray):
         return self.points().mean(axis=0)
 
 
+    def centroids(self):
+        return self
+
+
     def sizes(self):
         """Return the sizes of the :class:`Coords`.
 

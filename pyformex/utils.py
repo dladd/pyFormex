@@ -408,9 +408,10 @@ file_description = {
     'surface': 'Any Surface file (*.gts *.stl *.off *.smesh *.neu)',
     'pyformex': 'pyFormex scripts (*.py *.pye)',
     'pyf': 'pyFormex projects (*.pyf)',
-    'pgf': 'pyFormex geometry files (*.pgf *.formex)',
+    'pgf': 'pyFormex geometry files (*.pgf)',
     'postproc': 'Postproc scripts (*_post.py *.post)',
-    'flavia' : 'flavia results (*.flavia.msh *.flavia.res)'
+    'flavia' : 'flavia results (*.flavia.msh *.flavia.res)',
+    'inp': 'Abaqus input files (*.inp)',
 }
 
 

@@ -30,6 +30,7 @@ techniques = ['dialog']
 
 """
 reset()
+wireframe()
 
 res = askItems([
     dict(name='m',value=10,text='number of modules in axial direction'),

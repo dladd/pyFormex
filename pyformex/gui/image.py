@@ -144,22 +144,25 @@ def imageFormatFromExt(ext):
 
 ##### LOW LEVEL FUNCTIONS ##########
 
-def save_canvas(canvas,fn,fmt='png',quality=-1,options=None):
+def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
     """Save the rendering on canvas as an image file.
 
     canvas specifies the qtcanvas rendering window.
     fn is the name of the file
     fmt is the image file format
     """
+    #print "SAVECANVAS %s" % size
+    try:
+        w,h = size
+        canvas.resize(w,h)
+    except:
+        w,h = canvas.getSize()
     # make sure we have the current content displayed (on top)
     canvas.makeCurrent()
     canvas.raise_()
     canvas.display()
     pf.app.processEvents()
-    size = canvas.size()
-    w = int(size.width())
-    h = int(size.height())
-    pf.debug("Saving image with current size %sx%s" % (w,h))
+    pf.debug("Saving image with size %sx%s" % (w,h))
     
     if fmt in image_formats_qt:
         pf.debug("Image format can be saved by Qt")
@@ -298,7 +301,7 @@ def save_rect(x,y,w,h,filename,format,quality=-1):
 
 #### USER FUNCTIONS ################
 
-def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,quality=-1,verbose=False):
+def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,quality=-1,size=None,verbose=False):
     """Saves an image to file or Starts/stops multisave mode.
 
     With a filename and multi==False (default), the current viewport rendering
@@ -334,7 +337,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
     this function is called from the GUI.
     
     """
-    print "SAVE: quality=%s" % quality
+    #print "SAVE: quality=%s" % quality
     global multisave
 
     # Leave multisave mode if no filename or starting new multisave mode
@@ -364,7 +367,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
              QtCore.QObject.connect(pf.GUI,QtCore.SIGNAL("Save"),saveNext)
              if verbose:
                  pf.warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % pf.cfg['keys/save'])
-        multisave = (names,format,quality,window,border,hotkey,autosave,rootcrop)
+        multisave = (names,format,quality,size,window,border,hotkey,autosave,rootcrop)
         print("MULTISAVE %s "% str(multisave))
         return multisave is None
 
@@ -375,7 +378,9 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
             else:
                 sta = save_window(filename,format,quality)
         else:
-            sta = save_canvas(pf.canvas,filename,format,quality)
+            if size == pf.canvas.getSize():
+                size = None
+            sta = save_canvas(pf.canvas,filename,format,quality,size)
         if sta:
             pf.debug("Error while saving image %s" % filename)
         else:
@@ -396,9 +401,9 @@ def saveNext():
     or not.
     """
     if multisave:
-        names,format,quality,window,border,hotkey,autosave,rootcrop = multisave
+        names,format,quality,size,window,border,hotkey,autosave,rootcrop = multisave
         name = names.next()
-        save(name,window,False,hotkey,autosave,border,rootcrop,format,quality,False)
+        save(name,window,False,hotkey,autosave,border,rootcrop,format,quality,size,False)
 
 
 def saveIcon(fn,size=32):

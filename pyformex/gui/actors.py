@@ -182,9 +182,10 @@ class BboxActor(Actor):
         self.color = color
         self.linewidth = linewidth
         self.bb = bbox
-        self.vertices = array(elements.Hex8.vertices) * (bbox[1]-bbox[0]) + bbox[0]
-        self.edges = array(elements.Hex8.edges)
-        self.facets = array(elements.Hex8.faces)
+        Hex8 = elementType('hex8')
+        self.vertices = array(Hex8.vertices) * (bbox[1]-bbox[0]) + bbox[0]
+        self.edges = array(Hex8.edges)
+        self.facets = array(Hex8.faces)
 
     def bbox(self):
         return self.bb

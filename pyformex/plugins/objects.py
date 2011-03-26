@@ -233,9 +233,10 @@ class Objects(object):
         objects = self.check()
         if objects:
             for n,o in zip(self.names,objects):
-                pf.message("Object %s has bbox %s" % (n,o.bbox()))
+                bb = o.bbox()
+                pf.message("* %s (%s): bbox [%s, %s]" % (n,o.__class__.__name__,bb[0],bb[1]))
             if len(self.names) > 1:
-                pf.message("Overal bbox is %s" % bbox(objects))
+                pf.message("** Overal bbox: [%s, %s]" % (bb[0],bb[1]))
 
 
     def writeToFile(self,filename):
@@ -282,43 +283,46 @@ def draw_bbox(n):
 class DrawableObjects(Objects):
     """A selection of drawable objects from the globals().
 
-    `annotations`, if set, is a list of (func,active) tuples, where
+    This is a subclass of Objects. The constructor has the same arguments
+    as the Objects class, plus the following:
+    - `annotations`: a set of functions that draw annotations of the objects.
+      Each function should take an object name as argument, and draw the
+      requested annotation for the named object. If the object does not have
+      the annotation, it should be silently ignored.
+      Default annotation functions available are:
 
-    - `func` is a function that is to be called with the object name as
-      argument to draw some annotation for the object,
-    - `active` is a flag to signal if the annotation should be drawn or not.
+      - draw_object_name
+      - draw_elem_numbers
+      - draw_nodes
+      - draw_node_numbers
+      - draw_bbox
 
-    The default is to draw object name and element numbers.
+      No annotation functions are activated by default.
+
     """
     def __init__(self,*args,**kargs):
         Objects.__init__(self,*args,**kargs)
         self.autodraw = False
         self.shrink = None
-        self.annotations = [[draw_object_name,False],
-                            [draw_elem_numbers,False],
-                            [draw_node_numbers,False],
-                            [draw_nodes,False],
-                            [draw_bbox,False],
-                            ]
-        self._annotations = {}
+        self.annotations = set() # Active annotations
+        self._annotations = {} # Drawn annotations
         self._actors = []
 
-
-    def draw(self,**kargs):
-        clear()
-        pf.debug("Drawing SELECTION: %s" % self.names)
-        self._actors = draw(self.names,clear=False,shrink=self.shrink,wait=False,**kargs)
-        for i,a in enumerate(self.annotations):
-            if a[1]:
-                self.drawAnnotation(i)
-
-    
 
     def ask(self,mode='multi'):
         """Interactively sets the current selection."""
         new = Objects.ask(self,mode)
         if new is not None:
             self.draw()
+
+
+    def draw(self,**kargs):
+        clear()
+        pf.debug("Drawing SELECTION: %s" % self.names)
+        self._actors = draw(self.names,clear=False,shrink=self.shrink,wait=False,**kargs)
+        print "ANNOTATIONS %s" % self.annotations
+        for f in self.annotations:
+            self.drawAnnotation(f)
 
 
     def drawChanges(self):
@@ -337,62 +341,68 @@ class DrawableObjects(Objects):
         self.draw()
 
 
-    def toggleAnnotation(self,i=0,onoff=None):
+    def toggleAnnotation(self,f,onoff=None):
         """Toggle the display of an annotation On or Off.
 
         If given, onoff is True or False. 
         If no onoff is given, this works as a toggle. 
         """
-        active = self.annotations[i][1]
         if onoff is None:
-            active = not active
-        elif onoff:
-            active = True
+            # toggle
+            active = f not in self.annotations
         else:
-            active = False
-        self.annotations[i][1] = active
+            active = onoff
         if active:
-            self.drawAnnotation(i)
+            self.annotations.add(f)
+            self.drawAnnotation(f)
         else:
-            self.removeAnnotation(i)
+            self.annotations.discard(f)
+            self.removeAnnotation(f)
 
 
-    def drawAnnotation(self,i=0):
+    def drawAnnotation(self,f):
         """Draw some annotation for the current selection."""
-        self._annotations[i] = [ self.annotations[i][0](n) for n in self.names ]
+        self._annotations[f] = [ f(n) for n in self.names ]
+        print "DRAWN ANNOTATIONS %s" % self._annotations.keys()
 
 
-    def removeAnnotation(self,i=0):
-        """Remove the annotation i."""
-        pf.canvas.removeAnnotations(self._annotations[i])
-        pf.canvas.update()
-        del self._annotations[i]
+    def removeAnnotation(self,f):
+        """Remove the annotation f."""
+        print "REMOVING %s" % f
+        if f in self._annotations:
+            # pf.canvas.removeAnnotations(self._annotations[f])
+            # Use remove, because some annotations are not canvas
+            # annotations but actors!
+            pf.canvas.remove(self._annotations[f])
+            pf.canvas.update()
+            del self._annotations[f]
+        print "REMAINING %s" % self._annotations.keys()
 
 
-    def hasAnnotation(self,i=0):
-        """Return the status of annotation i"""
-        return self.annotations[i][1]
+    def hasAnnotation(self,f):
+        """Return the status of annotation f"""
+        return f in self.annotations
     def hasNames(self):
-        return self.hasAnnotation(0)
+        return self.hasAnnotation(draw_object_name)
     def hasNumbers(self):
-        return self.hasAnnotation(1)
+        return self.hasAnnotation(draw_elem_numbers)
     def hasNodeNumbers(self):
-        return self.hasAnnotation(2)
+        return self.hasAnnotation(draw_node_numbers)
     def hasNodeMarks(self):
-        return self.hasAnnotation(3)
+        return self.hasAnnotation(draw_nodes)
     def hasBbox(self):
-        return self.hasAnnotation(4)
+        return self.hasAnnotation(draw_bbox)
         
     def toggleNames(self,onoff=None):
-        self.toggleAnnotation(0,onoff)
+        self.toggleAnnotation(draw_object_name,onoff)
     def toggleNumbers(self,onoff=None):
-        self.toggleAnnotation(1,onoff)
+        self.toggleAnnotation(draw_elem_numbers,onoff)
     def toggleNodeNumbers(self,onoff=None):
-        self.toggleAnnotation(2,onoff)
+        self.toggleAnnotation(draw_node_numbers,onoff)
     def toggleNodes(self,onoff=None):
-        self.toggleAnnotation(3,onoff)
+        self.toggleAnnotation(draw_nodes,onoff)
     def toggleBbox(self,onoff=None):
-        self.toggleAnnotation(4,onoff)
+        self.toggleAnnotation(draw_bbox,onoff)
 
 
     def setProperty(self,prop=None):

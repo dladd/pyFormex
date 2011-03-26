@@ -37,9 +37,14 @@ from plugins.curve import *
 from plugins.nurbs import *
 from plugins.tools_menu import *
 from plugins import objects
+from plugins.geometry_menu import autoname,autoName 
 
 draw_mode_2d = ['point','polyline','curve','nurbs','circle']
-autoname = ODict([ (obj,utils.NameSequence(obj)) for obj in draw_mode_2d ])
+autoname['point'] = autoName('coords')
+autoname['curve'] = autoName('bezierspline')
+autoname['nurbs'] = autoName('nurbscurve')
+autoname['circle'] = autoName('circle')
+
 
 _preview = False
 
@@ -150,7 +155,6 @@ def drawObject2D(mode,npoints=-1,zvalue=0.,coords=None):
     return drawnObject(points,mode=mode)
 
 
-
 def selectObject(mode=None):
     selection = objects.drawAble(like=mode+'-')
     res = widgets.Selection(
@@ -195,7 +199,6 @@ def draw_object(mode,npoints=-1):
         draw(obj.knotPoints(),color=color,marksize=5)
     return name
     
-            
 
 def draw_points(npoints=-1):
     return draw_object('point',npoints=npoints)

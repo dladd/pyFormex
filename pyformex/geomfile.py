@@ -34,7 +34,7 @@ from coords import *
 from formex import Formex
 from mesh import Mesh
 from odict import ODict
-from pyformex import message,debug
+from pyformex import message,debug,warning
 
 
 import os
@@ -175,12 +175,12 @@ class GeometryFile(object):
             try:
                 writefunc = getattr(self,'write'+geom.__class__.__name__)
             except:
-                message("Can not (yet) write objects of type %s to geometry file: skipping" % type(geom))
+                warning("Can not (yet) write objects of type %s to geometry file: skipping" % type(geom))
+                return
             try:
                 writefunc(geom,name,sep)
             except:
-                message("Error while writing objects of type %s to geometry file: skipping" % type(geom))
-                raise
+                warning("Error while writing objects of type %s to geometry file: skipping" % type(geom))
 
 
     def writeFormex(self,F,name=None,sep=None):
@@ -272,6 +272,27 @@ class GeometryFile(object):
         self.writeCurve(F,name=None,sep=None,objtype='BezierSpline',extra="; degree=%s" % F.degree)
 
 
+    def writeNurbsCurve(self,F,name=None,sep=None,extra=None):
+        """Write a NurbsCurve to a pyFormex geometry file.
+
+        This function writes a NurbsCurve type to the geometry file.
+        
+        The following attributes and arguments are written in the header:
+        ncoords, nknots, closed, name, sep.
+        The following attributes are written as arrays: coords, knots
+        """
+        if sep is None:
+            sep = self.sep
+        head = "# objtype='%s'; ncoords=%s; nknots=%s; closed=%s; sep='%s'" % (F.__class__.__name__,F.coords.shape[0],F.knots.shape[0],F.closed,sep)
+        if name:
+            head += "; name='%s'" % name
+        if extra:
+            head += extra
+        self.fil.write(head+'\n')
+        self.writeData(F.coords,sep)
+        self.writeData(F.knots,sep)
+
+
     def readHeader(self):
         """Read the header of a pyFormex geometry file.
 
@@ -341,7 +362,7 @@ class GeometryFile(object):
             elif objtype in ['Mesh','TriSurface']:
                 obj = self.readMesh(ncoords,nelems,nplex,props,eltype,sep)
             elif objtype == 'PolyLine':
-                obj = self.readpolyLine(ncoords,closed,sep)
+                obj = self.readPolyLine(ncoords,closed,sep)
             elif objtype == 'BezierSpline':
                 if 'nparts' in s:
                     # THis looks like a version 1.3 BezierSpline
@@ -351,6 +372,8 @@ class GeometryFile(object):
                         # compatibility with 1.4  BezierSpline records
                         degree = 3
                     obj = self.readBezierSpline(ncoords,closed,degree,sep)
+            elif objtype == 'NurbsCurve':
+                obj = self.readNurbsCurve(ncoords,nknots,closed,sep)
             elif globals().has_key(objtype) and hasattr(globals()[objtype],'read_geom'):
                 obj = globals()[objtype].read_geom(self)
             else:
@@ -435,6 +458,20 @@ class GeometryFile(object):
         ndim = 3
         coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
         return BezierSpline(control=coords,closed=closed,degree=degree)
+ 
+
+    def readNurbsCurve(self,ncoords,nknots,closed,sep):
+        """Read a NurbsCurve from a pyFormex geometry file.
+
+        The coordinate array for ncoords control points and the nknots
+        knot values are read from the file.
+        A NurbsCurve of degree p = nknots - ncoords - 1 is returned.
+        """
+        from plugins.nurbs import NurbsCurve
+        ndim = 4
+        coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
+        knots = readArray(self.fil,Float,(nknots,),sep=sep)
+        return NurbsCurve(control=coords,knots=knots,closed=closed)
 
 
     def oldReadBezierSpline(self,ncoords,nparts,closed,sep):

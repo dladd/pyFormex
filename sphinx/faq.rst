@@ -235,4 +235,24 @@ TRICKS
   The setting will be saved when you leave pyFormex (but other scripts
   might change the setting again).
 
+
+#. **How to obtain unequally sized multiple viewports**
+
+  The multiple viewports are ordered in a grid layout, and you can
+  specify relative sizes for the different columns and/or rows of
+  viewports. You can use setColumnStretch and setRowStretch to give
+  the columns a relative stretch compared toi the other ones. 
+  The following example produces 4 viewports in a 2x2
+  layout, with the right column(1) having double width of the left
+  one(0), while the bottom row has a height equal to 1.5 times the
+  height of the top row::
+
+  layout(4)
+  pf.GUI.viewports.setColumnStretch(0,1)
+  pf.GUI.viewports.setColumnStretch(1,2)
+  pf.GUI.viewports.setRowStretch(0,2)
+  pf.GUI.viewports.setRowStretch(1,3)
+
+
+
 .. End

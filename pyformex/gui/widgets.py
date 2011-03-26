@@ -197,6 +197,9 @@ class InputItem(QtGui.QWidget):
     - setValue(val): always, unless the field is readonly. This method should
       change the value of the input widget to the specified value.
 
+    Subclasses are allowed to NOT have a ``self.input`` attribute, IFF they
+    redefine both the value() and the setValue() methods.
+
     Subclasses can set validators on the input, like::
     
       self.input.setValidator(QtGui.QIntValidator(self.input))
@@ -259,7 +262,7 @@ class InputItem(QtGui.QWidget):
         ##     pass
 
         if 'buttons' in kargs:
-            print kargs
+            #print kargs
             self.buttons = dialogButtons(self,kargs['buttons'])
             layout.addItem(self.buttons)
 
@@ -344,7 +347,7 @@ class InputLabel(InputItem):
 
         self.label.setWordWrap(False) # makes the label return min size
         width = self.layoutMinimumWidth()
-        print "min size: %s" % width
+        #print "min size: %s" % width
         self.label.setWordWrap(True)
 ## 00357 
 ## 00358     if (width > softLimit) {
@@ -888,10 +891,11 @@ class InputIVector(InputItem):
 
         self.input = QtGui.QWidget(*args)
         InputItem.__init__(self,name,*args,**kargs)
-        self.layout().insertWidget(1,self.input)
+        #self.layout().insertWidget(1,self.input)
 
-        layout = QtGui.QHBoxLayout(self)
-        self.input.setLayout(layout)
+        #layout = QtGui.QHBoxLayout(self)
+        #self.input.setLayout(layout)
+        layout = self.layout()
         self.fields = []
         for fld,val in zip(fields,value):
             f = InputInteger(fld,val)
@@ -1288,7 +1292,7 @@ class InputDialog(QtGui.QDialog):
         self.results = odict.ODict()
         self._pos = None
         self.store = store
-        self.autoname = utils.NameSequence('input-')
+        self.autoname = utils.NameSequence('input')
         self.prefix = prefix
         self.autoprefix = autoprefix
         if flat is None:
@@ -1888,8 +1892,9 @@ class SaveImageDialog(FileSelection):
       window. This mode is required if you want to include the window
       decorations.
 
-    
     """
+    default_size = None
+    
     def __init__(self,path=None,pattern=None,exist=False,multi=False):
         """Create the dialog."""
         if path is None:
@@ -1899,10 +1904,15 @@ class SaveImageDialog(FileSelection):
         FileSelection.__init__(self,path,pattern,exist)
         grid = self.layout()
         nr,nc = grid.rowCount(),grid.columnCount()
+        try:
+            w,h = SaveImageDialog.default_size
+        except:
+            w,h = pf.canvas.getSize()
         import image
         formats = ['From Extension'] + image.imageFormats() 
-        self.fmt = InputCombo("Format/Quality:",None,choices=formats)
-        self.qua = QtGui.QLineEdit('-1')
+        self.fmt = InputCombo("Format:",None,choices=formats)
+        self.qua = InputInteger("Quality:",-1)
+        self.siz = InputIVector("Size:",[w,h],fields=['W','H'])
         self.win = QtGui.QCheckBox("Whole Window")
         self.roo = QtGui.QCheckBox("Crop Root")
         self.bor = QtGui.QCheckBox("Add Border")
@@ -1920,6 +1930,8 @@ class SaveImageDialog(FileSelection):
         grid.addWidget(self.fmt,nr,0,1,2)
         grid.addWidget(self.qua,nr,2)
         nr += 1
+        grid.addWidget(self.siz,nr,0,1,2)
+        nr += 1
         grid.addWidget(self.win,nr,0)
         grid.addWidget(self.roo,nr,1)
         grid.addWidget(self.bor,nr,2)
@@ -1933,8 +1945,9 @@ class SaveImageDialog(FileSelection):
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
             opt = mydict.Dict()
-            opt.fm = str(self.fmt.value())
-            opt.qu = int(self.qua.text())
+            opt.fm = self.fmt.value()
+            opt.qu = SaveImageDialog.default_size = self.qua.value()
+            opt.sz = self.siz.value()
             opt.fn = str(self.selectedFiles()[0])
             opt.wi = self.win.isChecked()
             opt.rc = self.roo.isChecked()

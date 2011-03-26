@@ -688,11 +688,14 @@ def drawNumbers(F,color='black',trl=None,offset=0,leader=''):
     or to allow to view a mark at the centroids.
     If an offset is specified, it is added to the shown numbers.
     """
-    if not isinstance(F,coords.Coords):
-        F = F.centroids()
+    try:
+        X = F.centroids()
+    except:
+        return None
     if trl is not None:
-        F = F.trl(trl)
-    return drawMarks(F,numpy.arange(F.shape[0])+offset,color=color,leader=leader)
+        X = X.trl(trl)
+    X = X.reshape(-1,3)
+    return drawMarks(X,numpy.arange(X.shape[0])+offset,color=color,leader=leader)
 
 
 def drawVertexNumbers(F,color='black',trl=None):

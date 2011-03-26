@@ -32,6 +32,7 @@ has 3D coordinates in the global cartesian coordinate system.
 
 
 from draw2d import *
+from geometry_menu import *
     
 ################################## Menu #############################
 

@@ -29,17 +29,17 @@ external functions in the compiled library.
 """
 
 # There should be no other imports here but numpy
-import numpy as np
-
+from math import factorial
 
 def binomial(n,k):
     """Compute the binomial coefficient Cn,k.
 
     This computes the binomial coefficient Cn,k = fac(n) / fac(k) / fac(n-k).
 
-    >>> C(4,2)
+    >>> print [ binomial(4,i) for i in range(5) ]
+    [1, 4, 6, 4, 1]
     """
-    f = np.factorial
+    f = factorial
     return f(n) / f(k) / f(n-k)
 
 # End
