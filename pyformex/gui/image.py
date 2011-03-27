@@ -34,7 +34,7 @@ a movie from these images.
 import pyformex as pf
 
 from OpenGL import GL
-from PyQt4 import QtCore,QtGui
+from PyQt4 import QtCore,QtGui,QtOpenGL
 import utils
 import os
 
@@ -151,23 +151,36 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
     fn is the name of the file
     fmt is the image file format
     """
-    #print "SAVECANVAS %s" % size
-    try:
-        w,h = size
-        canvas.resize(w,h)
-    except:
-        w,h = canvas.getSize()
     # make sure we have the current content displayed (on top)
     canvas.makeCurrent()
     canvas.raise_()
     canvas.display()
     pf.app.processEvents()
-    pf.debug("Saving image with size %sx%s" % (w,h))
     
     if fmt in image_formats_qt:
         pf.debug("Image format can be saved by Qt")
-        GL.glFlush()
-        qim = canvas.grabFrameBuffer()
+        wc,hc = canvas.getSize()
+        try:
+            w,h = size
+        except:
+            w,h = wc,hc
+        if (w,h) == (wc,hc):
+            # Save directly from current rendering
+            pf.debug("Saving image from canvas with size %sx%s" % (w,h))
+            GL.glFlush()
+            qim = canvas.grabFrameBuffer()
+        else:
+            pf.debug("Saving image from virtual buffer with size %sx%s" % (w,h))
+            vcanvas = QtOpenGL.QGLFramebufferObject(w,h)
+            vcanvas.bind()
+            canvas.resize(w,h)
+            canvas.display()
+            GL.glFlush()
+            qim = vcanvas.toImage()
+            vcanvas.release()
+            canvas.resize(wc,hc)
+            del vcanvas
+            
         print "SAVING %s in format %s with quality %s" % (fn,fmt,quality)
         if qim.save(fn,fmt,quality):
             sta = 0
