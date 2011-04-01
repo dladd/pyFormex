@@ -216,8 +216,8 @@ def fmtDisplacements(prop):
         out += '        _F(GROUP_NO=(\'%s\'),\n' % p.name.upper()
         for j in p.displ:
             out += '           %s=%s,\n' % (dof[j[0]],j[1])
-    out += '          ),\n'
-    out += '    );\n\n'
+        out += '          ),\n'
+        out += '    );\n\n'
     return out
 
 
