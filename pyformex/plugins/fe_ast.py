@@ -108,20 +108,19 @@ def writeSet(fil,type,name,set):
     `set` is a list of node/element numbers,
     in which case the `ofs` value will be added to them.
     """
-    if not set.dtype.kind == 'S':
-        if type == 'NSET':
-            fil.write('GROUP_NO nom = %s\n' % name)
-            cap = 'N'
-        elif type == 'ELSET':
-            fil.write('GROUP_MA nom = %s\n' % name)
-            cap = 'M'
-        else:
-            raise ValueError,"Type should be NSET or ELSET"
+    if type == 'NSET':
+        fil.write('GROUP_NO nom = %s\n' % name)
+        cap = 'N'
+    elif type == 'ELSET':
+        fil.write('GROUP_MA nom = %s\n' % name)
+        cap = 'M'
+    else:
+        raise ValueError,"Type should be NSET or ELSET"
             
-        for i in set:
-            fil.write('%s%d\n' % (cap,i))
-        fil.write('FINSF\n')
-        fil.write('%\n')
+    for i in set:
+        fil.write('%s%d\n' % (cap,i))
+    fil.write('FINSF\n')
+    fil.write('%\n')
 
 
 def fmtHeadingMesh(text=''):
@@ -162,29 +161,29 @@ def fmtEquation(prop):
     The sum of the different terms should be equal to the coefficient.
     If this coefficient is not specified, the sum of the terms should be equal to zero.
     
-    Example: P.nodeProp(name='link',equation=[[209,1,1],[32,1,-1]])
+    Example: P.nodeProp(equation=[[209,1,1],[32,1,-1]])
     
     In this case, the displacement in Y-direction of node 209 and 32 should be equal.
     """
     
     dof = ['DX','DY','DZ']
-    for p in prop:
-        out = '%s = AFFE_CHAR_MECA(\n' % p.name
-        out += '    MODELE=Model,\n'
-        out += '    LIAISON_DDL=(\n'
+    out = 'link = AFFE_CHAR_MECA(\n'
+    out += '    MODELE=Model,\n'
+    out += '    LIAISON_DDL=(\n'
+    for i,p in enumerate(prop):
         l1 = '        _F(NOEUD=('
         l2 = '           DDL=('
         l3 = '           COEF_MULT=('
-        for i in p.equation:
-            l1 += '\'N%s\',' % i[0]
-            l2 += '\'%s\',' % dof[i[1]]
-            l3 += '%s,' % i[2]
+        for j in p.equation:
+            l1 += '\'N%s\',' % j[0]
+            l2 += '\'%s\',' % dof[j[1]]
+            l3 += '%s,' % j[2]
         out += l1 + '),\n' + l2 + '),\n' + l3 + '),\n'
         coef = 0
         if p.coefficient is not None:
             coef = p.coefficient
-        out += '          COEF_IMPO=%s,),\n' % coef
-    out += '          ),\n'
+        out += '           COEF_IMPO=%s,),\n' % coef
+    out += '           ),\n'
     out += '    );\n\n'
     return out
 
@@ -197,7 +196,7 @@ def fmtDisplacements(prop):
     - name
     - displ
     
-    Displ should be a a list of tuples (dofid,value)
+    Displ should be a list of tuples (dofid,value)
     
     Set can be a list of node numbers, or a set name (string).
     
@@ -217,16 +216,83 @@ def fmtDisplacements(prop):
         out += '        _F(GROUP_NO=(\'%s\'),\n' % p.name.upper()
         for j in p.displ:
             out += '           %s=%s,\n' % (dof[j[0]],j[1])
-        out += '          ),\n'
-        out += '    );\n'
+    out += '          ),\n'
+    out += '    );\n\n'
     return out
 
 
-def fmtMaterial(prop):
-    """Write a material section.
+def fmtLocalDisplacements(prop):
+    """Format nodal boundary conditions in a local coordinate system
+    
+    Required:
+    - name
+    - displ
+    - local
+    
+    Displ should be a list of tuples (dofid,value)
+    
+    Local is an angle, specified in degrees (SHOULD BE EXTENDED TO THREE ANGLES!!!)
+    The local cartesian coordinate system is obtained by rotating the global
+    coordinate system around the Z-axis over the specified angle.
+    
+    Set can be a list of node numbers, or a set name (string).
+    
     """
     
-    # TO DO!!!
+    dof = ['DX','DY','DZ','DRX','DRY','DRZ']
+    out = 'locDispl = AFFE_CHAR_MECA(\n'
+    out += '    MODELE=Model,\n'
+    out += '    LIAISON_OBLIQUE=(\n'
+    for i,p in enumerate(prop):
+        for j in p.displ:
+            out += '        _F(GROUP_NO=(\'%s\'),\n' % p.name.upper()
+            out += '           ANGL_NAUT=%s,\n' % p.local
+            out += '           %s=%s),\n' % (dof[j[0]],j[1])
+    out += '          ),\n'
+    out += '    );\n\n'
+    return out
+
+
+materialswritten=[]
+
+def fmtMaterial(mat):
+    """Write a material section.
+    """
+
+    if mat.name is None or mat.name in materialswritten:
+        return ""
+    
+    out = '%s = DEFI_MATERIAU(\n' % mat.name
+    
+    materialswritten.append(mat.name)
+    print materialswritten
+    
+    if mat.elasticity is None or mat.elasticity == 'linear':
+        if mat.poisson_ratio is None and mat.shear_modulus is not None:
+            mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
+
+        out += '    ELAS=_F(E=%s,NU=%s),\n' % (float(mat.young_modulus),float(mat.poisson_ratio))
+
+    if mat.plastic is not None:
+        mat.plastic = asarray(mat.plastic)
+        if mat.plastic.ndim != 2:
+            raise ValueError,"Plastic data should be 2-dim array"
+        out1 = 'SIGMF=DEFI_FONCTION(\n'
+        out1 += '    NOM_PARA=\'EPSI\',\n'
+        out1 += '    VALE=(\n'
+        for i in mat.plastic:
+            out1 += '        %s,%s,\n' % (i[0],i[1])
+        out1 += '        ),\n'
+        out1 += '    );\n\n'
+        
+        out += '    TRACTION=_F(SIGM=SIGMF,),\n'
+        
+        out = out1 + out
+
+    out += '    );\n\n'
+
+    return out
+
 
 solid3d_elems = [
     'HEXA8',]
@@ -243,6 +309,7 @@ def fmtSections(prop):
     out1 += '    AFFE=(\n'
     out2 = ''
     out3 = 'Mat=AFFE_MATERIAU(\n'
+    out3 += '    MODELE=Model,\n'
     out3 += '    MAILLAGE=Mesh,\n'
     out3 += '    AFFE=(\n'
 
@@ -258,8 +325,8 @@ def fmtSections(prop):
         out3 += '        _F(GROUP_MA=\'%s\',\n' % setname.upper()
         
         if mat is not None:
-            #out2 += fmtMaterial(mat)
-            print 'hier'
+            out2 += fmtMaterial(mat)
+
         ############
         ## 3DSOLID elements
         ##########################
@@ -269,9 +336,9 @@ def fmtSections(prop):
                 out3 += '           MATER=%s),\n' % mat.name
 
     out1 += '          ),\n'
-    out1 += '    );\n'
+    out1 += '    );\n\n'
     out3 += '          ),\n'
-    out3 += '    );\n'
+    out3 += '    );\n\n'
     
     return out1 + out2 + out3
 
@@ -363,9 +430,8 @@ Script: %s
                         nelems += nels
                 writeElems(fil,els,p.eltype,name=setname,eid=set)
                 
-            else:
-                pf.message("Writing element sets")
-                writeSet(fil,'NSET',setname,set)
+            pf.message("Writing element sets")
+            writeSet(fil,'ELSET',setname,set)
 
         pf.message("Total number of elements: %s" % telems)
         if nelems != telems:
@@ -419,6 +485,10 @@ Script: %s
 
     def writeComm(self,jobname=None,header=''):
 
+
+        global materialswritten
+        materialswritten = []
+        
         # Create the Code Aster command file
         if jobname is None:
             jobname,filename = 'Test',None
@@ -434,18 +504,23 @@ Script: %s
 #
 """ % (jobname, datetime.now(), pf.scriptName, header)))
         
-        fil.write('DEBUT();\n')
-        fil.write('Mesh=LIRE_MAILLAGE(INFO=2,);\n')
+        fil.write('DEBUT();\n\n')
+        fil.write('Mesh=LIRE_MAILLAGE(INFO=2,);\n\n')
         
         prop = self.prop.getProp('e',attr=['section','eltype'])
         if prop:
             pf.message("Writing element sections")
             fil.write(fmtSections(prop))
         
-        prop = self.prop.getProp('n',attr=['displ'])
+        prop = self.prop.getProp('n',attr=['displ'],noattr=['local'])
         if prop:
             pf.message("Writing displacement boundary conditions")
             fil.write(fmtDisplacements(prop))
+
+        prop = self.prop.getProp('n',attr=['local'])
+        if prop:
+            pf.message("Writing local displacement boundary conditions")
+            fil.write(fmtLocalDisplacements(prop))
 
         prop = self.prop.getProp('n',attr=['equation'])
         if prop:
