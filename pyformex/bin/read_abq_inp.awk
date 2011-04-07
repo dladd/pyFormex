@@ -1,4 +1,4 @@
-#!/usr/bin/awk -f
+#!/usr/bin/gawk -f
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
@@ -48,8 +48,10 @@
 
 ######## scanner #######################
 
+
+
 # initialisation: set default part name
-BEGIN { mode=0; start_part("DEFAULT_PART"); }
+BEGIN { IGNORECASE=1; mode=0; start_part("DEFAULT_PART"); }
 
 # start a new part
 /^\*\* PART INSTANCE:/ { start_part($4); print "**PART "$4; next; }
@@ -59,13 +61,13 @@ BEGIN { mode=0; start_part("DEFAULT_PART"); }
 /^\*\*/ { next; }
 
 # start a node block: record the number of the first node
-/^\*Node/ { 
+/^\*node/ { 
     start_mode(1)
     getline; gsub(",",""); header = "# nodes "outfile " offset "$1
 }
 
 # start an element block
-/^\*Element,/ { 
+/^\*element,/ { 
     start_mode(2) 
     getline; header = "# elems "outfile " nplex "NF-1
 
@@ -94,6 +96,7 @@ END { end_mode(); fflush("") }
 
 # start a new part with name pname
 function start_part(pname) {
+    print "Starting part "pname
     partname = pname
     meshfile = partname".mesh"
     printf("") > meshfile

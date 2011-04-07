@@ -15,6 +15,7 @@ from odict import ODict
 from geometry import Geometry
 from geomfile import GeometryFile
 from formex import Formex
+from connectivity import Connectivity
 from mesh import Mesh
 from trisurface import TriSurface
 
@@ -160,6 +161,121 @@ def importSurface():
 
 def importAny():
     importGeometry(ftype=None)
+
+
+def getParams(line):
+    """Strip the parameters from a comment line"""
+    s = line.split()
+    d = {'mode': s.pop(0),'filename': s.pop(0)}
+    d.update(dict(zip(s[::2],s[1::2])))
+    return d
+    
+
+def readNodes(fil):
+    """Read a set of nodes from an open mesh file"""
+    a = fromfile(fil,sep=" ").reshape(-1,3)
+    x = Coords(a)
+    print(x.shape)
+    return x
+
+
+def readElems(fil,nplex):
+    """Read a set of elems of plexitude nplex from an open mesh file"""
+    print("Reading elements of plexitude %s" % nplex)
+    e = fromfile(fil,sep=" ",dtype=Int).reshape(-1,nplex) 
+    e = Connectivity(e)
+    print(e.shape)
+    return e
+
+
+def readEsets(fil):
+    """Read the eset data of type generate"""
+    data = []
+    for line in fil:
+        s = line.strip('\n').split()
+        if len(s) == 4:
+            data.append(s[:1]+map(int,s[1:]))
+    return data
+            
+
+def readMesh(fn):
+    """Read a nodes/elems model from file.
+
+    Returns an (x,e) tuple or None
+    """
+    d = {}
+    pf.GUI.setBusy(True)
+    fil = file(fn,'r')
+    for line in fil:
+        if line[0] == '#':
+            line = line[1:]
+        globals().update(getParams(line))
+        dfil = file(filename,'r')
+        if mode == 'nodes':
+            d['coords'] = readNodes(dfil)
+        elif mode == 'elems':
+            elems = d.setdefault('elems',[])
+            e = readElems(dfil,int(nplex)) - int(offset)
+            elems.append(e)
+        elif mode == 'esets':
+            d['esets'] = readEsets(dfil)
+        else:
+            print("Skipping unrecognized line: %s" % line)
+        dfil.close()
+
+    pf.GUI.setBusy(False)
+    fil.close()
+    return d                    
+
+
+def importModel(fn=None):
+    """Read one or more element meshes into pyFormex.
+
+    Models are composed of matching nodes.txt and elems.txt files.
+    A single nodes fliename or a list of node file names can be specified.
+    If none is given, it will be asked from the user.
+    """
+
+    if fn is None:
+        fn = askFilename(".","*.mesh",multi=True)
+        if not fn:
+            return
+    if type(fn) == str:
+        fn = [fn]
+        
+    for f in fn:
+        d = readMesh(f)
+        print(type(d))
+        x = d['coords']
+        e = d['elems']
+
+        modelname = os.path.basename(f).replace('.mesh','')
+        export({modelname:d})
+        export(dict([("%s-%d"%(modelname,i), Mesh(x,ei)) for i,ei in enumerate(e)])) 
+
+
+def convert_inp(fn=None):
+    """Convert an Abaqus .inp file to pyFormex .mesh.
+
+    """
+    if fn is None:
+        fn = askFilename(".","*.inp",multi=True)
+        if not fn:
+            return
+
+        for f in fn:
+            convert_inp(f)
+        return
+
+
+    converter = os.path.join(pf.cfg['pyformexdir'],'bin','read_abq_inp.awk')
+    dirname = os.path.dirname(fn)
+    basename = os.path.basename(fn)
+    cmd = 'cd %s;%s %s' % (dirname,converter,basename)
+    print(cmd)
+    pf.GUI.setBusy()
+    print(utils.runCommand(cmd))
+    pf.GUI.setBusy(False)
      
 
 def writeGeometry(obj,filename,filetype=None,shortlines=False):
@@ -216,6 +332,66 @@ def printDataSize():
         #    size = ''
         pf.message("* %s (%s): %s" % (s,S.__class__.__name__,size))
 
+
+##################### conversion ##########################
+
+def toFormex(suffix=''):
+    """Transform the selection to Formices.
+
+    If a suffix is given, the Formices are stored with names equal to the
+    surface names plus the suffix, else, the surface names will be used
+    (and the surfaces will thus be cleared from memory).
+    """
+    if not selection.check():
+        selection.ask()
+
+    if not selection.names:
+        return
+
+    newnames = selection.names
+    if suffix:
+        newnames = [ n + suffix for n in newnames ]
+
+    newvalues = [ named(n).toFormex() for n in newnames ]
+    export2(newnames,newvalues)
+
+    if not suffix:
+        selection.clear()
+    formex_menu.selection.set(newnames)
+    clear()
+    formex_menu.selection.draw()
+    
+
+def toMesh(suffix=''):
+    """Transform the Formex selection to TriSurfaces.
+
+    If a suffix is given, the TriSurfaces are stored with names equal to the
+    Formex names plus the suffix, else, the Formex names will be used
+    (and the Formices will thus be cleared from memory).
+    """
+    if not formex_menu.selection.check():
+        formex_menu.selection.ask()
+
+    if not formex_menu.selection.names:
+        return
+
+    names = formex_menu.selection.names
+    formices = [ named(n) for n in names ]
+    if suffix:
+        names = [ n + suffix for n in names ]
+
+    #t = timer.Timer()
+    print "CONVERTING %s" % names
+    meshes =  dict([ (n,F.toMesh()) for n,F in zip(names,formices) if F.nplex() == 3])
+    #print("Converted in %s seconds" % t.seconds())
+    print("Converted %s" % meshes.keys())
+    export(meshes)
+
+    if not suffix:
+        formex_menu.selection.clear()
+    selection.set(meshes.keys())
+    #print "Number of points before fusing: %s" % before
+
 ################### menu #################
  
 _menu = 'Geometry'
@@ -228,6 +404,8 @@ def create_menu():
             ("pyFormex Geometry File (.pgf)",importPgf),
             ("Surface File (*.gts, *.stl, *.off, *.neu)",importSurface),
             ("All known geometry formats",importAny),
+            ("&Convert Abaqus .inp file",convert_inp),
+            ("&Import Converted Model",importModel),
             ]),
         ("&Export ",[
             ("pyFormex Geometry File (.pgf)",exportPgf),
@@ -257,7 +435,16 @@ def create_menu():
             ("&Node Marks",selection.toggleNodes,dict(checkable=True,checked=selection.hasNodeMarks())),
             ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
             ]),
-        ## ("---",None),
+        ("---",None),
+        ("&Convert",[
+            ("To &Formex",toFormex),
+            ("To &Mesh",toMesh),
+            ## ("To &TriSurface",toSurface),
+            ## ("To &PolyLine",toPolyLine),
+            ## ("To &BezierSpline",toBezierSpline),
+            ## ("To &NurbsCurve",toNurbsCurve),
+            ]),
+        ## (
         ## ("&Set Property",selection.setProperty),
         ## ("&Shrink",shrink),
         ## ("&Bbox",
