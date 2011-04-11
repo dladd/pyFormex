@@ -1261,6 +1261,9 @@ class MultiCanvas(FramedGridLayout):
         self.current = None
         self.ncols = 2
         self.rowwise = True
+        self.pos = None
+        self.rstretch = None
+        self.cstretch = None
         self.parent = parent
 
 
@@ -1274,7 +1277,7 @@ class MultiCanvas(FramedGridLayout):
             pf.debug("SHARING display lists WITH %s" % shared)
         canv = QtCanvas(self.parent,shared)
         return(canv)
-        
+
 
     def addView(self):
         """Add a new viewport to the widget"""
@@ -1286,7 +1289,7 @@ class MultiCanvas(FramedGridLayout):
         self.showWidget(canv)
         canv.initializeGL()   # Initialize OpenGL context and camera
         self.setCurrent(canv)
-        
+
 
     def setCurrent(self,canv):
         """Make the specified viewport the current one.
@@ -1315,33 +1318,53 @@ class MultiCanvas(FramedGridLayout):
 
 
     def showWidget(self,w):
-        """Show the view w"""
+        """Show the view w."""
         ind = self.all.index(w)
-        row,col = divmod(ind,self.ncols)
-
-        ## print("Viewport %s %s,%s,%s" % (self.rowwise,row,col,self.ncols))
-
-        ## if row > 0 and col < self.ncols and ind == len(self.all)-1:
-        ##     print("SPANMULTIPLE")
-        ##     rspan,cspan = 1,2
-        ##     if not self.rowwise:
-        ##         row,col = col,row
-        ##         rspan,cspan = cspan,rspan
-        ##     self.addWidget(w,row,col,rspan,cspan)
-        ## else:
-        if not self.rowwise:
-            row,col = col,row
-        self.addWidget(w,row,col)
+        if self.pos is None:
+            row,col = divmod(ind,self.ncols)
+            if not self.rowwise:
+                row,col = col,row
+            rspan,cspan = 1,1
+        elif ind < len(self.pos):
+            row,col,rspan,cspan = self.pos[ind]
+        else:
+            return
+        self.addWidget(w,row,col,rspan,cspan)
         w.raise_()
+        # set the stretch factors
+        if self.rstretch is not None:
+            for i in range(row,row+rspan):
+                if i >= len(self.rstretch):
+                    self.rstretch.append(1)
+                self.setRowStretch(i,self.rstretch[i])
+        if self.cstretch is not None:
+            for i in range(col,col+cspan):
+                if i >= len(self.cstretch):
+                    self.cstretch.append(1)
+                self.setColumnStretch(i,self.cstretch[i])
 
 
     def removeView(self):
         if len(self.all) > 1:
             w = self.all.pop()
+            if self.pos is not None:
+                self.pos = self.pos[:-1]
             if self.current == w:
                 self.setCurrent(self.all[-1])
             self.removeWidget(w)
             w.close()
+            # set the stretch factors
+            pos = [self.getItemPosition(self.indexOf(w)) for w in self.all]
+            if self.rstretch is not None:
+                row = max([p[0]+p[2] for p in pos])
+                for i in range(row,len(self.rstretch)):
+                    self.setRowStretch(i,0)
+                self.rstretch = self.rstretch[:row]
+            if self.cstretch is not None:
+                col = max([p[1]+p[3] for p in pos])
+                for i in range(col,len(self.cstretch)):
+                    self.setColumnStretch(i,0)
+                self.cstretch = self.cstretch[:col]
 
 
 ##     def setCamera(self,bbox,view):
@@ -1362,26 +1385,33 @@ Viewport %s;  Current:%s;  Settings:
 """ % (i, v == self.current, v.settings))
 
 
-    def changeLayout(self, nvps=None,ncols=None, nrows=None):
+    def changeLayout(self,nvps=None,ncols=None,nrows=None,pos=None,rstretch=None,cstretch=None):
         """Change the lay-out of the viewports on the OpenGL widget.
 
         nvps: number of viewports
         ncols: number of columns
         nrows: number of rows
-
+        pos: list holding the position and span of each viewport
+        [[row,col,rowspan,colspan],...]
+        rstretch: list holding the stretch factor for each row
+        cstretch: list holding the stretch factor for each column
+        (rows/columns with a higher stretch factor take more of the
+        available space)
         Each of this parameters is optional.
 
         If a number of viewports is given, viewports will be added
-        or removed to match the requested number. 
-        By default they are layed out rowwise over two columns.
+        or removed to match the requested number.
+        By default they are laid out rowwise over two columns.
 
         If ncols is an int, viewports are laid out rowwise over ncols
         columns and nrows is ignored. If ncols is None and nrows is an int,
-        viewports are laid out columnwise over nrows rows.
+        viewports are laid out columnwise over nrows rows. Alternatively,
+        the pos argument can be used to specify the layout of the viewports.
         """
         if pf.options.fpbug:
             print "CHANGE LAYOUT: %s (%s)" % (nvps,type(nvps))
             print self.all
+        # add or remove viewports to match the requested number
         if type(nvps) == int:
             if pf.options.fpbug:
                 print "removeView"
@@ -1391,21 +1421,31 @@ Viewport %s;  Current:%s;  Settings:
                 print "addView"
             while len(self.all) < nvps:
                 self.addView()
-
+        # get the new layout definition
         if type(ncols) == int:
             rowwise = True
+            pos = None
         elif type(nrows) == int:
             ncols = nrows
             rowwise = False
+            pos = None
+        elif type(pos) == list and len(pos) == len(self.all):
+            ncols = None
+            rowwise = None
         else:
             return
-
+        # remove the viewport widgets
         if pf.options.fpbug:
             print "removeWidget"
         for w in self.all:
             self.removeWidget(w)
+        # assign the new layout arguments
         self.ncols = ncols
         self.rowwise = rowwise
+        self.pos = pos
+        self.rstretch = rstretch
+        self.cstretch = cstretch
+        # add the viewport widgets
         if pf.options.fpbug:
             print "showWidget"
         for w in self.all:

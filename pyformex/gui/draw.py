@@ -1347,9 +1347,9 @@ def viewport(n=None):
     pf.canvas = pf.GUI.viewports.current
 
 
-def layout(nvps=None,ncols=None,nrows=None):
+def layout(nvps=None,ncols=None,nrows=None,pos=None,rstretch=None,cstretch=None):
     """Set the viewports layout."""
-    pf.GUI.viewports.changeLayout(nvps,ncols,nrows)
+    pf.GUI.viewports.changeLayout(nvps,ncols,nrows,pos,rstretch,cstretch)
     viewport()
 
 def addViewport():
