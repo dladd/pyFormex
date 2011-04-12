@@ -1408,17 +1408,10 @@ Viewport %s;  Current:%s;  Settings:
         viewports are laid out columnwise over nrows rows. Alternatively,
         the pos argument can be used to specify the layout of the viewports.
         """
-        if pf.options.fpbug:
-            print "CHANGE LAYOUT: %s (%s)" % (nvps,type(nvps))
-            print self.all
         # add or remove viewports to match the requested number
         if type(nvps) == int:
-            if pf.options.fpbug:
-                print "removeView"
             while len(self.all) > nvps:
                 self.removeView()
-            if pf.options.fpbug:
-                print "addView"
             while len(self.all) < nvps:
                 self.addView()
         # get the new layout definition
@@ -1435,8 +1428,6 @@ Viewport %s;  Current:%s;  Settings:
         else:
             return
         # remove the viewport widgets
-        if pf.options.fpbug:
-            print "removeWidget"
         for w in self.all:
             self.removeWidget(w)
         # assign the new layout arguments
@@ -1446,8 +1437,6 @@ Viewport %s;  Current:%s;  Settings:
         self.rstretch = rstretch
         self.cstretch = cstretch
         # add the viewport widgets
-        if pf.options.fpbug:
-            print "showWidget"
         for w in self.all:
             self.showWidget(w)
 
