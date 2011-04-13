@@ -144,9 +144,8 @@ class Mesh(Geometry):
         except:
             raise
 
+        self.setType(eltype)
         self.setProp(prop)
-
-        self.eltype = elementType(eltype,self.nplex())
 
 
     def _set_coords(self,coords):
@@ -160,6 +159,21 @@ class Mesh(Geometry):
         else:
             raise ValueError,"Invalid reinitialization of %s coords" % self.__class__
 
+
+    def setType(self,eltype=None):
+        """Set the eltype from a character string.
+
+        This function allows the user to change the element type of the Mesh.
+        The input is a character string with the name of one of the element
+        defined in elements.py. The function will only allow to set a type
+        matching the plexitude of the Mesh.
+
+        This method is seldom needed, because the applications should
+        normally set the element type at creation time.
+        """
+        self.eltype = elementType(eltype,self.nplex())
+        return self
+    
 
     def setProp(self,prop=None):
         """Create or destroy the property array for the Mesh.
@@ -1207,7 +1221,7 @@ Size: %s
             M.elems[:,-nplex:] = M.elems[:,-1:-(nplex+1):-1].copy()
 
         if autofix:
-            M.eltype = elementType(M.nplex())
+            M.eltype = elementType(nplex=M.nplex())
 
         return M
 

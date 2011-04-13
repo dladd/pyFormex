@@ -125,10 +125,7 @@ if __name__ == "draw":
     H = DoubleHelixStent(D,L,d,n,b).all()
     clear()
     draw(H,view='iso')
-    
-##     # and save it in a lot of graphics formats
-##     if ack("Do you want to save this image (in lots of formats) ?"):
-##         for ext in [ 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf', 'tex' ]: 
-##             image.save('WireStent.'+ext)
+
+
 
 #End
