@@ -18,7 +18,7 @@ from plugins.curve import *
 from plugins.nurbs import *
 
 
-def frenet(d1,d2):
+def frenet(d1,d2,d3=None):
     """Returns the 3 Frenet vectors and the curvature.
 
     d1,d2 are the first and second derivatives at points of a curve.
@@ -43,7 +43,12 @@ def frenet(d1,d2):
     m = dotpr(cross(d1,d2),e3)
     #print "m",m
     k = m / l**3
-    return e1,e2,e3,k
+    if d3 is None:
+        return e1,e2,e3,k
+    # compute torsion    
+    t = dotpr(d1,cross(d2,d3)) / dotpr(d1,d2)
+    return e1,e2,e3,k,t
+    
 
 
 clear()
@@ -60,24 +65,32 @@ def drawThePoints(N,n,color=None):
     draw(P,color=color,marksize=5)
     drawNumbers(P,color=color)
     
-    XD = N.derivatives(u,5)[:3]
+    XD = N.derivatives(u,5)[:4]
     if XD.shape[-1] == 4:
         XD = XD.toCoords()
-    x,d,dd = XD[:3]
-    e1,e2,e3,k = frenet(d,dd)
+    x,d1,d2,d3 = XD[:4]
+    e1,e2,e3,k,t = frenet(d1,d2,d3)
+    print t
 
-    print k
-    print isnan(k)
+    #k = 1./k
+    #k[isnan(k)] = 0.
     k /= k[isnan(k) == 0].max()
-    print k
+    tmax = t[isnan(t) == 0].max()
+    if tmax > 0:
+        t /= tmax
+    print t
     s = 0.3
     x1 = x+s*e1
-    x2 = x+k.reshape(-1,1)*e2 # draw curvature along normal
+    x2 = x+s*e2
     x3 = x+s*e3
+    x2k = x+k.reshape(-1,1)*e2 # draw curvature along normal
+    x3t = x+t.reshape(-1,1)*e3
     draw(x,marksize=10,color=yellow)
     draw(connect([Formex(x),Formex(x1)]),color=yellow,linewidth=3)
-    draw(connect([Formex(x),Formex(x2)]),color=cyan,linewidth=3)
-    draw(connect([Formex(x),Formex(x3)]),color=magenta,linewidth=3)
+    draw(connect([Formex(x),Formex(x2)]),color=cyan,linewidth=2)
+    draw(connect([Formex(x),Formex(x2k)]),color=blue,linewidth=5)
+    draw(connect([Formex(x),Formex(x3)]),color=magenta,linewidth=2)
+    draw(connect([Formex(x),Formex(x3t)]),color=red,linewidth=5)
 
 
 def drawNurbs(control,degree,closed,blended,weighted=False,Clear=False):
@@ -107,7 +120,7 @@ def drawNurbs(control,degree,closed,blended,weighted=False,Clear=False):
         wts=None
     N = NurbsCurve(X,wts=wts,degree=degree,closed=closed,blended=blended)
     draw(N,color=red)
-    drawThePoints(N,20,color=black)
+    drawThePoints(N,11,color=black)
 
 
 clear()
@@ -139,6 +152,7 @@ def timeOut():
 
 predefined = [
     '51414336',
+    '51i4143I36',
     '2584',
     '25984',
     '184',
@@ -153,6 +167,7 @@ predefined = [
     '214121',
     '214412',
     '151783',
+    'ABCDABCD',
     ]
     
 data_items = [
