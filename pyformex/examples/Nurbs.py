@@ -18,44 +18,37 @@ from plugins.curve import *
 from plugins.nurbs import *
 
 
-def uniformParamValues(self,n):
-    """Create a set of uniform parameter values for the NurbsCurve"""
-    umin = self.knots[0]
-    umax = self.knots[-1]
-    u = umin + arange(n+1) * (umax-umin) / n
-    
+def frenet(d1,d2):
+    """Returns the 3 Frenet vectors and the curvature.
+
+    d1,d2 are the first and second derivatives at points of a curve.
+    Returns 3 normalized vectors along tangent, normal, binormal
+    plus the curvature.
+    NOTE: This should be expanded to also return the torsion of the curve.
+    """
+    l = length(d1)
+    # What to do when l is 0? same as with k?
+    if l.min() == 0.0:
+        print "l is zero at %s" % where(l==0.0)[0]
+    e1 = d1 / l.reshape(-1,1)
+    e2 = d2 - dotpr(d2,e1).reshape(-1,1)*e1
+    k = length(e2)
+    if k.min() == 0.0:
+        print "k is zero at %s" % where(k==0.0)[0]
+    w = where(k==0.0)[0]
+    # where k = 0: set e2 to mean of previous and following
+    e2 /= k.reshape(-1,1)
+    #e3 = normalize(ddd - dotpr(ddd,e1)*e1 - dotpr(ddd,e2)*e2)
+    e3 = cross(e1,e2)
+    m = dotpr(cross(d1,d2),e3)
+    #print "m",m
+    k = m / l**3
+    return e1,e2,e3,k
+
+
 clear()
 linewidth(2)
 flat()
-
-#    3*0    -     2*1     -    3*2    : 8 = 5+3
-#    nctrl = nparts * degree + 1 
-#    nknots = nctrl + degree + 1
-#    nknots = (nparts+1) * degree + 2
-#
-# degree  nparts  nctrl   nknots
-#    2      1       3        6
-#    2      2       5        8
-#    2      3       7       10
-#    2      4       9       12
-#    3      1       4        8
-#    3      2       7       11
-#    3      3      10       14
-#    3      4      13       17
-#    4      1       5       10 
-#    4      2       9       14
-#    4      3      13       18
-#    5      1       6       12
-#    5      2      11       17
-#    5      3      16       22
-#    6      1       7       14       
-#    6      2      13       20
-#    7      1       8       16
-#    8      1       9       18
-
-# This should be a valid combination of ntrl/degree
-# drawing is only done if degree <= 7
-
 
 
 def drawThePoints(N,n,color=None):
@@ -71,12 +64,20 @@ def drawThePoints(N,n,color=None):
     if XD.shape[-1] == 4:
         XD = XD.toCoords()
     x,d,dd = XD[:3]
-    print "Point %s: Dir %s; Curv %s" % (x,d,dd)
-    x1 = x+0.1*d
-    x2 = x+0.01*dd
+    e1,e2,e3,k = frenet(d,dd)
+
+    print k
+    print isnan(k)
+    k /= k[isnan(k) == 0].max()
+    print k
+    s = 0.3
+    x1 = x+s*e1
+    x2 = x+k.reshape(-1,1)*e2 # draw curvature along normal
+    x3 = x+s*e3
     draw(x,marksize=10,color=yellow)
     draw(connect([Formex(x),Formex(x1)]),color=yellow,linewidth=3)
     draw(connect([Formex(x),Formex(x2)]),color=cyan,linewidth=3)
+    draw(connect([Formex(x),Formex(x3)]),color=magenta,linewidth=3)
 
 
 def drawNurbs(control,degree,closed,blended,weighted=False,Clear=False):

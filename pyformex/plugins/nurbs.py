@@ -222,6 +222,38 @@ class Geometry4(object):
         return self
     
 
+#######################################################
+## NURBS CURVES ##
+
+#    3*0    -     2*1     -    3*2    : 8 = 5+3
+#    nctrl = nparts * degree + 1 
+#    nknots = nctrl + degree + 1
+#    nknots = (nparts+1) * degree + 2
+#
+# degree  nparts  nctrl   nknots
+#    2      1       3        6
+#    2      2       5        8
+#    2      3       7       10
+#    2      4       9       12
+#    3      1       4        8
+#    3      2       7       11
+#    3      3      10       14
+#    3      4      13       17
+#    4      1       5       10 
+#    4      2       9       14
+#    4      3      13       18
+#    5      1       6       12
+#    5      2      11       17
+#    5      3      16       22
+#    6      1       7       14       
+#    6      2      13       20
+#    7      1       8       16
+#    8      1       9       18
+
+# This should be a valid combination of ntrl/degree
+# drawing is only done if degree <= 7
+
+
 class NurbsCurve(Geometry4):
 
     """A NURBS curve
@@ -335,7 +367,7 @@ class NurbsCurve(Geometry4):
     def derivatives(self,at,d=1):
         """Returns the points and derivatives up to d at parameter values at"""
         if type(at) is int:
-            u = self.uniformKnotValues(at)
+            u = uniformParamValues(at,self.knots[0],self.knots[-1])
         else:
             u = at
             
@@ -359,13 +391,20 @@ class NurbsCurve(Geometry4):
             # When using no weights, ctrl points are Coords4 normalized points,
             # and the derivatives all have w=0: the points represent directions
             # We just strip off the w=0.
-            # HOWEVER, if there are wights, not sure what to do.
+            # HOWEVER, if there are weights, not sure what to do.
             # Points themselves could be just normalized and returned.
             pts[0].normalize()
             pts = Coords(pts[...,:3])
         else:
             pts = Coords(pts)
         return pts
+
+    
+    def curvatureValue(self,at):
+        """Returns the value of the curvature"""
+        x,d,dd = self.derivatives(self,at,d=2)
+        
+        
 
 
     def knotPoints(self):
@@ -403,6 +442,7 @@ class NurbsCurve(Geometry4):
 
     def normalizeKnots(self):
         self.knots = self.knots / self/knots[-1]
+
         
 
     def actor(self,**kargs):
@@ -411,6 +451,12 @@ class NurbsCurve(Geometry4):
 
     
 
+
+def uniformParamValues(n,umin=0.0,umax=1.0):
+    """Create a set of uniform parameter values in the range umin..umax"""
+    umin = self.knots[0]
+    umax = self.knots[-1]
+    return umin + arange(n+1) * (umax-umin) / n
     
 
 def unitRange(n):
@@ -510,8 +556,6 @@ def curveToNurbs(B):
     return NurbsCurve(B.coords,degree=B.degree,closed=B.closed,blended=False)
 
 curve.BezierSpline.toNurbs = curveToNurbs
-
-#def Horner2D():
     
 
 ### End
