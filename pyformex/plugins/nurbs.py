@@ -331,6 +331,42 @@ class NurbsCurve(Geometry4):
             pts = Coords(pts)
         return pts
 
+    
+    def derivatives(self,at,d=1):
+        """Returns the points and derivatives up to d at parameter values at"""
+        if type(at) is int:
+            u = self.uniformKnotValues(at)
+        else:
+            u = at
+            
+        # sanitize arguments for library call
+        ctrl = self.coords.astype(double)
+        knots = self.knots.astype(double)
+        u = asarray(u).astype(double)
+        d = int(d)
+        
+        try:
+            pts = nurbs.curveDerivs(ctrl,knots,u,d)
+            if isnan(pts).any():
+                print "We got a NaN"
+                print pts
+                raise RuntimeError
+        except:
+            raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
+
+        if pts.shape[-1] == 4:
+            pts = Coords4(pts)
+            # When using no weights, ctrl points are Coords4 normalized points,
+            # and the derivatives all have w=0: the points represent directions
+            # We just strip off the w=0.
+            # HOWEVER, if there are wights, not sure what to do.
+            # Points themselves could be just normalized and returned.
+            pts[0].normalize()
+            pts = Coords(pts[...,:3])
+        else:
+            pts = Coords(pts)
+        return pts
+
 
     def knotPoints(self):
         """Returns the points at the knot values.

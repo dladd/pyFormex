@@ -24,39 +24,6 @@ def uniformParamValues(self,n):
     umax = self.knots[-1]
     u = umin + arange(n+1) * (umax-umin) / n
     
-
-def expandNurbsCurve():
-    def derivatives(self,at,d=1):
-        """Returns the points and derivatives up to d at parameter values at"""
-        if type(at) is int:
-            u = self.uniformKnotValues(at)
-        else:
-            u = at
-            
-        # sanitize arguments for library call
-        ctrl = self.coords.astype(double)
-        knots = self.knots.astype(double)
-        u = asarray(u).astype(double)
-        d = int(d)
-        
-        try:
-            pts = nurbs.curveDerivs(ctrl,knots,u,d)
-            if isnan(pts).any():
-                print "We got a NaN"
-                print pts
-                raise RuntimeError
-        except:
-            raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
-
-        # When using Coords4 normalized points, the derivatives all have w=0
-        # (the points represent directions). We just strip off the w=0.
-        return Coords(pts[...,:3])
-
-    NurbsCurve.uniformParamValues = uniformParamValues
-    NurbsCurve.derivatives = derivatives
-
-
-expandNurbsCurve()                         
 clear()
 linewidth(2)
 flat()
@@ -104,12 +71,12 @@ def drawThePoints(N,n,color=None):
     if XD.shape[-1] == 4:
         XD = XD.toCoords()
     x,d,dd = XD[:3]
-    #print "Point %s: Dir %s" % (x,d)
+    print "Point %s: Dir %s; Curv %s" % (x,d,dd)
     x1 = x+0.1*d
     x2 = x+0.01*dd
     draw(x,marksize=10,color=yellow)
     draw(connect([Formex(x),Formex(x1)]),color=yellow,linewidth=3)
-    #draw(connect([Formex(x),Formex(x2)]),color=cyan,linewidth=3)
+    draw(connect([Formex(x),Formex(x2)]),color=cyan,linewidth=3)
 
 
 def drawNurbs(control,degree,closed,blended,weighted=False,Clear=False):
