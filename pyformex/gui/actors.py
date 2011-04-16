@@ -763,7 +763,7 @@ class NurbsActor(Actor):
         Actor.__init__(self)
         self.object = data
         self.color = saneColor(color)
-        self.samplingTolerance = 1.0
+        self.samplingTolerance = 5.0
 
         
     def bbox(self):
@@ -771,7 +771,24 @@ class NurbsActor(Actor):
 
         
     def drawGL(self,**kargs):
-        drawNurbsCurves(self.object.coords,self.object.knots,color=self.color)
+        drawNurbsCurves(self.object.coords,self.object.knots,color=self.color,samplingTolerance=self.samplingTolerance)
 
+
+class NurbsSurfActor(Actor):
+
+    def __init__(self,data,color=None,**kargs):
+        from gui.drawable import saneColor
+        Actor.__init__(self)
+        self.object = data
+        self.color = saneColor(color)
+        self.samplingTolerance = 50.0
+
+        
+    def bbox(self):
+        return self.object.bbox()
+
+        
+    def drawGL(self,**kargs):
+        drawNurbsSurfaces(self.object.coords,self.object.sknots,self.object.tknots,color=self.color,samplingTolerance=self.samplingTolerance)
 
 # End

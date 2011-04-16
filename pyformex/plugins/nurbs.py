@@ -399,13 +399,6 @@ class NurbsCurve(Geometry4):
             pts = Coords(pts)
         return pts
 
-    
-    def curvatureValue(self,at):
-        """Returns the value of the curvature"""
-        x,d,dd = self.derivatives(self,at,d=2)
-        
-        
-
 
     def knotPoints(self):
         """Returns the points at the knot values.
@@ -557,5 +550,38 @@ def curveToNurbs(B):
 
 curve.BezierSpline.toNurbs = curveToNurbs
     
+
+def frenet(d1,d2,d3=None):
+    """Returns the 3 Frenet vectors and the curvature.
+
+    d1,d2 are the first and second derivatives at points of a curve.
+    d3, if given, is the third derivative. 
+    Returns 3 normalized vectors along tangent, normal, binormal
+    plus the curvature.
+    if d3 is give, also returns the torsion of the curve.
+    """
+    l = length(d1)
+    # What to do when l is 0? same as with k?
+    if l.min() == 0.0:
+        print "l is zero at %s" % where(l==0.0)[0]
+    e1 = d1 / l.reshape(-1,1)
+    e2 = d2 - dotpr(d2,e1).reshape(-1,1)*e1
+    k = length(e2)
+    if k.min() == 0.0:
+        print "k is zero at %s" % where(k==0.0)[0]
+    w = where(k==0.0)[0]
+    # where k = 0: set e2 to mean of previous and following
+    e2 /= k.reshape(-1,1)
+    #e3 = normalize(ddd - dotpr(ddd,e1)*e1 - dotpr(ddd,e2)*e2)
+    e3 = cross(e1,e2)
+    m = dotpr(cross(d1,d2),e3)
+    #print "m",m
+    k = m / l**3
+    if d3 is None:
+        return e1,e2,e3,k
+    # compute torsion    
+    t = dotpr(d1,cross(d2,d3)) / dotpr(d1,d2)
+    return e1,e2,e3,k,t
+
 
 ### End

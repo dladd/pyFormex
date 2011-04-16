@@ -196,14 +196,14 @@ def drawBezierPoints(x,color=None,granularity=100):
     drawBezier(x,color=None,objtype=GL.GL_POINTS,granularity=granularity)
 
 
-def drawNurbsCurves(x,knots,color=None,samplingTolerance=1.0):
+def drawNurbsCurves(x,knots,color=None,samplingTolerance=5.0):
     """Draw a collection of Nurbs curves.
 
     x: (nctrl,ndim) or (ncurve,nctrl,ndim) float array: control points,
        specifying either a single curve or ncurve curves defined by the
        same number of control points. ndim can be 3 or 4. If 4, the 4-th
        coordinate is interpreted as a weight for that point.
-    knots: (nknots) or (ncurve,nkots) float array: knot vector, contianing the
+    knots: (nknots) or (ncurve,nknots) float array: knot vector, containing the
        parameter values to be used in the nurbs definition. Remark that
        nknots must be larger than nctrl. The order of the curve is
        nknots-nctrl and the degree of the curve is order-1.
@@ -257,6 +257,66 @@ def drawQuadraticCurves(x,color=None):
     xx[...,1,:] = 2*x[...,1,:] - 0.5*(x[...,0,:] + x[...,2,:])
     knots = array([0.,0.,0.,1.,1.,1.])
     drawNurbsCurves(xx,knots,color=color)
+
+
+def drawNurbsSurfaces(x,sknots,tknots,color=None,samplingTolerance=50.0):
+    """Draw a collection of Nurbs surfaces.
+
+    x: (ns,nt,ndim) or (nsurf,ns,nt,ndim) float array:
+       (ns,nt) shaped control points array,
+       specifying either a single surface or nsurf surfaces defined by the
+       same number of control points. ndim can be 3 or 4. If 4, the 4-th
+       coordinate is interpreted as a weight for that point.
+    sknots: (nsk) or (nsurf,nsk) float array: knot vector, containing
+       the parameter values to be used in the s direction of the surface.
+       Remark that nsk must be larger than ns. The order of the surface
+       in s-direction is nsk-ns and the degree of the s-curves is nsk-ns-1.
+       If a single sknot vector is given, the same is used for all surfaces.
+       Otherwise, the number of sknot vectors must match the number of nurbs
+       surfaces.
+    tknots: (ntk) or (nsurf,ntk) float array: knot vector, containing
+       the parameter values to be used in the t direction of the surface.
+       Remark that ntk must be larger than nt. The order of the surface
+       in t-direction is ntk-nt and the degree of the t-curves is ntk-nt-1.
+       If a single sknot vector is given, the same is used for all surfaces.
+       Otherwise, the number of sknot vectors must match the number of nurbs
+       surfaces.
+
+    If color is given it is an (nsurf,3) array of RGB values.
+    """
+    nurb = GLU.gluNewNurbsRenderer()
+    if not nurb:
+        raise RuntimeError,"Could not create a new NURBS renderer"
+    ns,nt,ndim = x.shape[-3:]
+    nsk = asarray(sknots).shape[-1]
+    ntk = asarray(tknots).shape[-1]
+    print nsk,ntk,ns,nt
+    sorder = nsk-ns
+    torder = ntk-nt
+    if sorder > 8 or torder > 8:
+        import warnings
+        warnings.warn('Nurbs surfaces of degree > 7 can currently not be drawn! You can approximate the surface by a lower order surface.')
+        return
+    mode = {3:GL.GL_MAP2_VERTEX_3, 4:GL.GL_MAP2_VERTEX_4}[ndim]
+    x = x.reshape(-1,ns,nt,ndim)
+    if color is not None:
+        color = color.reshape(-1,3)
+    si = sknots
+    ti = tknots
+    GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
+    for i,xi in enumerate(x):
+        print xi.shape
+        print si
+        print ti
+        if color is not None:
+            GL.glColor3fv(color[i])
+        if sknots.ndim > 1:
+            si = sknots[i]
+        if tknots.ndim > 1:
+            ti = tknots[i]
+        GLU.gluBeginSurface(nurb)
+        GLU.gluNurbsSurface(nurb,si,ti,xi,mode)
+        GLU.gluEndSurface(nurb)
 
 
 def color_multiplex(color,nparts):
