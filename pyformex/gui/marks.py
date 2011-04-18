@@ -40,15 +40,15 @@ class Mark(Drawable):
       draw() : function to draw the mark
     """
     
-    def __init__(self,pos):
+    def __init__(self,pos,nolight=True,**kargs):
         self.pos = pos
-        Drawable.__init__(self)
+        Drawable.__init__(self,nolight=nolight,**kargs)
 
 
 class AxesMark(Mark):
     """Two viewport axes drawn at a 3D position."""
-    def __init__(self,pos,color=None):
-        Mark.__init__(self,pos)
+    def __init__(self,pos,color=None,**kargs):
+        Mark.__init__(self,pos,**kargs)
         self.color = saneColor(color)
 
     def drawGL(self,**kargs):
@@ -65,8 +65,8 @@ class AxesMark(Mark):
 class TextMark(Mark):
     """A text drawn at a 3D position."""
     
-    def __init__(self,pos,text,color=None,font='sans',size=18):
-        Mark.__init__(self,pos)
+    def __init__(self,pos,text,color=None,font='sans',size=18,**kargs):
+        Mark.__init__(self,pos,**kargs)
         self.text = text
         self.color = saneColor(color)
         self.font = gluttext.glutSelectFont(font,size)
@@ -87,7 +87,7 @@ class TextMark(Mark):
 class MarkList(Mark):
     """A list of numbers drawn at 3D positions."""
     
-    def __init__(self,pos,val,color=black,font='sans',size=18,leader='',gravity=''):
+    def __init__(self,pos,val,color=black,font='sans',size=18,leader='',gravity='',**kargs):
         """Create a number list.
 
         pos is an (N,3) array of positions.
@@ -99,7 +99,7 @@ class MarkList(Mark):
         """
         if len(val) < len(pos):
             raise ValueError,"Not enough values for positions"
-        Mark.__init__(self,pos)
+        Mark.__init__(self,pos,**kargs)
         self.val = val
         self.color = saneColor(color)
         self.font = gluttext.glutSelectFont(font,size)

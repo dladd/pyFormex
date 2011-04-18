@@ -861,15 +861,16 @@ class Drawable(object):
       creating a new display list.
     """
     
-    def __init__(self):
-        self.trans = False
+    def __init__(self,nolight=False,ontop=False):
         self.list = None
-        ## self.atype = 'unknown'
+        self.trans = False
+        self.nolight = nolight
+        self.ontop = ontop
 
     def drawGL(self,**kargs):
         """Perform the OpenGL drawing functions to display the actor."""
-        raise NotImplementedError
-
+        pass
+            
     def pickGL(self,**kargs):
         """Mimick the OpenGL drawing functions to pick (from) the actor."""
         pass
@@ -893,6 +894,10 @@ class Drawable(object):
         GL.glNewList(self.list,GL.GL_COMPILE)
         ok = False
         try:
+            if self.nolight:
+                GL.glDisable(GL.GL_LIGHTING)
+            if self.ontop:
+                GL.glDepthFunc(GL.GL_ALWAYS)
             self.drawGL(**kargs)
             ok = True
         finally:

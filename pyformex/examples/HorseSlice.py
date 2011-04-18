@@ -43,6 +43,7 @@ res = askItems([
     ('direction',[1.,0.,0.]),
     ('number of sections',20),
     ('color','red'),
+    ('ontop',False),
     ]) 
 if not res:
     exit()
@@ -53,7 +54,8 @@ c = res['color']
 
 slices = S.slice(dir=d,nplanes=n)
 linewidth(2)
-draw(slices,color=c,view=None,bbox='last',flat=True)
+draw(slices,color=c,view=None,bbox='last',nolight=True,ontop=res['ontop'])
+draw(slices[0])
 
 
 #undraw(SA)

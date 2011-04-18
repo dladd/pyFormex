@@ -371,7 +371,7 @@ def draw(F,
          color='prop',colormap=None,bkcolor=None,bkcolormap=None,alpha=None,
          mode=None,linewidth=None,linestipple=None,shrink=None,marksize=None,
          wait=True,clear=None,allviews=False,
-         highlight=False,flat=False):
+         highlight=False,nolight=False,ontop=False,**kargs):
     """Draw object(s) with specified settings and direct camera to it.
 
     The first argument is an object to be drawn. All other arguments are
@@ -439,6 +439,10 @@ def draw(F,
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
+    if 'flat' in kargs:
+        import warnings
+        warnings.warn('warn_flat_removed')
+        
     # Facility for drawing database objects by name
     if type(F) == str:
         F = named(F)
@@ -463,7 +467,7 @@ def draw(F,
                               color,colormap,bkcolor,bkcolormap,alpha,
                               mode,linewidth,linestipple,shrink,marksize,
                               wait=nowait,clear=clear,allviews=allviews,
-                              highlight=highlight,flat=flat))
+                              highlight=highlight,nolight=nolight,ontop=ontop))
             if Fi is F[0]:
                 clear = False
                 view = None
@@ -527,13 +531,11 @@ def draw(F,
         F = _shrink(F,shrink)
 
     try:
-        actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize)
+        actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop)
 
         if actor is None:
             return None
         
-        if flat:
-            actor.specular = 0.
         if highlight:
             pf.canvas.addHighlight(actor)
         else:
@@ -641,7 +643,7 @@ def _shrink(F,factor):
     return F.shrink(factor)
 
 
-def drawVectors(P,v,size=None,flat=True,**drawOptions):
+def drawVectors(P,v,size=None,nolight=True,**drawOptions):
     """Draw a set of vectors.
 
     If size==None, draws the vectors v at the points P.
@@ -655,7 +657,7 @@ def drawVectors(P,v,size=None,flat=True,**drawOptions):
         Q = P + v
     else:
         Q = P + size*normalize(v)
-    return draw(connect([P,Q]),flat=flat,**drawOptions)
+    return draw(connect([P,Q]),nolight=nolight,**drawOptions)
 
 
 def drawPlane(P,N,size):

@@ -191,9 +191,9 @@ def draw_object(mode,npoints=-1):
         autoname[mode].next()
     export({name:obj})
     pf.canvas.removeHighlights()
-    draw(points,color='black',flat=True)
+    draw(points,color='black',nolight=True)
     if mode != 'point':
-        draw(obj,color=color,flat=True)
+        draw(obj,color=color,nolight=True)
     if mode == 'nurbs':
         print "DRAWING KNOTS"
         draw(obj.knotPoints(),color=color,marksize=5)
@@ -234,7 +234,7 @@ def objectName(actor):
 def splitPolyLine(c):
     """Interactively split the specified polyline"""
     pf.options.debug = 1
-    XA = draw(c.coords,clear=False,bbox='last',flat=True)
+    XA = draw(c.coords,clear=False,bbox='last',nolight=True)
     pf.canvas.pickable = [XA]
     #print "ACTORS",pf.canvas.actors
     #print "PICKABLE",pf.canvas.pickable

@@ -59,8 +59,8 @@ e = (d+dd).rosette(6,60,point=[m*0.5,m*v,0])
 draw(e)
 #pause()
 
-f = e.mapd(2,lambda d:f*sqrt((m+1)**2-d**2),e.center(),[0,1])
+g = e.mapd(2,lambda d:f*sqrt((m+1)**2-d**2),e.center(),[0,1])
 clear()
-draw(f)
+draw(g)
 
 # End

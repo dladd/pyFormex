@@ -515,12 +515,12 @@ class Canvas(object):
         if mode != self.rendermode or lighting != self.lighting:
             self.rendermode = mode
             self.lighting = lighting
-            print "GLINIT %s %s" % (self.rendermode,self.lighting)
+            #print "GLINIT %s %s" % (self.rendermode,self.lighting)
             self.glinit()
             self.redrawAll()
         else:
-            print "KEEP MODE  %s %s" % (self.rendermode,self.lighting)
-
+            #print "KEEP MODE  %s %s" % (self.rendermode,self.lighting)
+            pass
 
     def setTransparency(self,onoff):
         self.alphablend = onoff
@@ -665,7 +665,6 @@ class Canvas(object):
         self.clear()
         #GL.glClearColor(*colors.RGBA(self.default.bgcolor))# Clear The Background Color
         GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
-        GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
         GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
         #GL.glEnable(GL.GL_CULL_FACE)
         
@@ -720,7 +719,7 @@ class Canvas(object):
         #if self.rendermode.startswith('smooth'):
         #    self.resetLighting()
         self.glLight(self.lighting)
-
+        GL.glDepthFunc(GL.GL_LESS)
     
     def setSize (self,w,h):
         if h == 0:	# prevent divide by zero 
@@ -779,9 +778,10 @@ class Canvas(object):
                 actor.draw(canvas=self)
 
         # draw the scene actors
+        sorted_actors =  [ a for a in self.actors if not a.ontop ] + [ a for a in self.actors if a.ontop ]
         if self.alphablend:
-            opaque = [ a for a in self.actors if not a.trans ]
-            transp = [ a for a in self.actors if a.trans ]
+            opaque = [ a for a in sorted_actors if not a.trans ]
+            transp = [ a for a in sorted_actors if a.trans ]
             for actor in opaque:
                 self.setDefaults()
                 actor.draw(canvas=self)
@@ -794,7 +794,7 @@ class Canvas(object):
             GL.glDepthMask (GL.GL_TRUE)
             GL.glDisable (GL.GL_BLEND)
         else:
-            for actor in self.actors:
+            for actor in sorted_actors:
                 self.setDefaults()
                 actor.draw(canvas=self)
 

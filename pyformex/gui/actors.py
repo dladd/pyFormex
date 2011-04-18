@@ -63,8 +63,8 @@ class Actor(Drawable):
     - `pickGL()`:
     """
     
-    def __init__(self):
-        Drawable.__init__(self)
+    def __init__(self,**kargs):
+        Drawable.__init__(self,**kargs)
 
     def bbox(self):
         """Default implementation for bbox()."""
@@ -468,7 +468,8 @@ class GeomActor(Actor):
         The user can specify a linewidth to be used when drawing
         in wireframe mode.
         """
-        Actor.__init__(self)
+        #print "EXTRA= %s" % kargs
+        Actor.__init__(self,**kargs)
 
         # Store a reference to the drawn object
         self.object = data

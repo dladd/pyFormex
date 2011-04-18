@@ -215,7 +215,7 @@ def showModel(nodes=True,elems=True):
     print DB.elems
     M = [ Mesh(DB.nodes,el,eltype='quad%d'%el.shape[1],prop=i) for i,el in enumerate(DB.elems.itervalues()) ]
     if nodes:
-        draw([m.coords for m in M])
+        draw([m.coords for m in M],nolight=True)
     if elems:
         draw(M)
     smoothwire()
@@ -258,7 +258,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     # draw undeformed structure
     if showref:
         ref = [ Mesh(nodes,el,eltype='quad%d'%el.shape[1]) for el in elems ]
-        draw(ref,bbox=None,color='green',linewidth=1,mode='wireframe')
+        draw(ref,bbox=None,color='green',linewidth=1,mode='wireframe',nolight=True)
 
     # compute the colors according to the values
     multiplier = 0

@@ -41,6 +41,8 @@ def getMessage(msg):
 
 warn_drawaxes_changed = "The syntax of drawAxes has changed. The use of the 'pos' argument is deprecated. Use an appropriate CoordinateSystem instead."
 
+warn_flat_removed = "The 'flat=True' parameter of the draw function has been replaced with 'nolight=True'."
+
 warn_viewport_switching = """.. warn_viewport_switching
 
 Viewport switching

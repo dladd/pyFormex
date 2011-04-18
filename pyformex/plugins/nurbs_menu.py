@@ -63,15 +63,15 @@ class _options:
 
 
 def drawNurbs(N):
-    draw(N,color=_options.color,flat=True)
+    draw(N,color=_options.color,nolight=True)
     if _options.ctrl:
-        draw(N.coords,flat=True)
+        draw(N.coords,nolight=True)
         if _options.ctrl_numbers:
-            drawNumbers(N.coords,flat=True)
+            drawNumbers(N.coords,nolight=True)
     if _options.knots:
-        draw(N.knotPoints(),color=_options.color,marksize=_options.knotsize,flat=True)
+        draw(N.knotPoints(),color=_options.color,marksize=_options.knotsize,nolight=True)
         if _options.knot_numbers:
-            drawNumbers(N.knotPoints(),flat=True)
+            drawNumbers(N.knotPoints(),nolight=True)
             
 
 # Override some functions for nurbs

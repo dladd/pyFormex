@@ -488,15 +488,15 @@ static void basisDerivs(double *U, double u, int p, int i, int n, double *dN)
 
 /* curvePoints */
 /*
-Compute a point on a B-spline curve. 
+Compute points on a B-spline curve. 
 
 Input:
 
-- p: degree of the B-spline
 - P: control points P(nc,nd)
 - nc: number of control points
 - nd: dimension of the points (3 or 4)
 - U: knot sequence: U[0] .. U[m]
+- nk: number of knot values = m+1
 - u: parametric values: U[0] <= ui <= U[m]
 - nu: number of parametric values
 
@@ -509,6 +509,7 @@ static void curvePoints(double *P, int nc, int nd, double *U, int nk, double *u,
 {
   int i, j, p, s, t;
   
+  /* degree of the spline */
   p = nk - nc - 1;
 
   /* space for the basis functions */
@@ -536,14 +537,14 @@ Compute derivatives of a B-spline curve.
 
 Input:
 
-- p: degree of the B-spline
+- n: number of derivatives to compute
 - P: control points P(nc,nd)
 - nc: number of control points
 - nd: dimension of the points (3 or 4)
 - U: knot sequence: U[0] .. U[m]
+- nk: number of knot values = m+1
 - u: parametric values: U[0] <= ui <= U[m]
 - nu: number of parametric values
-- n: number of derivatives to compute
 
 Output:
 - pnt: (n+1,nu,nd) points and derivatives on the B-spline
@@ -554,6 +555,7 @@ static void curveDerivs(int n, double *P, int nc, int nd, double *U, int nk, dou
 {
   int i, j, l, p, s, t;
 
+  /* degree of the spline */
   p = nk - nc - 1;
 
   /* number of nonzero derivatives to compute */
@@ -584,6 +586,64 @@ static void curveDerivs(int n, double *P, int nc, int nd, double *U, int nk, dou
 	pnt[(l*nu+j)*nd+i] = 0.0;
   free(dN);
 }
+
+
+/* surfacePoints */
+/*
+Compute points on a B-spline surface. 
+
+Input:
+
+- P: control points P(ns,nt,nd)
+- ns,nt: number of control points 
+- nd: dimension of the points (3 or 4)
+- U: knot sequence: U[0] .. U[m]
+- nU: number of knot values U = m+1
+- V: knot sequence: V[0] .. V[n]
+- nV: number of knot values V = n+1
+- u: parametric values (nu,2): U[0] <= ui[0] <= U[m], V[0] <= ui[1] <= V[m]
+- nu: number of parametric values
+
+Output:
+- pnt: (nu,nd) points on the B-spline
+
+Modified algorithm A3.5 from 'The NURBS Book' pg103.
+*/
+static void surfacePoints(double *P, int ns, int nt, int nd, double *U, int nU, double *V, int nV, double *u, int nu, double *pnt)
+{
+  int i, j, p, q, su, sv, iu, iv, t;
+  
+  /* degrees of the spline */
+  p = nU - ns - 1;
+  q = nV - nt - 1;
+
+  /* space for the basis functions */
+  double *Nu = (double*) malloc((p+1)*sizeof(double));
+  double *Nv = (double*) malloc((q+1)*sizeof(double));
+
+  /* for each parametric point j */
+  for (j = 0; j < nu; j++) {
+
+    /* find the span index of u[j] */
+    su = findSpan(U,u[2*j],p,ns-1);
+    basisFuns(U,u[2*j],p,su,Nu);
+
+    /* find the span index of v[j] */
+    sv = findSpan(V,u[2*j+1],q,nt-1);
+    basisFuns(V,u[2*j+1],q,sv,Nv);
+
+    for (i = 0; i < nd; i++) {
+      iu = (su-p) * nd;
+      S = 0.0;
+      for (l = 0; l <= q; l++) {
+	
+	temp = 0.0
+      pnt[j*nd+i] = dotprod(N,1,P+t+i,nd,p+1);
+    }
+  }
+  free(N);
+} 
+
 
 
 /* curveKnotRefine */

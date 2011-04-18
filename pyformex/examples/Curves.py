@@ -60,7 +60,7 @@ def drawCurve(ctype,dset,closed,endcond,curl,ndiv,ntot,extend,spread,drawtype,cu
     if TA is not None:
         undecorate(TA)
     TA = drawText(text,10,10,font='sans',size=20)
-    draw(P, color='black')
+    draw(P, color='black',nolight=True)
     drawNumbers(Formex(P))
     if ctype == 'PolyLine':
         S = PolyLine(P,closed=closed)
@@ -82,10 +82,10 @@ def drawCurve(ctype,dset,closed,endcond,curl,ndiv,ntot,extend,spread,drawtype,cu
 
     im = curvetypes.index(ctype)
     print "%s control points" % S.coords.shape[0]
-    draw(S.coords,color=red)
+    #draw(S.coords,color=red,nolight=True)
 
     if drawtype == 'Curve':
-        draw(S,color=ctype_color[im])
+        draw(S,color=ctype_color[im],nolight=True)
 
     else:
         if spread:

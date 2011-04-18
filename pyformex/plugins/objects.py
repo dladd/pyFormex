@@ -270,7 +270,7 @@ def draw_elem_numbers(n):
 
 def draw_nodes(n):
     """Draw the numbers of an object's nodes."""
-    return draw(named(n).coords,flat=True,wait=False)
+    return draw(named(n).coords,nolight=True,wait=False)
 
 def draw_node_numbers(n):
     """Draw the numbers of an object's nodes."""

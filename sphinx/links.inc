@@ -13,6 +13,7 @@
 .. _`Forums`: http://developer.berlios.de/forum/?group_id=2717
 .. _`Help Forum`: http://developer.berlios.de/forum/forum.php?forum_id=8348
 .. _`Bug tracker`: http://developer.berlios.de/bugs/?group_id=2717
+.. _`Bugs`: http://developer.berlios.de/bugs/?group_id=2717
 
 .. _`Online manual`: http://pyformex.berlios.de/doc/index.html
 .. _`pyFormex documentation`: http://pyformex.berlios.de/doc/index.html
@@ -51,11 +52,10 @@
 .. _`dd for Windows`: http://www.chrysocome.net/dd
 
 .. _`stent research group`: http://www.stent-ibitech.ugent.be
-.. _`IBiTech-bioMMeda, Ghent University`: http://www.biommeda.ugent.be
+.. _`IBiTech-bioMMeda`: http://www.biommeda.ugent.be
 .. _`IBiTech, Ghent University`: http://www.ibitech.ugent.be
 .. _`BuMPer cluster`: http://bumps.ugent.be/bumper
 .. _`FEops`: http://www.feops.com  
-
 
 .. _`Vascular Modeling Toolkit`: http://www.vmtk.org
 .. End
