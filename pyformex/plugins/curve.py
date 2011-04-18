@@ -580,7 +580,19 @@ class Polygon(PolyLine):
 
     def __init__(self,coords=[]):
         PolyLine.__init__(self,coords,closed=True)
+
+
+    def planarArea(self,n):
+        """Return the area of a planar Polygon.
         
+        n is the normal vector of the polygon plane.
+        """
+        n = normalize(n)
+        x1 = self.coords
+        x2 = roll(x1,-1,axis=0)
+        area = 0.5*(dotpr(n,cross(x1,x2).sum(0)))
+        return area
+
 
 ##############################################################################
 #
@@ -838,10 +850,8 @@ class BezierSpline(Curve):
     def sub_points(self,t,j):
         """Return the points at values t in part j."""
         P = self.part(j)
-        C = self.coeffs * P
-        U = [ ones_like(t), t ]
-        for d in range(self.degree-1):
-            U.append(U[-1] * t)
+        C = self.coeffs * P        
+        U = [ t**d for d in range(0,self.degree+1) ]
         U = column_stack(U)
         X = dot(U,C)
         return X
@@ -851,21 +861,39 @@ class BezierSpline(Curve):
         """Return the unit direction vectors at values t in part j."""
         P = self.part(j)
         C = self.coeffs * P
-        U = [ zeros_like(t), ones_like(t) ]
-        for d in range(2,self.degree+1):
-            U.append(d*(t**(d-1)))
+        U = [ d*(t**(d-1)) if d >= 1 else zeros_like(t) for d in range(0,self.degree+1) ]
         U = column_stack(U)
         T = dot(U,C)
         T = normalize(T)
         return T
-    
+
+
+    def sub_curvature(self,t,j,scalar=True):
+        """Return the curvature at values t in part j.
+        
+        If scalar is False, the signed curvatures in the 3 coordinate
+        planes (YZ,XZ,XY) are returned.
+        If scalar is True, the 3D curvature is returned.
+        """
+        P = self.part(j)
+        C = self.coeffs * P
+        U1 = [ d*(t**(d-1)) if d >= 1 else zeros_like(t) for d in range(0,self.degree+1) ]
+        U1 = column_stack(U1)
+        T1 = dot(U1,C)
+        U2 = [ d*(d-1)*(t**(d-2)) if d >=2 else zeros_like(t) for d in range(0,self.degree+1) ]
+        U2 = column_stack(U2)
+        T2 = dot(U2,C)
+        K = cross(T1,T2)/length(T1)**3
+        if scalar:
+            K = length(K)
+        return K
+
+
     def length_intgrnd(self,t,j):
         """Return the arc length integrand at value t in part j."""
         P = self.part(j)
         C = self.coeffs * P
-        U = [ 0., 1. ]
-        for d in range(2,self.degree+1):
-            U.append(d*(t**(d-1)))
+        U = [ d*(t**(d-1)) if d >= 1 else 0. for d in range(0,self.degree+1) ]
         U = array(U)
         T = dot(U,C)
         T = array(T).reshape(3)
@@ -974,11 +1002,6 @@ Most likely because 'python-scipy' is not installed on your system.""")
         """Return the same curve with the parameter direction reversed."""
         control = reverseAxis(self.coords,axis=0)
         return BezierSpline(control=control,closed=self.closed,degree=self.degree)
-
-
-    @deprecation("sub_tangents is deprecated: use sub_directions instead.")
-    def sub_tangents(self,*args,**kargs):
-        return self.sub_directions(*args,**kargs)
 
 
 ##############################################################################
