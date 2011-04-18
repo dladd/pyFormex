@@ -85,7 +85,7 @@ class TranslatedActor(Actor):
     """An Actor translated to another position."""
 
     def __init__(self,A,trl=(0.,0.,0.),**kargs):
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.actor = A
         self.trans = A.trans
         self.trl = asarray(trl)
@@ -117,7 +117,7 @@ class RotatedActor(Actor):
         If rot is an array with shape (4,4), the rotation is specified
         by the direction of the local 0, 1 and 2 axes of the actor.
         """
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.actor = A
         self.trans = A.trans
         if shape(rot) == (3,):
@@ -145,7 +145,7 @@ class CubeActor(Actor):
     """An OpenGL actor with cubic shape and 6 colored sides."""
 
     def __init__(self,size=1.0,color=[red,cyan,green,magenta,blue,yellow],**kargs):
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.size = size
         self.color = color
 
@@ -178,7 +178,7 @@ class BboxActor(Actor):
     """Draws a bbox."""
 
     def __init__(self,bbox,color=None,linewidth=None,**kargs):
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.color = color
         self.linewidth = linewidth
         self.bb = bbox
@@ -214,7 +214,7 @@ class AxesActor(Actor):
     """
 
     def __init__(self,cs=None,size=1.0,color=[red,green,blue],colored_axes=True,draw_planes=False,**kargs):
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         if cs is None:
             cs = CoordinateSystem()
         self.cs = cs    
@@ -259,7 +259,7 @@ class TriadeActor(Actor):
     """
 
     def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue],colored_axes=True,draw_planes=True,**kargs):
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.color = color
         self.setPos(pos)
         self.setSize(size)
@@ -316,7 +316,7 @@ class GridActor(Actor):
     """Draws a (set of) grid(s) in one of the coordinate planes."""
 
     def __init__(self,nx=(1,1,1),ox=(0.0,0.0,0.0),dx=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.2,lines=True,planes=True,**kargs):
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.linecolor = saneColor(linecolor)
         self.planecolor = saneColor(planecolor)
         self.linewidth = linewidth
@@ -349,7 +349,7 @@ class CoordPlaneActor(Actor):
     """Draws a set of 3 coordinate planes."""
 
     def __init__(self,nx=(1,1,1),ox=(0.0,0.0,0.0),dx=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True,**kargs):
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.linecolor = saneColor(linecolor)
         self.planecolor = saneColor(planecolor)
         self.linewidth = linewidth
@@ -387,7 +387,7 @@ class PlaneActor(Actor):
 
     def __init__(self,nx=(2,2,2),ox=(0.,0.,0.),size=((0.0,1.0,1.0),(0.0,1.0,1.0)),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True,**kargs):
         """A plane perpendicular to the x-axis at the origin."""
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.linecolor = saneColor(linecolor)
         self.planecolor = saneColor(planecolor)
         self.linewidth = linewidth
@@ -761,7 +761,7 @@ class NurbsActor(Actor):
 
     def __init__(self,data,color=None,**kargs):
         from gui.drawable import saneColor
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.object = data
         self.color = saneColor(color)
         self.samplingTolerance = 5.0
@@ -779,7 +779,7 @@ class NurbsSurfActor(Actor):
 
     def __init__(self,data,color=None,**kargs):
         from gui.drawable import saneColor
-        Actor.__init__(self)
+        Actor.__init__(self,**kargs)
         self.object = data
         self.color = saneColor(color)
         self.samplingTolerance = 50.0
