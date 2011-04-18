@@ -16,14 +16,14 @@ Operations on surface meshes
 Approximating geometry
 ----------------------
 
-An artery with a kink
-was imported as a triangulated surface, reconstructed from medical CT
-scan images. The arterial wall surface was then approximated by a
+A 3D model of a kinked artery was reconstructed from medical CT
+scan images and imported into pyFormex as a triangulated surface. 
+The arterial wall surface was then approximated by a
 sequence of circles with varying diameters and non collinear center
 points. The figure below shows part of the triangulated surface
 (yellow), a subset of the approximating circles (blue) and the line
 connecting the centers of the circles (red). The view is taken from
-inside the artery. Click on the image for a larger view.
+inside the artery.
 
 .. image:: ../images/tata-0114.jpg
    :align: center

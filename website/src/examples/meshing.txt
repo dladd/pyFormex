@@ -1,0 +1,26 @@
+.. This may look like plain text, but is really -*- rst -*-
+.. $Id$
+
+restindex	
+    crumb: Meshing
+    format: rest
+    page-title: Create Meshes
+    encoding: utf-8
+    output-encoding: None
+    initialheaderlevel: 2
+/restindex
+
+Creating meshes
+===============
+
+Hexahedral meshing
+------------------
+
+This image shows a hexahedral mesh of an arterial bifurcation.
+The script to create such meshes is not yet in the public part of
+pyFormex. 
+
+.. image:: ../images/hexmesh.png
+   :align: center
+
+.. End

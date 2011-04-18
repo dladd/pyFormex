@@ -2,11 +2,11 @@
 #
 
 HOMEPARTS= home_header.inc home_footer.inc
-HTDOCS= developer.html documentation.html install.html links.html screenshots.html usermeeting.html support.html pyformexinuse.html $(HOMEPARTS) pyformex.css favicon.ico
-EXAMPLES= examples/*.html
-IMAGES= images/*.png images/*.gif images/*.jpg
-SCRIPTS= scripts/*.py
-RSYNC= rsync -av -e ssh --delete
+HTDOCS= documentation.html install.html links.html screenshots.html support.html pyformexinuse.html $(HOMEPARTS) pyformex.css favicon.ico
+EXAMPLES= examples/
+IMAGES= images/
+SCRIPTS= scripts/
+RSYNC= rsync -av -e ssh --delete --exclude .svn
 
 SERVER= shell.berlios.de
 TARGETDIR= ${SERVER}:/home/groups/pyformex/htdocs

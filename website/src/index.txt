@@ -4,7 +4,7 @@ restindex
     crumb: Site Index
     format: rest
     page-title: pyFormex Site Index
-    section-pages: ,pyformex,documentation,screenshots,examples/index,pyformexinuse,install,support,usermeeting,links
+    section-pages: ,pyformex,documentation,screenshots,examples/index,pyformexinuse,install,support,links
     encoding: utf-8
     output-encoding: None
 /restindex
