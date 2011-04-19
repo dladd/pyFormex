@@ -1551,7 +1551,7 @@ class CoordinateSystem(Coords):
     the origin itself as fourth point.
 
     The constructor takes a (4,3) array as input. The default constructs
-    the standard global Cartesian axes system::
+    the standard global Cartesian axes system:
 
       1.  0.  0.
       0.  1.  0.
@@ -1564,8 +1564,19 @@ class CoordinateSystem(Coords):
             coords = eye(4,3)
         else:
             coords = checkArray(coords,(4,3),'f','i')
-        return Coords(coords)
-        
+        coords = Coords.__new__(clas,coords)
+        return coords
+
+
+    def origin(self):
+        """Return the origin of the CoordinateSystem."""
+        return self[3]
+
+
+    def axes(self):
+        """Return the axes of the CoordinateSystem."""
+        return self[:3]-self[3]
+
 
 # Creating special coordinate sets
 
