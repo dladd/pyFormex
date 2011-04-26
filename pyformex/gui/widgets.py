@@ -2756,7 +2756,7 @@ class ImageView(QtGui.QLabel):
     
     def __init__(self,image=None,maxheight=None,parent=None):
         """Create a new ImageView widget."""
-        QtGui.QLabel.__init__(self,parent=parent)
+        QtGui.QLabel.__init__(self,parent)
         self.setBackgroundRole(QtGui.QPalette.Base)
         self.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
         if maxheight:
