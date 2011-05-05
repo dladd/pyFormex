@@ -1026,10 +1026,10 @@ class InputWidget(InputItem):
         """Return the displayed text."""
         return ''
 
-    def value(self):
-        """Return the widget's value."""
-        self.item.acceptData()
-        return self.results
+    ## def value(self):
+    ##     """Return the widget's value."""
+    ##     self.item.acceptData()
+    ##     return self.results
 
     def setValue(self,val):
         """Change the widget's value."""
@@ -1209,6 +1209,8 @@ QtGui.QTabWidget.enableItem = enableItem
 ## QtGui.QTabWidget.disable = disableGroup
 
 
+default_dialog_flags = QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.CustomizeWindowHint
+
 class InputDialog(QtGui.QDialog):
     """A dialog widget to interactively set the value of one or more items.
 
@@ -1269,15 +1271,24 @@ class InputDialog(QtGui.QDialog):
       target field/group/tab.
           
     """
-    
     def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[]):
         """Create a dialog asking the user for the value of items."""
         if parent is None:
             parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
-        #self.setMaximumSize(*maxSize())
-        if flags is not None:
-            self.setWindowFlags(flags)
+
+        
+        print "MAXIMUM SIZE %d,%d" % pf.maxsize
+        self.setMaximumHeight(pf.maxsize[1])
+        #self.resize(*pf.maxsize)
+        #self.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)        
+        #print "%x" % self.windowFlags()
+        ## if flags is not None:
+        ##     print "%x" % flags
+        ##     flags |= self.windowFlags()
+        ##     print "%x" % flags
+        ##     self.setWindowFlags(flags)
+        
         if caption is None:
             caption = 'pyFormex-dialog'
         else:
@@ -1513,6 +1524,10 @@ class InputDialog(QtGui.QDialog):
         if not modal:
             #print "DELETE ON CLOSE"
             self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+
+        #self.adjustSize()
+        self.setMaximumHeight(1000)
+        print self.maximumHeight()
         QtGui.QDialog.show(self)
 
         addTimeOut(self,timeout,timeoutfunc)

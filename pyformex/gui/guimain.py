@@ -70,6 +70,14 @@ def Pos(widget):
     p = widget.pos()
     return p.x(),p.y()
 
+def MaxSize(*args):
+    """Return the maximum of a list of sizes"""
+    return max([i[0] for i in args]),max([i[1] for i in args])
+
+def MinSize(*args):
+    """Return the maximum of a list of sizes"""
+    return min([i[0] for i in args]),min([i[1] for i in args])
+
 def printpos(w,t=None):
     print("%s %s x %s" % (t,w.x(),w.y()))
 def printsize(w,t=None):
@@ -287,6 +295,8 @@ class Gui(QtGui.QMainWindow):
         self.materials = canvas.createMaterials()
         ## for m in self.materials:
         ##     print self.materials[m]
+
+          
 
 
     def createView(self,name,angles):
@@ -937,6 +947,12 @@ You should seriously consider to bail out now!!!
     # create GUI, show it, run it
 
     pf.debug("Creating the GUI")
+    desktop = pf.app.desktop()
+    pf.maxsize = Size(desktop.availableGeometry())
+    size = pf.cfg.get('gui/size',(800,600))
+    pos = pf.cfg.get('gui/pos',(0,0))
+    bdsize = pf.cfg.get('gui/bdsize',(800,600))
+    size = MinSize(size,pf.maxsize)
     pf.GUI = Gui(windowname,
                  pf.cfg.get('gui/size',(800,600)),
                  pf.cfg.get('gui/pos',(0,0)),

@@ -477,26 +477,47 @@ def Shape(a):
 
 
 # CANDIDATE FOR C LIBRARY
-def average_close(a,tol=0.5):
-    """Average values from an array according to some specification.
+def averageDirection(a,tol=0.5):
+    """Averages vectors that have almost the same direction.
 
+    a is a 2-dim array where rows are normalized directions.
+    All vectors that have nearly the same direction are replaced by the
+    average of these.
+
+    tol is a value specifying how close the directions should be in order
+    to be averaged. A vector b is considered to be the same direction as a
+    if its projection on a is longer than the tolerance value. The default
     The default is to have a direction that is nearly the same.
     a is a 2-dim array
+
+    This changes a inplace!
     """
     if a.ndim != 2:
         raise ValueError,"array should be 2-dimensional!"
-    n = normalize(a)
     nrow = a.shape[0]
     cnt = zeros(nrow,dtype=int32)
     while cnt.min() == 0:
+        # select unhandled vectors
         w = where(cnt==0)
-        nw = n[w]
+        nw = a[w]
+        # find all those with direction close to the first
         wok = where(dotpr(nw[0],nw) >= tol)
         wi = w[0][wok[0]]
+        # replace each with the sum and remember how many we have
         cnt[wi] = len(wi)
         a[wi] = a[wi].sum(axis=0)
-    return a,cnt
 
+    # divide by the sum to get average
+    a /= cnt.reshape(-1,1)
+
+    return a
+
+
+def averageDirectionsOneNode(d,wi,tol):
+    k = d[wi]
+    misc.averageDirection(k,tol)
+    d[wi] = k
+    
 
 # CANDIDATE FOR C LIBRARY
 def nodalSum2(val,elems,tol):
@@ -511,13 +532,21 @@ def nodalSum2(val,elems,tol):
     cnt
     On return each value is replaced with the sum of values at that node.
     """
+    print "!!!!nodalSum2!!!!"
+    val[:] = normalize(val)
+    import timer
+    from pyformex.lib import misc
+    t = timer.Timer()
     nodes = unique(elems)
-    for i in nodes:
-        wi = where(elems==i)
-        vi = val[wi]
-        ai,ni = average_close(vi,tol=tol)
-        ai /= ni.reshape(ai.shape[0],-1)
-        val[wi] = ai
+    t.reset()
+    [ averageDirectionsOneNode(val,where(elems==i),tol) for i in nodes ]
+    ## for i in nodes:
+    ##     wi = where(elems==i)
+    ##     k = val[wi]
+    ##     #averageDirection(k,tol)
+    ##     misc.averageDirection(k,tol)
+    ##     val[wi] = k
+    print "TIME %s \n" % t.seconds()
 
 
 def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
@@ -542,19 +571,18 @@ def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
         val.reshape(val.shape+(1,))
     if elems.shape != val.shape[:2]:
         raise RuntimeError,"shape of val and elems does not match"
-    work = zeros((elems.max()+1,val.shape[2]))
     if pf.options.safelib:
         val = val.astype(float32)
         elems = elems.astype(int32)
-        work = work.astype(float32)
     if val.shape[2] > 1 and direction_treshold is not None:
-        nodalSum2(val,elems,direction_treshold)
+        #nodalSum2(val,elems,direction_treshold)
+        print "NEW NODALSUM"
+        val = misc.nodalSum(val,elems,elems.max(),avg,return_all)
     else:
-        misc.nodalSum(val,elems,work,avg)
-    if return_all:
-        return val
-    else:
-        return work
+        print "NEW NODALSUM"
+        val = misc.nodalSum(val,elems,elems.max(),avg,return_all)
+    print val.shape
+    return val
 
 
 def interpolateNormals(coords,elems,atNodes=False,treshold=None):
@@ -861,7 +889,7 @@ class Drawable(object):
       creating a new display list.
     """
     
-    def __init__(self,nolight=False,ontop=False):
+    def __init__(self,nolight=False,ontop=False,**kargs):
         self.list = None
         self.trans = False
         self.nolight = nolight

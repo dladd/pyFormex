@@ -34,7 +34,7 @@ Screenshots
   some cross section are shown which have been created with pyFormex.
 - `Fluid simulations`_: pyFormex can also be used to create grids for
   Computational Fluid Dynamics (CFD). Again, many parameters can
-  easily be modified (anlge of intersection, number of boundary
+  easily be modified (angle of intersection, number of boundary
   layers,...).
 - `Slicing operation`_: In this example pyFormex was used to slice a
   surface model of a Horse. From left to right and top to bottom: the
@@ -46,3 +46,13 @@ Screenshots
 Some other screenshots can be found `here`_ on the developer pages. 
 
 .. _`here`: http://developer.berlios.de/screenshots/?group_id=2717
+
+And here we have some images of pyFormex running on ARM-based hardware:
+
+- `efika_smartbook`_: A Genesi Efika MX Smartbook running pyFormex.
+- `efika_screenshot`_: Screenshot of the Genesi Efika running pyFormex
+  under Ubuntu 10.10.
+
+.. _`efika_smartbook`: http://pyformex.berlios.de/images/efika_smartbook.jpg
+.. _`efika_screenshot`: http://pyformex.berlios.de/images/efika_screenshot.png
+

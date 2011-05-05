@@ -246,6 +246,10 @@ class Mesh(Geometry):
     def shape(self):
         return self.elems.shape
 
+    def info(self):
+        return "coords" + str(self.coords.shape) + "; elems" + str(self.elems.shape)
+    
+
     def nedges(self):
         """Return the number of edges.
 

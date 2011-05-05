@@ -86,7 +86,7 @@ if __name__ == 'draw':  # allows loading this file as a module
 
     res = askItems([
         I('filename',filename,text='Image file',itemtype='button',func=selectImage),
-        viewer,  # the image previewing widget
+        I('viewer',viewer,itemtype='widget'),  # the image previewing widget
         I('nx',w,text='width'),
         I('ny',h,text='height'),
         I('transform',itemtype='vradio',choices=transforms.keys()),

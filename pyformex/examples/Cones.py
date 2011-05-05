@@ -92,10 +92,10 @@ def cone1(r0,r1,h,t=360.,nr=1,nt=24,diag=None):
     #draw(p)
     q = p.rotate(t/nt,axis=1)
     #draw(q,color=green)
-    if diag == 'up':
+    if diag == 'u':
         F = connect([p,p,q],bias=[0,1,1]) + \
             connect([p,q,q],bias=[1,2,1])
-    elif diag == 'down':
+    elif diag == 'd':
         F = connect([q,p,q],bias=[0,1,1]) + \
             connect([p,p,q],bias=[1,2,1])
     else:
@@ -125,7 +125,6 @@ dialog = widgets.InputDialog(items)
 
 
 while not dialog.result() == widgets.TIMEOUT:
-    dialog.show()
     res = dialog.getResult()
     if not res:
         break

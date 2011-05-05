@@ -609,40 +609,42 @@ Output:
 
 Modified algorithm A3.5 from 'The NURBS Book' pg103.
 */
-static void surfacePoints(double *P, int ns, int nt, int nd, double *U, int nU, double *V, int nV, double *u, int nu, double *pnt)
-{
-  int i, j, p, q, su, sv, iu, iv, t;
+/* static void surfacePoints(double *P, int ns, int nt, int nd, double *U, int nU, double *V, int nV, double *u, int nu, double *pnt) */
+/* { */
+/*   int i, j, l, p, q, su, sv, iu, iv, t; */
+/*   double S, temp; */
   
-  /* degrees of the spline */
-  p = nU - ns - 1;
-  q = nV - nt - 1;
+/*   /\* degrees of the spline *\/ */
+/*   p = nU - ns - 1; */
+/*   q = nV - nt - 1; */
 
-  /* space for the basis functions */
-  double *Nu = (double*) malloc((p+1)*sizeof(double));
-  double *Nv = (double*) malloc((q+1)*sizeof(double));
+/*   /\* space for the basis functions *\/ */
+/*   double *Nu = (double*) malloc((p+1)*sizeof(double)); */
+/*   double *Nv = (double*) malloc((q+1)*sizeof(double)); */
 
-  /* for each parametric point j */
-  for (j = 0; j < nu; j++) {
+/*   /\* for each parametric point j *\/ */
+/*   for (j = 0; j < nu; j++) { */
 
-    /* find the span index of u[j] */
-    su = findSpan(U,u[2*j],p,ns-1);
-    basisFuns(U,u[2*j],p,su,Nu);
+/*     /\* find the span index of u[j] *\/ */
+/*     su = findSpan(U,u[2*j],p,ns-1); */
+/*     basisFuns(U,u[2*j],p,su,Nu); */
 
-    /* find the span index of v[j] */
-    sv = findSpan(V,u[2*j+1],q,nt-1);
-    basisFuns(V,u[2*j+1],q,sv,Nv);
+/*     /\* find the span index of v[j] *\/ */
+/*     sv = findSpan(V,u[2*j+1],q,nt-1); */
+/*     basisFuns(V,u[2*j+1],q,sv,Nv); */
 
-    for (i = 0; i < nd; i++) {
-      iu = (su-p) * nd;
-      S = 0.0;
-      for (l = 0; l <= q; l++) {
+/*     for (i = 0; i < nd; i++) { */
+/*       iu = (su-p) * nd; */
+/*       S = 0.0; */
+/*       for (l = 0; l <= q; l++) { */
 	
-	temp = 0.0
-      pnt[j*nd+i] = dotprod(N,1,P+t+i,nd,p+1);
-    }
-  }
-  free(N);
-} 
+/* 	temp = 0.0; */
+/* 	//pnt[j*nd+i] = dotprod(N,1,P+t+i,nd,p+1); */
+/*     } */
+/*   } */
+/*   free(Nu); */
+/*   free(Nv); */
+/* }  */
 
 
 

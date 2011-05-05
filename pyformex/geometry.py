@@ -182,7 +182,7 @@ class Geometry(object):
     def bsphere(self):
         return self.coords.bsphere()
 
-    def dataReport(self):
+    def info(self):
         return "coords" + str(self.coords.shape)
 
     def distanceFromPlane(self,*args,**kargs):

@@ -71,8 +71,11 @@ def command():
 
 ##################### database tools ##########################
 
-database = pf.GUI.database
-drawable = pf.GUI.drawable
+def _init_():
+    global database,drawable
+    database = pf.GUI.database
+    #drawable = pf.GUI.drawable
+    drawable = pf.GUI.selection['geometry']
 
 
 def printall():
@@ -293,6 +296,7 @@ def query(mode):
 def pick_actors():
     set_selection('actor')
 def pick_elements():
+    print drawable.names
     set_selection('element')
 def pick_points():
     set_selection('point')
@@ -368,28 +372,25 @@ def setpropCollection(K,prop):
             
     elif K.obj_type in ['element','point']:
         for k in K.keys():
-            o = pf.canvas.actors[k].object
+            a = pf.canvas.actors[k]
+            o = a.object
             print "SETPROP ACTOR %s" % type(o)
             n =  drawable.names[k]
             print "SETPROP DRAWABLE %s" % n
             O = named(n)
-            if O is not None:
-                print "ALSO SETTING OBJECT PROPERTIES to %s" % prop
+            print 'From actor: %s' % id(o)
+            print 'From name: %s' % id(O)
+            if id(o) != id(O):
+                raise RuntimeError,"The id of the drawn object does not match the selection"
             if prop is None:
                 o.setProp(prop)
-                if O:
-                    print id(o),id(O)
-                    O.setProp(prop)
             elif hasattr(o,'setProp'):
                 if not hasattr(o,'prop') or o.prop is None:
                     o.setProp(0)
-                print("PROP %s ?= %s" % (o.prop,O.prop))
                 o.prop[K[k]] = prop
-                o.setColor(o.prop)
-                o.redraw(mode=pf.canvas.rendermode)
-                if O and id(O.prop) != id(o.prop):
-                    O.setProp(o.prop)
-                print("PROP %s ?= %s" % (o.prop,O.prop))
+                o.setProp(o.prop)
+                a.setColor(o.prop)
+                a.redraw(mode=pf.canvas.rendermode)
 
 
 def setprop_selection():
@@ -517,6 +518,7 @@ _menu = 'Tools'
 
 def create_menu():
     """Create the Tools menu."""
+    _init_()
     MenuData = [
         ('&Read Geometry File',readGeometry),
         ('&Write Geometry File',writeGeometry),

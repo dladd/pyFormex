@@ -44,8 +44,8 @@ draw(F,color=color3)
 
 
 
-for a in [ 'ambient', 'specular', 'emission', 'shininess' ]:
-    v = getattr(pf.canvas,a)
-    print "  %s: %s" % (a,v)
+#for a in [ 'ambient', 'specular', 'emission', 'shininess' ]:
+#    v = getattr(pf.canvas,a)
+#    print "  %s: %s" % (a,v)
 
 # End

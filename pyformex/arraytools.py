@@ -1295,5 +1295,54 @@ def vectorPairCosAngle(v1,v2):
 def vectorPairAngle(v1,v2):
     """Return the angle (in radians) between the vectors v1 and v2."""
     return arccos(vectorPairCosAngle(v1,v2))
+
+
+def histogram2(a,bins,range=None):
+    """Compute the histogram of a set of data.
+
+    This function is a like numpy's histogram function, but also returns
+    the bin index for each individual entry in the data set.
+
+    Parameters:
     
+    - `a`: array_like.
+      Input data. The histogram is computed over the flattened array.
+
+    - `bins`: int or sequence of scalars.
+      If bins is an int, it defines the number of equal-width bins
+      in the given range. If bins is a sequence, it defines the bin edges,
+      allowing for non-uniform bin widths. Both the leftmost and rightmost
+      edges are included, thus the number of bins is len(bins)-1.
+
+    - `range`: (float, float), optional. The lower and upper range of the bins.
+      If not provided, range is simply (a.min(), a.max()). Values outside the
+      range are ignored. This parameter is ignored if bins is a sequence.
+
+    Returns:
+
+    - `hist`: integer array with length nbins, holding the number of elements
+      in each bin,
+    - `ind`: a sequence of nbins integer arrays, each holding the indices of
+      the elements fitting in the respective bins,
+    - `xbins`: array of same type as data and with length nbins+1:
+      returns the bin edges.
+
+    Example:
+
+    >>> histogram2([1,2,3,4,2,3,1],[1,2,3,4,5])
+    (array([2, 2, 2, 1]), [array([0, 6]), array([1, 4]), array([2, 5]), array([3])], array([1, 2, 3, 4, 5]))
+
+    """
+    ar = asarray(a)
+    if type(bins) == int:
+        nbins = bins
+        xbins = linspace(a.min(),a.max(),nbins+1)
+    else:
+        xbins = asarray(bins)
+        nbins = len(xbins)-1
+    d = digitize(ar,xbins)
+    ind = [ where(d==i)[0] for i in arange(1,nbins+1) ]
+    hist = asarray([ i.size for i in ind ])
+    return hist,ind,xbins
+   
 # End

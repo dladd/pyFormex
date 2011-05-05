@@ -326,21 +326,21 @@ def exportOff():
 def printDataSize():
     for s in selection.names:
         S = named(s)
-        #try:
-        size = S.dataReport()
-        #except:
-        #    size = ''
+        try:
+            size = S.info()
+        except:
+            size = 'no info available'
         pf.message("* %s (%s): %s" % (s,S.__class__.__name__,size))
 
 
 ##################### conversion ##########################
 
 def toFormex(suffix=''):
-    """Transform the selection to Formices.
+    """Transform the selected Geometry objects to Formices.
 
     If a suffix is given, the Formices are stored with names equal to the
-    surface names plus the suffix, else, the surface names will be used
-    (and the surfaces will thus be cleared from memory).
+    object names plus the suffix, else, the original object names will be
+    reused.
     """
     if not selection.check():
         selection.ask()
@@ -348,49 +348,41 @@ def toFormex(suffix=''):
     if not selection.names:
         return
 
-    newnames = selection.names
+    names = selection.names
     if suffix:
-        newnames = [ n + suffix for n in newnames ]
+        names = [ n + suffix for n in names ]
 
-    newvalues = [ named(n).toFormex() for n in newnames ]
-    export2(newnames,newvalues)
+    values = [ named(n).toFormex() for n in names ]
+    export2(names,values)
 
-    if not suffix:
-        selection.clear()
-    formex_menu.selection.set(newnames)
     clear()
-    formex_menu.selection.draw()
+    selection.draw()
     
 
 def toMesh(suffix=''):
-    """Transform the Formex selection to TriSurfaces.
+    """Transform the selected Geometry objects to Meshes.
 
     If a suffix is given, the TriSurfaces are stored with names equal to the
     Formex names plus the suffix, else, the Formex names will be used
     (and the Formices will thus be cleared from memory).
     """
-    if not formex_menu.selection.check():
-        formex_menu.selection.ask()
+    if not selection.check():
+        selection.ask()
 
-    if not formex_menu.selection.names:
+    if not selection.names:
         return
 
-    names = formex_menu.selection.names
-    formices = [ named(n) for n in names ]
+    names = selection.names
+    objects = [ named(n) for n in names ]
     if suffix:
         names = [ n + suffix for n in names ]
 
-    #t = timer.Timer()
     print "CONVERTING %s" % names
-    meshes =  dict([ (n,F.toMesh()) for n,F in zip(names,formices) if F.nplex() == 3])
-    #print("Converted in %s seconds" % t.seconds())
+    meshes =  dict([ (n,o.toMesh()) for n,o in zip(names,objects) if hasattr(o,'toMesh')])
     print("Converted %s" % meshes.keys())
     export(meshes)
 
-    if not suffix:
-        formex_menu.selection.clear()
     selection.set(meshes.keys())
-    #print "Number of points before fusing: %s" % before
 
 ################### menu #################
  
@@ -426,7 +418,7 @@ def create_menu():
         ("---",None),
         ("Print &Information ",[
             ('&Bounding Box',selection.printbbox),
-            ('&Data Size',printDataSize),
+            ('&Type and Size',printDataSize),
             ]),
         ("Toggle &Annotations ",[
             ("&Names",selection.toggleNames,dict(checkable=True)),

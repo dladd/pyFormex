@@ -28,7 +28,7 @@ This module initializes the pyFormex global variables and
 defines a few essential functions.
 """
 __version__ = "0.8.4-a2"
-__revision__ = '1882M'
+__revision__ = '1901:1903M'
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2011 Benedict Verhegghe'
 Url = 'http://pyformex.org'
