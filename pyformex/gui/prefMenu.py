@@ -24,7 +24,7 @@
 """Functions for the Pref menu."""
 
 import pyformex as pf
-from pyformex.main import savePreferences
+from main import savePreferences
 import os
 
 from gettext import gettext as _

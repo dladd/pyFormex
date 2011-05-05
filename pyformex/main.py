@@ -23,27 +23,42 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
+# This is the only pyFormex module that is imported from the main script,
+# so this is the place to put startup code
+
 import sys,os
-pyformexdir = sys.path[0]
-svnversion = os.path.exists(os.path.join(pyformexdir,'.svn'))
 startup_warnings = ''
 startup_messages = ''
 
+pyformexdir = sys.path[0]
+svnversion = os.path.exists(os.path.join(pyformexdir,'.svn'))
 if svnversion:
-    msg = ''
-    libdir = os.path.join(pyformexdir,'lib')
-    libraries = [ 'misc_','nurbs_','drawgl_' ]
-    for lib in libraries:
-        src = os.path.join(libdir,lib+'module.c')
-        obj = os.path.join(libdir,lib+'module.so')
-        if not os.path.exists(obj) or os.path.getmtime(obj) < os.path.getmtime(src):
-            msg += "\nThe compiled library '%smodule' is not up to date!" % lib
+
+    def checkLibraries():
+        print "Checking pyFormex libraries"
+        msg = ''
+        libdir = os.path.join(pyformexdir,'lib')
+        libraries = [ 'misc_','nurbs_','drawgl_' ]
+        for lib in libraries:
+            src = os.path.join(libdir,lib+'module.c')
+            obj = os.path.join(libdir,lib+'module.so')
+            if not os.path.exists(obj) or os.path.getmtime(obj) < os.path.getmtime(src):
+                msg += "\nThe compiled library '%smodule' is not up to date!" % lib
+        return msg
+
+
+    msg = checkLibraries()
+    if msg:
+        print "Rebuilding pyFormex libraries, please wait"
+        cmd = "cd %s/lib;make" % pyformexdir
+        os.system(cmd)
+        msg = checkLibraries()
+    
     if msg:
         msg += """
         
-You should probably rebuild the pyFormex library first.
-Do 'make' in %s/lib
-Then restart pyformex.
+I had a problem rebuilding the libraries in %s/lib. 
+You should probably exit pyFormex, fix the problem first and then restart pyFormex.
 """ % pyformexdir
     startup_warnings += msg
 
@@ -523,7 +538,7 @@ pyFormex Warning
         warnings.formatwarning = _format_warning
     
 
-                
+
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if pyformex.options.gui:

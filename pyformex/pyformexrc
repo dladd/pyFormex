@@ -79,7 +79,7 @@ history = []
 history_max = 20
 
 splash = os.path.join(icondir,'pyformex-splash.png')
-plugins = ['formex_menu','tools_menu']
+plugins = ['geometry_menu']
 style = "Plastique"
 size=(800,600)
 bdsize=size

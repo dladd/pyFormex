@@ -155,31 +155,31 @@ def delete_all():
         forgetAll()
 
 
-def writeGeometry():
-    """Write geometry to file."""
-    drawable.ask()
-    if drawable.check():
-        filter = utils.fileDescription(['pgf','all'])
-        cur = pf.cfg['workdir']
-        fn = askNewFilename(cur=cur,filter=filter)
-        if fn:
-            if not fn.endswith('.pgf'):
-                fn.append('.pgf')
-            message("Writing geometry file %s" % fn)
-            drawable.writeToFile(fn)
+## def writeGeometry():
+##     """Write geometry to file."""
+##     drawable.ask()
+##     if drawable.check():
+##         filter = utils.fileDescription(['pgf','all'])
+##         cur = pf.cfg['workdir']
+##         fn = askNewFilename(cur=cur,filter=filter)
+##         if fn:
+##             if not fn.endswith('.pgf'):
+##                 fn.append('.pgf')
+##             message("Writing geometry file %s" % fn)
+##             drawable.writeToFile(fn)
 
 
-def readGeometry():
-    """Read geometry from file."""
-    filter = utils.fileDescription(['pgf','all'])
-    cur = pf.cfg['workdir']
-    fn = askFilename(cur=cur,filter=filter)
-    if fn:
-        message("Reading geometry file %s" % fn)
-        drawable.readFromFile(fn)
-        print drawable.names
-        drawable.draw()
-        zoomAll()
+## def readGeometry():
+##     """Read geometry from file."""
+##     filter = utils.fileDescription(['pgf','all'])
+##     cur = pf.cfg['workdir']
+##     fn = askFilename(cur=cur,filter=filter)
+##     if fn:
+##         message("Reading geometry file %s" % fn)
+##         drawable.readFromFile(fn)
+##         print drawable.names
+##         drawable.draw()
+##         zoomAll()
 
 
 def convertGeometry():
@@ -520,9 +520,8 @@ def create_menu():
     """Create the Tools menu."""
     _init_()
     MenuData = [
-        ('&Read Geometry File',readGeometry),
-        ('&Write Geometry File',writeGeometry),
-        ('&Convert Geometry File',convertGeometry),
+        ## ('&Read Geometry File',readGeometry),
+        ## ('&Write Geometry File',writeGeometry),
         ('-- Global Variables --',printall,dict(disabled=True)),
         ('  &List All',printall),
         ('  &Select',database.ask),
@@ -536,6 +535,7 @@ def create_menu():
         ('  &Delete',forget_),
         ('  &Delete All',delete_all),
         ("---",None),
+        ('&Convert pyFormex Geometry File',convertGeometry),
         ('&Execute pyFormex command',command),
         ("&DOS to Unix",dos2unix,dict(tooltip="Convert a text file from DOS to Unix line terminators")),
         ("&Unix to DOS",unix2dos),

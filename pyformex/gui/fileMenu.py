@@ -418,7 +418,6 @@ MenuData = [
     (_('E&xit'),draw.closeGui),
 ]
 
-
 #onExit(closeProject)
 
 # End

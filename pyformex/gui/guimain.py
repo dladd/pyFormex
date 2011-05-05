@@ -1066,14 +1066,20 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # Load configured plugins, ignore if not found
     plugins.loadConfiguredPlugins()
 
-    pf.GUI.setBusy(False)
+
+    # Last minute menu modifications can go here
+        
+
+
+    # cleanup
+    pf.GUI.setBusy(False)         # HERE
     pf.GUI.addStatusBarButtons()
 
-    # remove the splash window
     if splash is not None:
+        # remove the splash window
         splash.finish(pf.GUI)
 
-    pf.GUI.setBusy(False)
+    pf.GUI.setBusy(False)        # OR HERE
 
     pf.debug("Showing the GUI")
     pf.GUI.show()

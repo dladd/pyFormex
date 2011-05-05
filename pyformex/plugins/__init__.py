@@ -83,8 +83,8 @@ def find_plugin_menus():
     return [
         'geometry_menu',
         'formex_menu',
-        'surface_menu',
         'mesh_menu',
+        'surface_menu',
         'tools_menu',
         'draw2d_menu',
         'nurbs_menu',
