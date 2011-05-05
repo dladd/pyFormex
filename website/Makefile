@@ -29,9 +29,9 @@ pubtest: $(HOMEPARTS)
 	$(RSYNC) --exclude src . ${TARGETDIR} -n
 
 pub: $(HOMEPARTS)
-	$(RSYNC) $(HTDOCS) ${TARGETDIR}
-	$(RSYNC) $(EXAMPLES) ${TARGETDIR}/examples
+	#$(RSYNC) $(HTDOCS) ${TARGETDIR}
+	#$(RSYNC) $(EXAMPLES) ${TARGETDIR}/examples
 	$(RSYNC) $(IMAGES) ${TARGETDIR}/images
-	$(RSYNC) $(SCRIPTS) ${TARGETDIR}/scripts
+	#$(RSYNC) $(SCRIPTS) ${TARGETDIR}/scripts
 	# fix the front page
 	ssh ${SERVER} ./get_projhtml

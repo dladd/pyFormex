@@ -281,9 +281,9 @@ def area(C,nroll=0):
     appropriately.
     """
     print nroll
-    from plugins.section2d import planeSection
+    from plugins.section2d import PlaneSection
     F = C.toFormex().rollAxes(nroll)
-    S = planeSection(F)
+    S = PlaneSection(F)
     C = S.sectionChar()
     return C['A']
 

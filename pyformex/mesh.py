@@ -1086,6 +1086,16 @@ Size: %s
         return ML
 
 
+    def removeDegenerate(self,eltype=None):
+        """Remove the degenerate elements from a Mesh.
+
+        Returns a Mesh with all degenerate elements removed.
+        """
+        deg = self.elems.testDegenerate()
+        M0 = self.select(~deg,compact=False)
+        return M0
+
+
     def renumber(self,order='elems'):
         """Renumber the nodes of a Mesh in the specified order.
 

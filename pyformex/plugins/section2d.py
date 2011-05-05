@@ -34,9 +34,9 @@ See the Section2D example for an example of its use.
 from plugins import sectionize
 from numpy import *
 
-## We should probably turn this into a class planeSection
+## initalization should be with a closed PolyLine, after checking it is plane
 
-class planeSection(object):
+class PlaneSection(object):
     """A class describing a general 2D section.
 
     The 2D section is the area inside a closed curve in the (x,y) plane.
