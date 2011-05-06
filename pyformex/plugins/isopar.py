@@ -150,17 +150,18 @@ class Isopar(object):
 
         Returns a Coords array with same shape as X
         """
-        try:
-            X = Coords(X)
-        except:
-            raise ValueError,"Expected a Coords object as argument"
+        if not isinstance(X,Coords):
+            try:
+                X = Coords(X)
+            except:
+                raise ValueError,"Expected a Coords object as argument"
         
         ndim,atoms = Isopar.isodata[self.eltype]
         aa = evaluate(atoms,X.x().ravel(),X.y().ravel(),X.z().ravel())
-        xx = reshape(dot(aa,self.trf),X.shape)
+        xx = dot(aa,self.trf).reshape(X.shape)
         if ndim < 3:
             xx[...,ndim:] += X[...,ndim:]
-        return Coords(xx)
+        return X.__class__(xx)
 
 
 # End
