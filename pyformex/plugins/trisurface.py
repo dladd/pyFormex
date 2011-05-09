@@ -39,6 +39,7 @@ from connectivity import Connectivity,connectedLineElems,adjacencyArrays
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from gui.drawable import interpolateNormals
 from plugins.geomtools import projectionVOP,rotationAngle,facetDistance,edgeDistance,vertexDistance, triangleBoundingCircle
+from plugins.geomtools import intersectionPointsSWP
 from plugins import inertia
 
 import os,tempfile
@@ -1346,11 +1347,12 @@ Total area: %s; Enclosed volume: %s
         edg_1_do = (d_edg < 0.).sum(axis=1) == 1
         w = edg_1_up * edg_1_do
         ind = where(w)[0]
+
         # compute the intersection points
         if ind.size != 0:
             rev = inverseUniqueIndex(ind)
             M = Mesh(S.coords,edg[w])
-            x = M.toFormex().intersectionWithPlane(p,n).reshape(-1,3)
+            x = intersectionPointsSWP(M.toFormex().coords,p,n,return_all=True).reshape(-1,3)
         
         # For each triangle, compute the number of cutting edges
         cut = w[fac]
