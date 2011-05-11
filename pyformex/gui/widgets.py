@@ -1278,7 +1278,7 @@ class InputDialog(QtGui.QDialog):
         QtGui.QDialog.__init__(self,parent)
 
         
-        print "MAXIMUM SIZE %d,%d" % pf.maxsize
+        #print "MAXIMUM SIZE %d,%d" % pf.maxsize
         self.setMaximumHeight(pf.maxsize[1])
         #self.resize(*pf.maxsize)
         #self.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)        
@@ -1527,7 +1527,7 @@ class InputDialog(QtGui.QDialog):
 
         #self.adjustSize()
         self.setMaximumHeight(1000)
-        print self.maximumHeight()
+        #print self.maximumHeight()
         QtGui.QDialog.show(self)
 
         addTimeOut(self,timeout,timeoutfunc)

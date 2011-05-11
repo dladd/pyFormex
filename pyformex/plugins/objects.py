@@ -269,7 +269,7 @@ def draw_elem_numbers(n):
     return drawNumbers(named(n),color='blue')
 
 def draw_nodes(n):
-    """Draw the numbers of an object's nodes."""
+    """Draw the nodes of an object."""
     return draw(named(n).coords,nolight=True,wait=False)
 
 def draw_node_numbers(n):

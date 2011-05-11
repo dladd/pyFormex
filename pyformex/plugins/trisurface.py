@@ -792,10 +792,10 @@ class TriSurface(Mesh):
     def fillBorder(self,method='radial',merge=False):
         """Fill the border areas of a surface to make it closed.
 
-        If the surface has no border, it is returned unchanged.
-        Else, each singly connected part of the border which forms a
-        closed curve will be filled with triangles, thus effectively
-        creating a closed surface.
+        Returns a list of surfaces, each of which fills a singly connected
+        part of the border of the input surface. Adding these surfaces to
+        the original will create a closed surface.
+        If the surface is already closed, an empty list is returned.
 
         There are two methods, corresponding with the methods of
         the surfaceInsideBorder.

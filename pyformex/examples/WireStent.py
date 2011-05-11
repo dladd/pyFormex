@@ -94,9 +94,26 @@ class DoubleHelixStent:
         self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
         self.ny = ny
 
-    def all(self):
-        """Return the Formex with all bar elements."""
+    def getFormex(self):
+        """Return the Formex with all bar elements.
+
+        This includes the elements along all the wires, as well as the
+        connectors between the wires.
+        """
         return self.F
+
+    def getWireAxes(self):
+        """Return the wire axes as curves.
+
+        The return value is two lists of curves (PolyLines), representing the
+        individual wire axes for each wire direction.
+        """
+        import connectivity
+        M = self.F.toMesh()
+        ML = [ M.withProp(i) for i in [1,3] ]
+        wires = [ connectivity.connectedLineElems(Mi.elems) for Mi in ML ]
+        wireaxes = [ [ Formex(M.coords[wi]).toCurve() for wi in wiresi ] for wiresi in wires ]
+        return wireaxes
 
 
 if __name__ == "draw":
@@ -107,11 +124,12 @@ if __name__ == "draw":
     reset()
 
     res = askItems([
-        ('L',80.,'',{'text':'Length of the stent'}),
-        ('D',10.,'',{'text':'Diameter of the stent'}),
-        ('n',12 ,'',{'text':'Total number of wires'}),
-        ('b',30.,'',{'text':'Pitch angle of the wires'}),
-        ('d',0.2,'',{'text':'Diameter of the wires'}),
+        _I('L',80.,text='Length of the stent'),
+        _I('D',10.,text='Diameter of the stent'),
+        _I('n',12 ,text='Total number of wires'),
+        _I('b',30.,text='Pitch angle of the wires'),
+        _I('d',0.2,text='Diameter of the wires'),
+        _I('show',itemtype='radio',choices=['Formex','Curves']),
         ])
 
     if not res:
@@ -121,11 +139,17 @@ if __name__ == "draw":
     if (n % 2) != 0:
         warning('Number of wires must be even!')
         exit()
-
-    H = DoubleHelixStent(D,L,d,n,b).all()
+    
+    H = DoubleHelixStent(D,L,d,n,b)
     clear()
-    draw(H,view='iso')
+    
+    if show=='Formex':
+        draw(H.getFormex(),view='iso')
 
+    else:
+        view('iso')
+        for w,c in zip(H.getWireAxes(),['black','magenta']):
+            draw(w,color=c)
 
 
 #End

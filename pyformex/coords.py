@@ -61,7 +61,7 @@ def bbox(objects):
       A Coords object with two points: the first contains the minimal
       coordinate values, the second has the maximal ones. 
 
-    Example::
+    Example:
     
       >>> from formex import *
       >>> bbox([Coords([-1.,1.,0.]),Formex(pattern('5'))])
@@ -255,7 +255,7 @@ class Coords(ndarray):
           A Coords object with shape(2,3): the first point contains the
           minimal coordinates, the second has the maximal ones. 
 
-        Example::
+        Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).bbox()
           [[ 0.  0.  0.]
@@ -276,7 +276,7 @@ class Coords(ndarray):
         The center of a :class:`Coords` is the center of its bbox().
         The return value is a (3,) shaped :class:`Coords` object.
         
-        Example::
+        Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).center()
           [ 1.5  1.5  0. ]
@@ -294,7 +294,7 @@ class Coords(ndarray):
         are the mean values of all points.
         The return value is a (3,) shaped :class:`Coords` object.
         
-        Example::
+        Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).centroid()
           [ 1.  1.  0.]
@@ -313,7 +313,7 @@ class Coords(ndarray):
 
         Return an array with the length of the bbox along the 3 axes.
         
-        Example::
+        Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).sizes()
           [ 3.  3.  0.]
@@ -328,7 +328,7 @@ class Coords(ndarray):
 
         This estimate is the length of the diagonal of the bbox().
         
-        Example::
+        Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).dsize()
           4.24264
@@ -345,7 +345,7 @@ class Coords(ndarray):
         center() of the :class:`Coords`, and such that no points of the
         :class:`Coords` are lying outside the sphere.
         
-        Example::
+        Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).bsphere()
           2.12132
@@ -367,7 +367,7 @@ class Coords(ndarray):
         Distance values are positive if the point is on the side of the
         plane indicated by the positive normal.
         
-        Example::
+        Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).distanceFromPlane([0.,0.,0.],[1.,0.,0.])
           [[ 0.  3.  0.]]
@@ -391,7 +391,7 @@ class Coords(ndarray):
         each point to the line through p with direction n.
         All distance values are positive or zero.
 
-        Example::
+        Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).distanceFromLine([0.,0.,0.],[1.,0.,0.])
           [[ 0.  0.  3.]]
@@ -412,7 +412,7 @@ class Coords(ndarray):
         The return value is a [...] shaped array with the distance of
         each point to point p.
         All distance values are positive or zero.
-        Example::
+        Example:
 
           >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).distanceFromPoint([0.,0.,0.])
           [[ 0.  3.  3.]]
@@ -578,7 +578,7 @@ class Coords(ndarray):
         to specify the direction(s) to scale. The default is to produce a
         homothetic scaling.
 
-        Example::
+        Example:
 
           >>> print Coords([1.,1.,1.]).scale(2)
           [ 2.  2.  2.]
@@ -613,7 +613,7 @@ class Coords(ndarray):
         If a distance value is given, the translation vector is multiplied
         with this value before it is added to the coordinates.
 
-        Example::
+        Example:
 
           >>> x = Coords([1.,1.,1.])
           >>> print x.translate(1)
@@ -1031,7 +1031,7 @@ class Coords(ndarray):
         numpy module.
         This method is one of several mapping methods. See also map1 and mapd.
 
-        Example::
+        Example:
 
           >>> print Coords([[1.,1.,1.]]).map(lambda x,y,z: [2*x,3*y,4*z])
           [[ 2.  3.  4.]]
@@ -1077,7 +1077,7 @@ class Coords(ndarray):
         This method is one of several mapping methods. See also
         :meth:`map3` and :meth:`map1`.
         
-        Example::
+        Example:
         
           E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])
 

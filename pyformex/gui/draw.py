@@ -666,7 +666,7 @@ def drawPlane(P,N,size):
     return draw(p,bbox='last')
 
 
-def drawMarks(X,M,color='black',leader=''):
+def drawMarks(X,M,color='black',leader='',ontop=True):
     """Draw a list of marks at points X.
 
     X is a Coords array.
@@ -674,7 +674,11 @@ def drawMarks(X,M,color='black',leader=''):
     The string representation of the marks are drawn at the corresponding
     3D coordinate.
     """
-    M = marks.MarkList(X,M,color=color,leader=leader)
+    _large_ = 20000
+    if len(M) > _large_:
+        if not ack("You are trying to draw marks at %s points. This may take a long time, and the results will most likely not be readible anyway. If you insist on drawing these marks, anwer YES." % len(M)):
+            return None
+    M = marks.MarkList(X,M,color=color,leader=leader,ontop=ontop)
     pf.canvas.addAnnotation(M)
     pf.canvas.numbers = M
     pf.canvas.update()
