@@ -259,7 +259,7 @@ def drawQuadraticCurves(x,color=None):
     drawNurbsCurves(xx,knots,color=color)
 
 
-def drawNurbsSurfaces(x,sknots,tknots,color=None,samplingTolerance=50.0):
+def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingTolerance=50.0):
     """Draw a collection of Nurbs surfaces.
 
     x: (ns,nt,ndim) or (nsurf,ns,nt,ndim) float array:
@@ -284,6 +284,10 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,samplingTolerance=50.0):
 
     If color is given it is an (nsurf,3) array of RGB values.
     """
+    if normals == 'auto':
+        GL.glEnable(GL.GL_AUTO_NORMAL)
+    else:
+        GL.glDisable(GL.GL_AUTO_NORMAL)
     nurb = GLU.gluNewNurbsRenderer()
     if not nurb:
         raise RuntimeError,"Could not create a new NURBS renderer"

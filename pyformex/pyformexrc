@@ -178,8 +178,11 @@ lighting = None  # smooth modes will switch it on
 lightmodel = 'ambient and diffuse' # currently only model supported
 ambient = 0.2     # does this really do anything?
 material = 'default' # the name of a material defined above
-lights= ['light0','light1'] # a list of enabled lights
+lights = ['light0','light1'] # a list of enabled lights
 avgnormaltreshold = 0.5
+quadline = True # if False, quadratic lines are shown as linear
+quadsurf = False # if False, quadratic surfaces are shown as linear
+volume = True # if False, volumes are shown as their border surface
 
 
 [help]

@@ -790,6 +790,7 @@ class NurbsSurfActor(Actor):
 
         
     def drawGL(self,**kargs):
-        drawNurbsSurfaces(self.object.coords,self.object.sknots,self.object.tknots,color=self.color,samplingTolerance=self.samplingTolerance)
+        drawNurbsSurfaces(self.object.coords,self.object.sknots,self.object.tknots,color=self.color,normals='auto',samplingTolerance=self.samplingTolerance)
+
 
 # End
