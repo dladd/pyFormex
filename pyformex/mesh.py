@@ -31,7 +31,7 @@ It also contains some useful functions to create such models.
 
 from formex import *
 from connectivity import Connectivity
-from elements import elementType
+from elements import elementType,elementName
 from utils import deprecation
 from geometry import Geometry
 from simple import regularGrid
@@ -943,8 +943,8 @@ Size: %s
         
         If the requested conversion is not implemented, an error is raised.
         """
-        
-        if totype == self.eltype.name():
+
+        if elementName(totype) == self.eltype.name():
             return self
 
         strategy = self.eltype.conversions.get(totype,None)
@@ -1518,31 +1518,51 @@ def mergeMeshes(meshes,fuse=True,**kargs):
     return coords,[Connectivity(i[e]) for i,e in zip(index,elems)]
 
 
-def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
+def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
     """Connect two meshes to form a hypermesh.
-    
-    mesh1 and mesh2 are two meshes with same topology (shape). 
-    The two meshes are connected by a higher order mesh with n
-    elements in the direction between the two meshes.
+
+    Parameters:
+
+    - `mesh1`, `mesh2`: Mesh objects with the same element type and shape
+      (number of elements and plexitude).
+      The two Meshes usually also have the same topology.
+      Both Meshes are connected to form a hypermesh. The plexitude of the
+      new Mesh is two times that of the original Meshes.
+    - `div`: Either an integer, or a sequence of numbers (usually between 0.0
+      and 1.0). This parameter has the same meaning as in `Coords.interpolate`.
+      number of
+      elements in the direction between the two Meshes is determined by . 
     n1 and n2 are node selection indices permitting a permutation of the
     nodes of the base sets in their appearance in the hypermesh.
     This can e.g. be used to achieve circular numbering of the hypermesh.
     """
+    import warnings
+    warnings.warn("Beware, connectMesh is currently under revision and may be broken!")
     # For compatibility, allow meshes to be specified as tuples
     if type(mesh1) is tuple:
         mesh1 = Mesh(mesh1)
     if type(mesh2) is tuple:
         mesh2 = Mesh(mesh2)
 
-    if mesh1.shape() != mesh2.shape():
+    if mesh1.eltype != mesh2.eltype or mesh1.shape() != mesh2.shape():
         raise ValueError,"Meshes are not compatible"
+
+    # get the eltype of the base Mesh, the extruded eltype and reordering
+    eltyp0 = mesh1.eltype
+    print "BASE ELTYPE = %s" % eltyp0
+    eltyp1,reorder = eltyp0.extruded
+    print "EXTRUDED ELTYPE = %s" % eltyp1
 
     # compact the node numbering schemes
     mesh1 = mesh1.compact()
     mesh2 = mesh2.compact()
 
     # Create the interpolations of the coordinates
-    x = Coords.interpolate(mesh1.coords,mesh2.coords,n).reshape(-1,3)
+    if type(div) == int:
+        div = arange(div+1) / float(div)
+    else:
+        div = array(div).ravel()
+    x = Coords.interpolate(mesh1.coords,mesh2.coords,div).reshape(-1,3)
 
     nnod = mesh1.ncoords()
     nplex = mesh1.nplex()
@@ -1553,9 +1573,19 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
     e1 = mesh1.elems[:,n1]
     e2 = mesh2.elems[:,n2] + nnod
     et = concatenate([e1,e2],axis=-1)
-    if type(n)!=int:n=len(n)-1
-    e = concatenate([et+i*nnod for i in range(n)])
-    return Mesh(x,e,eltype=eltype).setProp(mesh1.prop)
+    e = concatenate([et+i*nnod for i in range(div.size-1)])
+    # Reorder nodes if necessary
+    if reorder:
+        print "REORDER NODES",reorder
+        e = e[:,reorder]
+    eM = Mesh(x,e,eltype=eltyp1).setProp(mesh1.prop)
+
+    # convert to proper eltype
+    if eltype:
+        eM = eM.convert(eltype)
+
+    return eM
+
         
 # define this also as a Mesh method
 Mesh.connect = connectMesh

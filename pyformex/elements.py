@@ -377,9 +377,8 @@ Hex8 = Element(
               (0,3,2,1), (4,5,6,7) ],
     )
 
-
-Hex20 = Element(
-    'hex20',"An 20-node hexahedron",
+Hex16 = Element(
+    'hex16',"A 16-node hexahedron",
     ndim = 3,
     vertices = Hex8.vertices + [
         (  0.5,  0.0, 0.0 ),
@@ -390,6 +389,19 @@ Hex20 = Element(
         (  1.0,  0.5, 1.0 ),
         (  0.5,  1.0, 1.0 ),
         (  0.0,  0.5, 1.0 ),
+        ],
+    edges = [ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
+              (4,12,5),(5,13,6),(6,14,7),(7,15,4) ],
+    faces = [ (0,4,7,3,15,11), (1,2,6,5,9,13),
+              (0,1,5,4,8,12), (3,7,6,2,14,10),
+              (0,3,2,1,11,10,9, 8), (4,5,6,7,12,13,14,15) ],
+)
+
+
+Hex20 = Element(
+    'hex20',"A 20-node hexahedron",
+    ndim = 3,
+    vertices = Hex16.vertices + [
         (  0.0,  0.0, 0.5 ),
         (  1.0,  0.0, 0.5 ),
         (  1.0,  1.0, 0.5 ),
@@ -499,7 +511,14 @@ Hex20.conversions = {
     'hex8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
     'tet4'  : [ ('v', 'hex8'), ],
     }
+Hex16.conversions = {
+    'hex20'  : [ ('m',[ (0,8), (1,9), (2,10), (3,11) ]),
+                 ('s',[0, 1, 2, 3, 8, 9, 10, 11, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19])],
+    }
 
+Line2.extruded = ( Quad4, [0,1,3,2] )
+Quad4.extruded = ( Hex8, [] )
+Quad8.extruded = ( Hex16, [] )
 
 
 ##########################################################  
@@ -651,6 +670,8 @@ def printElementTypes():
     for ndim in range(4):
         print "  %s-dimensional elements: %s" % (ndim,elementTypes(ndim)        )
 
+def elementName(eltype):
+    return elementType(eltype).name()
 
 
 if __name__ == "__main__":

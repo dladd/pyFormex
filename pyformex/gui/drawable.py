@@ -405,14 +405,14 @@ def drawEdges(x,e,edges,eltype=None,color=None):
             color = color.reshape((-1,)+color.shape[-2:])
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
 
-        print "NPLEX %s" % nplex
+        #print "NPLEX %s" % nplex
         if nplex == 3:
             if elems is not None:
                 coords = coords[elems]
-            print "DRAWING line3 edges %s" % str(coords.shape)
+            #print "DRAWING line3 edges %s" % str(coords.shape)
             drawQuadraticCurves(coords,color)
         else:
-            print "DRAW POLYGONS"
+            #print "DRAW POLYGONS"
             draw_poly(coords,elems,'wireframe',color,1.0)
 
 
