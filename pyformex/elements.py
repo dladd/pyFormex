@@ -259,6 +259,16 @@ Quad4 = Element(
     )
 
 
+Quad6 = Element(
+    'quad6',"A 6-node quadrilateral",
+    ndim = 2,
+    vertices = Quad4.vertices +[(  0.5,  0.0, 0.0 ),
+     (  0.5,  1.0, 0.0 ),],
+    edges = [ (0,4,1), (1,2), (2,5,3), (3,0) ],
+    faces = [ (0,1,2,3,4,5), ],
+    drawfaces = [(0,4,3), (4,3,5), (4,5,1), (1,5,2)],
+    )
+
 Quad8 = Element(
     'quad8',"A 8-node quadrilateral",
     ndim = 2,
@@ -391,7 +401,8 @@ Hex16 = Element(
         (  0.0,  0.5, 1.0 ),
         ],
     edges = [ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
-              (4,12,5),(5,13,6),(6,14,7),(7,15,4) ],
+              (4,12,5),(5,13,6),(6,14,7),(7,15,4),
+              (0,4),(1,5),(2,6),(3,7) ],
     faces = [ (0,4,7,3,15,11), (1,2,6,5,9,13),
               (0,1,5,4,8,12), (3,7,6,2,14,10),
               (0,3,2,1,11,10,9, 8), (4,5,6,7,12,13,14,15) ],
@@ -424,7 +435,13 @@ Hex20.drawfaces = array(Hex20.faces)[:, Quad8.drawfaces].reshape(-1, 3)
 
 
 ########## element type conversions ##################################
-
+'''
+keywords
+'m' mean nodes to add for conversion ; list of tuple containing the nodes numbers between which to add the mean nodes
+'s' reordering of Nodes; list of tuple containing the nodes numbers for reordering
+'r' random choise of eltype conversion
+'v' conversion as type 'existing eltype name conversion table'
+'''
 
 Line3.conversions = {
     'line2'  : [ ('s', [ (0,2) ]), ],
@@ -450,7 +467,7 @@ Quad4.conversions = {
     'tri3-x' : [ ('m', [ (0,1,2,3) ]),
                  ('s', [ (0,1,4),(1,2,4),(2,3,4),(3,0,4) ]),
                  ],
-    'quad8'  : [ ('m', [ (0,1), (1,2), (2,3), (3,0) ]), ],
+    'quad8'  : [ ('m', [ (0,1), (1,2), (2,3), (3,0) ])],
     'quad4-4': [ ('v', 'quad9'), ],
     'quad9'  : [ ('v', 'quad8'), ],
     }
@@ -513,9 +530,17 @@ Hex20.conversions = {
     }
 Hex16.conversions = {
     'hex20'  : [ ('m',[ (0,8), (1,9), (2,10), (3,11) ]),
-                 ('s',[0, 1, 2, 3, 8, 9, 10, 11, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19])],
+                 ('s',[(0, 1, 2, 3, 8, 9, 10, 11, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19)])],
     }
+Quad6.conversions = {
+    'quad8'  : [ ('m',[ (0,3), (1,2)]),
+    ('s',[(0, 1, 2, 3, 4, 7, 5, 6)])],
+    }
+'''
+extruded variable is a tuple (eltype after extrusion, reordering list node numbers if needed)
+'''
 
+Line3.extruded = (Quad6, [0,2,5,3,1,4])
 Line2.extruded = ( Quad4, [0,1,3,2] )
 Quad4.extruded = ( Hex8, [] )
 Quad8.extruded = ( Hex16, [] )
