@@ -42,6 +42,7 @@ ny = 3
 nz = 7
 
 # A rectangular mesh
+print '\n1 : Test connectMesh quad4 to hex8\n'
 M1 = simple.rectangle(nx,ny).toMesh().setProp(1)
 # Same mesh, rotated and translated
 M2 = M1.rotate(45,0).translate([1.,-1.,nz]).setProp(3)
@@ -61,4 +62,65 @@ m = connectMesh(m1,m2,nz)
 clear()
 draw(m,view=None)
 
-# End
+pause()
+clear()
+
+print '\n2 : Test connectMesh quad8 to hex20\n'
+M1 = simple.rectangle(nx,ny).toMesh().convert('quad8').setProp(1)
+# Same mesh, rotated and translated
+M2 = M1.rotate(45,0).translate([1.,-1.,nz]).setProp(3)
+draw([M1,M2])
+drawNumbers(Formex(M1.select([0]).coords))
+sleep(1)
+m = connectMesh(M1,M2,nz,eltype='hex20')
+clear()
+draw(m,view=None)
+drawNumbers(Formex(m.renumber().select([0]).coords))
+pause()
+clear()
+
+print '\n3 : Test simple.circle line3, connectMesh line3 to quad8, extrude quad8 to hex20\n'
+M1 = simple.circle(a3=60.,a1=10,eltype='line3').toMesh().setProp(1)
+# Same mesh, rotated and translated
+M2 = M1.rotate(10.,1).translate([1.,-1.,nz]).setProp(3)
+draw([M1,M2])
+sleep(1)
+m = connectMesh(M1,M2,nz,eltype='quad8')
+draw(m)
+sleep(1)
+m=m.extrude(5,step=1.,dir=0,eltype='hex20')
+draw(m)
+drawNumbers(Formex(m.renumber().select([0]).coords))
+pause()
+clear()
+
+print '\n4 : Test default values for simple.circle line2, connectMesh line2 to quad8, extrude quad4 to hex8\n'
+M1 = simple.circle(a3=60.,a1=10).toMesh().setProp(1)
+# Same mesh, rotated and translated
+M2 = M1.rotate(10.,1).translate([1.,-1.,nz]).setProp(3)
+draw([M1,M2])
+sleep(1)
+m = connectMesh(M1,M2,nz)
+draw(m)
+sleep(1)
+m=m.extrude(5,step=1.,dir=0)
+draw(m)
+drawNumbers(Formex(m.renumber().select([0]).coords)) 
+pause()
+clear()
+
+print '\n5 : Test connectMesh quad8 to hex20,getBorderMesh for Quadratic elements\n'
+M1 = simple.circle(a3=60.,a1=10,eltype='line3').toMesh().setProp(1)
+# Same mesh, rotated and translated
+M2 = M1.rotate(10.,1).translate([1.,-1.,nz]).setProp(3)
+draw([M1,M2])
+sleep(1)
+m = connectMesh(M1,M2,nz,eltype='quad8')
+draw(m)
+sleep(1)
+m=m.extrude(5,step=1.,dir=0,eltype='hex20')
+m=m.getBorderMesh()
+m=Mesh(m.coords,m.elems,eltype='quad8').setProp(5)
+#~ draw(Mesh(m.coords,m.elems,eltype='quad8'))
+draw(m)
+drawNumbers(Formex(m.renumber().select([0]).coords))
