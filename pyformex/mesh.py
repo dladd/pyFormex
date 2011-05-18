@@ -952,6 +952,7 @@ Size: %s
         while not type(strategy) is list:
             # This allows for aliases in the conversion database
             strategy = self.eltype.conversions.get(strategy,None)
+            
             if strategy is None:
                 raise ValueError,"Don't know how to convert %s -> %s" % (self.eltype,totype)
 
@@ -967,7 +968,6 @@ Size: %s
         mesh = self
         totype = totype.split('-')[0]
         for step in strategy:
-            #print "STEP: %s" % str(step)
             steptype,stepdata = step
 
             if steptype == 'm':
@@ -1142,7 +1142,7 @@ Size: %s
         return self.__class__(self.coords,self.elems[order],prop=self.prop[order],eltype=self.eltype)
  
 
-    def extrude(self,n,step=1.,dir=0,autofix=True):
+    def extrude(self,n,step=1.,dir=0,eltype=None):
         """Extrude a Mesh in one of the axes directions.
 
         Returns a new Mesh obtained by extruding the given Mesh
@@ -1158,17 +1158,10 @@ Size: %s
         Currently, this function correctly transforms: point1 to line2,
         line2 to quad4, tri3 to wedge6, quad4 to hex8.
         """
-        nplex = self.nplex()
+        #~ nplex = self.nplex()
+        el = self.eltype
         coord2 = self.coords.translate(dir,n*step)
-        M = connectMesh(self,Mesh(coord2,self.elems),n)
-
-        if autofix and nplex == 2:
-            # fix node ordering for line2 to quad4 extrusions
-            M.elems[:,-nplex:] = M.elems[:,-1:-(nplex+1):-1].copy()
-
-        if autofix:
-            M.eltype = elementType(nplex=M.nplex())
-
+        M = connectMesh(self,Mesh(coord2,self.elems,eltype=el),n,eltype=eltype)
         return M
 
 
@@ -1206,7 +1199,7 @@ Size: %s
         CL = [ connectMesh(m1,m2,1,n1,n2,eltype) for (m1,m2) in zip(ML[:-1],ML[1:]) ]
         return Mesh.concatenate(CL)
 
-
+#FI TODO remove autofix flag check if already works with the new connectMesh
     def sweep(self,path,autofix=True,**kargs):
         """Sweep a mesh along a path, creating an extrusion
 
@@ -1552,6 +1545,7 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
     print "BASE ELTYPE = %s" % eltyp0
     eltyp1,reorder = eltyp0.extruded
     print "EXTRUDED ELTYPE = %s" % eltyp1
+    
 
     # compact the node numbering schemes
     mesh1 = mesh1.compact()
@@ -1582,28 +1576,14 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
 
     # convert to proper eltype
     if eltype:
+        print eltype
         eM = eM.convert(eltype)
 
     return eM
 
         
 # define this also as a Mesh method
-Mesh.connect = connectMesh
-
-
-def connectQuadraticMesh(mesh1,mesh2,n=1, eltype='Hex20'):
-    """currently works for Quad8 only.
-
-    Connect two Quad8 meshes to form a Hex20 mesh.
-    """
-    #this is a proposal. Is it better to implement the conversion in the _conversions_ ?
-    h16=connectMesh(mesh1,mesh2,n=n)
-    #now a conversion hex16 to hex20
-    h20=h16.addMeanNodes( [ (0,8), (1,9), (2,10), (3,11) ],'hex20')
-    h20.elems=h20.elems[:, [0, 1, 2, 3, 8, 9, 10, 11, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19]]
-    #finally fuse (needed after addMeanNodes) and renumber
-    return h20
-
+#~ Mesh.connect= connectMesh
 
 def connectMeshSequence(ML,loop=False,**kargs):
     #print([Mi.eltype for Mi in ML])
