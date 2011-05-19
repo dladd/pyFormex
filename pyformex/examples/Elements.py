@@ -37,6 +37,10 @@ from gui.widgets import simpleInputItem as I
 import utils
 
 def showElement(eltype,deformed,reduced):
+    clear()
+    smooth()
+    drawText("Element type: %s" %eltype,100,200,size=24,color=black)
+
     el = elementType(eltype)
     ndim = 3
     if reduced:
@@ -61,9 +65,6 @@ def showElement(eltype,deformed,reduced):
 
     # This will not work for elements with edges of different plexitude!
     F = [ Formex(v), Formex(v[e],eltype=el.edgetype), Formex(v[s],eltype=eltype) ]
-    clear()
-    smooth()
-    drawText(eltype,200,200,size=24,color=black)
     for Fi in F:
         #clear()
         draw(Fi)

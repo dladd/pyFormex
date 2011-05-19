@@ -45,7 +45,8 @@ class Element(object):
     Each element is defined by the following attributes:
 
     - `vertices`: the natural coordinates of its vertices,
-    - `edges`: a list of edges, each defined by a couple of node numbers,
+    - `edges`: a list of edges, each defined by 2 or 3 node numbers,
+      Currently, all edges of an element should have the same plexitude!!!
     - `faces`: a list of faces, each defined by a list of minimum 3 node
       numbers,
     - `element`: a list of all node numbers
@@ -73,6 +74,30 @@ class Element(object):
       1-dimensional elements: ['line2']
       2-dimensional elements: ['tri3', 'tri6', 'quad4', 'quad8', 'quad9']
       3-dimensional elements: ['tet4', 'tet10', 'wedge6', 'hex8', 'hex20', 'icosa']
+
+    Optional attributes:
+
+    - `conversions`: Defines possible strategies for conversion of the element
+      to other element types. It is a dictionary with the target element name
+      as key, and a list of actions as value. Each action in the list consists
+      of a tuple ( action, data ), where action is one of the action identifier
+      characters defined below, and data are the data needed for this action.
+
+    Conversion actions:
+
+    'm': add new nodes to the element by taking the mean values of existing
+         nodes. data is a list of tuples containing the nodes numbers whose
+         coorrdinates have to be averaged.
+    's': select nodes from the existing ones. data is a list of the node numbers
+         to retain in the new element. This can be used to reduce the plexitude
+         but also just to reorder the existing nodes.
+    'v': perform a conversion via an intermediate type. data is the name of the
+         intermediate element type. The current element will first be converted
+         to the intermediate type, and then conversion from that type to the
+         target will be attempted. 
+    'r': randomly choose one of the possible conversions. data is a list of
+         element names. This can e.g. be used to select randomly between
+         different but equivalent conversion paths.
     
     """
     proposed_changes = """..
@@ -263,8 +288,11 @@ Quad6 = Element(
     'quad6',"A 6-node quadrilateral",
     ndim = 2,
     vertices = Quad4.vertices +[(  0.5,  0.0, 0.0 ),
-     (  0.5,  1.0, 0.0 ),],
-    edges = [ (0,4,1), (1,2), (2,5,3), (3,0) ],
+                                (  0.5,  1.0, 0.0 ),
+                                ],
+#    edges = [ (0,4,1), (1,2), (2,5,3), (3,0) ],
+# EDGES CAN CURRENTLY NOT BE MIXED
+    edges = [ (0,4), (4,1), (1,2), (2,5),(5,3), (3,0) ],
     faces = [ (0,1,2,3,4,5), ],
     drawfaces = [(0,4,3), (4,3,5), (4,5,1), (1,5,2)],
     )
@@ -400,9 +428,13 @@ Hex16 = Element(
         (  0.5,  1.0, 1.0 ),
         (  0.0,  0.5, 1.0 ),
         ],
+    # EDGES CAN CURRENTLY NOT BE MIXED nplex
+    ## edges = [ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
+    ##           (4,12,5),(5,13,6),(6,14,7),(7,15,4),
+    ##           (0,4),(1,5),(2,6),(3,7) ],
     edges = [ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
               (4,12,5),(5,13,6),(6,14,7),(7,15,4),
-              (0,4),(1,5),(2,6),(3,7) ],
+              (0,0,4),(1,1,5),(2,2,6),(3,3,7) ],
     faces = [ (0,4,7,3,15,11), (1,2,6,5,9,13),
               (0,1,5,4,8,12), (3,7,6,2,14,10),
               (0,3,2,1,11,10,9, 8), (4,5,6,7,12,13,14,15) ],
@@ -424,6 +456,7 @@ Hex20 = Element(
     faces = [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
               (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
               (0,3,2,1,11,10,9, 8), (4,5,6,7,12,13,14,15) ],
+    
 )
 # We can not set this at __init__ time
 if pyformex.options.hex20edgeslinear:
@@ -435,13 +468,6 @@ Hex20.drawfaces = array(Hex20.faces)[:, Quad8.drawfaces].reshape(-1, 3)
 
 
 ########## element type conversions ##################################
-'''
-keywords
-'m' mean nodes to add for conversion ; list of tuple containing the nodes numbers between which to add the mean nodes
-'s' reordering of Nodes; list of tuple containing the nodes numbers for reordering
-'r' random choise of eltype conversion
-'v' conversion as type 'existing eltype name conversion table'
-'''
 
 Line3.conversions = {
     'line2'  : [ ('s', [ (0,2) ]), ],

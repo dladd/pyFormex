@@ -685,7 +685,7 @@ def drawMarks(X,M,color='black',leader='',ontop=True):
     return M
 
 
-def drawNumbers(F,color='black',trl=None,offset=0,leader=''):
+def drawNumbers(F,color='black',trl=None,offset=0,leader='',ontop=True):
     """Draw numbers on all elements of F.
 
     Normally, the numbers are drawn at the centroids of the elements.
@@ -701,10 +701,10 @@ def drawNumbers(F,color='black',trl=None,offset=0,leader=''):
     if trl is not None:
         X = X.trl(trl)
     X = X.reshape(-1,3)
-    return drawMarks(X,numpy.arange(X.shape[0])+offset,color=color,leader=leader)
+    return drawMarks(X,numpy.arange(X.shape[0])+offset,color=color,leader=leader,ontop=ontop)
 
 
-def drawVertexNumbers(F,color='black',trl=None):
+def drawVertexNumbers(F,color='black',trl=None,ontop=False):
     """Draw (local) numbers on all vertices of F.
 
     Normally, the numbers are drawn at the location of the vertices.
@@ -715,12 +715,12 @@ def drawVertexNumbers(F,color='black',trl=None):
     FC = F.coords.reshape((-1,3))
     if trl is not None:
         FC = FC.trl(trl)
-    return drawMarks(FC,numpy.resize(numpy.arange(F.coords.shape[1]),(FC.shape[0])),color=color)
+    return drawMarks(FC,numpy.resize(numpy.arange(F.coords.shape[1]),(FC.shape[0])),color=color,ontop=ontop)
 
 
-def drawText3D(P,text,color=None,font='sans',size=18):
+def drawText3D(P,text,color=None,font='sans',size=18,ontop=True):
     """Draw a text at a 3D point P."""
-    M = marks.TextMark(P,text,color=color,font=font,size=size)
+    M = marks.TextMark(P,text,color=color,font=font,size=size,ontop=ontop)
     pf.canvas.addAnnotation(M)
     pf.canvas.update()
     return M
