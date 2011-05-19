@@ -111,6 +111,22 @@ class Mesh(Geometry):
     ## (because only the first two arguments match).
     ## See the copy() method for an example.
     ###################################################################
+
+    def _formex_transform(func):
+        """Perform a Formex transformation on the .coords attribute of the object.
+
+        This is a decorator function. It should be used only for Formex methods
+        which are not Geometry methods as well.
+        """
+        formex_func = getattr(Formex,func.__name__)
+        def newf(self,*args,**kargs):
+            """Performs the Formex %s transformation on the coords attribute"""
+            F = Formex(self.coords).formex_func(self.coords,*args,**kargs)
+            return self._set_coords(coords_func(self.coords,*args,**kargs))
+        newf.__name__ = func.__name__
+        newf.__doc__ = coords_func.__doc__
+        return newf
+
     
     def __init__(self,coords=None,elems=None,prop=None,eltype=None):
         """Initialize a new Mesh."""
@@ -192,15 +208,29 @@ class Mesh(Geometry):
             prop = array(prop).astype(Int)
             self.prop = resize(prop,(self.nelems(),))
         return self
-
+            
 
     def __getitem__(self,i):
-        """Allows elements to be addressed as self[i].
+        """Return element i of the Mesh.
 
-        self[i] returns an array with the coordinates of element i
-        self[i][j] then will return the coordinates of node j of element i
+        This allows addressing element i of Mesh M as M[i].
+        The return value is an array with the coordinates of all the points
+        of the element. M[i][j] then will return the coordinates of node j
+        of element i.
+        This also allows to change the individual coordinates or nodes, by
+        an assignment like  M[i][j] = [1.,0.,0.].
         """
         return self.coords[self.elems[i]]
+    
+
+    def __setitem__(self,i,val):
+        """Change element i of the Mesh.
+
+        This allows changing all the coordinates of an element by direct
+        assignment such as M[i] = [[1.,0.,0.], ...]. The user should make sure
+        that the data match the plexitude of the element. 
+        """
+        self.coords[i] = val
     
 
     def getProp(self):
@@ -707,10 +737,11 @@ Size: %s
         enr =  unique(hiinv[hiinv >= 0])  # element number
         return enr
     
-    
-    @deprecation("Mesh.findCoincidentNodes is deprecated. Use Coords.match or Mesh.matchCoords. Beware for order of arguments!")
-    def findCoincidentCoords(self,mesh,**kargs):
-        return mesh.coords.match(self.coords)
+
+    # BV removed in 0.8.4
+    ## @deprecation("Mesh.findCoincidentNodes is deprecated. Use Coords.match or Mesh.matchCoords. Beware for order of arguments!")
+    ## def findCoincidentCoords(self,mesh,**kargs):
+    ##     return mesh.coords.match(self.coords)
 
 
     # Since this is used in only a few places, we could
@@ -1592,7 +1623,7 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
 
         
 # define this also as a Mesh method
-#~ Mesh.connect= connectMesh
+Mesh.connect = connectMesh
 
 def connectMeshSequence(ML,loop=False,**kargs):
     #print([Mi.eltype for Mi in ML])

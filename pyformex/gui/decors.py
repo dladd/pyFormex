@@ -115,11 +115,13 @@ class Decoration(Drawable):
                
     """
 
-    def __init__(self,x,y):
+    def __init__(self,x,y,**kargs):
         """Create a decoration at canvas coordinates x,y"""
         self.x = int(x)
         self.y = int(y)
-        Drawable.__init__(self)
+        if 'nolight' not in kargs:
+            kargs['nolight'] = True
+        Drawable.__init__(self,**kargs)
 
 
 # Marks database: a dict with mark name and a function to draw
@@ -130,8 +132,8 @@ _marks_ = {
 
 class Mark(Decoration):
     """A mark at a fixed position on the canvas."""
-    def __init__(self,x,y,mark='dot',color=None,linewidth=None):
-        Decoration.__init__(self,x,y)
+    def __init__(self,x,y,mark='dot',color=None,linewidth=None,**kargs):
+        Decoration.__init__(self,x,y,**kargs)
         self.x = x
         self.y = y
         if not mark in _marks_:
@@ -151,8 +153,8 @@ class Mark(Decoration):
 
 class Line(Decoration):
     """A straight line on the canvas."""
-    def __init__(self,x1,y1,x2,y2,color=None,linewidth=None):
-        Decoration.__init__(self,x1,y1)
+    def __init__(self,x1,y1,x2,y2,color=None,linewidth=None,**kargs):
+        Decoration.__init__(self,x1,y1,**kargs)
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -207,9 +209,9 @@ class GlutText(Decoration):
     
     """
 
-    def __init__(self,text,x,y,font='9x15',size=None,gravity=None,color=None,zoom=None):
+    def __init__(self,text,x,y,font='9x15',size=None,gravity=None,color=None,zoom=None,**kargs):
         """Create a text actor"""
-        Decoration.__init__(self,x,y)
+        Decoration.__init__(self,x,y,**kargs)
         self.text = str(text)
         self.font = gluttext.glutSelectFont(font,size)
 
@@ -234,8 +236,8 @@ Text = GlutText
 
 class ColorLegend(Decoration):
     """A viewport decoration showing a colorscale legend."""
-    def __init__(self,colorlegend,x,y,w,h,font=None,size=None,dec=2,scale=0,grid=0,linewidth=None,lefttext=False,nlabels=-1):
-        Decoration.__init__(self,x,y)
+    def __init__(self,colorlegend,x,y,w,h,font=None,size=None,dec=2,scale=0,grid=0,linewidth=None,lefttext=False,nlabels=-1,**kargs):
+        Decoration.__init__(self,x,y,**kargs)
         self.cl = colorlegend
         self.w = int(w)
         self.h = int(h)
@@ -308,8 +310,8 @@ class ColorLegend(Decoration):
 
 class Rectangle(Decoration):
     """A 2D-rectangle on the canvas."""
-    def __init__(self,x1,y1,x2,y2,color=None):
-        Decoration.__init__(self,x1,y1)
+    def __init__(self,x1,y1,x2,y2,color=None,**kargs):
+        Decoration.__init__(self,x1,y1,**kargs)
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -322,8 +324,8 @@ class Rectangle(Decoration):
 
 class Grid(Decoration):
     """A 2D-grid on the canvas."""
-    def __init__(self,x1,y1,x2,y2,nx=1,ny=1,color=None,linewidth=None):
-        Decoration.__init__(self,x1,y1)
+    def __init__(self,x1,y1,x2,y2,nx=1,ny=1,color=None,linewidth=None,**kargs):
+        Decoration.__init__(self,x1,y1,**kargs)
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -343,7 +345,7 @@ class Grid(Decoration):
 
 class LineDrawing(Decoration):
     """A collection of straight lines on the canvas."""
-    def __init__(self,data,color=None,linewidth=None):
+    def __init__(self,data,color=None,linewidth=None,**kargs):
         """Initially a Line Drawing.
 
         data can be a 2-plex Formex or equivalent coordinate data.
@@ -355,7 +357,7 @@ class LineDrawing(Decoration):
         data = data[:,:,:2]
         self.data = data.astype(Float)
         x1,y1 = self.data[0,0]
-        Decoration.__init__(self,x1,y1)
+        Decoration.__init__(self,x1,y1,**kargs)
         self.color = saneColor(color)
         self.linewidth = saneLineWidth(linewidth)
     
@@ -388,8 +390,8 @@ class Triade(Drawable):
       
     """
 
-    def __init__(self,pos='lb',siz=100,pat='12-34',legend='xyz',color=[red,green,blue,cyan,magenta,yellow]):
-        Drawable.__init__(self)
+    def __init__(self,pos='lb',siz=100,pat='12-34',legend='xyz',color=[red,green,blue,cyan,magenta,yellow],**kargs):
+        Drawable.__init__(self,**kargs)
         self.pos = pos
         self.siz = siz
         self.pat = pat
