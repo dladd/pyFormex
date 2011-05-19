@@ -194,6 +194,15 @@ class Mesh(Geometry):
         return self
 
 
+    def __getitem__(self,i):
+        """Allows elements to be addressed as self[i].
+
+        self[i] returns an array with the coordinates of element i
+        self[i][j] then will return the coordinates of node j of element i
+        """
+        return self.coords[self.elems[i]]
+    
+
     def getProp(self):
         """Return the properties as a numpy array (ndarray)"""
         return self.prop
