@@ -1037,7 +1037,6 @@ def connectedLineElems(elems):
     """
     elems = Connectivity(elems)
     np=elems.nplex()
-    np=2
     parts = []
     while elems.size != 0:
         closed,loop = closedLoop(elems)
