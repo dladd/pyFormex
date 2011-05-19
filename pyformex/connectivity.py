@@ -920,7 +920,7 @@ def closedLoop(elems):
 
     Parameters:
 
-    - `elems`: Connectivity-like with plexitude 2
+    - `elems`: Connectivity-like with plexitude 2 (for eltype line2 ) or 3 (for eltype line3)
 
     Returns: a tuple (return_code,table):
     
@@ -962,10 +962,12 @@ def closedLoop(elems):
         The first nrows rows of table are reversed in row and column order.
         """
         tbl[:nrows] = reverseAxis(reverseAxis(tbl[:nrows],0),1)
-
-
-    elems = Connectivity(elems)
     
+    import warnings
+    warnings.warn("Beware, closedLoop is currently under revision and may be broken!")
+    
+    elems = Connectivity(elems)
+    np=elems.nplex()
     srt = zeros_like(elems) - 1
     ie = 0
     je = 0
@@ -974,11 +976,11 @@ def closedLoop(elems):
     while True:
         # Store an element that has been found ok
         if rev:
-            srt[ie] = elems[je][[1,0]]
+            srt[ie] = elems[je][range(np)[::-1]]
         else:
             srt[ie] = elems[je]
-        elems[je] = [ -1,-1 ] # Done with this one
-        j = srt[ie][1] # remember endpoint
+        elems[je] = [ -1]*np # Done with this one
+        j = srt[ie][-1] # remember endpoint
         if j == k:
             break
         ie += 1
@@ -994,14 +996,15 @@ def closedLoop(elems):
                 j,k = k,j
                 reverse_table(srt,ie)
         je = w[0][0]
-        rev = w[1][0] == 1
+        rev = w[-1][0] == np-1 #check if the position of first node in the last elem is np
     if any(srt == -1):
         ret = 2
-    elif srt[-1][1] != srt[0][0]:
+    elif srt[-1][-1] != srt[0][0]:
         ret = 1
     else:
         ret = 0
     return ret,srt
+
 
 
 # BV: this could become a Connectivity function splitByConnection
@@ -1033,11 +1036,13 @@ def connectedLineElems(elems):
              
     """
     elems = Connectivity(elems)
+    np=elems.nplex()
+    np=2
     parts = []
     while elems.size != 0:
         closed,loop = closedLoop(elems)
-        parts.append(loop[loop!=-1].reshape(-1,2))
-        elems = elems[elems!=-1].reshape(-1,2)
+        parts.append(loop[loop!=-1].reshape(-1,np))
+        elems = elems[elems!=-1].reshape(-1,np)
     return parts
 
 
