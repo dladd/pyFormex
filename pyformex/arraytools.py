@@ -1344,5 +1344,110 @@ def histogram2(a,bins,range=None):
     ind = [ where(d==i)[0] for i in arange(1,nbins+1) ]
     hist = asarray([ i.size for i in ind ])
     return hist,ind,xbins
-   
+
+
+def movingView(a, size):
+    """Create a moving view along the first axis of an array
+    
+    Parameters
+    ----------
+    a : array_like: array for wihch to create a moving view
+    size : int: size of the moving view
+
+    Returns
+    -------
+    An array that is a view of the original array with an extra first
+    axis of length w.
+
+    Using swapaxes(0,axis) moving views over any axis can be created.
+    
+    Examples
+    --------
+    >>> x=arange(10).reshape((5,2))
+    >>> print x
+    [[0 1]
+     [2 3]
+     [4 5]
+     [6 7]
+     [8 9]]
+    >>> print movingView(x, 3)
+    [[[0 1]
+      [2 3]
+      [4 5]]
+    <BLANKLINE>
+     [[2 3]
+      [4 5]
+      [6 7]]
+    <BLANKLINE>
+     [[4 5]
+      [6 7]
+      [8 9]]]
+
+    Calculate rolling sum of first axis:
+    >>> print movingView(x, 3).sum(axis=0)
+    [[ 6  9]
+     [12 15]
+     [18 21]]
+    """
+    from numpy.lib import stride_tricks
+    if size < 1:
+        raise ValueError, "`size` must be at least 1."
+    if size > a.shape[0]:
+        raise ValueError, "`size` is too long."
+    shape = (size, a.shape[0] - size + 1) + a.shape[1:]
+    strides = (a.strides[0],) + a.strides
+    return stride_tricks.as_strided(a, shape=shape, strides=strides)
+
+
+def movingAverage(a,n,m0=None,m1=None):
+    """Compute the moving average along the first axis of an array.
+
+    Parameters
+    ----------
+    a : array_like: array to be averaged
+    n : int: moving sample size
+    m0 : optional, int: if specified, the first data set of a will be prepended
+         this number of times
+    m1 : optional, int: if specified, the last data set of a will be appended
+         this number of times
+
+    Returns
+    -------
+    An array with the moving average over n data sets along the first axis of a.
+    The array has the same shape as a, except possibly for the length of the
+    first axis.
+    If neither m0 nor m1 are set, the first axis will have a length of
+    a.shape[0] - (n-1).
+    If both m0 and m1 are give, the first axis will have a length of
+    a.shape[0] - (n-1) + m0 + m1. 
+    If either m0 or m1 are set and the other not, the missing value m0 or m1
+    will be computed thus that the return array has a first axis with length
+    a.shape[0].
+
+    Examples
+    --------
+    >>> x=arange(10).reshape((5,2))
+    >>> print movingAverage(x,3)
+    [[ 2.  3.]
+     [ 4.  5.]
+     [ 6.  7.]]
+    >>> print movingAverage(x,3,2)
+    [[ 0.          1.        ]
+     [ 0.66666667  1.66666667]
+     [ 2.          3.        ]
+     [ 4.          5.        ]
+     [ 6.          7.        ]]
+
+    """
+    if m0 is None and m1 is None:
+        ae = a
+    else:
+        if m0 is None:
+            m0 = n-1 - m1 
+        elif m1 is None:
+            m1 = n-1 - m0
+        ae = [a[:1]] * m0 + [ a ] + [a[-1:]] * m1
+        ae = concatenate(ae,axis=0)
+    return movingView(ae,n).mean(axis=0)
+
 # End

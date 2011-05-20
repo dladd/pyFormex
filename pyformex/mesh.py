@@ -1239,8 +1239,8 @@ Size: %s
         CL = [ connectMesh(m1,m2,1,n1,n2,eltype) for (m1,m2) in zip(ML[:-1],ML[1:]) ]
         return Mesh.concatenate(CL)
 
-#FI TODO remove autofix flag check if already works with the new connectMesh
-    def sweep(self,path,autofix=True,**kargs):
+
+    def sweep(self,path,eltype=None,**kargs):
         """Sweep a mesh along a path, creating an extrusion
 
         Returns a new Mesh obtained by sweeping the given Mesh
@@ -1255,20 +1255,13 @@ Size: %s
         appropriate. If autofix is switched off, the connectivities
         are merely stacked, and the user may have to fix it himself.
 
-        Currently, this function correctly transforms: point1 to line2,
-        line2 to quad4, tri3 to wedge6, quad4 to hex8.
+        Currently, this function produces the correct element type, but
+        the geometry .
         """
         nplex = self.nplex()
         seq = sweepCoords(self.coords,path,**kargs)
         ML = [ Mesh(x,self.elems,prop=self.prop) for x in seq ]
-        M = connectMeshSequence(ML)
-
-        if autofix and nplex == 2:
-            # fix node ordering for line2 to quad4 extrusions
-            M.elems[:,-nplex:] = M.elems[:,-1:-(nplex+1):-1].copy()
-
-        if autofix:
-            M.eltype = elementType(nplex=M.nplex())
+        M = connectMeshSequence(ML,eltype=eltype)
 
         return M
 
