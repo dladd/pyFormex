@@ -715,7 +715,7 @@ def drawVertexNumbers(F,color='black',trl=None,ontop=False):
     FC = F.coords.reshape((-1,3))
     if trl is not None:
         FC = FC.trl(trl)
-    return drawMarks(FC,numpy.resize(numpy.arange(F.coords.shape[1]),(FC.shape[0])),color=color,ontop=ontop)
+    return drawMarks(FC,numpy.resize(numpy.arange(F.coords.shape[-2]),(FC.shape[0])),color=color,ontop=ontop)
 
 
 def drawText3D(P,text,color=None,font='sans',size=18,ontop=True):

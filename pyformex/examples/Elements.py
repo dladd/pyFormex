@@ -37,9 +37,12 @@ from gui.widgets import simpleInputItem as I
 import utils
 import olist
 
+
+colors = [black,blue,yellow,red]
+
 def showElement(eltype,deformed,reduced,drawas):
     clear()
-    smooth()
+    flat()
     drawText("Element type: %s" %eltype,100,200,size=24,color=black)
     el = elementType(eltype)
     print el.report()
@@ -53,7 +56,7 @@ def showElement(eltype,deformed,reduced,drawas):
     else:
         view('front')
         
-    v = Coords(el.vertices)
+    v = el.vertices
     if deformed:
         dv = ( random.rand(v.size).reshape(v.shape) - 0.5 ) * 0.1
         v += dv
@@ -62,23 +65,19 @@ def showElement(eltype,deformed,reduced,drawas):
         if ndim < 2:
             v[...,1] = 0.0
 
-    F = []
+
     for i in range(el.ndim+1):
         ent = el.getEntities(i)
-        F +=  [ Mesh(v,e,eltype=et) for et,e in ent.items() ]
+        print "ENTITIES %s" % i,
+        print ent
+        F =  [ Mesh(v,e,eltype=et) for et,e in ent.items() ]
 
-    F = olist.flatten(F)
+        if drawas == 'Formex':
+            F = [ Fi.toFormex() for Fi in F ]
 
-    if drawas == 'Formex':
-        F = [ Mi.toFormex() for Mi in F ]
-
-    for Fi in F:
-        print Fi
-        draw(Fi)
-        
-    wait()
-    wireframe()
-    drawVertexNumbers(Fi)
+        if i == 0:
+            drawVertexNumbers(F[0])
+        draw(F,color=colors[i])
     
         
 if __name__ == "draw":
@@ -90,8 +89,8 @@ if __name__ == "draw":
     res = askItems([
         I('Element Type',choices=['All',]+ElemList),
         I('Deformed',False),
-        I('Reduced dimensionality',False),
-        I('Draw as',None,itemtype='radio',choices=['Formex','Mesh']),
+        I('Reduced dimensionality',True),
+        I('Draw as',None,itemtype='radio',choices=['Mesh','Formex',]),
         ])
     if not res:
         exit()

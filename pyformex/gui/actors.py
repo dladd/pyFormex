@@ -649,13 +649,13 @@ class GeomActor(Actor):
 
         ################## draw the geometry #################
         nplex = self.nplex()
-        #print "ELTYPE=%s" % self.eltype
+        print "NPLEX %s, ELTYPE=%s" % (nplex,self.eltype)
         
         if nplex == 1:
             marksize = self.marksize
             if marksize is None:
                 marksize = canvas.settings.pointsize
-            # THIS COULD GO INTO drawPoints
+            # THIS SHOULD GO INTO drawPoints
             if self.elems is None:
                 coords = self.coords
             else:
@@ -665,8 +665,13 @@ class GeomActor(Actor):
         elif nplex == 2:
             drawLines(self.coords,self.elems,color)
         
-        elif nplex == 3 and self.eltype in ['curve','line3']:
-            drawQuadraticCurves(self.coords,color)
+        elif nplex == 3 and self.eltype.name() in ['curve','line3']:
+            # THIS SHOULD GO INTO drawQuadraticCurves
+            if self.elems is None:
+                coords = self.coords
+            else:
+                coords = self.coords[self.elems]
+            drawQuadraticCurves(coords,color)
             
         elif self.eltype is None:
             # polygons
@@ -689,15 +694,17 @@ class GeomActor(Actor):
                     GL.glColor(append(bkcolor,alpha))
                     drawPolygons(self.coords,self.elems,mode,bkcolor,alpha)
                     GL.glDisable(GL.GL_CULL_FACE)
-                   
         else:
             el = elementType(self.eltype)
             if mode=='wireframe' :
                 for edgetype,edges in el.getDrawEdges().items():
+                    print "DRAWING EDGES"
+                    print "   type %s" % edgetype
+                    print edges
                     drawEdges(self.coords,self.elems,edges,edgetype,color)    
             else:
+                print "DRAWING FACES"
                 for facetype,faces in el.getDrawFaces().items():
-                    print bkcolor
                     if bkcolor is not None:
                         #print "COLOR=%s" % color
                         #print "BKCOLOR =%s" % bkcolor

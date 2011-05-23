@@ -31,6 +31,7 @@ that conversions may be necessary. Conversions to/from external programs
 should be done by the interface modules.
 """
 import pyformex
+from coords import Coords
 import numpy as np
 from odict import ODict
 
@@ -118,67 +119,73 @@ Proposed changes in the Element class
 
 - Make the elements into Element class instances instead of subclasses?
 
+- Should we use Coords objects for the vertices and arrays for the rest?
+
 
 """
 
     collection = ODict() # the full collection with all defined elements
+
+
+    @classmethod
+    def _sanitize(clas,ent):
+        ent = dict((k,np.array(v)) for k,v in ent.items())
+        nent = sum(len(v) for v in ent.values())
+        return nent,ent
+
     
-    
-    def __init__(self,name,doc,ndim,vertices,edges=None,faces=None,conversions={},drawedges=None,drawfaces=None):
+    def __init__(self,name,doc,ndim,vertices,edges={},faces={}):
         self.doc = doc
         self.ndim = ndim
-        self.vertices = vertices
-        self.edges = edges
-        self.faces = faces
-        self.conversions = conversions
-        if drawedges:
-            self.drawedges = drawedges
-        if drawfaces:
-            self.drawfaces = drawfaces
-        # add to the collection
+        self.vertices = Coords(vertices)
+        self._nedges,self.edges = Element._sanitize(edges)
+        self._nfaces,self.faces = Element._sanitize(faces)
+
+        # add the element to the collection
         name = name.lower()
         Element.collection[name] = self
 
 
     def nplex(self):
-        return len(self.vertices)
+        return self.vertices.shape[0]
     
     nvertices = nplex
     nnodes = nplex
 
                                       
     def nedges(self):
-        return len(self.edges[1])
+        return self._nedges
     
     def nfaces(self):
-        return len(self.faces[1])
+        return self._nfaces
 
 
     def getPoints(self):
         return self.getEntities(0)
 
     def getEdges(self):
-        return self.edges[0], np.array(self.edges[1])
+        return self.getEntities(1)
 
     def getFaces(self):
-        return self.faces[0], np.array(self.faces[1])
-
-    def getDrawEdges(self):
-        try:
-            edges = self.drawedges
-        except:
-            edges = self.edges
-        return { edges[0]: np.array(edges[1]) }
-
-    def getDrawFaces(self):
-        try:
-            faces = self.drawfaces
-        except:
-            faces = self.faces
-        return { faces[0]: np.array(faces[1]) }
+        return self.getEntities(2)
 
     def getCells(self):
         return self.getEntities(3)
+
+    def getDrawEdges(self):
+        try:
+            return self.drawedges
+        except:
+            return self.edges
+
+    def getDrawFaces(self):
+        try:
+            ent = self.drawfaces
+        except:
+            ent = self.faces
+
+        print "EL %s : draw faces %s" % (self.name(),ent)
+        return self.faces
 
 
     def getEntities(self,level,reduce=False):
@@ -220,18 +227,18 @@ Proposed changes in the Element class
 
         else:
             if level == 1:
-                eltype,elems = self.edges[0], np.array(self.edges[1])
+                ent = self.edges
                 
             elif level == 2:
-                eltype,elems = self.faces[0], np.array(self.faces[1])
+                ent = self.faces
 
             if reduce:
                 import warnings
                 warnings.warn("The `reduce` parameter is not yet implemented!")
-                return {eltype:elems}
+                return ent
 
             else:
-                return {eltype:elems}
+                return ent
         
 
     def toFormex(self):
@@ -268,30 +275,14 @@ Proposed changes in the Element class
             print "Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (k,v.ndim,v.nplex(),v.nedges(),v.nfaces())
         
 
-# BV
-# Should we use Coords objects for the vertices and arrays for the rest?
-
 #####################################################
 # Define the collection of default pyFormex elements 
-
-
-## NoElement = Element(
-##     'noelem',"No defined element type",
-##     ndim = 0,
-##     vertices = [],
-##     edges = [],
-##     faces = [],
-##     )
-
 
 Point = Element(
     'point',"A single point",
     ndim = 0,
     vertices = [ ( 0.0, 0.0, 0.0 ) ],
-    edges = ( '', [] ) ,
-    faces = ( '', [] ) ,
     )
-
 
 Line2 = Element(
     'line2',"A 2-node line segment",
@@ -299,10 +290,7 @@ Line2 = Element(
     vertices = [ ( 0.0, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ],
-    edges = ( 'line2', [(0,1) ] ),
-    faces = ( '', [] ) ,
     )
-
 
 Line3 = Element(
     'line3',"A 3-node quadratic line segment",
@@ -311,10 +299,9 @@ Line3 = Element(
                  ( 0.5, 0.0, 0.0 ),
                  ( 1.0, 0.0, 0.0 ),
                  ],
-    edges = ( 'line3', [ (0,1,2) ] ), 
-    faces = ( '', [] ),
     )
 
+######### 2D ###################
 
 Tri3 = Element(
     'tri3',"A 3-node triangle",
@@ -323,10 +310,8 @@ Tri3 = Element(
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
                  ],
-    edges = ( 'line2', [ (0,1), (1,2), (2,0) ] ), 
-    faces = ( 'tri3' , [ (0,1,2), ], ),
+    edges = { 'line2': [ (0,1), (1,2), (2,0) ] }, 
     )
-
 
 Tri6 = Element(
     'tri6',"A 6-node triangle",
@@ -338,11 +323,9 @@ Tri6 = Element(
                  ( 0.5, 0.5, 0.0 ),
                  ( 0.0, 0.5, 0.0 ),
                  ],    
-    edges = ( 'line2', [ (0,3,1), (1,4,2), (2,5,0) ], ), 
-    faces = ( 'tri6' , [ (0,1,2,3,4,5), ], ),
-    drawfaces = ( 'tri3' , [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ] )
+    edges = { 'line2': [ (0,3,1), (1,4,2), (2,5,0) ], }, 
     )
-Tri6.drawfacesas = 'tri3'
+Tri6.drawfaces = { 'tri3': [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ] }
 
 
 Quad4 = Element(
@@ -353,43 +336,44 @@ Quad4 = Element(
                  (  1.0,  1.0, 0.0 ),
                  (  0.0,  1.0, 0.0 ),
                  ],
-    edges = ( 'line2', [ (0,1), (1,2), (2,3), (3,0) ], ), 
-    faces = ( 'quad4', [ (0,1,2,3), ], ),
+    edges = { 'line2': [ (0,1), (1,2), (2,3), (3,0) ], }, 
     )
 
 
 Quad6 = Element(
     'quad6',"A 6-node quadrilateral",
     ndim = 2,
-    vertices = Quad4.vertices + [ (  0.5,  0.0, 0.0 ),
-        (  0.5,  1.0, 0.0 ),
-        ],
-    edges = ( 'line3', [ (0,4,1), (1,1,2), (2,5,3), (3,3,0) ] ),
-    faces = ( 'quad6', [ (0,1,2,3,4,5), ] ),
-    drawfaces = ('tri3', [(0,4,3), (4,5,3), (4,1,5), (1,2,5)], ),
+    vertices = Coords.concatenate([
+        Quad4.vertices,
+        [ (  0.5,  0.0, 0.0 ),
+          (  0.5,  1.0, 0.0 ),
+          ]]),
+    edges = { 'line3': [ (0,4,1), (1,1,2), (2,5,3), (3,3,0) ] },
     )
+Quad6.drawfaces = {'tri3': [(0,4,3), (4,5,3), (4,1,5), (1,2,5)], }
 
 Quad8 = Element(
     'quad8',"A 8-node quadrilateral",
     ndim = 2,
-    vertices = Quad4.vertices + [ (  0.5,  0.0, 0.0 ),
-                                  (  1.0,  0.5, 0.0 ),
-                                  (  0.5,  1.0, 0.0 ),
-                                  (  0.0,  0.5, 0.0 ),
-                                  ],
-    edges = ( 'line3', [ (0,4,1), (1,5,2), (2,6,3), (3,7,0), ], ),
-    faces = ( 'quad8', [ (0,1,2,3,4,5,6,7), ], ),
-    drawfaces = ( 'tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], ),
+    vertices = Coords.concatenate([
+        Quad4.vertices,
+        [ (  0.5,  0.0, 0.0 ),
+          (  1.0,  0.5, 0.0 ),
+          (  0.5,  1.0, 0.0 ),
+          (  0.0,  0.5, 0.0 ),
+          ]]),
+    edges = { 'line3': [ (0,4,1), (1,5,2), (2,6,3), (3,7,0), ], },
 )
+Quad8.drawfaces = { 'tri3': [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], },
 
 Quad9 = Element(
     'quad9',"A 9-node quadrilateral",
     ndim = 2,
     vertices = Quad8.vertices + [ (  0.5,  0.5, 0.0 ), ],
     edges = Quad8.edges,
-    faces = ( 'quad8', [ (0,1,2,3,4,5,6,7,8), ], ),
-    drawfaces = ( 'tri3', [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], ),
 )
+Quad9.drawfaces = { 'tri3': [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], },
+
 
 ######### 3D ###################
 
@@ -401,8 +385,8 @@ Tet4 = Element(
                  ( 0.0, 1.0, 0.0 ),
                  ( 0.0, 0.0, 1.0 ),
                  ],
-    edges = ( 'line2', [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ], ), 
-    faces = ( 'tri3', [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ], ),
+    edges = { 'line2': [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ], }, 
+    faces = { 'tri3': [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ], },
     )
 
 
@@ -420,8 +404,8 @@ Tet10 = Element(
                  ( 0.0, 0.5, 0.5 ),
                  ( 0.5, 0.0, 0.5 ),
                  ],
-    edges = ( 'line3', [ (0,4,1), (1,7,2), (2,5,0), (0,6,3), (1,9,3), (2,8,3) ],), 
-# BV: This needs further specification!
+    edges = { 'line3': [ (0,4,1), (1,7,2), (2,5,0), (0,6,3), (1,9,3), (2,8,3) ],}, 
+    # BV: This needs further specification!
     faces = Tet4.faces,
     )
 
@@ -429,26 +413,30 @@ Tet10 = Element(
 Tet14 = Element(
     'tet14',"A 14-node tetrahedron",
     ndim = 3,
-    vertices = Tet10.vertices + [ ( 1./3., 1./3., 0.0 ),
-                 ( 0.0, 1./3., 1./3. ),
-                 ( 1./3., 0.0, 1./3. ),
-                 ( 1./3., 1./3., 1./3. ),
-                 ],
+    vertices = Coords.concatenate([
+        Tet10.vertices,
+        [ ( 1./3., 1./3., 0.0 ),
+          ( 0.0, 1./3., 1./3. ),
+          ( 1./3., 0.0, 1./3. ),
+          ( 1./3., 1./3., 1./3. ),
+          ]]),
     edges = Tet10.edges, 
-# BV: This needs further specification!
+    # BV: This needs further specification!
     faces = Tet4.faces,
     )
     
     
 Tet15 = Element(
-'tet15',"A 15-node tetrahedron",
-ndim = 3,
-vertices = Tet14.vertices + [ ( 0.25, 0.25, 0.25 ),
-             ],
-edges = Tet10.edges,
-# BV: This needs further specification!
-faces = Tet4.faces,
-)
+    'tet15',"A 15-node tetrahedron",
+    ndim = 3,
+    vertices = Coords.concatenate([
+        Tet14.vertices,
+        [ ( 0.25, 0.25, 0.25 ),
+          ]]),
+    edges = Tet10.edges,
+    # BV: This needs further specification!
+    faces = Tet4.faces,
+    )
 
 
 Wedge6 = Element(
@@ -461,8 +449,9 @@ Wedge6 = Element(
                  ( 1.0, 0.0,-1.0 ),
                  ( 0.0, 1.0,-1.0 ),
                  ],
-    edges = ('line2', [ (0,1), (1,2), (2,0), (0,3), (1,4), (2,5), (3,4), (4,5), (5,3) ], ),
-    faces = ('tri3', [ (0,1,2), (3,5,4), (0,3,4,1), (1,4,5,2), (2,5,3,0) ], ),
+    edges = {'line2': [ (0,1), (1,2), (2,0), (0,3), (1,4), (2,5), (3,4), (4,5), (5,3) ], },
+    faces = {'tri3': [ (0,1,2), (3,5,4)],
+             'quad4': [(0,3,4,1), (1,4,5,2), (2,5,3,0) ], },
     )
 
 Hex8 = Element(
@@ -477,12 +466,12 @@ Hex8 = Element(
                  ( 1.0, 1.0, 1.0 ),
                  ( 0.0, 1.0, 1.0 ),
                  ],
-    edges = ('line2',[ (0,1), (1,2), (2,3), (3,0),
+    edges = {'line2':[ (0,1), (1,2), (2,3), (3,0),
                        (4,5), (5,6), (6,7), (7,4),
-                       (0,4), (1,5), (2,6), (3,7) ], ),
-    faces = ('quad4', [ (0,4,7,3), (1,2,6,5),
+                       (0,4), (1,5), (2,6), (3,7) ], },
+    faces = {'quad4': [ (0,4,7,3), (1,2,6,5),
                         (0,1,5,4), (3,7,6,2),
-                        (0,3,2,1), (4,5,6,7) ], ),
+                        (0,3,2,1), (4,5,6,7) ], },
     )
 
 Hex8.mirrored = (0,3,2,1,4,7,6,5) 
@@ -491,50 +480,45 @@ Hex8.mirrored = (0,3,2,1,4,7,6,5)
 Hex16 = Element(
     'hex16',"A 16-node hexahedron",
     ndim = 3,
-    vertices = Hex8.vertices + [
-        (  0.5,  0.0, 0.0 ),
-        (  1.0,  0.5, 0.0 ),
-        (  0.5,  1.0, 0.0 ),
-        (  0.0,  0.5, 0.0 ),
-        (  0.5,  0.0, 1.0 ),
-        (  1.0,  0.5, 1.0 ),
-        (  0.5,  1.0, 1.0 ),
-        (  0.0,  0.5, 1.0 ),
-        ],
-    edges = ('line3', [ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
-                         (4,12,5),(5,13,6),(6,14,7),(7,15,4),
-                         (0,0,4),(1,1,5),(2,2,6),(3,3,7) ], ),
-    faces = ( 'quad8', [ (0,2,7,3,15,11), (1,2,6,5,9,13),
-                          (0,1,5,4,8,12), (3,7,6,2,14,10),
-                          (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], ),
-)
+    vertices = Coords.concatenate([
+        Hex8.vertices,
+        [(  0.5,  0.0, 0.0 ),
+         (  1.0,  0.5, 0.0 ),
+         (  0.5,  1.0, 0.0 ),
+         (  0.0,  0.5, 0.0 ),
+         (  0.5,  0.0, 1.0 ),
+         (  1.0,  0.5, 1.0 ),
+         (  0.5,  1.0, 1.0 ),
+         (  0.0,  0.5, 1.0 ),
+         ]]),
+    edges = {'line3': [ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
+                        (4,12,5),(5,13,6),(6,14,7),(7,15,4),
+                        (0,0,4),(1,1,5),(2,2,6),(3,3,7) ], },
+    faces = { 'quad6': [ (0,2,7,3,15,11), (1,2,6,5,9,13),
+                         (0,1,5,4,8,12), (3,7,6,2,14,10), ],
+              'quad8': [ (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], },
+    )
 
 
 Hex20 = Element(
     'hex20',"A 20-node hexahedron",
     ndim = 3,
-    vertices = Hex16.vertices + [
-        (  0.0,  0.0, 0.5 ),
-        (  1.0,  0.0, 0.5 ),
-        (  1.0,  1.0, 0.5 ),
-        (  0.0,  1.0, 0.5 )
-        ],
-    edges = ('line3',[ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
-              (4,12,5),(5,13,6),(6,14,7),(7,15,4),
-              (0,16,4),(1,17,5),(2,18,6),(3,19,7) ],),
-    faces = ('quad8', [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
-              (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
-              (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], ),
+    vertices = Coords.concatenate([
+        Hex16.vertices,
+        [(  0.0,  0.0, 0.5 ),
+         (  1.0,  0.0, 0.5 ),
+         (  1.0,  1.0, 0.5 ),
+         (  0.0,  1.0, 0.5 )
+         ]]),
+    edges = {'line3':[ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
+                       (4,12,5),(5,13,6),(6,14,7),(7,15,4),
+                       (0,16,4),(1,17,5),(2,18,6),(3,19,7) ],},
+    faces = {'quad8': [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
+                        (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
+                        (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], },
     
 )
-# We can not set this at __init__ time
-if pyformex.options.hex20edgeslinear:
-    from numpy import concatenate
-    edges = np.array(Hex20.edges)
-    Hex20.drawedges = concatenate([edges[:,:2],edges[:,-2:]],axis=0)
     
-Hex20.drawas = { 'faces' : 'quad8' }
-
 
 ########## element type conversions ##################################
 
@@ -685,24 +669,24 @@ Icosa = Element(
                  (-phi, 0.0, 1.0 ),
                  (-phi, 0.0,-1.0 ),
                  ],
-    edges = [ (0,1),  (0,8), (1,8), (0,10),(1,10),
-              (2,3),  (2,9), (3,9), (2,11),(3,11),
-              (4,5),  (4,0), (5,0), (4,2), (5,2),
-              (6,7),  (6,1), (7,1), (6,3), (7,3),
-              (8,9),  (8,4), (9,4), (8,6), (9,6),
-              (10,11),(10,5),(11,5),(10,7),(11,7),
-              ],
-    faces = [ (0,1,8),  (1,0,10),
-              (2,3,11), (3,2,9),
-              (4,5,0),  (5,4,2),
-              (6,7,3),  (7,6,1),
-              (8,9,4),  (9,8,6),
-              (10,11,7),(11,10,5),
-              (0,8,4),  (1,6,8),
-              (0,5,10), (1,10,7),
-              (2,11,5), (3,7,11),
-              (2,4,9),  (3,9,6),
-              ],
+    edges = { 'line2': [ (0,1),  (0,8), (1,8), (0,10),(1,10),
+                         (2,3),  (2,9), (3,9), (2,11),(3,11),
+                         (4,5),  (4,0), (5,0), (4,2), (5,2),
+                         (6,7),  (6,1), (7,1), (6,3), (7,3),
+                         (8,9),  (8,4), (9,4), (8,6), (9,6),
+                         (10,11),(10,5),(11,5),(10,7),(11,7),
+                         ], },
+    faces = { 'tri3': [ (0,1,8),  (1,0,10),
+                        (2,3,11), (3,2,9),
+                        (4,5,0),  (5,4,2),
+                        (6,7,3),  (7,6,1),
+                        (8,9,4),  (9,8,6),
+                        (10,11,7),(11,10,5),
+                        (0,8,4),  (1,6,8),
+                        (0,5,10), (1,10,7),
+                        (2,11,5), (3,7,11),
+                        (2,4,9),  (3,9,6),
+                        ], },
     )
 
 
@@ -714,11 +698,6 @@ _default_eltype = {
     4 : Quad4,
     6 : Wedge6,
     8 : Hex8,
-    }
-
-_default_edgetype = {
-    2 : 'line2',
-    3 : 'line3',
     }
 
 _default_facetype = {
@@ -811,6 +790,16 @@ def printElementTypes():
 
 def elementName(eltype):
     return elementType(eltype).name()
+
+
+#Element.printAll()
+#printElementTypes()
+
+#for k,v in Element.collection.items():
+#    print k
+#    print v.getEdges()
+#    print v.getFaces()
+
 
 
 if __name__ == "__main__":
