@@ -184,8 +184,8 @@ class BboxActor(Actor):
         self.bb = bbox
         Hex8 = elementType('hex8')
         self.vertices = array(Hex8.vertices) * (bbox[1]-bbox[0]) + bbox[0]
-        self.edges = array(Hex8.edges)
-        self.facets = array(Hex8.faces)
+        self.edges = array(Hex8.edges[1])
+        self.facets = array(Hex8.faces[1])
 
     def bbox(self):
         return self.bb
@@ -693,34 +693,27 @@ class GeomActor(Actor):
         else:
             el = elementType(self.eltype)
             if mode=='wireframe' :
-                edgetype = None
-                if hasattr(el,'drawedges'):
-                    edges = el.drawedges
-                else:
-                    edges = el.edges
-                    edgetype = el.edgetype
-                drawEdges(self.coords,self.elems,edges,edgetype,color)    
+                for edgetype,edges in el.getDrawEdges().items():
+                    drawEdges(self.coords,self.elems,edges,edgetype,color)    
             else:
-                if hasattr(el,'drawfaces'):
-                    faces = el.drawfaces
-                else:
-                    faces = el.faces
-                if bkcolor is not None:
-                    #print "COLOR=%s" % color
-                    #print "BKCOLOR =%s" % bkcolor
-                    # Draw front and back with different colors
-                    #from canvas import glCulling
-                    #glCulling()
-                    GL.glEnable(GL.GL_CULL_FACE)
-                    GL.glCullFace(GL.GL_BACK)
-                    #print "DRAWING FRONT SIDES"
-                drawFaces(self.coords,self.elems,faces,mode,color,alpha)
-                if bkcolor is not None:
-                    #print "DRAWING BACK SIDES"
-                    GL.glCullFace(GL.GL_FRONT)
-                    GL.glColor(append(bkcolor,alpha))
-                    drawFaces(self.coords,self.elems,faces,mode,bkcolor,alpha)
-                    GL.glDisable(GL.GL_CULL_FACE)
+                for facetype,faces in el.getDrawFaces().items():
+                    print bkcolor
+                    if bkcolor is not None:
+                        #print "COLOR=%s" % color
+                        #print "BKCOLOR =%s" % bkcolor
+                        # Draw front and back with different colors
+                        #from canvas import glCulling
+                        #glCulling()
+                        GL.glEnable(GL.GL_CULL_FACE)
+                        GL.glCullFace(GL.GL_BACK)
+                        #print "DRAWING FRONT SIDES"
+                    drawFaces(self.coords,self.elems,faces,mode,color,alpha)
+                    if bkcolor is not None:
+                        #print "DRAWING BACK SIDES"
+                        GL.glCullFace(GL.GL_FRONT)
+                        GL.glColor(append(bkcolor,alpha))
+                        drawFaces(self.coords,self.elems,faces,mode,bkcolor,alpha)
+                        GL.glDisable(GL.GL_CULL_FACE)
 
    
 

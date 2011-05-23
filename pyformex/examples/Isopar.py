@@ -89,9 +89,10 @@ if sdim == 1:
 elif sdim == 2:
     F = simple.rectangle(1,1,1.,1.)
 else:
-    v = array(elements.Hex8.vertices)
-    f = array(elements.Hex8.faces)
-    F = Formex(v[f])
+    ## v = array(elements.Hex8.vertices)
+    ## f = array(elements.Hex8.faces[1])
+    ## F = Formex(v[f])
+    F = elements.Hex8.toFormex()
 
 if sdim > 1:
     for i in range(sdim):

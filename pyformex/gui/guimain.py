@@ -1135,6 +1135,23 @@ def runGUI():
 
     pf.interactive = True
     pf.debug("Start main loop")
+    warnings.warn("""..
+
+BEWARE!!!! 
+
+To enable some future developments, major changes were needed to the
+implementation of the Element data. These changes have been started
+since revision 1924, but it will take some more revisions before the
+work is completed. That means that the code will be in an unstable
+and likely broken state for some time. If you are an end user depending
+on a running pyFormex environment, you should consider to downgrade
+to a pre-1923 revision. If on the other hand you want to help us with
+the transition, please report any observed malfunctioning on the
+pyFormex forums.
+Thanks.
+The pyFormex developers.
+""")
+
     #utils.procInfo('runGUI')
     #from multiprocessing import Process
     #p = Process(target=pf.app.exec_)

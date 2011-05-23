@@ -433,7 +433,9 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
     # We collect them according to plexitude.
     # But first convert to a list, so that we can call this function
     # with an array too (in case of a single plexitude)
+    print faces
     faces = list(faces)
+    print faces
     for fac in olist.collectOnLength(faces).itervalues():
         fa = asarray(fac)
         nplex = fa.shape[1]

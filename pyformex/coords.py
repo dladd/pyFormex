@@ -1489,34 +1489,39 @@ class Coords(ndarray):
         return Coords(x.reshape(-1,3))
 
     
-    @classmethod
-    def interpolate(clas,F,G,div):
+    def interpolate(self,X,div):
         """Create interpolations between two :class:`Coords`.
 
-        F and G are two :class:`Coords` with the same shape.
-        v is a list of floating point values.
-        The result is the concatenation of the interpolations of F and G at all
-        the values in div.
-        An interpolation of F and G at value v is a :class:`Coords` H where each
-        coordinate Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
-        Thus, a :class:`Coords` interpolate(F,G,[0.,0.5,1.0]) will contain all points of
-        F and G and all points with mean coordinates between those of F and G.
+        Parameters:
 
-        As a convenience, if an integer is specified for div, it is taken as a
-        number of divisions for the interval [0..1].
-        Thus, interpolate(F,G,n) is equivalent with
-        interpolate(F,G,arange(0,n+1)/float(n))
+        - `X`: a :class:`Coords` with same shape as `self`.
+        - `div`: a list of floating point values, or an int. If an int
+          is specified, a list with (div+1) values for `div` is created
+          by dividing the interval [0..1] into `div` equal distances.
 
-        The resulting :class:`Coords` array has an extra axis (the first).
-        Its shape is (n,) + F.shape, where n is the number of divisions.
+        Returns:
+
+        A :class:`Coords` with an extra (first) axis, containing the
+        concatenation of the interpolations of `self` and `X` at all
+        values in `div`.
+        Its shape is (n,) + self.shape, where n is the number of values
+        in `div`.
+        
+        An interpolation of F and G at value v is a :class:`Coords` H where
+        each coordinate Hijk is obtained from:  Fijk = Fijk + v * (Gijk-Fijk).
+        Thus, X.interpolate(Y,[0.,0.5,1.0]) will contain all points of
+        X and Y and all points with mean coordinates between those of X and Y.
+
+        F.interpolate(G,n) is equivalent with
+        F.interpolate(G,arange(0,n+1)/float(n))
         """
-        if F.shape != G.shape:
-            raise RuntimeError,"Expected Coords objects with equal shape!"
+        if self.shape != X.shape:
+            raise RuntimeError,"`X` should have same shape as `self`"
         if type(div) == int:
             div = arange(div+1) / float(div)
         else:
             div = array(div).ravel()
-        return F + outer(div,G-F).reshape((-1,)+F.shape)
+        return self + outer(div,X-self).reshape((-1,)+self.shape)
 
 
     # Convenient shorter notations

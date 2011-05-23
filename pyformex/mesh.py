@@ -35,29 +35,6 @@ from elements import elementType,elementName
 from utils import deprecation
 from geometry import Geometry
 from simple import regularGrid
-
-
-#################### This first section holds experimental stuff!! #####
-
-# degenerate patterns
-_reductions_ = {
-    'hex8': {
-        'wedge6' : [
-            ([[0,1],[4,5]], [0,2,3,4,6,7]),
-            ([[1,2],[5,6]], [0,1,3,4,5,7]),
-            ([[2,3],[6,7]], [0,1,2,4,5,6]),
-            ([[3,0],[7,4]], [0,1,2,4,5,6]),
-            ([[0,1],[3,2]], [0,4,5,3,7,6]),
-            ([[1,5],[2,6]], [0,4,5,3,7,6]),
-            ([[5,4],[6,7]], [0,4,1,3,7,2]),
-            ([[4,0],[7,3]], [0,5,1,3,6,2]),
-            ([[0,3],[1,2]], [0,7,4,1,6,5]),
-            ([[3,7],[2,6]], [0,3,4,1,2,5]),
-            ([[7,4],[6,5]], [0,3,4,1,2,5]),
-            ([[4,0],[5,1]], [0,3,7,1,2,6]),
-            ],
-        },
-    }
    
 
 ##############################################################
@@ -330,39 +307,12 @@ class Mesh(Geometry):
         return self.elems
 
 
-    def getLowerEntitiesSelector(self,level=-1,unique=False):
+    @deprecation("Mesh.getLowerEntitiesSelector is deprecated. Use Element.getEntities instead.")
+    def getLowerEntitiesSelector(self,level=-1):
         """Get the entities of a lower dimensionality.
 
-        If the element type is defined in the :mod:`elements` module,
-        this returns a Connectivity table with the entities of a lower
-        dimensionality. The full list of entities with increasing
-        dimensionality  0,1,2,3 is::
-
-            ['points', 'edges', 'faces', 'cells' ]
-
-        If level is negative, the dimensionality returned is relative
-        to that of the caller. If it is positive, it is taken absolute.
-        Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
-        returns the faces, while for a 2D element type, it returns the edges.
-        For both meshes however,  getLowerEntities(+1) returns the edges.
-
-        By default, all entities for all elements are returned and common
-        entities will appear multiple times. Specifying unique=True will 
-        return only the unique ones.
-
-        The return value may be an empty table, if the element type does
-        not have the requested entities (e.g. the 'point' type).
-        If the eltype is not defined, or the requested entity level is
-        outside the range 0..3, the return value is None.
         """
-        if level < 0:
-            level = self.eltype.ndim + level
-
-        if level < 0 or level > 3:
-            return None
-
-        attr = ['points', 'edges', 'faces', 'cells'][level]
-        return array(getattr(self.eltype,attr))
+        return self.eltype.getEntities(level).values()[0]
 
 
     def getLowerEntities(self,level=-1,unique=False):
@@ -535,7 +485,7 @@ class Mesh(Geometry):
             M = Mesh(self.coords,brd,prop=self.prop[enr])
 
         if compact:
-            M._compact()
+            M = M.compact()
         return M
 
 
@@ -549,6 +499,35 @@ class Mesh(Geometry):
           
         """
         return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
+
+
+    def reflect(self,autofix=None,**kargs):
+        """Reflect the coordinates in direction dir against plane at pos.
+
+        Parameters:
+
+        - `dir`: int: direction of the reflection (default 0)
+        - `pos`: float: offset of the mirror plane from origin (default 0.0)
+        """
+        if autofix is None:
+            import warnings
+            from datetime import datetime
+            today = datetime.today()
+            deadline = datetime(year=2011,month=7,day=1)
+            if today > deadline:
+                autofix = True
+                warnings.warn("The Mesh.reflect now uses 'autofix=True' by default!")
+            else:
+                autofix = False
+                warnings.warn("The Mesh.reflect now has an 'autofix' option that will automatically fix the Mesh connectivity table after a `reflect` operation. Currently this autofix is set to 'False' by default, so as not to break your code. (Thank Francesco for this). However, after %s, we will switch the default to 'True', so you either have to add 'autofix=False' or (by preference) you should fix your code to use the new default value (e.g. remove your own fixing methods)!")
+                              
+        M = Geometry.reflect(**kargs)
+        # NOW FIX THE elem connectivity
+        if autofix and hasattr(M.eltype,'mirrored'):
+            M = M.select(M.eltype.mirrored)
+
+        return M
+        
 
 
 #############################################################################
@@ -597,29 +576,6 @@ class Mesh(Geometry):
     def nEdgeAdjacent(self):
         """Find the number of adjacent elems."""
         return (self.edgeAdjacency() >=0).sum(axis=-1)
-
-
-    # BV: Should be made dependent on getFaces
-    # or a function??
-    # ?? DOES THIS WORK FOR *ANY* MESH ??
-    # What with a mesh of points, lines, ...
-    # Also, el.faces can contain items of different length
-    @deprecation("The use of this function is discouraged!")
-    def getAngles(self, angle_spec=Deg):
-        """_Returns the angles in Deg or Rad between the edges of a mesh.
-        
-        The returned angles are shaped  as (nelems, n1faces, n1vertices),
-        where n1faces are the number of faces in 1 element and the number
-        of vertices in 1 face.
-        """
-        #mf = self.coords[self.getFaces()]
-        mf = self.coords[self.getLowerEntities(2,unique=False)]
-        v = mf - roll(mf,-1,axis=1)
-        v=normalize(v)
-        v1=-roll(v,+1,axis=1)
-        angfac= arccos( clip(dotpr(v, v1), -1., 1. ))/angle_spec
-        el = self.eltype
-        return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
 
 
     # BV: REMOVED node2nodeAdjacency:
@@ -673,7 +629,7 @@ Size: %s
         This creates a detailed string representation of a Mesh,
         containing the report() and the lists of nodes and elements.
         """
-        return self.report() + "Coords:\n" + self.coords.__str__() +  "Elems:\n" + self.elems.__str__()
+        return self.report() + "Coords:\n" + self.coords.__str__() +  "\nElems:\n" + self.elems.__str__()
 
 
     def fuse(self,**kargs):
@@ -701,7 +657,7 @@ Size: %s
         return self.coords.match(mesh.coords,**kargs)
         
     
-    def matchElemsCentroids(self, mesh,**kargs):
+    def matchCentroids(self, mesh,**kargs):
         """Match elems of Mesh with elems of self.
         
         self and Mesh are same eltype meshes
@@ -709,10 +665,10 @@ Size: %s
         
         Elems are matched by their centroids.
         """
-        c=Mesh(self.centroids(), arange(self.nelems() ))
-        mc=Mesh(mesh.centroids(), arange(mesh.nelems() ))
+        c = Mesh(self.centroids(), arange(self.nelems() ))
+        mc = Mesh(mesh.centroids(), arange(mesh.nelems() ))
         return c.matchCoords(mc,**kargs)
-        
+
 
     # BV: I'm not sure that we need this. Looks like it can or should
     # be replaced with a method applied on the BorderMesh
@@ -732,7 +688,7 @@ Size: %s
         hiinv = hi.inverse()
         fm=Mesh(self.coords,self.getFaces())
         mesh=Mesh(mesh.coords,mesh.getFaces())
-        c=fm.matchElemsCentroids(mesh)
+        c=fm.matchCentroids(mesh)
         hiinv = hiinv[c]
         enr =  unique(hiinv[hiinv >= 0])  # element number
         return enr
@@ -744,26 +700,26 @@ Size: %s
     ##     return mesh.coords.match(self.coords)
 
 
-    # Since this is used in only a few places, we could
-    # throw it away and only use compact()
-    def _compact(self):
-        """Remove unconnected nodes and renumber the mesh.
+    ## # Since this is used in only a few places, we could
+    ## # throw it away and only use compact()
+    ## def _compact(self):
+    ##     """Remove unconnected nodes and renumber the mesh.
 
-        Beware! This function changes the object in place and therefore
-        returns nothing. It is mostly intended for internal use.
-        Normal users should use compact().
-        """
-        nodes = unique(self.elems)
-        if nodes.size == 0:
-            self.__init__([],[])
+    ##     Beware! This function changes the object in place and therefore
+    ##     returns nothing. It is mostly intended for internal use.
+    ##     Normal users should use compact().
+    ##     """
+    ##     nodes = unique(self.elems)
+    ##     if nodes.size == 0:
+    ##         self.__init__([],[])
         
-        elif nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
-            coords = self.coords[nodes]
-            if nodes[-1] >= nodes.size:
-                elems = inverseUniqueIndex(nodes)[self.elems]
-            else:
-                elems = self.elems
-            self.__init__(coords,elems,prop=self.prop,eltype=self.eltype)
+    ##     elif nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
+    ##         coords = self.coords[nodes]
+    ##         if nodes[-1] >= nodes.size:
+    ##             elems = inverseUniqueIndex(nodes)[self.elems]
+    ##         else:
+    ##             elems = self.elems
+    ##         self.__init__(coords,elems,prop=self.prop,eltype=self.eltype)
     
 
     def compact(self):
@@ -812,7 +768,7 @@ Size: %s
         if self.prop is not None:
             M.setProp(self.prop[selected])
         if compact:
-            M._compact()
+            M = M.compact()
         return M
 
 
@@ -1180,6 +1136,67 @@ Size: %s
         """
         order = self.elems.reorder(order)
         return self.__class__(self.coords,self.elems[order],prop=self.prop[order],eltype=self.eltype)
+
+##############################################################
+    #
+    # Connection, Extrusion, Sweep
+    #
+
+    def _connect_1_(self,mesh1,div=1,eltype=None):
+        """Connect a Mesh with another one to form a hypermesh.
+
+        Parameters:
+
+        - `mesh1`: a Mesh with the same element type and shape
+          (number of elements and plexitude) as self.
+          The two Meshes usually also have the same topology.
+          Both Meshes are connected to form a hypermesh. The plexitude of the
+          new Mesh is two times that of the original Mesh.
+        - `div`: Either an integer, or a sequence of numbers (usually between
+          0.0 and 1.0). This parameter has the same meaning as in
+          `Coords.interpolate`. If an int is given, div will be set to
+          (div+1) equally spaced values in the range [0.0..1.0].
+        - `eltype`: the element type of the constructed hypermesh. If not
+          given it is set from the element type database. Otherwise, the
+          extrude element type will be created first, and then a conversion
+          to the rewuested element is attempted.
+        """
+        if self.eltype != mesh1.eltype or self.shape() != mesh1.shape():
+            raise ValueError,"Incompatible Mesh"
+
+        # get the extruded eltype and reordering schedule
+        _eltype, reorder = self.eltype.extruded
+
+        print "NEW CONNECT to %s, %s" % (_eltype, reorder)
+
+        # compact the node numbering schemes
+        self = self.compact()
+        mesh1 = mesh1.compact()
+
+        # Create the interpolations of the coordinates
+        if type(div) == int:
+            div = arange(div+1) / float(div)
+        else:
+            div = array(div).ravel()
+        x = Coords.interpolate(self.coords,mesh1.coords,div).reshape(-1,3)
+
+        # Create the connectivity table
+        nnod = self.ncoords()
+        e1 = self.elems
+        e2 = mesh1.elems + nnod
+        et = concatenate([e1,e2],axis=-1)
+        e = concatenate([et+i*nnod for i in range(div.size-1)])
+        
+        # Reorder nodes if necessary
+        if reorder:
+            e = e[:,reorder]
+        eM = Mesh(x,e,eltype=_eltype).setProp(self.prop)
+
+        # convert to proper eltype
+        if eltype:
+            eM = eM.convert(eltype)
+
+        return eM
  
 
     def extrude(self,n,step=1.,dir=0,eltype=None):
@@ -1407,8 +1424,6 @@ Size: %s
         return self.clip(self.test(nodes=nodes,dir=n,min=p))
 
 
-    
-
     def volumes(self):
         """Return the signed volume of all the mesh elements
 
@@ -1449,25 +1464,57 @@ Size: %s
             return 0.0
     
 
-    # ?? IS THIS DEFINED FOR *ANY* MESH ??
-    #this is define for every linear surface or linear volume mesh.
-    def equiAngleSkew(self):
-        """Returns the equiAngleSkew of the elements, a mesh quality parameter .
+
+    #
+    #  NEEDS CLEANUP BEFORE BEING REINSTATED
+    #  =====================================
+    #
+
+    # BV: Should be made dependent on getFaces
+    # or become a function??
+    # ?? DOES THIS WORK FOR *ANY* MESH ??
+    # What with a mesh of points, lines, ...
+    # Also, el.faces can contain items of different plexitude
+    # Maybe define this for 2D meshes only?
+    # Formulas for both linear and quadratic edges
+    # For quadratic: Option to select tangential or chordal directions
+    
+    ## def getAngles(self, angle_spec=Deg):
+    ##     """_Returns the angles in Deg or Rad between the edges of a mesh.
+        
+    ##     The returned angles are shaped  as (nelems, n1faces, n1vertices),
+    ##     where n1faces are the number of faces in 1 element and the number
+    ##     of vertices in 1 face.
+    ##     """
+    ##     #mf = self.coords[self.getFaces()]
+    ##     mf = self.coords[self.getLowerEntities(2,unique=False)]
+    ##     v = mf - roll(mf,-1,axis=1)
+    ##     v=normalize(v)
+    ##     v1=-roll(v,+1,axis=1)
+    ##     angfac= arccos( clip(dotpr(v, v1), -1., 1. ))/angle_spec
+    ##     el = self.eltype
+    ##     return angfac.reshape(self.nelems(),len(el.faces), len(el.faces[0]))
+
+
+    ## This is dependent on removed getAngles
+    ## # ?? IS THIS DEFINED FOR *ANY* MESH ??
+    ## #this is define for every linear surface or linear volume mesh.
+    ## def equiAngleSkew(self):
+    ##     """Returns the equiAngleSkew of the elements, a mesh quality parameter .
        
-      It quantifies the skewness of the elements: normalize difference between
-      the worst angle in each element and the ideal angle (angle in the face 
-      of an equiangular element, qe).
-      """
-        eang=self.getAngles(Deg)
-        eangsh= eang.shape
-        eang= eang.reshape(eangsh[0], eangsh[1]*eangsh[2])
-        eang.max(axis=1), eang.min(axis=1)
-        eangMax, eangmin=eang.max(axis=1), eang.min(axis=1)        
-        f= self.eltype.getFaces()
-        nedginface=len( array(f[ f.keys()[0] ], int)[0] )
-        qe=180.*(nedginface-2.)/nedginface
-        extremeAngles= [ (eangMax-qe)/(180.-qe), (qe-eangmin)/qe ]
-        return array(extremeAngles).max(axis=0)
+    ##   It quantifies the skewness of the elements: normalize difference between
+    ##   the worst angle in each element and the ideal angle (angle in the face 
+    ##   of an equiangular element, qe).
+    ##   """
+    ##     eang=self.getAngles(Deg)
+    ##     eangsh= eang.shape
+    ##     eang= eang.reshape(eangsh[0], eangsh[1]*eangsh[2])
+    ##     eangMax, eangmin=eang.max(axis=1), eang.min(axis=1)        
+    ##     f= self.eltype.faces[1]
+    ##     nedginface=len( array(f[ f.keys()[0] ], int)[0] )
+    ##     qe=180.*(nedginface-2.)/nedginface
+    ##     extremeAngles= [ (eangMax-qe)/(180.-qe), (qe-eangmin)/qe ]
+    ##     return array(extremeAngles).max(axis=0)
 
 
     def actor(self,**kargs):
@@ -1616,7 +1663,7 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
 
         
 # define this also as a Mesh method
-Mesh.connect = connectMesh
+Mesh.connect = Mesh._connect_1_
 
 def connectMeshSequence(ML,loop=False,**kargs):
     #print([Mi.eltype for Mi in ML])

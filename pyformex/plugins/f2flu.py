@@ -130,7 +130,7 @@ def output_fluent(fil,nodes,elems):
     print(nodes)
     print("Element connectivity")
     print(elems)
-    faces = array(Tet4.faces)   # Turning faces into an array is important !
+    faces = array(Tet4.faces[1])   # Turning faces into an array is important !
     print("Tetraeder faces")
     print(faces)
     elf = elems.take(faces,axis=1)

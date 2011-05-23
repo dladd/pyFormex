@@ -2146,7 +2146,7 @@ def interpolate(F,G,div,swap=False):
     If swap==True, the order is swapped and you get m sequences of n
     interpolations.
     """
-    r = Coords.interpolate(F.coords,G.coords,div)
+    r = F.coords.interpolate(G.coords,div)
     # r is a 4-dim array
     if swap:
         r = r.swapaxes(0,1)

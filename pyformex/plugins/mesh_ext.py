@@ -262,7 +262,7 @@ def areas(self):
         """
         return _default_surfacetype.get(nplex,None)
 
-    nfacperel= len(self.eltype.faces)#nfaces per elem
+    nfacperel= len(self.eltype.faces[1])#nfaces per elem
     mf=Mesh(self.coords, self.getFaces())#mesh of all faces
     mf.eltype = elementType(defaultSurfacetype(mf.nplex()))
     ntriperfac= mf.select([0]).convert('tri3').nelems()#how many tri per face

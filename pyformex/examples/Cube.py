@@ -59,8 +59,8 @@ def cube_tri(color=None):
 def cube_quad(color=None):
     """Create a cube with quadrilaterals."""
     v = array(Hex8.vertices)
-    f = array(Hex8.faces)
-    faces = Formex(v[f])
+    f,ftype = Hex8.faces)
+    faces = Formex(v[f],eltype=ftype)
     if color == 'Single':
         color = 'red'
     elif color == 'Face':
@@ -75,8 +75,7 @@ def showCube(base,color):
     #print base,color
     if base == 'Triangle':
         cube = cube_tri
-    else:
-        cube = cube_quad
+    else:        cube = cube_quad
     cube,color = cube(color)
     clear()
     draw(cube,color=color)

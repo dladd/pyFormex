@@ -32,19 +32,22 @@ techniques = ['dialog','elements']
 """
 
 from elements import *
-from formex import *
+from mesh import Mesh
 from gui.widgets import simpleInputItem as I
 import utils
+import olist
 
-def showElement(eltype,deformed,reduced):
+def showElement(eltype,deformed,reduced,drawas):
     clear()
     smooth()
     drawText("Element type: %s" %eltype,100,200,size=24,color=black)
-
     el = elementType(eltype)
+    print el.report()
+
     ndim = 3
     if reduced:
         ndim = el.ndim
+
     if ndim == 3:
         view('iso')
     else:
@@ -58,32 +61,37 @@ def showElement(eltype,deformed,reduced):
             v[...,2] = 0.0
         if ndim < 2:
             v[...,1] = 0.0
-            
-            
-    e = array(el.edges)
-    s = array([el.element])
 
-    # This will not work for elements with edges of different plexitude!
-    F = [ Formex(v), Formex(v[e],eltype=el.edgetype), Formex(v[s],eltype=eltype) ]
+    F = []
+    for i in range(el.ndim+1):
+        ent = el.getEntities(i)
+        F +=  [ Mesh(v,e,eltype=et) for et,e in ent.items() ]
+
+    F = olist.flatten(F)
+
+    if drawas == 'Formex':
+        F = [ Mi.toFormex() for Mi in F ]
+
     for Fi in F:
-        #clear()
+        print Fi
         draw(Fi)
+        
     wait()
     wireframe()
     drawVertexNumbers(Fi)
-#    wait()
     
         
 if __name__ == "draw":
 
     ElemList = []
-    for ndim in [2,3]:
+    for ndim in [0,1,2,3]:
         ElemList += elementTypes(ndim)
         
     res = askItems([
         I('Element Type',choices=['All',]+ElemList),
         I('Deformed',False),
         I('Reduced dimensionality',False),
+        I('Draw as',None,itemtype='radio',choices=['Formex','Mesh']),
         ])
     if not res:
         exit()
@@ -91,6 +99,7 @@ if __name__ == "draw":
     eltype = res['Element Type']
     deformed = res['Deformed']
     reduced = res['Reduced dimensionality']
+    drawas = res['Draw as']
     if eltype == 'All':
         ellist = ElemList
     else:
@@ -98,7 +107,7 @@ if __name__ == "draw":
     clear()
     delay(1)
     for el in ellist:
-        showElement(el,deformed,reduced)
+        showElement(el,deformed,reduced,drawas)
     
     
 # End
