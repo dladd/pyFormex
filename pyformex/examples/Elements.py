@@ -37,7 +37,6 @@ from gui.widgets import simpleInputItem as I
 import utils
 import olist
 
-
 colors = [black,blue,yellow,red]
 
 def showElement(eltype,deformed,reduced,drawas):
@@ -46,7 +45,9 @@ def showElement(eltype,deformed,reduced,drawas):
     drawText("Element type: %s" %eltype,100,200,size=24,color=black)
     el = elementType(eltype)
     print el.report()
-
+    M = el.toMesh()
+    print M
+    
     ndim = 3
     if reduced:
         ndim = el.ndim
@@ -56,7 +57,7 @@ def showElement(eltype,deformed,reduced,drawas):
     else:
         view('front')
         
-    v = el.vertices
+    v = M.coords
     if deformed:
         dv = ( random.rand(v.size).reshape(v.shape) - 0.5 ) * 0.1
         v += dv
@@ -65,20 +66,27 @@ def showElement(eltype,deformed,reduced,drawas):
         if ndim < 2:
             v[...,1] = 0.0
 
+    ## eL = [ M.getLowerEntities(i) for i in range(el.ndim+1) ]
+    ## ML = [ Mesh(M.coords,M,eltype=M.eltype) for i in range(el.ndim+1) ]
 
     for i in range(el.ndim+1):
-        ent = el.getEntities(i)
-        print "ENTITIES %s" % i,
-        print ent
-        F =  [ Mesh(v,e,eltype=et) for et,e in ent.items() ]
-
+        e = M.getLowerEntities(i)
+        F = Mesh(v,e,eltype=e.eltype)
+        print i,e.eltype,F.eltype
+        
         if drawas == 'Formex':
-            F = [ Fi.toFormex() for Fi in F ]
-
+            F = F.toFormex(F)
+            
+        print "DRAWING WITH ELTYPE %s" % F.eltype
         draw(F,color=colors[i])
         if i == 0:
-            drawVertexNumbers(F[0])
-    
+            drawVertexNumbers(F)
+
+        if i==2:
+            print F
+            print F.eltype
+
+   
         
 if __name__ == "draw":
 

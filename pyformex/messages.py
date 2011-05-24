@@ -67,4 +67,7 @@ warn_widgets_updatedialogitems = "gui.widgets.updateDialogItems now expects data
 
 warn_deprecated_inputitem = "Using a list or tuple as InputItem data is deprecated. Please use the new dict format."
 
+_future_deprecation = "This functionality is deprecated and will probably be removed in future, unless you explain to the developers why they should retain it."
+
+
 # End

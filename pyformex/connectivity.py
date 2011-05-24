@@ -34,7 +34,7 @@ adjacency of elements can easily be detected from common node numbers.
 
 from arraytools import *
 from utils import deprecation
-_future_deprecation = "This functionality is deprecated and will probably be removed in future, unless you explain to the developers why they should retain it."
+from messages import _future_deprecation
 
 
 # BV: Should we make an InverseConnectivity class?
@@ -99,7 +99,7 @@ class Connectivity(ndarray):
     # Because we have a __new__ constructor here and no __init__,
     # we have to list the arguments explicitely in the docstring above.
     #
-    def __new__(self,data=[],dtyp=None,copy=False,nplex=0,allow_negative=False):
+    def __new__(self,data=[],dtyp=None,copy=False,nplex=0,allow_negative=False,eltype=None):
         """Create a new Connectivity object."""
         
         # Turn the data into an array, and copy if requested
@@ -119,20 +119,24 @@ class Connectivity(ndarray):
  
         # Check values
         if ar.size > 0:
-            self._max = ar.max()
-            if self._max > 2**31-1 or (ar.min() < 0 and not allow_negative):
+            maxval = ar.max()
+            if maxval > 2**31-1 or (ar.min() < 0 and not allow_negative):
                 raise ValueError,"Negative or too large positive value in data"
             if nplex > 0 and ar.shape[1] != nplex:
                 raise ValueError,"Expected data of plexitude %s" % nplex
         else:
-            self._max = -1
+            maxval = -1
             ar = ar.reshape(0,nplex)
             
         # Transform 'subarr' from an ndarray to our new subclass.
         ar = ar.view(self)
 
-        # Other data
-        self.inv = None   # inverse index
+        ## # Other data
+        ar.inv = None   # inverse index
+        ar.maxval = maxval
+
+        if eltype:
+            ar.eltype = eltype
 
         return ar
 
@@ -214,12 +218,105 @@ class Connectivity(ndarray):
 
         Example:
         
-          >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).removeDegenerate()
-          Connectivity([[0, 1, 2],
-                 [0, 3, 2]])
+        >>> Connectivity([[0,1,2],[0,1,1],[0,3,2]]).removeDegenerate()
+        Connectivity([[0, 1, 2],
+               [0, 3, 2]])
 
         """
         return self[~self.testDegenerate()]
+
+
+    def reduceDegenerate(self,target=None):
+        """Reduce degenerate elements to lower plexitude elements.
+
+        This will try to reduce the degenerate elements of the Connectivity
+        to a lower plexitude. This is only possible if an element type
+        was set in the Connectivity. This function uses the data of
+        the Element database in :mod:`elements`.
+
+        If a target element type is given, only the reductions to that element
+        type are performed. Else, all the target element types for which
+        a reduction scheme is available, will be tried.
+
+        Returns:
+        
+        A list of Connectivities of which the first one contains
+        the originally non-degenerate elements and the last one contains
+        the elements that could not be reduced and may be empty.
+        If the original Connectivity does not have an element type set,
+        or the element type does not have any reduction schemes defined,
+        a list with only the original is returned.
+
+        Remark: If the Connectivity is part of a Mesh, you should use the
+        Mesh.reduceDegenerate method instead, as that one will preserve
+        the property numbers into the resulting Meshes.
+
+        Example:
+        
+        >>> C = Connectivity([[0,1,2],[0,1,1],[0,3,2]],eltype='line3')
+        >>> print C.reduceDegenerate()
+        
+        """
+        from elements import elementType
+        if not hasattr(self,'eltype'):
+           print "NO ELTYPE"
+           return [ self ]
+
+        print "NA IMPORT",self.eltype,id(self.eltype)
+        eltype = elementType(self.eltype)
+        if not hasattr(eltype,'degenerate'):
+            print "NO REDUCTIONS"
+            return [ self ]
+
+        # get all reductions for this eltype
+        strategies = eltype.degenerate
+
+        # if target, keep only those leading to target
+        if target is not None:
+            s = strategies.get(target,[])
+            if s:
+                strategies = {target:s}
+            else:
+                strategies = {}
+
+        print "STRATEGIES",strategies
+
+        if not strategies:
+            return [self]
+
+
+        e = self
+        ML = []
+
+        for totype in strategies:
+            print "REDUCE TO %s" % totype
+
+            elems = []
+            for conditions,selector in strategies[totype]:
+                cond = array(conditions)
+                #print "TRYING",cond
+                #print e
+                w = (e[:,cond[:,0]] == e[:,cond[:,1]]).all(axis=1)
+                #print "Matching elems: %s" % where(w)[0]
+                sel = where(w)[0]
+                if len(sel) > 0:
+                    elems.append(e[sel][:,selector])
+                    # remove the reduced elems from m
+                    e = e[~w]
+
+                    if e.nelems() == 0:
+                        break
+
+            if elems:
+                elems = concatenate(elems)
+                ML.append(Connectivity(elems,eltype=totype))
+
+            if e.nelems() == 0:
+                break
+
+        ML.append(e)
+
+        return ML
 
     
     def testDoubles(self,permutations=True):
@@ -1202,5 +1299,11 @@ def adjacencyArrays(elems,nsteps=1):
         step += 1
     return adj
 
+
+if __name__ == "__main__":
+
+    C = Connectivity([[0,1],[2,3]],eltype='line2')
+    print C
+    print C.eltype
 
 # End

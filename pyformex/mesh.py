@@ -164,7 +164,11 @@ class Mesh(Geometry):
         This method is seldom needed, because the applications should
         normally set the element type at creation time.
         """
-        self.eltype = elementType(eltype,self.nplex())
+        # For compatibility reasons, the eltype is set as an attribute
+        # of both the Mesh and the Mesh.elems attribute
+        if eltype is None and hasattr(self.elems,'eltype'):
+            eltype = self.elems.eltype
+        self.elems.eltype = self.eltype = elementType(eltype,self.nplex())
         return self
     
 
@@ -312,7 +316,7 @@ class Mesh(Geometry):
         """Get the entities of a lower dimensionality.
 
         """
-        return self.eltype.getEntities(level).values()[0]
+        return self.eltype.getEntities(level)
 
 
     def getLowerEntities(self,level=-1,unique=False):
@@ -340,8 +344,9 @@ class Mesh(Geometry):
         If the eltype is not defined, or the requested entity level is
         outside the range 0..3, the return value is None.
         """
-        sel = self.getLowerEntitiesSelector(level)
+        sel = self.eltype.getEntities(level)
         ent = self.elems.selectNodes(sel)
+        ent.eltype = sel.eltype
         if unique:
             ent = ent.removeDoubles()
 
@@ -1007,6 +1012,10 @@ Size: %s
         elements that could not be reduced and may be empty.
         Property numbers propagate to the children. 
         """
+        #
+        # This double a lot of functionality of Connectivity.reduceDegenerate
+        # But this was really needed to keep the properties
+        #
         strategies = _reductions_.get(self.eltype,{})
         if eltype is not None:
             s = strategies.get(eltype,[])

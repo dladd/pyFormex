@@ -32,9 +32,17 @@ should be done by the interface modules.
 """
 import pyformex
 from coords import Coords
-import numpy as np
+from connectivity import Connectivity
+from numpy import arange
 from odict import ODict
 
+def _sanitize(ent):
+    # input is Connectivity or (eltype,table)
+    # output is Connectivity
+    if isinstance(ent,Connectivity):
+        return ent
+    else:
+        return Connectivity(ent[1],eltype=ent[0])
 
 class Element(object):
     """Element base class: an empty element.
@@ -126,21 +134,13 @@ Proposed changes in the Element class
 
     collection = ODict() # the full collection with all defined elements
 
-
-    @classmethod
-    def _sanitize(clas,ent):
-        ent = dict((k,np.array(v)) for k,v in ent.items())
-        nent = sum(len(v) for v in ent.values())
-        return nent,ent
-
-    
-    def __init__(self,name,doc,ndim,vertices,edges={},faces={}):
+    def __init__(self,name,doc,ndim,vertices,edges=('',[]),faces=('',[])):
+                
         self.doc = doc
         self.ndim = ndim
         self.vertices = Coords(vertices)
-        self._nedges,self.edges = Element._sanitize(edges)
-        self._nfaces,self.faces = Element._sanitize(faces)
-
+        self.edges = _sanitize(edges)
+        self.faces = _sanitize(faces)
         # add the element to the collection
         name = name.lower()
         Element.collection[name] = self
@@ -154,10 +154,10 @@ Proposed changes in the Element class
 
                                       
     def nedges(self):
-        return self._nedges
+        return self.edges.nelems()
     
     def nfaces(self):
-        return self._nfaces
+        return self.faces.nelems()
 
 
     def getPoints(self):
@@ -171,18 +171,9 @@ Proposed changes in the Element class
 
     def getCells(self):
         return self.getEntities(3)
-
-    def getDrawEdges(self):
-        try:
-            return self.drawedges
-        except:
-            return self.getEdges()
-
-    def getDrawFaces(self):
-        try:
-            return self.drawfaces
-        except:
-            return self.getFaces()
+    
+    def getElement(self):
+        return self.getEntities(self.ndim)
 
 
     def getEntities(self,level,reduce=False):
@@ -202,7 +193,7 @@ Proposed changes in the Element class
 
         The return value is a dict where the keys are element types
         and the values are connectivity tables. 
-        If reduce == False: there will be only one connectivity tables
+        If reduce == False: there will be only one connectivity table
         and it may include degenerate elements.
         If reduce == True, an attempt is made to reduce the degenerate
         elements. The returned dict may then have multiple entries.
@@ -217,37 +208,41 @@ Proposed changes in the Element class
             return None
         
         if level == 0:
-            return {'point': np.arange(self.nplex()).reshape((-1,1))}
+            return Connectivity(arange(self.nplex()).reshape((-1,1)),eltype='point')
 
         elif level == self.ndim:
-            return {self.name(): np.arange(self.nplex()).reshape((1,-1))}
+            return Connectivity(arange(self.nplex()).reshape((1,-1)),eltype=self.name())
 
-        else:
-            if level == 1:
-                ent = self.edges
-                
-            elif level == 2:
-                ent = self.faces
+        elif level == 1:
+            return self.edges
 
-            if reduce:
-                import warnings
-                warnings.warn("The `reduce` parameter is not yet implemented!")
-                return ent
+        elif level == 2:
+            return self.faces
+ 
 
-            else:
-                return ent
+    def getDrawEdges(self):
+        if not hasattr(self,'drawedges'):
+            self.drawedges = self.getEdges().reduceDegenerate()
+        return self.drawedges
+
+    def getDrawFaces(self):
+        if not hasattr(self,'drawfaces'):
+            print "REDUCING FACES"
+            self.drawfaces = self.getFaces().reduceDegenerate()
+        return self.drawfaces
         
 
     def toFormex(self):
-        x = np.array(self.vertices)
-        e = np.array(self.element)
-        return Formex(x[e])
+        from formex import Formex
+        x = self.vertices
+        e = self.getElement()
+        return Formex(x[e],eltype=e.eltype)
 
     def toMesh(self):
-        from plugins import Mesh
-        x = np.array(self.vertices)
-        e = np.array(self.element)
-        return Mesh(x,e)
+        from mesh import Mesh
+        x = self.vertices
+        e = self.getElement()
+        return Mesh(x,e,eltype=e.eltype)
 
     def name(self):
         for k,v in Element.collection.items():
@@ -307,7 +302,7 @@ Tri3 = Element(
                  ( 1.0, 0.0, 0.0 ),
                  ( 0.0, 1.0, 0.0 ),
                  ],
-    edges = { 'line2': [ (0,1), (1,2), (2,0) ] }
+    edges = ('line2', [ (0,1), (1,2), (2,0) ])
     )
 
 Tri6 = Element(
@@ -320,9 +315,9 @@ Tri6 = Element(
                  ( 0.5, 0.5, 0.0 ),
                  ( 0.0, 0.5, 0.0 ),
                  ],    
-    edges = { 'line3': [ (0,3,1), (1,4,2), (2,5,0) ], }
+    edges = ('line3', [ (0,3,1), (1,4,2), (2,5,0) ], )
     )
-Tri6.drawfaces = { 'tri3': [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ] }
+Tri6.drawfaces = ('tri3', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ] )
 
 
 Quad4 = Element(
@@ -333,9 +328,8 @@ Quad4 = Element(
                  (  1.0,  1.0, 0.0 ),
                  (  0.0,  1.0, 0.0 ),
                  ],
-    edges = { 'line2': [ (0,1), (1,2), (2,3), (3,0) ], }
+    edges = ('line2', [ (0,1), (1,2), (2,3), (3,0) ], )
     )
-
 
 Quad6 = Element(
     'quad6',"A 6-node quadrilateral",
@@ -345,9 +339,13 @@ Quad6 = Element(
         [ (  0.5,  0.0, 0.0 ),
           (  0.5,  1.0, 0.0 ),
           ]]),
-    edges = { 'line3': [ (0,4,1), (1,1,2), (2,5,3), (3,3,0) ] }
+    edges = ('line3', [ (0,4,1), (1,1,2), (2,5,3), (3,3,0) ] )
     )
-Quad6.drawfaces = {'tri3': [(0,4,3), (4,5,3), (4,1,5), (1,2,5)], }
+Quad6.drawedges = [
+    _sanitize(('line2', [(1,2), (3,0)])), 
+    _sanitize(('line3', [(0,4,1), (2,5,3)]))
+    ]
+Quad6.drawfaces = [ Connectivity([(0,4,3), (4,5,3), (4,1,5), (1,2,5)],eltype='tri3' ) ]
 
 Quad8 = Element(
     'quad8',"A 8-node quadrilateral",
@@ -359,9 +357,10 @@ Quad8 = Element(
           (  0.5,  1.0, 0.0 ),
           (  0.0,  0.5, 0.0 ),
           ]]),
-    edges = { 'line3': [ (0,4,1), (1,5,2), (2,6,3), (3,7,0), ], }
+    edges = ('line3',[ (0,4,1), (1,5,2), (2,6,3), (3,7,0), ])
 )
-Quad8.drawfaces = { 'tri3': [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], }
+Quad8.drawfaces = [
+    _sanitize(('tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], ))]
 
 Quad9 = Element(
     'quad9',"A 9-node quadrilateral",
@@ -372,7 +371,7 @@ Quad9 = Element(
           ]]),
     edges = Quad8.edges,
 )
-Quad9.drawfaces = { 'tri3': [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], }
+Quad9.drawfaces = ('tri3', [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], )
 
 
 ######### 3D ###################
@@ -385,8 +384,8 @@ Tet4 = Element(
                  ( 0.0, 1.0, 0.0 ),
                  ( 0.0, 0.0, 1.0 ),
                  ],
-    edges = { 'line2': [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ], }, 
-    faces = { 'tri3': [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ], }
+    edges = ('line2', [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ], ), 
+    faces = ('tri3', [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ], )
     )
 
 
@@ -404,7 +403,7 @@ Tet10 = Element(
                  ( 0.0, 0.5, 0.5 ),
                  ( 0.5, 0.0, 0.5 ),
                  ],
-    edges = { 'line3': [ (0,4,1), (1,7,2), (2,5,0), (0,6,3), (1,9,3), (2,8,3) ],}, 
+    edges = ('line3', [ (0,4,1), (1,7,2), (2,5,0), (0,6,3), (1,9,3), (2,8,3) ],), 
     # BV: This needs further specification!
     faces = Tet4.faces,
     )
@@ -449,9 +448,9 @@ Wedge6 = Element(
                  ( 1.0, 0.0,-1.0 ),
                  ( 0.0, 1.0,-1.0 ),
                  ],
-    edges = {'line2': [ (0,1), (1,2), (2,0), (0,3), (1,4), (2,5), (3,4), (4,5), (5,3) ], },
-    faces = {'tri3': [ (0,1,2), (3,5,4)],
-             'quad4': [(0,3,4,1), (1,4,5,2), (2,5,3,0) ], }
+    edges = ('line2', [ (0,1), (1,2), (2,0), (0,3), (1,4), (2,5), (3,4), (4,5), (5,3) ], ),
+    faces = ('tri3', [ (0,1,2), (3,5,4)],
+             'quad4', [(0,3,4,1), (1,4,5,2), (2,5,3,0) ], )
     )
 
 Hex8 = Element(
@@ -466,12 +465,12 @@ Hex8 = Element(
                  ( 1.0, 1.0, 1.0 ),
                  ( 0.0, 1.0, 1.0 ),
                  ],
-    edges = {'line2':[ (0,1), (1,2), (2,3), (3,0),
+    edges = ('line2',[ (0,1), (1,2), (2,3), (3,0),
                        (4,5), (5,6), (6,7), (7,4),
-                       (0,4), (1,5), (2,6), (3,7) ], },
-    faces = {'quad4': [ (0,4,7,3), (1,2,6,5),
+                       (0,4), (1,5), (2,6), (3,7) ], ),
+    faces = ('quad4', [ (0,4,7,3), (1,2,6,5),
                         (0,1,5,4), (3,7,6,2),
-                        (0,3,2,1), (4,5,6,7) ], }
+                        (0,3,2,1), (4,5,6,7) ], )
     )
 
 Hex8.mirrored = (0,3,2,1,4,7,6,5) 
@@ -491,12 +490,12 @@ Hex16 = Element(
          (  0.5,  1.0, 1.0 ),
          (  0.0,  0.5, 1.0 ),
          ]]),
-    edges = {'line3': [ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
+    edges = ('line3', [ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
                         (4,12,5),(5,13,6),(6,14,7),(7,15,4),
-                        (0,0,4),(1,1,5),(2,2,6),(3,3,7) ], },
-    faces = { 'quad6': [ (0,2,7,3,15,11), (1,2,6,5,9,13),
+                        (0,0,4),(1,1,5),(2,2,6),(3,3,7) ], ),
+    faces = ('quad6', [ (0,2,7,3,15,11), (1,2,6,5,9,13),
                          (0,1,5,4,8,12), (3,7,6,2,14,10), ],
-              'quad8': [ (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], }
+              'quad8', [ (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], )
     )
 
 
@@ -510,12 +509,12 @@ Hex20 = Element(
          (  1.0,  1.0, 0.5 ),
          (  0.0,  1.0, 0.5 )
          ]]),
-    edges = {'line3':[ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
+    edges = ('line3',[ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
                        (4,12,5),(5,13,6),(6,14,7),(7,15,4),
-                       (0,16,4),(1,17,5),(2,18,6),(3,19,7) ],},
-    faces = {'quad8': [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
+                       (0,16,4),(1,17,5),(2,18,6),(3,19,7) ],),
+    faces = ('quad8', [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
                         (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
-                        (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], }
+                        (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], )
     
 )
     
@@ -617,10 +616,10 @@ Quad6.conversions = {
     }
 
 
-Line3.extruded = ( Quad6, [0,2,5,3,1,4])
-Line2.extruded = ( Quad4, [0,1,3,2] )
-Quad4.extruded = ( Hex8, [] )
-Quad8.extruded = ( Hex16, [] )
+Line3.extruded = (Quad6, [0,2,5,3,1,4])
+Line2.extruded = (Quad4, [0,1,3,2] )
+Quad4.extruded = (Hex8, [] )
+Quad8.extruded = (Hex16, [] )
 
 Line3.degenerate = {
     'line2' : [ ([[0,1]], [0,2]),
@@ -669,24 +668,24 @@ Icosa = Element(
                  (-phi, 0.0, 1.0 ),
                  (-phi, 0.0,-1.0 ),
                  ],
-    edges = { 'line2': [ (0,1),  (0,8), (1,8), (0,10),(1,10),
-                         (2,3),  (2,9), (3,9), (2,11),(3,11),
-                         (4,5),  (4,0), (5,0), (4,2), (5,2),
-                         (6,7),  (6,1), (7,1), (6,3), (7,3),
-                         (8,9),  (8,4), (9,4), (8,6), (9,6),
-                         (10,11),(10,5),(11,5),(10,7),(11,7),
-                         ], },
-    faces = { 'tri3': [ (0,1,8),  (1,0,10),
-                        (2,3,11), (3,2,9),
-                        (4,5,0),  (5,4,2),
-                        (6,7,3),  (7,6,1),
-                        (8,9,4),  (9,8,6),
-                        (10,11,7),(11,10,5),
-                        (0,8,4),  (1,6,8),
-                        (0,5,10), (1,10,7),
-                        (2,11,5), (3,7,11),
-                        (2,4,9),  (3,9,6),
-                        ], }
+    edges = ('line2', [ (0,1),  (0,8), (1,8), (0,10),(1,10),
+                        (2,3),  (2,9), (3,9), (2,11),(3,11),
+                        (4,5),  (4,0), (5,0), (4,2), (5,2),
+                        (6,7),  (6,1), (7,1), (6,3), (7,3),
+                        (8,9),  (8,4), (9,4), (8,6), (9,6),
+                        (10,11),(10,5),(11,5),(10,7),(11,7),
+                        ], ),
+    faces = ('tri3', [ (0,1,8),  (1,0,10),
+                       (2,3,11), (3,2,9),
+                       (4,5,0),  (5,4,2),
+                       (6,7,3),  (7,6,1),
+                       (8,9,4),  (9,8,6),
+                       (10,11,7),(11,10,5),
+                       (0,8,4),  (1,6,8),
+                       (0,5,10), (1,10,7),
+                       (2,11,5), (3,7,11),
+                       (2,4,9),  (3,9,6),
+                       ], )
     )
 
 
@@ -707,7 +706,6 @@ _default_facetype = {
     8 : 'quad8',
     9 : 'quad9',
     }
-
 
 
 def elementType(name=None,nplex=-1):
@@ -792,15 +790,13 @@ def elementName(eltype):
     return elementType(eltype).name()
 
 
-#Element.printAll()
-#printElementTypes()
+## Element.printAll()
+## printElementTypes()
 
-#for k,v in Element.collection.items():
-#    print k
-#    print v.getEdges()
-#    print v.getFaces()
-
-
+## for k,v in Element.collection.items():
+##     print k
+##     print v.getEdges()
+##     print v.getFaces()
 
 if __name__ == "__main__":
     printElementTypes()
