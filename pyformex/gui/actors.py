@@ -704,6 +704,8 @@ class GeomActor(Actor):
                     drawEdges(self.coords,self.elems,edges,edgetype,color)    
             else:
                 print "DRAWING FACES"
+                ent = el.getDrawFaces()
+                print ent
                 for facetype,faces in el.getDrawFaces().items():
                     if bkcolor is not None:
                         #print "COLOR=%s" % color

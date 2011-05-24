@@ -75,9 +75,9 @@ def showElement(eltype,deformed,reduced,drawas):
         if drawas == 'Formex':
             F = [ Fi.toFormex() for Fi in F ]
 
+        draw(F,color=colors[i])
         if i == 0:
             drawVertexNumbers(F[0])
-        draw(F,color=colors[i])
     
         
 if __name__ == "draw":
