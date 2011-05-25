@@ -101,6 +101,12 @@ class Connectivity(ndarray):
     #
     def __new__(self,data=[],dtyp=None,copy=False,nplex=0,allow_negative=False,eltype=None):
         """Create a new Connectivity object."""
+
+        if eltype is None:
+            try:
+                eltype = data.eltype
+            except:
+                eltype = None
         
         # Turn the data into an array, and copy if requested
         ar = array(data, dtype=dtyp, copy=copy)
@@ -135,7 +141,7 @@ class Connectivity(ndarray):
         ar.inv = None   # inverse index
         ar.maxval = maxval
 
-        if eltype:
+        if eltype is not None:
             ar.eltype = eltype
 
         return ar
@@ -269,13 +275,10 @@ class Connectivity(ndarray):
         """
         from elements import elementType
         if not hasattr(self,'eltype'):
-           #print "NO ELTYPE"
            return [ self ]
 
-        #print "NA IMPORT",self.eltype,id(self.eltype)
         eltype = elementType(self.eltype)
         if not hasattr(eltype,'degenerate'):
-            #print "NO REDUCTIONS"
             return [ self ]
 
         # get all reductions for this eltype
@@ -289,8 +292,6 @@ class Connectivity(ndarray):
             else:
                 strategies = {}
 
-        #print "STRATEGIES",strategies
-
         if not strategies:
             return [self]
 
@@ -299,15 +300,11 @@ class Connectivity(ndarray):
         ML = []
 
         for totype in strategies:
-            #print "REDUCE TO %s" % totype
 
             elems = []
             for conditions,selector in strategies[totype]:
                 cond = array(conditions)
-                #print "TRYING",cond
-                #print e
                 w = (e[:,cond[:,0]] == e[:,cond[:,1]]).all(axis=1)
-                #print "Matching elems: %s" % where(w)[0]
                 sel = where(w)[0]
                 if len(sel) > 0:
                     elems.append(e[sel][:,selector])
@@ -608,7 +605,8 @@ class Connectivity(ndarray):
         - `hi`: defines the original elements in function of the intermediate
           level ones,
         - `lo`: defines the intermediate level items in function of the lowest
-          level ones (the original nodes).
+          level ones (the original nodes). If the `selector` has an `eltype`
+          attribute, then `lo` will inherit the same `eltype` value.
           
         Intermediate level items that consist of the same items in any
         permutation order are collapsed to single items.
@@ -643,6 +641,12 @@ class Connectivity(ndarray):
         uniq,uniqid = uniqueRows(lo,permutations=True)
         hi = Connectivity(uniqid.reshape(-1,sel.nelems()))
         lo = lo[uniq]
+        #
+        # PUT THIS BEHIND THE SELECTION, BECAUSE IT LOOSES THE 'eltype'
+        #
+        if hasattr(sel,'eltype'):
+            lo.eltype = sel.eltype
+        #print "LOLO",lo.report()
         return hi,lo
     
 
@@ -1400,5 +1404,11 @@ if __name__ == "__main__":
     C = Connectivity([[0,1],[2,3]],eltype='line2')
     print C
     print C.eltype
+    print C.report()
+    print C[0].report()
+    print C.selectNodes([1])
+    print C.selectNodes([])
+
+    print Connectivity().report()
 
 # End

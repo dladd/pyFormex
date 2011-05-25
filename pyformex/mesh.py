@@ -69,11 +69,12 @@ class Mesh(Geometry):
     - eltype: an Element subclass or a string designing the element type,
       default None.
     
-    If eltype is None, a default eltype is derived from the plexitude, by
-    calling the elements.elementType function.
-    For plexitudes without default type,
-    or if the default type is not the wanted element type, the user should
-    specify the element type himself.
+    If eltype is None, the eltype of the elems Connectivity table is used,
+    and if that is missing, a default eltype is derived from the plexitude,
+    by a call to the elements.elementType function.
+    In most cases the eltype can be set automatically.
+    The user can override the default value, but an error will occur if
+    the element type does not exist or does not match the plexitude.
 
     A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
     or by a single geometric object that provides a toMesh() method.
@@ -118,12 +119,11 @@ class Mesh(Geometry):
             return
 
         if elems is None:
-            if hasattr(coords,'toMesh'):
+            try:
                 # initialize from a single object
                 coords,elems = coords.toMesh()
-            elif type(coords) is tuple:
-                # SHOULD WE KEEP THIS ???
-                coords,elems = coords
+            except:
+                raise ValueError,"No `elems` specified and the first argument can not be converted to a Mesh."
 
         try:
             self.coords = Coords(coords)
@@ -168,7 +168,7 @@ class Mesh(Geometry):
         # of both the Mesh and the Mesh.elems attribute
         if eltype is None and hasattr(self.elems,'eltype'):
             eltype = self.elems.eltype
-        self.elems.eltype = self.eltype = elementType(eltype,self.nplex())
+        self.eltype = self.elems.eltype = elementType(eltype,self.nplex())
         return self
     
 
@@ -311,7 +311,7 @@ class Mesh(Geometry):
         return self.elems
 
 
-    @deprecation("Mesh.eltype.getEntities is deprecated. Use Element.getEntities instead.")
+    @deprecation("Mesh.getLowerEntitiesSelector is deprecated. Use Element.getEntities instead.")
     def getLowerEntitiesSelector(self,level=-1):
         """Get the entities of a lower dimensionality.
 
@@ -453,11 +453,17 @@ class Mesh(Geometry):
         See also :meth:`getBorderMesh`.
         """
         sel = self.eltype.getEntities(-1)
+        print sel.report()
         hi,lo = self.elems.insertLevel(sel)
         hiinv = hi.inverse()
         ncon = (hiinv>=0).sum(axis=1)
         isbrd = (ncon<=1)   # < 1 should not occur 
         brd = lo[isbrd]
+        #
+        # WE SET THE eltype HERE, BECAUSE THE INDEX OPERATION ABOVE
+        # LOOSES THE eltype
+        #
+        brd.eltype = sel.eltype 
         if not return_indices:
             return brd
         
@@ -487,11 +493,7 @@ class Mesh(Geometry):
         else:
             brd,indices = self.getBorder(return_indices=True)
             enr = indices[:,0]
-            # THIS IS CALLING self.eltype.getEntities(-1) A SECOND TIME!
-            # SHOULD SET eltype from brd.eltype
-            # Mesh in general should set eltype automatically from a
-            # Connectivity with eltype
-            M = Mesh(self.coords,brd,prop=self.prop[enr],eltype=self.eltype.getEntities(-1).eltype)
+            M = Mesh(self.coords,brd,prop=self.prop[enr])
 
         if compact:
             M = M.compact()
@@ -829,7 +831,6 @@ Size: %s
         newnodes = arange(newcoords.shape[0]).reshape(self.elems.shape[0],-1) + self.coords.shape[0]
         elems = Connectivity(concatenate([self.elems,newnodes],axis=-1))
         coords = Coords.concatenate([self.coords,newcoords])
-        #print "OLD plex = %s, NEW plex = %s, eltype = %s" % (self.nplex(),elems.nplex(),eltype)
         return Mesh(coords,elems,self.prop,eltype)
 
 
@@ -1041,17 +1042,13 @@ Size: %s
         ML = []
 
         for eltype in strategies:
-            #print "REDUCE TO %s" % eltype
 
             elems = []
             prop = []
             for conditions,selector in strategies[eltype]:
                 e = m.elems
                 cond = array(conditions)
-                #print "TRYING",cond
-                #print e
                 w = (e[:,cond[:,0]] == e[:,cond[:,1]]).all(axis=1)
-                #print "Matching elems: %s" % where(w)[0]
                 sel = where(w)[0]
                 if len(sel) > 0:
                     elems.append(e[sel][:,selector])
@@ -1069,8 +1066,6 @@ Size: %s
                     prop = concatenate(prop)
                 else:
                     prop = None
-                #print elems
-                #print prop
                 ML.append(Mesh(m.coords,elems,prop,eltype))
 
             if m.nelems() == 0:
@@ -1190,7 +1185,7 @@ Size: %s
         except:
             raise ValueError,"I don't know how to extrude elements of type '%s'" % self.eltype.name()
         
-        print "NEW CONNECT to %s, %s" % (_eltype,reorder)
+        #print "NEW CONNECT to %s, %s" % (_eltype,reorder)
 
         # compact the node numbering schemes
         self = self.compact()
@@ -1340,7 +1335,6 @@ Size: %s
             
         coords,elems = mergeMeshes(meshes,**kargs)
         elems = concatenate(elems,axis=0)
-        #print coords,elems,prop,eltype
         return clas(coords,elems,prop=prop,eltype=eltype)
 
  

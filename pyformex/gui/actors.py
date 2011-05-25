@@ -649,7 +649,7 @@ class GeomActor(Actor):
 
         ################## draw the geometry #################
         nplex = self.nplex()
-        print "NPLEX %s, ELTYPE=%s" % (nplex,self.eltype)
+        #print "NPLEX %s, ELTYPE=%s" % (nplex,self.eltype)
         
         if nplex == 1:
             marksize = self.marksize
@@ -711,7 +711,7 @@ class GeomActor(Actor):
                     drawEdges(self.coords,self.elems,edges,edges.eltype,color)    
             else:
                 
-                print "DRAWING FACES"
+                #print "DRAWING FACES"
                 ent = el.getDrawFaces()
                 #print ent
                 for faces in el.getFaces().reduceDegenerate():

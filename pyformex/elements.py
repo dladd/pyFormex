@@ -209,7 +209,7 @@ Proposed changes in the Element class
             level = self.ndim + level
 
         if level < 0 or level > self.ndim:
-            return None
+            return Connectivity()
         
         if level == 0:
             return Connectivity(arange(self.nplex()).reshape((-1,1)),eltype='point')
@@ -231,7 +231,6 @@ Proposed changes in the Element class
 
     def getDrawFaces(self):
         if not hasattr(self,'drawfaces'):
-            print "REDUCING FACES"
             self.drawfaces = self.getFaces().reduceDegenerate()
         return self.drawfaces
         
@@ -373,7 +372,6 @@ Quad9 = Element(
     edges = Quad8.edges,
     drawfaces = [('tri3', [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], )]
     )
-
 
 ######### 3D ###################
 
