@@ -134,13 +134,17 @@ Proposed changes in the Element class
 
     collection = ODict() # the full collection with all defined elements
 
-    def __init__(self,name,doc,ndim,vertices,edges=('',[]),faces=('',[])):
+    def __init__(self,name,doc,ndim,vertices,edges=('',[]),faces=('',[]),**kargs):
                 
         self.doc = doc
         self.ndim = ndim
         self.vertices = Coords(vertices)
         self.edges = _sanitize(edges)
         self.faces = _sanitize(faces)
+        if 'drawedges' in kargs:
+            self.drawedges = [ _sanitize(e) for e in kargs['drawedges'] ]
+        if 'drawfaces' in kargs:
+            self.drawfaces = [ _sanitize(e) for e in kargs['drawfaces'] ]
         # add the element to the collection
         name = name.lower()
         Element.collection[name] = self
@@ -315,10 +319,9 @@ Tri6 = Element(
                  ( 0.5, 0.5, 0.0 ),
                  ( 0.0, 0.5, 0.0 ),
                  ],    
-    edges = ('line3', [ (0,3,1), (1,4,2), (2,5,0) ], )
-    )
-Tri6.drawfaces = ('tri3', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ] )
-
+    edges = ('line3', [ (0,3,1), (1,4,2), (2,5,0) ], ),
+    drawfaces = [('tri3', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ] )]
+)
 
 Quad4 = Element(
     'quad4',"A 4-node quadrilateral",
@@ -339,13 +342,12 @@ Quad6 = Element(
         [ (  0.5,  0.0, 0.0 ),
           (  0.5,  1.0, 0.0 ),
           ]]),
-    edges = ('line3', [ (0,4,1), (1,1,2), (2,5,3), (3,3,0) ] )
+    edges = ('line3', [ (0,4,1), (1,1,2), (2,5,3), (3,3,0) ] ),
+    drawedges = [ ('line2', [(1,2), (3,0)]), 
+                  ('line3', [(0,4,1), (2,5,3)])
+                  ],
+    drawfaces = [ ('tri3',[(0,4,3), (4,5,3), (4,1,5), (1,2,5)]) ]
     )
-Quad6.drawedges = [
-    _sanitize(('line2', [(1,2), (3,0)])), 
-    _sanitize(('line3', [(0,4,1), (2,5,3)]))
-    ]
-Quad6.drawfaces = [ Connectivity([(0,4,3), (4,5,3), (4,1,5), (1,2,5)],eltype='tri3' ) ]
 
 Quad8 = Element(
     'quad8',"A 8-node quadrilateral",
@@ -357,10 +359,9 @@ Quad8 = Element(
           (  0.5,  1.0, 0.0 ),
           (  0.0,  0.5, 0.0 ),
           ]]),
-    edges = ('line3',[ (0,4,1), (1,5,2), (2,6,3), (3,7,0), ])
-)
-Quad8.drawfaces = [
-    _sanitize(('tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], ))]
+    edges = ('line3',[ (0,4,1), (1,5,2), (2,6,3), (3,7,0), ]),
+    drawfaces = [ ('tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], )]
+    )
 
 Quad9 = Element(
     'quad9',"A 9-node quadrilateral",
@@ -370,8 +371,8 @@ Quad9 = Element(
         [ (  0.5,  0.5, 0.0 ),
           ]]),
     edges = Quad8.edges,
-)
-Quad9.drawfaces = ('tri3', [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], )
+    drawfaces = [('tri3', [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], )]
+    )
 
 
 ######### 3D ###################
@@ -475,7 +476,6 @@ Hex8 = Element(
 
 Hex8.mirrored = (0,3,2,1,4,7,6,5) 
 
-
 Hex16 = Element(
     'hex16',"A 16-node hexahedron",
     ndim = 3,
@@ -493,9 +493,11 @@ Hex16 = Element(
     edges = ('line3', [ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
                         (4,12,5),(5,13,6),(6,14,7),(7,15,4),
                         (0,0,4),(1,1,5),(2,2,6),(3,3,7) ], ),
-    faces = ('quad6', [ (0,2,7,3,15,11), (1,2,6,5,9,13),
-                         (0,1,5,4,8,12), (3,7,6,2,14,10), ],
-              'quad8', [ (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], )
+    faces = ('quad8', [ (0,4,7,3,0,15,7,11), (1,2,6,5,9,2,13,5),
+                        (0,1,5,4,8,1,12,4), (3,7,6,2,3,14,6,10), 
+                        (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], ),
+    drawedges = [ Hex8.edges ],
+    drawfaces = [ Hex8.faces ]
     )
 
 
@@ -514,8 +516,8 @@ Hex20 = Element(
                        (0,16,4),(1,17,5),(2,18,6),(3,19,7) ],),
     faces = ('quad8', [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
                         (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
-                        (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], )
-    
+                        (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], ),
+    drawfaces = [ Hex8.faces ]
 )
     
 
