@@ -27,7 +27,7 @@
 
 level = 'beginner'
 topics = ['geometry','curve']
-techniques = ['color','solve']
+techniques = ['connect','color','solve']
 
 """
 

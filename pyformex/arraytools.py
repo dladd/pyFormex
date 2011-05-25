@@ -578,7 +578,7 @@ def reverseAxis(a,axis=-1):
              [1, 2, 3]])
       
     Remark: if the axis is known in advance, it may be more efficient to use
-    an indexing operation, like ``a[:,:::-1,:]``
+    an indexing operation, like ``a[:,::-1,:]``
     """
     return reorderAxis(a,'reverse',axis)
 

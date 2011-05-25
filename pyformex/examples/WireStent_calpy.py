@@ -56,7 +56,7 @@ pitch_angle = 30.
 # during testing
 stent_length = 10.
 stent = DoubleHelixStent(stent_diameter,stent_length,
-                         wire_diameter,number_wires,pitch_angle,nb=1).all()
+                         wire_diameter,number_wires,pitch_angle,nb=1).getFormex()
 
 if pf.options.gui:
     # draw it

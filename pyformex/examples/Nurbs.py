@@ -5,7 +5,7 @@
 
 level = 'advanced'
 topics = ['geometry', 'curve']
-techniques = ['nurbs','border']
+techniques = ['nurbs','connect','border']
 
 .. Description
 

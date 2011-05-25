@@ -1834,7 +1834,7 @@ maxprop  = %s
 #   Transformations that change the plexitude
 #        
 
-    def extrude(self,n,step=1.,dir=0,autofix=True):
+    def extrude(self,n,step=1.,dir=0):
         """Extrude a Formex in one of the axis directions.
 
         Returns a Formex with doubled plexitude.
@@ -1848,7 +1848,7 @@ maxprop  = %s
 
         See the 'connect' function for a more versatile tool.
         """
-        return self.toMesh().extrude(n,step,dir,autofix=autofix).toFormex()
+        return self.toMesh().extrude(n,step,dir).toFormex()
 
 
 ##############################################################################

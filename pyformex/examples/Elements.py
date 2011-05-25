@@ -46,7 +46,7 @@ def showElement(eltype,deformed,reduced,drawas):
     el = elementType(eltype)
     print el.report()
     M = el.toMesh()
-    print M
+    #print M
     
     ndim = 3
     if reduced:
@@ -66,25 +66,16 @@ def showElement(eltype,deformed,reduced,drawas):
         if ndim < 2:
             v[...,1] = 0.0
 
-    ## eL = [ M.getLowerEntities(i) for i in range(el.ndim+1) ]
-    ## ML = [ Mesh(M.coords,M,eltype=M.eltype) for i in range(el.ndim+1) ]
-
     for i in range(el.ndim+1):
         e = M.getLowerEntities(i)
         F = Mesh(v,e,eltype=e.eltype)
-        print i,e.eltype,F.eltype
         
         if drawas == 'Formex':
-            F = F.toFormex(F)
+            F = F.toFormex()
             
-        print "DRAWING WITH ELTYPE %s" % F.eltype
         draw(F,color=colors[i])
         if i == 0:
             drawVertexNumbers(F)
-
-        if i==2:
-            print F
-            print F.eltype
 
    
         

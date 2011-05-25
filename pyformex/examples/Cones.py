@@ -26,7 +26,7 @@
 
 level = 'normal'
 topics = ['geometry']
-techniques = ['dialog']
+techniques = ['connect','dialog']
 """
 
 import simple

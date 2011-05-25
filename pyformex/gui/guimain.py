@@ -969,7 +969,7 @@ You should seriously consider to bail out now!!!
 
 pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under the conditions of the GNU General Public License, version 3 or later. See Help->License or the file COPYING for details.
 """ % pf.Version)
-    
+
     # Set interaction functions
     
     def show_warning(message,category,filename,lineno,file=None,line=None):
@@ -1084,6 +1084,12 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.debug("Showing the GUI")
     pf.GUI.show()
     pf.GUI.update()
+
+    if pf.cfg['gui/fortune']:
+        sta,out = utils.runCommand(pf.cfg['fortune'])
+        if sta == 0:
+            draw.showInfo(out)
+
     pf.app_started = True
     pf.GUI.processEvents()
     return 0
@@ -1135,22 +1141,6 @@ def runGUI():
 
     pf.interactive = True
     pf.debug("Start main loop")
-    warnings.warn("""..
-
-BEWARE!!!! 
-
-To enable some future developments, major changes were needed to the
-implementation of the Element data. These changes have been started
-since revision 1924, but it will take some more revisions before the
-work is completed. That means that the code will be in an unstable
-and likely broken state for some time. If you are an end user depending
-on a running pyFormex environment, you should consider to downgrade
-to a pre-1923 revision. If on the other hand you want to help us with
-the transition, please report any observed malfunctioning on the
-pyFormex forums.
-Thanks.
-The pyFormex developers.
-""")
 
     #utils.procInfo('runGUI')
     #from multiprocessing import Process

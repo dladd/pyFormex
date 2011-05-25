@@ -487,6 +487,10 @@ class Mesh(Geometry):
         else:
             brd,indices = self.getBorder(return_indices=True)
             enr = indices[:,0]
+            # THIS IS CALLING self.eltype.getEntities(-1) A SECOND TIME!
+            # SHOULD SET eltype from brd.eltype
+            # Mesh in general should set eltype automatically from a
+            # Connectivity with eltype
             M = Mesh(self.coords,brd,prop=self.prop[enr],eltype=self.eltype.getEntities(-1).eltype)
 
         if compact:
@@ -944,10 +948,13 @@ Size: %s
         
         If the requested conversion is not implemented, an error is raised.
         """
-
-        if elementName(totype) == self.eltype.name():
+        #
+        # totype is a string !
+        #
+        
+        if elementType(totype) == self.eltype:
             return self
-
+        
         strategy = self.eltype.conversions.get(totype,None)
 
         while not type(strategy) is list:
@@ -1013,10 +1020,14 @@ Size: %s
         Property numbers propagate to the children. 
         """
         #
-        # This double a lot of functionality of Connectivity.reduceDegenerate
+        # This doubles a lot of functionality of Connectivity.reduceDegenerate
         # But this was really needed to keep the properties
         #
-        strategies = _reductions_.get(self.eltype,{})
+        try:
+            strategies = self.eltype.degenerate
+        except:
+            return [self]
+        
         if eltype is not None:
             s = strategies.get(eltype,[])
             if s:
@@ -1173,10 +1184,13 @@ Size: %s
         if self.eltype != mesh1.eltype or self.shape() != mesh1.shape():
             raise ValueError,"Incompatible Mesh"
 
-        # get the extruded eltype and reordering schedule
-        _eltype, reorder = self.eltype.extruded
-
-        print "NEW CONNECT to %s, %s" % (_eltype, reorder)
+        # get the extruded Connectivity
+        try:
+            _eltype,reorder = self.eltype.extruded
+        except:
+            raise ValueError,"I don't know how to extrude elements of type '%s'" % self.eltype.name()
+        
+        print "NEW CONNECT to %s, %s" % (_eltype,reorder)
 
         # compact the node numbering schemes
         self = self.compact()
@@ -1206,7 +1220,8 @@ Size: %s
             eM = eM.convert(eltype)
 
         return eM
- 
+
+    connect = _connect_1_
 
     def extrude(self,n,step=1.,dir=0,eltype=None):
         """Extrude a Mesh in one of the axes directions.
@@ -1224,11 +1239,7 @@ Size: %s
         Currently, this function correctly transforms: point1 to line2,
         line2 to quad4, tri3 to wedge6, quad4 to hex8.
         """
-        #~ nplex = self.nplex()
-        el = self.eltype
-        coord2 = self.coords.translate(dir,n*step)
-        M = connectMesh(self,Mesh(coord2,self.elems,eltype=el),n,eltype=eltype)
-        return M
+        return self.connect(self.translate(dir,n*step),n,eltype=eltype)
 
 
     def revolve(self,n,axis=0,angle=360.,around=None,autofix=True):
@@ -1618,8 +1629,6 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
     nodes of the base sets in their appearance in the hypermesh.
     This can e.g. be used to achieve circular numbering of the hypermesh.
     """
-    import warnings
-    warnings.warn("Beware, connectMesh is currently under revision and may be broken!")
     # For compatibility, allow meshes to be specified as tuples
     if type(mesh1) is tuple:
         mesh1 = Mesh(mesh1)
@@ -1631,10 +1640,7 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
 
     # get the eltype of the base Mesh, the extruded eltype and reordering
     eltyp0 = mesh1.eltype
-    print "BASE ELTYPE = %s" % eltyp0
     eltyp1,reorder = eltyp0.extruded
-    print "EXTRUDED ELTYPE = %s" % eltyp1
-    
 
     # compact the node numbering schemes
     mesh1 = mesh1.compact()
@@ -1659,20 +1665,18 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
     e = concatenate([et+i*nnod for i in range(div.size-1)])
     # Reorder nodes if necessary
     if reorder:
-        print "REORDER NODES",reorder
         e = e[:,reorder]
     eM = Mesh(x,e,eltype=eltyp1).setProp(mesh1.prop)
 
     # convert to proper eltype
     if eltype:
-        print eltype
         eM = eM.convert(eltype)
 
     return eM
 
         
 # define this also as a Mesh method
-Mesh.connect = Mesh._connect_1_
+#Mesh.connect = connectMesh
 
 def connectMeshSequence(ML,loop=False,**kargs):
     #print([Mi.eltype for Mi in ML])

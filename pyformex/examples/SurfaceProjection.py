@@ -67,9 +67,7 @@ def makeGrid(nx,ny,eltype):
     The grid is scaled to unit size and centered.
     """
     elem = getattr(elements,eltype)
-    x = array(elem.vertices)
-    e = array(elem.element)
-    return Formex([x[e]],eltype=eltype).replic2(nx,ny).resized(1.).centered()
+    return elem.toFormex().replic2(nx,ny).resized(1.).centered()
 
 
 

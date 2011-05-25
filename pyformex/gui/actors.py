@@ -29,7 +29,7 @@ from OpenGL import GL,GLU
 
 from drawable import *
 from formex import *
-from elements import elementType
+from elements import elementType,elementName
 from mesh import Mesh
 
 from plugins.trisurface import TriSurface
@@ -664,15 +664,18 @@ class GeomActor(Actor):
 
         elif nplex == 2:
             drawLines(self.coords,self.elems,color)
-        
-        elif nplex == 3 and self.eltype.name() in ['curve','line3']:
+            
+        # beware: some Formex eltypes are strings and may not
+        # represent a valid Mesh elementType
+        # THis is only here for Formex type. 
+        elif nplex == 3 and self.eltype in ['curve','line3']:
             # THIS SHOULD GO INTO drawQuadraticCurves
             if self.elems is None:
                 coords = self.coords
             else:
                 coords = self.coords[self.elems]
             drawQuadraticCurves(coords,color)
-            
+
         elif self.eltype is None:
             # polygons
             if mode=='wireframe' :
@@ -696,17 +699,22 @@ class GeomActor(Actor):
                     GL.glDisable(GL.GL_CULL_FACE)
         else:
             el = elementType(self.eltype)
-            if mode=='wireframe' :
-                for edges in el.getDrawEdges():
-                    print "DRAWING EDGES"
-                    print "   type %s" % edges.eltype
-                    print edges
+            if mode=='wireframe' or el.ndim < 2:
+                #print el.name()
+                #print el.getDrawEdges()
+                #print el.getEdges()
+                #
+                for edges in el.getEdges().reduceDegenerate():
+                    #print "DRAWING EDGES"
+                    #print "   type %s" % edges.eltype
+                    #print edges
                     drawEdges(self.coords,self.elems,edges,edges.eltype,color)    
             else:
+                
                 print "DRAWING FACES"
                 ent = el.getDrawFaces()
-                print ent
-                for faces in el.getDrawFaces():
+                #print ent
+                for faces in el.getFaces().reduceDegenerate():
                     if bkcolor is not None:
                         #print "COLOR=%s" % color
                         #print "BKCOLOR =%s" % bkcolor

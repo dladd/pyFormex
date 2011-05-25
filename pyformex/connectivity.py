@@ -87,11 +87,11 @@ class Connectivity(ndarray):
 
     Example:
 
-      >>> print Connectivity([[0,1,2],[0,1,3],[0,3,2],[0,5,3]])
-      [[0 1 2]
-       [0 1 3]
-       [0 3 2]
-       [0 5 3]]
+    >>> print Connectivity([[0,1,2],[0,1,3],[0,3,2],[0,5,3]])
+    [[0 1 2]
+     [0 1 3]
+     [0 3 2]
+     [0 5 3]]
       
     """
     #
@@ -162,6 +162,14 @@ class Connectivity(ndarray):
         """
         return self.shape[1]
 
+
+    def report(self):
+        """Format a Connectivity table"""
+        s = "Conn %s" % (self.shape,)
+        if hasattr(self,'eltype'):
+            s += ", eltype=%s" % self.eltype
+        s += '\n'
+        return s + ndarray.__str__(self)
 
 ############### Detecting degenerates and duplicates ##############
 
@@ -255,17 +263,19 @@ class Connectivity(ndarray):
         
         >>> C = Connectivity([[0,1,2],[0,1,1],[0,3,2]],eltype='line3')
         >>> print C.reduceDegenerate()
+        [Connectivity([[0, 1]]), Connectivity([[0, 1, 2],
+               [0, 3, 2]])]
         
         """
         from elements import elementType
         if not hasattr(self,'eltype'):
-           print "NO ELTYPE"
+           #print "NO ELTYPE"
            return [ self ]
 
-        print "NA IMPORT",self.eltype,id(self.eltype)
+        #print "NA IMPORT",self.eltype,id(self.eltype)
         eltype = elementType(self.eltype)
         if not hasattr(eltype,'degenerate'):
-            print "NO REDUCTIONS"
+            #print "NO REDUCTIONS"
             return [ self ]
 
         # get all reductions for this eltype
@@ -279,7 +289,7 @@ class Connectivity(ndarray):
             else:
                 strategies = {}
 
-        print "STRATEGIES",strategies
+        #print "STRATEGIES",strategies
 
         if not strategies:
             return [self]
@@ -289,7 +299,7 @@ class Connectivity(ndarray):
         ML = []
 
         for totype in strategies:
-            print "REDUCE TO %s" % totype
+            #print "REDUCE TO %s" % totype
 
             elems = []
             for conditions,selector in strategies[totype]:
@@ -1060,9 +1070,6 @@ def closedLoop(elems):
         """
         tbl[:nrows] = reverseAxis(reverseAxis(tbl[:nrows],0),1)
     
-    import warnings
-    warnings.warn("Beware, closedLoop is currently under revision and may be broken!")
-    
     elems = Connectivity(elems)
     np=elems.nplex()
     srt = zeros_like(elems) - 1
@@ -1097,6 +1104,94 @@ def closedLoop(elems):
     if any(srt == -1):
         ret = 2
     elif srt[-1][-1] != srt[0][0]:
+        ret = 1
+    else:
+        ret = 0
+    return ret,srt
+
+
+# This is an experimental replacement for closedLoop
+def findLoop(elems):
+    """Check if a set of line segments form a closed polyline.
+
+    Parameters:
+
+    - `elems`: Connectivity-like with plexitude 2 (for eltype line2 ) or 3 (for eltype line3)
+
+    Returns: a tuple (return_code,table):
+    
+    - `return_code`: an integer with one of the following values:
+    
+      - 0: the segments form a closed loop
+      - 1: the segments form a single non-closed path
+      - 2: the segments form multiple not connected paths
+      
+    - `table`:
+
+      - if return_code is 0 or 1: a Connectivity table equivalent
+        to the input, but with the elements and their nodes sorted in order.
+      - if return_code is 2: a table with a singly connected part in the
+        top rows, followed by -1 values for th unconnected elements.
+
+    Example:
+
+      >>> findLoop([[0,1],[1,2],[0,4],[4,2]])
+      (0, Connectivity([[0, 1],
+             [1, 2],
+             [2, 4],
+             [4, 0]]))
+             
+      >>> findLoop([[0,1],[1,2],[0,4]])
+      (1, Connectivity([[2, 1],
+             [1, 0],
+             [0, 4]]))
+             
+      >>> findLoop([[0,1],[0,2],[0,3],[4,5]])
+      (2, Connectivity([[ 1,  0],
+             [ 0,  2],
+             [-1, -1],
+             [-1, -1]]))
+    """
+    def reverse_table(tbl,nrows):
+        """Reverse the table of a connected line
+
+        The first nrows rows of table are reversed in row and column order.
+        """
+        tbl[:nrows] = tbl[nrows-1::-1,::-1].copy() # copy is needed !!!
+    
+    elems = Connectivity(elems)
+    srt = zeros_like(elems) - 1
+    ie = 0
+    je = 0
+    rev = False
+    k = elems[0][0] # remember startpoint
+    while True:
+        # Store an element that has been found ok
+        if rev:
+            srt[ie] = elems[je][[1,0]]
+        else:
+            srt[ie] = elems[je]
+        elems[je] = [ -1,-1] # Done with this one
+        j = srt[ie][1] # remember endpoint
+        if j == k:
+            break
+        ie += 1
+
+        # Look for the next connected element
+        w = where(elems == j)
+        if w[0].size == 0:
+            # Try reversing
+            w = where(elems == k)
+            if w[0].size == 0:
+                break
+            else:
+                j,k = k,j
+                reverse_table(srt,ie)
+        je = w[0][0]
+        rev = w[1][0] == 1
+    if any(srt == -1):
+        ret = 2
+    elif srt[-1][1] != srt[0][0]:
         ret = 1
     else:
         ret = 0

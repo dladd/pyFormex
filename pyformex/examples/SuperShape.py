@@ -35,6 +35,9 @@ from gui.widgets import *
 from gui.draw import *
 from gui.imagecolor import *
 
+print "This example is currently broken!"
+exit()
+
 dialog = None
 savefile = None
 tol = 1.e-4

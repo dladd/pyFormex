@@ -26,7 +26,7 @@
 
 level = 'normal'
 topics = ['geometry','surface']
-techniques = ['color']
+techniques = ['color','elements','reverse']
 
 """
 
@@ -58,9 +58,9 @@ def cube_tri(color=None):
 
 def cube_quad(color=None):
     """Create a cube with quadrilaterals."""
-    v = array(Hex8.vertices)
-    f,ftype = Hex8.faces)
-    faces = Formex(v[f],eltype=ftype)
+    v = Hex8.vertices
+    f = Hex8.faces
+    faces = Formex(v[f],eltype=f.eltype)
     if color == 'Single':
         color = 'red'
     elif color == 'Face':
@@ -100,10 +100,11 @@ if __name__ == "draw":
     base = 'Quad'
     color = 'Full'
     while True:
-        res = askItems([I('All',all),
-                        I('Base',base,choices=baseshape),
-                        I('Color',color,choices=colormode),
-                        ],caption="Make a selection or check 'All'")
+        res = askItems([
+            I('All',all),
+            I('Base',base,choices=baseshape),
+            I('Color',color,choices=colormode),
+            ],caption="Make a selection or check 'All'")
         if not res:
             break;
 
@@ -131,7 +132,7 @@ if __name__ == "draw":
     exit()
     
 
-## The following was used to create the rendering icons
+## The following was used to create the rendering icons for the pyFormex GUI
     
     draw(cube)
     view('iso')

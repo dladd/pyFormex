@@ -59,6 +59,7 @@ syspath = []
 editor = os.environ.get('VISUAL','')
 viewer = 'firefox'   # html viewer
 browser = 'firefox'  # web browser
+fortune = 'fortune -s' # command to generate a fortune cookie
 
 autoglobals = True
 uselib = True
@@ -75,6 +76,7 @@ filters = [('.*return_index.*','numpy')]
 
 [gui]
 #imagesfromeps = True
+fortune = False  # show a fortune cookie on startup
 history = []
 history_max = 20
 

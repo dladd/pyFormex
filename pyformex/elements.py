@@ -33,7 +33,7 @@ should be done by the interface modules.
 import pyformex
 from coords import Coords
 from connectivity import Connectivity
-from numpy import arange
+from numpy import array,arange
 from odict import ODict
 
 def _sanitize(ent):
@@ -450,8 +450,9 @@ Wedge6 = Element(
                  ( 0.0, 1.0,-1.0 ),
                  ],
     edges = ('line2', [ (0,1), (1,2), (2,0), (0,3), (1,4), (2,5), (3,4), (4,5), (5,3) ], ),
-    faces = ('tri3', [ (0,1,2), (3,5,4)],
-             'quad4', [(0,3,4,1), (1,4,5,2), (2,5,3,0) ], )
+    faces = ('quad4', [ (0,1,1,2), (3,5,5,4), (0,3,4,1), (1,4,5,2), (2,5,3,0) ], ),
+    drawfaces = [ ('tri3', [ (0,1,2), (3,5,4)] ),
+                  ('quad4', [(0,3,4,1), (1,4,5,2), (2,5,3,0) ], )]
     )
 
 Hex8 = Element(
@@ -517,10 +518,18 @@ Hex20 = Element(
     faces = ('quad8', [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
                         (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
                         (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], ),
-    drawfaces = [ Hex8.faces ]
 )
-    
 
+# We can not set this at __init__ time
+# Do we still need this ??
+## if pyformex.options.hex20edgeslinear: 	 
+##     from numpy import concatenate 	 
+##     edges = array(Hex20.edges) 	 
+##     Hex20.drawedges = concatenate([edges[:,:2],edges[:,-2:]],axis=0) 	 
+    
+Hex20.drawfaces = [ array(Hex20.faces)[:, Quad8.drawfaces[0]].reshape(-1, 3) ]
+
+######################################################################
 ########## element type conversions ##################################
 
 Line3.conversions = {
@@ -617,11 +626,17 @@ Quad6.conversions = {
     ('s',[(0, 1, 2, 3, 4, 7, 5, 6)])],
     }
 
+##########################################################
+############ Extrusions ##################################
 
-Line3.extruded = (Quad6, [0,2,5,3,1,4])
+Point.extruded = (Line2, [])
 Line2.extruded = (Quad4, [0,1,3,2] )
+Line3.extruded = (Quad6, [0,2,5,3,1,4])
 Quad4.extruded = (Hex8, [] )
 Quad8.extruded = (Hex16, [] )
+
+############################################################
+############ Reduction of degenerate elements ##############
 
 Line3.degenerate = {
     'line2' : [ ([[0,1]], [0,2]),
@@ -789,8 +804,16 @@ def printElementTypes():
         print "  %s-dimensional elements: %s" % (ndim,elementTypes(ndim)        )
 
 def elementName(eltype):
-    return elementType(eltype).name()
-
+    if isinstance(eltype,Element):
+        return eltype.name()
+    elif type(eltype) is str:
+        try:
+            return elementType(eltype).name()
+        except:
+            pass
+    else:
+        return None
+        
 
 ## Element.printAll()
 ## printElementTypes()

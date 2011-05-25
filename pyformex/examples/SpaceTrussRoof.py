@@ -26,7 +26,7 @@
 
 level = 'normal'
 topics = ['geometry']
-techniques = ['dialog', 'animation', 'color', 'import']
+techniques = ['dialog', 'animation', 'color', 'import', 'connect', 'interpolate']
 
 """
 import simple
