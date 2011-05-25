@@ -311,7 +311,7 @@ class Mesh(Geometry):
         return self.elems
 
 
-    @deprecation("Mesh.getLowerEntitiesSelector is deprecated. Use Element.getEntities instead.")
+    @deprecation("Mesh.eltype.getEntities is deprecated. Use Element.getEntities instead.")
     def getLowerEntitiesSelector(self,level=-1):
         """Get the entities of a lower dimensionality.
 
@@ -426,12 +426,12 @@ class Mesh(Geometry):
 
         This returns a Connectivity table with the elements defined in
         function of the edges. It is equivalent to
-        ```self.elems.insertLevel(self.getLowerEntitiesSelector(1))```
+        ```self.elems.insertLevel(self.eltype.getEntities(1))```
         but it also stores the definition of the edges and the returned
         element to edge connectivity.
         """
         if self.elem_edges is None:
-            sel = self.getLowerEntitiesSelector(1)
+            sel = self.eltype.getEntities(1)
             self.elem_edges,self.edges = self.elems.insertLevel(sel)
         return self.elem_edges
 
@@ -452,7 +452,7 @@ class Mesh(Geometry):
         Mesh.coords to construct a Mesh of the border geometry.
         See also :meth:`getBorderMesh`.
         """
-        sel = self.getLowerEntitiesSelector(-1)
+        sel = self.eltype.getEntities(-1)
         hi,lo = self.elems.insertLevel(sel)
         hiinv = hi.inverse()
         ncon = (hiinv>=0).sum(axis=1)
@@ -487,7 +487,7 @@ class Mesh(Geometry):
         else:
             brd,indices = self.getBorder(return_indices=True)
             enr = indices[:,0]
-            M = Mesh(self.coords,brd,prop=self.prop[enr])
+            M = Mesh(self.coords,brd,prop=self.prop[enr],eltype=self.eltype.getEntities(-1).eltype)
 
         if compact:
             M = M.compact()
@@ -688,7 +688,7 @@ Size: %s
         Returns the indices array of the elems of self that matches
         the faces of mesh
         """
-        sel = self.getLowerEntitiesSelector(2)
+        sel = self.eltype.getEntities(2)
         hi,lo = self.elems.insertLevel(sel)
         hiinv = hi.inverse()
         fm=Mesh(self.coords,self.getFaces())
