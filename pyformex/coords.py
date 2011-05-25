@@ -1602,9 +1602,13 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,end
     At each point of the curve, a copy of the Coords object is created, with
     its origin in the curve's point, and its normal along the curve's direction.
     In case of a PolyLine, directions are pointing to the next point by default.
-    If avgdir==True, average directions are taken at the intermediate points.
+    If avgdir==True, average directions are taken at the intermediate points
+    avgdir can also be an array like sequence of shape (N,3) to explicitely set the 
+    the directions for ALL the points of the path
+    
     Missing end directions can explicitely be set by enddir, and are by default
     taken along the last segment.
+    enddir is a list of 2 array like values of shape (3). one of the two can also be an empty list
     If the curve is closed, endpoints are treated as any intermediate point,
     and the user should normally not specify enddir.
     
@@ -1616,10 +1620,13 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,end
     The return value is a sequence of the transformed Coords objects.
     """
     points = path.coords
-    if avgdir:
-        directions = path.avgDirections()
+    if isinstance(avgdir,bool):
+        if avgdir:
+            directions = path.avgDirections()
+        else:
+            directions = path.directions()
     else:
-         directions = path.directions()
+        directions=asarray(avgdir).reshape(len(avgdir),-1)
 
     missing = points.shape[0] - directions.shape[0]
     if missing == 1:
