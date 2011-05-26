@@ -28,7 +28,7 @@
 Computing geometrical properties of plane sections.
 
 level = 'normal'
-topics = ['geometry']
+topics = ['geometry','section2d']
 techniques = []
 
 """
@@ -62,7 +62,12 @@ def close_loop_example():
     drawNumbers(M.coords,color=blue)
 
     print "Original elements:",M.elems
-    ret, sorted = connectivity.closedLoop(M.elems)
+    conn = connectivity.connectedLineElems(M.elems)
+    if len(conn) > 1:
+        message("This curve is not a closed circumference")
+        return None
+    
+    sorted = conn[0]
     print "Sorted elements:",sorted
 
     showInfo('Click to continue')
@@ -73,6 +78,7 @@ def close_loop_example():
 
 
 clear()
+flat()
 reset()
 examples = { 'Square'    : square_example,
              'Rectangle' : rectangle_example,
@@ -86,6 +92,8 @@ res = askItems([
     ])
 if res:
     F = examples[res['example']]()
+    if F is None:
+        exit()
     draw(F)
     S = sectionChar(F)
     S.update(extendedSectionChar(S))
