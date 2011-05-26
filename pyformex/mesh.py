@@ -504,7 +504,6 @@ class Mesh(Geometry):
             M = M.compact()
         return M
 
-
     def reverse(self):
         """Return a Mesh where all elements have been reversed.
 
@@ -514,10 +513,12 @@ class Mesh(Geometry):
           Mesh(self.coords,self.elems[:,::-1])
           
         """
-        return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
-
-
-    def reflect(self,autofix=None,**kargs):
+        if hasattr(self.eltype  ,'reversed'):
+            return self.__class__(self.coords,self.elems[:,self.eltype.reversed],prop=self.prop,eltype=self.eltype)
+        else:
+            return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
+            
+    def reflect(self,dir=0,autofix=None,**kargs):
         """Reflect the coordinates in direction dir against plane at pos.
 
         Parameters:
@@ -525,7 +526,9 @@ class Mesh(Geometry):
         - `dir`: int: direction of the reflection (default 0)
         - `pos`: float: offset of the mirror plane from origin (default 0.0)
         """
+        
         if autofix is None:
+            
             import warnings
             from datetime import datetime
             today = datetime.today()
@@ -536,11 +539,11 @@ class Mesh(Geometry):
             else:
                 autofix = False
                 warnings.warn("The Mesh.reflect now has an 'autofix' option that will automatically fix the Mesh connectivity table after a `reflect` operation. Currently this autofix is set to 'False' by default, so as not to break your code. (Thank Francesco for this). However, after %s, we will switch the default to 'True', so you either have to add 'autofix=False' or (by preference) you should fix your code to use the new default value (e.g. remove your own fixing methods)!")
-                              
-        M = Geometry.reflect(**kargs)
+        
+        M = Geometry.reflect(self,dir=dir,**kargs)
         # NOW FIX THE elem connectivity
         if autofix and hasattr(M.eltype,'mirrored'):
-            M = M.select(M.eltype.mirrored)
+            M.elems = M.elems[:,M.eltype.mirrored]
 
         return M
         
