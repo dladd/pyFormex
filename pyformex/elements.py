@@ -361,6 +361,10 @@ Quad8 = Element(
     edges = ('line3',[ (0,4,1), (1,5,2), (2,6,3), (3,7,0), ]),
     drawfaces = [ ('tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], )]
     )
+#~ Quad8.mirrored = (3,2,1,0,6,5,4,7)
+Quad8.mirrored = (1,0,3,2,4,7,6,5)
+Quad8.reversed= (3,2,1,0,6,5,4,7)
+
 
 Quad9 = Element(
     'quad9',"A 9-node quadrilateral",
@@ -474,6 +478,7 @@ Hex8 = Element(
     )
 
 Hex8.mirrored = (0,3,2,1,4,7,6,5) 
+
 
 Hex16 = Element(
     'hex16',"A 16-node hexahedron",
