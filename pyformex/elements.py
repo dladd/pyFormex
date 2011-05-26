@@ -257,7 +257,7 @@ Proposed changes in the Element class
         return self.name()
 
     def report(self):
-        print "Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (self.name(),self.ndim,self.nplex(),self.nedges(),self.nfaces())
+        print("Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (self.name(),self.ndim,self.nplex(),self.nedges(),self.nfaces()))
   
 
     @classmethod
@@ -267,7 +267,7 @@ Proposed changes in the Element class
     @classmethod
     def printAll(clas):
         for k,v in Element.collection.items():
-            print "Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (k,v.ndim,v.nplex(),v.nedges(),v.nfaces())
+            print("Element %s: ndim=%s, nplex=%s, nedges=%s, nfaces=%s" % (k,v.ndim,v.nplex(),v.nedges(),v.nfaces()))
         
 
 #####################################################
@@ -746,16 +746,9 @@ def elementType(name=None,nplex=-1):
     >>> elementType(nplex=2).name()
     'line2'
     """
-    ## >>> try:
-    ## ...     elementType('tri3',4)
-    ## ... except:
-    ## ...     print "No such element"
-    ## No such element
-
 
     if isinstance(name,Element):
         return name
-    
     
     eltype = None
     try:
@@ -797,9 +790,9 @@ def printElementTypes():
     Prints a list of the names of all availabale element types,
     grouped by their dimensionality.
     """
-    print "Available Element Types:"        
+    print("Available Element Types:")        
     for ndim in range(4):
-        print "  %s-dimensional elements: %s" % (ndim,elementTypes(ndim)        )
+        print("  %s-dimensional elements: %s" % (ndim,elementTypes(ndim))        )
 
 def elementName(eltype):
     if isinstance(eltype,Element):
@@ -812,14 +805,6 @@ def elementName(eltype):
     else:
         return None
         
-
-## Element.printAll()
-## printElementTypes()
-
-## for k,v in Element.collection.items():
-##     print k
-##     print v.getEdges()
-##     print v.getFaces()
 
 if __name__ == "__main__":
     printElementTypes()

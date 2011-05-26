@@ -468,7 +468,6 @@ class GeomActor(Actor):
         The user can specify a linewidth to be used when drawing
         in wireframe mode.
         """
-        #print "EXTRA= %s" % kargs
         Actor.__init__(self,**kargs)
 
         # Store a reference to the drawn object
@@ -540,7 +539,6 @@ class GeomActor(Actor):
     def setBkColor(self,color,colormap=None):
         """Set the backside color of the Actor."""
         self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.shape())
-        #print "BKCOLOR %s = %s"%(color,self.bkcolor)
 
 
     def setAlpha(self,alpha):
@@ -567,14 +565,10 @@ class GeomActor(Actor):
         from canvas import glLineStipple
         if canvas is None:
             canvas = pf.canvas
-        #print "Calling with canvas %s" % canvas
-        #print "Calling with mode %s" % mode
         if mode is None:
            mode = self.mode
-        #print "self.mode %s" % mode
         if mode is None:
             mode = canvas.rendermode
-        #print "DRAWING WITH MODE %s" % mode
 
         if mode.endswith('wire'):
             self.drawGL(mode=mode[:-4])
@@ -641,15 +635,12 @@ class GeomActor(Actor):
                     spec = append(spec,1.)
                 else:
                     spec = colors.GREY(self.specular)# *  pf.canvas.specular
-                #print self.coords.shape
-                #print "SETTING SPECULAR to %s" % str(spec)
                 GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,spec)
                 GL.glMaterialfv(fill_mode,GL.GL_EMISSION,spec)
                 GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.specular)
 
         ################## draw the geometry #################
         nplex = self.nplex()
-        #print "NPLEX %s, ELTYPE=%s" % (nplex,self.eltype)
         
         if nplex == 1:
             marksize = self.marksize
@@ -697,23 +688,14 @@ class GeomActor(Actor):
                     GL.glColor(append(bkcolor,alpha))
                     drawPolygons(self.coords,self.elems,mode,bkcolor,alpha)
                     GL.glDisable(GL.GL_CULL_FACE)
+                    
         else:
             el = elementType(self.eltype)
+            
             if mode=='wireframe' or el.ndim < 2:
-                #print el.name()
-                #print el.getDrawEdges()
-                #print el.getEdges()
-                #
                 for edges in el.getEdges().reduceDegenerate():
-                    #print "DRAWING EDGES"
-                    #print "   type %s" % edges.eltype
-                    #print edges
                     drawEdges(self.coords,self.elems,edges,edges.eltype,color)    
             else:
-                
-                #print "DRAWING FACES"
-                ent = el.getDrawFaces()
-                #print ent
                 for faces in el.getFaces().reduceDegenerate():
                     if bkcolor is not None:
                         #print "COLOR=%s" % color

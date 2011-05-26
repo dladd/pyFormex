@@ -487,7 +487,10 @@ class Connectivity(ndarray):
                  [-1,  1,  2]])
         """
         if self.inv is None:
-            self.inv = inverseIndex(self)
+            if self.size > 0:
+                self.inv = inverseIndex(self)
+            else:
+                self.inv = Connectivity()
         return self.inv
 
 
@@ -575,8 +578,11 @@ class Connectivity(ndarray):
 
         """
         sel = Connectivity(selector)
-        return Connectivity(self[:,sel].reshape(-1,sel.nplex()))
-
+        if sel.size > 0:
+            return Connectivity(self[:,sel].reshape(-1,sel.nplex()))
+        else:
+            return Connectivity()
+        
 
     def insertLevel(self,selector,lower_only=False):
         """Insert an extra hierarchical level in a Connectivity table.
@@ -638,15 +644,17 @@ class Connectivity(ndarray):
         """
         sel = Connectivity(selector)
         lo = self.selectNodes(sel)
-        uniq,uniqid = uniqueRows(lo,permutations=True)
-        hi = Connectivity(uniqid.reshape(-1,sel.nelems()))
-        lo = lo[uniq]
+        if lo.size > 0:
+            uniq,uniqid = uniqueRows(lo,permutations=True)
+            hi = Connectivity(uniqid.reshape(-1,sel.nelems()))
+            lo = lo[uniq]
+        else:
+            hi = lo = Connectivity()
         #
         # PUT THIS BEHIND THE SELECTION, BECAUSE IT LOOSES THE 'eltype'
         #
         if hasattr(sel,'eltype'):
             lo.eltype = sel.eltype
-        #print "LOLO",lo.report()
         return hi,lo
     
 
@@ -706,7 +714,7 @@ class Connectivity(ndarray):
 
         Example:
         
-          >>> print [ i for i in combinations(range(3),2) ]
+          >>> print([ i for i in combinations(range(3),2) ])
           [(0, 1), (0, 2), (1, 2)]
           >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).resolve()
           Connectivity([[0, 1],
@@ -754,15 +762,15 @@ class Connectivity(ndarray):
           >>> a = Connectivity([[0,1],[2,3],[4,5]])
           >>> b = Connectivity([[10,11,12],[13,14,15]])
           >>> c = Connectivity([[20,21],[22,23]])
-          >>> print Connectivity.connect([a,b,c])
+          >>> print(Connectivity.connect([a,b,c]))
           [[ 0 10 20]
            [ 2 13 22]]
-          >>> print Connectivity.connect([a,b,c],nodid=[1,0,1])
+          >>> print(Connectivity.connect([a,b,c],nodid=[1,0,1]))
           [[ 1 10 21]
            [ 3 13 23]]
-          >>> print Connectivity.connect([a,b,c],bias=[1,0,1])
+          >>> print(Connectivity.connect([a,b,c],bias=[1,0,1]))
           [[ 2 10 22]]
-          >>> print Connectivity.connect([a,b,c],bias=[1,0,1],loop=True)
+          >>> print(Connectivity.connect([a,b,c],bias=[1,0,1],loop=True))
           [[ 2 10 22]
            [ 4 13 20]
            [ 0 10 22]]
@@ -1402,13 +1410,13 @@ def adjacencyArrays(elems,nsteps=1):
 if __name__ == "__main__":
 
     C = Connectivity([[0,1],[2,3]],eltype='line2')
-    print C
-    print C.eltype
-    print C.report()
-    print C[0].report()
-    print C.selectNodes([1])
-    print C.selectNodes([])
+    print(C)
+    print(C.eltype)
+    print(C.report())
+    print(C[0].report())
+    print(C.selectNodes([1]))
+    print(C.selectNodes([]))
 
-    print Connectivity().report()
+    print(Connectivity().report())
 
 # End

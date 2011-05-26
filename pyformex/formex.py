@@ -342,10 +342,10 @@ def intersectionPointsWithPlane(F,p,n):
     """
     f = F.coords
     t = intersectionWithPlane(F,p,n).reshape((-1,1))
-    print t.shape
+    #print t.shape
     from plugins.geomtools import intersectionTimesSWP
     t = intersectionTimesSWP(f,p,n).reshape((-1,1))
-    print t.shape
+    #print t.shape
     return Formex((1.-t) * f[:,0,:] + t * f[:,1,:])
 
 

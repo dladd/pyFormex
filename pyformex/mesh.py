@@ -453,7 +453,12 @@ class Mesh(Geometry):
         See also :meth:`getBorderMesh`.
         """
         sel = self.eltype.getEntities(-1)
-        print sel.report()
+        if sel.size == 0:
+            if return_indices:
+                return Connectivity(),[]
+            else:
+                return Connectivity()
+            
         hi,lo = self.elems.insertLevel(sel)
         hiinv = hi.inverse()
         ncon = (hiinv>=0).sum(axis=1)

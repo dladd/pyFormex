@@ -42,9 +42,9 @@ colors = [black,blue,yellow,red]
 def showElement(eltype,deformed,reduced,drawas):
     clear()
     flat()
-    drawText("Element type: %s" %eltype,100,200,size=24,color=black)
+    drawText("Element type: %s" %eltype,100,200,font='times',size=18,color=black)
     el = elementType(eltype)
-    print el.report()
+    #print el.report()
     M = el.toMesh()
     
     ndim = 3
