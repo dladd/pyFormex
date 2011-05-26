@@ -693,10 +693,10 @@ class GeomActor(Actor):
             el = elementType(self.eltype)
             
             if mode=='wireframe' or el.ndim < 2:
-                for edges in el.getEdges().reduceDegenerate():
+                for edges in el.getDrawEdges():
                     drawEdges(self.coords,self.elems,edges,edges.eltype,color)    
             else:
-                for faces in el.getFaces().reduceDegenerate():
+                for faces in el.getDrawFaces():
                     if bkcolor is not None:
                         #print "COLOR=%s" % color
                         #print "BKCOLOR =%s" % bkcolor
