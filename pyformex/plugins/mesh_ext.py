@@ -6,8 +6,7 @@ This module defines extended Mesh functionality which is considered to be
 experimental, maybe incomplete or even buggy.
 
 The functions in this module can be called as functions operating on a
-Mesh object, but can also be installed as Mesh methods by calling the
-initialize() function once.
+Mesh object, but are also available as Mesh methods.
 """
 
 from mesh import Mesh
@@ -332,6 +331,7 @@ def _auto_initialize():
     Mesh.rings = rings
     Mesh.correctNegativeVolumes = correctNegativeVolumes
     Mesh.scaledJacobian = scaledJacobian
+    
 _auto_initialize()
 
 

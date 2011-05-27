@@ -1018,7 +1018,6 @@ Total area: %s; Enclosed volume: %s
 
 ##################  Partitioning a surface #############################
 
-    from plugins.mesh_ext import nodeFront, walkNodeFront, partitionByNodeFront, partitionByConnection, splitByConnection, largestByConnection
 
     def edgeFront(self,startat=0,okedges=None,front_increment=1):
         """Generator function returning the frontal elements.

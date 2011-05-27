@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex
+#!/usr/bin/pyformex
 ##
 ##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -72,7 +72,9 @@ class Geometry(object):
     default and implement a more efficient copy method.
 
     The following :class:`Geometry` methods return the value of the same
-    method applied on the `coords` attribute:
+    method applied on the `coords` attribute. Refer to the correponding
+    :class:`coords.Coords` method for their precise arguments.
+
     :meth:`x`,
     :meth:`y`,
     :meth:`z`,
@@ -90,40 +92,40 @@ class Geometry(object):
     :meth:`directionalExtremes`,
     :meth:`__str__`.
     
-    Refer to the correponding :class:`Coords` method for their usage.
 
     The following :class:`Coords` transformation methods can be directly applied
     to a :class:`Geometry` object or a derived class object. The return value
     is a new object identical to the original, except for the coordinates,
     which will have been transformed by the specified method.
-    Refer to the correponding :class:`Coords` method for the usage of these
-    methods:
-    `scale`,
-    `translate`,
-    `rotate`,
-    `shear`,
-    `reflect`,
-    `affine`,
-    `cylindrical`,
-    `hyperCylindrical`,
-    `toCylindrical`,
-    `spherical`,
-    `superSpherical`,
-    `toSpherical`,
-    `bump`,
-    `bump1`,
-    `bump2`,
-    `flare`,
-    `map`,
-    `map1`,
-    `mapd`,
-    `replace`,
-    `swapAxes`,
-    `rollAxes`,
-    `projectOnSphere`,
-    `projectOnCylinder`,
-    `rot`,
-    `trl`.
+    Refer to the correponding :class:`coords.Coords` method in for the precise
+    arguments of these methods:
+    
+    :meth:`scale`,
+    :meth:`translate`,
+    :meth:`rotate`,
+    :meth:`shear`,
+    :meth:`reflect`,
+    :meth:`affine`,
+    :meth:`cylindrical`,
+    :meth:`hyperCylindrical`,
+    :meth:`toCylindrical`,
+    :meth:`spherical`,
+    :meth:`superSpherical`,
+    :meth:`toSpherical`,
+    :meth:`bump`,
+    :meth:`bump1`,
+    :meth:`bump2`,
+    :meth:`flare`,
+    :meth:`map`,
+    :meth:`map1`,
+    :meth:`mapd`,
+    :meth:`replace`,
+    :meth:`swapAxes`,
+    :meth:`rollAxes`,
+    :meth:`projectOnSphere`,
+    :meth:`projectOnCylinder`,
+    :meth:`rot`,
+    :meth:`trl`.
     """
     
     ########### Change the coords #################
@@ -138,7 +140,10 @@ class Geometry(object):
             """Performs the Coords %s transformation on the coords attribute""" 
             return self._set_coords(coords_func(self.coords,*args,**kargs))
         newf.__name__ = func.__name__
-        newf.__doc__ = coords_func.__doc__
+        newf.__doc__ ="""Apply '%s' transformation to the Geometry object. 
+
+        See :meth:`coords.Coords.%s` for details.
+""" % (func.__name__,func.__name__)
         return newf
 
 

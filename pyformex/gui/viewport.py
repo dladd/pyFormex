@@ -1228,462 +1228,467 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 ################# Multiple Viewports ###############
 
-if pf.options.newviewports:
+class NewMultiCanvas(QtGui.QGridLayout):
+    """An OpenGL canvas with multiple viewports and QT interaction.
 
-    class MultiCanvas(QtGui.QGridLayout):
-        """An OpenGL canvas with multiple viewports and QT interaction.
+    The MultiCanvas implements a central QT widget containing one or more
+    QtCanvas widgets.
+    """
+    def __init__(self,parent=None):
+        """Initialize the multicanvas."""
+        QtGui.QGridLayout.__init__(self)
+        self.all = []
+        self.current = None
+        self.rowwise = True
+        self.parent = parent
 
-        The MultiCanvas implements a central QT widget containing one or more
-        QtCanvas widgets.
+
+    def changeLayout(self,nvps=None,ncols=None,nrows=None,pos=None,rstretch=None,cstretch=None):
+        """Change the lay-out of the viewports on the OpenGL widget.
+
+        nvps: number of viewports
+        ncols: number of columns
+        nrows: number of rows
+        pos: list holding the position and span of each viewport
+        [[row,col,rowspan,colspan],...]
+        rstretch: list holding the stretch factor for each row
+        cstretch: list holding the stretch factor for each column
+        (rows/columns with a higher stretch factor take more of the
+        available space)
+        Each of this parameters is optional.
+
+        If pos is given, it specifies all viewports and nvps, nrows and ncols
+        are disregarded.
+
+        Else:
+
+        If nvps is given, it specifies the number of viewports in the layout.
+        Else, nvps will be set to the current number of viewports.
+
+        If ncols is an int, viewports are laid out rowwise over ncols
+        columns and nrows is ignored. If ncols is None and nrows is an int,
+        viewports are laid out columnwise over nrows rows.
+
+        If nvps is not equal to the current number of viewports, viewports
+        will be added or removed to match the requested number.
+
+        By default they are laid out rowwise over two columns.
         """
-        def __init__(self,parent=None):
-            """Initialize the multicanvas."""
-            QtGui.QGridLayout.__init__(self)
-            self.all = []
-            self.current = None
-            self.rowwise = True
-            self.parent = parent
-
-
-        def changeLayout(self,nvps=None,ncols=None,nrows=None,pos=None,rstretch=None,cstretch=None):
-            """Change the lay-out of the viewports on the OpenGL widget.
-
-            nvps: number of viewports
-            ncols: number of columns
-            nrows: number of rows
-            pos: list holding the position and span of each viewport
-            [[row,col,rowspan,colspan],...]
-            rstretch: list holding the stretch factor for each row
-            cstretch: list holding the stretch factor for each column
-            (rows/columns with a higher stretch factor take more of the
-            available space)
-            Each of this parameters is optional.
-
-            If pos is given, it specifies all viewports and nvps, nrows and ncols
-            are disregarded.
-
-            Else:
-
-            If nvps is given, it specifies the number of viewports in the layout.
-            Else, nvps will be set to the current number of viewports.
-
-            If ncols is an int, viewports are laid out rowwise over ncols
-            columns and nrows is ignored. If ncols is None and nrows is an int,
-            viewports are laid out columnwise over nrows rows.
-
-            If nvps is not equal to the current number of viewports, viewports
-            will be added or removed to match the requested number.
-
-            By default they are laid out rowwise over two columns.
-            """
-            if pos is None:
-                # get the new layout definition
-                if nvps is None:
-                    nvps = len(self.all)
-                if ncols is None:
-                    if nrows is None:
-                        ncols = self.ncols()
-                if type(ncols) == int:
-                    pos = [ divmod(i,ncols) for i in range(nvps) ]
-                elif type(nrows) == int:
-                    pos = [ divmod(i,nrows)[::-1] for i in range(nvps) ]
-                else:
-                    return
-            else:
-                nvps = len(pos)
-
-            print nvps,pos
-
-            while len(self.all) < nvps:
-                # create new viewports
-                view = self.createView()
-                self.all.append(view)
-
-            while len(self.all) > nvps:
-                # remove viewports
-                self.removeView()
-
-            # remove all views from the canvas
-            for w in self.all:
-                self.removeWidget(w)
-               # w.hide()
-
-            # create the new layout
-            for view,args in zip(self.all,pos):
-                self.addView(view,*args)
-            self.setCurrent(self.all[-1])
-
-
-        def createView(self,shared=None):
-            """Create a new viewport
-
-            If another QtCanvas instance is passed, both will share the same
-            display lists and textures.
-            """
-            if shared is not None:
-                pf.debug("SHARING display lists WITH %s" % shared)
-            view = QtCanvas(self.parent,shared)
-            if len(self.all) > 0:
-                # copy default settings from previous
-                view.resetDefaults(self.all[-1].settings)
-            return(view)
-
-
-        def addView(self,view,row,col,rowspan=1,colspan=1):
-            """Add a new viewport and make it visible"""
-            self.addWidget(view,row,col,rowspan,colspan)
-            view.raise_()
-            view.initializeGL()   # Initialize OpenGL context and camera
-
-
-        def removeView(self,view=None):
-            """Remove a view from the canvas
-
-            If view is None, the last one is removed.
-            You can not remove a view when there is only one left.
-            """
-            if len(self.all) > 1:
-                if view is None:
-                    view = self.all.pop()
-                else:
-                    i = self.all.find(view)
-                    if i < 0:
-                        return
-                    view = self.all.pop(i)
-                    if self.current == view:
-                        self.setCurrent(self.all[i-1])
-                    self.removeWidget(view)
-                    view.close()
-
-
-        def setCurrent(self,view):
-            """Make the specified viewport the current one.
-
-            view can be either a viewport or viewport number.
-            """
-            if type(view) == int and view in range(len(self.all)):
-                view = self.all[view]
-            if view == self.current:
-                return  # already current
-
-            if view in self.all:
-                if self.current:
-                    self.current.focus = False
-                    self.current.updateGL()
-                self.current = view
-                self.current.focus = True
-                self.current.updateGL()
-                toolbar.updateTransparencyButton()
-                toolbar.updatePerspectiveButton()
-                toolbar.updateLightButton()
-
-
-        def currentView(self):
-            return self.all.index(self.current)
-
-
-        def nrows(self):
-            return self.rowCount()
-
-
-        def ncols(self):
-            return self.columnCount()
-
-
-        def setStretch(self,rowstretch,colstretch):
-            """Set the row and column stretch factors.
-
-            rowstretch and colstretch are lists of stretch factors to be applied
-            on the subsequent rows/columns. If the lists are shorter than the
-            number of rows/columns, the 
-            """
-            if rowstretch:
-                for i in range(min(len(rowstretch),self.nrows())):
-                    self.setRowStretch(i,rowstretch[i])
-            if colstretch:
-                for i in range(min(len(colstretch),self.ncols())):
-                    self.setColumnStretch(i,colstretch[i])
-
-
-        def updateAll(self):
-             pf.debug("UPDATING ALL VIEWPORTS")
-             for v in self.all:
-                 v.update()
-             pf.GUI.processEvents()
-
-
-        def printSettings(self):
-            for i,v in enumerate(self.all):
-                pf.message("""
-    ## VIEWPORTS ##
-    Viewport %s;  Current:%s;  Settings:
-    %s
-    """ % (i, v == self.current, v.settings))
-
-        def link(self,vp,to):
-            """Link viewport vp to to"""
-            print "LINK %s to %s" % (vp,to)
-            print "LINKING CURRENTLY DISABLED"
-            return
-            nvps = len(self.all)
-            if vp in range(nvps) and to in range(nvps) and vp != to:
-                to = self.all[to]
-                oldvp = self.all[vp]
-                import warnings
-                warnings.warn('warn_viewport_linking')
-                newvp = self.newView(to)
-                self.all[vp] = newvp
-                self.removeWidget(oldvp)
-                oldvp.close()
-                self.showWidget(newvp)
-                vp = newvp
-                vp.actors = to.actors
-                vp.bbox = to.bbox
-                vp.show()
-                vp.setCamera()
-                vp.redrawAll()
-                #vp.updateGL()
-                pf.GUI.processEvents()
-
-
-
-else:
-
-
-    class FramedGridLayout(QtGui.QGridLayout):
-        """A QtGui.QGridLayout where each added widget is framed."""
-
-        def __init__(self,parent=None):
-            """Initialize the multicanvas."""
-            QtGui.QGridLayout.__init__(self)
-     #       self.frames = []
-
-
-        def addWidget(*args):
-    #        f = QtGui.QFrame(w)
-    #        self.frames.append(f)
-            QtGui.QGridLayout.addWidget(*args)
-
-
-        def removeWidget(self,w):
-            QtGui.QGridLayout.removeWidget(self,w)
-
-
-    class MultiCanvas(FramedGridLayout):
-        """An OpenGL canvas with multiple viewports and QT interaction.
-
-        The MultiCanvas implements a central QT widget containing one or more
-        QtCanvas widgets.
-        """
-        def __init__(self,parent=None):
-            """Initialize the multicanvas."""
-            FramedGridLayout.__init__(self)
-            self.all = []
-            self.current = None
-            self.ncols = 2
-            self.rowwise = True
-            self.pos = None
-            self.rstretch = None
-            self.cstretch = None
-            self.parent = parent
-
-
-        def newView(self,shared=None):
-            """Create a new viewport
-
-            If another QtCanvas instance is passed, both will share the same
-            display lists and textures.
-            """
-            if shared is not None:
-                pf.debug("SHARING display lists WITH %s" % shared)
-            canv = QtCanvas(self.parent,shared)
-            return(canv)
-
-
-        def addView(self):
-            """Add a new viewport to the widget"""
-            canv = self.newView()
-            if len(self.all) > 0:
-                # copy default settings from previous
-                canv.resetDefaults(self.all[-1].settings)
-            self.all.append(canv)
-            self.showWidget(canv)
-            canv.initializeGL()   # Initialize OpenGL context and camera
-            self.setCurrent(canv)
-
-
-        def setCurrent(self,canv):
-            """Make the specified viewport the current one.
-
-            canv can be either a viewport or viewport number.
-            """
-            if type(canv) == int and canv in range(len(self.all)):
-                canv = self.all[canv]
-            if canv == self.current:
-                return  # already current
-
-            if canv in self.all:
-                if self.current:
-                    self.current.focus = False
-                    self.current.updateGL()
-                self.current = canv
-                self.current.focus = True
-                self.current.updateGL()
-                toolbar.updateTransparencyButton()
-                toolbar.updatePerspectiveButton()
-                toolbar.updateLightButton()
-
-
-        def currentView(self):
-            return self.all.index(self.current)
-
-
-        def showWidget(self,w):
-            """Show the view w."""
-            ind = self.all.index(w)
-            if self.pos is None:
-                row,col = divmod(ind,self.ncols)
-                if not self.rowwise:
-                    row,col = col,row
-                rspan,cspan = 1,1
-            elif ind < len(self.pos):
-                row,col,rspan,cspan = self.pos[ind]
-            else:
-                return
-            self.addWidget(w,row,col,rspan,cspan)
-            w.raise_()
-            # set the stretch factors
-            if self.rstretch is not None:
-                for i in range(row,row+rspan):
-                    if i >= len(self.rstretch):
-                        self.rstretch.append(1)
-                    self.setRowStretch(i,self.rstretch[i])
-            if self.cstretch is not None:
-                for i in range(col,col+cspan):
-                    if i >= len(self.cstretch):
-                        self.cstretch.append(1)
-                    self.setColumnStretch(i,self.cstretch[i])
-
-
-        def removeView(self):
-            if len(self.all) > 1:
-                w = self.all.pop()
-                if self.pos is not None:
-                    self.pos = self.pos[:-1]
-                if self.current == w:
-                    self.setCurrent(self.all[-1])
-                self.removeWidget(w)
-                w.close()
-                # set the stretch factors
-                pos = [self.getItemPosition(self.indexOf(w)) for w in self.all]
-                if self.rstretch is not None:
-                    row = max([p[0]+p[2] for p in pos])
-                    for i in range(row,len(self.rstretch)):
-                        self.setRowStretch(i,0)
-                    self.rstretch = self.rstretch[:row]
-                if self.cstretch is not None:
-                    col = max([p[1]+p[3] for p in pos])
-                    for i in range(col,len(self.cstretch)):
-                        self.setColumnStretch(i,0)
-                    self.cstretch = self.cstretch[:col]
-
-
-    ##     def setCamera(self,bbox,view):
-    ##         self.current.setCamera(bbox,view)
-
-        def updateAll(self):
-             pf.debug("UPDATING ALL VIEWPORTS")
-             for v in self.all:
-                 v.update()
-             pf.GUI.processEvents()
-
-        def printSettings(self):
-            for i,v in enumerate(self.all):
-                pf.message("""
-    ## VIEWPORTS ##
-    Viewport %s;  Current:%s;  Settings:
-    %s
-    """ % (i, v == self.current, v.settings))
-
-
-        def changeLayout(self,nvps=None,ncols=None,nrows=None,pos=None,rstretch=None,cstretch=None):
-            """Change the lay-out of the viewports on the OpenGL widget.
-
-            nvps: number of viewports
-            ncols: number of columns
-            nrows: number of rows
-            pos: list holding the position and span of each viewport
-            [[row,col,rowspan,colspan],...]
-            rstretch: list holding the stretch factor for each row
-            cstretch: list holding the stretch factor for each column
-            (rows/columns with a higher stretch factor take more of the
-            available space)
-            Each of this parameters is optional.
-
-            If a number of viewports is given, viewports will be added
-            or removed to match the requested number.
-            By default they are laid out rowwise over two columns.
-
-            If ncols is an int, viewports are laid out rowwise over ncols
-            columns and nrows is ignored. If ncols is None and nrows is an int,
-            viewports are laid out columnwise over nrows rows. Alternatively,
-            the pos argument can be used to specify the layout of the viewports.
-            """
-            # add or remove viewports to match the requested number
-            if type(nvps) == int:
-                while len(self.all) > nvps:
-                    self.removeView()
-                while len(self.all) < nvps:
-                    self.addView()
+        if pos is None:
             # get the new layout definition
+            if nvps is None:
+                nvps = len(self.all)
+            if ncols is None:
+                if nrows is None:
+                    ncols = self.ncols()
             if type(ncols) == int:
-                rowwise = True
-                pos = None
+                pos = [ divmod(i,ncols) for i in range(nvps) ]
             elif type(nrows) == int:
-                ncols = nrows
-                rowwise = False
-                pos = None
-            elif type(pos) == list and len(pos) == len(self.all):
-                ncols = None
-                rowwise = None
+                pos = [ divmod(i,nrows)[::-1] for i in range(nvps) ]
             else:
                 return
-            # remove the viewport widgets
-            for w in self.all:
-                self.removeWidget(w)
-            # assign the new layout arguments
-            self.ncols = ncols
-            self.rowwise = rowwise
-            self.pos = pos
-            self.rstretch = rstretch
-            self.cstretch = cstretch
-            # add the viewport widgets
-            for w in self.all:
-                self.showWidget(w)
+        else:
+            nvps = len(pos)
+
+        print nvps,pos
+
+        while len(self.all) < nvps:
+            # create new viewports
+            view = self.createView()
+            self.all.append(view)
+
+        while len(self.all) > nvps:
+            # remove viewports
+            self.removeView()
+
+        # remove all views from the canvas
+        for w in self.all:
+            self.removeWidget(w)
+           # w.hide()
+
+        # create the new layout
+        for view,args in zip(self.all,pos):
+            self.addView(view,*args)
+        self.setCurrent(self.all[-1])
 
 
-        def link(self,vp,to):
-            """Link viewport vp to to"""
-            print "LINK %s to %s" % (vp,to)
-            nvps = len(self.all)
-            if vp in range(nvps) and to in range(nvps) and vp != to:
-                to = self.all[to]
-                oldvp = self.all[vp]
-                import warnings
-                warnings.warn('warn_viewport_linking')
-                newvp = self.newView(to)
-                self.all[vp] = newvp
-                self.removeWidget(oldvp)
-                oldvp.close()
-                self.showWidget(newvp)
-                vp = newvp
-                vp.actors = to.actors
-                vp.bbox = to.bbox
-                vp.show()
-                vp.setCamera()
-                vp.redrawAll()
-                #vp.updateGL()
-                pf.GUI.processEvents()
+    def createView(self,shared=None):
+        """Create a new viewport
 
+        If another QtCanvas instance is passed, both will share the same
+        display lists and textures.
+        """
+        if shared is not None:
+            pf.debug("SHARING display lists WITH %s" % shared)
+        view = QtCanvas(self.parent,shared)
+        if len(self.all) > 0:
+            # copy default settings from previous
+            view.resetDefaults(self.all[-1].settings)
+        return(view)
+
+
+    def addView(self,view,row,col,rowspan=1,colspan=1):
+        """Add a new viewport and make it visible"""
+        self.addWidget(view,row,col,rowspan,colspan)
+        view.raise_()
+        view.initializeGL()   # Initialize OpenGL context and camera
+
+
+    def removeView(self,view=None):
+        """Remove a view from the canvas
+
+        If view is None, the last one is removed.
+        You can not remove a view when there is only one left.
+        """
+        if len(self.all) > 1:
+            if view is None:
+                view = self.all.pop()
+            else:
+                i = self.all.find(view)
+                if i < 0:
+                    return
+                view = self.all.pop(i)
+                if self.current == view:
+                    self.setCurrent(self.all[i-1])
+                self.removeWidget(view)
+                view.close()
+
+
+    def setCurrent(self,view):
+        """Make the specified viewport the current one.
+
+        view can be either a viewport or viewport number.
+        """
+        if type(view) == int and view in range(len(self.all)):
+            view = self.all[view]
+        if view == self.current:
+            return  # already current
+
+        if view in self.all:
+            if self.current:
+                self.current.focus = False
+                self.current.updateGL()
+            self.current = view
+            self.current.focus = True
+            self.current.updateGL()
+            toolbar.updateTransparencyButton()
+            toolbar.updatePerspectiveButton()
+            toolbar.updateLightButton()
+
+
+    def currentView(self):
+        return self.all.index(self.current)
+
+
+    def nrows(self):
+        return self.rowCount()
+
+
+    def ncols(self):
+        return self.columnCount()
+
+
+    def setStretch(self,rowstretch,colstretch):
+        """Set the row and column stretch factors.
+
+        rowstretch and colstretch are lists of stretch factors to be applied
+        on the subsequent rows/columns. If the lists are shorter than the
+        number of rows/columns, the 
+        """
+        if rowstretch:
+            for i in range(min(len(rowstretch),self.nrows())):
+                self.setRowStretch(i,rowstretch[i])
+        if colstretch:
+            for i in range(min(len(colstretch),self.ncols())):
+                self.setColumnStretch(i,colstretch[i])
+
+
+    def updateAll(self):
+         pf.debug("UPDATING ALL VIEWPORTS")
+         for v in self.all:
+             v.update()
+         pf.GUI.processEvents()
+
+
+    def printSettings(self):
+        for i,v in enumerate(self.all):
+            pf.message("""
+## VIEWPORTS ##
+Viewport %s;  Current:%s;  Settings:
+%s
+""" % (i, v == self.current, v.settings))
+
+    def link(self,vp,to):
+        """Link viewport vp to to"""
+        print "LINK %s to %s" % (vp,to)
+        print "LINKING CURRENTLY DISABLED"
+        return
+        nvps = len(self.all)
+        if vp in range(nvps) and to in range(nvps) and vp != to:
+            to = self.all[to]
+            oldvp = self.all[vp]
+            import warnings
+            warnings.warn('warn_viewport_linking')
+            newvp = self.newView(to)
+            self.all[vp] = newvp
+            self.removeWidget(oldvp)
+            oldvp.close()
+            self.showWidget(newvp)
+            vp = newvp
+            vp.actors = to.actors
+            vp.bbox = to.bbox
+            vp.show()
+            vp.setCamera()
+            vp.redrawAll()
+            #vp.updateGL()
+            pf.GUI.processEvents()
+
+
+
+class FramedGridLayout(QtGui.QGridLayout):
+    """A QtGui.QGridLayout where each added widget is framed."""
+
+    def __init__(self,parent=None):
+        """Initialize the multicanvas."""
+        QtGui.QGridLayout.__init__(self)
+ #       self.frames = []
+
+
+    def addWidget(*args):
+#        f = QtGui.QFrame(w)
+#        self.frames.append(f)
+        QtGui.QGridLayout.addWidget(*args)
+
+
+    def removeWidget(self,w):
+        QtGui.QGridLayout.removeWidget(self,w)
+
+
+class MultiCanvas(FramedGridLayout):
+    """An OpenGL canvas with multiple viewports and QT interaction.
+
+    The MultiCanvas implements a central QT widget containing one or more
+    QtCanvas widgets.
+    """
+    def __init__(self,parent=None):
+        """Initialize the multicanvas."""
+        FramedGridLayout.__init__(self)
+        self.all = []
+        self.current = None
+        self.ncols = 2
+        self.rowwise = True
+        self.pos = None
+        self.rstretch = None
+        self.cstretch = None
+        self.parent = parent
+
+
+    def newView(self,shared=None):
+        """Create a new viewport
+
+        If another QtCanvas instance is passed, both will share the same
+        display lists and textures.
+        """
+        if shared is not None:
+            pf.debug("SHARING display lists WITH %s" % shared)
+        canv = QtCanvas(self.parent,shared)
+        return(canv)
+
+
+    def addView(self):
+        """Add a new viewport to the widget"""
+        canv = self.newView()
+        if len(self.all) > 0:
+            # copy default settings from previous
+            canv.resetDefaults(self.all[-1].settings)
+        self.all.append(canv)
+        self.showWidget(canv)
+        canv.initializeGL()   # Initialize OpenGL context and camera
+        self.setCurrent(canv)
+
+
+    def setCurrent(self,canv):
+        """Make the specified viewport the current one.
+
+        canv can be either a viewport or viewport number.
+        """
+        if type(canv) == int and canv in range(len(self.all)):
+            canv = self.all[canv]
+        if canv == self.current:
+            return  # already current
+
+        if canv in self.all:
+            if self.current:
+                self.current.focus = False
+                self.current.updateGL()
+            self.current = canv
+            self.current.focus = True
+            self.current.updateGL()
+            toolbar.updateTransparencyButton()
+            toolbar.updatePerspectiveButton()
+            toolbar.updateLightButton()
+
+
+    def currentView(self):
+        return self.all.index(self.current)
+
+
+    def showWidget(self,w):
+        """Show the view w."""
+        ind = self.all.index(w)
+        if self.pos is None:
+            row,col = divmod(ind,self.ncols)
+            if not self.rowwise:
+                row,col = col,row
+            rspan,cspan = 1,1
+        elif ind < len(self.pos):
+            row,col,rspan,cspan = self.pos[ind]
+        else:
+            return
+        self.addWidget(w,row,col,rspan,cspan)
+        w.raise_()
+        # set the stretch factors
+        if self.rstretch is not None:
+            for i in range(row,row+rspan):
+                if i >= len(self.rstretch):
+                    self.rstretch.append(1)
+                self.setRowStretch(i,self.rstretch[i])
+        if self.cstretch is not None:
+            for i in range(col,col+cspan):
+                if i >= len(self.cstretch):
+                    self.cstretch.append(1)
+                self.setColumnStretch(i,self.cstretch[i])
+
+
+    def removeView(self):
+        if len(self.all) > 1:
+            w = self.all.pop()
+            if self.pos is not None:
+                self.pos = self.pos[:-1]
+            if self.current == w:
+                self.setCurrent(self.all[-1])
+            self.removeWidget(w)
+            w.close()
+            # set the stretch factors
+            pos = [self.getItemPosition(self.indexOf(w)) for w in self.all]
+            if self.rstretch is not None:
+                row = max([p[0]+p[2] for p in pos])
+                for i in range(row,len(self.rstretch)):
+                    self.setRowStretch(i,0)
+                self.rstretch = self.rstretch[:row]
+            if self.cstretch is not None:
+                col = max([p[1]+p[3] for p in pos])
+                for i in range(col,len(self.cstretch)):
+                    self.setColumnStretch(i,0)
+                self.cstretch = self.cstretch[:col]
+
+
+##     def setCamera(self,bbox,view):
+##         self.current.setCamera(bbox,view)
+
+    def updateAll(self):
+         pf.debug("UPDATING ALL VIEWPORTS")
+         for v in self.all:
+             v.update()
+         pf.GUI.processEvents()
+
+    def printSettings(self):
+        for i,v in enumerate(self.all):
+            pf.message("""
+## VIEWPORTS ##
+Viewport %s;  Current:%s;  Settings:
+%s
+""" % (i, v == self.current, v.settings))
+
+
+    def changeLayout(self,nvps=None,ncols=None,nrows=None,pos=None,rstretch=None,cstretch=None):
+        """Change the lay-out of the viewports on the OpenGL widget.
+
+        nvps: number of viewports
+        ncols: number of columns
+        nrows: number of rows
+        pos: list holding the position and span of each viewport
+        [[row,col,rowspan,colspan],...]
+        rstretch: list holding the stretch factor for each row
+        cstretch: list holding the stretch factor for each column
+        (rows/columns with a higher stretch factor take more of the
+        available space)
+        Each of this parameters is optional.
+
+        If a number of viewports is given, viewports will be added
+        or removed to match the requested number.
+        By default they are laid out rowwise over two columns.
+
+        If ncols is an int, viewports are laid out rowwise over ncols
+        columns and nrows is ignored. If ncols is None and nrows is an int,
+        viewports are laid out columnwise over nrows rows. Alternatively,
+        the pos argument can be used to specify the layout of the viewports.
+        """
+        # add or remove viewports to match the requested number
+        if type(nvps) == int:
+            while len(self.all) > nvps:
+                self.removeView()
+            while len(self.all) < nvps:
+                self.addView()
+        # get the new layout definition
+        if type(ncols) == int:
+            rowwise = True
+            pos = None
+        elif type(nrows) == int:
+            ncols = nrows
+            rowwise = False
+            pos = None
+        elif type(pos) == list and len(pos) == len(self.all):
+            ncols = None
+            rowwise = None
+        else:
+            return
+        # remove the viewport widgets
+        for w in self.all:
+            self.removeWidget(w)
+        # assign the new layout arguments
+        self.ncols = ncols
+        self.rowwise = rowwise
+        self.pos = pos
+        self.rstretch = rstretch
+        self.cstretch = cstretch
+        # add the viewport widgets
+        for w in self.all:
+            self.showWidget(w)
+
+
+    def link(self,vp,to):
+        """Link viewport vp to to"""
+        print "LINK %s to %s" % (vp,to)
+        nvps = len(self.all)
+        if vp in range(nvps) and to in range(nvps) and vp != to:
+            to = self.all[to]
+            oldvp = self.all[vp]
+            import warnings
+            warnings.warn('warn_viewport_linking')
+            newvp = self.newView(to)
+            self.all[vp] = newvp
+            self.removeWidget(oldvp)
+            oldvp.close()
+            self.showWidget(newvp)
+            vp = newvp
+            vp.actors = to.actors
+            vp.bbox = to.bbox
+            vp.show()
+            vp.setCamera()
+            vp.redrawAll()
+            #vp.updateGL()
+            pf.GUI.processEvents()
+
+
+def _auto_initialize():
+    global MultiCanvas
+    try:
+        if pf.options.newviewports:
+            MultiCanvas = NewMultiCanvas
+    except:
+        pass
+
+_auto_initialize()
                     
 # End

@@ -40,17 +40,18 @@ from simple import regularGrid
 ##############################################################
 
 class Mesh(Geometry):
-    """A mesh is a discrete geometrical model defined by nodes and elements.
+    """A Mesh is a discrete geometrical model defined by nodes and elements.
 
-    In the Mesh geometrical data model, coordinates of all points are gathered
-    in a single twodimensional array 'coords' with shape (ncoords,3) and the
-    individual geometrical elements are described by indices into the 'elems'
-    array.
-    This model has some advantages over the Formex data model, where all
-    points of all element are stored by their coordinates:
+    In the Mesh geometrical data model, the coordinates of all the points
+    are gathered in a single twodimensional array with shape (ncoords,3).
+    The individual geometrical elements are then described by indices into
+    the coordinates array.
     
-    - compacter storage, because coordinates of coinciding points do not
-      need to be repeated,
+    This model has some advantages over the Formex data model (which stores
+    all the points of all the elements by their coordinates):
+    
+    - a more compact storage, because coordinates of coinciding
+      points are not repeated,
     - faster connectivity related algorithms.
     
     The downside is that geometry generating algorithms are far more complex
@@ -62,10 +63,12 @@ class Mesh(Geometry):
 
     The Mesh data model has at least the following attributes:
     
-    - coords: (ncoords,3) shaped Coords array,
-    - elems: (nelems,nplex) shaped array of int32 indices into coords. All
-      values should be in the range 0 <= value < ncoords.
-    - prop: array of element property numbers, default None.
+    - coords: (ncoords,3) shaped Coords object, holding the coordinates of
+      all points in the Mesh;
+    - elems: (nelems,nplex) shaped Connectivity object, defining the elements
+      by indices into the Coords array. All values in elems should be in the
+      range 0 <= value < ncoords.
+    - prop: an array of element property numbers, default None.
     - eltype: an Element subclass or a string designing the element type,
       default None.
     
@@ -1625,7 +1628,8 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
     - `div`: Either an integer, or a sequence of numbers (usually between 0.0
       and 1.0). This parameter has the same meaning as in `Coords.interpolate`.
       number of
-      elements in the direction between the two Meshes is determined by . 
+      elements in the direction between the two Meshes is determined by.
+      
     n1 and n2 are node selection indices permitting a permutation of the
     nodes of the base sets in their appearance in the hypermesh.
     This can e.g. be used to achieve circular numbering of the hypermesh.

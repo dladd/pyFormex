@@ -85,6 +85,7 @@ main pyformex path are considered to belong to the pyformex core functionality.
    ref/project
    ref/utils
    ref/elements
+   ref/mesh
 
 
 **pyFormex GUI modules**
@@ -93,7 +94,7 @@ These modules are located under pyformex/gui.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 12
+   :numbered: 13
 
    ref/widgets
    ref/menu
@@ -121,10 +122,10 @@ path, these modules are in no way different from other pyFormex modules.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 28
+   :numbered: 29
 
    ref/curve
-   ref/mesh
+   ref/mesh_ext
    ref/trisurface
    ref/geomtools
    ref/nurbs
@@ -138,6 +139,7 @@ path, these modules are in no way different from other pyFormex modules.
    ref/fe_abq
    ref/fe_post
    ref/postproc
+   ref/flavia
    ref/lima
    ref/turtle
    ref/dxf
@@ -145,6 +147,7 @@ path, these modules are in no way different from other pyFormex modules.
    ref/tetgen
    ref/tools
    ref/objects
+   ref/plot2d
 ..   ref/formex_menu
 ..   ref/tools_menu
 ..   ref/surface_menu
@@ -160,7 +163,7 @@ elsewhere.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 50
+   :numbered: 53
 
    ref/olist
    ref/mydict
@@ -170,7 +173,6 @@ elsewhere.
    ref/flatkeydb
    ref/sendmail
    ref/timer
-   ref/misc
 
 .. End
 

@@ -247,11 +247,11 @@ TRICKS
   one(0), while the bottom row has a height equal to 1.5 times the
   height of the top row::
 
-  layout(4)
-  pf.GUI.viewports.setColumnStretch(0,1)
-  pf.GUI.viewports.setColumnStretch(1,2)
-  pf.GUI.viewports.setRowStretch(0,2)
-  pf.GUI.viewports.setRowStretch(1,3)
+    layout(4)
+    pf.GUI.viewports.setColumnStretch(0,1)
+    pf.GUI.viewports.setColumnStretch(1,2)
+    pf.GUI.viewports.setRowStretch(0,2)
+    pf.GUI.viewports.setRowStretch(1,3)
 
 
 

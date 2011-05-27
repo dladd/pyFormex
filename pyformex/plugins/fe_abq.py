@@ -1,4 +1,3 @@
-#!/usr/bin/env pyformex
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
@@ -53,7 +52,7 @@ from mydict import Dict,CDict
 import pyformex as pf
 from datetime import datetime
 import os,sys
-from utils import deprecation
+from utils import deprecation,removeDict
 
 ##################################################
 ## Some Abaqus .inp format output routines
@@ -138,40 +137,23 @@ def fmtData(data,npl=8,sep=', ',linesep='\n'):
     return linesep.join([fmtData1D(row,npl,sep,linesep) for row in data])+linesep
 
 
-
-#~ FI addOptions and removePropOptions allows to manipulate keywords of the porperty database
-# They help the other functions to have more general purpose. I.e. a property Dict is passed for a specific 
-# keyword. the Dict is cleaned (removePropOptions) from the required keys to be written (to wit the keywords in the old versions of fe_abq) 
-#or the ones that need to be checked while the rest is added as keyword option (addOptions).see class Step,writeModelProps,writeStepExtra  for use
-def addOptions(option):
-    '''add option after an abaqus keyword
+def fmtOptions(options):
+    """Format the options of an Abaqus command line.
     
-    -option is a Dict type
-        It has keys name equal to the ABAQUS keywords and value equal to parameter setting
-        if an ABAQUS keyword does not have a value to be the Dict value must be an empty string
+    - `options`: a dict with ABAQUS command keywords and values. If the keyword
+      does not take any value, the value in the dict should be an empty string.
 
-    '''
-    cmd=''
-    for k in option.keys():
-        cmd+=' , '+k
-        if option[k] != '':
-            cmd+='= %s' % option[k]
-        cmd=cmd.upper()
-    return cmd
-
-#~ FI  see comments before addOptions
-def removePropOptions(d,opName):
-    '''delete all key option in d contained in opName
-    d is Dict 
-    opName is list of string (keys names to be deleted)
-    '''
-    for k in  d.keys():
-        if k in opName:
-            del d[k]
-    return d
+    Returns a comma-separated string of 'keyword' or 'keyword=value' fields.
+    The string includes an initial comma.
+    """
+    s = ''
+    for k in options:
+        s += ", %s" % k.upper()
+        if options[k] != '':
+            s += "=%s" % options[k]
+    return s
 
 
-    
 def fmtHeading(text=''):
     """Format the heading of the Abaqus input file."""
     out = """**  Abaqus input file created by %s (%s)
@@ -215,22 +197,26 @@ def fmtMaterial(mat):
 
     - 'HYERELASTIC':
     
-      required
-      - model: one of 'ogden', 'polynomial' or 'reduced polynomial'
-      - constants: list of all parameter required for the model (see Abaqus documentation)
+      required:
       
-      optional
-      - order: order of the model. If blank will be automatically calculated from the len of the constants list
+      - model: one of 'ogden', 'polynomial' or 'reduced polynomial'
+      - constants: list of all parameter required for the model
+        (see Abaqus documentation)
+      
+      optional:
+      
+      - order: order of the model. If blank will be automatically calculated
+        from the len of the constants list
         
-        example:
+        example::
         
-        intimaMat= {
+          intimaMat = {
             'name': 'intima',
             'density': 0.1, # Not Used, but Abaqus does not like a material without
             'elasticity':'hyperelastic',
             'type':'reduced polynomial',
             'constants': [6.79E-03, 5.40E-01, -1.11, 10.65, -7.27, 1.63, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        }
+          }
       
     - 'ANISOTROPIC HYPERELASTIC':
  
@@ -569,8 +555,7 @@ def fmtConnectorBehavior(prop):
 # this sholud be extended to all the element types that has the property SOLID SECTION. now it is only for 3dsolid
     
 def fmtSolidSection(el,setname):
-    '''
-    this function should be modified to create a general function for all the element types that has the property SOLID SECTION. now it is only for 3dsolid
+    """_ THis docstring is very badly structured!
     
     REQUIRED
     
@@ -593,7 +578,7 @@ def fmtSolidSection(el,setname):
     EXAMPLE
     control=Dict({'name':'StentControl','hourglass':'enhanced',})
     P.elemProp(set='STENT',eltype='C3D8R',section=ElemSection(section=stentSec,material=steel,seccontrol=control))
-    '''
+    """
     
     out = ''
     if el.sectiontype.upper() == '3DSOLID':
@@ -614,12 +599,12 @@ def fmtSolidSection(el,setname):
         if el.seccontrol is not None:
             if el.seccontrol.name is not None:
                 # add the only required parameter
-                out +="*SECTION CONTROLS, NAME=%s" %el.seccontrol.name
-                out+=addOptions(removeDictKey(el.seccontrol,['name','data']))
-                out+='\n'           
+                out += "*SECTION CONTROLS, NAME=%s" %el.seccontrol.name
+                out += fmtOptions(removeDict(el.seccontrol,['name','data']))
+                out += '\n'           
                 # add  data line for 
                 if el.seccontrol.data is not None:
-                   out+=fmtData(el.seccontrol.data)
+                   out += fmtData(el.seccontrol.data)
             else:
                 raise ValueError,"A section control name need to be specified"
         
@@ -643,8 +628,9 @@ def fmtSurface(prop):
     - name: the surface name
     - surftype: 'ELEMENT' or 'NODE'
     - label: face or edge identifier (only required for surftype = 'ELEMENT')
-    This label can be a string, or a list of strings. This allows to use different
-    identifiers for the different elements in the surface.
+    
+    This label can be a string, or a list of strings. This allows to use
+    different identifiers for the different elements in the surface.
     """
     out = ''
     for p in prop:
@@ -669,7 +655,10 @@ def fmtAnalyticalSurface(prop):
     - name: the surface name
     - surftype: 'ELEMENT' or 'NODE'
     - label: face or edge identifier (only required for surftype = 'NODE')
-    Example: P.Prop(name='AnalySurf', nodeset = 'REFNOD', analyticalsurface='')
+    
+    Example:
+
+    >>> P.Prop(name='AnalySurf', nodeset = 'REFNOD', analyticalsurface='')
     """
     out = ''
     for p in prop:
@@ -678,10 +667,13 @@ def fmtAnalyticalSurface(prop):
  
 def fmtSurfaceInteraction(prop):
     """Format the interactions.
+    
     Required:
+    
     -name
     
     Optional:
+    
     - cross_section (for node based interaction)
     - friction : friction coeff or 'rough'
     - surface behavior: no separation
@@ -722,10 +714,14 @@ def fmtGeneralContact(prop):
     Required:
 
     - interaction: interaction properties : name or Dict
+    
     Optional:
+    
     - Exclusions (exl)
+    
     Example:
-    P.Prop(generalinteraction=Interaction(name ='contactprop1'),exl =[['surf11', 'surf12'],['surf21',surf22]])
+    
+    >>> P.Prop(generalinteraction=Interaction(name ='contactprop1'),exl =[['surf11', 'surf12'],['surf21',surf22]])
     """
     out = ''
     for p in prop:
@@ -755,8 +751,8 @@ def fmtContactPair(prop):
     - interaction: interaction properties : name or Dict
     
     Example:
-    P.Prop(name='contact0',interaction=Interaction(name ='contactprop', surfacebehavior=True, pressureoverclosure=['hard','linear',0.0, 0.0, 0.001])
-    , master ='quadtubeINTSURF1',  slave='hexstentEXTSURF', contacttype='NODE TO SURFACE')
+    
+    >>> P.Prop(name='contact0',interaction=Interaction(name ='contactprop', surfacebehavior=True, pressureoverclosure=['hard','linear',0.0, 0.0, 0.001]), master ='quadtubeINTSURF1',  slave='hexstentEXTSURF', contacttype='NODE TO SURFACE')
     """
     out = ''
     for p in prop:
@@ -776,6 +772,7 @@ def fmtContactPair(prop):
 
 def fmtConstraint(prop):
     """Format Tie constraint
+    
     Required:
     
     -name
@@ -784,11 +781,13 @@ def fmtConstraint(prop):
     -master
     
     Optional:
+
     -type (surf2surf, node2surf)
     -no rotation
     
     Example:
-    P.Prop(constraint='1', name = 'constr1', adjust = 'no', master = 'hexstentbarSURF', slave = 'hexstentEXTSURF',type='NODE TO SURFACE')    
+
+    >>> P.Prop(constraint='1', name = 'constr1', adjust = 'no', master = 'hexstentbarSURF', slave = 'hexstentEXTSURF',type='NODE TO SURFACE')    
     """
     for p in prop:
         out =''
@@ -803,12 +802,17 @@ def fmtConstraint(prop):
 
 	
 def fmtInitialConditions(prop):
-    """Format initial conditions:
+    """Format initial conditions
+    
     Required:
+
     -type
     -nodes
     -data
-    Example: P.Prop(initialcondition='', nodes ='Nall', type = 'TEMPERATURE', data = 37.)
+
+    Example::
+
+      P.Prop(initialcondition='', nodes ='Nall', type = 'TEMPERATURE', data = 37.)
     """
     
     for p in prop:
@@ -848,17 +852,22 @@ def fmtEquation(prop):
     """Format multi-point constraint using an equation
     
     Required:
+    
     - equation
     
     Equation should be a list, which contains the different terms of the equation.
     Each term is again a list with three values:
+    
     - First value: node number
     - Second value: degree of freedom
     - Third value: coefficient
     
-    Example: P.nodeProp(equation=[[209,1,1],[32,1,-1]])
+    Example::
+
+      P.nodeProp(equation=[[209,1,1],[32,1,-1]])
     
-    In this case, the displacement in Y-direction of node 209 and 32 should be equal.
+    This forces the displacement in Y-direction of nodes 209 and 32 to
+    be equal.
     """
     
     out = ''
@@ -1095,7 +1104,7 @@ def writeSection(fil,prop):
 #~ the key ampl can be also icluded in extra but has not been removed
 # I will suggest to remove writeDisplacements or set this function equal to writeBoundaries
 def writeBoundaries(fil,prop):
-    """Write nodal boundary conditions.
+    """_ BAD STRUCTURE! Write nodal boundary conditions.
 
     prop is a list of node property records that should be scanned for
     bound attributes to write. prop contains
@@ -1139,7 +1148,7 @@ def writeBoundaries(fil,prop):
             fil.write(", OP=%s" % p.op)  
                     
         if p.extra is not None:
-           fil.write(addOptions(p.extra))
+           fil.write(fmtOptions(p.extra))
            
         fil.write("\n")
         
@@ -1420,7 +1429,8 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
 # need to be written at the step level for type history.
 # This function is very similar to writeStepExtra maybe can be merged
 def writeModelProps(fil,prop):
-    """Write model props for this step
+    """_ BAD STRUCTURE Write model props for this step
+    
     extra : str 
              : list of Dict. each Dict is a new line.Only 2 keys are dedicated
                 
@@ -1446,7 +1456,7 @@ def writeModelProps(fil,prop):
                 for l in p.extra:
                     l=CDict(l) # to avoid keyerrors if l.data is not a key
                     cmd+='*%s'%l['keyword']
-                    cmd+=addOptions(removePropOptions(l,['keyword','data']))
+                    cmd+=fmtOptions(removeDict(l,['keyword','data']))
                     cmd+='\n'
                     if l.data is not None:
                         cmd+=fmtData(l.data)
@@ -1461,7 +1471,7 @@ def writeStepExtra(fil,extra):
         for l in extra:
             l=CDict(l) # to avoid keyerrors if l.data is not a key
             cmd+='*%s'%l['keyword']
-            cmd+=addOptions(removePropOptions(l,['keyword','data']))
+            cmd+=fmtOptions(removeDict(l,['keyword','data']))
             cmd+='\n'
             if l.data is not None:
                 cmd+=fmtData(l.data)
@@ -1611,7 +1621,7 @@ class Step(Dict):
         cmd += ', NLGEOM=%s' % self.nlgeom
         
         if self.stepOptions is not None:
-            cmd+=addOptions(self.stepOptions)
+            cmd+=fmtOptions(self.stepOptions)
         cmd += '\n'
         fil.write(cmd)
         
@@ -1633,7 +1643,7 @@ class Step(Dict):
         
         cmd=''
         if self.analysisOptions is not None:
-            cmd+=addOptions(self.analysisOptions)
+            cmd+=fmtOptions(self.analysisOptions)
         cmd+='\n'
         fil.write(cmd)             
         

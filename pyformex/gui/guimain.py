@@ -1090,6 +1090,19 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         if sta == 0:
             draw.showInfo(out)
 
+
+    warnings.warn("""..
+
+Developers
+----------
+Please follow the coding style as explained in Help -> Developer Guidelines
+
+Current points of attention:
+- Docstrings should start and end with \"\"\"
+- Docstrings should be valid ReStructuredText
+- Assignment operators ('=', '+=', etc.) have a blank before and after.
+""")
+
     pf.app_started = True
     pf.GUI.processEvents()
     return 0

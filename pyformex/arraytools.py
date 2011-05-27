@@ -1349,20 +1349,20 @@ def histogram2(a,bins,range=None):
 def movingView(a, size):
     """Create a moving view along the first axis of an array
     
-    Parameters
-    ----------
-    a : array_like: array for wihch to create a moving view
-    size : int: size of the moving view
+    Parameters:
+    
+    - `a` : array_like: array for wihch to create a moving view
+    - `size` : int: size of the moving view
 
-    Returns
-    -------
+    Returns:
+    
     An array that is a view of the original array with an extra first
     axis of length w.
 
     Using swapaxes(0,axis) moving views over any axis can be created.
     
-    Examples
-    --------
+    Examples:
+    
     >>> x=arange(10).reshape((5,2))
     >>> print x
     [[0 1]
@@ -1402,17 +1402,17 @@ def movingView(a, size):
 def movingAverage(a,n,m0=None,m1=None):
     """Compute the moving average along the first axis of an array.
 
-    Parameters
-    ----------
-    a : array_like: array to be averaged
-    n : int: moving sample size
-    m0 : optional, int: if specified, the first data set of a will be prepended
-         this number of times
-    m1 : optional, int: if specified, the last data set of a will be appended
-         this number of times
+    Parameters:
+    
+    - `a` : array_like: array to be averaged
+    - `n` : int: moving sample size
+    - `m0` : optional, int: if specified, the first data set of a will
+      be prepended this number of times
+    - `m1` : optional, int: if specified, the last data set of a will
+      be appended this number of times
 
-    Returns
-    -------
+    Returns:
+    
     An array with the moving average over n data sets along the first axis of a.
     The array has the same shape as a, except possibly for the length of the
     first axis.
@@ -1424,8 +1424,8 @@ def movingAverage(a,n,m0=None,m1=None):
     will be computed thus that the return array has a first axis with length
     a.shape[0].
 
-    Examples
-    --------
+    Examples:
+    
     >>> x=arange(10).reshape((5,2))
     >>> print movingAverage(x,3)
     [[ 2.  3.]

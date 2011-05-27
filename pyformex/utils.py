@@ -585,6 +585,13 @@ def tildeExpand(fn):
     return fn.replace('~',os.environ['HOME'])
     
 
+def userName():
+    """Find the name of the user."""
+    try:
+        return os.environ['LOGNAME']
+    except:
+        return 'NOBODY'
+    
       
 def is_pyFormex(filename):
     """Checks whether a file is a pyFormex script.
@@ -595,7 +602,7 @@ def is_pyFormex(filename):
     and the first line of the file contains the substring 'pyformex'.
     Typically, a pyFormex script starts with a line::
 
-       #!/usr/bin/env pyformex
+       #!/usr/bin/pyformex
     """
     filename = str(filename) # force it into a string
     if filename.endswith(".pye"):
@@ -735,8 +742,34 @@ def selectDict(d,keys):
     
     The return value is a dict with all the items from d whose key
     is in keys.
+    See :func:`removeDict` for the complementary operation.
+    
+    Example:
+
+    >>> d = dict([(c,c*c) for c in range(6)])
+    >>> selectDict(d,[4,0,1])
+    {0: 0, 1: 1, 4: 16}
     """
-    return dict([ item for item in d.items() if item[0] in keys ])
+    return dict([ (k,d[k]) for k in keys if k in d ])
+
+
+def removeDict(d,keys):
+    """Remove a set of keys from a dict.
+
+    - `d`: a dict
+    - `keys`: a set of key values
+
+    The return value is a dict with all the items from `d` whose key
+    is not in `keys`.
+    This is the complementary operation of selectDict.
+
+    Example:
+
+    >>> d = dict([(c,c*c) for c in range(6)])
+    >>> removeDict(d,[4,0])
+    {1: 1, 2: 4, 3: 9, 5: 25}
+    """
+    return dict([ (k,d[k]) for k in d if k not in keys ])
 
     
 def stuur(x,xval,yval,exp=2.5):

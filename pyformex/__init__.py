@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
@@ -49,6 +48,7 @@ StartTime = datetime.datetime.now()
 # initialize some global variables used for communication between modules
 
 options = None     # the options found on the command line
+   
 print_help = None  # the function to print(the pyformex help text (pyformex -h))
 
 cfg = {}         # the current session configuration

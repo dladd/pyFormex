@@ -35,7 +35,7 @@ import simple
 import utils
 import olist
 
-from pyformex.lib import drawgl
+from lib import drawgl
 
 def glObjType(nplex):
     if nplex == 1:

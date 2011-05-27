@@ -9,14 +9,14 @@
 # 
 
 COREMODULES= arraytools collection config connectivity coords elements  \
-  flatkeydb formex geometry misc mydict odict olist project \
+  flatkeydb formex geometry mesh mydict odict olist project \
   script sendmail simple timer utils
 GUIMODULES= actors camera canvas colors colorscale decors draw gluttext \
   image imageViewer imagearray imagecolor marks menu\
   scriptMenu toolbar viewport widgets 
-PLUGINMODULES= curve datareader dxf export fe fe_abq fe_post geomtools \
-  inertia isopar lima mesh nurbs objects postproc properties section2d \
-  tetgen tools trisurface turtle units
+PLUGINMODULES= curve datareader dxf export fe fe_abq fe_post flavia geomtools \
+  inertia isopar lima mesh_ext nurbs objects plot2d postproc properties \
+  section2d tetgen tools trisurface turtle units
 #AUTOREF= $(COREMODULES) $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
 AUTOREF= $(COREMODULES) $(GUIMODULES) $(PLUGINMODULES)
 AUTOSRC= $(addsuffix .rst, ${AUTOREF})

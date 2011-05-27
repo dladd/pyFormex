@@ -24,7 +24,9 @@
 """Create 3D graphical representations.
 
 The draw module provides the basic user interface to the OpenGL
-rendering capabilities of pyFormex.
+rendering capabilities of pyFormex. The full contents of this module
+is available to scripts running in the pyFormex GUI without the need
+to import it.
 """
 
 import pyformex as pf

@@ -126,6 +126,8 @@ Docstrings
   is recommended to add an extended description for all but the trivial
   components.
 
+- Docstrings should end and start with triple double-quotes (""").
+
 - Docstrings should not exceed the 80 character total line
   length. Python statements can exceed that length, if the result is more easy
   to read than splitting the line.

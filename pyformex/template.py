@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex --gui
+#!/usr/bin/pyformex --gui
 
 """Script Template
 

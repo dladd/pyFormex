@@ -21,7 +21,7 @@ import os,sys
 # set path to the pyformex modules
 parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 pyformexdir = os.path.join(parent,'pyformex')
-for d in [ 'plugins', 'gui' ]:
+for d in [ 'plugins', 'gui', 'lib' ]:
     sys.path.insert(0,os.path.join(pyformexdir,d))
 sys.path.insert(0,pyformexdir)
 
@@ -29,9 +29,6 @@ sys.path.insert(0,pyformexdir)
 
 from pyformex.odict import ODict
 
-def debug(s):
-    if options.debug:
-        print '.. DEBUG:'+str(s)
 
 import inspect
 
@@ -102,6 +99,7 @@ def do_module(filename):
 
     # Shipout
     
+    ship_start()
     ship_module(modname,module.__doc__)
     #print names
     ship_functions(names)
@@ -111,6 +109,8 @@ def do_module(filename):
     ship_functions_init(modname)
     ship_end()
     
+    sys.__stdout__.write(out)
+
        
 
 ############# Output formatting ##########################
@@ -138,9 +138,25 @@ def sanitize(s):
 
     
 
+out = ''
+
+def ship_start():
+    global out
+    out = ''
+
+def ship(s):
+    global out
+    out += s
+    out += '\n'
+    
+
+def debug(s):
+    if options.debug:
+        ship('.. DEBUG:'+str(s))
+
 def ship_module(name,docstring):
     shortdoc,longdoc = split_doc(docstring)
-    print """.. $%s$  -*- rst -*-
+    ship(""".. $%s$  -*- rst -*-
 .. pyformex reference manual --- %s
 .. CREATED WITH py2rst.py: DO NOT EDIT
 
@@ -154,39 +170,41 @@ def ship_module(name,docstring):
 %s
 
 .. automodule:: %s
-   :synopsis: %s""" % ('Id',name,name,name,shortdoc,'='*(12+len(name)+len(shortdoc)),name,shortdoc)
-    
+   :synopsis: %s""" % ('Id',name,name,name,shortdoc,'='*(12+len(name)+len(shortdoc)),name,shortdoc))
 
 def ship_end():
-    print """
+    ship("""
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
-"""
+""")
 
 def ship_functions(members=[]):
     if members:
-        print """   :members: %s""" % (','.join(members))
+        ship("""   :members: %s""" % (','.join(members)))
 
 def ship_class(name,members=[]):
-    print """
+    ship("""
    .. autoclass:: %s
-      :members: %s""" % (name,','.join(members))
+      :members: %s""" % (name,','.join(members)))
 
 def ship_class_init(name):
-    print """
+    ship("""
    ``Classes defined in module %s``
-""" % name
+""" % name)
 
 def ship_functions_init(name):
-    print """
+    ship("""
    ``Functions defined in module %s`` 
-""" % name
+""" % name)
 
 
 def main(argv):
     global options,source
+
+    sys.stdout = sys.stderr
+    
     from optparse import OptionParser,make_option
     parser = OptionParser(
         usage = """usage: %prog [Options] PYTHONFILE
