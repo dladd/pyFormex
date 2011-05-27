@@ -998,22 +998,22 @@ Total area: %s; Enclosed volume: %s
         return TriSurface(coordsNew,self.getElems(),prop=self.prop)
 
 
-    def reflect(self,*args,**kargs):
-        """Reflect the Surface in direction dir against plane at pos.
+    ## def reflect(self,*args,**kargs):
+    ##     """Reflect the Surface in direction dir against plane at pos.
 
-        Parameters:
+    ##     Parameters:
 
-        - `dir`: int: direction of the reflection (default 0)
-        - `pos`: float: offset of the mirror plane from origin (default 0.0)
-        - `inplace`: boolean: change the coordinates inplace (default False)
-        - `reverse`: boolean: revert the normals of the triangles
-          (default True).
-          Reflection of the coordinates of a 2D Mesh reverses the surface
-          sides. Setting this parameter True will cause an extra
-          reversion. This is what is expected in most surface mirroring
-          operations.
-        """
-        return Mesh.reflect(self,*args,**kargs)
+    ##     - `dir`: int: direction of the reflection (default 0)
+    ##     - `pos`: float: offset of the mirror plane from origin (default 0.0)
+    ##     - `inplace`: boolean: change the coordinates inplace (default False)
+    ##     - `reverse`: boolean: revert the normals of the triangles
+    ##       (default True).
+    ##       Reflection of the coordinates of a 2D Mesh reverses the surface
+    ##       sides. Setting this parameter True will cause an extra
+    ##       reversion. This is what is expected in most surface mirroring
+    ##       operations.
+    ##     """
+    ##     return Mesh.reflect(self,*args,**kargs)
     
 
 ##################  Partitioning a surface #############################

@@ -504,6 +504,7 @@ class Mesh(Geometry):
             M = M.compact()
         return M
 
+
     def reverse(self):
         """Return a Mesh where all elements have been reversed.
 
@@ -513,32 +514,34 @@ class Mesh(Geometry):
           Mesh(self.coords,self.elems[:,::-1])
           
         """
-        if hasattr(self.eltype  ,'reversed'):
-            return self.__class__(self.coords,self.elems[:,self.eltype.reversed],prop=self.prop,eltype=self.eltype)
+        import warnings
+        warnings.warn("The meaning of Mesh.reverse has changed. Before, it would just reorder the nodes of the elements in backwards order (just like the Formex.reverse does. The new definition of Mesh.reverse however is to reverse the line direction for 1D eltypes, to reverse the normals for 2D eltypes and to leave the Mesh untouched for other (0D and 3D) eltypes. This definition may have more practical use.")
+
+        if self.eltype.ndim not in [1,2]:
+            return self
+
+        if hasattr(self.eltype,'reversed'):
+            elems = self.elems[:,self.eltype.reversed]
         else:
-            return self.__class__(self.coords,self.elems[:,::-1],prop=self.prop,eltype=self.eltype)
+            elems = self.elems[:,::-1]
+        return self.__class__(self.coords,elems,prop=self.prop,eltype=self.eltype)
+
             
-    def reflect(self,dir=0,autofix=None,**kargs):
+    def reflect(self,dir=0,pos=0.0,autofix=None):
         """Reflect the coordinates in direction dir against plane at pos.
 
         Parameters:
 
         - `dir`: int: direction of the reflection (default 0)
         - `pos`: float: offset of the mirror plane from origin (default 0.0)
+        - `autofix`: boolean: if True, the connectivity table of reflected
+          2D and 3D elements will automatically be fixed to
         """
-        
         if autofix is None:
-            
+
+            autofix = True
             import warnings
-            from datetime import datetime
-            today = datetime.today()
-            deadline = datetime(year=2011,month=7,day=1)
-            if today > deadline:
-                autofix = True
-                warnings.warn("The Mesh.reflect now uses 'autofix=True' by default!")
-            else:
-                autofix = False
-                warnings.warn("The Mesh.reflect now has an 'autofix' option that will automatically fix the Mesh connectivity table after a `reflect` operation. Currently this autofix is set to 'False' by default, so as not to break your code. (Thank Francesco for this). However, after %s, we will switch the default to 'True', so you either have to add 'autofix=False' or (by preference) you should fix your code to use the new default value (e.g. remove your own fixing methods)!")
+            warnings.warn("The Mesh.reflect now has an 'autofix' option that will automatically fix the Mesh connectivity table after a `reflect` operation. !!!! The autofix value has been set to 'True' !!!! If you did the fixing yourself, you should now remove that code, or else add 'autofix=False'.")
         
         M = Geometry.reflect(self,dir=dir,**kargs)
         # NOW FIX THE elem connectivity
@@ -1226,21 +1229,17 @@ Size: %s
 
     connect = _connect_1_
 
+
     def extrude(self,n,step=1.,dir=0,eltype=None):
         """Extrude a Mesh in one of the axes directions.
 
         Returns a new Mesh obtained by extruding the given Mesh
-        over n steps of length step in direction of axis dir.
-        The returned Mesh has double plexitude of the original.
+        over `n` steps of length `step` in direction of axis `dir`.
 
-        This function is usually used to extrude points into lines,
-        lines into surfaces and surfaces into volumes.
-        By default it will try to fix the connectivity ordering where
-        appropriate. If autofix is switched off, the connectivities
-        are merely stacked, and the user may have to fix it himself.
+        This is a convenience function equivalent to::
 
-        Currently, this function correctly transforms: point1 to line2,
-        line2 to quad4, tri3 to wedge6, quad4 to hex8.
+          self.connect(self.translate(dir,n*step),n,eltype=eltype)
+          
         """
         return self.connect(self.translate(dir,n*step),n,eltype=eltype)
 

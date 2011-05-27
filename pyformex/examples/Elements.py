@@ -55,6 +55,14 @@ def showElement(eltype,deformed,reduced,drawas):
         view('iso')
     else:
         view('front')
+
+    ## if M.eltype.ndim == 2:
+    ##     drawNumbers(M.coords)
+    ##     print M.elems.report()
+    ##     draw(M,color=red,bkcolor=blue)
+
+    ##     #draw(M.reverse(),color=red,bkcolor=blue)
+    ## return
         
     v = M.coords
     if deformed:
