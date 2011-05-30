@@ -465,6 +465,7 @@ class PropertyDB(Dict):
           - a single number,
           - a list of numbers,
           - the name of an already defined set,
+          - the name of a set already defined by another name
           - a list of such names.
 
         Besides these, any other fields may be defined and will be added
@@ -487,6 +488,8 @@ class PropertyDB(Dict):
                 ### convenience to allow set='name' as alias for name='name'
                 ### to reuse already defined set
                 set,name = name,set
+            elif type(set) is str and name is not None:
+                d.set=set
             else:
                 if type(set) is int:
                     set = [ set ]
@@ -583,7 +586,7 @@ class PropertyDB(Dict):
           If None, the property will hold for all nodes.
         - cload: a concentrated load: a list of 6 float values
           [FX,FY,FZ,MX,MY,MZ] or a list of (dofid,value) tuples.
-        - bound: a boundary condition: a list of 6 codes (0/1)
+        - bound: a boundary condition: a str ,a list of 6 codes (0/1),a list of tuples (dofid,value)
         - displ: a prescribed displacement: a list of tuples (dofid,value)
         - csys: a CoordSystem
         - ampl: the name of an Amplitude
@@ -595,8 +598,11 @@ class PropertyDB(Dict):
             if bound is not None:
                 if type(bound) == str:
                     d['bound'] = checkString(bound,self.bound_strings)
-                else:
-                    d['bound'] = checkArray1D(bound,6,'i')
+                elif type(bound) == list:
+                    if type(bound[0])==int:
+                        d['bound'] = checkArray1D(bound,6,'i')
+                    else:
+                        d['bound'] = checkArrayOrIdValue(bound)
             if displ is not None:
                 d['displ'] = checkArrayOrIdValue(displ)
             if csys is not None:
