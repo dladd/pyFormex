@@ -55,6 +55,50 @@ access to the servers.
 """)
 
 
+def configure():
+    from gui.prefMenu import updateSettings
+    from gui.widgets import simpleInputItem as I, groupInputItem as G, tabInputItem as T
+    
+    dia = None
+
+    def close():
+        dia.close()
+        
+    def accept(save=False):
+        dia.acceptData()
+        res = dia.results
+        res['_save_'] = save
+        if res['_addhost_']:
+            res['jobs/hosts'] = pf.cfg.get('jobs/hosts',['localhost']) + [ res['_addhost_'] ]
+            res['jobs/host'] = res['_addhost_']
+        pf.debug(res)
+        updateSettings(res)
+
+    def acceptAndSave():
+        accept(save=True)
+
+    def autoSettings(keylist):
+        return [I(k,pf.cfg[k]) for k in keylist]
+
+    jobs_settings = [
+        I('jobs/host',pf.cfg.get('jobs/host','localhost'),text="Host",tooltip="The host machine where your job input/output files are located.",choices=pf.cfg.get('jobs/hosts',['localhost'])), #,buttons=[('Add Host',addHost)]),
+        I('jobs/inputdir',pf.cfg.get('jobs/inputdir','bumper/requests'),text="Input directory"),
+        I('jobs/outputdir',pf.cfg.get('jobs/outputdir','bumper/results'),text="Output directory"),
+        I('_addhost_','',text="New host",tooltip="To set a host name that is not yet in the list of hosts, you can simply fill it in here."),
+        ]
+
+    dia = widgets.InputDialog(
+        caption='pyFormex Settings',
+        store=pf.cfg,
+        items=jobs_settings,
+        actions=[
+            ('Close',close),
+            ('Accept and Save',acceptAndSave),
+            ('Accept',accept),
+        ])
+    dia.show()
+
+
 def getSubdirs(server,userdir):
     """Get a list of all subdirs in userdir on server.
 
@@ -119,7 +163,7 @@ def submitToCluster(filename=None):
             if res['postabq']:
                 reqtxt += 'postproc=postabq\n'
             host = pf.cfg.get('jobs/host','mecaflix')
-            reqdir = pf.cfg.get('jobs/requests','bumper/requests')
+            reqdir = pf.cfg.get('jobs/inputdir','bumper/requests')
             cmd = "scp %s %s:%s" % (filename,host,reqdir)
             ret = call(['scp',filename,'%s:%s' % (host,reqdir)])
             print ret
@@ -133,7 +177,7 @@ def killClusterJob(jobname=None):
     if res:
         jobname = res['jobname']
         host = pf.cfg.get('jobs/host','mecaflix')
-        reqdir = pf.cfg.get('jobs/requests','bumper/requests')
+        reqdir = pf.cfg.get('jobs/inputdir','bumper/requests')
         cmd = "touch %s/%s.kill" % (reqdir,jobname)
         print host
         print cmd
@@ -191,7 +235,7 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
         targetdir = pf.cfg['workdir']
     if jobname is None:
         if the_jobnames is None:
-            jobname_input = [('server','mecaflix'),
+            jobname_input = [('server',pf.cfg['jobs/host']),
                              ('userdir','bumper/results'),
                              ('jobname',''),
                              ]
@@ -226,6 +270,7 @@ def create_menu():
     """Create the Jobs menu."""
     MenuData = [
         ("&About",about),
+        ("&Configure Job Plugin",configure),
         ("&Submit Abaqus Job",submitToCluster),
         ("&Kill Cluster Job",killClusterJob),
         ("&Check result cases on server",checkResultsOnServer),

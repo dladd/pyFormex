@@ -144,6 +144,8 @@ Proposed changes in the Element class
             self.drawedges = [ _sanitize(e) for e in kargs['drawedges'] ]
         if 'drawfaces' in kargs:
             self.drawfaces = [ _sanitize(e) for e in kargs['drawfaces'] ]
+        if 'reversed' in kargs:
+            self.reversed = kargs['reversed']
         # add the element to the collection
         name = name.lower()
         Element.collection[name] = self
@@ -318,6 +320,7 @@ Tri6 = Element(
                  ( 0.0, 0.5, 0.0 ),
                  ],    
     edges = ('line3', [ (0,3,1), (1,4,2), (2,5,0) ], ),
+    reversed = (2,1,0,4,3,5),
     drawfaces = [('tri3', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ] )]
 )
 
@@ -329,7 +332,7 @@ Quad4 = Element(
                  (  1.0,  1.0, 0.0 ),
                  (  0.0,  1.0, 0.0 ),
                  ],
-    edges = ('line2', [ (0,1), (1,2), (2,3), (3,0) ], )
+    edges = ('line2', [ (0,1), (1,2), (2,3), (3,0) ], ),
     )
 
 Quad6 = Element(
@@ -341,6 +344,7 @@ Quad6 = Element(
           (  0.5,  1.0, 0.0 ),
           ]]),
     edges = ('line3', [ (0,4,1), (1,1,2), (2,5,3), (3,3,0) ] ),
+    reversed = (3,2,1,0,5,4),
     drawedges = [ ('line2', [(1,2), (3,0)]), 
                   ('line3', [(0,4,1), (2,5,3)])
                   ],
@@ -358,11 +362,9 @@ Quad8 = Element(
           (  0.0,  0.5, 0.0 ),
           ]]),
     edges = ('line3',[ (0,4,1), (1,5,2), (2,6,3), (3,7,0), ]),
-    drawfaces = [ ('tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], )]
+    reversed = (3,2,1,0,6,5,4,7),
+    drawfaces = [ ('tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], )],
     )
-#~ Quad8.mirrored = (3,2,1,0,6,5,4,7)
-Quad8.mirrored = (1,0,3,2,4,7,6,5)
-Quad8.reversed= (3,2,1,0,6,5,4,7)
 
 
 Quad9 = Element(
@@ -373,6 +375,7 @@ Quad9 = Element(
         [ (  0.5,  0.5, 0.0 ),
           ]]),
     edges = Quad8.edges,
+    reversed = (3,2,1,0,6,5,4,7,8),
     drawfaces = [('tri3', [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], )]
     )
 
@@ -387,7 +390,8 @@ Tet4 = Element(
                  ( 0.0, 0.0, 1.0 ),
                  ],
     edges = ('line2', [ (0,1), (1,2), (2,0), (0,3), (1,3), (2,3) ], ), 
-    faces = ('tri3', [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ], )
+    faces = ('tri3', [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ], ),
+    reversed = (0,1,3,2),
     )
 
 
@@ -405,9 +409,10 @@ Tet10 = Element(
                  ( 0.0, 0.5, 0.5 ),
                  ( 0.5, 0.0, 0.5 ),
                  ],
-    edges = ('line3', [ (0,4,1), (1,7,2), (2,5,0), (0,6,3), (1,9,3), (2,8,3) ],), 
+    edges = ('line3', [ (0,4,1),(1,7,2),(2,5,0),(0,6,3),(1,9,3),(2,8,3) ],), 
     # BV: This needs further specification!
     faces = Tet4.faces,
+    reversed = (0,1,3,2,4,6,5,9,8,7),
     )
 
 
@@ -424,6 +429,7 @@ Tet14 = Element(
     edges = Tet10.edges, 
     # BV: This needs further specification!
     faces = Tet4.faces,
+    reversed = (0,1,3,2,4,6,5,9,8,7,12,11,10,13),
     )
     
     
@@ -437,6 +443,7 @@ Tet15 = Element(
     edges = Tet10.edges,
     # BV: This needs further specification!
     faces = Tet4.faces,
+    reversed = (0,1,3,2,4,6,5,9,8,7,12,11,10,13,14),
     )
 
 
@@ -473,10 +480,10 @@ Hex8 = Element(
                        (0,4), (1,5), (2,6), (3,7) ], ),
     faces = ('quad4', [ (0,4,7,3), (1,2,6,5),
                         (0,1,5,4), (3,7,6,2),
-                        (0,3,2,1), (4,5,6,7) ], )
+                        (0,3,2,1), (4,5,6,7) ], ),
+    reversed = (4,5,6,7,0,1,2,3),
     )
 
-Hex8.mirrored = (0,3,2,1,4,7,6,5) 
 
 
 Hex16 = Element(
@@ -499,6 +506,7 @@ Hex16 = Element(
     faces = ('quad8', [ (0,4,7,3,0,15,7,11), (1,2,6,5,9,2,13,5),
                         (0,1,5,4,8,1,12,4), (3,7,6,2,3,14,6,10), 
                         (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], ),
+    reversed= (4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11),
     drawedges = [ Hex8.edges ],
     drawfaces = [ Hex8.faces ]
     )
@@ -520,8 +528,8 @@ Hex20 = Element(
     faces = ('quad8', [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
                         (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
                         (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], ),
+    reversed = (4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11,16,17,18,19),
 )
-Hex20.mirrored= (0,3,2,1,4,7,6,5,11,10,9,8,15,14,13,12,16,19,18,17) 
 
 # We can not set this at __init__ time
 # Do we still need this ??

@@ -223,5 +223,11 @@ stlread = '.off'
 sender = ''
 server = 'localhost'
 
+[jobs]
+hosts = ['localhost']
+host = 'localhost'
+inputdir = '~'
+outputdir = '~'
+
 #End
 

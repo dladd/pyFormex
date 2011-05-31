@@ -81,4 +81,9 @@ Current points of attention:
 - Docstrings should be valid ReStructuredText
 - Assignment operators ('=', '+=', etc.) have a blank before and after.
 """
+
+warn_mesh_reverse = "The meaning of Mesh.reverse has changed. Before, it would just reorder the nodes of the elements in backwards order (just like the Formex.reverse still does. The new definition of Mesh.reverse however is to reverse the line direction for 1D eltypes, to reverse the normals for 2D eltypes and to turn 3D volumes inside out. This definition may have more practical use. It can e.g. be used to fix meshes after a mirroring operation."
+
+warn_mesh_reflect = "The Mesh.reflect now has an 'autofix' option that will automatically fix the Mesh connectivity table after a `reflect` operation. !!!! The autofix value has been set to 'True' !!!! If you did the fixing yourself, you should now remove that code, or else add 'autofix=False'."
+
 # End

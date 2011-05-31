@@ -518,10 +518,7 @@ class Mesh(Geometry):
           
         """
         import warnings
-        warnings.warn("The meaning of Mesh.reverse has changed. Before, it would just reorder the nodes of the elements in backwards order (just like the Formex.reverse does. The new definition of Mesh.reverse however is to reverse the line direction for 1D eltypes, to reverse the normals for 2D eltypes and to leave the Mesh untouched for other (0D and 3D) eltypes. This definition may have more practical use.")
-
-        if self.eltype.ndim not in [1,2]:
-            return self
+        warnings.warn('warn_mesh_reverse')
 
         if hasattr(self.eltype,'reversed'):
             elems = self.elems[:,self.eltype.reversed]
@@ -544,15 +541,11 @@ class Mesh(Geometry):
 
             autofix = True
             import warnings
-            warnings.warn("The Mesh.reflect now has an 'autofix' option that will automatically fix the Mesh connectivity table after a `reflect` operation. !!!! The autofix value has been set to 'True' !!!! If you did the fixing yourself, you should now remove that code, or else add 'autofix=False'.")
+            warnings.warn("warn_mesh_reflect")
         
         M = Geometry.reflect(self,dir=dir,pos=pos)
         if autofix:
-            # Fix elem connectivity
-            if hasattr(M.eltype,'mirrored'):
-                M.elems = M.elems[:,M.eltype.mirrored]
-            else:
-                M = M.reverse()
+            M = M.reverse()
         return M
         
 

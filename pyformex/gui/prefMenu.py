@@ -41,8 +41,9 @@ def updateSettings(res,save=None):
     res is a dictionary with configuration values.
     The current settings will be update with the values in res.
 
-    If res contains a key '_save_' and its value is True, the
-    preferences will also be saved to the user's preference file.
+    If res contains a key '_save_', or a `save` argument is supplied,
+    and its value is True, the preferences will also be saved to the
+    user's preference file.
     Else, the user will be asked whether he wants to save the changes.
     """
     pf.debug(res,"\nACCEPTED SETTINGS")
@@ -178,8 +179,11 @@ def settings():
              ),
             T('Mouse',mouse_settings),
             T('Plugins',plugin_items),
-            T('Environment',mail_settings),
-                
+            T('Environment',[
+                G('Mail',mail_settings),
+#                G('Jobs',jobs_settings),
+                ],
+              ),
             ],
         actions=[
             ('Close',close),

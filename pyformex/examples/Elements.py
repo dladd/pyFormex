@@ -37,35 +37,28 @@ from gui.widgets import simpleInputItem as I
 import utils
 import olist
 
+print pf.PF
+
 colors = [black,blue,yellow,red]
 
-def showElement(eltype,deformed,reduced,drawas):
+def showElement(eltype,options):
     clear()
-    flat()
     drawText("Element type: %s" %eltype,100,200,font='times',size=18,color=black)
     el = elementType(eltype)
     #print el.report()
     M = el.toMesh()
     
-    ndim = 3
-    if reduced:
-        ndim = el.ndim
+    ndim = el.ndim
 
     if ndim == 3:
         view('iso')
+        smooth()
     else:
         view('front')
-
-    if M.eltype.ndim == 2:
-        drawNumbers(M.coords)
-        print M.elems.report()
-        draw(M,color=red,bkcolor=blue)
-
-        #draw(M.reverse(),color=red,bkcolor=blue)
-    return
+        flat()
         
     v = M.coords
-    if deformed:
+    if options['Deformed']:
         dv = ( random.rand(v.size).reshape(v.shape) - 0.5 ) * 0.1
         v += dv
         if ndim < 3:
@@ -73,11 +66,22 @@ def showElement(eltype,deformed,reduced,drawas):
         if ndim < 2:
             v[...,1] = 0.0
 
+    if options['Mirrored']:
+        M = M.reflect()
+        print M
+    drawNumbers(M.coords)
+    
+
+    print M.elems.report()
+    draw(M,color=red,bkcolor=blue)
+
+    return
+
     for i in range(el.ndim+1):
         e = M.getLowerEntities(i)
         F = Mesh(v,e)
      
-        if drawas == 'Formex':
+        if options['Draw as'] == 'Formex':
             F = F.toFormex()
             
         draw(F,color=colors[i])
@@ -95,20 +99,24 @@ if __name__ == "draw":
     ElemList = []
     for ndim in [0,1,2,3]:
         ElemList += elementTypes(ndim)
+
+    res = pf.PF.get('Elements_data',{
+        'Deformed':False,'Mirrored':False,'Draw as':'Mesh'})
         
-    res = askItems([
-        I('Element Type',choices=['All',]+ElemList),
-        I('Deformed',False),
-        I('Reduced dimensionality',True),
-        I('Draw as',None,itemtype='radio',choices=['Mesh','Formex',]),
-        ])
+    res = askItems(
+        store=res,
+        items=[
+            I('Element Type',choices=['All',]+ElemList),
+            I('Deformed',itemtype='bool'),
+            I('Mirrored',itemtype='bool'),
+            I('Draw as',itemtype='radio',choices=['Mesh','Formex',]),
+            ])
     if not res:
         exit()
-        
+
+    pf.PF['Elements_data'] = res
+    
     eltype = res['Element Type']
-    deformed = res['Deformed']
-    reduced = res['Reduced dimensionality']
-    drawas = res['Draw as']
     if eltype == 'All':
         ellist = ElemList
     else:
@@ -116,7 +124,7 @@ if __name__ == "draw":
     clear()
     delay(1)
     for el in ellist:
-        showElement(el,deformed,reduced,drawas)
+        showElement(el,res)
     
     
 # End
