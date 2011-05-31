@@ -630,7 +630,17 @@ def fmtSurface(prop):
     - label: face or edge identifier (only required for surftype = 'ELEMENT')
     
     This label can be a string, or a list of strings. This allows to use
-    different identifiers for the different elements in the surface.
+    different identifiers for the different elements in the surface. Thus::
+
+      Prop(name='mysurf',set=[0,1,2,6],surftype='element',label=['S1','S2','S1','S3')
+
+    will get exported to Abaqus as::
+
+      *SURFACE, NAME=mysurf, TYPE=element
+      1, S1
+      2, S2,
+      1, S1
+      7, S3 
     """
     out = ''
     for p in prop:
@@ -645,6 +655,7 @@ def fmtSurface(prop):
             else:
                 out += "%s, %s\n" % (e,p.label[i])
     return out
+
 
 def fmtAnalyticalSurface(prop):
     """Format the analytical surface rigid body.
@@ -1164,7 +1175,7 @@ def writeBoundaries(fil,prop):
                 fil.write(fmtData(setname,dof,dof,b[1]))
 
 #~ FI see writeBoundaries comments
-def writeDisplacements(fil,prop):
+def writeDisplacements(fil,prop,dtype='DISPLACEMENT'):
     """Write boundary conditions of type BOUNDARY, TYPE=DISPLACEMENT
 
     prop is a list of node property records that should be scanned for
@@ -1178,7 +1189,7 @@ def writeDisplacements(fil,prop):
     """
     for p in prop:
         setname = nsetName(p)
-        fil.write("*BOUNDARY, TYPE=DISPLACEMENT")
+        fil.write("*BOUNDARY, TYPE=%s" % dtype)
         if p.op is not None:
             fil.write(", OP=%s" % p.op)                    
         if p.ampl is not None:
@@ -1187,7 +1198,8 @@ def writeDisplacements(fil,prop):
         for v in p.displ:
             dof = v[0]+1
             fil.write("%s, %s, %s, %s\n" % (setname,dof,dof,v[1]))
-            
+
+
 def writeCloads(fil,prop,op='NEW'):
     """Write cloads.
 
@@ -1657,11 +1669,16 @@ class Step(Dict):
         if prop:
             pf.message("  Writing step boundary conditions")
             writeBoundaries(fil,prop)
-     
-        prop = propDB.getProp('n',tag=self.tags,attr=['displ'])
-        if prop:
-            pf.message("  Writing step displacements")
-            writeDisplacements(fil,prop)
+
+        for pname,aname in [
+            ('displ','DISPLACEMENT'),
+            ('veloc','VELOCITY'),
+            ('accel','ACCELERATION')
+            ]:
+            prop = propDB.getProp('n',tag=self.tags,attr=[pname])
+            if prop:
+                pf.message("  Writing step %s" % aname.lower())
+                writeDisplacements(fil,prop,dtype=aname)
         
         prop = propDB.getProp('n',tag=self.tags,attr=['cload'])
         if prop:

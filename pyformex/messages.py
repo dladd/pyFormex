@@ -69,5 +69,16 @@ warn_deprecated_inputitem = "Using a list or tuple as InputItem data is deprecat
 
 _future_deprecation = "This functionality is deprecated and will probably be removed in future, unless you explain to the developers why they should retain it."
 
+warn_developer_style = """..
 
+Developers
+----------
+Please follow the coding style as explained in Help -> Developer Guidelines
+
+Current points of attention:
+
+- Docstrings should start and end with \"\"\"
+- Docstrings should be valid ReStructuredText
+- Assignment operators ('=', '+=', etc.) have a blank before and after.
+"""
 # End

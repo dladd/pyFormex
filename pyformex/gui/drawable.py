@@ -451,6 +451,8 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
             color = color[:,fa,:]
             color = color.reshape((-1,)+color.shape[-2:])
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
+        print color
+        print type(color)
         draw_poly(coords,elems,mode,color,alpha)
 
 

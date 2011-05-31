@@ -547,12 +547,12 @@ class Mesh(Geometry):
             warnings.warn("The Mesh.reflect now has an 'autofix' option that will automatically fix the Mesh connectivity table after a `reflect` operation. !!!! The autofix value has been set to 'True' !!!! If you did the fixing yourself, you should now remove that code, or else add 'autofix=False'.")
         
         M = Geometry.reflect(self,dir=dir,pos=pos)
-        # NOW FIX THE elem connectivity
         if autofix:
+            # Fix elem connectivity
             if hasattr(M.eltype,'mirrored'):
                 M.elems = M.elems[:,M.eltype.mirrored]
             else:
-                M=M.reverse()
+                M = M.reverse()
         return M
         
 
@@ -1248,6 +1248,7 @@ Size: %s
         """
         return self.connect(self.translate(dir,n*step),n,eltype=eltype)
 
+
 #FI to check if the reordering is always correct
     def revolve(self,n,axis=0,angle=360.,around=None,autofix=True):
         """Revolve a Mesh around an axis.
@@ -1681,9 +1682,6 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
 
     return eM
 
-        
-# define this also as a Mesh method
-#~ Mesh.connect = connectMesh
 
 def connectMeshSequence(ML,loop=False,**kargs):
     #print([Mi.eltype for Mi in ML])
@@ -1692,7 +1690,7 @@ def connectMeshSequence(ML,loop=False,**kargs):
         MR.append(ML[0])
     else:
         ML = ML[:-1]
-    HM = [ connectMesh(Mi,Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
+    HM = [ Mi.connect(Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
     #print([Mi.eltype for Mi in HM])
     return Mesh.concatenate(HM)
 

@@ -128,8 +128,8 @@ Docstrings
 
 - Docstrings should end and start with triple double-quotes (""").
 
-- Docstrings should not exceed the 80 character total line
-  length. Python statements can exceed that length, if the result is more easy
+- Docstrings should not exceed the 80 character total line length. 
+  Python statements can exceed that length, if the result is more easy
   to read than splitting the line.
 
 - Docstrings should be written with `re-structured text (reST)

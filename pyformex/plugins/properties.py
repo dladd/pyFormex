@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex
+#!/usr/bin/pyformex
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
@@ -465,7 +465,6 @@ class PropertyDB(Dict):
           - a single number,
           - a list of numbers,
           - the name of an already defined set,
-          - the name of a set already defined by another name
           - a list of such names.
 
         Besides these, any other fields may be defined and will be added
@@ -481,25 +480,22 @@ class PropertyDB(Dict):
             d.tag = str(tag)
         if name is None and kargs.has_key('setname'):
             # allow for backwards compatibility
-            print("!! 'setname' is deprecated, please use 'name'")
+            import warnings
+            warnings.warn("!! 'setname' is deprecated, please use 'name'")
             name = setname
+        if name is None and type(set) is str:
+            ### convenience to allow set='name' as alias for name='name'
+            ### to reuse already defined set
+            name,set = set,name
+        if name is None:
+            name = self.autoName(kind,d.nr)
+        elif type(name) is not str:
+            raise ValueError,"Property name should be a string"
+        d.name = name
         if set is not None:
-            if type(set) is str and name is None:
-                ### convenience to allow set='name' as alias for name='name'
-                ### to reuse already defined set
-                set,name = name,set
-            elif type(set) is str and name is not None:
-                d.set=set
-            else:
-                if type(set) is int:
-                    set = [ set ]
-                d.set = unique(set)
-                if name is None:
-                    name = self.autoName(kind,d.nr)
-        if name is not None:
-            if type(name) is not str:
-                raise ValueError,"Property name should be a string"
-            d.name = name
+            if type(set) is int or type(set) is str:
+                set = [ set ]
+            d.set = unique(set)
         
         prop.append(d)
         return d
@@ -574,7 +570,7 @@ class PropertyDB(Dict):
         return self.getProp(kind=kind,rec=rec,tag=tag,attr=attr,delete=True)
 
 
-    def nodeProp(self,prop=None,set=None,name=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None,**kargs):
+    def nodeProp(self,prop=None,set=None,name=None,tag=None,cload=None,bound=None,displ=None,veloc=None,accel=None,csys=None,ampl=None,**kargs):
         """Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
@@ -586,8 +582,10 @@ class PropertyDB(Dict):
           If None, the property will hold for all nodes.
         - cload: a concentrated load: a list of 6 float values
           [FX,FY,FZ,MX,MY,MZ] or a list of (dofid,value) tuples.
-        - bound: a boundary condition: a str ,a list of 6 codes (0/1),a list of tuples (dofid,value)
-        - displ: a prescribed displacement: a list of tuples (dofid,value)
+        - displ,veloc,accel: prescribed displacement, velocity or
+          acceleration: a list of 6 float values
+          [UX,UY,UZ,RX,RY,RZ] or  a list of tuples (dofid,value)
+        - bound: a boundary condition: a str or a list of 6 codes (0/1)
         - csys: a CoordSystem
         - ampl: the name of an Amplitude
         """
@@ -595,16 +593,17 @@ class PropertyDB(Dict):
             d = kargs
             if cload is not None:
                 d['cload'] = checkArrayOrIdValue(cload)
+            if displ is not None:
+                d['displ'] = checkArrayOrIdValue(displ)
+            if veloc is not None:
+                d['veloc'] = checkArrayOrIdValue(veloc)
+            if accel is not None:
+                d['accel'] = checkArrayOrIdValue(accel)
             if bound is not None:
                 if type(bound) == str:
                     d['bound'] = checkString(bound,self.bound_strings)
                 elif type(bound) == list:
-                    if type(bound[0])==int:
-                        d['bound'] = checkArray1D(bound,6,'i')
-                    else:
-                        d['bound'] = checkArrayOrIdValue(bound)
-            if displ is not None:
-                d['displ'] = checkArrayOrIdValue(displ)
+                    d['bound'] = checkArray1D(bound,6,'i')
             if csys is not None:
                 if isinstance(csys,CoordSystem):
                     d['csys'] = csys
@@ -667,7 +666,7 @@ if __name__ == "script" or  __name__ == "draw":
 
 
     if pf.GUI:
-        workHere()
+        chdir(__file__)
     print(os.getcwd())
     
     P = PropertyDB()
@@ -811,5 +810,7 @@ if __name__ == "script" or  __name__ == "draw":
         print(p.nr)
 
     P.Prop(set='cylinder',name='cylsurf',surftype='element',label='SNEG')
+
+    print P.getProp(attr=['surftype'])
 
 # End

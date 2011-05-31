@@ -698,17 +698,17 @@ class GeomActor(Actor):
             else:
                 for faces in el.getDrawFaces():
                     if bkcolor is not None:
-                        #print "COLOR=%s" % color
-                        #print "BKCOLOR =%s" % bkcolor
-                        # Draw front and back with different colors
-                        #from canvas import glCulling
-                        #glCulling()
+                        # Enable drawing front and back with different colors
+                        print "COLOR=%s" % color
+                        print "BKCOLOR =%s" % bkcolor
                         GL.glEnable(GL.GL_CULL_FACE)
                         GL.glCullFace(GL.GL_BACK)
-                        #print "DRAWING FRONT SIDES"
+                        print "DRAWING FRONT SIDES"
+                    # Draw the front sides
                     drawFaces(self.coords,self.elems,faces,mode,color,alpha)
                     if bkcolor is not None:
-                        #print "DRAWING BACK SIDES"
+                        # Draw the back sides
+                        print "DRAWING BACK SIDES"
                         GL.glCullFace(GL.GL_FRONT)
                         GL.glColor(append(bkcolor,alpha))
                         drawFaces(self.coords,self.elems,faces,mode,bkcolor,alpha)
