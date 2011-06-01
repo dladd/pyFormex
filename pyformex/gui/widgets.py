@@ -2436,7 +2436,7 @@ def updateText(widget,text,format=''):
         html = utils.rst2html(text)
         if html[:10] == text[:10]:
             #print "CONVERSION TO HTML FAILED"
-            text += "\n\nNote: This reStructuredText is displayed as plain text beacuse it could not be converted to html. If you install python-docutils, you should see this text (and others) with a much nicer layout!\n"
+            text += "\n\nNote: This reStructuredText is displayed as plain text because it could not be converted to html. If you install python-docutils, you will see this text (and other pyFormex messages) in a much nicer layout!\n"
         else:
             text = html
 

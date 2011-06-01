@@ -84,10 +84,9 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     If size (float) is given, it specifies the point size.
     If color is given it is an (npoints,3) array of RGB values.
     """
-    if pf.options.safelib:
-        x = x.astype(float32).reshape(-1,3)
-        if color is not None:
-            color = resize(color.astype(float32),x.shape)
+    x = x.astype(float32).reshape(-1,3)
+    if color is not None:
+        color = resize(color.astype(float32),x.shape)
     if size:
         GL.glPointSize(size)
     x = x.reshape(-1,1,3)
@@ -101,6 +100,9 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
     are specified by:
     coords (npts,3) : the coordinates of the points
     elems (nels,nplex): the connectivity of nels polygons of plexitude nplex
+
+    color is either None or an RGB color array with shape (3,), (nels,3) or
+    (nels,nplex,3).
 
     objtype sets the OpenGL drawing mode. The default (-1) will select the
     appropriate value depending on the plexitude of the elements:
@@ -134,18 +136,21 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
             except:
                 raise ValueError,"""Invalid normals specified"""
 
-    if pf.options.safelib:
-        x = x.astype(float32)
-        if e is not None:
-            e = e.astype(int32)
-        if n is not None:
-            n = n.astype(float32)
-        if color is not None:
-            color = color.astype(float32)
-            pf.debug("COLORS:%s" % str(color.shape))
-            if (color.shape[0] != nelems or
-                color.shape[-1] != 3):
-                color = None
+    # Sanitize data before calling library function
+    x = x.astype(float32)
+    if e is not None:
+        e = e.astype(int32)
+    if n is not None:
+        n = n.astype(float32)
+    if color is not None:
+        color = color.astype(float32)
+        pf.debug("COLORS:%s" % str(color.shape))
+        if color.shape[-1] != 3 or (
+            color.ndim > 1 and color.shape[0] != nelems) :
+            pf.debug("INCOMPATIBLE COLOR SHAPE: %s, while nelems=%s" % (str(color.shape),nelems))
+            color = None
+            
+    # Call library function
     if e is None:
         drawgl.draw_polygons(x,n,color,alpha,objtype)
     else:
@@ -336,7 +341,7 @@ def color_multiplex(color,nparts):
     return color.reshape(-1,3)
 
 
-def draw_poly(x,e,mode,color=None,alpha=1.0):
+def draw_faces(x,e,mode,color=None,alpha=1.0):
     """Draw a collection of faces.
 
     (x,e) are one of:
@@ -346,22 +351,27 @@ def draw_poly(x,e,mode,color=None,alpha=1.0):
        
     Each of the nfaces sets of nplex points defines a polygon. 
 
-    If color is given it is an (nel,3) array of RGB values. This function
-    will multiplex the colors, so that n faces are drawn in the same color.
+    If color is given it is either an (3,), (nelems,3), (nelems,faces,3)
+    or (nelems,faces,nplex,3) array of RGB values.
+    In the second case, this function will multiplex the colors, so that
+    `nfaces` faces are drawn in the same color.
     This is e.g. convenient when drawing faces of a solid element.
     """
     if e is None:
-        nfaces,nplex = x.shape[1:3]
+        nelems,nfaces,nplex = x.shape[:3]
         x = x.reshape(-1,nplex,3)
     else:
-        nfaces,nplex = e.shape[1:3]
+        nelems,nfaces,nplex = e.shape[:3]
         e = e.reshape(-1,nplex)
 
     if color is not None:
-        if color.ndim < 3:
+        if color.ndim == 2:
             pf.debug("COLOR SHAPE BEFORE MULTIPLEXING %s" % str(color.shape))
             color = color_multiplex(color,nfaces)
             pf.debug("COLOR SHAPE AFTER  MULTIPLEXING %s" % str(color.shape))
+        if color.ndim > 2:
+            color = color.reshape((nelems*nfaces,) + color.shape[-2:]).squeeze()
+            pf.debug("COLOR SHAPE AFTER RESHAPING %s" % str(color.shape))
 
     drawPolygons(x,e,mode,color,alpha)
 
@@ -401,8 +411,7 @@ def drawEdges(x,e,edges,eltype=None,color=None):
         if color is not None and color.ndim==3:
             pf.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
             # select the colors of the matching points
-            color = color[:,fa,:]#.reshape((-1,)+color.shape[-2:])
-            color = color.reshape((-1,)+color.shape[-2:])
+            color = color[:,fa,:]
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
 
         if nplex == 3:
@@ -410,7 +419,7 @@ def drawEdges(x,e,edges,eltype=None,color=None):
                 coords = coords[elems]
             drawQuadraticCurves(coords,color)
         else:
-            draw_poly(coords,elems,'wireframe',color,1.0)
+            draw_faces(coords,elems,'wireframe',color,1.0)
 
 
 def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
@@ -449,11 +458,8 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
             pf.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
             # select the colors of the matching points
             color = color[:,fa,:]
-            color = color.reshape((-1,)+color.shape[-2:])
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
-        print color
-        print type(color)
-        draw_poly(coords,elems,mode,color,alpha)
+        draw_faces(coords,elems,mode,color,alpha)
 
 
 def drawAtPoints(x,mark,color=None):
@@ -576,9 +582,8 @@ def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
         val.reshape(val.shape+(1,))
     if elems.shape != val.shape[:2]:
         raise RuntimeError,"shape of val and elems does not match"
-    if pf.options.safelib:
-        val = val.astype(float32)
-        elems = elems.astype(int32)
+    val = val.astype(float32)
+    elems = elems.astype(int32)
     if val.shape[2] > 1 and direction_treshold is not None:
         #nodalSum2(val,elems,direction_treshold)
         print "NEW NODALSUM"
@@ -685,7 +690,6 @@ def drawGridPlanes(x0,x1,nx):
             x[:,:,axes] = corners
             GL.glBegin(GL.GL_QUADS)
             for p in x.reshape((-1,3)):
-                #print p
                 GL.glVertex3fv(p)
             GL.glEnd()
 
@@ -694,10 +698,9 @@ def drawGridPlanes(x0,x1,nx):
 
 def pickPolygons(x,e=None,objtype=-1):
     """Mimics drawPolygons for picking purposes."""
-    if pf.options.safelib:
-        x = x.astype(float32)
-        if e is not None:
-            e = e.astype(int32)
+    x = x.astype(float32)
+    if e is not None:
+        e = e.astype(int32)
     if e is None:
         drawgl.pick_polygons(x,objtype)
     else:

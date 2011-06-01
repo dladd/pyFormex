@@ -584,36 +584,19 @@ class GeomActor(Actor):
         
         if color is None:
             color,colormap = self.color,self.colormap
+            bkcolor, bkcolormap = self.bkcolor,self.bkcolormap
         else:
+            # THIS OPTION IS ONLY MEANT FOR OVERRIDING THE COLOR
+            # WITH THE EDGECOLOR IN ..wire DRAWING MODES
+            # SO NO NEED TO SET bkcolor
             color,colormap = saneColor(color),None
+            bkcolor, bkcolormap = None,None
 
-        if color is None:  # set canvas default
-            color,colormap = canvas.settings.fgcolor,canvas.settings.colormap
-
-        if color is None:
-            # no color
-            pass
-        
-        elif color.dtype.kind == 'f' and color.ndim == 1:
-            # single color: set now
-            GL.glColor(append(color,alpha))
-            color = None
-
-        elif color.dtype.kind == 'i':
-            # color index: convert to full colors
+        # convert color index to full colors
+        if color is not None and color.dtype.kind == 'i':
             color = colormap[color]
 
-        else:
-            # a full color array: set later while drawing
-            pass
-
-
-        bkcolor, bkcolormap = self.bkcolor,self.bkcolormap
-        if bkcolor is None:  # set canvas default
-            bkcolor,bkcolormap = canvas.settings.bkcolor,canvas.settings.bkcolormap
-
         if bkcolor is not None and bkcolor.dtype.kind == 'i':
-            # convert index to colors
             bkcolor = bkcolormap[bkcolor]
         
         linewidth = self.linewidth
@@ -673,19 +656,11 @@ class GeomActor(Actor):
                 drawPolyLines(self.coords,self.elems,color)
             else:
                 if bkcolor is not None:
-                    #print "COLOR=%s" % color
-                    #print "BKCOLOR =%s" % bkcolor
-                    # Draw front and back with different colors
-                    #from canvas import glCulling
-                    #glCulling()
                     GL.glEnable(GL.GL_CULL_FACE)
                     GL.glCullFace(GL.GL_BACK)
-                    #print "DRAWING FRONT SIDES"
                 drawPolygons(self.coords,self.elems,mode,color,alpha)
                 if bkcolor is not None:
-                    #print "DRAWING BACK SIDES"
                     GL.glCullFace(GL.GL_FRONT)
-                    GL.glColor(append(bkcolor,alpha))
                     drawPolygons(self.coords,self.elems,mode,bkcolor,alpha)
                     GL.glDisable(GL.GL_CULL_FACE)
                     
@@ -699,18 +674,13 @@ class GeomActor(Actor):
                 for faces in el.getDrawFaces():
                     if bkcolor is not None:
                         # Enable drawing front and back with different colors
-                        print "COLOR=%s" % color
-                        print "BKCOLOR =%s" % bkcolor
                         GL.glEnable(GL.GL_CULL_FACE)
                         GL.glCullFace(GL.GL_BACK)
-                        print "DRAWING FRONT SIDES"
                     # Draw the front sides
                     drawFaces(self.coords,self.elems,faces,mode,color,alpha)
                     if bkcolor is not None:
                         # Draw the back sides
-                        print "DRAWING BACK SIDES"
                         GL.glCullFace(GL.GL_FRONT)
-                        GL.glColor(append(bkcolor,alpha))
                         drawFaces(self.coords,self.elems,faces,mode,bkcolor,alpha)
                         GL.glDisable(GL.GL_CULL_FACE)
 

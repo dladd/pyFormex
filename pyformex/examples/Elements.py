@@ -37,7 +37,6 @@ from gui.widgets import simpleInputItem as I
 import utils
 import olist
 
-print pf.PF
 
 colors = [black,blue,yellow,red]
 
@@ -66,13 +65,14 @@ def showElement(eltype,options):
         if ndim < 2:
             v[...,1] = 0.0
 
-    if options['Mirrored']:
-        M = M.reflect()
-        print M
+    i = 'xyz'.find(options['Mirrored'])
+    if i >= 0:
+        M = M.reflect(i)
+        #print M
     drawNumbers(M.coords)
     
 
-    print M.elems.report()
+    #print M.elems.report()
     draw(M,color=red,bkcolor=blue)
 
     return
@@ -101,14 +101,14 @@ if __name__ == "draw":
         ElemList += elementTypes(ndim)
 
     res = pf.PF.get('Elements_data',{
-        'Deformed':False,'Mirrored':False,'Draw as':'Mesh'})
+        'Deformed':False,'Mirrored':'No','Draw as':'Mesh'})
         
     res = askItems(
         store=res,
         items=[
             I('Element Type',choices=['All',]+ElemList),
             I('Deformed',itemtype='bool'),
-            I('Mirrored',itemtype='bool'),
+            I('Mirrored',itemtype='radio',choices=['No','x','y','z']),
             I('Draw as',itemtype='radio',choices=['Mesh','Formex',]),
             ])
     if not res:

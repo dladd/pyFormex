@@ -150,9 +150,13 @@ draw_polygons(PyObject *dummy, PyObject *args)
   if (objtype < 0) objtype = gl_objtype(nplex);
 
   if (nplex <= 4 && objtype == gl_objtype(nplex)) { 
+    /*********** Points, Lines, Triangles, Quads **************/
     glBegin(objtype);
 
-    if (ndc == 0) {
+    if (ndc < 2) {        /* no or single color */
+      if (ndc == 1) {    	/* single color */
+	gl_color(c,alpha);
+      }
       if (ndn == 0) {
 	for (i=0; i<nel*nplex*3; i+=3) {
 	  glVertex3fv(x+i);
@@ -168,7 +172,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 	  glVertex3fv(x+j);
 	}
       }
-    } else if (ndc == 2) {
+    } else if (ndc == 2) {     /* element color */
       if (ndn == 0) {
 	for (i=0; i<nel; i++) {
 	  gl_color(c+3*i,alpha);
@@ -189,7 +193,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 	  }
 	}
       }
-    } else if (ndc == 3) {
+    } else if (ndc == 3) {     /* vertex color */
       if (ndn == 0) {
 	for (i=0; i<nel*nplex*3; i+=3) {
 	  gl_color(c+i,alpha);
@@ -203,7 +207,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 	    glVertex3fv(x+nplex*3*i+j);
 	  }
 	}
-      } else if (ndn == 3) {
+      } else if (ndn == 3) { 
 	for (i=0; i<nel; i++) {
 	  for (j=0;j<nplex*3;j+=3) {
 	    glNormal3fv(n+nplex*3*i+j);
@@ -216,8 +220,12 @@ draw_polygons(PyObject *dummy, PyObject *args)
     glEnd();
 
   } else {
+    /************** Polygons ********************/
 
-    if (ndc == 0) {
+    if (ndc < 2) {        /* no or single color */
+      if (ndc == 1) {    	/* single color */
+	gl_color(c,alpha);
+      }
       if (ndn == 0) {
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
@@ -241,7 +249,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 	  glEnd();
 	}
       }
-    } else if (ndc == 2) {
+    } else if (ndc == 2) {    /* element color */
       if (ndn == 0) {
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
@@ -268,7 +276,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 	  glEnd();
 	}
       }
-    } else if (ndc == 3) {
+    } else if (ndc == 3) {         /* vertex color */
       if (ndn == 0) {
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
@@ -426,7 +434,10 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
   if (nplex <= 4 && objtype == gl_objtype(nplex)) { 
     glBegin(objtype);
 
-    if (ndc == 0) {
+    if (ndc < 2) {        /* no or single color */
+      if (ndc == 1) {    	/* single color */
+	gl_color(c,alpha);
+      }
       if (ndn == 0) {
 	for (i=0; i<nel*nplex; ++i) {
 	  glVertex3fv(x+3*e[i]);
@@ -500,7 +511,10 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 #ifdef DEBUG
     printf("** objtype = %d\n",objtype);
 #endif
-    if (ndc == 0) {
+    if (ndc < 2) {        /* no or single color */
+      if (ndc == 1) {    	/* single color */
+	gl_color(c,alpha);
+      }
       if (ndn == 0) {
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
