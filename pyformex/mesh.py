@@ -511,11 +511,15 @@ class Mesh(Geometry):
     def reverse(self):
         """Return a Mesh where all elements have been reversed.
 
-        Reversing an element means reversing the order of its points.
-        This is equivalent to::
-        
-          Mesh(self.coords,self.elems[:,::-1])
-          
+        Reversing an element has the following meaning:
+
+        - for 1D elements: reverse the traversal direction,
+        - for 2D elements: reverse the direction of the positive normal,
+        - for 3D elements: reverse inside and outside directions of the
+          element's border surface
+
+        The :meth:`reflect` method by default calls this method to undo
+        the element reversal caused by the reflection operation. 
         """
         import warnings
         warnings.warn('warn_mesh_reverse')
@@ -527,24 +531,31 @@ class Mesh(Geometry):
         return self.__class__(self.coords,elems,prop=self.prop,eltype=self.eltype)
 
             
-    def reflect(self,dir=0,pos=0.0,autofix=None):
-        """Reflect the coordinates in direction dir against plane at pos.
+    def reflect(self,dir=0,pos=0.0,reverse=True,**kargs):
+        """Reflect the coordinates in one of the coordinate directions.
 
         Parameters:
 
         - `dir`: int: direction of the reflection (default 0)
         - `pos`: float: offset of the mirror plane from origin (default 0.0)
-        - `autofix`: boolean: if True, the connectivity table of reflected
-          2D and 3D elements will automatically be fixed to
+        - `reverse`: boolean: if True, the :meth:`Mesh.reverse` method is
+          called after the reflection to undo the element reversal caused
+          by the reflection of its coordinates. This will in most cases have
+          the desired effect. If not however, the user can set this to False
+          to skip the element reversal.
         """
-        if autofix is None:
-
-            autofix = True
+        if 'autofix' in kargs:
+            import warnings
+            warnings.warn("The `autofix` parameter of Mesh.reflect has been renamed to `reverse`.")
+            reverse = kargs['autofix']
+            
+        if reverse is None:
+            reverse = True
             import warnings
             warnings.warn("warn_mesh_reflect")
         
         M = Geometry.reflect(self,dir=dir,pos=pos)
-        if autofix:
+        if reverse:
             M = M.reverse()
         return M
         

@@ -23,9 +23,10 @@
 ##
 """Formex algebra in Python
 
-This module is a Python implementation of most functions of Formex algebra.
-It forms the basis of pyFormex, but predates it and is fairly independent.
-Therefore, it can also be used as a standalone extension module in Python.
+This module defines the :class:`Formex` class, which is the major class for
+representing geometry in pyFormex. The Formex class implements most
+functionality of Formex algebra in a consistent and easy to understand
+syntax.
 """
 
 from coords import *
@@ -452,7 +453,7 @@ def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
 
 
 def _sane_side(side):
-    # allow some old variants of arguments
+    """_Allow some old variants of arguments_"""
     if type(side) == str:
         if side.startswith('pos'):
             side = '+'
@@ -463,7 +464,7 @@ def _sane_side(side):
     return side
 
 def _select_side(side,alist):
-    # return selected parts dependent on side
+    """_Return selected parts dependent on side_"""
     if side == '+':
         return alist[0]
     elif side == '-':
@@ -1582,17 +1583,6 @@ maxprop  = %s
 
 
 
-    def reverse(self):
-        """Return a Formex where all elements have been reversed.
-
-        Reversing an element means reversing the order of its points.
-        This is equivalent to::
-          self.selectNodes(arange(self.nplex()-1,-1,-1))
-        """
-        return Formex(self.coords[:,::-1],self.prop,self.eltype)
-#        return self.selectNodes(arange(self.coords.shape[1]-1,-1,-1))
-
-
 #############################
 # Test and clipping functions
 
@@ -1683,18 +1673,6 @@ maxprop  = %s
 #   Transformations that preserve the topology (but change coordinates)
 #
 
-    def mirror(self,dir=2,pos=0,keep_orig=True):
-        """Reflect a Formex in one of the coordinate directions
-
-        This method behaves like reflect(), but adds the reflected
-        part to the original. Setting keep_orig=False makes it behave just
-        like reflect().
-        """
-        if keep_orig:
-            return self+self.reflect(dir,pos)
-        else:
-            return self.reflect(dir,pos)
-
 
     def centered(self):
         """Return a centered copy of the Formex."""
@@ -1755,18 +1733,43 @@ maxprop  = %s
 #   Transformations that change the topology
 #        
 
-    def replicate(self,n,vector,distance=None):
+    def reverse(self):
+        """Return a Formex where all elements have been reversed.
+
+        Reversing an element means reversing the order of its points.
+        This is equivalent to::
+          self.selectNodes(arange(self.nplex()-1,-1,-1))
+        """
+        return Formex(self.coords[:,::-1],self.prop,self.eltype)
+
+
+    def mirror(self,dir=2,pos=0,keep_orig=True):
+        """Reflect a Formex in one of the coordinate directions
+
+        This method behaves like reflect(), but adds the reflected
+        part to the original. Setting keep_orig=False makes it behave just
+        like reflect().
+        """
+        if keep_orig:
+            return self+self.reflect(dir,pos)
+        else:
+            return self.reflect(dir,pos)
+
+
+    def replicate(self,n,dir=0,step=1.0):
         """Replicate a Formex n times with fixed step in any direction.
 
         Returns a Formex which is the concatenation of n copies, where each
-        copy is equal to the previous one translated over (vector,distance).
-        The first copy is equal to the original.
-        Vector and distance are interpreted just like in the translate() method.
+        copy is equal to the previous one translated over `(dir,step)`, where
+        `dir` and `step` are interpreted just like in the :meth:`translate`
+        method. The first of the copies is equal to the original.
         """
-        f = self.coords.replicate(n,vector,distance=None)
+        f = self.coords.replicate(n,dir,step=step)
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         ## the replication of the properties is automatic!
         return Formex(f,self.prop,self.eltype)
+
+    rep = replicate
 
 
     def replic(self,n,step=1.0,dir=0):

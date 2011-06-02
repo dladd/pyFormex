@@ -597,22 +597,25 @@ class Coords(ndarray):
         return out
     
 
-    def translate(self,vector,distance=None,inplace=False):
+    def translate(self,dir,step=None,inplace=False):
         """Translate a :class:`Coords` object.
 
-        The translation vector can be specified in one of the following ways:
-        
-        - an axis number (0,1,2),
-        - a single translation vector,
-        - an array of translation vectors.
-        
-        If an axis number is given, a unit vector in the direction of the
-        specified axis will be used.
-        If an array of translation vectors is given, it should be
-        broadcastable to the size of the :class:`Coords` array.
-        If a distance value is given, the translation vector is multiplied
-        with this value before it is added to the coordinates.
+        Translates the Coords in the direction `dir` over a distance
+        `step * length(dir)`.
 
+        Parameters:
+
+        - `dir`: specifies the direction and distance of the translation. It
+          can be either 
+
+          - an axis number (0,1,2), specifying a unit vector in the direction
+            of one of the coordinate axes.
+          - a single translation vector,
+          - an array of translation vectors, compatible with the Coords shape.
+        
+        - `step`: If specified, the translation vector specified by `dir` will
+          be multiplied with this value. It is commonly used with unit `dir`
+          vectors to set the translation distance.
         Example:
 
           >>> x = Coords([1.,1.,1.])
@@ -630,12 +633,12 @@ class Coords(ndarray):
             out = self
         else:
             out = self.copy()
-        if type(vector) is int:
-            vector = unitVector(vector)
-        vector = Coords(vector,copy=True)
-        if distance is not None:
-            vector *= distance
-        out += vector
+        if type(dir) is int:
+            dir = unitVector(dir)
+        dir = Coords(dir,copy=True)
+        if step is not None:
+            dir *= step
+        out += dir
         return out
 
 
@@ -667,7 +670,7 @@ class Coords(ndarray):
         return self.translate(trl)
     
 
-    def rotate(self,angle,axis=2,around=None,inplace=False):
+    def rotate(self,angle,axis=2,around=None):
         """Return a copy rotated over angle around axis.
 
         The angle is specified in degrees.
@@ -682,10 +685,6 @@ class Coords(ndarray):
         All rotations are performed around the point [0,0,0], unless a
         rotation origin is specified in the argument 'around'. 
         """
-        if inplace:
-            out = self
-        else:
-            out = self.copy()
         mat = asarray(angle)
         if mat.size == 1:
             mat = rotationMatrix(angle,axis)
@@ -693,9 +692,10 @@ class Coords(ndarray):
             raise ValueError,"Rotation matrix should be 3x3"
         if around is not None:
             around = asarray(around)
-            out = out.translate(-around,inplace=inplace)
-        out = out.affine(mat,around,inplace=inplace)
-        return out
+            out = self.translate(-around)
+        else:
+            out = self
+        return out.affine(mat,around)
     
 
     def shear(self,dir,dir1,skew,inplace=False):
@@ -711,6 +711,7 @@ class Coords(ndarray):
         return out
 
 
+    # THIS SHOULD BE GENERALIZED TO TAKE SAME `dir` OPTIONS AS translate
     def reflect(self,dir=0,pos=0.,inplace=False):
         """Reflect the coordinates in direction dir against plane at pos.
 
@@ -728,7 +729,7 @@ class Coords(ndarray):
         return out
     
 
-    def affine(self,mat,vec=None,inplace=False):
+    def affine(self,mat,vec=None):
         """Returns a general affine transform of the :class:`Coords` object.
 
         `mat`: a 3x3 float matrix
@@ -737,37 +738,10 @@ class Coords(ndarray):
         
         The returned object has coordinates given by ``self * mat + vec``.
         """
-        if inplace:
-            import warnings
-            warnings.warn("The Coords.affine transformation is currently not guaranteed to execute inplace. The same will hold for all transformations based on affine.")
-            out = self
-        else:
-            out = self.copy()
-        out = dot(out,mat)
+        out = dot(self,mat)
         if vec is not None:
             out += vec
         return out
-
-
-    def replicate(self,n,vector,distance=None):
-        """Replicate a Coords n times with fixed step in any direction.
-
-        Returns a Coords object with shape (n,) + self.shape, thus having
-        an extra first axis.
-        Each element along the axis 0 is equal to the previous element
-        translated over (vector,distance). Here, vector and distance are
-        interpreted just like in the translate() method.
-        The first element along the axis 0 is identical to the original Coords.
-        """
-        if type(vector) is int:
-            vector = unitVector(vector)
-        vector = Coords(vector,copy=True)
-        if distance is not None:
-            vector *= distance 
-        f = resize(self,(n,)+self.shape)
-        for i in range(1,n):
-            f[i] += i*vector
-        return Coords(f)
 #
 #
 #   B. Non-Affine transformations.
@@ -1274,7 +1248,35 @@ class Coords(ndarray):
         return self.isopar('tet4',currentCS,initialCS)
         
 
-##############################################################################    
+############################################################################
+    #
+    #   Transformations that change the shape of the Coords array
+    #
+ 
+
+    def replicate(self,n,dir=0,step=None):
+        """Replicate a Coords n times with fixed step in any direction.
+
+        Returns a Coords object with shape `(n,) + self.shape`, thus having
+        an extra first axis.
+        Each component along the axis 0 is equal to the previous component
+        translated over `(dir,step)`, where `dir` and `step` are
+        interpreted just like in the :meth:`translate` method.
+        The first component along the axis 0 is identical to the
+        original Coords.
+        """
+        n = int(n)
+        if type(dir) is int:
+            dir = unitVector(dir)
+        dir = Coords(dir,copy=True)
+        if step is not None:
+            dir *= step 
+        f = resize(self,(n,)+self.shape)
+        for i in range(1,n):
+            f[i] += i*dir
+        return Coords(f)
+    
+ 
     def split(self):
         """Split the coordinate array in blocks along first axis.
 
@@ -1527,6 +1529,7 @@ class Coords(ndarray):
     # Convenient shorter notations
     rot = rotate
     trl = translate
+    rep = replicate
 
 
     # Deprecated functions
@@ -1538,14 +1541,14 @@ class Coords(ndarray):
 
 
     # BV: Why do we need this ??
-    def actor(self,**kargs):
+    ## def actor(self,**kargs):
 
-        if self.npoints() == 0:
-            return None
+    ##     if self.npoints() == 0:
+    ##         return None
         
-        from gui.actors import GeomActor
-        from formex import Formex
-        return GeomActor(Formex(self.reshape(-1,3)),**kargs)
+    ##     from gui.actors import GeomActor
+    ##     from formex import Formex
+    ##     return GeomActor(Formex(self.reshape(-1,3)),**kargs)
 
 
 class CoordinateSystem(Coords):
