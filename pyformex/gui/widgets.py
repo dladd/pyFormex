@@ -300,7 +300,8 @@ class InputInfo(InputItem):
         self.input.setReadOnly(True)
         InputItem.__init__(self,name,*args,**kargs)
         self._value_ = value
-        self.layout().insertWidget(1,self.input)
+        if self._value_ is not None:
+            self.layout().insertWidget(1,self.input)
 
     def value(self):
         """Return the widget's value."""

@@ -641,14 +641,10 @@ class GeomActor(Actor):
             
         # beware: some Formex eltypes are strings and may not
         # represent a valid Mesh elementType
-        # THis is only here for Formex type. 
+        # THis is only here for Formex type.
+        # We can probably remove it if we avoid eltype 'curve'
         elif nplex == 3 and self.eltype in ['curve','line3']:
-            # THIS SHOULD GO INTO drawQuadraticCurves
-            if self.elems is None:
-                coords = self.coords
-            else:
-                coords = self.coords[self.elems]
-            drawQuadraticCurves(coords,color)
+            drawQuadraticCurves(self.coords,self.elems,color)
 
         elif self.eltype is None:
             # polygons
@@ -677,11 +673,11 @@ class GeomActor(Actor):
                         GL.glEnable(GL.GL_CULL_FACE)
                         GL.glCullFace(GL.GL_BACK)
                     # Draw the front sides
-                    drawFaces(self.coords,self.elems,faces,mode,color,alpha)
+                    drawFaces(self.coords,self.elems,faces,faces.eltype,mode,color,alpha)
                     if bkcolor is not None:
                         # Draw the back sides
                         GL.glCullFace(GL.GL_FRONT)
-                        drawFaces(self.coords,self.elems,faces,mode,bkcolor,alpha)
+                        drawFaces(self.coords,self.elems,faces,faces.eltype,mode,bkcolor,alpha)
                         GL.glDisable(GL.GL_CULL_FACE)
 
    

@@ -55,6 +55,11 @@ def updateSettings(res,save=None):
     # Do not use 'pf.cfg.update(res)' here!
     # It will not work with our Config class!
 
+    ## WE TURNED THE CFG VARIABLE INTO A STRING
+    ## # Set some types which are not properly returned by the dialog
+    ## res['render/line'] = int(res['render/line'])
+    ## res['render/surface'] = int(res['render/surface'])
+
     todo = set([])
     for k in res:
         if k.startswith('_'): # skip temporary variables
@@ -175,15 +180,19 @@ def settings():
                  ),
                 I('gui/splash',text='Splash image',itemtype='button',func=changeSplash),
                 viewer,
-                ],
-             ),
+                ]),
+            T('Drawing',[
+                I('_info_00_',itemtype='info',text='Changes to these options only become effective after restarting pyFormex!'),
+                I('render/line',text='Line drawing order',itemtype='radio',choices=['1','2'],tooltip='Wherever possible, lines will be drawn as an approximation of at most this order.'),
+                I('render/surface',text='Surface drawing order',itemtype='radio',choices=['1','2'],tooltip='Wherever possible, surfaces (including borders of solids) will be drawn as an approximation of at most this order.'),
+                ]
+              ),
             T('Mouse',mouse_settings),
             T('Plugins',plugin_items),
             T('Environment',[
                 G('Mail',mail_settings),
 #                G('Jobs',jobs_settings),
-                ],
-              ),
+                ]),
             ],
         actions=[
             ('Close',close),

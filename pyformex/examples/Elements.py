@@ -54,21 +54,25 @@ def showElement(eltype,options):
         smooth()
     else:
         view('front')
-        flat()
+        if options['Force dimensionality']:
+            flat()
+        else:
+            smooth()
         
-    v = M.coords
+    #print options['Deformed']
     if options['Deformed']:
-        dv = ( random.rand(v.size).reshape(v.shape) - 0.5 ) * 0.1
-        v += dv
-        if ndim < 3:
-            v[...,2] = 0.0
-        if ndim < 2:
-            v[...,1] = 0.0
+        M.coords = M.coords.addNoise(rsize=0.1)
+        if options['Force dimensionality']:
+            if ndim < 3:
+                M.coords[...,2] = 0.0
+            if ndim < 2:
+                M.coords[...,1] = 0.0
 
     i = 'xyz'.find(options['Mirrored'])
     if i >= 0:
         M = M.reflect(i)
         #print M
+    draw(M.coords,wait=False)
     drawNumbers(M.coords)
     
 
@@ -100,8 +104,14 @@ if __name__ == "draw":
     for ndim in [0,1,2,3]:
         ElemList += elementTypes(ndim)
 
-    res = pf.PF.get('Elements_data',{
-        'Deformed':False,'Mirrored':'No','Draw as':'Mesh'})
+    res = {
+        'Deformed':True,
+        'Mirrored':'No',
+        'Draw as':'Mesh',
+        'Force dimensionality':False,
+        }
+    res.update(pf.PF.get('Elements_data',{}))
+    #print res
         
     res = askItems(
         store=res,
@@ -110,10 +120,12 @@ if __name__ == "draw":
             I('Deformed',itemtype='bool'),
             I('Mirrored',itemtype='radio',choices=['No','x','y','z']),
             I('Draw as',itemtype='radio',choices=['Mesh','Formex',]),
+            I('Force dimensionality',itemtype='bool'),
             ])
     if not res:
         exit()
 
+    #print "RESULT",res
     pf.PF['Elements_data'] = res
     
     eltype = res['Element Type']

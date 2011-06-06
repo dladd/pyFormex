@@ -244,10 +244,11 @@ def drawNurbsCurves(x,knots,color=None,samplingTolerance=5.0):
         GLU.gluEndCurve(nurb)
 
 
-def drawQuadraticCurves(x,color=None):
-    """Draw a collection of curves.
+def drawQuadraticCurves(x,e=None,color=None):
+    """Draw a collection of quadratic curves.
 
-    x is a (nlines,3,3) shaped array of coordinates.
+    The geometry is specified by x or (x,e).
+    x or x[e] is a (nlines,3,3) shaped array of coordinates.
     For each element a quadratic curve through its 3 points is drawn.
 
     This uses the drawNurbsCurves function for the actual drawing.
@@ -258,7 +259,10 @@ def drawQuadraticCurves(x,color=None):
 
     If color is given it is an (nlines,3) array of RGB values.
     """
-    xx = x.copy()
+    if e is None:
+        xx = x.copy()
+    else:
+        xx = x[e]
     xx[...,1,:] = 2*x[...,1,:] - 0.5*(x[...,0,:] + x[...,2,:])
     knots = array([0.,0.,0.,1.,1.,1.])
     drawNurbsCurves(xx,knots,color=color)
@@ -299,7 +303,6 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
     ns,nt,ndim = x.shape[-3:]
     nsk = asarray(sknots).shape[-1]
     ntk = asarray(tknots).shape[-1]
-    print nsk,ntk,ns,nt
     sorder = nsk-ns
     torder = ntk-nt
     if sorder > 8 or torder > 8:
@@ -312,11 +315,9 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         color = color.reshape(-1,3)
     si = sknots
     ti = tknots
+    
     GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
     for i,xi in enumerate(x):
-        print xi.shape
-        print si
-        print ti
         if color is not None:
             GL.glColor3fv(color[i])
         if sknots.ndim > 1:
@@ -326,6 +327,48 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         GLU.gluBeginSurface(nurb)
         GLU.gluNurbsSurface(nurb,si,ti,xi,mode)
         GLU.gluEndSurface(nurb)
+
+
+def quad8_quad9(x):
+    """_Convert an array of quad8 surfaces to quad9"""
+    #print x.shape
+    x9 = x[...,:4,:].sum(axis=-2)/2 - x[...,4:,:].sum(axis=-2)/4
+    return concatenate([x,x9[...,newaxis,:]],axis=-2)
+    
+
+def drawQuadraticSurfaces(x,e,color=None):
+    """Draw a collection of quadratic surfaces.
+
+    The geometry is specified by x or (x,e).
+    x or x[e] is a (nsurf,nquad,3) shaped array of coordinates, where
+    nquad is either 4,6,8 or 9
+    For each element a quadratic surface through its nquad points is drawn.
+
+    This uses the drawNurbsSurfaces function for the actual drawing.
+    The difference between drawQuadraticSurfaces(x) and drawNurbsSurfaces(x)
+    is that in the former, the internal point is laying on the surface, while
+    in the latter case, the middle point defines the tangents in the middle
+    points of the sides.
+
+    If color is given it is an (nsurf,3) array of RGB values.
+    """
+    if e is None:
+        xx = x.copy()
+    else:
+        xx = x[e]
+    #print xx.shape
+    if xx.shape[-2] == 8:
+        xx = quad8_quad9(xx)
+        #print xx.shape
+    # Convert quad9 to nurbs node order
+    xx = xx[...,[0,7,3,4,8,6,1,5,2],:]
+    #print xx.shape
+    xx = xx.reshape(-1,3,3,xx.shape[-1])
+    #print xx.shape
+    xx[...,1,:] = 2*xx[...,1,:] - 0.5*(xx[...,0,:] + xx[...,2,:])
+    xx[...,1,:,:] = 2*xx[...,1,:,:] - 0.5*(xx[...,0,:,:] + xx[...,2,:,:])
+    knots = array([0.,0.,0.,1.,1.,1.])
+    drawNurbsSurfaces(xx,knots,knots,color)
 
 
 def color_multiplex(color,nparts):
@@ -376,7 +419,7 @@ def draw_faces(x,e,mode,color=None,alpha=1.0):
     drawPolygons(x,e,mode,color,alpha)
 
 
-def drawEdges(x,e,edges,eltype=None,color=None):
+def drawEdges(x,e,edges,eltype,color=None):
     """Draw the edges of a geometry.
 
     This function draws the edges of a geometry collection, usually of a higher
@@ -414,15 +457,13 @@ def drawEdges(x,e,edges,eltype=None,color=None):
             color = color[:,fa,:]
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
 
-        if nplex == 3:
-            if elems is not None:
-                coords = coords[elems]
-            drawQuadraticCurves(coords,color)
+        if eltype == 'line3':
+            drawQuadraticCurves(coords,elems,color)
         else:
             draw_faces(coords,elems,'wireframe',color,1.0)
 
 
-def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
+def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0):
     """Draw the faces of a geometry.
 
     This function draws the faces of a geometry collection, usually of a higher
@@ -459,7 +500,10 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
             # select the colors of the matching points
             color = color[:,fa,:]
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
-        draw_faces(coords,elems,mode,color,alpha)
+        if eltype in ['quad8','quad9']:
+            drawQuadraticSurfaces(coords,elems,color)
+        else:
+            draw_faces(coords,elems,mode,color,alpha)
 
 
 def drawAtPoints(x,mark,color=None):

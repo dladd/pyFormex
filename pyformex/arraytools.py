@@ -1450,4 +1450,9 @@ def movingAverage(a,n,m0=None,m1=None):
         ae = concatenate(ae,axis=0)
     return movingView(ae,n).mean(axis=0)
 
+
+def randomNoise(shape,min=0.0,max=1.0):
+    """Create an array with random values between min and max"""
+    return random.random(shape) * (max-min) + min
+
 # End
