@@ -1540,15 +1540,15 @@ class Coords(ndarray):
     ##     return reflect(*args,**kargs)
 
 
-    # BV: Why do we need this ??
-    ## def actor(self,**kargs):
+    def actor(self,**kargs):
+        """_This allows a Coords object to be drawn directly"""
 
-    ##     if self.npoints() == 0:
-    ##         return None
+        if self.npoints() == 0:
+            return None
         
-    ##     from gui.actors import GeomActor
-    ##     from formex import Formex
-    ##     return GeomActor(Formex(self.reshape(-1,3)),**kargs)
+        from gui.actors import GeomActor
+        from formex import Formex
+        return GeomActor(Formex(self.reshape(-1,3)),**kargs)
 
 
 class CoordinateSystem(Coords):
