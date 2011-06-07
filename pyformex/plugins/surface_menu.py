@@ -52,11 +52,11 @@ def draw_edge_numbers(n):
     F = Formex(S.coords[S.getEdges()]) 
     return drawNumbers(F,color='green')
 
-def draw_node_numbers(n):
-    """Draw the node numbers of the named surface."""
-    S = named(n)
-    F = Formex(S.coords) 
-    return drawNumbers(F,color='red')
+## def draw_node_numbers(n):
+##     """Draw the node numbers of the named surface."""
+##     S = named(n)
+##     F = Formex(S.coords) 
+##     return drawNumbers(F,color='red')
 
 def draw_normals(n,avg=False):
     """Draw the surface normals at centers or averaged normals at the nodes."""
@@ -84,26 +84,20 @@ def draw_normals(n,avg=False):
 def draw_avg_normals(n):
     return draw_normals(n,True)
 
-    
-selection = DrawableObjects(clas=TriSurface)
 
-ntoggles = len(selection.annotations)
-def toggleEdgeNumbers():
-    selection.toggleAnnotation(0+ntoggles)
-def toggleNodeNumbers():
-    print "SURFACE_MENU: %s" % selection
-    selection.toggleAnnotation(1+ntoggles)
-def toggleNormals():
-    selection.toggleAnnotation(2+ntoggles)
-def toggleAvgNormals():
-    selection.toggleAnnotation(3+ntoggles)
+class SurfaceObjects(DrawableObjects):
+    def __init__(self):
+        DrawableObjects.__init__(self,clas=TriSurface)
+    def toggleEdgeNumbers(self,onoff=None):
+        self.toggleAnnotation(draw_edge_numbers,onoff)
+    def toggleNormals(self,onoff=None):
+        print "TOGGLENORMALS",self,type(self)
+        self.toggleAnnotation(draw_normals,onoff)
+    def toggleAvgNormals(self,onoff=None):
+        self.toggleAnnotation(draw_avg_normals,onoff)
 
+selection = SurfaceObjects()
 
-## selection.annotations.extend([[draw_edge_numbers,False],
-##                               [draw_node_numbers,False],
-##                               [draw_normals,False],
-##                               [draw_avg_normals,False],
-##                               ])
 
 ##################### select, read and write ##########################
 
@@ -1393,10 +1387,10 @@ def create_menu():
         ("Toggle &Annotations",
          [("&Names",selection.toggleNames,dict(checkable=True)),
           ("&Face Numbers",selection.toggleNumbers,dict(checkable=True)),
-          ("&Edge Numbers",toggleEdgeNumbers,dict(checkable=True)),
-          ("&Node Numbers",toggleNodeNumbers,dict(checkable=True)),
-          ("&Normals",toggleNormals,dict(checkable=True)),
-          ("&AvgNormals",toggleAvgNormals,dict(checkable=True)),
+          ("&Edge Numbers",selection.toggleEdgeNumbers,dict(checkable=True)),
+          ("&Node Numbers",selection.toggleNodeNumbers,dict(checkable=True)),
+          ("&Normals",selection.toggleNormals,dict(checkable=True)),
+          ("&AvgNormals",selection.toggleAvgNormals,dict(checkable=True)),
           ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
           ]),
         ("&Statistics",showStatisticsDialog),

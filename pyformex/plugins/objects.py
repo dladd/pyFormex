@@ -32,6 +32,7 @@ import pyformex as pf
 
 from coords import bbox
 from script import named
+from gui.draw import drawBbox
 import geomfile
 import odict
 
@@ -278,6 +279,7 @@ def draw_node_numbers(n):
 
 def draw_bbox(n):
     """Draw the bbox of an object."""
+    print "DRAWBBOX",drawBbox
     return drawBbox(named(n))
    
 

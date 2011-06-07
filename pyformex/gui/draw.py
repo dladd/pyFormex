@@ -753,7 +753,9 @@ def drawViewportAxes3D(pos,color=None):
 
 def drawBbox(A):
     """Draw the bbox of the actor A."""
+    print "DRAWBBOX",A
     B = actors.BboxActor(A.bbox())
+    print "BBOX IS",B
     annotate(B)
     return B
 
