@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
     <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" /> 
@@ -57,11 +57,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <p>DEBUG: Using the (slower) Python misc functions
-.. $Id$  -<em>- rst -</em>-
-.. pyformex reference manual &#8212; formex
-.. CREATED WITH py2rst.py: DO NOT EDIT</p>
-<div class="section" id="module-formex">
+  <div class="section" id="module-formex">
 <span id="formex-formex-algebra-in-python"></span><span id="sec-ref-formex"></span><h1>2. <a class="reference internal" href="#module-formex" title="formex: Formex algebra in Python"><tt class="xref py py-mod docutils literal"><span class="pre">formex</span></tt></a> &#8212; Formex algebra in Python<a class="headerlink" href="#module-formex" title="Permalink to this headline">¶</a></h1>
 <p>This module is a Python implementation of most functions of Formex algebra.
 It forms the basis of pyFormex, but predates it and is fairly independent.
@@ -303,7 +299,7 @@ connectivity table with integers pointing to the corresponding vertex.</p>
 <p>Coordinates are separated by commas, points are separated
 by semicolons and grouped between brackets, elements are
 separated by commas and grouped between braces:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]],[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">]],[[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">]]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
 <span class="go">{[1.0,0.0,0.0; 0.0,1.0,0.0], [0.0,1.0,0.0; 1.0,2.0,0.0]}</span>
 </pre></div>
@@ -491,7 +487,7 @@ permutation of the other&#8217;s.</p>
 <dd><p>Return a Formex where all elements have been reversed.</p>
 <p>Reversing an element means reversing the order of its points.
 This is equivalent to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">selectNodes</span><span class="p">(</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nplex</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">selectNodes</span><span class="p">(</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nplex</span><span class="p">()</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span><span class="o">-</span><span class="mf">1</span><span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -645,7 +641,7 @@ to translate in calculated directions.</p>
 
 <dl class="method">
 <dt id="formex.Formex.extrude">
-<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#formex.Formex.extrude" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em><big>)</big><a class="headerlink" href="#formex.Formex.extrude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extrude a Formex in one of the axis directions.</p>
 <p>Returns a Formex with doubled plexitude.</p>
 <p>First the original Formex is translated over n steps of length step in
@@ -766,6 +762,26 @@ does not contain the expected number of values.</dd>
 </dd></dl>
 
 <dl class="method">
+<dt id="formex.Formex.align">
+<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align the Coords along the global axes.</p>
+<p>Alignment involves a translation such that the bounding box
+of the Coords object becomes aligned on the origin of the global axes.
+The requested alignment is determined by a string of three characters,
+one for each of the coordinate axes. The character determines how
+the structure is aligned in the corresponding direction:</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
+<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
+<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+</ul>
+<p>Any other value will make the alignment in that direction unchanged.</p>
+<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
+all the points in the octant with all positive coordinate values.
+A string &#8216;000&#8217; will center the object around the origin.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="formex.Formex.bump">
 <tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.bump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a bump.</p>
@@ -859,7 +875,7 @@ only include numerical operations and functions understood by the
 numpy module.
 This method is one of several mapping methods. See also map1 and mapd.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mf">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mf">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mf">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
 <span class="go">[[ 2.  3.  4.]]</span>
 </pre></div>
 </div>
@@ -893,9 +909,8 @@ a limited set of axes to calculate a 2-D or 1-D distance.
 This method is one of several mapping methods. See also
 <tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#formex.Formex.map1" title="formex.Formex.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
+<blockquote>
+E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])</blockquote>
 <p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
 </dd></dl>
 
@@ -986,9 +1001,9 @@ In the latter case, dir (a single axis number or a list) may be given
 to specify the direction(s) to scale. The default is to produce a
 homothetic scaling.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
 <span class="go">[ 2.  2.  2.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">])</span>
 <span class="go">[ 2.  3.  4.]</span>
 </pre></div>
 </div>
@@ -1107,13 +1122,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -1137,13 +1152,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -1264,7 +1279,7 @@ two edges ending in each point.</p>
 
 <dl class="function">
 <dt id="formex.pattern">
-<tt class="descclassname">formex.</tt><tt class="descname">pattern</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#formex.pattern" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">pattern</tt><big>(</big><em>s</em>, <em>connect=True</em><big>)</big><a class="headerlink" href="#formex.pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a line segment pattern created from a string.</p>
 <p>This function creates a list of line segments where all points lie on
 a regular grid with unit step.
@@ -1292,7 +1307,7 @@ C----I----A          3----9----1         c----i----a
 G    D    H          7    4    8         g    d    h</pre>
 </div>
 <p>The special character &#8216;/&#8217; can be put before any character to make the
-move without making a connection.
+move without inserting an element.
 The effect of any other character is undefined.</p>
 <p>The resulting list is directly suited to initialize a Formex.</p>
 </dd></dl>
@@ -1504,7 +1519,7 @@ interpolations.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

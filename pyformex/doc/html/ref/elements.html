@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>12. elements — Definition of elements. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>12. elements — Definition of elements. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="13. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
+    <link rel="next" title="13. mesh — Finite element meshes in pyFormex." href="mesh.html" />
     <link rel="prev" title="11. utils — A collection of miscellaneous utility functions." href="utils.html" /> 
   </head>
   <body>
@@ -39,7 +39,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="widgets.html" title="13. widgets — A collection of custom widgets used in the pyFormex GUI"
+          <a href="mesh.html" title="13. mesh — Finite element meshes in pyFormex."
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
@@ -67,14 +67,14 @@ should be done by the interface modules.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
 <dl class="class">
 <dt id="elements.Element">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Element</tt><big>(</big><em>name</em>, <em>doc</em>, <em>ndim</em>, <em>vertices</em>, <em>edges</em>, <em>faces</em>, <em>element=</em><span class="optional">[</span><span class="optional">]</span>, <em>conversions={}</em>, <em>drawedges=None</em>, <em>drawfaces=None</em>, <em>facetype=None</em>, <em>edgetype=None</em><big>)</big><a class="headerlink" href="#elements.Element" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Element</tt><big>(</big><em>name</em>, <em>doc</em>, <em>ndim</em>, <em>vertices</em>, <em>edges=(''</em><span class="optional">[</span><span class="optional">]</span>, <em>)</em>, <em>faces=(''</em><span class="optional">[</span><span class="optional">]</span>, <em>)</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#elements.Element" title="Permalink to this definition">¶</a></dt>
 <dd><p>Element base class: an empty element.</p>
 <p>All derived classes should have a capitalized name: starting with
 an uppercase character and further only lower case and digits.</p>
 <p>Each element is defined by the following attributes:</p>
 <ul class="simple">
 <li><cite>vertices</cite>: the natural coordinates of its vertices,</li>
-<li><cite>edges</cite>: a list of edges, each defined by a couple of node numbers,</li>
+<li><cite>edges</cite>: a list of edges, each defined by 2 or 3 node numbers,</li>
 <li><cite>faces</cite>: a list of faces, each defined by a list of minimum 3 node
 numbers,</li>
 <li><cite>element</cite>: a list of all node numbers</li>
@@ -101,6 +101,54 @@ normal on the face.</p>
 <span class="go">  3-dimensional elements: [&#39;tet4&#39;, &#39;tet10&#39;, &#39;wedge6&#39;, &#39;hex8&#39;, &#39;hex20&#39;, &#39;icosa&#39;]</span>
 </pre></div>
 </div>
+<p>Optional attributes:</p>
+<ul class="simple">
+<li><cite>conversions</cite>: Defines possible strategies for conversion of the element
+to other element types. It is a dictionary with the target element name
+as key, and a list of actions as value. Each action in the list consists
+of a tuple ( action, data ), where action is one of the action identifier
+characters defined below, and data are the data needed for this action.</li>
+</ul>
+<p>Conversion actions:</p>
+<dl class="docutils">
+<dt>&#8216;m&#8217;: add new nodes to the element by taking the mean values of existing</dt>
+<dd>nodes. data is a list of tuples containing the nodes numbers whose
+coorrdinates have to be averaged.</dd>
+<dt>&#8216;s&#8217;: select nodes from the existing ones. data is a list of the node numbers</dt>
+<dd>to retain in the new element. This can be used to reduce the plexitude
+but also just to reorder the existing nodes.</dd>
+<dt>&#8216;v&#8217;: perform a conversion via an intermediate type. data is the name of the</dt>
+<dd>intermediate element type. The current element will first be converted
+to the intermediate type, and then conversion from that type to the
+target will be attempted.</dd>
+<dt>&#8216;r&#8217;: randomly choose one of the possible conversions. data is a list of</dt>
+<dd>element names. This can e.g. be used to select randomly between
+different but equivalent conversion paths.</dd>
+</dl>
+<dl class="method">
+<dt id="elements.Element.getEntities">
+<tt class="descname">getEntities</tt><big>(</big><em>level</em>, <em>reduce=False</em><big>)</big><a class="headerlink" href="#elements.Element.getEntities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the type and connectivity table of some element entities.</p>
+<p>The full list of entities with increasing dimensionality  0,1,2,3 is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>If level is negative, the dimensionality returned is relative
+to the highest dimensionality (.i.e., that of the element).
+If it is positive, it is taken absolute.</p>
+<p>Thus, for a 3D element type, getEntities(-1) returns the faces,
+while for a 2D element type, it returns the edges.
+For both types however, getLowerEntities(+1) returns the edges.</p>
+<p>The return value is a dict where the keys are element types
+and the values are connectivity tables. 
+If reduce == False: there will be only one connectivity table
+and it may include degenerate elements.
+If reduce == True, an attempt is made to reduce the degenerate
+elements. The returned dict may then have multiple entries.</p>
+<p>If the requested entity level is outside the range 0..ndim,
+the return value is None.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
@@ -124,7 +172,7 @@ was given, the default element type for this plexitude is returned.</li>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">elementType</span><span class="p">(</span><span class="s">&#39;tri3&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
 <span class="go">&#39;tri3&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">elementType</span><span class="p">(</span><span class="n">nplex</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">elementType</span><span class="p">(</span><span class="n">nplex</span><span class="o">=</span><span class="mf">2</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
 <span class="go">&#39;line2&#39;</span>
 </pre></div>
 </div>
@@ -162,8 +210,8 @@ grouped by their dimensionality.</p>
   <p class="topless"><a href="utils.html"
                         title="previous chapter">11. <tt class="docutils literal"><span class="pre">utils</span></tt> &#8212; A collection of miscellaneous utility functions.</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="widgets.html"
-                        title="next chapter">13. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
+  <p class="topless"><a href="mesh.html"
+                        title="next chapter">13. <tt class="docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -191,7 +239,7 @@ grouped by their dimensionality.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="widgets.html" title="13. widgets — A collection of custom widgets used in the pyFormex GUI"
+          <a href="mesh.html" title="13. mesh — Finite element meshes in pyFormex."
              >next</a> |</li>
         <li class="right" >
           <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
@@ -205,7 +253,7 @@ grouped by their dimensionality.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

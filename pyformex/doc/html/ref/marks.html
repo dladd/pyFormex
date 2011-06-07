@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>18. marks — OpenGL marks for annotating 3D actors. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>19. marks — OpenGL marks for annotating 3D actors. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,10 +23,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="19. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" />
-    <link rel="prev" title="17. decors — 2D decorations for the OpenGL canvas." href="decors.html" /> 
+    <link rel="next" title="20. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" />
+    <link rel="prev" title="18. decors — 2D decorations for the OpenGL canvas." href="decors.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,10 +39,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="gluttext.html" title="19. gluttext — 2D text decorations using GLUT fonts"
+          <a href="gluttext.html" title="20. gluttext — 2D text decorations using GLUT fonts"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="decors.html" title="17. decors — 2D decorations for the OpenGL canvas."
+          <a href="decors.html" title="18. decors — 2D decorations for the OpenGL canvas."
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -57,17 +57,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <p>DEBUG: Using the (slower) Python misc functions
-DEBUG: Using the (slower) Python misc functions
-.. $Id$  -<em>- rst -</em>-
-.. pyformex reference manual &#8212; marks
-.. CREATED WITH py2rst.py: DO NOT EDIT</p>
-<div class="section" id="module-marks">
-<span id="marks-opengl-marks-for-annotating-3d-actors"></span><span id="sec-ref-marks"></span><h1>18. <a class="reference internal" href="#module-marks" title="marks: OpenGL marks for annotating 3D actors."><tt class="xref py py-mod docutils literal"><span class="pre">marks</span></tt></a> &#8212; OpenGL marks for annotating 3D actors.<a class="headerlink" href="#module-marks" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-marks">
+<span id="marks-opengl-marks-for-annotating-3d-actors"></span><span id="sec-ref-marks"></span><h1>19. <a class="reference internal" href="#module-marks" title="marks: OpenGL marks for annotating 3D actors."><tt class="xref py py-mod docutils literal"><span class="pre">marks</span></tt></a> &#8212; OpenGL marks for annotating 3D actors.<a class="headerlink" href="#module-marks" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">marks</span></tt></p>
 <dl class="class">
 <dt id="marks.Mark">
-<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">Mark</tt><big>(</big><em>pos</em><big>)</big><a class="headerlink" href="#marks.Mark" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">Mark</tt><big>(</big><em>pos</em>, <em>nolight=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#marks.Mark" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D drawing inserted at a 3D position of the scene.</p>
 <dl class="docutils">
 <dt>The minimum attributes and methods are:</dt>
@@ -108,7 +103,7 @@ draw() : function to draw the mark</dd>
 
 <dl class="class">
 <dt id="marks.AxesMark">
-<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">AxesMark</tt><big>(</big><em>pos</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#marks.AxesMark" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">AxesMark</tt><big>(</big><em>pos</em>, <em>color=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#marks.AxesMark" title="Permalink to this definition">¶</a></dt>
 <dd><p>Two viewport axes drawn at a 3D position.</p>
 <dl class="method">
 <dt id="marks.AxesMark.pickGL">
@@ -138,7 +133,7 @@ draw() : function to draw the mark</dd>
 
 <dl class="class">
 <dt id="marks.TextMark">
-<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">TextMark</tt><big>(</big><em>pos</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em><big>)</big><a class="headerlink" href="#marks.TextMark" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">TextMark</tt><big>(</big><em>pos</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#marks.TextMark" title="Permalink to this definition">¶</a></dt>
 <dd><p>A text drawn at a 3D position.</p>
 <dl class="method">
 <dt id="marks.TextMark.pickGL">
@@ -168,7 +163,7 @@ draw() : function to draw the mark</dd>
 
 <dl class="class">
 <dt id="marks.MarkList">
-<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">MarkList</tt><big>(</big><em>pos</em>, <em>val</em>, <em>color=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>font='sans'</em>, <em>size=18</em>, <em>leader=''</em>, <em>gravity=''</em><big>)</big><a class="headerlink" href="#marks.MarkList" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">MarkList</tt><big>(</big><em>pos</em>, <em>val</em>, <em>color=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>font='sans'</em>, <em>size=18</em>, <em>leader=''</em>, <em>gravity=''</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#marks.MarkList" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of numbers drawn at 3D positions.</p>
 <dl class="method">
 <dt id="marks.MarkList.drawpick">
@@ -217,10 +212,10 @@ draw() : function to draw the mark</dd>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="decors.html"
-                        title="previous chapter">17. <tt class="docutils literal docutils literal docutils literal"><span class="pre">decors</span></tt> &#8212; 2D decorations for the OpenGL canvas.</a></p>
+                        title="previous chapter">18. <tt class="docutils literal docutils literal docutils literal"><span class="pre">decors</span></tt> &#8212; 2D decorations for the OpenGL canvas.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="gluttext.html"
-                        title="next chapter">19. <tt class="docutils literal docutils literal docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
+                        title="next chapter">20. <tt class="docutils literal docutils literal docutils literal"><span class="pre">gluttext</span></tt> &#8212; 2D text decorations using GLUT fonts</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -248,10 +243,10 @@ draw() : function to draw the mark</dd>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="gluttext.html" title="19. gluttext — 2D text decorations using GLUT fonts"
+          <a href="gluttext.html" title="20. gluttext — 2D text decorations using GLUT fonts"
              >next</a> |</li>
         <li class="right" >
-          <a href="decors.html" title="17. decors — 2D decorations for the OpenGL canvas."
+          <a href="decors.html" title="18. decors — 2D decorations for the OpenGL canvas."
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -262,7 +257,7 @@ draw() : function to draw the mark</dd>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

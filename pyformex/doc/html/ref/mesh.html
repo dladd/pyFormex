@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>30. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>13. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,10 +23,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="31. trisurface — Operations on triangulated surfaces." href="trisurface.html" />
-    <link rel="prev" title="29. curve — Definition of curves in pyFormex." href="curve.html" /> 
+    <link rel="next" title="14. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
+    <link rel="prev" title="12. elements — Definition of elements." href="elements.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,10 +39,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="trisurface.html" title="31. trisurface — Operations on triangulated surfaces."
+          <a href="widgets.html" title="14. widgets — A collection of custom widgets used in the pyFormex GUI"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="curve.html" title="29. curve — Definition of curves in pyFormex."
+          <a href="elements.html" title="12. elements — Definition of elements."
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -57,12 +57,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <p>DEBUG: Using the (slower) Python misc functions
-.. $Id$  -<em>- rst -</em>-
-.. pyformex reference manual &#8212; mesh
-.. CREATED WITH py2rst.py: DO NOT EDIT</p>
-<div class="section" id="module-mesh">
-<span id="mesh-finite-element-meshes-in-pyformex"></span><span id="sec-ref-mesh"></span><h1>30. <a class="reference internal" href="#module-mesh" title="mesh: Finite element meshes in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">mesh</span></tt></a> &#8212; Finite element meshes in pyFormex.<a class="headerlink" href="#module-mesh" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-mesh">
+<span id="mesh-finite-element-meshes-in-pyformex"></span><span id="sec-ref-mesh"></span><h1>13. <a class="reference internal" href="#module-mesh" title="mesh: Finite element meshes in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">mesh</span></tt></a> &#8212; Finite element meshes in pyFormex.<a class="headerlink" href="#module-mesh" title="Permalink to this headline">¶</a></h1>
 <p>This module defines the Mesh class, which can be used to describe discrete
 geometrical models like those used in Finite Element models.
 It also contains some useful functions to create such models.</p>
@@ -70,16 +66,16 @@ It also contains some useful functions to create such models.</p>
 <dl class="class">
 <dt id="mesh.Mesh">
 <em class="property">class </em><tt class="descclassname">mesh.</tt><tt class="descname">Mesh</tt><big>(</big><em>coords=None</em>, <em>elems=None</em>, <em>prop=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>A mesh is a discrete geometrical model defined by nodes and elements.</p>
-<p>In the Mesh geometrical data model, coordinates of all points are gathered
-in a single twodimensional array &#8216;coords&#8217; with shape (ncoords,3) and the
-individual geometrical elements are described by indices into the &#8216;elems&#8217;
-array.
-This model has some advantages over the Formex data model, where all
-points of all element are stored by their coordinates:</p>
+<dd><p>A Mesh is a discrete geometrical model defined by nodes and elements.</p>
+<p>In the Mesh geometrical data model, the coordinates of all the points
+are gathered in a single twodimensional array with shape (ncoords,3).
+The individual geometrical elements are then described by indices into
+the coordinates array.</p>
+<p>This model has some advantages over the Formex data model (which stores
+all the points of all the elements by their coordinates):</p>
 <ul class="simple">
-<li>compacter storage, because coordinates of coinciding points do not
-need to be repeated,</li>
+<li>a more compact storage, because coordinates of coinciding
+points are not repeated,</li>
 <li>faster connectivity related algorithms.</li>
 </ul>
 <p>The downside is that geometry generating algorithms are far more complex
@@ -89,20 +85,35 @@ geometry, but when we come to the point of exporting the geometry to
 file (and to other programs), a Mesh data model may be more adequate.</p>
 <p>The Mesh data model has at least the following attributes:</p>
 <ul class="simple">
-<li>coords: (ncoords,3) shaped Coords array,</li>
-<li>elems: (nelems,nplex) shaped array of int32 indices into coords. All
-values should be in the range 0 &lt;= value &lt; ncoords.</li>
-<li>prop: array of element property numbers, default None.</li>
+<li>coords: (ncoords,3) shaped Coords object, holding the coordinates of
+all points in the Mesh;</li>
+<li>elems: (nelems,nplex) shaped Connectivity object, defining the elements
+by indices into the Coords array. All values in elems should be in the
+range 0 &lt;= value &lt; ncoords.</li>
+<li>prop: an array of element property numbers, default None.</li>
 <li>eltype: an Element subclass or a string designing the element type,
 default None.</li>
 </ul>
-<p>If eltype is None, a default eltype is derived from the plexitude, by
-calling the elements.elementType function.
-For plexitudes without default type,
-or if the default type is not the wanted element type, the user should
-specify the element type himself.</p>
+<p>If eltype is None, the eltype of the elems Connectivity table is used,
+and if that is missing, a default eltype is derived from the plexitude,
+by a call to the elements.elementType function.
+In most cases the eltype can be set automatically.
+The user can override the default value, but an error will occur if
+the element type does not exist or does not match the plexitude.</p>
 <p>A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
 or by a single geometric object that provides a toMesh() method.</p>
+<dl class="method">
+<dt id="mesh.Mesh.setType">
+<tt class="descname">setType</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.setType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the eltype from a character string.</p>
+<p>This function allows the user to change the element type of the Mesh.
+The input is a character string with the name of one of the element
+defined in elements.py. The function will only allow to set a type
+matching the plexitude of the Mesh.</p>
+<p>This method is seldom needed, because the applications should
+normally set the element type at creation time.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="mesh.Mesh.setProp">
 <tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.setProp" title="Permalink to this definition">¶</a></dt>
@@ -180,31 +191,6 @@ Note that this may contain points that are not used in the mesh.
 <tt class="descname">getElems</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the elems data.</p>
 <p>Returns the element connectivity data as stored in the object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mesh.Mesh.getLowerEntitiesSelector">
-<tt class="descname">getLowerEntitiesSelector</tt><big>(</big><em>level=-1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getLowerEntitiesSelector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the entities of a lower dimensionality.</p>
-<p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
-this returns a Connectivity table with the entities of a lower
-dimensionality. The full list of entities with increasing
-dimensionality  0,1,2,3 is:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
-</pre></div>
-</div>
-<p>If level is negative, the dimensionality returned is relative
-to that of the caller. If it is positive, it is taken absolute.
-Thus, for a Mesh with a 3D element type, getLowerEntities(-1)
-returns the faces, while for a 2D element type, it returns the edges.
-For both meshes however,  getLowerEntities(+1) returns the edges.</p>
-<p>By default, all entities for all elements are returned and common
-entities will appear multiple times. Specifying unique=True will 
-return only the unique ones.</p>
-<p>The return value may be an empty table, if the element type does
-not have the requested entities (e.g. the &#8216;point&#8217; type).
-If the eltype is not defined, or the requested entity level is
-outside the range 0..3, the return value is None.</p>
 </dd></dl>
 
 <dl class="method">
@@ -288,7 +274,7 @@ requests can return it without the need for computing it again.</p>
 <dd><p>Defines the elements in function of its edges.</p>
 <p>This returns a Connectivity table with the elements defined in
 function of the edges. It is equivalent to
-<tt class="docutils literal"><span class="pre">`self.elems.insertLevel(self.getLowerEntitiesSelector(1))`</span></tt>
+<tt class="docutils literal"><span class="pre">`self.elems.insertLevel(self.eltype.getEntities(1))`</span></tt>
 but it also stores the definition of the edges and the returned
 element to edge connectivity.</p>
 </dd></dl>
@@ -327,9 +313,22 @@ switched off by setting <cite>compact=False</cite>.</p>
 <dd><p>Return a Mesh where all elements have been reversed.</p>
 <p>Reversing an element means reversing the order of its points.
 This is equivalent to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">elems</span><span class="p">[:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">elems</span><span class="p">[:,::</span><span class="o">-</span><span class="mf">1</span><span class="p">])</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.reflect">
+<tt class="descname">reflect</tt><big>(</big><em>dir=0</em>, <em>pos=0.0</em>, <em>autofix=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>dir</cite>: int: direction of the reflection (default 0)</li>
+<li><cite>pos</cite>: float: offset of the mirror plane from origin (default 0.0)</li>
+<li><cite>autofix</cite>: boolean: if True, the connectivity table of reflected
+2D and 3D elements will automatically be fixed to</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -410,8 +409,8 @@ that will be passed to <tt class="xref py py-meth docutils literal"><span class=
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.matchElemsCentroids">
-<tt class="descname">matchElemsCentroids</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.matchElemsCentroids" title="Permalink to this definition">¶</a></dt>
+<dt id="mesh.Mesh.matchCentroids">
+<tt class="descname">matchCentroids</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.matchCentroids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Match elems of Mesh with elems of self.</p>
 <p>self and Mesh are same eltype meshes
 and are both without Doubles.</p>
@@ -608,6 +607,13 @@ degenerate elements.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.removeDegenerate">
+<tt class="descname">removeDegenerate</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.removeDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the degenerate elements from a Mesh.</p>
+<p>Returns a Mesh with all degenerate elements removed.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.renumber">
 <tt class="descname">renumber</tt><big>(</big><em>order='elems'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.renumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renumber the nodes of a Mesh in the specified order.</p>
@@ -646,19 +652,37 @@ the following predefined strings:<ul>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.connect">
+<tt class="descname">connect</tt><big>(</big><em>mesh1</em>, <em>div=1</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect a Mesh with another one to form a hypermesh.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>mesh1</cite>: a Mesh with the same element type and shape
+(number of elements and plexitude) as self.
+The two Meshes usually also have the same topology.
+Both Meshes are connected to form a hypermesh. The plexitude of the
+new Mesh is two times that of the original Mesh.</li>
+<li><cite>div</cite>: Either an integer, or a sequence of numbers (usually between
+0.0 and 1.0). This parameter has the same meaning as in
+<cite>Coords.interpolate</cite>. If an int is given, div will be set to
+(div+1) equally spaced values in the range [0.0..1.0].</li>
+<li><cite>eltype</cite>: the element type of the constructed hypermesh. If not
+given it is set from the element type database. Otherwise, the
+extrude element type will be created first, and then a conversion
+to the rewuested element is attempted.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.extrude">
-<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.extrude" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.extrude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extrude a Mesh in one of the axes directions.</p>
 <p>Returns a new Mesh obtained by extruding the given Mesh
-over n steps of length step in direction of axis dir.
-The returned Mesh has double plexitude of the original.</p>
-<p>This function is usually used to extrude points into lines,
-lines into surfaces and surfaces into volumes.
-By default it will try to fix the connectivity ordering where
-appropriate. If autofix is switched off, the connectivities
-are merely stacked, and the user may have to fix it himself.</p>
-<p>Currently, this function correctly transforms: point1 to line2,
-line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+over <cite>n</cite> steps of length <cite>step</cite> in direction of axis <cite>dir</cite>.</p>
+<p>This is a convenience function equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span><span class="n">n</span><span class="o">*</span><span class="n">step</span><span class="p">),</span><span class="n">n</span><span class="p">,</span><span class="n">eltype</span><span class="o">=</span><span class="n">eltype</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -679,7 +703,7 @@ line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.sweep">
-<tt class="descname">sweep</tt><big>(</big><em>path</em>, <em>autofix=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.sweep" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">sweep</tt><big>(</big><em>path</em>, <em>eltype=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.sweep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sweep a mesh along a path, creating an extrusion</p>
 <p>Returns a new Mesh obtained by sweeping the given Mesh
 over a path.
@@ -691,8 +715,8 @@ lines into surfaces and surfaces into volumes.
 By default it will try to fix the connectivity ordering where
 appropriate. If autofix is switched off, the connectivities
 are merely stacked, and the user may have to fix it himself.</p>
-<p>Currently, this function correctly transforms: point1 to line2,
-line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+<p>Currently, this function produces the correct element type, but
+the geometry .</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -774,15 +798,6 @@ value is None.</p>
 <tt class="descname">volume</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total volume of a Mesh.</p>
 <p>If the Mesh can not be converted to tet4 type, 0 is returned</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mesh.Mesh.equiAngleSkew">
-<tt class="descname">equiAngleSkew</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.equiAngleSkew" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the equiAngleSkew of the elements, a mesh quality parameter .</p>
-<p>It quantifies the skewness of the elements: normalize difference between
-the worst angle in each element and the ideal angle (angle in the face 
-of an equiangular element, qe).</p>
 </dd></dl>
 
 <dl class="method">
@@ -908,7 +923,7 @@ only include numerical operations and functions understood by the
 numpy module.
 This method is one of several mapping methods. See also map1 and mapd.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mf">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mf">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mf">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
 <span class="go">[[ 2.  3.  4.]]</span>
 </pre></div>
 </div>
@@ -942,9 +957,8 @@ a limited set of axes to calculate a 2-D or 1-D distance.
 This method is one of several mapping methods. See also
 <tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#mesh.Mesh.map1" title="mesh.Mesh.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
+<blockquote>
+E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])</blockquote>
 <p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
 </dd></dl>
 
@@ -962,18 +976,6 @@ No points of the <tt class="xref py py-class docutils literal"><span class="pre"
 <dd><p>Project <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> on a sphere.</p>
 <p>The default sphere is a unit sphere at the origin.
 The center of the sphere should not be part of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mesh.Mesh.reflect">
-<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reflect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>dir</cite>: int: direction of the reflection (default 0)</li>
-<li><cite>pos</cite>: float: offset of the mirror plane from origin (default 0.0)</li>
-<li><cite>inplace</cite>: boolean: change the coordinates inplace (default False)</li>
-</ul>
 </dd></dl>
 
 <dl class="method">
@@ -1035,9 +1037,9 @@ In the latter case, dir (a single axis number or a list) may be given
 to specify the direction(s) to scale. The default is to produce a
 homothetic scaling.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
 <span class="go">[ 2.  2.  2.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">])</span>
 <span class="go">[ 2.  3.  4.]</span>
 </pre></div>
 </div>
@@ -1156,13 +1158,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -1186,13 +1188,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -1207,18 +1209,6 @@ be an open file.
 The Geometry is then written to that file in a native format, using
 sep as separator between the coordinates.
 If fil is a string, the file is closed prior to returning.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mesh.Mesh.connect">
-<tt class="descname">connect</tt><big>(</big><em>mesh1</em>, <em>mesh2</em>, <em>n=1</em>, <em>n1=None</em>, <em>n2=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connect two meshes to form a hypermesh.</p>
-<p>mesh1 and mesh2 are two meshes with same topology (shape). 
-The two meshes are connected by a higher order mesh with n
-elements in the direction between the two meshes.
-n1 and n2 are node selection indices permitting a permutation of the
-nodes of the base sets in their appearance in the hypermesh.
-This can e.g. be used to achieve circular numbering of the hypermesh.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1268,21 +1258,23 @@ not fuse them.</p>
 
 <dl class="function">
 <dt id="mesh.connectMesh">
-<tt class="descclassname">mesh.</tt><tt class="descname">connectMesh</tt><big>(</big><em>mesh1</em>, <em>mesh2</em>, <em>n=1</em>, <em>n1=None</em>, <em>n2=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.connectMesh" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">mesh.</tt><tt class="descname">connectMesh</tt><big>(</big><em>mesh1</em>, <em>mesh2</em>, <em>div=1</em>, <em>n1=None</em>, <em>n2=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.connectMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connect two meshes to form a hypermesh.</p>
-<p>mesh1 and mesh2 are two meshes with same topology (shape). 
-The two meshes are connected by a higher order mesh with n
-elements in the direction between the two meshes.
-n1 and n2 are node selection indices permitting a permutation of the
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>mesh1</cite>, <cite>mesh2</cite>: Mesh objects with the same element type and shape
+(number of elements and plexitude).
+The two Meshes usually also have the same topology.
+Both Meshes are connected to form a hypermesh. The plexitude of the
+new Mesh is two times that of the original Meshes.</li>
+<li><cite>div</cite>: Either an integer, or a sequence of numbers (usually between 0.0
+and 1.0). This parameter has the same meaning as in <cite>Coords.interpolate</cite>.
+number of
+elements in the direction between the two Meshes is determined by.</li>
+</ul>
+<p>n1 and n2 are node selection indices permitting a permutation of the
 nodes of the base sets in their appearance in the hypermesh.
 This can e.g. be used to achieve circular numbering of the hypermesh.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh.connectQuadraticMesh">
-<tt class="descclassname">mesh.</tt><tt class="descname">connectQuadraticMesh</tt><big>(</big><em>mesh1</em>, <em>mesh2</em>, <em>n=1</em>, <em>eltype='Hex20'</em><big>)</big><a class="headerlink" href="#mesh.connectQuadraticMesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>currently works for Quad8 only.</p>
-<p>Connect two Quad8 meshes to form a Hex20 mesh.</p>
 </dd></dl>
 
 </div>
@@ -1298,11 +1290,11 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
-  <p class="topless"><a href="curve.html"
-                        title="previous chapter">29. <tt class="docutils literal"><span class="pre">curve</span></tt> &#8212; Definition of curves in pyFormex.</a></p>
+  <p class="topless"><a href="elements.html"
+                        title="previous chapter">12. <tt class="docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="trisurface.html"
-                        title="next chapter">31. <tt class="docutils literal"><span class="pre">trisurface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
+  <p class="topless"><a href="widgets.html"
+                        title="next chapter">14. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -1330,10 +1322,10 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="trisurface.html" title="31. trisurface — Operations on triangulated surfaces."
+          <a href="widgets.html" title="14. widgets — A collection of custom widgets used in the pyFormex GUI"
              >next</a> |</li>
         <li class="right" >
-          <a href="curve.html" title="29. curve — Definition of curves in pyFormex."
+          <a href="elements.html" title="12. elements — Definition of elements."
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -1344,7 +1336,7 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

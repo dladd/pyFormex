@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>17. decors — 2D decorations for the OpenGL canvas. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>18. decors — 2D decorations for the OpenGL canvas. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,10 +23,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="18. marks — OpenGL marks for annotating 3D actors." href="marks.html" />
-    <link rel="prev" title="16. actors — OpenGL actors for populating the 3D scene." href="actors.html" /> 
+    <link rel="next" title="19. marks — OpenGL marks for annotating 3D actors." href="marks.html" />
+    <link rel="prev" title="17. actors — OpenGL actors for populating the 3D scene." href="actors.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,10 +39,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="marks.html" title="18. marks — OpenGL marks for annotating 3D actors."
+          <a href="marks.html" title="19. marks — OpenGL marks for annotating 3D actors."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="actors.html" title="16. actors — OpenGL actors for populating the 3D scene."
+          <a href="actors.html" title="17. actors — OpenGL actors for populating the 3D scene."
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -57,17 +57,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <p>DEBUG: Using the (slower) Python misc functions
-DEBUG: Using the (slower) Python misc functions
-.. $Id$  -<em>- rst -</em>-
-.. pyformex reference manual &#8212; decors
-.. CREATED WITH py2rst.py: DO NOT EDIT</p>
-<div class="section" id="module-decors">
-<span id="decors-2d-decorations-for-the-opengl-canvas"></span><span id="sec-ref-decors"></span><h1>17. <a class="reference internal" href="#module-decors" title="decors: 2D decorations for the OpenGL canvas."><tt class="xref py py-mod docutils literal"><span class="pre">decors</span></tt></a> &#8212; 2D decorations for the OpenGL canvas.<a class="headerlink" href="#module-decors" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-decors">
+<span id="decors-2d-decorations-for-the-opengl-canvas"></span><span id="sec-ref-decors"></span><h1>18. <a class="reference internal" href="#module-decors" title="decors: 2D decorations for the OpenGL canvas."><tt class="xref py py-mod docutils literal"><span class="pre">decors</span></tt></a> &#8212; 2D decorations for the OpenGL canvas.<a class="headerlink" href="#module-decors" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">decors</span></tt></p>
 <dl class="class">
 <dt id="decors.Decoration">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Decoration</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#decors.Decoration" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Decoration</tt><big>(</big><em>x</em>, <em>y</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Decoration" title="Permalink to this definition">¶</a></dt>
 <dd><p>A decoration is a 2-D drawing at canvas position x,y.</p>
 <p>All decorations have at least the following attributes:</p>
 <ul>
@@ -115,7 +110,7 @@ allowed in a display list.</p>
 
 <dl class="class">
 <dt id="decors.Mark">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Mark</tt><big>(</big><em>x</em>, <em>y</em>, <em>mark='dot'</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Mark" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Mark</tt><big>(</big><em>x</em>, <em>y</em>, <em>mark='dot'</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Mark" title="Permalink to this definition">¶</a></dt>
 <dd><p>A mark at a fixed position on the canvas.</p>
 <dl class="method">
 <dt id="decors.Mark.pickGL">
@@ -145,7 +140,7 @@ allowed in a display list.</p>
 
 <dl class="class">
 <dt id="decors.Line">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Line</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Line" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Line</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Line" title="Permalink to this definition">¶</a></dt>
 <dd><p>A straight line on the canvas.</p>
 <dl class="method">
 <dt id="decors.Line.pickGL">
@@ -175,7 +170,7 @@ allowed in a display list.</p>
 
 <dl class="class">
 <dt id="decors.GlutText">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">GlutText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>font='9x15'</em>, <em>size=None</em>, <em>gravity=None</em>, <em>color=None</em>, <em>zoom=None</em><big>)</big><a class="headerlink" href="#decors.GlutText" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">GlutText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>font='9x15'</em>, <em>size=None</em>, <em>gravity=None</em>, <em>color=None</em>, <em>zoom=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.GlutText" title="Permalink to this definition">¶</a></dt>
 <dd><p>A viewport decoration showing a text string.</p>
 <ul class="simple">
 <li>text: a simple string, a multiline string or a list of strings. If it is
@@ -226,7 +221,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 
 <dl class="class">
 <dt id="decors.ColorLegend">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorlegend</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>font=None</em>, <em>size=None</em>, <em>dec=2</em>, <em>scale=0</em>, <em>grid=0</em>, <em>linewidth=None</em>, <em>lefttext=False</em>, <em>nlabels=-1</em><big>)</big><a class="headerlink" href="#decors.ColorLegend" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorlegend</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>font=None</em>, <em>size=None</em>, <em>dec=2</em>, <em>scale=0</em>, <em>grid=0</em>, <em>linewidth=None</em>, <em>lefttext=False</em>, <em>nlabels=-1</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.ColorLegend" title="Permalink to this definition">¶</a></dt>
 <dd><p>A viewport decoration showing a colorscale legend.</p>
 <dl class="method">
 <dt id="decors.ColorLegend.pickGL">
@@ -256,7 +251,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 
 <dl class="class">
 <dt id="decors.Rectangle">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Rectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.Rectangle" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Rectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D-rectangle on the canvas.</p>
 <dl class="method">
 <dt id="decors.Rectangle.pickGL">
@@ -286,7 +281,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 
 <dl class="class">
 <dt id="decors.Grid">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Grid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx=1</em>, <em>ny=1</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Grid" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Grid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx=1</em>, <em>ny=1</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D-grid on the canvas.</p>
 <dl class="method">
 <dt id="decors.Grid.pickGL">
@@ -316,7 +311,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 
 <dl class="class">
 <dt id="decors.LineDrawing">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">LineDrawing</tt><big>(</big><em>data</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.LineDrawing" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">LineDrawing</tt><big>(</big><em>data</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.LineDrawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>A collection of straight lines on the canvas.</p>
 <dl class="method">
 <dt id="decors.LineDrawing.pickGL">
@@ -346,7 +341,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 
 <dl class="class">
 <dt id="decors.Triade">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Triade</tt><big>(</big><em>pos='lb', siz=100, pat='12-34', legend='xyz', color=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 1.0, 1.0), (1.0, 0.0, 1.0), (1.0, 1.0, 0.0)]</em><big>)</big><a class="headerlink" href="#decors.Triade" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Triade</tt><big>(</big><em>pos='lb', siz=100, pat='12-34', legend='xyz', color=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 1.0, 1.0), (1.0, 0.0, 1.0), (1.0, 1.0, 0.0)], **kargs</em><big>)</big><a class="headerlink" href="#decors.Triade" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor representing a triade of global axes.</p>
 <ul>
 <li><dl class="first docutils">
@@ -447,10 +442,10 @@ ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="actors.html"
-                        title="previous chapter">16. <tt class="docutils literal docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
+                        title="previous chapter">17. <tt class="docutils literal docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="marks.html"
-                        title="next chapter">18. <tt class="docutils literal"><span class="pre">marks</span></tt> &#8212; OpenGL marks for annotating 3D actors.</a></p>
+                        title="next chapter">19. <tt class="docutils literal"><span class="pre">marks</span></tt> &#8212; OpenGL marks for annotating 3D actors.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -478,10 +473,10 @@ ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="marks.html" title="18. marks — OpenGL marks for annotating 3D actors."
+          <a href="marks.html" title="19. marks — OpenGL marks for annotating 3D actors."
              >next</a> |</li>
         <li class="right" >
-          <a href="actors.html" title="16. actors — OpenGL actors for populating the 3D scene."
+          <a href="actors.html" title="17. actors — OpenGL actors for populating the 3D scene."
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -492,7 +487,7 @@ ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

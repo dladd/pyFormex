@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>41. fe_abq — Exporting finite element models in Abaqus™ input file format. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>42. fe_abq — Exporting finite element models in Abaqus™ input file format. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,10 +23,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="42. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
-    <link rel="prev" title="40. fe — Finite Element Models in pyFormex." href="fe.html" /> 
+    <link rel="next" title="43. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
+    <link rel="prev" title="41. fe — Finite Element Models in pyFormex." href="fe.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,10 +39,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fe_post.html" title="42. fe_post — A postprocessor for ABAQUS output files."
+          <a href="fe_post.html" title="43. fe_post — A postprocessor for ABAQUS output files."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="fe.html" title="40. fe — Finite Element Models in pyFormex."
+          <a href="fe.html" title="41. fe — Finite Element Models in pyFormex."
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -57,12 +57,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <p>DEBUG: Using the (slower) Python misc functions
-.. $Id$  -<em>- rst -</em>-
-.. pyformex reference manual &#8212; fe_abq
-.. CREATED WITH py2rst.py: DO NOT EDIT</p>
-<div class="section" id="module-fe_abq">
-<span id="fe-abq-exporting-finite-element-models-in-abaqustrade-input-file-format"></span><span id="sec-ref-fe-abq"></span><h1>41. <a class="reference internal" href="#module-fe_abq" title="fe_abq: Exporting finite element models in Abaqus\ |trade| input file format."><tt class="xref py py-mod docutils literal"><span class="pre">fe_abq</span></tt></a> &#8212; Exporting finite element models in Abaqus™ input file format.<a class="headerlink" href="#module-fe_abq" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-fe_abq">
+<span id="fe-abq-exporting-finite-element-models-in-abaqustrade-input-file-format"></span><span id="sec-ref-fe-abq"></span><h1>42. <a class="reference internal" href="#module-fe_abq" title="fe_abq: Exporting finite element models in Abaqus\ |trade| input file format."><tt class="xref py py-mod docutils literal"><span class="pre">fe_abq</span></tt></a> &#8212; Exporting finite element models in Abaqus™ input file format.<a class="headerlink" href="#module-fe_abq" title="Permalink to this headline">¶</a></h1>
 <p>This module provides functions and classes to export finite element models
 from pyFormex in the Abaqus™ input format (.inp).
 The exporter handles the mesh geometry as well as model, node and element
@@ -431,22 +427,15 @@ by sep. Lines are separated by linesep.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="fe_abq.addOptions">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">addOptions</tt><big>(</big><em>option</em><big>)</big><a class="headerlink" href="#fe_abq.addOptions" title="Permalink to this definition">¶</a></dt>
-<dd><p>add option after an abaqus keyword</p>
-<dl class="docutils">
-<dt>-option is a Dict type</dt>
-<dd>It has keys name equal to the ABAQUS keywords and value equal to parameter setting
-if an ABAQUS keyword does not have a value to be the Dict value must be an empty string</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="fe_abq.removePropOptions">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">removePropOptions</tt><big>(</big><em>d</em>, <em>opName</em><big>)</big><a class="headerlink" href="#fe_abq.removePropOptions" title="Permalink to this definition">¶</a></dt>
-<dd><p>delete all key option in d contained in opName
-d is Dict 
-opName is list of string (keys names to be deleted)</p>
+<dt id="fe_abq.fmtOptions">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtOptions</tt><big>(</big><em>options</em><big>)</big><a class="headerlink" href="#fe_abq.fmtOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the options of an Abaqus command line.</p>
+<ul class="simple">
+<li><cite>options</cite>: a dict with ABAQUS command keywords and values. If the keyword
+does not take any value, the value in the dict should be an empty string.</li>
+</ul>
+<p>Returns a comma-separated string of &#8216;keyword&#8217; or &#8216;keyword=value&#8217; fields.
+The string includes an initial comma.</p>
 </dd></dl>
 
 <dl class="function">
@@ -484,24 +473,28 @@ fields labeled (opt) are optional.</p>
 </ul>
 </li>
 <li><p class="first">&#8216;HYERELASTIC&#8217;:</p>
-<p>required
-- model: one of &#8216;ogden&#8217;, &#8216;polynomial&#8217; or &#8216;reduced polynomial&#8217;
-- constants: list of all parameter required for the model (see Abaqus documentation)</p>
-<p>optional
-- order: order of the model. If blank will be automatically calculated from the len of the constants list</p>
-<blockquote>
+<p>required:</p>
+<ul class="simple">
+<li>model: one of &#8216;ogden&#8217;, &#8216;polynomial&#8217; or &#8216;reduced polynomial&#8217;</li>
+<li>constants: list of all parameter required for the model
+(see Abaqus documentation)</li>
+</ul>
+<p>optional:</p>
+<ul>
+<li><p class="first">order: order of the model. If blank will be automatically calculated
+from the len of the constants list</p>
 <p>example:</p>
-<dl class="docutils">
-<dt>intimaMat= {</dt>
-<dd><p class="first last">&#8216;name&#8217;: &#8216;intima&#8217;,
-&#8216;density&#8217;: 0.1, # Not Used, but Abaqus does not like a material without
-&#8216;elasticity&#8217;:&#8217;hyperelastic&#8217;,
-&#8216;type&#8217;:&#8217;reduced polynomial&#8217;,
-&#8216;constants&#8217;: [6.79E-03, 5.40E-01, -1.11, 10.65, -7.27, 1.63, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</p>
-</dd>
-</dl>
-<p>}</p>
-</blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">intimaMat</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;intima&#39;</span><span class="p">,</span>
+  <span class="s">&#39;density&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="c"># Not Used, but Abaqus does not like a material without</span>
+  <span class="s">&#39;elasticity&#39;</span><span class="p">:</span><span class="s">&#39;hyperelastic&#39;</span><span class="p">,</span>
+  <span class="s">&#39;type&#39;</span><span class="p">:</span><span class="s">&#39;reduced polynomial&#39;</span><span class="p">,</span>
+  <span class="s">&#39;constants&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">6.79E-03</span><span class="p">,</span> <span class="mf">5.40E-01</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.11</span><span class="p">,</span> <span class="mf">10.65</span><span class="p">,</span> <span class="o">-</span><span class="mf">7.27</span><span class="p">,</span> <span class="mf">1.63</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
 </li>
 <li><p class="first">&#8216;ANISOTROPIC HYPERELASTIC&#8217;:</p>
 </li>
@@ -647,34 +640,6 @@ P.Prop(name=&#8217;connbehavior3&#8217;,ConnectorBehavior=&#8217;&#8216;,Stop=di
 </dd></dl>
 
 <dl class="function">
-<dt id="fe_abq.fmtSolidSection">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSolidSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSolidSection" title="Permalink to this definition">¶</a></dt>
-<dd><p>this function should be modified to create a general function for all the element types that has the property SOLID SECTION. now it is only for 3dsolid</p>
-<p>REQUIRED</p>
-<ul class="simple">
-<li>material/composite (mutually exclusive)</li>
-<li>elset</li>
-<li>refnode (REQUIRED only for plane stress elements and acoustic infinite elements)</li>
-<li>orientation (REQUIRED only for anisotropic materials, OPTIONAL otherwise)</li>
-</ul>
-<p>el.seccontrol is a Dict
-REQUIRED</p>
-<blockquote>
-el.seccontrol.name = name of the section control</blockquote>
-<dl class="docutils">
-<dt>OPTIONAL</dt>
-<dd><p class="first">el.seccontrol.data = list or array of optional line for hourglass control and bulk viscosity</p>
-<p class="last">All other  keys  have name equal to the ABAQUS keywords and value equal to parameter setting
-if an ABAQUS keyword does not have a value to be the Dict value must be an empty string</p>
-</dd>
-</dl>
-<p>el.material see fmtMaterial documentation</p>
-<p>EXAMPLE
-control=Dict({&#8216;name&#8217;:&#8217;StentControl&#8217;,&#8217;hourglass&#8217;:&#8217;enhanced&#8217;,})
-P.elemProp(set=&#8217;STENT&#8217;,eltype=&#8217;C3D8R&#8217;,section=ElemSection(section=stentSec,material=steel,seccontrol=control))</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="fe_abq.fmtSurface">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurface</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the surface definitions.</p>
@@ -683,8 +648,10 @@ P.elemProp(set=&#8217;STENT&#8217;,eltype=&#8217;C3D8R&#8217;,section=ElemSectio
 <li>set: the elements/nodes in the surface, either numbers or a set name.</li>
 <li>name: the surface name</li>
 <li>surftype: &#8216;ELEMENT&#8217; or &#8216;NODE&#8217;</li>
-<li>label: face or edge identifier (only required for surftype = &#8216;NODE&#8217;)</li>
+<li>label: face or edge identifier (only required for surftype = &#8216;ELEMENT&#8217;)</li>
 </ul>
+<p>This label can be a string, or a list of strings. This allows to use
+different identifiers for the different elements in the surface.</p>
 </dd></dl>
 
 <dl class="function">
@@ -698,20 +665,25 @@ P.elemProp(set=&#8217;STENT&#8217;,eltype=&#8217;C3D8R&#8217;,section=ElemSectio
 <li>surftype: &#8216;ELEMENT&#8217; or &#8216;NODE&#8217;</li>
 <li>label: face or edge identifier (only required for surftype = &#8216;NODE&#8217;)</li>
 </ul>
-<p>Example: P.Prop(name=&#8217;AnalySurf&#8217;, nodeset = &#8216;REFNOD&#8217;, analyticalsurface=&#8217;&#8216;)</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;AnalySurf&#39;</span><span class="p">,</span> <span class="n">nodeset</span> <span class="o">=</span> <span class="s">&#39;REFNOD&#39;</span><span class="p">,</span> <span class="n">analyticalsurface</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.fmtSurfaceInteraction">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurfaceInteraction</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format the interactions.
-Required:
--name</p>
-<p>Optional:
-- cross_section (for node based interaction)
-- friction : friction coeff or &#8216;rough&#8217;
-- surface behavior: no separation
-- surface behavior: pressureoverclosure</p>
+<dd><p>Format the interactions.</p>
+<p>Required:</p>
+<p>-name</p>
+<p>Optional:</p>
+<ul class="simple">
+<li>cross_section (for node based interaction)</li>
+<li>friction : friction coeff or &#8216;rough&#8217;</li>
+<li>surface behavior: no separation</li>
+<li>surface behavior: pressureoverclosure</li>
+</ul>
 </dd></dl>
 
 <dl class="function">
@@ -723,10 +695,14 @@ Required:
 <ul class="simple">
 <li>interaction: interaction properties : name or Dict</li>
 </ul>
-<p>Optional:
-- Exclusions (exl)
-Example:
-P.Prop(generalinteraction=Interaction(name =&#8217;contactprop1&#8217;),exl =[[&#8216;surf11&#8217;, &#8216;surf12&#8217;],[&#8216;surf21&#8217;,surf22]])</p>
+<p>Optional:</p>
+<ul class="simple">
+<li>Exclusions (exl)</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">generalinteraction</span><span class="o">=</span><span class="n">Interaction</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span><span class="s">&#39;contactprop1&#39;</span><span class="p">),</span><span class="n">exl</span> <span class="o">=</span><span class="p">[[</span><span class="s">&#39;surf11&#39;</span><span class="p">,</span> <span class="s">&#39;surf12&#39;</span><span class="p">],[</span><span class="s">&#39;surf21&#39;</span><span class="p">,</span><span class="n">surf22</span><span class="p">]])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -739,36 +715,42 @@ P.Prop(generalinteraction=Interaction(name =&#8217;contactprop1&#8217;),exl =[[&
 <li>slave: slave surface</li>
 <li>interaction: interaction properties : name or Dict</li>
 </ul>
-<p>Example:
-P.Prop(name=&#8217;contact0&#8217;,interaction=Interaction(name =&#8217;contactprop&#8217;, surfacebehavior=True, pressureoverclosure=[&#8216;hard&#8217;,&#8217;linear&#8217;,0.0, 0.0, 0.001])
-, master =&#8217;quadtubeINTSURF1&#8217;,  slave=&#8217;hexstentEXTSURF&#8217;, contacttype=&#8217;NODE TO SURFACE&#8217;)</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;contact0&#39;</span><span class="p">,</span><span class="n">interaction</span><span class="o">=</span><span class="n">Interaction</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span><span class="s">&#39;contactprop&#39;</span><span class="p">,</span> <span class="n">surfacebehavior</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">pressureoverclosure</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;hard&#39;</span><span class="p">,</span><span class="s">&#39;linear&#39;</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">]),</span> <span class="n">master</span> <span class="o">=</span><span class="s">&#39;quadtubeINTSURF1&#39;</span><span class="p">,</span>  <span class="n">slave</span><span class="o">=</span><span class="s">&#39;hexstentEXTSURF&#39;</span><span class="p">,</span> <span class="n">contacttype</span><span class="o">=</span><span class="s">&#39;NODE TO SURFACE&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.fmtConstraint">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConstraint</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtConstraint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format Tie constraint
-Required:</p>
+<dd><p>Format Tie constraint</p>
+<p>Required:</p>
 <p>-name
 -adjust (yes or no)
 -slave
 -master</p>
-<p>Optional:
--type (surf2surf, node2surf)
+<p>Optional:</p>
+<p>-type (surf2surf, node2surf)
 -no rotation</p>
-<p>Example:
-P.Prop(constraint=&#8216;1&#8217;, name = &#8216;constr1&#8217;, adjust = &#8216;no&#8217;, master = &#8216;hexstentbarSURF&#8217;, slave = &#8216;hexstentEXTSURF&#8217;,type=&#8217;NODE TO SURFACE&#8217;)</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">constraint</span><span class="o">=</span><span class="s">&#39;1&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;constr1&#39;</span><span class="p">,</span> <span class="n">adjust</span> <span class="o">=</span> <span class="s">&#39;no&#39;</span><span class="p">,</span> <span class="n">master</span> <span class="o">=</span> <span class="s">&#39;hexstentbarSURF&#39;</span><span class="p">,</span> <span class="n">slave</span> <span class="o">=</span> <span class="s">&#39;hexstentEXTSURF&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;NODE TO SURFACE&#39;</span><span class="p">)</span>    
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.fmtInitialConditions">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtInitialConditions</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtInitialConditions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format initial conditions:
-Required:
--type
+<dd><p>Format initial conditions</p>
+<p>Required:</p>
+<p>-type
 -nodes
--data
-Example: P.Prop(initialcondition=&#8217;&#8216;, nodes =&#8217;Nall&#8217;, type = &#8216;TEMPERATURE&#8217;, data = 37.)</p>
+-data</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">initialcondition</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">nodes</span> <span class="o">=</span><span class="s">&#39;Nall&#39;</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="s">&#39;TEMPERATURE&#39;</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="mf">37.</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -782,6 +764,29 @@ Example: P.Prop(initialcondition=&#8217;&#8216;, nodes =&#8217;Nall&#8217;, type
 <li>a: a first point</li>
 <li>b: a second point</li>
 </ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.fmtEquation">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtEquation</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format multi-point constraint using an equation</p>
+<p>Required:</p>
+<ul class="simple">
+<li>equation</li>
+</ul>
+<p>Equation should be a list, which contains the different terms of the equation.
+Each term is again a list with three values:</p>
+<ul class="simple">
+<li>First value: node number</li>
+<li>Second value: degree of freedom</li>
+<li>Third value: coefficient</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="n">equation</span><span class="o">=</span><span class="p">[[</span><span class="mf">209</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">32</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="o">-</span><span class="mf">1</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>This forces the displacement in Y-direction of nodes 209 and 32 to
+be equal.</p>
 </dd></dl>
 
 <dl class="function">
@@ -825,40 +830,8 @@ or a list of names the name of another already defined set.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="fe_abq.writeBoundaries">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeBoundaries</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeBoundaries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write nodal boundary conditions.</p>
-<p>prop is a list of node property records that should be scanned for
-bound attributes to write. prop contains</p>
-<p>REQUIRED
--bound  : a string (for prescribed conditions)</p>
-<blockquote>
-: a list of 6 integer (of values 0 or 1). where 1 the boundary is written 
-: a list of tuple ( )</blockquote>
-<p>OPTIONAL
--ampl     : an amplitude name
--extra    : Dict type.It has keys name equal to the ABAQUS keywords and value equal to parameter setting</p>
-<blockquote>
-if an ABAQUS keyword does not have a value to be the Dict value must be an empty string</blockquote>
-<p>By default, the boundary conditions are applied as a modification of the
-existing boundary conditions, i.e. initial conditions and conditions from
-previous steps remain in effect.</p>
-<p>EXAMPLES
-P.nodeProp(tag=&#8217;init&#8217;,set=arange(100),name=&#8217;catheter&#8217;,bound=&#8217;pinned&#8217;)</p>
-<p>P.nodeProp(tag=&#8217;init&#8217;,set=arange(100),name=&#8217;catheter&#8217;,bound=[0,1,1,0,0,0])</p>
-<p>!!!!This works like writeDisplacements
-ampname=&#8217;amp&#8217;
-times = [0,1];values = [0,1]
-amp = Amplitude(data=column_stack([times,values]))
-P.Prop(amplitude=amp,name=ampname)
-P.nodeProp(tag=&#8217;step1&#8217;,set=&#8217;catheter&#8217;,bound=[(0,5.3),(1,3.5)],ampl=ampname)</p>
-<p>extra= Dict({&#8216;user&#8217;:&#8217;&#8216;})
-P.nodeProp(tag=&#8217;step1&#8217;,set=&#8217;catheter&#8217;,bound=[(0,5.4),(1,3.5)],extra=extra)</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="fe_abq.writeDisplacements">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDisplacements</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='MOD'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDisplacements" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDisplacements</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeDisplacements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write boundary conditions of type BOUNDARY, TYPE=DISPLACEMENT</p>
 <p>prop is a list of node property records that should be scanned for
 displ attributes to write.</p>
@@ -990,35 +963,6 @@ easily call it with a Results dict as arguments</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="fe_abq.writeModelProps">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeModelProps</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeModelProps" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Write model props for this step</dt>
-<dd><dl class="first last docutils">
-<dt>extra <span class="classifier-delimiter">:</span> <span class="classifier">str </span></dt>
-<dd><p class="first">: list of Dict. each Dict is a new line.Only 2 keys are dedicated</p>
-<blockquote class="last">
-<dl class="docutils">
-<dt>REQUIRED</dt>
-<dd>-keyword =  abaqus keyword name</dd>
-<dt>OPTIONAL</dt>
-<dd><p class="first">-data = list or array of numerical data for any additional data line</p>
-<p class="last">All other keys have name equal to the ABAQUS keywords and value equal to parameter setting
-if an ABAQUS keyword does not have a value to be the Dict value must be an empty string</p>
-</dd>
-</dl>
-<p>EXAMPLE
-P.Prop(tag=&#8217;step1&#8217;,extra=&#8217;<a href="#id9"><span class="problematic" id="id10">*</span></a>CONTACT CONTROLS , AUTOMATIC TOLERANCES</p>
-</blockquote>
-</dd>
-</dl>
-</dd>
-<dt>&#8216;)</dt>
-<dd>P.Prop(tag=&#8217;step1&#8217;,extra=[Dict({&#8216;keyword&#8217;:&#8217;CONTACT CONTROLS&#8217;,&#8217;AUTOMATIC TOLERANCES&#8217;:&#8217;&#8216;})])</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="fe_abq.exportMesh">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">exportMesh</tt><big>(</big><em>filename</em>, <em>mesh</em>, <em>eltype=None</em>, <em>header=''</em><big>)</big><a class="headerlink" href="#fe_abq.exportMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a finite element mesh in Abaqus .inp format.</p>
@@ -1046,10 +990,10 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="fe.html"
-                        title="previous chapter">40. <tt class="docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
+                        title="previous chapter">41. <tt class="docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="fe_post.html"
-                        title="next chapter">42. <tt class="docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.</a></p>
+                        title="next chapter">43. <tt class="docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -1077,10 +1021,10 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fe_post.html" title="42. fe_post — A postprocessor for ABAQUS output files."
+          <a href="fe_post.html" title="43. fe_post — A postprocessor for ABAQUS output files."
              >next</a> |</li>
         <li class="right" >
-          <a href="fe.html" title="40. fe — Finite Element Models in pyFormex."
+          <a href="fe.html" title="41. fe — Finite Element Models in pyFormex."
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -1091,7 +1035,7 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

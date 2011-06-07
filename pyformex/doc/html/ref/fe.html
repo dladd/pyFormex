@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>40. fe — Finite Element Models in pyFormex. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>41. fe — Finite Element Models in pyFormex. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,10 +23,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="41. fe_abq — Exporting finite element models in Abaqus™ input file format." href="fe_abq.html" />
-    <link rel="prev" title="39. properties — General framework for attributing properties to geometrical elements." href="properties.html" /> 
+    <link rel="next" title="42. fe_abq — Exporting finite element models in Abaqus™ input file format." href="fe_abq.html" />
+    <link rel="prev" title="40. properties — General framework for attributing properties to geometrical elements." href="properties.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,10 +39,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fe_abq.html" title="41. fe_abq — Exporting finite element models in Abaqus™ input file format."
+          <a href="fe_abq.html" title="42. fe_abq — Exporting finite element models in Abaqus™ input file format."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="properties.html" title="39. properties — General framework for attributing properties to geometrical elements."
+          <a href="properties.html" title="40. properties — General framework for attributing properties to geometrical elements."
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -57,12 +57,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <p>DEBUG: Using the (slower) Python misc functions
-.. $Id$  -<em>- rst -</em>-
-.. pyformex reference manual &#8212; fe
-.. CREATED WITH py2rst.py: DO NOT EDIT</p>
-<div class="section" id="module-fe">
-<span id="fe-finite-element-models-in-pyformex"></span><span id="sec-ref-fe"></span><h1>40. <a class="reference internal" href="#module-fe" title="fe: Finite Element Models in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">fe</span></tt></a> &#8212; Finite Element Models in pyFormex.<a class="headerlink" href="#module-fe" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-fe">
+<span id="fe-finite-element-models-in-pyformex"></span><span id="sec-ref-fe"></span><h1>41. <a class="reference internal" href="#module-fe" title="fe: Finite Element Models in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">fe</span></tt></a> &#8212; Finite Element Models in pyFormex.<a class="headerlink" href="#module-fe" title="Permalink to this headline">¶</a></h1>
 <p>Finite element models are geometrical models that consist of a unique
 set of nodal coordinates and one of more sets of elements.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe</span></tt></p>
@@ -117,6 +113,26 @@ belong to the corresponding group.</p>
 <p><cite>mat</cite>: a 3x3 float matrix</p>
 <p><cite>vec</cite>: a length 3 list or array of floats</p>
 <p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.align">
+<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align the Coords along the global axes.</p>
+<p>Alignment involves a translation such that the bounding box
+of the Coords object becomes aligned on the origin of the global axes.
+The requested alignment is determined by a string of three characters,
+one for each of the coordinate axes. The character determines how
+the structure is aligned in the corresponding direction:</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
+<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
+<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+</ul>
+<p>Any other value will make the alignment in that direction unchanged.</p>
+<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
+all the points in the octant with all positive coordinate values.
+A string &#8216;000&#8217; will center the object around the origin.</p>
 </dd></dl>
 
 <dl class="method">
@@ -213,7 +229,7 @@ only include numerical operations and functions understood by the
 numpy module.
 This method is one of several mapping methods. See also map1 and mapd.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mf">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mf">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mf">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
 <span class="go">[[ 2.  3.  4.]]</span>
 </pre></div>
 </div>
@@ -247,9 +263,8 @@ a limited set of axes to calculate a 2-D or 1-D distance.
 This method is one of several mapping methods. See also
 <tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#fe.Model.map1" title="fe.Model.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
+<blockquote>
+E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])</blockquote>
 <p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
 </dd></dl>
 
@@ -340,9 +355,9 @@ In the latter case, dir (a single axis number or a list) may be given
 to specify the direction(s) to scale. The default is to produce a
 homothetic scaling.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
 <span class="go">[ 2.  2.  2.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">])</span>
 <span class="go">[ 2.  3.  4.]</span>
 </pre></div>
 </div>
@@ -461,13 +476,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -491,13 +506,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -559,7 +574,7 @@ old ones.</p>
 <dl class="function">
 <dt id="fe.mergedModel">
 <tt class="descclassname">fe.</tt><tt class="descname">mergedModel</tt><big>(</big><em>meshes</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.mergedModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the fe Model obtained from merging individual models.</p>
+<dd><p>Returns the fe Model obtained from merging individual meshes.</p>
 <p>The input arguments are (coords,elems) tuples.
 The return value is a merged fe Model.</p>
 </dd></dl>
@@ -578,10 +593,10 @@ The return value is a merged fe Model.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="properties.html"
-                        title="previous chapter">39. <tt class="docutils literal docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>
+                        title="previous chapter">40. <tt class="docutils literal docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="fe_abq.html"
-                        title="next chapter">41. <tt class="docutils literal"><span class="pre">fe_abq</span></tt> &#8212; Exporting finite element models in Abaqus™ input file format.</a></p>
+                        title="next chapter">42. <tt class="docutils literal"><span class="pre">fe_abq</span></tt> &#8212; Exporting finite element models in Abaqus™ input file format.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -609,10 +624,10 @@ The return value is a merged fe Model.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="fe_abq.html" title="41. fe_abq — Exporting finite element models in Abaqus™ input file format."
+          <a href="fe_abq.html" title="42. fe_abq — Exporting finite element models in Abaqus™ input file format."
              >next</a> |</li>
         <li class="right" >
-          <a href="properties.html" title="39. properties — General framework for attributing properties to geometrical elements."
+          <a href="properties.html" title="40. properties — General framework for attributing properties to geometrical elements."
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -623,7 +638,7 @@ The return value is a merged fe Model.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

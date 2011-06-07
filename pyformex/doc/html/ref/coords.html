@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="2. formex — Formex algebra in Python" href="formex.html" />
     <link rel="prev" title="pyFormex reference manual" href="../refman.html" /> 
@@ -57,11 +57,7 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <p>DEBUG: Using the (slower) Python misc functions
-.. $Id$  -<em>- rst -</em>-
-.. pyformex reference manual &#8212; coords
-.. CREATED WITH py2rst.py: DO NOT EDIT</p>
-<div class="section" id="module-coords">
+  <div class="section" id="module-coords">
 <span id="coords-a-structured-collection-of-3d-coordinates"></span><span id="sec-ref-coords"></span><h1>1. <a class="reference internal" href="#module-coords" title="coords: A structured collection of 3D coordinates."><tt class="xref py py-mod docutils literal"><span class="pre">coords</span></tt></a> &#8212; A structured collection of 3D coordinates.<a class="headerlink" href="#module-coords" title="Permalink to this headline">¶</a></h1>
 <p>The <a class="reference internal" href="#module-coords" title="coords: A structured collection of 3D coordinates."><tt class="xref py py-mod docutils literal"><span class="pre">coords</span></tt></a> module defines the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> class, which is the basic
 data structure in pyFormex to store the coordinates of points in a 3D space.</p>
@@ -83,11 +79,23 @@ three endpoints of the unit vectors along the axes at the origin, and
 the origin itself as fourth point.</p>
 <p>The constructor takes a (4,3) array as input. The default constructs
 the standard global Cartesian axes system:</p>
-<div class="highlight-python"><pre>1.  0.  0.
+<blockquote>
+1.  0.  0.
 0.  1.  0.
 0.  0.  1.
-0.  0.  0.</pre>
-</div>
+0.  0.  0.</blockquote>
+<dl class="method">
+<dt id="coords.CoordinateSystem.origin">
+<tt class="descname">origin</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the origin of the CoordinateSystem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.axes">
+<tt class="descname">axes</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the axes of the CoordinateSystem.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="coords.CoordinateSystem.points">
 <tt class="descname">points</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.points" title="Permalink to this definition">¶</a></dt>
@@ -125,7 +133,7 @@ its shape attribute.</p>
 The returned array has the same shape as the Coords array along
 its first ndim-1 axes.
 This is equivalent with</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mf">0</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -138,7 +146,7 @@ This is equivalent with</p>
 The returned array has the same shape as the Coords array along
 its first ndim-1 axes.
 This is equivalent with</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mf">1</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -151,7 +159,7 @@ This is equivalent with</p>
 The returned array has the same shape as the Coords array along
 its first ndim-1 axes.
 This is equivalent with</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mf">0</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -372,9 +380,9 @@ In the latter case, dir (a single axis number or a list) may be given
 to specify the direction(s) to scale. The default is to produce a
 homothetic scaling.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
 <span class="go">[ 2.  2.  2.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">])</span>
 <span class="go">[ 2.  3.  4.]</span>
 </pre></div>
 </div>
@@ -398,13 +406,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -428,13 +436,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -666,7 +674,7 @@ only include numerical operations and functions understood by the
 numpy module.
 This method is one of several mapping methods. See also map1 and mapd.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mf">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mf">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mf">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
 <span class="go">[[ 2.  3.  4.]]</span>
 </pre></div>
 </div>
@@ -700,9 +708,8 @@ a limited set of axes to calculate a 2-D or 1-D distance.
 This method is one of several mapping methods. See also
 <tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#coords.CoordinateSystem.map1" title="coords.CoordinateSystem.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
+<blockquote>
+E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])</blockquote>
 <p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
 </dd></dl>
 
@@ -936,24 +943,29 @@ You just have to make sure that the coordinates are read in order
 coordinates read is a multiple of 3.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="coords.CoordinateSystem.interpolate">
-<em class="property">classmethod </em><tt class="descname">interpolate</tt><big>(</big><em>clas</em>, <em>F</em>, <em>G</em>, <em>div</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.interpolate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">interpolate</tt><big>(</big><em>X</em>, <em>div</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.interpolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create interpolations between two <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
-<p>F and G are two <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the same shape.
-v is a list of floating point values.
-The result is the concatenation of the interpolations of F and G at all
-the values in div.
-An interpolation of F and G at value v is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> H where each
-coordinate Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
-Thus, a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> interpolate(F,G,[0.,0.5,1.0]) will contain all points of
-F and G and all points with mean coordinates between those of F and G.</p>
-<p>As a convenience, if an integer is specified for div, it is taken as a
-number of divisions for the interval [0..1].
-Thus, interpolate(F,G,n) is equivalent with
-interpolate(F,G,arange(0,n+1)/float(n))</p>
-<p>The resulting <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array has an extra axis (the first).
-Its shape is (n,) + F.shape, where n is the number of divisions.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>X</cite>: a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with same shape as <cite>self</cite>.</li>
+<li><cite>div</cite>: a list of floating point values, or an int. If an int
+is specified, a list with (div+1) values for <cite>div</cite> is created
+by dividing the interval [0..1] into <cite>div</cite> equal distances.</li>
+</ul>
+<p>Returns:</p>
+<p>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with an extra (first) axis, containing the
+concatenation of the interpolations of <cite>self</cite> and <cite>X</cite> at all
+values in <cite>div</cite>.
+Its shape is (n,) + self.shape, where n is the number of values
+in <cite>div</cite>.</p>
+<p>An interpolation of F and G at value v is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> H where
+each coordinate Hijk is obtained from:  Fijk = Fijk + v * (Gijk-Fijk).
+Thus, X.interpolate(Y,[0.,0.5,1.0]) will contain all points of
+X and Y and all points with mean coordinates between those of X and Y.</p>
+<p>F.interpolate(G,n) is equivalent with
+F.interpolate(G,arange(0,n+1)/float(n))</p>
 </dd></dl>
 
 </dd></dl>
@@ -1036,7 +1048,7 @@ its shape attribute.</p>
 The returned array has the same shape as the Coords array along
 its first ndim-1 axes.
 This is equivalent with</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mf">0</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1049,7 +1061,7 @@ This is equivalent with</p>
 The returned array has the same shape as the Coords array along
 its first ndim-1 axes.
 This is equivalent with</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mf">1</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1062,7 +1074,7 @@ This is equivalent with</p>
 The returned array has the same shape as the Coords array along
 its first ndim-1 axes.
 This is equivalent with</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="mf">0</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1283,9 +1295,9 @@ In the latter case, dir (a single axis number or a list) may be given
 to specify the direction(s) to scale. The default is to produce a
 homothetic scaling.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
 <span class="go">[ 2.  2.  2.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">])</span>
 <span class="go">[ 2.  3.  4.]</span>
 </pre></div>
 </div>
@@ -1309,13 +1321,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -1532,7 +1544,7 @@ only include numerical operations and functions understood by the
 numpy module.
 This method is one of several mapping methods. See also map1 and mapd.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mf">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mf">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mf">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
 <span class="go">[[ 2.  3.  4.]]</span>
 </pre></div>
 </div>
@@ -1566,9 +1578,8 @@ a limited set of axes to calculate a 2-D or 1-D distance.
 This method is one of several mapping methods. See also
 <tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
+<blockquote>
+E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])</blockquote>
 <p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
 </dd></dl>
 
@@ -1802,24 +1813,29 @@ You just have to make sure that the coordinates are read in order
 coordinates read is a multiple of 3.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="coords.Coords.interpolate">
-<em class="property">classmethod </em><tt class="descname">interpolate</tt><big>(</big><em>clas</em>, <em>F</em>, <em>G</em>, <em>div</em><big>)</big><a class="headerlink" href="#coords.Coords.interpolate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">interpolate</tt><big>(</big><em>X</em>, <em>div</em><big>)</big><a class="headerlink" href="#coords.Coords.interpolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create interpolations between two <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
-<p>F and G are two <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the same shape.
-v is a list of floating point values.
-The result is the concatenation of the interpolations of F and G at all
-the values in div.
-An interpolation of F and G at value v is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> H where each
-coordinate Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
-Thus, a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> interpolate(F,G,[0.,0.5,1.0]) will contain all points of
-F and G and all points with mean coordinates between those of F and G.</p>
-<p>As a convenience, if an integer is specified for div, it is taken as a
-number of divisions for the interval [0..1].
-Thus, interpolate(F,G,n) is equivalent with
-interpolate(F,G,arange(0,n+1)/float(n))</p>
-<p>The resulting <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array has an extra axis (the first).
-Its shape is (n,) + F.shape, where n is the number of divisions.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>X</cite>: a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with same shape as <cite>self</cite>.</li>
+<li><cite>div</cite>: a list of floating point values, or an int. If an int
+is specified, a list with (div+1) values for <cite>div</cite> is created
+by dividing the interval [0..1] into <cite>div</cite> equal distances.</li>
+</ul>
+<p>Returns:</p>
+<p>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with an extra (first) axis, containing the
+concatenation of the interpolations of <cite>self</cite> and <cite>X</cite> at all
+values in <cite>div</cite>.
+Its shape is (n,) + self.shape, where n is the number of values
+in <cite>div</cite>.</p>
+<p>An interpolation of F and G at value v is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> H where
+each coordinate Hijk is obtained from:  Fijk = Fijk + v * (Gijk-Fijk).
+Thus, X.interpolate(Y,[0.,0.5,1.0]) will contain all points of
+X and Y and all points with mean coordinates between those of X and Y.</p>
+<p>F.interpolate(G,n) is equivalent with
+F.interpolate(G,arange(0,n+1)/float(n))</p>
 </dd></dl>
 
 <dl class="method">
@@ -1855,13 +1871,13 @@ If a distance value is given, the translation vector is multiplied
 with this value before it is added to the coordinates.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
 <span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
@@ -1916,9 +1932,12 @@ coordinate values, the second has the maximal ones.</dd>
 <p>At each point of the curve, a copy of the Coords object is created, with
 its origin in the curve&#8217;s point, and its normal along the curve&#8217;s direction.
 In case of a PolyLine, directions are pointing to the next point by default.
-If avgdir==True, average directions are taken at the intermediate points.
-Missing end directions can explicitely be set by enddir, and are by default
+If avgdir==True, average directions are taken at the intermediate points
+avgdir can also be an array like sequence of shape (N,3) to explicitely set the 
+the directions for ALL the points of the path</p>
+<p>Missing end directions can explicitely be set by enddir, and are by default
 taken along the last segment.
+enddir is a list of 2 array like values of shape (3). one of the two can also be an empty list
 If the curve is closed, endpoints are treated as any intermediate point,
 and the user should normally not specify enddir.</p>
 <p>At each point of the curve, the original Coords object can be scaled in x
@@ -1945,7 +1964,7 @@ the curve.</p>
                         title="previous chapter">pyFormex reference manual</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="formex.html"
-                        title="next chapter">2. <tt class="docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
+                        title="next chapter">2. <tt class="docutils literal docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -1987,7 +2006,7 @@ the curve.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

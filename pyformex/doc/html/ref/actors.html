@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>16. actors — OpenGL actors for populating the 3D scene. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>17. actors — OpenGL actors for populating the 3D scene. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,10 +23,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="17. decors — 2D decorations for the OpenGL canvas." href="decors.html" />
-    <link rel="prev" title="15. colorscale — Color mapping of a range of values." href="colorscale.html" /> 
+    <link rel="next" title="18. decors — 2D decorations for the OpenGL canvas." href="decors.html" />
+    <link rel="prev" title="16. colorscale — Color mapping of a range of values." href="colorscale.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,10 +39,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="decors.html" title="17. decors — 2D decorations for the OpenGL canvas."
+          <a href="decors.html" title="18. decors — 2D decorations for the OpenGL canvas."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="colorscale.html" title="15. colorscale — Color mapping of a range of values."
+          <a href="colorscale.html" title="16. colorscale — Color mapping of a range of values."
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -57,17 +57,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <p>DEBUG: Using the (slower) Python misc functions
-DEBUG: Using the (slower) Python misc functions
-.. $Id$  -<em>- rst -</em>-
-.. pyformex reference manual &#8212; actors
-.. CREATED WITH py2rst.py: DO NOT EDIT</p>
-<div class="section" id="module-actors">
-<span id="actors-opengl-actors-for-populating-the-3d-scene"></span><span id="sec-ref-actors"></span><h1>16. <a class="reference internal" href="#module-actors" title="actors: OpenGL actors for populating the 3D scene."><tt class="xref py py-mod docutils literal"><span class="pre">actors</span></tt></a> &#8212; OpenGL actors for populating the 3D scene.<a class="headerlink" href="#module-actors" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-actors">
+<span id="actors-opengl-actors-for-populating-the-3d-scene"></span><span id="sec-ref-actors"></span><h1>17. <a class="reference internal" href="#module-actors" title="actors: OpenGL actors for populating the 3D scene."><tt class="xref py py-mod docutils literal"><span class="pre">actors</span></tt></a> &#8212; OpenGL actors for populating the 3D scene.<a class="headerlink" href="#module-actors" title="Permalink to this headline">¶</a></h1>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">actors</span></tt></p>
 <dl class="class">
 <dt id="actors.Actor">
-<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">Actor</tt><a class="headerlink" href="#actors.Actor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">actors.</tt><tt class="descname">Actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#actors.Actor" title="Permalink to this definition">¶</a></dt>
 <dd><p>An Actor is anything that can be drawn in an OpenGL 3D Scene.</p>
 <p>The visualisation of the Scene Actors is dependent on camera position and
 angles, clipping planes, rendering mode and lighting.</p>
@@ -433,18 +428,6 @@ draw_planes = False suppress the drawing of the coordinate planes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="actors.GeomActor.setLineWidth">
-<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the linewidth of the Actor.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="actors.GeomActor.setLineStipple">
-<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the linewidth of the Actor.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="actors.GeomActor.setColor">
 <tt class="descname">setColor</tt><big>(</big><em>color</em>, <em>colormap=None</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the color of the Actor.</p>
@@ -489,6 +472,18 @@ one with mode=&#8217;wireframe&#8217; and color=black, and one with mode=mode[:-
 of its parent, but the eltype will be retained.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="actors.GeomActor.setLineWidth">
+<tt class="descname">setLineWidth</tt><big>(</big><em>linewidth</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="actors.GeomActor.setLineStipple">
+<tt class="descname">setLineStipple</tt><big>(</big><em>linestipple</em><big>)</big><a class="headerlink" href="#actors.GeomActor.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the linewidth of the Actor.</p>
+</dd></dl>
+
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">actors</span></tt></p>
@@ -506,10 +501,10 @@ of its parent, but the eltype will be retained.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="colorscale.html"
-                        title="previous chapter">15. <tt class="docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
+                        title="previous chapter">16. <tt class="docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="decors.html"
-                        title="next chapter">17. <tt class="docutils literal"><span class="pre">decors</span></tt> &#8212; 2D decorations for the OpenGL canvas.</a></p>
+                        title="next chapter">18. <tt class="docutils literal"><span class="pre">decors</span></tt> &#8212; 2D decorations for the OpenGL canvas.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -537,10 +532,10 @@ of its parent, but the eltype will be retained.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="decors.html" title="17. decors — 2D decorations for the OpenGL canvas."
+          <a href="decors.html" title="18. decors — 2D decorations for the OpenGL canvas."
              >next</a> |</li>
         <li class="right" >
-          <a href="colorscale.html" title="15. colorscale — Color mapping of a range of values."
+          <a href="colorscale.html" title="16. colorscale — Color mapping of a range of values."
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -551,7 +546,7 @@ of its parent, but the eltype will be retained.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

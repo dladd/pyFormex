@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyFormex example scripts &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>pyFormex example scripts &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="index.html" />
     <link rel="next" title="pyFormex reference manual" href="refman.html" />
     <link rel="prev" title="pyFormex FAQ ‘n TRICKS" href="faq.html" /> 
   </head>
@@ -71,7 +71,7 @@ distribution.</p>
 <p>To get acquainted with the modus operandi of pyFormex,
 the <tt class="file docutils literal"><span class="pre">WireStent.py</span></tt> script is studied step by step. The lines are numbered
 for easy referencing, but are not part of the script itself.</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><pre>  1
   2
   3
   4
@@ -189,7 +189,7 @@ for easy referencing, but are not part of the script itself.</p>
 116
 117
 118
-119</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex --gui</span>
+119</pre></td><td class="code"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex --gui</span>
 <span class="sd">&quot;&quot;&quot;Wirestent.py</span>
 
 <span class="sd">A pyFormex script to generate a geometrical model of a wire stent.</span>
@@ -226,31 +226,31 @@ for easy referencing, but are not part of the script itself.</p>
 <span class="sd">    other with property 3. The connectors have property 2. The wire</span>
 <span class="sd">    set with property 1 is winding positively around the z-axis.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">De</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">be</span><span class="p">,</span><span class="n">ds</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">nb</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">connectors</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">De</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">be</span><span class="p">,</span><span class="n">ds</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">nb</span><span class="o">=</span><span class="mf">4</span><span class="p">,</span><span class="n">connectors</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create the Wire Stent.&quot;&quot;&quot;</span>
-        <span class="n">D</span> <span class="o">=</span> <span class="n">De</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">d</span> <span class="o">-</span> <span class="n">ds</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">De</span> <span class="o">-</span> <span class="mf">2</span><span class="o">*</span><span class="n">d</span> <span class="o">-</span> <span class="n">ds</span>
         <span class="n">r</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">D</span>
         <span class="n">dz</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">ds</span><span class="o">+</span><span class="n">d</span><span class="p">)</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">D</span><span class="o">*</span><span class="n">tand</span><span class="p">(</span><span class="n">be</span><span class="p">)</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
         <span class="n">ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">nx</span><span class="o">*</span><span class="n">L</span><span class="o">/</span><span class="n">p</span><span class="p">))</span>  <span class="c"># The actual length may differ a bit from L</span>
         <span class="c"># a single bumped strut, oriented along the x-axis</span>
-        <span class="n">bump_z</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">1.</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">nb</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;1&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">replic</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">bump1</span><span class="p">(</span><span class="mi">2</span><span class="p">,[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="n">dz</span><span class="p">],</span><span class="n">bump_z</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">bump_z</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">1.</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">nb</span><span class="p">)</span><span class="o">**</span><span class="mf">2</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;1&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">replic</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">bump1</span><span class="p">(</span><span class="mf">2</span><span class="p">,[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="n">dz</span><span class="p">],</span><span class="n">bump_z</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span>
         <span class="c"># scale back to size 1.</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">1.</span><span class="o">/</span><span class="n">nb</span><span class="p">,</span><span class="mf">1.</span><span class="o">/</span><span class="n">nb</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
         <span class="c"># NE and SE directed struts</span>
-        <span class="n">NE</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">shear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
-        <span class="n">SE</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">shear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
-        <span class="n">NE</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">SE</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">NE</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">shear</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+        <span class="n">SE</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span><span class="o">.</span><span class="n">shear</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
+        <span class="n">NE</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
+        <span class="n">SE</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mf">3</span><span class="p">)</span>
         <span class="c"># a unit cell of crossing struts</span>
-        <span class="n">cell1</span> <span class="o">=</span> <span class="p">(</span><span class="n">NE</span><span class="o">+</span><span class="n">SE</span><span class="p">)</span><span class="o">.</span><span class="n">rosette</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">180</span><span class="p">)</span>
+        <span class="n">cell1</span> <span class="o">=</span> <span class="p">(</span><span class="n">NE</span><span class="o">+</span><span class="n">SE</span><span class="p">)</span><span class="o">.</span><span class="n">rosette</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">180</span><span class="p">)</span>
         <span class="c"># add a connector between first points of NE and SE</span>
         <span class="k">if</span> <span class="n">connectors</span><span class="p">:</span>
-            <span class="n">cell1</span> <span class="o">+=</span> <span class="n">Formex</span><span class="p">([[</span><span class="n">NE</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">SE</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]],</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">cell1</span> <span class="o">+=</span> <span class="n">Formex</span><span class="p">([[</span><span class="n">NE</span><span class="p">[</span><span class="mf">0</span><span class="p">][</span><span class="mf">0</span><span class="p">],</span><span class="n">SE</span><span class="p">[</span><span class="mf">0</span><span class="p">][</span><span class="mf">0</span><span class="p">]]],</span><span class="mf">2</span><span class="p">)</span>
         <span class="c"># and create its mirror</span>
-        <span class="n">cell2</span> <span class="o">=</span> <span class="n">cell1</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">cell2</span> <span class="o">=</span> <span class="n">cell1</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
         <span class="c"># and move both to appropriate place</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell1</span> <span class="o">=</span> <span class="n">cell1</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell2</span> <span class="o">=</span> <span class="n">cell2</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
@@ -260,7 +260,7 @@ for easy referencing, but are not part of the script itself.</p>
         <span class="n">dy</span> <span class="o">=</span> <span class="mf">4.</span>
         <span class="n">F</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell1</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">cell2</span><span class="p">)</span><span class="o">.</span><span class="n">replic2</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
         <span class="c"># fold it into a cylinder</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">F</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="n">r</span><span class="p">])</span><span class="o">.</span><span class="n">cylindrical</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">scale</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">360.</span><span class="o">/</span><span class="p">(</span><span class="n">nx</span><span class="o">*</span><span class="n">dx</span><span class="p">),</span><span class="n">p</span><span class="o">/</span><span class="n">nx</span><span class="o">/</span><span class="n">dy</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">F</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="n">r</span><span class="p">])</span><span class="o">.</span><span class="n">cylindrical</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],</span><span class="n">scale</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">360.</span><span class="o">/</span><span class="p">(</span><span class="n">nx</span><span class="o">*</span><span class="n">dx</span><span class="p">),</span><span class="n">p</span><span class="o">/</span><span class="n">nx</span><span class="o">/</span><span class="n">dy</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ny</span> <span class="o">=</span> <span class="n">ny</span>
 
     <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -278,7 +278,7 @@ for easy referencing, but are not part of the script itself.</p>
     <span class="n">D</span> <span class="o">=</span> <span class="mf">10.</span>
     <span class="n">L</span> <span class="o">=</span> <span class="mf">80.</span>
     <span class="n">d</span> <span class="o">=</span> <span class="mf">0.2</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mf">12</span>
     <span class="n">b</span> <span class="o">=</span> <span class="mf">30.</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">askItems</span><span class="p">([[</span><span class="s">&#39;Diameter&#39;</span><span class="p">,</span><span class="n">D</span><span class="p">],</span>
                     <span class="p">[</span><span class="s">&#39;Length&#39;</span><span class="p">,</span><span class="n">L</span><span class="p">],</span>
@@ -293,7 +293,7 @@ for easy referencing, but are not part of the script itself.</p>
     <span class="n">L</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s">&#39;Length&#39;</span><span class="p">])</span>
     <span class="n">d</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s">&#39;WireDiam&#39;</span><span class="p">])</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s">&#39;NWires&#39;</span><span class="p">])</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mf">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">:</span>
         <span class="n">warning</span><span class="p">(</span><span class="s">&#39;Number of wires must be even!&#39;</span><span class="p">)</span>
         <span class="nb">exit</span><span class="p">()</span>
     <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s">&#39;Pitch&#39;</span><span class="p">])</span>
@@ -326,337 +326,17 @@ its aim and functioning (lines 11-37).</p>
 <p>The constructor <tt class="docutils literal"><span class="pre">__init__</span></tt> of the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class requires 8
 arguments (line 38):</p>
 <ul class="simple">
-<li>stent external diameter <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- (mm).</li>
-<li>stent length <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">L</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- (mm).</li>
-<li>wire diameter <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">d</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- (mm).</li>
+<li>stent external diameter <img class="math" src="_images/math/80c2d7b999148a9a1b9740bd873c5365df7f461a.png" alt="De"/> (mm).</li>
+<li>stent length <img class="math" src="_images/math/859ccf4cd60c7bc6b8fa1afc9a42dc811a826d6f.png" alt="L"/> (mm).</li>
+<li>wire diameter <img class="math" src="_images/math/96ab646de7704969b91c76a214126b45f2b07b25.png" alt="d"/> (mm).</li>
 <li>Number of wires in one spiral set, i.e. wires with the same orientation,
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">nx</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- (-).</li>
-<li>Pitch angle <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">\beta</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- (<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">\deg</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-).</li>
-<li>Extra radial distance between the crossing wires <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">ds</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- (mm). By default,
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">ds</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- is [0.0]mm for crossing wires, corresponding with a centre line
-distance between two crossing wires of exactly <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">d</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-.</li>
+<img class="math" src="_images/math/435f3a43ae59ed41768ef39b59d4515a9f150105.png" alt="nx"/> (-).</li>
+<li>Pitch angle <img class="math" src="_images/math/fdb63b9e51abe6bbb16acfb5d7b773ddbb5bf4a8.png" alt="\beta"/> (<img class="math" src="_images/math/09ddb817441a1323731ea0677596957f28faea46.png" alt="\deg"/>).</li>
+<li>Extra radial distance between the crossing wires <img class="math" src="_images/math/804a8d1c4e19e5a78fd601c01cc26e9f07e44f66.png" alt="ds"/> (mm). By default,
+<img class="math" src="_images/math/804a8d1c4e19e5a78fd601c01cc26e9f07e44f66.png" alt="ds"/> is [0.0]mm for crossing wires, corresponding with a centre line
+distance between two crossing wires of exactly <img class="math" src="_images/math/96ab646de7704969b91c76a214126b45f2b07b25.png" alt="d"/>.</li>
 <li>Number of elements in a strut, i.e. part of a wire between two crossings,
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">nb</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- (-). As every base element is a straight line, multiple elements are
+<img class="math" src="_images/math/7597d11a42c06a95deb9a54a84b717f1571d7c2c.png" alt="nb"/> (-). As every base element is a straight line, multiple elements are
 required to approximate the curvature of the stent wires. The default value of 4
 elements in a strut is a good assumption.</li>
 <li>If <tt class="docutils literal"><span class="pre">connectors=True</span></tt>, extra elements are created at the positions where
@@ -673,474 +353,26 @@ structure, which is easily parametric adaptable.</p>
 <h3>Creating the base module<a class="headerlink" href="#creating-the-base-module" title="Permalink to this headline">¶</a></h3>
 <p>(lines 40-48)</p>
 <p>Depending on the specified arguments in the constructor, the mean stent diameter
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">D</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-, the average stent radius <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">r</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-, the <tt class="docutils literal"><span class="pre">bump</span></tt> or curvature of the
-wires <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">dz</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-, the pitch <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">p</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- and the number of base modules in the
-axial direction <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">ny</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- are calculated with the following script. As the wire
+<img class="math" src="_images/math/9ffb448918db29f2a72f8f87f421b3b3cad18f95.png" alt="D"/>, the average stent radius <img class="math" src="_images/math/b55ca7a0aa88ab7d58f4fc035317fdac39b17861.png" alt="r"/>, the <tt class="docutils literal"><span class="pre">bump</span></tt> or curvature of the
+wires <img class="math" src="_images/math/b4f7f56319a1ec5982ca6ee623972e083fcd0fba.png" alt="dz"/>, the pitch <img class="math" src="_images/math/36f73fc1312ee0349b3f3a0f3bd9eb5504339011.png" alt="p"/> and the number of base modules in the
+axial direction <img class="math" src="_images/math/46587de496607a13f873f771a0964285cbe8f638.png" alt="ny"/> are calculated with the following script. As the wire
 stent structure is obtained by braiding, the wires have an undulating course and
 the <tt class="docutils literal"><span class="pre">bump</span> <span class="pre">dz</span></tt> corresponds to the amplitude of the wave. If no extra distance
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">ds</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- is specified, there will be exactly one wire diameter between the
+<img class="math" src="_images/math/804a8d1c4e19e5a78fd601c01cc26e9f07e44f66.png" alt="ds"/> is specified, there will be exactly one wire diameter between the
 centre lines of the crossing wires. The number of modules in the axial direction
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">ny</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- is an integer, therefore, the actual length of the stent model might
-differ slightly from the specified, desired length <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">L</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-. However, this
+<img class="math" src="_images/math/46587de496607a13f873f771a0964285cbe8f638.png" alt="ny"/> is an integer, therefore, the actual length of the stent model might
+differ slightly from the specified, desired length <img class="math" src="_images/math/859ccf4cd60c7bc6b8fa1afc9a42dc811a826d6f.png" alt="L"/>. However, this
 difference has a negligible impact on the numerical results.</p>
 <p>Of now, all parameters to describe the stent geometry are specified and
 available to start the construction of the wire stent. Initially a simple Formex
 is created using the <tt class="docutils literal"><span class="pre">pattern()</span></tt>-function: a straigth line segment of length
-1 oriented along the X-axis (East or <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">1</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
--direction). The <tt class="docutils literal"><span class="pre">replic()</span></tt>-functionality replicates this line segment <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">nb</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- times with step 1 in the
-X-direction (<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">0</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
--direction). Subsequently, these <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">nb</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- line
+1 oriented along the X-axis (East or <img class="math" src="_images/math/dce34f4dfb2406144304ad0d6106c5382ddd1446.png" alt="1"/>-direction). The <tt class="docutils literal"><span class="pre">replic()</span></tt>-functionality replicates this line segment <img class="math" src="_images/math/7597d11a42c06a95deb9a54a84b717f1571d7c2c.png" alt="nb"/> times with step 1 in the
+X-direction (<img class="math" src="_images/math/bc1f9d9bf8a1b606a4188b5ce9a2af1809e27a89.png" alt="0"/>-direction). Subsequently, these <img class="math" src="_images/math/7597d11a42c06a95deb9a54a84b717f1571d7c2c.png" alt="nb"/> line
 segments form a new Formex which is given a one-dimensional <tt class="docutils literal"><span class="pre">bump</span></tt> with the
 <tt class="docutils literal"><span class="pre">bump1()</span></tt>-function. The Formex undergoes a deformation in the Z-direction
-(<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">2</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
--direction), forced by the point <tt class="docutils literal"><span class="pre">[0,0,dz]</span></tt>. The <tt class="docutils literal"><span class="pre">bump</span></tt>
+(<img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/>-direction), forced by the point <tt class="docutils literal"><span class="pre">[0,0,dz]</span></tt>. The <tt class="docutils literal"><span class="pre">bump</span></tt>
 intensity is specified by the quadratic <tt class="docutils literal"><span class="pre">bump_z</span></tt> function and varies along the
-X-axis (<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">0</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
--axis). The creation of this single bumped strut, oriented
+X-axis (<img class="math" src="_images/math/bc1f9d9bf8a1b606a4188b5ce9a2af1809e27a89.png" alt="0"/>-axis). The creation of this single bumped strut, oriented
 along the X-axis is summarized in the next script and depicted in figures
 <a class="reference internal" href="#fig-straight"><em>A straight line segment</em></a>, <a class="reference internal" href="#fig-replicated"><em>The line segment with replications</em></a> and <a class="reference internal" href="#fig-bumped"><em>A bumped line segment</em></a>,.</p>
 <div class="figure align-center" id="fig-straight">
@@ -1157,245 +389,21 @@ along the X-axis is summarized in the next script and depicted in figures
 </div>
 <p>The single bumped strut (<tt class="docutils literal"><span class="pre">base</span></tt>) is rescaled homothetically in the XY-plane to
 size one with the <tt class="docutils literal"><span class="pre">scale()</span></tt>-function. Subsequently, the <tt class="docutils literal"><span class="pre">shear()</span></tt>-functionality generates a new <tt class="docutils literal"><span class="pre">NE</span></tt> Formex by skewing the <tt class="docutils literal"><span class="pre">base</span></tt> Formex in
-the Y-direction (<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">1</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
--direction) with a <tt class="docutils literal"><span class="pre">skew</span></tt> factor of <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">1</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- in
+the Y-direction (<img class="math" src="_images/math/dce34f4dfb2406144304ad0d6106c5382ddd1446.png" alt="1"/>-direction) with a <tt class="docutils literal"><span class="pre">skew</span></tt> factor of <img class="math" src="_images/math/dce34f4dfb2406144304ad0d6106c5382ddd1446.png" alt="1"/> in
 the YX-plane. As a result, the Y-coordinates of the <tt class="docutils literal"><span class="pre">base</span></tt> Formex are altered
-according to the following rule: <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">y_2 = y_1 + skew \* x_1</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-. Similarly a
+according to the following rule: <img class="math" src="_images/math/1976493054d4291e9f39a772ddeac0b5e7779389.png" alt="y_2 = y_1 + skew \* x_1"/>. Similarly a
 <tt class="docutils literal"><span class="pre">SE</span></tt> Formex is generated by a <tt class="docutils literal"><span class="pre">shear()</span></tt> operation on a mirrored copy of the
 <tt class="docutils literal"><span class="pre">base</span></tt> Formex. The <tt class="docutils literal"><span class="pre">base</span></tt> copy, mirrored in the direction of the XY-plane
-(perpendicular to the <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">2</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
--axis), is obtained by the <tt class="docutils literal"><span class="pre">reflect()</span></tt>
+(perpendicular to the <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/>-axis), is obtained by the <tt class="docutils literal"><span class="pre">reflect()</span></tt>
 command. Both Formices are given a different property number by the
 <tt class="docutils literal"><span class="pre">setProp()</span></tt>-function, visualised by the different color codes in Figure
 <a class="reference internal" href="#fig-unit-cell"><em>Unit cell of crossing wires and connectors</em></a> This number can be used as an entry in a database, which holds some
 sort of property. The Formex and the database are two seperate entities, only
 linked by the property numbers. The <tt class="docutils literal"><span class="pre">rosette()</span></tt>-function creates a unit cell
-of crossing struts by <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">2</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- rotational replications with an angular step of
+of crossing struts by <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> rotational replications with an angular step of
 [180]:math:<cite>deg</cite> around the Z-axis (the original Formex is the first of the
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">2</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- replicas). If specified in the constructor, an additional Formex with
-property <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">2</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- connects the first points of the <tt class="docutils literal"><span class="pre">NE</span></tt> and <tt class="docutils literal"><span class="pre">SE</span></tt> Formices.</p>
+<img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> replicas). If specified in the constructor, an additional Formex with
+property <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> connects the first points of the <tt class="docutils literal"><span class="pre">NE</span></tt> and <tt class="docutils literal"><span class="pre">SE</span></tt> Formices.</p>
 <p>(lines 49-61)</p>
 <div class="figure align-center" id="fig-rescaled">
 <img alt="rescaled bumped line segment" src="_images/WireStentDemot2Step04.png" style="width: 300px;" />
@@ -1435,136 +443,8 @@ use is impossible with local variables, such as for example the <tt class="docut
 <h3>Full nearly planar pattern<a class="headerlink" href="#full-nearly-planar-pattern" title="Permalink to this headline">¶</a></h3>
 <p>The fully nearly planar pattern is obtained by copying the base module in two
 directions and shown in Figure <a class="reference internal" href="#fig-full-plane"><em>Full planar topology</em></a>. <tt class="docutils literal"><span class="pre">replic2()</span></tt> generates this
-pattern with <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">nx</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- and <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">ny</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- replications with steps <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">dx</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- and
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">dy</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- in respectively, the default X- and Y-direction.</p>
+pattern with <img class="math" src="_images/math/435f3a43ae59ed41768ef39b59d4515a9f150105.png" alt="nx"/> and <img class="math" src="_images/math/46587de496607a13f873f771a0964285cbe8f638.png" alt="ny"/> replications with steps <img class="math" src="_images/math/953640113c8002037caa26af92570f9cb7d5773c.png" alt="dx"/> and
+<img class="math" src="_images/math/5a687ff25b068f70b5def1fdb4f1c49344997391.png" alt="dy"/> in respectively, the default X- and Y-direction.</p>
 <p>(lines 67-70)</p>
 <div class="figure align-center" id="fig-full-plane">
 <img alt="Full planar topology" src="_images/WireStentDemot2Step12.png" style="width: 300px;" />
@@ -1577,177 +457,17 @@ Transcript written on math.log.
 </div>
 <div class="section" id="cylindrical-stent-structure">
 <h3>Cylindrical stent structure<a class="headerlink" href="#cylindrical-stent-structure" title="Permalink to this headline">¶</a></h3>
-<p>Finally the full pattern is translated over the stent radius <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">r</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- in
+<p>Finally the full pattern is translated over the stent radius <img class="math" src="_images/math/b55ca7a0aa88ab7d58f4fc035317fdac39b17861.png" alt="r"/> in
 Z-direction and transformed to the cylindrical stent structure by a coordinate
-transformation with the Z-coordinates as distance <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">r</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-, the X-coordinates
-as angle <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">\theta</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- and the Y-coordinates as height <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">z</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-. The
+transformation with the Z-coordinates as distance <img class="math" src="_images/math/b55ca7a0aa88ab7d58f4fc035317fdac39b17861.png" alt="r"/>, the X-coordinates
+as angle <img class="math" src="_images/math/52e8ed7a3ba22130ad3984eb2cd413406475a689.png" alt="\theta"/> and the Y-coordinates as height <img class="math" src="_images/math/b13f21416d84e13708696f34dea81026cda583c9.png" alt="z"/>. The
 <tt class="docutils literal"><span class="pre">scale()</span></tt>-operator rescales the stent structure to the correct circumference
 and length. The resulting stent geometry is depicted in Figure <a class="reference internal" href="#fig-stent"><em>Cylindrical stent</em></a>.</p>
 <p>(lines 71-73)</p>
 <p>In addition to the stent initialization, the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class script
 contains a function <tt class="docutils literal"><span class="pre">all()</span></tt> representing the complete stent Formex.
 Consequently, the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class has four attributes: the Formices
-<tt class="docutils literal"><span class="pre">cell1</span></tt>, <tt class="docutils literal"><span class="pre">cell2</span></tt> and <tt class="docutils literal"><span class="pre">all</span></tt>; and the number <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">ny</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-.</p>
+<tt class="docutils literal"><span class="pre">cell1</span></tt>, <tt class="docutils literal"><span class="pre">cell2</span></tt> and <tt class="docutils literal"><span class="pre">all</span></tt>; and the number <img class="math" src="_images/math/46587de496607a13f873f771a0964285cbe8f638.png" alt="ny"/>.</p>
 <div class="figure align-center" id="fig-stent">
 <img alt="cylindrical stent" src="_images/WireStentDemot2Step16.png" style="width: 300px;" />
 <p class="caption">Cylindrical stent</p>
@@ -1765,398 +485,46 @@ generating lots of variations on the original geometry. This is a huge advantage
 for parametric analyses and illustrated in figures
 <a class="reference internal" href="#fig-stent-d16l40d22n6b25"><em>Stent variant with </em></a>: these wire
 stents are all created with the same script, but with other values of the
-parameters <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-, <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">nx</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
- and <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">\beta</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-. As the script for building
+parameters <img class="math" src="_images/math/80c2d7b999148a9a1b9740bd873c5365df7f461a.png" alt="De"/>, <img class="math" src="_images/math/435f3a43ae59ed41768ef39b59d4515a9f150105.png" alt="nx"/> and <img class="math" src="_images/math/fdb63b9e51abe6bbb16acfb5d7b773ddbb5bf4a8.png" alt="\beta"/>. As the script for building
 the wire stent geometry is defined as a the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class in the
 (<tt class="file docutils literal"><span class="pre">WireStent.py</span></tt>) script, it can easily be imported for e.g. this purpose.</p>
 <div class="figure align-center" id="fig-stent-d16l40d22n6b25">
 <img alt="Stent variant" src="_images/WireStentD16L40d22n6b25.png" style="width: 300px;" />
-<p class="caption">Stent variant with <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De=16, nx=6, \beta=25</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-</p>
+<p class="caption">Stent variant with <img class="math" src="_images/math/dd5e3857ae21daa6c9c4521d45e2e09454c847f0.png" alt="De=16, nx=6, \beta=25"/></p>
 </div>
 <div class="figure align-center" id="fig-stent-d16l40d22n6b50">
 <img alt="Stent variant" src="_images/WireStentD16L40d22n6b50.png" style="width: 300px;" />
-<p class="caption">Stent variant with <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De=16, nx=6, \beta=50</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-</p>
+<p class="caption">Stent variant with <img class="math" src="_images/math/a3dfc30029c4ca579f65947e1858a05ae1233659.png" alt="De=16, nx=6, \beta=50"/></p>
 </div>
 <div class="figure align-center" id="fig-stent-d16l40d22n10b25">
 <img alt="Stent variant" src="_images/WireStentD16L40d22n10b25.png" style="width: 300px;" />
-<p class="caption">Stent variant with <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De=16, nx=10, \beta=25</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-</p>
+<p class="caption">Stent variant with <img class="math" src="_images/math/9f3bdd8f54a9a2d46c769410f286bff8646a4d7a.png" alt="De=16, nx=10, \beta=25"/></p>
 </div>
 <div class="figure align-center" id="fig-stent-d16l40d22n10b50">
 <img alt="Stent variant" src="_images/WireStentD16L40d22n10b50.png" style="width: 300px;" />
-<p class="caption">Stent variant with <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De=16, nx=10, \beta=50</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-</p>
+<p class="caption">Stent variant with <img class="math" src="_images/math/55aaa8741e5126c197bd3a986f46165e15d7bf19.png" alt="De=16, nx=10, \beta=50"/></p>
 </div>
 <div class="figure align-center" id="fig-stent-d32l40d22n6b25">
 <img alt="Stent variant" src="_images/WireStentD32L40d22n6b25.png" style="width: 300px;" />
-<p class="caption">Stent variant with <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De=32, nx=6, \beta=25</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-</p>
+<p class="caption">Stent variant with <img class="math" src="_images/math/6ab77f0909f9e9426fbe827c5e805a87aa1e6fa4.png" alt="De=32, nx=6, \beta=25"/></p>
 </div>
 <div class="figure align-center" id="fig-stent-d32l40d22n6b50">
 <img alt="Stent variant" src="_images/WireStentD32L40d22n6b50.png" style="width: 300px;" />
-<p class="caption">Stent variant with <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De=32, nx=6, \beta=50</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-</p>
+<p class="caption">Stent variant with <img class="math" src="_images/math/2aeee926bd2d6bbe822ad1871a424e07bad899a5.png" alt="De=32, nx=6, \beta=50"/></p>
 </div>
 <div class="figure align-center" id="fig-stent-d32l40d22n10b25">
 <img alt="Stent variant" src="_images/WireStentD32L40d22n10b25.png" style="width: 300px;" />
-<p class="caption">Stent variant with <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De=32, nx=10, \beta=25</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-</p>
+<p class="caption">Stent variant with <img class="math" src="_images/math/a6b32b71d40ef0cc4f92e0493a2f3db800b8d2a1.png" alt="De=32, nx=10, \beta=25"/></p>
 </div>
 <div class="figure align-center" id="fig-stent-d32l40d22n10b50">
 <img alt="Stent variant" src="_images/WireStentD32L40d22n10b50.png" style="width: 300px;" />
-<p class="caption">Stent variant with <div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">De=32, nx=10, \beta=50</tt>)</p>
-latex exited with error:
-[stderr]
-
-[stdout]
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian)
- restricted \write18 enabled.
-entering extended mode
-(./math.tex
-LaTeX2e &lt;2009/09/24&gt;
-Babel &lt;v3.8l&gt; and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, loaded.
-(/usr/share/texmf-texlive/tex/latex/base/article.cls
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texmf-texlive/tex/latex/base/size12.clo))
-(/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
-
-! LaTeX Error: File `utf8x.def&#8217; not found.
-
-Type X to quit or &lt;RETURN&gt; to proceed,
-or enter new name. (Default extension: def)
-
-Enter file name: 
-! Emergency stop.
-&lt;read *&gt; 
-         
-l.131 \endinput
-               ^^M
-No pages of output.
-Transcript written on math.log.
-</div>
-</p>
+<p class="caption">Stent variant with <img class="math" src="_images/math/03093f6aafd62c55673071ae075bcc438f87e571.png" alt="De=32, nx=10, \beta=50"/></p>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">examples.WireStent</span> <span class="kn">import</span> <span class="n">DoubleHelixStent</span>
 
 <span class="k">for</span> <span class="n">De</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">16.</span><span class="p">,</span><span class="mf">32.</span><span class="p">]:</span>
-    <span class="k">for</span> <span class="n">nx</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">]:</span>
-        <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">50</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">nx</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">6</span><span class="p">,</span><span class="mf">10</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">25</span><span class="p">,</span><span class="mf">50</span><span class="p">]:</span>
             <span class="n">stent</span> <span class="o">=</span> <span class="n">DoubleHelixStent</span><span class="p">(</span><span class="n">De</span><span class="p">,</span><span class="mf">40.</span><span class="p">,</span><span class="mf">0.22</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="n">draw</span><span class="p">(</span><span class="n">stent</span><span class="p">,</span><span class="n">view</span><span class="o">=</span><span class="s">&#39;iso&#39;</span><span class="p">)</span>
             <span class="n">pause</span><span class="p">()</span>
@@ -2296,7 +664,7 @@ is 9.19 mm.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

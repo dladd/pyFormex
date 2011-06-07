@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>8. connectivity — A class and functions for handling nodal connectivity. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>8. connectivity — A class and functions for handling nodal connectivity. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="9. simple — Predefined geometries with a simple shape." href="simple.html" />
     <link rel="prev" title="7. geometry — A generic interface to the Coords transformation methods" href="geometry.html" /> 
@@ -85,7 +85,7 @@ numbers are called <cite>degenerate</cite> elements.
 Rows containing the same node sets, albeit different permutations thereof,
 are called &#8216;double&#8217;s.</p>
 <p>A new Connectivity object is created with the following syntax</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Connectivity</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span><span class="n">dtyp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">nplex</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Connectivity</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[],</span><span class="n">dtyp</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">nplex</span><span class="o">=</span><span class="mf">0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Parameters:</p>
@@ -103,7 +103,7 @@ An error will be raised if the specified data do not match the
 specified plexitude.</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">3</span><span class="p">]])</span>
 <span class="go">[[0 1 2]</span>
 <span class="go"> [0 1 3]</span>
 <span class="go"> [0 3 2]</span>
@@ -115,7 +115,7 @@ specified plexitude.</li>
 <tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nelems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of elements in the Connectivity table.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">nelems</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">3</span><span class="p">]])</span><span class="o">.</span><span class="n">nelems</span><span class="p">()</span>
 <span class="go">4</span>
 </pre></div>
 </div>
@@ -126,10 +126,16 @@ specified plexitude.</li>
 <tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nplex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the plexitude of the elements in the Connectivity table.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">nplex</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">3</span><span class="p">]])</span><span class="o">.</span><span class="n">nplex</span><span class="p">()</span>
 <span class="go">3</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.report">
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format a Connectivity table</p>
 </dd></dl>
 
 <dl class="method">
@@ -143,7 +149,7 @@ equal values.</p>
 <dd>The True values flag the degenerate rows.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">testDegenerate</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">testDegenerate</span><span class="p">()</span>
 <span class="go">array([False,  True, False], dtype=bool)</span>
 </pre></div>
 </div>
@@ -154,7 +160,7 @@ equal values.</p>
 <tt class="descname">listDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the degenerate elements.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDegenerate</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDegenerate</span><span class="p">()</span>
 <span class="go">array([1])</span>
 </pre></div>
 </div>
@@ -165,7 +171,7 @@ equal values.</p>
 <tt class="descname">listNonDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listNonDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the non-degenerate elements.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listNonDegenerate</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listNonDegenerate</span><span class="p">()</span>
 <span class="go">array([0, 2])</span>
 </pre></div>
 </div>
@@ -178,9 +184,39 @@ equal values.</p>
 <p>Degenerate elements are rows with repeating values.
 Returns a Connectivity with the degenerate elements removed.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">removeDegenerate</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">removeDegenerate</span><span class="p">()</span>
 <span class="go">Connectivity([[0, 1, 2],</span>
 <span class="go">       [0, 3, 2]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.reduceDegenerate">
+<tt class="descname">reduceDegenerate</tt><big>(</big><em>target=None</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.reduceDegenerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce degenerate elements to lower plexitude elements.</p>
+<p>This will try to reduce the degenerate elements of the Connectivity
+to a lower plexitude. This is only possible if an element type
+was set in the Connectivity. This function uses the data of
+the Element database in <a class="reference internal" href="elements.html#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a>.</p>
+<p>If a target element type is given, only the reductions to that element
+type are performed. Else, all the target element types for which
+a reduction scheme is available, will be tried.</p>
+<p>Returns:</p>
+<p>A list of Connectivities of which the first one contains
+the originally non-degenerate elements and the last one contains
+the elements that could not be reduced and may be empty.
+If the original Connectivity does not have an element type set,
+or the element type does not have any reduction schemes defined,
+a list with only the original is returned.</p>
+<p>Remark: If the Connectivity is part of a Mesh, you should use the
+Mesh.reduceDegenerate method instead, as that one will preserve
+the property numbers into the resulting Meshes.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]],</span><span class="n">eltype</span><span class="o">=</span><span class="s">&#39;line3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">C</span><span class="o">.</span><span class="n">reduceDegenerate</span><span class="p">()</span>
+<span class="go">[Connectivity([[0, 1]]), Connectivity([[0, 1, 2],</span>
+<span class="go">       [0, 3, 2]])]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -200,7 +236,7 @@ every position.</p>
 and False for those of the doubles.</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">testDoubles</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">testDoubles</span><span class="p">()</span>
 <span class="go">(array([0, 1, 2]), Connectivity([ True, False,  True], dtype=bool))</span>
 </pre></div>
 </div>
@@ -211,7 +247,7 @@ and False for those of the doubles.</li>
 <tt class="descname">listUnique</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listUnique" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the unique elements.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listUnique</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listUnique</span><span class="p">()</span>
 <span class="go">array([0, 2])</span>
 </pre></div>
 </div>
@@ -222,7 +258,7 @@ and False for those of the doubles.</li>
 <tt class="descname">listDoubles</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listDoubles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the double elements.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDoubles</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDoubles</span><span class="p">()</span>
 <span class="go">array([1])</span>
 </pre></div>
 </div>
@@ -238,7 +274,7 @@ will only remove the double rows that have matching values at
 matching positions.</p>
 <p>Returns a new Connectivity with the double elements removed.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">removeDoubles</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">removeDoubles</span><span class="p">()</span>
 <span class="go">Connectivity([[0, 1, 2],</span>
 <span class="go">       [0, 3, 2]])</span>
 </pre></div>
@@ -281,7 +317,7 @@ explicit order was specified as input, this order is returned after
 checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">3</span><span class="p">,</span><span class="mf">0</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">(</span><span class="s">&#39;reverse&#39;</span><span class="p">)]</span>
 <span class="go">Connectivity([[0, 1],</span>
 <span class="go">       [3, 0],</span>
@@ -289,7 +325,7 @@ checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</d
 <span class="go">       [1, 2]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">(</span><span class="s">&#39;nodes&#39;</span><span class="p">)</span>
 <span class="go">array([3, 2, 0, 1])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="n">A</span><span class="o">.</span><span class="n">reorder</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">])]</span>
 <span class="go">Connectivity([[3, 0],</span>
 <span class="go">       [0, 1],</span>
 <span class="go">       [1, 2],</span>
@@ -305,7 +341,7 @@ checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</d
 <p>This returns the inverse index of the Connectivity, as computed
 by <a class="reference internal" href="arraytools.html#arraytools.inverseIndex" title="arraytools.inverseIndex"><tt class="xref py py-func docutils literal"><span class="pre">arraytools.inverseIndex()</span></tt></a>. See</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">inverse</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">inverse</span><span class="p">()</span>
 <span class="go">array([[ 0,  1,  2],</span>
 <span class="go">       [-1,  0,  1],</span>
 <span class="go">       [-1,  0,  2],</span>
@@ -333,19 +369,19 @@ where row <cite>i</cite> holds a sorted list of all the items that are
 adjacent to item <cite>i</cite>, padded with -1 values to create an equal
 list length for all items.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;e&#39;</span><span class="p">)</span>
 <span class="go">array([[ 1,  2,  3],</span>
 <span class="go">       [-1,  0,  3],</span>
 <span class="go">       [-1, -1,  0],</span>
 <span class="go">       [-1,  0,  1]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">)</span>
 <span class="go">array([[ 1,  2,  5],</span>
 <span class="go">       [-1,  0,  3],</span>
 <span class="go">       [-1, -1,  0],</span>
 <span class="go">       [-1, -1,  1],</span>
 <span class="go">       [-1, -1, -1],</span>
 <span class="go">       [-1, -1,  0]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">]])</span><span class="o">.</span><span class="n">adjacency</span><span class="p">(</span><span class="s">&#39;n&#39;</span><span class="p">)</span>
 <span class="go">array([[-1,  1,  2,  3],</span>
 <span class="go">       [-1,  0,  2,  3],</span>
 <span class="go">       [ 0,  1,  4,  5],</span>
@@ -372,7 +408,7 @@ should be retained in the new Connectivity table.</li>
 <cite>(self.nelems*selector.nelems,selector.nplex)</cite>. This function
 does not collapse the double elements.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">selectNodes</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">selectNodes</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span>
 <span class="go">Connectivity([[0, 1],</span>
 <span class="go">       [0, 2],</span>
 <span class="go">       [0, 2],</span>
@@ -410,7 +446,8 @@ is prefered when you do not need the higher level info.</li>
 <li><cite>hi</cite>: defines the original elements in function of the intermediate
 level ones,</li>
 <li><cite>lo</cite>: defines the intermediate level items in function of the lowest
-level ones (the original nodes).</li>
+level ones (the original nodes). If the <cite>selector</cite> has an <cite>eltype</cite>
+attribute, then <cite>lo</cite> will inherit the same <cite>eltype</cite> value.</li>
 </ul>
 <p>Intermediate level items that consist of the same items in any
 permutation order are collapsed to single items.
@@ -427,7 +464,7 @@ See also <tt class="xref py py-meth docutils literal"><span class="pre">Mesh.com
 for the general case, if the selector is complete.
 The resulting rows may however be permutations of the original.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">insertLevel</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">insertLevel</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">]])</span>
 <span class="go">(Connectivity([[0, 3, 1],</span>
 <span class="go">       [1, 3, 0],</span>
 <span class="go">       [2, 4, 1]]), Connectivity([[0, 1],</span>
@@ -457,7 +494,7 @@ which is complete.
 The algorithm only works if all vertex numbers of an element are
 unique.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">hi</span><span class="p">,</span><span class="n">lo</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">insertLevel</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">hi</span><span class="p">,</span><span class="n">lo</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">insertLevel</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">hi</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">lo</span><span class="p">)</span>
 <span class="go">Connectivity([[0, 1, 2],</span>
 <span class="go">       [0, 2, 1],</span>
@@ -477,9 +514,9 @@ Plexitudes lower than 2 can not be resolved.</p>
 <p>Returns a plex-2 Connectivity with all connections between node
 pairs. In each element the nodes are sorted.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span> <span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">([</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mf">3</span><span class="p">),</span><span class="mf">2</span><span class="p">)</span> <span class="p">])</span>
 <span class="go">[(0, 1), (0, 2), (1, 2)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 <span class="go">Connectivity([[0, 1],</span>
 <span class="go">       [0, 2],</span>
 <span class="go">       [0, 3],</span>
@@ -509,10 +546,10 @@ and removes all columns containing only -1 values.</p>
 maxc &lt;= adj.shape[1], where the rows are sorted in ascending order
 and where columns with only -1 values are removed.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span> <span class="mf">0</span><span class="p">,</span>  <span class="mf">2</span><span class="p">,</span>  <span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">3</span><span class="p">,</span>  <span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span> <span class="mf">3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">0</span><span class="p">,</span>  <span class="mf">1</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sortAdjacency</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="go">array([[ 0,  1,  2],</span>
 <span class="go">       [-1,  1,  3],</span>
@@ -545,12 +582,12 @@ maxc &lt;= adj.shape[1], where row <cite>i</cite> retains the unique non-negativ
 numbers of the original array except the valu <cite>i</cite>, and is possibly
 padded with -1 values.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">5</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">3</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">5</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span> <span class="mf">0</span><span class="p">,</span>  <span class="mf">0</span><span class="p">,</span>  <span class="mf">0</span><span class="p">,</span>  <span class="mf">1</span><span class="p">,</span>  <span class="mf">2</span><span class="p">,</span>  <span class="mf">5</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">0</span><span class="p">,</span>  <span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">1</span><span class="p">,</span>  <span class="mf">3</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">2</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">3</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">],</span>
+<span class="gp">... </span>           <span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1</span><span class="p">,</span>  <span class="mf">5</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reduceAdjacency</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="go">array([[ 1,  2,  5],</span>
 <span class="go">       [-1,  0,  3],</span>
@@ -563,48 +600,55 @@ padded with -1 values.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="connectivity.closedLoop">
-<tt class="descclassname">connectivity.</tt><tt class="descname">closedLoop</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.closedLoop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if a set of line segments form a closed polyline.</p>
+<dt id="connectivity.findConnectedLineElems">
+<tt class="descclassname">connectivity.</tt><tt class="descname">findConnectedLineElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.findConnectedLineElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a single path of connected line elems.</p>
+<p>This function is intended as a helper function for
+<a class="reference internal" href="#connectivity.connectedLineElems" title="connectivity.connectedLineElems"><tt class="xref py py-func docutils literal"><span class="pre">connectedLineElems()</span></tt></a>. It should probably not be used directly,
+because, as a side-effect, it changes the data in the <cite>elems</cite> argument.
+<a class="reference internal" href="#connectivity.connectedLineElems" title="connectivity.connectedLineElems"><tt class="xref py py-func docutils literal"><span class="pre">connectedLineElems()</span></tt></a> does not have this inconvenience.</p>
+<p>The function searches a Connectivity table for a chain of elements
+in which the first node of all but the first element is equal to the
+last node of the previous element. To create such a chain, elements may
+be reordered and the node sequence of an element may be reversed.</p>
 <p>Parameters:</p>
 <ul class="simple">
-<li><cite>elems</cite>: Connectivity-like with plexitude 2</li>
+<li><cite>elems</cite>: Connectivity-like. Any plexitude is allowed, but only the
+first and the last columna are relevant.</li>
 </ul>
-<p>Returns: a tuple (return_code,table):</p>
-<ul class="simple">
-<li><cite>return_code</cite>: an integer with one of the following values:<ul>
-<li>0: the segments form a closed loop</li>
-<li>1: the segments form a single non-closed path</li>
-<li>2: the segments form multiple not connected paths</li>
-</ul>
-</li>
-<li><cite>table</cite>:<ul>
-<li>if return_code is 0 or 1: a Connectivity table equivalent
-to the input, but with the elements and their nodes sorted in order.</li>
-<li>if return_code is 2: a table with a singly connected part in the
-top rows, followed by -1 values for th unconnected elements.</li>
-</ul>
-</li>
-</ul>
+<dl class="docutils">
+<dt>Returns: a Connectivity with a single chain extracted from the input</dt>
+<dd><p class="first">Connectivity. The result will not necessarily be the longest path.
+It will however contain the first element of the input table.</p>
+<p class="last">As a side-effect, all elements contained in the output chain will
+have their entries in the input table <cite>elems</cite> changed to -1.</p>
+</dd>
+</dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">closedLoop</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
-<span class="go">(0, Connectivity([[0, 1],</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">findConnectedLineElems</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">4</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span>
+<span class="go">Connectivity([[0, 1],</span>
 <span class="go">       [1, 2],</span>
 <span class="go">       [2, 4],</span>
-<span class="go">       [4, 0]]))</span>
+<span class="go">       [4, 0]])</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">closedLoop</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
-<span class="go">(1, Connectivity([[2, 1],</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">findConnectedLineElems</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">4</span><span class="p">]])</span>
+<span class="go">Connectivity([[2, 1],</span>
 <span class="go">       [1, 0],</span>
-<span class="go">       [0, 4]]))</span>
+<span class="go">       [0, 4]])</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">closedLoop</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span>
-<span class="go">(2, Connectivity([[ 1,  0],</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">findConnectedLineElems</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span class="go">Connectivity([[ 1,  0],</span>
 <span class="go">       [ 0,  2],</span>
 <span class="go">       [-1, -1],</span>
-<span class="go">       [-1, -1]]))</span>
+<span class="go">       [-1, -1]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">C</span>
+<span class="go">[[-1 -1]</span>
+<span class="go"> [-1 -1]</span>
+<span class="go"> [ 0  3]</span>
+<span class="go"> [ 4  5]]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -617,22 +661,28 @@ top rows, followed by -1 values for th unconnected elements.</li>
 Each row holds the two vertex numbers of a single line segment.</p>
 <p>The return value is a list of (nsegi,2) shaped array of integers.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">4</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span>
 <span class="go">[Connectivity([[0, 1],</span>
 <span class="go">       [1, 2],</span>
 <span class="go">       [2, 4],</span>
 <span class="go">       [4, 0]])]</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">4</span><span class="p">]])</span>
 <span class="go">[Connectivity([[2, 1],</span>
 <span class="go">       [1, 0],</span>
 <span class="go">       [0, 4]])]</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">]])</span>
 <span class="go">[Connectivity([[1, 0],</span>
 <span class="go">       [0, 2]]), Connectivity([[0, 3]]), Connectivity([[4, 5]])]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connectedLineElems</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span>
+<span class="go">[Connectivity([[3, 0, 2],</span>
+<span class="go">       [2, 1, 0],</span>
+<span class="go">       [0, 3, 1]]), Connectivity([[4, 5, 2]])]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -648,7 +698,7 @@ path of j elements, padded with -1 values to create an equal list length
 for all nodes.
 This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">adjacencyArrays</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">adjacencyArrays</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],[</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">],[</span><span class="mf">4</span><span class="p">,</span><span class="mf">0</span><span class="p">]],</span><span class="mf">3</span><span class="p">)</span>
 <span class="go">[array([[0],</span>
 <span class="go">       [1],</span>
 <span class="go">       [2],</span>
@@ -725,7 +775,7 @@ This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>

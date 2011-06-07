@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>50. objects — Selection of objects from the global dictionary. &mdash; pyFormex v0.8.4-a1 documentation</title>
+    <title>52. objects — Selection of objects from the global dictionary. &mdash; pyFormex v0.8.4-a3 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a1',
+        VERSION:     '0.8.4-a3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,10 +23,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="51. olist — Some convenient shortcuts for common list operations." href="olist.html" />
-    <link rel="prev" title="49. tools — tools.py" href="tools.html" /> 
+    <link rel="next" title="53. plot2d — plot2d.py" href="plot2d.html" />
+    <link rel="prev" title="51. tools — tools.py" href="tools.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,10 +39,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="olist.html" title="51. olist — Some convenient shortcuts for common list operations."
+          <a href="plot2d.html" title="53. plot2d — plot2d.py"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="tools.html" title="49. tools — tools.py"
+          <a href="tools.html" title="51. tools — tools.py"
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -57,25 +57,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <p>DEBUG: Using the (slower) Python misc functions
-DEBUG: Using the (slower) Python misc functions
-DEBUG: LOADING IMAGE FORMATS
-DEBUG:
-Qt image types for saving: [&#8216;bmp&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
-Qt image types for input: [&#8216;bmp&#8217;, &#8216;gif&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;mng&#8217;, &#8216;pbm&#8217;, &#8216;pgm&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;svg&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
-gl2ps image types: []
-image types converted from EPS: []
-DEBUG: LOADING IMAGE FORMATS
-DEBUG:
-Qt image types for saving: [&#8216;bmp&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
-Qt image types for input: [&#8216;bmp&#8217;, &#8216;gif&#8217;, &#8216;ico&#8217;, &#8216;jpeg&#8217;, &#8216;jpg&#8217;, &#8216;mng&#8217;, &#8216;pbm&#8217;, &#8216;pgm&#8217;, &#8216;png&#8217;, &#8216;ppm&#8217;, &#8216;svg&#8217;, &#8216;tif&#8217;, &#8216;tiff&#8217;, &#8216;xbm&#8217;, &#8216;xpm&#8217;]
-gl2ps image types: []
-image types converted from EPS: []
-.. $Id$  -<em>- rst -</em>-
-.. pyformex reference manual &#8212; objects
-.. CREATED WITH py2rst.py: DO NOT EDIT</p>
-<div class="section" id="module-objects">
-<span id="objects-selection-of-objects-from-the-global-dictionary"></span><span id="sec-ref-objects"></span><h1>50. <a class="reference internal" href="#module-objects" title="objects: Selection of objects from the global dictionary."><tt class="xref py py-mod docutils literal"><span class="pre">objects</span></tt></a> &#8212; Selection of objects from the global dictionary.<a class="headerlink" href="#module-objects" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-objects">
+<span id="objects-selection-of-objects-from-the-global-dictionary"></span><span id="sec-ref-objects"></span><h1>52. <a class="reference internal" href="#module-objects" title="objects: Selection of objects from the global dictionary."><tt class="xref py py-mod docutils literal"><span class="pre">objects</span></tt></a> &#8212; Selection of objects from the global dictionary.<a class="headerlink" href="#module-objects" title="Permalink to this headline">¶</a></h1>
 <p>This is a support module for other pyFormex plugins.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">objects</span></tt></p>
 <dl class="class">
@@ -221,13 +204,23 @@ Return a list with the selected names or None.</p>
 <dt id="objects.DrawableObjects">
 <em class="property">class </em><tt class="descclassname">objects.</tt><tt class="descname">DrawableObjects</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects" title="Permalink to this definition">¶</a></dt>
 <dd><p>A selection of drawable objects from the globals().</p>
-<p><cite>annotations</cite>, if set, is a list of (func,active) tuples, where</p>
+<p>This is a subclass of Objects. The constructor has the same arguments
+as the Objects class, plus the following:
+- <cite>annotations</cite>: a set of functions that draw annotations of the objects.</p>
+<blockquote>
+<p>Each function should take an object name as argument, and draw the
+requested annotation for the named object. If the object does not have
+the annotation, it should be silently ignored.
+Default annotation functions available are:</p>
 <ul class="simple">
-<li><cite>func</cite> is a function that is to be called with the object name as
-argument to draw some annotation for the object,</li>
-<li><cite>active</cite> is a flag to signal if the annotation should be drawn or not.</li>
+<li>draw_object_name</li>
+<li>draw_elem_numbers</li>
+<li>draw_nodes</li>
+<li>draw_node_numbers</li>
+<li>draw_bbox</li>
 </ul>
-<p>The default is to draw object name and element numbers.</p>
+<p>No annotation functions are activated by default.</p>
+</blockquote>
 <dl class="method">
 <dt id="objects.DrawableObjects.ask">
 <tt class="descname">ask</tt><big>(</big><em>mode='multi'</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.ask" title="Permalink to this definition">¶</a></dt>
@@ -250,7 +243,7 @@ old are drawn in yellow, new in the current color.</p>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.toggleAnnotation">
-<tt class="descname">toggleAnnotation</tt><big>(</big><em>i=0</em>, <em>onoff=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleAnnotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toggleAnnotation</tt><big>(</big><em>f</em>, <em>onoff=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleAnnotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the display of an annotation On or Off.</p>
 <p>If given, onoff is True or False. 
 If no onoff is given, this works as a toggle.</p>
@@ -258,20 +251,20 @@ If no onoff is given, this works as a toggle.</p>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.drawAnnotation">
-<tt class="descname">drawAnnotation</tt><big>(</big><em>i=0</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.drawAnnotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">drawAnnotation</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.drawAnnotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw some annotation for the current selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.removeAnnotation">
-<tt class="descname">removeAnnotation</tt><big>(</big><em>i=0</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.removeAnnotation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove the annotation i.</p>
+<tt class="descname">removeAnnotation</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.removeAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the annotation f.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.hasAnnotation">
-<tt class="descname">hasAnnotation</tt><big>(</big><em>i=0</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasAnnotation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the status of annotation i</p>
+<tt class="descname">hasAnnotation</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the status of annotation f</p>
 </dd></dl>
 
 <dl class="method">
@@ -417,7 +410,7 @@ of the selection.names.</p>
 <dl class="function">
 <dt id="objects.draw_nodes">
 <tt class="descclassname">objects.</tt><tt class="descname">draw_nodes</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw the numbers of an object&#8217;s nodes.</p>
+<dd><p>Draw the nodes of an object.</p>
 </dd></dl>
 
 <dl class="function">
@@ -446,10 +439,10 @@ of the selection.names.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="tools.html"
-                        title="previous chapter">49. <tt class="docutils literal"><span class="pre">tools</span></tt> &#8212; tools.py</a></p>
+                        title="previous chapter">51. <tt class="docutils literal"><span class="pre">tools</span></tt> &#8212; tools.py</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="olist.html"
-                        title="next chapter">51. <tt class="docutils literal docutils literal"><span class="pre">olist</span></tt> &#8212; Some convenient shortcuts for common list operations.</a></p>
+  <p class="topless"><a href="plot2d.html"
+                        title="next chapter">53. <tt class="docutils literal"><span class="pre">plot2d</span></tt> &#8212; plot2d.py</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -477,10 +470,10 @@ of the selection.names.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="olist.html" title="51. olist — Some convenient shortcuts for common list operations."
+          <a href="plot2d.html" title="53. plot2d — plot2d.py"
              >next</a> |</li>
         <li class="right" >
-          <a href="tools.html" title="49. tools — tools.py"
+          <a href="tools.html" title="51. tools — tools.py"
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -491,7 +484,7 @@ of the selection.names.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
     </div>
   </body>
 </html>
