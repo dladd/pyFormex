@@ -331,7 +331,6 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
 
 def quad8_quad9(x):
     """_Convert an array of quad8 surfaces to quad9"""
-    #print x.shape
     x9 = x[...,:4,:].sum(axis=-2)/2 - x[...,4:,:].sum(axis=-2)/4
     return concatenate([x,x9[...,newaxis,:]],axis=-2)
     
@@ -356,15 +355,11 @@ def drawQuadraticSurfaces(x,e,color=None):
         xx = x.copy()
     else:
         xx = x[e]
-    #print xx.shape
     if xx.shape[-2] == 8:
         xx = quad8_quad9(xx)
-        #print xx.shape
     # Convert quad9 to nurbs node order
     xx = xx[...,[0,7,3,4,8,6,1,5,2],:]
-    #print xx.shape
     xx = xx.reshape(-1,3,3,xx.shape[-1])
-    #print xx.shape
     xx[...,1,:] = 2*xx[...,1,:] - 0.5*(xx[...,0,:] + xx[...,2,:])
     xx[...,1,:,:] = 2*xx[...,1,:,:] - 0.5*(xx[...,0,:,:] + xx[...,2,:,:])
     knots = array([0.,0.,0.,1.,1.,1.])
@@ -480,9 +475,7 @@ def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0):
     # We collect them according to plexitude.
     # But first convert to a list, so that we can call this function
     # with an array too (in case of a single plexitude)
-    #print faces
     faces = list(faces)
-    #print faces
     for fac in olist.collectOnLength(faces).itervalues():
         fa = asarray(fac)
         nplex = fa.shape[1]

@@ -183,9 +183,9 @@ class BboxActor(Actor):
         self.linewidth = linewidth
         self.bb = bbox
         Hex8 = elementType('hex8')
-        self.vertices = array(Hex8.vertices) * (bbox[1]-bbox[0]) + bbox[0]
-        self.edges = array(Hex8.edges[1])
-        self.facets = array(Hex8.faces[1])
+        self.vertices = Hex8.vertices * (bbox[1]-bbox[0]) + bbox[0]
+        self.edges = Hex8.edges
+        self.facets = Hex8.faces
 
     def bbox(self):
         return self.bb
@@ -195,7 +195,6 @@ class BboxActor(Actor):
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
         drawLines(self.vertices,self.edges,self.color)
-
 
  
 class AxesActor(Actor):

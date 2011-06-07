@@ -91,7 +91,6 @@ class SurfaceObjects(DrawableObjects):
     def toggleEdgeNumbers(self,onoff=None):
         self.toggleAnnotation(draw_edge_numbers,onoff)
     def toggleNormals(self,onoff=None):
-        print "TOGGLENORMALS",self,type(self)
         self.toggleAnnotation(draw_normals,onoff)
     def toggleAvgNormals(self,onoff=None):
         self.toggleAnnotation(draw_avg_normals,onoff)
