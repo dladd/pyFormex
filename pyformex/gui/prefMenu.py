@@ -55,11 +55,6 @@ def updateSettings(res,save=None):
     # Do not use 'pf.cfg.update(res)' here!
     # It will not work with our Config class!
 
-    ## WE TURNED THE CFG VARIABLE INTO A STRING
-    ## # Set some types which are not properly returned by the dialog
-    ## res['render/line'] = int(res['render/line'])
-    ## res['render/surface'] = int(res['render/surface'])
-
     todo = set([])
     for k in res:
         if k.startswith('_'): # skip temporary variables
@@ -95,6 +90,7 @@ def updateSettings(res,save=None):
 def settings():
     import plugins
     import sendmail
+    from elements import elementTypes
     
     dia = None
 
@@ -182,9 +178,9 @@ def settings():
                 viewer,
                 ]),
             T('Drawing',[
-                I('_info_00_',itemtype='info',text='Changes to these options only become effective after restarting pyFormex!'),
-                I('render/line',text='Line drawing order',itemtype='radio',choices=['1','2'],tooltip='Wherever possible, lines will be drawn as an approximation of at most this order.'),
-                I('render/surface',text='Surface drawing order',itemtype='radio',choices=['1','2'],tooltip='Wherever possible, surfaces (including borders of solids) will be drawn as an approximation of at most this order.'),
+                I('_info_00_',itemtype='info',text='Changes to these options currently only become effective after restarting pyFormex!'),
+                #I('draw/quadline',text='Line drawing order',itemtype='radio',choices=elementTypes(1),tooltip='Wherever possible, lines will be drawn as an approximation of at most this order.'),
+                #I('draw/quadsurf',text='Surface drawing order',itemtype='radio',choices=elementTypes(2),tooltip='Wherever possible, surfaces (including borders of solids) will be drawn as an approximation of at most this order.'),
                 ]
               ),
             T('Mouse',mouse_settings),

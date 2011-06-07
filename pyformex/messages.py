@@ -76,11 +76,7 @@ Quadratic surface drawing
 We have started implementing quadratic surface drawing.
 Currently, quad8 and quad9 elements can be drawn as quadratics in the
 smooth or flat rendering style. To activate the quadratic surface drawing,
-either use the command::
-
-  pyformex --drawsurfaces=2
-  
-or change the default in Settings->Drawing (you need to restart to make it effective).
+change the default in Settings->Drawing (you need to restart to make it effective).
 
 Developers: please test and report.
 """

@@ -50,6 +50,8 @@ def glObjType(nplex):
         objtype = GL.GL_POLYGON
     return objtype
 
+# A list of elements that can be drawn quadratically using NURBS
+_nurbs_elements = [ 'line3', 'quad4', 'quad8', 'quad9' ] 
 
 ### Some drawing functions ###############################################
 
@@ -232,6 +234,12 @@ def drawNurbsCurves(x,knots,color=None,samplingTolerance=5.0):
     x = x.reshape(-1,nctrl,ndim)
     if color is not None:
         color = color.reshape(-1,3)
+        if color.shape[0] == 1:
+            # Handle single color
+            GL.glColor3fv(color[0])
+            color = None
+        elif color.shape[0] != x.shape[0]:
+            raise ValueError,"Number of colors (%s) should equal 1 or the number of faces(%s)" % (color.shape[0],x.shape[0])
     ki = knots
     GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
     for i,xi in enumerate(x):
@@ -240,6 +248,7 @@ def drawNurbsCurves(x,knots,color=None,samplingTolerance=5.0):
         if knots.ndim > 1:
             ki = knots[i]
         GLU.gluBeginCurve(nurb)
+        #print ki,xi
         GLU.gluNurbsCurve(nurb,ki,xi,mode)
         GLU.gluEndCurve(nurb)
 
@@ -263,7 +272,11 @@ def drawQuadraticCurves(x,e=None,color=None):
         xx = x.copy()
     else:
         xx = x[e]
-    xx[...,1,:] = 2*x[...,1,:] - 0.5*(x[...,0,:] + x[...,2,:])
+    #print xx.shape
+    #print xx
+    xx[...,1,:] = 2*xx[...,1,:] - 0.5*(xx[...,0,:] + xx[...,2,:])
+    #print xx.shape
+    #print xx
     knots = array([0.,0.,0.,1.,1.,1.])
     drawNurbsCurves(xx,knots,color=color)
 
@@ -313,12 +326,20 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
     x = x.reshape(-1,ns,nt,ndim)
     if color is not None:
         color = color.reshape(-1,3)
+        if color.shape[0] == 1:
+            # Handle single color
+            GL.glColor3fv(color[0])
+            color = None
+        elif color.shape[0] != x.shape[0]:
+            raise ValueError,"Number of colors (%s) should equal 1 or the number of faces(%s)" % (color.shape[0],x.shape[0])
+                             
     si = sknots
     ti = tknots
     
     GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
     for i,xi in enumerate(x):
         if color is not None:
+            # Handle element color
             GL.glColor3fv(color[i])
         if sknots.ndim > 1:
             si = sknots[i]
@@ -328,6 +349,12 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         GLU.gluNurbsSurface(nurb,si,ti,xi,mode)
         GLU.gluEndSurface(nurb)
 
+
+def quad4_quad8(x):
+    """_Convert an array of quad4 surfaces to quad8"""
+    y = roll(x,-1,axis=-2)
+    x5_8 = (x+y)/2
+    return concatenate([x,x5_8],axis=-2)
 
 def quad8_quad9(x):
     """_Convert an array of quad8 surfaces to quad9"""
@@ -351,10 +378,21 @@ def drawQuadraticSurfaces(x,e,color=None):
 
     If color is given it is an (nsurf,3) array of RGB values.
     """
+    #print "DRAWQUADSURF"
     if e is None:
         xx = x.copy()
     else:
         xx = x[e]
+
+    if xx.shape[-2] == 4:
+        # Bilinear surface
+        xx = xx[...,[0,3,1,2],:]
+        knots = array([0.,0.,1.,1.])
+        xx = xx.reshape(-1,2,2,xx.shape[-1])
+        #print xx.shape
+        drawNurbsSurfaces(xx,knots,knots,color)
+        return
+    
     if xx.shape[-2] == 8:
         xx = quad8_quad9(xx)
     # Convert quad9 to nurbs node order
@@ -437,12 +475,13 @@ def drawEdges(x,e,edges,eltype,color=None):
     for edg in olist.collectOnLength(edges).itervalues():
         fa = asarray(edg)
         nplex = fa.shape[1]
+        #print fa
         if e is None:
             coords = x[:,fa,:]
             elems = None
         else:
             coords = x
-            elems = e[:,fa]
+            elems = e[:,fa].reshape(-1,fa.shape[-1])
         pf.debug("COORDS SHAPE: %s" % str(coords.shape))
         if elems is not None:
             pf.debug("ELEMS SHAPE: %s" % str(elems.shape))
@@ -453,6 +492,7 @@ def drawEdges(x,e,edges,eltype,color=None):
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
 
         if eltype == 'line3':
+            #print coords,elems
             drawQuadraticCurves(coords,elems,color)
         else:
             draw_faces(coords,elems,'wireframe',color,1.0)
@@ -493,9 +533,11 @@ def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0):
             # select the colors of the matching points
             color = color[:,fa,:]
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
-        if eltype in ['quad8','quad9']:
+        if eltype in pf.cfg['draw/quadsurf'] and eltype in _nurbs_elements:
+            #print "USING QUADSURF"
             drawQuadraticSurfaces(coords,elems,color)
         else:
+            #print "USING POLYGON"
             draw_faces(coords,elems,mode,color,alpha)
 
 

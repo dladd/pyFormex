@@ -68,6 +68,7 @@ Section = Full.toMesh()
 
 clear()
 draw(Section,color=red)
+exit()
 
 #pause()
 

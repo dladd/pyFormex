@@ -374,14 +374,6 @@ def run(argv=[]):
            action="store_true", dest="test", default=False,
            help="testing mode: only for developers!",
            ),
-        MO("--drawlines",
-           action="store", dest="drawlines", default=None,
-           help="Set the default order for drawing lines (either '1' or '2'). The default is to use quadratic lines whenever possible. Setting this to '1' will force a linear approximation.",
-           ),
-        MO("--drawsurfaces",
-           action="store", dest="drawsurfaces", default=None,
-           help="Set the default order for drawing surfaces (either '1' or '2'). The default is to approximate with linear triangles. Setting this to '2' will try to use quadratic surface whenever possible.",
-           ),
         MO("--testexecutor",
            action="store_true", dest="executor", default=False,
            help="test alternate executor: only for developers!",
@@ -489,11 +481,6 @@ def run(argv=[]):
     if pyformex.options.uselib is None:
         pyformex.options.uselib = pyformex.cfg['uselib']
 
-    # Override config with command line parameters
-    if pyformex.options.drawlines:
-        pyformex.cfg['render/line'] = pyformex.options.drawlines
-    if pyformex.options.drawsurfaces:
-        pyformex.cfg['render/surface'] = pyformex.options.drawsurfaces
 
     # Set default --nogui if first remaining argument is a pyformex script.
     if pyformex.options.gui is None:

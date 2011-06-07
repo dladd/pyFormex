@@ -33,7 +33,7 @@ import os,types
 from PyQt4 import QtCore, QtGui
 import pyformex as pf
 import colors
-import odict,mydict
+import odict,mydict,olist
 import utils
 import warnings
 
@@ -55,6 +55,16 @@ TIMEOUT = -1        # the return value if a widget timed out
 # slots
 Accept = QtCore.SLOT("accept()")
 Reject = QtCore.SLOT("reject()")
+
+# QT List selection mode
+selection_mode = {
+    None: QtGui.QAbstractItemView.NoSelection,
+    'single': QtGui.QAbstractItemView.SingleSelection,
+    'multi': QtGui.QAbstractItemView.MultiSelection,
+    'contiguous': QtGui.QAbstractItemView.ContiguousSelection,
+    'extended': QtGui.QAbstractItemView.ExtendedSelection,
+    'checked': QtGui.QAbstractItemView.SingleSelection,
+    }
 
 # icons
 def standardIcon(label):
@@ -350,45 +360,7 @@ class InputLabel(InputItem):
         width = self.layoutMinimumWidth()
         #print "min size: %s" % width
         self.label.setWordWrap(True)
-## 00357 
-## 00358     if (width > softLimit) {
-## 00359         label->setWordWrap(true);
-## 00360         width = qMax(softLimit, layoutMinimumWidth());
-## 00361 
-## 00362         if (width > hardLimit) {
-## 00363             label->d_func()->ensureTextControl();
-## 00364             if (QTextControl *control = label->d_func()->control)
-## 00365                 control->setWordWrapMode(QTextOption::WrapAnywhere);
-## 00366             width = hardLimit;
-## 00367         }
-## 00368     }
-## 00369 
-## 00370     if (informativeLabel) {
-## 00371         label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-## 00372         if (layoutMinimumWidth() > hardLimit) { // longest word is really big, so wrap anywhere
-## 00373             informativeLabel->d_func()->ensureTextControl();
-## 00374             if (QTextControl *control = informativeLabel->d_func()->control)
-## 00375                 control->setWordWrapMode(QTextOption::WrapAnywhere);
-## 00376         }
-## 00377         QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-## 00378         policy.setHeightForWidth(label->wordWrap());
-## 00379         label->setSizePolicy(policy);
-## 00380         policy.setHeightForWidth(true);
-## 00381         informativeLabel->setSizePolicy(policy);
-## 00382     }
-## 00383 
-## 00384     QFontMetrics fm(qApp->font("QWorkspaceTitleBar"));
-## 00385     int windowTitleWidth = qMin(fm.width(q->windowTitle()) + 50, hardLimit);
-## 00386     if (windowTitleWidth > width)
-## 00387         width = windowTitleWidth;
-## 00388 
-## 00389     q->layout()->activate();
-## 00390     int height = (q->layout()->hasHeightForWidth())
-## 00391                      ? q->layout()->totalHeightForWidth(width)
-## 00392                      : q->layout()->totalMinimumSize().height();
-## 00393     q->setFixedSize(width, height);
-## 00394 }
-    
+   
 
 class InputString(InputItem):
     """A string input field with a label in front.
@@ -502,6 +474,101 @@ class InputBool(InputItem):
             self.input.setCheckState(QtCore.Qt.Checked)
         else:
             self.input.setCheckState(QtCore.Qt.Unchecked)
+
+class MyListWidget(QtGui.QListWidget):
+    def allItems(self):
+        return [ self.item(i) for i in range(self.count()) ]
+    ## def sizeHint(self):
+    ##     for i in self.allItems():
+    ##         print i.contentsRect()
+    ##         a =  i.contentsRect()
+    ##     return a
+
+class InputList(InputItem):
+    """A list selection InputItem.
+
+    A list selection is a widget allowing the selection of zero, one or more
+    items from a list.
+
+    choices is a list/tuple of possible values.
+    default is the initial/default list of selected items.
+    Values in default that are not in the choices list, are ignored.
+    If default is None or an empty list, nothing is selected initially.
+
+    By default, the user can select multiple items and the return value is
+    a list of all currently slected items.
+    If single is True, only a single item can be selected.
+    
+    If check is True, all items have a checkbox and only the checked items
+    are returned. This option sets single==False.
+    """
+    
+    def __init__(self,name,default=[],choices=[],sort=False,single=True,check=False,*args,**kargs):
+        """Create the listwidget."""
+        if len(choices) == 0:
+            raise ValueError,"List input expected choices!"
+        self._choices_ = [ str(s) for s in choices ]
+        self.input = MyListWidget()
+        InputItem.__init__(self,name,*args,**kargs)
+        self.input.addItems(self._choices_)
+        if sort:
+            self.input.sortItems()
+
+        mode = 'extended'
+        self._check_ = check
+        if check:
+            mode = None
+            single = False
+        if single:
+            mode = 'single'
+
+        self.input.setSelectionMode(selection_mode[mode])
+        self.input.setWidgetResizable() 
+        self.setValue(default)
+        self.layout().insertWidget(1,self.input)
+
+    def setSelected(self,selected,flag=True):
+        """Mark the specified items as selected or not."""
+        for s in selected:
+            for i in self.input.findItems(s,QtCore.Qt.MatchExactly):
+                i.setSelected(flag)
+
+    def setChecked(self,selected,flag=True):
+        """Mark the specified items as checked or not."""
+        if flag:
+            qtflag = QtCore.Qt.Checked
+        else:
+            qtflag = QtCore.Qt.Unchecked
+         
+        for s in selected:
+            for i in self.input.findItems(s,QtCore.Qt.MatchExactly):
+                i.setCheckState(qtflag)
+
+    def getSelected(self):
+        res = [i.text() for i in self.input.selectedItems()]
+        return map(str,res)
+
+    def getChecked(self):
+        res = [ i.text() for i in self.input.allItems() if i.checkState()==QtCore.Qt.Checked ]
+        return map(str,res)
+
+    def value(self):
+        """Return the widget's value."""
+        if self._check_:
+            f = self.getChecked
+        else:
+            f = self.getSelected
+        return f()
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        if self._check_:
+            f = self.setChecked
+        else:
+            f = self.setSelected
+        f(val,True)
+        f(olist.difference(self._choices_,val),False)
+
 
     
 class InputCombo(InputItem):
@@ -1440,6 +1507,7 @@ class InputDialog(QtGui.QDialog):
                 
     def add_input(self,form,prefix,**item):
         """Add a single input item to the form."""
+        #print item
         item['name'] = prefix + item.get('name',self.autoname.next())
         if not 'value' in item:
             # no value: try to find one
@@ -1640,7 +1708,7 @@ InputItems.update({
 
 keys = InputItems.keys()
 keys.sort()
-#print keys
+
 
 def inputAny(name,value,itemtype,**options):
     """Create an InputItem of any type, depending on the arguments.
@@ -2014,14 +2082,6 @@ class DockedSelection(QtGui.QDockWidget):
 class ModelessSelection(QtGui.QDialog):
     """A modeless dialog for selecting one or more items from a list."""
     
-    selection_mode = {
-        None: QtGui.QAbstractItemView.NoSelection,
-        'single': QtGui.QAbstractItemView.SingleSelection,
-        'multi': QtGui.QAbstractItemView.MultiSelection,
-        'contiguous': QtGui.QAbstractItemView.ContiguousSelection,
-        'extended': QtGui.QAbstractItemView.ExtendedSelection,
-        }
-    
     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None,width=None,height=None):
         """Create the SelectionList dialog."""
         QtGui.QDialog.__init__(self)
@@ -2035,7 +2095,7 @@ class ModelessSelection(QtGui.QDialog):
         self.listw.addItems(slist)
         if sort:
             self.listw.sortItems()
-        self.listw.setSelectionMode(self.selection_mode[mode])
+        self.listw.setSelectionMode(selection_mode[mode])
         grid = QtGui.QGridLayout()
         grid.addWidget(self.listw,0,0,1,1)
         self.setLayout(grid)
@@ -2047,11 +2107,8 @@ class ModelessSelection(QtGui.QDialog):
         """Mark the specified items as selected."""
         for s in selected:
             for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
-                # OBSOLETE: should be changed with Qt version 4.2 or later
-                self.listw.setItemSelected(i,bool)
-                # SHOULD BECOME:
-                # i.setSelected(True) # requires Qt 4.2
-                # i.setCheckState(QtCore.Qt.Checked)
+                i.setSelected(True)
+                i.setCheckState(QtCore.Qt.Checked)
 
                 
     def getResult(self):
@@ -2070,14 +2127,6 @@ class Selection(QtGui.QDialog):
 
     - `slist`: a list of items that are initially selected.
     """
-    
-    selection_mode = {
-        None: QtGui.QAbstractItemView.NoSelection,
-        'single': QtGui.QAbstractItemView.SingleSelection,
-        'multi': QtGui.QAbstractItemView.MultiSelection,
-        'contiguous': QtGui.QAbstractItemView.ContiguousSelection,
-        'extended': QtGui.QAbstractItemView.ExtendedSelection,
-        }
     
     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
         """Create the SelectionList dialog."""
@@ -2721,10 +2770,6 @@ class ComboBox(InputCombo):
     def __init__(self,name,choices,func=None,*args,**kargs):
         warnings.warn("ComboBox is deprecated! Use InputCombo instead")
         InputCombo.__init__(self,name,None,choices=choices,onselect=func,*args,**kargs)
-        ## self.layout().setSpacing(0)
-        ## self.layout().setMargin(0)
-        ## if func:
-        ##     self.connect(self.input,QtCore.SIGNAL("activated(int)"),func)
 
 
 ############################# Coords box ###########################
