@@ -91,6 +91,8 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
+    # Release scriptlock
+    scriptRelease(__file__)
 
 
 def timeOut():
@@ -101,6 +103,7 @@ def timeOut():
     Most users can simply ignore this.
     """
     show()
+    wait()
     close()
 
 
@@ -121,6 +124,9 @@ if __name__ == 'draw':
 
     # Show the dialog and let the user have fun
     dialog.show()
+
+    # Block other scripts 
+    scriptLock(__file__)
 
 # End
 

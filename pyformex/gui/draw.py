@@ -1079,8 +1079,6 @@ def step():
     If a script is running, this just releases the draw lock.
     Else, it starts the script in step mode.
     """
-    import script
-    #if script.scriptRunning:
     if pf.GUI.drawlock.locked:
         pf.GUI.drawlock.release()
     else:

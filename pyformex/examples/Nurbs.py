@@ -104,6 +104,8 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
+    # Release scriptlock
+    scriptRelease(__file__)
 
 
 def show():
@@ -112,9 +114,13 @@ def show():
     export({'_Nurbs_data_':res})
     drawNurbs(**res)
 
+def showAll():
+    for control in predefined:
+        drawNurbs(control,degree=2,closed=False,blended=True,weighted=False,Clear=True)
 
 def timeOut():
     showAll()
+    wait()
     close()
 
 
@@ -154,7 +160,7 @@ dialog = Dialog(
     data_items,
     enablers = input_enablers,
     caption = 'Nurbs parameters',
-    actions = [('Close',close),('Clear',clear),('Show',show)],
+    actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
     default = 'Show',
     )
 
@@ -163,6 +169,9 @@ if pf.PF.has_key('_Nurbs_data_'):
 
 dialog.timeout = timeOut
 dialog.show()
+
+# Block other scripts 
+scriptLock(__file__)
        
 
 # End

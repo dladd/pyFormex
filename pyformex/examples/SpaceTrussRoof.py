@@ -66,7 +66,6 @@ draw(F)
 createView('myview1',(30.,0.,0.))
 view('myview1',True)
 
-drawtimeout = 1
 for i in range(19):
     createView('myview2',(i*10.,20.,0.))
     view('myview2',True)

@@ -177,6 +177,7 @@ def close():
     if savefile:
         savefile.close()
         savefile = None
+    scriptRelease(__file__)
 
 
 def reset():
@@ -222,6 +223,7 @@ def play():
 def dialog_timeout():
     play()
     close()
+    
         
 def openSuperShapeDialogs():
     global dialog
@@ -269,13 +271,7 @@ if __name__ == "draw":
 
     close()
     openSuperShapeDialogs()
-    #smoothwire()
-
-    ## while dialog is not None:
-    ##     if dialog.timedOut():
-    ##         show_shape()
-    ##     pf.app.processEvents()
-    ##     sleep(1)
+    scriptLock(__file__)
 
 
 # End

@@ -237,22 +237,27 @@ def system(cmdline,result='output'):
 
 sleep = time.sleep
 
-scriptDisabled = False
-scriptRunning = False
 scriptThread = None
 exitrequested = False
 stepmode = False
 starttime = 0.0
 pye = False
 
+scriptlock = set()
+
+def scriptLock(id):
+    global scriptlock
+    scriptlock |= set([id])
+
+def scriptRelease(id):
+    global scriptlock
+    scriptlock -= set([id])
+    
 
 def executeScript(scr,glob):
     """Execute a Python script in specified globals."""
-    ## print "SCRIPT"
-    ## print scr
-    ## print "GLOBALS"
-    ## print glob
     exec scr in glob
+
  
 def playScript(scr,name=None,filename=None,argv=[],pye=False):
     """Play a pyformex script scr. scr should be a valid Python text.
@@ -269,20 +274,20 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     (including comments) is echoed to the message board.
     """
     from geometry import Geometry
-    global scriptDisabled,scriptRunning,exitrequested
-    #pf.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
+    global exitrequested
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     global scriptThread
     if scriptThread is not None and scriptThread.isAlive():
         pf.message("Not executing this script because another one is already running")
         return
-        
-    if scriptRunning or scriptDisabled :
-        pf.message("Not executing this script because another one is already running")
+
+       
+    if len(scriptlock) > 0:
+        pf.message("!!Not executing because a script lock has been set: %s" % scriptlock)
         return
     
-    scriptRunning = True
+    scriptLock('__auto__')
     exitrequested = False
 
     if pf.GUI:
@@ -361,7 +366,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             exportNames.extend(listAll(clas=Geometry,dic=g))
         pf.PF.update([(k,g[k]) for k in exportNames])
 
-        scriptRunning = False # release the lock in case of an error
+        scriptRelease('__auto__') # release the lock
         elapsed = time.clock() - starttime
         pf.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if pf.GUI:
@@ -378,9 +383,8 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
 
 def force_finish():
-    global scriptRunning,stepmode
-    # print "FORCE FINISH"
-    scriptRunning = False # release the lock in case of an error
+    global scriptlock,stepmode
+    scriptlock = set() # release all script locks (in case of an error)
     stepmode = False
 
 
@@ -422,7 +426,7 @@ def breakpt(msg=None):
 def raiseExit():
     print "EEEEEEEEEEEEXXXXXXXXXXXXXXXXIIIIIIIIIIIIIIIITTTTTTTTTTTTTTTTTTT"
     pf.debug("RAISED EXIT")
-    print scriptRunning
+    print scriptlock
     if pf.GUI:
         pf.GUI.drawlock.release()   
     raise _Exit,"EXIT REQUESTED FROM SCRIPT"
@@ -478,7 +482,7 @@ def play(fn=None,argv=[],step=False):
 
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
-    if scriptRunning:
+    if len(scriptlock) > 0:
         if all:
             raise _ExitAll # ask exit from pyformex
         else:

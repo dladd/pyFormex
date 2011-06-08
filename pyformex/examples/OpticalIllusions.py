@@ -475,6 +475,8 @@ def close():
     if explanation:
         explanation.close()
         explanation = None
+    # Release scriptlock
+    scriptRelease(__file__)
     
 
 def explain():
@@ -520,6 +522,7 @@ def next():
 def timeOut():
     """What to do when the dialog receives a timeout signal"""
     show()
+    wait()
     close()
 
 
@@ -554,5 +557,8 @@ if __name__ == "draw":
 
     close()
     openDialog()
+
+    # Block other scripts 
+    scriptLock(__file__)
     
 # End

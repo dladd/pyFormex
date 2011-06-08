@@ -123,6 +123,7 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
+    scriptRelease(__file__)
 
 
 def timeOut():
@@ -139,5 +140,6 @@ def timeOut():
 dialog = widgets.InputDialog(items,caption='Drawing parameters',actions = [('Close',close),('Show',show)],default='Show')
 dialog.timeout = timeOut
 dialog.show()
+scriptLock(__file__)
         
 # End

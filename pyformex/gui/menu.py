@@ -465,7 +465,6 @@ def resetGUI():
     pyformex.GUI.actions['Stop'].setEnabled(False)
 
 
-
 def resetWarnings():
     """Reset the warning filters to the default."""
     del pyformex.prefcfg['warnings/filters']
@@ -524,7 +523,7 @@ def createMenuData():
         ## (_('&Reset Picking Mode'),resetPick),
         (_('&Reset GUI'),resetGUI),
         (_('&Reset Warning Filters'),resetWarnings),
-        (_('&Force Finish Script'),draw.force_finish),
+        (_('&Force Finish Script'),script.force_finish),
         ## (_('&Execute single statement'),command),
         (_('&Save Message Board'),saveBoard),
         (_('&Open Log File'),openLogFile),

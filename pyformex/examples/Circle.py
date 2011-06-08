@@ -36,7 +36,6 @@ from plugins.geomtools import rotationAngle
 
 # Test
 linewidth(1)
-drawtimeout = 1
 for i in [3,4,5,6,8,12,20,60,180]:
     #print "%s points" % i
     clear()

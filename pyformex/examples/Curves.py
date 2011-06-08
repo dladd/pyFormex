@@ -154,12 +154,17 @@ flat()
 
 dialog = None
 
+import script
+
 
 def close():
     global dialog
     if dialog:
         dialog.close()
         dialog = None
+    # Release scriptlock
+    scriptRelease(__file__)
+
 
 
 def show(all=False):
@@ -182,8 +187,10 @@ def showAll():
 
 def timeOut():
     showAll()
+    wait()
     close()
     
+
 dialog = widgets.InputDialog(
     data_items,
     caption='Curve parameters',
@@ -196,6 +203,9 @@ if pf.PF.has_key('_Curves_data_'):
 
 dialog.timeout = timeOut
 dialog.show()
-       
+# Block other scripts 
+scriptLock(__file__)
+
+
 
 # End

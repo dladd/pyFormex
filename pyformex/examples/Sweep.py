@@ -197,6 +197,7 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
+    scriptRelease(__file__)
 
 
 def timeOut():
@@ -229,6 +230,7 @@ if __name__ == 'draw':
 
     # Show the dialog and let the user have fun
     dialog.show()
+    scriptLock(__file__)
 
 # End
 

@@ -545,7 +545,7 @@ Hex20 = Element(
 ##     edges = array(Hex20.edges) 	 
 ##     Hex20.drawedges = concatenate([edges[:,:2],edges[:,-2:]],axis=0) 	 
     
-Hex20.drawfaces = [ Hex20.faces[:, Quad8.drawfaces[0]].reshape(-1, 3) ]
+#Hex20.drawfaces = [ Hex20.faces[:, Quad8.drawfaces[0]].reshape(-1, 3) ]
 
 ######################################################################
 ########## element type conversions ##################################

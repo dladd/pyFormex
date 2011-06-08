@@ -238,9 +238,12 @@ def permutations():
 def close():
     pf.canvas.resetMouse(LEFT,SHIFT)
     dia.close()
+    # Release script lock 
+    scriptRelease(__file__)
 
 def timeOut():
     shuffle()
+    wait()
     close()
 
 dia = widgets.InputDialog(
@@ -271,5 +274,8 @@ if __name__ == "draw":
     dia.show()
     dia.acceptData()
     globals().update(dia.results)
+
+    # Block other scripts 
+    scriptLock(__file__)
 
 # End
