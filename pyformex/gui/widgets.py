@@ -476,13 +476,22 @@ class InputBool(InputItem):
             self.input.setCheckState(QtCore.Qt.Unchecked)
 
 class MyListWidget(QtGui.QListWidget):
+    def __init__(self):
+        QtGui.QListWidget.__init__(self)
+        
     def allItems(self):
         return [ self.item(i) for i in range(self.count()) ]
-    ## def sizeHint(self):
-    ##     for i in self.allItems():
-    ##         print i.contentsRect()
-    ##         a =  i.contentsRect()
-    ##     return a
+
+    def fixSize(self):
+        w = 0
+        h = 10 # margin
+        for i in self.allItems():
+            r = self.visualItemRect(i)
+            h += r.height()
+            w = max(w,r.width())
+        print "Need total height of %s" % h
+        self.setFixedSize(w,h)
+
 
 class InputList(InputItem):
     """A list selection InputItem.
@@ -503,7 +512,7 @@ class InputList(InputItem):
     are returned. This option sets single==False.
     """
     
-    def __init__(self,name,default=[],choices=[],sort=False,single=True,check=False,*args,**kargs):
+    def __init__(self,name,default=[],choices=[],sort=False,single=False,check=False,*args,**kargs):
         """Create the listwidget."""
         if len(choices) == 0:
             raise ValueError,"List input expected choices!"
@@ -523,9 +532,13 @@ class InputList(InputItem):
             mode = 'single'
 
         self.input.setSelectionMode(selection_mode[mode])
-        self.input.setWidgetResizable() 
         self.setValue(default)
+        #self.input.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+        self.input.fixSize()
+        self.input.updateGeometry()
         self.layout().insertWidget(1,self.input)
+        self.updateGeometry()
+        #self.input.setSizeHint(QtCore.QSize(self.input.width(),10))
 
     def setSelected(self,selected,flag=True):
         """Mark the specified items as selected or not."""
@@ -813,38 +826,38 @@ class InputFloat(InputItem):
         self.input.setText(str(val))
 
 
-class InputFloatTable(InputItem):
-    """A table of floats input item."""
+## class InputFloatTable(InputItem):
+##     """A table of floats input item."""
     
-    def __init__(self,name,value,*args,**kargs):
-        """Creates a new float table input field."""
-        if value is None:
-            ncols = kargs.get('ncols',1)
-            nrows = kargs.get('nrows',1)
-            value = zeros(nrows,ncols)
-        else:
-            nrows,ncols = value.shape
+##     def __init__(self,name,value,*args,**kargs):
+##         """Creates a new float table input field."""
+##         if value is None:
+##             ncols = kargs.get('ncols',1)
+##             nrows = kargs.get('nrows',1)
+##             value = zeros(nrows,ncols)
+##         else:
+##             nrows,ncols = value.shape
             
-        chead = kargs.get('chead',None)
-        rhead = kargs.get('rhead',None)
+##         chead = kargs.get('chead',None)
+##         rhead = kargs.get('rhead',None)
 
-        self.input = ArrayTable(value,rhead=rhead,chead=chead)
-        InputItem.__init__(self,name,*args,**kargs)
-        self.layout().insertWidget(1,self.input)
+##         self.input = ArrayTable(value,rhead=rhead,chead=chead)
+##         InputItem.__init__(self,name,*args,**kargs)
+##         self.layout().insertWidget(1,self.input)
 
-    def show(self):
-        """Select all text on first display.""" 
-        InputItem.show(self)
-        self.input.selectAll()
+##     def show(self):
+##         """Select all text on first display.""" 
+##         InputItem.show(self)
+##         self.input.selectAll()
 
-    def value(self):
-        """Return the widget's value."""
-        return float(self.input.text())
+##     def value(self):
+##         """Return the widget's value."""
+##         return float(self.input.text())
 
-    def setValue(self,val):
-        """Change the widget's value."""
-        val = float(val)
-        self.input.setText(str(val))
+##     def setValue(self,val):
+##         """Change the widget's value."""
+##         val = float(val)
+##         self.input.setText(str(val))
 
    
 class InputSlider(InputInteger):

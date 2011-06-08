@@ -281,7 +281,7 @@ def drawQuadraticCurves(x,e=None,color=None):
     drawNurbsCurves(xx,knots,color=color)
 
 
-def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingTolerance=50.0):
+def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingTolerance=10.0):
     """Draw a collection of Nurbs surfaces.
 
     x: (ns,nt,ndim) or (nsurf,ns,nt,ndim) float array:
@@ -481,7 +481,7 @@ def drawEdges(x,e,edges,eltype,color=None):
             elems = None
         else:
             coords = x
-            elems = e[:,fa].reshape(-1,fa.shape[-1])
+            elems = e[:,fa]
         pf.debug("COORDS SHAPE: %s" % str(coords.shape))
         if elems is not None:
             pf.debug("ELEMS SHAPE: %s" % str(elems.shape))
@@ -492,6 +492,7 @@ def drawEdges(x,e,edges,eltype,color=None):
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
 
         if eltype == 'line3':
+            # elems = elems.reshape(-1,fa.shape[-1])
             #print coords,elems
             drawQuadraticCurves(coords,elems,color)
         else:

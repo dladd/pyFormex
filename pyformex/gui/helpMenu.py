@@ -104,6 +104,7 @@ _developers = [
     'Matthieu De Beule',
     'Gianluca De Santis',
     'Bart Desloovere',
+    'Francesco Iannaccone',
     'Peter Mortier',
     'Tim Neels',
     'Tomas Praet',
