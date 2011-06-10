@@ -742,6 +742,53 @@ def drawAxes(*args,**kargs):
         A = actors.AxesActor(*args,**kargs)
     drawActor(A)
     return A
+        
+
+def drawImage(image,nx=-1,ny=-1,pixel='dot'):
+    """Draw an image as a colored Formex
+
+    Draws a raster image as a colored Formex. While there are other and
+    better ways to display an image in pyFormex (such as using the imageView
+    widget), this function allows for interactive handling the image using
+    the OpenGL infrastructure.
+
+    Parameters:
+
+    - `image`: a QImage holding a raster image. An image can be loaded from
+      most standard image files using the :func:`loadImage` function
+    - `nx`,`ny`: resolution you want to use for the display
+    - `pixel`: the Formex representing a single pixel. It should be either
+      a single element Formex, or one of the strings 'dot' or 'quad'. If 'dot'
+      a single point will be used, if 'quad' a unit square. The difference
+      will be important when zooming in. The default is 'dot'. 
+
+    """
+    pf.GUI.setBusy()
+    from gui.imagecolor import image2glcolor
+    w,h = image.width(),image.height()
+    if nx <= 0:
+        nx = w
+    if ny <= 0:
+        ny = h
+    if nx != w or ny != h:
+        image = image.scaled(nx,ny)
+    # Create the colors
+    color,colortable = image2glcolor(image)
+
+    # Create a 2D grid of nx*ny elements
+    # !! THIS CAN PROBABLY BE DONE FASTER
+    if isinstance(pixel,Formex) and pixel.nelems()==1:
+        F = pixel
+    elif pixel == 'quad':
+        F = Formex(mpattern('123'))
+    else:
+        F = Formex(origin())
+    F = F.replic2(nx,ny).centered()
+
+    # Draw the grid using the image colors
+    FA = draw(F,color=color,colormap=colortable,nolight=True)
+    pf.GUI.setBusy(False)
+    return FA
 
 
 def drawViewportAxes3D(pos,color=None):

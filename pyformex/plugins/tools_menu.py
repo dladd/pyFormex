@@ -33,7 +33,7 @@ from gui import menu
 import utils
 from formex import *
 from gui.draw import *
-from gui.widgets import simpleInputItem as I
+from gui.widgets import simpleInputItem as _I
 from plugins import objects
 from plugins.tools import *
 from plugins.trisurface import TriSurface
@@ -155,42 +155,6 @@ def delete_all():
         forgetAll()
 
 
-## def writeGeometry():
-##     """Write geometry to file."""
-##     drawable.ask()
-##     if drawable.check():
-##         filter = utils.fileDescription(['pgf','all'])
-##         cur = pf.cfg['workdir']
-##         fn = askNewFilename(cur=cur,filter=filter)
-##         if fn:
-##             if not fn.endswith('.pgf'):
-##                 fn.append('.pgf')
-##             message("Writing geometry file %s" % fn)
-##             drawable.writeToFile(fn)
-
-
-## def readGeometry():
-##     """Read geometry from file."""
-##     filter = utils.fileDescription(['pgf','all'])
-##     cur = pf.cfg['workdir']
-##     fn = askFilename(cur=cur,filter=filter)
-##     if fn:
-##         message("Reading geometry file %s" % fn)
-##         drawable.readFromFile(fn)
-##         print drawable.names
-##         drawable.draw()
-##         zoomAll()
-
-
-def convertGeometry():
-    """Convert geometry file to latest format."""
-    filter = utils.fileDescription(['pgf','all'])
-    cur = pf.cfg['workdir']
-    fn = askFilename(cur=cur,filter=filter)
-    if fn:
-        from geomfile import GeometryFile
-        message("Converting geometry file %s to version %s" % (fn,GeometryFile._version_))
-        GeometryFile(fn).rewrite()
         
 
 def dos2unix():
@@ -341,7 +305,7 @@ def edit_point(pt):
         return [ res[i] for i in 'xyz' ]
         
     dia = widgets.InputDialog(
-        items = [I(x=x,y=y,z=z),]
+        items = [_I(x=x,y=y,z=z),]
         )
     dia.show()
     
@@ -492,11 +456,11 @@ def sendMail():
         return
     
     res = askItems([
-        I('sender',sender,text="From:",readonly=True),
-        I('to','',text="To:"),
-        I('cc','',text="Cc:"),
-        I('subject','',text="Subject:"),
-        I('text','',itemtype='text',text="Message:"),
+        _I('sender',sender,text="From:",readonly=True),
+        _I('to','',text="To:"),
+        _I('cc','',text="Cc:"),
+        _I('subject','',text="Subject:"),
+        _I('text','',itemtype='text',text="Message:"),
        ])
     if not res:
         return
@@ -510,7 +474,7 @@ def sendMail():
     if cc:
         print "  with copy to %s" % cc
 
-
+###################### images #############################
         
 ################### menu #################
 
@@ -520,29 +484,27 @@ def create_menu():
     """Create the Tools menu."""
     _init_()
     MenuData = [
-        ## ('&Read Geometry File',readGeometry),
-        ## ('&Write Geometry File',writeGeometry),
-        ('-- Global Variables --',printall,dict(disabled=True)),
-        ('  &List All',printall),
-        ('  &Select',database.ask),
-        ('  &Print Value',printval),
-        ('  &Print BBox',printbbox),
-        ('  &Draw',drawable.ask),
-        ('  &Create',create),
-        ('  &Change Value',edit),
-        ('  &Rename',rename_),
-        ('  &Keep',keep_),
-        ('  &Delete',forget_),
-        ('  &Delete All',delete_all),
+        ('Global &Variables',[
+            ('  &List All',printall),
+            ('  &Select',database.ask),
+            ('  &Print Value',printval),
+            ('  &Print BBox',printbbox),
+            ('  &Draw',drawable.ask),
+            ('  &Create',create),
+            ('  &Change Value',edit),
+            ('  &Rename',rename_),
+            ('  &Keep',keep_),
+            ('  &Delete',forget_),
+            ('  &Delete All',delete_all),
+            ]),
         ("---",None),
-        ('&Convert pyFormex Geometry File',convertGeometry),
         ('&Execute pyFormex command',command),
         ("&DOS to Unix",dos2unix,dict(tooltip="Convert a text file from DOS to Unix line terminators")),
         ("&Unix to DOS",unix2dos),
         ("Send &Mail",sendMail),
         ("---",None),
-        ("&Create Plane",
-            [("Coordinates", 
+        ("&Create Plane",[
+            ("Coordinates", 
                 [("Point and normal", createPlaneCoordsPointNormal),
                 ("Three points", createPlaneCoords3Points),
                 ]), 
@@ -554,32 +516,34 @@ def create_menu():
         ("&Draw Selection",planes.draw),
         ("&Forget Selection",planes.forget),
         ("---",None),
-        ('&Pick',
-         [("&Actors",pick_actors),
-          ("&Elements",pick_elements),
-          ("&Points",pick_points),
-          ("&Edges",pick_edges),
-          ]),
+        #("Load an &Image as Formex",loadImage),
+        ("---",None),
+        ('&Pick',[
+            ("&Actors",pick_actors),
+            ("&Elements",pick_elements),
+            ("&Points",pick_points),
+            ("&Edges",pick_edges),
+            ]),
         ('&Edit Points',edit_points),
         ("&Remove Highlights",removeHighlights),
         ("---",None),
-        ('&Selection',
-         [('&Create Report',report_selection),
-          ('&Set Property',setprop_selection),
-          ('&Grow',grow_selection),
-          ('&Partition',partition_selection),
-          ('&Get Partition',get_partition),
-          ('&Export',export_selection),
-          ]),
+        ('&Selection',[
+            ('&Create Report',report_selection),
+            ('&Set Property',setprop_selection),
+            ('&Grow',grow_selection),
+            ('&Partition',partition_selection),
+            ('&Get Partition',get_partition),
+            ('&Export',export_selection),
+            ]),
         ("---",None),
-        ('&Query',
-         [('&Actors',query_actors),
-          ('&Elements',query_elements),
-          ('&Points',query_points),
-          ('&Edges',query_edges),
-          ('&Distances',query_distances),
-          ('&Angle',query_angle),
-          ]),
+        ('&Query',[
+            ('&Actors',query_actors),
+            ('&Elements',query_elements),
+            ('&Points',query_points),
+            ('&Edges',query_edges),
+            ('&Distances',query_distances),
+            ('&Angle',query_angle),
+            ]),
         ("---",None),
         ('&Reload',reload_menu),
         ("&Close",close_menu),

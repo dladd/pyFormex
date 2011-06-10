@@ -320,6 +320,16 @@ def exportPgfShortlines():
 def exportOff():
     exportGeometry(['off'])
  
+
+def convertGeometryFile():
+    """Convert pyFormex geometry file to latest format."""
+    filter = utils.fileDescription(['pgf','all'])
+    cur = pf.cfg['workdir']
+    fn = askFilename(cur=cur,filter=filter)
+    if fn:
+        from geomfile import GeometryFile
+        message("Converting geometry file %s to version %s" % (fn,GeometryFile._version_))
+        GeometryFile(fn).rewrite()
     
 ##################### properties ##########################
 
@@ -397,7 +407,8 @@ def create_menu():
             ("Surface File (*.gts, *.stl, *.off, *.neu)",importSurface),
             ("All known geometry formats",importAny),
             ("&Convert Abaqus .inp file",convert_inp),
-            ("&Import Converted Model",importModel),
+            ("&Import Converted Abaqus Model",importModel),
+            ('&Convert pyFormex Geometry File',convertGeometryFile,dict(tooltip="Convert a pyFormex Geometry File (.pgf) to the latest format, overwriting the file.")),
             ]),
         ("&Export ",[
             ("pyFormex Geometry File (.pgf)",exportPgf),

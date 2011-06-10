@@ -110,15 +110,7 @@ def alignCurvePoints(curve,axis=1,max=True):
         ind = curve.pointsOn()[:,axis].argmax()
     else:
         ind = curve.pointsOn()[:,axis].argmin()
-    #for i,x in enumerate(curve.pointsOn()):
-    #    print "%s: %s" % (i,x)
-    #drawNumbers(curve.pointsOn())
-    #print "ALIGNING ON POINT %s" % ind
     rollCurvePoints(curve,ind)
-    #for i,x in enumerate(curve.pointsOn()):
-    #    print "%s: %s" % (i,x)
-    #drawNumbers(curve.pointsOn(),color=red)
-    draw(curve.pointsOn()[0],color=green)
     
 
 class SplineSurface(Geometry):
@@ -344,6 +336,7 @@ if align:
     for Ci in CL:
         #clear()
         alignCurvePoints(Ci,aligndir,alignmax)
+        draw(Ci.pointsOn()[0],color=green)
         #zoomAll()
         #pause()
         #exit()

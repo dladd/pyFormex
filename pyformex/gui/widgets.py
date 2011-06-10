@@ -2148,7 +2148,7 @@ class Selection(QtGui.QDialog):
         # Selection List
         self.listw = QtGui.QListWidget()
         self.listw.addItems(slist)
-        self.listw.setSelectionMode(self.selection_mode[mode])
+        self.listw.setSelectionMode(selection_mode[mode])
         if sort:
             self.listw.sortItems()
         if selected:

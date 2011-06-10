@@ -320,7 +320,7 @@ def surfaceInsideBorder(border,method='radial'):
 
     border is a 2-plex Mesh representing a closed polyline.
 
-    The return value is a TrisSurface filling the hole inside the border.
+    The return value is a TriSurface filling the hole inside the border.
 
     There are two fill methods:
     

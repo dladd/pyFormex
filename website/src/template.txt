@@ -42,6 +42,7 @@
           print '<li><a href="#%s">%s</a></li>' % (a.lower(),a)
         print '</ul>'
 #>
+
 <div class="menu">
 
 <li><a class="main" href="http://developer.berlios.de/forum/forum.php?forum_id=8348">Help Forum</a></li>
