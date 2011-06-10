@@ -476,6 +476,76 @@ def sendMail():
 
 ###################### images #############################
         
+def selectImage():
+    """Open a dialog to read an image file.
+
+    """
+    global image
+    from gui.widgets import ImageView
+    from gui.imagecolor import image2glcolor,QImage
+    
+    # some default values
+    filename = getcfg('datadir')+'/butterfly.png'
+    w,h = 200,200
+    image = None # the loaded image
+    diag = None # the image dialog
+
+    # construct the image previewer widget
+    viewer = ImageView(filename)
+
+    def selectImage(fn):
+        """Helper function to load and preview image"""
+        fn = askImageFile(fn)
+        if fn:
+            viewer.showImage(fn)
+            loadImage(fn)
+        return fn
+
+    def loadImage(fn):
+        """Helper function to load the image and set its size in the dialog"""
+        global image
+        image = QImage(fn)
+        if image.isNull():
+            warning("Could not load image '%s'" % fn)
+            return None
+
+        w,h = image.width(),image.height()
+        print "size = %sx%s" % (w,h)
+
+        diag = currentDialog()
+        if diag:
+            diag.updateData({'nx':w,'ny':h})
+
+        maxsiz = 40000.
+        if w*h > maxsiz:
+            scale = sqrt(maxsiz/w/h)
+            w = int(w*scale)
+            h = int(h*scale)
+        return w,h
+    
+    res = askItems([
+        _I('filename',filename,text='Image file',itemtype='button',func=selectImage),
+        _I('viewer',viewer,itemtype='widget'),  # the image previewing widget
+        _I('nx',w,text='width'),
+        _I('ny',h,text='height'),
+        ])
+
+    if not res:
+        return None
+
+    if image is None:
+        print "Loading image"
+        loadImage(filename)
+
+    return image
+
+def showImage():
+    clear()
+    im = selectImage()
+    if im:
+        drawImage(im)
+
+
 ################### menu #################
 
 _menu = 'Tools'
@@ -516,7 +586,7 @@ def create_menu():
         ("&Draw Selection",planes.draw),
         ("&Forget Selection",planes.forget),
         ("---",None),
-        #("Load an &Image as Formex",loadImage),
+        ("Show an &Image file as Formex",showImage),
         ("---",None),
         ('&Pick',[
             ("&Actors",pick_actors),
