@@ -62,9 +62,11 @@ def autoName(clas):
 # We put these in an init function to allow --testmodule to run without GUI
 
 def _init_():
-    global drawable,selection,selection_F,selection_M,selection_TS,selection_PL,selection_NC,setSelection,drawSelection,drawAll
+    global drawable,selection,drawAll
+    global selection_F,selection_M,selection_TS,selection_PL,selection_NC,setSelection,drawSelection
     drawable = pf.GUI.drawable
     selection = pf.GUI.selection['geometry']
+    drawAll = drawable.draw
     ## selection_F = pf.GUI.selection['formex']
     ## selection_M = pf.GUI.selection['mesh']
     ## selection_TS = pf.GUI.selection['surface']
@@ -72,16 +74,19 @@ def _init_():
     ## selection_NC = pf.GUI.selection['nurbs']
     ## setSelection = selection.set
     ## drawSelection = selection.draw
-    drawAll = drawable.draw
     
 
-def set_selection(section='geometry'):
-    print "SETTING %s" % section
-    sel = pf.GUI.selection.get(section)
+def set_selection(clas='geometry'):
+    print 'hallo'
+    sel = pf.GUI.selection.get(clas)
+    print sel
     if sel:
+        print 'ASK'
         sel.ask()
         selection.set(sel.names)
         selection.draw()
+    else:
+        warning('Nothing to select')
         
 
 ##################### read and write ##########################

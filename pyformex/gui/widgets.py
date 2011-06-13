@@ -2146,13 +2146,7 @@ class Selection(QtGui.QDialog):
         QtGui.QDialog.__init__(self)
         self.setWindowTitle(title)
         # Selection List
-        self.listw = QtGui.QListWidget()
-        self.listw.addItems(slist)
-        self.listw.setSelectionMode(selection_mode[mode])
-        if sort:
-            self.listw.sortItems()
-        if selected:
-            self.setSelected(selected)
+        self.input = InputList(name=title,text='',default=selected,choices=slist,sort=sort,single=mode=='single',check=False)
         # Accept/Cancel Buttons
         acceptButton = QtGui.QPushButton('OK')
         self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,Accept)
@@ -2162,7 +2156,7 @@ class Selection(QtGui.QDialog):
         grid = QtGui.QGridLayout()
         grid.setColumnStretch(1,1)
         grid.setColumnMinimumWidth(1,250)
-        grid.addWidget(self.listw,0,0,1,-1)
+        grid.addWidget(self.input,0,0,1,-1)
         grid.addWidget(acceptButton,1,0)
         grid.addWidget(cancelButton,1,1)
         self.setLayout(grid)
@@ -2170,10 +2164,7 @@ class Selection(QtGui.QDialog):
 
     def setSelected(self,selected):
         """Mark the specified items as selected."""
-        for s in selected:
-            for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
-                i.setSelected(True)
-                i.setCheckState(QtCore.Qt.Checked)
+        self.input.setValue(selected)
 
                 
     def getResult(self):
@@ -2185,8 +2176,7 @@ class Selection(QtGui.QDialog):
         """
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            res = [ i.text() for i in self.listw.selectedItems() ]
-            return map(str,res)
+            return self.input.value()
         else:
             return None
         
@@ -2396,7 +2386,7 @@ class Tabs(QtGui.QTabWidget):
 class GenericDialog(QtGui.QDialog):
     """A generic dialog widget.
 
-    The dialog if formed by a number of widgets stacked in a vertical box
+    The dialog is formed by a number of widgets stacked in a vertical box
     layout. At the bottom is a horizontal button box with possible actions.
 
     - `widgets`: a list of widgets to include in the dialog
@@ -2777,12 +2767,13 @@ class ButtonBox(InputPush):
         return s
 
 
-############################# Combo box ###########################
+# removed in 0.8.4
+## ############################# Combo box ###########################
 
-class ComboBox(InputCombo):
-    def __init__(self,name,choices,func=None,*args,**kargs):
-        warnings.warn("ComboBox is deprecated! Use InputCombo instead")
-        InputCombo.__init__(self,name,None,choices=choices,onselect=func,*args,**kargs)
+## class ComboBox(InputCombo):
+##     def __init__(self,name,choices,func=None,*args,**kargs):
+##         warnings.warn("ComboBox is deprecated! Use InputCombo instead")
+##         InputCombo.__init__(self,name,None,choices=choices,onselect=func,*args,**kargs)
 
 
 ############################# Coords box ###########################

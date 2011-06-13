@@ -35,10 +35,12 @@ Release 0.9
 
 **Add Nurbs curves and surfaces**
   :dev: bverheg
-  :sta: Proof Of Concept
-  :rem: See the example
+  :sta: Curves mostly implemented, surfaces under development
 
 **Add faceted surfaces**
+  :dev: bverheg
+  :sta: idea
+  :rem: A faceted surface where the facets can be any convex flat polygon.
 
 **Add quad based surfaces**
   :sta: idea
@@ -46,6 +48,11 @@ Release 0.9
     An unstructured quad mesher for more complex surface shapes could be
     based on subdivision.
      
+**Zoom center**
+  :sta: idea
+  :rem: setting a center point for the interactive zoom functions,
+    which may be different from the viewpoint center
+
 **Default focus**
   :dev: bverheg
   :sta: IDEA
@@ -53,11 +60,6 @@ Release 0.9
     largest cross dimension in the shortest viewport direction,
     and use angle zooming to increase the image if the cross
     section is not square and aligned with the viewport.
-      
-**Multiple views**
-  :dev: bverheg
-  :sta: Mostly done, under testing
-  :rem: Need to make more versatile: link contents, position, number
       
 **Faster loading of large STL models (possibly in C)**
   :dev: bverheg
@@ -89,6 +91,7 @@ Release 0.9
 **Derive BBoxActor from GridActor**
       
 **Merge the Formex, Surface and Mesh plugin menus**
+  :sta: PARTIAL
   :rem: These should be merged into a single Geometry menu.
 
 **Add a GRID option to the canvas**

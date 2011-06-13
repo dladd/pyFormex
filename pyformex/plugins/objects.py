@@ -32,7 +32,7 @@ import pyformex as pf
 
 from coords import bbox
 from script import named
-from gui.draw import drawBbox
+from gui.draw import drawBbox,_I
 import geomfile
 import odict
 
