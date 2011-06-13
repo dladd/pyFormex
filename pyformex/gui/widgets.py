@@ -2074,101 +2074,36 @@ def selectFont():
         return None
 
 
-class DockedSelection(QtGui.QDockWidget):
-    """A docked selection widget.
 
-    A widget that is docked in the main window and contains a modeless
-    dialog for selecting items.
-    """
-    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None):
-        QtGui.QDockWidget.__init__(self)
-        self.setWidget(ModelessSelection(slist,title,mode,sort,func))
-    
-    def setSelected(self,selected,bool):
-        self.widget().setSelected(selected,bool)
-    
-    def getResult(self):
-        res = self.widget().getResult()
-        return res
-
-
-class ModelessSelection(QtGui.QDialog):
-    """A modeless dialog for selecting one or more items from a list."""
-    
-    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None,width=None,height=None):
-        """Create the SelectionList dialog."""
-        QtGui.QDialog.__init__(self)
-        self.setWindowTitle(title)
-        # Selection List
-        self.listw = QtGui.QListWidget()
-        if width is not None:
-            self.listw.setMaximumWidth(width)
-        if height is not None:
-            self.listw.setMaximumHeight(height)
-        self.listw.addItems(slist)
-        if sort:
-            self.listw.sortItems()
-        self.listw.setSelectionMode(selection_mode[mode])
-        grid = QtGui.QGridLayout()
-        grid.addWidget(self.listw,0,0,1,1)
-        self.setLayout(grid)
-        if func:
-            self.connect(self.listw,QtCore.SIGNAL("itemClicked(QListWidgetItem *)"),func)
-    
-
-    def setSelected(self,selected,bool):
-        """Mark the specified items as selected."""
-        for s in selected:
-            for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
-                i.setSelected(True)
-                i.setCheckState(QtCore.Qt.Checked)
-
-                
-    def getResult(self):
-        """Return the list of selected values.
-
-        If the user cancels the selection operation, the return value is None.
-        Else, the result is always a list, possibly empty or with a single
-        value.
-        """
-        res = [i.text() for i in self.listw.selectedItems()]
-        return map(str,res)
-
-
-class Selection(QtGui.QDialog):
+class ListSelection(InputDialog):
     """A dialog for selecting one or more items from a list.
 
-    - `slist`: a list of items that are initially selected.
+    This is a convenient class which constructs an input dialog with a single
+    input item: an InputList. It allows the user to select one or more items
+    from a list. The constructor supports all arguments of the InputDialog and
+    the InputList classes. The return value is the value of the InputList,
+    not the result of the InputDialog.
     """
-    
-    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
+    def __init__(self,choices,caption='ListSelection',default=[],single=False,check=False,sort=False,*args,**kargs):
         """Create the SelectionList dialog."""
-        QtGui.QDialog.__init__(self)
-        self.setWindowTitle(title)
-        # Selection List
-        self.input = InputList(name=title,text='',default=selected,choices=slist,sort=sort,single=mode=='single',check=False)
-        # Accept/Cancel Buttons
-        acceptButton = QtGui.QPushButton('OK')
-        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,Accept)
-        cancelButton = QtGui.QPushButton('Cancel')
-        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,Reject)
-        # Putting it all together
-        grid = QtGui.QGridLayout()
-        grid.setColumnStretch(1,1)
-        grid.setColumnMinimumWidth(1,250)
-        grid.addWidget(self.input,0,0,1,-1)
-        grid.addWidget(acceptButton,1,0)
-        grid.addWidget(cancelButton,1,1)
-        self.setLayout(grid)
+        InputDialog.__init__(self,caption=caption,items = [
+            dict(name='input',value=default,itemtype='list',choices=choices,
+                 text='',single=single,check=check,sort=sort,*args,**kargs),
+            ],)
     
 
-    def setSelected(self,selected):
+    def setValue(self,selected):
         """Mark the specified items as selected."""
-        self.input.setValue(selected)
+        self['input'].setValue(selected)
+
+
+    def value(self,selected):
+        """Return the selected items."""
+        return self['input'].value()
 
                 
     def getResult(self):
-        """Return the list of selected values.
+        """Show the modal dialog and return the list of selected values.
 
         If the user cancels the selection operation, the return value is None.
         Else, the result is always a list, possibly empty or with a single
@@ -2176,9 +2111,84 @@ class Selection(QtGui.QDialog):
         """
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            return self.input.value()
+            return self.value()
         else:
             return None
+
+
+class Selection(ListSelection):
+    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
+        """Create the SelectionList dialog."""
+        import warnings
+        warnings.deprecation("widgets.Selection is deprecated. Please use widgets.ListSelection.")
+        ListSelection.__init__(self,caption=title,choices=slist,default=selected,single=mode=='single',sort=sort)
+        
+    
+# BV Uncommented, because I could only find 1 use: in osteo_menu, to define
+# an InputList, which can probably be replaced by the default InputList
+
+## class ModelessSelection(QtGui.QDialog):
+##     """A modeless dialog for selecting one or more items from a list."""
+    
+##     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None,width=None,height=None):
+##         """Create the SelectionList dialog."""
+##         QtGui.QDialog.__init__(self)
+##         self.setWindowTitle(title)
+##         # Selection List
+##         self.listw = QtGui.QListWidget()
+##         if width is not None:
+##             self.listw.setMaximumWidth(width)
+##         if height is not None:
+##             self.listw.setMaximumHeight(height)
+##         self.listw.addItems(slist)
+##         if sort:
+##             self.listw.sortItems()
+##         self.listw.setSelectionMode(selection_mode[mode])
+##         grid = QtGui.QGridLayout()
+##         grid.addWidget(self.listw,0,0,1,1)
+##         self.setLayout(grid)
+##         if func:
+##             self.connect(self.listw,QtCore.SIGNAL("itemClicked(QListWidgetItem *)"),func)
+    
+
+##     def setSelected(self,selected,bool):
+##         """Mark the specified items as selected."""
+##         for s in selected:
+##             for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
+##                 i.setSelected(True)
+##                 i.setCheckState(QtCore.Qt.Checked)
+
+                
+##     def getResult(self):
+##         """Return the list of selected values.
+
+##         If the user cancels the selection operation, the return value is None.
+##         Else, the result is always a list, possibly empty or with a single
+##         value.
+##         """
+##         res = [i.text() for i in self.listw.selectedItems()]
+##         return map(str,res)
+
+# BV uncommented, because I can not find any place where it is used,
+# and probably it would be better to use a generic docked widget and
+# an InputList
+
+## class DockedSelection(QtGui.QDockWidget):
+##     """A docked selection widget.
+
+##     A widget that is docked in the main window and contains a modeless
+##     dialog for selecting items.
+##     """
+##     def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None):
+##         QtGui.QDockWidget.__init__(self)
+##         self.setWidget(ModelessSelection(slist,title,mode,sort,func))
+    
+##     def setSelected(self,selected,bool):
+##         self.widget().setSelected(selected,bool)
+    
+##     def getResult(self):
+##         res = self.widget().getResult()
+##         return res
         
 
 # !! The QtGui.QColorDialog can not be instantiated or subclassed.
@@ -2204,6 +2214,52 @@ def getColor(col=None,caption=None):
         return str(col.name())
     else:
         return None
+
+
+# Can be replaced with InputDialog??
+class GenericDialog(QtGui.QDialog):
+    """A generic dialog widget.
+
+    The dialog is formed by a number of widgets stacked in a vertical box
+    layout. At the bottom is a horizontal button box with possible actions.
+
+    - `widgets`: a list of widgets to include in the dialog
+    - `title`: the window title for the dialog
+    - `parent`: the parent widget. If None, it is set to pf.GUI.
+    - `actions`: the actions to include in the bottom button box. By default,
+      an 'OK' button is displayed to close the dialog. Can be set to None
+      to avoid creation of a button box.
+    - `default`: the default action, 'OK' by default.
+    """
+    
+    def __init__(self,widgets,title=None,parent=None,actions=[('OK',)],default='OK'):
+        """Create the Dialog"""
+        if parent is None:
+            parent = pf.GUI
+        QtGui.QDialog.__init__(self,parent)
+        if title is None:
+            title = 'pyFormex Dialog'
+        self.setWindowTitle(str(title))
+        
+        self.form = QtGui.QVBoxLayout()
+        self.add(widgets)
+
+        if actions is not None:
+            but = dialogButtons(self,actions,default)
+            self.form.addLayout(but)
+        
+        self.setLayout(self.form)
+
+
+    def add(self,widgets,pos=-1):
+        if type(widgets) is not list:
+            widgets = [widgets]
+        for w in widgets:
+            if pos >= 0:
+                ind = pos
+            else:
+                ind = pos+self.form.count()
+            self.form.insertWidget(ind,w)
 
 
 ########################### Table widgets ###########################
@@ -2381,51 +2437,6 @@ class Tabs(QtGui.QTabWidget):
         QtGui.QTabWidget.__init__(self,parent)
         for header,widget in items:
             self.addTab(widget,header)
-
-
-class GenericDialog(QtGui.QDialog):
-    """A generic dialog widget.
-
-    The dialog is formed by a number of widgets stacked in a vertical box
-    layout. At the bottom is a horizontal button box with possible actions.
-
-    - `widgets`: a list of widgets to include in the dialog
-    - `title`: the window title for the dialog
-    - `parent`: the parent widget. If None, it is set to pf.GUI.
-    - `actions`: the actions to include in the bottom button box. By default,
-      an 'OK' button is displayed to close the dialog. Can be set to None
-      to avoid creation of a button box.
-    - `default`: the default action, 'OK' by default.
-    """
-    
-    def __init__(self,widgets,title=None,parent=None,actions=[('OK',)],default='OK'):
-        """Create the Dialog"""
-        if parent is None:
-            parent = pf.GUI
-        QtGui.QDialog.__init__(self,parent)
-        if title is None:
-            title = 'pyFormex Dialog'
-        self.setWindowTitle(str(title))
-        
-        self.form = QtGui.QVBoxLayout()
-        self.add(widgets)
-
-        if actions is not None:
-            but = dialogButtons(self,actions,default)
-            self.form.addLayout(but)
-        
-        self.setLayout(self.form)
-
-
-    def add(self,widgets,pos=-1):
-        if type(widgets) is not list:
-            widgets = [widgets]
-        for w in widgets:
-            if pos >= 0:
-                ind = pos
-            else:
-                ind = pos+self.form.count()
-            self.form.insertWidget(ind,w)
 
 
 class TableDialog(GenericDialog):

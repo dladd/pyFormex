@@ -38,9 +38,7 @@ import simple
 from plugins.tools import Plane
 from pyformex.arraytools import niceLogSize
 
-from gui.widgets import simpleInputItem as I
-from gui.widgets import groupInputItem as G
-
+from gui.widgets import simpleInputItem as _I, groupInputItem as _G
 import os, timer
 
 ##################### selection and annotations ##########################
@@ -372,8 +370,8 @@ def fillBorder():
     B = named('border')
     if B:
         res = askItems([
-            I('Fill how many',itemtype='radio',choices=['All','One']),
-            I('Filling method',itemtype='radio',choices=['radial','border']),
+            _I('Fill how many',itemtype='radio',choices=['All','One']),
+            _I('Filling method',itemtype='radio',choices=['radial','border']),
             ])
         if res['Fill how many'] == 'One':
             B = B[:1]
@@ -548,17 +546,17 @@ def showStatisticsDialog():
     keys = SelectableStatsValues.keys()
     _stat_dia = widgets.InputDialog(
         caption='Surface Statistics',items=[
-            I('Value',itemtype='vradio',choices=keys),
-            I('neighbours',text='Curvature Neighbourhood',value=1),
-            I('curval',text='Curvature Value',itemtype='vradio',choices=CurvatureValues),
-            I('clip',itemtype='hradio',choices=['None','Top','Bottom','Both']),
-            I('Clip Mode',itemtype='hradio',choices=['Range','Percentile']),
-            G('Clip Values',checkable=True,items=[
-                I('Top',1.0),
-                I('Bottom',0.0),
+            _I('Value',itemtype='vradio',choices=keys),
+            _I('neighbours',text='Curvature Neighbourhood',value=1),
+            _I('curval',text='Curvature Value',itemtype='vradio',choices=CurvatureValues),
+            _I('clip',itemtype='hradio',choices=['None','Top','Bottom','Both']),
+            _I('Clip Mode',itemtype='hradio',choices=['Range','Percentile']),
+            _G('Clip Values',checkable=True,items=[
+                _I('Top',1.0),
+                _I('Bottom',0.0),
                 ],
               ),
-            I('Cumulative Distribution',False),
+            _I('Cumulative Distribution',False),
             ],
         actions=[
             ('Close',_close_stats_dia),
@@ -597,11 +595,11 @@ def showSurfaceValue(S,txt,val,onEdges):
 def colorByFront():
     S = selection.check(single=True)
     if S:
-        res  = askItems([I('front type',choices=['node','edge']),
-                         I('number of colors',-1),
-                         I('front width',1),
-                         I('start at',0),
-                         I('first prop',0),
+        res  = askItems([_I('front type',choices=['node','edge']),
+                         _I('number of colors',-1),
+                         _I('front width',1),
+                         _I('start at',0),
+                         _I('first prop',0),
                          ])
         pf.app.processEvents()
         if res:
@@ -634,9 +632,9 @@ def partitionByConnection():
 def partitionByAngle():
     S = selection.check(single=True)
     if S:
-        res  = askItems([I('angle',60.),
-                         I('firstprop',1),
-                         #I('startat',0)
+        res  = askItems([_I('angle',60.),
+                         _I('firstprop',1),
+                         #_I('startat',0)
                          ])
         pf.app.processEvents()
         if res:
@@ -661,7 +659,7 @@ def scaleSelection():
     """Scale the selection."""
     FL = selection.check()
     if FL:
-        res = askItems([I('scale',1.0),
+        res = askItems([_I('scale',1.0),
                         ],caption = 'Scaling Factor')
         if res:
             scale = float(res['scale'])
@@ -674,7 +672,7 @@ def scale3Selection():
     """Scale the selection with 3 scale values."""
     FL = selection.check()
     if FL:
-        res = askItems([I('scale',[1.0,1.0,1.0],itemtype='point'),
+        res = askItems([_I('scale',[1.0,1.0,1.0],itemtype='point'),
                         ],caption = 'Scaling Factors')
         if res:
             scale = res['scale']
@@ -687,8 +685,8 @@ def translateSelection():
     """Translate the selection."""
     FL = selection.check()
     if FL:
-        res = askItems([I('direction',0),
-                        I('distance','1.0'),
+        res = askItems([_I('direction',0),
+                        _I('distance','1.0'),
                         ],caption = 'Translation Parameters')
         if res:
             dir = res['direction']
@@ -715,34 +713,34 @@ def rotate(mode='global'):
     FL = selection.check()
     if FL:
         if mode == 'global':
-            res = askItems([I('angle',90.0),
-                            I('axis',2),
+            res = askItems([_I('angle',90.0),
+                            _I('axis',2),
                             ])
             if res:
                 angle = res['angle']
                 axis = res['axis']
                 around = None
         elif mode == 'parallel':
-            res = askItems([I('angle',90.0),
-                            I('axis',2),
-                            I('point',[0.0,0.0,0.0],itemtype='point'),
+            res = askItems([_I('angle',90.0),
+                            _I('axis',2),
+                            _I('point',[0.0,0.0,0.0],itemtype='point'),
                             ])
             if res:
                 angle = res['angle']
                 axis = res['axis']
                 around = res['point']
         elif mode == 'central':
-            res = askItems([I('angle',90.0),
-                            I('axis',[1.0,0.0,0.0],itemtype='point'),
+            res = askItems([_I('angle',90.0),
+                            _I('axis',[1.0,0.0,0.0],itemtype='point'),
                             ])
             if res:
                 angle = res['angle']
                 axis = res['axis']
                 around = None
         elif mode == 'general':
-            res = askItems([I('angle',90.0),
-                            I('axis',[1.0,0.0,0.0],itemtype='point'),
-                            I('point',[0.0,0.0,0.0],itemtype='point'),
+            res = askItems([_I('angle',90.0),
+                            _I('axis',[1.0,0.0,0.0],itemtype='point'),
+                            _I('point',[0.0,0.0,0.0],itemtype='point'),
                             ])
             if res:
                 angle = res['angle']
@@ -783,10 +781,10 @@ def clipSelection():
     """
     FL = selection.check()
     if FL:
-        res = askItems([I('axis',0),
-                        I('begin',0.0),
-                        I('end',1.0),
-                        I('nodes','all',choices=['all','any','none']),
+        res = askItems([_I('axis',0),
+                        _I('begin',0.0),
+                        _I('end',1.0),
+                        _I('nodes','all',choices=['all','any','none']),
                         ],caption='Clipping Parameters')
         if res:
             bb = bbox(FL)
@@ -809,12 +807,12 @@ def clipAtPlane():
     dsize = bbox(FL).dsize()
     esize = 10 ** (niceLogSize(dsize)-5)
 
-    res = askItems([I('Point',[0.0,0.0,0.0],itemtype='point'),
-                    I('Normal',[1.0,0.0,0.0],itemtype='point'),
-                    I('Keep side',itemtype='radio',choices=['positive','negative']),
-                    I('Nodes',itemtype='radio',choices=['all','any','none']),
-                    I('Tolerance',esize),
-                    I('Property',1),
+    res = askItems([_I('Point',[0.0,0.0,0.0],itemtype='point'),
+                    _I('Normal',[1.0,0.0,0.0],itemtype='point'),
+                    _I('Keep side',itemtype='radio',choices=['positive','negative']),
+                    _I('Nodes',itemtype='radio',choices=['all','any','none']),
+                    _I('Tolerance',esize),
+                    _I('Property',1),
                     ],caption = 'Define the clipping plane')
     if res:
         P = res['Point']
@@ -844,11 +842,11 @@ def cutWithPlane():
     dsize = bbox(FL).dsize()
     esize = 10 ** (niceLogSize(dsize)-5)
 
-    res = askItems([I('Point',[0.0,0.0,0.0],itemtype='point'),
-                    I('Normal',[1.0,0.0,0.0],itemtype='point'),
-                    I('New props',[1,2,2,3,4,5,6]),
-                    I('Side','positive',itemtype='radio',choices=['positive','negative','both']),
-                    I('Tolerance',esize),
+    res = askItems([_I('Point',[0.0,0.0,0.0],itemtype='point'),
+                    _I('Normal',[1.0,0.0,0.0],itemtype='point'),
+                    _I('New props',[1,2,2,3,4,5,6]),
+                    _I('Side','positive',itemtype='radio',choices=['positive','negative','both']),
+                    _I('Tolerance',esize),
                     ],caption = 'Define the cutting plane')
     if res:
         P = res['Point']
@@ -881,14 +879,14 @@ def cutSelectionByPlanes():
 
     planes = listAll(clas=Plane)
     if len(planes) == 0:
-        warning("You have to first define some planes")
+        warning("You have to define some planes first.")
         return
         
-    res1 = widgets.Selection(planes,'Known %sobjects' % selection.object_type(),mode='multi',sort=True).getResult()
+    res1 = widgets.ListSelection(planes,caption='Known %sobjects' % selection.object_type(),sort=True).getResult()
     if res1:
-        res2 = askItems([I('Tolerance',0.),
-                         I('Color by','side',itemtype='radio',choices=['side', 'element type']), 
-                         I('Side','both',itemtype='radio',choices=['positive','negative','both']),
+        res2 = askItems([_I('Tolerance',0.),
+                         _I('Color by','side',itemtype='radio',choices=['side', 'element type']), 
+                         _I('Side','both',itemtype='radio',choices=['positive','negative','both']),
                          ],caption = 'Cutting parameters')
         if res2:
             planes = map(named, res1)
@@ -933,9 +931,9 @@ def intersectWithPlane():
     FL = selection.check()
     if not FL:
         return
-    res = askItems([I('Name suffix','intersect'),
-                    I('Point',(0.0,0.0,0.0)),
-                    I('Normal',(1.0,0.0,0.0)),
+    res = askItems([_I('Name suffix','intersect'),
+                    _I('Point',(0.0,0.0,0.0)),
+                    _I('Normal',(1.0,0.0,0.0)),
                     ],caption = 'Define the cutting plane')
     if res:
         suffix = res['Name suffix']
@@ -951,8 +949,8 @@ def slicer():
     S = selection.check(single=True)
     if not S:
         return
-    res = askItems([I('Direction',[1.,0.,0.]),
-                    I('# slices',20),
+    res = askItems([_I('Direction',[1.,0.,0.]),
+                    _I('# slices',20),
                     ],caption = 'Define the slicing planes')
     if res:
         axis = res['Direction']
@@ -974,9 +972,9 @@ def spliner():
     S = selection.check(single=True)
     if not S:
         return
-    res = askItems([I('Direction',[1.,0.,0.]),
-                    I('# slices',20),
-                    I('remove_invalid',False),
+    res = askItems([_I('Direction',[1.,0.,0.]),
+                    _I('# slices',20),
+                    _I('remove_invalid',False),
                     ],caption = 'Define the slicing planes')
     if res:
         axis = res['Direction']
@@ -1006,13 +1004,13 @@ def smooth():
     S = selection.check(single=True)
     if S:
         res = askItems([
-            I('method','lowpass',itemtype='radio',choices=['lowpass','laplace','gts']),
-            I('iterations',1),
-            I('lambda_value',0.5,min=0.0,max=1.0),
-            I('neighbourhood',1),
-            I('alpha',0.0),
-            I('beta',0.2),
-            I('verbose',False),
+            _I('method','lowpass',itemtype='radio',choices=['lowpass','laplace','gts']),
+            _I('iterations',1),
+            _I('lambda_value',0.5,min=0.0,max=1.0),
+            _I('neighbourhood',1),
+            _I('alpha',0.0),
+            _I('beta',0.2),
+            _I('verbose',False),
             ])
         if res:
             if not 0.0 <= res['lambda_value'] <= 1.0:
@@ -1052,7 +1050,7 @@ def export_surface():
         fn = askNewFilename(pf.cfg['workdir'],types)
         if fn:
             print("Exporting surface model to %s" % fn)
-            updateGUI()
+            updateGU_I()
             fe_abq.exportMesh(fn,S,eltype='S3',header="Abaqus model generated by pyFormex from input file %s" % os.path.basename(fn))
 
 
@@ -1063,14 +1061,14 @@ def export_volume():
     fn = askNewFilename(pf.cfg['workdir'],types)
     if fn:
         print("Exporting volume model to %s" % fn)
-        updateGUI()
+        updateGU_I()
         mesh = Mesh(PF['volume'])
         fe_abq.exportMesh(fn,mesh,eltype='C3D%d' % elems.shape[1],header="Abaqus model generated by tetgen from surface in STL file %s.stl" % PF['project'])
 
 
 def show_nodes():
     n = 0
-    data = askItems([I('node number',n),
+    data = askItems([_I('node number',n),
                      ])
     n = int(data['node number'])
     if n > 0:
@@ -1105,8 +1103,8 @@ def trim_border(elems,nodes,nb,visual=False):
 
 def trim_surface():
     check_surface()
-    res = askItems([I('Number of trim rounds',1),
-                    I('Minimum number of border edges',1),
+    res = askItems([_I('Number of trim rounds',1),
+                    _I('Minimum number of border edges',1),
                     ])
     n = int(res['Number of trim rounds'])
     nb = int(res['Minimum number of border edges'])
@@ -1176,11 +1174,11 @@ def show_volume():
 
 
 def createGrid():
-    res = askItems([I('name','__auto__'),
-                    I('nx',3),
-                    I('ny',3),
-                    I('b',1),
-                    I('h',1),
+    res = askItems([_I('name','__auto__'),
+                    _I('nx',3),
+                    _I('ny',3),
+                    _I('b',1),
+                    _I('h',1),
                     ])
     if res:
         globals().update(res)
@@ -1195,7 +1193,7 @@ def createGrid():
 
 
 def createCube():
-    res = askItems([I('name','__auto__'),
+    res = askItems([_I('name','__auto__'),
                     ])
     if res:
         name = res['name']
@@ -1205,8 +1203,8 @@ def createCube():
         selection.draw()
 
 def createSphere():
-    res = askItems([I('name','__auto__'),
-                    I('grade',4),
+    res = askItems([_I('name','__auto__'),
+                    _I('grade',4),
                     ])
     if res:
         name = res['name']
@@ -1218,15 +1216,15 @@ def createSphere():
 
 
 def createCylinder():
-    res = askItems([I('name','__auto__'),
-                    I('base diameter',1.),
-                    I('top diameter',1.),
-                    I('height',1.),
-                    I('angle',360.),
-                    I('div_along_length',6),
-                    I('div_along_circ',12),
-                    I('bias',0.),
-                    I('diagonals',choices=['up','down']),
+    res = askItems([_I('name','__auto__'),
+                    _I('base diameter',1.),
+                    _I('top diameter',1.),
+                    _I('height',1.),
+                    _I('angle',360.),
+                    _I('div_along_length',6),
+                    _I('div_along_circ',12),
+                    _I('bias',0.),
+                    _I('diagonals',choices=['up','down']),
                     ])
     if res:
         name = res['name']
@@ -1237,13 +1235,13 @@ def createCylinder():
 
 
 def createCone():
-    res = askItems([I('name','__auto__'),
-                    I('radius',1.),
-                    I('height',1.),
-                    I('angle',360.),
-                    I('div_along_radius',6),
-                    I('div_along_circ',12),
-                    I('diagonals',choices=['up','down']),
+    res = askItems([_I('name','__auto__'),
+                    _I('radius',1.),
+                    _I('height',1.),
+                    _I('angle',360.),
+                    _I('div_along_radius',6),
+                    _I('div_along_circ',12),
+                    _I('diagonals',choices=['up','down']),
                     ])
     if res:
         name = res['name']
@@ -1271,17 +1269,17 @@ def split():
 def coarsen():
     S = selection.check(single=True)
     if S:
-        res = askItems([I('min_edges',-1),
-                        I('max_cost',-1.0),
-                        I('mid_vertex',False),
-                        I('length_cost',False),
-                        I('max_fold',1.0),
-                        I('volume_weight',0.5),
-                        I('boundary_weight',0.5),
-                        I('shape_weight',0.0),
-                        I('progressive',False),
-                        I('log',False),
-                        I('verbose',False),
+        res = askItems([_I('min_edges',-1),
+                        _I('max_cost',-1.0),
+                        _I('mid_vertex',False),
+                        _I('length_cost',False),
+                        _I('max_fold',1.0),
+                        _I('volume_weight',0.5),
+                        _I('boundary_weight',0.5),
+                        _I('shape_weight',0.0),
+                        _I('progressive',False),
+                        _I('log',False),
+                        _I('verbose',False),
                         ])
         if res:
             selection.remember()
@@ -1297,10 +1295,10 @@ def coarsen():
 def refine():
     S = selection.check(single=True)
     if S:
-        res = askItems([I('max_edges',-1),
-                        I('min_cost',-1.0),
-                        I('log',False),
-                        I('verbose',False),
+        res = askItems([_I('max_edges',-1),
+                        _I('min_cost',-1.0),
+                        _I('log',False),
+                        _I('verbose',False),
                         ])
         if res:
             selection.remember()
@@ -1327,12 +1325,12 @@ def boolean():
         return
     
     ops = ['+ (Union)','- (Difference)','* (Intersection)']
-    res = askItems([I('surface 1',choices=surfs),
-                    I('surface 2',choices=surfs),
-                    I('operation',choices=ops),
-                    I('output intersection curve',False),
-                    I('check self intersection',False),
-                    I('verbose',False),
+    res = askItems([_I('surface 1',choices=surfs),
+                    _I('surface 2',choices=surfs),
+                    _I('operation',choices=ops),
+                    _I('output intersection curve',False),
+                    _I('check self intersection',False),
+                    _I('verbose',False),
                     ],'Boolean Operation')
     if res:
         SA = pf.PF[res['surface 1']]

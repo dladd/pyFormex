@@ -30,6 +30,7 @@ Graphic Tools plugin menu for pyFormex.
 import pyformex as pf
 from gui import menu
 
+from geometry_menu import autoName
 import utils
 from formex import *
 from gui.draw import *
@@ -37,6 +38,7 @@ from gui.widgets import simpleInputItem as _I
 from plugins import objects
 from plugins.tools import *
 from plugins.trisurface import TriSurface
+
 
 
 def editFormex(F,name):
@@ -177,6 +179,7 @@ def unix2dos():
 ##################### planes ##########################
 
 planes = objects.DrawableObjects(clas=Plane)
+pname = autoName(Plane)
 
 def editPlane(plane,name):
     res = askItems([('Point',list(plane.point())),

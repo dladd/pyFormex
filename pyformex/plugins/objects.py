@@ -190,11 +190,11 @@ class Objects(object):
         This sets the current selection to the selected names.
         Return a list with the selected names or None.
         """
-        res = widgets.Selection(
-            self.listAll(),
-            'Known %sobjects' % self.object_type(),
-            mode,sort=True,selected=self.names
-            ).getResult()
+        res = widgets.ListSelection(
+            caption='Known %sobjects' % self.object_type(),
+            choices=self.listAll(),
+            default=self.names,
+            sort=True).getResult()
         if res is not None:
             self.set(res)
         return res

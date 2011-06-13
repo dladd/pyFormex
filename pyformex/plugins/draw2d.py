@@ -157,9 +157,9 @@ def drawObject2D(mode,npoints=-1,zvalue=0.,coords=None):
 
 def selectObject(mode=None):
     selection = objects.drawAble(like=mode+'-')
-    res = widgets.Selection(
+    res = widgets.ListSelection(
         selection.listAll(),
-        'Known %ss' % mode,
+        caption='Known %ss' % mode,
         sort=True).getResult()
     # UNFINISHED
 
