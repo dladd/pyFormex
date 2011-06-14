@@ -55,9 +55,9 @@ def showElement(eltype,options):
     else:
         view('front')
         if options['Force dimensionality']:
-            flat()
+            flatwire()
         else:
-            smooth()
+            smoothwire()
         
     #print options['Deformed']
     if options['Deformed']:
@@ -69,33 +69,26 @@ def showElement(eltype,options):
                 M.coords[...,1] = 0.0
 
     i = 'xyz'.find(options['Mirrored'])
-    if i >= 0:
-        M = M.reflect(i)
-        #print M
+    if i>=0:
+        M = M.trl(i,0.2)
+        M = M + M.reflect(i)
+
+    M.setProp([5,6])
+    
+    if options['Draw as'] == 'Formex':
+        M = M.toFormex()
+    elif options['Draw as'] == 'Border':
+        M = M.getBorderMesh()
+        
     draw(M.coords,wait=False)
     drawNumbers(M.coords)
-    
-
-    #print M.elems.report()
-    draw(M,color=red,bkcolor=blue)
-
-    return
-
-    for i in range(el.ndim+1):
-        e = M.getLowerEntities(i)
-        F = Mesh(v,e)
-     
-        if options['Draw as'] == 'Formex':
-            F = F.toFormex()
-            
-        draw(F,color=colors[i])
-        if i == 0:
-            drawVertexNumbers(F)
 
 
-    clear()
-    F = M.getBorderMesh()
-    draw(F)
+    if options['Color setting'] == 'prop':
+        draw(M)
+    else:
+        draw(M,color=red,bkcolor=blue)
+        
          
         
 if __name__ == "draw":
@@ -108,6 +101,7 @@ if __name__ == "draw":
         'Deformed':True,
         'Mirrored':'No',
         'Draw as':'Mesh',
+        'Color setting':'direct',
         'Force dimensionality':False,
         }
     res.update(pf.PF.get('Elements_data',{}))
@@ -119,7 +113,8 @@ if __name__ == "draw":
             I('Element Type',choices=['All',]+ElemList),
             I('Deformed',itemtype='bool'),
             I('Mirrored',itemtype='radio',choices=['No','x','y','z']),
-            I('Draw as',itemtype='radio',choices=['Mesh','Formex',]),
+            I('Draw as',itemtype='radio',choices=['Mesh','Formex','Border']),
+            I('Color setting',itemtype='radio',choices=['direct','prop']),
             I('Force dimensionality',itemtype='bool'),
             ])
     if not res:
@@ -137,6 +132,8 @@ if __name__ == "draw":
     delay(1)
     for el in ellist:
         showElement(el,res)
+
+        
     
     
 # End

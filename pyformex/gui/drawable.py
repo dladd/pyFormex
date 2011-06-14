@@ -268,10 +268,28 @@ def drawQuadraticCurves(x,e=None,color=None):
 
     If color is given it is an (nlines,3) array of RGB values.
     """
+    pf.debug("drawQuadraticCurves")
+    if e is None:
+        nelems,nfaces,nplex = x.shape[:3]
+        x = x.reshape(-1,nplex,3)
+    else:
+        nelems,nfaces,nplex = e.shape[:3]
+        e = e.reshape(-1,nplex)
+
+    if color is not None:
+        if color.ndim == 2:
+            pf.debug("COLOR SHAPE BEFORE MULTIPLEXING %s" % str(color.shape))
+            color = color_multiplex(color,nfaces)
+            pf.debug("COLOR SHAPE AFTER  MULTIPLEXING %s" % str(color.shape))
+        if color.ndim > 2:
+            color = color.reshape((nelems*nfaces,) + color.shape[-2:]).squeeze()
+            pf.debug("COLOR SHAPE AFTER RESHAPING %s" % str(color.shape))
+
     if e is None:
         xx = x.copy()
     else:
         xx = x[e]
+
     #print xx.shape
     #print xx
     xx[...,1,:] = 2*xx[...,1,:] - 0.5*(xx[...,0,:] + xx[...,2,:])
@@ -378,7 +396,23 @@ def drawQuadraticSurfaces(x,e,color=None):
 
     If color is given it is an (nsurf,3) array of RGB values.
     """
-    pf.debug("DRAWQUADSURF")
+    pf.debug("drawQuadraticSurfaces")
+    if e is None:
+        nelems,nfaces,nplex = x.shape[:3]
+        x = x.reshape(-1,nplex,3)
+    else:
+        nelems,nfaces,nplex = e.shape[:3]
+        e = e.reshape(-1,nplex)
+
+    if color is not None:
+        if color.ndim == 2:
+            pf.debug("COLOR SHAPE BEFORE MULTIPLEXING %s" % str(color.shape))
+            color = color_multiplex(color,nfaces)
+            pf.debug("COLOR SHAPE AFTER  MULTIPLEXING %s" % str(color.shape))
+        if color.ndim > 2:
+            color = color.reshape((nelems*nfaces,) + color.shape[-2:]).squeeze()
+            pf.debug("COLOR SHAPE AFTER RESHAPING %s" % str(color.shape))
+            
     if e is None:
         xx = x.copy()
     else:
@@ -492,8 +526,6 @@ def drawEdges(x,e,edges,eltype,color=None):
             pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
 
         if eltype == 'line3':
-            # elems = elems.reshape(-1,fa.shape[-1])
-            #print coords,elems
             drawQuadraticCurves(coords,elems,color)
         else:
             draw_faces(coords,elems,'wireframe',color,1.0)
