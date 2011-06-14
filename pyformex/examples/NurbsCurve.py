@@ -1,7 +1,7 @@
-#!/usr/bin/env pyformex --gui
+#!/usr/bin/pyformex --gui
 # $Id$
 
-"""Nurbs
+"""NurbsCurve
 
 level = 'advanced'
 topics = ['geometry', 'curve']

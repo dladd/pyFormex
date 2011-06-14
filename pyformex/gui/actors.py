@@ -739,7 +739,7 @@ class NurbsSurfActor(Actor):
         Actor.__init__(self,**kargs)
         self.object = data
         self.color = saneColor(color)
-        self.samplingTolerance = 50.0
+        self.samplingTolerance = 10.0
 
         
     def bbox(self):

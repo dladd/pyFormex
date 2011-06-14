@@ -32,7 +32,7 @@ from coords import *
 from lib import nurbs
 from plugins import curve
 from pyformex import options
-from gui.actors import NurbsActor
+from gui.actors import NurbsActor,NurbsSurfActor
 import olist
 
 
@@ -259,11 +259,13 @@ class NurbsCurve(Geometry4):
     """A NURBS curve
 
     The Nurbs curve is defined by nctrl control points, a degree (>= 1) and
-    a knot vector with knots = nctrl+degree+1 parameter values, in ascending
-    order.
-    The knot values are only defined upon a multiplicative constant, equal to
-    the largest value. Sensible default values are constructed automatically
-    by a call to the knotVector() function.
+    a knot vector with knots = nctrl+degree+1 parameter values.
+
+    The knots vector should hold nknots values in ascending order. The values
+    are only defined upon a multiplicative constant and will be normalized
+    to set the last value to 1.
+    Sensible default values are constructed automatically by a call to the
+    knotVector() function. 
 
     If no knots are given and no degree is specified, the degree is set to
     the number of control points - 1 if the curve is blended. If not blended,
@@ -319,6 +321,7 @@ class NurbsCurve(Geometry4):
             knots = knotsVector(nctrl,degree,blended=blended,closed=closed)
         else:
             knots = asarray(knots).ravel()
+            knots = knots / knots[-1]
 
         nknots = knots.shape[0]
         
@@ -432,18 +435,110 @@ class NurbsCurve(Geometry4):
         X = nurbs.curveDecompose(self.coords,self.knots)
         return NurbsCurve(X,degree=self.degree,blended=False)
 
-
-    def normalizeKnots(self):
-        self.knots = self.knots / self/knots[-1]
-
         
 
     def actor(self,**kargs):
         """Graphical representation"""
         return NurbsActor(self,**kargs)
-
     
 
+#######################################################
+## NURBS Surface ##
+
+
+class NurbsSurface(Geometry4):
+
+    """A NURBS surface
+
+    The Nurbs surface is defined as a tensor product of NURBS curves in two
+    parametrical directions u and v. The control points form a grid of
+    (nctrlu,nctrlv) points. The other data are like those for a NURBS curve,
+    but need to be specified as a tuple for the (u,v) directions.
+
+    The knot values are only defined upon a multiplicative constant, equal to
+    the largest value. Sensible default values are constructed automatically
+    by a call to the knotVector() function.
+
+    If no knots are given and no degree is specified, the degree is set to
+    the number of control points - 1 if the curve is blended. If not blended,
+    the degree is not set larger than 3.
+
+    
+    order (2,3,4,...) = degree+1 = min. number of control points
+    ncontrol >= order
+    nknots = order + ncontrol >= 2*order
+
+    convenient solutions:
+    OPEN:
+      nparts = (ncontrol-1) / degree
+      nintern = 
+    """
+    
+    def __init__(self,control,degree=(None,None),wts=None,knots=(None,None),closed=(False,False),blended=(True,True)):
+
+        self.closed = closed
+
+        control = Coords4(control)
+        if wts is not None:
+            control.deNormalize(wts.reshape(wts.shape[-1],1))
+
+        for d in range(2):
+            nctrl = control.shape[d]
+            deg = degree[d]
+            kn = knots[d]
+            bl = blended[d]
+            cl = closed[d]
+            
+            if deg is None:
+                if kn is None:
+                    deg = nctrl-1
+                    if not bl:
+                        deg = min(deg,3)
+                else:
+                    deg = len(kn) - nctrl -1
+                    if deg <= 0:
+                        raise ValueError,"Length of knot vector (%s) must be at least number of control points (%s) plus 2" % (len(knots),nctrl)
+
+            order = deg+1
+
+            if nctrl < order:
+                raise ValueError,"Number of control points (%s) must not be smaller than order (%s)" % (nctrl,order)
+
+            if kn is None:
+                kn = knotsVector(nctrl,deg,blended=bl,closed=cl)
+            else:
+                kn = asarray(kn).ravel()
+
+            nknots = kn.shape[0]
+
+            if nknots != nctrl+order:
+                raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
+
+            if d == 0:
+                self.tknots = kn
+            else:
+                self.sknots = kn
+                
+        self.coords = control
+        self.degree = degree
+        self.closed = closed
+
+
+    def order(self):
+        return (self.sknots.shape[0]-self.coords.shape[0],
+                self.tknots.shape[0]-self.coords.shape[1])
+        
+    def bbox(self):
+        return self.coords.toCoords().bbox()
+        
+
+    def actor(self,**kargs):
+        """Graphical representation"""
+        return NurbsSurfActor(self,**kargs)
+
+
+################################################################
+    
 
 def uniformParamValues(n,umin=0.0,umax=1.0):
     """Create a set of uniform parameter values in the range umin..umax"""
