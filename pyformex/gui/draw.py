@@ -443,7 +443,7 @@ def draw(F,
     """
     if 'flat' in kargs:
         import warnings
-        warnings.warn('warn_flat_removed')
+        warnings.warn('warn_flat_removed',DeprecationWarning,stacklevel=2)
         
     # Facility for drawing database objects by name
     if type(F) == str:

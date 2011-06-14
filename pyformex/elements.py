@@ -140,10 +140,9 @@ Proposed changes in the Element class
         self.vertices = Coords(vertices)
         self.edges = _sanitize(edges)
         self.faces = _sanitize(faces)
-        if 'drawedges' in kargs:
-            self.drawedges = [ _sanitize(e) for e in kargs['drawedges'] ]
-        if 'drawfaces' in kargs:
-            self.drawfaces = [ _sanitize(e) for e in kargs['drawfaces'] ]
+        for a in [ 'drawedges', 'drawedges2', 'drawfaces', 'drawfaces2']:
+            if a in kargs:
+                setattr(self,a, [ _sanitize(e) for e in kargs[a] ])
         if 'reversed' in kargs:
             self.reversed = kargs['reversed']
         # add the element to the collection
@@ -225,12 +224,16 @@ Proposed changes in the Element class
             return self.faces
  
 
-    def getDrawEdges(self):
+    def getDrawEdges(self,quadratic=False):
+        if quadratic and hasattr(self,'drawedges2'):
+            return self.drawedges2
         if not hasattr(self,'drawedges'):
             self.drawedges = self.getEdges().reduceDegenerate()
         return self.drawedges
 
-    def getDrawFaces(self):
+    def getDrawFaces(self,quadratic=False):
+        if quadratic and hasattr(self,'drawfaces2'):
+            return self.drawfaces2
         if not hasattr(self,'drawfaces'):
             self.drawfaces = self.getFaces().reduceDegenerate()
         return self.drawfaces
@@ -363,10 +366,8 @@ Quad8 = Element(
           ]]),
     edges = ('line3',[ (0,4,1), (1,5,2), (2,6,3), (3,7,0), ]),
     reversed = (3,2,1,0,6,5,4,7),
-    drawfaces = {
-        '1': [('tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], )],
-        '2': [('quad8', [(0,1,2,3,4,5,6,7)], )]
-        }[pyformex.cfg['render/surface']]
+    drawfaces = [('tri3', [(0,4,7), (1,5,4), (2,6,5), (3,7,6), (4,5,6), (4,6,7) ], )],
+    drawfaces2 = [('quad8', [(0,1,2,3,4,5,6,7)], )],
     )
     
 
@@ -379,10 +380,8 @@ Quad9 = Element(
           ]]),
     edges = Quad8.edges,
     reversed = (3,2,1,0,6,5,4,7,8),
-    drawfaces = {
-        '1': [('tri3', [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], )],
-        '2': [('quad9', [(0,1,2,3,4,5,6,7,8)], )]
-        }[pyformex.cfg['render/surface']]
+    drawfaces = [('tri3', [(0,4,8),(4,1,8),(1,5,8),(5,2,8),(2,6,8),(6,3,8),(3,7,8),(7,0,8) ], )],
+    drawfaces2 = [('quad9', [(0,1,2,3,4,5,6,7,8)], )],
     )
 
 ######### 3D ###################

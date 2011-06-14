@@ -378,7 +378,7 @@ def drawQuadraticSurfaces(x,e,color=None):
 
     If color is given it is an (nsurf,3) array of RGB values.
     """
-    #print "DRAWQUADSURF"
+    pf.debug("DRAWQUADSURF")
     if e is None:
         xx = x.copy()
     else:

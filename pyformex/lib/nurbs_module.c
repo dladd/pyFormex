@@ -60,7 +60,42 @@ static double dotprod(double *a, int ia, double *b, int ib, int n)
   return t;
 }
 
-static double **matrix(int nrows, int ncols) 
+/* Distance between two points in n dimensions */
+/* p and q are n-dimensional points. */
+static double distance4d(double *a, double *b, int n)
+{
+  int i;
+  double s,t;
+  t = 0.0;
+  for (i=0; i<n; i++) {
+    s = (*a)-(*b);
+    t += s*s;
+    ++a;
+    ++b;
+  }
+  return t;
+}
+  
+
+/* Turn an array into a matrix */
+/* An array here is a contiguous memory space of (nrows*ncols) doubles,
+   stored in row first order. This function creates an array of pointers
+   to the start of each row. As a result the array elements can be addressed
+   as p[i][j], and operations can be done on the whole row.
+*/
+static double **matrix(double*a, int nrows, int ncols) 
+{
+  int row;
+  double **mat;
+
+  mat = (double**) malloc (nrows*sizeof(double*));
+  mat[0] = a;
+  for (row = 1; row < nrows; row++)
+    mat[row] = mat[row-1] + ncols;  
+  return mat;
+}
+
+static double **newmatrix(int nrows, int ncols) 
 {
   int row;
   double **mat;
@@ -248,7 +283,7 @@ static double _horner(double *a, int n, double u)
 /* } */
 
 
-/* bernstein */
+/* _bernstein */
 /*
 Compute the value of a Bernstein polynomial.
 
@@ -263,7 +298,7 @@ The value of the Bernstein polynomial B(i,n) at parameter value u.
 Algorithm A1.2 from 'The NURBS Book' p20. 
 */
 
-static double bernstein(int i, int n, double u)
+static double _bernstein(int i, int n, double u)
 {
   int j, k;
   double u1;
@@ -278,7 +313,7 @@ static double bernstein(int i, int n, double u)
 }
 
 
-/* allBernstein */
+/* all_bernstein */
 /*
 Compute the value of all n-th degree Bernstein polynomials.
 
@@ -293,7 +328,7 @@ at parameter value u.
 Algorithm A1.3 from 'The NURBS Book' p20. 
 */
 
-static void allBernstein(int n, double u, double *B)
+static void all_bernstein(int n, double u, double *B)
 {
   int j, k;
   double u1, temp, saved;
@@ -311,7 +346,7 @@ static void allBernstein(int n, double u, double *B)
 }
 
 
-/* findSpan */
+/* find_span */
 /*
 Find the knot span index of the parametric point u. 
 
@@ -328,7 +363,7 @@ Returns:
 
 Algorithm A2.1 from 'The NURBS Book' pg68.
 */
-static int findSpan(double *U, double u, int p, int n)
+static int find_span(double *U, double u, int p, int n)
 {
   int low, high, mid;
   int cnt=0;
@@ -352,7 +387,7 @@ static int findSpan(double *U, double u, int p, int n)
   return(mid);
 }
 
-/* basisFuns */
+/* basis_funs */
 /*
 Compute the nonvanishing B-spline basis functions for index span i. 
 
@@ -361,14 +396,14 @@ Input:
 - U: knot sequence: U[0] .. U[m]
 - u: parametric value: U[0] <= u <= U[m]
 - p: degree of the B-spline basis functions
-- i: index of the knot span for value u (from findSpan())
+- i: index of the knot span for value u (from find_span())
 
 Output:
 - N: (p+1) values of nonzero basis functions at u
 
 Algorithm A2.2 from 'The NURBS Book' pg70.
 */
-static void basisFuns(double *U, double u, int p, int i, double *N)
+static void basis_funs(double *U, double u, int p, int i, double *N)
 {
   int j,r;
   double saved, temp;
@@ -394,7 +429,7 @@ static void basisFuns(double *U, double u, int p, int i, double *N)
   free(right);
 }
 
-/* basisDerivs */
+/* basis_derivs */
 /*
 Compute the nonvanishing B-spline basis functions and their derivatives. 
 
@@ -403,7 +438,7 @@ Input:
 - U: knot sequence: U[0] .. U[m]
 - u: parametric value: U[0] <= u <= U[m]
 - p: degree of the B-spline basis functions
-- i: index of the knot span for value u (from findSpan())
+- i: index of the knot span for value u (from find_span())
 - n: number of derivatives to compute (n <= p)
 
 Output:
@@ -412,13 +447,13 @@ Output:
 
 Algorithm A2.3 from 'The NURBS Book' pg72.
 */
-static void basisDerivs(double *U, double u, int p, int i, int n, double *dN)
+static void basis_derivs(double *U, double u, int p, int i, int n, double *dN)
 {
   int j,k,r,s1,s2,rk,pk,j1,j2;
   double temp, saved, der;
   double **ndu, *a, *left, *right;
 
-  ndu = matrix(p+1, p+1);
+  ndu = newmatrix(p+1, p+1);
   a = (double *) malloc(2*(p+1)*sizeof(double));
   left = (double *) malloc((p+1)*sizeof(double));
   right = (double *) malloc((p+1)*sizeof(double));
@@ -486,7 +521,7 @@ static void basisDerivs(double *U, double u, int p, int i, int n, double *dN)
 }
 
 
-/* curvePoints */
+/* curve_points */
 /*
 Compute points on a B-spline curve. 
 
@@ -505,7 +540,7 @@ Output:
 
 Modified algorithm A3.1 from 'The NURBS Book' pg82.
 */
-static void curvePoints(double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *pnt)
+static void curve_points(double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *pnt)
 {
   int i, j, p, s, t;
   
@@ -519,8 +554,8 @@ static void curvePoints(double *P, int nc, int nd, double *U, int nk, double *u,
   for (j = 0; j < nu; j++) {
 
     /* find the span index of u[j] */
-    s = findSpan(U,u[j],p,nc-1);
-    basisFuns(U,u[j],p,s,N);
+    s = find_span(U,u[j],p,nc-1);
+    basis_funs(U,u[j],p,s,N);
 
     t = (s-p) * nd;
     for (i = 0; i < nd; i++) {
@@ -531,7 +566,7 @@ static void curvePoints(double *P, int nc, int nd, double *U, int nk, double *u,
 } 
 
 
-/* curveDerivs */
+/* curve_derivs */
 /*
 Compute derivatives of a B-spline curve. 
 
@@ -551,7 +586,7 @@ Output:
 
 Modified algorithm A3.2 from 'The NURBS Book' pg93.
 */
-static void curveDerivs(int n, double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *pnt)
+static void curve_derivs(int n, double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *pnt)
 {
   int i, j, l, p, s, t;
 
@@ -567,8 +602,8 @@ static void curveDerivs(int n, double *P, int nc, int nd, double *U, int nk, dou
 
   /* for each parametric point r */
   for (j = 0; j < nu; j++) {
-    s = findSpan(U,u[j],p,nc-1);
-    basisDerivs(U,u[j],p,s,du,dN);
+    s = find_span(U,u[j],p,nc-1);
+    basis_derivs(U,u[j],p,s,du,dN);
 
     /* for each nonzero dervative */
     for (l = 0; l <= du; l++) {
@@ -626,12 +661,12 @@ Modified algorithm A3.5 from 'The NURBS Book' pg103.
 /*   for (j = 0; j < nu; j++) { */
 
 /*     /\* find the span index of u[j] *\/ */
-/*     su = findSpan(U,u[2*j],p,ns-1); */
-/*     basisFuns(U,u[2*j],p,su,Nu); */
+/*     su = find_span(U,u[2*j],p,ns-1); */
+/*     basis_funs(U,u[2*j],p,su,Nu); */
 
 /*     /\* find the span index of v[j] *\/ */
-/*     sv = findSpan(V,u[2*j+1],q,nt-1); */
-/*     basisFuns(V,u[2*j+1],q,sv,Nv); */
+/*     sv = find_span(V,u[2*j+1],q,nt-1); */
+/*     basis_funs(V,u[2*j+1],q,sv,Nv); */
 
 /*     for (i = 0; i < nd; i++) { */
 /*       iu = (su-p) * nd; */
@@ -648,7 +683,7 @@ Modified algorithm A3.5 from 'The NURBS Book' pg103.
 
 
 
-/* curveKnotRefine */
+/* curve_knot_refine */
 /*
 Refine curve knot vector. 
 
@@ -669,7 +704,7 @@ Output:
 Modified algorithm A5.1 from 'The NURBS Book' pg164.
 */
 
-static void curveKnotRefine(double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *newP, double *newU)
+static void curve_knot_refine(double *P, int nc, int nd, double *U, int nk, double *u, int nu, double *newP, double *newU)
 {
   int a, b, r, l, i, j, k, n, p, q, ind;
   double alfa;
@@ -678,8 +713,8 @@ static void curveKnotRefine(double *P, int nc, int nd, double *U, int nk, double
   n = nc - 1;
   r = nu - 1;
 
-  a = findSpan(U,u[0],p,n);
-  b = findSpan(U,u[r],p,n) + 1;
+  a = find_span(U,u[0],p,n);
+  b = find_span(U,u[r],p,n) + 1;
 
   for (j = 0; j < a-p; j++) 
     for (q=0; q<nd; q++) newP[j*nd+q] = P[j*nd+q];
@@ -716,7 +751,7 @@ static void curveKnotRefine(double *P, int nc, int nd, double *U, int nk, double
   }
 }
 
-/* curveDecompose */
+/* curve_decompose */
 /*
 Decompose a Nurbs curve in Bezier segments. 
 
@@ -737,7 +772,7 @@ Modified algorithm A5.6 from 'The NURBS Book' pg173.
 */
   
 
-static void curveDecompose(double *P, int nc, int nd, double *U, int nk, double *newP)
+static void curve_decompose(double *P, int nc, int nd, double *U, int nk, double *newP)
 {
   int i, j, k, p, s, m, r, a, b, mult, n, nb, ii, save;
   double numer, alpha, *alfa;
@@ -806,6 +841,96 @@ static void curveDecompose(double *P, int nc, int nd, double *U, int nk, double 
   free(alfa);
 }
 
+/* surfaceDecompose */
+/*
+Decompose a Nurbs surface in Bezier patches. 
+
+Input:
+
+- p: degree of the B-spline
+- P: control points P(nc,nd)
+- nc: number of control points = n+1
+- nd: dimension of the points (3 or 4)
+- U: knot sequence: U[0] .. U[m]   m = n+p+1 = nc+p
+
+Output:
+
+- newP: (nb*p+1,nd) new control points
+- nb: number of Bezier segments 
+
+Modified algorithm A5.7 from 'The NURBS Book' pg177.
+*/
+  
+
+/* static void surfaceDecompose(double *P, int nc, int nd, double *U, int nk, double *newP) */
+/* { */
+/*   int i, j, k, p, s, m, r, a, b, mult, n, nb, ii, save; */
+/*   double numer, alpha, *alfa; */
+
+/*   n = nc - 1; */
+/*   m = nk - 1; */
+/*   p = m - n - 1; */
+
+/*   alfa = (double *) malloc(p*sizeof(double)); */
+
+/*   a = p; */
+/*   b = p+1; */
+/*   nb = 0; */
+  
+/*   /\* First bezier segment *\/ */
+/*   for (i = 0; i < (p+1)*nd; i++) newP[i] = P[i]; */
+
+/*   // Loop through knot vector *\/ */
+/*   while (b < m) { */
+/*     i = b; */
+/*     while (b < m && U[b] == U[b+1]) b++; */
+/*     mult = b-i+1; */
+    
+/*     if (mult < p) { */
+/*       printf("mult at %d is %d < %d\n",b,mult,p); */
+/*       /\* compute alfas *\/ */
+/*       numer = U[b] - U[a]; */
+/*       for (k = p; k > mult; k--) */
+/*         alfa[k-mult-1] = numer / (U[a+k]-U[a]); */
+
+/*       /\* Insert knot U[b] r times *\/ */
+/*       r = p - mult; */
+/*       for (j = 1; j <= r; j++) { */
+/*         save = r - j; */
+/*         s = mult + j; 	/\* Number of new points *\/ */
+/*         for (k = p; k >= s; k--) { */
+/* 	  alpha = alfa[k-s]; */
+/* 	  printf("alpha = %f\n",alpha); */
+/*           for (ii = 0; ii < nd; ii++) { */
+/*             newP[(nb+k)*nd+ii] = alpha*newP[(nb+k)*nd+ii] + (1.0-alpha)*newP[(nb+k-1)*nd+ii]; */
+/* 	    printf("Setting element %d to %f\n",(nb+k)*nd+ii,newP[(nb+k)*nd+ii]); */
+/* 	  } */
+/* 	} */
+/* 	if (b < m) */
+/* 	  /\* Control point of next segment *\/ */
+/* 	  for (ii = 0; ii < nd; ii++) { */
+/* 	    newP[(nb+p+save)*nd+ii] = newP[(nb+p)*nd+ii]; */
+/* 	    printf("Copying element %d to %f\n",(nb+p+save)*nd+ii,newP[(nb+p+save)*nd+ii]); */
+/* 	  } */
+/*       } */
+/*     } */
+/*     /\* Bezier segment completed *\/ */
+/*     nb += p; */
+/*     if (b < m) { */
+/*       /\* Initialize for next segment *\/ */
+/*       for (i = r; i <= p; i++) */
+/*         for (ii = 0; ii < nd; ii++) { */
+/*           newP[(nb+i)*nd+ii] = P[(b-p+i)*nd+ii]; */
+/* 	  printf("Initializing element %d to %f\n",(nb+i)*nd+ii,newP[(nb+i)*nd+ii]); */
+/* 	} */
+/*       a = b; */
+/*       b++; */
+/*     } */
+/*   } */
+  
+/*   free(alfa); */
+/* } */
+
 
 /* static char bspdegelev_doc[] = */
 /* "Degree elevate a B-Spline t times.\n\ */
@@ -821,6 +946,134 @@ static void curveDecompose(double *P, int nc, int nd, double *U, int nk, double 
 /* Modified version of Algorithm A5.9 from 'The NURBS BOOK' pg206.\n\ */
 /* \n"; */
 
+
+/* Find last occurrence of u in U */
+static int find_last_occurrence(double *U, double u)
+{
+  int i = 0;
+  while (U[i] <= u) ++i;
+  return i-1;
+}
+
+/* Find multiplicity of u in U, where r is the last occurrence of u in U*/
+static int find_multiplicity(double *U, double u, int r)
+{
+  int i = r;
+  while (U[i] == u) --i;
+  return r-i;
+}
+
+
+
+/* curve_knot_remove */
+/*
+Refine curve knot vector. 
+
+Input:
+
+- p: degree of the B-spline
+- P: control points P(nc,nd)
+- nc: number of control points = n+1
+- nd: dimension of the points (3 or 4)
+- U: knot sequence: U[0] .. U[m]   m = n+p+1 = nc+p
+- u: knot value to remove: U[0] <= u <= U[m]
+- num: number of times to remove u
+- tol: allowable tolerance for deviation of the curve. See NURBS book, p. 185
+
+Output:
+- t: actual number of times that u was removed
+P and U are replaced with the new control points and knot vector
+
+Modified algorithm A5.8 from 'The NURBS Book' pg185.
+*/
+
+static int curve_knot_remove(double *P, int nc, int nd, double *U, int nk, double u, int num, double tol)
+{
+  int n,m,p,ord,fout,last,first,t,off,k,i,j,ii,jj,remflag,r,s,kk;
+  double alfi,alfj;
+
+  n = nc - 1;
+  m = nk - 1;
+  p = m - n - 1;
+
+  double *temp = (double*) malloc((2*p+1)*nd*sizeof(double));
+  double *xtemp = (double*) malloc(nd*sizeof(double));
+
+  r = find_last_occurrence(U,u);
+  s = find_multiplicity(U,u,r);
+
+  ord = p+1;
+  fout = (2*r-s-p)/2;  /* First control point out */
+  last = r-s;
+  first = r-p;
+  for (t=0; t<num; t++) {
+    /* This loop is Eq. (5.28) */
+    off = first-1; /* Diff in index between temp and P */
+    for (k=0; k<nd; ++k) temp[0*nd+k] = P[off*nd+k];
+    for (k=0; k<nd; ++k) temp[(last+1-off)*nd+k] = P[(last+1)*nd+k];
+    i = first;
+    j = last;
+    ii = 1;
+    jj = last-off;
+    remflag = 0;
+    while (j-i > t) {
+      /* Compute new control points for onr removeal step */
+      alfi = (u-U[i])/(U[i+ord+t]-U[i]);
+      alfj = (u-U[j-t])/(U[j+ord]-U[j-t]);
+      for (k=0; k<nd; ++k) temp[ii*nd+k] = (P[i*nd+k]-(1.0-alfi)*temp[(ii-1)*nd+k])/alfi;
+      for (k=0; k<nd; ++k) temp[jj*nd+k] = (P[j*nd+k]-alfj*temp[(jj+1)*nd+k])/(1.0-alfj);
+      ++i; ++ii;
+      --j; --jj;
+    }
+    /* Check if knot removable */
+    if (j-i < t) {
+      if (distance4d(temp+(ii-1)*nd,temp+(jj+1)*nd,nd) <= tol)
+	remflag = 1;
+    }
+    else {
+      alfi = (u-U[i])/(U[i+ord+t]-U[i]);
+      for (k=0; k<nd; ++k) xtemp[k] = alfi*temp[(ii+t+1)*nd+k] + (1.0-alfi)*temp[(ii-1)*nd+k];
+      if (distance4d(P+i*nd,xtemp,nd) <= tol)
+	remflag = 1;
+    }
+    if (remflag == 0)
+      /* Cannot remove any more knots */
+      /* Get out of for-loop */
+      break;
+    else {
+      /* Succesful removal. Save new control points */
+      i = first;
+      j = last;
+      while (j-i > t) {
+	for (k=0; k<nd; ++k) P[i*nd+k] = temp[(i-off)*nd+k];
+	for (k=0; k<nd; ++k) P[j*nd+k] = temp[(j-off)*nd+k];
+	++i;
+	--j;
+      }
+    }
+    --first;
+    ++last;
+  }
+  if (t==0) return t;
+  /* Shift knots */
+  for (kk=r+1; kk<= m; ++kk) U[kk-t] = U[kk];
+  /* Pj thru Pi will be overwritten */
+  j = fout;
+  i = j;
+  for (kk=1; kk<t; ++kk) {
+  /*   if (kk % 2 == 1) */
+  /*     ++i; */
+  /*   else */
+  /*     --i; */
+  /* } */
+  /* for (kk=i+1; kk<=n ++kk) { /\* Shift *\/ */
+  /*   for (k=0; k<nd; ++k) P[j*nd+k] = P[kk*nd+k]; */
+  /*   ++j; */
+  }
+  return t;
+}
+
+
 /* static void _bspdegelev(int p, double **P, int nd, int nc, double *U,  */
 /*                int t, int *nh, double **newP, double *newU) */
 /* { */
@@ -831,10 +1084,10 @@ static void curveDecompose(double *P, int nc, int nd, double *U, int nk, double 
 
 /*   n = nc - 1; */
 
-/*   bezalfa = matrix(d+1,p+t+1); */
-/*   bpts = matrix(nd,p+1); */
-/*   ebpts = matrix(nd,p+t+1); */
-/*   Nextbpts = matrix(nd,p); */
+/*   bezalfa = newmatrix(d+1,p+t+1); */
+/*   bpts = newmatrix(nd,p+1); */
+/*   ebpts = newmatrix(nd,p+t+1); */
+/*   Nextbpts = newmatrix(nd,p); */
 /*   alfa = (double *) malloc(p*sizeof(double)); */
 
 /*   m = n + p + 1; */
@@ -1048,7 +1301,7 @@ static char binomial_doc[] =
 \n\
  Algorithm from 'Numerical Recipes in C, 2nd Edition' pg215.\n";
 
-static PyObject * nurbs_binomial(PyObject *self, PyObject *args)
+static PyObject * binomial(PyObject *self, PyObject *args)
 {
   int n, k;
   double ret;
@@ -1072,7 +1325,7 @@ at parameter value u.\n\
 \n\
 Algorithm A1.3 from The NURBS Book.\n";
 
-static PyObject * nurbs_allBernstein(PyObject *self, PyObject *args)
+static PyObject * allBernstein(PyObject *self, PyObject *args)
 {
   int n;
   npy_intp dim[1];
@@ -1088,7 +1341,7 @@ static PyObject * nurbs_allBernstein(PyObject *self, PyObject *args)
   B = (double *)PyArray_DATA(ret);
 
   /* Compute */
-  allBernstein(n,u,B);
+  all_bernstein(n,u,B);
 
   /* Return */
   return ret;
@@ -1114,7 +1367,7 @@ Output:\n\
 Modified algorithm A3.1 from 'The NURBS Book' pg82.\n\
 \n";
 
-static PyObject * nurbs_curvePoints(PyObject *self, PyObject *args)
+static PyObject * curvePoints(PyObject *self, PyObject *args)
 {
   int nd, nc, nk, nu;
   npy_intp *P_dim, *U_dim, *u_dim, dim[2];
@@ -1152,7 +1405,7 @@ static PyObject * nurbs_curvePoints(PyObject *self, PyObject *args)
   pnt = (double *)PyArray_DATA(ret);
 
   /* Compute */
-  curvePoints(P, nc, nd, U, nk, u, nu, pnt);
+  curve_points(P, nc, nd, U, nk, u, nu, pnt);
 
   /* Clean up and return */
   Py_DECREF(arr1);
@@ -1189,7 +1442,7 @@ Output:\n\
 Modified algorithm A3.2 from 'The NURBS Book' pg93.\n\
 \n";
 
-static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
+static PyObject * curveDerivs(PyObject *self, PyObject *args)
 {
   int nc, nd, nk, nu, n;
   npy_intp *P_dim, *U_dim, *u_dim, dim[3];
@@ -1228,7 +1481,7 @@ static PyObject * nurbs_curveDerivs(PyObject *self, PyObject *args)
   pnt = (double *)PyArray_DATA(ret);
 
   /* Compute */
-  curveDerivs(n, P, nc, nd, U, nk, u, nu, pnt);
+  curve_derivs(n, P, nc, nd, U, nk, u, nu, pnt);
 
   /* Clean up and return */
   Py_DECREF(arr1);
@@ -1260,7 +1513,7 @@ Output:\n\
 Modified algorithm A5.1 from 'The NURBS Book' pg164.\n\
 \n";
 
-static PyObject * nurbs_curveKnotRefine(PyObject *self, PyObject *args)
+static PyObject * curveKnotRefine(PyObject *self, PyObject *args)
 {
   int nd, nc, nk, nu;
   npy_intp *P_dim, *U_dim, *u_dim, dim[2];
@@ -1301,7 +1554,7 @@ static PyObject * nurbs_curveKnotRefine(PyObject *self, PyObject *args)
   newU = (double *)PyArray_DATA(ret2);
 
   /* Compute */
-  curveKnotRefine(P, nc, nd, U, nk, u, nu, newP, newU);
+  curve_knot_refine(P, nc, nd, U, nk, u, nu, newP, newU);
 
   /* Clean up and return */
   Py_DECREF(arr1);
@@ -1335,7 +1588,7 @@ Returns:\n\
 Modified algorithm A5.6 from 'The NURBS Book' pg173.\n\
 \n";
 
-static PyObject * nurbs_curveDecompose(PyObject *self, PyObject *args)
+static PyObject * curveDecompose(PyObject *self, PyObject *args)
 {
   int nd, nc, nk;
   npy_intp *P_dim, *U_dim, dim[2];
@@ -1386,8 +1639,74 @@ static PyObject * nurbs_curveDecompose(PyObject *self, PyObject *args)
   newP = (double *)PyArray_DATA(ret);
 
   /* Compute */
-  curveDecompose(P, nc, nd, U, nk, newP);
+  curve_decompose(P, nc, nd, U, nk, newP);
   print_mat(newP,nc+count,nd);
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  return ret;
+
+ fail:
+  printf("error cleanup and return\n");
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  return NULL;
+}
+
+static char curveKnotRemove_doc[] =
+"Refine curve knot vector.\n\
+\n\
+Input:\n\
+\n\
+- P: control points P(nc,nd)\n\
+- U: knot sequence: U[0] .. U[m]   m = n+p+1 = nc+p\n\
+- u: knot value to remove: U[0] <= u <= U[m]\n\
+- num: number of times to remove u\n\
+- tol: allowable tolerance for deviation of the curve. See NURBS book, p. 185\n\
+\n\
+Output:\n\
+- t: actual number of times that u was removed\n\
+P and U are replaced with the new control points and knot vector\n\
+\n\
+Modified algorithm A5.8 from 'The NURBS Book' pg185.\n\
+\n";
+
+static PyObject * curveKnotRemove(PyObject *self, PyObject *args)
+{
+  int nd, nc, nk, num, t, i;
+  npy_intp *P_dim, *U_dim, dim[2];
+  double *P, *U, u, tol, *newP;
+  PyObject *a1, *a2;
+  PyObject *arr1=NULL, *arr2=NULL, *ret=NULL;
+
+  if(!PyArg_ParseTuple(args, "OOfif", &a1, &a2, &u, &num, &tol))
+    return NULL;
+  arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr1 == NULL)
+    return NULL;
+  arr2 = PyArray_FROM_OTF(a2, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr2 == NULL)
+    goto fail;
+
+  P_dim = PyArray_DIMS(arr1);
+  U_dim = PyArray_DIMS(arr2);
+  nc = P_dim[0];
+  nd = P_dim[1];
+  nk = U_dim[0];
+  P = (double *)PyArray_DATA(arr1);
+  U = (double *)PyArray_DATA(arr2);
+
+  /* Compute */
+  t = curve_knot_remove(P, nc, nd, U, nk, u, num, tol);
+  print_mat(P,nc-t,nd);
+ 
+  /* Create the return arrays */
+  dim[0] = nc-t;
+  dim[1] = nd;
+  ret = PyArray_SimpleNew(2,dim, NPY_DOUBLE);
+  newP = (double *)PyArray_DATA(ret);
+  for (i=0; i<dim[0]*dim[1]; ++i) newP[i] = P[i];
 
   /* Clean up and return */
   Py_DECREF(arr1);
@@ -1437,12 +1756,13 @@ static PyObject * nurbs_curveDecompose(PyObject *self, PyObject *args)
 
 static PyMethodDef _methods_[] =
 {
-	{"binomial", nurbs_binomial, METH_VARARGS, binomial_doc},
-	{"allBernstein", nurbs_allBernstein, METH_VARARGS, allBernstein_doc},
-	{"curvePoints", nurbs_curvePoints, METH_VARARGS, curvePoints_doc},
-	{"curveDerivs", nurbs_curveDerivs, METH_VARARGS, curveDerivs_doc},
-	{"curveKnotRefine", nurbs_curveKnotRefine, METH_VARARGS, curveKnotRefine_doc},
-	{"curveDecompose", nurbs_curveDecompose, METH_VARARGS, curveDecompose_doc},
+	{"binomial", binomial, METH_VARARGS, binomial_doc},
+	{"allBernstein", allBernstein, METH_VARARGS, allBernstein_doc},
+	{"curvePoints", curvePoints, METH_VARARGS, curvePoints_doc},
+	{"curveDerivs", curveDerivs, METH_VARARGS, curveDerivs_doc},
+	{"curveKnotRefine", curveKnotRefine, METH_VARARGS, curveKnotRefine_doc},
+	{"curveDecompose", curveDecompose, METH_VARARGS, curveDecompose_doc},
+	{"curveKnotRemove", curveKnotRemove, METH_VARARGS, curveKnotRemove_doc},
 	/* {"bspdegelev", nurbs_bspdegelev, METH_VARARGS, bspdegelev_doc}, */
 	{NULL, NULL}
 };

@@ -663,10 +663,10 @@ class GeomActor(Actor):
             el = elementType(self.eltype)
             
             if mode=='wireframe' or el.ndim < 2:
-                for edges in el.getDrawEdges():
+                for edges in el.getDrawEdges(el.name() in pf.cfg['draw/quadline']):
                     drawEdges(self.coords,self.elems,edges,edges.eltype,color)    
             else:
-                for faces in el.getDrawFaces():
+                for faces in el.getDrawFaces(el.name() in pf.cfg['draw/quadsurf']):
                     if bkcolor is not None:
                         # Enable drawing front and back with different colors
                         GL.glEnable(GL.GL_CULL_FACE)
