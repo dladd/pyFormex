@@ -70,29 +70,29 @@ class Coords4(ndarray):
 
     Parameters
         
-    data : array_like
-        If specified, data should evaluate to an array of floats, with the
-        length of its last axis not larger than 4. When equal to four, each
-        tuple along the last axis represents a ingle point in homogeneous
-        coordinates.
-        If smaller than four, the last axis will be expanded to four by adding
-        values zero in the second and third position and values 1 in the last
-        position.
-        If no data are given, a single point (0.,0.,0.) will be created.
+    `data`: array_like
+      If specified, data should evaluate to an array of floats, with the
+      length of its last axis not larger than 4. When equal to four, each
+      tuple along the last axis represents a ingle point in homogeneous
+      coordinates.
+      If smaller than four, the last axis will be expanded to four by adding
+      values zero in the second and third position and values 1 in the last
+      position.
+      If no data are given, a single point (0.,0.,0.) will be created.
 
-    w : array_like
-        If specified, the w values are used to denormalize the homogeneous
-        data such that the last component becomes w.
+    `w`: array_like
+      If specified, the w values are used to denormalize the homogeneous
+       data such that the last component becomes w.
 
-    dtyp : data-type
-        The datatype to be used. It not specified, the datatype of `data`
-        is used, or the default :data:`Float` (which is equivalent to
-        :data:`numpy.float32`).
+    `dtyp`: data-type
+      The datatype to be used. It not specified, the datatype of `data`
+      is used, or the default :data:`Float` (which is equivalent to
+      :data:`numpy.float32`).
 
-    copy : boolean
-        If ``True``, the data are copied. By default, the original data are
-        used if possible, e.g. if a correctly shaped and typed
-        :class:`numpy.ndarray` is specified.
+    `copy`: boolean
+      If ``True``, the data are copied. By default, the original data are
+      used if possible, e.g. if a correctly shaped and typed
+      :class:`numpy.ndarray` is specified.
     """
             
     def __new__(cls, data=None, w=None, dtyp=Float, copy=False):
@@ -264,24 +264,24 @@ class NurbsCurve(Geometry4):
     The knots vector should hold nknots values in ascending order. The values
     are only defined upon a multiplicative constant and will be normalized
     to set the last value to 1.
-    Sensible default values are constructed automatically by a call to the
-    knotVector() function. 
+    Sensible default values are constructed automatically by calling
+    :func:`knotVector`. 
 
     If no knots are given and no degree is specified, the degree is set to
     the number of control points - 1 if the curve is blended. If not blended,
     the degree is not set larger than 3.
 
-    
-    order (2,3,4,...) = degree+1 = min. number of control points
-    ncontrol >= order
-    nknots = order + ncontrol >= 2*order
-
-    convenient solutions:
-    OPEN:
-      nparts = (ncontrol-1) / degree
-      nintern = 
     """
-    
+#    
+#    order (2,3,4,...) = degree+1 = min. number of control points
+#    ncontrol >= order
+#    nknots = order + ncontrol >= 2*order
+#
+#    convenient solutions:
+#    OPEN:
+#      nparts = (ncontrol-1) / degree
+#      nintern = 
+#    
     def __init__(self,control,degree=None,wts=None,knots=None,closed=False,blended=True):
         self.closed = closed
         nctrl = len(control)
@@ -318,7 +318,7 @@ class NurbsCurve(Geometry4):
             raise ValueError,"Number of control points (%s) must not be smaller than order (%s)" % (nctrl,order)
 
         if knots is None:
-            knots = knotsVector(nctrl,degree,blended=blended,closed=closed)
+            knots = knotVector(nctrl,degree,blended=blended,closed=closed)
         else:
             knots = asarray(knots).ravel()
             knots = knots / knots[-1]
@@ -350,7 +350,7 @@ class NurbsCurve(Geometry4):
 
         Parameters:
 
-        - `u`: (nu,) shaped float array: parametric values at which a point
+        `u`: (nu,) shaped float array: parametric values at which a point
           is to be placed.
 
         Returns: (nu,3) shaped Coords with nu points at the specified
@@ -472,7 +472,7 @@ class NurbsSurface(Geometry4):
     the number of control points - 1 if the curve is blended. If not blended,
     the degree is not set larger than 3.
 
-    ** This is under development! **
+    .. warning:: This is a class under development!
 
     """
     
@@ -507,7 +507,7 @@ class NurbsSurface(Geometry4):
                 raise ValueError,"Number of control points (%s) must not be smaller than order (%s)" % (nctrl,order)
 
             if kn is None:
-                kn = knotsVector(nctrl,deg,blended=bl,closed=cl)
+                kn = knotVector(nctrl,deg,blended=bl,closed=cl)
             else:
                 kn = asarray(kn).ravel()
 
@@ -542,7 +542,7 @@ class NurbsSurface(Geometry4):
 
         Parameters:
 
-        - `u`: (nu,2) shaped float array: `nu` parametric values (u,v) at which
+        `u`: (nu,2) shaped float array: `nu` parametric values (u,v) at which
           a point is to be placed.
 
         Returns: (nu,3) shaped Coords with `nu` points at the specified
@@ -578,51 +578,97 @@ class NurbsSurface(Geometry4):
     
 
 def uniformParamValues(n,umin=0.0,umax=1.0):
-    """Create a set of uniform parameter values in the range umin..umax"""
-    umin = self.knots[0]
-    umax = self.knots[-1]
-    return umin + arange(n+1) * (umax-umin) / n
-    
+    """Create a set of uniformly distributed parameter values in a range.
 
-def unitRange(n):
-    """Divide the range 0..1 in n equidistant points"""
-    if n > 1:
-        return (arange(n) * (1.0/(n-1))).tolist()
-    elif n == 1:
-        return [0.5]
+    Parameters:
+
+    `n`: int: number of intervals in which the range should be divided.
+      The number of values returned is ``n+1``.
+    `umin`,`umax`: float: start and end value of the interval. Default
+      interval is [0.0..1.0].
+
+    Returns: a float array with n+1 equidistant values in the range umin..umax.
+      For n > 0, both of the endpoints are included. For n=0, a single
+      value at the center of the interval will be returned. For n<0, an
+      empty array is returned.
+    
+    Example:
+    
+    >>> uniformParamValues(4).tolist()
+    [0.0, 0.25, 0.5, 0.75, 1.0]
+    >>> uniformParamValues(0).tolist()
+    [0.5]
+    >>> uniformParamValues(-1).tolist()
+    []
+    >>> uniformParamValues(2,1.5,2.5).tolist()
+    [1.5, 2.0, 2.5]
+    """
+    if n == 0:
+        return array([0.5*(umax+umin)])
     else:
-        return []
+        return umin + arange(n+1) * (umax-umin) / n
 
 
-def knotsVector(nctrl,degree,blended=True,closed=False):
-    """Compute knots vector for a fully blended Nurbs curve.
+def knotVector(nctrl,degree,blended=True,closed=False):
+    """Compute sensible knot vector for a Nurbs curve.
 
-    A Nurbs curve with nctrl points and of given degree needs a knots vector
-    with nknots = nctrl+degree+1 values.
+    A knot vector is a sequence of non-decreasing parametric values. These
+    values define the `knots`, i.e. the points where the analytical expression
+    of the Nurbs curve may change. The knot values are only meaningful upon a
+    multiplicative constant, and they are usually normalized to the range
+    [0.0..1.0].
+
+    A Nurbs curve with ``nctrl`` points and of given ``degree`` needs a knot
+    vector with ``nknots = nctrl+degree+1`` values. A ``degree`` curve needs
+    at least ``nctrl = degree+1`` control points, and thus at least
+    ``nknots = 2*(degree+1)`` knot values.
+
+    To make an open curve start and end in its end points, it needs knots with
+    multiplicity ``degree+1`` at its ends. Thus, for an open blended curve, the
+    default policy is to set the knot values at the ends to 0.0, resp. 1.0,
+    both with multiplicity ``degree+1``, and to spread the remaining
+    ``nctrl - degree - 1`` values equally over the interval.
+
+    For a closed (blended) curve, the knots are equally spread over the
+    interval, all having a multiplicity 1 for maximum continuity of the curve.
+
+    For an open unblended curve, all internal knots get multiplicity ``degree``.
+    This results in a curve that is only one time continuously derivable at
+    the knots, thus the curve is smooth, but the curvature may be discontinuous.
+    There is an extra requirement in this case: ``nctrl`` sohuld be a multiple
+    of ``degree`` plus 1.
     
+    Example:
+
+    >>> print knotVector(7,3)
+    [ 0.    0.    0.    0.    0.25  0.5   0.75  1.    1.    1.    1.  ]
+    >>> print knotVector(7,3,closed=True)
+    [ 0.   0.1  0.2  0.3  0.4  0.5  0.6  0.7  0.8  0.9  1. ]
+    >>> print knotVector(7,3,blended=False)
+    [ 0.  0.  0.  0.  1.  1.  1.  2.  2.  2.  2.]
     """
     nknots = nctrl+degree+1
     if closed:
-        knots = unitRange(nknots)
+        knots = uniformParamValues(nknots-1)
     else:
         if blended:
             npts = nknots - 2*degree
-            knots = [0.]*degree + unitRange(npts) + [1.]*degree
+            knots = [0.]*degree +  uniformParamValues(npts-1).tolist() + [1.]*degree
         else:
             nparts = (nctrl-1) / degree
             if nparts*degree+1 != nctrl:
                 raise ValueError,"Discrete knot vectors can only be used if the number of control points is a multiple of the degree, plus one."
             knots = [0.] + [ [float(i)]*degree for i in range(nparts+1) ] + [float(nparts)]
             knots = olist.flatten(knots)
-            
+
     return asarray(knots)
 
 
 def toCoords4(x):
     """Convert cartesian coordinates to homogeneous
 
-    x: :class:Coords
-       Array with cartesian coordinates.
+    `x`: :class:`Coords`
+      Array with cartesian coordinates.
        
     Returns a Coords4 object corresponding to the input cartesian coordinates.
     """

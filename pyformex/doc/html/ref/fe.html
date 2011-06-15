@@ -109,413 +109,211 @@ belong to the corresponding group.</p>
 <dl class="method">
 <dt id="fe.Model.affine">
 <tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.affine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a general affine transform of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
-<p><cite>mat</cite>: a 3x3 float matrix</p>
-<p><cite>vec</cite>: a length 3 list or array of floats</p>
-<p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+<dd><p>Apply &#8216;affine&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.affine" title="coords.Coords.affine"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.affine()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.align">
 <tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.align" title="Permalink to this definition">¶</a></dt>
-<dd><p>Align the Coords along the global axes.</p>
-<p>Alignment involves a translation such that the bounding box
-of the Coords object becomes aligned on the origin of the global axes.
-The requested alignment is determined by a string of three characters,
-one for each of the coordinate axes. The character determines how
-the structure is aligned in the corresponding direction:</p>
-<ul class="simple">
-<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
-<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
-<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
-</ul>
-<p>Any other value will make the alignment in that direction unchanged.</p>
-<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
-all the points in the octant with all positive coordinate values.
-A string &#8216;000&#8217; will center the object around the origin.</p>
+<dd><p>Apply &#8216;align&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.align" title="coords.Coords.align"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.align()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.bump">
 <tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.bump" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a bump.</p>
-<p>A bump is a modification of a set of coordinates by a non-matching
-point. It can produce various effects, but one of the most common
-uses is to force a surface to be indented by some point.</p>
-<p>dir specifies the axis of the modified coordinates;
-a is the point that forces the bumping;
-func is a function that calculates the bump intensity from distance
-(!! func(0) should be different from 0)
-dist is the direction in which the distance is measured : this can
-be one of the axes, or a list of one or more axes.
-If only 1 axis is specified, the effect is like function bump1
-If 2 axes are specified, the effect is like bump2
-This function can take 3 axes however.
-Default value is the set of 3 axes minus the direction of modification.
-This function is then equivalent to bump2.</p>
+<dd><p>Apply &#8216;bump&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump" title="coords.Coords.bump"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.bump1">
 <tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.bump1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a one-dimensional bump.</p>
-<ul class="simple">
-<li><cite>dir</cite> specifies the axis of the modified coordinates;</li>
-<li><cite>a</cite> is the point that forces the bumping;</li>
-<li><cite>dist</cite> specifies the direction in which the distance is measured;</li>
-<li><cite>func</cite> is a function that calculates the bump intensity from distance
-and should be such that <tt class="docutils literal"><span class="pre">func(0)</span> <span class="pre">!=</span> <span class="pre">0</span></tt>.</li>
-</ul>
+<dd><p>Apply &#8216;bump1&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump1" title="coords.Coords.bump1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump1()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.bump2">
 <tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.bump2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> with a two-dimensional bump.</p>
-<p>dir specifies the axis of the modified coordinates;
-a is the point that forces the bumping;
-func is a function that calculates the bump intensity from distance
-!! func(0) should be different from 0.</p>
+<dd><p>Apply &#8216;bump2&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump2" title="coords.Coords.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump2()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.cylindrical">
 <tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.cylindrical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts from cylindrical to cartesian after scaling.</p>
-<p>dir specifies which coordinates are interpreted as resp.
-distance(r), angle(theta) and height(z). Default order is [r,theta,z].
-scale will scale the coordinate values prior to the transformation.
-(scale is given in order r,theta,z).
-The resulting angle is interpreted in degrees.</p>
+<dd><p>Apply &#8216;cylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.cylindrical" title="coords.Coords.cylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.cylindrical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.egg">
 <tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.egg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maps the coordinates to an egg-shape</p>
+<dd><p>Apply &#8216;egg&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.egg" title="coords.Coords.egg"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.egg()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.flare">
 <tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.flare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a flare at the end of a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> block.</p>
-<p>The flare extends over a distance <tt class="docutils literal"><span class="pre">xf</span></tt> at the start (<tt class="docutils literal"><span class="pre">end=0</span></tt>)
-or end (<tt class="docutils literal"><span class="pre">end=1</span></tt>) in direction <tt class="docutils literal"><span class="pre">dir[0]</span></tt> of the coords block,
-and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f</span></tt> in the <tt class="docutils literal"><span class="pre">dir[1]</span></tt> direction.</p>
+<dd><p>Apply &#8216;flare&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.flare" title="coords.Coords.flare"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.flare()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.hyperCylindrical">
+<tt class="descname">hyperCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;hyperCylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.hyperCylindrical()</span></tt> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.isopar">
 <tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.isopar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform an isoparametric transformation on a Coords.</p>
-<p>This is a convenience method to transform a Coords object through
-an isoparametric transformation. It is equivalent to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>See <tt class="xref py py-mod docutils literal"><span class="pre">plugins.isopar</span></tt> for more details.</p>
+<dd><p>Apply &#8216;isopar&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.isopar" title="coords.Coords.isopar"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.isopar()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.map">
 <tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> mapped by a 3-D function.</p>
-<p>This is one of the versatile mapping functions.
-func is a numerical function which takes three arguments and produces
-a list of three output values. The coordinates [x,y,z] will be
-replaced by func(x,y,z).
-The function must be applicable to arrays, so it should
-only include numerical operations and functions understood by the
-numpy module.
-This method is one of several mapping methods. See also map1 and mapd.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">:</span> <span class="p">[</span><span class="mf">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="mf">3</span><span class="o">*</span><span class="n">y</span><span class="p">,</span><span class="mf">4</span><span class="o">*</span><span class="n">z</span><span class="p">])</span>
-<span class="go">[[ 2.  3.  4.]]</span>
-</pre></div>
-</div>
+<dd><p>Apply &#8216;map&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.map" title="coords.Coords.map"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.map1">
 <tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.map1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> where coordinate i is mapped by a 1-D function.</p>
-<p><cite>func</cite> is a numerical function which takes one argument and produces
-one result. The coordinate dir will be replaced by func(coord[x]).
-If no x is specified, x is taken equal to dir. 
-The function must be applicable on arrays, so it should only
-include numerical operations and functions understood by the
-numpy module.
-This method is one of several mapping methods. See also map and mapd.</p>
+<dd><p>Apply &#8216;map1&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map1()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.mapd">
 <tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.mapd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maps one coordinate by a function of the distance to a point.</p>
-<p><cite>func</cite> a numerical function which takes one argument and produces
-one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
-where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
-The function must be applicable on arrays, so it should only
-include numerical operations and functions understood by the
-<tt class="xref py py-mod docutils literal"><span class="pre">numpy</span></tt> module.
-By default, the distance d is calculated in 3-D, but one can specify
-a limited set of axes to calculate a 2-D or 1-D distance.
-This method is one of several mapping methods. See also
-<tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#fe.Model.map1" title="fe.Model.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
-<p>Example:</p>
-<blockquote>
-E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])</blockquote>
-<p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
+<dd><p>Apply &#8216;mapd&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.mapd" title="coords.Coords.mapd"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.mapd()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.projectOnCylinder">
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Project <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> on a cylinder with axis parallel to a global axis.</p>
-<p>The default cylinder has its axis along the x-axis and a unit radius.
-No points of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> should belong to the axis..</p>
+<dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.projectOnSphere" title="Permalink to this definition">¶</a></dt>
-<dd><p>Project <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> on a sphere.</p>
-<p>The default sphere is a unit sphere at the origin.
-The center of the sphere should not be part of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt>.</p>
+<dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnSphere" title="coords.Coords.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnSphere()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.reflect">
 <tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.reflect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
-<p>Parameters:</p>
-<ul class="simple">
-<li><cite>dir</cite>: int: direction of the reflection (default 0)</li>
-<li><cite>pos</cite>: float: offset of the mirror plane from origin (default 0.0)</li>
-<li><cite>inplace</cite>: boolean: change the coordinates inplace (default False)</li>
-</ul>
+<dd><p>Apply &#8216;reflect&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.reflect" title="coords.Coords.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.reflect()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.replace">
 <tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.replace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replace the coordinates along the axes i by those along j.</p>
-<p>i and j are lists of axis numbers or single axis numbers.
-replace ([0,1,2],[1,2,0]) will roll the axes by 1.
-replace ([0,1],[1,0]) will swap axes 0 and 1.
-An optionally third argument may specify another <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object to take
-the coordinates from. It should have the same dimensions.</p>
+<dd><p>Apply &#8216;replace&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.replace" title="coords.Coords.replace"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.replace()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.rollAxes">
 <tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.rollAxes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Roll the axes over the given amount.</p>
-<p>Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
-2 becomes 0.</p>
+<dd><p>Apply &#8216;rollAxes&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rollAxes" title="coords.Coords.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rollAxes()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.rot">
 <tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.rot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy rotated over angle around axis.</p>
-<p>The angle is specified in degrees.
-The axis is either one of (0,1,2) designating the global axes,
-or a vector specifying an axis through the origin.
-If no axis is specified, rotation is around the 2(z)-axis. This is
-convenient for working on 2D-structures.</p>
-<p>As a convenience, the user may also specify a 3x3 rotation matrix,
-in which case the function rotate(mat) is equivalent to affine(mat).</p>
-<p>All rotations are performed around the point [0,0,0], unless a
-rotation origin is specified in the argument &#8216;around&#8217;.</p>
+<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.rotate">
 <tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.rotate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy rotated over angle around axis.</p>
-<p>The angle is specified in degrees.
-The axis is either one of (0,1,2) designating the global axes,
-or a vector specifying an axis through the origin.
-If no axis is specified, rotation is around the 2(z)-axis. This is
-convenient for working on 2D-structures.</p>
-<p>As a convenience, the user may also specify a 3x3 rotation matrix,
-in which case the function rotate(mat) is equivalent to affine(mat).</p>
-<p>All rotations are performed around the point [0,0,0], unless a
-rotation origin is specified in the argument &#8216;around&#8217;.</p>
+<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.scale">
 <tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy scaled with scale[i] in direction i.</p>
-<p>The scale should be a list of 3 scaling factors for the 3 axis
-directions, or a single scaling factor.
-In the latter case, dir (a single axis number or a list) may be given
-to specify the direction(s) to scale. The default is to produce a
-homothetic scaling.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
-<span class="go">[ 2.  2.  2.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">])</span>
-<span class="go">[ 2.  3.  4.]</span>
-</pre></div>
-</div>
+<dd><p>Apply &#8216;scale&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.scale" title="coords.Coords.scale"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.scale()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.shear">
 <tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.shear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
-<p>The coordinate dir is replaced with (dir + skew * dir1).</p>
+<dd><p>Apply &#8216;shear&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.shear" title="coords.Coords.shear"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.shear()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.spherical">
 <tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.spherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts from spherical to cartesian after scaling.</p>
-<ul class="simple">
-<li><cite>dir</cite> specifies which coordinates are interpreted as resp.
-longitude(theta), latitude(phi) and distance(r).</li>
-<li><cite>scale</cite> will scale the coordinate values prior to the transformation.</li>
-</ul>
-<p>Angles are interpreted in degrees.
-Latitude, i.e. the elevation angle, is measured from equator in
-direction of north pole(90). South pole is -90.</p>
-<p>If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+<dd><p>Apply &#8216;spherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.spherical" title="coords.Coords.spherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.spherical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.superSpherical">
 <tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.superSpherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs a superspherical transformation.</p>
-<p>superSpherical is much like spherical, but adds some extra
-parameters to enable the creation of virtually any surface.</p>
-<p>Just like with spherical(), the input coordinates are interpreted as
-the longitude, latitude and distance in a spherical coordinate system.</p>
-<p><cite>dir</cite> specifies which coordinates are interpreted as resp.
-longitude(theta), latitude(phi) and distance(r).
-Angles are then interpreted in degrees.
-Latitude, i.e. the elevation angle, is measured from equator in
-direction of north pole(90). South pole is -90.
-If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
-<p><cite>scale</cite> will scale the coordinate values prior to the transformation.</p>
-<p>The <cite>n</cite> and <cite>e</cite> parameters define exponential transformations of the
-north_south (latitude), resp. the east_west (longitude) coordinates.
-Default values of 1 result in a circle.</p>
-<p><cite>k</cite> adds &#8216;eggness&#8217; to the shape: a difference between the northern and
-southern hemisphere. Values &gt; 0 enlarge the southern hemishpere and
-shrink the northern.</p>
+<dd><p>Apply &#8216;superSpherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.superSpherical" title="coords.Coords.superSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.superSpherical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.swapAxes">
 <tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.swapAxes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Swap coordinate axes i and j.</p>
-<p>Beware! This is different from numpy&#8217;s swapaxes() method !</p>
+<dd><p>Apply &#8216;swapAxes&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.swapAxes" title="coords.Coords.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.swapAxes()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.toCylindrical">
 <tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.toCylindrical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts from cartesian to cylindrical coordinates.</p>
-<p>dir specifies which coordinates axes are parallel to respectively the
-cylindrical axes distance(r), angle(theta) and height(z). Default
-order is [x,y,z].
-The angle value is given in degrees.</p>
+<dd><p>Apply &#8216;toCylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.toCylindrical" title="coords.Coords.toCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toCylindrical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.toSpherical">
 <tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.toSpherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts from cartesian to spherical coordinates.</p>
-<p><cite>dir</cite> specifies which coordinates axes are parallel to respectively
-the spherical axes distance(r), longitude(theta) and latitude(phi).
-Latitude is the elevation angle measured from equator in direction
-of north pole(90). South pole is -90.
-Default order is [0,1,2], thus the equator plane is the (x,y)-plane.</p>
-<p>The returned angle values are given in degrees.</p>
+<dd><p>Apply &#8216;toSpherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.toSpherical" title="coords.Coords.toSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toSpherical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.transformCS">
 <tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.transformCS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform a CoordinateSystem transformation on the Coords.</p>
-<p>This method transforms the Coords object by the transformation that
-turns the initial CoordinateSystem into the currentCoordinateSystem.</p>
-<p>currentCS and initialCS are CoordSystem or (4,3) shaped Coords
-instances. If initialCS is None, the global (x,y,z) axes are used.</p>
-<p>E.g. the default initialCS and currentCS equal to:</p>
-<div class="highlight-python"><pre> 0.  1.  0.
--1.  0.  0.
- 0.  0.  1.
- 0.  0.  0.</pre>
-</div>
-<p>result in a rotation of 90 degrees around the z-axis.</p>
-<p>This is a convenience function equivalent to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">isopar</span><span class="p">(</span><span class="s">&#39;tet4&#39;</span><span class="p">,</span><span class="n">currentCS</span><span class="p">,</span><span class="n">initialCS</span><span class="p">)</span>
-</pre></div>
-</div>
+<dd><p>Apply &#8216;transformCS&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.transformCS" title="coords.Coords.transformCS"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.transformCS()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.translate">
 <tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.translate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translate a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
-<p>The translation vector can be specified in one of the following ways:</p>
-<ul class="simple">
-<li>an axis number (0,1,2),</li>
-<li>a single translation vector,</li>
-<li>an array of translation vectors.</li>
-</ul>
-<p>If an axis number is given, a unit vector in the direction of the
-specified axis will be used.
-If an array of translation vectors is given, it should be
-broadcastable to the size of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> array.
-If a distance value is given, the translation vector is multiplied
-with this value before it is added to the coordinates.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
-<span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
-<span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
-<span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="go">[ 1.  2.  1.]</span>
-</pre></div>
-</div>
+<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.trl">
 <tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.Model.trl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Translate a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
-<p>The translation vector can be specified in one of the following ways:</p>
-<ul class="simple">
-<li>an axis number (0,1,2),</li>
-<li>a single translation vector,</li>
-<li>an array of translation vectors.</li>
-</ul>
-<p>If an axis number is given, a unit vector in the direction of the
-specified axis will be used.
-If an array of translation vectors is given, it should be
-broadcastable to the size of the <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> array.
-If a distance value is given, the translation vector is multiplied
-with this value before it is added to the coordinates.</p>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
-<span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
-<span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
-<span class="go">[ 1.  2.  1.]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="go">[ 1.  2.  1.]</span>
-</pre></div>
-</div>
+<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">

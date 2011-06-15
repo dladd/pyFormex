@@ -616,6 +616,7 @@ class Coords(ndarray):
         - `step`: If specified, the translation vector specified by `dir` will
           be multiplied with this value. It is commonly used with unit `dir`
           vectors to set the translation distance.
+          
         Example:
 
           >>> x = Coords([1.,1.,1.])

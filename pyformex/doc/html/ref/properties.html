@@ -425,7 +425,7 @@ are removed from the database.</p>
 
 <dl class="method">
 <dt id="properties.PropertyDB.nodeProp">
-<tt class="descname">nodeProp</tt><big>(</big><em>prop=None</em>, <em>set=None</em>, <em>name=None</em>, <em>tag=None</em>, <em>cload=None</em>, <em>bound=None</em>, <em>displ=None</em>, <em>csys=None</em>, <em>ampl=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.nodeProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nodeProp</tt><big>(</big><em>prop=None</em>, <em>set=None</em>, <em>name=None</em>, <em>tag=None</em>, <em>cload=None</em>, <em>bound=None</em>, <em>displ=None</em>, <em>veloc=None</em>, <em>accel=None</em>, <em>csys=None</em>, <em>ampl=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.nodeProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new node property, empty by default.</p>
 <p>A node property can contain any combination of the following fields:</p>
 <ul class="simple">
@@ -436,8 +436,10 @@ for which this property will be set, or a set name
 If None, the property will hold for all nodes.</li>
 <li>cload: a concentrated load: a list of 6 float values
 [FX,FY,FZ,MX,MY,MZ] or a list of (dofid,value) tuples.</li>
-<li>bound: a boundary condition: a list of 6 codes (0/1)</li>
-<li>displ: a prescribed displacement: a list of tuples (dofid,value)</li>
+<li>displ,veloc,accel: prescribed displacement, velocity or
+acceleration: a list of 6 float values
+[UX,UY,UZ,RX,RY,RZ] or  a list of tuples (dofid,value)</li>
+<li>bound: a boundary condition: a str or a list of 6 codes (0/1)</li>
 <li>csys: a CoordSystem</li>
 <li>ampl: the name of an Amplitude</li>
 </ul>

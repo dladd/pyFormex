@@ -79,141 +79,6 @@ and write them to the Abaqus input file and some data classes to organize all
 the data involved with the finite element model.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_abq</span></tt></p>
 <dl class="class">
-<dt id="fe_abq.Step">
-<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Step</tt><big>(</big><em>analysis='STATIC', time=[0.0, 0.0, 0.0, 0.0], nlgeom='NO', subheading=None, tags=None, name=None, out=None, res=None, stepOptions=None, analysisOptions=None, extra=None</em><big>)</big><a class="headerlink" href="#fe_abq.Step" title="Permalink to this definition">¶</a></dt>
-<dd><p>The basic logical unit in the simulation history.</p>
-<blockquote>
-<p>In Abaqus, a step is the smallest logical entity in the simulation
-history. It is typically a time step in a dynamic simulation, but it
-can also describe different loading states in a (quasi-)static simulation.</p>
-<p>Our Step class holds all the data describing the global step parameters.
-It combines the Abaqus &#8216;STEP&#8217;, &#8216;STATIC&#8217;, &#8216;DYNAMIC&#8217; and &#8216;BUCKLE&#8217; keyword
-commands (and even some more global parameter setting commands).</p>
-<p>Parameters:</p>
-<ul>
-<li><p class="first"><cite>analysis</cite>: the analysis type, one of: &#8216;STATIC&#8217;, &#8216;DYNAMIC&#8217;, &#8216;EXPLICIT&#8217;,
-&#8216;PERTURBATION&#8217;, &#8216;BUCKLE&#8217;, &#8216;RIKS&#8217;</p>
-</li>
-<li><p class="first"><cite>time</cite>: either
-- a single float value specifying the step time,
-- a list  of 2 values (special cases with analysis=EXPLICIT)
-- a list  of 4 values: time inc, step time, min. time inc, max. time inc (all the other cases)
-- for LANCZOS: a list of 5 values
-- for RIKS: a list of 8 values
-In most cases, only the step time should be specified.</p>
-</li>
-<li><p class="first"><cite>nlgeom</cite>: &#8216;YES&#8217; ot &#8216;NO&#8217; (default)
-If &#8216;YES&#8217;, the analysis will be geometrically non-linear. For Analysis type
-&#8216;RIKS&#8217;  set <cite>nlgeom</cite> to &#8216;YES&#8217;, &#8216;BUCKLE&#8217; set it to &#8216;NO&#8217;,
-&#8216;PERTURBATION&#8217; ignores <cite>nlgeom</cite>.</p>
-</li>
-<li><p class="first"><cite>tags</cite>: a list of property tags to include in this step.
-If specified, only the property records having one of the listed values
-as their <cite>tag</cite> attribute will be included in this step.</p>
-</li>
-<li><p class="first"><cite>out</cite> and <cite>res</cite>: specific output/result records for this step. They
-come in addition to the global ones.</p>
-</li>
-<li><dl class="first docutils">
-<dt>stepOption is a  Dict of optional parameters to be added at a step level at the FIRST line. it is placed after the <a href="#id1"><span class="problematic" id="id2">*</span></a>STEP keyword i.e</dt>
-<dd><p class="first last"><a href="#id3"><span class="problematic" id="id4">*</span></a>STEP, NLGEOM=YES,INC=10000,UNSYMM = YES
-It has keys name equal to the ABAQUS keywords and value equal to parameter setting
-if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)</p>
-</dd>
-</dl>
-</li>
-</ul>
-<blockquote>
--subheading is a string printed as an additionanal subheading (not important normally)</blockquote>
-<ul>
-<li><dl class="first docutils">
-<dt>analysisOption is a  Dict of optional parameters to be added at a step level at the SECOND line. it is placed after the analysis keyword i.e</dt>
-<dd><p class="first last"><a href="#id5"><span class="problematic" id="id6">*</span></a>STATIC, STABILIZE=0.0002,CONTINUE=NO
-with keys name equal to the ABAQUS keywords and value equal to parameter setting
-if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)</p>
-</dd>
-</dl>
-</li>
-</ul>
-<dl class="docutils">
-<dt>-extra <span class="classifier-delimiter">:</span> <span class="classifier">str  for any extra keyword to be added at a step level after the time line</span></dt>
-<dd><p class="first">: list of Dict for any extra keyword to be added at a step level after the time line. Each Dict is a separate line (see example below)</p>
-<blockquote class="last">
-<p>Only 2 keys are dedicated:</p>
-<dl class="docutils">
-<dt>REQUIRED</dt>
-<dd>-keyword =  abaqus keyword name</dd>
-<dt>OPTIONAL</dt>
-<dd>-data = list or array of numerical data for any additional data line</dd>
-</dl>
-<p>All the other keys are optional and must have name equal to the ABAQUS keywords and value equal to parameter setting
-if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)</p>
-</blockquote>
-</dd>
-</dl>
-<p>Examples on stepOption ,  analysisOption, extra</p>
-<dl class="docutils">
-<dt>stepOption standard analysis, not needed for explicit</dt>
-<dd>Dict({&#8216;UNSYMM&#8217;:&#8217;YES&#8217;/&#8217;NO&#8217;,&#8217;CONVERT SDI&#8217;:&#8217;YES&#8217;/&#8217;NO&#8217;,&#8217;AMPLITUDE&#8217;:&#8217;STEP&#8217;/&#8217;RAMP&#8217;,&#8217;INC&#8217;:100})</dd>
-<dt>analysisOption:</dt>
-<dd><dl class="first last docutils">
-<dt>static, riks</dt>
-<dd>Dict({&#8216;STABILIZE&#8217;:0.0002,&#8217;CONTINUE&#8217;:&#8217;NO&#8217;/&#8217;YES&#8217;,&#8217;ALLSDTOL&#8217;:0.05,&#8217;DIRECT&#8217;:&#8217;NO STOP&#8217;,&#8217;FACTOR&#8217;:1.,&#8217;INCR&#8217;:0.1 (for riks)})</dd>
-<dt>dynamic (implicit)</dt>
-<dd>Dict({&#8216;APPLICATION&#8217;:&#8217;QUASI-STATIC&#8217;/&#8217;MODERATE DISSIPATION&#8217;/&#8217;TRANSIENT FIDELITY&#8217;})</dd>
-<dt>dynamic explicit</dt>
-<dd>Dict({&#8216;DIRECT USER CONTROL&#8217;:&#8217;&#8217; / &#8216;ELEMENT BY ELEMENT&#8217;:&#8217;&#8217; / &#8216;FIXED TIME INCREMENTATION&#8217;:&#8217;&#8216;,            &#8216;IMPROVED DT METHOD&#8217;=&#8217;NO&#8217;/&#8217;YES&#8217;,&#8217;SCALE FACTOR&#8217;:1.})</dd>
-<dt>buckle</dt>
-<dd>Dict({&#8216;EIGENSOLVER&#8217;:&#8217;SUBSPACE&#8217;})</dd>
-</dl>
-</dd>
-<dt>extra:</dt>
-<dd>extra=&#8217;<a href="#id7"><span class="problematic" id="id8">*</span></a>BULK VISCOSITY</dd>
-</dl>
-</blockquote>
-<p>0.12, 0.06
-&#8216;</p>
-<blockquote>
-extra=[Dict({&#8216;keyword&#8217;:&#8217;BULK VISCOSITY&#8217;,&#8217;data&#8217;:[0.12, 0.06]})]</blockquote>
-<dl class="method">
-<dt id="fe_abq.Step.write">
-<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>propDB</em>, <em>out=</em><span class="optional">[</span><span class="optional">]</span>, <em>res=</em><span class="optional">[</span><span class="optional">]</span>, <em>resfreq=1</em>, <em>timemarks=False</em><big>)</big><a class="headerlink" href="#fe_abq.Step.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a load step.</p>
-<p>propDB is the properties database to use.</p>
-<p>Except for the step data itself, this will also write the passed
-output and result requests.
-out is a list of Output-instances.
-res is a list of Result-instances.
-resfreq and timemarks are global values only used by Explicit</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe_abq.Step.update">
-<tt class="descname">update</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#fe_abq.Step.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a dictionary to the Dict object.</p>
-<p>The data can be a dict or Dict type object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe_abq.Step.get">
-<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Step.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value for key or a default.</p>
-<p>This is the equivalent of the dict get method, except that it
-returns only the default value if the key was not found in self,
-and there is no _default_ method or it raised a KeyError.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="fe_abq.Step.setdefault">
-<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default</em><big>)</big><a class="headerlink" href="#fe_abq.Step.setdefault" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replaces the setdefault function of a normal dictionary.</p>
-<p>This is the same as the get method, except that it also sets the
-default value if get found a KeyError.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="fe_abq.Output">
 <em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Output</tt><big>(</big><em>kind=None</em>, <em>keys=None</em>, <em>set=None</em>, <em>type='FIELD'</em>, <em>variable='PRESELECT'</em>, <em>extra=''</em>, <em>**options</em><big>)</big><a class="headerlink" href="#fe_abq.Output" title="Permalink to this definition">¶</a></dt>
 <dd><p>A request for output to .odb and history.</p>
@@ -651,7 +516,16 @@ P.Prop(name=&#8217;connbehavior3&#8217;,ConnectorBehavior=&#8217;&#8216;,Stop=di
 <li>label: face or edge identifier (only required for surftype = &#8216;ELEMENT&#8217;)</li>
 </ul>
 <p>This label can be a string, or a list of strings. This allows to use
-different identifiers for the different elements in the surface.</p>
+different identifiers for the different elements in the surface. Thus:</p>
+<div class="highlight-python"><pre>Prop(name='mysurf',set=[0,1,2,6],surftype='element',label=['S1','S2','S1','S3')</pre>
+</div>
+<p>will get exported to Abaqus as:</p>
+<div class="highlight-python"><pre>*SURFACE, NAME=mysurf, TYPE=element
+1, S1
+2, S2,
+1, S1
+7, S3 </pre>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -831,7 +705,7 @@ or a list of names the name of another already defined set.</p>
 
 <dl class="function">
 <dt id="fe_abq.writeDisplacements">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDisplacements</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeDisplacements" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDisplacements</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>dtype='DISPLACEMENT'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDisplacements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write boundary conditions of type BOUNDARY, TYPE=DISPLACEMENT</p>
 <p>prop is a list of node property records that should be scanned for
 displ attributes to write.</p>

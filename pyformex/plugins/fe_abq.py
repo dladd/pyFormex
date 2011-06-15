@@ -1504,7 +1504,9 @@ def writeStepExtra(fil,extra):
 #            writeFileOutput(fil,resfreq,timemarks)
 # should be removed and change also the OUTPUT class (see comments)
 class Step(Dict):
-    """The basic logical unit in the simulation history.
+    """_Badly structured docstring
+
+    The basic logical unit in the simulation history.
 
     In Abaqus, a step is the smallest logical entity in the simulation
     history. It is typically a time step in a dynamic simulation, but it
@@ -1519,6 +1521,7 @@ class Step(Dict):
     - `analysis`: the analysis type, one of: 'STATIC', 'DYNAMIC', 'EXPLICIT',
       'PERTURBATION', 'BUCKLE', 'RIKS'
     - `time`: either
+
       - a single float value specifying the step time,
       - a list  of 2 values (special cases with analysis=EXPLICIT)
       - a list  of 4 values: time inc, step time, min. time inc, max. time inc (all the other cases)
@@ -1541,7 +1544,7 @@ class Step(Dict):
         It has keys name equal to the ABAQUS keywords and value equal to parameter setting
         if an ABAQUS keyword does not have a value to be the Dict value must be an empty string (see example below)
     
-     -subheading is a string printed as an additionanal subheading (not important normally)
+    - subheading is a string printed as an additionanal subheading (not important normally)
     
     - analysisOption is a  Dict of optional parameters to be added at a step level at the SECOND line. it is placed after the analysis keyword i.e
         *STATIC, STABILIZE=0.0002,CONTINUE=NO

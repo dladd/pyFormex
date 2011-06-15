@@ -390,20 +390,24 @@ homothetic scaling.</p>
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.translate">
-<tt class="descname">translate</tt><big>(</big><em>vector</em>, <em>distance=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.translate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">translate</tt><big>(</big><em>dir</em>, <em>step=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.translate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translate a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
-<p>The translation vector can be specified in one of the following ways:</p>
+<p>Translates the Coords in the direction <cite>dir</cite> over a distance
+<cite>step * length(dir)</cite>.</p>
+<p>Parameters:</p>
 <ul class="simple">
-<li>an axis number (0,1,2),</li>
+<li><cite>dir</cite>: specifies the direction and distance of the translation. It
+can be either<ul>
+<li>an axis number (0,1,2), specifying a unit vector in the direction
+of one of the coordinate axes.</li>
 <li>a single translation vector,</li>
-<li>an array of translation vectors.</li>
+<li>an array of translation vectors, compatible with the Coords shape.</li>
 </ul>
-<p>If an axis number is given, a unit vector in the direction of the
-specified axis will be used.
-If an array of translation vectors is given, it should be
-broadcastable to the size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array.
-If a distance value is given, the translation vector is multiplied
-with this value before it is added to the coordinates.</p>
+</li>
+<li><cite>step</cite>: If specified, the translation vector specified by <cite>dir</cite> will
+be multiplied with this value. It is commonly used with unit <cite>dir</cite>
+vectors to set the translation distance.</li>
+</ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
@@ -420,20 +424,24 @@ with this value before it is added to the coordinates.</p>
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.trl">
-<tt class="descname">trl</tt><big>(</big><em>vector</em>, <em>distance=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.trl" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">trl</tt><big>(</big><em>dir</em>, <em>step=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.trl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translate a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
-<p>The translation vector can be specified in one of the following ways:</p>
+<p>Translates the Coords in the direction <cite>dir</cite> over a distance
+<cite>step * length(dir)</cite>.</p>
+<p>Parameters:</p>
 <ul class="simple">
-<li>an axis number (0,1,2),</li>
+<li><cite>dir</cite>: specifies the direction and distance of the translation. It
+can be either<ul>
+<li>an axis number (0,1,2), specifying a unit vector in the direction
+of one of the coordinate axes.</li>
 <li>a single translation vector,</li>
-<li>an array of translation vectors.</li>
+<li>an array of translation vectors, compatible with the Coords shape.</li>
 </ul>
-<p>If an axis number is given, a unit vector in the direction of the
-specified axis will be used.
-If an array of translation vectors is given, it should be
-broadcastable to the size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array.
-If a distance value is given, the translation vector is multiplied
-with this value before it is added to the coordinates.</p>
+</li>
+<li><cite>step</cite>: If specified, the translation vector specified by <cite>dir</cite> will
+be multiplied with this value. It is commonly used with unit <cite>dir</cite>
+vectors to set the translation distance.</li>
+</ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
@@ -470,7 +478,7 @@ A string &#8216;000&#8217; will center the object around the origin.</p>
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.rot">
-<tt class="descname">rot</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.rot" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rot</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.rot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy rotated over angle around axis.</p>
 <p>The angle is specified in degrees.
 The axis is either one of (0,1,2) designating the global axes,
@@ -485,7 +493,7 @@ rotation origin is specified in the argument &#8216;around&#8217;.</p>
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.rotate">
-<tt class="descname">rotate</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.rotate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rotate</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.rotate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy rotated over angle around axis.</p>
 <p>The angle is specified in degrees.
 The axis is either one of (0,1,2) designating the global axes,
@@ -519,23 +527,11 @@ rotation origin is specified in the argument &#8216;around&#8217;.</p>
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.affine">
-<tt class="descname">affine</tt><big>(</big><em>mat</em>, <em>vec=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.affine" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">affine</tt><big>(</big><em>mat</em>, <em>vec=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.affine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a general affine transform of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p><cite>mat</cite>: a 3x3 float matrix</p>
 <p><cite>vec</cite>: a length 3 list or array of floats</p>
 <p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="coords.CoordinateSystem.replicate">
-<tt class="descname">replicate</tt><big>(</big><em>n</em>, <em>vector</em>, <em>distance=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.replicate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replicate a Coords n times with fixed step in any direction.</p>
-<p>Returns a Coords object with shape (n,) + self.shape, thus having
-an extra first axis.
-Each element along the axis 0 is equal to the previous element
-translated over (vector,distance). Here, vector and distance are
-interpreted just like in the translate() method.
-The first element along the axis 0 is identical to the original Coords.</p>
 </dd></dl>
 
 <dl class="method">
@@ -821,6 +817,42 @@ instances. If initialCS is None, the global (x,y,z) axes are used.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">isopar</span><span class="p">(</span><span class="s">&#39;tet4&#39;</span><span class="p">,</span><span class="n">currentCS</span><span class="p">,</span><span class="n">initialCS</span><span class="p">)</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.addNoise">
+<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.10000000000000001</em>, <em>asize=0.0</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.addNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add random noise to a Coords.</p>
+<p>A random amount is added to eacho individual coordinate in the Coords.
+The difference of any coordinate from its original value will
+not be maximally <tt class="docutils literal"><span class="pre">asize</span> <span class="pre">+</span> <span class="pre">rsize</span> <span class="pre">*</span> <span class="pre">self.sizes().max()</span></tt>. The default
+is to set it to 0.1 times the geometrical size of the structure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.rep">
+<tt class="descname">rep</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.rep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replicate a Coords n times with fixed step in any direction.</p>
+<p>Returns a Coords object with shape <cite>(n,) + self.shape</cite>, thus having
+an extra first axis.
+Each component along the axis 0 is equal to the previous component
+translated over <cite>(dir,step)</cite>, where <cite>dir</cite> and <cite>step</cite> are
+interpreted just like in the <a class="reference internal" href="#coords.CoordinateSystem.translate" title="coords.CoordinateSystem.translate"><tt class="xref py py-meth docutils literal"><span class="pre">translate()</span></tt></a> method.
+The first component along the axis 0 is identical to the
+original Coords.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.replicate">
+<tt class="descname">replicate</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replicate a Coords n times with fixed step in any direction.</p>
+<p>Returns a Coords object with shape <cite>(n,) + self.shape</cite>, thus having
+an extra first axis.
+Each component along the axis 0 is equal to the previous component
+translated over <cite>(dir,step)</cite>, where <cite>dir</cite> and <cite>step</cite> are
+interpreted just like in the <a class="reference internal" href="#coords.CoordinateSystem.translate" title="coords.CoordinateSystem.translate"><tt class="xref py py-meth docutils literal"><span class="pre">translate()</span></tt></a> method.
+The first component along the axis 0 is identical to the
+original Coords.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1305,20 +1337,24 @@ homothetic scaling.</p>
 
 <dl class="method">
 <dt id="coords.Coords.translate">
-<tt class="descname">translate</tt><big>(</big><em>vector</em>, <em>distance=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.translate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">translate</tt><big>(</big><em>dir</em>, <em>step=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.translate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translate a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
-<p>The translation vector can be specified in one of the following ways:</p>
+<p>Translates the Coords in the direction <cite>dir</cite> over a distance
+<cite>step * length(dir)</cite>.</p>
+<p>Parameters:</p>
 <ul class="simple">
-<li>an axis number (0,1,2),</li>
+<li><cite>dir</cite>: specifies the direction and distance of the translation. It
+can be either<ul>
+<li>an axis number (0,1,2), specifying a unit vector in the direction
+of one of the coordinate axes.</li>
 <li>a single translation vector,</li>
-<li>an array of translation vectors.</li>
+<li>an array of translation vectors, compatible with the Coords shape.</li>
 </ul>
-<p>If an axis number is given, a unit vector in the direction of the
-specified axis will be used.
-If an array of translation vectors is given, it should be
-broadcastable to the size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array.
-If a distance value is given, the translation vector is multiplied
-with this value before it is added to the coordinates.</p>
+</li>
+<li><cite>step</cite>: If specified, the translation vector specified by <cite>dir</cite> will
+be multiplied with this value. It is commonly used with unit <cite>dir</cite>
+vectors to set the translation distance.</li>
+</ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
@@ -1355,7 +1391,7 @@ A string &#8216;000&#8217; will center the object around the origin.</p>
 
 <dl class="method">
 <dt id="coords.Coords.rotate">
-<tt class="descname">rotate</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.rotate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rotate</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em><big>)</big><a class="headerlink" href="#coords.Coords.rotate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy rotated over angle around axis.</p>
 <p>The angle is specified in degrees.
 The axis is either one of (0,1,2) designating the global axes,
@@ -1389,23 +1425,11 @@ rotation origin is specified in the argument &#8216;around&#8217;.</p>
 
 <dl class="method">
 <dt id="coords.Coords.affine">
-<tt class="descname">affine</tt><big>(</big><em>mat</em>, <em>vec=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.affine" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">affine</tt><big>(</big><em>mat</em>, <em>vec=None</em><big>)</big><a class="headerlink" href="#coords.Coords.affine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a general affine transform of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p><cite>mat</cite>: a 3x3 float matrix</p>
 <p><cite>vec</cite>: a length 3 list or array of floats</p>
 <p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="coords.Coords.replicate">
-<tt class="descname">replicate</tt><big>(</big><em>n</em>, <em>vector</em>, <em>distance=None</em><big>)</big><a class="headerlink" href="#coords.Coords.replicate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replicate a Coords n times with fixed step in any direction.</p>
-<p>Returns a Coords object with shape (n,) + self.shape, thus having
-an extra first axis.
-Each element along the axis 0 is equal to the previous element
-translated over (vector,distance). Here, vector and distance are
-interpreted just like in the translate() method.
-The first element along the axis 0 is identical to the original Coords.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1694,6 +1718,29 @@ instances. If initialCS is None, the global (x,y,z) axes are used.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="coords.Coords.addNoise">
+<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.10000000000000001</em>, <em>asize=0.0</em><big>)</big><a class="headerlink" href="#coords.Coords.addNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add random noise to a Coords.</p>
+<p>A random amount is added to eacho individual coordinate in the Coords.
+The difference of any coordinate from its original value will
+not be maximally <tt class="docutils literal"><span class="pre">asize</span> <span class="pre">+</span> <span class="pre">rsize</span> <span class="pre">*</span> <span class="pre">self.sizes().max()</span></tt>. The default
+is to set it to 0.1 times the geometrical size of the structure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.replicate">
+<tt class="descname">replicate</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=None</em><big>)</big><a class="headerlink" href="#coords.Coords.replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replicate a Coords n times with fixed step in any direction.</p>
+<p>Returns a Coords object with shape <cite>(n,) + self.shape</cite>, thus having
+an extra first axis.
+Each component along the axis 0 is equal to the previous component
+translated over <cite>(dir,step)</cite>, where <cite>dir</cite> and <cite>step</cite> are
+interpreted just like in the <a class="reference internal" href="#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">translate()</span></tt></a> method.
+The first component along the axis 0 is identical to the
+original Coords.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="coords.Coords.split">
 <tt class="descname">split</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split the coordinate array in blocks along first axis.</p>
@@ -1840,7 +1887,7 @@ F.interpolate(G,arange(0,n+1)/float(n))</p>
 
 <dl class="method">
 <dt id="coords.Coords.rot">
-<tt class="descname">rot</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.rot" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rot</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em><big>)</big><a class="headerlink" href="#coords.Coords.rot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy rotated over angle around axis.</p>
 <p>The angle is specified in degrees.
 The axis is either one of (0,1,2) designating the global axes,
@@ -1855,20 +1902,24 @@ rotation origin is specified in the argument &#8216;around&#8217;.</p>
 
 <dl class="method">
 <dt id="coords.Coords.trl">
-<tt class="descname">trl</tt><big>(</big><em>vector</em>, <em>distance=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.trl" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">trl</tt><big>(</big><em>dir</em>, <em>step=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.trl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translate a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
-<p>The translation vector can be specified in one of the following ways:</p>
+<p>Translates the Coords in the direction <cite>dir</cite> over a distance
+<cite>step * length(dir)</cite>.</p>
+<p>Parameters:</p>
 <ul class="simple">
-<li>an axis number (0,1,2),</li>
+<li><cite>dir</cite>: specifies the direction and distance of the translation. It
+can be either<ul>
+<li>an axis number (0,1,2), specifying a unit vector in the direction
+of one of the coordinate axes.</li>
 <li>a single translation vector,</li>
-<li>an array of translation vectors.</li>
+<li>an array of translation vectors, compatible with the Coords shape.</li>
 </ul>
-<p>If an axis number is given, a unit vector in the direction of the
-specified axis will be used.
-If an array of translation vectors is given, it should be
-broadcastable to the size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array.
-If a distance value is given, the translation vector is multiplied
-with this value before it is added to the coordinates.</p>
+</li>
+<li><cite>step</cite>: If specified, the translation vector specified by <cite>dir</cite> will
+be multiplied with this value. It is commonly used with unit <cite>dir</cite>
+vectors to set the translation distance.</li>
+</ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
@@ -1881,6 +1932,19 @@ with this value before it is added to the coordinates.</p>
 <span class="go">[ 1.  2.  1.]</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.rep">
+<tt class="descname">rep</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=None</em><big>)</big><a class="headerlink" href="#coords.Coords.rep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replicate a Coords n times with fixed step in any direction.</p>
+<p>Returns a Coords object with shape <cite>(n,) + self.shape</cite>, thus having
+an extra first axis.
+Each component along the axis 0 is equal to the previous component
+translated over <cite>(dir,step)</cite>, where <cite>dir</cite> and <cite>step</cite> are
+interpreted just like in the <a class="reference internal" href="#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">translate()</span></tt></a> method.
+The first component along the axis 0 is identical to the
+original Coords.</p>
 </dd></dl>
 
 </dd></dl>

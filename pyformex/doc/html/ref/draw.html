@@ -409,6 +409,26 @@ The arguments are the same as those of the AxesActor constructor.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="draw.drawImage">
+<tt class="descclassname">draw.</tt><tt class="descname">drawImage</tt><big>(</big><em>image</em>, <em>nx=-1</em>, <em>ny=-1</em>, <em>pixel='dot'</em><big>)</big><a class="headerlink" href="#draw.drawImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw an image as a colored Formex</p>
+<p>Draws a raster image as a colored Formex. While there are other and
+better ways to display an image in pyFormex (such as using the imageView
+widget), this function allows for interactive handling the image using
+the OpenGL infrastructure.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>image</cite>: a QImage holding a raster image. An image can be loaded from
+most standard image files using the <tt class="xref py py-func docutils literal"><span class="pre">loadImage()</span></tt> function</li>
+<li><cite>nx</cite>,`ny`: resolution you want to use for the display</li>
+<li><cite>pixel</cite>: the Formex representing a single pixel. It should be either
+a single element Formex, or one of the strings &#8216;dot&#8217; or &#8216;quad&#8217;. If &#8216;dot&#8217;
+a single point will be used, if &#8216;quad&#8217; a unit square. The difference
+will be important when zooming in. The default is &#8216;dot&#8217;.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
 <dt id="draw.drawViewportAxes3D">
 <tt class="descclassname">draw.</tt><tt class="descname">drawViewportAxes3D</tt><big>(</big><em>pos</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#draw.drawViewportAxes3D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw two viewport axes at a 3D position.</p>
@@ -827,10 +847,10 @@ might also be set by the user.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="script.html"
-                        title="previous chapter">4. <tt class="docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
+                        title="previous chapter">4. <tt class="docutils literal docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="colors.html"
-                        title="next chapter">6. <tt class="docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+                        title="next chapter">6. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

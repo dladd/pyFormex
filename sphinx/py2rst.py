@@ -21,7 +21,7 @@ import os,sys
 # set path to the pyformex modules
 parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 pyformexdir = os.path.join(parent,'pyformex')
-for d in [ 'plugins', 'gui', 'lib' ]:
+for d in [ 'lib', 'gui', 'plugins' ]: # this order is important!
     sys.path.insert(0,os.path.join(pyformexdir,d))
 sys.path.insert(0,pyformexdir)
 
