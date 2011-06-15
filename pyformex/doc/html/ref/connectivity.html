@@ -406,7 +406,8 @@ should be retained in the new Connectivity table.</li>
 </ul>
 <p>Returns a <a class="reference internal" href="#connectivity.Connectivity" title="connectivity.Connectivity"><tt class="xref py py-class docutils literal"><span class="pre">Connectivity</span></tt></a> object with shape
 <cite>(self.nelems*selector.nelems,selector.nplex)</cite>. This function
-does not collapse the double elements.</p>
+does not collapse the double elements. The eltype of the result
+is equal to that of the selector, possibly None.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span><span class="o">.</span><span class="n">selectNodes</span><span class="p">([[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">]])</span>
 <span class="go">Connectivity([[0, 1],</span>

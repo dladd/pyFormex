@@ -64,6 +64,26 @@ such as lines, triangles, circles, planes.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geomtools</span></tt></p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geomtools</span></tt></p>
 <dl class="function">
+<dt id="geomtools.areaNormals">
+<tt class="descclassname">geomtools.</tt><tt class="descname">areaNormals</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.areaNormals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the area and normal vectors of a collection of triangles.</p>
+<p>x is an (ntri,3,3) array of coordinates.</p>
+<p>Returns a tuple of areas,normals.
+The normal vectors are normalized.
+The area is always positive.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.polygonNormals">
+<tt class="descclassname">geomtools.</tt><tt class="descname">polygonNormals</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.polygonNormals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute normals in all points of polygons in x.</p>
+<p>x is an (nel,nplex,3) coordinate array representing a (possibly not plane)
+polygon.</p>
+<p>The return value is an (nel,nplex,3) array with the unit normals on the
+two edges ending in each point.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="geomtools.triangleInCircle">
 <tt class="descclassname">geomtools.</tt><tt class="descname">triangleInCircle</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.triangleInCircle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the incircles of the triangles x</p>

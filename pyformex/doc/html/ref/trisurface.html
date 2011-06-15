@@ -82,6 +82,14 @@ an (ntri,3) integer array of edges numbers.</li>
 <p>Additionally, a keyword argument prop= may be specified to
 set property values.</p>
 <dl class="method">
+<dt id="trisurface.TriSurface.areas">
+<tt class="descname">areas</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.areas" title="Permalink to this definition">¶</a></dt>
+<dd><p>area of elements</p>
+<p>For surface element the faces&#8217; area is returned.
+For volume elements the sum of the faces&#8217;areas is returned.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.nedges">
 <tt class="descname">nedges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nedges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of edges of the TriSurface.</p>
@@ -637,6 +645,55 @@ if one of them is, the set of self-intersecting faces is written
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.report">
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a report on the Mesh shape and size.</p>
+<p>The report contains the number of nodes, number of elements,
+plexitude, element type, bbox and size.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.nodeFront">
+<tt class="descname">nodeFront</tt><big>(</big><em>startat=0</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nodeFront" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator function returning the frontal elements.</p>
+<p>startat is an element number or list of numbers of the starting front.
+On first call, this function returns the starting front.
+Each next() call returns the next front.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.partitionByNodeFront">
+<tt class="descname">partitionByNodeFront</tt><big>(</big><em>firstprop=0</em>, <em>startat=0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByNodeFront" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detects different parts of the Mesh using a frontal method.</p>
+<p>okedges flags the edges where the two adjacent elems are to be
+in the same part of the Mesh.
+startat is a list of elements that are in the first part.
+The partitioning is returned as a property type array having a value
+corresponding to the part number. The lowest property number will be
+firstprop.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.partitionByConnection">
+<tt class="descname">partitionByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect the connected parts of a Mesh.</p>
+<p>The Mesh is partitioned in parts in which all elements are
+connected. Two elements are connected if it is possible to draw a
+continuous (poly)line from a point in one element to a point in
+the other element without leaving the Mesh.
+The partitioning is returned as a property type array having a value
+corresponding to the part number. The lowest property number will be
+firstprop.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.splitByConnection">
+<tt class="descname">splitByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitByConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the Mesh into connected parts.</p>
+<p>Returns a list of Meshes that each form a connected part.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.affine">
 <tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.affine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;affine&#8217; transformation to the Geometry object.</p>
@@ -840,6 +897,21 @@ if one of them is, the set of self-intersecting faces is written
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.largestByConnection">
+<tt class="descname">largestByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.largestByConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the largest connected part of the Mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.rings">
+<tt class="descname">rings</tt><big>(</big><em>sources</em>, <em>nrings</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.rings" title="Permalink to this definition">¶</a></dt>
+<dd><p>It finds the rings of elems connected to sources by node.</p>
+<p>Sources is a list of elem indices.
+A list of rings is returned, from zero (equal to sources) to step.
+If step is -1, all rings are returned.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.setType">
 <tt class="descname">setType</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the eltype from a character string.</p>
@@ -852,6 +924,18 @@ normally set the element type at creation time.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.correctNegativeVolumes">
+<tt class="descname">correctNegativeVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.correctNegativeVolumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the connectivity of negative-volume elements to make
+positive-volume elements.</p>
+<p>Negative-volume elements (hex or tet with inconsistent face orientation)
+may appear by error during geometrical trnasformations
+(e.g. reflect, sweep, extrude, revolve).
+This function fixes those elements.
+Currently it only works with linear tet and hex.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.setProp">
 <tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create or destroy the property array for the Mesh.</p>
@@ -861,6 +945,22 @@ You can specify a single value or a list/array of integer values.
 If the number of passed values is less than the number of elements,
 they wil be repeated. If you give more, they will be ignored.</p>
 <p>If a value None is given, the properties are removed from the Mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.scaledJacobian">
+<tt class="descname">scaledJacobian</tt><big>(</big><em>scaled=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.scaledJacobian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a quality measure for volume meshes.</p>
+<p>If scaled if False, it returns the Jacobian at the corners of each element.
+If scaled is True, it returns a quality metrics, being
+the minumum value of the scaled Jacobian in each element (at one corner, 
+the Jacobian divided by the volume of a perfect brick).
+Each tet or hex element gives a value between -1 and 1. 
+Acceptable elements have a positive scaled Jacobian. However, good 
+quality requires a minimum of 0.2.
+Quadratic meshes are first converted to linear.
+If the mesh contain mainly negative Jacobians, it probably has negative
+volumes and can be fixed with the  correctNegativeVolumes.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1101,14 +1201,6 @@ to skip the element reversal.</li>
 <dt id="trisurface.TriSurface.nEdgeAdjacent">
 <tt class="descname">nEdgeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nEdgeAdjacent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the number of adjacent elems.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.report">
-<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a report on the Mesh shape and size.</p>
-<p>The report contains the number of nodes, number of elements,
-plexitude, element type, bbox and size.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1520,16 +1612,6 @@ value is None.</p>
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">trisurface</span></tt></p>
-<dl class="function">
-<dt id="trisurface.areaNormals">
-<tt class="descclassname">trisurface.</tt><tt class="descname">areaNormals</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#trisurface.areaNormals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the area and normal vectors of a collection of triangles.</p>
-<p>x is an (ntri,3,3) array of coordinates.</p>
-<p>Returns a tuple of areas,normals.
-The normal vectors are normalized.
-The area is always positive.</p>
-</dd></dl>
-
 <dl class="function">
 <dt id="trisurface.stlConvert">
 <tt class="descclassname">trisurface.</tt><tt class="descname">stlConvert</tt><big>(</big><em>stlname</em>, <em>outname=None</em>, <em>options='-d'</em><big>)</big><a class="headerlink" href="#trisurface.stlConvert" title="Permalink to this definition">¶</a></dt>
