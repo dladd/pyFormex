@@ -540,14 +540,8 @@ Hex20 = Element(
     reversed = (4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11,16,17,18,19),
 )
 
-# We can not set this at __init__ time
-# Do we still need this ??
-## if pyformex.options.hex20edgeslinear: 	 
-##     from numpy import concatenate 	 
-##     edges = array(Hex20.edges) 	 
-##     Hex20.drawedges = concatenate([edges[:,:2],edges[:,-2:]],axis=0) 	 
-    
-#Hex20.drawfaces = [ Hex20.faces[:, Quad8.drawfaces[0]].reshape(-1, 3) ]
+Hex20.drawfaces = [ Hex20.faces.selectNodes(i) for i in Quad8.drawfaces ]
+Hex20.drawfaces2 = Hex20.faces
 
 ######################################################################
 ########## element type conversions ##################################

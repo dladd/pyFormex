@@ -564,7 +564,8 @@ class Connectivity(ndarray):
 
         Returns a :class:`Connectivity` object with shape
         `(self.nelems*selector.nelems,selector.nplex)`. This function
-        does not collapse the double elements.
+        does not collapse the double elements. The eltype of the result
+        is equal to that of the selector, possibly None.
            
         Example:
         
@@ -578,8 +579,12 @@ class Connectivity(ndarray):
 
         """
         sel = Connectivity(selector)
+        try:
+            eltype = sel.eltype
+        except:
+            eltype = None
         if sel.size > 0:
-            return Connectivity(self[:,sel].reshape(-1,sel.nplex()))
+            return Connectivity(self[:,sel].reshape(-1,sel.nplex()),eltype=eltype)
         else:
             return Connectivity()
         

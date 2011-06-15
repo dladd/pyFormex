@@ -816,7 +816,9 @@ class BezierSpline(Curve):
         self.nparts = nparts
         self.closed = closed
 
-        print "Degree: %s; Parts: %s, Ncoords: %s" % (self.degree,self.nparts,self.coords.shape[0])
+
+    def report(self):
+        return "Degree: %s; Parts: %s, Ncoords: %s" % (self.degree,self.nparts,self.coords.shape[0])
 
 
     def pointsOn(self):

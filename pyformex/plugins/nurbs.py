@@ -485,7 +485,7 @@ class NurbsSurface(Geometry4):
             control.deNormalize(wts.reshape(wts.shape[-1],1))
 
         for d in range(2):
-            nctrl = control.shape[d]
+            nctrl = control.shape[1-d] # BEWARE! the order of the nodes
             deg = degree[d]
             kn = knots[d]
             bl = blended[d]
@@ -527,8 +527,8 @@ class NurbsSurface(Geometry4):
 
 
     def order(self):
-        return (self.uknots.shape[0]-self.coords.shape[0],
-                self.vknots.shape[0]-self.coords.shape[1])
+        return (self.uknots.shape[0]-self.coords.shape[1],
+                self.vknots.shape[0]-self.coords.shape[0])
         
     def bbox(self):
         """Return the bounding box of the NURBS surface.
@@ -550,8 +550,8 @@ class NurbsSurface(Geometry4):
         
         """
         ctrl = self.coords.astype(double)
-        U = self.uknots.astype(double)
-        V = self.vknots.astype(double)
+        U = self.vknots.astype(double)
+        V = self.uknots.astype(double)
         u = asarray(u).astype(double)
 
         try:
