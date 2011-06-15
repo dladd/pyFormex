@@ -30,23 +30,23 @@ a triangulated surface.
 
 import pyformex as pf
 
-import filewrite as filewrite
-
 from formex import *
-from plugins import tetgen
-from mesh import Mesh
 from connectivity import Connectivity,connectedLineElems,adjacencyArrays
-from utils import runCommand, changeExt,countLines,mtime,hasExternal
+from mesh import Mesh
+import mesh_ext  # load the extended Mesh functions
+
+import geomtools
+import inertia
+import tetgen
+import filewrite
+import utils
 from gui.drawable import interpolateNormals
-from plugins.geomtools import projectionVOP,rotationAngle,facetDistance,edgeDistance,vertexDistance, triangleBoundingCircle
-from plugins.geomtools import intersectionPointsSWP
-from plugins import inertia
 
 import os,tempfile
 
-hasExternal('admesh')
-hasExternal('tetgen')
-hasExternal('gts')
+utils.hasExternal('admesh')
+utils.hasExternal('tetgen')
+utils.hasExternal('gts')
 
 
 def areaNormals(x):
@@ -86,8 +86,8 @@ def stlConvert(stlname,outname=None,options='-d'):
     if not outname:
         outname = pf.cfg.get('surface/stlread','.off')
     if outname.startswith('.'):
-        outname = changeExt(stlname,outname)
-    if os.path.exists(outname) and mtime(stlname) < mtime(outname):
+        outname = utils.changeExt(stlname,outname)
+    if os.path.exists(outname) and utils.mtime(stlname) < utils.mtime(outname):
         return outname,0,"File '%s' seems to be up to date" % outname
     
     if outname.endswith('.off'):
@@ -97,7 +97,7 @@ def stlConvert(stlname,outname=None,options='-d'):
     else:
         return outname,1,"Can not convert file '%s' to '%s'" % (stlname,outname)
        
-    sta,out = runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     return outname,sta,out
 
 
@@ -177,9 +177,9 @@ def read_gambit_neutral(fn):
     Returns a nodes,elems tuple.
     """
     scr = os.path.join(pf.cfg['bindir'],'gambit-neu ')
-    runCommand("%s '%s'" % (scr,fn))
-    nodesf = changeExt(fn,'.nodes')
-    elemsf = changeExt(fn,'.elems')
+    utils.runCommand("%s '%s'" % (scr,fn))
+    nodesf = utils.changeExt(fn,'.nodes')
+    elemsf = utils.changeExt(fn,'.elems')
     nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
     elems = fromfile(elemsf,sep=' ',dtype=int32).reshape((-1,3))
     return nodes, elems-1
@@ -267,7 +267,7 @@ def curvature(coords,elems,edges,neighbours=1):
     vp[adjNotOk] = 0.
     vn[adjNotOk] = 0.
     # calculate unit length projection of vp onto the tangent plane
-    t = projectionVOP(vp,n[:,newaxis])
+    t = geomtools.projectionVOP(vp,n[:,newaxis])
     t = normalize(t)
     # calculate normal curvature
     k = dotpr(vp,vn)/dotpr(vp,vp)
@@ -279,7 +279,7 @@ def curvature(coords,elems,edges,neighbours=1):
     tmax2 = cross(n,tmax1)
     tmax2 = normalize(tmax2)
     # calculate angles (tmax1,t)
-    theta,rot = rotationAngle(repeat(tmax1[:,newaxis],t.shape[1],1),t,angle_spec=Rad)
+    theta,rot = geomtools.rotationAngle(repeat(tmax1[:,newaxis],t.shape[1],1),t,angle_spec=Rad)
     # check the sign of the angles
     d =  dotpr(rot,n[:,newaxis])/(length(rot)*length(n)[:,newaxis]) # divide by length for round-off errors
     cw = isClose(d,[-1.])
@@ -955,14 +955,14 @@ Total area: %s; Enclosed volume: %s
         """
         # distance from vertices
         Vp = self.coords
-        res = vertexDistance(X,Vp,return_points) # OKdist, (OKpoints)
+        res = geomtools.vertexDistance(X,Vp,return_points) # OKdist, (OKpoints)
         dist = res[0]
         if return_points:
             points = res[1]
 
         # distance from edges
         Ep = self.coords[self.getEdges()]
-        res = edgeDistance(X,Ep,return_points) # OKpid, OKdist, (OKpoints)
+        res = geomtools.edgeDistance(X,Ep,return_points) # OKpid, OKdist, (OKpoints)
         okE,distE = res[:2]
         closer = distE < dist[okE]
         dist[okE[closer]] = distE[closer]
@@ -971,7 +971,7 @@ Total area: %s; Enclosed volume: %s
 
         # distance from faces
         Fp = self.coords[self.elems]
-        res = facetDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
+        res = geomtools.facetDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
         okF,distF = res[:2]
         closer = distF < dist[okF]
         dist[okF[closer]] = distF[closer]
@@ -1351,7 +1351,7 @@ Total area: %s; Enclosed volume: %s
         if ind.size != 0:
             rev = inverseUniqueIndex(ind)
             M = Mesh(S.coords,edg[w])
-            x = intersectionPointsSWP(M.toFormex().coords,p,n,return_all=True).reshape(-1,3)
+            x = geomtools.intersectionPointsSWP(M.toFormex().coords,p,n,return_all=True).reshape(-1,3)
         
         # For each triangle, compute the number of cutting edges
         cut = w[fac]
@@ -1546,7 +1546,7 @@ Total area: %s; Enclosed volume: %s
         tmp1 = tempfile.mktemp('.off')
         cmd = "admesh -d --write-off='%s' '%s'" % (tmp1,tmp)
         pf.message("Fixing surface normals with command\n %s" % cmd)
-        sta,out = runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         pf.message("Reading result from %s" % tmp1)
         S = TriSurface.read(tmp1)   
         os.remove(tmp)
@@ -1586,7 +1586,7 @@ Total area: %s; Enclosed volume: %s
         self.write(tmp,'gts')
         pf.message("Checking with command\n %s" % cmd)
         cmd += ' < %s' % tmp
-        sta,out = runCommand(cmd,False)
+        sta,out = utils.runCommand(cmd,False)
         os.remove(tmp)
         pf.message(out)
         if sta == 0:
@@ -1666,7 +1666,7 @@ Total area: %s; Enclosed volume: %s
         self.write(tmp,'gts')
         pf.message("Splitting with command\n %s" % cmd)
         cmd += ' < %s' % tmp
-        sta,out = runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
             pf.message(out)
@@ -1732,7 +1732,7 @@ Total area: %s; Enclosed volume: %s
         self.write(tmp,'gts')
         pf.message("Coarsening with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
-        sta,out = runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
             pf.message(out)
@@ -1776,7 +1776,7 @@ Total area: %s; Enclosed volume: %s
         self.write(tmp,'gts')
         pf.message("Refining with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
-        sta,out = runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
             pf.message(out)
@@ -1814,7 +1814,7 @@ Total area: %s; Enclosed volume: %s
         self.write(tmp,'gts')
         pf.message("Smoothing with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
-        sta,out = runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         if sta or verbose:
             pf.message(out)
@@ -1862,7 +1862,7 @@ Total area: %s; Enclosed volume: %s
         surf.write(tmp1,'gts')
         pf.message("Performing boolean operation with command\n %s" % cmd)
         cmd += ' %s %s | gts2stl > %s' % (tmp,tmp1,tmp2)
-        sta,out = runCommand(cmd)
+        sta,out = utils.runCommand(cmd)
         os.remove(tmp)
         os.remove(tmp1)
         if sta or verbose:
@@ -1899,7 +1899,7 @@ def read_stla(fn,dtype=Float,large=False,guess=True):
     if large:
         return read_ascii_large(fn,dtype=dtype)
     if guess:
-        n = countLines(fn) / 7 # ASCII STL has 7 lines per triangle
+        n = utils.countLines(fn) / 7 # ASCII STL has 7 lines per triangle
     else:
         n = 100
     f = file(fn,'r')
@@ -1949,7 +1949,7 @@ def read_ascii_large(fn,dtype=Float):
     .nodes file and then reading it through numpy's fromfile() function.
     """
     tmp = '%s.nodes' % fn
-    runCommand("awk '/^[ ]*vertex[ ]+/{print $2,$3,$4}' '%s' | d2u > '%s'" % (fn,tmp))
+    utils.runCommand("awk '/^[ ]*vertex[ ]+/{print $2,$3,$4}' '%s' | d2u > '%s'" % (fn,tmp))
     nodes = fromfile(tmp,sep=' ',dtype=dtype).reshape((-1,3,3))
     return nodes
 
@@ -1958,7 +1958,7 @@ def off_to_tet(fn):
     """Transform an .off model to tetgen (.node/.smesh) format."""
     pf.message("Transforming .OFF model %s to tetgen .smesh" % fn)
     nodes,elems = read_off(fn)
-    write_node_smesh(changeExt(fn,'.smesh'),nodes,elems)
+    write_node_smesh(utils.changeExt(fn,'.smesh'),nodes,elems)
 
 
 def find_row(mat,row,nmatch=None):
@@ -2081,7 +2081,7 @@ def Sphere(level=4,verbose=False,filename=None):
         tmp = filename
     cmd += ' > %s' % tmp
     pf.message("Writing file %s" % tmp)
-    sta,out = runCommand(cmd)
+    sta,out = utils.runCommand(cmd)
     if sta or verbose:
         pf.message(out)
     pf.message("Reading model from %s" % tmp)
@@ -2092,8 +2092,6 @@ def Sphere(level=4,verbose=False,filename=None):
 
 
 ####### Unsupported functions needing cleanup #######################
-
-from utils import deprecation
 
 def checkDistanceLinesPointsTreshold(p, q, m, dtresh):
     """_p are np points, q m are nl lines, dtresh are np distances. It returns the indices of lines, points which are in a distance < dtresh. The distance point-line is calculated using Pitagora as it seems the fastest way."""
@@ -2126,7 +2124,7 @@ def intersectSurfaceWithLines(ts, qli, mli, atol=1.e-5):
     It returns the points of intersection and the indices of the intersected line and triangle.
     TODO: the slowest part is computing the distances of lines from triangles, can it be faster? """
     #find Bounding Sphere for each triangle
-    tsr,  tsc, tsn=triangleBoundingCircle(ts.coords[ts.elems])
+    tsr,  tsc, tsn = geomtools.triangleBoundingCircle(ts.coords[ts.elems])
     wl, wt=checkDistanceLinesPointsTreshold(tsc,qli, mli, tsr)#slow part
     #find the intersection points xc only for the candidates wl,wt
     npl= ts.areaNormals()[1]

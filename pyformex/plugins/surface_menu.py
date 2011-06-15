@@ -41,8 +41,6 @@ from pyformex.arraytools import niceLogSize
 from gui.widgets import simpleInputItem as _I, groupInputItem as _G
 import os, timer
 
-import mesh_ext  # required to load the extended Mesh functions
-
 ##################### selection and annotations ##########################
 
 
