@@ -33,7 +33,6 @@ import pyformex as pf
 from formex import *
 from connectivity import Connectivity,connectedLineElems,adjacencyArrays
 from mesh import Mesh
-import mesh_ext  # load the extended Mesh functions
 
 import geomtools
 import inertia
@@ -62,6 +61,7 @@ def areaNormals(x):
     area *= 0.5
     return area,normals
 
+import mesh_ext  # load the extended Mesh functions
 
 # Conversion of surface file formats
 
