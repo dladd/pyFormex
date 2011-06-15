@@ -346,6 +346,23 @@ static void all_bernstein(int n, double u, double *B)
 }
 
 
+
+/* Find last occurrence of u in U */
+static int find_last_occurrence(double *U, double u)
+{
+  int i = 0;
+  while (U[i] <= u) ++i;
+  return i-1;
+}
+
+/* Find multiplicity of u in U, where r is the last occurrence of u in U*/
+static int find_multiplicity(double *U, double u, int r)
+{
+  int i = r;
+  while (U[i] == u) --i;
+  return r-i;
+}
+
 /* find_span */
 /*
 Find the knot span index of the parametric point u. 
@@ -521,6 +538,11 @@ static void basis_derivs(double *U, double u, int p, int i, int n, double *dN)
 }
 
 
+/********************************************************/
+/************************ CURVE *************************/
+/********************************************************/
+
+
 /* curve_points */
 /*
 Compute points on a B-spline curve. 
@@ -551,14 +573,14 @@ static void curve_points(double *P, int nc, int nd, double *U, int nk, double *u
   double *N = (double*) malloc((p+1)*sizeof(double));
 
   /* for each parametric point j */
-  for (j = 0; j < nu; j++) {
+  for (j=0; j<nu; ++j) {
 
     /* find the span index of u[j] */
     s = find_span(U,u[j],p,nc-1);
     basis_funs(U,u[j],p,s,N);
 
     t = (s-p) * nd;
-    for (i = 0; i < nd; i++) {
+    for (i=0; i<nd; ++i) {
       pnt[j*nd+i] = dotprod(N,1,P+t+i,nd,p+1);
     }
   }
@@ -621,65 +643,6 @@ static void curve_derivs(int n, double *P, int nc, int nd, double *U, int nk, do
 	pnt[(l*nu+j)*nd+i] = 0.0;
   free(dN);
 }
-
-
-/* surfacePoints */
-/*
-Compute points on a B-spline surface. 
-
-Input:
-
-- P: control points P(ns,nt,nd)
-- ns,nt: number of control points 
-- nd: dimension of the points (3 or 4)
-- U: knot sequence: U[0] .. U[m]
-- nU: number of knot values U = m+1
-- V: knot sequence: V[0] .. V[n]
-- nV: number of knot values V = n+1
-- u: parametric values (nu,2): U[0] <= ui[0] <= U[m], V[0] <= ui[1] <= V[m]
-- nu: number of parametric values
-
-Output:
-- pnt: (nu,nd) points on the B-spline
-
-Modified algorithm A3.5 from 'The NURBS Book' pg103.
-*/
-/* static void surfacePoints(double *P, int ns, int nt, int nd, double *U, int nU, double *V, int nV, double *u, int nu, double *pnt) */
-/* { */
-/*   int i, j, l, p, q, su, sv, iu, iv, t; */
-/*   double S, temp; */
-  
-/*   /\* degrees of the spline *\/ */
-/*   p = nU - ns - 1; */
-/*   q = nV - nt - 1; */
-
-/*   /\* space for the basis functions *\/ */
-/*   double *Nu = (double*) malloc((p+1)*sizeof(double)); */
-/*   double *Nv = (double*) malloc((q+1)*sizeof(double)); */
-
-/*   /\* for each parametric point j *\/ */
-/*   for (j = 0; j < nu; j++) { */
-
-/*     /\* find the span index of u[j] *\/ */
-/*     su = find_span(U,u[2*j],p,ns-1); */
-/*     basis_funs(U,u[2*j],p,su,Nu); */
-
-/*     /\* find the span index of v[j] *\/ */
-/*     sv = find_span(V,u[2*j+1],q,nt-1); */
-/*     basis_funs(V,u[2*j+1],q,sv,Nv); */
-
-/*     for (i = 0; i < nd; i++) { */
-/*       iu = (su-p) * nd; */
-/*       S = 0.0; */
-/*       for (l = 0; l <= q; l++) { */
-	
-/* 	temp = 0.0; */
-/* 	//pnt[j*nd+i] = dotprod(N,1,P+t+i,nd,p+1); */
-/*     } */
-/*   } */
-/*   free(Nu); */
-/*   free(Nv); */
-/* }  */
 
 
 
@@ -841,128 +804,6 @@ static void curve_decompose(double *P, int nc, int nd, double *U, int nk, double
   free(alfa);
 }
 
-/* surfaceDecompose */
-/*
-Decompose a Nurbs surface in Bezier patches. 
-
-Input:
-
-- p: degree of the B-spline
-- P: control points P(nc,nd)
-- nc: number of control points = n+1
-- nd: dimension of the points (3 or 4)
-- U: knot sequence: U[0] .. U[m]   m = n+p+1 = nc+p
-
-Output:
-
-- newP: (nb*p+1,nd) new control points
-- nb: number of Bezier segments 
-
-Modified algorithm A5.7 from 'The NURBS Book' pg177.
-*/
-  
-
-/* static void surfaceDecompose(double *P, int nc, int nd, double *U, int nk, double *newP) */
-/* { */
-/*   int i, j, k, p, s, m, r, a, b, mult, n, nb, ii, save; */
-/*   double numer, alpha, *alfa; */
-
-/*   n = nc - 1; */
-/*   m = nk - 1; */
-/*   p = m - n - 1; */
-
-/*   alfa = (double *) malloc(p*sizeof(double)); */
-
-/*   a = p; */
-/*   b = p+1; */
-/*   nb = 0; */
-  
-/*   /\* First bezier segment *\/ */
-/*   for (i = 0; i < (p+1)*nd; i++) newP[i] = P[i]; */
-
-/*   // Loop through knot vector *\/ */
-/*   while (b < m) { */
-/*     i = b; */
-/*     while (b < m && U[b] == U[b+1]) b++; */
-/*     mult = b-i+1; */
-    
-/*     if (mult < p) { */
-/*       printf("mult at %d is %d < %d\n",b,mult,p); */
-/*       /\* compute alfas *\/ */
-/*       numer = U[b] - U[a]; */
-/*       for (k = p; k > mult; k--) */
-/*         alfa[k-mult-1] = numer / (U[a+k]-U[a]); */
-
-/*       /\* Insert knot U[b] r times *\/ */
-/*       r = p - mult; */
-/*       for (j = 1; j <= r; j++) { */
-/*         save = r - j; */
-/*         s = mult + j; 	/\* Number of new points *\/ */
-/*         for (k = p; k >= s; k--) { */
-/* 	  alpha = alfa[k-s]; */
-/* 	  printf("alpha = %f\n",alpha); */
-/*           for (ii = 0; ii < nd; ii++) { */
-/*             newP[(nb+k)*nd+ii] = alpha*newP[(nb+k)*nd+ii] + (1.0-alpha)*newP[(nb+k-1)*nd+ii]; */
-/* 	    printf("Setting element %d to %f\n",(nb+k)*nd+ii,newP[(nb+k)*nd+ii]); */
-/* 	  } */
-/* 	} */
-/* 	if (b < m) */
-/* 	  /\* Control point of next segment *\/ */
-/* 	  for (ii = 0; ii < nd; ii++) { */
-/* 	    newP[(nb+p+save)*nd+ii] = newP[(nb+p)*nd+ii]; */
-/* 	    printf("Copying element %d to %f\n",(nb+p+save)*nd+ii,newP[(nb+p+save)*nd+ii]); */
-/* 	  } */
-/*       } */
-/*     } */
-/*     /\* Bezier segment completed *\/ */
-/*     nb += p; */
-/*     if (b < m) { */
-/*       /\* Initialize for next segment *\/ */
-/*       for (i = r; i <= p; i++) */
-/*         for (ii = 0; ii < nd; ii++) { */
-/*           newP[(nb+i)*nd+ii] = P[(b-p+i)*nd+ii]; */
-/* 	  printf("Initializing element %d to %f\n",(nb+i)*nd+ii,newP[(nb+i)*nd+ii]); */
-/* 	} */
-/*       a = b; */
-/*       b++; */
-/*     } */
-/*   } */
-  
-/*   free(alfa); */
-/* } */
-
-
-/* static char bspdegelev_doc[] = */
-/* "Degree elevate a B-Spline t times.\n\ */
-/* \n\ */
-/* INPUT:\n\ */
-/* \n\ */
-/*  n,p,U,Pw,t\n\ */
-/* \n\ */
-/* OUTPUT:\n\ */
-/* \n\ */
-/*  nh,Uh,Qw\n\ */
-/* \n\ */
-/* Modified version of Algorithm A5.9 from 'The NURBS BOOK' pg206.\n\ */
-/* \n"; */
-
-
-/* Find last occurrence of u in U */
-static int find_last_occurrence(double *U, double u)
-{
-  int i = 0;
-  while (U[i] <= u) ++i;
-  return i-1;
-}
-
-/* Find multiplicity of u in U, where r is the last occurrence of u in U*/
-static int find_multiplicity(double *U, double u, int r)
-{
-  int i = r;
-  while (U[i] == u) --i;
-  return r-i;
-}
-
 
 
 /* curve_knot_remove */
@@ -1072,6 +913,20 @@ static int curve_knot_remove(double *P, int nc, int nd, double *U, int nk, doubl
   }
   return t;
 }
+
+/* static char bspdegelev_doc[] = */
+/* "Degree elevate a B-Spline t times.\n\ */
+/* \n\ */
+/* INPUT:\n\ */
+/* \n\ */
+/*  n,p,U,Pw,t\n\ */
+/* \n\ */
+/* OUTPUT:\n\ */
+/* \n\ */
+/*  nh,Uh,Qw\n\ */
+/* \n\ */
+/* Modified version of Algorithm A5.9 from 'The NURBS BOOK' pg206.\n\ */
+/* \n"; */
 
 
 /* static void _bspdegelev(int p, double **P, int nd, int nc, double *U,  */
@@ -1282,9 +1137,172 @@ static int curve_knot_remove(double *P, int nc, int nd, double *U, int nk, doubl
 /*   free(alfa); */
 /* } */
 
+
+
+/********************************************************/
+/*********************** SURFACE ************************/
+/********************************************************/
+
+
+
+/* surface_points */
+/*
+Compute points on a B-spline surface. 
+
+Input:
+
+- P: control points P(ns,nt,nd)
+- ns,nt: number of control points 
+- nd: dimension of the points (3 or 4)
+- U: knot sequence: U[0] .. U[m]
+- nU: number of knot values U = m+1
+- V: knot sequence: V[0] .. V[n]
+- nV: number of knot values V = n+1
+- u: parametric values (nu,2): U[0] <= ui[0] <= U[m], V[0] <= ui[1] <= V[m]
+- nu: number of parametric values
+
+Output:
+- pnt: (nu,nd) points on the B-spline
+
+Modified algorithm A3.5 from 'The NURBS Book' pg103.
+*/
+static void surface_points(double *P, int ns, int nt, int nd, double *U, int nU, double *V, int nV, double *u, int nu, double *pnt)
+{
+  int i, j, k, p, q, su, sv, iu, iv;
+  double S;
+  
+  /* degrees of the spline */
+  p = nU - ns - 1;
+  q = nV - nt - 1;
+
+  /* space for the basis functions */
+  double *Nu = (double*) malloc((p+1)*sizeof(double));
+  double *Nv = (double*) malloc((q+1)*sizeof(double));
+
+  /* for each parametric point j */
+  for (j=0; j<nu; ++j) {
+
+    /* find the span index of u[j] */
+    su = find_span(U,u[2*j],p,ns-1);
+    basis_funs(U,u[2*j],p,su,Nu);
+
+    /* find the span index of v[j] */
+    sv = find_span(V,u[2*j+1],q,nt-1);
+    basis_funs(V,u[2*j+1],q,sv,Nv);
+
+    iu = su-p;
+    iv = sv-q;
+    for (i=0; i<nd; ++i) {
+      S = 0.0;
+      for (k=0; k<=p; ++k) {
+	S += Nu[k] * dotprod(Nv,1,P+((iu+k)*nt+iv)*nd+i,nd,q+1);
+      }
+      pnt[j*nd+i] = S;
+    }
+  }
+  free(Nu);
+  free(Nv);
+}
+
+
+/* surfaceDecompose */
+/*
+Decompose a Nurbs surface in Bezier patches. 
+
+Input:
+
+- p: degree of the B-spline
+- P: control points P(nc,nd)
+- nc: number of control points = n+1
+- nd: dimension of the points (3 or 4)
+- U: knot sequence: U[0] .. U[m]   m = n+p+1 = nc+p
+
+Output:
+
+- newP: (nb*p+1,nd) new control points
+- nb: number of Bezier segments 
+
+Modified algorithm A5.7 from 'The NURBS Book' pg177.
+*/
+  
+
+/* static void surfaceDecompose(double *P, int nc, int nd, double *U, int nk, double *newP) */
+/* { */
+/*   int i, j, k, p, s, m, r, a, b, mult, n, nb, ii, save; */
+/*   double numer, alpha, *alfa; */
+
+/*   n = nc - 1; */
+/*   m = nk - 1; */
+/*   p = m - n - 1; */
+
+/*   alfa = (double *) malloc(p*sizeof(double)); */
+
+/*   a = p; */
+/*   b = p+1; */
+/*   nb = 0; */
+  
+/*   /\* First bezier segment *\/ */
+/*   for (i = 0; i < (p+1)*nd; i++) newP[i] = P[i]; */
+
+/*   // Loop through knot vector *\/ */
+/*   while (b < m) { */
+/*     i = b; */
+/*     while (b < m && U[b] == U[b+1]) b++; */
+/*     mult = b-i+1; */
+    
+/*     if (mult < p) { */
+/*       printf("mult at %d is %d < %d\n",b,mult,p); */
+/*       /\* compute alfas *\/ */
+/*       numer = U[b] - U[a]; */
+/*       for (k = p; k > mult; k--) */
+/*         alfa[k-mult-1] = numer / (U[a+k]-U[a]); */
+
+/*       /\* Insert knot U[b] r times *\/ */
+/*       r = p - mult; */
+/*       for (j = 1; j <= r; j++) { */
+/*         save = r - j; */
+/*         s = mult + j; 	/\* Number of new points *\/ */
+/*         for (k = p; k >= s; k--) { */
+/* 	  alpha = alfa[k-s]; */
+/* 	  printf("alpha = %f\n",alpha); */
+/*           for (ii = 0; ii < nd; ii++) { */
+/*             newP[(nb+k)*nd+ii] = alpha*newP[(nb+k)*nd+ii] + (1.0-alpha)*newP[(nb+k-1)*nd+ii]; */
+/* 	    printf("Setting element %d to %f\n",(nb+k)*nd+ii,newP[(nb+k)*nd+ii]); */
+/* 	  } */
+/* 	} */
+/* 	if (b < m) */
+/* 	  /\* Control point of next segment *\/ */
+/* 	  for (ii = 0; ii < nd; ii++) { */
+/* 	    newP[(nb+p+save)*nd+ii] = newP[(nb+p)*nd+ii]; */
+/* 	    printf("Copying element %d to %f\n",(nb+p+save)*nd+ii,newP[(nb+p+save)*nd+ii]); */
+/* 	  } */
+/*       } */
+/*     } */
+/*     /\* Bezier segment completed *\/ */
+/*     nb += p; */
+/*     if (b < m) { */
+/*       /\* Initialize for next segment *\/ */
+/*       for (i = r; i <= p; i++) */
+/*         for (ii = 0; ii < nd; ii++) { */
+/*           newP[(nb+i)*nd+ii] = P[(b-p+i)*nd+ii]; */
+/* 	  printf("Initializing element %d to %f\n",(nb+i)*nd+ii,newP[(nb+i)*nd+ii]); */
+/* 	} */
+/*       a = b; */
+/*       b++; */
+/*     } */
+/*   } */
+  
+/*   free(alfa); */
+/* } */
+
+
+
+
 /********************************************************/
 /****** EXPORTED FUNCTIONS (callable from Python ********/
 /********************************************************/
+
+
 
 static char _doc_[] = "nurbs_ module. Version 0.1\n\
 \n\
@@ -1497,6 +1515,7 @@ static PyObject * curveDerivs(PyObject *self, PyObject *args)
   return NULL;
 }
 
+
 static char curveKnotRefine_doc[] =
 "Refine curve knot vector.\n\
 \n\
@@ -1570,6 +1589,7 @@ static PyObject * curveKnotRefine(PyObject *self, PyObject *args)
   Py_XDECREF(arr3);
   return NULL;
 }
+
 
 static char curveDecompose_doc[] =
 "Decompose a Nurbs curve in Bezier segments.\n\
@@ -1754,6 +1774,91 @@ static PyObject * curveKnotRemove(PyObject *self, PyObject *args)
 /* } */
 
 
+static char surfacePoints_doc[] =
+"Compute points on a B-spline surface.\n\
+\n\
+Input:\n\
+\n\
+- P: control points P(ns,nt,nd)\n\
+- ns,nt: number of control points\n\
+- nd: dimension of the points (3 or 4)\n\
+- U: knot sequence: U[0] .. U[m]\n\
+- nU: number of knot values U = m+1\n\
+- V: knot sequence: V[0] .. V[n]\n\
+- nV: number of knot values V = n+1\n\
+- u: parametric values (nu,2): U[0] <= ui[0] <= U[m], V[0] <= ui[1] <= V[m]\n\
+- nu: number of parametric values\n\
+\n\
+Output:\n\
+- pnt: (nu,nd) points on the B-spline\n\
+\n\
+Modified algorithm A3.5 from 'The NURBS Book' pg103.\n\
+\n";
+
+static PyObject * surfacePoints(PyObject *self, PyObject *args)
+{
+  int ns,nt,nd,nU,nV,nu;
+  npy_intp *P_dim, *U_dim, *V_dim, *u_dim, dim[2];
+  double *P, *U, *V, *u, *pnt;
+  PyObject *a1, *a2, *a3, *a4;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL, *ret=NULL;
+
+  if (!PyArg_ParseTuple(args, "OOOO", &a1, &a2, &a3, &a4))
+    return NULL;
+  arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr1 == NULL)
+    return NULL;
+  arr2 = PyArray_FROM_OTF(a2, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr2 == NULL)
+    goto fail;
+  arr3 = PyArray_FROM_OTF(a3, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr3 == NULL)
+    goto fail;
+  arr4 = PyArray_FROM_OTF(a4, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr4 == NULL)
+    goto fail;
+
+  P_dim = PyArray_DIMS(arr1);
+  U_dim = PyArray_DIMS(arr2);
+  V_dim = PyArray_DIMS(arr3);
+  u_dim = PyArray_DIMS(arr4);
+  ns = P_dim[0];
+  nt = P_dim[1];
+  nd = P_dim[2];
+  nU = U_dim[0];
+  nV = V_dim[0];
+  nu = u_dim[0];
+  P = (double *)PyArray_DATA(arr1);
+  U = (double *)PyArray_DATA(arr2);
+  V = (double *)PyArray_DATA(arr3);
+  u = (double *)PyArray_DATA(arr4);
+
+  /* Create the return array */
+  dim[0] = nu;
+  dim[1] = nd;
+  ret = PyArray_SimpleNew(2,dim, NPY_DOUBLE);
+  pnt = (double *)PyArray_DATA(ret);
+
+  /* Compute */
+  surface_points(P,ns,nt,nd,U,nU,V,nV,u,nu,pnt);
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  Py_DECREF(arr3);
+  Py_DECREF(arr4);
+  return ret;
+
+ fail:
+  printf("error cleanup and return\n");
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
+  Py_XDECREF(arr4);
+  return NULL;
+}
+
+
 static PyMethodDef _methods_[] =
 {
 	{"binomial", binomial, METH_VARARGS, binomial_doc},
@@ -1764,6 +1869,7 @@ static PyMethodDef _methods_[] =
 	{"curveDecompose", curveDecompose, METH_VARARGS, curveDecompose_doc},
 	{"curveKnotRemove", curveKnotRemove, METH_VARARGS, curveKnotRemove_doc},
 	/* {"bspdegelev", nurbs_bspdegelev, METH_VARARGS, bspdegelev_doc}, */
+	{"surfacePoints", surfacePoints, METH_VARARGS, surfacePoints_doc},
 	{NULL, NULL}
 };
 

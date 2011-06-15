@@ -339,15 +339,24 @@ class NurbsCurve(Geometry4):
         return len(self.knots)-len(self.coords)
         
     def bbox(self):
+        """Return the bounding box of the NURBS curve.
+
+        """
         return self.coords.toCoords().bbox()
 
 
-    def pointsAt(self,u=None,n=10):
-        if u is None:
-            umin = self.knots[0]
-            umax = self.knots[-1]
-            u = umin + arange(n+1) * (umax-umin) / n
+    def pointsAt(self,u):
+        """Return the points on the Nurbs curve at given parametric values.
+
+        Parameters:
+
+        - `u`: (nu,) shaped float array: parametric values at which a point
+          is to be placed.
+
+        Returns: (nu,3) shaped Coords with nu points at the specified
+        parametric values.
         
+        """
         ctrl = self.coords.astype(double)
         knots = self.knots.astype(double)
         u = asarray(u).astype(double)
@@ -463,15 +472,8 @@ class NurbsSurface(Geometry4):
     the number of control points - 1 if the curve is blended. If not blended,
     the degree is not set larger than 3.
 
-    
-    order (2,3,4,...) = degree+1 = min. number of control points
-    ncontrol >= order
-    nknots = order + ncontrol >= 2*order
+    ** This is under development! **
 
-    convenient solutions:
-    OPEN:
-      nparts = (ncontrol-1) / degree
-      nintern = 
     """
     
     def __init__(self,control,degree=(None,None),wts=None,knots=(None,None),closed=(False,False),blended=(True,True)):
@@ -515,9 +517,9 @@ class NurbsSurface(Geometry4):
                 raise ValueError,"Length of knot vector (%s) must be equal to number of control points (%s) plus order (%s)" % (nknots,nctrl,order)
 
             if d == 0:
-                self.tknots = kn
+                self.uknots = kn
             else:
-                self.sknots = kn
+                self.vknots = kn
                 
         self.coords = control
         self.degree = degree
@@ -525,11 +527,46 @@ class NurbsSurface(Geometry4):
 
 
     def order(self):
-        return (self.sknots.shape[0]-self.coords.shape[0],
-                self.tknots.shape[0]-self.coords.shape[1])
+        return (self.uknots.shape[0]-self.coords.shape[0],
+                self.vknots.shape[0]-self.coords.shape[1])
         
     def bbox(self):
+        """Return the bounding box of the NURBS surface.
+
+        """
         return self.coords.toCoords().bbox()
+
+
+    def pointsAt(self,u):
+        """Return the points on the Nurbs surface at given parametric values.
+
+        Parameters:
+
+        - `u`: (nu,2) shaped float array: `nu` parametric values (u,v) at which
+          a point is to be placed.
+
+        Returns: (nu,3) shaped Coords with `nu` points at the specified
+        parametric values.
+        
+        """
+        ctrl = self.coords.astype(double)
+        U = self.uknots.astype(double)
+        V = self.vknots.astype(double)
+        u = asarray(u).astype(double)
+
+        try:
+            pts = nurbs.surfacePoints(ctrl,U,V,u)
+            if isnan(pts).any():
+                print "We got a NaN"
+                raise RuntimeError
+        except:
+            raise RuntimeError,"Some error occurred during the evaluation of the Nurbs curve"
+
+        if pts.shape[-1] == 4:
+            pts = Coords4(pts).toCoords()
+        else:
+            pts = Coords(pts)
+        return pts
         
 
     def actor(self,**kargs):
