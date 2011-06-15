@@ -33,6 +33,7 @@ from elements import elementType,elementName
 from mesh import Mesh
 
 from plugins.trisurface import TriSurface
+from plugins.nurbs import NurbsCurve,NurbsSurface
 from marks import TextMark
 
 import timer
@@ -667,6 +668,7 @@ class GeomActor(Actor):
                     drawEdges(self.coords,self.elems,edges,edges.eltype,color)    
             else:
                 for faces in el.getDrawFaces(el.name() in pf.cfg['draw/quadsurf']):
+                    print faces.report()
                     if bkcolor is not None:
                         # Enable drawing front and back with different colors
                         GL.glEnable(GL.GL_CULL_FACE)
@@ -716,12 +718,31 @@ class GeomActor(Actor):
 
 class NurbsActor(Actor):
 
-    def __init__(self,data,color=None,**kargs):
+    def __init__(self,data,color=None,colormap=None,bkcolor=None,bkcolormap=None,**kargs):
         from gui.drawable import saneColor
         Actor.__init__(self,**kargs)
         self.object = data
-        self.color = saneColor(color)
-        self.samplingTolerance = 5.0
+        self.setColor(color,colormap)
+        self.setBkColor(bkcolor,bkcolormap)
+        if isinstance(self.object,NurbsCurve):
+            self.samplingTolerance = 5.0
+        elif isinstance(self.object,NurbsSurface):
+            self.samplingTolerance = 10.0
+        self.list = None
+
+
+    def shape(self):
+        return self.object.coords.shape[:-1]
+
+ 
+    def setColor(self,color,colormap=None):
+        """Set the color of the Actor."""
+        self.color,self.colormap = saneColorSet(color,colormap,self.shape())
+
+
+    def setBkColor(self,color,colormap=None):
+        """Set the backside color of the Actor."""
+        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.shape())
 
         
     def bbox(self):
@@ -729,25 +750,10 @@ class NurbsActor(Actor):
 
         
     def drawGL(self,**kargs):
-        drawNurbsCurves(self.object.coords,self.object.knots,color=self.color,samplingTolerance=self.samplingTolerance)
-
-
-class NurbsSurfActor(Actor):
-
-    def __init__(self,data,color=None,**kargs):
-        from gui.drawable import saneColor
-        Actor.__init__(self,**kargs)
-        self.object = data
-        self.color = saneColor(color)
-        self.samplingTolerance = 10.0
-
-        
-    def bbox(self):
-        return self.object.bbox()
-
-        
-    def drawGL(self,**kargs):
-        drawNurbsSurfaces(self.object.coords,self.object.vknots,self.object.uknots,color=self.color,normals='auto',samplingTolerance=self.samplingTolerance)
+        if isinstance(self.object,NurbsCurve):
+            drawNurbsCurves(self.object.coords,self.object.knots,color=self.color,samplingTolerance=self.samplingTolerance)
+        elif isinstance(self.object,NurbsSurface):
+            drawNurbsSurfaces(self.object.coords,self.object.vknots,self.object.uknots,color=self.color,normals='auto',samplingTolerance=self.samplingTolerance)
 
 
 # End

@@ -179,8 +179,8 @@ def settings():
                 ]),
             T('Drawing',[
                 I('_info_00_',itemtype='info',text='Changes to these options currently only become effective after restarting pyFormex!'),
-                I('draw/quadline',text='Line drawing order',itemtype='list',choices=elementTypes(1),tooltip='Wherever possible, lines will be drawn as an approximation of at most this order.'),
-                I('draw/quadsurf',text='Surface drawing order',itemtype='list',choices=elementTypes(2),tooltip='Wherever possible, surfaces (including borders of solids) will be drawn as an approximation of at most this order.'),
+                I('draw/quadline',text='Draw as quadratic lines',itemtype='list',check=True,choices=elementTypes(1),tooltip='Line elements checked here will be drawn as quadratic lines whenever possible.'),
+                I('draw/quadsurf',text='Draw as quadratic surfaces',itemtype='list',check=True,choices=elementTypes(2)+elementTypes(3),tooltip='Surface and volume elements checked here will be drawn as quadratic surfaces whenever possible.'),
                 ]
               ),
             T('Mouse',mouse_settings),

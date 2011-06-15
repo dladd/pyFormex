@@ -152,7 +152,7 @@ wait = 0.0  # time(sec.) to wait between draw operations
 flywait = 0.3  # time(sec.) to wait between subsequent views in auto flying
 localaxes = True     # by default, buttons rotate/pan in local axes
 quadline = [] # 'line3' ]
-quadsurf = [] # [ 'quad8', 'quad9' ]
+quadsurf = [] # [ 'quad8', 'quad9', 'hex20' ]
 
 [pick]
 size=(12,12) # size of the pick window

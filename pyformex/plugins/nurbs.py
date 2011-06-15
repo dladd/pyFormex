@@ -32,7 +32,6 @@ from coords import *
 from lib import nurbs
 from plugins import curve
 from pyformex import options
-from gui.actors import NurbsActor,NurbsSurfActor
 import olist
 
 
@@ -448,6 +447,7 @@ class NurbsCurve(Geometry4):
 
     def actor(self,**kargs):
         """Graphical representation"""
+        from gui.actors import NurbsActor
         return NurbsActor(self,**kargs)
     
 
@@ -571,7 +571,10 @@ class NurbsSurface(Geometry4):
 
     def actor(self,**kargs):
         """Graphical representation"""
-        return NurbsSurfActor(self,**kargs)
+        from gui.actors import NurbsActor
+        print "CREATING NURBS ACTOR"
+        print self.coords.shape
+        return NurbsActor(self,**kargs)
 
 
 ################################################################

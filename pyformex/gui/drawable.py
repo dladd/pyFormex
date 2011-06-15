@@ -52,7 +52,7 @@ def glObjType(nplex):
     return objtype
 
 # A list of elements that can be drawn quadratically using NURBS
-_nurbs_elements = [ 'line3', 'quad4', 'quad8', 'quad9' ] 
+_nurbs_elements = [ 'line3', 'quad4', 'quad8', 'quad9', 'hex20' ] 
 
 ### Some drawing functions ###############################################
 
@@ -342,29 +342,45 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         warnings.warn('Nurbs surfaces of degree > 7 can currently not be drawn! You can approximate the surface by a lower order surface.')
         return
     mode = {3:GL.GL_MAP2_VERTEX_3, 4:GL.GL_MAP2_VERTEX_4}[ndim]
-    x = x.reshape(-1,ns,nt,ndim)
+    #x = x.reshape(-1,ns,nt,ndim)
     if color is not None:
-        color = color.reshape(-1,3)
-        if color.shape[0] == 1:
+        pf.debug('Color shape: %s' % str(color.shape))
+        pf.debug('Coords shape: %s' % str(x.shape))
+        #color = color.reshape(-1,3)
+        if color.ndim == 1:
             # Handle single color
-            GL.glColor3fv(color[0])
+            pf.debug('Set single color: OK')
+            GL.glColor3fv(color)
             color = None
-        elif color.shape[0] != x.shape[0]:
-            raise ValueError,"Number of colors (%s) should equal 1 or the number of faces(%s)" % (color.shape[0],x.shape[0])
+        elif color.ndim == 2 and color.shape[0] == x.shape[0]:
+            pf.debug('Element color: %s' % color.shape[0])
+        elif color.shape == x.shape[:-1] + (3,):
+            pf.debug('Vertex color: %s' % str(color.shape[:-1]))
+        else:
+            raise ValueError,"Number of colors (%s) should equal 1 or the number of faces(%s) or the number of faces * number of vertices" % (color.shape[0],x.shape[0])
                              
     si = sknots
     ti = tknots
     
     GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
+    if x.ndim == 3:
+        x = x.reshape(-1,ns,nt,ndim)
+    if color is not None and color.ndim == 3:
+        from plugins.nurbs import Coords4
+        color = Coords4(color)
+        color = color.reshape(-1,ns,nt,ndim)
     for i,xi in enumerate(x):
-        if color is not None:
+        if color is not None and color.ndim == 2:
             # Handle element color
+            pf.debug('Set element color: OK')
             GL.glColor3fv(color[i])
         if sknots.ndim > 1:
             si = sknots[i]
         if tknots.ndim > 1:
             ti = tknots[i]
         GLU.gluBeginSurface(nurb)
+        if color is not None and color.ndim == 4:
+            GLU.gluNurbsSurface(nurb,si,ti,color[i],GL.GL_MAP2_COLOR_4)
         GLU.gluNurbsSurface(nurb,si,ti,xi,mode)
         GLU.gluEndSurface(nurb)
 
@@ -406,6 +422,7 @@ def drawQuadraticSurfaces(x,e,color=None):
         e = e.reshape(-1,nplex)
 
     if color is not None:
+        pf.debug('Color shape: %s' % str(color.shape))
         if color.ndim == 2:
             pf.debug("COLOR SHAPE BEFORE MULTIPLEXING %s" % str(color.shape))
             color = color_multiplex(color,nfaces)

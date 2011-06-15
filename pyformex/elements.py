@@ -232,7 +232,9 @@ Proposed changes in the Element class
         return self.drawedges
 
     def getDrawFaces(self,quadratic=False):
+        print "QUADRATIC %s" % quadratic
         if quadratic and hasattr(self,'drawfaces2'):
+            print self.drawfaces2
             return self.drawfaces2
         if not hasattr(self,'drawfaces'):
             self.drawfaces = self.getFaces().reduceDegenerate()
@@ -541,7 +543,7 @@ Hex20 = Element(
 )
 
 Hex20.drawfaces = [ Hex20.faces.selectNodes(i) for i in Quad8.drawfaces ]
-Hex20.drawfaces2 = Hex20.faces
+Hex20.drawfaces2 = [ Hex20.faces ]
 
 ######################################################################
 ########## element type conversions ##################################
