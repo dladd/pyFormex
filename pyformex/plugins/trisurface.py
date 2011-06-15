@@ -33,6 +33,7 @@ import pyformex as pf
 from formex import *
 from connectivity import Connectivity,connectedLineElems,adjacencyArrays
 from mesh import Mesh
+import mesh_ext  # load the extended Mesh functions
 
 import geomtools
 import inertia
@@ -47,21 +48,6 @@ utils.hasExternal('admesh')
 utils.hasExternal('tetgen')
 utils.hasExternal('gts')
 
-
-def areaNormals(x):
-    """Compute the area and normal vectors of a collection of triangles.
-
-    x is an (ntri,3,3) array of coordinates.
-
-    Returns a tuple of areas,normals.
-    The normal vectors are normalized.
-    The area is always positive.
-    """
-    area,normals = vectorPairAreaNormals(x[:,1]-x[:,0],x[:,2]-x[:,1])
-    area *= 0.5
-    return area,normals
-
-import mesh_ext  # load the extended Mesh functions
 
 # Conversion of surface file formats
 
@@ -194,7 +180,7 @@ def write_stla(f,x):
     if own:
         f = file(f,'w')
     f.write("solid  Created by %s\n" % pf.Version)
-    area,norm = areaNormals(x)
+    area,norm = geomtools.areaNormals(x)
     degen = degenerate(area,norm)
     print("The model contains %d degenerate triangles" % degen.shape[0])
     for e,n in zip(x,norm):
@@ -660,7 +646,7 @@ class TriSurface(Mesh):
         The values are returned and saved in the object.
         """
         if self.areas is None or self.normals is None:
-            self.areas,self.normals = areaNormals(self.coords[self.elems])
+            self.areas,self.normals = geomtools.areaNormals(self.coords[self.elems])
         return self.areas,self.normals
 
 

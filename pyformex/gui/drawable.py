@@ -30,6 +30,7 @@ from OpenGL import GL,GLU
 from colors import *
 from numpy import *
 from formex import *
+from plugins import geomtools
 
 import simple
 import utils
@@ -126,9 +127,9 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
                 mode = 'smooth'
             else:
                 if e is None:
-                    n = polygonNormals(x)
+                    n = geomtools.polygonNormals(x)
                 else:
-                    n = polygonNormals(x[e])
+                    n = geomtools.polygonNormals(x[e])
                 pf.debug("NORMALS:%s" % str(n.shape))
         else:
             try:
@@ -718,7 +719,7 @@ def interpolateNormals(coords,elems,atNodes=False,treshold=None):
     If atNodes == True, a more compact array with the unique averages
     at the nodes is returned.
     """
-    n = polygonNormals(coords[elems])
+    n = geomtools.polygonNormals(coords[elems])
     n = nodalSum(n,elems,return_all=not atNodes,direction_treshold=treshold)
     return normalize(n)
 

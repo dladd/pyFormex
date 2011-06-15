@@ -28,7 +28,7 @@ from gui import decors,colors
 from gui.camera import inverse
 from gui.draw import *
 from formex import *
-from plugins import trisurface
+from plugins import geomtools
 
 VA=None
 
@@ -39,7 +39,7 @@ def prepare(V):
     P = V.center()
     print("Initial P = %s" % P)
     VA = draw(V,bbox=None,color='black')
-    area,norm = surface.areaNormals(V.coords)
+    area,norm = geomtools.areaNormals(V.coords)
     N = norm[0]
     return V,P,N
 
@@ -60,7 +60,7 @@ def testview(F,V,P):
     print(F.center())
     undraw(VA)
     VA = draw(V)
-    area,norm = surface.areaNormals(V.coords)
+    area,norm = geomtools.areaNormals(V.coords)
     N = norm[0]
     return P,N
 

@@ -1205,6 +1205,82 @@ static void surface_points(double *P, int ns, int nt, int nd, double *U, int nU,
 }
 
 
+/* surface_derivs */
+/*
+Compute derivatives of a B-spline surface. 
+
+Input:
+
+- mu,mv: number of derivatives to compute in u,v direction
+- P: control points P(ns,nt,nd)
+- ns,nt: number of control points
+- nd: dimension of the points (3 or 4)
+- U: knot sequence: U[0] .. U[m]
+- nU: number of knot values U = m+1
+- V: knot sequence: V[0] .. V[n]
+- nV: number of knot values V = n+1
+- u: parametric values (nu,2): U[0] <= ui[0] <= U[m], V[0] <= ui[1] <= V[m]
+- nu: number of parametric values
+
+Output:
+- pnt: (mu+1,mv+1,nu,nd) points and derivatives on the B-spline surface
+
+Modified algorithm A3.6 from 'The NURBS Book' pg111.
+*/
+static void surface_derivs(int mu, int mv, double *P,int ns, int nt, int nd, double *U, int nU, double *V, int nV, double *u, int nu, double *pnt)
+{
+  int p,q,du,dv,su,sv,i,j,k,l,iu,iv,r;
+  double S, *qnt;
+  
+  /* degrees of the spline */
+  p = nU - ns - 1;
+  q = nV - nt - 1;
+
+  /* number of nonzero derivatives to compute */
+  du = min(p,mu);
+  dv = min(q,mv);
+
+  /* space for the basis functions and derivatives */
+  double *Nu = (double*) malloc((du+1)*(p+1)*sizeof(double));
+  double *Nv = (double*) malloc((dv+1)*(q+1)*sizeof(double));
+
+  /* clear everything */
+  for (i=0; i<(mu+1)*(mv+1)*nu*nd; ++i) pnt[i] = 0;
+
+  /* for each parametric point j */
+  for (j=0; j<nu; ++j) {
+
+    /* find the span index of u[j] */
+    su = find_span(U,u[2*j],p,ns-1);
+    basis_derivs(U,u[2*j],p,su,du,Nu);
+
+    /* find the span index of v[j] */
+    sv = find_span(V,u[2*j+1],q,nt-1);
+    basis_derivs(V,u[2*j+1],q,sv,dv,Nv);
+
+    /* for each nonzero dervative */
+    for (k=0; k<=du; ++k) {
+      for (l=0; l<=dv; ++l) {
+	qnt = pnt + (k*(mv+1) + l) *nu*nd;
+
+	iu = su-p;
+	iv = sv-q;
+	for (i=0; i<nd; ++i) {
+	  S = 0.0;
+	  for (r=0; r<=p; ++r) {
+	    S += Nu[r] * dotprod(Nv,1,P+((iu+r)*nt+iv)*nd+i,nd,q+1);
+	  }
+	  qnt[j*nd+i] = S;
+	}
+      }      
+    }
+  }
+  free(Nu);
+  free(Nv);
+}
+
+
+
 /* surfaceDecompose */
 /*
 Decompose a Nurbs surface in Bezier patches. 
@@ -1855,6 +1931,84 @@ static PyObject * surfacePoints(PyObject *self, PyObject *args)
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
   Py_XDECREF(arr4);
+  return NULL;
+}
+
+
+static char surfaceDerivs_doc[] =
+"Compute derivatives of a B-spline surface.\n\
+\n\
+Input:\n\
+\n\
+- n: number of derivatives to compute\n\
+- P: control points P(ns,nt,nd)\n\
+- ns,nt: number of control points\n\
+- nd: dimension of the points (3 or 4)\n\
+- U: knot sequence: U[0] .. U[m]\n\
+- nU: number of knot values U = m+1\n\
+- V: knot sequence: V[0] .. V[n]\n\
+- nV: number of knot values V = n+1\n\
+- u: parametric values (nu,2): U[0] <= ui[0] <= U[m], V[0] <= ui[1] <= V[m]\n\
+- nu: number of parametric values\n\
+\n\
+Output:\n\
+- pnt: (n+1,nu,nd) points and derivatives on the B-spline surface\n\
+\n\
+Modified algorithm A3.6 from 'The NURBS Book' pg111.\n\
+\n";
+
+static PyObject * surfaceDerivs(PyObject *self, PyObject *args)
+{
+  int nc, nd, nk, nu, n;
+  npy_intp *P_dim, *U_dim, *u_dim, dim[3];
+  double *P, *U, *u, *pnt;
+  PyObject *a1, *a2, *a3;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *ret=NULL;
+
+  if(!PyArg_ParseTuple(args, "OOOi", &a1, &a2, &a3, &n))
+    return NULL;
+  arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr1 == NULL)
+    return NULL;
+  arr2 = PyArray_FROM_OTF(a2, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr2 == NULL)
+    goto fail;
+  arr3 = PyArray_FROM_OTF(a3, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr3 == NULL)
+    goto fail;
+
+  P_dim = PyArray_DIMS(arr1);
+  U_dim = PyArray_DIMS(arr2);
+  u_dim = PyArray_DIMS(arr3);
+  nc = P_dim[0];
+  nd = P_dim[1];
+  nk = U_dim[0];
+  nu = u_dim[0];
+  P = (double *)PyArray_DATA(arr1);
+  U = (double *)PyArray_DATA(arr2);
+  u = (double *)PyArray_DATA(arr3);
+
+  /* Create the return array */
+  dim[0] = n+1;
+  dim[1] = nu;
+  dim[2] = nd;
+  ret = PyArray_SimpleNew(3,dim, NPY_DOUBLE);
+  pnt = (double *)PyArray_DATA(ret);
+
+  /* Compute */
+  curve_derivs(n, P, nc, nd, U, nk, u, nu, pnt);
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  Py_DECREF(arr3);
+  return ret;
+
+ fail:
+  printf("error cleanup and return\n");
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
   return NULL;
 }
 

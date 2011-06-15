@@ -29,9 +29,47 @@ such as lines, triangles, circles, planes.
 
 from formex import *
 
+
 class Plane(object):
     def __init__(self,P,n):
         self.coords = Coords.concatenate([P,normalize(n)])
+
+
+def areaNormals(x):
+    """Compute the area and normal vectors of a collection of triangles.
+
+    x is an (ntri,3,3) array of coordinates.
+
+    Returns a tuple of areas,normals.
+    The normal vectors are normalized.
+    The area is always positive.
+    """
+    area,normals = vectorPairAreaNormals(x[:,1]-x[:,0],x[:,2]-x[:,1])
+    area *= 0.5
+    return area,normals
+
+
+def polygonNormals(x):
+    """Compute normals in all points of polygons in x.
+
+    x is an (nel,nplex,3) coordinate array representing a (possibly not plane)
+    polygon.
+    
+    The return value is an (nel,nplex,3) array with the unit normals on the
+    two edges ending in each point.
+    """
+    if x.shape[1] < 3:
+        #raise ValueError,"Cannot compute normals for plex-2 elements"
+        n = zeros_like(x)
+        n[:,:,2] = -1.
+        return n
+    
+    ni = arange(x.shape[1])
+    nj = roll(ni,1)
+    nk = roll(ni,-1)
+    v1 = x-x[:,nj]
+    v2 = x[:,nk]-x
+    return vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
 
 
 def triangleInCircle(x):

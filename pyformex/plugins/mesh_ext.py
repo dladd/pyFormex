@@ -11,9 +11,8 @@ Mesh object, but are also available as Mesh methods.
 
 from mesh import Mesh
 from elements import elementType,_default_facetype
-from trisurface import areaNormals
 from formex import *
-#from connectivity import Connectivity
+
 
 ##############################################################################
 #
@@ -260,12 +259,12 @@ def areas(self):
         mesh._default_facetype.
         """
         return _default_surfacetype.get(nplex,None)
-
+    import geomtools
     nfacperel= len(self.eltype.faces[1])#nfaces per elem
     mf=Mesh(self.coords, self.getFaces())#mesh of all faces
     mf.eltype = elementType(defaultSurfacetype(mf.nplex()))
     ntriperfac= mf.select([0]).convert('tri3').nelems()#how many tri per face
-    elfacarea= areaNormals( mf.convert('tri3').toFormex()[:])[0].reshape(self.nelems(), nfacperel*ntriperfac)#elems'faces'areas
+    elfacarea = geomtools.areaNormals( mf.convert('tri3').toFormex()[:])[0].reshape(self.nelems(), nfacperel*ntriperfac)#elems'faces'areas
     return elfacarea.sum(axis=1)#elems'areas
 
 
