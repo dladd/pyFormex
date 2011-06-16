@@ -2097,7 +2097,7 @@ class ListSelection(InputDialog):
         self['input'].setValue(selected)
 
 
-    def value(self,selected):
+    def value(self):
         """Return the selected items."""
         return self['input'].value()
 

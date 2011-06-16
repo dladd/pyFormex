@@ -870,4 +870,8 @@ def filterWarning(message,module='',category='U',action='ignore'):
     warnings.filterwarnings(action,message,category,module)
 
 
+def warn(message,level=UserWarning,stacklevel=3):
+    import warnings
+    warnings.warn(message,level,stacklevel)
+
 ### End

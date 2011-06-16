@@ -939,13 +939,16 @@ Total area: %s; Enclosed volume: %s
         If return_points = True, a second value is returned: an array with
         the closest (foot)points matching X.
         """
+        from timer import Timer
+        t = Timer()
         # distance from vertices
         Vp = self.coords
         res = geomtools.vertexDistance(X,Vp,return_points) # OKdist, (OKpoints)
         dist = res[0]
         if return_points:
             points = res[1]
-
+        print "Vertex distance: %s seconds" % t.seconds()
+        
         # distance from edges
         Ep = self.coords[self.getEdges()]
         res = geomtools.edgeDistance(X,Ep,return_points) # OKpid, OKdist, (OKpoints)
@@ -954,15 +957,17 @@ Total area: %s; Enclosed volume: %s
         dist[okE[closer]] = distE[closer]
         if return_points:
             points[okE[closer]] = res[2][closer]
+        print "Edge distance: %s seconds" % t.seconds()
 
         # distance from faces
         Fp = self.coords[self.elems]
-        res = geomtools.facetDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
+        res = geomtools.faceDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
         okF,distF = res[:2]
         closer = distF < dist[okF]
         dist[okF[closer]] = distF[closer]
         if return_points:
             points[okF[closer]] = res[2][closer]
+        print "Face distance: %s seconds" % t.seconds()
 
         if return_points:
             return dist,points

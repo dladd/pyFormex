@@ -232,7 +232,7 @@ Proposed changes in the Element class
         return self.drawedges
 
     def getDrawFaces(self,quadratic=False):
-        print "QUADRATIC %s" % quadratic
+        #print "QUADRATIC %s" % quadratic
         if quadratic and hasattr(self,'drawfaces2'):
             print self.drawfaces2
             return self.drawfaces2

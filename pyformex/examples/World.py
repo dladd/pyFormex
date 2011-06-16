@@ -26,7 +26,7 @@
 
 level = 'normal'
 topics = ['image']
-techniques = ['color']
+techniques = ['color','filename']
 
 """
 

@@ -55,7 +55,18 @@ functionality.
 
 warn_viewport_linking = "Linking viewports is an experimental feature and is not fully functional yet."
 
-warn_avoid_sleep = "The sleep function is not yet fully functional and its use should currently be avoided. Use the delay and pause functions, or the drawwait setting instead!"
+warn_avoid_sleep = """.. warn_avoid_sleep
+
+Avoid sleep function
+--------------------
+The sleep function may cause a heavy processor load during it wait cycle,
+and its use should therefore be avoided. Depending on your intentions,
+there are several better alternatives:
+
+- the `Draw Wait Time` preference setting,
+- the delay() and wait() functions,
+- the pause() function,
+"""
 
 warn_old_table_dialog = "The use of OldTableDialog is deprecated. Please use a combination of the Dialog, Tabs and Table widgets."
 

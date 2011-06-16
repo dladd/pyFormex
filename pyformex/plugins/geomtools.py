@@ -171,6 +171,21 @@ def triangleObtuse(x):
     return (vv[:,0] > vv[:,1]+vv[:,2]) + (vv[:,1] > vv[:,2]+vv[:,0]) + (vv[:,2] > vv[:,0]+vv[:,1])
 
 
+def isInsideTriangle(x,P):
+    """Checks whether the points are inside triangles.
+
+    x is a Coords array with shape (ntri,3,3) representing ntri triangles.
+    P is a Coords array with shape (ntri,3) representing ntri points lying
+    in the planes of the triangles.
+    This function checks whether these points fall inside the triangles.
+
+    Returns array with ntri bool values.
+    """
+    xx = [ cross(x[:,i]-P,x[:,j]-P) for (i,j) in ((0,1),(1,2),(2,0)) ]
+    xy = (xx[0]*xx[1]).sum(axis=-1)
+    yz = (xx[1]*xx[2]).sum(axis=-1)
+    return (column_stack([xy,yz]) > 0).all(axis=-1)
+
 
 def lineIntersection(P1,D1,P2,D2):
     """Finds the intersection of 2 coplanar lines.
@@ -582,13 +597,14 @@ def intersectionTimesPOL(p,q,m):
     return (I1-I2)/I3
 
 
-## ################## distance tools ###############
+#################### distance tools ###############
 
-def facetDistance(X,Fp,return_points=False):
-    """Compute the closest perpendicular distance of points X to a set of facets.
+
+def faceDistance(X,Fp,return_points=False):
+    """Compute the closest perpendicular distance to a set of triangles.
 
     X is a (nX,3) shaped array of points.
-    Fp is a (nF,nplex,3) shaped array of facet vertices.
+    Fp is a (nF,3,3) shaped array of triangles.
 
     Note that some points may not have a normal with footpoint inside any
     of the facets.
@@ -607,7 +623,10 @@ def facetDistance(X,Fp,return_points=False):
     # Compute intersection points of perpendiculars from X on facets F
     Y = intersectionPointsPOP(X,Fp[:,0,:],Fn)
     # Find intersection points Y inside the facets
-    inside = insideSimplex(baryCoords(Fp,Y))
+    from timer import Timer
+    t = Timer()
+    inside = row_stack([isInsideTriangle(Fp,y) for y in Y])
+    print "  inside: %s seconds" % t.seconds()
     pid = where(inside)[0]
     X = X[pid]
     Y = Y[inside]
@@ -687,7 +706,10 @@ def vertexDistance(X,Vp,return_points=False):
     return OKdist,
 
 
-## ##########################################
+############################################
+
+# This is slow on large datasets
+# Anybody still needs this?
 
 def baryCoords(S,P):
     """Return the barycentric coordinates of points P wrt. simplexes S.

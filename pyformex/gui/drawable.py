@@ -436,6 +436,10 @@ def drawQuadraticSurfaces(x,e,color=None):
     else:
         xx = x[e]
 
+    #
+    #  if color.ndim > 2, we have to do the same transforms with colors !!
+    #
+
     if xx.shape[-2] == 4:
         # Bilinear surface
         xx = xx[...,[0,3,1,2],:]
@@ -447,9 +451,16 @@ def drawQuadraticSurfaces(x,e,color=None):
     
     if xx.shape[-2] == 8:
         xx = quad8_quad9(xx)
+        
     # Convert quad9 to nurbs node order
     xx = xx[...,[0,7,3,4,8,6,1,5,2],:]
     xx = xx.reshape(-1,3,3,xx.shape[-1])
+    if color.ndim > 2:
+        if color.shape[-2] == 8:
+            color = quad8_quad9(color)
+        color = color[...,[0,7,3,4,8,6,1,5,2],:]
+        color = color.reshape(-1,3,3,color.shape[-1])
+    
     xx[...,1,:] = 2*xx[...,1,:] - 0.5*(xx[...,0,:] + xx[...,2,:])
     xx[...,1,:,:] = 2*xx[...,1,:,:] - 0.5*(xx[...,0,:,:] + xx[...,2,:,:])
     knots = array([0.,0.,0.,1.,1.,1.])

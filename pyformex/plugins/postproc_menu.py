@@ -255,6 +255,10 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     if type(elems) != list:
         elems = [ elems ]
 
+    print ["ELEMS: %s" % str(el.shape) for el in elems ]
+    if val is not None:
+        print "VAL: %s" % str(val.shape)
+
     # draw undeformed structure
     if showref:
         ref = [ Mesh(nodes,el,eltype='quad%d'%el.shape[1]) for el in elems ]
@@ -306,6 +310,8 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     dscale = array(dscale)
     frames = []   # a place to store the drawn frames
     bboxes = []
+    if sleeptime >= 0:
+        delay(sleeptime)
     for dsc in dscale.flat:
 
         if displ is None:
@@ -318,9 +324,10 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         # easily remove/redisplay them
         #print(val)
         if val is None:
-            F = [ draw(df,color='blue',view=None,bbox='last',wait=None) for df in deformed ]
+            F = [ draw(df,color='blue',view=None,bbox='last',wait=False) for df in deformed ]
         else:
-            F = [ draw(df,color=cval[el],view=None,bbox='last',wait=None) for df,el in zip(deformed,elems) ]
+            print [ df.report() + "\nCOLORS %s" % str(cval[el].shape)  for df,el in zip(deformed,elems) ]
+            F = [ draw(df,color=cval[el],view=None,bbox='last',wait=False) for df,el in zip(deformed,elems) ]
         T = drawText('Deformation scale = %s' % dsc,200,10)
 
         # remove the last frame
@@ -333,9 +340,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
             pf.canvas.removeDecoration(frames[-1][1])
         # add the latest frame to the stored list of frames
         frames.append((F,T))
-        if sleeptime > 0.:
-            pf.app.processEvents()
-            sleep(sleeptime)
+        wait()
 
     zoomBbox(bbox(bboxes))
     
@@ -357,9 +362,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
             pf.canvas.display()
             pf.canvas.update()
             FA,TA = F,T
-            if sleeptime > 0.:
-                pf.app.processEvents()
-                sleep(sleeptime)
+            wait()
 
 
 ############################# PostProc #################################

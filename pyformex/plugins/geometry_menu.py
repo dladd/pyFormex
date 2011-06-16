@@ -77,11 +77,8 @@ def _init_():
     
 
 def set_selection(clas='geometry'):
-    print 'hallo'
     sel = pf.GUI.selection.get(clas)
-    print sel
     if sel:
-        print 'ASK'
         sel.ask()
         selection.set(sel.names)
         selection.draw()
