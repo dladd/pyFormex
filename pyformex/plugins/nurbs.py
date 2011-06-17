@@ -578,6 +578,38 @@ class NurbsSurface(Geometry4):
 
 
 ################################################################
+
+
+def globalInterpolationCurve(Q,degree=3,strategy=0.5):
+    """Compute the global curve interpolation matrix.
+
+    The global curve interpolation matrix allows to compute the
+    control points of a NURBS curve that passes through all given points
+    and has parameter values u at the points.
+
+    Returns the knot vector U and the coefficent matrix A. The
+    control points P are the
+
+    Strategy to set the parameter values at the points:
+    0.0 = equally spaced
+    0.5 = centripetal
+    1.0 = chord length
+    """
+    from plugins.curve import PolyLine
+    # set the knot values at the points
+    nc = Q.shape[0]
+    n = nc-1
+
+    # chord length
+    d = PolyLine(Q).lengths()
+    # apply strategy
+    d = d ** strategy
+    d = d.cumsum()
+    d /= d[-1]
+    u = concatenate([[0.], d])
+    U,A = nurbs.curveGlobalInterpolationMatrix(Q,u,degree)
+    P = linalg.solve(A,Q)
+    return NurbsCurve(P,knots=U,degree=degree)
     
 
 def uniformParamValues(n,umin=0.0,umax=1.0):

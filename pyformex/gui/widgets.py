@@ -1429,6 +1429,7 @@ class InputDialog(QtGui.QDialog):
                         if isinstance(src,InputBool):
                             signal = QtCore.SIGNAL("stateChanged(int)")
                         elif isinstance(src,InputRadio):
+                            utils.warn('radio_enabler')
                             # BV: this does not work
                             signal = QtCore.SIGNAL("buttonClicked(int)")
                         elif isinstance(src,InputCombo):

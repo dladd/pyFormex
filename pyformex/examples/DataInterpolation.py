@@ -36,7 +36,7 @@ M = Formex(mpattern('123')).replic2(nx,ny).toMesh().convert('quad%s'%nplex,fuse=
 #draw(M,color=yellow)
 
 # Create the Mesh interpolateor
-gprule = (2,2) # integration rule: maximum (5,5)
+gprule = (5,1) # integration rule: minimum (1,1),  maximum (5,5)
 Q = calpy_itf.QuadInterpolator(M.nelems(),M.nplex(),gprule)
 
 # Define some random data at the GP.

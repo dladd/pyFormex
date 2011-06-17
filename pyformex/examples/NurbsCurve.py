@@ -61,11 +61,11 @@ def drawThePoints(N,n,color=None):
     draw(connect([Formex(x),Formex(x3t)]),color=red,linewidth=5)
 
 
-def drawNurbs(control,degree,closed,blended,weighted=False,Clear=False):
+def drawNurbs(points,pointtype,degree,strategy,closed,blended,weighted=False,Clear=False):
     if Clear:
         clear()
 
-    C = Formex(pattern(control)).toCurve()
+    C = Formex(pattern(points)).toCurve()
     X = C.coords
     draw(C)
     draw(X,marksize=10)
@@ -86,7 +86,10 @@ def drawNurbs(control,degree,closed,blended,weighted=False,Clear=False):
         #print wts,wts.shape
     else:
         wts=None
-    N = NurbsCurve(X,wts=wts,degree=degree,closed=closed,blended=blended)
+    if pointtype == 'Control':
+        N = NurbsCurve(X,wts=wts,degree=degree,closed=closed,blended=blended)
+    else:
+        N = globalInterpolationCurve(X,degree=degree,strategy=strategy)
     draw(N,color=red)
     drawThePoints(N,11,color=black)
 
@@ -115,8 +118,8 @@ def show():
     drawNurbs(**res)
 
 def showAll():
-    for control in predefined:
-        drawNurbs(control,degree=2,closed=False,blended=True,weighted=False,Clear=True)
+    for points in predefined:
+        drawNurbs(points,degree=2,closed=False,blended=True,weighted=False,strategy=0.5,Clear=True)
 
 def timeOut():
     showAll()
@@ -145,15 +148,21 @@ predefined = [
     ]
     
 data_items = [
-    _I('control',text='Control Points',choices=predefined),
+    _I('points',text='Point set',choices=predefined),
+    _I('pointtype',text='Point type',itemtype='select',choices=['Control','OnCurve']),
     _I('degree',2),
+    _I('strategy',0.5),
     _I('closed',False),
     _I('blended',True,enabled=False),
     _I('weighted',False),
     _I('Clear',True),
     ]
 input_enablers = [
-    ('closed',False,'blended'),
+    ('pointtype','OnCurve','strategy'),
+    ('pointtype','Control','closed'),
+    ('pointtype','Control','blended'),
+    ('pointtype','Control','weighted'),
+#    ('closed',False,'blended'),
     ]
   
 dialog = Dialog(

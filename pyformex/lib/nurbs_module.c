@@ -760,7 +760,7 @@ static void curve_decompose(double *P, int nc, int nd, double *U, int nk, double
     mult = b-i+1;
     
     if (mult < p) {
-      printf("mult at %d is %d < %d\n",b,mult,p);
+      //printf("mult at %d is %d < %d\n",b,mult,p);
       /* compute alfas */
       numer = U[b] - U[a];
       for (k = p; k > mult; k--)
@@ -773,17 +773,17 @@ static void curve_decompose(double *P, int nc, int nd, double *U, int nk, double
         s = mult + j; 	/* Number of new points */
         for (k = p; k >= s; k--) {
 	  alpha = alfa[k-s];
-	  printf("alpha = %f\n",alpha);
+	  //printf("alpha = %f\n",alpha);
           for (ii = 0; ii < nd; ii++) {
             newP[(nb+k)*nd+ii] = alpha*newP[(nb+k)*nd+ii] + (1.0-alpha)*newP[(nb+k-1)*nd+ii];
-	    printf("Setting element %d to %f\n",(nb+k)*nd+ii,newP[(nb+k)*nd+ii]);
+	    //printf("Setting element %d to %f\n",(nb+k)*nd+ii,newP[(nb+k)*nd+ii]);
 	  }
 	}
 	if (b < m)
 	  /* Control point of next segment */
 	  for (ii = 0; ii < nd; ii++) {
 	    newP[(nb+p+save)*nd+ii] = newP[(nb+p)*nd+ii];
-	    printf("Copying element %d to %f\n",(nb+p+save)*nd+ii,newP[(nb+p+save)*nd+ii]);
+	    //printf("Copying element %d to %f\n",(nb+p+save)*nd+ii,newP[(nb+p+save)*nd+ii]);
 	  }
       }
     }
@@ -794,7 +794,7 @@ static void curve_decompose(double *P, int nc, int nd, double *U, int nk, double
       for (i = r; i <= p; i++)
         for (ii = 0; ii < nd; ii++) {
           newP[(nb+i)*nd+ii] = P[(b-p+i)*nd+ii];
-	  printf("Initializing element %d to %f\n",(nb+i)*nd+ii,newP[(nb+i)*nd+ii]);
+	  //printf("Initializing element %d to %f\n",(nb+i)*nd+ii,newP[(nb+i)*nd+ii]);
 	}
       a = b;
       b++;
@@ -1137,6 +1137,53 @@ static int curve_knot_remove(double *P, int nc, int nd, double *U, int nk, doubl
 /*   free(alfa); */
 /* } */
 
+
+
+/* curve_global_interp_mat */
+/*
+Compute the global curve interpolation matrix. 
+
+Input:
+
+- p: degree of the B-spline
+- Q: points through which the curve should pass (nc,nd)
+- nc: number of points = number of control points = n+1
+- nd: dimension of the points (3 or 4)
+- u: parameter values at the points (nc)
+strategies:
+  0 : equally spaced (not recommended)
+  1 : chord length
+  2 : centripetal (recommended)
+
+Output:
+- P: control points P(nc,nd)
+- U: knot sequence: U[0] .. U[m]   m = n+p+1 = nc+p
+- A: coefficient matrix (nc,nc)
+
+Modified algorithm A9.1 from 'The NURBS Book' pg369.
+*/
+  
+static void curve_global_interp_mat(int p, double *Q, int nc, int nd, double *u, double *U, double *A)
+{
+  int n,m,i,j,s;
+
+  n = nc - 1;
+  m = nc + p;
+  
+  /* Compute the knot vector U by averaging (9.8) */
+  for (i=0; i<=p; ++i) U[i] = 0.0;
+  for (i=m-p; i<=m; ++i) U[i] = 1.0;
+  for (j=1; j<=n-p; ++j) {
+    for (i=j; i<j+p; ++i) U[j+p] += u[i];
+    U[j+p] /= p;
+  }
+  /* Set up coefficient matrix A */
+  for (i=0; i<nc*nc; ++i) A[i] = 0.0;
+  for (i=0; i<nc; ++i) {
+    s = find_span(U,u[i],p,nc-1);
+    basis_funs(U,u[i],p,s,A+i*nc+s-p); /* i-th row */
+  }
+}
 
 
 /********************************************************/
@@ -1508,7 +1555,7 @@ static PyObject * curvePoints(PyObject *self, PyObject *args)
   return ret;
 
  fail:
-  printf("error cleanup and return\n");
+  //printf("error cleanup and return\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
@@ -1584,7 +1631,7 @@ static PyObject * curveDerivs(PyObject *self, PyObject *args)
   return ret;
 
  fail:
-  printf("error cleanup and return\n");
+  //printf("error cleanup and return\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
@@ -1659,7 +1706,7 @@ static PyObject * curveKnotRefine(PyObject *self, PyObject *args)
   return Py_BuildValue("(OO)", ret1, ret2);
 
  fail:
-  printf("error cleanup and return\n");
+  //printf("error cleanup and return\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
@@ -1715,15 +1762,15 @@ static PyObject * curveDecompose(PyObject *self, PyObject *args)
   int p = nk - nc - 1;
   int b = p + 1;
   int i,mult;
-  printf("nc, nk, n, m, p = %d, %d, %d, %d, %d\n",nc,nk,nc-1,m,p);
+  //printf("nc, nk, n, m, p = %d, %d, %d, %d, %d\n",nc,nk,nc-1,m,p);
   while (b < m) {
     i = b;
     while (b < m && U[b] == U[b+1]) b++;
     mult = b-i+1;
-    printf("b, i, mult = %d, %d, %d\n",b,i,mult);
+    //printf("b, i, mult = %d, %d, %d\n",b,i,mult);
     if (mult < p) {
       count += (p-mult);
-      printf("Count: %d\n",count);
+      //printf("Count: %d\n",count);
     }
     b++;
   }
@@ -1744,7 +1791,7 @@ static PyObject * curveDecompose(PyObject *self, PyObject *args)
   return ret;
 
  fail:
-  printf("error cleanup and return\n");
+  //printf("error cleanup and return\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   return NULL;
@@ -1810,7 +1857,7 @@ static PyObject * curveKnotRemove(PyObject *self, PyObject *args)
   return ret;
 
  fail:
-  printf("error cleanup and return\n");
+  //printf("error cleanup and return\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   return NULL;
@@ -1849,6 +1896,81 @@ static PyObject * curveKnotRemove(PyObject *self, PyObject *args)
 /* 	return Py_BuildValue("(OOi)", (PyObject *)ic, (PyObject *)ik, nh); */
 /* } */
 
+static char curveGlobalInterpolationMatrix_doc[] =
+"Compute the global curve interpolation matrix.\n\
+\n\
+Input:\n\
+\n\
+- Q: points through which the curve should pass (nc,nd), where\n\
+  nc is the number of points = number of control points = n+1 and\n\
+  nd is the dimension of the points (3 or 4)\n\
+- u: parameter values at the points (nc)\n\
+- p: degree of the B-spline\n\
+strategies:\n\
+  0 : equally spaced (not recommended)\n\
+  1 : chord length\n\
+  2 : centripetal (recommended)\n\
+\n\
+Output:\n\
+- P: control points P(nc,nd)\n\
+- U: knot sequence: U[0] .. U[m]   m = n+p+1 = nc+p\n\
+- A: coefficient matrix (nc,nc)\n\
+\n\
+Modified algorithm A9.1 from 'The NURBS Book' pg369.\n\
+\n";
+
+static PyObject * curveGlobalInterpolationMatrix(PyObject *self, PyObject *args)
+{
+  int p,nc,nd,nu;
+  npy_intp *Q_dim, *u_dim, dim[2];
+  double *Q, *u, *U, *A;
+  PyObject *a1, *a2;
+  PyObject *arr1=NULL, *arr2=NULL, *ret1=NULL, *ret2=NULL;
+
+  if (!PyArg_ParseTuple(args, "OOi", &a1, &a2, &p))
+    return NULL;
+  arr1 = PyArray_FROM_OTF(a1, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr1 == NULL)
+    return NULL;
+  arr2 = PyArray_FROM_OTF(a2, NPY_DOUBLE, NPY_IN_ARRAY);
+  if(arr2 == NULL)
+    goto fail;
+
+  Q_dim = PyArray_DIMS(arr1);
+  u_dim = PyArray_DIMS(arr2);
+  nc = Q_dim[0];
+  nd = Q_dim[1];
+  nu = u_dim[0];
+  if (nu != nc) goto fail;
+
+  Q = (double *)PyArray_DATA(arr1);
+  u = (double *)PyArray_DATA(arr2);
+
+  /* Create the return arrays */
+  dim[0] = nc+p+1;
+  ret1 = PyArray_SimpleNew(1,dim, NPY_DOUBLE);
+  U = (double *)PyArray_DATA(ret1);
+  dim[0] = nc;
+  dim[1] = nc;
+  ret2 = PyArray_SimpleNew(2,dim, NPY_DOUBLE);
+  A = (double *)PyArray_DATA(ret2);
+
+  /* Compute */
+  curve_global_interp_mat(p, Q, nc, nd, u, U, A);
+
+  /* Clean up and return */
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  //return ret1;
+  return Py_BuildValue("(OO)", ret1, ret2);
+
+ fail:
+  //printf("error cleanup and return\n");
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  return NULL;
+}
+
 
 static char surfacePoints_doc[] =
 "Compute points on a B-spline surface.\n\
@@ -1870,6 +1992,7 @@ Output:\n\
 \n\
 Modified algorithm A3.5 from 'The NURBS Book' pg103.\n\
 \n";
+
 
 static PyObject * surfacePoints(PyObject *self, PyObject *args)
 {
@@ -1926,7 +2049,7 @@ static PyObject * surfacePoints(PyObject *self, PyObject *args)
   return ret;
 
  fail:
-  printf("error cleanup and return\n");
+  //printf("error cleanup and return\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
@@ -2005,7 +2128,7 @@ static PyObject * surfaceDerivs(PyObject *self, PyObject *args)
   return ret;
 
  fail:
-  printf("error cleanup and return\n");
+  //printf("error cleanup and return\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
@@ -2023,6 +2146,7 @@ static PyMethodDef _methods_[] =
 	{"curveDecompose", curveDecompose, METH_VARARGS, curveDecompose_doc},
 	{"curveKnotRemove", curveKnotRemove, METH_VARARGS, curveKnotRemove_doc},
 	/* {"bspdegelev", nurbs_bspdegelev, METH_VARARGS, bspdegelev_doc}, */
+	{"curveGlobalInterpolationMatrix", curveGlobalInterpolationMatrix, METH_VARARGS, curveGlobalInterpolationMatrix_doc},
 	{"surfacePoints", surfacePoints, METH_VARARGS, surfacePoints_doc},
 	{NULL, NULL}
 };
