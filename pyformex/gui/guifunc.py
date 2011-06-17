@@ -24,7 +24,7 @@
 
 """GUI support functions.
 
-This module defines a collection of function which are the equivalent of
+This module defines a collection of functions which are the equivalent of
 functions defined in the draw module, but are executed in the viewport with
 the current GUI focus, instead of the script viewport.
 """

@@ -892,7 +892,7 @@ def createView(name,angles,addtogui=False):
     """
     pf.canvas.view_angles[name] = angles
     if addtogui:
-        guifunc.createView(name,angles)
+        pf.GUI.createView(name,angles)
     
 
 def setView(name,angles=None):
