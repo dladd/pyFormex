@@ -616,7 +616,9 @@ class TriSurface(Mesh):
         if ftype == 'pgf':
             Geometry.write(self,fname)
         elif ftype == 'gts':
-            filewrite.writeGTS(fname,self.coords,self.getEdges(),self.getElemEdges())
+            faces,edges=self.elems.insertLevel([[0,1],[1,2],[2,0]])
+            filewrite.writeGTS(fname,self.coords,edges,faces)
+##            filewrite.writeGTS(fname,self.coords,self.getEdges(),self.getElemEdges())
             pf.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','smesh']:
             if ftype == 'stl':
@@ -1728,7 +1730,7 @@ Total area: %s; Enclosed volume: %s
         if sta or verbose:
             pf.message(out)
         pf.message("Reading coarsened model from %s" % tmp1)
-        S = TriSurface.read(tmp1)        
+        S = TriSurface.read(tmp1)
         os.remove(tmp1)
         return S
    
