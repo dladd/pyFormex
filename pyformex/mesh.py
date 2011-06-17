@@ -950,7 +950,7 @@ Size: %s
         return [ self.select(sel==i,compact=compact) for i in range(n) if i in sel ]
     
 
-    def convert(self,totype):
+    def convert(self,totype,fuse=False):
         """Convert a Mesh to another element type.
 
         Converting a Mesh from one element type to another can only be
@@ -968,6 +968,12 @@ Size: %s
         the same geometry (possibly approximatively) as the original mesh.
         
         If the requested conversion is not implemented, an error is raised.
+
+        ..warning: Conversion strategies that add new nodes may produce
+          double nodes at the common border of elements. The :meth:`fuse`
+          method can be used to merge such coincident nodes. Specifying
+          fuse=True will also enforce the fusing. This option become the
+          default in future.
         """
         #
         # totype is a string !
@@ -1008,6 +1014,8 @@ Size: %s
             else:
                 raise ValueError,"Unknown conversion step type '%s'" % steptype
 
+        if fuse:
+            mesh = mesh.fuse()
         return mesh
 
 

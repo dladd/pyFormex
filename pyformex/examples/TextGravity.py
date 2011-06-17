@@ -45,18 +45,20 @@ d = 50
 
 G = Grid(x-50,y-50,x+50,y+50,2,2)
 decorate(G)
-    
+
+delay(2)
 for g in [ 'NW','N','NE','W','C','E','SW','S','SE']:
     T = drawText("XXX  %s  XXX"%g,x,y,gravity=g)
-    sleep(2)
+    wait()
     undecorate(T)
 
 
+delay(1)
 from gui.gluttext import GLUTFONTS
 for f in GLUTFONTS.keys():
     S = drawText(f,20,20,font='hv18')
     T = drawText('X',x,y,font=f,gravity='C')
-    sleep(1)
+    wait()
     undecorate(S)
     undecorate(T)
     

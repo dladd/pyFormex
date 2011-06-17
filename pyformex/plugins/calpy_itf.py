@@ -99,5 +99,32 @@ else:
     pf.debug("Loading plugin %s" % __file__)
     check()
 
+    if check():
+        from calpy import plane
+        class QuadInterpolator(plane.Quad):
+            """A class to interface with calpy's Quad class.
+
+            We want to use the calpy interpolation facilities without
+            having to set up a full model for calpy processing.
+            This class just sets the necessary data to make the
+            interpolation mehtods (GP2NOdes, NodalAcc, NodalAvg) work.
+
+            Parameters:
+
+            - `nelems`: number of elements
+            - `nplex`: plexitude of the elements (supported is 4 to 9)
+            - `gprule`: gauss integration rule
+            """
+            class Model:
+                """A dummy class to keep calpy happy."""
+                option = 'dummy'
+                tempfilename = 'dummy'
+                
+            def __init__(self,nelems,nplex,gprule):
+                from numpy import array
+                plane.Quad.__init__(self,'myQuad',gprule,self.Model)
+                self.nnod = nplex
+                self.nelems = nelems
+                self.natCoords = array([1,1,-1,1,-1,-1,1,-1,0,1,-1,0,0,-1,1,0,0,0],dtype=float).reshape((9,2))[:self.nnod,:]
 
 ### End
