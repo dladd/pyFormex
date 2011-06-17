@@ -1171,7 +1171,7 @@ static void curve_global_interp_mat(int p, double *Q, int nc, int nd, double *u,
   m = nc + p;
   
   /* Compute the knot vector U by averaging (9.8) */
-  for (i=0; i<=p; ++i) U[i] = 0.0;
+  for (i=0; i<m-p; ++i) U[i] = 0.0;
   for (i=m-p; i<=m; ++i) U[i] = 1.0;
   for (j=1; j<=n-p; ++j) {
     for (i=j; i<j+p; ++i) U[j+p] += u[i];

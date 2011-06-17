@@ -38,7 +38,7 @@ def drawThePoints(N,n,color=None):
         XD = XD.toCoords()
     x,d1,d2,d3 = XD[:4]
     e1,e2,e3,k,t = frenet(d1,d2,d3)
-    print t
+    #print t
 
     #k = 1./k
     #k[isnan(k)] = 0.
@@ -46,7 +46,7 @@ def drawThePoints(N,n,color=None):
     tmax = t[isnan(t) == 0].max()
     if tmax > 0:
         t /= tmax
-    print t
+    #print t
     s = 0.3
     x1 = x+s*e1
     x2 = x+s*e2
@@ -91,7 +91,7 @@ def drawNurbs(points,pointtype,degree,strategy,closed,blended,weighted=False,Cle
     else:
         N = globalInterpolationCurve(X,degree=degree,strategy=strategy)
     draw(N,color=red)
-    drawThePoints(N,11,color=black)
+    #drawThePoints(N,11,color=black)
 
 
 clear()

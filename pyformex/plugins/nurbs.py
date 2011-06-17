@@ -572,8 +572,6 @@ class NurbsSurface(Geometry4):
     def actor(self,**kargs):
         """Graphical representation"""
         from gui.actors import NurbsActor
-        print "CREATING NURBS ACTOR"
-        print self.coords.shape
         return NurbsActor(self,**kargs)
 
 
@@ -581,19 +579,28 @@ class NurbsSurface(Geometry4):
 
 
 def globalInterpolationCurve(Q,degree=3,strategy=0.5):
-    """Compute the global curve interpolation matrix.
+    """Create a global interpolation NurbsCurve.
 
-    The global curve interpolation matrix allows to compute the
-    control points of a NURBS curve that passes through all given points
-    and has parameter values u at the points.
+    Given an ordered set of points Q, the globalInterpolationCurve
+    is a NURBS curve of the given degree, passing through all the
+    points. 
 
-    Returns the knot vector U and the coefficent matrix A. The
-    control points P are the
+    Returns a NurbsCurve through the given point set. The number of
+    control points is the same as the number of input points.
 
-    Strategy to set the parameter values at the points:
-    0.0 = equally spaced
-    0.5 = centripetal
-    1.0 = chord length
+    ..warning: Currently there is the limitation that two consecutive
+      points should not coincide. If they do, a warning is shown and
+      the double points will be removed.
+
+    The procedure works by computing the control points that will
+    produce a NurbsCurve with the given points occurring at predefined
+    parameter values. The strategy to set this values uses a parameter
+    as exponent. Different values produce (slighly) different curves.
+    Typical values are:
+
+    0.0: equally spaced (not recommended)
+    0.5: centripetal (default, recommended)
+    1.0: chord length (often used)
     """
     from plugins.curve import PolyLine
     # set the knot values at the points
@@ -602,13 +609,23 @@ def globalInterpolationCurve(Q,degree=3,strategy=0.5):
 
     # chord length
     d = PolyLine(Q).lengths()
+    if (d==0.0).any():
+        utils.warn("Your point set appears to contain double points. Currently I cannot handle that. I will skip the doubles and try to go ahead.")
+        Q = concatenate([Q[d!=0.0],Q[-1:]],axis=0)
+        d = PolyLine(Q).lengths()
+        if (d==0.0).any():
+            raise ValueError,"Double points in the data set are not allowed"
     # apply strategy
     d = d ** strategy
     d = d.cumsum()
     d /= d[-1]
     u = concatenate([[0.], d])
+    #print "u = ",u
     U,A = nurbs.curveGlobalInterpolationMatrix(Q,u,degree)
+    #print "U = ",U
+    #print "A = ",A
     P = linalg.solve(A,Q)
+    #print "P = ",P
     return NurbsCurve(P,knots=U,degree=degree)
     
 
