@@ -1827,16 +1827,7 @@ def updateDialogItems(data,newdata):
  
 
 def updateOldDialogItems(data,newdata):
-    """_Update the input data fields with new data values
-
-    - data: a list of dialog items, as required by an OldInputDialog.
-    - newdata: a dictionary with new values for (some of) the items.
-
-    The values in data which have a matching key in newdata will be
-    replaced with the new value, unless it is None.
-    
-    This function requires that the dialog items are lists, not tuples.
-    """
+    """_Update the input data fields with new data values."""
     if newdata:
         if type(data) is dict:
             for d in data:
@@ -2736,7 +2727,7 @@ def dialogButtons(dialog,actions=None,default=None):
         else:
             slot = (dialog,Reject)
         dialog.connect(b,QtCore.SIGNAL("clicked()"),*slot)
-        if n == default:
+        if n == default.lower():
             b.setDefault(True)
         but.addWidget(b)
     return but

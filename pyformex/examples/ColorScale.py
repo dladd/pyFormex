@@ -35,49 +35,51 @@ techniques = ['dialog', 'color']
 
 from gui.colorscale import *
 from gui.gluttext import GLUTFONTS
-from gui.widgets import simpleInputItem as I, groupInputItem as G
-
 
 input_data = [
-    I('valrange',text='Value range type',itemtype='select',choices=['Minimum-Medium-Maximum','Minimum-Maximum']),
-    I('maxval',12.0,text='Maximum value'),
-    I('medval',0.0,text='Medium value'),
-    I('minval',-6.0,text='Minimum value'),
-#    I('predef',True,text='Use a predefined color palette'),
-    I('palet',text='Predefined color palette',choices=Palette.keys()),
-    G('custom',text='Custom Color palette',items=[
-        I('maxcol',[1.,0.,0.],text='Maximum color',itemtype='color'),
-        I('medcol',[1.,1.,0.],text='Medium color',itemtype='color'),
-        I('mincol',[1.,1.,1.],text='Minimum color',itemtype='color'),
+    _I('valrange',text='Value range type',itemtype='select',choices=['Minimum-Medium-Maximum','Minimum-Maximum']),
+    _I('maxval',12.0,text='Maximum value'),
+    _I('medval',0.0,text='Medium value'),
+    _I('minval',-6.0,text='Minimum value'),
+    _I('palet',text='Predefined color palette',choices=Palette.keys()),
+    _G('custom',text='Custom Color palette',items=[
+        _I('maxcol',[1.,0.,0.],text='Maximum color',itemtype='color'),
+        _I('medcol',[1.,1.,0.],text='Medium color',itemtype='color'),
+        _I('mincol',[1.,1.,1.],text='Minimum color',itemtype='color'),
         ],checked=False),
-    I('maxexp',1.0,text='High exponent'),
-    I('minexp',1.0,text='Low exponent'),
-    I('ncolors',12,text='Number of colors'),
-    I('showgrid',False,text='Show grid'),
-    I('linewidth',1.5,text='Line width',enabled=False),
-    I('dec',2,text='Decimals'),
-    I('scale',0,text='Scaling exponent'),
-    I('lefttext',True,text='Text left of colorscale'),
-    I('font','hv18',text='Font',choices=GLUTFONTS.keys()),
-    I('header','Currently not displayed',text='Header',enabled=False),
-    I('gravity','Notused',text='Gravity',enabled=False),
-    I('autosize',True,text='Autosize'),
-    I('size',(100,600),text='Size'),
-    I('position',[400,50],text='Position'),
+    _I('maxexp',1.0,text='High exponent'),
+    _I('minexp',1.0,text='Low exponent'),
+    _I('ncolors',200,text='Number of colors'),
+    _T('Grid/Label',[
+        _I('ngrid',-1,text='Number of grid intervals'),
+        _I('linewidth',1.5,text='Line width'),
+        _I('nlabel',-1, text='Number of label intervals'), 
+        _I('dec',2,text='Decimals'),
+        _I('scale',0,text='Scaling exponent'),
+        _I('lefttext',True,text='Text left of colorscale'),
+        _I('font','hv18',text='Font',choices=GLUTFONTS.keys()),
+        _I('header','Currently not displayed',text='Header',enabled=False),
+        _I('gravity','Notused',text='Gravity',enabled=False),
+        ]),
+    _T('Position/Size',[
+        _I('autosize',True,text='Autosize'),
+        _I('size',(100,600),text='Size'),
+        _I('autopos',True,text='Autoposition'),
+        _I('position',[400,50],text='Position'),
+        ]),
     ]
 
 input_enablers = [
     ('valrange','Minimum-Medium-Maximum','medval','medcol'),
     ('custom',False,'palet'),
-#    ('predef',False,'Custom Color palette'),
-    ('showgrid',True,'linewidth'),
     ('autosize',False,'size'),
+    ('autopos',False,'position'),
     ]
 
 
 def show():
     """Accept the data and draw according to them"""
-    global medval,medcol,palet,minexp,grid
+    global medval,medcol,palet,minexp,grid,nlabels
     
     clear()
     lights(False)
@@ -89,39 +91,31 @@ def show():
     
     if valrange == 'Minimum-Maximum':
         medval = None
-#        if not predef:
-#            medcol = None
         minexp = None
 
     if custom:
         palet = map(GLColor,[mincol,medcol,maxcol])
 
-    if showgrid:
-        if ncolors <= 50:
-            grid = ncolors
-        else:
-            grid = 1
-    else:
-        grid = 0
-
+    mw,mh = pf.canvas.Size()
     x,y = position
-
+    if autopos:
+        x = mw / 2
     if autosize:
-        mw,mh = pf.canvas.Size()
         h = int(0.9*(mh-y))
         w = min(0.1*mw,100)
     else:
         w,h = size
+        
 
     # ok, now draw it
-    drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,grid,linewidth,lefttext,font,x,y,w,h)     
+    drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,ngrid,linewidth,nlabel,lefttext,font,x,y,w,h)     
 
 
-def drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,grid,linewidth,lefttext,font,x,y,w,h):
+def drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,ngrid,linewidth,nlabel,lefttext,font,x,y,w,h):
     """Draw a color scale with the specified parameters"""
     CS = ColorScale(palet,minval,maxval,midval=medval,exp=maxexp,exp2=minexp)
     CL = ColorLegend(CS,ncolors)
-    CLA = decors.ColorLegend(CL,x,y,w,h,grid=grid,font=font,dec=dec,scale=scale,linewidth=linewidth,lefttext=lefttext) 
+    CLA = decors.ColorLegend(CL,x,y,w,h,ngrid=ngrid,linewidth=linewidth,nlabel=nlabel,font=font,dec=dec,scale=scale,lefttext=lefttext) 
     decorate(CLA)
 
 
@@ -152,7 +146,7 @@ if __name__ == 'draw':
     # Update the data items from saved values
     try:
         saved_data = named('ColorScale_data')
-        widgets.updateDialogItems(input_data,save_data)
+        widgets.updateDialogItems(input_data,saved_data)
     except:
         pass
 

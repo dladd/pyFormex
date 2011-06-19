@@ -43,7 +43,7 @@ Palette = {
     'WB'  : [ white,grey(0.5),black ],
 }
 
-class ColorScale:
+class ColorScale(object):
     """Mapping floating point values into colors.
 
     A colorscale maps floating point values within a certain range
@@ -137,17 +137,23 @@ class ColorScale:
         return tuple( [ (1.-x)*p + x*q for p,q in zip(c0,c1) ] )
 
 
-class ColorLegend:
-    """A colorlegend is a colorscale divided in a number of subranges."""
+class ColorLegend(object):
+    """A colorlegend divides a in a number of subranges.
+
+    Parameters:
+
+    - `colorscale`: a :class:`ColorScale` instance
+    - `n`: a positive integer
+    
+    For a :class:`ColorScale` without ``midval``, the full range is divided
+    in ``n`` subranges; for a scale with ``midval``, each of the two ranges
+    is divided in ``n/2`` subranges. In each case the legend has ``n``
+    subranges limited by ``n+1`` values. The ``n`` colors of the legend
+    correspond to the middle value of each subrange.
+    """
 
     def __init__(self,colorscale,n):
-        """Create a color legend dividing a colorscale in n subranges.
-
-        The full value range of the colorscale is divided in n subranges,
-        each half range being divided in n/2 subranges.
-        This sets n+1 limits of the subranges.
-        The n colors of the subranges correspond to the subrange middle value.
-        """
+        """Initialize the color legend."""
         self.cs = colorscale
         n = int(n)
         r = float(n)/2
@@ -164,12 +170,14 @@ class ColorLegend:
         self.underflowcolor = None
         self.overflowcolor = None
 
+
     def overflow(self,oflow=None):
         """Raise a runtime error if oflow == None, else return oflow."""
         if oflow==None:
             raise RuntimeError, "Value outside colorscale range"
         else:
             return oflow
+
 
     def color(self,val):
         """Return the color representing a value val.
@@ -211,3 +219,5 @@ if __name__ == "__main__":
 
     print(CL.color(-55))
     print(CL.color(255))
+
+# End
