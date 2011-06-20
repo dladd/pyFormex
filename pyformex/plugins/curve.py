@@ -870,13 +870,8 @@ class BezierSpline(Curve):
         return T
 
 
-    def sub_curvature(self,t,j,scalar=True):
-        """Return the curvature at values t in part j.
-        
-        If scalar is False, the signed curvatures in the 3 coordinate
-        planes (YZ,XZ,XY) are returned.
-        If scalar is True, the 3D curvature is returned.
-        """
+    def sub_curvature(self,t,j):
+        """Return the curvature at values t in part j."""
         P = self.part(j)
         C = self.coeffs * P
         U1 = [ d*(t**(d-1)) if d >= 1 else zeros_like(t) for d in range(0,self.degree+1) ]
@@ -885,9 +880,7 @@ class BezierSpline(Curve):
         U2 = [ d*(d-1)*(t**(d-2)) if d >=2 else zeros_like(t) for d in range(0,self.degree+1) ]
         U2 = column_stack(U2)
         T2 = dot(U2,C)
-        K = cross(T1,T2)/length(T1)**3
-        if scalar:
-            K = length(K)
+        K = length(cross(T1,T2))/(length(T1)**3)
         return K
 
 
