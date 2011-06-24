@@ -438,8 +438,8 @@ class Mesh(Geometry):
             self.elem_edges,self.edges = self.elems.insertLevel(sel)
         return self.elem_edges
 
-
-    def getBorder(self,return_indices=False):
+    
+    def getFreeEntities(self,return_indices=False,level=-1):
         """Return the border of the Mesh.
 
         This returns a Connectivity table with the border of the Mesh.
@@ -455,7 +455,7 @@ class Mesh(Geometry):
         Mesh.coords to construct a Mesh of the border geometry.
         See also :meth:`getBorderMesh`.
         """
-        sel = self.eltype.getEntities(-1)
+        sel = self.eltype.getEntities(level)
         if sel.size == 0:
             if return_indices:
                 return Connectivity(),[]
@@ -471,7 +471,7 @@ class Mesh(Geometry):
         # WE SET THE eltype HERE, BECAUSE THE INDEX OPERATION ABOVE
         # LOOSES THE eltype
         #
-        brd.eltype = sel.eltype 
+        brd.eltype = sel.eltype
         if not return_indices:
             return brd
         
@@ -484,7 +484,7 @@ class Mesh(Geometry):
         return brd,column_stack([enr,fnr])
 
 
-    def getBorderMesh(self,compact=True):
+    def getFreeEntitiesMesh(self,compact=True,level=-1):
         """Return a Mesh with the border elements.
 
         Returns a Mesh representing the border of the Mesh.
@@ -496,17 +496,27 @@ class Mesh(Geometry):
         switched off by setting `compact=False`.
         """
         if self.prop==None:
-            M = Mesh(self.coords,self.getBorder())
+            M = Mesh(self.coords,self.getFreeEntities(level=level))
 
         else:
-            brd,indices = self.getBorder(return_indices=True)
+            brd,indices = self.getFreeEntities(return_indices=True,level=level)
             enr = indices[:,0]
             M = Mesh(self.coords,brd,prop=self.prop[enr])
+            M.setType(brd.eltype)
 
         if compact:
             M = M.compact()
         return M
 
+    def getBorder(self,return_indices=False):
+        return self.getFreeEntities(return_indices,level=-1);
+
+    def getBorderMesh(self,compact=True):
+        return self.getFreeEntitiesMesh(compact=compact,level=-1)
+
+    def getFreeEdgesMesh(self,compact=True):
+        return self.getFreeEntitiesMesh(compact=compact,level=1)
+        
 
     def reverse(self):
         """Return a Mesh where all elements have been reversed.
@@ -1213,8 +1223,6 @@ Size: %s
         except:
             raise ValueError,"I don't know how to extrude elements of type '%s'" % self.eltype.name()
         
-        #print "NEW CONNECT to %s, %s" % (_eltype,reorder)
-
         # compact the node numbering schemes
         self = self.compact()
         mesh1 = mesh1.compact()
@@ -1696,14 +1704,12 @@ def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
 
 
 def connectMeshSequence(ML,loop=False,**kargs):
-    #print([Mi.eltype for Mi in ML])
     MR = ML[1:]
     if loop:
         MR.append(ML[0])
     else:
         ML = ML[:-1]
     HM = [ Mi.connect(Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
-    #print([Mi.eltype for Mi in HM])
     return Mesh.concatenate(HM)
 
 

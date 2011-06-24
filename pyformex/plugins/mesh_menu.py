@@ -59,18 +59,7 @@ class MeshObjects(DrawableObjects):
 
 selection = MeshObjects()
 
-
-def splitProp():
-    """Split the mesh based on property values"""
-    from plugins import partition
-    
-    F = selection.check(single=True)
-    if not F:
-        return
-
-    name = selection[0]
-    partition.splitProp(F,name)
-    
+   
 
 def fuseMesh():
     """Fuse the nodes of a Mesh"""
@@ -209,28 +198,12 @@ _menu = 'Mesh'
 def create_menu():
     """Create the menu."""
     MenuData = [
-        ## ("&Convert Abaqus .inp file",convert_inp),
-        ## ("&Import Converted Model",importModel),
-        ## ("&Select Mesh(es)",selection.ask),
-        ## ("&Draw Selection",selection.draw),
-        ## ("&Forget Selection",selection.forget),
-        ## ("&Convert to Formex",toFormex),
-        ## ("&Convert from Formex",fromFormex),
         ("---",None),
-        ("&Split on Property Value",splitProp),
         ("&Fuse Nodes",fuseMesh),
         ("&Divide Mesh",divideMesh),
         ("&Convert Mesh Eltype",convertMesh),
         ("&Renumber Mesh in Elems order",renumberMeshInElemsOrder),
         ("---",None),
-        ## ("Toggle &Annotations",
-        ##  [("&Name",selection.toggleNames,dict(checked=draw_object_name in selection.annotations)),
-          ## ("&Element Numbers",selection.toggleNumbers,dict(checked=selection.hasNumbers())),
-          ## ("&Node Numbers",selection.toggleNodeNumbers,dict(checked=selection.hasNodeNumbers())),
-          ## ("&Node Marks",selection.toggleNodes,dict(checked=selection.hasNodeMarks())),
-          ## ('&Bounding Box',selection.toggleBbox,dict(checked=selection.hasBbox())),
-        ##   ]),
-        ## ("---",None),
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]

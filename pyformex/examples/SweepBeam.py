@@ -68,7 +68,7 @@ Section = Full.toMesh()
 
 clear()
 draw(Section,color=red)
-exit()
+#exit()
 
 #pause()
 
@@ -94,7 +94,7 @@ else:
     
 smooth()
 clear()
-Beam.eltype = 'hex8'
+#Beam.eltype = 'hex8'
 draw(Beam,color='red',linewidth=2)
 export({'Beam':Beam})
 

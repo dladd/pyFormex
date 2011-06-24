@@ -1370,7 +1370,7 @@ def create_menu():
         ("&Merge Selection",merge),
         ("&Fix Normals",fixNormals),
         ("&Reverse Normals",reverseNormals),
-        ("&Set Property",selection.setProperty),
+        #("&Set Property",selection.setProp),
         ("---",None),
         ("Print &Information",
          [('&Data Size',printSize),

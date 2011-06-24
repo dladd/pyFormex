@@ -396,6 +396,19 @@ def toMesh(suffix=''):
 
     selection.set(meshes.keys())
 
+
+def splitProp():
+    """Split the selected object based on property values"""
+    from plugins import partition
+    
+    F = selection.check(single=True)
+    if not F:
+        return
+
+    name = selection[0]
+    partition.splitProp(F,name)
+    
+ 
 ################### menu #################
  
 _menu = 'Geometry'
@@ -437,6 +450,7 @@ def create_menu():
             ("&Names",selection.toggleNames,dict(checkable=True)),
             ("&Elem Numbers",selection.toggleNumbers,dict(checkable=True)),
             ("&Node Numbers",selection.toggleNodeNumbers,dict(checkable=True,checked=selection.hasNodeNumbers())),
+            ("&Free Edges",selection.toggleFreeEdges,dict(checkable=True,checked=selection.hasFreeEdges())),
             ("&Node Marks",selection.toggleNodes,dict(checkable=True,checked=selection.hasNodeMarks())),
             ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
             ]),
@@ -449,8 +463,11 @@ def create_menu():
             ## ("To &BezierSpline",toBezierSpline),
             ## ("To &NurbsCurve",toNurbsCurve),
             ]),
-        ## (
-        ## ("&Set Property",selection.setProperty),
+        ("&Property Numbers",[
+            ("&Set",selection.setProp),
+            ("&Delete",selection.delProp),
+            ("&Split",splitProp),
+            ]),
         ## ("&Shrink",shrink),
         ## ("&Bbox",
         ##  [('&Show Bbox Planes',showBbox),

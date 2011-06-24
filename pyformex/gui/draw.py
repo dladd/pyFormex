@@ -687,6 +687,14 @@ def drawMarks(X,M,color='black',leader='',ontop=True):
     return M
 
 
+def drawFreeEdges(M,color='black'):
+    """Draw the feature edges of a Mesh"""
+    print "DRAW FREE EDGES"
+    B = M.getFreeEdgesMesh()
+    print B
+    draw(B,color=color,nolight=True)
+    
+
 def drawNumbers(F,color='black',trl=None,offset=0,leader='',ontop=True):
     """Draw numbers on all elements of F.
 

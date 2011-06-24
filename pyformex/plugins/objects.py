@@ -277,6 +277,10 @@ def draw_node_numbers(n):
     """Draw the numbers of an object's nodes."""
     return drawNumbers(named(n).coords,color='red')
 
+def draw_free_edges(n):
+    """Draw the feature edges of an object."""
+    return drawFreeEdges(named(n),color='black')
+
 def draw_bbox(n):
     """Draw the bbox of an object."""
     return drawBbox(named(n))
@@ -322,7 +326,6 @@ class DrawableObjects(Objects):
         clear()
         pf.debug("Drawing SELECTION: %s" % self.names)
         self._actors = draw(self.names,clear=False,shrink=self.shrink,wait=False,**kargs)
-        print "ANNOTATIONS %s" % self.annotations
         for f in self.annotations:
             self.drawAnnotation(f)
 
@@ -365,12 +368,10 @@ class DrawableObjects(Objects):
     def drawAnnotation(self,f):
         """Draw some annotation for the current selection."""
         self._annotations[f] = [ f(n) for n in self.names ]
-        print "DRAWN ANNOTATIONS %s" % self._annotations.keys()
 
 
     def removeAnnotation(self,f):
         """Remove the annotation f."""
-        print "REMOVING %s" % f
         if f in self._annotations:
             # pf.canvas.removeAnnotations(self._annotations[f])
             # Use remove, because some annotations are not canvas
@@ -378,7 +379,6 @@ class DrawableObjects(Objects):
             pf.canvas.remove(self._annotations[f])
             pf.canvas.update()
             del self._annotations[f]
-        print "REMAINING %s" % self._annotations.keys()
 
 
     def hasAnnotation(self,f):
@@ -390,6 +390,8 @@ class DrawableObjects(Objects):
         return self.hasAnnotation(draw_elem_numbers)
     def hasNodeNumbers(self):
         return self.hasAnnotation(draw_node_numbers)
+    def hasFreeEdges(self):
+        return self.hasAnnotation(draw_free_edges)
     def hasNodeMarks(self):
         return self.hasAnnotation(draw_nodes)
     def hasBbox(self):
@@ -401,13 +403,15 @@ class DrawableObjects(Objects):
         self.toggleAnnotation(draw_elem_numbers,onoff)
     def toggleNodeNumbers(self,onoff=None):
         self.toggleAnnotation(draw_node_numbers,onoff)
+    def toggleFreeEdges(self,onoff=None):
+        self.toggleAnnotation(draw_free_edges,onoff)
     def toggleNodes(self,onoff=None):
         self.toggleAnnotation(draw_nodes,onoff)
     def toggleBbox(self,onoff=None):
         self.toggleAnnotation(draw_bbox,onoff)
 
 
-    def setProperty(self,prop=None):
+    def setProp(self,prop=None):
         """Set the property of the current selection.
 
         prop should be a single integer value or None.
@@ -427,6 +431,20 @@ class DrawableObjects(Objects):
             for o in objects:
                 if hasattr(o,'setProp'):
                     o.setProp(prop)
+            self.draw()
+
+
+    def delProp(self):
+        """Delete the property of the current selection.
+
+        This well reset the `prop` attribute of all selected objects
+        to None.
+        """
+        objects = self.check()
+        if objects:
+            for o in objects:
+                if hasattr(o,'prop'):
+                    o.prop=None
             self.draw()
 
 

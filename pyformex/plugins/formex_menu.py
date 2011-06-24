@@ -444,23 +444,7 @@ _menu = 'Formex'
 def create_menu():
     """Create the Formex menu."""
     MenuData = [
-        ## ("&Read Geometry File(s)",readSelection),
-        ## ("&Write Geometry File",writeSelection),
-        ## ("&Select",selection.ask),
-        ## ("&Draw Selection",selection.draw),
-        ## ("&Forget Selection",selection.forget),
-        ## ("---",None),
-        ## ("Print &Information",
-        ##  [('&Data Size',printSize),
-        ##   ('&Bounding Box',selection.printbbox),
-        ##   ]),
-        ("&Set Property",selection.setProperty),
         ("&Shrink",shrink),
-        ## ("Toggle &Annotations",
-        ##  [("&Names",selection.toggleNames,dict(checkable=True)),
-        ##   ("&Numbers",selection.toggleNumbers,dict(checkable=True)),
-        ##   ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
-        ##   ]),
         ("---",None),
         ("&Bbox",
          [('&Show Bbox Planes',showBbox),
