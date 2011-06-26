@@ -20,11 +20,11 @@ class NurbsObjects(DrawableObjects):
         """Toggle mesh annotations on/off.
 
         This functions is like DrawableObjects.toggleAnnotation but also
-        updates the mesh_menu when changes are made.
+        updates the geometry_menu when changes are made.
         """
         DrawableObjects.toggleAnnotation(self,i,onoff)
-        mesh_menu = pf.GUI.menu.item(_menu)
-        toggle_menu = mesh_menu.item("toggle annotations")
+        geometry_menu = pf.GUI.menu.item(_menu)
+        toggle_menu = geometry_menu.item("toggle annotations")
         # This relies on the menu having the same items as the annotation list
         action = toggle_menu.actions()[i]
         action.setChecked(selection.hasAnnotation(i))

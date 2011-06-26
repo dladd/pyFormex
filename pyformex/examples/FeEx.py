@@ -38,7 +38,7 @@ from plugins.properties import *
 from plugins.fe_abq import *
 from plugins.fe_post import FeResult
 from plugins import postproc_menu
-from plugins import mesh_menu
+from plugins import geometry_menu
 from plugins import isopar
 from odict import ODict
 import utils
@@ -73,7 +73,7 @@ def resetData():
     parts = PF.get('FeEx-parts',[])
     model = PF.get('FeEx-model',None)
     PDB = PF.get('FeEx-propdb',None)
-    mesh_menu.selection.set([])
+    geometry_menu.selection.set([])
 
 
 def saveData():
@@ -85,14 +85,14 @@ def reset():
     smoothwire()
     transparent()
     #lights(False)
-    mesh_menu.selection.draw()
+    geometry_menu.selection.draw()
 
 def deleteAll():
     global parts,model,PDB
     parts = []
     model = None
     PDB = None
-    mesh_menu.selection.set([])
+    geometry_menu.selection.set([])
     reset()
 
 ######################## parts ####################
@@ -172,15 +172,15 @@ def addPart(M):
     parts.append(part)
     partname = 'part-%s'%n
     export({partname:part})
-    mesh_menu.selection.names.append(partname)
-    mesh_menu.selection.draw()
+    geometry_menu.selection.names.append(partname)
+    geometry_menu.selection.draw()
 
 
 def convertQuadratic(qtype='quad8'):
     """Convert the parts to quadratic"""
     global parts
     parts = [ p.convert(qtype) for p in parts ]
-    mesh_menu.selection.changeValues(parts)
+    geometry_menu.selection.changeValues(parts)
     drawParts()
     
 def convertQuadratic9():
@@ -195,7 +195,7 @@ def drawParts():
     ## [ drawNumbers(p,color=blue) for p in parts ]
     ## [ drawNumbers(p.coords,color=red) for p in parts ]
     ## zoomAll()
-    mesh_menu.selection.draw()
+    geometry_menu.selection.draw()
 
 
 ######################## the model ####################
@@ -1121,7 +1121,7 @@ def reload_menu():
 
 if __name__ == "draw":
 
-    mesh_menu.show_menu()
+    geometry_menu.show_menu()
     resetData()
     reset()
     reload_menu()

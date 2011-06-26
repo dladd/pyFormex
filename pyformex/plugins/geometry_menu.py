@@ -16,8 +16,9 @@ from geometry import Geometry
 from geomfile import GeometryFile
 from formex import Formex
 from connectivity import Connectivity
-from mesh import Mesh
+from mesh import Mesh,mergeMeshes
 from trisurface import TriSurface
+from elements import elementType
 
 from gui import actors
 from gui import menu
@@ -407,7 +408,153 @@ def splitProp():
 
     name = selection[0]
     partition.splitProp(F,name)
+
+
+#############################################
+###  Mesh functions
+#############################################
+       
+def narrow_selection(clas):
+    global selection
+    print "BEFORE",selection.names
+    selection.set([n for n in selection.names if isinstance(named(n),clas)])
+    print "BEFORE",selection.names
     
+
+
+def fuseMesh():
+    """Fuse the nodes of a Mesh"""
+    if not selection.check():
+        selection.ask()
+
+    narrow_selection(Mesh)
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    res = askItems([
+        ('Relative Tolerance',1.e-5),
+        ('Absolute Tolerance',1.e-5),
+        ('Shift',0.5),
+        ('Nodes per box',1)])
+
+    if not res:
+        return
+
+    before = [ m.ncoords() for m in meshes ]
+    meshes = [ m.fuse(
+        rtol = res['Relative Tolerance'],
+        atol = res['Absolute Tolerance'],
+        shift = res['Shift'],
+        nodesperbox = res['Nodes per box'],
+        ) for m in meshes ]
+    after = [ m.ncoords() for m in meshes ]
+    print "Number of points before fusing: %s" % before
+    print "Number of points after fusing: %s" % after
+
+    names = [ "%s_fused" % n for n in selection.names ]
+    export2(names,meshes)
+    selection.set(names)
+    clear()
+    selection.draw()
+
+
+
+def divideMesh():
+    """Create a mesh by subdividing existing elements.
+
+    """
+    if not selection.check():
+        selection.ask()
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    eltypes = set([ m.eltype for m in meshes if m.eltype is not None])
+    print "eltypes in selected meshes: %s" % eltypes
+    if len(eltypes) > 1:
+        warning("I can only divide meshes with the same element type\nPlease narrow your selection before trying conversion.")
+        return
+    if len(eltypes) == 1:
+        fromtype = eltypes.pop()
+    showInfo("Sorry, this function is not implemented yet!")
+
+
+def convertMesh():
+    """Transform the element type of the selected meshes.
+
+    """
+    if not selection.check():
+        selection.ask()
+
+    narrow_selection(Mesh)
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    eltypes = set([ m.eltype.name() for m in meshes if m.eltype is not None])
+    print "eltypes in selected meshes: %s" % eltypes
+    if len(eltypes) > 1:
+        warning("I can only convert meshes with the same element type\nPlease narrow your selection before trying conversion.")
+        return
+    if len(eltypes) == 1:
+        fromtype = elementType(eltypes.pop())
+        choices = ["%s -> %s" % (fromtype,to) for to in fromtype.conversions.keys()]
+        if len(choices) == 0:
+            warning("Sorry, can not convert a %s mesh"%fromtype)
+            return
+        res = askItems([
+            ('_conversion',None,'vradio',{'text':'Conversion Type','choices':choices}),
+            ("_compact",True),
+            ('_merge',None,'hradio',{'text':"Merge Meshes",'choices':['None','Each','All']}),
+            ])
+        if res:
+            globals().update(res)
+            print "Selected conversion %s" % _conversion
+            totype = _conversion.split()[-1]
+            names = [ "%s_converted" % n for n in selection.names ]
+            meshes = [ m.convert(totype) for m in meshes ]
+            if _merge == 'Each':
+                meshes = [ m.fuse() for m in meshes ]
+            elif  _merge == 'All':
+                print _merge
+                coords,elems = mergeMeshes(meshes)
+                print elems
+                ## names = [ "_merged_mesh_%s" % e.nplex() for e in elems ]
+                ## meshes = [ Mesh(coords,e,eltype=meshes[0].eltype) for e in elems ]
+                ## print meshes[0].elems
+                meshes = [ Mesh(coords,e,m.prop,m.eltype) for e,m in zip(elems,meshes) ]
+            if _compact:
+                print "compacting meshes"
+                meshes = [ m.compact() for m in meshes ]
+                
+            export2(names,meshes)
+            selection.set(names)
+            clear()
+            selection.draw()
+
+
+def renumberMeshInElemsOrder():
+    """Renumber the selected Meshes in elems order.
+
+    """
+    if not selection.check():
+        selection.ask()
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    names = selection.names
+    meshes = [ M.renumber() for M in meshes ]
+    export2(names,meshes)
+    selection.set(names)
+    clear()
+    selection.draw()
+
+
  
 ################### menu #################
  
@@ -498,6 +645,12 @@ def create_menu():
         ## ("&Sectionize Selection",sectionizeSelection),
         ## ("---",None),
         ## ("&Fly",fly),
+        ("Mesh",[
+            ("&Fuse Nodes",fuseMesh),
+            ("&Divide Mesh",divideMesh),
+            ("&Convert Mesh Eltype",convertMesh),
+            ("&Renumber Mesh in Elems order",renumberMeshInElemsOrder),
+            ]),
         ("---",None),
         ("&Reload menu",reload_menu),
         ("&Close",close_menu),

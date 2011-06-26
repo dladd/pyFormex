@@ -33,7 +33,7 @@ from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *
 from plugins.trisurface import *
 from plugins.objects import *
-from plugins import plot2d,formex_menu,mesh_menu,fe_abq
+from plugins import plot2d,formex_menu,geometry_menu,fe_abq
 import simple
 from plugins.tools import Plane
 from pyformex.arraytools import niceLogSize
@@ -253,9 +253,9 @@ def toMesh(suffix=''):
 
     if not suffix:
         selection.clear()
-    mesh_menu.selection.set(newnames)
+    geometry_menu.selection.set(newnames)
     clear()
-    mesh_menu.selection.draw()
+    geometry_menu.selection.draw()
     
 
 def fromMesh(suffix=''):
@@ -265,13 +265,13 @@ def fromMesh(suffix=''):
     Mesh names plus the suffix, else, the Mesh names will be used
     (and the Meshes will thus be cleared from memory).
     """
-    if not mesh_menu.selection.check():
-        mesh_menu.selection.ask()
+    if not geometry_menu.selection.check():
+        geometry_menu.selection.ask()
 
-    if not mesh_menu.selection.names:
+    if not geometry_menu.selection.names:
         return
 
-    names = mesh_menu.selection.names
+    names = geometry_menu.selection.names
     meshes = [ named(n) for n in names ]
     if suffix:
         names = [ n + suffix for n in names ]
@@ -283,7 +283,7 @@ def fromMesh(suffix=''):
     export(surfaces)
 
     if not suffix:
-        mesh_menu.selection.clear()
+        geometry_menu.selection.clear()
     selection.set(surfaces.keys())
 
 

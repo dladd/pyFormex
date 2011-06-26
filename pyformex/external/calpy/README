@@ -11,7 +11,8 @@ needed to let it cooperate with pyFormex.
 By default the installation is done under /usr/local and you will need root
 privileges to do so.
 
-The full installation can be done with a single command (as root):
-./calpy.install all
+The full installation can be done with a single command:
+(sudo) ./install.sh all
 
-
+Dependencies:
+gfortran
