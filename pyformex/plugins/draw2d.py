@@ -238,7 +238,7 @@ def splitPolyLine(c):
     pf.canvas.pickable = [XA]
     #print "ACTORS",pf.canvas.actors
     #print "PICKABLE",pf.canvas.pickable
-    k = pickPoints(filtr='single',oneshot=True)
+    k = pickPoints(filter='single',oneshot=True)
     pf.canvas.pickable = None
     undraw(XA)
     if k.has_key(0):
@@ -249,7 +249,7 @@ def splitPolyLine(c):
     
   
 def split_curve():
-    k = pickActors(filtr='single',oneshot=True)
+    k = pickActors(filter='single',oneshot=True)
     print k
     print k[-1]
     if not k.has_key(-1):

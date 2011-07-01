@@ -459,12 +459,10 @@ def draw(F,
     if type(F) == list:
         actor = []
         nowait = False
-        #print "DRAWING LIST WITH BBOX %s" % bbox
         save_bbox = bbox
         for Fi in F:
             if Fi is F[-1]:
                 nowait = wait
-                #print "DRAWING WITH BBOX %s, VIEW %s" % (bbox,view)
             actor.append(draw(Fi,view,bbox,
                               color,colormap,bkcolor,bkcolormap,alpha,
                               mode,linewidth,linestipple,shrink,marksize,
@@ -1016,7 +1014,6 @@ def set_material_value(typ,val):
     typ is one of 'ambient','specular','emission','shininess'
     val is a value between 0.0 and 1.0
     """
-    #print "SETMATVAL %s = %s" % (typ,val)
     setattr(pf.canvas,typ,val)
     pf.canvas.setLighting(True)
     pf.canvas.update()
@@ -1537,50 +1534,58 @@ def removeHighlights():
     
 
 
-selection_filters = [ 'none', 'single', 'closest', 'connected' ]
 
-
-def set_selection_filter(s):
-    """Set the selection filter mode
-
-    s is one of the strings in selection_filters
-    """
-    s = str(s)
-    if s in selection_filters:
-        pf.canvas.start_selection(None,s)
-
-    
-def pick(mode='actor',filtr=None,oneshot=False,func=None):
+def pick(mode='actor',filter=None,oneshot=False,func=None):
     """Enter interactive picking mode and return selection.
 
     See viewport.py for more details.
     This function differs in that it provides default highlighting
     during the picking operation, a button to stop the selection operation
 
-    If no filter is given, the available filters are presented in a combobox.
+    Parameters:
+
+    - `mode`: one of the pick modes
+    - `filter`: one of the `selection_filters`. The default picking filter
+      activated on entering the pick mode. All available filters are
+      presented in a combobox.
     """
-    if pf.canvas.selection_mode is not None:
-        warning("You need to finish the previous picking operation first!")
+    
+    def _set_selection_filter(s):
+        """Set the selection filter mode
+
+        This function is used to change the selection filter from the
+        selection InputCombo widget.
+        s is one of the strings in selection_filters.
+        """
+        s = str(s)
+        if pf.canvas.selection_mode is not None and s in pf.canvas.selection_filters:
+            pf.canvas.start_selection(None,s)
+        if pf.canvas.selection_mode is not None:
+            warning("You need to finish the previous picking operation first!")
+            return
+
+    if mode not in pf.canvas.getPickModes():
+        warning("Invalid picking mode: %s. Expected one of %s." % (mode,pf.canvas.getPickModes()))
         return
 
     pick_buttons = widgets.ButtonBox('Selection:',[('Cancel',pf.canvas.cancel_selection),('OK',pf.canvas.accept_selection)])
     
     if mode == 'element':
-        filters = selection_filters
+        filters = pf.canvas.selection_filters
     else:
-        filters = selection_filters[:3]
-    filter_combo = widgets.InputCombo('Filter:',None,choices=filters,onselect=set_selection_filter)
-    if filtr is not None and filtr in selection_filters:
-        filter_combo.setValue(filtr)
+        filters = pf.canvas.selection_filters[:3]
+    filter_combo = widgets.InputCombo('Filter:',None,choices=filters,onselect=_set_selection_filter)
+    if filter is not None and filter in pf.canvas.selection_filters:
+        filter_combo.setValue(filter)
     
     if func is None:
         func = highlight_funcs.get(mode,None)
-    pf.message("Select %s %s" % (filtr,mode))
+    pf.message("Select %s %s" % (filter,mode))
 
     pf.GUI.statusbar.addWidget(pick_buttons)
     pf.GUI.statusbar.addWidget(filter_combo)
     try:
-        sel = pf.canvas.pick(mode,oneshot,func,filtr)
+        sel = pf.canvas.pick(mode,oneshot,func,filter)
     finally:
         # cleanup
         if pf.canvas.selection_mode is not None:
@@ -1590,17 +1595,22 @@ def pick(mode='actor',filtr=None,oneshot=False,func=None):
     return sel
  
     
-def pickActors(filtr=None,oneshot=False,func=None):
-    return pick('actor',filtr,oneshot,func)
+def pickActors(filter=None,oneshot=False,func=None):
+    return pick('actor',filter,oneshot,func)
 
-def pickElements(filtr=None,oneshot=False,func=None):
-    return pick('element',filtr,oneshot,func)
+def pickElements(filter=None,oneshot=False,func=None):
+    return pick('element',filter,oneshot,func)
 
-def pickPoints(filtr=None,oneshot=False,func=None):
-    return pick('point',filtr,oneshot,func)
+def pickPoints(filter=None,oneshot=False,func=None):
+    return pick('point',filter,oneshot,func)
 
-def pickEdges(filtr=None,oneshot=False,func=None):
-    return pick('edge',filtr,oneshot,func)
+def pickEdges(filter=None,oneshot=False,func=None):
+    return pick('edge',filter,oneshot,func)
+
+def pickNumbers(marks=None):
+    if marks:
+        pf.canvas.numbers = marks
+    return pf.canvas.pickNumbers()
 
 
 def highlight(K,mode):
@@ -1613,12 +1623,6 @@ def highlight(K,mode):
     func = highlight_funcs.get(mode,None)
     if func:
         func(K)
-
-
-def pickNumbers(marks=None):
-    if marks:
-        pf.canvas.numbers = marks
-    return pf.canvas.pickNumbers()
 
 
 LineDrawing = None

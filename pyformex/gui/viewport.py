@@ -225,25 +225,25 @@ class CanvasMouseHandler(object):
 
     """
     def setMouse(self,button,func,mod=NONE):
-        #print(button,mod)
+        pf.debug(button,mod)
         self.mousefncsaved[mod][button].append(self.mousefnc[mod][button])
         self.mousefnc[mod][button] = func
         self.setCursorShapeFromFunc(func)
-        #print("MOUSE %s" % func)
-        #print("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
+        pf.debug("MOUSE %s" % func)
+        pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
 
 
     def resetMouse(self,button,mod=NONE):
-        #print("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
+        pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
         try:
             func = self.mousefncsaved[mod][button].pop()
         except:
-            #print("AAAAAHHH, COULD NOT POP")
+            pf.debug("AAAAAHHH, COULD NOT POP")
             func = None
         self.mousefnc[mod][button] = func
         self.setCursorShapeFromFunc(func)
-        #print("RESETMOUSE %s" % func)
-        #print("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
+        pf.debug("RESETMOUSE %s" % func)
+        pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
             
 
     def getMouseFunc(self):
@@ -271,6 +271,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                      'draw'   : QtCore.Qt.CrossCursor, 
                      'busy'   : QtCore.Qt.BusyCursor,
                      }
+
+    selection_filters = [ 'none', 'single', 'closest', 'connected' ]
+
     
     def __init__(self,*args):
         """Initialize an empty canvas with default settings."""
@@ -313,6 +316,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         # Drawing options
         self.resetOptions()
 
+
+    def getPickModes(self):
+        return self.pick_func.keys()
+
+
     def resetOptions(self):
         """Reset the Drawing options to some defaults"""
         self.options = dict(
@@ -346,13 +354,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 
     def setMouse(self,button,func,mod=NONE):
+        pf.debug("setMouse %s %s %s" % (button,mod,func))
         self.mousefncsaved[mod][button].append(self.mousefnc[mod][button])
         self.mousefnc[mod][button] = func
         if button == LEFT and mod == NONE:
             self.setCursorShapeFromFunc(func)
+        #print self.mousefnc
 
 
     def resetMouse(self,button,mod=NONE):
+        pf.debug("resetMouse %s %s" % (button,mod))
         try:
             func = self.mousefncsaved[mod][button].pop()
         except:
@@ -360,6 +371,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.mousefnc[mod][button] = func
         if button == LEFT and mod == NONE:
             self.setCursorShapeFromFunc(func)
+        #print self.mousefnc
             
 
     def getMouseFunc(self):
@@ -433,12 +445,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.pickable = [ self.actors[i] for i in nrs if i in range(len(self.actors))]
         
 
-    def start_selection(self,mode,filtr):
+    def start_selection(self,mode,filter):
         """Start an interactive picking mode.
 
         If selection mode was already started, mode is disregarded and
         this can be used to change the filter method.
         """
+        #pf.debug("START SELECTION")
+        #pf.debug("Mode is %s" % self.selection_mode)
         if self.selection_mode is None:
             self.setMouse(LEFT,self.mouse_pick)
             self.setMouse(LEFT,self.mouse_pick,SHIFT)
@@ -450,25 +464,30 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.selection_mode = mode
             self.selection_front = None
 
-        if filtr == 'none':
-            filtr = None
-        self.selection_filter = filtr
-        if filtr is None:
+        if filter == 'none':
+            filter = None
+        self.selection_filter = filter
+        if filter is None:
             self.selection_front = None
         self.selection.clear()
         self.selection.setType(self.selection_mode)
+        #pf.debug("START SELECTION DONE")
 
 
     def wait_selection(self):
         """Wait for the user to interactively make a selection."""
+        #pf.debug("WAIT SELECTION")
         self.selection_timer = QtCore.QThread
         self.selection_busy = True
         while self.selection_busy:
             self.selection_timer.msleep(20)
             pf.app.processEvents()
+        #pf.debug("WAIT SELECTION DONE")
+
 
     def finish_selection(self):
         """End an interactive picking mode."""
+        #pf.debug("FINISH SELECTION")
         self.resetMouse(LEFT)
         self.resetMouse(LEFT,SHIFT)
         self.resetMouse(LEFT,CTRL)
@@ -477,6 +496,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.disconnect(self,DONE,self.accept_selection)
         self.disconnect(self,CANCEL,self.cancel_selection)
         self.selection_mode = None
+        #pf.debug("FINISH SELECTION DONE")
+
 
     def accept_selection(self,clear=False):
         """Accept or cancel an interactive picking mode.
@@ -495,12 +516,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.accept_selection(clear=True)
 
     
-    def pick(self,mode='actor',single=False,func=None,filter=None):
+    def pick(self,mode='actor',oneshot=False,func=None,filter=None):
         """Interactively pick objects from the viewport.
 
         - `mode`: defines what to pick : one of
           ``['actor','element','point','number','edge']``
-        - `single`: if True, the function returns as soon as the user ends
+        - `oneshot`: if True, the function returns as soon as the user ends
           a picking operation. The default is to let the user
           modify his selection and only to return after an explicit
           cancel (ESC or right mouse button).
@@ -568,7 +589,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                     if func:
                         func(self.selection)
                 self.update()
-            if single:
+            if oneshot:
                 self.accept_selection()
         if func and not self.selection_accepted:
             func(self.selection)
@@ -759,10 +780,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.edit_mode = mode
         self.drawing_busy = False     
 
-    def drawLinesInter(self,mode='line',single=False,func=None):
+    def drawLinesInter(self,mode='line',oneshot=False,func=None):
         """Interactively draw lines on the canvas.
 
-        - single: if True, the function returns as soon as the user ends
+        - oneshot: if True, the function returns as soon as the user ends
           a drawing operation. The default is to let the user
           draw multiple lines and only to return after an explicit
           cancel (ESC or right mouse button).
@@ -791,7 +812,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                     self.drawing = append(self.drawing,self.drawn.reshape(-1,2,2),0)
                 if func:
                     func(self.drawing)
-            if single:
+            if oneshot:
                 self.accept_drawing()                
         if func and not self.drawing_accepted:
             func(self.drawing)

@@ -1352,24 +1352,12 @@ class InputDialog(QtGui.QDialog):
       target field/group/tab.
           
     """
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[]):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[]):
         """Create a dialog asking the user for the value of items."""
         if parent is None:
             parent = pf.GUI
         QtGui.QDialog.__init__(self,parent)
 
-        
-        #print "MAXIMUM SIZE %d,%d" % pf.maxsize
-        self.setMaximumHeight(pf.maxsize[1])
-        #self.resize(*pf.maxsize)
-        #self.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)        
-        #print "%x" % self.windowFlags()
-        ## if flags is not None:
-        ##     print "%x" % flags
-        ##     flags |= self.windowFlags()
-        ##     print "%x" % flags
-        ##     self.setWindowFlags(flags)
-        
         if caption is None:
             caption = 'pyFormex-dialog'
         else:
@@ -1400,16 +1388,7 @@ class InputDialog(QtGui.QDialog):
         # add the action buttons
         but = dialogButtons(self,actions,default)
         self.form.addLayout(but)
-        if scroll:
-            # This is experimental !!!
-            self.child = QtGui.QWidget()
-            self.child.setLayout(self.form)
-            self.scroll = QtGui.QScrollArea(self)
-            self.scroll.setWidget(self.child)
-            self.scroll.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
-            self.scroll.resize(pf.GUI.width()/2,pf.GUI.height())
-        else:
-            self.setLayout(self.form)
+        self.setLayout(self.form)
         self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
 
 
@@ -1693,6 +1672,26 @@ class InputDialog(QtGui.QDialog):
 
     # for compatibility, should be deprecated
     getResult = getResults
+
+
+
+class ScrollDialog(InputDialog):
+    def __init__(self,*args,**kargs):
+        # This is experimental !!!
+        InputDialog.__init__(self,*args,**kargs)
+        self.scroll = QtGui.QScrollArea()
+        self.scroll.setWidget(self)
+        #self.viewport().setBackgroundRole(QtGui.QPalette.Dark)
+        self.scroll.viewport().setAutoFillBackground(True)
+        #self.scroll.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.Maximum)
+        #self.scroll.resize(pf.GUI.width()/2,pf.GUI.height())
+        #self.scroll.setWidgetResizable(True)
+        
+    def show(self):
+        self.scroll.show()
+
+    def close(self):
+        self.scroll.close()
 
 
 # Create a dict with itemtype <-> InputItem mapping

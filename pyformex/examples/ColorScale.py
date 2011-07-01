@@ -157,6 +157,7 @@ if __name__ == 'draw':
     dialog.timeout = timeOut
 
     # Show the dialog and let the user have fun
+    #dialog = widgets.ScrollDialog(dialog)
     dialog.show()
 
     # Block other scripts 
