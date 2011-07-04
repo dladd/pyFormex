@@ -117,7 +117,7 @@ def createGeometry():
 
     # Ratio of the height of the isosceles triangle over the icosaeder edge length.
     c = 0.5*tand(54.)
-    angle = arccos(tand(54.)/sqrt(3.))/Deg
+    angle = arccosd(tand(54.)/sqrt(3.))
     pf.message("Rotation Ratio: %s; Angle: %s degrees" % (c,angle)) 
     F = F.rotate(angle,0)
     clear()

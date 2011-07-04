@@ -27,7 +27,7 @@ This module defines some basic operations on simple geometrical entities
 such as lines, triangles, circles, planes.
 """
 
-from formex import *
+from coords import *
 
 
 class Plane(object):
@@ -49,11 +49,39 @@ def areaNormals(x):
     return area,normals
 
 
+def polygonArea(x,project=None):
+    """Compute area inside a polygon.
+
+    Parameters:
+
+    - `x`: (nplex,3) Coords array representing the vertices of a
+      (possibly nonplanar) polygon.
+    - `project`: (3,) Coords array representing a unit direction vector.
+    
+    Returns: a single float value with the area inside the polygon. If a
+    direction vector is given, the area projected in that direction is
+    returned.
+    
+    Note that if the polygon is nonplanar and no direction is given, the area
+    inside the polygon is not well defined.
+    """
+    if x.shape[1] < 3:
+        return 0.0
+
+    x1 = roll(x,-1,axis=0)
+
+    if project is None:
+        area = vectorPairArea(x,x1)
+    else:
+        area = vectorTripleProduct(Coords(project),x,x1)
+    return 0.5 *area.sum()
+
+
 def polygonNormals(x):
     """Compute normals in all points of polygons in x.
 
-    x is an (nel,nplex,3) coordinate array representing a (possibly not plane)
-    polygon.
+    x is an (nel,nplex,3) coordinate array representing nel (possibly nonplanar)
+    polygons.
     
     The return value is an (nel,nplex,3) array with the unit normals on the
     two edges ending in each point.
@@ -294,7 +322,7 @@ def rotationAngle(A,B,m=None,angle_spec=Deg):
             n[t] = anyPerpendicularVector(A[t])
         n = normalize(n)
         c = dotpr(A,B)
-        angle = arccos(c.clip(min=-1.,max=1.)) / angle_spec
+        angle = arccosd(c.clip(min=-1.,max=1.),angle_spec)
         return angle,n
     else:
         # project vectors on plane

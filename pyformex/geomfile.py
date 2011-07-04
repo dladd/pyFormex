@@ -275,7 +275,7 @@ class GeometryFile(object):
     def writeNurbsCurve(self,F,name=None,sep=None,extra=None):
         """Write a NurbsCurve to a pyFormex geometry file.
 
-        This function writes a NurbsCurve type to the geometry file.
+        This function writes a NurbsCurve instance to the geometry file.
         
         The following attributes and arguments are written in the header:
         ncoords, nknots, closed, name, sep.
@@ -291,6 +291,28 @@ class GeometryFile(object):
         self.fil.write(head+'\n')
         self.writeData(F.coords,sep)
         self.writeData(F.knots,sep)
+
+
+    def writeNurbsSurface(self,F,name=None,sep=None,extra=None):
+        """Write a NurbsSurface to a pyFormex geometry file.
+
+        This function writes a NurbsSurface instance to the geometry file.
+        
+        The following attributes and arguments are written in the header:
+        ncoords, nknotsu, nknotsv, closedu, closedv, name, sep.
+        The following attributes are written as arrays: coords, knotsu, knotsv
+        """
+        if sep is None:
+            sep = self.sep
+        head = "# objtype='%s'; ncoords=%s; nuknots=%s; nvknots=%s; uclosed=%s; vclosed=%s; sep='%s'" % (F.__class__.__name__,F.coords.shape[0],F.uknots.shape[0],F.uknots.shape[0],F.closed[0],F.closed[1],sep)
+        if name:
+            head += "; name='%s'" % name
+        if extra:
+            head += extra
+        self.fil.write(head+'\n')
+        self.writeData(F.coords,sep)
+        self.writeData(F.uknots,sep)
+        self.writeData(F.vknots,sep)
 
 
     def readHeader(self):
@@ -472,6 +494,22 @@ class GeometryFile(object):
         coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
         knots = readArray(self.fil,Float,(nknots,),sep=sep)
         return NurbsCurve(control=coords,knots=knots,closed=closed)
+ 
+
+    def readNurbsSurface(self,ncoords,nuknots,nvknots,uclosed,vclosed,sep):
+        """Read a NurbsSurface from a pyFormex geometry file.
+
+        The coordinate array for ncoords control points and the nuknots and
+        nvknots values of uknots and vknots are read from the file.
+        A NurbsSurface of degree ``pu = nuknots - ncoords - 1``  and
+        ``pv = nvknots - ncoords - 1`` is returned.
+        """
+        from plugins.nurbs import NurbsSurface
+        ndim = 4
+        coords = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
+        uknots = readArray(self.fil,Float,(nuknots,),sep=sep)
+        vknots = readArray(self.fil,Float,(nvknots,),sep=sep)
+        return NurbsSurface(control=coords,knots=(uknots,vknots),closed=(uclosed,vclosed))
 
 
     def oldReadBezierSpline(self,ncoords,nparts,closed,sep):

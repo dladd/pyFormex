@@ -69,6 +69,9 @@ class Curve(Geometry):
 
     N_approx = 10
 
+    def __init__(self):
+        Geometry.__init__(self)
+
     def pointsOn(self):
         return self.coords
 
@@ -256,6 +259,8 @@ class PolyLine(Curve):
 
     def __init__(self,coords=[],control=None,closed=False):
         """Initialize a PolyLine from a coordinate array."""
+        Curve.__init__(self)
+        
         if control is not None:
             coords = control
         if isinstance(coords,Formex):
@@ -582,16 +587,27 @@ class Polygon(PolyLine):
         PolyLine.__init__(self,coords,closed=True)
 
 
-    def planarArea(self,n):
-        """Return the area of a planar Polygon.
-        
-        n is the normal vector of the polygon plane.
+    def area(self,project=None):
+        """Compute area inside a polygon.
+
+        Parameters:
+
+        - `project`: (3,) Coords array representing a unit direction vector.
+
+        Returns: a single float value with the area inside the polygon. If a
+        direction vector is given, the area projected in that direction is
+        returned.
+
+        Note that if the polygon is nonplanar and no direction is given,
+        the area inside the polygon is not well defined.
         """
-        n = normalize(n)
-        x1 = self.coords
-        x2 = roll(x1,-1,axis=0)
-        area = 0.5*(dotpr(n,cross(x1,x2).sum(0)))
-        return area
+        from geomtools import polygonArea
+        return polygonArea(self.coords,project)
+
+
+    def planarArea(self,n):
+        utils.warn("Polygon.planarArea is deprecated. Use Polygon.area instead.|")
+        return self.area(n)
 
 
 ##############################################################################

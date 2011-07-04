@@ -137,7 +137,7 @@ def glutRenderText(text,font,gravity=''):
         font = glutFont(font)
     if gravity:
         curpos = GL.glGetFloatv(GL.GL_CURRENT_RASTER_POSITION)
-        print curpos
+        #print curpos
         GL.glRasterPos2f(curpos[0]-20.,curpos[1])
     for character in str(text):
         GLUT.glutBitmapCharacter(font, ord(character))

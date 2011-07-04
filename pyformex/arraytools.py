@@ -128,7 +128,7 @@ golden_ratio = 0.5 * (1.0 + sqrt(5.))
 # Convenience functions: trigonometric functions with argument in degrees
 
 def sind(arg,angle_spec=Deg):
-    """Return the sin of an angle in degrees.
+    """Return the sine of an angle in degrees.
 
     For convenience, this can also be used with an angle in radians,
     by specifying `angle_spec=Rad`.
@@ -140,7 +140,7 @@ def sind(arg,angle_spec=Deg):
 
 
 def cosd(arg,angle_spec=Deg):
-    """Return the cos of an angle in degrees.
+    """Return the cosine of an angle in degrees.
 
     For convenience, this can also be used with an angle in radians,
     by specifying ``angle_spec=Rad``.
@@ -152,12 +152,61 @@ def cosd(arg,angle_spec=Deg):
 
 
 def tand(arg,angle_spec=Deg):
-    """Return the tan of an angle in degrees.
+    """Return the tangens of an angle in degrees.
 
     For convenience, this can also be used with an angle in radians,
     by specifying ``angle_spec=Rad``.
     """
     return tan(arg*angle_spec)
+
+
+def arcsind(arg,angle_spec=Deg):
+    """Return the angle whose sine is equal to the argument.
+
+    By default, the angle is returned in Degrees.
+    Specifying `angle_spec=Rad` will return the angle in radians.
+
+    >>> print arcsind(0.5), arcsind(1.0,Rad)
+    30.0 1.57079632679
+    """
+    return arcsin(arg)/angle_spec
+
+
+def arccosd(arg,angle_spec=Deg):
+    """Return the angle whose cosine is equal to the argument.
+
+    By default, the angle is returned in Degrees.
+    Specifying `angle_spec=Rad` will return the angle in radians.
+
+    >>> print arccosd(0.5), arccosd(-1.0,Rad)
+    60.0 3.14159265359
+    """
+    return arccos(arg)/angle_spec
+
+
+def arctand(arg,angle_spec=Deg):
+    """Return the angle whose tangens is equal to the argument.
+
+    By default, the angle is returned in Degrees.
+    Specifying `angle_spec=Rad` will return the angle in radians.
+
+    >>> print arctand(1.0), arctand(-1.0,Rad)
+    45.0 -0.785398163397
+    """
+    return arctan(arg)/angle_spec
+
+
+def arctand2(sin,cos,angle_spec=Deg):
+    """Return the angle whose sine and cosine values are given.
+
+    By default, the angle is returned in Degrees.
+    Specifying `angle_spec=Rad` will return the angle in radians.
+    This returns an angle in the range ]-180,180].
+
+    >>> print arctand2(0.0,-1.0), arctand2(-sqrt(0.5),-sqrt(0.5),Rad)
+    180.0 -2.35619449019
+    """
+    return arctan2(sin,cos)/angle_spec
    
 
 def niceLogSize(f):
@@ -877,10 +926,10 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
     Example::
     
       >>> a = array([2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,7,8])
-      >>> unique(a,True)
-      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]))
-      >>> uniqueOrdered(a,True)
-      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]))
+      >>> unique(a,True,True)
+      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]), array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))
+      >>> uniqueOrdered(a,True,True)
+      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]), array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))
 
     Notice the difference in the 4-th entry of the second array.
 
@@ -1244,7 +1293,7 @@ def vectorPairAreaNormals(vec1,vec2):
     These are calculated from the cross product of vec1 and vec2, which indeed
     gives area * normal.
 
-    Note that where two vectors are parallel, an area zero will results and
+    Note that where two vectors are parallel, an area zero results and
     an axis with components NaN.
     """
     normal = cross(vec1,vec2)
@@ -1278,22 +1327,34 @@ def vectorTripleProduct(vec1,vec2,vec3):
 
     vec1, vec2, vec3 are (n,3) shaped arrays holding collections of vectors.
     The result is a (n,) shaped array with the triple product of each set
-    of corresponding vectors fromvec1,vec2,vec3.
+    of corresponding vectors from vec1,vec2,vec3.
     This is also the square of the volume of the parallellepid formex by
     the 3 vectors.
+    If vec1 is a unit normal, the result is also the area of the parallellogram
+    (vec2,vec3) projected in the direction vec1.
     """
     return dotpr(vec1,cross(vec2,vec3))
 
 
 def vectorPairCosAngle(v1,v2):
-    """Return the cosinus of the angle between the vectors v1 and v2."""
+    """Return the cosinus of the angle between the vectors v1 and v2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is an (n) shaped array with the cosinus of the angle between
+    each pair of vectors (vec1,vec2).
+    """
     v1 = asarray(v1)
     v2 = asarray(v2)
     return dotpr(v1,v2) / sqrt(dotpr(v1,v1)*dotpr(v2,v2))
 
 
 def vectorPairAngle(v1,v2):
-    """Return the angle (in radians) between the vectors v1 and v2."""
+    """Return the angle (in radians) between the vectors v1 and v2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is an (n) shaped array with the angle between
+    each pair of vectors (vec1,vec2).
+    """
     return arccos(vectorPairCosAngle(v1,v2))
 
 

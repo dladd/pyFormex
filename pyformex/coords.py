@@ -797,7 +797,7 @@ class Coords(ndarray):
         f = zeros_like(self)
         x,y,z = [ self[...,i] for i in dir ]
         f[...,0] = sqrt(x*x+y*y)
-        f[...,1] = arctan2(y,x) / angle_spec
+        f[...,1] = arctand2(y,x,angle_spec)
         f[...,2] = z
         return f
 
@@ -886,8 +886,8 @@ class Coords(ndarray):
         """
         v = self[...,dir].reshape((-1,3))
         dist = sqrt(sum(v*v,-1))
-        long = arctan2(v[:,0],v[:,2]) / angle_spec
-        lat = where(dist <= 0.0,0.0,arcsin(v[:,1]/dist) / angle_spec)
+        long = arctand2(v[:,0],v[:,2],angle_spec)
+        lat = where(dist <= 0.0,0.0,arcsind(v[:,1]/dist,angle_spec))
         f = column_stack([long,lat,dist])
         return f.reshape(self.shape)
 

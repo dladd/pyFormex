@@ -185,14 +185,14 @@ def reportAngles(K):
     for F in getCollection(K):
         if isinstance(F,GeomActor):
             x = F.coords
-            print(x)
+            #print(x)
             if F.elems is None:
-                print(x.shape)
+                #print(x.shape)
                 v = x[:,1,:] - x[:,0,:]
                 v = normalize(v)
             cosa = dotpr(v[0],v[1])
-            print(cosa)
-            a = arccos(cosa) * 180. / pi
+            #print(cosa)
+            a = arccosd(cosa)
             s += "  a = %s" % a
     return s
 

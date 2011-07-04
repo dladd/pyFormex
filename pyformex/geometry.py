@@ -122,6 +122,7 @@ class Geometry(object):
     :meth:`replace`,
     :meth:`swapAxes`,
     :meth:`rollAxes`,
+    :meth:`projectOnPlane`,
     :meth:`projectOnSphere`,
     :meth:`projectOnCylinder`,
     :meth:`rot`,
@@ -293,6 +294,9 @@ class Geometry(object):
     def rollAxes(self,*args,**kargs):
         pass
 
+    @_coords_transform
+    def projectOnPlane(self,*args,**kargs):
+        pass
     @_coords_transform
     def projectOnSphere(self,*args,**kargs):
         pass

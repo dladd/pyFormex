@@ -367,7 +367,7 @@ def _create_border_triangle(coords,elems):
     inpr = diagonal(inner(edges1,edges2))
     cos = inpr/(len1*len2)
     # angle between 0 and 180 degrees
-    angle = arccos(cos)/(pi/180.)
+    angle = arccosd(cos)
     # determine sharpest angle
     i = where(angle == angle.min())[0][0]
     # create triangle and new border elements
@@ -831,7 +831,7 @@ class TriSurface(Mesh):
 
     def edgeAngles(self):
         """Return the angles over all edges (in degrees). It is the angle (0 to 180) between 2 face normals."""
-        return arccos(self.edgeCosAngles()) / Deg
+        return arccosd(self.edgeCosAngles())
 
 
     def _compute_data(self):
