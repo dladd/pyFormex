@@ -379,23 +379,6 @@ def projectionVOP(A,n):
 #  VECTORS, AND u,v,w for (possibly) unnormalized
 #
 
-def intersectionPointsLWL(q1,m1,q2,m2):
-    """Return the intersection points of lines (q1,m1) and lines (q2,m2)
-
-    with the perpendiculars between them.
-    
-    This is equivalent to intersectionTimesLWL(q1,m1,q2,m2) but returns a
-    tuple of (nq1,nq2,3) shaped arrays of intersection points instead of the
-    parameter values.
-    """
-    t1,t2 = intersectionTimesLWL(q1,m1,q2,m2)
-    t1 = t1[:,:,newaxis]
-    t2 = t2[:,:,newaxis]
-    q1 = q1[:,newaxis,:]
-    m1 = m1[:,newaxis,:]
-    return q1 + t1 * m1, q2 + t2 * m2
-
-
 def intersectionTimesLWL(q1,m1,q2,m2):
     """Return the intersection of lines (q1,m1) and lines (q2,m2)
 
@@ -414,16 +397,36 @@ def intersectionTimesLWL(q1,m1,q2,m2):
         raise RuntimeError,"Expected q2 and m2 with same shape."
     q1 = q1[:,newaxis]
     m1 = m1[:,newaxis]
-    q2 = q2[newaxis,:]
-    m2 = m2[newaxis,:]
-    m1 = repeat(m1,m2.shape[1],1)
-    m2 = repeat(m2,m1.shape[0],0)
-    m = row_stack([m1[newaxis],m2[newaxis]]) # (2,nq1,nq2,3)
-    A = dotpr(m[:,newaxis],m[newaxis,:]) # (2,2,nq1,nq2)
-    A[:,1] = -A[:,1]
-    b = dotpr(q2-q1,m) # (2,nq1,nq2)
-    t1,t2 = solveMany(A,b)
+    q2 = q2[newaxis]
+    m2 = m2[newaxis]
+    dot1 = dotpr(m1,m1)
+    dot2 = dotpr(m2,m2)
+    dot12 = dotpr(m1,m2)
+    denom = (dot12**2-dot1*dot2)
+    q12 = q2-q1
+    dot1 = dot1[:,:,newaxis]
+    dot2 = dot2[:,:,newaxis]
+    dot12 = dot12[:,:,newaxis]
+    t1 = dotpr(q12,m2*dot12-m1*dot2) / denom
+    t2 = dotpr(q12,m2*dot1-m1*dot12) / denom
     return t1,t2
+
+
+def intersectionPointsLWL(q1,m1,q2,m2):
+    """Return the intersection points of lines (q1,m1) and lines (q2,m2)
+
+    with the perpendiculars between them.
+    
+    This is equivalent to intersectionTimesLWL(q1,m1,q2,m2) but returns a
+    tuple of (nq1,nq2,3) shaped arrays of intersection points instead of the
+    parameter values.
+    """
+    t1,t2 = intersectionTimesLWL(q1,m1,q2,m2)       
+    t1 = t1[:,:,newaxis]
+    t2 = t2[:,:,newaxis]
+    q1 = q1[:,newaxis]
+    m1 = m1[:,newaxis]
+    return q1 + t1 * m1, q2 + t2 * m2
 
 
 def intersectionTimesLWP(q,m,p,n):
@@ -451,8 +454,8 @@ def intersectionPointsLWP(q,m,p,n):
     """
     t = intersectionTimesLWP(q,m,p,n)
     t = t[:,:,newaxis]
-    q = q[:,newaxis,:]
-    m = m[:,newaxis,:]
+    q = q[:,newaxis]
+    m = m[:,newaxis]
     return q + t * m
 
 
@@ -576,7 +579,7 @@ def intersectionPointsPOP(q,p,n):
     """
     t = intersectionTimesPOP(q,p,n)
     t = t[:,:,newaxis]
-    q = q[:,newaxis,:]
+    q = q[:,newaxis]
     return q + t * n
 
 
@@ -591,11 +594,9 @@ def intersectionTimesPOP(q,p,n):
     """
     if p.shape != n.shape:
         raise RuntimeError,"Expected p and n with same shape."
-    I1 = dotpr(p,n)
-    I2 = inner(q,n)
-    I3 = dotpr(n,n)
-    return (I1-I2)/I3
-
+    t =  (dotpr(p,n) - inner(q,n)) / dotpr(n,n)
+    return t
+    
 
 def intersectionPointsPOL(p,q,m):
     """Return the intersection points of perpendiculars from points p on lines (q,m).
@@ -619,10 +620,8 @@ def intersectionTimesPOL(p,q,m):
     """
     if q.shape != m.shape:
         raise RuntimeError,"Expected q and m with same shape."
-    I1 = inner(p,m)
-    I2 = dotpr(q,m)
-    I3 = dotpr(m,m)
-    return (I1-I2)/I3
+    t =  (inner(p,m) - dotpr(q,m)) / dotpr(m,m)
+    return t
 
 
 #################### distance tools ###############
