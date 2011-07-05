@@ -268,13 +268,21 @@ If no onoff is given, this works as a toggle.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="objects.DrawableObjects.setProperty">
-<tt class="descname">setProperty</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.setProperty" title="Permalink to this definition">¶</a></dt>
+<dt id="objects.DrawableObjects.setProp">
+<tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.setProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the property of the current selection.</p>
 <p>prop should be a single integer value or None.
 If None is given, a value will be asked from the user.
 If a negative value is given, the property is removed.
 If a selected object does not have a setProp method, it is ignored.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.delProp">
+<tt class="descname">delProp</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.delProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the property of the current selection.</p>
+<p>This well reset the <cite>prop</cite> attribute of all selected objects
+to None.</p>
 </dd></dl>
 
 <dl class="method">
@@ -417,6 +425,12 @@ of the selection.names.</p>
 <dt id="objects.draw_node_numbers">
 <tt class="descclassname">objects.</tt><tt class="descname">draw_node_numbers</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_node_numbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the numbers of an object&#8217;s nodes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="objects.draw_free_edges">
+<tt class="descclassname">objects.</tt><tt class="descname">draw_free_edges</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_free_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the feature edges of an object.</p>
 </dd></dl>
 
 <dl class="function">

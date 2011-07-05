@@ -221,8 +221,62 @@ for the horizontal. The default(empty) string will center the text.</li>
 
 <dl class="class">
 <dt id="decors.ColorLegend">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorlegend</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>font=None</em>, <em>size=None</em>, <em>dec=2</em>, <em>scale=0</em>, <em>grid=0</em>, <em>linewidth=None</em>, <em>lefttext=False</em>, <em>nlabels=-1</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.ColorLegend" title="Permalink to this definition">¶</a></dt>
-<dd><p>A viewport decoration showing a colorscale legend.</p>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorlegend</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>ngrid=0</em>, <em>linewidth=None</em>, <em>nlabel=-1</em>, <em>font=None</em>, <em>size=None</em>, <em>dec=2</em>, <em>scale=0</em>, <em>lefttext=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.ColorLegend" title="Permalink to this definition">¶</a></dt>
+<dd><p>A labeled colorscale legend.</p>
+<p>When showing the distribution of some variable over a domain by means
+of a color encoding, the viewer expects some labeled colorscale as a
+guide to decode the colors. The ColorLegend decoration provides
+such a color legend. This class only provides the visual details of
+the scale. The conversion of the numerical values to the matching colors
+is provided by the <a class="reference internal" href="colorscale.html#colorscale.ColorLegend" title="colorscale.ColorLegend"><tt class="xref py py-class docutils literal"><span class="pre">colorscale.ColorLegend</span></tt></a> class.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>colorlegend</cite>: a <a class="reference internal" href="colorscale.html#colorscale.ColorLegend" title="colorscale.ColorLegend"><tt class="xref py py-class docutils literal"><span class="pre">colorscale.ColorLegend</span></tt></a> instance providing
+conversion between numerical values and colors</li>
+<li><cite>x,y,w,h</cite>: four integers specifying the position and size of the
+color bar rectangle</li>
+<li><cite>ngrid</cite>: int: number of intervals for the grid lines to be shown.
+If &gt; 0, grid lines are drawn around the color bar and between the
+<tt class="docutils literal"><span class="pre">ngrid</span></tt> intervals.
+If = 0, no grid lines are drawn.
+If &lt; 0 (default), the value is set equal to the number of colors (as
+set in the <tt class="docutils literal"><span class="pre">colorlegend</span></tt>) or to 0 if this number is higher than 50.</li>
+<li><cite>linewidth</cite>: float: width of the grid lines. If not specified, the
+current canvas line width is used.</li>
+<li><cite>nlabel</cite>: int: number of intervals for the labels to be shown.
+If &gt; 0, labels will be displayed at <cite>nlabel</cite> interval borders, if
+possible. The number of labels displayed thus will be <tt class="docutils literal"><span class="pre">nlabel+1</span></tt>,
+or less if the labels would otherwise be too close or overlapping.
+If 0, no labels are shown. 
+If &lt; 0 (default), a default number of labels is shown.</li>
+<li><cite>font</cite>, <cite>size</cite>: font and size to be used for the labels</li>
+<li><cite>dec</cite>: int: number of decimals to be used in the labels</li>
+<li><cite>scale</cite>: int: exponent of 10 for the scaling factor of the label values.
+The displayed values will be equal to the real values multiplied with
+<tt class="docutils literal"><span class="pre">10**scale</span></tt>.</li>
+<li><cite>lefttext</cite>: bool: if True, the labels will be drawn to the left of the
+color bar. The default is to draw the labels at the right.</li>
+</ul>
+<p>Some practical guidelines:</p>
+<ul class="simple">
+<li>The number of colors is defined by the <tt class="docutils literal"><span class="pre">colorlegend</span></tt> argument.</li>
+<li>Large numbers of colors result inb a quasi continuous color scheme.</li>
+<li>With a high number of colors, grid lines disturb the image, so either
+use <tt class="docutils literal"><span class="pre">ngrid=0</span></tt> or <tt class="docutils literal"><span class="pre">ngrid=</span></tt> to only draw a border around the colors.</li>
+<li>With a small number of colors, set <tt class="docutils literal"><span class="pre">ngrid</span> <span class="pre">=</span> <span class="pre">len(colorlegend.colors)</span></tt>
+to add gridlines between each color.
+Without it, the individual colors in the color bar may seem to be not
+constant, due to an optical illusion. Adding the grid lines reduces
+this illusion.</li>
+<li>When using both grid lines and labels, set both <tt class="docutils literal"><span class="pre">ngrid</span></tt> and <tt class="docutils literal"><span class="pre">nlabel</span></tt>
+to the same number or make one a multiple of the other. Not doing so
+may result in a very confusing picture.</li>
+<li>The best practices are to use either a low number of colors (&lt;=20) and
+the default <tt class="docutils literal"><span class="pre">ngrid</span></tt> and <tt class="docutils literal"><span class="pre">nlabel</span></tt>, or a high number of colors (&gt;=200)
+and the default values or a low value for <tt class="docutils literal"><span class="pre">nlabel</span></tt>.</li>
+</ul>
+<p>The <cite>ColorScale</cite> example script provides opportunity to experiment with
+different settings.</p>
 <dl class="method">
 <dt id="decors.ColorLegend.pickGL">
 <tt class="descname">pickGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.ColorLegend.pickGL" title="Permalink to this definition">¶</a></dt>

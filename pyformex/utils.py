@@ -537,12 +537,17 @@ def runCommand(cmd,RaiseError=True,quiet=False):
     if not quiet:
         pf.message("Running command: %s" % cmd)
     sta,out = commands.getstatusoutput(cmd)
+    exitcode = sta >> 8
+    signal = sta % 256
+    coredump = bool(sta & 128)
     if sta != 0:
         pf.message(out)
+        pf.message("Command exited with an error (exitcode %s, signal %s, coredump %s)\nOutput:\n%s" % (exitcode,signal,coredump,out))
         if RaiseError:
             raise RuntimeError, "Error while executing command:\n  %s" % cmd
-    return sta,out
-
+    if signal or coredump:
+        exitcode = -1
+    return exitcode,out
 
 def spawn(cmd):
     """Spawn a child process."""

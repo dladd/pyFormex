@@ -104,6 +104,12 @@ def readData(s,type,strict=False):
     return out
 
 
+###################################################
+## BV: The following functions need clean up
+## or should be replaced with a common module with calpy
+##
+
+
 def readAsciiTable(fn, header=True):
     """_Reads data from an ASCII text file (Table).
     

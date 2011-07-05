@@ -138,7 +138,7 @@ On RELEASE, zoom to the picked rectangle.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.start_selection">
-<tt class="descname">start_selection</tt><big>(</big><em>mode</em>, <em>filtr</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.start_selection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">start_selection</tt><big>(</big><em>mode</em>, <em>filter</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.start_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start an interactive picking mode.</p>
 <p>If selection mode was already started, mode is disregarded and
 this can be used to change the filter method.</p>
@@ -171,13 +171,13 @@ this can be used to change the filter method.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.pick">
-<tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>single=False</em>, <em>func=None</em>, <em>filter=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pick" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>oneshot=False</em>, <em>func=None</em>, <em>filter=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactively pick objects from the viewport.</p>
 <ul>
 <li><p class="first"><cite>mode</cite>: defines what to pick : one of
 <tt class="docutils literal"><span class="pre">['actor','element','point','number','edge']</span></tt></p>
 </li>
-<li><p class="first"><cite>single</cite>: if True, the function returns as soon as the user ends
+<li><p class="first"><cite>oneshot</cite>: if True, the function returns as soon as the user ends
 a picking operation. The default is to let the user
 modify his selection and only to return after an explicit
 cancel (ESC or right mouse button).</p>
@@ -317,10 +317,10 @@ On RELEASE, add the point to the point list.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.drawLinesInter">
-<tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>single=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.drawLinesInter" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.drawLinesInter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactively draw lines on the canvas.</p>
 <ul class="simple">
-<li>single: if True, the function returns as soon as the user ends
+<li>oneshot: if True, the function returns as soon as the user ends
 a drawing operation. The default is to let the user
 draw multiple lines and only to return after an explicit
 cancel (ESC or right mouse button).</li>
@@ -1014,10 +1014,10 @@ The default OpenGL format can be changed by command line options:</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="canvas.html"
-                        title="previous chapter">21. <tt class="docutils literal docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
+                        title="previous chapter">21. <tt class="docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="camera.html"
-                        title="next chapter">23. <tt class="docutils literal docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
+                        title="next chapter">23. <tt class="docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

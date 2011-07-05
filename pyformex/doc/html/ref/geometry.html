@@ -147,6 +147,7 @@ arguments of these methods:</p>
 <a class="reference internal" href="#geometry.Geometry.replace" title="geometry.Geometry.replace"><tt class="xref py py-meth docutils literal"><span class="pre">replace()</span></tt></a>,
 <a class="reference internal" href="#geometry.Geometry.swapAxes" title="geometry.Geometry.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">swapAxes()</span></tt></a>,
 <a class="reference internal" href="#geometry.Geometry.rollAxes" title="geometry.Geometry.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">rollAxes()</span></tt></a>,
+<a class="reference internal" href="#geometry.Geometry.projectOnPlane" title="geometry.Geometry.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">projectOnPlane()</span></tt></a>,
 <a class="reference internal" href="#geometry.Geometry.projectOnSphere" title="geometry.Geometry.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">projectOnSphere()</span></tt></a>,
 <a class="reference internal" href="#geometry.Geometry.projectOnCylinder" title="geometry.Geometry.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">projectOnCylinder()</span></tt></a>,
 <a class="reference internal" href="#geometry.Geometry.rot" title="geometry.Geometry.rot"><tt class="xref py py-meth docutils literal"><span class="pre">rot()</span></tt></a>,
@@ -326,6 +327,13 @@ arguments of these methods:</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="geometry.Geometry.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="geometry.Geometry.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
@@ -395,10 +403,10 @@ If fil is a string, the file is closed prior to returning.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="colors.html"
-                        title="previous chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+                        title="previous chapter">6. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="connectivity.html"
-                        title="next chapter">8. <tt class="docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+                        title="next chapter">8. <tt class="docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

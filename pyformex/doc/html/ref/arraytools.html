@@ -70,7 +70,7 @@ everything from this module:</p>
 <dl class="function">
 <dt id="arraytools.sind">
 <tt class="descclassname">arraytools.</tt><tt class="descname">sind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.sind" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the sin of an angle in degrees.</p>
+<dd><p>Return the sine of an angle in degrees.</p>
 <p>For convenience, this can also be used with an angle in radians,
 by specifying <cite>angle_spec=Rad</cite>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">sind</span><span class="p">(</span><span class="mf">30</span><span class="p">),</span> <span class="n">sind</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mf">6</span><span class="p">,</span><span class="n">Rad</span><span class="p">)</span>
@@ -82,7 +82,7 @@ by specifying <cite>angle_spec=Rad</cite>.</p>
 <dl class="function">
 <dt id="arraytools.cosd">
 <tt class="descclassname">arraytools.</tt><tt class="descname">cosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.cosd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the cos of an angle in degrees.</p>
+<dd><p>Return the cosine of an angle in degrees.</p>
 <p>For convenience, this can also be used with an angle in radians,
 by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cosd</span><span class="p">(</span><span class="mf">60</span><span class="p">),</span> <span class="n">cosd</span><span class="p">(</span><span class="n">pi</span><span class="o">/</span><span class="mf">3</span><span class="p">,</span><span class="n">Rad</span><span class="p">)</span>
@@ -94,9 +94,58 @@ by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</spa
 <dl class="function">
 <dt id="arraytools.tand">
 <tt class="descclassname">arraytools.</tt><tt class="descname">tand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.tand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the tan of an angle in degrees.</p>
+<dd><p>Return the tangens of an angle in degrees.</p>
 <p>For convenience, this can also be used with an angle in radians,
 by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.arcsind">
+<tt class="descclassname">arraytools.</tt><tt class="descname">arcsind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arcsind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angle whose sine is equal to the argument.</p>
+<p>By default, the angle is returned in Degrees.
+Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">arcsind</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">arcsind</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">Rad</span><span class="p">)</span>
+<span class="go">30.0 1.57079632679</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.arccosd">
+<tt class="descclassname">arraytools.</tt><tt class="descname">arccosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arccosd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angle whose cosine is equal to the argument.</p>
+<p>By default, the angle is returned in Degrees.
+Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">arccosd</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">arccosd</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">Rad</span><span class="p">)</span>
+<span class="go">60.0 3.14159265359</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.arctand">
+<tt class="descclassname">arraytools.</tt><tt class="descname">arctand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arctand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angle whose tangens is equal to the argument.</p>
+<p>By default, the angle is returned in Degrees.
+Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">arctand</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">arctand</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="n">Rad</span><span class="p">)</span>
+<span class="go">45.0 -0.785398163397</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.arctand2">
+<tt class="descclassname">arraytools.</tt><tt class="descname">arctand2</tt><big>(</big><em>sin</em>, <em>cos</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arctand2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the angle whose sine and cosine values are given.</p>
+<p>By default, the angle is returned in Degrees.
+Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.
+This returns an angle in the range ]-180,180].</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">arctand2</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">arctand2</span><span class="p">(</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="o">-</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">Rad</span><span class="p">)</span>
+<span class="go">180.0 -2.35619449019</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -558,10 +607,10 @@ True.</p>
 </ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">5</span><span class="p">,</span><span class="mf">6</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">,</span><span class="mf">7</span><span class="p">,</span><span class="mf">8</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueOrdered</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]), array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueOrdered</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]), array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))</span>
 </pre></div>
 </div>
 <p>Notice the difference in the 4-th entry of the second array.</p>
@@ -816,7 +865,7 @@ The result is a tuple of two arrays:</p>
 </ul>
 <p>These are calculated from the cross product of vec1 and vec2, which indeed
 gives area * normal.</p>
-<p>Note that where two vectors are parallel, an area zero will results and
+<p>Note that where two vectors are parallel, an area zero results and
 an axis with components NaN.</p>
 </dd></dl>
 
@@ -844,21 +893,29 @@ each couple (edg1,edg2).</p>
 <dd><p>Compute triple product vec1 . (vec2 x vec3).</p>
 <p>vec1, vec2, vec3 are (n,3) shaped arrays holding collections of vectors.
 The result is a (n,) shaped array with the triple product of each set
-of corresponding vectors fromvec1,vec2,vec3.
+of corresponding vectors from vec1,vec2,vec3.
 This is also the square of the volume of the parallellepid formex by
-the 3 vectors.</p>
+the 3 vectors.
+If vec1 is a unit normal, the result is also the area of the parallellogram
+(vec2,vec3) projected in the direction vec1.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.vectorPairCosAngle">
 <tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairCosAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairCosAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cosinus of the angle between the vectors v1 and v2.</p>
+<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+The result is an (n) shaped array with the cosinus of the angle between
+each pair of vectors (vec1,vec2).</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.vectorPairAngle">
 <tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle (in radians) between the vectors v1 and v2.</p>
+<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+The result is an (n) shaped array with the angle between
+each pair of vectors (vec1,vec2).</p>
 </dd></dl>
 
 <dl class="function">

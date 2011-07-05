@@ -74,11 +74,28 @@ The area is always positive.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="geomtools.polygonArea">
+<tt class="descclassname">geomtools.</tt><tt class="descname">polygonArea</tt><big>(</big><em>x</em>, <em>project=None</em><big>)</big><a class="headerlink" href="#geomtools.polygonArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute area inside a polygon.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>x</cite>: (nplex,3) Coords array representing the vertices of a
+(possibly nonplanar) polygon.</li>
+<li><cite>project</cite>: (3,) Coords array representing a unit direction vector.</li>
+</ul>
+<p>Returns: a single float value with the area inside the polygon. If a
+direction vector is given, the area projected in that direction is
+returned.</p>
+<p>Note that if the polygon is nonplanar and no direction is given, the area
+inside the polygon is not well defined.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="geomtools.polygonNormals">
 <tt class="descclassname">geomtools.</tt><tt class="descname">polygonNormals</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.polygonNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute normals in all points of polygons in x.</p>
-<p>x is an (nel,nplex,3) coordinate array representing a (possibly not plane)
-polygon.</p>
+<p>x is an (nel,nplex,3) coordinate array representing nel (possibly nonplanar)
+polygons.</p>
 <p>The return value is an (nel,nplex,3) array with the unit normals on the
 two edges ending in each point.</p>
 </dd></dl>
@@ -125,6 +142,17 @@ bounding circles.</p>
 <p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.</p>
 <p>Returns an (ntri) array of True/False values indicating whether the
 triangles are obtuse.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.isInsideTriangle">
+<tt class="descclassname">geomtools.</tt><tt class="descname">isInsideTriangle</tt><big>(</big><em>x</em>, <em>P</em><big>)</big><a class="headerlink" href="#geomtools.isInsideTriangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the points are inside triangles.</p>
+<p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.
+P is a Coords array with shape (ntri,3) representing ntri points lying
+in the planes of the triangles.
+This function checks whether these points fall inside the triangles.</p>
+<p>Returns array with ntri bool values.</p>
 </dd></dl>
 
 <dl class="function">
@@ -336,11 +364,11 @@ such that the intersection points are given by q+t*m.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="geomtools.facetDistance">
-<tt class="descclassname">geomtools.</tt><tt class="descname">facetDistance</tt><big>(</big><em>X</em>, <em>Fp</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#geomtools.facetDistance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the closest perpendicular distance of points X to a set of facets.</p>
+<dt id="geomtools.faceDistance">
+<tt class="descclassname">geomtools.</tt><tt class="descname">faceDistance</tt><big>(</big><em>X</em>, <em>Fp</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#geomtools.faceDistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the closest perpendicular distance to a set of triangles.</p>
 <p>X is a (nX,3) shaped array of points.
-Fp is a (nF,nplex,3) shaped array of facet vertices.</p>
+Fp is a (nF,3,3) shaped array of triangles.</p>
 <p>Note that some points may not have a normal with footpoint inside any
 of the facets.</p>
 <p>The return value is a tuple OKpid,OKdist,OKpoints where:</p>
@@ -381,33 +409,6 @@ Vp is a (nV,3) shaped array of vertices.</p>
 <li>OKpoints is an array with the closest vertices for the points
 and is only returned if return_points = True.</li>
 </ul>
-</dd></dl>
-
-<dl class="function">
-<dt id="geomtools.baryCoords">
-<tt class="descclassname">geomtools.</tt><tt class="descname">baryCoords</tt><big>(</big><em>S</em>, <em>P</em><big>)</big><a class="headerlink" href="#geomtools.baryCoords" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the barycentric coordinates of points P wrt. simplexes S.</p>
-<p>S is a (nel,nplex,3) shaped array of n-simplexes (n=nplex-1) e.g.:</p>
-<ul class="simple">
-<li>1-simplex: line segment</li>
-<li>2-simplex: triangle</li>
-<li>3-simplex: tetrahedron</li>
-</ul>
-<p>P is a (npts,nel,3) shaped array of points.</p>
-<p>The return value is a (npts,nel,nplex) shaped array of barycentric
-coordinates BC, such that the points P are given by</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">BC</span><span class="p">[:,:,:,</span><span class="n">newaxis</span><span class="p">]</span><span class="o">*</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mf">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="geomtools.insideSimplex">
-<tt class="descclassname">geomtools.</tt><tt class="descname">insideSimplex</tt><big>(</big><em>BC</em>, <em>bound=True</em><big>)</big><a class="headerlink" href="#geomtools.insideSimplex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if points are in simplexes.</p>
-<p>BC is an array of barycentric coordinates, which sum up to one.
-If bound = True, a point lying on the boundary is considered to
-be inside the simplex.</p>
 </dd></dl>
 
 </div>

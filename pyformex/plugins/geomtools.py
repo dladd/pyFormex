@@ -735,55 +735,54 @@ def vertexDistance(X,Vp,return_points=False):
 
 ############################################
 
-# This is slow on large datasets
-# Anybody still needs this?
+# BV: removed in 0.8.4
 
-def baryCoords(S,P):
-    """Return the barycentric coordinates of points P wrt. simplexes S.
+## def baryCoords(S,P):
+##     """Return the barycentric coordinates of points P wrt. simplexes S.
     
-    S is a (nel,nplex,3) shaped array of n-simplexes (n=nplex-1) e.g.:
+##     S is a (nel,nplex,3) shaped array of n-simplexes (n=nplex-1) e.g.:
 
-    - 1-simplex: line segment
-    - 2-simplex: triangle
-    - 3-simplex: tetrahedron
+##     - 1-simplex: line segment
+##     - 2-simplex: triangle
+##     - 3-simplex: tetrahedron
 
-    P is a (npts,nel,3) shaped array of points.
+##     P is a (npts,nel,3) shaped array of points.
     
-    The return value is a (npts,nel,nplex) shaped array of barycentric
-    coordinates BC, such that the points P are given by ::
+##     The return value is a (npts,nel,nplex) shaped array of barycentric
+##     coordinates BC, such that the points P are given by ::
     
-       (BC[:,:,:,newaxis]*S).sum(-2)
+##        (BC[:,:,:,newaxis]*S).sum(-2)
        
-    """
-    if S.shape[0] != P.shape[1]:
-        raise RuntimeError,"Expected S and P with same number of elements."
-    # Make S and P arrays with the same number of dimensions
-    S = S.transpose(1,0,2)[:,newaxis] # (nplex,1,nel,3)
-    P = P[newaxis] # (1,npts,nel,3)
-    # Compute matrices
-    vs = S[1:] - S[0:1] # (dim,1,nel,3)
-    vp = P - S[0:1] # (1,npts,nel,3)
-    A = dotpr(vs[:,newaxis],vs[newaxis,:]) # (dim,dim,1,nel)
-    A = repeat(A,P.shape[1],2) # (dim,dim,npts,nel)
-    b = dotpr(vs,vp) # (dim,npts,nel)
-    # Compute barycentric coordinates
-    t = solveMany(A,b) # (dim,npts,nel)
-    t = asarray(t).transpose(1,2,0) # (npts,nel,dim)
-    t0 = 1.-t.sum(-1)
-    return dstack([t0,t])
+##     """
+##     if S.shape[0] != P.shape[1]:
+##         raise RuntimeError,"Expected S and P with same number of elements."
+##     # Make S and P arrays with the same number of dimensions
+##     S = S.transpose(1,0,2)[:,newaxis] # (nplex,1,nel,3)
+##     P = P[newaxis] # (1,npts,nel,3)
+##     # Compute matrices
+##     vs = S[1:] - S[0:1] # (dim,1,nel,3)
+##     vp = P - S[0:1] # (1,npts,nel,3)
+##     A = dotpr(vs[:,newaxis],vs[newaxis,:]) # (dim,dim,1,nel)
+##     A = repeat(A,P.shape[1],2) # (dim,dim,npts,nel)
+##     b = dotpr(vs,vp) # (dim,npts,nel)
+##     # Compute barycentric coordinates
+##     t = solveMany(A,b) # (dim,npts,nel)
+##     t = asarray(t).transpose(1,2,0) # (npts,nel,dim)
+##     t0 = 1.-t.sum(-1)
+##     return dstack([t0,t])
 
 
-def insideSimplex(BC,bound=True):
-    """Check if points are in simplexes.
+## def insideSimplex(BC,bound=True):
+##     """Check if points are in simplexes.
     
-    BC is an array of barycentric coordinates, which sum up to one.
-    If bound = True, a point lying on the boundary is considered to
-    be inside the simplex.
-    """
-    if bound:
-        return (BC >= 0.).all(-1)
-    else:
-        return (BC > 0.).all(-1)
+##     BC is an array of barycentric coordinates, which sum up to one.
+##     If bound = True, a point lying on the boundary is considered to
+##     be inside the simplex.
+##     """
+##     if bound:
+##         return (BC >= 0.).all(-1)
+##     else:
+##         return (BC > 0.).all(-1)
 
 
 

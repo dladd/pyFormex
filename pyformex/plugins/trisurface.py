@@ -1072,44 +1072,6 @@ Total area: %s; Enclosed volume: %s
                 elems = elems[[0]]
                 prop += 1
 
-##GDS moved to mesh_ext.py
-#    def nodeFront(self,startat=0,front_increment=1):
-#        """Generator function returning the frontal elements.
-#
-#        startat is an element number or list of numbers of the starting front.
-#        On first call, this function returns the starting front.
-#        Each next() call returns the next front.
-#        """
-#        p = -ones((self.nfaces()),dtype=int)
-#        if self.nfaces() <= 0:
-#            return
-#        # Construct table of elements connected to each element
-#        adj = self.nodeAdjacency()
-#
-#        # Remember nodes left for processing
-#        todo = ones((self.npoints(),),dtype=bool)
-#        elems = clip(asarray(startat),0,self.nfaces())
-#        prop = 0
-#        while elems.size > 0:
-#            # Store prop value for current elems
-#            p[elems] = prop
-#            yield p
-#
-#            prop += front_increment
-#
-#            # Determine adjacent elements
-#            elems = unique(adj[elems])
-#            elems = elems[(elems >= 0) * (p[elems] < 0) ]
-#            if elems.size > 0:
-#                continue
-#
-#            # No more elements in this part: start a new one
-#            elems = where(p<0)[0]
-#            if elems.size > 0:
-#                # Start a new part
-#                elems = elems[[0]]
-#                prop += 1
-
 
     def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
         """Grow a selection using a frontal method.
@@ -1125,15 +1087,6 @@ Total area: %s; Enclosed volume: %s
             elif nsteps == 0:
                 break
         return p
-
-##GDS moved to mesh_ext.py
-#    def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
-#        for p in self.nodeFront(startat=startat,front_increment=front_increment):   
-#            if nsteps > 0:
-#                nsteps -= 1
-#            elif nsteps == 0:
-#                break
-#        return p
 
 
     def growSelection(self,sel,mode='node',nsteps=1):
@@ -1166,35 +1119,6 @@ Total area: %s; Enclosed volume: %s
         """
         return firstprop + self.walkEdgeFront(startat=startat,okedges=okedges,front_increment=0)
     
-
-##GDS moved to mesh_ext.py
-#    def partitionByNodeFront(self,firstprop=0,startat=0):
-#        """Detects different parts of the surface using a frontal method.
-#
-#        okedges flags the edges where the two adjacent triangles are to be
-#        in the same part of the surface.
-#        startat is a list of elements that are in the first part.
-#        
-#        The partitioning is returned as a property type array having a value
-#        corresponding to the part number. The lowest property number will be
-#        firstprop.
-#        """
-#        return firstprop + self.walkNodeFront(startat=startat,front_increment=0)
-
-##GDS moved to mesh_ext.py
-#    def partitionByConnection(self):
-#        """Detect the connected parts of a surface.
-#
-#        The surface is partitioned in parts in which all elements are
-#        connected. Two elements are connected if it is possible to draw a
-#        continuous (poly)line from a point in one element to a point in
-#        the other element without leaving the surface.
-#        
-#        The partitioning is returned as a property type array having a value
-#        corresponding to the part number. The lowest property number will be
-#        firstprop.
-#        """
-#        return self.partitionByNodeFront()
 
 
     def partitionByAngle(self,angle=60.,firstprop=0, sortedbyarea=None):
@@ -1232,31 +1156,6 @@ Total area: %s; Enclosed volume: %s
                 p2[p==j]=i
             p=p2
         return firstprop + p
-
-##GDS moved to mesh_ext.py
-#    def splitByConnection(self):
-#        """Split the surface into connected parts.
-#
-#        Returns a list of surfaces that each form a connected part.
-#        """
-#        split = self.splitProp(self.partitionByConnection())
-#        if split:
-#            return split.values()
-#        else:
-#            return [ self ]
-
-##GDS moved to mesh_ext.py
-#    def largestByConnection(self):
-#        """Return the largest connected part of the surface."""
-#        p = self.partitionByConnection()
-#        nparts = p.max()+1
-#        if nparts == 1:
-#            return self,nparts
-#        else:
-#            t = [ p == pi for pi in range(nparts) ]
-#            n = [ ti.sum() for ti in t ]
-#            w = array(n).argmax()
-#            return self.clip(t[w]),nparts
 
 
     def cutWithPlane(self,*args,**kargs):
@@ -1512,7 +1411,9 @@ Total area: %s; Enclosed volume: %s
 
 
 
-###################### Methods using admesh/GTS #############################
+###################################################################
+##    Methods using admesh/GTS/tetgen
+#####################################
  
  
     def fixNormals(self):
@@ -1546,17 +1447,16 @@ Total area: %s; Enclosed volume: %s
         os.remove(tmp1)    
         return S.setProp(self.prop)
 
-    #1 GDS: maybe it should be renamed as isSelfIntersecting()
-    #2 in case of self intersecting, maybe a read_GTS should be 
-    #   used to output the bad triangles.
-    #3 why the returned sta codes are different ?
+
     def check(self,verbose=False, matched=True):
         """Check the surface using gtscheck.
 
-        Checks whether the surface is orientable,
-        non self-intersecting manifold. For the use of the `gts` methods (split, 
-        coarsen, refine, boolean), this is a necessary condition; additionally,
-        the surface has to be closed (check this with the :meth:`isClosedManifold`).
+        Checks whether the surface is an orientable,
+        non self-intersecting manifold.
+
+        For the use of the `gts` methods (split, coarsen, refine, boolean),
+        this is a necessary condition; additionally, the surface has to be
+        closed (can be checked with :meth:`isClosedManifold`).
 
         Returns 0 if the surface passes the test, nonzero if not.
         A full report is printed out.
@@ -1585,10 +1485,10 @@ Total area: %s; Enclosed volume: %s
         if sta == 0:
             pf.message('The surface is an orientable non self-intersecting manifold')
             return sta, None
-        if sta==512:#why 512? according to gtscheck -h should be 2
-            pf.message('The surface is not an orientable manifold, try first fixNormals()')
+        if sta==2:
+            pf.message('The surface is not an orientable manifold (this may be due to badly oriented normals)')
             return sta, None
-        if sta==768:#why 768? according to gtscheck -h should be 3
+        if sta==3:
             pf.message('The surface is an orientable manifold but is self-intersecting')
             outs= out.split('\n')
             first=0

@@ -468,6 +468,8 @@ def divideMesh():
     if not selection.check():
         selection.ask()
 
+    narrow_selection(Mesh)
+
     if not selection.names:
         return
 
@@ -490,6 +492,7 @@ def convertMesh():
         selection.ask()
 
     narrow_selection(Mesh)
+    
     if not selection.names:
         return
 
@@ -542,6 +545,8 @@ def renumberMeshInElemsOrder():
     """
     if not selection.check():
         selection.ask()
+
+    narrow_selection(Mesh)
 
     if not selection.names:
         return
@@ -646,10 +651,10 @@ def create_menu():
         ## ("---",None),
         ## ("&Fly",fly),
         ("Mesh",[
-            ("&Fuse Nodes",fuseMesh),
-            ("&Divide Mesh",divideMesh),
-            ("&Convert Mesh Eltype",convertMesh),
-            ("&Renumber Mesh in Elems order",renumberMeshInElemsOrder),
+            ("&Convert element type",convertMesh),
+            ("&Subdivide",divideMesh),
+            ("&Fuse nodes",fuseMesh),
+            ("&Renumber nodes in element order",renumberMeshInElemsOrder),
             ]),
         ("---",None),
         ("&Reload menu",reload_menu),

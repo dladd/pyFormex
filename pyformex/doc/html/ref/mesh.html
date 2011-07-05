@@ -280,8 +280,8 @@ element to edge connectivity.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.getBorder">
-<tt class="descname">getBorder</tt><big>(</big><em>return_indices=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorder" title="Permalink to this definition">¶</a></dt>
+<dt id="mesh.Mesh.getFreeEntities">
+<tt class="descname">getFreeEntities</tt><big>(</big><em>return_indices=False</em>, <em>level=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEntities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the border of the Mesh.</p>
 <p>This returns a Connectivity table with the border of the Mesh.
 The border entities are of a lower hierarchical level than the
@@ -292,12 +292,12 @@ for inverse lookup of the higher entity (column 0) and its local
 border part number (column 1).</p>
 <p>The returned Connectivity can be used together with the
 Mesh.coords to construct a Mesh of the border geometry.
-See also <a class="reference internal" href="#mesh.Mesh.getBorderMesh" title="mesh.Mesh.getBorderMesh"><tt class="xref py py-meth docutils literal"><span class="pre">getBorderMesh()</span></tt></a>.</p>
+See also <tt class="xref py py-meth docutils literal"><span class="pre">getBorderMesh()</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.getBorderMesh">
-<tt class="descname">getBorderMesh</tt><big>(</big><em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorderMesh" title="Permalink to this definition">¶</a></dt>
+<dt id="mesh.Mesh.getFreeEntitiesMesh">
+<tt class="descname">getFreeEntitiesMesh</tt><big>(</big><em>compact=True</em>, <em>level=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEntitiesMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh with the border elements.</p>
 <p>Returns a Mesh representing the border of the Mesh.
 The returned Mesh is of the next lower hierarchical level.
@@ -564,7 +564,7 @@ off for efficiency reasons.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.convert">
-<tt class="descname">convert</tt><big>(</big><em>totype</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">convert</tt><big>(</big><em>totype</em>, <em>fuse=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a Mesh to another element type.</p>
 <p>Converting a Mesh from one element type to another can only be
 done if both element types are of the same dimensionality.
@@ -577,6 +577,13 @@ in a table. New strategies may be added however.</p>
 <p>The return value is a Mesh of the requested element type, representing
 the same geometry (possibly approximatively) as the original mesh.</p>
 <p>If the requested conversion is not implemented, an error is raised.</p>
+<dl class="docutils">
+<dt>..warning: Conversion strategies that add new nodes may produce</dt>
+<dd>double nodes at the common border of elements. The <a class="reference internal" href="#mesh.Mesh.fuse" title="mesh.Mesh.fuse"><tt class="xref py py-meth docutils literal"><span class="pre">fuse()</span></tt></a>
+method can be used to merge such coincident nodes. Specifying
+fuse=True will also enforce the fusing. This option become the
+default in future.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -906,6 +913,13 @@ value is None.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
@@ -1104,7 +1118,7 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
                         title="previous chapter">12. <tt class="docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="widgets.html"
-                        title="next chapter">14. <tt class="docutils literal docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
+                        title="next chapter">14. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

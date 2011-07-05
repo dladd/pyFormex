@@ -325,6 +325,30 @@ the object.</p>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">nurbs</span></tt></p>
 <dl class="function">
+<dt id="nurbs.globalInterpolationCurve">
+<tt class="descclassname">nurbs.</tt><tt class="descname">globalInterpolationCurve</tt><big>(</big><em>Q</em>, <em>degree=3</em>, <em>strategy=0.5</em><big>)</big><a class="headerlink" href="#nurbs.globalInterpolationCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a global interpolation NurbsCurve.</p>
+<p>Given an ordered set of points Q, the globalInterpolationCurve
+is a NURBS curve of the given degree, passing through all the
+points.</p>
+<p>Returns a NurbsCurve through the given point set. The number of
+control points is the same as the number of input points.</p>
+<dl class="docutils">
+<dt>..warning: Currently there is the limitation that two consecutive</dt>
+<dd>points should not coincide. If they do, a warning is shown and
+the double points will be removed.</dd>
+</dl>
+<p>The procedure works by computing the control points that will
+produce a NurbsCurve with the given points occurring at predefined
+parameter values. The strategy to set this values uses a parameter
+as exponent. Different values produce (slighly) different curves.
+Typical values are:</p>
+<p>0.0: equally spaced (not recommended)
+0.5: centripetal (default, recommended)
+1.0: chord length (often used)</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="nurbs.uniformParamValues">
 <tt class="descclassname">nurbs.</tt><tt class="descname">uniformParamValues</tt><big>(</big><em>n</em>, <em>umin=0.0</em>, <em>umax=1.0</em><big>)</big><a class="headerlink" href="#nurbs.uniformParamValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a set of uniformly distributed parameter values in a range.</p>
@@ -462,7 +486,7 @@ if d3 is give, also returns the torsion of the curve.</p>
                         title="previous chapter">33. <tt class="docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="isopar.html"
-                        title="next chapter">35. <tt class="docutils literal docutils literal"><span class="pre">isopar</span></tt> &#8212; Isoparametric transformations</a></p>
+                        title="next chapter">35. <tt class="docutils literal"><span class="pre">isopar</span></tt> &#8212; Isoparametric transformations</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

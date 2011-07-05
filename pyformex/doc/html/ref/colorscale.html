@@ -98,7 +98,17 @@ to the -1, 0 and 1 values.</p>
 <dl class="class">
 <dt id="colorscale.ColorLegend">
 <em class="property">class </em><tt class="descclassname">colorscale.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorscale</em>, <em>n</em><big>)</big><a class="headerlink" href="#colorscale.ColorLegend" title="Permalink to this definition">¶</a></dt>
-<dd><p>A colorlegend is a colorscale divided in a number of subranges.</p>
+<dd><p>A colorlegend divides a in a number of subranges.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>colorscale</cite>: a <a class="reference internal" href="#colorscale.ColorScale" title="colorscale.ColorScale"><tt class="xref py py-class docutils literal"><span class="pre">ColorScale</span></tt></a> instance</li>
+<li><cite>n</cite>: a positive integer</li>
+</ul>
+<p>For a <a class="reference internal" href="#colorscale.ColorScale" title="colorscale.ColorScale"><tt class="xref py py-class docutils literal"><span class="pre">ColorScale</span></tt></a> without <tt class="docutils literal"><span class="pre">midval</span></tt>, the full range is divided
+in <tt class="docutils literal"><span class="pre">n</span></tt> subranges; for a scale with <tt class="docutils literal"><span class="pre">midval</span></tt>, each of the two ranges
+is divided in <tt class="docutils literal"><span class="pre">n/2</span></tt> subranges. In each case the legend has <tt class="docutils literal"><span class="pre">n</span></tt>
+subranges limited by <tt class="docutils literal"><span class="pre">n+1</span></tt> values. The <tt class="docutils literal"><span class="pre">n</span></tt> colors of the legend
+correspond to the middle value of each subrange.</p>
 <dl class="method">
 <dt id="colorscale.ColorLegend.overflow">
 <tt class="descname">overflow</tt><big>(</big><em>oflow=None</em><big>)</big><a class="headerlink" href="#colorscale.ColorLegend.overflow" title="Permalink to this definition">¶</a></dt>

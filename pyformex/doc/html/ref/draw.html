@@ -374,6 +374,12 @@ The string representation of the marks are drawn at the corresponding
 </dd></dl>
 
 <dl class="function">
+<dt id="draw.drawFreeEdges">
+<tt class="descclassname">draw.</tt><tt class="descname">drawFreeEdges</tt><big>(</big><em>M</em>, <em>color='black'</em><big>)</big><a class="headerlink" href="#draw.drawFreeEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the feature edges of a Mesh</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="draw.drawNumbers">
 <tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big><a class="headerlink" href="#draw.drawNumbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw numbers on all elements of F.</p>
@@ -783,20 +789,19 @@ partitionCollection() method.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="draw.set_selection_filter">
-<tt class="descclassname">draw.</tt><tt class="descname">set_selection_filter</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.set_selection_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the selection filter mode</p>
-<p>s is one of the strings in selection_filters</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="draw.pick">
-<tt class="descclassname">draw.</tt><tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>filtr=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.pick" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>filter=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.pick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enter interactive picking mode and return selection.</p>
 <p>See viewport.py for more details.
 This function differs in that it provides default highlighting
 during the picking operation, a button to stop the selection operation</p>
-<p>If no filter is given, the available filters are presented in a combobox.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>mode</cite>: one of the pick modes</li>
+<li><cite>filter</cite>: one of the <cite>selection_filters</cite>. The default picking filter
+activated on entering the pick mode. All available filters are
+presented in a combobox.</li>
+</ul>
 </dd></dl>
 
 <dl class="function">
@@ -850,7 +855,7 @@ might also be set by the user.</p>
                         title="previous chapter">4. <tt class="docutils literal docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="colors.html"
-                        title="next chapter">6. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+                        title="next chapter">6. <tt class="docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

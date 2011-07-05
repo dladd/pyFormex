@@ -116,33 +116,54 @@ Projects
 --------
 
 
-Plugins
--------
+Plugin menus
+------------
 - geometry_menu (NEW): a new menu to work on all kind of geometry objects
   using a common interface. It will replace the formex_menu and
   mesh_menu.
-- nurbs_menu (NEW): a menu to work experiment with NURBS curves and surfaces
+- mesh_menu: REMOVED (functionality moved into geometry_menu)
+- formex_menu: some functionality moved into geometry_menu
+- draw2d_menu: added drawing of Nurbs curves
+- nurbs_menu (NEW): a menu to work experiment with NURBS curves and
+  surfaces
+- tools_menu: added an entry to display an image file
+- jobs_menu: added some configurability
+
+
+Plugins
+-------
+- mesh_ext: holds some extensions to the mesh module. Most of this
+  functionality will be merged into the mesh module before we reach
+  release 1.0.
+- nurbs: a plugin to work with NURBS curves and surfaces. UNDER DEVELOPMENT!
+  Defines Coords4, Geometry4, NurbsCurve and NurbsSurface classes.
+  Functions: globalInterpolationCurve, knotVector,
+  pointsOnBezierCurve, deCasteljou, curveToNurbs, frenet
+- fe_abq: too many enhancements to mention them here
 - fe_ast (NEW): a plugin to interface with code_aster
 - calpy_itf: added the QuadInterpolator class
+- geomtools: new functions: areaNormals, polygonNormals,
+  isInsideTriangle
+- objects: changed the way annotations are registered
+- trisurface: moved lots of functions into mesh module, added new
+  functions: nonManifoldEdges, checkSelfIntersectionsWithTetgen
 
 
 External
 --------
-- calix can be called and postprocessed, see FeEx example
-- gambit-neu scripts in pyformex/bin
 
 
 Examples
 --------
 New examples:
-- SplineSurface
-.. - RotoTranslation
-.. - SurfaceProjection
-.. - BezierSpline
-.. - Carpetry
+- BezierCurve
+- Casteljou
+- DataInterpolation
+- InputDialog
+- MeshMatch
+- NurbsCurve
+- NurbsSurface
 
-- FeEx: 
-  - direct run and postprocessing of calix jobs 
-  - 
+
 
 .. End

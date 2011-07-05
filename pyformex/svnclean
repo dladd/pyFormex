@@ -4,6 +4,6 @@ echo "CLEANING pyFormex SVN TREE"
 pyformexdir=$(dirname $0)
 cd $pyformexdir
 pwd
-rm -f misc.pyc scriptsmenu.pyc gui/gui.pyc gui/help.pyc gui/messages.pyc plugins/surface.pyc plugins/mesh.pyc 
+rm -f misc.pyc scriptsmenu.pyc gui/gui.pyc gui/help.pyc gui/messages.pyc plugins/surface.pyc plugins/mesh.pyc plugins/mesh_menu.pyc 
 echo "CLEANING DONE"
 

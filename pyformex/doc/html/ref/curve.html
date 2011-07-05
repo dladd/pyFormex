@@ -65,6 +65,344 @@ higher order curves and collections thereof. In general, the curves are 3D,
 but special cases may be created for handling plane curves.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">curve</span></tt></p>
 <dl class="class">
+<dt id="curve.Curve">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Curve</tt><a class="headerlink" href="#curve.Curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for curve type classes.</p>
+<p>This is a virtual class intended to be subclassed.
+It defines the common definitions for all curve types.
+The subclasses should at least define the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sub_points</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="curve.Curve.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values t in part j</p>
+<p>t can be an array of parameter values, j is a single segment number.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.sub_points_2">
+<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values,parts given by zip(t,j)</p>
+<p>t and j can both be arrays, but should have the same length.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.sub_directions">
+<tt class="descname">sub_directions</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the directions at values t in part j</p>
+<p>t can be an array of parameter values, j is a single segment number.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.sub_directions_2">
+<tt class="descname">sub_directions_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_directions_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the directions at values,parts given by zip(t,j)</p>
+<p>t and j can both be arrays, but should have the same length.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.pointsAt">
+<tt class="descname">pointsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Curve.pointsAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at parameter values t.</p>
+<p>Parameter values are floating point values. Their integer part
+is interpreted as the curve segment number, and the decimal part
+goes from 0 to 1 over the segment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.directionsAt">
+<tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Curve.directionsAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at parameter values t.</p>
+<p>Parameter values are floating point values. Their integer part
+is interpreted as the curve segment number, and the decimal part
+goes from 0 to 1 over the segment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.subPoints">
+<tt class="descname">subPoints</tt><big>(</big><em>div=10, extend=[0.0, 0.0]</em><big>)</big><a class="headerlink" href="#curve.Curve.subPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a series of points on the Curve.</p>
+<p>The parameter space of each segment is divided into ndiv parts.
+The coordinates of the points at these parameter values are returned
+as a Coords object.
+The extend parameter allows to extend the curve beyond the endpoints.
+The normal parameter space of each part is [0.0 .. 1.0]. The extend
+parameter will add a curve with parameter space [-extend[0] .. 0.0]
+for the first part, and a curve with parameter space
+[1.0 .. 1 + extend[0]] for the last part.
+The parameter step in the extensions will be adjusted slightly so
+that the specified extension is a multiple of the step size.
+If the curve is closed, the extend parameter is disregarded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.length">
+<tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total length of the curve.</p>
+<p>This is only available for curves that implement the &#8216;lengths&#8217;
+method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.approx">
+<tt class="descname">approx</tt><big>(</big><em>ndiv=None</em>, <em>ntot=None</em><big>)</big><a class="headerlink" href="#curve.Curve.approx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PolyLine approximation of the curve</p>
+<p>If no <cite>ntot</cite> is given, the curve is approximated by <cite>ndiv</cite>
+straight segments over each part of the curve.
+If <cite>ntot</cite> is given, the curve is approximated by <cite>ntot</cite>
+straight segments over the total curve. This is based on a
+first approximation with ndiv segments over each part.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.toFormex">
+<tt class="descname">toFormex</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a curve to a Formex.</p>
+<p>This creates a polyline approximation as a plex-2 Formex.
+This is mainly used for drawing curves that do not implement
+their own drawing routines.</p>
+<p>The method can be passed the same arguments as the <cite>approx</cite> method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.affine">
+<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;affine&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.affine" title="coords.Coords.affine"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.affine()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.align">
+<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;align&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.align" title="coords.Coords.align"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.align()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.bump">
+<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.bump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;bump&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump" title="coords.Coords.bump"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.bump1">
+<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.bump1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;bump1&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump1" title="coords.Coords.bump1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump1()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.bump2">
+<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.bump2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;bump2&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump2" title="coords.Coords.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump2()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.cylindrical">
+<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.cylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;cylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.cylindrical" title="coords.Coords.cylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.cylindrical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.egg">
+<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.egg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;egg&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.egg" title="coords.Coords.egg"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.egg()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.flare">
+<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.flare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;flare&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.flare" title="coords.Coords.flare"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.flare()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.hyperCylindrical">
+<tt class="descname">hyperCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;hyperCylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.hyperCylindrical()</span></tt> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.isopar">
+<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.isopar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;isopar&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.isopar" title="coords.Coords.isopar"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.isopar()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.map">
+<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;map&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.map" title="coords.Coords.map"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.map1">
+<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.map1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;map1&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map1()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.mapd">
+<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.mapd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;mapd&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.mapd" title="coords.Coords.mapd"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.mapd()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.projectOnCylinder">
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.projectOnSphere">
+<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnSphere" title="coords.Coords.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnSphere()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.reflect">
+<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;reflect&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.reflect" title="coords.Coords.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.reflect()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.replace">
+<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;replace&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.replace" title="coords.Coords.replace"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.replace()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.rollAxes">
+<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.rollAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;rollAxes&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rollAxes" title="coords.Coords.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rollAxes()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.rot">
+<tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.rot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.rotate">
+<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.scale">
+<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;scale&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.scale" title="coords.Coords.scale"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.scale()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.shear">
+<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.shear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;shear&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.shear" title="coords.Coords.shear"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.shear()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.spherical">
+<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;spherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.spherical" title="coords.Coords.spherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.spherical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.superSpherical">
+<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.superSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;superSpherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.superSpherical" title="coords.Coords.superSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.superSpherical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.swapAxes">
+<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.swapAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;swapAxes&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.swapAxes" title="coords.Coords.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.swapAxes()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.toCylindrical">
+<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;toCylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.toCylindrical" title="coords.Coords.toCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toCylindrical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.toSpherical">
+<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.toSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;toSpherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.toSpherical" title="coords.Coords.toSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toSpherical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.transformCS">
+<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.transformCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;transformCS&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.transformCS" title="coords.Coords.transformCS"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.transformCS()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.translate">
+<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.trl">
+<tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.trl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.write">
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#curve.Curve.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Geometry to a .pgf file.</p>
+<p>If fil is a string, a file with that name is opened. Else fil should
+be an open file.
+The Geometry is then written to that file in a native format, using
+sep as separator between the coordinates.
+If fil is a string, the file is closed prior to returning.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="curve.PolyLine">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">PolyLine</tt><big>(</big><em>coords=</em><span class="optional">[</span><span class="optional">]</span>, <em>control=None</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a series of straight line segments.</p>
@@ -320,6 +658,13 @@ goes from 0 to 1 over the segment.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.PolyLine.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.PolyLine.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.PolyLine.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.PolyLine.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
@@ -491,10 +836,18 @@ If fil is a string, the file is closed prior to returning.</p>
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Polygon</tt><big>(</big><em>coords=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#curve.Polygon" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Polygon is a closed PolyLine.</p>
 <dl class="method">
-<dt id="curve.Polygon.planarArea">
-<tt class="descname">planarArea</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#curve.Polygon.planarArea" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the area of a planar Polygon.</p>
-<p>n is the normal vector of the polygon plane.</p>
+<dt id="curve.Polygon.area">
+<tt class="descname">area</tt><big>(</big><em>project=None</em><big>)</big><a class="headerlink" href="#curve.Polygon.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute area inside a polygon.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>project</cite>: (3,) Coords array representing a unit direction vector.</li>
+</ul>
+<p>Returns: a single float value with the area inside the polygon. If a
+direction vector is given, the area projected in that direction is
+returned.</p>
+<p>Note that if the polygon is nonplanar and no direction is given,
+the area inside the polygon is not well defined.</p>
 </dd></dl>
 
 <dl class="method">
@@ -625,6 +978,13 @@ goes from 0 to 1 over the segment.</p>
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Polygon.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Polygon.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Polygon.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1009,11 +1369,8 @@ an empty Coords if degree &lt;= 1.</p>
 
 <dl class="method">
 <dt id="curve.BezierSpline.sub_curvature">
-<tt class="descname">sub_curvature</tt><big>(</big><em>t</em>, <em>j</em>, <em>scalar=True</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.sub_curvature" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">sub_curvature</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.sub_curvature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the curvature at values t in part j.</p>
-<p>If scalar is False, the signed curvatures in the 3 coordinate
-planes (YZ,XZ,XY) are returned.
-If scalar is True, the 3D curvature is returned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1184,6 +1541,13 @@ goes from 0 to 1 over the segment.</p>
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1501,6 +1865,13 @@ goes from 0 to 1 over the segment.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.QuadBezierSpline.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.QuadBezierSpline.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
@@ -1711,11 +2082,8 @@ an empty Coords if degree &lt;= 1.</p>
 
 <dl class="method">
 <dt id="curve.QuadBezierSpline.sub_curvature">
-<tt class="descname">sub_curvature</tt><big>(</big><em>t</em>, <em>j</em>, <em>scalar=True</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_curvature" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">sub_curvature</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_curvature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the curvature at values t in part j.</p>
-<p>If scalar is False, the signed curvatures in the 3 coordinate
-planes (YZ,XZ,XY) are returned.
-If scalar is True, the 3D curvature is returned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1898,6 +2266,13 @@ goes from 0 to 1 over the segment.</p>
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2111,11 +2486,8 @@ an empty Coords if degree &lt;= 1.</p>
 
 <dl class="method">
 <dt id="curve.CardinalSpline.sub_curvature">
-<tt class="descname">sub_curvature</tt><big>(</big><em>t</em>, <em>j</em>, <em>scalar=True</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.sub_curvature" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">sub_curvature</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.sub_curvature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the curvature at values t in part j.</p>
-<p>If scalar is False, the signed curvatures in the 3 coordinate
-planes (YZ,XZ,XY) are returned.
-If scalar is True, the 3D curvature is returned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2299,6 +2671,13 @@ goes from 0 to 1 over the segment.</p>
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline2.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2620,6 +2999,13 @@ goes from 0 to 1 over the segment.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.NaturalSpline.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.NaturalSpline.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
@@ -2938,6 +3324,13 @@ goes from 0 to 1 over the segment.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.Arc3.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Arc3.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.Arc3.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Arc3.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
@@ -3253,6 +3646,13 @@ goes from 0 to 1 over the segment.</p>
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Arc.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Arc.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Arc.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
@@ -3581,6 +3981,13 @@ goes from 0 to 1 over the segment.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="curve.Spiral.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Spiral.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="curve.Spiral.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Spiral.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
@@ -3747,337 +4154,6 @@ their own drawing routines.</p>
 <dl class="method">
 <dt id="curve.Spiral.write">
 <tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#curve.Spiral.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a Geometry to a .pgf file.</p>
-<p>If fil is a string, a file with that name is opened. Else fil should
-be an open file.
-The Geometry is then written to that file in a native format, using
-sep as separator between the coordinates.
-If fil is a string, the file is closed prior to returning.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="curve.Curve">
-<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Curve</tt><a class="headerlink" href="#curve.Curve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base class for curve type classes.</p>
-<p>This is a virtual class intended to be subclassed.
-It defines the common definitions for all curve types.
-The subclasses should at least define the following:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">sub_points</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="curve.Curve.sub_points">
-<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at values t in part j</p>
-<p>t can be an array of parameter values, j is a single segment number.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.sub_points_2">
-<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points_2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at values,parts given by zip(t,j)</p>
-<p>t and j can both be arrays, but should have the same length.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.sub_directions">
-<tt class="descname">sub_directions</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_directions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the directions at values t in part j</p>
-<p>t can be an array of parameter values, j is a single segment number.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.sub_directions_2">
-<tt class="descname">sub_directions_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_directions_2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the directions at values,parts given by zip(t,j)</p>
-<p>t and j can both be arrays, but should have the same length.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.pointsAt">
-<tt class="descname">pointsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Curve.pointsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
-<p>Parameter values are floating point values. Their integer part
-is interpreted as the curve segment number, and the decimal part
-goes from 0 to 1 over the segment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.directionsAt">
-<tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Curve.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
-<p>Parameter values are floating point values. Their integer part
-is interpreted as the curve segment number, and the decimal part
-goes from 0 to 1 over the segment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.subPoints">
-<tt class="descname">subPoints</tt><big>(</big><em>div=10, extend=[0.0, 0.0]</em><big>)</big><a class="headerlink" href="#curve.Curve.subPoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a series of points on the Curve.</p>
-<p>The parameter space of each segment is divided into ndiv parts.
-The coordinates of the points at these parameter values are returned
-as a Coords object.
-The extend parameter allows to extend the curve beyond the endpoints.
-The normal parameter space of each part is [0.0 .. 1.0]. The extend
-parameter will add a curve with parameter space [-extend[0] .. 0.0]
-for the first part, and a curve with parameter space
-[1.0 .. 1 + extend[0]] for the last part.
-The parameter step in the extensions will be adjusted slightly so
-that the specified extension is a multiple of the step size.
-If the curve is closed, the extend parameter is disregarded.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.length">
-<tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the total length of the curve.</p>
-<p>This is only available for curves that implement the &#8216;lengths&#8217;
-method.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.approx">
-<tt class="descname">approx</tt><big>(</big><em>ndiv=None</em>, <em>ntot=None</em><big>)</big><a class="headerlink" href="#curve.Curve.approx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a PolyLine approximation of the curve</p>
-<p>If no <cite>ntot</cite> is given, the curve is approximated by <cite>ndiv</cite>
-straight segments over each part of the curve.
-If <cite>ntot</cite> is given, the curve is approximated by <cite>ntot</cite>
-straight segments over the total curve. This is based on a
-first approximation with ndiv segments over each part.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.toFormex">
-<tt class="descname">toFormex</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.toFormex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a curve to a Formex.</p>
-<p>This creates a polyline approximation as a plex-2 Formex.
-This is mainly used for drawing curves that do not implement
-their own drawing routines.</p>
-<p>The method can be passed the same arguments as the <cite>approx</cite> method.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.affine">
-<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.affine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;affine&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.affine" title="coords.Coords.affine"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.affine()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.align">
-<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.align" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;align&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.align" title="coords.Coords.align"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.align()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.bump">
-<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.bump" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;bump&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.bump" title="coords.Coords.bump"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.bump1">
-<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.bump1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;bump1&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.bump1" title="coords.Coords.bump1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump1()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.bump2">
-<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.bump2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;bump2&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.bump2" title="coords.Coords.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump2()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.cylindrical">
-<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.cylindrical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;cylindrical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.cylindrical" title="coords.Coords.cylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.cylindrical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.egg">
-<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.egg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;egg&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.egg" title="coords.Coords.egg"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.egg()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.flare">
-<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.flare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;flare&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.flare" title="coords.Coords.flare"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.flare()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.hyperCylindrical">
-<tt class="descname">hyperCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;hyperCylindrical&#8217; transformation to the Geometry object.</p>
-<p>See <tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.hyperCylindrical()</span></tt> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.isopar">
-<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.isopar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;isopar&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.isopar" title="coords.Coords.isopar"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.isopar()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.map">
-<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;map&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.map" title="coords.Coords.map"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.map1">
-<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.map1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;map1&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map1()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.mapd">
-<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.mapd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;mapd&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.mapd" title="coords.Coords.mapd"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.mapd()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.projectOnCylinder">
-<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.projectOnSphere">
-<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.projectOnSphere" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnSphere" title="coords.Coords.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnSphere()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.reflect">
-<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.reflect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;reflect&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.reflect" title="coords.Coords.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.reflect()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.replace">
-<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.replace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;replace&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.replace" title="coords.Coords.replace"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.replace()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.rollAxes">
-<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.rollAxes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;rollAxes&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.rollAxes" title="coords.Coords.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rollAxes()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.rot">
-<tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.rot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.rotate">
-<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.rotate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.scale">
-<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;scale&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.scale" title="coords.Coords.scale"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.scale()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.shear">
-<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.shear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;shear&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.shear" title="coords.Coords.shear"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.shear()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.spherical">
-<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.spherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;spherical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.spherical" title="coords.Coords.spherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.spherical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.superSpherical">
-<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.superSpherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;superSpherical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.superSpherical" title="coords.Coords.superSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.superSpherical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.swapAxes">
-<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.swapAxes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;swapAxes&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.swapAxes" title="coords.Coords.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.swapAxes()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.toCylindrical">
-<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.toCylindrical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;toCylindrical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.toCylindrical" title="coords.Coords.toCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toCylindrical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.toSpherical">
-<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.toSpherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;toSpherical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.toSpherical" title="coords.Coords.toSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toSpherical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.transformCS">
-<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.transformCS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;transformCS&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.transformCS" title="coords.Coords.transformCS"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.transformCS()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.translate">
-<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.translate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.trl">
-<tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.Curve.trl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.Curve.write">
-<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#curve.Curve.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a Geometry to a .pgf file.</p>
 <p>If fil is a string, a file with that name is opened. Else fil should
 be an open file.

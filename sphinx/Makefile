@@ -24,6 +24,7 @@ SVNDOC= ../pyformex/doc/html
 UPLOAD= shell.berlios.de:/home/groups
 DOCUPLOAD= ${UPLOAD}/pyformex/htdocs/doc
 FTPUPLOAD= ${UPLOAD}/ftp/pub/pyformex
+FTPLOCAL= bumps.ugent.be:/var/ftp/pub/pyformex
 
 .PHONY: help clean ref html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
 
@@ -111,7 +112,7 @@ doctest:
 
 pdf: ${PDF}
 
-${PDF}: latex
+${PDF}: #latex
 	make -C _build/latex all-pdf
 
 
@@ -138,7 +139,7 @@ pubpdf: ${PDF}
 	${RSYNC} -t $< ${FTPUPLOAD}
 
 # and to our ftp server
-publocal:
-	rsync -lt pyformex.pdf ${FTPLOCAL}
+publocal: ${PDF}
+	rsync -lt $< ${FTPLOCAL}
 
 # End

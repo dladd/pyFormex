@@ -543,10 +543,11 @@ for the <cite>gts</cite> methods to be applicable.</p>
 <dt id="trisurface.TriSurface.check">
 <tt class="descname">check</tt><big>(</big><em>verbose=False</em>, <em>matched=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the surface using gtscheck.</p>
-<p>Checks whether the surface is orientable,
-non self-intersecting manifold. For the use of the <cite>gts</cite> methods (split, 
-coarsen, refine, boolean), this is a necessary condition; additionally,
-the surface has to be closed (check this with the <a class="reference internal" href="#trisurface.TriSurface.isClosedManifold" title="trisurface.TriSurface.isClosedManifold"><tt class="xref py py-meth docutils literal"><span class="pre">isClosedManifold()</span></tt></a>).</p>
+<p>Checks whether the surface is an orientable,
+non self-intersecting manifold.</p>
+<p>For the use of the <cite>gts</cite> methods (split, coarsen, refine, boolean),
+this is a necessary condition; additionally, the surface has to be
+closed (can be checked with <a class="reference internal" href="#trisurface.TriSurface.isClosedManifold" title="trisurface.TriSurface.isClosedManifold"><tt class="xref py py-meth docutils literal"><span class="pre">isClosedManifold()</span></tt></a>).</p>
 <p>Returns 0 if the surface passes the test, nonzero if not.
 A full report is printed out.</p>
 <p>If surface is not an orientable manifold returns 512.
@@ -789,6 +790,13 @@ firstprop.</p>
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1097,8 +1105,8 @@ requests can return it without the need for computing it again.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.getBorder">
-<tt class="descname">getBorder</tt><big>(</big><em>return_indices=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getBorder" title="Permalink to this definition">¶</a></dt>
+<dt id="trisurface.TriSurface.getFreeEntities">
+<tt class="descname">getFreeEntities</tt><big>(</big><em>return_indices=False</em>, <em>level=-1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getFreeEntities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the border of the Mesh.</p>
 <p>This returns a Connectivity table with the border of the Mesh.
 The border entities are of a lower hierarchical level than the
@@ -1109,12 +1117,12 @@ for inverse lookup of the higher entity (column 0) and its local
 border part number (column 1).</p>
 <p>The returned Connectivity can be used together with the
 Mesh.coords to construct a Mesh of the border geometry.
-See also <a class="reference internal" href="#trisurface.TriSurface.getBorderMesh" title="trisurface.TriSurface.getBorderMesh"><tt class="xref py py-meth docutils literal"><span class="pre">getBorderMesh()</span></tt></a>.</p>
+See also <tt class="xref py py-meth docutils literal"><span class="pre">getBorderMesh()</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.getBorderMesh">
-<tt class="descname">getBorderMesh</tt><big>(</big><em>compact=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getBorderMesh" title="Permalink to this definition">¶</a></dt>
+<dt id="trisurface.TriSurface.getFreeEntitiesMesh">
+<tt class="descname">getFreeEntitiesMesh</tt><big>(</big><em>compact=True</em>, <em>level=-1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getFreeEntitiesMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh with the border elements.</p>
 <p>Returns a Mesh representing the border of the Mesh.
 The returned Mesh is of the next lower hierarchical level.
@@ -1373,7 +1381,7 @@ off for efficiency reasons.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.convert">
-<tt class="descname">convert</tt><big>(</big><em>totype</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.convert" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">convert</tt><big>(</big><em>totype</em>, <em>fuse=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.convert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a Mesh to another element type.</p>
 <p>Converting a Mesh from one element type to another can only be
 done if both element types are of the same dimensionality.
@@ -1386,6 +1394,13 @@ in a table. New strategies may be added however.</p>
 <p>The return value is a Mesh of the requested element type, representing
 the same geometry (possibly approximatively) as the original mesh.</p>
 <p>If the requested conversion is not implemented, an error is raised.</p>
+<dl class="docutils">
+<dt>..warning: Conversion strategies that add new nodes may produce</dt>
+<dd>double nodes at the common border of elements. The <a class="reference internal" href="#trisurface.TriSurface.fuse" title="trisurface.TriSurface.fuse"><tt class="xref py py-meth docutils literal"><span class="pre">fuse()</span></tt></a>
+method can be used to merge such coincident nodes. Specifying
+fuse=True will also enforce the fusing. This option become the
+default in future.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1845,10 +1860,10 @@ Beware: this may take a lot of time if level is 8 or higher.</p>
     <h3><a href="../index.html">Documentation</a></h3>
   <h4>Previous topic</h4>
   <p class="topless"><a href="mesh_ext.html"
-                        title="previous chapter">31. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mesh_ext</span></tt> &#8212; Extended functionality of the Mesh class.</a></p>
+                        title="previous chapter">31. <tt class="docutils literal"><span class="pre">mesh_ext</span></tt> &#8212; Extended functionality of the Mesh class.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="geomtools.html"
-                        title="next chapter">33. <tt class="docutils literal docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
+                        title="next chapter">33. <tt class="docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
