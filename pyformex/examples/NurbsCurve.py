@@ -118,8 +118,14 @@ def show():
     drawNurbs(**res)
 
 def showAll():
+    dialog.acceptData()
+    res = dialog.results
+    export({'_Nurbs_data_':res})
     for points in predefined:
-        drawNurbs(points,degree=2,closed=False,blended=True,weighted=False,strategy=0.5,Clear=True)
+        print res
+        res['points'] = points
+        drawNurbs(**res)
+
 
 def timeOut():
     showAll()

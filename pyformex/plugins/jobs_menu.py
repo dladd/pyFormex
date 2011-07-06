@@ -119,10 +119,9 @@ def getFiles(server,userdir,files,targetdir):
 
     files is a list of file names.
     """
-    print(server,userdir,files,targetdir)
-    files = [ '%s:%s/%s' % (server,userdir,f) for f in files ]
-    cmd = "scp %s %s/" % (' '.join(files),targetdir)
-    sta,out = utils.runCommand(cmd,False)
+    files = [ '%s:%s/%s' % (server,userdir.rstrip('/'),f) for f in files ]
+    cmd = "scp %s %s" % (' '.join(files),targetdir)
+    sta,out = utils.runCommand(cmd)
     return sta==0
 
 
@@ -225,28 +224,38 @@ def checkResultsOnServer(server=None,userdir=None):
         the_userdir = None
         the_jobnames = None
     pf.message(the_jobnames)
-        
+       
+
+def changeTargetDir(fn):
+    from gui import draw
+    return draw.askDirname(fn)
     
 
 def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
     """Get results back from cluster."""
     global the_jobname
+    print "getRESULTS"
     if targetdir is None:
         targetdir = pf.cfg['workdir']
     if jobname is None:
         if the_jobnames is None:
-            jobname_input = [('server',pf.cfg['jobs/host']),
-                             ('userdir','bumper/results'),
-                             ('jobname',''),
-                             ]
+            jobname_input = [
+                ('server',pf.cfg['jobs/host']),
+                ('userdir','bumper/results'),
+                ('jobname',''),
+                ]
         else:
-            jobname_input = [('jobname',the_jobname,'select',the_jobnames)]
+            jobname_input = [
+                dict(name='jobname',value=the_jobname,choices=the_jobnames)
+                ]
 
-        res = askItems(jobname_input + [('target dir',targetdir),
-                                        ('.fil',True),
-                                        ('.post',True),
-                                        ('_post.py',False),
-                                        ])
+        print jobname_input
+        res = askItems(jobname_input + [
+            dict(name='target dir',value=targetdir,itemtype='button',func=changeTargetDir),
+            ('.fil',True),
+            ('.post',True),
+            ('_post.py',False),
+            ])
         if res:
             server = res.get('server',the_server)
             userdir = res.get('userdir',the_userdir)
@@ -273,7 +282,7 @@ def create_menu():
         ("&Configure Job Plugin",configure),
         ("&Submit Abaqus Job",submitToCluster),
         ("&Kill Cluster Job",killClusterJob),
-        ("&Check result cases on server",checkResultsOnServer),
+        ("&List available results on server",checkResultsOnServer),
         ("&Get results from server",getResultsFromServer),
         ("&Execute remote command",remoteCommand),
         ("---",None),

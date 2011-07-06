@@ -25,9 +25,19 @@
 
 import pyformex as pf
 
-import os,commands,re,sys
+import os,re,sys
 from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
+
+
+### execute a system command ###
+def system(cmd):
+    pf.debug("COMMAND: %s" % cmd)
+    import subprocess
+    P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE) # or .STDOUT to redirect 
+    sta = P.wait() # wait for the process to finish
+    out = P.communicate()[0] # get the stdout
+    return sta,out
 
 
 # versions of detected modules/external commands
@@ -192,7 +202,7 @@ def checkExternal(name=None,command=None,answer=None):
         if answer is None:
             answer = ans
 
-    m = re.match(answer,commands.getoutput(command))
+    m = re.match(answer,system(command)[1])
     if m:
         version = m.group(1)
     else:
@@ -533,21 +543,25 @@ def countLines(fn):
 
 
 def runCommand(cmd,RaiseError=True,quiet=False):
-    """Run a command and raise error if exited with error."""
+    """Run a command and raise error if exited with error.
+
+    cmd is a string with the command to be run. The command is run
+    in the background, waiting for the result. If no error occurs,
+    the exit status and stdout are returned.
+    Else an error is raised by default.
+    """
+    import subprocess
     if not quiet:
         pf.message("Running command: %s" % cmd)
-    sta,out = commands.getstatusoutput(cmd)
-    exitcode = sta >> 8
-    signal = sta % 256
-    coredump = bool(sta & 128)
+    sta,out = system(cmd)
     if sta != 0:
-        pf.message(out)
-        pf.message("Command exited with an error (exitcode %s, signal %s, coredump %s)\nOutput:\n%s" % (exitcode,signal,coredump,out))
+        if not quiet:
+            pf.message(out)
+            pf.message("Command exited with an error (exitcode %s)" % sta)
         if RaiseError:
             raise RuntimeError, "Error while executing command:\n  %s" % cmd
-    if signal or coredump:
-        exitcode = -1
-    return exitcode,out
+    return sta,out
+
 
 def spawn(cmd):
     """Spawn a child process."""

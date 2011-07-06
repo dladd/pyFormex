@@ -40,7 +40,7 @@ from mesh import Mesh
 
 ########################
 
-import threading,os,commands,copy,re,time
+import threading,os,copy,re,time
 
 ######################### Exceptions #########################################
 
@@ -225,12 +225,13 @@ def system(cmdline,result='output'):
     If result == 'output', the output of the command is returned.
     If result == 'both', a tuple of status and output is returned.
     """
+    sta,out = utils.system(cmdline)
     if result == 'status':
-        return os.system(cmdline)
+        return sta
     elif result == 'output':
-        return commands.getoutput(cmdline)
+        return out
     elif result == 'both':
-        return commands.getstatusoutput(cmdline)
+        return sta,out
 
 
 ########################### PLAYING SCRIPTS ##############################

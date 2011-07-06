@@ -2,7 +2,7 @@
 VERSION=0.8.4
 # Unless you are creating an official release, a tail should be added
 # to the ${VERSION} to set a release tag. e.g. -alpha, -rc1
-RELEASE=${VERSION}-a3
+RELEASE=${VERSION}-a4
 
 PROGRAM= pyformex.py
 VENDOR= pyformex
