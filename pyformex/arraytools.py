@@ -351,18 +351,25 @@ def solveMany(A,b):
     A is a (M,M,...) shaped array.
     b is a (M,...) shaped array.
     
-    This solves all equations A[:,:,i].x = b[:,i].
     The return value is a (M,...) shaped array.
     """
-    shape = b.shape
-    n = shape[0]
-    if A.shape != (n,)+shape:
+    M = b.shape[0]
+    if A.shape[:2] != (M,M):
         raise ValueError,"A(%s) and b(%s) have incompatible shape" % (A.shape,b.shape)
-    A = A.reshape(n,n,-1)
-    b = b.reshape(n,-1)
-    x = column_stack([ linalg.solve(A[:,:,i],b[:,i]) for i in range(b.shape[1])])
-    return x.reshape(shape)
-
+    b = addAxis(b,1)
+    if M == 1:
+        return b[0]/A[0,0]
+    elif M == 2:
+        denom = cross(A[:,0],A[:,1],axis=0)
+        As = roll(A,-1,axis=1)
+        As[:,1] *= -1.
+        return cross(b,As,axis=0) / denom
+    elif M == 3:
+        C = cross(roll(A,-1,axis=1),roll(A,-2,axis=1),axis=0)
+        denom = dotpr(A[:,0],C[:,0],axis=0)
+        return dotpr(b,C,axis=0) / denom
+    else:
+        raise RuntimeError,"Function is not implemented for dimension %s." % M
 
 
 def inside(p,mi,ma):

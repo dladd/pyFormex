@@ -399,16 +399,16 @@ def intersectionTimesLWL(q1,m1,q2,m2):
     m1 = m1[:,newaxis]
     q2 = q2[newaxis]
     m2 = m2[newaxis]
-    dot1 = dotpr(m1,m1)
-    dot2 = dotpr(m2,m2)
+    dot11 = dotpr(m1,m1)
+    dot22 = dotpr(m2,m2)
     dot12 = dotpr(m1,m2)
-    denom = (dot12**2-dot1*dot2)
+    denom = (dot12**2-dot11*dot22)
     q12 = q2-q1
-    dot1 = dot1[:,:,newaxis]
-    dot2 = dot2[:,:,newaxis]
+    dot11 = dot11[:,:,newaxis]
+    dot22 = dot22[:,:,newaxis]
     dot12 = dot12[:,:,newaxis]
-    t1 = dotpr(q12,m2*dot12-m1*dot2) / denom
-    t2 = dotpr(q12,m2*dot1-m1*dot12) / denom
+    t1 = dotpr(q12,m2*dot12-m1*dot22) / denom
+    t2 = dotpr(q12,m2*dot11-m1*dot12) / denom
     return t1,t2
 
 
@@ -509,7 +509,7 @@ def intersectionPointsSWP(S,p,n,return_all=False):
         ok = (t >= 0.0) * (t <= 1.0)
         points = points[ok]
     return points
-     
+
 
 def intersectionPointsPWP(p1,n1,p2,n2,p3,n3):
     """Return the intersection points of planes (p1,n1), (p2,n2) and (p3,n3).
@@ -652,7 +652,8 @@ def faceDistance(X,Fp,return_points=False):
     # Find intersection points Y inside the facets
     from timer import Timer
     t = Timer()
-    inside = row_stack([isInsideTriangle(Fp,y) for y in Y])
+##    inside = row_stack([isInsideTriangle(Fp,y) for y in Y])
+    inside = insideSimplex(baryCoords(Fp,Y))
     print "  inside: %s seconds" % t.seconds()
     pid = where(inside)[0]
     X = X[pid]
@@ -733,57 +734,50 @@ def vertexDistance(X,Vp,return_points=False):
     return OKdist,
 
 
-############################################
+#################### barycentric coordinates ###############
 
-# BV: removed in 0.8.4
+def baryCoords(S,P):
+    """Compute the barycentric coordinates of points  P wrt. simplexes S.
 
-## def baryCoords(S,P):
-##     """Return the barycentric coordinates of points P wrt. simplexes S.
+    S is a (nel,nplex,3) shaped array of n-simplexes (n=nplex-1):
+    - 1-simplex: line segment
+    - 2-simplex: triangle
+    - 3-simplex: tetrahedron
+    P is a (npts,3), (npts,nel,3) or (npts,1,3) shaped array of points.
+
+    The return value is a (nplex,npts,nel) shaped array of barycentric coordinates.
+    """
+    if len(S.shape) != 3:
+        raise ValueError,"S should be a 3-dim array, got shape %s" % str(S.shape) 
+    if len(P.shape) == 2:
+        P = P.reshape(-1,1,3)
+    elif P.shape[1] != S.shape[0] and P.shape[1] != 1:
+        raise ValueError,"Second dimension of P should be first dimension of S or 1."
+    S = S.transpose(1,0,2) # (nplex,nel,3)
+    vp = P - S[0]
+    vs = S[1:] - S[:1]
+    A = dotpr(vs[:,newaxis],vs[newaxis])
+    b = dotpr(vp[newaxis],vs[:,newaxis]) # (nplex-1,npts,nel)
+    A = addAxis(A,2) # (nplex-1,nplex-1,1,nel)
+    t = solveMany(A,b)
+    t0 = (1.-t.sum(0))
+    t0 = addAxis(t0,0)
+    t = row_stack([t0,t])
+    return t
+
+
+def insideSimplex(BC,bound=True):
+    """Check if points are in simplexes.
     
-##     S is a (nel,nplex,3) shaped array of n-simplexes (n=nplex-1) e.g.:
-
-##     - 1-simplex: line segment
-##     - 2-simplex: triangle
-##     - 3-simplex: tetrahedron
-
-##     P is a (npts,nel,3) shaped array of points.
-    
-##     The return value is a (npts,nel,nplex) shaped array of barycentric
-##     coordinates BC, such that the points P are given by ::
-    
-##        (BC[:,:,:,newaxis]*S).sum(-2)
-       
-##     """
-##     if S.shape[0] != P.shape[1]:
-##         raise RuntimeError,"Expected S and P with same number of elements."
-##     # Make S and P arrays with the same number of dimensions
-##     S = S.transpose(1,0,2)[:,newaxis] # (nplex,1,nel,3)
-##     P = P[newaxis] # (1,npts,nel,3)
-##     # Compute matrices
-##     vs = S[1:] - S[0:1] # (dim,1,nel,3)
-##     vp = P - S[0:1] # (1,npts,nel,3)
-##     A = dotpr(vs[:,newaxis],vs[newaxis,:]) # (dim,dim,1,nel)
-##     A = repeat(A,P.shape[1],2) # (dim,dim,npts,nel)
-##     b = dotpr(vs,vp) # (dim,npts,nel)
-##     # Compute barycentric coordinates
-##     t = solveMany(A,b) # (dim,npts,nel)
-##     t = asarray(t).transpose(1,2,0) # (npts,nel,dim)
-##     t0 = 1.-t.sum(-1)
-##     return dstack([t0,t])
-
-
-## def insideSimplex(BC,bound=True):
-##     """Check if points are in simplexes.
-    
-##     BC is an array of barycentric coordinates, which sum up to one.
-##     If bound = True, a point lying on the boundary is considered to
-##     be inside the simplex.
-##     """
-##     if bound:
-##         return (BC >= 0.).all(-1)
-##     else:
-##         return (BC > 0.).all(-1)
-
+    BC is an array of barycentric coordinates (along the first axis),
+    which sum up to one.
+    If bound = True, a point lying on the boundary is considered to
+    be inside the simplex.
+    """
+    if bound:
+        return (BC >= 0.).all(0)
+    else:
+        return (BC > 0.).all(0)
 
 
 # End
