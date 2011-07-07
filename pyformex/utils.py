@@ -560,7 +560,7 @@ def runCommand(cmd,RaiseError=True,quiet=False):
             pf.message("Command exited with an error (exitcode %s)" % sta)
         if RaiseError:
             raise RuntimeError, "Error while executing command:\n  %s" % cmd
-    return sta,out
+    return sta,out.rstrip('\n')
 
 
 def spawn(cmd):
