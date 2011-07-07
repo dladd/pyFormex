@@ -199,22 +199,6 @@ def triangleObtuse(x):
     return (vv[:,0] > vv[:,1]+vv[:,2]) + (vv[:,1] > vv[:,2]+vv[:,0]) + (vv[:,2] > vv[:,0]+vv[:,1])
 
 
-def isInsideTriangle(x,P):
-    """Checks whether the points are inside triangles.
-
-    x is a Coords array with shape (ntri,3,3) representing ntri triangles.
-    P is a Coords array with shape (ntri,3) representing ntri points lying
-    in the planes of the triangles.
-    This function checks whether these points fall inside the triangles.
-
-    Returns array with ntri bool values.
-    """
-    xx = [ cross(x[:,i]-P,x[:,j]-P) for (i,j) in ((0,1),(1,2),(2,0)) ]
-    xy = (xx[0]*xx[1]).sum(axis=-1)
-    yz = (xx[1]*xx[2]).sum(axis=-1)
-    return (column_stack([xy,yz]) > 0).all(axis=-1)
-
-
 def lineIntersection(P1,D1,P2,D2):
     """Finds the intersection of 2 coplanar lines.
 
@@ -627,7 +611,30 @@ def intersectionTimesPOL(p,q,m):
 #################### distance tools ###############
 
 
-def faceDistance(X,Fp,return_points=False):
+def insideTriangle(x,P,method='bary'):
+    """Checks whether the points P are inside triangles x.
+
+    x is a Coords array with shape (ntri,3,3) representing ntri triangles.
+    P is a Coords array with shape (npts,ntri,3) representing npts points
+    in each of the ntri planes of the triangles.
+    This function checks whether the points of P fall inside the corresponding
+    triangles.
+
+    Returns an array with (npts,ntri) bool values.
+    """
+    if method == 'bary':
+        return insideSimplex(baryCoords(x,P))
+    else:
+        # Older, slower algorithm
+        xP = x[newaxis,...] - P[:,:,newaxis,:]
+        xx = [ cross(xP[:,:,i],xP[:,:,j]) for (i,j) in ((0,1),(1,2),(2,0)) ]
+        xy = (xx[0]*xx[1]).sum(axis=-1)
+        yz = (xx[1]*xx[2]).sum(axis=-1)
+        d = dstack([xy,yz])
+        return (d > 0).all(axis=-1)
+
+
+def faceDistance(X,Fp,return_points=False,method='bary'):
     """Compute the closest perpendicular distance to a set of triangles.
 
     X is a (nX,3) shaped array of points.
@@ -650,14 +657,11 @@ def faceDistance(X,Fp,return_points=False):
     # Compute intersection points of perpendiculars from X on facets F
     Y = intersectionPointsPOP(X,Fp[:,0,:],Fn)
     # Find intersection points Y inside the facets
-    from timer import Timer
-    t = Timer()
-##    inside = row_stack([isInsideTriangle(Fp,y) for y in Y])
-    inside = insideSimplex(baryCoords(Fp,Y))
-    print "  inside: %s seconds" % t.seconds()
+    inside = insideTriangle(Fp,Y,method)
     pid = where(inside)[0]
     X = X[pid]
     Y = Y[inside]
+
     # Compute the distances
     dist = length(X-Y)
     # Get the shortest distances
@@ -747,9 +751,9 @@ def baryCoords(S,P):
 
     The return value is a (nplex,npts,nel) shaped array of barycentric coordinates.
     """
-    if len(S.shape) != 3:
+    if S.ndim != 3:
         raise ValueError,"S should be a 3-dim array, got shape %s" % str(S.shape) 
-    if len(P.shape) == 2:
+    if P.ndim == 2:
         P = P.reshape(-1,1,3)
     elif P.shape[1] != S.shape[0] and P.shape[1] != 1:
         raise ValueError,"Second dimension of P should be first dimension of S or 1."
@@ -759,6 +763,7 @@ def baryCoords(S,P):
     A = dotpr(vs[:,newaxis],vs[newaxis])
     b = dotpr(vp[newaxis],vs[:,newaxis]) # (nplex-1,npts,nel)
     A = addAxis(A,2) # (nplex-1,nplex-1,1,nel)
+    #print "SOLVE",A.shape,b.shape
     t = solveMany(A,b)
     t0 = (1.-t.sum(0))
     t0 = addAxis(t0,0)

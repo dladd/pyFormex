@@ -48,6 +48,7 @@ utils.hasExternal('admesh')
 utils.hasExternal('tetgen')
 utils.hasExternal('gts')
 
+from utils import deprecation
 
 # Conversion of surface file formats
 
@@ -929,7 +930,7 @@ Total area: %s; Enclosed volume: %s
         return s
 
     
-    def distanceOfPoints(self,X,return_points=False):
+    def distanceOfPoints(self,X,return_points=False,method='bary'):
         """Find the distances of points X to the TriSurface.
     
         The distance of a point is either:
@@ -963,7 +964,7 @@ Total area: %s; Enclosed volume: %s
 
         # distance from faces
         Fp = self.coords[self.elems]
-        res = geomtools.faceDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
+        res = geomtools.faceDistance(X,Fp,return_points,method=method) # OKpid, OKdist, (OKpoints)
         okF,distF = res[:2]
         closer = distF < dist[okF]
         dist[okF[closer]] = distF[closer]
@@ -2004,13 +2005,19 @@ def intersectLineWithPlaneOne2One(q,m,p,n):
     t=dotpr(n, (p-q))/dotpr(n, m)
     return q+m*t[:, newaxis]
 
+#
+# Efficiency should be compared with geomtools.insideTriangle
+#
+@deprecation("checkPointInsideTriangleOne2One is deprecated: use geomtools.insideTriangle instead")
 def checkPointInsideTriangleOne2One(tpi, pi, atol=1.e-5):
     """_return a 1D boolean with the same dimension of tpi and pi. The value [i] is True if the point pi[i] is inside the triangle tpi[i]. It uses areas to check it. """
+    print tpi.shape, pi.shape
     tpi3= column_stack([tpi[:, 0], tpi[:, 1], pi, tpi[:, 0], pi, tpi[:, 2], pi, tpi[:, 1], tpi[:, 2]]).reshape(pi.shape[0]*3,  3, 3)
     #areas
     Atpi3=(length(cross(tpi3[:,1]-tpi3[:,0],tpi3[:,2]-tpi3[:,1]))*0.5).reshape(pi.shape[0], 3).sum(axis=1)#area and sum
     Atpi=length(cross(tpi[:,1]-tpi[:,0],tpi[:,2]-tpi[:,1]))*0.5#area
     return -(Atpi3>Atpi+atol)#True mean point inside triangle
+
 
 def intersectSurfaceWithLines(ts, qli, mli, atol=1.e-5):
     """_it takes a TriSurface ts and a set of lines ql,ml and intersect the lines with the TriSurface.
@@ -2025,7 +2032,8 @@ def intersectSurfaceWithLines(ts, qli, mli, atol=1.e-5):
     #check if each intersection is really inside the triangle
     tsw=ts.select(wt)
     tsw=tsw.coords[tsw.elems]
-    xIn=checkPointInsideTriangleOne2One(tsw, xc, atol)
+    #xIn = checkPointInsideTriangleOne2One(tsw, xc, atol)
+    xIn = geomtools.insideTriangle(tsw,xc[newaxis,...])
     #takes only intersections that fall inside the triangle
     return xc[xIn], wl[xIn], wt[xIn]
 
