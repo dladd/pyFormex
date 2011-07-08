@@ -760,11 +760,17 @@ def baryCoords(S,P):
     S = S.transpose(1,0,2) # (nplex,nel,3)
     vp = P - S[0]
     vs = S[1:] - S[:1]
-    A = dotpr(vs[:,newaxis],vs[newaxis])
+    A = dotpr(vs[:,newaxis],vs[newaxis]) # (nplex-1,nplex-1,nel)
     b = dotpr(vp[newaxis],vs[:,newaxis]) # (nplex-1,npts,nel)
-    A = addAxis(A,2) # (nplex-1,nplex-1,1,nel)
-    #print "SOLVE",A.shape,b.shape
+    #import timer
+    #T = timer.Timer()
     t = solveMany(A,b)
+    #print "DIRECT SOLVER: %s" % T.seconds()
+    #T.reset()
+    #tt = solveMany(A,b,False)
+    #print "GENERAL SOLVER: %s" % T.seconds()
+    #print "RESULTS MATCH: %s" % (tt-t).sum()
+    
     t0 = (1.-t.sum(0))
     t0 = addAxis(t0,0)
     t = row_stack([t0,t])

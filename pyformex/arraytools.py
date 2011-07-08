@@ -345,31 +345,48 @@ def horner(a,u):
     return c
 
 
-def solveMany(A,b):
+def solveMany(A,b,direct=True):
     """Solve many systems of linear equations.
-    
-    A is a (M,M,...) shaped array.
-    b is a (M,...) shaped array.
-    
-    The return value is a (M,...) shaped array.
+
+    Parameters:
+
+    - `A`: (ndof,ndof,nsys) shaped float array.
+    - `b`: (ndof,nrhs,nsys) shaped float array.
+
+    Returns: a float array `x` with same shape as `b`, where ``x[:,i,j]``
+    solves the system of linear equations A[:,:,j].x[:,i,j] = b[:,i,j].
+
+    For ndof in [1,2,3], all solutions are by default computed directly and
+    simultaneously. If ``direct=False`` is specified, a general linear
+    equation solver is called for each system of equations. This is also the
+    method used if ``ndof > 4``.
     """
-    M = b.shape[0]
-    if A.shape[:2] != (M,M):
+    ndof,nrhs,nsys = b.shape
+    if A.shape[:2] != (ndof,ndof):
         raise ValueError,"A(%s) and b(%s) have incompatible shape" % (A.shape,b.shape)
-    b = addAxis(b,1)
-    if M == 1:
-        return b[0]/A[0,0]
-    elif M == 2:
-        denom = cross(A[:,0],A[:,1],axis=0)
-        As = roll(A,-1,axis=1)
-        As[:,1] *= -1.
-        return cross(b,As,axis=0) / denom
-    elif M == 3:
-        C = cross(roll(A,-1,axis=1),roll(A,-2,axis=1),axis=0)
-        denom = dotpr(A[:,0],C[:,0],axis=0)
-        return dotpr(b,C,axis=0) / denom
+
+    if ndof < 4 and direct:
+        A = addAxis(A,2)
+        b = addAxis(b,1)
+
+        if ndof == 1:
+            x = b[0]/A[0,0]
+
+        elif ndof == 2:
+            denom = cross(A[:,0],A[:,1],axis=0)
+            As = roll(A,-1,axis=1)
+            As[:,1] *= -1.
+            x = cross(b,As,axis=0) / denom
+
+        elif ndof == 3:
+            C = cross(roll(A,-1,axis=1),roll(A,-2,axis=1),axis=0)
+            denom = dotpr(A[:,0],C[:,0],axis=0)
+            x = dotpr(b,C,axis=0) / denom
+
     else:
-        raise RuntimeError,"Function is not implemented for dimension %s." % M
+        x = dstack([linalg.solve(A[:,:,i],b[:,:,i]) for i in range(nsys)])
+
+    return x
 
 
 def inside(p,mi,ma):
