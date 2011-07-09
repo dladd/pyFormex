@@ -9,7 +9,7 @@ Create a sloccount report for the pyformex tagged releases.
 
 print __doc__
 from pyformex.flatkeydb import FlatDB
-from pyformex.utils import runCommand
+from pyformex.utils import runCommand,removeTree
 
 import os,sys,commands,datetime
 
@@ -63,11 +63,13 @@ def sloccount(rel):
     print "SLOCCOUNTING %s" % pyfdir
     cmd = "sloccount %s > %s" % (pyfdir,slocfile)
     runCmd(cmd)
+
     
 
 
 for release in keys:
     sloccount(DB[release])
+    removeTree(workdir)
     
 
 # Now, create some statistics

@@ -2,7 +2,7 @@
 #
 
 HOMEPARTS= home_header.inc home_footer.inc
-HTDOCS= documentation.html install.html links.html screenshots.html support.html pyformexinuse.html $(HOMEPARTS) pyformex.css favicon.ico
+HTDOCS= documentation.html install.html links.html screenshots.html support.html pyformexinuse.html pyformex.html pyformex.css favicon.ico
 EXAMPLES= examples/
 IMAGES= images/
 SCRIPTS= scripts/
@@ -15,29 +15,19 @@ TARGETDIR= ${SERVER}:/home/groups/pyformex/htdocs
 
 html: 
 	r2w
-#	rm index.html
-#	ln -s pyformex.html index.html
+	./split_home
+	./update-news
+
 
 all:	pub
 
-
-$(HOMEPARTS): pyformex.html
-	./split_home
-
-# update the homepage with the news
-update: $(HOMEPARTS)
-
-pyformex-news.cache: 
-	wget -q -O $@ 'http://developer.berlios.de/export/projnews.php?group_id=2717&limit=4&flat=1&show_summaries=1' > /dev/null
 
 # Transfers the files to BerliOs
 pubtest: $(HOMEPARTS)
 	$(RSYNC) --exclude src . ${TARGETDIR} -n
 
-pub: #$(HOMEPARTS)
+pub: 
 	$(RSYNC) $(HTDOCS) ${TARGETDIR}
 	$(RSYNC) $(EXAMPLES) ${TARGETDIR}/examples
 	$(RSYNC) $(IMAGES) ${TARGETDIR}/images
 	$(RSYNC) $(SCRIPTS) ${TARGETDIR}/scripts
-	# fix the front page
-	#ssh ${SERVER} ./get_projhtml

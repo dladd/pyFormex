@@ -75,8 +75,9 @@ they are easy to distinguish::
 Next we copy the triangles a number of times in two directions,
 generating the triangular pattern at the left::
 
-   m=5; n=5; d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1) dd =
-   aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1) </pre> </td>
+   m=5; n=5
+   d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1)
+   dd = aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1)
 
 .. image:: ../images/Geodesic-3.png
 
