@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
+##  This file is part of pyFormex 0.8.4 Release Sat Jul  9 14:43:11 2011
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -26,8 +26,8 @@
 This module initializes the pyFormex global variables and
 defines a few essential functions.
 """
-__version__ = "0.8.4-a4"
-__revision__ = '1987:1991M'
+__version__ = "0.8.4"
+__revision__ = '1993M'
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2011 Benedict Verhegghe'
 Url = 'http://pyformex.org'

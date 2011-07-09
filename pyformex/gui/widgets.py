@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
+##  This file is part of pyFormex 0.8.4 Release Sat Jul  9 14:43:11 2011
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -1813,10 +1813,15 @@ def updateDialogItems(data,newdata):
 
     The user should make sure to set only values of the proper type!
     """
-    warnings.warn("warn_widgets_updatedialogitems")
     if newdata:
+        # check for old format
+        if type(data) is dict:
+            return updateOldDialogItems(data,newdata)
         for d in data:
-            #print d
+            if not isinstance(d,dict):
+                return updateOldDialogItems(data,newdata)
+        # new format
+        for d in data:
             if d.get('itemtype',None) in [ 'group', 'tab' ]:
                 updateDialogItems(d['items'],newdata)
             else:
@@ -1827,6 +1832,7 @@ def updateDialogItems(data,newdata):
 
 def updateOldDialogItems(data,newdata):
     """_Update the input data fields with new data values."""
+    warnings.warn("warn_widgets_updatedialogitems")
     if newdata:
         if type(data) is dict:
             for d in data:

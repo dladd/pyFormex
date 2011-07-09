@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.4-a3 documentation</title>
+    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.4 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4-a3',
+        VERSION:     '0.8.4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4-a3 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="4. script — Basic pyFormex script functions" href="script.html" />
     <link rel="prev" title="2. formex — Formex algebra in Python" href="formex.html" /> 
@@ -244,12 +244,19 @@ float(nu,nd), nd-dimensional values of the polynom.</p>
 
 <dl class="function">
 <dt id="arraytools.solveMany">
-<tt class="descclassname">arraytools.</tt><tt class="descname">solveMany</tt><big>(</big><em>A</em>, <em>b</em><big>)</big><a class="headerlink" href="#arraytools.solveMany" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">solveMany</tt><big>(</big><em>A</em>, <em>b</em>, <em>direct=True</em><big>)</big><a class="headerlink" href="#arraytools.solveMany" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solve many systems of linear equations.</p>
-<p>A is a (M,M,...) shaped array.
-b is a (M,...) shaped array.</p>
-<p>This solves all equations A[:,:,i].x = b[:,i].
-The return value is a (M,...) shaped array.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>A</cite>: (ndof,ndof,nsys) shaped float array.</li>
+<li><cite>b</cite>: (ndof,nrhs,nsys) shaped float array.</li>
+</ul>
+<p>Returns: a float array <cite>x</cite> with same shape as <cite>b</cite>, where <tt class="docutils literal"><span class="pre">x[:,i,j]</span></tt>
+solves the system of linear equations A[:,:,j].x[:,i,j] = b[:,i,j].</p>
+<p>For ndof in [1,2,3], all solutions are by default computed directly and
+simultaneously. If <tt class="docutils literal"><span class="pre">direct=False</span></tt> is specified, a general linear
+equation solver is called for each system of equations. This is also the
+method used if <tt class="docutils literal"><span class="pre">ndof</span> <span class="pre">&gt;</span> <span class="pre">4</span></tt>.</p>
 </dd></dl>
 
 <dl class="function">

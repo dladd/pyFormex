@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
+##  This file is part of pyFormex 0.8.4 Release Sat Jul  9 14:43:11 2011
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -152,7 +152,6 @@ def show():
     """Accept the data and draw according to them"""
     clear()
     dialog.acceptData()
-    #print dialog.results
     globals().update(dialog.results)
 
     PL = createSpiralCurve(turns,nmod)
@@ -171,13 +170,11 @@ def show():
         CS = createCrossSection()
         draw(CS)
 
-        #print CS.shape()
         draw(CS)
         wait()
         structure = CS.sweep(PL,normal=[1.,0.,0.],upvector=eval(cross_upvector),avgdir=True)
         clear()
         smoothwire()
-        #print structure.shape()
         draw(structure,color='red',bkcolor='cyan')
 
         if nwires > 1:
@@ -216,8 +213,8 @@ if __name__ == 'draw':
     # Update the data items from saved values
     try:
         saved_data = pf.PF.get('Sweep_data',{})
-        #print saved_data
-        widgets.updateDialogItems(input_data,pf.PF.get('Sweep_data',{}))
+        #
+        widgets.updateDialogItems(input_data,saved_data)
     except:
         raise
 

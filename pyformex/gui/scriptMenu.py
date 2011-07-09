@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.3 Release Sun Dec  5 18:01:17 2010
+##  This file is part of pyFormex 0.8.4 Release Sat Jul  9 14:43:11 2011
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -28,7 +28,7 @@ import pyformex as pf
 from PyQt4 import QtCore, QtGui
 
 import utils
-import draw
+import script,draw
 import menu
 import os,random
 from gettext import gettext as _
@@ -398,19 +398,24 @@ class ScriptMenu(QtGui.QMenu):
 
 
     ### THIS should be moved to a playAll function in draw/script module
+    ### Currently, it is only intended for testing the examples
+    ### THus we can permit to add some adhoc solutions, like resetting
+    ### the layout at each new script
     def runAllFiles(self,files,randomize=False,pause=0.):
         """Run all the scripts in given list."""
         pf.GUI.actions['Stop'].setEnabled(True)
         if randomize:
             random.shuffle(files)
         for f in files:
+            while script.scriptlock:
+                print "WAITING BECAUSE OF SCRIPTLOCK"
+                draw.sleep(5)
             draw.layout(1)
             self.runScript(f)
-            #pf.debug("draw.exitrequested == %s" % draw.exitrequested)
             if draw.exitrequested:
                 break
-            if pause > 0.:
-                sleep(pause)
+            ## if pause > 0.:
+            ##     sleep(pause)
         pf.GUI.actions['Stop'].setEnabled(False)
 
 
