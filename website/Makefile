@@ -24,14 +24,20 @@ all:	pub
 $(HOMEPARTS): pyformex.html
 	./split_home
 
+# update the homepage with the news
+update: $(HOMEPARTS)
+
+pyformex-news.cache: 
+	wget -q -O $@ 'http://developer.berlios.de/export/projnews.php?group_id=2717&limit=4&flat=1&show_summaries=1' > /dev/null
+
 # Transfers the files to BerliOs
 pubtest: $(HOMEPARTS)
 	$(RSYNC) --exclude src . ${TARGETDIR} -n
 
-pub: $(HOMEPARTS)
-	#$(RSYNC) $(HTDOCS) ${TARGETDIR}
-	#$(RSYNC) $(EXAMPLES) ${TARGETDIR}/examples
+pub: #$(HOMEPARTS)
+	$(RSYNC) $(HTDOCS) ${TARGETDIR}
+	$(RSYNC) $(EXAMPLES) ${TARGETDIR}/examples
 	$(RSYNC) $(IMAGES) ${TARGETDIR}/images
-	#$(RSYNC) $(SCRIPTS) ${TARGETDIR}/scripts
+	$(RSYNC) $(SCRIPTS) ${TARGETDIR}/scripts
 	# fix the front page
-	ssh ${SERVER} ./get_projhtml
+	#ssh ${SERVER} ./get_projhtml

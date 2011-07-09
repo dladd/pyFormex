@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Update the home page with the latest news
+#
+wget -q -O pyformex-news.tmp 'http://developer.berlios.de/export/projnews.php?group_id=2717&limit=4&flat=1&show_summaries=1' > /dev/null
+./html2xhtml -t transitional pyformex-news.tmp | gawk -f toxhtml.awk > pyformex-news.cache
+cat home_header.inc pyformex-news.cache home_footer.inc > pyformex.html
