@@ -54,7 +54,7 @@ CFLAGS= -g -D$(DEBUG) -O3 -Wall -Wstrict-prototypes -fPIC
 # -DMAJOR_VERSION=1 -DMINOR_VERSION=0
 
 
-all: $(SOBJECTS) $(PROGRAMS)
+all: Makefile $(SOBJECTS) $(PROGRAMS)
 
 
 debug:
@@ -73,8 +73,9 @@ postabq: postabq.c
 Makefile: Makefile.in config.status
 	./config.status
 
-config.status: configure
+config.status: #configure
 	./configure
+
 #	./config.status --recheck
 
 #configure: configure.ac

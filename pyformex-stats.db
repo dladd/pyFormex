@@ -24,17 +24,17 @@ release
   size=1426285
 
 release
-  sh=186
-  python=26984
-  dollars=1018486
-  rev=1254
-  manyears=7.54
-  years=1.15
-  tag=0.8.1
-  sloc=31714
-  date=2009-12-09
-  ansic=4340
-  size=2094469 	
+  sh=290
+  python=35594
+  dollars=1359964
+  rev=1994
+  manyears=10.07
+  years=1.29
+  tag=0.8.4
+  sloc=41768
+  date=2011-07-09
+  ansic=5694
+  size=2780652	
 
 release
   sh=28
@@ -61,17 +61,17 @@ release
   size=535373
 
 release
-  sh=42
-  python=21962
-  dollars=719703
-  rev=805
-  manyears=5.33
-  years=1.01
-  tag=0.7.2
-  sloc=22784
-  date=2008-09-23
-  ansic=780
-  size=1222304
+  sh=186
+  python=26984
+  dollars=1018486
+  rev=1254
+  manyears=7.54
+  years=1.15
+  tag=0.8.1
+  sloc=31714
+  date=2009-12-09
+  ansic=4340
+  size=2094469 	
 
 release
   sh=42
@@ -125,6 +125,19 @@ release
   size=1798747
 
 release
+  sh=42
+  python=20334
+  dollars=664252
+  rev=708
+  manyears=4.92
+  years=0.98
+  tag=0.7.1
+  sloc=21109
+  date=2008-05-24
+  ansic=733
+  size=1194746
+
+release
   sh=18
   python=18896
   dollars=601784
@@ -175,16 +188,16 @@ release
 
 release
   sh=42
-  python=20334
-  dollars=664252
-  rev=708
-  manyears=4.92
-  years=0.98
-  tag=0.7.1
-  sloc=21109
-  date=2008-05-24
-  ansic=733
-  size=1194746
+  python=21962
+  dollars=719703
+  rev=805
+  manyears=5.33
+  years=1.01
+  tag=0.7.2
+  sloc=22784
+  date=2008-09-23
+  ansic=780
+  size=1222304
 
 release
   python=1853

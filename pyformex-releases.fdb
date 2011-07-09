@@ -1,6 +1,12 @@
 # $Id$
 
 release
+  tag = 0.8.4
+  date = 2011-07-09
+  size = 2780652	
+  rev = 1994
+
+release
   tag = 0.8.3
   date = 2010-12-05
   size = 2359437	
