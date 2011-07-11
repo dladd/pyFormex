@@ -578,7 +578,7 @@ def intersectionTimesPOP(q,p,n):
     """
     if p.shape != n.shape:
         raise RuntimeError,"Expected p and n with same shape."
-    t =  (dotpr(p,n) - inner(q,n)) / dotpr(n,n)
+    t = (dotpr(p,n) - inner(q,n)) / dotpr(n,n)
     return t
     
 
@@ -589,7 +589,7 @@ def intersectionPointsPOL(p,q,m):
     shaped array of intersection points instead of the parameter values.
     """
     t = intersectionTimesPOL(p,q,m)
-    t = t[:,:,newaxis]
+    t = t[...,newaxis] # force broadcasting for all coordinates
     return q + t * m
 
 

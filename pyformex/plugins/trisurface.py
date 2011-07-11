@@ -930,7 +930,7 @@ Total area: %s; Enclosed volume: %s
         return s
 
     
-    def distanceOfPoints(self,X,return_points=False,method='bary'):
+    def distanceOfPoints(self,X,return_points=False):
         """Find the distances of points X to the TriSurface.
     
         The distance of a point is either:
@@ -950,27 +950,34 @@ Total area: %s; Enclosed volume: %s
         dist = res[0]
         if return_points:
             points = res[1]
-        print "Vertex distance: %s seconds" % t.seconds()
+        print "Vertex distance: %s seconds" % t.seconds(True)
+        #print dist
         
         # distance from edges
         Ep = self.coords[self.getEdges()]
         res = geomtools.edgeDistance(X,Ep,return_points) # OKpid, OKdist, (OKpoints)
         okE,distE = res[:2]
         closer = distE < dist[okE]
-        dist[okE[closer]] = distE[closer]
-        if return_points:
-            points[okE[closer]] = res[2][closer]
-        print "Edge distance: %s seconds" % t.seconds()
+        #print okE,closer
+        if closer.size > 0:
+            dist[okE[closer]] = distE[closer]
+            if return_points:
+                points[okE[closer]] = res[2][closer]
+        print "Edge distance: %s seconds" % t.seconds(True)
+        #print dist
 
         # distance from faces
         Fp = self.coords[self.elems]
-        res = geomtools.faceDistance(X,Fp,return_points,method=method) # OKpid, OKdist, (OKpoints)
+        res = geomtools.faceDistance(X,Fp,return_points) # OKpid, OKdist, (OKpoints)
         okF,distF = res[:2]
         closer = distF < dist[okF]
-        dist[okF[closer]] = distF[closer]
-        if return_points:
-            points[okF[closer]] = res[2][closer]
-        print "Face distance: %s seconds" % t.seconds()
+        #print okF,closer
+        if closer.size > 0:
+            dist[okF[closer]] = distF[closer]
+            if return_points:
+                points[okF[closer]] = res[2][closer]
+        print "Face distance: %s seconds" % t.seconds(True)
+        #print dist
 
         if return_points:
             return dist,points

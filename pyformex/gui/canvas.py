@@ -1050,6 +1050,7 @@ class Canvas(object):
         return winx,winy,winz
         return self.camera.project(x,y,z)
 
+
     def unProject(self,x,y,z,locked=False):
         "Map the window coordinates (x,y,z) to object coordinates."""
         locked=False

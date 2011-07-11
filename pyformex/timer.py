@@ -27,33 +27,61 @@
 from datetime import datetime
 
 class Timer(object):
-    """A class for measuring elapsed time."""
+    """A class for measuring elapsed time.
 
-    def __init__(self):
+    A Timer object measures elapsed real time since a specified time, which
+    by default is the time of the creation of the Timer.
+
+    Parameters:
+
+    - `start`: a datetime object. If not specified, the time of the creation
+      of the Timer is used.    
+    """
+
+    def __init__(self,start=None):
         """Create and start a timer."""
-        self.reset()
+        self.reset(start)
 
-    def reset(self):
-        """Start the timer."""
-        self.start = datetime.now()
+    def reset(self,start=None):
+        """(Re)Start the timer.
 
-    def read(self):
+        Sets the start time of the timer to the specified value, or to
+        the current time by default.
+
+        Parameters:
+
+        - `start`: a datetime object. If not specified, the current time as
+          returned by datetime.now() is used.
+        """
+        if isinstance(start,datetime):
+            self.start = start
+        else:
+            self.start = datetime.now()
+
+    def read(self,reset=False):
         """Read the timer.
 
-        This returns the elapsed time since the last reset (or the creation
+        Returns the elapsed time since the last reset (or the creation
         of the timer) as a datetime.timedelta object.
+
+        If reset=True, the timer is reset to the time of reading.
         """
         now = datetime.now()
-        return now - self.start
+        ret = now - self.start
+        if reset:
+            self.start = now
+        return ret
     
-    def seconds(self,rounded=True):
+    def seconds(self,reset=False,rounded=True):
         """Return the timer readings in seconds.
 
         The default return value is a rounded integer number of seconds.
         With ``rounded == False``, a floating point value with granularity of
         1 microsecond is returned.
+
+        If reset=True, the timer is reset at the time of reading.
         """
-        e = self.read()
+        e = self.read(reset)
         tim = e.days*24*3600 + e.seconds + e.microseconds / 1000000.
         if rounded:
             tim = int(round(tim))
