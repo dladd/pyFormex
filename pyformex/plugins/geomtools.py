@@ -634,7 +634,7 @@ def insideTriangle(x,P,method='bary'):
         return (d > 0).all(axis=-1)
 
 
-def faceDistance(X,Fp,return_points=False,method='bary'):
+def faceDistance(X,Fp,return_points=False):
     """Compute the closest perpendicular distance to a set of triangles.
 
     X is a (nX,3) shaped array of points.
@@ -657,20 +657,24 @@ def faceDistance(X,Fp,return_points=False,method='bary'):
     # Compute intersection points of perpendiculars from X on facets F
     Y = intersectionPointsPOP(X,Fp[:,0,:],Fn)
     # Find intersection points Y inside the facets
-    inside = insideTriangle(Fp,Y,method)
+    inside = insideTriangle(Fp,Y)
     pid = where(inside)[0]
-    X = X[pid]
-    Y = Y[inside]
+    if pid.size == 0:
+        if return_points:
+            return [],[],[]
+        else:
+            return [],[]
 
     # Compute the distances
+    X = X[pid]
+    Y = Y[inside]
     dist = length(X-Y)
     # Get the shortest distances
-    OKpid = unique(pid)
-    OKdist = array([ dist[pid == i].min() for i in OKpid ])
+    OKpid,OKpos = groupArgmin(dist,pid)
+    OKdist = dist[OKpos]
     if return_points:
         # Get the closest footpoints matching OKpid
-        minid = array([ dist[pid == i].argmin() for i in OKpid ])
-        OKpoints = array([ Y[pid==i][j] for i,j in zip(OKpid,minid) ]).reshape(-1,3)
+        OKpoints = Y[OKpos]
         return OKpid,OKdist,OKpoints
     return OKpid,OKdist
 
@@ -699,17 +703,22 @@ def edgeDistance(X,Ep,return_points=False):
     # Find intersection points Y inside the edges
     inside = (t >= 0.) * (t <= 1.)
     pid = where(inside)[0]
+    if pid.size == 0:
+        if return_points:
+            return [],[],[]
+        else:
+            return [],[]
+
+    # Compute the distances
     X = X[pid]
     Y = Y[inside]
-    # Compute the distances
     dist = length(X-Y)
     # Get the shortest distances
-    OKpid = unique(pid)
-    OKdist = array([ dist[pid == i].min() for i in OKpid ])
+    OKpid,OKpos = groupArgmin(dist,pid)
+    OKdist = dist[OKpos]
     if return_points:
         # Get the closest footpoints matching OKpid
-        minid = array([ dist[pid == i].argmin() for i in OKpid ])
-        OKpoints = array([ Y[pid==i][j] for i,j in zip(OKpid,minid) ]).reshape(-1,3)
+        OKpoints = Y[OKpos]
         return OKpid,OKdist,OKpoints
     return OKpid,OKdist
 

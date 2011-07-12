@@ -1280,6 +1280,42 @@ def matchIndex(target,values):
         inv = concatenate([inv,-ones((diff,),dtype=Int)])
     return inv[values]
 
+
+## THIS IS A CANDIDATE FOR THE LIBRARY !!!
+def groupArgmin(val,gid):
+    """Compute the group minimum
+
+    Computes the minimum value per group of a set of values tagged with
+    a group number.
+
+    Parameters:
+
+    - `val`: (nval,) shaped array of values
+    - `gid`: (nval,) shaped int array of group identifiers
+
+    Returns:
+
+    - `ugid`: (ngrp,) shaped int array with unique group identifiers
+    - `minpos`: (ngrp,p) shape int array giving the position in `val` of
+      the minimum of all values with the corresponding group identifier
+      in `ugid`.
+
+    After return, the minimum values corresponding to the groups in `ugid`
+    are given by ``val[minpos]``.
+
+    >>> val = array([ 0.0, 1.0, 2.0, 3.0, 4.0, -5.0 ])
+    >>> gid = array([ 2, 1, 1, 6, 6, 1 ])
+    >>> print groupArgmin(val,gid)
+    (array([1, 2, 6]), array([5, 0, 3]))
+    """
+    ugid = unique(gid)
+    minid = hstack([ val[gid == i].argmin() for i in ugid ])
+    rng = arange(val.size)
+    minpos = hstack([ rng[gid == i][j] for i,j in zip(ugid,minid) ])
+    return ugid,minpos
+
+
+###########################################################
 # Working with sets of vectors
 
 def vectorLength(vec):
