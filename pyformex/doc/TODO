@@ -17,7 +17,7 @@ Each task can have the following keys:
 :dev(eloper): Who is already working on that task.
 
 :sta(tus): In what status is the task: idea, proof of concept,
-   partially implemented, done
+   partially implemented, done, rejected
  
 :rem(arks): Anything about the task that is worthwile sharing with others.
 
@@ -47,11 +47,6 @@ Release 0.9
   :rem: Could be based on SplineSurface, which is then divided in quads.
     An unstructured quad mesher for more complex surface shapes could be
     based on subdivision.
-     
-**Zoom center**
-  :sta: idea
-  :rem: setting a center point for the interactive zoom functions,
-    which may be different from the viewpoint center
 
 **Default focus**
   :dev: bverheg
@@ -64,7 +59,7 @@ Release 0.9
 **Faster loading of large STL models (possibly in C)**
   :dev: bverheg
   :sta: PARTIAL
-  :rem: Done via external 'gts': transform to GTS format.
+  :rem: Done via external 'addmesh': transform to OFF format.
     Should be implemented as C function.
 
 **Export models to FEA/CFD simulation codes**

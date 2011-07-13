@@ -284,7 +284,7 @@ def sphere3(nx,ny,r=1,bot=-90,top=90):
     return grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
 
 
-# TODO: This should be renamed and probably use mesh.connectMesh
+# TODO: This should be renamed and probably use mesh.connect
 # TODO: or polylines
 def connectCurves(curve1,curve2,n):
     """Connect two curves to form a surface.

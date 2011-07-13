@@ -401,11 +401,6 @@ class Mesh(Geometry):
         but this also stores the result internally so that future
         requests can return it without the need for computing it again.
         """
-        from plugins.trisurface import TriSurface
-        if self.__class__ == TriSurface:
-            import warnings
-            warnings.warn('warn_trisurface_getfaces')
-
         if self.faces is None:
             self.faces = self.getLowerEntities(2,unique=True)
         return self.faces
@@ -802,9 +797,6 @@ Size: %s
         
         See `cselect` for the complementary operation.
         """
-        if self.__class__ == Mesh:
-            import warnings
-            warnings.warn('warn_mesh_select_default_compacted')
         M = self.__class__(self.coords,self.elems[selected],eltype=self.eltype)
         if self.prop is not None:
             M.setProp(self.prop[selected])
@@ -1192,15 +1184,60 @@ Size: %s
 
 ##############################################################
     #
-    # Connection, Extrusion, Sweep
+    # Connection, Extrusion, Sweep, Revolution
     #
 
-    def _connect_1_(self,mesh1,div=1,eltype=None):
+    def connectSequence(self,coordslist,div=1,eltype=None):
+        """Connect a Mesh with a sequence of toplogically congruent ones.
+
+        Parameters:
+
+        - `meshes`: a list of Meshes with the same element type and shape
+          (number of elements and plexitude).
+          The two Meshes usually also have the same topology.
+          Each pair of subsequent Meshes are connected to form hypermeshes
+          which are then concatenated.
+          The plexitude of the new Mesh is two times that of the original Mesh.
+        - `div`: Either an integer, or a sequence of numbers (usually between
+          0.0 and 1.0). This parameter has the same meaning as in
+          `Coords.interpolate`. If an int is given, div will be set to
+          (div+1) equally spaced values in the range [0.0..1.0].
+        - `eltype`: the element type of the constructed hypermesh. If not
+          given it is set from the element type database. Otherwise, the
+          extrude element type will be created first, and then a conversion
+          to the requested element is attempted.
+        """
+        print "CONNECTSEQ"
+        if type(coordslist) is not list:
+            raise ValueError,"Invalid coordslist argument"
+
+        for i,c in enumerate(coordslist):
+            pass
+            
+        if sum([c.shape != self.coords.shape for c in coordslist]):
+            raise ValueError,"Incompatible coordinate sets"
+
+        # Create the connectivity table  
+        nnod = self.ncoords()
+        e = extrudeConnectivity(self.elems,nnod)
+        e = replicConnectivity(e,len(coordslist)-1,nnod)
+        # Concatenate the coordinates
+        #coordslist[0:0] = [self.coords] 
+        x = Coords.concatenate(coordslist)
+        # Create the Mesh
+        M = Mesh(x,e).setProp(self.prop)
+        # convert to proper eltype
+        if eltype:
+            M = M.convert(eltype)
+        return M
+
+
+    def connect(self,mesh,div=1,eltype=None):
         """Connect a Mesh with another one to form a hypermesh.
 
         Parameters:
 
-        - `mesh1`: a Mesh with the same element type and shape
+        - `mesh`: a Mesh with the same element type and shape
           (number of elements and plexitude) as self.
           The two Meshes usually also have the same topology.
           Both Meshes are connected to form a hypermesh. The plexitude of the
@@ -1214,45 +1251,32 @@ Size: %s
           extrude element type will be created first, and then a conversion
           to the rewuested element is attempted.
         """
-        if self.eltype != mesh1.eltype or self.shape() != mesh1.shape():
+        print "CONNECT"
+        if self.eltype != mesh.eltype or self.shape() != mesh.shape():
             raise ValueError,"Incompatible Mesh"
-
-        # get the extruded Connectivity
-        try:
-            _eltype,reorder = self.eltype.extruded
-        except:
-            raise ValueError,"I don't know how to extrude elements of type '%s'" % self.eltype.name()
         
         # compact the node numbering schemes
         self = self.compact()
-        mesh1 = mesh1.compact()
+        mesh = mesh.compact()
 
-        # Create the interpolations of the coordinates
+        # set divisions
         if type(div) == int:
             div = arange(div+1) / float(div)
         else:
             div = array(div).ravel()
-        x = Coords.interpolate(self.coords,mesh1.coords,div).reshape(-1,3)
 
-        # Create the connectivity table
+        # Create the connectivity table  
         nnod = self.ncoords()
-        e1 = self.elems
-        e2 = mesh1.elems + nnod
-        et = concatenate([e1,e2],axis=-1)
-        e = concatenate([et+i*nnod for i in range(div.size-1)])
-        
-        # Reorder nodes if necessary
-        if reorder:
-            e = e[:,reorder]
-        eM = Mesh(x,e,eltype=_eltype).setProp(self.prop)
-
+        e = extrudeConnectivity(self.elems,nnod)
+        e = replicConnectivity(e,div.size-1,nnod)
+        # Create the interpolations of the coordinates
+        x = Coords.interpolate(self.coords,mesh.coords,div).reshape(-1,3)
+        # Create the Mesh
+        M = Mesh(x,e).setProp(self.prop)
         # convert to proper eltype
         if eltype:
-            eM = eM.convert(eltype)
-
-        return eM
-
-    connect = _connect_1_
+            M = M.convert(eltype)
+        return M
 
 
     def extrude(self,n,step=1.,dir=0,eltype=None):
@@ -1269,40 +1293,18 @@ Size: %s
         return self.connect(self.translate(dir,n*step),n,eltype=eltype)
 
 
-#FI to check if the reordering is always correct
-    def revolve(self,n,axis=0,angle=360.,around=None,autofix=True):
+    def revolve(self,n,axis=0,angle=360.,around=None,eltype=None):
         """Revolve a Mesh around an axis.
 
         Returns a new Mesh obtained by revolving the given Mesh
         over an angle around an axis in n steps, while extruding
         the mesh from one step to the next.
-
-        This function is usually used to extrude points into lines,
-        lines into surfaces and surfaces into volumes.
-        By default it will try to fix the connectivity ordering where
-        appropriate. If autofix is switched off, the connectivities
-        are merely stacked, and the user may have to fix it himself.
-
-        Currently, this function correctly transforms: point1 to line2,
-        line2 to quad4, tri3 to wedge6, quad4 to hex8.
+        This extrudes points into lines, lines into surfaces and surfaces
+        into volumes.
         """
-        nplex = self.nplex()
         angles = arange(n+1) * angle / n
-        coordL = [ self.coords.rotate(angle=a,axis=axis,around=around) for a in angles ]
-        ML = [ Mesh(x,self.elems) for x in coordL ]
-
-        n1 = n2 = eltype = None
-
-        #~ if autofix and nplex == 2:
-            # fix node ordering for line2 to quad4 revolutions
-            #~ n1 = [0,1]
-            #~ n2 = [1,0]
-
-        #~ if autofix:
-            #~ eltype = elementType(nplex=2*self.nplex())
-
-        CL = [ connectMesh(m1,m2,1,n1,n2,eltype) for (m1,m2) in zip(ML[:-1],ML[1:]) ]
-        return Mesh.concatenate(CL)
+        seq = [ self.coords.rotate(angle=a,axis=axis,around=around) for a in angles ]
+        return self.connectSequence(seq,eltype=eltype)
 
 
     def sweep(self,path,eltype=None,**kargs):
@@ -1323,12 +1325,8 @@ Size: %s
         Currently, this function produces the correct element type, but
         the geometry .
         """
-        nplex = self.nplex()
         seq = sweepCoords(self.coords,path,**kargs)
-        ML = [ Mesh(x,self.elems,prop=self.prop) for x in seq ]
-        M = connectMeshSequence(ML,eltype=eltype)
-
-        return M
+        return self.connectSequence(seq,eltype=eltype)
 
 
     def __add__(self,other):
@@ -1512,6 +1510,16 @@ Size: %s
     
 
 
+    def actor(self,**kargs):
+
+        if self.nelems() == 0:
+            return None
+        
+        from gui.actors import GeomActor
+        return GeomActor(self,**kargs)
+
+
+
     #
     #  NEEDS CLEANUP BEFORE BEING REINSTATED
     #  =====================================
@@ -1563,25 +1571,43 @@ Size: %s
     ##     extremeAngles= [ (eangMax-qe)/(180.-qe), (qe-eangmin)/qe ]
     ##     return array(extremeAngles).max(axis=0)
 
-
-    def actor(self,**kargs):
-
-        if self.nelems() == 0:
-            return None
-        
-        from gui.actors import GeomActor
-        return GeomActor(self,**kargs)
-
-
-    # BV: removed in 0.8.4
-    ## ################ DEPRECATED ###############
-    ## @deprecation("Mesh.unselect is deprecated. Use Mesh.cselect instead")
-    ## def unselect(self,*args,**kargs):
-    ##     return self.cselect(*args,**kargs)
-
-
 ######################## Functions #####################
 
+
+def extrudeConnectivity(e,nnod):
+    """Extrude a Connectivity to a higher level Connectivity.
+
+    Currently returns an integer array, not a Connectivity!
+    """
+    try:
+        eltype,reorder = e.eltype.extruded
+    except:
+        try:
+            eltype = e.eltype.name()
+        except:
+            eltype = None
+        raise ValueError,"I don't know how to extrude a Connectivity with eltype '%s'" % eltype
+    # create hypermesh Connectivity
+    e = concatenate([e+i*nnod for i in range(2)],axis=-1)
+    # Reorder nodes if necessary
+    if reorder:
+        e = e[:,reorder]
+    return Connectivity(e,eltype=eltype)
+
+
+def replicConnectivity(e,n,inc):
+    """Repeat a Connectivity with increasing node numbers.
+
+    e: a Connectivity
+    n: integer: number of copies to make
+    inc: integer: increment in node numbers for each copy
+
+    Returns the concatenation of n connectivity tables, which are each copies
+    of the original e, but having the node numbers increased by inc.
+    """
+    return Connectivity(concatenate([e+i*inc for i in range(n)]),eltype=e.eltype)
+
+    
 
 def mergeNodes(nodes,fuse=True,**kargs):
     """Merge all the nodes of a list of node sets.
@@ -1638,71 +1664,6 @@ def mergeMeshes(meshes,fuse=True,**kargs):
     return coords,[Connectivity(i[e]) for i,e in zip(index,elems)]
 
 
-def connectMesh(mesh1,mesh2,div=1,n1=None,n2=None,eltype=None):
-    """Connect two meshes to form a hypermesh.
-
-    Parameters:
-
-    - `mesh1`, `mesh2`: Mesh objects with the same element type and shape
-      (number of elements and plexitude).
-      The two Meshes usually also have the same topology.
-      Both Meshes are connected to form a hypermesh. The plexitude of the
-      new Mesh is two times that of the original Meshes.
-    - `div`: Either an integer, or a sequence of numbers (usually between 0.0
-      and 1.0). This parameter has the same meaning as in `Coords.interpolate`.
-      number of
-      elements in the direction between the two Meshes is determined by.
-      
-    n1 and n2 are node selection indices permitting a permutation of the
-    nodes of the base sets in their appearance in the hypermesh.
-    This can e.g. be used to achieve circular numbering of the hypermesh.
-    """
-    # For compatibility, allow meshes to be specified as tuples
-    if type(mesh1) is tuple:
-        mesh1 = Mesh(mesh1)
-    if type(mesh2) is tuple:
-        mesh2 = Mesh(mesh2)
-
-    if mesh1.eltype != mesh2.eltype or mesh1.shape() != mesh2.shape():
-        raise ValueError,"Meshes are not compatible"
-
-    # get the eltype of the base Mesh, the extruded eltype and reordering
-    eltyp0 = mesh1.eltype
-    eltyp1,reorder = eltyp0.extruded
-
-    # compact the node numbering schemes
-    mesh1 = mesh1.compact()
-    mesh2 = mesh2.compact()
-
-    # Create the interpolations of the coordinates
-    if type(div) == int:
-        div = arange(div+1) / float(div)
-    else:
-        div = array(div).ravel()
-    x = Coords.interpolate(mesh1.coords,mesh2.coords,div).reshape(-1,3)
-
-    nnod = mesh1.ncoords()
-    nplex = mesh1.nplex()
-    if n1 is None:
-        n1 = range(nplex)
-    if n2 is None:
-        n2 = range(nplex)
-    e1 = mesh1.elems[:,n1]
-    e2 = mesh2.elems[:,n2] + nnod
-    et = concatenate([e1,e2],axis=-1)
-    e = concatenate([et+i*nnod for i in range(div.size-1)])
-    # Reorder nodes if necessary
-    if reorder:
-        e = e[:,reorder]
-    eM = Mesh(x,e,eltype=eltyp1).setProp(mesh1.prop)
-
-    # convert to proper eltype
-    if eltype:
-        eM = eM.convert(eltype)
-
-    return eM
-
-
 def connectMeshSequence(ML,loop=False,**kargs):
     MR = ML[1:]
     if loop:
@@ -1721,6 +1682,8 @@ def connectMeshSequence(ML,loop=False,**kargs):
 # The creator of the mesh normally KNOWS the correct connectivity,
 # and should immediately fix it, instead of calculating it from
 # coordinate data
+# It could be used in a general Mesh checking/fixing utility
+
 def correctHexMeshOrientation(hm):
     """_hexahedral elements have an orientation.
 

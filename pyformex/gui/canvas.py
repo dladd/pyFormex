@@ -1029,12 +1029,6 @@ class Canvas(object):
         self.camera.resetArea()
 
 
-    def zoom(self,f,dolly=True):
-        """Dolly zooming."""
-        if dolly:
-            self.camera.dolly(f)
-
-
     def project(self,x,y,z,locked=False):
         "Map the object coordinates (x,y,z) to window coordinates."""
         locked=False
@@ -1067,21 +1061,46 @@ class Canvas(object):
         return self.camera.unProject(x,y,z)
 
 
-    def zoomRectangle(self,x0,y0,x1,y1):
-        """Rectangle zooming
+    def zoom(self,f,dolly=True):
+        """Dolly zooming.
 
-        x0,y0,x1,y1 are pixel coordinates of the lower left and upper right
-        corners of the area to zoom to the full window
+        Zooms in with a factor `f` by moving the camera closer
+        to the scene. This does noet change the camera's FOV setting.
+        It will change the perspective view though.
         """
-        ## WE SHOULD ADD FACILITIES TO KEEP THE ASPECT RATIO
+        if dolly:
+            self.camera.dolly(f)
+
+
+    def zoomRectangle(self,x0,y0,x1,y1):
+        """Rectangle zooming.
+
+        Zooms in/out by changing the area and position of the visible
+        part of the lens.
+        Unlike zoom(), this does not change the perspective view.
+
+        `x0,y0,x1,y1` are pixel coordinates of the lower left and upper right
+        corners of the area of the lens that will be mapped on the
+        canvas viewport.
+        Specifying values that lead to smaller width/height will zoom in.
+        """
         w,h = float(self.width()),float(self.height())
         self.camera.setArea(x0/w,y0/h,x1/w,y1/h)
 
 
-    def zoomAll(self):
-        """Rectangle zooming
+    def zoomCentered(self,w,h,x=None,y=None):
+        """Rectangle zooming with specified center.
 
-        x0,y0,x1,y1 are relative corners in (0,0)..(1,1) space
+        This is like zoomRectangle, but the zoom rectangle is specified
+        by its center and size, which may be more appropriate when using
+        off-center zooming.
+        """
+        self.zoomRectangle(x-w/2,y-h/2,x+w/2,y+w/2)
+
+
+    def zoomAll(self):
+        """Rectangle zoom to make full scene visible.
+
         """
         self.camera.resetArea()
 

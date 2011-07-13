@@ -808,7 +808,8 @@ class Connectivity(ndarray):
                 v = concatenate([v,clist[i][:k,j]])
             f[:,i] = resize(v,(n))
         return Connectivity(f)
-    
+
+
 
 ######################################################################
     # BV: the methods below should probably be removed,

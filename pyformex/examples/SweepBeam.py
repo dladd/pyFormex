@@ -32,7 +32,7 @@ techniques = ['color']
 """
 
 from plugins import curve
-from mesh import Mesh,connectMesh
+#from mesh import Mesh
 import simple
 
 
@@ -72,7 +72,7 @@ draw(Section,color=red)
 
 #pause()
 
-method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude'])
+method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude','Revolve'])
 
 
 if method == 'Sweep':
@@ -82,20 +82,21 @@ if method == 'Sweep':
     Beam = Section.sweep(path,normal=[0.,0.,1.],upvector=[0.,1.,0.])
 
 elif method == 'Connect':
-    Section1 = Section.copy()
-    Section1.coords = Section1.coords.trl([0,0,l])
-    Beam = connectMesh(Section,Section1,el)
+    Section1 = Section.trl([0,0,l])
+    Beam = Section.connect(Section1,el)
 
 elif method == 'Extrude':
     Beam = Section.extrude(el,step=l/el,dir=2)
+
+elif method == 'Revolve':
+    Beam = Section.revolve(el,axis=1,angle=60.,around=[-l,0.,0.])
 
 else:
     exit()
     
 smooth()
 clear()
-#Beam.eltype = 'hex8'
-draw(Beam,color='red',linewidth=2)
+draw(Beam.getBorderMesh(),color='red',linewidth=2)
 export({'Beam':Beam})
 
 
