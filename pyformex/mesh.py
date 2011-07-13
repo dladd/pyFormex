@@ -1207,7 +1207,6 @@ Size: %s
           extrude element type will be created first, and then a conversion
           to the requested element is attempted.
         """
-        print "CONNECTSEQ"
         if type(coordslist) is not list:
             raise ValueError,"Invalid coordslist argument"
 
@@ -1251,7 +1250,6 @@ Size: %s
           extrude element type will be created first, and then a conversion
           to the rewuested element is attempted.
         """
-        print "CONNECT"
         if self.eltype != mesh.eltype or self.shape() != mesh.shape():
             raise ValueError,"Incompatible Mesh"
         
