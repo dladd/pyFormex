@@ -774,12 +774,15 @@ def findOldProcesses(max=16):
                 pid = pidofxwin(windowid)
             else:
                 pid = None
-
-            running.append((windowid,name,pid))
-            count += 1
-            windowname = '%s (%s)' % (pf.Version,count)
+            # pid control needed for invisible windows on ubuntu
+            if pid:
+                running.append((windowid,name,pid))
+                count += 1
+                windowname = '%s (%s)' % (pf.Version,count)
+            else:
+                break
         else:
-            break
+            break 
 
     return windowname,running
         
