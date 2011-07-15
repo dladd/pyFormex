@@ -26,8 +26,10 @@
 from PyQt4 import QtCore,QtGui
 import numpy
 
-QtGui.QColor.setAllowX11ColorNames(True)
-
+try:
+    QtGui.QColor.setAllowX11ColorNames(True)
+except:
+    print "This appears not to be an X11 Window system!"
 
 def GLColor(color):
     """Convert a color to an OpenGL RGB color.

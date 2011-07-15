@@ -53,6 +53,10 @@ And here we have some images of pyFormex running on ARM-based hardware:
 - `efika_screenshot`_: Screenshot of the Genesi Efika running pyFormex
   under Ubuntu 10.10.
 
+And finally, a first glimpse of
+
+- `imac_screenshot`_: pyFormex running on an iMac.
+
 .. _`efika_smartbook`: http://pyformex.berlios.de/images/efika_smartbook.jpg
 .. _`efika_screenshot`: http://pyformex.berlios.de/images/efika_screenshot.png
-
+.. _`imac_screenshot`: http://pyformex.berlios.de/images/pyformex_on_Mac.png

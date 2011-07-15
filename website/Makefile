@@ -26,6 +26,9 @@ all:	pub
 pubtest: $(HOMEPARTS)
 	$(RSYNC) --exclude src . ${TARGETDIR} -n
 
+pubimages: 
+	$(RSYNC) $(IMAGES) ${TARGETDIR}/images
+
 pub: 
 	$(RSYNC) $(HTDOCS) ${TARGETDIR}
 	$(RSYNC) $(EXAMPLES) ${TARGETDIR}/examples
