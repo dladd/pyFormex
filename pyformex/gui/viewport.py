@@ -41,8 +41,11 @@ import image
 import utils
 import toolbar
 
-from ctypes import cdll
-libGL = cdll.LoadLibrary("libGL.so.1")
+
+# BV: UGLY! WE SHOULD GET RID OF THIS
+if pf.X11:
+    from ctypes import cdll
+    libGL = cdll.LoadLibrary("libGL.so.1")
 
 import math
 

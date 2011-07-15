@@ -26,10 +26,15 @@
 from PyQt4 import QtCore,QtGui
 import numpy
 
+# BV: THIS DETECTION SHOULD GO ELSEWHERE
+import pyformex as pf
 try:
     QtGui.QColor.setAllowX11ColorNames(True)
+    pf.X11 = True
 except:
-    print "This appears not to be an X11 Window system!"
+    print "WARNING: THIS IS NOT AN X11 WINDOW SYSTEM!"
+    print "SOME THINGS MAY NOT WORK PROPERLY!"
+    pf.X11 = False
 
 def GLColor(color):
     """Convert a color to an OpenGL RGB color.

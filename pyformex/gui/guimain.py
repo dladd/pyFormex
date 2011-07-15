@@ -843,7 +843,6 @@ def startGUI(args):
     #pf.options.debug = -1
     pf.debug("Arguments passed to the QApplication: %s" % args)
     pf.app = QtGui.QApplication(args)
-    
     #
     pf.debug("Arguments left after constructing the QApplication: %s" % args)
     pf.debug("Arguments left after constructing the QApplication: %s" % pf.app.arguments().join('\n'))
@@ -872,8 +871,13 @@ def startGUI(args):
 
     # Check for existing pyFormex processes
     pf.debug("Checking for running pyFormex")
-    windowname,running = findOldProcesses()
-
+    if pf.X11:
+        windowname,running = findOldProcesses()
+    else:
+        windowname,running = "UNKOWN",[]
+    pf.debug("%s,%s" % (windowname,running))
+    
+    
     while len(running) > 0:
         if len(running) >= 16:
             print("Too many open pyFormex windows --- bailing out")
