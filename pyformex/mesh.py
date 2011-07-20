@@ -1187,6 +1187,9 @@ Size: %s
     # Connection, Extrusion, Sweep, Revolution
     #
 
+    ## THE loop PARAMETER NEEDS TO BE ADDED
+    ## THE div PARAMETER NEED TO BE IMPLEMENTED
+
     def connectSequence(self,coordslist,div=1,eltype=None):
         """Connect a Mesh with a sequence of toplogically congruent ones.
 
@@ -1216,13 +1219,26 @@ Size: %s
         if sum([c.shape != self.coords.shape for c in coordslist]):
             raise ValueError,"Incompatible coordinate sets"
 
-        # Create the connectivity table  
-        nnod = self.ncoords()
-        e = extrudeConnectivity(self.elems,nnod)
-        e = replicConnectivity(e,len(coordslist)-1,nnod)
+        # set divisions
+        if type(div) == int:
+            div = arange(1,div+1) / float(div)
+        else:
+            div = array(div).ravel()
+
         # Concatenate the coordinates
-        #coordslist[0:0] = [self.coords] 
-        x = Coords.concatenate(coordslist)
+        #print len(coordslist)
+        x = [ Coords.interpolate(xi,xj,div).reshape(-1,3) for xi,xj in zip(coordslist[:-1],coordslist[1:]) ]
+        #print len(x)
+        #print [xi.shape for xi in x]
+        #print coordslist[0].shape
+        x = Coords.concatenate(coordslist[:1] + x)
+        #print x.shape
+        
+        # Create the connectivity table
+        nnod = self.ncoords()
+        nrep = x.shape[0]//nnod - 1
+        e = extrudeConnectivity(self.elems,nnod)
+        e = replicConnectivity(e,nrep,nnod)
         # Create the Mesh
         M = Mesh(x,e).setProp(self.prop)
         # convert to proper eltype

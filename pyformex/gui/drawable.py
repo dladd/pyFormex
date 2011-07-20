@@ -455,7 +455,7 @@ def drawQuadraticSurfaces(x,e,color=None):
     # Convert quad9 to nurbs node order
     xx = xx[...,[0,7,3,4,8,6,1,5,2],:]
     xx = xx.reshape(-1,3,3,xx.shape[-1])
-    if color.ndim > 2:
+    if color is not None and color.ndim > 2:
         if color.shape[-2] == 8:
             color = quad8_quad9(color)
         color = color[...,[0,7,3,4,8,6,1,5,2],:]

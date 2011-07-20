@@ -519,7 +519,7 @@ def createScriptDirsDialog():
         
 
 def setOptions():
-    options = ['test','uselib','fastencode']
+    options = [] # Currently No user changeable options ['test']
     options = [ o for o in options if hasattr(pf.options,o) ]
     items = [ I(o,getattr(pf.options,o)) for o in options ]
     # currently we only have All or None as debug levels

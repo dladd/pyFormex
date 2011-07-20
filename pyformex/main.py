@@ -330,10 +330,6 @@ def run(argv=[]):
            action="store_false", dest="uselib", default=None,
            help="Do not use the pyFormex C-lib.",
            ),
-        MO("--fastencode",
-           action="store_true", dest="fastencode", default=False,
-           help="Use a fast algorithm to encode edges.",
-           ),
         MO("--norst2html",
            action="store_false", dest="rst2html", default=True,
            help="Do not try to convert rst messages to html before displaying.",
@@ -370,10 +366,10 @@ def run(argv=[]):
            action="store", dest="testmodule", default=None,
            help="Run the docstring tests for module TESTMODULE. TESTMODULE is the name of the module, using . as path separator.",
            ),
-        MO("--test",
-           action="store_true", dest="test", default=False,
-           help="testing mode: only for developers!",
-           ),
+        ## MO("--test",
+        ##    action="store_true", dest="test", default=False,
+        ##    help="testing mode: only for developers!",
+        ##    ),
         MO("--testexecutor",
            action="store_true", dest="executor", default=False,
            help="test alternate executor: only for developers!",
@@ -567,7 +563,8 @@ pyFormex Warning
     if startup_messages:
         print(startup_messages)
 
-    pyformex.debug(utils.reportDetected())
+    if pyformex.options.debug: # Avoid computing the report if not printed
+        pyformex.debug(utils.reportDetected())
  
     #print(pyformex.cfg.keys())
     #print(pyformex.refcfg.keys())

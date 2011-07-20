@@ -234,7 +234,7 @@ Proposed changes in the Element class
     def getDrawFaces(self,quadratic=False):
         #print "QUADRATIC %s" % quadratic
         if quadratic and hasattr(self,'drawfaces2'):
-            print self.drawfaces2
+            #print self.drawfaces2
             return self.drawfaces2
         if not hasattr(self,'drawfaces'):
             self.drawfaces = self.getFaces().reduceDegenerate()
@@ -544,6 +544,25 @@ Hex20 = Element(
 
 Hex20.drawfaces = [ Hex20.faces.selectNodes(i) for i in Quad8.drawfaces ]
 Hex20.drawfaces2 = [ Hex20.faces ]
+
+
+# THIS ELEMENT IS NOT READY!!
+from simple import regularGrid
+Hex27 = Element(
+    'hex27',"A 27-node hexahedron",
+    ndim = 3,
+    vertices = regularGrid([0.,0.,0.],[1.,1.,1.],[2,2,2]),
+    edges = ('line3',[ (0,8,1), (1,9,2), (2,10,3),(3,11,0),
+                       (4,12,5),(5,13,6),(6,14,7),(7,15,4),
+                       (0,16,4),(1,17,5),(2,18,6),(3,19,7) ],),
+    faces = ('quad8', [ (0,4,7,3,16,15,19,11), (1,2,6,5,9,18,13,17),
+                        (0,1,5,4,8,17,12,16), (3,7,6,2,19,14,18,10),
+                        (0,3,2,1,11,10,9,8), (4,5,6,7,12,13,14,15) ], ),
+    reversed = (4,5,6,7,0,1,2,3,12,13,14,15,8,9,10,11,16,17,18,19),
+)
+
+Hex27.drawfaces = [ Hex20.faces.selectNodes(i) for i in Quad8.drawfaces ]
+Hex27.drawfaces2 = [ Hex20.faces ]
 
 ######################################################################
 ########## element type conversions ##################################

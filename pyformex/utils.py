@@ -215,9 +215,14 @@ def checkExternal(name=None,command=None,answer=None):
 def FullVersion():
     return "%s (Rev. %s)" % (pf.Version,pf.__revision__)
 
+def Libraries():
+    from lib import accelerated
+    acc = [ m.__name__ for m in accelerated ]
+    return ', '.join(acc)
 
 def reportDetected():
     s = "%s\n\n" % FullVersion()
+    s += "pyFormex C libraries: %s\n\n" % Libraries()
     s += "Python version: %s\n" % sys.version
     s += "Operating system: %s\n\n" % sys.platform
     s += "Detected Python Modules:\n"

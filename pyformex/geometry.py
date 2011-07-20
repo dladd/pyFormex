@@ -102,6 +102,7 @@ class Geometry(object):
     
     :meth:`scale`,
     :meth:`translate`,
+    :meth:`centered`,
     :meth:`rotate`,
     :meth:`shear`,
     :meth:`reflect`,
@@ -222,6 +223,9 @@ class Geometry(object):
         pass
     @_coords_transform
     def translate(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def centered(self,*args,**kargs):
         pass
     @_coords_transform
     def align(self,*args,**kargs):

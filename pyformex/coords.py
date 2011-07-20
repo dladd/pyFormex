@@ -643,6 +643,18 @@ class Coords(ndarray):
         return out
 
 
+    def centered(self):
+        """Return a centered copy of the Coords.
+
+        Returns a Coords which is a translation thus that the center
+        coincides with the origin.
+        This is equivalent with::
+
+          self.trl(-self.center())
+        """
+        return self.trl(-self.center())
+
+
     def align(self,alignment='---'):
         """Align the Coords along the global axes.
 
