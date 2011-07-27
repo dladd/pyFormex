@@ -124,10 +124,7 @@ Proposed changes in the Element class
 - getAlignedCoords(): return coords between 0 ad 1 and aligned on 0 in all
   directions
 
-- Make the elements into Element class instances instead of subclasses?
-
-- Should we use Coords objects for the vertices and arrays for the rest?
-
+- Make the elements subclasses instead of Element class instances?
 
 """
 
@@ -644,14 +641,20 @@ Wedge6.conversions = {
 Hex8.conversions = {
     'wedge6': [ ('s', [ (0,1,2,4,5,6),(2,3,0,6,7,4) ]), ],
     'tet4'  : [ ('s', [ (0,1,2,5),(2,3,0,7),(5,7,6,2),(7,5,4,0),(0,5,2,7) ]), ],
+    'tet4-6': [ ('v', 'wedge6') ],
+    'hex8-8': [ ('v', 'hex20'), ],
     'hex20' : [ ('m', [ (0,1), (1,2), (2,3), (3,0),
                         (4,5), (5,6), (6,7), (7,4),
                         (0,4), (1,5), (2,6), (3,7), ]), ],
     }
 Hex20.conversions = {
     'hex8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
+    'hex8-8': [ ('v', 'hex27'), ],
+#    'hex27' :
     'tet4'  : [ ('v', 'hex8'), ],
     }
+#Hex27.conversions = {
+
 Hex16.conversions = {
     'hex20'  : [ ('m',[ (0,8), (1,9), (2,10), (3,11) ]),
                  ('s',[(0, 1, 2, 3, 8, 9, 10, 11, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19)])],
@@ -669,6 +672,8 @@ Line2.extruded = (Quad4, [0,1,3,2] )
 Line3.extruded = (Quad6, [0,2,5,3,1,4])
 Quad4.extruded = (Hex8, [] )
 Quad8.extruded = (Hex16, [] )
+
+Quad8.extruded2 = (Hex20, [],[] )
 
 ############################################################
 ############ Reduction of degenerate elements ##############

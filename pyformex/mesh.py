@@ -830,13 +830,28 @@ Size: %s
             return self.select(wi,compact=compact)
 
 
+    def avgNodes(self,nodsel,wts=None):
+        """Create average nodes from the existing nodes of a mesh.
+
+        `nodsel` is a local node selector as in :meth:`selectNodes`
+        Returns the (weighted) average coordinates of the points in the
+        selector as `(nelems*nnod,3)` array of coordinates, where
+        nnod is the length of the node selector.
+        `wts` is a 1-D array of weights to be attributed to the points.
+        Its length should be equal to that of nodsel.
+        """
+        elems = self.elems.selectNodes(nodsel)
+        return self.coords[elems].average(wts=wts,axis=1)
+
+
+    # The following is equivalent to avgNodes(self,nodsel)
     def meanNodes(self,nodsel):
         """Create nodes from the existing nodes of a mesh.
 
         `nodsel` is a local node selector as in :meth:`selectNodes`
         Returns the mean coordinates of the points in the selector as
         `(nelems*nnod,3)` array of coordinates, where nnod is the length
-        of the node selector. 
+        of the node selector.
         """
         elems = self.elems.selectNodes(nodsel)
         return self.coords[elems].mean(axis=1)
@@ -1188,9 +1203,8 @@ Size: %s
     #
 
     ## THE loop PARAMETER NEEDS TO BE ADDED
-    ## THE div PARAMETER NEED TO BE IMPLEMENTED
 
-    def connectSequence(self,coordslist,div=1,eltype=None):
+    def connectSequence(self,coordslist,div=1,degree=1,loop=False,eltype=None):
         """Connect a Mesh with a sequence of toplogically congruent ones.
 
         Parameters:

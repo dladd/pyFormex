@@ -287,6 +287,40 @@ class Coords(ndarray):
         return 0.5 * (X0+X1)
 
 
+    def average(self,wts=None,axis=0):
+        """Return a (weighted) average of the :class:`Coords`.
+
+        The average of a :class:`Coords` is a :class:`Coords` with one
+        axis less than the original, obtained by averaging all the points
+        along that axis.
+        The weights array can either be 1-D (in which case its length must
+        be the size along the given axis) or of the same shape as a.
+        Weights can be specified as a 1-D array with the length of that axis,
+        or as an array with the same shape as the :class:`Coords`.
+        The sum of the weights (along the specified axis if not 1-D) will
+        generally be equal to 1.0.
+        If wts=None, then all points are assumed to have a weight equal to
+        one divided by the length of the specified axis.
+
+        Example:
+
+          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],\
+                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).average()
+          [[ 2.  0.  0.]
+           [ 3.  0.  0.]
+           [ 4.  0.  0.]]
+          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],\
+                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).average(axis=1)
+          [[ 1.  0.  0.]
+           [ 5.  0.  0.]]
+          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],\
+                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).average(wts=[0.5,0.25,0.25],axis=1)
+          [[ 0.75  0.    0.  ]
+           [ 4.75  0.    0.  ]]
+        """
+        return average(self,weights=wts,axis=axis)
+        
+
     def centroid(self):
         """Return the centroid of the :class:`Coords`.
 
@@ -651,6 +685,7 @@ class Coords(ndarray):
         This is equivalent with::
 
           self.trl(-self.center())
+
         """
         return self.trl(-self.center())
 
@@ -672,7 +707,8 @@ class Coords(ndarray):
 
         The default alignment string '---' results in a translation which puts
         all the points in the octant with all positive coordinate values.
-        A string '000' will center the object around the origin.
+        A string '000' will center the object around the origin, just like
+        the (slightly faster) :meth:`centered` method, which is .
         """
         trl = zeros(3)
         bb = self.bbox()
