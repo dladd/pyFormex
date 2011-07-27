@@ -1227,8 +1227,8 @@ Size: %s
         if type(coordslist) is not list:
             raise ValueError,"Invalid coordslist argument"
 
-        for i,c in enumerate(coordslist):
-            pass
+        ## for i,c in enumerate(coordslist):
+        ##     pass
             
         if sum([c.shape != self.coords.shape for c in coordslist]):
             raise ValueError,"Incompatible coordinate sets"
@@ -1287,24 +1287,26 @@ Size: %s
         self = self.compact()
         mesh = mesh.compact()
 
-        # set divisions
-        if type(div) == int:
-            div = arange(div+1) / float(div)
-        else:
-            div = array(div).ravel()
+        return self.connectSequence([self.coords,mesh.coords],div=div,eltype=eltype)
 
-        # Create the connectivity table  
-        nnod = self.ncoords()
-        e = extrudeConnectivity(self.elems,nnod)
-        e = replicConnectivity(e,div.size-1,nnod)
-        # Create the interpolations of the coordinates
-        x = Coords.interpolate(self.coords,mesh.coords,div).reshape(-1,3)
-        # Create the Mesh
-        M = Mesh(x,e).setProp(self.prop)
-        # convert to proper eltype
-        if eltype:
-            M = M.convert(eltype)
-        return M
+        ## # set divisions
+        ## if type(div) == int:
+        ##     div = arange(div+1) / float(div)
+        ## else:
+        ##     div = array(div).ravel()
+
+        ## # Create the connectivity table  
+        ## nnod = self.ncoords()
+        ## e = extrudeConnectivity(self.elems,nnod)
+        ## e = replicConnectivity(e,div.size-1,nnod)
+        ## # Create the interpolations of the coordinates
+        ## x = Coords.interpolate(self.coords,mesh.coords,div).reshape(-1,3)
+        ## # Create the Mesh
+        ## M = Mesh(x,e).setProp(self.prop)
+        ## # convert to proper eltype
+        ## if eltype:
+        ##     M = M.convert(eltype)
+        ## return M
 
 
     def extrude(self,n,step=1.,dir=0,eltype=None):

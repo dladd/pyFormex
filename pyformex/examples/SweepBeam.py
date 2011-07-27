@@ -94,7 +94,6 @@ elif method == 'Revolve':
 else:
     exit()
     
-smooth()
 clear()
 draw(Beam.getBorderMesh(),color='red',linewidth=2)
 export({'Beam':Beam})
