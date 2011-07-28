@@ -1202,36 +1202,85 @@ Size: %s
     # Connection, Extrusion, Sweep, Revolution
     #
 
-    ## THE loop PARAMETER NEEDS TO BE ADDED
+    ## BV: THE degree PARAMETER NEEDS TO BE IMPLEMENTED
+    ## BV: THE loop PARAMETER NEEDS TO BE IMPLEMENTED
 
-    def connectSequence(self,coordslist,div=1,degree=1,loop=False,eltype=None):
-        """Connect a Mesh with a sequence of toplogically congruent ones.
+    def connect(self,coordslist,div=1,degree=1,loop=False,eltype=None):
+        """Connect a sequence of toplogically congruent Meshes into a hypermesh.
 
         Parameters:
 
-        - `meshes`: a list of Meshes with the same element type and shape
-          (number of elements and plexitude).
-          The two Meshes usually also have the same topology.
-          Each pair of subsequent Meshes are connected to form hypermeshes
-          which are then concatenated.
-          The plexitude of the new Mesh is two times that of the original Mesh.
-        - `div`: Either an integer, or a sequence of numbers (usually between
-          0.0 and 1.0). This parameter has the same meaning as in
-          `Coords.interpolate`. If an int is given, div will be set to
-          (div+1) equally spaced values in the range [0.0..1.0].
-        - `eltype`: the element type of the constructed hypermesh. If not
-          given it is set from the element type database. Otherwise, the
-          extrude element type will be created first, and then a conversion
-          to the requested element is attempted.
+        - `coordslist`: either a list of Coords instances, all having the same
+          shape as self.coords, or a single Mesh instance whose `coords`
+          attribute has the same shape.
+
+          If it is a list of Coords, consider a
+          list of Meshes obtained by combining each Coords object with the
+          connectivity table, element type and property numbers of the current
+          Mesh. The return value then is the hypermesh obtained by connecting
+          each consecutive slice of (degree+1) of these meshes. The hypermesh
+          has a dimensionality that is one higher than the original Mesh (i.e.
+          points become lines, lines become surfaces, surfaces become volumes).
+          The resulting elements will be of the given `degree` in the
+          direction of the connection. Notice that the coords of the current
+          Mesh are not used, unless these coords are explicitely included into
+          the specified `coordslist`. In many cases `self.coords` will be the
+          first item in `coordslist`, but it could occur anywhere in the list
+          or even not at all. The number of Coords items in the list should
+          be a multiple of `degree` plus 1.
+
+          Specifying a single Mesh instead of a list of Coords is
+          just a convenience for the often occurring situation of connecting
+          a Mesh (self) with another one (mesh) having the same connectivity:
+          in this case the list of Coords will automatically be set to
+          ``[ self.coords, mesh.coords ]``. The `degree` should be 1 in this
+          case.
+
+        - `degree`: degree of the connection. Currently only degree 1 and 2
+          are supported. If degree is 1, every Coords from the `coordslist`
+          is connected with hyperelements of a linear degree in the
+          connection direction. If degree is 2, quadratic hyperelements are
+          created from one Coords item and the next two in the list.
+
+        - `loop`: if True, the connections with loop around the list and
+          connect back to the first. This is accomplished by adding the first
+          Coords item back at the end of the list.
+
+        - `div`: Either an integer, or a sequence of float numbers (usually
+          in the range ]0.0..1.0]). With this parameter the generated elements
+          can be further subdivided along the connection direction.
+          If an int is given, the connected elements will be divided
+          into this number of elements along the connection direction. If a
+          sequence of float numbers is given, the numbers specify the relative
+          distance along the connection direction where the elements should
+          end. If the last value in the sequence is not equal to 1.0, there
+          will be a gap between the consecutive connections.
+
+        - `eltype`: the element type of the constructed hypermesh. Normally,
+          this is set automatically from the base element type and the
+          connection degree. If a different element type is specified,
+          a final conversion to the requested element type is attempted.
         """
-        if type(coordslist) is not list:
+        if type(coordslist) is list:
+            clist = coordslist
+        elif isinstance(coordslist,Mesh):
+            utils.warn("Mesh.connect does no longer automatically compact the Meshes. You may have to use the Mesh.compact method to do so.")
+            clist = [ self.coords, coordslist.coords ]
+        else:
             raise ValueError,"Invalid coordslist argument"
 
-        ## for i,c in enumerate(coordslist):
-        ##     pass
-            
-        if sum([c.shape != self.coords.shape for c in coordslist]):
+        if sum([c.shape != self.coords.shape for c in clist]):
             raise ValueError,"Incompatible coordinate sets"
+
+        # implement loop parameter
+        if loop:
+            clist.append(clist[0])
+
+        if (len(clist)-1) % degree != 0:
+            raise ValueError,"Invalid length of coordslist for this degree."
+
+        if degree != 1:
+            raise NotImplementedError,"Quadratic connection is not implemented yet."
 
         # set divisions
         if type(div) == int:
@@ -1240,19 +1289,15 @@ Size: %s
             div = array(div).ravel()
 
         # Concatenate the coordinates
-        #print len(coordslist)
-        x = [ Coords.interpolate(xi,xj,div).reshape(-1,3) for xi,xj in zip(coordslist[:-1],coordslist[1:]) ]
-        #print len(x)
-        #print [xi.shape for xi in x]
-        #print coordslist[0].shape
-        x = Coords.concatenate(coordslist[:1] + x)
-        #print x.shape
+        x = [ Coords.interpolate(xi,xj,div).reshape(-1,3) for xi,xj in zip(clist[:-1],clist[1:]) ]
+        x = Coords.concatenate(clist[:1] + x)
         
         # Create the connectivity table
         nnod = self.ncoords()
         nrep = x.shape[0]//nnod - 1
         e = extrudeConnectivity(self.elems,nnod)
         e = replicConnectivity(e,nrep,nnod)
+        
         # Create the Mesh
         M = Mesh(x,e).setProp(self.prop)
         # convert to proper eltype
@@ -1261,33 +1306,38 @@ Size: %s
         return M
 
 
-    def connect(self,mesh,div=1,eltype=None):
-        """Connect a Mesh with another one to form a hypermesh.
-
-        Parameters:
-
-        - `mesh`: a Mesh with the same element type and shape
-          (number of elements and plexitude) as self.
-          The two Meshes usually also have the same topology.
-          Both Meshes are connected to form a hypermesh. The plexitude of the
-          new Mesh is two times that of the original Mesh.
-        - `div`: Either an integer, or a sequence of numbers (usually between
-          0.0 and 1.0). This parameter has the same meaning as in
-          `Coords.interpolate`. If an int is given, div will be set to
-          (div+1) equally spaced values in the range [0.0..1.0].
-        - `eltype`: the element type of the constructed hypermesh. If not
-          given it is set from the element type database. Otherwise, the
-          extrude element type will be created first, and then a conversion
-          to the rewuested element is attempted.
-        """
-        if self.eltype != mesh.eltype or self.shape() != mesh.shape():
-            raise ValueError,"Incompatible Mesh"
+    def connectSequence(self,coordslist,div=1,degree=1,loop=False,eltype=None):
+        utils.deprec("Mesh.connectSequence is deprecated: use Mesh.connect instead")
+        return self.connect(coordslist,div=div,degree=degree,loop=loop,eltype=eltype)
         
-        # compact the node numbering schemes
-        self = self.compact()
-        mesh = mesh.compact()
 
-        return self.connectSequence([self.coords,mesh.coords],div=div,eltype=eltype)
+    ## def connect(self,mesh,div=1,eltype=None):
+    ##     """Connect a Mesh with another one to form a hypermesh.
+
+    ##     Parameters:
+
+    ##     - `mesh`: a Mesh with the same element type and shape
+    ##       (number of elements and plexitude) as self.
+    ##       The two Meshes usually also have the same topology.
+    ##       Both Meshes are connected to form a hypermesh. The plexitude of the
+    ##       new Mesh is two times that of the original Mesh.
+    ##     - `div`: Either an integer, or a sequence of numbers (usually between
+    ##       0.0 and 1.0). This parameter has the same meaning as in
+    ##       `Coords.interpolate`. If an int is given, div will be set to
+    ##       (div+1) equally spaced values in the range [0.0..1.0].
+    ##     - `eltype`: the element type of the constructed hypermesh. If not
+    ##       given it is set from the element type database. Otherwise, the
+    ##       extrude element type will be created first, and then a conversion
+    ##       to the rewuested element is attempted.
+    ##     """
+    ##     if self.eltype != mesh.eltype or self.shape() != mesh.shape():
+    ##         raise ValueError,"Incompatible Mesh"
+        
+    ##     # compact the node numbering schemes
+    ##     self = self.compact()
+    ##     mesh = mesh.compact()
+
+    ##     return self.connectSequence([self.coords,mesh.coords],div=div,eltype=eltype)
 
         ## # set divisions
         ## if type(div) == int:
@@ -1323,7 +1373,7 @@ Size: %s
         return self.connect(self.translate(dir,n*step),n,eltype=eltype)
 
 
-    def revolve(self,n,axis=0,angle=360.,around=None,eltype=None):
+    def revolve(self,n,axis=0,angle=360.,around=None,loop=False,eltype=None):
         """Revolve a Mesh around an axis.
 
         Returns a new Mesh obtained by revolving the given Mesh
@@ -1334,7 +1384,7 @@ Size: %s
         """
         angles = arange(n+1) * angle / n
         seq = [ self.coords.rotate(angle=a,axis=axis,around=around) for a in angles ]
-        return self.connectSequence(seq,eltype=eltype)
+        return self.connect(seq,loop=loop,eltype=eltype)
 
 
     def sweep(self,path,eltype=None,**kargs):
@@ -1356,7 +1406,7 @@ Size: %s
         the geometry .
         """
         seq = sweepCoords(self.coords,path,**kargs)
-        return self.connectSequence(seq,eltype=eltype)
+        return self.connect(seq,eltype=eltype)
 
 
     def __add__(self,other):

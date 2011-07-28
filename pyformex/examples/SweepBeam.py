@@ -72,7 +72,7 @@ draw(Section,color=red)
 
 #pause()
 
-method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude','Revolve'])
+method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude','Revolve','RevolveLoop'])
 
 
 if method == 'Sweep':
@@ -90,6 +90,9 @@ elif method == 'Extrude':
 
 elif method == 'Revolve':
     Beam = Section.revolve(el,axis=1,angle=60.,around=[-l,0.,0.])
+
+elif method == 'RevolveLoop':
+    Beam = Section.revolve(el,axis=1,angle=240.,around=[-l,0.,0.],loop=True)
 
 else:
     exit()

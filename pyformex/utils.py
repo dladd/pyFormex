@@ -898,4 +898,8 @@ def warn(message,level=UserWarning,stacklevel=3):
     import warnings
     warnings.warn(message,level,stacklevel)
 
+
+def deprec(message,stacklevel=3):
+    warn(message,level=DeprecationWarning,stacklevel=stacklevel)
+
 ### End
