@@ -550,7 +550,7 @@ from simple import regularGrid
 Hex27 = Element(
     'hex27',"A 27-node hexahedron",
     ndim = 3,
-    vertices = regularGrid([0.,0.,0.],[1.,1.,1.],[2,2,2]).reshape(-1,3),
+    vertices = regularGrid([0.,0.,0.],[1.,1.,1.],[2,2,2]).swapaxes(0,2).reshape(-1,3),
     edges = ('line3',[ (0,1,2),(6,7,8),(18,19,20),(24,25,26),
                        (0,3,6),(2,5,8),(18,21,24),(20,23,26),
                        (0,9,18),(2,11,20),(6,15,24),(8,17,26) ],),
