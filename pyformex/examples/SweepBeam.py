@@ -74,6 +74,7 @@ draw(Section,color=red)
 
 method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude','Revolve','RevolveLoop'])
 
+print Section.prop
 
 if method == 'Sweep':
     L = simple.line([0,0,0],[0,0,l],el)
@@ -96,9 +97,14 @@ elif method == 'RevolveLoop':
 
 else:
     exit()
-    
+
+print Beam.prop
+print Beam.elems.shape
+
+
 clear()
-draw(Beam.getBorderMesh(),color='red',linewidth=2)
+draw(Beam,color='red',linewidth=2)
+#draw(Beam.getBorderMesh(),color='red',linewidth=2)
 export({'Beam':Beam})
 
 

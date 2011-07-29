@@ -1295,7 +1295,7 @@ Size: %s
         # Create the connectivity table
         nnod = self.ncoords()
         nrep = x.shape[0]//nnod - 1
-        e = extrudeConnectivity(self.elems,nnod)
+        e = extrudeConnectivity(self.elems,nnod,degree)
         e = replicConnectivity(e,nrep,nnod)
         
         # Create the Mesh
@@ -1653,22 +1653,31 @@ Size: %s
 
 ######################## Functions #####################
 
+# BV: THESE SHOULD GO TO connectivity MODULE
 
-def extrudeConnectivity(e,nnod):
-    """Extrude a Connectivity to a higher level Connectivity.
+def extrudeConnectivity(e,nnod,degree):
+    """_Extrude a Connectivity to a higher level Connectivity.
 
+    e: Connectivity
+    nnod: a number > highest node number
+    degree: degree of extrusion (currently 1 or 2)
+
+    The extrusion adds `degree` planes of nodes, each with an node increment
+    `nnod`, to the original Connectivity `e` and then selects the target nodes
+    from it as defined by the e.eltype.extruded[degree] value.
+    
     Currently returns an integer array, not a Connectivity!
     """
     try:
-        eltype,reorder = e.eltype.extruded
+        eltype,reorder = e.eltype.extruded[degree]
     except:
         try:
             eltype = e.eltype.name()
         except:
             eltype = None
-        raise ValueError,"I don't know how to extrude a Connectivity with eltype '%s'" % eltype
+        raise ValueError,"I don't know how to extrude a Connectivity of eltype '%s' in degree %s" % (eltype,degree)
     # create hypermesh Connectivity
-    e = concatenate([e+i*nnod for i in range(2)],axis=-1)
+    e = concatenate([e+i*nnod for i in range(degree+1)],axis=-1)
     # Reorder nodes if necessary
     if reorder:
         e = e[:,reorder]
@@ -1676,7 +1685,7 @@ def extrudeConnectivity(e,nnod):
 
 
 def replicConnectivity(e,n,inc):
-    """Repeat a Connectivity with increasing node numbers.
+    """_Repeat a Connectivity with increasing node numbers.
 
     e: a Connectivity
     n: integer: number of copies to make
@@ -1744,16 +1753,6 @@ def mergeMeshes(meshes,fuse=True,**kargs):
     return coords,[Connectivity(i[e]) for i,e in zip(index,elems)]
 
 
-def connectMeshSequence(ML,loop=False,**kargs):
-    MR = ML[1:]
-    if loop:
-        MR.append(ML[0])
-    else:
-        ML = ML[:-1]
-    HM = [ Mi.connect(Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
-    return Mesh.concatenate(HM)
-
-
 ########### Deprecated #####################
 
 
@@ -1777,6 +1776,18 @@ def correctHexMeshOrientation(hm):
     tp=vectorTripleProduct(hf[:, 1]-hf[:, 0], hf[:, 2]-hf[:, 1], hf[:, 4]-hf[:, 0])# from formex.py
     hm.elems[tp<0.]=hm.elems[tp<0.][:,  [4, 5, 6, 7, 0, 1, 2, 3]]
     return hm
+
+
+# deprecated in 0.8.5
+def connectMeshSequence(ML,loop=False,**kargs):
+    utils.deprec("connectMeshSequence is deprecated: use Mesh.connect instead")
+    MR = ML[1:]
+    if loop:
+        MR.append(ML[0])
+    else:
+        ML = ML[:-1]
+    HM = [ Mi.connect(Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
+    return Mesh.concatenate(HM)
 
 
 # End

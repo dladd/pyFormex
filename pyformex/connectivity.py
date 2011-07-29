@@ -736,6 +736,58 @@ class Connectivity(ndarray):
         return lo[ind]
 
 
+    # BV: UNTESTED !
+    def reorderNodes(schemes,reverse=False):
+        """_Convert Connectivity to/from foreign node numbering schemes.
+
+        The order in which the element's nodes are numbered internally in
+        pyFormex may be different than the numbering scheme used in external
+        software packages. To allow correct export/import to/from other
+        software, the nodes have to be renumbered.
+        This function provides such a facility.
+
+        Parameters:
+
+        - `schemes`: a dictionary having pyFormex element names as keys and
+          the matching nodal permutation arrays as values. The length of
+          the aray should match the plexitude of the Connectivity.
+        - `reverse`: if True, the conversion is from external to internal.
+          In this case, the Connectivity's eltype is interpreted as the
+          pyFormex target element type (and should be set beforehand).
+
+        Returns:
+
+        - If the Connectivity has an element type and `scheme` has a key
+          matching the element's name, a Connectivity with the renumbered
+          elements is returned.
+
+          - If `reverse` is False (default), the renumbering is done according
+            to the permutation given by the `scheme` value matching the
+            element name and the returned Connectivity will have no element
+            type.
+
+          - If `reverse` is True, the permutation scheme is reversed prior
+            to using it. The target element type is retained in the returned
+            Connectivity.
+
+        - If the Connectivity has no element type or `scheme` has no matching
+          key, the input Connectivity is returned unchanged.
+
+        """
+        if hasattr(self,'eltype'):
+            key = elems.eltype.name()
+            if scheme.haskey(key):
+                print 'key = %s' % key
+                trl = scheme[key]
+                print 'trl = %s' % trl
+                elems = self[trl]
+                if not reverse:
+                    delattr(self,'eltype')
+                return elems
+
+        return self
+
+
 #######################################################################
     # class and static methods #
 

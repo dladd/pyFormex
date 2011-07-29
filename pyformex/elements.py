@@ -666,11 +666,11 @@ Quad6.conversions = {
 ##########################################################
 ############ Extrusions ##################################
 
-Point.extruded = (Line2, [])
-Line2.extruded = (Quad4, [0,1,3,2] )
-Line3.extruded = (Quad6, [0,2,5,3,1,4])
-Quad4.extruded = (Hex8, [] )
-Quad8.extruded = (Hex16, [] )
+Point.extruded = { 1: (Line2, []) }
+Line2.extruded = { 1: (Quad4, [0,1,3,2] ) }
+Line3.extruded = { 1: (Quad6, [0,2,5,3,1,4]) }
+Quad4.extruded = { 1: (Hex8, [] ) }
+Quad8.extruded = { 1: (Hex16, [] ) }
 
 Quad8.extruded2 = (Hex20, [],[] )
 

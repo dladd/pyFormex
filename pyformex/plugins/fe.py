@@ -37,24 +37,6 @@ from utils import deprecation
 import warnings
 
 
-## BV: withdrawn in 0.8.3
-## @deprecation("\nUse Mesh instances and mesh.mergeMeshes instead.")
-## def mergeModels(femodels,**kargs):
-##     """Merge all the nodes of a list of FE models.
-
-##     Each item in femodels is a (coords,elems) tuple.
-##     The return value is a tuple with:
-
-##     - the coordinates of all unique nodes,
-##     - a list of elems corresponding to the input list,
-##       but with numbers referring to the new coordinates.
-
-##     The merging operation can be tuned by specifying extra arguments
-##     that will be passed to :meth:`Coords:fuse`.
-##     """
-##     return mergeMeshes([Mesh(m) for m in femodels])
-
-
 ######################## Finite Element Model ##########################
 
 class Model(Geometry):
@@ -78,7 +60,6 @@ class Model(Geometry):
 
         The model can have node and element property numbers.
         """
-        #Dict.__init__(self)
         if not type(elems) == list:
             elems = [ elems ]
         self.coords = Coords(coords)
@@ -192,12 +173,8 @@ class Model(Geometry):
         all = arange(nnodes)
         old = concatenate([old,setdiff1d(all,old)])
         new = concatenate([new,setdiff1d(all,new)])
-        #print("old:\n",old)
-        #print("new:\n",new)
         oldnew = old[new]
         newold = argsort(oldnew)
-        #print("oldnew:\n",oldnew)
-        #print("newold:\n",newold)
         self.coords = self.coords[oldnew]
         self.elems = [ Connectivity(newold[e]) for e in self.elems ]
         return oldnew,newold
