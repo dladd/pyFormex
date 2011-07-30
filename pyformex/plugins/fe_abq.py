@@ -1662,12 +1662,12 @@ class Step(Dict):
         cmd+='\n'
         fil.write(cmd)             
         
+        #~ fil.write(("%s"+",%s"*(len(self.time)-1)+'\n') % tuple(self.time))               
+        fil.write(fmtData(self.time))              
+        
         if self.extra is not None:
             writeStepExtra(fil,self.extra)
         
-        #~ fil.write(("%s"+",%s"*(len(self.time)-1)+'\n') % tuple(self.time))               
-        fil.write(fmtData(self.time))               
-
         prop = propDB.getProp('n',tag=self.tags,attr=['bound'])
         if prop:
             pf.message("  Writing step boundary conditions")
