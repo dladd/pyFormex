@@ -126,6 +126,9 @@ class Geometry(object):
     :meth:`projectOnPlane`,
     :meth:`projectOnSphere`,
     :meth:`projectOnCylinder`,
+    :meth:`isopar`,
+    :meth:`transformCS`,
+    :meth:`addNoise`,
     :meth:`rot`,
     :meth:`trl`.
     """
@@ -312,6 +315,9 @@ class Geometry(object):
         pass
     @_coords_transform
     def transformCS(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def addNoise(self,*args,**kargs):
         pass
 
     rot = rotate

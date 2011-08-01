@@ -1203,7 +1203,6 @@ Size: %s
     #
 
     ## BV: THE degree PARAMETER NEEDS TO BE IMPLEMENTED
-    ## BV: THE loop PARAMETER NEEDS TO BE IMPLEMENTED
 
     def connect(self,coordslist,div=1,degree=1,loop=False,eltype=None):
         """Connect a sequence of toplogically congruent Meshes into a hypermesh.
@@ -1237,10 +1236,17 @@ Size: %s
           case.
 
         - `degree`: degree of the connection. Currently only degree 1 and 2
-          are supported. If degree is 1, every Coords from the `coordslist`
-          is connected with hyperelements of a linear degree in the
-          connection direction. If degree is 2, quadratic hyperelements are
-          created from one Coords item and the next two in the list.
+          are supported.
+
+          - If degree is 1, every Coords from the `coordslist`
+            is connected with hyperelements of a linear degree in the
+            connection direction.
+
+          - If degree is 2, quadratic hyperelements are
+            created from one Coords item and the next two in the list.
+            Note that all Coords items should contain the same number of nodes,
+            even for higher order elements where the intermediate planes
+            contain less nodes.
 
         - `loop`: if True, the connections with loop around the list and
           connect back to the first. This is accomplished by adding the first
@@ -1277,10 +1283,10 @@ Size: %s
             clist.append(clist[0])
 
         if (len(clist)-1) % degree != 0:
-            raise ValueError,"Invalid length of coordslist for this degree."
+            raise ValueError,"Invalid length of coordslist (%s) for degree %s." % (len(clist),degree)
 
-        if degree != 1:
-            raise NotImplementedError,"Quadratic connection is not implemented yet."
+        ## if degree != 1:
+        ##     raise NotImplementedError,"Quadratic connection is not implemented yet."
 
         # set divisions
         if type(div) == int:
@@ -1288,15 +1294,31 @@ Size: %s
         else:
             div = array(div).ravel()
 
+        # For higher order non-lagrangian elements the procedure could be
+        # optimized by first compacting the coords and elems.
+        # Instead we opted for the simpler method of adding the maximum
+        # number of nodes, and then selecting the used ones.
+        # A final compact() throws out the unused points.
+
         # Concatenate the coordinates
-        x = [ Coords.interpolate(xi,xj,div).reshape(-1,3) for xi,xj in zip(clist[:-1],clist[1:]) ]
+        #print "CLIST = %s" % len(clist)
+        #print "BBOX clist = %s" % bbox(clist)
+        x = [ Coords.interpolate(xi,xj,div).reshape(-1,3) for xi,xj in zip(clist[:-1:degree],clist[degree::degree]) ]
         x = Coords.concatenate(clist[:1] + x)
+        #print "BBOX x = %s" % bbox(x)
+        #print "X = %s" % x.shape[0]
         
         # Create the connectivity table
         nnod = self.ncoords()
-        nrep = x.shape[0]//nnod - 1
+        #print "NNOD = %s" % nnod
+        nrep = (x.shape[0]//nnod - 1) // degree
+        #print "NREP=%s" % nrep
+        #print "INPUT ELEMS",self.elems
         e = extrudeConnectivity(self.elems,nnod,degree)
-        e = replicConnectivity(e,nrep,nnod)
+        #print "SINGLE EXTRUSION",e
+        e = replicConnectivity(e,nrep,nnod*degree)
+        #print "REPLICATED EXTRUSION",e
+        #print "COORDS SHAPE: %s" % x.shape[0]
         
         # Create the Mesh
         M = Mesh(x,e).setProp(self.prop)
@@ -1306,71 +1328,24 @@ Size: %s
         return M
 
 
+    # deprecated in 0.8.5
     def connectSequence(self,coordslist,div=1,degree=1,loop=False,eltype=None):
         utils.deprec("Mesh.connectSequence is deprecated: use Mesh.connect instead")
         return self.connect(coordslist,div=div,degree=degree,loop=loop,eltype=eltype)
-        
-
-    ## def connect(self,mesh,div=1,eltype=None):
-    ##     """Connect a Mesh with another one to form a hypermesh.
-
-    ##     Parameters:
-
-    ##     - `mesh`: a Mesh with the same element type and shape
-    ##       (number of elements and plexitude) as self.
-    ##       The two Meshes usually also have the same topology.
-    ##       Both Meshes are connected to form a hypermesh. The plexitude of the
-    ##       new Mesh is two times that of the original Mesh.
-    ##     - `div`: Either an integer, or a sequence of numbers (usually between
-    ##       0.0 and 1.0). This parameter has the same meaning as in
-    ##       `Coords.interpolate`. If an int is given, div will be set to
-    ##       (div+1) equally spaced values in the range [0.0..1.0].
-    ##     - `eltype`: the element type of the constructed hypermesh. If not
-    ##       given it is set from the element type database. Otherwise, the
-    ##       extrude element type will be created first, and then a conversion
-    ##       to the rewuested element is attempted.
-    ##     """
-    ##     if self.eltype != mesh.eltype or self.shape() != mesh.shape():
-    ##         raise ValueError,"Incompatible Mesh"
-        
-    ##     # compact the node numbering schemes
-    ##     self = self.compact()
-    ##     mesh = mesh.compact()
-
-    ##     return self.connectSequence([self.coords,mesh.coords],div=div,eltype=eltype)
-
-        ## # set divisions
-        ## if type(div) == int:
-        ##     div = arange(div+1) / float(div)
-        ## else:
-        ##     div = array(div).ravel()
-
-        ## # Create the connectivity table  
-        ## nnod = self.ncoords()
-        ## e = extrudeConnectivity(self.elems,nnod)
-        ## e = replicConnectivity(e,div.size-1,nnod)
-        ## # Create the interpolations of the coordinates
-        ## x = Coords.interpolate(self.coords,mesh.coords,div).reshape(-1,3)
-        ## # Create the Mesh
-        ## M = Mesh(x,e).setProp(self.prop)
-        ## # convert to proper eltype
-        ## if eltype:
-        ##     M = M.convert(eltype)
-        ## return M
 
 
-    def extrude(self,n,step=1.,dir=0,eltype=None):
+    def extrude(self,n,step=1.,dir=0,degree=1,eltype=None):
         """Extrude a Mesh in one of the axes directions.
 
         Returns a new Mesh obtained by extruding the given Mesh
         over `n` steps of length `step` in direction of axis `dir`.
-
-        This is a convenience function equivalent to::
-
-          self.connect(self.translate(dir,n*step),n,eltype=eltype)
           
         """
-        return self.connect(self.translate(dir,n*step),n,eltype=eltype)
+        print "Extrusion over %s steps of length %s" % (n,step)
+        x = [ self.coords.trl(dir,i*n*step/degree) for i in range(1,degree+1) ]
+        print bbox(x)
+        return self.connect([self.coords] + x,n*degree,degree=degree,eltype=eltype)
+        #return self.connect(self.trl(dir,n*step),n*degree,degree=degree,eltype=eltype)
 
 
     def revolve(self,n,axis=0,angle=360.,around=None,loop=False,eltype=None):
@@ -1426,6 +1401,10 @@ Size: %s
 
         Merging of the nodes can be tuned by specifying extra arguments
         that will be passed to :meth:`Coords:fuse`.
+
+        This is a class method, and should be invoked as follows::
+
+          Mesh.concatenate([mesh0,mesh1,mesh2])
         """
         nplex = set([ m.nplex() for m in meshes ])
         if len(nplex) > 1:
@@ -1679,7 +1658,7 @@ def extrudeConnectivity(e,nnod,degree):
     # create hypermesh Connectivity
     e = concatenate([e+i*nnod for i in range(degree+1)],axis=-1)
     # Reorder nodes if necessary
-    if reorder:
+    if len(reorder) > 0:
         e = e[:,reorder]
     return Connectivity(e,eltype=eltype)
 

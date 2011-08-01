@@ -72,10 +72,10 @@ draw(Section,color=red)
 
 #pause()
 
-method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude','Revolve','RevolveLoop'])
+method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude','ExtrudeQuadratic','Revolve','RevolveLoop'])
 
-print Section.prop
-
+import timer
+t = timer.Timer()
 if method == 'Sweep':
     L = simple.line([0,0,0],[0,0,l],el)
     x = concatenate([L.coords[:,0],L.coords[-1:,1]])
@@ -89,6 +89,10 @@ elif method == 'Connect':
 elif method == 'Extrude':
     Beam = Section.extrude(el,step=l/el,dir=2)
 
+elif method == 'ExtrudeQuadratic':
+    Section = Section.convert('quad9')
+    Beam = Section.extrude(el,step=l/el,dir=2,degree=2)
+
 elif method == 'Revolve':
     Beam = Section.revolve(el,axis=1,angle=60.,around=[-l,0.,0.])
 
@@ -98,13 +102,15 @@ elif method == 'RevolveLoop':
 else:
     exit()
 
-print Beam.prop
-print Beam.elems.shape
+print "Computing: %s seconds" % t.seconds()
+#print Beam.prop
+#print Beam.elems.shape
 
-
+t.reset()
 clear()
 draw(Beam,color='red',linewidth=2)
 #draw(Beam.getBorderMesh(),color='red',linewidth=2)
+print "Drawing: %s seconds" % t.seconds()
 export({'Beam':Beam})
 
 

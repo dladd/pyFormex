@@ -666,13 +666,19 @@ Quad6.conversions = {
 ##########################################################
 ############ Extrusions ##################################
 
-Point.extruded = { 1: (Line2, []) }
+Point.extruded = { 1: (Line2, []),
+                   2: (Line3, [0,2,1]) }
 Line2.extruded = { 1: (Quad4, [0,1,3,2] ) }
-Line3.extruded = { 1: (Quad6, [0,2,5,3,1,4]) }
+Line3.extruded = { 1: (Quad6, [0,2,5,3,1,4]),
+                   2: (Quad9, [0,1,7,6,2,4,8,3,5]), }
 Quad4.extruded = { 1: (Hex8, [] ) }
 Quad8.extruded = { 1: (Hex16, [] ) }
-
-Quad8.extruded2 = (Hex20, [],[] )
+# BV: If Quad9 would be numbered consecutively, extrusion would be as easy as
+#Quad9.extruded = { 2: (Hex27, [] }
+Quad9.extruded = { 2: (Hex27, [ 0, 4, 1, 7, 8, 5, 3, 6, 2,
+                                9,13,10,16,17,14,12,15,11,
+                               18,22,19,25,26,23,21,24,20,
+                                ]) }
 
 ############################################################
 ############ Reduction of degenerate elements ##############

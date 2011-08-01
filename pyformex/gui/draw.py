@@ -527,6 +527,7 @@ def draw(F,
         setView(view)
 
     pf.GUI.setBusy()
+    pf.app.processEvents()
     if shrink is not None:
         F = _shrink(F,shrink)
 
