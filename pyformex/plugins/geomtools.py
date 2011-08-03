@@ -358,136 +358,159 @@ def projectionVOP(A,n):
 #
 #  IT SHOULD BE CLEARLY DOCUMENTED WHETHER NORMALS ARE REQUIRED
 #  TO BE NORMALIZED OR NOT
+#  svc: plane normals and line vectors are not required to be normalized
 #
 #  MAYBE WE SHOULD ADOPT CONVENTION TO USE m,n FOR NORMALIZED
 #  VECTORS, AND u,v,w for (possibly) unnormalized
 #
 
-def intersectionTimesLWL(q1,m1,q2,m2):
+def intersectionTimesLWL(q1,m1,q2,m2,mode='all'):
     """Return the intersection of lines (q1,m1) and lines (q2,m2)
 
     with the perpendiculars between them.
 
-    q1/m1 is a (nq1,3) shaped array of points/vectors.
-    q2/m2 is a (nq2,3) shaped array of points/vectors.
-    
-    The return value is a tuple of (nq1,nq2) shaped arrays of parameter
+    Parameters:
+
+    - `qi`,`mi` (i=1...2): (nqi,3) shaped arrays of points and vectors (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single line or a
+      set of lines.
+    - `mode`: `all` to calculate the intersection of each line (q1,m1) with all lines
+      (q2,m2) or `pair` for pairwise intersections.
+
+    Returns: A tuple of (nq1,nq2) shaped (`mode=all`) arrays of parameter
     values t1 and t2, such that the intersection points are given by
     q1+t1*m1 and q2+t2*m2.
     """
-    if q1.shape != m1.shape:
-        raise RuntimeError,"Expected q1 and m1 with same shape."
-    if q2.shape != m2.shape:
-        raise RuntimeError,"Expected q2 and m2 with same shape."
-    q1 = q1[:,newaxis]
-    m1 = m1[:,newaxis]
-    q2 = q2[newaxis]
-    m2 = m2[newaxis]
+    if mode == 'all':
+        q1 = asarray(q1).reshape(-1,1,3)
+        m1 = asarray(m1).reshape(-1,1,3)
+        q2 = asarray(q2).reshape(1,-1,3)
+        m2 = asarray(m2).reshape(1,-1,3)
     dot11 = dotpr(m1,m1)
     dot22 = dotpr(m2,m2)
     dot12 = dotpr(m1,m2)
     denom = (dot12**2-dot11*dot22)
     q12 = q2-q1
-    dot11 = dot11[:,:,newaxis]
-    dot22 = dot22[:,:,newaxis]
-    dot12 = dot12[:,:,newaxis]
+    dot11 = dot11[...,newaxis]
+    dot22 = dot22[...,newaxis]
+    dot12 = dot12[...,newaxis]
     t1 = dotpr(q12,m2*dot12-m1*dot22) / denom
     t2 = dotpr(q12,m2*dot11-m1*dot12) / denom
     return t1,t2
 
 
-def intersectionPointsLWL(q1,m1,q2,m2):
+def intersectionPointsLWL(q1,m1,q2,m2,mode='all'):
     """Return the intersection points of lines (q1,m1) and lines (q2,m2)
 
     with the perpendiculars between them.
     
-    This is equivalent to intersectionTimesLWL(q1,m1,q2,m2) but returns a
-    tuple of (nq1,nq2,3) shaped arrays of intersection points instead of the
+    This is like intersectionTimesLWL but returns a tuple of (nq1,nq2,3)
+    shaped (`mode=all`) arrays of intersection points instead of the
     parameter values.
     """
-    t1,t2 = intersectionTimesLWL(q1,m1,q2,m2)       
-    t1 = t1[:,:,newaxis]
-    t2 = t2[:,:,newaxis]
-    q1 = q1[:,newaxis]
-    m1 = m1[:,newaxis]
-    return q1 + t1 * m1, q2 + t2 * m2
+    t1,t2 = intersectionTimesLWL(q1,m1,q2,m2,mode)       
+    t1 = t1[...,newaxis]
+    t2 = t2[...,newaxis]
+    if mode == 'all':
+        q1 = q1[:,newaxis]
+        m1 = m1[:,newaxis]
+    return q1+t1*m1, q2+t2*m2
 
 
-def intersectionTimesLWP(q,m,p,n):
+def intersectionTimesLWP(q,m,p,n,mode='all'):
     """Return the intersection of lines (q,m) with planes (p,n).
-
-    q/m is a (nq,3) shaped array of points/vectors.
-    p/n is a (np,3) shaped array of points/normals.
-    
-    The return value is a (nq,np) shaped array of parameter values t,
-    such that the intersection points are given by q+t*m.
-    """
-    if q.shape != m.shape:
-        raise RuntimeError,"Expected q and m with same shape."
-    if p.shape != n.shape:
-        raise RuntimeError,"Expected p and n with same shape."
-    t =  (dotpr(p,n) - inner(q,n)) / inner(m,n)
-    return t
-
-
-def intersectionPointsLWP(q,m,p,n):
-    """Return the intersection points of lines (q,m) with planes (p,n).
-
-    This is like intersectionTimesLWP(q,m,p,n) but returns a (nq,np,3)
-    shaped array of intersection points instead of the parameter values.
-    """
-    t = intersectionTimesLWP(q,m,p,n)
-    t = t[:,:,newaxis]
-    q = q[:,newaxis]
-    m = m[:,newaxis]
-    return q + t * m
-
-
-def intersectionTimesSWP(S,p,n):
-    """Return the intersection of line segments S with the plane (p,n).
 
     Parameters:
 
-    - `S`:  an (ns,2,3) array with line segments
-    - `p`,`n`: (np,3) arrays with points and normals defining a set of planes
+    - `q`,`m`: (nq,3) shaped arrays of points and vectors (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single line
+      or a set of lines.
+    - `p`,`n`: (np,3) shaped arrays of points and normals (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single plane
+      or a set of planes.
+    - `mode`: `all` to calculate the intersection of each line (q,m) with
+      all planes (p,n) or `pair` for pairwise intersections.
 
-    Returns: (ns,np) shaped array of parameter values t,
+    Returns: A (nq,np) shaped (`mode=all`) array of parameter values t,
+    such that the intersection points are given by q+t*m.
+    """
+    if mode == 'all':
+        return  (dotpr(p,n) - inner(q,n)) / inner(m,n)
+    elif mode == 'pair':
+        return  (dotpr(p,n) - dotpr(q,n)) / dotpr(m,n)
+
+
+def intersectionPointsLWP(q,m,p,n,mode='all'):
+    """Return the intersection points of lines (q,m) with planes (p,n).
+
+    This is like intersectionTimesLWP but returns a (nq,np,3) shaped
+    (`mode=all`) array of intersection points instead of the
+    parameter values.
+    """
+    t = intersectionTimesLWP(q,m,p,n,mode)
+    t = t[...,newaxis]
+    if mode == 'all':
+        q = q[:,newaxis]
+        m = m[:,newaxis]
+    return q+t*m
+
+
+def intersectionTimesSWP(S,p,n,mode='all'):
+    """Return the intersection of line segments S with planes (p,n).
+
+    Parameters:
+
+    - `S`: (ns,2,3) shaped array of line segments (`mode=all`)
+      or broadcast compatible array (`mode=pair`), defining a single line
+      segment or a set of line segments.
+    - `p`,`n`: (np,3) shaped arrays of points and normals (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single plane
+      or a set of planes.
+    - `mode`: `all` to calculate the intersection of each line segment S with
+      all planes (p,n) or `pair` for pairwise intersections.
+
+    Returns: A (ns,np) shaped (`mode=all`) array of parameter values t,
     such that the intersection points are given by (1-t)*S[:,0] + t*S[:,1].
 
     This function is comparable to intersectionTimesLWP, but ensures that
     parameter values 0<=t<=1 are points inside the line segments.
     """
-    p = asarray(p).reshape(-1,3)
-    n = asarray(n).reshape(-1,3)
-    if p.shape != n.shape:
-        raise RuntimeError,"Expected p and n with same shape."
-    n = normalize(n)
-    q0 = S[:,0,:]
-    q1 = S[:,1,:]
-    t = (dotpr(p,n) - inner(q0,n)) / inner((q1-q0),n)
-    return t
+    q0 = S[...,0,:]
+    q1 = S[...,1,:]
+    return intersectionTimesLWP(q0,q1-q0,p,n,mode)
 
 
-def intersectionPointsSWP(S,p,n,return_all=False):
-    """Return the intersection points of line segments S with the plane (p,n).
+def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
+    """Return the intersection points of line segments S with planes (p,n).
 
     Parameters:
 
-    - `S`:  an (ns,2,3) array with line segments
-    - `p`,`n`: (3,) or (np,3) arrays with points and normals defining a
-      single plane or a set of planes
+    - `S`: (ns,2,3) shaped array of line segments (`mode=all`)
+      or broadcast compatible array (`mode=pair`), defining a single line
+      segment or a set of line segments.
+    - `p`,`n`: (np,3) shaped arrays of points and normals (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single plane
+      or a set of planes.
+    - `mode`: `all` to calculate the intersection of each line segment S with
+      all planes (p,n) or `pair` for pairwise intersections.
     - `return_all`: if True, all intersection points of the lines along the
       segments are returned. Default is to return only the points that lie
       on the segments.
 
-    Returns the intersection points as a Coords with shape (ns,np,3) if
+    Returns the intersection points as a Coords with shape (ns,np,3) (`mode=all`) if
     return_all==True, else as a Coords with shape (n,3) where n <= ns*np.
     """
-    t = intersectionTimesSWP(S,p,n)
-    tn = t[:,:,newaxis]
-    q0 = S[:,:1,:]
-    q1 = S[:,1:,:]
+    t = intersectionTimesSWP(S,p,n,mode)
+    tn = t[...,newaxis]
+    q0 = S[...,0,:]
+    q1 = S[...,1,:]
+    if mode == 'all':
+        q0 = q0[:,newaxis]
+        q1 = q1[:,newaxis]
     points = Coords((1.-tn)*q0 + tn*q1)
+    if points.ndim == 1:
+        points = points.reshape(1,3)
+        t = t.reshape(1)
     if not return_all:
         # Find points inside segments
         ok = (t >= 0.0) * (t <= 1.0)
@@ -495,117 +518,128 @@ def intersectionPointsSWP(S,p,n,return_all=False):
     return points
 
 
-def intersectionPointsPWP(p1,n1,p2,n2,p3,n3):
+def intersectionPointsPWP(p1,n1,p2,n2,p3,n3,mode='all'):
     """Return the intersection points of planes (p1,n1), (p2,n2) and (p3,n3).
 
-    p1/n1 is a (np1,3) shaped array of points/normals.
-    p2/n2 is a (np2,3) shaped array of points/normals.
-    p3/n3 is a (np3,3) shaped array of points/normals.
+    Parameters:
 
-    The return value is a (np1,np2,np3,3) shaped array of intersection points.
+    - `pi`,`ni` (i=1...3): (npi,3) shaped arrays of points and normals (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single plane
+      or a set of planes.
+    - `mode`: `all` to calculate the intersection of each plane (p1,n1) with all planes
+      (p2,n2) and (p3,n3) or `pair` for pairwise intersections.
+
+    Returns: A (np1,np2,np3,3) shaped (`mode=all`) array of intersection points.
     """
-    if p1.shape != n1.shape:
-        raise RuntimeError,"Expected p1 and n1 with same shape."
-    if p2.shape != n2.shape:
-        raise RuntimeError,"Expected p2 and n2 with same shape."
-    if p3.shape != n3.shape:
-        raise RuntimeError,"Expected p3 and n3 with same shape."
-    p1 = p1[:,newaxis,newaxis]
-    n1 = n1[:,newaxis,newaxis]
-    p2 = p2[newaxis,:,newaxis]
-    n2 = n2[newaxis,:,newaxis]
-    p3 = p3[newaxis,newaxis,:]
-    n3 = n3[newaxis,newaxis,:]
-    dot1 = dotpr(p1,n1)[:,:,:,newaxis]
-    dot2 = dotpr(p2,n2)[:,:,:,newaxis]
-    dot3 = dotpr(p3,n3)[:,:,:,newaxis]
+    if mode == 'all':
+        p1 = asarray(p1).reshape(-1,1,1,3)
+        n1 = asarray(n1).reshape(-1,1,1,3)
+        p2 = asarray(p2).reshape(1,-1,1,3)
+        n2 = asarray(n2).reshape(1,-1,1,3)
+        p3 = asarray(p3).reshape(1,1,-1,3)
+        n3 = asarray(n3).reshape(1,1,-1,3)
+    dot1 = dotpr(p1,n1)[...,newaxis]
+    dot2 = dotpr(p2,n2)[...,newaxis]
+    dot3 = dotpr(p3,n3)[...,newaxis]
     cross23 = cross(n2,n3)
     cross31 = cross(n3,n1)
     cross12 = cross(n1,n2)
-    denom = dotpr(n1,cross23)[:,:,:,newaxis]
+    denom = dotpr(n1,cross23)[...,newaxis]
     return (dot1*cross23+dot2*cross31+dot3*cross12)/denom
 
 
-def intersectionLinesPWP(p1,n1,p2,n2):
+def intersectionLinesPWP(p1,n1,p2,n2,mode='all'):
     """Return the intersection lines of planes (p1,n1) and (p2,n2).
 
-    p1/n1 is a (np1,3) shaped array of points/normals.
-    p2/n2 is a (np2,3) shaped array of points/normals.
+    Parameters:
 
-    The return value is a tuple of (np1,np2,3) shaped arrays of intersection
+    - `pi`,`ni` (i=1...2): (npi,3) shaped arrays of points and normals (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single plane
+      or a set of planes.
+    - `mode`: `all` to calculate the intersection of each plane (p1,n1) with all planes
+      (p2,n2) or `pair` for pairwise intersections.
+
+    Returns: A tuple of (np1,np2,3) shaped (`mode=all`) arrays of intersection
     points q and vectors m, such that the intersection lines are given by q+t*m.
     """
-    if p1.shape != n1.shape:
-        raise RuntimeError,"Expected p1 and n1 with same shape."
-    if p2.shape != n2.shape:
-        raise RuntimeError,"Expected p2 and n2 with same shape."
-    p1 = p1[:,newaxis]
-    n1 = n1[:,newaxis]
-    p2 = p2[newaxis,:]
-    n2 = n2[newaxis,:]
-    n3 =  cross(n1,n2)
-    dot1 = dotpr(p1,n1)[:,:,newaxis]
-    dot2 = dotpr(p2,n2)[:,:,newaxis]
-    dot3 = dotpr(p1,n3)[:,:,newaxis]
-    cross23 = cross(n2,n3)
-    cross31 = cross(n3,n1)
-    cross12 = cross(n1,n2)
-    denom = dotpr(n1,cross23)[:,:,newaxis]
-    q = (dot1*cross23+dot2*cross31+dot3*cross12)/denom
-    return q,n3
+    if mode == 'all':
+        p1 = asarray(p1).reshape(-1,1,3)
+        n1 = asarray(n1).reshape(-1,1,3)
+        p2 = asarray(p2).reshape(1,-1,3)
+        n2 = asarray(n2).reshape(1,-1,3)
+    m =  cross(n1,n2)
+    q = intersectionPointsPWP(p1,n1,p2,n2,p1,m,mode='pair')
+    return q,m
 
 
-def intersectionPointsPOP(q,p,n):
-    """Return the intersection points of perpendiculars from points q on planes (p,n).
+def intersectionTimesPOP(X,p,n,mode='all'):
+    """Return the intersection of perpendiculars from points X on planes (p,n).
 
-    This is equivalent to intersectionTimesPOP(q,p,n) but returns a (nq,np,3)
-    shaped array of intersection points instead of the parameter values.
+    Parameters:
+
+    - `X`: a (nX,3) shaped array of points (`mode=all`)
+      or broadcast compatible array (`mode=pair`).
+    - `p`,`n`: (np,3) shaped arrays of points and normals (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single plane
+      or a set of planes.
+    - `mode`: `all` to calculate the intersection for each point X with
+      all planes (p,n) or `pair` for pairwise intersections.
+
+    Returns: A (nX,np) shaped (`mode=all`) array of parameter values t,
+    such that the intersection points are given by X+t*n.
     """
-    t = intersectionTimesPOP(q,p,n)
-    t = t[:,:,newaxis]
-    q = q[:,newaxis]
-    return q + t * n
+    if mode == 'all':
+        return  (dotpr(p,n) - inner(X,n)) / dotpr(n,n)
+    elif mode == 'pair':
+        return  (dotpr(p,n) - dotpr(X,n)) / dotpr(n,n)
 
 
-def intersectionTimesPOP(q,p,n):
-    """Return the intersection of perpendiculars from points q on planes (p,n).
+def intersectionPointsPOP(X,p,n,mode='all'):
+    """Return the intersection points of perpendiculars from points X on planes (p,n).
 
-    q is (nq,3) shaped array of points.
-    p/n is a (np,3) shaped array of points/normals.
-    
-    The return value is a (nq,np) shaped array of parameter values t,
-    such that the intersection points are given by q+t*n.
+    This is like intersectionTimesPOP but returns a (nX,np,3) shaped (`mode=all`)
+    array of intersection points instead of the parameter values.
     """
-    if p.shape != n.shape:
-        raise RuntimeError,"Expected p and n with same shape."
-    t = (dotpr(p,n) - inner(q,n)) / dotpr(n,n)
-    return t
-    
-
-def intersectionPointsPOL(p,q,m):
-    """Return the intersection points of perpendiculars from points p on lines (q,m).
-    
-    This is equivalent to intersectionTimesPWL(p,q,m) but returns a (np,nq,3)
-    shaped array of intersection points instead of the parameter values.
-    """
-    t = intersectionTimesPOL(p,q,m)
-    t = t[...,newaxis] # force broadcasting for all coordinates
-    return q + t * m
+    t = intersectionTimesPOP(X,p,n,mode)
+    t = t[...,newaxis]
+    if mode == 'all':
+        X = X[:,newaxis]
+    return X+t*n
 
 
-def intersectionTimesPOL(p,q,m):
-    """Return the intersection of perpendiculars from points p on lines (q,m).
+def intersectionTimesPOL(X,q,m,mode='all'):
+    """Return the intersection of perpendiculars from points X on lines (q,m).
 
-    p is (np,3) shaped array of points.
-    q/m is a (nq,3) shaped array of points/vectors.
+    Parameters:
 
-    The return value is a (np,nq) shaped array of parameter values t,
+    - `X`: a (nX,3) shaped array of points (`mode=all`)
+      or broadcast compatible array (`mode=pair`).
+    - `q`,`m`: (nq,3) shaped arrays of points and vectors (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single line
+      or a set of lines.
+    - `mode`: `all` to calculate the intersection for each point X with
+      all lines (q,m) or `pair` for pairwise intersections.
+
+    Returns: A (nX,nq) shaped (`mode=all`) array of parameter values t,
     such that the intersection points are given by q+t*m.
     """
-    if q.shape != m.shape:
-        raise RuntimeError,"Expected q and m with same shape."
-    t =  (inner(p,m) - dotpr(q,m)) / dotpr(m,m)
-    return t
+    if mode == 'all':
+        return  (inner(X,m) - dotpr(q,m)) / dotpr(m,m)
+    elif mode == 'pair':
+        return  (dotpr(X,m) - dotpr(q,m)) / dotpr(m,m)
+
+
+def intersectionPointsPOL(X,q,m,mode='all'):
+    """Return the intersection points of perpendiculars from points X on lines (q,m).
+    
+    This is like intersectionTimesPOL but returns a (nX,nq,3) shaped (`mode=all`)
+    array of intersection points instead of the parameter values.
+    """
+    t = intersectionTimesPOL(X,q,m,mode)
+    t = t[...,newaxis]
+    if mode == 'all':
+        q = q[:,newaxis]
+    return q+t*m
 
 
 #################### distance tools ###############
