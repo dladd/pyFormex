@@ -318,7 +318,6 @@ static PyObject * coords_fuse(PyObject *dummy, PyObject *args)
   Py_INCREF(Py_None);
   return Py_None;
  fail:
-  printf("Error Cleanup\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
@@ -423,7 +422,6 @@ static PyObject * nodalSum(PyObject *dummy, PyObject *args)
   Py_DECREF(arr2);
   return ret;
  fail:
-  printf("Error Cleanup\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   return NULL;
@@ -568,7 +566,6 @@ static PyObject * averageDirection(PyObject *dummy, PyObject *args)
 }
 
 
-
 static PyObject * averageDirectionIndexed(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL, *arg2=NULL;
@@ -594,10 +591,10 @@ static PyObject * averageDirectionIndexed(PyObject *dummy, PyObject *args)
 
   /* Clean up and return */
   Py_DECREF(arr1);
+  Py_DECREF(arr2);
   Py_INCREF(Py_None);
   return Py_None;
  fail:
-  printf("Error Cleanup\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   return NULL;

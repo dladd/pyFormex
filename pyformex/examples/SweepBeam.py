@@ -108,8 +108,8 @@ print "Computing: %s seconds" % t.seconds()
 
 t.reset()
 clear()
-draw(Beam,color='red',linewidth=2)
-#draw(Beam.getBorderMesh(),color='red',linewidth=2)
+#draw(Beam,color='red',linewidth=2)
+draw(Beam.getBorderMesh(),color='red',linewidth=2)
 print "Drawing: %s seconds" % t.seconds()
 export({'Beam':Beam})
 

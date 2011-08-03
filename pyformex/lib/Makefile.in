@@ -58,12 +58,17 @@ all: Makefile $(SOBJECTS) $(PROGRAMS)
 
 
 debug:
+	make clean
 	make DEBUG=DEBUG
+
+nodebug:
+	make clean
+	make
 
 postabq: postabq.c
 	$(CC) -o $@ $<
 
-%.o: %.c
+%.o: %.c Makefile
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<
 
 %.so: %.o

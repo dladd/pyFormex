@@ -32,6 +32,7 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 #include <GL/gl.h>
+#include <GL/glu.h>
 
 static char __doc__[] = "drawgl_ module\n\
 \n\
@@ -46,6 +47,8 @@ OpenGL drawing functions.\n\
   to be incompatible with the previous version, the version number
   should be bumped, and the new version number should also be set
   in the lib module initialization file __init__.py
+
+ ## ACTUALLY NOT USED YET ##
 */
 
 int version = 1;
@@ -97,6 +100,21 @@ int gl_objtype(int nplex)
   return objtype;
 }
 
+/********************************************** gl_map2_vertexmode ****/
+/* Set the OpenGL MAP2 vertex mode from ndim. */
+/*
+    ndim is either 3 or 4.
+*/
+GLenum gl_map2_vertexmode(int ndim)
+{
+  GLenum mode = 0;
+  if (ndim == 3)
+    mode = GL_MAP2_VERTEX_3;
+  else if (ndim == 4)
+    mode = GL_MAP2_VERTEX_4;
+  return mode;
+}
+
 /****** EXTERNAL FUNCTIONS (callable from Python ********/
 
 /********************************************** draw_polygons ****/
@@ -121,6 +139,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 #endif
 
   if (!PyArg_ParseTuple(args,"OOOfi",&arg1,&arg2,&arg3,&alpha,&objtype)) return NULL;
+
   arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
   x = (float *)PyArray_DATA(arr1);
@@ -130,18 +149,18 @@ draw_polygons(PyObject *dummy, PyObject *args)
   printf("** nel = %d\n",nel);
   printf("** nplex = %d\n",nplex);
 #endif
+
   arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr2 != NULL) { 
-    n = (float *)PyArray_DATA(arr2);
     ndn = PyArray_NDIM(arr2);
+    n = (float *)PyArray_DATA(arr2);
   }
 
   arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr3 != NULL) { 
-    c = (float *)PyArray_DATA(arr3);
     ndc = PyArray_NDIM(arr3);
+    c = (float *)PyArray_DATA(arr3);
   }
-  
 #ifdef DEBUG
   printf("** ndn = %d\n",ndn);
   printf("** ndc = %d\n",ndc);
@@ -310,10 +329,10 @@ draw_polygons(PyObject *dummy, PyObject *args)
     }
   }
 
-  /* Cleanup */
-  Py_DECREF(arr1);
-  if (arr2 != NULL)  { Py_DECREF(arr2); }
-  if (arr3 != NULL)  { Py_DECREF(arr3); }
+  /* cleanup: */
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -338,7 +357,7 @@ pick_polygons(PyObject *dummy, PyObject *args)
 #endif
   if (!PyArg_ParseTuple(args,"Oi",&arg1,&objtype)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
-  if (arr1 == NULL) goto cleanup;
+  if (arr1 == NULL) return NULL;
   x = (float *)PyArray_DATA(arr1);
   nel = PyArray_DIMS(arr1)[0];
   nplex = PyArray_DIMS(arr1)[1];
@@ -362,8 +381,8 @@ pick_polygons(PyObject *dummy, PyObject *args)
     glPopName();
   }
 
- cleanup:
-  if (arr1 != NULL) { Py_DECREF(arr1); }
+  /* cleanup: */
+  Py_XDECREF(arr1);
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -395,7 +414,7 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
   if (!PyArg_ParseTuple(args,"OOOOfi",&arg1,&arg2,&arg3,&arg4,&alpha,&objtype)) return NULL;
 
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr1 == NULL) goto cleanup;
+  if (arr1 == NULL) goto fail;
   x = (float *)PyArray_DATA(arr1);
   npts = PyArray_DIMS(arr1)[0];
 #ifdef DEBUG
@@ -403,7 +422,7 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 #endif
 
   arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
-  if (arr2 == NULL) goto cleanup;
+  if (arr2 == NULL) goto fail;
   e = (int *)PyArray_DATA(arr2);
   nel = PyArray_DIMS(arr2)[0];
   nplex = PyArray_DIMS(arr2)[1];
@@ -414,14 +433,14 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 
   arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr3 != NULL) { 
-    n = (float *)PyArray_DATA(arr3);
     ndn = PyArray_NDIM(arr3);
+    n = (float *)PyArray_DATA(arr3);
   }
 
   arr4 = PyArray_FROM_OTF(arg4, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr4 != NULL) { 
-    c = (float *)PyArray_DATA(arr4);
     ndc = PyArray_NDIM(arr4);
+    c = (float *)PyArray_DATA(arr4);
   }
   
 #ifdef DEBUG
@@ -614,13 +633,20 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
     }
   }
   
- cleanup:
-  if (arr1 != NULL) { Py_DECREF(arr1); }
-  if (arr2 != NULL) { Py_DECREF(arr2); }
-  if (arr3 != NULL) { Py_DECREF(arr3); }
-  if (arr4 != NULL) { Py_DECREF(arr4); }
+  /* cleanup: */
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
+  Py_XDECREF(arr4);
   Py_INCREF(Py_None);
   return Py_None;
+  
+ fail:
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
+  Py_XDECREF(arr4);
+  return NULL;
 }
 
 
@@ -644,13 +670,15 @@ pick_polygon_elems(PyObject *dummy, PyObject *args)
 #endif
   if (!PyArg_ParseTuple(args,"OOi",&arg1,&arg2,&objtype)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
-  if (arr1 == NULL) goto cleanup;
+  if (arr1 == NULL) goto fail;
   x = (float *)PyArray_DATA(arr1);
   npts = PyArray_DIMS(arr1)[0];
+#ifdef DEBUG
   printf("** npts = %d\n",npts);
+#endif
 
   arr2 = PyArray_FROM_OTF(arg2,NPY_INT,NPY_IN_ARRAY);
-  if (arr2 == NULL) goto cleanup;
+  if (arr2 == NULL) goto fail;
   e = (int *)PyArray_DATA(arr2);
   nel = PyArray_DIMS(arr2)[0];
   nplex = PyArray_DIMS(arr2)[1];
@@ -668,11 +696,147 @@ pick_polygon_elems(PyObject *dummy, PyObject *args)
     glPopName();
   }
 
- cleanup:
-  if (arr1 != NULL) { Py_DECREF(arr1); }
-  if (arr2 != NULL) { Py_DECREF(arr2); }
+  /* cleanup: */
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
   Py_INCREF(Py_None);
   return Py_None;
+
+ fail:
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  return NULL;
+}
+
+/********************************************** draw_nurbs_surfaces ****/
+/* Draw NURBS surfaces */
+/* args: ndim is 3 or 4 (4th value is weight)
+    coords: x: (nsurf,ns,nt,ndim)
+    sknots: s: (nsknots) or (nsurf,nsknots)
+    tknots: t: (ntknots) or (nsurf,ntknots)
+    color:  c: None or (ndim) or (nsurf,ndim) or (nsurf,ns,nt,4) !!
+    alpha: float
+    sampling: float
+*/  
+static PyObject* draw_nurbs_surfaces(PyObject *dummy, PyObject *args)
+{
+  PyObject *retval=NULL;
+  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
+  float *x, *s=NULL, *t=NULL, *c=NULL, alpha, sampling;
+  int nsurf,ns,nt,ndim,nds,nsknots,nsorder,ndt,ntknots,ntorder,ndc=0,ncdim=0,mode,cmode,i;
+  GLUnurbs *nurb=NULL;
+
+#ifdef DEBUG
+  printf("** draw_nurbs_surfaces\n");
+#endif
+  
+  if (!PyArg_ParseTuple(args,"OOOOff",&arg1,&arg2,&arg3,&arg4,&alpha,&sampling)) return NULL;
+
+  arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
+  if (arr1 == NULL) goto fail;
+  x = (float *)PyArray_DATA(arr1);
+  nsurf = PyArray_DIMS(arr1)[0];
+  ns = PyArray_DIMS(arr1)[1];
+  nt = PyArray_DIMS(arr1)[2];
+  ndim = PyArray_DIMS(arr1)[3];
+#ifdef DEBUG
+  printf("** nsurf = %d\n",nsurf);
+  printf("** ns = %d\n",ns);
+  printf("** nt = %d\n",nt);
+  printf("** ndim = %d\n",ndim);
+#endif
+  
+  arr2 = PyArray_FROM_OTF(arg2,NPY_FLOAT,NPY_IN_ARRAY);
+  if (arr2 == NULL) goto fail; 
+  s = (float *)PyArray_DATA(arr2);
+  nds = PyArray_NDIM(arr2);
+  nsknots = PyArray_DIMS(arr2)[nds-1];
+  nsorder = nsknots - ns;
+#ifdef DEBUG
+  printf("** nds = %d\n",nds);
+  printf("** nsknots = %d\n",nsknots);
+#endif
+  
+  arr3 = PyArray_FROM_OTF(arg3,NPY_FLOAT,NPY_IN_ARRAY);
+  if (arr3 == NULL) goto fail; 
+  t = (float *)PyArray_DATA(arr3);
+  ndt = PyArray_NDIM(arr3);
+  ntknots = PyArray_DIMS(arr3)[ndt-1];
+  ntorder = ntknots - nt;
+#ifdef DEBUG
+  printf("** ndt = %d\n",ndt);
+  printf("** ntknots = %d\n",ntknots);
+#endif
+  
+  arr4 = PyArray_FROM_OTF(arg4,NPY_FLOAT,NPY_IN_ARRAY);
+  if (arr4 != NULL) { 
+    ndc = PyArray_NDIM(arr4);
+    if (ndc > 0) {
+      ncdim = PyArray_DIMS(arr4)[ndc-1];
+      c = (float *)PyArray_DATA(arr4);
+    }
+  }
+#ifdef DEBUG
+  printf("** ndc = %d\n",ndc);
+  printf("** ncdim = %d\n",ncdim);
+#endif
+
+  nurb = gluNewNurbsRenderer();
+#ifdef DEBUG
+  printf("** nurb = %p\n",nurb);
+#endif
+  if (nurb == NULL) goto cleanup;
+  gluNurbsProperty(nurb,GLU_SAMPLING_TOLERANCE,sampling);
+
+  mode = gl_map2_vertexmode(ndim);
+  if (ndc == 4) 
+    cmode = GL_MAP2_COLOR_4;
+
+#ifdef DEBUG
+  printf("** nurbs mode = %d\n",mode);
+  printf("** nurbs cmode = %d\n",cmode);
+  printf("** nurbs order = %d, %d\n",nsorder,ntorder);
+#endif
+
+  if (ndc == 1) {    	/* single color */
+    gl_color(c,alpha);
+  }
+
+  for (i=0; i<nsurf; ++i) {
+#ifdef DEBUG
+    printf("** nurbs surface %d,\n",i);
+#endif
+    if (ndc == 2) {    	/* element color */
+      gl_color(c,alpha);
+      c += ncdim;
+    }
+   
+    gluBeginSurface(nurb);
+    if (ndc == 4 && ncdim == 4) {     /* vertex color */
+      gluNurbsSurface(nurb,ns,s,nt,t,ncdim,ns*ncdim,c,nsorder,ntorder,cmode);
+      c += ns*nt*ncdim; 
+    }
+    gluNurbsSurface(nurb,nsknots,s,ntknots,t,ndim,ns*ndim,x,nsorder,ntorder,mode);
+    gluEndSurface(nurb);
+
+    if (nds > 1) s += nsknots;
+    if (ndt > 1) t += ntknots;
+    x += ns*nt*ndim;
+  }
+
+ cleanup:
+  Py_INCREF(Py_None);
+  retval = Py_None;
+
+  /* common code for normal and failure exit */
+ fail:
+  if (nurb) gluDeleteNurbsRenderer(nurb);
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
+  Py_XDECREF(arr4);
+  return retval;
 }
 
 
@@ -683,6 +847,7 @@ static PyMethodDef _methods_[] = {
     {"pick_polygons", pick_polygons, METH_VARARGS, "Pick polygons."},
     {"draw_polygon_elems", draw_polygon_elems, METH_VARARGS, "Draw polygon elements."},
     {"pick_polygon_elems", pick_polygon_elems, METH_VARARGS, "Pick polygon elements."},
+    {"draw_nurbs_surfaces", draw_nurbs_surfaces, METH_VARARGS, "Draw NURBS surfaces."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 

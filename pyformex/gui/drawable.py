@@ -299,8 +299,8 @@ def drawQuadraticCurves(x,e=None,color=None):
     knots = array([0.,0.,0.,1.,1.,1.])
     drawNurbsCurves(xx,knots,color=color)
 
-
-def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingTolerance=10.0):
+_nurbs_renderers_ = []
+def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingTolerance=20.0):
     """Draw a collection of Nurbs surfaces.
 
     x: (ns,nt,ndim) or (nsurf,ns,nt,ndim) float array:
@@ -325,13 +325,8 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
 
     If color is given it is an (nsurf,3) array of RGB values.
     """
-    if normals == 'auto':
-        GL.glEnable(GL.GL_AUTO_NORMAL)
-    else:
-        GL.glDisable(GL.GL_AUTO_NORMAL)
-    nurb = GLU.gluNewNurbsRenderer()
-    if not nurb:
-        raise RuntimeError,"Could not create a new NURBS renderer"
+    import timer
+    t = timer.Timer()
     ns,nt,ndim = x.shape[-3:]
     nsk = asarray(sknots).shape[-1]
     ntk = asarray(tknots).shape[-1]
@@ -341,7 +336,6 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         import warnings
         warnings.warn('Nurbs surfaces of degree > 7 can currently not be drawn! You can approximate the surface by a lower order surface.')
         return
-    mode = {3:GL.GL_MAP2_VERTEX_3, 4:GL.GL_MAP2_VERTEX_4}[ndim]
     #x = x.reshape(-1,ns,nt,ndim)
     if color is not None:
         pf.debug('Color shape: %s' % str(color.shape))
@@ -357,32 +351,74 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         elif color.shape == x.shape[:-1] + (3,):
             pf.debug('Vertex color: %s' % str(color.shape[:-1]))
         else:
-            raise ValueError,"Number of colors (%s) should equal 1 or the number of faces(%s) or the number of faces * number of vertices" % (color.shape[0],x.shape[0])
-                             
-    si = sknots
-    ti = tknots
-    
-    GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
+            raise ValueError,"Number of colors (%s) should equal 1 or the number of faces(%s) or the number of faces * number of vertices" % (color.shape[0],x.shape[0])                 
+
     if x.ndim == 3:
         x = x.reshape(-1,ns,nt,ndim)
     if color is not None and color.ndim == 3:
         from plugins.nurbs import Coords4
         color = Coords4(color)
-        color = color.reshape(-1,ns,nt,ndim)
-    for i,xi in enumerate(x):
-        if color is not None and color.ndim == 2:
-            # Handle element color
-            pf.debug('Set element color: OK')
-            GL.glColor3fv(color[i])
-        if sknots.ndim > 1:
-            si = sknots[i]
-        if tknots.ndim > 1:
-            ti = tknots[i]
-        GLU.gluBeginSurface(nurb)
+        color = color.reshape(-1,ns,nt,4)
+    
+    if normals == 'auto':
+        GL.glEnable(GL.GL_AUTO_NORMAL)
+    else:
+        GL.glDisable(GL.GL_AUTO_NORMAL)
+
+    # The following uses:
+    # x: (nsurf,ns,nt,4)
+    # sknots: (nsknots) or (nsurf,nsknots)
+    # tknots: (ntknots) or (nsurf,ntknots)
+    # color: None or (4) or (nsurf,4) or (nsurf,ns,nt,4)
+    # samplingTolerance
+    
+    if pf.options.fastnurbs:
+        alpha=0.5
+        x = x.astype(float32)
+        sknots = sknots.astype(float32)
+        tknots = tknots.astype(float32)
+        if color is not None:
+            color = color.astype(float32)
+
+        print "COLOR = %s" % color
+        if color is not None:
+            print color.dtype
+            print color.shape
+        print x.shape
+        color=array([1.,0.,0.,0.5],dtype=Float)
+        nb = drawgl.draw_nurbs_surfaces(x,sknots,tknots,color,alpha,samplingTolerance)
+
+    else:
+
+        nurb = GLU.gluNewNurbsRenderer()
+        if not nurb:
+            raise RuntimeError,"Could not create a new NURBS renderer"
+        samplingTolerance = 100.
+        GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
+
+
+        mode = {3:GL.GL_MAP2_VERTEX_3, 4:GL.GL_MAP2_VERTEX_4}[ndim]
         if color is not None and color.ndim == 4:
-            GLU.gluNurbsSurface(nurb,si,ti,color[i],GL.GL_MAP2_COLOR_4)
-        GLU.gluNurbsSurface(nurb,si,ti,xi,mode)
-        GLU.gluEndSurface(nurb)
+            cmode = {3:GL.GL_MAP2_COLOR_3, 4:GL.GL_MAP2_COLOR_4}[color.shape[-1]]
+        si = sknots
+        ti = tknots
+        for i,xi in enumerate(x):
+            if color is not None and color.ndim == 2:
+                # Handle element color
+                pf.debug('Set element color: OK')
+                GL.glColor3fv(color[i])
+            if sknots.ndim > 1:
+                si = sknots[i]
+            if tknots.ndim > 1:
+                ti = tknots[i]
+            GLU.gluBeginSurface(nurb)
+            if color is not None and color.ndim == 4:
+                GLU.gluNurbsSurface(nurb,si,ti,color[i],cmode)
+            GLU.gluNurbsSurface(nurb,si,ti,xi,mode)
+            GLU.gluEndSurface(nurb)
+        GLU.gluDeleteNurbsRenderer(nurb)
+
+    print "drawNurbsSurfaces: %s seconds" % t.seconds()
 
 
 def quad4_quad8(x):
@@ -413,6 +449,8 @@ def drawQuadraticSurfaces(x,e,color=None):
 
     If color is given it is an (nsurf,3) array of RGB values.
     """
+    import timer
+    t = timer.Timer()
     pf.debug("drawQuadraticSurfaces")
     if e is None:
         nelems,nfaces,nplex = x.shape[:3]
@@ -465,6 +503,7 @@ def drawQuadraticSurfaces(x,e,color=None):
     xx[...,1,:,:] = 2*xx[...,1,:,:] - 0.5*(xx[...,0,:,:] + xx[...,2,:,:])
     knots = array([0.,0.,0.,1.,1.,1.])
     drawNurbsSurfaces(xx,knots,knots,color)
+    print "drawQuadraticSurfaces: %s seconds" % t.seconds()
 
 
 def color_multiplex(color,nparts):

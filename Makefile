@@ -96,6 +96,10 @@ lib: ${LIBDIR}/Makefile
 libdebug: ${LIBDIR}/Makefile
 	make -C ${LIBDIR} debug
 
+# Create the C library without debug option
+libnodebug: ${LIBDIR}/Makefile
+	make -C ${LIBDIR} nodebug
+
 # Clean C library
 libreset: ${LIBDIR}/Makefile
 	make -C ${LIBDIR} reset
