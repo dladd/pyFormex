@@ -298,7 +298,7 @@ def projection(A,B,axis=-1):
     Bl = length(B,axis)
     if (Bl == 0.).any():
         raise ValueError,"Projection on zero vector."
-    return dotpr(A,B,axis)/length(B,axis)
+    return d/Bl
 
 
 def norm(v,n=2):
