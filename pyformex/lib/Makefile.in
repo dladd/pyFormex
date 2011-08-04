@@ -45,11 +45,11 @@ PY_INCLUDE= @PYTHON_INCLUDE@
 NUMPY_INCLUDE= @NUMPY_INCLUDE@
 
 
+include Makefile.conf
+
 INCLUDES= -I/usr/include -I$(PY_INCLUDE) -I$(NUMPY_INCLUDE)
 
-DEBUG=NDEBUG
-
-CFLAGS= -g -D$(DEBUG) -O3 -Wall -Wstrict-prototypes -fPIC
+CFLAGS= -g -O3 -Wall -Wstrict-prototypes -fPIC
 
 # -DMAJOR_VERSION=1 -DMINOR_VERSION=0
 

@@ -31,6 +31,12 @@ techniques = ['extrude']
 
 """
 clear()
+smooth()
+M = Formex(mpattern('123')).replic2(60,30).toMesh()#.setProp(5)
+draw(M,color=yellow)
+#drawNumbers(M)
+exit()
+
 smoothwire()
 view('iso')
 delay(1)
@@ -39,15 +45,15 @@ a = Formex([0.,0.,0.])
 draw(a,color='black')
 
 
-b = a.extrude(2,1.,1)
+b = a.extrude(8,1.,1)
 draw(b,color='red')
 
 
-c = b.extrude(4,1.,0)
+c = b.extrude(8,1.,0)
 draw(c,color='blue')
 
 
 d = c.extrude(7,-1.,2)
-draw(d,color='green')
+draw(d,color='yellow')
 
 # End

@@ -468,6 +468,9 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 	}
       } else if (ndn == 3) {
 	for (j=0;j<nel*nplex;++j) {
+#ifdef OPENGL_BUG
+	  gl_color(c,alpha);
+#endif
 	  glNormal3fv(n+3*j);
 	  glVertex3fv(x+3*e[j]);
 	}
@@ -495,17 +498,11 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
       }
     } else if (ndc == 3) {
       if (ndn == 0) {  // DONE
-#ifdef DEBUG
-	printf("** check 1\n");
-#endif
 	for (i=0; i<nel*nplex; i++) {
 	  gl_color(c+3*i,alpha);
 	  glVertex3fv(x+3*e[i]);
 	}
       } else if (ndn == 2) {   // DONE
-#ifdef DEBUG
-	printf("** check 2\n");
-#endif
 	for (i=0; i<nel; i++) {
 	  glNormal3fv(n+3*i);
 	  for (j=0;j<nplex;++j) {
@@ -541,9 +538,6 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 	  glEnd();
 	}
       } else if (ndn == 2) {   // DONE
-#ifdef DEBUG
-	printf("** check 5\n");
-#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  glNormal3fv(n+3*i);
@@ -562,9 +556,6 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
       }
     } else if (ndc == 2) {   // DONE
       if (ndn == 0) {
-#ifdef DEBUG
-	printf("** check 7\n");
-#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  gl_color(c+3*i,alpha);
@@ -572,9 +563,6 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 	  glEnd();
 	}
       } else if (ndn == 2){   // DONE
-#ifdef DEBUG
-	printf("** check 8\n");
-#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  gl_color(c+3*i,alpha);
@@ -595,9 +583,6 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
       }
     } else if (ndc == 3) {   // DONE
       if (ndn == 0) {
-#ifdef DEBUG
-	printf("** check 10 1\n");
-#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  for (j=0;j<nplex;++j) {
@@ -607,9 +592,6 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 	  glEnd();
 	}
       } else if (ndn == 2) {   // DONE
-#ifdef DEBUG
-	printf("** check 11 2\n");
-#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  glNormal3fv(n+3*i);
