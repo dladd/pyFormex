@@ -468,7 +468,7 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 	}
       } else if (ndn == 3) {
 	for (j=0;j<nel*nplex;++j) {
-#ifdef OPENGL_BUG
+#if BUGFIX & 1
 	  gl_color(c,alpha);
 #endif
 	  glNormal3fv(n+3*j);

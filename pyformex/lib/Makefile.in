@@ -44,15 +44,20 @@ CC= @CC@
 PY_INCLUDE= @PYTHON_INCLUDE@
 NUMPY_INCLUDE= @NUMPY_INCLUDE@
 
-
-include Makefile.conf
+######################
+# LOCAL CONFIGURATION
+# To change these values, put the changes in a file `Makefile.local'
+DEBUG=NDEBUG # debug output: DEBUG/NDEBUG
+BUGFIX=0 # fix an opengl bug on some platforms: 0/1
+-include Makefile.local
 
 INCLUDES= -I/usr/include -I$(PY_INCLUDE) -I$(NUMPY_INCLUDE)
 
-CFLAGS= -g -O3 -Wall -Wstrict-prototypes -fPIC
+CFLAGS= -g -O3 -Wall -Wstrict-prototypes -fPIC -D$(DEBUG) -DBUGFIX=$(BUGFIX)
 
 # -DMAJOR_VERSION=1 -DMINOR_VERSION=0
 
+.PHONY: Makefile.local
 
 all: Makefile $(SOBJECTS) $(PROGRAMS)
 
@@ -63,20 +68,23 @@ debug:
 
 nodebug:
 	make clean
-	make
+	make DEBUG=NDEBUG
 
 postabq: postabq.c
 	$(CC) -o $@ $<
 
-%.o: %.c Makefile
+%.o: %.c Makefile Makefile.local
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<
 
 %.so: %.o
 	$(CC) -shared $< -L/usr/lib -o $@
 
-
 Makefile: Makefile.in config.status
 	./config.status
+
+Makefile.local:
+	if [ ! -f $@ ]; then touch $@; fi 
+
 
 config.status: #configure
 	./configure
