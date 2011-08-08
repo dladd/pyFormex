@@ -364,6 +364,37 @@ def projectionVOP(A,n):
 #  VECTORS, AND u,v,w for (possibly) unnormalized
 #
 
+def pointsAtLines(q,m,t):
+    """Return the points of lines (q,m) at parameter values t.
+
+    Parameters:
+
+    - `q`,`m`: (...,3) shaped arrays of points and vectors, defining
+      a single line or a set of lines.
+    - `t`: array of parameter values, broadcast compatible with `q` and `m`.
+
+    Returns: An array with the points at parameter values t.
+    """
+    t = t[...,newaxis]
+    return q+t*m
+
+
+def pointsAtSegments(S,t):
+    """Return the points of line segments S at parameter values t.
+
+    Parameters:
+
+    - `S`: (...,2,3) shaped array, defining a single line segment or
+      a set of line segments.
+    - `t`: array of parameter values, broadcast compatible with `S`.
+
+    Returns: An array with the points at parameter values t.
+    """    
+    q0 = S[...,0,:]
+    q1 = S[...,1,:]
+    return pointsAtLines(q0,q1-q0,t)
+
+
 def intersectionTimesLWL(q1,m1,q2,m2,mode='all'):
     """Return the intersection of lines (q1,m1) and lines (q2,m2)
 
@@ -408,13 +439,11 @@ def intersectionPointsLWL(q1,m1,q2,m2,mode='all'):
     shaped (`mode=all`) arrays of intersection points instead of the
     parameter values.
     """
-    t1,t2 = intersectionTimesLWL(q1,m1,q2,m2,mode)       
-    t1 = t1[...,newaxis]
-    t2 = t2[...,newaxis]
+    t1,t2 = intersectionTimesLWL(q1,m1,q2,m2,mode)
     if mode == 'all':
         q1 = q1[:,newaxis]
         m1 = m1[:,newaxis]
-    return q1+t1*m1, q2+t2*m2
+    return pointsAtLines(q1,m1,t1),pointsAtLines(q2,m2,t2)
 
 
 def intersectionTimesLWP(q,m,p,n,mode='all'):
@@ -435,9 +464,9 @@ def intersectionTimesLWP(q,m,p,n,mode='all'):
     such that the intersection points are given by q+t*m.
     """
     if mode == 'all':
-        return  (dotpr(p,n) - inner(q,n)) / inner(m,n)
+        return (dotpr(p,n) - inner(q,n)) / inner(m,n)
     elif mode == 'pair':
-        return  (dotpr(p,n) - dotpr(q,n)) / dotpr(m,n)
+        return (dotpr(p,n) - dotpr(q,n)) / dotpr(m,n)
 
 
 def intersectionPointsLWP(q,m,p,n,mode='all'):
@@ -448,11 +477,10 @@ def intersectionPointsLWP(q,m,p,n,mode='all'):
     parameter values.
     """
     t = intersectionTimesLWP(q,m,p,n,mode)
-    t = t[...,newaxis]
     if mode == 'all':
         q = q[:,newaxis]
         m = m[:,newaxis]
-    return q+t*m
+    return pointsAtLines(q,m,t)
 
 
 def intersectionTimesSWP(S,p,n,mode='all'):
@@ -501,21 +529,17 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
     return_all==True, else as a Coords with shape (n,3) where n <= ns*np.
     """
     t = intersectionTimesSWP(S,p,n,mode)
-    tn = t[...,newaxis]
-    q0 = S[...,0,:]
-    q1 = S[...,1,:]
     if mode == 'all':
-        q0 = q0[:,newaxis]
-        q1 = q1[:,newaxis]
-    points = Coords((1.-tn)*q0 + tn*q1)
-    if points.ndim == 1:
-        points = points.reshape(1,3)
+        S = S[:,newaxis]
+    x = pointsAtSegments(S,t)
+    if x.ndim == 1:
+        x = x.reshape(1,3)
         t = t.reshape(1)
     if not return_all:
         # Find points inside segments
         ok = (t >= 0.0) * (t <= 1.0)
-        points = points[ok]
-    return points
+        x = x[ok]
+    return x
 
 
 def intersectionPointsPWP(p1,n1,p2,n2,p3,n3,mode='all'):
@@ -589,9 +613,9 @@ def intersectionTimesPOP(X,p,n,mode='all'):
     such that the intersection points are given by X+t*n.
     """
     if mode == 'all':
-        return  (dotpr(p,n) - inner(X,n)) / dotpr(n,n)
+        return (dotpr(p,n) - inner(X,n)) / dotpr(n,n)
     elif mode == 'pair':
-        return  (dotpr(p,n) - dotpr(X,n)) / dotpr(n,n)
+        return (dotpr(p,n) - dotpr(X,n)) / dotpr(n,n)
 
 
 def intersectionPointsPOP(X,p,n,mode='all'):
@@ -601,10 +625,9 @@ def intersectionPointsPOP(X,p,n,mode='all'):
     array of intersection points instead of the parameter values.
     """
     t = intersectionTimesPOP(X,p,n,mode)
-    t = t[...,newaxis]
     if mode == 'all':
         X = X[:,newaxis]
-    return X+t*n
+    return pointsAtLines(X,n,t)
 
 
 def intersectionTimesPOL(X,q,m,mode='all'):
@@ -624,9 +647,9 @@ def intersectionTimesPOL(X,q,m,mode='all'):
     such that the intersection points are given by q+t*m.
     """
     if mode == 'all':
-        return  (inner(X,m) - dotpr(q,m)) / dotpr(m,m)
+        return (inner(X,m) - dotpr(q,m)) / dotpr(m,m)
     elif mode == 'pair':
-        return  (dotpr(X,m) - dotpr(q,m)) / dotpr(m,m)
+        return (dotpr(X,m) - dotpr(q,m)) / dotpr(m,m)
 
 
 def intersectionPointsPOL(X,q,m,mode='all'):
@@ -636,10 +659,9 @@ def intersectionPointsPOL(X,q,m,mode='all'):
     array of intersection points instead of the parameter values.
     """
     t = intersectionTimesPOL(X,q,m,mode)
-    t = t[...,newaxis]
     if mode == 'all':
         q = q[:,newaxis]
-    return q+t*m
+    return pointsAtLines(q,m,t)
 
 
 #################### distance tools ###############
