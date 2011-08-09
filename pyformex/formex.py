@@ -247,7 +247,7 @@ def intersectionPointsWithPlane(F,p,n):
     t = intersectionWithPlane(F,p,n).reshape((-1,1))
     #print t.shape
     from plugins.geomtools import intersectionTimesSWP
-    t = intersectionTimesSWP(f,p,n).reshape((-1,1))
+    t = intersectionTimesSWP(f,p,n,mode='pair').reshape((-1,1))    
     #print t.shape
     return Formex((1.-t) * f[:,0,:] + t * f[:,1,:])
 
@@ -571,8 +571,8 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
     
     from plugins.geomtools import intersectionTimesSWP,intersectionPointsSWP
     C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
-    t = column_stack([intersectionTimesSWP(Ci.coords,p,n) for Ci in C])
-    P = column_stack([intersectionPointsSWP(Ci.coords,p,n,return_all=True) for Ci in C])    
+    t = column_stack([intersectionTimesSWP(Ci.coords,p,n,mode='pair') for Ci in C])
+    P = stack([intersectionPointsSWP(Ci.coords,p,n,mode='pair',return_all=True) for Ci in C],axis=1)    
     T = (t >= 0.)*(t <= 1.)
     d = F.coords.distanceFromPlane(p,n)
     U = abs(d) < atol
@@ -1793,7 +1793,7 @@ maxprop  = %s
         """
         if self.nplex() == 2:
             from plugins.geomtools import intersectionPointsSWP
-            return intersectionPointsSWP(self.coords,p,n)
+            return intersectionPointsSWP(self.coords,p,n,mode='pair')[0]
         elif self.nplex() == 3:
             return Formex(intersectionLinesWithPlane(self,p,n))
         else:

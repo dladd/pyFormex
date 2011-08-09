@@ -494,7 +494,7 @@ class PolyLine(Curve):
 
         for j in w:
             #print "%s -- %s" % (i,j)
-            P = self.coords[j:j+2].intersectionPointsSWP(p,n).reshape(1,3)
+            P = intersectionPointsSWP(self.coords[j:j+2],p,n,mode='pair')[0]
             #print "%s -- %s cuts at %s" % (j,j+1,P)
             x = Coords.concatenate([Q,self.coords[i:j+1],P])
             #print "%s + %s + %s = %s" % (Q.shape[0],j-i,P.shape[0],x.shape[0])

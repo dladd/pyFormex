@@ -389,7 +389,7 @@ def pointsAtSegments(S,t):
     - `t`: array of parameter values, broadcast compatible with `S`.
 
     Returns: An array with the points at parameter values t.
-    """    
+    """
     q0 = S[...,0,:]
     q1 = S[...,1,:]
     return pointsAtLines(q0,q1-q0,t)
@@ -488,17 +488,16 @@ def intersectionTimesSWP(S,p,n,mode='all'):
 
     Parameters:
 
-    - `S`: (ns,2,3) shaped array of line segments (`mode=all`)
-      or broadcast compatible array (`mode=pair`), defining a single line
-      segment or a set of line segments.
+    - `S`: (nS,2,3) shaped array (`mode=all`) or broadcast compatible array
+    (`mode=pair`), defining a single line segment or a set of line segments.
     - `p`,`n`: (np,3) shaped arrays of points and normals (`mode=all`)
       or broadcast compatible arrays (`mode=pair`), defining a single plane
       or a set of planes.
     - `mode`: `all` to calculate the intersection of each line segment S with
       all planes (p,n) or `pair` for pairwise intersections.
 
-    Returns: A (ns,np) shaped (`mode=all`) array of parameter values t,
-    such that the intersection points are given by (1-t)*S[:,0] + t*S[:,1].
+    Returns: A (nS,np) shaped (`mode=all`) array of parameter values t,
+    such that the intersection points are given by (1-t)*S[...,0,:] + t*S[...,1,:].
 
     This function is comparable to intersectionTimesLWP, but ensures that
     parameter values 0<=t<=1 are points inside the line segments.
@@ -513,11 +512,9 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
 
     Parameters:
 
-    - `S`: (ns,2,3) shaped array of line segments (`mode=all`)
-      or broadcast compatible array (`mode=pair`), defining a single line
-      segment or a set of line segments.
-    - `p`,`n`: (np,3) shaped arrays of points and normals (`mode=all`)
-      or broadcast compatible arrays (`mode=pair`), defining a single plane
+    - `S`: (nS,2,3) shaped array, defining a single line segment or a set of line
+      segments.
+    - `p`,`n`: (np,3) shaped arrays of points and normals, defining a single plane
       or a set of planes.
     - `mode`: `all` to calculate the intersection of each line segment S with
       all planes (p,n) or `pair` for pairwise intersections.
@@ -525,9 +522,13 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
       segments are returned. Default is to return only the points that lie
       on the segments.
 
-    Returns the intersection points as a Coords with shape (ns,np,3) (`mode=all`) if
-    return_all==True, else as a Coords with shape (n,3) where n <= ns*np.
+    Returns: if `return_all==True`, a (nS,np,3) shaped (`mode=all`) array of
+    intersection points, else, a tuple of intersection points with shape (n,3) and line
+    and plane indices with shape (n), where n <= nS*np.
     """
+    S = S.reshape(-1,2,3)
+    p = p.reshape(-1,3)
+    n = n.reshape(-1,3)
     t = intersectionTimesSWP(S,p,n,mode)
     if mode == 'all':
         S = S[:,newaxis]
@@ -538,8 +539,143 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
     if not return_all:
         # Find points inside segments
         ok = (t >= 0.0) * (t <= 1.0)
-        x = x[ok]
+        if mode == 'all':
+            wl,wt = where(ok)
+        elif mode == 'pair':
+            wl = wt = where(ok)[0]
+        return x[ok],wl,wt
     return x
+
+
+def intersectionTimesLWT(q,m,F,mode='all'):
+    """Return the intersection of lines (q,m) with triangles F.
+
+    Parameters:
+
+    - `q`,`m`: (nq,3) shaped arrays of points and vectors (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single line
+      or a set of lines.
+    - `F`: (nF,3,3) shaped array (`mode=all`) or broadcast compatible array
+      (`mode=pair`), defining a single triangle or a set of triangles.
+    - `mode`: `all` to calculate the intersection of each line (q,m) with
+      all triangles F or `pair` for pairwise intersections.
+
+    Returns: A (nq,nF) shaped (`mode=all`) array of parameter values t,
+    such that the intersection points are given q+tm.
+    """
+    Fn = cross(F[...,1,:]-F[...,0,:],F[...,2,:]-F[...,1,:])
+    return intersectionTimesLWP(q,m,F[...,0,:],Fn,mode)
+
+
+def intersectionPointsLWT(q,m,F,mode='all',return_all=False):
+    """Return the intersection points of lines (q,m) with triangles F.
+
+    Parameters:
+
+    - `q`,`m`: (nq,3) shaped arrays of points and vectors, defining a single line
+      or a set of lines.
+    - `F`: (nF,3,3) shaped array, defining a single triangle or a set of triangles.
+    - `mode`: `all` to calculate the intersection points of each line (q,m) with
+      all triangles F or `pair` for pairwise intersections.
+    - `return_all`: if True, all intersection points are returned. Default is to return
+        only the points that lie inside the triangles.
+
+    Returns: if `return_all==True`, a (nq,nF,3) shaped (`mode=all`) array of
+    intersection points, else, a tuple of intersection points with shape (n,3) and line
+    and plane indices with shape (n), where n <= nq*nF.
+    """
+    q = q.reshape(-1,3)
+    m = m.reshape(-1,3)
+    F = F.reshape(-1,3,3)
+    if not return_all:
+        # Find lines passing through the bounding spheres of the triangles
+        r,c,n = triangleBoundingCircle(F)        
+        if mode == 'all':
+##            d = distancesPFL(c,q,m,mode).transpose() # this is much slower for large arrays
+            mode = 'pair'
+            d = row_stack([ distancesPFL(c,q[i],m[i],mode) for i in range(q.shape[0]) ]) 
+            wl,wt = where(d<=r)
+        elif mode == 'pair':
+            d = distancesPFL(c,q,m,mode)
+            wl = wt = where(d<=r)[0]
+        if wl.size == 0:
+            return empty((0,3,),dtype=float),wl,wt
+        q,m,F = q[wl],m[wl],F[wt]
+    t = intersectionTimesLWT(q,m,F,mode)
+    if mode == 'all':
+        q = q[:,newaxis]
+        m = m[:,newaxis]
+    x = pointsAtLines(q,m,t)
+    if not return_all:
+        # Find points inside the faces
+        ok = insideTriangle(F,x[newaxis]).reshape(-1)
+        return x[ok],wl[ok],wt[ok]
+    else:
+        return x
+
+
+def intersectionTimesSWT(S,F,mode='all'):
+    """Return the intersection of lines segments S with triangles F.
+
+    Parameters:
+
+    - `S`: (nS,2,3) shaped array (`mode=all`) or broadcast compatible array
+    (`mode=pair`), defining a single line segment or a set of line segments.
+    - `F`: (nF,3,3) shaped array (`mode=all`) or broadcast compatible array
+      (`mode=pair`), defining a single triangle or a set of triangles.
+    - `mode`: `all` to calculate the intersection of each line segment S with
+      all triangles F or `pair` for pairwise intersections.
+
+    Returns: A (nS,nF) shaped (`mode=all`) array of parameter values t,
+    such that the intersection points are given by (1-t)*S[...,0,:] + t*S[...,1,:].
+    """
+    Fn = cross(F[...,1,:]-F[...,0,:],F[...,2,:]-F[...,1,:])
+    return intersectionTimesSWP(S,F[...,0,:],Fn,mode)
+
+
+def intersectionPointsSWT(S,F,mode='all',return_all=False):
+    """Return the intersection points of lines segments S with triangles F.
+
+    Parameters:
+
+    - `S`: (nS,2,3) shaped array, defining a single line segment or a set of line segments.
+    - `F`: (nF,3,3) shaped array, defining a single triangle or a set of triangles.
+    - `mode`: `all` to calculate the intersection points of each line segment S with
+      all triangles F or `pair` for pairwise intersections.
+    - `return_all`: if True, all intersection points are returned. Default is to return
+        only the points that lie on the segments and inside the triangles.
+
+    Returns: if `return_all==True`, a (nS,nF,3) shaped (`mode=all`) array of
+    intersection points, else, a tuple of intersection points with shape (n,3) and line
+    and plane indices with shape (n), where n <= nS*nF.
+    """
+    
+    S = S.reshape(-1,2,3)
+    F = F.reshape(-1,3,3)
+    if not return_all:
+        # Find lines passing through the bounding spheres of the triangles
+        r,c,n = triangleBoundingCircle(F)        
+        if mode == 'all':
+##            d = distancesPFS(c,S,mode).transpose() # this is much slower for large arrays
+            mode = 'pair'
+            d = row_stack([ distancesPFS(c,S[i],mode) for i in range(S.shape[0]) ]) 
+            wl,wt = where(d<=r)
+        elif mode == 'pair':
+            d = distancesPFS(c,S,mode)
+            wl = wt = where(d<=r)[0]
+        if wl.size == 0:
+            return empty((0,3,),dtype=float),wl,wt
+        S,F = S[wl],F[wt]
+    t = intersectionTimesSWT(S,F,mode)
+    if mode == 'all':
+        S = S[:,newaxis]
+    x = pointsAtSegments(S,t)
+    if not return_all:
+        # Find points inside the segments and faces
+        ok = (t >= 0.0) * (t <= 1.0) * insideTriangle(F,x[newaxis]).reshape(-1) 
+        return x[ok],wl[ok],wt[ok]
+    else:
+        return x
 
 
 def intersectionPointsPWP(p1,n1,p2,n2,p3,n3,mode='all'):
@@ -665,6 +801,50 @@ def intersectionPointsPOL(X,q,m,mode='all'):
 
 
 #################### distance tools ###############
+
+def distancesPFL(X,q,m,mode='all'):
+    """Return the distances of points X from lines (q,m).
+
+    Parameters:
+
+    - `X`: a (nX,3) shaped array of points (`mode=all`)
+      or broadcast compatible array (`mode=pair`).
+    - `q`,`m`: (nq,3) shaped arrays of points and vectors (`mode=all`)
+      or broadcast compatible arrays (`mode=pair`), defining a single line
+      or a set of lines.
+    - `mode`: `all` to calculate the distance of each point X from
+      all lines (q,m) or `pair` for pairwise distances.
+
+    Returns: A (nX,nq) shaped (`mode=all`) array of distances.
+    """    
+    if mode == 'all':
+        X = asarray(X).reshape(-1,1,3)
+        q = asarray(q).reshape(1,-1,3)
+        m = asarray(m).reshape(1,-1,3)
+    C = length(X-q)
+    A = abs(dotpr(X,m)-dotpr(q,m))/length(m)
+    d = sqrt(abs(C**2-A**2))
+    return d
+
+
+def distancesPFS(X,S,mode='all'):
+    """Return the distances of points X from line segments S.
+
+    Parameters:
+
+    - `X`: a (nX,3) shaped array of points (`mode=all`)
+      or broadcast compatible array (`mode=pair`).
+    - `S`: (nS,2,3) shaped array of line segments (`mode=all`)
+      or broadcast compatible array (`mode=pair`), defining a single line
+      segment or a set of line segments.
+    - `mode`: `all` to calculate the distance of each point X from
+      all line segments S or `pair` for pairwise distances.
+
+    Returns: A (nX,nS) shaped (`mode=all`) array of distances.
+    """
+    q0 = S[...,0,:]
+    q1 = S[...,1,:]
+    return distancesPFL(X,q0,q1-q0,mode)
 
 
 def insideTriangle(x,P,method='bary'):

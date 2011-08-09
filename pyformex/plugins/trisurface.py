@@ -1251,7 +1251,7 @@ Total area: %s; Enclosed volume: %s
         if ind.size != 0:
             rev = inverseUniqueIndex(ind)
             M = Mesh(S.coords,edg[w])
-            x = geomtools.intersectionPointsSWP(M.toFormex().coords,p,n,return_all=True).reshape(-1,3)
+            x = geomtools.intersectionPointsSWP(M.toFormex().coords,p,n,mode='pair',return_all=True).reshape(-1,3)
         
         # For each triangle, compute the number of cutting edges
         cut = w[fac]
@@ -2040,7 +2040,7 @@ def intersectSurfaceWithLines(ts, qli, mli, atol=1.e-5):
     tsw=ts.select(wt)
     tsw=tsw.coords[tsw.elems]
     #xIn = checkPointInsideTriangleOne2One(tsw, xc, atol)
-    xIn = geomtools.insideTriangle(tsw,xc[newaxis,...])
+    xIn = geomtools.insideTriangle(tsw,xc[newaxis,...]).reshape(-1)
     #takes only intersections that fall inside the triangle
     return xc[xIn], wl[xIn], wt[xIn]
 
