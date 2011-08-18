@@ -571,11 +571,16 @@ class GeomActor(Actor):
             mode = canvas.rendermode
 
         if mode.endswith('wire'):
-            self.drawGL(mode=mode[:-4])
-            # draw the lines without lights
-            canvas.glLight(False)
-            self.drawGL(mode='wireframe',color=asarray(black))
-            return
+            mode = mode[:-4]
+
+        #print 'DRAWING MODE %s' % mode
+
+        ## if mode.endswith('wire'):
+        ##     self.drawGL(mode=mode[:-4])
+        ##     # draw the lines without lights
+        ##     canvas.glLight(False)
+        ##     self.drawGL(mode='wireframe',color=asarray(black))
+        ##     return
                             
         ############# set drawing attributes #########
         alpha = self.alpha
@@ -668,6 +673,7 @@ class GeomActor(Actor):
                     drawEdges(self.coords,self.elems,edges,edges.eltype,color)    
             else:
                 for faces in el.getDrawFaces(el.name() in pf.cfg['draw/quadsurf']):
+                    #print faces.report()
                     if bkcolor is not None:
                         # Enable drawing front and back with different colors
                         GL.glEnable(GL.GL_CULL_FACE)

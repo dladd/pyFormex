@@ -454,7 +454,7 @@ class Canvas(object):
         return self.width(),self.height()
 
 
-    def glLight(self,onoff):
+    def do_lighting(self,onoff):
         """Toggle lights on/off."""
         if onoff:
             self.lightprof.activate()
@@ -464,7 +464,7 @@ class Canvas(object):
             GL.glDisable(GL.GL_LIGHTING)
 
 
-    def hasLight(self):
+    def has_lighting(self):
         """Return the status of the lighting."""
         return GL.glIsEnabled(GL.GL_LIGHTING)
         
@@ -474,7 +474,6 @@ class Canvas(object):
         self.settings.reset(dict)
         self.resetLighting()
         ## self.resetLights()
-
 
     def setAmbient(self,ambient):
         """Set the global ambient lighting for the canvas"""
@@ -508,7 +507,8 @@ class Canvas(object):
         and everything is redrawn with the new mode.
         """
         if mode not in Canvas.rendermodes:
-            mode = Canvas.rendermodes[0]
+            raise ValueError,"Invalid render mode %s" % mode
+            #mode = Canvas.rendermodes[0]
         if lighting not in [True,False]:
             lighting = mode.startswith('smooth')
 
@@ -517,20 +517,39 @@ class Canvas(object):
             self.lighting = lighting
             #print "GLINIT %s %s" % (self.rendermode,self.lighting)
             self.glinit()
-            self.redrawAll()
+            #print "REDRAWALL %s %s" % (self.rendermode,self.lighting)
+            #self.redrawAll()
+            #print "SWITCH TO NRE RENDERMODE COMPLETED"
         else:
             #print "KEEP MODE  %s %s" % (self.rendermode,self.lighting)
             pass
 
-    def setTransparency(self,onoff):
-        self.alphablend = onoff
+    def setToggle(self,attr,onoff):
+        if onoff not in [True,False]:
+            onoff = not getattr(self,attr)
+        setattr(self,attr,onoff)
+        try:
+            func = getattr(self,'do_'+attr)#.capitalize())
+            func(onoff)
+        except:
+            pass
+        
+    ## def setTransparency(self,onoff):
+    ##     self.alphablend = onoff
 
     def setLighting(self,onoff):
-        self.lighting = onoff
-        self.glLight(self.lighting)
+        self.setToggle('lighting',onoff)
+        
+    ## def setLighting(self,onoff):
+    ##     self.lighting = onoff
+    ##     print "canvas.setLighting %s" % onoff
+    ##     self.glLight(self.lighting)
 
-    def setAveragedNormals(self,onoff):
-        self.avgnormals = onoff
+    ## def setAveragedNormals(self,onoff):
+    ##     self.avgnormals = onoff
+    ##     self.do_avgnormals(onoff)
+        
+    def do_avgnormals(self,onoff):
         change = (self.rendermode == 'smooth' and self.avgnormals) or \
                  (self.rendermode == 'smooth_avg' and not self.avgnormals)
         if change:
@@ -718,7 +737,7 @@ class Canvas(object):
         GL.glPointSize(self.settings.pointsize)
         #if self.rendermode.startswith('smooth'):
         #    self.resetLighting()
-        self.glLight(self.lighting)
+        self.do_lighting(self.lighting)
         GL.glDepthFunc(GL.GL_LESS)
     
     def setSize (self,w,h):
@@ -740,6 +759,7 @@ class Canvas(object):
         or after changing  camera position/orientation or lens.
         """
         #pf.debugt("UPDATING CURRENT OPENGL CANVAS")
+        #print "DISPLAY"
         self.makeCurrent()
         self.clear()
         
@@ -832,7 +852,7 @@ class Canvas(object):
         GL.glLoadIdentity()
         self.zoom_2D()
         GL.glDisable(GL.GL_DEPTH_TEST)
-        self.glLight(False)
+        self.do_lighting(False)
         self.mode2D = True
 
  
@@ -845,7 +865,7 @@ class Canvas(object):
             GL.glPopMatrix()
             GL.glMatrixMode(GL.GL_MODELVIEW)
             GL.glPopMatrix()
-            self.glLight(self.lighting)
+            self.do_lighting(self.lighting)
             self.mode2D = False
        
         
@@ -962,6 +982,7 @@ class Canvas(object):
 
     def redrawAll(self):
         """Redraw all actors in the scene."""
+        #print "REDRAWALL"
         self.actors.redraw()
         self.highlights.redraw()
         self.annotations.redraw()

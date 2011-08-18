@@ -954,11 +954,18 @@ def colormap(color=None):
 
 
 def renderMode(mode,avg=False,light=None):
+    #print "DRAW.RENDERMODE"
+    #print "CANVAS %s" % pf.canvas
+    #print "MODE %s" % pf.canvas.rendermode
+    # ERROR The following redraws twice !!!
     pf.canvas.setRenderMode(mode,light)
+    #print "NEW MODE %s" % pf.canvas.rendermode
     pf.canvas.update()
     toolbar.updateNormalsButton()
     toolbar.updateLightButton()
     pf.GUI.processEvents()
+    #print "DONE DRAW>RENDERMODE"
+    
     
 def wireframe():
     renderMode("wireframe")
@@ -992,7 +999,7 @@ def lights(state=True):
 
 def transparent(state=True):
     """Set the transparency mode on or off."""
-    pf.canvas.setTransparency(state)
+    pf.canvas.setToggle('alphablend',state)
     pf.canvas.update()
     toolbar.updateTransparencyButton()
     pf.GUI.processEvents()
@@ -1397,8 +1404,6 @@ def viewport(n=None):
 
     if n is None, selects the current GUI viewport for drawing
     """
-    import warnings
-    warnings.warn('warn_viewport_switching')
     if n is not None:
         pf.canvas.update()
         pf.GUI.viewports.setCurrent(n)

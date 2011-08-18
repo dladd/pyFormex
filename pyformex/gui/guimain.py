@@ -662,7 +662,8 @@ class Gui(QtGui.QMainWindow):
         #print "SAVED script canvas %s" % pf.canvas
         #pf.canvas = self.viewports.current
         #print "SET script canvas %s" % pf.canvas
-        pf.app.processEvents()
+        if pf.app:
+            pf.app.processEvents()
         #pf.canvas = saved
         #print "RESTORED script canvas %s" % pf.canvas
 

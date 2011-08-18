@@ -140,19 +140,64 @@ def addCameraButtons(toolbar):
         b.setToolTip(but[0])
 
 
-# We should probably make a general framework for toggle buttons ?
+#######################################################################
+# Viewport Toggle buttons #
+###########################
 
+
+class Toggle(object):
+    def __init__(self,state=False):
+        self.state = state
+    def toggle(self,onoff=None):
+        if onoff is None:
+            onoff = not self.state
+        self.state = onoff
+
+
+
+class ViewportToggleButton(object):
+    def __init__(self,toolbar,tooltip,icon,func,attr,checked=False,icon0=None):
+        self.button = addButton(toolbar,tooltip,icon,func,toggle=True,icon0=icon0)
+        self.attr = attr
+
+    def updateButton(self):
+        """Update the button to current viewport state."""
+        vp = pf.GUI.viewports.current
+        if vp == pf.canvas:
+            self.setChecked(getattr(vp,self.attr))
+        pf.GUI.processEvents()
+
+    def toggle(self,attr,state=None):
+        """Update the corresponding viewport attribute.
+
+        This does not update the button state.
+        """
+        vp = pf.GUI.viewports.current
+        vp.setToggle(attr,state)
+        vp.update()
+        pf.GUI.processEvents()
+
+
+def toggleButton(attr,state=None):
+    """Update the corresponding viewport attribute.
+    
+    This does not update the button state.
+    """
+    vp = pf.GUI.viewports.current
+    vp.setToggle(attr,state)
+    vp.update()
+    pf.GUI.processEvents()
+
+def updateButton(button,attr):
+    """Update the button to correct state."""
+    vp = pf.GUI.viewports.current
+    if vp == pf.canvas:
+        button.setChecked(getattr(vp,attr))
+    pf.GUI.processEvents()
+        
 ################# Transparency Button ###############
 
 transparency_button = None # the toggle transparency button
-
-def toggleTransparency(state=None): # This does not update the button state
-    vp = pf.GUI.viewports.current
-    if state is None:
-        state = not vp.alphablend
-    vp.setTransparency(state)
-    vp.update()
-    pf.GUI.processEvents()
 
 def addTransparencyButton(toolbar):
     global transparency_button
@@ -160,25 +205,17 @@ def addTransparencyButton(toolbar):
                                     'transparent',toggleTransparency,
                                     toggle=True)    
 
+def toggleTransparency(state=None):
+    toggleButton('alphablend',state)
+
 def updateTransparencyButton():
     """Update the transparency button to correct state."""
-    vp = pf.GUI.viewports.current
-    if vp == pf.canvas:
-        transparency_button.setChecked(vp.alphablend)
-    pf.GUI.processEvents()
-  
+    updateButton(transparency_button,'alphablend')
+    
 
 ################# Lights Button ###############
 
 light_button = None
-
-def toggleLight(state=None): 
-    vp = pf.GUI.viewports.current
-    if state is None:
-        state = not vp.lighting
-    vp.setLighting(state)
-    vp.update()
-    pf.GUI.processEvents()
 
 def addLightButton(toolbar):
     global light_button
@@ -186,24 +223,17 @@ def addLightButton(toolbar):
                              'lamp-on',toggleLight,icon0='lamp',
                              toggle=True,checked=True)    
 
+def toggleLight(state=None): 
+    toggleButton('lighting',state)
+
 def updateLightButton():
     """Update the light button to correct state."""
-    vp = pf.GUI.viewports.current
-    if vp == pf.canvas:
-        light_button.setChecked(vp.lighting)
-    pf.GUI.processEvents()
+    updateButton(light_button,'lighting')
 
 
 ################# Normals Button ###############
 
 normals_button = None
-
-def toggleNormals():
-    vp = pf.GUI.viewports.current
-    state = not vp.avgnormals
-    vp.setAveragedNormals(state)
-    vp.update()
-    pf.GUI.processEvents()
 
 def addNormalsButton(toolbar):
     global normals_button
@@ -211,12 +241,12 @@ def addNormalsButton(toolbar):
                                'normals-avg',toggleNormals,icon0='normals-ind',
                                toggle=True,checked=False)    
 
+def toggleNormals(state=None):
+    toggleButton('avgnormals',state)
+
 def updateNormalsButton(state=True):
     """Update the normals button to correct state."""
-    vp = pf.GUI.viewports.current
-    if vp == pf.canvas:
-        normals_button.setChecked(vp.avgnormals)
-    pf.GUI.processEvents()
+    updateButton(normals_button,'avgnormals')
 
 
 ################# Perspective Button ###############
@@ -240,6 +270,7 @@ def addPerspectiveButton(toolbar):
 
 def updatePerspectiveButton():
     """Update the normals button to correct state."""
+    #updateButton(perspective_button,'avgnormals')
     vp = pf.GUI.viewports.current
     if vp == pf.canvas:
         perspective_button.setChecked(vp.camera.perspective)

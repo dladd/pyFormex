@@ -43,16 +43,6 @@ warn_drawaxes_changed = "The syntax of drawAxes has changed. The use of the 'pos
 
 warn_flat_removed = "The 'flat=True' parameter of the draw function has been replaced with 'nolight=True'."
 
-warn_viewport_switching = """.. warn_viewport_switching
-
-Viewport switching
-------------------
-The viewport switching functions have changed: interactive changes through the
-GUI are now decoupled from changes by the script.
-This may result in unwanted effects if your script relied on the old (coupled)
-functionality.
-"""
-
 warn_viewport_linking = "Linking viewports is an experimental feature and is not fully functional yet."
 
 warn_avoid_sleep = """.. warn_avoid_sleep

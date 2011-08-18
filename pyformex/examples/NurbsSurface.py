@@ -69,7 +69,7 @@ kx,ky = 10,4
 nP = 100
 
 # what to draw
-draw_points = False
+draw_points = True
 draw_surf = True
 draw_curves = False
 draw_curvepoints = False
@@ -101,6 +101,8 @@ if draw_surf:
     # draw the Nurbs surface, with random colors
     colors = 0.5*random.rand(*S.coords.shape)
     draw(S,color=colors[...,:3])
+
+exit()
 
 ###########################
 ####   ISOPARAMETRIC CURVES
