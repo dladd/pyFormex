@@ -854,6 +854,10 @@ class Formex(Geometry):
         called to assign the properties.
         """
         if isinstance(data,Formex):
+            if prop is None:
+                prop = data.prop
+            if eltype is None:
+                eltype = data.eltype
             data = data.coords
         else:
             if type(data) == str:
@@ -892,6 +896,8 @@ class Formex(Geometry):
         try:
             self.eltype = eltype.lower()
         except:
+            if eltype is not None:
+                utils.warn("Formex eltype currently needs to be a string!")
             self.eltype = None
 
 

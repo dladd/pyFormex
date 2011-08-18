@@ -495,7 +495,6 @@ class GeomActor(Actor):
         self.setBkColor(bkcolor,bkcolormap)
         self.setAlpha(alpha)
         self.marksize = marksize
-        self.list = None
 
 
     def getType(self):
@@ -551,6 +550,46 @@ class GeomActor(Actor):
         return self.coords.bbox()
 
 
+    def draw(self,**kargs):
+        #print "ACTORS.DRAW"
+        
+        if 'mode' in kargs:
+            mode = kargs['mode']
+        else:
+            canvas = kargs.get('canvas',pf.canvas)
+            mode = canvas.rendermode
+
+        if mode.endswith('wire'):
+            if not hasattr(self,'wire'):
+                import copy
+                wire = copy.copy(self)
+                wire.nolight = True
+                wire.ontop = False # True will make objects transparent for edges
+                wire.list = None
+                Drawable.draw(wire,mode='wireframe',color=asarray(black))
+                self.wire = wire
+
+            # Add the existing wire to the extra list, and then draw wo wire
+            if self.wire not in self.extra:
+                self.extra.append(self.wire)
+                # AVOID RECURSION
+                self.wire.extra = []
+                
+            mode = mode[:-4]
+
+        else:
+            if hasattr(self,'wire') and self.wire in self.extra:
+                self.extra.remove(self.wire)
+
+        if self.list is None or mode != self.mode:
+            kargs['mode'] = mode
+            self.delete_list()
+            self.list = self.create_list(**kargs)
+            self.mode = mode
+
+        self.use_list()
+
+
     def drawGL(self,canvas=None,mode=None,color=None,**kargs):
         """Draw the geometry on the specified canvas.
 
@@ -572,15 +611,6 @@ class GeomActor(Actor):
 
         if mode.endswith('wire'):
             mode = mode[:-4]
-
-        #print 'DRAWING MODE %s' % mode
-
-        ## if mode.endswith('wire'):
-        ##     self.drawGL(mode=mode[:-4])
-        ##     # draw the lines without lights
-        ##     canvas.glLight(False)
-        ##     self.drawGL(mode='wireframe',color=asarray(black))
-        ##     return
                             
         ############# set drawing attributes #########
         alpha = self.alpha

@@ -1079,11 +1079,11 @@ class Drawable(object):
     
     def __init__(self,nolight=False,ontop=False,**kargs):
         self.list = None
-        self.wire = None
         self.mode = None # stores mode of self.list: wireframe/smooth/flat
         self.trans = False
         self.nolight = nolight
         self.ontop = ontop
+        self.extra = [] # list of dependent Drawables
 
     def drawGL(self,**kargs):
         """Perform the OpenGL drawing functions to display the actor."""
@@ -1100,27 +1100,11 @@ class Drawable(object):
             canvas = kargs.get('canvas',pf.canvas)
             mode = canvas.rendermode
 
-        color = kargs.get('color',None)
-        
         if mode.endswith('wire'):
-            if self.wire is None:
-                kargs['mode'] = 'wireframe'
-                kargs['color'] = asarray(black)
-                canvas.do_lighting(False)
-                #print "CREATING element edges"
-                #pf.options.debug = -1
-                self.wire = self.create_list(**kargs)
-                #pf.options.debug = 0
-                canvas.do_lighting(canvas.lighting)
-            
             mode = mode[:-4]
-        else:
-            self.delete_wire()
 
         if self.list is None or mode != self.mode:
             kargs['mode'] = mode
-            kargs['color'] = color
-            #print "CREATING elements"
             self.delete_list()
             self.list = self.create_list(**kargs)
             self.mode = mode
@@ -1128,15 +1112,14 @@ class Drawable(object):
         self.use_list()
 
     def redraw(self,**kargs):
-        #print "REDRAW ACTOR"
         self.draw(**kargs)
 
 
     def use_list(self):
         if self.list:
             GL.glCallList(self.list)
-        if self.wire:
-            GL.glCallList(self.wire)
+        for i in self.extra:
+            i.use_list()
 
 
     def create_list(self,**kargs):
@@ -1161,11 +1144,6 @@ class Drawable(object):
         if self.list:
             GL.glDeleteLists(self.list,1)
         self.list = None
-        
-    def delete_wire(self):
-        if self.wire:
-            GL.glDeleteLists(self.wire,1)
-        self.wire = None
             
     
     def setLineWidth(self,linewidth):
