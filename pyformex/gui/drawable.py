@@ -399,7 +399,13 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
 
         mode = {3:GL.GL_MAP2_VERTEX_3, 4:GL.GL_MAP2_VERTEX_4}[ndim]
         if color is not None and color.ndim == 4:
-            cmode = {3:GL.GL_MAP2_COLOR_3, 4:GL.GL_MAP2_COLOR_4}[color.shape[-1]]
+            if color.shape[-1] == 3:
+                # expand to 4 colors
+                alpha = 0.5
+                color = growAxis(color,1,axis=-1,fill=alpha)
+            if color.shape[-1] != 4:
+                raise ValueError,"Expected 3 or 4 color components"
+            cmode = GL.GL_MAP2_COLOR_4
         si = sknots
         ti = tknots
         for i,xi in enumerate(x):
