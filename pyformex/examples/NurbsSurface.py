@@ -36,14 +36,13 @@ Nurbs
 This example is under development.
 """
 
+from plugins.nurbs import *
+
 clear()
 smooth()
 
 createView('myview',angles=(0,-15,0),addtogui=True)
 view('myview')
-
-from plugins.nurbs import *
-
 
 #############################
 ####   DATA
@@ -69,13 +68,18 @@ kx,ky = 10,4
 nP = 100
 
 # what to draw
-draw_points = True
-draw_surf = True
-draw_curves = False
-draw_curvepoints = False
-draw_isocurves = True
-draw_randompoints = True
+res = askItems([
+    ('draw_points',True),
+    ('draw_surf',True),
+    ('draw_curves',False),
+    ('draw_curvepoints',False),
+    ('draw_isocurves',True),
+    ('draw_randompoints',True),
+    ])
+if not res:
+    exit()
 
+globals().update(res)
 
 ###########################
 ####   CONTROL GRID
@@ -102,7 +106,7 @@ if draw_surf:
     colors = 0.5*random.rand(*S.coords.shape)
     draw(S,color=colors[...,:3])
 
-exit()
+#exit()
 
 ###########################
 ####   ISOPARAMETRIC CURVES
@@ -135,12 +139,16 @@ if draw_curvepoints:
 # First swap the isoparametric point grids, then create curves
 PuC = CuP.swapaxes(0,1)
 PvC = CvP.swapaxes(0,1)
-Vc = [NurbsCurve(PuC[i],degree=py,knots=S.vknots) for i in range(kx)] 
-Uc = [NurbsCurve(PvC[i],degree=px,knots=S.uknots) for i in range(ky)]
+Vc = [NurbsCurve(PuC[i],degree=py,knots=S.vknots) for i in range(kx+1)] 
+Uc = [NurbsCurve(PvC[i],degree=px,knots=S.uknots) for i in range(ky+1)]
 if draw_isocurves:
     # draw the isocurves
-    draw(Vc,color=black,linewidth=2)#,ontop=True)
-    draw(Uc,color=black,linewidth=2)#,ontop=True)
+    draw(Vc,color=red,linewidth=2,nolight=True)#,ontop=True)
+    color = 0.5*random.rand(Uc[0].coords.shape[0],3)
+    print color.shape
+    print color
+    draw(Uc,color=[red,yellow,green,cyan,blue,magenta],linewidth=3,nolight=True)#,ontop=True)
+    
 
 
 ###########################
@@ -153,5 +161,6 @@ P = S.pointsAt(u)
 if draw_randompoints:
     # draw the random points
     draw(P,color=black,nolight=True,ontop=True)
+
 
 # End

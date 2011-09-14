@@ -519,21 +519,22 @@ def createScriptDirsDialog():
         
 
 def setOptions():
-    options = [] # Currently No user changeable options ['test']
+    options = [ 'debug' ] # Currently No user changeable options ['test']
     options = [ o for o in options if hasattr(pf.options,o) ]
     items = [ I(o,getattr(pf.options,o)) for o in options ]
-    # currently we only have All or None as debug levels
-    debug_levels = [ 'All','None' ]
-    if pf.options.debug:
-        debug = 'All'
-    else:
-        debug = 'None'
-    items.append(I('debug',debug,'vradio',choices=debug_levels))
+    ## # currently we only have All or None as debug levels
+    ## debug_levels = [ 'All','None' ]
+    ## if pf.options.debug:
+    ##     debug = 'All'
+    ## else:
+    ##     debug = 'None'
+    ## items.append(I('debug',debug,'vradio',choices=debug_levels))
     res = draw.askItems(items)
     if res:
+        print res
         for o in options:
             setattr(pf.options,o,res[o])
-            setattr(pf.options,'debug',debug_levels.index(res['debug'])-1)
+            #setattr(pf.options,'debug',debug_levels.index(res['debug'])-1)
             print("Options: %s" % pf.options)
             ## if o == 'debug':
             ##     pf.setDebugFunc()

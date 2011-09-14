@@ -56,19 +56,22 @@ _nurbs_elements = [ 'line3', 'quad4', 'quad8', 'quad9', 'hex20' ]
 
 ### Some drawing functions ###############################################
 
-def glColor(color,alpha=1.0):
+def glColor(color,alpha=None):
     """Set the OpenGL color, possibly with transparency.
 
-    color is a tuple of 3 real values.
+    color is a tuple of 3 or 4 real values.
     alpha is a single real value.
     All values are between 0.0 and 1.0
     """
     if color is not None:
-        if alpha == 1.0:
-            GL.glColor3fv(color)
+        if len(color) == 3:
+            if alpha is None:
+                GL.glColor3fv(color)
+            else:
+                GL.glColor4fv(append(color,alpha))
         else:
-            GL.glColor4fv(append(color,alpha)) 
-
+            GL.glColor4fv(color)
+            
 
 #
 # Though all three functions drawPoints, drawLines and drawPolygons
@@ -204,7 +207,7 @@ def drawBezierPoints(x,color=None,granularity=100):
     drawBezier(x,color=None,objtype=GL.GL_POINTS,granularity=granularity)
 
 
-def drawNurbsCurves(x,knots,color=None,samplingTolerance=5.0):
+def drawNurbsCurves(x,knots,color=None,alpha=1.0,samplingTolerance=5.0):
     """Draw a collection of Nurbs curves.
 
     x: (nctrl,ndim) or (ncurve,nctrl,ndim) float array: control points,
@@ -221,9 +224,6 @@ def drawNurbsCurves(x,knots,color=None,samplingTolerance=5.0):
 
     If color is given it is an (ncurves,3) array of RGB values.
     """
-    nurb = GLU.gluNewNurbsRenderer()
-    if not nurb:
-        raise RuntimeError,"Could not create a new NURBS renderer"
     nctrl,ndim = x.shape[-2:]
     nknots = asarray(knots).shape[-1]
     order = nknots-nctrl
@@ -231,30 +231,67 @@ def drawNurbsCurves(x,knots,color=None,samplingTolerance=5.0):
         import warnings
         warnings.warn('Nurbs curves of degree > 7 can currently not be drawn! You can create some approximation by evaluating the curve at some points.')
         return
-    mode = {3:GL.GL_MAP1_VERTEX_3, 4:GL.GL_MAP1_VERTEX_4}[ndim]
-    x = x.reshape(-1,nctrl,ndim)
+
+    if x.ndim == 2:
+        x = x.reshape(-1,nctrl,ndim)
+        if color is not None and color.ndim == 2:
+            color = color.reshape(-1,nctrl,color.shape[-1])
+
     if color is not None:
-        color = color.reshape(-1,3)
-        if color.shape[0] == 1:
-            # Handle single color
-            GL.glColor3fv(color[0])
-            color = None
-        elif color.shape[0] != x.shape[0]:
-            raise ValueError,"Number of colors (%s) should equal 1 or the number of faces(%s)" % (color.shape[0],x.shape[0])
-    ki = knots
+        pf.debug('Coords shape: %s' % str(x.shape))
+        pf.debug('Color shape: %s' % str(color.shape))
+        if color.ndim == 1:
+            pf.debug('Single color')
+        elif color.ndim == 2 and color.shape[0] == x.shape[0]:
+            pf.debug('Element color: %s colors' % color.shape[0])
+        elif color.shape == x.shape[:-1] + (3,):
+            pf.debug('Vertex color: %s colors' % str(color.shape[:-1]))
+        else:
+            raise ValueError,"Number of colors (%s) should equal 1 or the number of curves(%s) or the number of curves * number of vertices" % (color.shape[0],x.shape[0])                 
+
+        pf.debug("Color shape = %s" % str(color.shape))
+        if color.shape[-1] not in (3,4):
+            raise ValueError,"Expected 3 or 4 color components"
+
+    if color is not None:
+        pf.debug("Final Color shape = %s" % str(color.shape))
+
+    nurb = GLU.gluNewNurbsRenderer()
+    if not nurb:
+        raise RuntimeError,"Could not create a new NURBS renderer"
+
     GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
+    
+    mode = {3:GL.GL_MAP1_VERTEX_3, 4:GL.GL_MAP1_VERTEX_4}[ndim]
+
+    if color is not None and color.ndim == 1:
+        # Handle single color
+        pf.debug('Set single color: OK')
+        glColor(color)
+        color = None
+        
+    ki = knots
     for i,xi in enumerate(x):
-        if color is not None:
-            GL.glColor3fv(color[i])
+        if color is not None and color.ndim == 2:
+            # Handle element color
+            glColor(color[i])
         if knots.ndim > 1:
             ki = knots[i]
         GLU.gluBeginCurve(nurb)
-        #print ki,xi
+        if color is not None and color.ndim == 3:
+            # Handle vertex color
+            ci = color[i]
+            if ci.shape[-1] == 3:
+                # gluNurbs always wants 4 colors
+                ci = growAxis(ci,1,axis=-1,fill=alpha)
+            GLU.gluNurbsCurve(nurb,ki,ci,GL.GL_MAP1_COLOR_4)
         GLU.gluNurbsCurve(nurb,ki,xi,mode)
         GLU.gluEndCurve(nurb)
 
+    GLU.gluDeleteNurbsRenderer(nurb)
 
-def drawQuadraticCurves(x,e=None,color=None):
+
+def drawQuadraticCurves(x,e=None,color=None,alpha=1.0):
     """Draw a collection of quadratic curves.
 
     The geometry is specified by x or (x,e).
@@ -297,10 +334,11 @@ def drawQuadraticCurves(x,e=None,color=None):
     #print xx.shape
     #print xx
     knots = array([0.,0.,0.,1.,1.,1.])
-    drawNurbsCurves(xx,knots,color=color)
+    drawNurbsCurves(xx,knots,color=color,alpha=alpha)
+    
 
 _nurbs_renderers_ = []
-def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingTolerance=20.0):
+def drawNurbsSurfaces(x,sknots,tknots,color=None,alpha=1.0,normals='auto',samplingTolerance=20.0):
     """Draw a collection of Nurbs surfaces.
 
     x: (ns,nt,ndim) or (nsurf,ns,nt,ndim) float array:
@@ -327,6 +365,7 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
     """
     import timer
     t = timer.Timer()
+    
     ns,nt,ndim = x.shape[-3:]
     nsk = asarray(sknots).shape[-1]
     ntk = asarray(tknots).shape[-1]
@@ -336,16 +375,17 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         import warnings
         warnings.warn('Nurbs surfaces of degree > 7 can currently not be drawn! You can approximate the surface by a lower order surface.')
         return
-    #x = x.reshape(-1,ns,nt,ndim)
+
+    if x.ndim == 3:
+        x = x.reshape(-1,ns,nt,ndim)
+        if color is not None and color.ndim == 3:
+            color = color.reshape(-1,ns,nt,color.shape[-1])
+
     if color is not None:
-        pf.debug('Color shape: %s' % str(color.shape))
         pf.debug('Coords shape: %s' % str(x.shape))
-        #color = color.reshape(-1,3)
+        pf.debug('Color shape: %s' % str(color.shape))
         if color.ndim == 1:
-            # Handle single color
-            pf.debug('Set single color: OK')
-            GL.glColor3fv(color)
-            color = None
+            pf.debug('Single color')
         elif color.ndim == 2 and color.shape[0] == x.shape[0]:
             pf.debug('Element color: %s' % color.shape[0])
         elif color.shape == x.shape[:-1] + (3,):
@@ -353,13 +393,10 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         else:
             raise ValueError,"Number of colors (%s) should equal 1 or the number of faces(%s) or the number of faces * number of vertices" % (color.shape[0],x.shape[0])                 
 
-    if x.ndim == 3:
-        x = x.reshape(-1,ns,nt,ndim)
-    if color is not None and color.ndim == 3:
-        from plugins.nurbs import Coords4
-        color = Coords4(color)
-        color = color.reshape(-1,ns,nt,4)
-    
+        pf.debug("Color shape = %s" % str(color.shape))
+        if color.shape[-1] not in (3,4):
+            raise ValueError,"Expected 3 or 4 color components"
+
     if normals == 'auto':
         GL.glEnable(GL.GL_AUTO_NORMAL)
     else:
@@ -380,12 +417,16 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         if color is not None:
             color = color.astype(float32)
 
+            if color.shape[-1] == 3:
+                # gluNurbs always wants 4 colors
+                color = growAxis(color,3,axis=-1,fill=alpha)
+
         print "COLOR = %s" % color
         if color is not None:
             print color.dtype
             print color.shape
         print x.shape
-        color=array([1.,0.,0.,0.5],dtype=Float)
+        # color=array([1.,0.,0.,0.5],dtype=Float)
         nb = drawgl.draw_nurbs_surfaces(x,sknots,tknots,color,alpha,samplingTolerance)
 
     else:
@@ -393,35 +434,38 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,normals='auto',samplingToleranc
         nurb = GLU.gluNewNurbsRenderer()
         if not nurb:
             raise RuntimeError,"Could not create a new NURBS renderer"
-        samplingTolerance = 100.
+        
         GLU.gluNurbsProperty(nurb,GLU.GLU_SAMPLING_TOLERANCE,samplingTolerance)
 
-
         mode = {3:GL.GL_MAP2_VERTEX_3, 4:GL.GL_MAP2_VERTEX_4}[ndim]
-        if color is not None and color.ndim == 4:
-            if color.shape[-1] == 3:
-                # expand to 4 colors
-                alpha = 0.5
-                color = growAxis(color,1,axis=-1,fill=alpha)
-            if color.shape[-1] != 4:
-                raise ValueError,"Expected 3 or 4 color components"
-            cmode = GL.GL_MAP2_COLOR_4
+        
+        if color is not None and color.ndim == 1:
+            # Handle single color
+            pf.debug('Set single color: OK')
+            glColor(color)
+            color = None
+
         si = sknots
         ti = tknots
         for i,xi in enumerate(x):
             if color is not None and color.ndim == 2:
                 # Handle element color
-                pf.debug('Set element color: OK')
-                GL.glColor3fv(color[i])
+                glColor(color[i])
             if sknots.ndim > 1:
                 si = sknots[i]
             if tknots.ndim > 1:
                 ti = tknots[i]
             GLU.gluBeginSurface(nurb)
             if color is not None and color.ndim == 4:
-                GLU.gluNurbsSurface(nurb,si,ti,color[i],cmode)
+                # Handle vertex color
+                ci = color[i]
+                if ci.shape[-1] == 3:
+                    # gluNurbs always wants 4 colors
+                    ci = growAxis(ci,1,axis=-1,fill=alpha)
+                GLU.gluNurbsSurface(nurb,si,ti,ci,GL.GL_MAP2_COLOR_4)
             GLU.gluNurbsSurface(nurb,si,ti,xi,mode)
             GLU.gluEndSurface(nurb)
+            
         GLU.gluDeleteNurbsRenderer(nurb)
 
     print "drawNurbsSurfaces: %s seconds" % t.seconds()
@@ -472,7 +516,8 @@ def drawQuadraticSurfaces(x,e,color=None):
             color = color_multiplex(color,nfaces)
             pf.debug("COLOR SHAPE AFTER  MULTIPLEXING %s" % str(color.shape))
         if color.ndim > 2:
-            color = color.reshape((nelems*nfaces,) + color.shape[-2:]).squeeze()
+            # BV REMOVED squeeze: may break some things
+            color = color.reshape((nelems*nfaces,) + color.shape[-2:])#.squeeze()
             pf.debug("COLOR SHAPE AFTER RESHAPING %s" % str(color.shape))
             
     if e is None:
@@ -635,11 +680,12 @@ def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0):
         pf.debug("COORDS SHAPE: %s" % str(coords.shape))
         if elems is not None:
             pf.debug("ELEMS SHAPE: %s" % str(elems.shape))
-        if color is not None and color.ndim==3:
-            pf.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
+        if color is not None:
+            pf.debug("COLOR SHAPE: %s" % str(color.shape))
             # select the colors of the matching points
-            color = color[:,fa,:]
-            pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
+            if color.ndim==3:
+                color = color[:,fa,:]
+                pf.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
         if eltype in pf.cfg['draw/quadsurf'] and eltype in _nurbs_elements:
             #print "USING QUADSURF"
             drawQuadraticSurfaces(coords,elems,color)
@@ -988,7 +1034,8 @@ def saneColor(color=None):
 
     # Convert to array
     try:
-        color = asarray(color).squeeze()
+        # REMOVED THE SQUEEZE: MAY BREAK SOME THINGS !!!
+        color = asarray(color)#.squeeze()
         if color.dtype.kind == 'f' and color.shape[-1] == 3:
             # Looks like we have a sane color array
             return color.astype(float32)
@@ -1037,6 +1084,7 @@ def saneColorSet(color=None,colormap=None,shape=(1,),canvas=None):
         shape = (shape,)
     color = saneColor(color)
     if color is not None:
+        pf.debug("SANECOLORSET: color %s, shape %s" % (color.shape,shape))
         if color.dtype.kind == 'i':
             ncolors = color.max()+1
             if colormap is None:
@@ -1050,6 +1098,7 @@ def saneColorSet(color=None,colormap=None,shape=(1,),canvas=None):
             color = saneColorArray(color,shape)
             colormap = None
 
+        pf.debug("SANECOLORSET RESULT: %s" % str(color.shape))
     return color,colormap
 
 

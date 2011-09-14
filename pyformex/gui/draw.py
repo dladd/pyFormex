@@ -550,6 +550,7 @@ def draw(F,
                 pf.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
                 pf.canvas.setCamera(bbox,view)
                 #setView(view)
+
         pf.canvas.update()
         pf.app.processEvents()
         #pf.debug("AUTOSAVE %s" % image.autoSaveOn())

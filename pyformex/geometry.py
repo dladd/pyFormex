@@ -224,6 +224,18 @@ class Geometry(object):
     @_coords_transform
     def scale(self,*args,**kargs):
         pass
+
+
+    def resized(self,size=1.,tol=1.e-5):
+        """Return a scaled copy of the Formex with given size in all directions.
+
+        If a direction has zero size, it is not rescaled.
+        """
+        s = self.sizes()
+        s[s<tol*s.max()] = size
+        return self.scale(size/s)
+
+
     @_coords_transform
     def translate(self,*args,**kargs):
         pass

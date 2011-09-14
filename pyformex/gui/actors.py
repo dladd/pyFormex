@@ -495,6 +495,7 @@ class GeomActor(Actor):
         self.setBkColor(bkcolor,bkcolormap)
         self.setAlpha(alpha)
         self.marksize = marksize
+        #print "GEOMACTOR: %s -> %s" % (color.shape,self.color.shape)
 
 
     def getType(self):
@@ -551,7 +552,6 @@ class GeomActor(Actor):
 
 
     def draw(self,**kargs):
-        #print "ACTORS.DRAW"
         
         if 'mode' in kargs:
             mode = kargs['mode']
@@ -703,7 +703,6 @@ class GeomActor(Actor):
                     drawEdges(self.coords,self.elems,edges,edges.eltype,color)    
             else:
                 for faces in el.getDrawFaces(el.name() in pf.cfg['draw/quadsurf']):
-                    #print faces.report()
                     if bkcolor is not None:
                         # Enable drawing front and back with different colors
                         GL.glEnable(GL.GL_CULL_FACE)

@@ -1583,16 +1583,6 @@ maxprop  = %s
 #
 
 
-    def resized(self,size=1.,tol=1.e-5):
-        """Return a scaled copy of the Formex with given size in all directions.
-
-        If a direction has zero size, it is not rescaled.
-        """
-        s = self.sizes()
-        s[s<tol*s.max()] = size
-        return self.scale(size/s)
-
-
     def circulize(self,angle):
         """Transform a linear sector into a circular one.
 
