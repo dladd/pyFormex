@@ -248,10 +248,10 @@ Here is a small example Python script.
   individual items of them are accessed by an index starting from 0.
 
 * Function definitions can use both positional arguments and keyword arguments,
-  but the keyword arguments mus follow the positional arguments.
+  but the keyword arguments must follow the positional arguments.
   The order in which keyword arguments are specified is not important.
 
-* You can used names defines in other modules, but you need to import
+* You can use names defined in other modules, but you need to import
   those first. This can be done by importing the whole module and then
   using a name relative to that module::
 
@@ -890,7 +890,7 @@ just by printing the Formex itself: ``print(F)``.
 Likewise you can see the property numbers from a ``print(F.prop)`` instruction.
 
 But once you start using large data structures, this information may become difficult to handle.
-You are usually better of with some generalized information about the Formex object.
+You are usually better off with some generalized information about the Formex object.
 The :class:`Formex` class provides a number of methods that return such information.
 The following table lists the most interesting ones.
 

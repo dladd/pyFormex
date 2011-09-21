@@ -69,7 +69,8 @@ class DoubleHelixStent:
         dy = 4.
         F = (self.cell1+self.cell2).replic2(nx,ny,dx,dy)
         # fold it into a cylinder
-        self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
+        self.F = F.translate([0.,0.,r]).cylindrical(
+            dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
         self.ny = ny
 
     def all(self):
@@ -113,7 +114,8 @@ if __name__ == "draw":
     
     # and save it in a lot of graphics formats
     if ack("Do you want to save this image (in lots of formats) ?"):
-        for ext in [ 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf', 'tex' ]: 
+        for ext in [ 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm',
+                     'eps', 'ps', 'pdf', 'tex' ]: 
             image.save('WireStent.'+ext)
 
 # End

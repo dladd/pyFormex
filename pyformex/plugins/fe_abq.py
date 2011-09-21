@@ -377,7 +377,7 @@ def fmtFrameSection(el,setname):
     sectiontype = el.sectiontype.upper()
     out += "*FRAME SECTION, ELSET=%s, SECTION=%s%s\n" % (setname,sectiontype,extra)
     if sectiontype == 'GENERAL':
-        out += "%s, %s, %s, %s, %s \n" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
+        out += "%s, %s, %s, %s, %s \n" % (float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
     elif sectiontype == 'CIRC':
         out += "%s \n" % float(el.radius)
     elif sectiontype == 'RECT':
@@ -436,7 +436,7 @@ def fmtGeneralBeamSection(el,setname):
     sectiontype = el.sectiontype.upper()
     out += "*BEAM GENERAL SECTION, ELSET=%s, SECTION=%s%s\n" % (setname,sectiontype,extra)
     if sectiontype == 'GENERAL':
-        out += "%s, %s, %s, %s, %s \n" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
+        out += "%s, %s, %s, %s, %s \n" % (float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
     elif sectiontype == 'CIRC':
         out += "%s \n" % float(el.radius)
     elif sectiontype == 'RECT':
@@ -487,7 +487,7 @@ def fmtBeamSection(el,setname):
     sectiontype = el.sectiontype.upper()
     out += "*BEAM SECTION, ELSET=%s, MATERIAL=%s, SECTION=%s\n" % (setname,el.material.name,sectiontype)
     if sectiontype == 'GENERAL':
-        out += "%s, %s, %s, %s, %s \n" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
+        out += "%s, %s, %s, %s, %s \n" % (float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
     elif sectiontype == 'CIRC':
         out += "%s \n" % float(el.radius)
     elif sectiontype == 'RECT':
@@ -897,7 +897,7 @@ def fmtEquation(prop):
 ## The following output sections with possibly large data
 ## are written directly to file.
 ##########################################################
-
+ 
 def writeNodes(fil,nodes,name='Nall',nofs=1):
     """Write nodal coordinates.
 

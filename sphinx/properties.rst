@@ -138,7 +138,7 @@ that we could address them in the subsequent print and field assigment
 statements. In most cases however, it will be impractical and unnecessary to
 give your records a name. They all are recorded in the :class:`PropertyDB`
 database, and will exist as long as the database variable lives. There should be
-away though to request selected data from that database. The :meth:`getProp`
+a way though to request selected data from that database. The :meth:`getProp`
 method returns a list of records satisfying some conditions. The examples below
 show how it can be used. ::
 
@@ -376,10 +376,10 @@ method, add the kind='e' argument to get element properties.
 
 Like node properties, element property records have a number of specialize
 fields. Currently, the following ones are recognized by the Abaqus input file
-generatr.
+generator.
 
 eltype
-   This is the single most import element property. It sets the element type that
+   This is the single most important element property. It sets the element type that
    will be used during the analysis. Notice that a Formex object also may have an
    ``eltype`` attribute; that one however is only used to describe the type of the
    geometric elements involved. The element type discussed here however may also

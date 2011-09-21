@@ -569,7 +569,7 @@ class GeomActor(Actor):
                 Drawable.draw(wire,mode='wireframe',color=asarray(black))
                 self.wire = wire
 
-            # Add the existing wire to the extra list, and then draw wo wire
+            # Add the existing wire to the extra list, and then draw w/o wire
             if self.wire not in self.extra:
                 self.extra.append(self.wire)
                 # AVOID RECURSION
@@ -783,11 +783,22 @@ class NurbsActor(Actor):
         return self.object.bbox()
 
         
-    def drawGL(self,**kargs):
+    def drawGL(self,canvas=None,**kargs):
+        if canvas is None:
+            canvas = pf.canvas
+
+        mode = canvas.rendermode
+
+        if mode.endswith('wire'):
+            mode = mode[:-4]
+            
         if isinstance(self.object,NurbsCurve):
             drawNurbsCurves(self.object.coords,self.object.knots,color=self.color,samplingTolerance=self.samplingTolerance)
         elif isinstance(self.object,NurbsSurface):
-            drawNurbsSurfaces(self.object.coords,self.object.vknots,self.object.uknots,color=self.color,normals='auto',samplingTolerance=self.samplingTolerance)
+            if mode == 'wireframe':
+                pass
+            else:
+                drawNurbsSurfaces(self.object.coords,self.object.vknots,self.object.uknots,color=self.color,normals='auto',samplingTolerance=self.samplingTolerance)
 
 
 # End
