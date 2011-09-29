@@ -217,8 +217,8 @@ class AxesActor(Actor):
         Actor.__init__(self,**kargs)
         if cs is None:
             cs = CoordinateSystem()
-        self.cs = cs    
-        self.color = saneColorArray(color,(3,1))
+        self.cs = cs
+        self.color = saneColorArray(saneColor(color),(3,1))
         self.colored_axes = colored_axes
         self.draw_planes = draw_planes
         self.setSize(size)
@@ -244,6 +244,7 @@ class AxesActor(Actor):
             c = self.color
         else:
             c = None
+        x = self.cs.trl(-self.cs[3]).scale(self.size).trl(self.cs[3])
         drawLines(self.cs,e,c)
 
  

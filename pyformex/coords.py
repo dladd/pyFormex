@@ -1276,7 +1276,7 @@ class Coords(ndarray):
         This method transforms the Coords object by the transformation that
         turns the initial CoordinateSystem into the currentCoordinateSystem.
 
-        currentCS and initialCS are CoordSystem or (4,3) shaped Coords
+        currentCS and initialCS are CoordinateSystem or (4,3) shaped Coords
         instances. If initialCS is None, the global (x,y,z) axes are used.
 
         E.g. the default initialCS and currentCS equal to::
@@ -1627,7 +1627,7 @@ class CoordinateSystem(Coords):
       0.  0.  1.
       0.  0.  0.
     """
-    def __new__(clas,coords=None):
+    def __new__(clas,coords=None,origin=None,axes=None):
         """Initialize the CoordinateSystem"""
         if coords is None:
             coords = eye(4,3)
