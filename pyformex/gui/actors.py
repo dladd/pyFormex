@@ -213,7 +213,7 @@ class AxesActor(Actor):
     draw_planes = False: do not draw the coordinate planes.
     """
 
-    def __init__(self,cs=None,size=1.0,color=[red,green,blue],colored_axes=True,draw_planes=False,**kargs):
+    def __init__(self,cs=None,size=1.0,color=[red,green,blue],colored_axes=True,draw_planes=False,linewidth=None,**kargs):
         Actor.__init__(self,**kargs)
         if cs is None:
             cs = CoordinateSystem()
@@ -221,6 +221,7 @@ class AxesActor(Actor):
         self.color = saneColorArray(saneColor(color),(3,1))
         self.colored_axes = colored_axes
         self.draw_planes = draw_planes
+        self.linewidth = linewidth
         self.setSize(size)
 
     def bbox(self):
@@ -235,17 +236,19 @@ class AxesActor(Actor):
 
     def drawGL(self,**kargs):
         """Draw the axes."""
+        x = self.cs.trl(-self.cs[3]).scale(self.size).trl(self.cs[3])
         if self.draw_planes:
             e = array([[3,1,2],[3,2,0],[3,0,1]])
-            drawPolygons(self.cs,e,'flat')
-            
+            drawPolygons(x,e,'flat')
+        
         e = array([[3,0],[3,1],[3,2]])
         if self.colored_axes:
             c = self.color
         else:
             c = None
-        x = self.cs.trl(-self.cs[3]).scale(self.size).trl(self.cs[3])
-        drawLines(self.cs,e,c)
+        if self.linewidth:
+            GL.glLineWidth(self.linewidth)
+        drawLines(x,e,c)
 
  
 class TriadeActor(Actor):

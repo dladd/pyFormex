@@ -1631,6 +1631,10 @@ class CoordinateSystem(Coords):
         """Initialize the CoordinateSystem"""
         if coords is None:
             coords = eye(4,3)
+            if axes is not None:
+                coords[:3] = axes
+            if origin is not None:
+                coords += origin
         else:
             coords = checkArray(coords,(4,3),'f','i')
         coords = Coords.__new__(clas,coords)
@@ -1645,6 +1649,13 @@ class CoordinateSystem(Coords):
     def axes(self):
         """Return the axes of the CoordinateSystem."""
         return self[:3]-self[3]
+
+
+    def actor(self,**kargs):
+        """_This allows a CoordinateSystem object to be drawn directly."""
+        from gui.actors import AxesActor
+        return AxesActor(self,**kargs)
+
 
 
 # Creating special coordinate sets
