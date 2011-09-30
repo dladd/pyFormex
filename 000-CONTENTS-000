@@ -1,0 +1,13 @@
+This directory always contains the current version of pyFormex.
+
+It contains the following subdirectories:
+- pyformex: contains the pyFormex source code
+- screenshots: contains some images
+- sphinx: contains the source of the documentation
+- user: contains minutes of our user meetings
+- website: contains the source of the pyFormex website
+ 
+Furthermore, this directory contains some files with general information about
+pyFormex and some tools to help with the development.
+
+
