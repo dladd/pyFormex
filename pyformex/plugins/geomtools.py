@@ -297,6 +297,8 @@ def rotationAngle(A,B,m=None,angle_spec=Deg):
     return value is a (n,) shaped array with rotation angles.
     Specify angle_spec=Rad to get the angles in radians.
     """
+    A = asarray(A).reshape(-1,3)
+    B = asarray(B).reshape(-1,3)
     if m is None:
         A = normalize(A)
         B = normalize(B)
@@ -309,6 +311,7 @@ def rotationAngle(A,B,m=None,angle_spec=Deg):
         angle = arccosd(c.clip(min=-1.,max=1.),angle_spec)
         return angle,n
     else:
+        m = asarray(m).reshape(-1,3)
         # project vectors on plane
         A = projectionVOP(A,m)
         B = projectionVOP(B,m)
