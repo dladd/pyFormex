@@ -701,7 +701,7 @@ class TriSurface(Mesh):
     def surfaceType(self):
         """Check whether the TriSurface is a manifold and if it's closed."""
         ncon = self.nEdgeConnected()
-        nadj = self.nEdgeAdjacent()
+        #nadj = self.nEdgeAdjacent()
         maxcon = ncon.max()
         mincon = ncon.min()
         manifold = maxcon == 2
@@ -746,10 +746,14 @@ class TriSurface(Mesh):
         """
         Finds edges and faces that are not Manifold.
         
-        It returns the edges that connect 3 or more faces and the faces."""
-        conn=self.edgeConnections()
-        ed=(conn!=-1).sum(axis=1)>2
-        fa= unique1d(conn[ed])
+        Returns a tuple of:
+
+        - the edges that connect 3 or more faces,
+        - the faces connected to these edges.
+        """
+        conn = self.edgeConnections()
+        ed = (conn!=-1).sum(axis=1)>2
+        fa = unique(conn[ed])
         return arange(len(ed))[ed], fa[fa!=-1]
         
 
@@ -879,54 +883,44 @@ class TriSurface(Mesh):
         self._compute_data()
         return self.edgmin
 
-   
+  
     def stats(self):
         """Return a text with full statistics."""
         bbox = self.bbox()
         manifold,closed,mincon,maxcon = self.surfaceType()
         self._compute_data()
-        angles = self.edgeAngles()
-        vangles = self.getAngles()
         area = self.area()
-        if manifold and closed:
-            volume = self.volume()
-        else:
-            volume = 0.0
-        print(
-            self.ncoords(),self.nedges(),self.nfaces(),
-            bbox[0],bbox[1],
-            mincon,maxcon,
-            manifold,closed,
-            self.areas.min(),self.areas.max(),
-            self.edglen.min(),self.edglen.max(),
-            self.altmin.min(),self.aspect.max(),
-            angles.min(),angles.max(),
-            vangles.min(),vangles.max(),
-            area,volume
-            )
         s = """
-Size: %d vertices, %s edges and %d faces
+Size: %s vertices, %s edges and %s faces
 Bounding box: min %s, max %s
 Minimal/maximal number of connected faces per edge: %s/%s
-Surface is manifold: %s; surface is closed: %s
-Smallest area: %s; largest area: %s
-Shortest edge: %s; longest edge: %s
+Surface is%s a%s manifold
+Facet area: min %s; mean %s; max %s
+Edge length: min %s; mean %s; max %s
 Shortest altitude: %s; largest aspect ratio: %s
-Angle between adjacent faces: smallest: %s; largest: %s
-Angle at vertices: smallest: %s; largest: %s
-Total area: %s; Enclosed volume: %s   
-""" % (
-            self.ncoords(),self.nedges(),self.nfaces(),
-            bbox[0],bbox[1],
-            mincon,maxcon,
-            manifold,closed,
-            self.areas.min(),self.areas.max(),
-            self.edglen.min(),self.edglen.max(),
-            self.altmin.min(),self.aspect.max(),
-            angles.min(),angles.max(),
-            vangles.min(),vangles.max(),
-            area,volume
-            )
+""" % ( self.ncoords(),self.nedges(),self.nfaces(),
+        bbox[0],bbox[1],
+        mincon,maxcon,
+        {True:'',False:' not'}[manifold],{True:' closed',False:''}[closed],
+        self.areas.min(),self.areas.mean(),self.areas.max(),
+        self.edglen.min(),self.edglen.mean(),self.edglen.max(),
+        self.altmin.min(),self.aspect.max(),
+        )
+        if manifold:
+            angles = self.edgeAngles()
+            # getAngles is currently removed
+            # vangles = self.getAngles()
+            if closed:
+                volume = self.volume()
+
+            s += """Angle between adjacent facets: min: %s; mean: %s; max: %s
+""" % ( angles.min(),angles.mean(),angles.max())
+
+        s += "Total area: %s; " % area
+        if manifold and closed:
+            s += "Enclosed volume: %s" % volume
+        else:
+            s += "No volume (not a closed manifold!)"
         return s
 
     
@@ -1123,13 +1117,13 @@ Total area: %s; Enclosed volume: %s
         startat is a list of elements that are in the first part. 
         The partitioning is returned as a property type array having a value
         corresponding to the part number. The lowest property number will be
-        firstprop
+        firstprop.
         """
         return firstprop + self.walkEdgeFront(startat=startat,okedges=okedges,front_increment=0)
     
 
 
-    def partitionByAngle(self,angle=60.,firstprop=0, sortedbyarea=None):
+    def partitionByAngle(self,angle=60.,firstprop=0,sortedbyarea=True):
         """Partition the surface by splitting it at sharp edges.
 
         The surface is partitioned in parts in which all elements can be
@@ -1140,29 +1134,29 @@ Total area: %s; Enclosed volume: %s
        
         The partitioning is returned as a property type array having a value
         corresponding to the part number. The lowest property number will be
-        firstprop.
-        
-        If sortedbyarea is 'up' or 'down' the parts will be ordered by 
-        increasing or decreasign area.
+        firstprop. By default the parts will be assigned property numbers in
+        the order of decreasing total area. The sorting can be turned off
+        by setting sortedbyarea=False, though nobody probably has a good
+        reason to use this.
         """
+        if not sortedbyarea in [True,False]:
+            pf.warning("The sortedbyarea parameter should be a boolean. The sorting is now on by default and is always done by decreasing area.")
+            
         conn = self.edgeConnections()
         # Flag edges that connect two faces
         conn2 = (conn >= 0).sum(axis=-1) == 2
         # compute normals and flag small angles over edges
         cosangle = cosd(angle)
-        a, n= self.areaNormals()
+        a, n = self.areaNormals()
         n = n[conn[conn2]]
         small_angle = ones(conn2.shape,dtype=bool)
         small_angle[conn2] = dotpr(n[:,0],n[:,1]) >= cosangle
-        p=self.partitionByEdgeFront(small_angle)
+        p = self.partitionByEdgeFront(small_angle)
         if sortedbyarea:
-            a= [a[p==j].sum() for j in unique(p)]
-            x2=argsort(a)
-            if sortedbyarea=='down':x2=x2[::-1]
-            p2=p.copy()
-            for i, j in enumerate(x2):
-                p2[p==j]=i
-            p=p2
+            area = [a[p==j].sum() for j in unique(p)]
+            srt = argsort(a)[::-1]
+            inv = inverseUniqueIndex(srt)
+            p = inv[p]
         return firstprop + p
 
 

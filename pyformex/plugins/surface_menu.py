@@ -376,7 +376,7 @@ def fillBorder():
             _I('Fill which borders',itemtype='radio',choices=['All','One']),
             _I('Filling method',itemtype='radio',choices=['radial','border']),
             ])
-        if res['Fill how many'] == 'One':
+        if res['Fill which borders'] == 'One':
             B = B[:1]
         fills = [ surfaceInsideBorder(b,method=res['Filling method']).setProp(i+1) for i,b in enumerate(B) ]
         draw(fills)

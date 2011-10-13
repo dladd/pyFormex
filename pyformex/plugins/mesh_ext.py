@@ -34,6 +34,7 @@ Mesh object, but are also available as Mesh methods.
 from mesh import Mesh
 from elements import elementType,_default_facetype
 from formex import *
+from utils import deprecation
 
 
 ##############################################################################
@@ -305,6 +306,8 @@ def area(self):
         return 0.0
 
 
+# BV: This is not mesh specific and can probably be achieved by t1 * t2
+@deprecation("Deprecated")
 def tests(t):
     """Intersection of multiple test operations.
     
@@ -352,6 +355,7 @@ def _auto_initialize():
     Mesh.rings = rings
     Mesh.correctNegativeVolumes = correctNegativeVolumes
     Mesh.scaledJacobian = scaledJacobian
+
     
 _auto_initialize()
 

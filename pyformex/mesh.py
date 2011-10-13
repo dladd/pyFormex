@@ -1592,6 +1592,8 @@ Size: %s
     # Maybe define this for 2D meshes only?
     # Formulas for both linear and quadratic edges
     # For quadratic: Option to select tangential or chordal directions
+    #
+    #### Currently reinstated in trisurface.py ! 
     
     ## def getAngles(self, angle_spec=Deg):
     ##     """_Returns the angles in Deg or Rad between the edges of a mesh.
