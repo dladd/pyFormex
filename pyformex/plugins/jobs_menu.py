@@ -24,6 +24,7 @@
 
 import pyformex as pf
 from gui import menu
+from gui.widgets import simpleInputItem as I
 
 import utils
 import os
@@ -51,7 +52,7 @@ general public, as an example of how to integrate external
 commands and hosts into a pyFormex menu.
 
 In order for these commands to work, you need to have `ssh`
-access to the servers.
+access to the host system.
 """)
 
 
@@ -69,7 +70,7 @@ def configure():
         res = dia.results
         res['_save_'] = save
         if res['_addhost_']:
-            res['jobs/hosts'] = pf.cfg.get('jobs/hosts',['localhost']) + [ res['_addhost_'] ]
+            res['jobs/hosts'] = pf.cfg['jobs/hosts'] + [ res['_addhost_'] ]
             res['jobs/host'] = res['_addhost_']
         pf.debug(res)
         updateSettings(res)
@@ -99,13 +100,13 @@ def configure():
     dia.show()
 
 
-def getSubdirs(server,userdir):
-    """Get a list of all subdirs in userdir on server.
+def getSubdirs(host,userdir):
+    """Get a list of all subdirs in userdir on host.
 
-    The server should be a machine where the user has ssh access.
+    The host should be a machine where the user has ssh access.
     The userdir is relative to the user's home dir.
     """
-    cmd = "ssh %s 'cd %s;ls -F|egrep \".*/\"'" % (server,userdir)
+    cmd = "ssh %s 'cd %s;ls -F|egrep \".*/\"'" % (host,userdir)
     sta,out = utils.runCommand(cmd,False)
     if sta:
         out = ''
@@ -114,33 +115,40 @@ def getSubdirs(server,userdir):
     return dirs
 
 
-def getFiles(server,userdir,files,targetdir):
-    """Copy files from userdir on server to targetdir.
+def getFiles(host,userdir,files,targetdir):
+    """Copy files from userdir on host to targetdir.
 
     files is a list of file names.
     """
-    files = [ '%s:%s/%s' % (server,userdir.rstrip('/'),f) for f in files ]
+    files = [ '%s:%s/%s' % (host,userdir.rstrip('/'),f) for f in files ]
     cmd = "scp %s %s" % (' '.join(files),targetdir)
     sta,out = utils.runCommand(cmd)
     return sta==0
 
 
-def remoteCommand(server=None,command=None):
-    """Execute a remote command."""
-    if server is None or command is None:
-        res = askItems([
-            ('server',None,'radio',{'select':['bumpfs','bumpfs2','other']}),
-            ('other','',{'text':'Other server name'}),
-            ('command',''),
-            ])
+def remoteCommand(host=None,command=None):
+    """Execute a remote command.
+
+    host: the hostname where the command is executed
+    command: the command line
+    """
+    if host is None or command is None:
+        res = askItems(
+            [ I('host',choices=['bumpfs','bumpfs2','--other--']),
+              I('other','',text='Other host name'),
+              I('command','hostname'),
+              ],
+            enablers = [('host','--other--','other')],
+            )
+
     if res:
-        server = res['server']
-        if server == 'other':
-            server = res['other']
+        host = res['host']
+        if host == '--other--':
+            host = res['other']
         command = res['command']
 
-    if server and command:
-        cmd = "ssh %s '%s'" % (server,command)
+    if host and command:
+        cmd = "ssh %s '%s'" % (host,command)
         sta,out = utils.runCommand(cmd)
         message(out)
         
@@ -184,43 +192,43 @@ def killClusterJob(jobname=None):
         print ret
        
 
-the_server = None
+the_host = None
 the_userdir = None
 the_jobnames = None
 the_jobname = None
 
 
-def checkResultsOnServer(server=None,userdir=None):
+def checkResultsOnServer(host=None,userdir=None):
     """Get a list of job results from the cluster.
 
     Specify userdir='bumper/running' to get a list of running jobs.
     """
-    global the_server,the_userdir,the_jobnames
-    if server is None or userdir is None:
+    global the_host,the_userdir,the_jobnames
+    if host is None or userdir is None:
         res = askItems([
-            ('server',None,'select',{'choices':['bumpfs','bumpfs2','other']}),
-            ('other','',{'text':'Other server name'}),
+            ('host',None,'select',{'choices':['bumpfs','bumpfs2','other']}),
+            ('other','',{'text':'Other host name'}),
             ('status',None,'select',{'choices':['results','running','custom']}),
             ('userdir','bumper/results/',{'text':'Custom user directory'}),
             ])
         if not res:
             return
-        server = res['server']
-        if server == 'other':
-            server = res['other']
+        host = res['host']
+        if host == 'other':
+            host = res['other']
         status = res['status']
         if status in ['results','running']:
             userdir = 'bumper/%s/' % status
         else:
             userdir = res['userdir']
         
-    jobnames = getSubdirs(server,userdir)
+    jobnames = getSubdirs(host,userdir)
     if jobnames:
-        the_server = server
+        the_host = host
         the_userdir = userdir
         the_jobnames = jobnames
     else:
-        the_server = None
+        the_host = None
         the_userdir = None
         the_jobnames = None
     pf.message(the_jobnames)
@@ -240,7 +248,7 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
     if jobname is None:
         if the_jobnames is None:
             jobname_input = [
-                ('server',pf.cfg['jobs/host']),
+                ('host',pf.cfg['jobs/host']),
                 ('userdir','bumper/results'),
                 ('jobname',''),
                 ]
@@ -257,7 +265,7 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
             ('_post.py',False),
             ])
         if res:
-            server = res.get('server',the_server)
+            host = res.get('host',the_host)
             userdir = res.get('userdir',the_userdir)
             jobname = res['jobname']
             targetdir = res['target dir']
@@ -265,7 +273,7 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
     if jobname and ext:
         files = [ '%s%s' % (jobname,e) for e in ext ]
         userdir = "%s/%s" % (userdir,jobname)
-        if getFiles(server,userdir,files,targetdir):
+        if getFiles(host,userdir,files,targetdir):
             the_jobname = jobname
 
         

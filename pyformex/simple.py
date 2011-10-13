@@ -341,21 +341,29 @@ def sector(r,t,nr,nt,h=0.,diag=None):
 
 
 def cylinder(D,L,nt,nl,D1=None,angle=360.,bias=0.,diag=None):
-    """Create a cylindrical or conical surface.
+    """Create a cylindrical, conical or truncated conical surface.
 
-    Returns a Formex representing a cylindrical or (possibly truncated)
-    conical surface around the z-axis. L is the length(height) of the
-    cy;linder/cone and D is the base diameter. If D1 is specified,
-    it is used as the diameter at the top. If no, it is taken equal to D,
-    resulting in a cylindrical surface. Setting either D1 or D to zero
-    results in a cone, other values will create a truncated cone.
+    Returns a Formex representing (an approximation of) a cylindrical or
+    (possibly truncated) conical surface with its axis along the z-axis.
+    The resulting surface is actually a prism or pyramid, and only becomes
+    a good approximation of a cylinder or cone for high values of `nt`.
 
-    The surface has nt elements in circumferential direction and
-    nl in longitudinal direction.
-    By default, the elements are quads. Setting diag to 'u' or 'd' will
-    put in an up or down diagonal to create triangles.
+    Parameters:
+
+    - `D`: base diameter (at z=0) of the cylinder/cone,
+    - `L`: length (along z-axis) of the cylinder/cone,
+    - `nt`: number of elements along the circumference,
+    - `nl`: number of elements along the length,
+    - `D1`: diameter at the top (z=L) of the cylinder/cone: if unspecified,
+      it is taken equal to `D` and a cylinder results.
+      Setting either `D1` or `D` to zero results in a cone,
+      other values will create a truncated cone.
+    - `diag`: by default, the elements are quads. Setting `diag` to 'u' or 'd'
+      will put in an 'up' or 'down' diagonal to create triangles.
     """
     C = rectangle(nl,nt,L,angle,bias=bias,diag=diag).trl(2,D/2.)
+    if D1 is not None and D1 != D:
+        C = C.shear(2,0,(D1-D)/L/2)
     return C.cylindrical(dir=[2,1,0])
 
 

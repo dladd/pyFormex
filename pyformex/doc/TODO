@@ -111,6 +111,7 @@ Release 0.9
 
 **Complete the Coords.fromfile and Formex.fromfile arguments**
       
+**post-install script should not execute pyformex**
       
 Release 0.9.1
 -------------

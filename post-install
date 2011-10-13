@@ -25,6 +25,10 @@
 # This is the pyformex post install script
 #
 
+#
+# We really should avoid calling pyformex here, to ease the installation
+# in sandboxed environments (e.g. Gentoo)
+#
 instdir=$(pyformex --whereami | grep '^Script' | sed 's|.* ||')
 echo "Executables installed in $instdir"
 

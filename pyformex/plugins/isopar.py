@@ -46,6 +46,11 @@ def evaluate(atoms,x,y=0,z=0):
 class Isopar(object):
     """A class representing an isoparametric transformation
 
+        type is one of the keys in Isopar.isodata
+        coords and oldcoords can be either arrays, Coords or Formex instances,
+        but should be of equal shape, and match the number of atoms in the
+        specified transformation type
+
     The following three formulations are equivalent ::
 
        trf = Isopar(eltype,coords,oldcoords)
@@ -59,6 +64,27 @@ class Isopar(object):
     """
 
     # REM: we should create a function to produce these data
+
+    # LAGRANGIAN : 1,2,3 dim (LINE, QUAD, HEX)
+    # TRIANGLE : 2,3 dim (TRI,TET)
+    # SERENDIPITY : list ???
+
+    # lagrangian(nx,ny,nz)
+    #                type   ndim   degree+1
+    #  'line2': ('lagrangian',1,(1))
+    #  'quad9': ('lagrangian',2,(2,2))
+    #  'quad6': ('lagrangian',2,(3,2))
+    #  'quad6': 'lag-2-3-2'
+    #  'quad8' : ('direct', 2, ('1','x','y','x*x','y*y','x*y','x*x*y','x*y*y')),
+    #
+    # generic name:
+    #
+    #   'lag-2-2-3' : ('lagrangian',2,(2,3))
+    #   'tri-2-2' : ('triangular',2,(2))
+
+    #   'lag-i-j-k' 
+    
+    
     isodata = {
         'line2' : (1, ('1','x')),
         'line3' : (1, ('1','x','x*x')),
@@ -121,11 +147,6 @@ class Isopar(object):
 
     def __init__(self,eltype,coords,oldcoords):
         """Create an isoparametric transformation.
-
-        type is one of the keys in Isopar.isodata
-        coords and oldcoords can be either arrays, Coords or Formex instances,
-        but should be of equal shape, and match the number of atoms in the
-        specified transformation type
         """
         ndim,atoms = Isopar.isodata[eltype]
         coords = coords.view().reshape(-1,3)

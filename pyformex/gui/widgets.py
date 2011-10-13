@@ -1346,11 +1346,12 @@ class InputDialog(QtGui.QDialog):
     - flags:
     - modal:
 
-    - `enablers`: a dictionary of key,value pairs where key is an input item
-      name of a boolean field, and value is the name of another field or
-      group or tab. Checking the boolean field will enable/disable the
-      target field/group/tab.
-          
+    - `enablers`: a list of tuples (key,value,key1,...) where the first two
+      items indicate the key and value of the enabler, and the next items
+      are keys of fields that are enabled when the field key has the specified
+      value. Currentley, key should be a field of type boolean, radio, combo or
+      group.
+         
     """
     def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[]):
         """Create a dialog asking the user for the value of items."""

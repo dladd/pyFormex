@@ -36,7 +36,7 @@ ny=8    # number of modules in meridional direction
 rd=100  # radius of the sphere cap
 base=50 # slope of the dome at its base (= half angle of the sphere cap)
 top=5   # slope of the dome at its top opening (0 = no opening) 
-a=ny*float(top)/(base-top)
+a = ny*float(top)/(base-top)
 e1 = Formex(pattern("54"),[1,3]) # diagonals and meridionals
 e2 = Formex(pattern("1"),0)      # horizontals
 f1 = e1.replic2(nx,ny,1,1)
