@@ -29,8 +29,8 @@ this document, and advice you on which method might be the best in your case.
 
 .. note:: **pyFormex on non-Linux systems**
 
-  pyFormex is being developed on Linux systems, and most users run it on a
-  Linux platform. The :ref:`sec:pyformex-nonlinux` section holds information
+  pyFormex is being developed on GNU/Linux systems, and most users run it on a
+  GNU/Linux platform. The :ref:`sec:pyformex-nonlinux` section holds information
   on how pyFormex can be run on other platforms.
 
 Let's first give you an overview of the most important pros and cons of the 
@@ -112,7 +112,7 @@ To sum it up:
   from the anonymously checked out :ref:`sec:development-version`.
 
 - Finally, if you do not have enough permissions to install the prerequisites,
-  or if you do not have a Linux system in the first place, or if you just want
+  or if you do not have a GNU/Linux system in the first place, or if you just want
   to try out pyFormex without having to install anything,
   or if you want a portable system that can you take
   with you and run anywhere, choose for the :ref:`sec:bumpix-live-linux` on
@@ -382,14 +382,14 @@ library just like specified above.
 
 .. _sec:bumpix-live-linux:
 
-BuMPix Live Linux system
-========================
+BuMPix Live GNU/Linux system
+============================
 
 If you do not have access to a running Linux system, or if the above
 installation methods fail for some unknown reason (remember, you can
 ask for help on the pyFormex `Forums`_), you can still run pyFormex by
-using a `Bumpix Live Linux`_ system. `Bumpix Live` is a full featured
-Linux system including pyFormex that can be run from a single
+using a `Bumpix Live GNU/Linux`_ system. `Bumpix Live` is a full featured
+Debian GNU/Linux system including pyFormex that can be run from a single
 removable medium such as a CD or a USB key. 
 Installation instructions can be found in :doc:`bumpix`.
 
@@ -413,17 +413,17 @@ Further guidelines for using the BuMPix system can be found in :doc:`bumpix`.
 Running pyFormex on non-Linux systems
 =====================================
 
-pyFormex is being developed on Linux platforms, and most of its users run
-pyFormex on a Linux system. Because of that, there is no installation
+pyFormex is being developed on GNU/Linux platforms, and most of its users run
+pyFormex on a GNU/Linux system. Because of that, there is no installation
 procedure to run pyFormex natively on other systems.
 
 Currently, the easiest way to run pyFormex on a non-Linux system is by
 using the :ref:`sec:bumpix-live-linux`. We use this frequently with
 large groups of students in classes having only Windows PCs. We also
-have some professional users who could no install Linux due to
+have some professional users who could no install GNU/Linux due to
 corporate regulations, that are working this way.
 
-Another possibility is to run a virtual Linux instance on the
+Another possibility is to run a virtual GNU/Linux instance on the
 platform. There is currently quite good virtualization software
 available for nearly any platform.
 

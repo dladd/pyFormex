@@ -41,10 +41,12 @@ from connectivity import Connectivity
 from mesh import Mesh,mergeMeshes
 from trisurface import TriSurface
 from elements import elementType
+import simple
 
 from gui import actors
 from gui import menu
 from gui.draw import *
+from gui.widgets import simpleInputItem as _I, groupInputItem as _G
 
 from plugins import objects,trisurface,inertia,partition,sectionize
 
@@ -52,7 +54,8 @@ import commands, os, timer
 
 ################### automatic naming of objects ##########################
 
-autoname = {}
+_autoname = {}
+autoname = _autoname    # alias used by some other plugins that still need to be updated
 
 def autoName(clas):
     """Return the autoname class instance for objects of type clas.
@@ -76,9 +79,9 @@ def autoName(clas):
             except:
                 raise ValueError,"Expected an instance, class or string"
     name = name.lower()
-    if not name in autoname:
-        autoname[name] = utils.NameSequence(name)
-    return autoname[name]
+    if not name in _autoname:
+        _autoname[name] = utils.NameSequence(name)
+    return _autoname[name]
 
 ##################### selection of objects ##########################
 
@@ -420,6 +423,11 @@ def toMesh(suffix=''):
     selection.set(meshes.keys())
 
 
+#############################################
+###  Property functions
+#############################################
+
+
 def splitProp():
     """Split the selected object based on property values"""
     from plugins import partition
@@ -431,6 +439,61 @@ def splitProp():
     name = selection[0]
     partition.splitProp(F,name)
 
+
+#############################################
+###  Create Geometry functions
+#############################################
+
+
+def convertFormex(F,totype):
+    if totype != 'Formex':
+        F = F.toMesh()
+        if totype == 'TriSurface':
+            F = TriSurface(F)
+    return F
+    
+
+def createCylinder():
+    _data_ = __name__+'_createCylinder_data'
+    res = {
+        'name':'__auto__',
+        'object type':'Formex',
+        'base diameter':1.,
+        'top diameter':1.,
+        'height':2.,
+        'angle':360.,
+        'div_along_length':6,
+        'div_along_circ':12,
+        'bias':0.,
+        'diagonals':'up',
+        }
+    if pf.PF.has_key(_data_):
+        res.update(pf.PF[_data_])
+    res = askItems(store=res, items=[
+        _I('name'),
+        _I('object type',choices=['Formex','Mesh','TriSurface']),
+        _I('base diameter'),
+        _I('top diameter'),
+        _I('height'),
+        _I('angle'),
+        _I('div_along_length'),
+        _I('div_along_circ'),
+        _I('bias'),
+        _I('diagonals',choices=['none','up','down']),
+        ])
+
+    if res:
+        pf.PF[_data_] = res
+        name = res['name']
+        if name == '__auto__':
+            name = autoName(res['object type']).next()
+
+        F = simple.cylinder(L=res['height'],D=res['base diameter'],D1=res['top diameter'],angle=res['angle'],nt=res['div_along_circ'],nl=res['div_along_length'],bias=res['bias'],diag=res['diagonals'][0])
+
+        F = convertFormex(F,res['object type'])
+        export({name:F})
+        selection.set([name])
+        selection.draw()
 
 #############################################
 ###  Mesh functions
@@ -456,10 +519,10 @@ def fuseMesh():
 
     meshes = [ named(n) for n in selection.names ]
     res = askItems([
-        ('Relative Tolerance',1.e-5),
-        ('Absolute Tolerance',1.e-5),
-        ('Shift',0.5),
-        ('Nodes per box',1)])
+        _I('Relative Tolerance',1.e-5),
+        _I('Absolute Tolerance',1.e-5),
+        _I('Shift',0.5),
+        _I('Nodes per box',1)])
 
     if not res:
         return
@@ -531,9 +594,9 @@ def convertMesh():
             warning("Sorry, can not convert a %s mesh"%fromtype)
             return
         res = askItems([
-            ('_conversion',None,'vradio',{'text':'Conversion Type','choices':choices}),
-            ("_compact",True),
-            ('_merge',None,'hradio',{'text':"Merge Meshes",'choices':['None','Each','All']}),
+            _I('_conversion',itemtype='vradio',text='Conversion Type',choices=choices),
+            _I('_compact',True),
+            _I('_merge',itemtype='hradio',text="Merge Meshes",choices=['None','Each','All']),
             ])
         if res:
             globals().update(res)
@@ -641,6 +704,10 @@ def create_menu():
             ("&Set",selection.setProp),
             ("&Delete",selection.delProp),
             ("&Split",splitProp),
+            ]),
+        ("&Create Object",[
+            ('&Cylinder, Cone, Truncated Cone',createCylinder),
+            ## ('&Circle, Sector, Cone',createCone),
             ]),
         ## ("&Shrink",shrink),
         ## ("&Bbox",

@@ -27,7 +27,7 @@
 
 .. _`local FTP server`: ftp://bumps.ugent.be/pub/pyformex
 .. _`latest BuMPix image`: ftp://bumps.ugent.be/pub/bumpix/bumpix-latest.img
-.. _`BuMPix Live Linux`: ftp://bumps.ugent.be/pub/bumpix
+.. _`BuMPix Live GNU/Linux`: ftp://bumps.ugent.be/pub/bumpix
 .. _`Calpy`: ftp://bumps.ugent.be/pub/calpy
 
   

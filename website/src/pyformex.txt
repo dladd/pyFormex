@@ -52,14 +52,14 @@ Full details are in the documentation.
   
 Platform
 --------
-pyFormex is written completely in Python. While it is developed on Linux platforms, it can be made to work on other platforms too, provided that you have installed the required packages.
+pyFormex is written completely in Python. While it is developed on GNU/Linux platforms, it can be made to work on other platforms too, provided that you have installed the required packages.
   
   
 Options
 -------
 There are some optional packages you can install to enhance some of the functionality of pyFormex.
 
-- If you want to save the images in .PS, .EPS or .PDF format (as shown in the WireStent example), you need the gl2ps OpenGL to PostScript 	printing library.
+- If you want to save the images in .PS, .EPS or .PDF format (as shown in the WireStent example), you need the gl2ps OpenGL to PostScript printing library.
 - If you want to perform the structural analysis of the truss in the X_truss_analysis example, you need the `Calpy`_ analysis package. Install by preference from the source; compiling should work without problems if you have a full NumPy installation.
 
   
