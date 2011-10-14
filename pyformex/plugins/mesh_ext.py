@@ -306,6 +306,31 @@ def area(self):
         return 0.0
 
 
+def partitionByAngle(self,**arg):
+    """Partition a surface Mesh by the angle between adjacent elements.
+
+    The Mesh is partitioned in parts bounded by the sharp edges in the
+    surface. The arguments and return value are the same as in
+    :meth:`TriSurface.partitionByAngle`.
+
+    Currently this only works for 'tri3' and 'quad4' type Meshes.
+    Also, the 'quad4' partitioning method currently only works corectly
+    if the quads are nearly planar.
+    """
+    if self.eltype.name() not in [ 'tri3', 'quad4' ]:
+        raise ValueError, "partitionByAngle currently only works for 'tri3' and 'quad4' type Meshes."
+
+    S = TriSurface(self.convert('tri3'))
+    p = S.partitionByAngle(**arg)
+    if self.eltype.name() == 'tri3':
+        return p
+    if self.eltype.name() == 'quad4':
+        p = p.reshape(-1,2)
+        if not (p[:,0] == p[:,1]).all():
+            pf.warning("The partitioning may be incorrect due to nonplanar 'quad4' elements")
+        return p[:,0]
+
+
 # BV: This is not mesh specific and can probably be achieved by t1 * t2
 @deprecation("Deprecated")
 def tests(t):
@@ -355,7 +380,7 @@ def _auto_initialize():
     Mesh.rings = rings
     Mesh.correctNegativeVolumes = correctNegativeVolumes
     Mesh.scaledJacobian = scaledJacobian
-
+    Mesh.partitionByAngle = partitionByAngle
     
 _auto_initialize()
 
