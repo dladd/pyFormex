@@ -357,7 +357,7 @@ def showBorder():
             print("The border consists of %s parts" % len(border))
             print("The sorted border edges are: ")
             print('\n'.join([" %s: %s" % (i,b.elems) for i,b in enumerate(border)]))
-            coloredB = [ b.setProp(i+1) for i,b in enumerate(border) ]
+            coloredB = [ b.compact().setProp(i+1) for i,b in enumerate(border) ]
             draw(coloredB,linewidth=3)
             for i,b in enumerate(coloredB):
                 drawText3D(b.center(),str(i),color=pf.canvas.settings.colormap[i+1],font='sans',size=18,ontop=True)
@@ -1219,69 +1219,9 @@ def createSphere():
 
 
 def createCylinder():
-    print __name__
-    _data_ = 'surface_menu_createCylinder_data'
-    res =  pf.PF.get(_data_, {
-        'name':'__auto__',
-        'base diameter':1.,
-        'top diameter':1.,
-        'height':2.,
-        'angle':360.,
-        'div_along_length':6,
-        'div_along_circ':12,
-        'bias':0.,
-        'diagonals':'up',
-        })
-    res = askItems(store=res, items=[
-        _I('name'),
-        _I('base diameter'),
-        _I('top diameter'),
-        _I('height'),
-        _I('angle'),
-        _I('div_along_length'),
-        _I('div_along_circ'),
-        _I('bias'),
-        _I('diagonals',choices=['up','down']),
-        ])
-                   
-    if res:
-        pf.PF[_data_] = res
-        name = res['name']
-        F = simple.cylinder(L=res['height'],D=res['base diameter'],D1=res['top diameter'],angle=res['angle'],nt=res['div_along_circ'],nl=res['div_along_length'],bias=res['bias'],diag=res['diagonals'][0])
-        export({name:TriSurface(F)})
-        selection.set([name])
-        selection.draw()
+    pf.warning("This function has been moved to the Geometry menu")
 
-
-def createCone():
-    _data_ = 'surface_menu_createCone_data'
-    res = pf.PF.get(_data_, {
-        'name' : '__auto__',
-        'radius': 1.,
-        'height': 1.,
-        'angle': 360.,
-        'div_along_radius': 6,
-        'div_along_circ':12,
-        'diagonals':'up',
-        })
-        
-    res = askItems(store=res, items=[
-        _I('name'),
-        _I('radius'),
-        _I('height'),
-        _I('angle'),
-        _I('div_along_radius'),
-        _I('div_along_circ'),
-        _I('diagonals',choices=['up','down']),
-        ])
-    
-    if res:
-        pf.PF[_data_] = res
-        name = res['name']
-        F = simple.sector(r=res['radius'],t=res['angle'],nr=res['div_along_radius'],nt=res['div_along_circ'],h=res['height'],diag=res['diagonals'])
-        export({name:TriSurface(F)})
-        selection.set([name])
-        selection.draw()
+createCone = createCylinder
 
 
 ###################  Operations using gts library  ########################

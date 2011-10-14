@@ -488,8 +488,51 @@ def createCylinder():
         if name == '__auto__':
             name = autoName(res['object type']).next()
 
-        F = simple.cylinder(L=res['height'],D=res['base diameter'],D1=res['top diameter'],angle=res['angle'],nt=res['div_along_circ'],nl=res['div_along_length'],bias=res['bias'],diag=res['diagonals'][0])
+        F = simple.cylinder(L=res['height'],D=res['base diameter'],D1=res['top diameter'],
+                            angle=res['angle'],nt=res['div_along_circ'],nl=res['div_along_length'],
+                            bias=res['bias'],diag=res['diagonals'][0])
 
+        F = convertFormex(F,res['object type'])
+        export({name:F})
+        selection.set([name])
+        selection.draw()
+
+
+def createCone():
+    _data_ = __name__+'_createCone_data'
+    res = {
+        'name' : '__auto__',
+        'object type':'Formex',
+        'radius': 1.,
+        'height': 1.,
+        'angle': 360.,
+        'div_along_radius': 6,
+        'div_along_circ':12,
+        'diagonals':'up',
+        }
+    if pf.PF.has_key(_data_):
+        res.update(pf.PF[_data_])
+        
+    res = askItems(store=res, items=[
+        _I('name'),
+        _I('object type',choices=['Formex','Mesh','TriSurface']),
+        _I('radius'),
+        _I('height'),
+        _I('angle'),
+        _I('div_along_radius'),
+        _I('div_along_circ'),
+        _I('diagonals',choices=['none','up','down']),
+        ])
+    
+    if res:
+        pf.PF[_data_] = res
+        name = res['name']
+        if name == '__auto__':
+            name = autoName(res['object type']).next()
+
+        F = simple.sector(r=res['radius'],t=res['angle'],nr=res['div_along_radius'],
+                          nt=res['div_along_circ'],h=res['height'],diag=res['diagonals'])
+        
         F = convertFormex(F,res['object type'])
         export({name:F})
         selection.set([name])
@@ -707,7 +750,7 @@ def create_menu():
             ]),
         ("&Create Object",[
             ('&Cylinder, Cone, Truncated Cone',createCylinder),
-            ## ('&Circle, Sector, Cone',createCone),
+            ('&Circle, Sector, Cone',createCone),
             ]),
         ## ("&Shrink",shrink),
         ## ("&Bbox",
