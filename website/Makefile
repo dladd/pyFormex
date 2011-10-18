@@ -2,7 +2,7 @@
 #
 
 HOMEPARTS= home_header.inc home_footer.inc
-HTDOCS= documentation.html install.html links.html screenshots.html support.html pyformexinuse.html pyformex.html pyformex.css favicon.ico
+HTDOCS= install.html links.html screenshots.html support.html pyformexinuse.html pyformex.html pyformex.css favicon.ico
 EXAMPLES= examples/
 IMAGES= images/
 SCRIPTS= scripts/
@@ -16,7 +16,7 @@ TARGETDIR= ${SERVER}:/home/groups/pyformex/htdocs
 html: 
 	r2w
 	./split_home
-	./update-news
+	./update-news noupdate
 
 
 all:	pub

@@ -636,7 +636,7 @@ def checkRevision(rev,comp='>='):
     case on very old versions) the test returns False.
     """
     try:
-        cur = int(utils.splitStartDigits(pf.__revision__.split()[1])[0])
+        cur = int(utils.splitStartDigits(pf.__revision__)[0])
         return eval("%s %s %s" % (cur,comp,rev))
     except:
         return False

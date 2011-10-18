@@ -47,7 +47,7 @@ If you only want to use the Formex class, its mathematical transformation method
 
 If you want to use the Graphical User Interface to run scripts and to render the created structures either to screen or to image files, you also need `PyOpenGL`_, `Qt4`_ and `PyQt4`_.
   
-Full details are in the documentation.
+Full details are in the `pyFormex documentation`_.
   
   
 Platform

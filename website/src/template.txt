@@ -45,7 +45,11 @@
 
 <div class="menu">
 
+<li><a class="main" href="http://pyformex.berlios.de/doc/index.html">Documentation</a></li>
+
 <li><a class="main" href="http://developer.berlios.de/forum/forum.php?forum_id=8348">Help Forum</a></li>
+
+<li><a class="main" href="http://pyformex.berlios.de/doc/install.html">Installation</a></li>
 
 <li><a class="main" href="http://developer.berlios.de/project/showfiles.php?group_id=2717">Downloads</a></li>
 
