@@ -6,7 +6,8 @@
 %{
 #include "gl2ps.h"
 %}
-// Comment
+
+
 typedef int     GLint;
 typedef short   GLshort;
 typedef float   GLfloat;

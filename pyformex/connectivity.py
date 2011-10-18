@@ -65,7 +65,7 @@ class Connectivity(ndarray):
     usually all numbers in a row are different. Rows containing duplicate
     numbers are called `degenerate` elements.
     Rows containing the same node sets, albeit different permutations thereof,
-    are called 'double's.
+    are called duplicates.
 
     A new Connectivity object is created with the following syntax ::
     
@@ -326,25 +326,25 @@ class Connectivity(ndarray):
         return ML
 
     
-    def testDoubles(self,permutations=True):
+    def testDuplicate(self,permutations=True):
     #    This algorithm is faster than encode,
     #    but for nplex=2 enmagic2 would probably still be faster.
-        """Test the Connectivity list for doubles.
+        """Test the Connectivity list for duplicates.
 
-        By default, doubles are elements that consist of the same set of
+        By default, duplicates are elements that consist of the same set of
         nodes, in any particular order. Setting permutations to False
-        will only find the double rows that have matching values at
+        will only find the duplicate rows that have matching values at
         every position.
 
         This function returns a tuple with two arrays:
         
         - an index used to sort the elements
         - a flags array with the value True for indices of the unique elements
-          and False for those of the doubles.
+          and False for those of the duplicates.
 
         Example:
         
-          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).testDoubles()
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).testDuplicate()
           (array([0, 1, 2]), Connectivity([ True, False,  True], dtype=bool))
           
         """
@@ -356,7 +356,7 @@ class Connectivity(ndarray):
         ind = sortByColumns(C)
         C = C.take(ind,axis=0)
         ok = (C != roll(C,1,axis=0)).any(axis=1)
-        if not ok[0]: # all doubles -> should result in one unique element
+        if not ok[0]: # all duplicates -> should result in one unique element
             ok[0] = True
         return ind,ok
     
@@ -370,40 +370,40 @@ class Connectivity(ndarray):
           array([0, 2])
           
         """
-        ind,ok = self.testDoubles(permutations)
+        ind,ok = self.testDuplicate(permutations)
         return ind[ok]
 
 
-    def listDoubles(self,permutations=True):
-        """Return a list with the numbers of the double elements.
+    def listDuplicate(self,permutations=True):
+        """Return a list with the numbers of the duplicate elements.
 
         Example:
         
-          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).listDoubles()
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).listDuplicates()
           array([1])
           
         """
-        ind,ok = self.testDoubles(permutations)
+        ind,ok = self.testDuplicate(permutations)
         return ind[~ok]
 
    
-    def removeDoubles(self,permutations=True):
-        """Remove doubles from a Connectivity list.
+    def removeDuplicate(self,permutations=True):
+        """Remove duplicate elements from a Connectivity list.
 
-        By default, doubles are elements that consist of the same set of
+        By default, duplicates are elements that consist of the same set of
         nodes, in any particular order. Setting permutations to False
-        will only remove the double rows that have matching values at
+        will only remove the duplicate rows that have matching values at
         matching positions.
 
-        Returns a new Connectivity with the double elements removed.
+        Returns a new Connectivity with the duplicate elements removed.
 
         Example:
         
-          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).removeDoubles()
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).removeDuplicate()
           Connectivity([[0, 1, 2],
                  [0, 3, 2]])
         """
-        ind,ok = self.testDoubles(permutations)
+        ind,ok = self.testDuplicate(permutations)
         return self[ind[ok]]
 
 
@@ -564,7 +564,7 @@ class Connectivity(ndarray):
 
         Returns a :class:`Connectivity` object with shape
         `(self.nelems*selector.nelems,selector.nplex)`. This function
-        does not collapse the double elements. The eltype of the result
+        does not collapse the duplicate elements. The eltype of the result
         is equal to that of the selector, possibly None.
            
         Example:
@@ -607,7 +607,7 @@ class Connectivity(ndarray):
           Each row of `selector` holds a list of the local node numbers that
           should be retained in the new Connectivity table.
         - `lower_only`: if True, only the definition of the new (lower)
-          entities is returned, complete without removing doubles.
+          entities is returned, complete without removing duplicates.
           This is equivalent to using :meth:`selectNodes`, which
           is prefered when you do not need the higher level info. 
         
@@ -1051,7 +1051,7 @@ def reduceAdjacency(adj):
     A reduced adjacency table is one where each row:
 
     - does not contain the row index itself,
-    - does not contain doubles,
+    - does not contain duplicates,
     - is sorted in ascending order,
 
     and that has at least one row without -1 value.

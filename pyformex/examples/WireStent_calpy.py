@@ -29,8 +29,6 @@ topics = ['FEA']
 techniques = ['color'] 
 """
 
-chdir(__file__)
-
 ############################
 # Load the needed calpy modules    
 

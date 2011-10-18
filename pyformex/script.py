@@ -622,23 +622,36 @@ def isWritable(path):
 
 
 def checkRevision(rev,comp='>='):
-    """Check that we have the requested revision number.
+    """Check the pyFormex revision number.
 
-    Raises an error if the revision number of the running pyFormex does not
-    pass the comparison test with the given revision number.
+    - rev: a positive integer.
+    - comp: a string specifying a comparison operator.
+    
+    By default, this function returns True if the pyFormex revision
+    number is equal or larger than the specified number.
 
-    rev: a positive integer.
-    comp: a string used in the comparison.
+    The comp argument may specify another comparison operator.
 
-    Default is to allow the specified revision and all later ones.
+    If pyFormex is unable to find its revision number (this is the
+    case on very old versions) the test returns False.
     """
     try:
         cur = int(utils.splitStartDigits(pf.__revision__.split()[1])[0])
-        if not eval("%s %s %s" % (cur,comp,rev)):
-            raise RuntimeError
+        return eval("%s %s %s" % (cur,comp,rev))
     except:
+        return False
+
+
+def requireRevision(rev,comp='>='):
+    """Require a specified pyFormex revision number.
+
+    The arguments are like checkRevision. Ho9wever, this function will
+    raise an error if the requirement fails.
+    """
+    if not checkRevision(rev,comp):
         raise RuntimeError,"Your current pyFormex revision (%s) does not pass the test %s %s" % (pf.__revision__,comp,rev)
-   
+
+    
 ################### read and write files #################################
 
 def writeGeomFile(filename,objects,sep=' ',mode='w',shortlines=False):

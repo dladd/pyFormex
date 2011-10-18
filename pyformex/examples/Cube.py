@@ -67,7 +67,6 @@ def cube_quad(color=None):
         color = [4,1,5,2,6,3]
     elif color == 'Full':
         color = array([7,6,4,5,3,2,0,1])[f]
-    print color
     return faces,color
 
 
@@ -75,7 +74,8 @@ def showCube(base,color):
     #print base,color
     if base == 'Triangle':
         cube = cube_tri
-    else:        cube = cube_quad
+    else:
+        cube = cube_quad
     cube,color = cube(color)
     clear()
     draw(cube,color=color)
@@ -86,7 +86,6 @@ def showCube(base,color):
 if __name__ == "draw":
 
     from gui import widgets
-    from gui.widgets import simpleInputItem as I
 
     clear()
     reset()
@@ -101,9 +100,9 @@ if __name__ == "draw":
     color = 'Full'
     while True:
         res = askItems([
-            I('All',all),
-            I('Base',base,choices=baseshape),
-            I('Color',color,choices=colormode),
+            _I('All',all),
+            _I('Base',base,choices=baseshape),
+            _I('Color',color,choices=colormode),
             ],caption="Make a selection or check 'All'")
         if not res:
             break;
@@ -116,7 +115,6 @@ if __name__ == "draw":
             bases = [ res['Base'] ]
             colors = [ res['Color'] ]
 
-        print bases,colors
         for base in bases:
             lights(False)
 
@@ -128,33 +126,5 @@ if __name__ == "draw":
         # Break from endless loop if an input timeout is active !
         if widgets.input_timeout >= 0:
             break
-
-    exit()
-    
-
-## The following was used to create the rendering icons for the pyFormex GUI
-    
-    draw(cube)
-    view('iso')
-    zoomAll()
-    pf.canvas.zoom(1.5)
-
-    export({'cube':cube})
-    exit()
-
-    chdir(__file__)
-    from gui import draw as _draw
-
-    for mode in [ 'wireframe', 'smooth', 'smoothwire', 'flat', 'flatwire' ]:
-        getattr(_draw,mode)()
-        image.saveIcon(mode)
-        #sleep(1)
-
-
-    clear()
-    smoothwire()
-    draw(cube.shrink(0.8),bbox=None)
-    #pf.canvas.zoom(1.5)
-    image.saveIcon('shrink')
     
 # End

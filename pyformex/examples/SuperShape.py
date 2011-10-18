@@ -134,7 +134,6 @@ def showSuperShape():
     print color
     if type(color) == str and color.startswith('file:'):
         print "trying to convert color"
-        chdir(__file__)
         im = QtGui.QImage('Elevation-800.jpg')
         print im
         print im.isNull()

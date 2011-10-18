@@ -351,7 +351,7 @@ class Mesh(Geometry):
         ent = self.elems.selectNodes(sel)
         ent.eltype = sel.eltype
         if unique:
-            ent = ent.removeDoubles()
+            ent = ent.removeDuplicate()
 
         return ent
 
@@ -697,7 +697,7 @@ Size: %s
         """Match elems of Mesh with elems of self.
         
         self and Mesh are same eltype meshes
-        and are both without Doubles.
+        and are both without duplicates.
         
         Elems are matched by their centroids.
         """
@@ -714,7 +714,7 @@ Size: %s
             
         self and Mesh can be same eltype meshes or different eltype but of the 
         same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
-        and are both without Doubles.
+        and are both without duplicates.
             
         Returns the indices array of the elems of self that matches
         the faces of mesh
@@ -1066,7 +1066,7 @@ Size: %s
         Property numbers propagate to the children. 
         """
         #
-        # This doubles a lot of functionality of Connectivity.reduceDegenerate
+        # This duplicates a lot of functionality of Connectivity.reduceDegenerate
         # But this was really needed to keep the properties
         #
         try:
@@ -1152,8 +1152,21 @@ Size: %s
         Returns a Mesh with all degenerate elements removed.
         """
         deg = self.elems.testDegenerate()
-        M0 = self.select(~deg,compact=False)
-        return M0
+        return self.select(~deg,compact=False)
+
+
+    def removeDuplicate(self,permutations=True):
+        """Remove the duplicate elements from a Mesh.
+
+        Duplicate elements are elements that consist of the same nodes,
+        by default in no particular order. Setting permutations=False will
+        only consider elements with the same nodes in the same order as
+        duplicates.
+        
+        Returns a Mesh with all duplicate elements removed.
+        """
+        ind,ok = self.elems.testDuplicate(permutations)
+        return self.select(ind[ok])
 
 
     def renumber(self,order='elems'):

@@ -796,32 +796,32 @@ class TriSurface(Mesh):
         return [ surfaceInsideBorder(b,method).setProp(i) for i,b in enumerate(self.border()) ]
 
 
-    # BV: There are too many of these! cfr getBorder,
-    def boundaryEdges(self):
-        """_Returns the border edges of a surface, grouped by id property. """
-        be=Mesh(self.coords, self.getEdges()[self.borderEdges()] )#.renumber()
-        be.elems=be.elems.removeDegenerate().removeDoubles()
-        parts = connectedLineElems(be.elems)
-        prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
-        elems = concatenate(parts,axis=0)
-        return Mesh(be.coords,elems,prop=prop)
+    ## # BV: There are too many of these! cfr getBorder,
+    ## def boundaryEdges(self):
+    ##     """_Returns the border edges of a surface, grouped by id property. """
+    ##     be=Mesh(self.coords, self.getEdges()[self.borderEdges()] )#.renumber()
+    ##     be.elems=be.elems.removeDegenerate().removeDoubles()
+    ##     parts = connectedLineElems(be.elems)
+    ##     prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
+    ##     elems = concatenate(parts,axis=0)
+    ##     return Mesh(be.coords,elems,prop=prop)
     
-    # BV: There are too many of these!
-    def boundaryFiller(self):
-        """_Fills the holes of a surface by creating extra faces at the boundary edges. Original surface and boundaries are returned with different id prop."""
-        brd=self.boundaryEdges()
-        Brd=[ brd.withProp(p).compact() for p in brd.propSet() ]
-        if self.prop==None:self=self.setProp(0)
-        maxp=self.maxProp()+1
-        capsm=[Mesh( surfaceInsideLoop(Brd[i].coords,Brd[i].elems) ).setProp(i+maxp) for i in range(len(Brd))]
-        return TriSurface( Mesh.concatenate( capsm+[self] ) )#.renumber()
+    ## # BV: There are too many of these!
+    ## def boundaryFiller(self):
+    ##     """_Fills the holes of a surface by creating extra faces at the boundary edges. Original surface and boundaries are returned with different id prop."""
+    ##     brd=self.boundaryEdges()
+    ##     Brd=[ brd.withProp(p).compact() for p in brd.propSet() ]
+    ##     if self.prop==None:self=self.setProp(0)
+    ##     maxp=self.maxProp()+1
+    ##     capsm=[Mesh( surfaceInsideLoop(Brd[i].coords,Brd[i].elems) ).setProp(i+maxp) for i in range(len(Brd))]
+    ##     return TriSurface( Mesh.concatenate( capsm+[self] ) )#.renumber()
 
 
     def edgeCosAngles(self):
         """Return the cos of the angles over all edges.
         
         The surface should be a manifold (max. 2 elements per edge).
-        Edges with only one element get angles = 1.0.
+        Edges adjacent to only one element get cosangles = 1.0.
         """
         conn = self.edgeConnections()
         # Bail out if some edge has more than two connected faces
@@ -1301,8 +1301,8 @@ Shortest altitude: %s; largest aspect ratio: %s
         else:
             M = Mesh.concatenate(Mparts)
 
-        # Remove degenerate and doubles
-        M = Mesh(M.coords,M.elems.removeDegenerate().removeDoubles())
+        # Remove degenerate and duplicate elements
+        M = Mesh(M.coords,M.elems.removeDegenerate().removeDuplicate())
 
         # Split in connected loops
         parts = connectedLineElems(M.elems)

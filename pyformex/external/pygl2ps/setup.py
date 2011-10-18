@@ -13,5 +13,4 @@ See http://www.geuz.org/gl2ps/
       py_modules=["gl2ps"],
       ext_modules=[Extension("_gl2ps",
                              ["gl2ps.c","gl2ps_wrap.c"],
-#                             include_dirs=["/usr/local/include/python2.3"],
                              libraries=["GL"])])
