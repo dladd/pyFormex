@@ -29,20 +29,18 @@ topics = ['geometry','surface']
 techniques = ['dialog', 'persistence', 'color']
 
 """
-from gui.widgets import simpleInputItem as I
-
 reset()
 
 basechoices = ['Triangles','Quadrilaterals']
-renderchoices = ['wireframe','flat','flatwire','smooth','smoothwire']
+renderchoices = pf.canvas.rendermodes[:5]
 res = askItems([
-    I('baseGeom',itemtype='radio',choices=basechoices,text='Type of surface element'),
-    I('nbumps',3,text='Number of bumps'),
-    I('rendermode',choices=renderchoices,text='Render mode'),
-    I('transparent',False,text='Transparent'),
-    I('bottom',False,text='Add a bottom plate'),
-    I('shrink',False,text='Shrink elements'),
-    I('export',False,text='Export to .stl'),
+    _I('baseGeom',itemtype='radio',choices=basechoices,text='Type of surface element'),
+    _I('nbumps',3,text='Number of bumps'),
+    _I('rendermode',choices=renderchoices,text='Render mode'),
+    _I('transparent',False,text='Transparent'),
+    _I('bottom',False,text='Add a bottom plate'),
+    _I('shrink',False,text='Shrink elements'),
+    _I('export',False,text='Export to .stl'),
     ])
 if not res:
     exit()

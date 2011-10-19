@@ -130,7 +130,6 @@ def glNoCulling():
     glCulling(False)
 
 def glLighting(onoff):
-    #print onoff
     glEnable(GL.GL_LIGHTING,onoff)
 
 

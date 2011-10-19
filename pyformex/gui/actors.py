@@ -570,7 +570,9 @@ class GeomActor(Actor):
                 wire.nolight = True
                 wire.ontop = False # True will make objects transparent for edges
                 wire.list = None
-                Drawable.draw(wire,mode='wireframe',color=asarray(black))
+                # THIS SEEMS TO HAVE SIDE EFFECTS !
+                # IT SHOULD NOT DRAW< JUST CREATE
+                Drawable.prepare_list(wire,mode='wireframe',color=asarray(black))
                 self.wire = wire
 
             # Add the existing wire to the extra list, and then draw w/o wire
@@ -591,6 +593,12 @@ class GeomActor(Actor):
             self.list = self.create_list(**kargs)
             self.mode = mode
 
+        ## print self.list
+        ## try:
+        ##     print self.wire
+        ## except:
+        ##     pass
+        ## print self.extra
         self.use_list()
 
 

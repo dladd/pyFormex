@@ -1150,7 +1150,14 @@ class Drawable(object):
         """Mimick the OpenGL drawing functions to pick (from) the actor."""
         pass
 
+    def redraw(self,**kargs):
+        self.draw(**kargs)
+
     def draw(self,**kargs):
+        self.prepare_list(**kargs)
+        self.use_list()
+
+    def prepare_list(self,**kargs):
         if 'mode' in kargs:
             mode = kargs['mode']
         else:
@@ -1166,18 +1173,13 @@ class Drawable(object):
             self.list = self.create_list(**kargs)
             self.mode = mode
 
-        self.use_list()
-
-    def redraw(self,**kargs):
-        self.draw(**kargs)
-
+        #print "PREPARED LIST %s %s %s" % (self.list,self.mode,self.extra)
 
     def use_list(self):
         if self.list:
             GL.glCallList(self.list)
         for i in self.extra:
             i.use_list()
-
 
     def create_list(self,**kargs):
         displist = GL.glGenLists(1)
