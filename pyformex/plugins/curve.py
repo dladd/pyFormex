@@ -50,7 +50,7 @@ from utils import deprecation
 #    closed: is the curve closed or not
 #    range: [min,max] : range of the parameter: default 0..1
 # methods:
-#    subPoints(t,j): returns points with parameter values t of part j
+#    subPoints(t): returns points with parameter values t
 #    points(ndiv,extend=[0.,0.]): returns points obtained by dividing each
 #           part in ndiv sections at equal parameter distance.
 #    pointsOn(): the defining points placed on the curve
@@ -154,11 +154,16 @@ class Curve(Geometry):
 
 
     def subPoints(self,div=10,extend=[0., 0.]):
-        """Return a series of points on the Curve.
+        """Return a sequence of points on the Curve.
 
-        The parameter space of each segment is divided into ndiv parts.
-        The coordinates of the points at these parameter values are returned
-        as a Coords object.
+        - `div`: int or a list of floats (usually in the range [0.,1.])
+          If `div` is an integer, a list of floats is constructed by dividing
+          the range [0.,1.] into `div` equal parts.
+          The list of floats then specifies a set of parameter values for which
+          points at in each part are returned. The points are returned in a
+          single Coords in order of the parts.
+
+        
         The extend parameter allows to extend the curve beyond the endpoints.
         The normal parameter space of each part is [0.0 .. 1.0]. The extend
         parameter will add a curve with parameter space [-extend[0] .. 0.0]
@@ -297,8 +302,7 @@ class PolyLine(Curve):
     def toMesh(self):
         """Convert the polyLine to a plex-2 Mesh.
 
-        This returned mesh is equivalent with the PolyLine, but does
-        not guarantee the sequential order.
+        The returned Mesh is equivalent with the PolyLine.
         """
         e1 = arange(self.ncoords())
         elems = column_stack([e1,roll(e1,-1)])
@@ -613,15 +617,21 @@ class Polygon(PolyLine):
 ##############################################################################
 #
 class BezierSpline(Curve):
-    """A class representing a cubic Bezier spline curve.
-    
-    A cubic Bezier spline is a continuous curve consisting of `nparts`
-    successive parts and where each part is a cubic Bezier curve described
-    by four control points (two end points which are on the curve, and two
-    intermediate control points which are off the curve).
+    """A class representing a Bezier spline curve of degree 1, 2 or 3.
+
+    A Bezier spline of degree `d` is a continuous curve consisting of `nparts`
+    successive parts, where each part is a Bezier curve of the same degree.
+    Currently pyFormex can model linear, quadratic and cubic BezierSplines.
+    A linear BezierSpline is equivalent to a PolyLine, which has more
+    specialized methods than the BezierSpline, so it might be more
+    sensible to use a PolyLine instead of the linear BezierSpline.
+
+    A Bezier curve of degree `d` is determined by `d+1` control points,
+    of which the first and the last are on the curve, while the intermediate
+    `d-1` points are not.
     Since the end point of one part is the begin point of the next part,
-    a BezierSpline is described by ncontrol=3*nparts+1 control points if the
-    curve is open, or ncontrol=3*nparts if the curve is closed.
+    a BezierSpline is described by `ncontrol=d*nparts+1` control points if the
+    curve is open, or `ncontrol=d*nparts` if the curve is closed.
 
     The constructor provides different ways to initialize the full set of
     control points. In many cases the off-curve control points can be
@@ -634,7 +644,7 @@ class BezierSpline(Curve):
       for a closed curve, npoints = nparts.
       If not specified, the on-curve points should be included in the
       `control` argument.
-    - deriv : array_like (npoints,3) or (2,3)
+    - `deriv` : array_like (npoints,3) or (2,3)
       If specified, it gives the direction of the curve at all points or at
       the endpoints only for a shape (2,3) array.
       For points where the direction is left unspecified or where the
@@ -645,12 +655,12 @@ class BezierSpline(Curve):
       In the two endpoints of an open curve however, this average
       direction can not be calculated: the two control points in these
       parts are set coincident.
-    - curl : float         
+    - `curl` : float         
       The curl parameter can be set to influence the curliness of the curve
       in between two subsequent points. A value curl=0.0 results in
       straight segments. The higher the value, the more the curve becomes
       curled.
-    - control : array(nparts,2,3) or array(ncontrol,3)
+    - `control` : array(nparts,2,3) or array(ncontrol,3)
       If `coords` was specified, this should be a (nparts,2,3) array with
       the intermediate control points, two for each part.
       
@@ -663,11 +673,14 @@ class BezierSpline(Curve):
       If not specified, the control points are generated automatically from
       the `coords`, `deriv` and `curl` arguments.
       If specified, they override these parameters.
-    - closed : boolean
+    - `closed` : boolean
       If True, the curve will be continued from the last point back
       to the first to create a closed curve.
 
-    - endzerocurv : boolean or tuple of two booleans.
+    - `degree`: int (1, 2 or 3)
+      Specfies the degree of the curve. Default is 3.
+
+    - `endzerocurv` : boolean or tuple of two booleans.
       Specifies the end conditions for an open curve.
       If True, the end curvature will be forced to zero. The default is
       to use maximal continuity of the curvature.
@@ -695,7 +708,7 @@ class BezierSpline(Curve):
         }
 
     def __init__(self,coords=None,deriv=None,curl=1./3.,control=None,closed=False,degree=3,endzerocurv=False):
-        """Create a cubic spline curve."""
+        """Create a BezierSpline curve."""
 
         if not degree > 0:
             raise ValueError,"Degree of BezierSpline should be >= 0!"
@@ -924,9 +937,39 @@ Most likely because 'python-scipy' is not installed on your system.""")
         L = [ quad(self.length_intgrnd,0.,1.,args=(j,))[0] for j in range(self.nparts) ]
         return array(L)
 
+    
+    def toMesh(self):
+        """Convert the BezierSpline to a Mesh.
+
+        For degrees 1 or 2, the returned Mesh is equivalent with the
+        BezierSpline, and will have element type 'line1', resp. 'line2'.
+
+        For degree 3, the returned Mesh will currently be a quadratic
+        approximation with element type 'line2'.
+        """
+        if self.degree == 1:
+            return self.approx(ndiv=1).toMesh()
+        else:
+            coords = self.subPoints(2)
+            e1 = 2*arange(len(coords)/2)
+            elems = column_stack([e1,e1+1,e1+2])
+            if self.closed:
+                elems = elems[-1][-1] = 0
+            return Mesh(coords,elems,eltype='line3')
+  
+
+        # This is not activated (yet) because it would be called for
+        # drawing curves.
+    ## def toFormex(self):
+    ##     """Convert the BezierSpline to a Formex.
+
+    ##     This is notational convenience for::
+    ##       self.toMesh().toFormex()
+    ##     """
+    ##     return self.toMesh().toFormex()
+
 
     # BV: This should go as a specialization in the approx() method
-
     def approx_by_subdivision(self,tol=1.e-3):
         """Return a PolyLine approximation of the curve.
 
@@ -1219,25 +1262,44 @@ class Arc3(Curve):
 class Arc(Curve):
     """A class representing a circular arc."""
 
-    def __init__(self,coords):
+    def __init__(self,coords=None,center=None,radius=None,angles=None,angle_spec=Deg):
         """Create a circular arc.
 
-        The arc is specified by the center and begin and end-point.
+        The arc can be specified by 3 points: center, begin and end-point;
+        or by center, radius and two angles. In the latter case, the arc
+        lies in a plane parallel to the x,y plane.
         """
-        self.coords = Coords(coords)
         self.nparts = 1
         self.closed = False
-        if self.coords.shape != (3,3):
-            raise ValueError,"Expected 3 points"
+        if coords is not None:
+            self.coords = Coords(coords)
+            if self.coords.shape != (3,3):
+                raise ValueError,"Expected 3 points"
 
-        self.center = self.coords[1]
-        v = self.coords-self.center
-        self.radius = length(v[0])
-        self.normal = unitVector(cross(v[0],v[2]))
-        self.angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self.center) for x in self.coords[[0,-1]] ]
-        #print(self.coords)
-        print("Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal))
-        print("ANGLES=%s" % (self.angles))
+            self.center = self.coords[0]
+            v = self.coords-self.center
+            self.radius = length(v[1])
+            self.normal = unitVector(cross(v[1],v[2]))
+            self.angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self.center) for x in self.coords[[1,2]] ]
+
+        else:
+            #try:
+                self.center = center
+                self.radius = radius
+                self.normal = [0.,0.,1.]
+                self.angles = [ a * angle_spec for a in angles ]
+                while self.angles[1] < self.angles[0]:
+                    self.angles[1] += 2*pi
+                begin,end = self.sub_points(array([0.0,1.0]),0)
+                self.coords = Coords([self.center,begin,end])
+            #except:
+            #    raise ValueError,"Invalid data for Arc"
+               
+            
+        #print("New ARC")
+        #print(" Center %s, Radius %s, Normal %s" % (self.center,self.radius,self.normal))
+        #print(" Angles=%s" % (self.angles))
+        #print(" Start=%s; End=%s" % (self.coords[1],self.coords[2]))
 
     def sub_points(self,t,j):
         a = t*(self.angles[-1]-self.angles[0])

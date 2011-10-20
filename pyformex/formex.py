@@ -1454,35 +1454,24 @@ maxprop  = %s
                         for j in range(self.coords.shape[0]) ] )
 
 
-        
-    def unique(self,rtol=1.e-4,atol=1.e-6):
+    def removeDuplicate(self,permutations=True,rtol=1.e-4,atol=1.e-6):
         """Return a Formex which holds only the unique elements.
 
-        Two elements are considered equal when all its nodal coordinates
-        are close. Two values are close if they are both small compared to atol
-        or their difference divided by the second value is small compared to
-        rtol.
-        Two elements are not considered equal if one's points are a
-        permutation of the other's.
-        """
-        ##
-        ##  THIS IS SLOW!! IT NEEDS TO BE REIMPLEMENTED BASED ON THE
-        ##  feModel, and should probably be moved to a dedicated class
-        ##
-        flag = ones((self.coords.shape[0],))
-        for i in range(self.coords.shape[0]):
-            for j in range(i):
-                if allclose(self.coords[i],self.coords[j],rtol=rtol,atol=atol):
-                    # i is a duplicate node
-                    flag[i] = 0
-                    break
-        if self.prop is None:
-            p = None
-        else:
-            p = self.prop[flag>0]
-        return Formex(self.coords[flag>0],p,self.eltype)
+        Two elements are considered equal when all its points are (nearly)
+        coincident. By default any permutation of point order is also allowed.
 
-      
+        Two coordinate value are considered equal if they are both small
+        compared to atol or if their difference divided by the second value
+        is small compared to rtol.
+
+        If permutations is set False, two elements are not considered equal
+        if one's points are a permutation of the other's.
+        """
+        M = self.toMesh(rtol=rtol,atol=atol)
+        ind,ok = M.elems.testDuplicate()
+        return self.select(ind[ok])
+
+
     ## def nonzero(self):
     ##     """Return a Formex which holds only the nonzero elements.
 
@@ -1943,28 +1932,17 @@ maxprop  = %s
     #
     # Obsolete and deprecated functions
     #
-    # These functions are retained mainly for compatibility reasons.
-    # New users should avoid these functions!
-    # They may (will) be removed in future.
-
-    # BV: to be removed in 0.8.5
-
-    @deprecation("`feModel()` is deprecated. Use `toMesh()` wherever possible.\n`fuse()` remains available with the same result as `feModel()`")
-    def feModel(self,*args,**kargs):
-        return self.fuse(*args,**kargs)
-
-
-    # BV: removed in 0.8.4
-    
-    ## @deprecation("`nnodel` is deprecated: use `nplex` instead.")
-    ## def nnodel(self):
-    ##     return self.nplex()
     
     nnodes = npoints
 
-    # Convenience short notations and aliases
+#########################################################################
+    #
+    # Convenient short notations and aliases
+    #
+    
     rep = replic
     ros = rosette
+    unique = removeDuplicate
 
 
 ##############################################################################

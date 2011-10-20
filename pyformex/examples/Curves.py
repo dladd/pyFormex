@@ -34,7 +34,7 @@ techniques = ['widgets','persistence','import','spline']
 from plugins.curve import *
 from plugins.nurbs import *
 from odict import ODict
-from gui.widgets import InputDialog, simpleInputItem as I
+from gui.widgets import InputDialog
 
 ctype_color = [ 'red','green','blue','cyan','magenta','yellow','white' ] 
 point_color = [ 'black','white' ] 
@@ -130,21 +130,21 @@ dataset = [
     ]
 
 data_items = [
-    I('DataSet','0',choices=map(str,range(len(dataset)))), 
-    I('CurveType',choices=curvetypes),
-    I('Closed',False),
-    I('EndCurvatureZero',False),
-    I('Curl',1./3.),
-    I('Ndiv',10),
-    I('SpreadEvenly',False),
-    I('Ntot',40),
-    I('ExtendAtStart',0.0),
-    I('ExtendAtEnd',0.0),
-    I('Scale',[1.0,1.0,1.0]),
-    I('DrawAs',None,'hradio',choices=['Curve','Polyline']),
-    I('Clear',True),
-    I('ShowDirections',False),
-    I('CutWithPlane',False),
+    _I('DataSet','0',choices=map(str,range(len(dataset)))), 
+    _I('CurveType',choices=curvetypes),
+    _I('Closed',False),
+    _I('EndCurvatureZero',False),
+    _I('Curl',1./3.),
+    _I('Ndiv',10),
+    _I('SpreadEvenly',False),
+    _I('Ntot',40),
+    _I('ExtendAtStart',0.0),
+    _I('ExtendAtEnd',0.0),
+    _I('Scale',[1.0,1.0,1.0]),
+    _I('DrawAs',None,'hradio',choices=['Curve','Polyline']),
+    _I('Clear',True),
+    _I('ShowDirections',False),
+    _I('CutWithPlane',False),
     ]
 
 clear()

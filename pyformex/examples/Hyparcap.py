@@ -33,7 +33,8 @@ techniques = ['color']
 """
 
 clear()
-from math import *
+wireframe()
+
 a = 5 # verdeelparameter
 x = -((1-sqrt(5))/2) # gulden getal
 s = 30. # overspanning
