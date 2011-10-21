@@ -42,7 +42,7 @@ a = ny*float(top)/(bot-top)
 
 # First, a line based model
 
-base = Formex(pattern("543"),[1,2,3]) # single cell
+base = Formex('l:543',[1,2,3]) # single cell
 draw(base)
 
 d = base.select([0]).replic2(nx,ny,1,1)   # all diagonals

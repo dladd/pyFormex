@@ -40,7 +40,7 @@ view('front')
 
 def unitAxes():
     """Create a set of three axes."""
-    Hx = Formex(pattern('1'),5).translate([-0.5,0.0,0.0])
+    Hx = Formex('l:1',5).translate([-0.5,0.0,0.0])
     Hy = Hx.rotate(90)
     Hz = Hx.rotate(-90,1)
     Hx.setProp(4)
@@ -70,7 +70,7 @@ def showPrincipal1(F):
     return C,I,Iprin,Iaxes
 
 
-#F = Formex(pattern('1')).replic(2,2,1).replic(2,2,2).scale(2)
+#F = Formex('l:1').replic(2,2,1).replic(2,2,2).scale(2)
 nx,ny,nz = 2,3,4
 dx,dy,dz = 4,3,2
 F = Formex([[[0,0,0]]]).replic(nx,dx,0).replic(ny,dy,1).replic(nz,dz,2)

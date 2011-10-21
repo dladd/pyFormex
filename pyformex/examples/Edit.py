@@ -30,14 +30,14 @@ techniques = ['persistence','interactive']
 """
 clear()
 alfabet = {
-    'A': '22144/61',
-    'C': '/13221',
+    'A': 'l:22144/61',
+    'C': 'l:/13221',
    }
 
  
 def plotChar(char):
     try:
-        draw(Formex(pattern(alfabet[char])))
+        draw(Formex(alfabet[char]))
     except:
         raise ValueError,"Can not plot character %s" % char
 
@@ -48,7 +48,7 @@ data = dict(
     b = 1.5,
     c = [0.,0.,0.],
     d = 'red',
-    f = Formex(pattern('121212'))
+    f = Formex('l:121212')
     )
 export(data)
 globals().update(data)

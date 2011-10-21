@@ -43,7 +43,7 @@ if not res:
 
 globals().update(res)
 
-C = Formex(pattern('1234'))
+C = Formex('l:1234')
 cell = connect([C,C,C,C],bias=[0,1,2,3])
 strip = cell.replic2(l,w,1.,1.).translate(1,-0.5*w)
 TA = draw(strip,color='orange',bkcolor='red')

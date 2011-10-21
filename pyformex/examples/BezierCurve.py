@@ -54,7 +54,9 @@ s = res['pattern']
 if s == 'custom':
     s = res['custom']
 
-C = Formex(pattern(s)).toCurve()
+if not s.startswith('l:'):
+    s = 'l:' + s
+C = Formex(s).toCurve()
 
 clear()
 linewidth(2)

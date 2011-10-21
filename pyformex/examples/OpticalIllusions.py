@@ -207,7 +207,7 @@ def AlignedLines():
     """
     resetview()
     a = 60.
-    lines = Formex(pattern('1')).scale([20,1,0]).rotate(a).translate([-20.*cos(a*pi/180.),0,0]).replic(32,1)
+    lines = Formex('l:1').scale([20,1,0]).rotate(a).translate([-20.*cos(a*pi/180.),0,0]).replic(32,1)
     lines = lines.cutWithPlane([-1,0,0],[1,0,0],side='+').cutWithPlane([22,0,0],[1,0,0],side='-')
     mask = Formex('m:1234').scale([1,20.*sin(a*pi/180.),1]).replic(11,2)
     mask.setProp(6)
@@ -331,7 +331,7 @@ def CirclesAndLines():
     resetview()
     n,m,nc = 5,5,8
     size = nc*sqrt(2)
-    lines = Formex(pattern('1234')).translate([-0.5,-0.5,0]).rotate(45).scale(size)
+    lines = Formex('l:1234').translate([-0.5,-0.5,0]).rotate(45).scale(size)
     c = circle(a1=5)
     C = c
     for i in range(2,nc+1): C += c.scale(i)

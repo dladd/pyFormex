@@ -35,7 +35,7 @@ n = 6      # number of modules in one sector
 r = 36.    # radius of the dome
 
 # Topology for 1 sector
-T = Formex(pattern("164"),3).replic2(n,n,1,1,0,1,0,-1)
+T = Formex('l:164',3).replic2(n,n,1,1,0,1,0,-1)
 
 
 # 4 sectors
@@ -78,7 +78,7 @@ draw(dome3)
 # circulize1
 m = 6
 angle = 360./m
-T = Formex(pattern("127"),3)
+T = Formex('l:127',3)
 D = T.replic2(n,n,1,1,0,1,1,-1)
 D = D.scale(u).circulize1()
 D = D.mapd(2,lambda d:sqrt(r**2-d**2),[0,0,0],[0,1])

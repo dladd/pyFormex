@@ -32,7 +32,7 @@ techniques = ['color']
 m = 36 # number of cells along torus big circle
 n = 36 # number of cells along torus small circle
 message("Create a triangle with three colored members")
-F = Formex(pattern("164"),[1,2,3])
+F = Formex('l:164',[1,2,3])
 clear();draw(F);pause()
 message("Replicate it into a rectangular pattern")
 F = F.replic2(m,n,1,1)

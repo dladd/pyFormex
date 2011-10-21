@@ -44,7 +44,7 @@ class AnalogClock(object):
         """Create an analog clock."""
         self.linewidth = lw
         self.circle = simple.circle(a1=2.,a2=2.)
-        radius = Formex(pattern('2'))
+        radius = Formex('l:2')
         self.mainmark = radius.divide([mm,1.0])
         self.hourmark = radius.divide([hm,1.0])
         self.mainhand = radius.divide([0.0,mh])

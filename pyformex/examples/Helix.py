@@ -36,7 +36,7 @@ n = 10 # number of cells along circular cross section
 reset()
 setDrawOptions({'clear':True})
 bgcolor(white)
-F = Formex(pattern("164"),[1,2,3]); draw(F)
+F = Formex('l:164',[1,2,3]); draw(F)
 F = F.replic(m,1.,0); draw(F)
 F = F.replic(n,1.,1); draw(F)
 F = F.translate(2,1.); draw(F,view='iso')

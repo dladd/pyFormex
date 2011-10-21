@@ -37,8 +37,8 @@ e1 = 30 # elevation of the major arcs
 e2 = 5  # elevation of the minor arcs
 
 # Create a grid of beam elements
-a1 = Formex(pattern('2')).replic2(m+1,n,1,1,0,1) + \
-     Formex(pattern('1')).replic2(m,n+1,1,1,0,1)
+a1 = Formex('l:2').replic2(m+1,n,1,1,0,1) + \
+     Formex('l:1').replic2(m,n+1,1,1,0,1)
 draw(a1,'front')
 p = array(a1.center())
 p[2] = e1

@@ -45,11 +45,11 @@ if not res:
 globals().update(res)
 
 # Diagonals
-d = Formex(pattern("5"),1).rosette(4,90).translate([1,1,0]).replic2(m,n,2,2)
+d = Formex('l:5',1).rosette(4,90).translate([1,1,0]).replic2(m,n,2,2)
 # Longitudinals
-h = Formex(pattern("1"),3).replic2(2*m,2*n+1,1,1)
+h = Formex('l:1',3).replic2(2*m,2*n+1,1,1)
 # End bars
-e = Formex(pattern("2"),0).replic2(2,2*n,2*m,1)
+e = Formex('l:2',0).replic2(2,2*n,2*m,1)
 # Create barrel
 barrel = (d+h+e).rotate(90,1).translate(0,r).scale([1.,a/(2*n),l/(2*m)]).cylindrical()
 

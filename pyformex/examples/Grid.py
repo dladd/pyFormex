@@ -42,10 +42,10 @@ def base(type,m,n=None):
     """
     n = n or m
     if type == 'triline':
-        return Formex(pattern('164')).replic2(m,n,1,1,0,1,0,-1)
+        return Formex('l:164').replic2(m,n,1,1,0,1,0,-1)
     elif type == 'quadline':
-        return Formex(pattern('2')).replic2(m+1,n,1,1) + \
-               Formex(pattern('1')).replic2(m,n+1,1,1)
+        return Formex('l:2').replic2(m+1,n,1,1) + \
+               Formex('l:1').replic2(m,n+1,1,1)
     elif type == 'tri':
         return Formex('m:12-34').replic2(m,n)
     elif type == 'quad':

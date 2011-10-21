@@ -87,7 +87,7 @@ def drawNurbs(points,pointtype,degree,strategy,closed,blended,weighted=False,Cle
     if Clear:
         clear()
 
-    C = Formex(pattern(points)).toCurve()
+    C = Formex(points)
     X = C.coords
     draw(C)
     draw(X,marksize=10)

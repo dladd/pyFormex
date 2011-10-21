@@ -42,7 +42,7 @@ marks.TextMark.bbox = tmbbox
 
 def drawAxis(len,dir,text):
     """Draw an axis of given length and direction annotated with text."""
-    F = Formex(pattern('1')).scale(len).rotate(dir)
+    F = Formex('l:1').scale(len).rotate(dir)
     #T = F[0][1].scale(1.1)
     draw(F,linewidth=2.0)
     drawText3D(F[0][1]+(2.,-0.5,0.),text,size=18)
@@ -51,7 +51,7 @@ def drawAxis(len,dir,text):
 def drawFrame(P):
     """Draw a dashed frame at position P."""
     d,e = (2,3) # dash length and step
-    h = Formex(pattern('1')).scale(d)
+    h = Formex('l:1').scale(d)
     v = h.rotate(-90).replic(4,-e,1)
     h = h.replic(6,e,0)
     frame = (h + v).trl(P)

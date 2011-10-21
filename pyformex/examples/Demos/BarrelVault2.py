@@ -56,14 +56,14 @@ da = da.replic(n,2,1) # replicate in y-direction
 draw(da)
 
 # Longitudinals
-h = Formex(pattern("1"),3) # same as  Formex([[[0.,0.,0.],[1.,0.,0.]]],3)
+h = Formex('l:1',3) # same as  Formex([[[0.,0.,0.],[1.,0.,0.]]],3)
 draw(h)
 
 ha = h.replic2(2*m,2*n+1,1,1) # replicate in x- and y-direction
 draw(ha)
 
 # End bars
-e = Formex(pattern("2"),0) # a unit vertical line
+e = Formex('l:2',0) # a unit vertical line
 draw(e)
 
 ea = e.replic2(2,2*n,2*m,1) # verticals only at the ends!

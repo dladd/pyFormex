@@ -31,20 +31,19 @@ contents.
 
 from formex import *
 
-# A collection of simple line element shapes, to be constructed by passing
-# the string to the formex.lpattern() function.
-# The shape() function below returns the corresponding Formex.
+# A collection of Formex string input patterns to construct some simple
+# geometrical shapes
 Pattern = {
-    'line'   : '1',
-    'angle'  : '1+2',
-    'square' : '1234',
-    'plus'   : '1+2+3+4',
-    'cross'  : '5+6+7+8',
-    'diamond' : '/45678',
-    'rtriangle' : '164',
-    'cube'   : '1234I/aI/bI/cI/41234',
-    'star'   : '1+2+3+4+5+6+7+8',
-    'star3d' : '1+2+3+4+5+6+7+8+A+B+C+D+E+F+G+H+a+b+c+d+e+f+g+h'
+    'line'      : 'l:1',
+    'angle'     : 'l:1+2',
+    'square'    : 'l:1234',
+    'plus'      : 'l:1+2+3+4',
+    'cross'     : 'l:5+6+7+8',
+    'diamond'   : 'l:/45678',
+    'rtriangle' : 'l:164',
+    'cube'      : 'l:1234I/aI/bI/cI/41234',
+    'star'      : 'l:1+2+3+4+5+6+7+8',
+    'star3d'    : 'l:1+2+3+4+5+6+7+8+A+B+C+D+E+F+G+H+a+b+c+d+e+f+g+h'
     }
 
 def shape(name):
@@ -57,7 +56,7 @@ def shape(name):
     'star', 'star3d'.
     See the Pattern example.
     """
-    return Formex(lpattern(Pattern[name]))
+    return Formex(Pattern[name])
 
     
 def regularGrid(x0,x1,nx):
@@ -254,7 +253,7 @@ def sphere2(nx,ny,r=1,bot=-90,top=90):
     The sphere caps can be cut off by specifying top and bottom latitude
     angles (measured in degrees from 0 at north pole to 180 at south pole.
     """
-    base = Formex(lpattern("543"),[1,2,3])    # single cell
+    base = Formex('l:543',[1,2,3])           # single cell
     d = base.select([0]).replic2(nx,ny,1,1)   # all diagonals
     m = base.select([1]).replic2(nx,ny,1,1)   # all meridionals
     h = base.select([2]).replic2(nx,ny+1,1,1) # all horizontals

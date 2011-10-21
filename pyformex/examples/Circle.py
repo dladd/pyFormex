@@ -50,7 +50,7 @@ for i in [3,4,5,6,8,12,20,60,180]:
 clear()
 n = 40
 h = 0.5
-line = Formex(pattern('1'*n)).scale(2./n).translate([-1.,0.,0.])
+line = Formex('l:'+'1'*n).scale(2./n).translate([-1.,0.,0.])
 curve = line.bump(1,[0.,h,0.],lambda x: 1.-x**2)
 curve.setProp(1)
 draw(line)

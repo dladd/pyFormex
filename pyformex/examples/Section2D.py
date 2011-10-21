@@ -55,7 +55,7 @@ def circle_example():
 
 def close_loop_example():
     # one more example, originally not a closed loop curve
-    F = Formex(pattern('11')).replic(2,1,1) + Formex(pattern('2')).replic(2,2,0)
+    F = Formex('l:11').replic(2,1,1) + Formex('l:2').replic(2,2,0)
     M = F.toMesh()
     draw(M,color='green')
     drawNumbers(M,color=red)

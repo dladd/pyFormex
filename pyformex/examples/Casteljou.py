@@ -68,7 +68,9 @@ if not res:
 
 globals().update(res)
 
-C = Formex(pattern(pat)).toCurve()
+if not pat.startswith('l:'):
+    pat = 'l:' + pat
+C = Formex(pat).toCurve()
 
 clear()
 linewidth(2)

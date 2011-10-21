@@ -74,9 +74,9 @@ class DoubleHelixStent:
         ny = int(round(nx*L/p))  # The actual length may differ a bit from L
         # a single bumped strut, oriented along the x-axis
         bump_z=lambda x: 1.-(x/nb)**2
-        A=Formex(pattern('1'),3)
+        A=Formex('l:1',3)
         pf.message("\nThis Demo is intended for educational purposes by rewriting the WireStent.py \n example and adding lots of drawing instructions and comments. More details \n regarding the used definitions can be found in the Pyformex reference manual.")
-        pf.message("\nStep 1: Create a Formex: a line of length 1 (with property 3) oriented along the X-axis\n               A = Formex(pattern('1'),3)")
+        pf.message("\nStep 1: Create a Formex: a line of length 1 (with property 3) oriented along the X-axis\n               A = Formex('l:1',3)")
         draw(A,view='bottom')
         pause()
         B=Formex(A.replic(nb,1.0),1)

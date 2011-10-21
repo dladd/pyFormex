@@ -44,7 +44,7 @@ if __name__ == "draw":
     setDrawOptions({'bbox':None})
     for n,p in simple.Pattern.items():
         message("%s = %s" % (n,p))
-        FB = draw(Formex(pattern(p)),bbox=None,color='red')
+        FB = draw(Formex(p),bbox=None,color='red')
         if FA:
             undraw(FA)
         FA = FB

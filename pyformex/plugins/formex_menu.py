@@ -139,7 +139,7 @@ def removeBbox():
 
 def unitAxes():
     """Create a set of three axes."""
-    Hx = Formex(pattern('1'),5).translate([-0.5,0.0,0.0])
+    Hx = Formex('l:1',5).translate([-0.5,0.0,0.0])
     Hy = Hx.rotate(90)
     Hz = Hx.rotate(-90,1)
     Hx.setProp(4)

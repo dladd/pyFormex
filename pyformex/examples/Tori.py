@@ -36,7 +36,7 @@ def torus(m,n,surface=True):
     if surface:
         C = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],[1,3])
     else:
-        C = Formex(pattern("164"),[1,2,3])
+        C = Formex('l:164',[1,2,3])
     F = C.replic2(m,n,1,1)
     G = F.translate(2,1).cylindrical([2,1,0],[1.,360./n,1.])
     H = G.translate(0,5).cylindrical([0,2,1],[1.,360./m,1.])

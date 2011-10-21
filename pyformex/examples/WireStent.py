@@ -69,7 +69,7 @@ class DoubleHelixStent:
         ny = int(round(nx*L/p))  # The actual length may differ a bit from L
         # a single bumped strut, oriented along the x-axis
         bump_z=lambda x: 1.-(x/nb)**2
-        base = Formex(pattern('1')).replic(nb,1.0).bump1(2,[0.,0.,dz],bump_z,0)
+        base = Formex('l:1').replic(nb,1.0).bump1(2,[0.,0.,dz],bump_z,0)
         # scale back to size 1.
         base = base.scale([1./nb,1./nb,1.])
         # NE and SE directed struts
