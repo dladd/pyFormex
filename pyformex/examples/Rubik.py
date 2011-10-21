@@ -82,9 +82,9 @@ from numpy.random import rand
 # General definitions
 def createCube(n=3):
     tol = 0.005
-    front = Formex(mpattern('123')).replic2(n,n).translate([-n/2.,-n/2.,-n/2.])
+    front = Formex('m:123').replic2(n,n).translate([-n/2.,-n/2.,-n/2.])
     sides = front+front.translate(2,n)
-    darkPosTol = Formex(mpattern('123')).replic2(n,n).translate([-n/2.,-n/2.,0.]).scale(1.-5.*tol/n).translate(2, -n/2.+1+tol)
+    darkPosTol = Formex('m:123').replic2(n,n).translate([-n/2.,-n/2.,0.]).scale(1.-5.*tol/n).translate(2, -n/2.+1+tol)
     darkNegTol = darkPosTol.translate(2, -2*tol)
     dark = darkPosTol.replic(n-1, 1, dir=2) + darkNegTol.replic(n-1, 1, dir=2)
     cube = sides + sides.rotate(90,1) + sides.rotate(90,0) + dark + dark.rotate(90, 0) + dark.rotate(90, 1)

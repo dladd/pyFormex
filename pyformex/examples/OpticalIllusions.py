@@ -49,7 +49,7 @@ def ParallelLines():
     resetview([0.8,0.8,0.8])
     lines = Formex([[[0,0,0],[14,0,0]]]).replic(13,1,dir=1)
     draw(lines,color=[0.8,0.8,0.8],linewidth=1.0)
-    F = Formex(mpattern('1234')).replic(13,1)
+    F = Formex('m:1234').replic(13,1)
     F.setProp([0,7])
     F += F.translate([0.2,1,0]) + F.translate([0.4,2,0]) + F.translate([0.2,3,0])
     F = F.replic(3,4,dir=1)
@@ -100,7 +100,7 @@ def SquaresAndCircles():
     """
     resetview([0.6,0.6,0.6])
     B,H = 16,16
-    F = Formex(mpattern('1234')).replic2(B,H,1.2,1.2)
+    F = Formex('m:1234').replic2(B,H,1.2,1.2)
     R = 0.2/sqrt(2.)
     C = circle(a1=20).scale(R).points()
     O = [0,0,0]
@@ -120,7 +120,7 @@ def ShadesOfGrey():
     resetview([0.8,0.8,0.8])
     sc = 2
     box = [[-2,0,-2],[2,8,2]]
-    back = Formex(mpattern('1234')).scale([8,8,1])
+    back = Formex('m:1234').scale([8,8,1])
     back += back.translate([-8,0,0])
     back.setProp([0,7])
     C = circle(a1=11.25).rotate(-90,2).points()
@@ -160,9 +160,9 @@ def RunningInCircles():
     centre.setProp(1)
     draw(centre,bbox=box)
     draw(F,bbox=box)
-    b1 = Formex(mpattern('1234')).scale([1.5,0.8,0]).translate([0,8.5,0.1])
+    b1 = Formex('m:1234').scale([1.5,0.8,0]).translate([0,8.5,0.1])
     b1.setProp(3)
-    b2 = Formex(mpattern('1234')).scale([1.5,0.8,0]).translate([0,7,0.1])
+    b2 = Formex('m:1234').scale([1.5,0.8,0]).translate([0,7,0.1])
     b2.setProp(6)
     b = b1+b2
     col = [random.rand(3)/3,[1,1,1]-random.rand(3)/8]
@@ -186,7 +186,7 @@ def HowManyColors():
     resetview()
     magenta,orange,cyan = array([1.,0.,1.]),array([1.,0.6,0.]),array([0.,1.,0.6])
     b,h,B,H = 10,0.5,11,99
-    F = Formex(mpattern('1234')).scale([b,h,1]).replic2(B,H,b,h)
+    F = Formex('m:1234').scale([b,h,1]).replic2(B,H,b,h)
     col = resize(magenta,(H,B,3))
     for i in range(H):
         for j in range(B):
@@ -209,7 +209,7 @@ def AlignedLines():
     a = 60.
     lines = Formex(pattern('1')).scale([20,1,0]).rotate(a).translate([-20.*cos(a*pi/180.),0,0]).replic(32,1)
     lines = lines.cutWithPlane([-1,0,0],[1,0,0],side='+').cutWithPlane([22,0,0],[1,0,0],side='-')
-    mask = Formex(mpattern('1234')).scale([1,20.*sin(a*pi/180.),1]).replic(11,2)
+    mask = Formex('m:1234').scale([1,20.*sin(a*pi/180.),1]).replic(11,2)
     mask.setProp(6)
     savedelay = pf.GUI.drawwait
     draw(mask,color=random.rand(3))
@@ -285,7 +285,7 @@ def FlickerInducedBlindness():
     points = Formex([[0,-5,0]]).rosette(n,360./n)
     points.setProp(6)
     draw(points,color=[0.2,0.5,0.3],marksize=4)
-    F1 = Formex(mpattern('1234')).scale([1,2,1]).translate([d,-6,0])
+    F1 = Formex('m:1234').scale([1,2,1]).translate([d,-6,0])
     F2 = F1.translate([-1-2*d,0,0])
     F1 = F1.rosette(n,360./n)
     F2 = F2.rosette(n,360./n)
@@ -313,7 +313,7 @@ def SineWave():
     if not res: return
     shift,per,amp = res['Spacing between lines'],res['Periods'],res['Amplitude']
     n = int(2*pi/shift*per)
-    F = Formex(mpattern('2')).replic(n,shift)
+    F = Formex('m:2').replic(n,shift)
     for i in F:
         i[0,1] = amp*sin(i[0,0])
         i[1,1] = i[0,1] + 1
@@ -382,10 +382,10 @@ def Cussion():
     b,h = 17,17
     if b%2==0: b+=1
     if h%2==0: h+=1
-    chess = Formex(mpattern('1234')).replic2(b,h,1,1).translate([-b/2+0.5,-h/2+0.5,0])
+    chess = Formex('m:1234').replic2(b,h,1,1).translate([-b/2+0.5,-h/2+0.5,0])
     col=[random.rand(3),random.rand(3)]
-    sq1 = Formex(mpattern('1234')).scale([0.25,0.25,1]).translate([-0.45,0.2,0])
-    sq2 = Formex(mpattern('1234')).scale([0.25,0.25,1]).translate([0.2,-0.45,0])
+    sq1 = Formex('m:1234').scale([0.25,0.25,1]).translate([-0.45,0.2,0])
+    sq2 = Formex('m:1234').scale([0.25,0.25,1]).translate([0.2,-0.45,0])
     F = sq1.translate([1,0,0]).replic(int(b/2)-1,1)+sq2.translate([0,1,0]).replic(int(h/2)-1,1,dir=1)
     sq = sq1+sq2
     for i in range(int(b/2)):

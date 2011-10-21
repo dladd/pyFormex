@@ -64,7 +64,7 @@ def bbox(objects):
     Example:
     
       >>> from formex import *
-      >>> bbox([Coords([-1.,1.,0.]),Formex(pattern('5'))])
+      >>> bbox([Coords([-1.,1.,0.]),Formex(lpattern('5'))])
       Coords([[-1.,  0.,  0.],
              [ 1.,  1.,  0.]], dtype=float32)
       

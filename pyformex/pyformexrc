@@ -141,6 +141,7 @@ linewidth = 1.0             # width of lines
 linestipple = (0,1)         # line stipple (factor,pattern)
 marksize = 0.4              # size of 3D marks
 marktype = 'sphere'         # type of 3D mark
+rendermode = 'wireframe'
 
 
 [mark]

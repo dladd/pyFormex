@@ -141,7 +141,7 @@ globals().update(res)
 nx,ny = px*kx,py*ky # pixels
 print 'The image is reconstructed with %d x %d pixels'%(nx, ny)
 
-F = Formex(mpattern('123')).replic2(nx,ny).centered()
+F = Formex('m:123').replic2(nx,ny).centered()
 if image is None:
     print "Loading image"
     wpic, hpic=loadImage(filename)

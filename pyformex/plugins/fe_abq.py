@@ -2092,7 +2092,7 @@ if __name__ == "script" or __name__ == "draw":
     print("See the FeAbq example for a comprehensive example.")
    
     # Create the geometry (4 quads)
-    F = Formex(mpattern('123')).replic2(2,2)
+    F = Formex('m:123').replic2(2,2)
 
     # Create Finite Element model
     nodes,elems = F.feModel()

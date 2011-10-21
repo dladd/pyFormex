@@ -665,12 +665,25 @@ Quad6.conversions = {
 
 ##########################################################
 ############ Extrusions ##################################
+#
+# Extrusion database
+#
+# For each element, extruded is a dictionary with
+#
+#    key = degree of extrusion (1 or 2)
+#  value = tuple (Target element type, Node reordering)
+# If no Node reordering is specified, the nodes of the translated entity are jus append to
+# those of the original entity.
+#
+# NEED TO CHECK THIS !!!!:
+# For degree 2, the default order is:  first plane, intermediate plane, last plane.
 
 Point.extruded = { 1: (Line2, []),
                    2: (Line3, [0,2,1]) }
 Line2.extruded = { 1: (Quad4, [0,1,3,2] ) }
 Line3.extruded = { 1: (Quad6, [0,2,5,3,1,4]),
                    2: (Quad9, [0,1,7,6,2,4,8,3,5]), }
+Tri3.extruded = { 1: (Wedge6, [] ) }
 Quad4.extruded = { 1: (Hex8, [] ) }
 Quad8.extruded = { 1: (Hex16, [] ) }
 # BV: If Quad9 would be numbered consecutively, extrusion would be as easy as

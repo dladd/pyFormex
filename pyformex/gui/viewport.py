@@ -288,6 +288,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setCursorShape('default')
         self.button = None
         self.mod = NONE
+        self.dynamouse = True  # dynamic mouse action works on mouse move
+        self.dynamic = None    # what action on mouse move
         self.mousefnc = {}
         self.mousefncsaved = {}
         for mod in _modifiers:

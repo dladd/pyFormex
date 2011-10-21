@@ -60,7 +60,7 @@ if not res:
 
 # Add the returned data to the global variables
 globals().update(res)
-F = Formex(mpattern("12-34"),[0,1]).replic2(m,n,1,1)
+F = Formex('m:12-34',[0,1]).replic2(m,n,1,1)
 if f0:
     F = addFlares(F)
 

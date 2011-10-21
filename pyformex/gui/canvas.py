@@ -43,7 +43,6 @@ from mydict import Dict
 def gl_pickbuffer():
     "Return a list of the 2nd numbers in the openGL pick buffer."
     buf = GL.glRenderMode(GL.GL_RENDER)
-    #pf.debugt("translate getpickbuf")
     return asarray([ r[2] for r in buf ])
 
 
@@ -188,100 +187,14 @@ class ActorList(list):
             self.remove(actor)
 
     def redraw(self):
-        """Redraw (some) actors in the scene.
+        """Redraw all actors in the list.
 
         This redraws the specified actors (recreating their display list).
-        This should e.g. be used after changing an actor's properties.
+        This could e.g. be used after changing an actor's properties.
         """
         for actor in self:
             actor.redraw()
 
-
-
-##################################################################
-#
-#  The Canvas Settings
-#
-
-class CanvasSettings(Dict):
-    """A collection of settings for an OpenGL Canvas.
-
-    The canvas settings are a collection of settings and default values
-    affecting the rendering in an individual viewport. Currently the
-    following values are defined:
-
-    - bgcolor: the viewport background color
-    - bgcolor2: None for a single color background, bottom color for a
-      graded background (the top color then being bgcolor)
-    - fgcolor: the default drawing color
-    - bkcolor: the default backface color
-    - slcolor: the highlight color
-    - colormap: the default color map to be used if color is an index
-    - bklormap: the default color map to be used if bkcolor is an index
-
-    Any of these values can be set in the constructor using a keyword argument.
-    All items that are not set, will get their value from the configuration
-    file(s).
-    """
-
-    def __init__(self,**kargs):
-        """Create a new set of CanvasSettings, possibly changing defaults."""
-        Dict.__init__(self)
-        self.reset(kargs)
-
-    def reset(self,d):
-        """Reset to defaults.
-
-        If a dict is specified, these settings will override defaults.
-        """
-        #print "RESETTING %s" % d
-        self.update(pf.refcfg['canvas'])
-        self.update(pf.prefcfg['canvas'])
-        self.update(pf.cfg['canvas'])
-        if dict:
-            self.update(d)
-
-    def update(self,d,strict=True):
-        """Update current values with the specified settings
-
-        Returns the sanitized update values.
-        """
-        ok = self.checkDict(d,strict)
-        #print "UPDATING %s" % ok
-        Dict.update(self,ok)
-        ## THIS SHOULD BE DONE WHILE SETTING THE CFG !!
-        ## if (self.bgcolor2 == self.bgcolor).all():
-        ##     self.bgcolor2 = None
-
-    @classmethod
-    def checkDict(clas,dict,strict=True):
-        """Transform a dict to acceptable settings."""
-        ok = {}
-        for k,v in dict.items():
-            if k in [ 'bgcolor', 'bgcolor2', 'fgcolor', 'bkcolor', 'slcolor']:
-                if v is not None:
-                    v = saneColor(v)
-            elif k in ['colormap','bkcolormap']:
-                if v is not None:
-                    v =  map(saneColor,v)
-            elif k in ['linewidth', 'pointsize', 'marksize']:
-                v = float(v)
-            elif k == 'linestipple':
-                v = map(int,v)
-            elif k == 'transparency':
-                v = max(min(float(v),1.0),0.0)
-            elif k == 'marktype':
-                pass
-            else:
-                if strict:
-                    raise ValueError,"Invalid key for CanvasSettings: %s" % k
-                else:
-                    continue
-            ok[k] = v
-        return ok
-    
-    def __str__(self):
-        return utils.formatDict(self)
 
 
 ############### OpenGL Lighting #################################
@@ -412,15 +325,144 @@ class LightProfile(object):
 
 ##################################################################
 #
+#  The Canvas Settings
+#
+
+class CanvasSettings(Dict):
+    """A collection of settings for an OpenGL Canvas.
+
+    The canvas settings are a collection of settings and default values
+    affecting the rendering in an individual viewport. There are two type of settings:
+    
+    - mode settings are set during the initialization of the canvas and can/should not be
+      changed during the drawing of actors and decorations;
+    - default settings can be used as default values but may be changed during the drawing
+      of actors/decorations: they are reset before each individual draw instruction.
+      
+    Currently the following mode settings are defined:
+    
+    - bgcolor: the viewport background color
+    - bgcolor2: None for a single color background, bottom color for a
+      graded background (the top color then being bgcolor)
+    - slcolor: the highlight color
+    - rendermode: the rendering mode
+    - shading: True is smooth, False is flat
+    - lighting: True or False
+
+    The list of default settings includes:
+
+    - fgcolor: the default drawing color
+    - bkcolor: the default backface color
+    - colormap: the default color map to be used if color is an index
+    - bklormap: the default color map to be used if bkcolor is an index
+    - pointsize: the default size for drawing points
+    - marksize: the default size for drawing markers
+    - linewidth: the default width for drawing lines
+
+    Any of these values can be set in the constructor using a keyword argument.
+    All items that are not set, will get their value from the configuration
+    file(s).
+    """
+
+    def __init__(self,**kargs):
+        """Create a new set of CanvasSettings."""
+        Dict.__init__(self)
+        self.reset(kargs)
+
+    def reset(self,d={}):
+        """Reset the CanvasSettings to its defaults.
+
+        The default values are taken from the configuration files.
+        An optional dictionary may be specified to override (some of) these defaults.
+        """
+        self.update(pf.refcfg['canvas'])
+        self.update(pf.prefcfg['canvas'])
+        self.update(pf.cfg['canvas'])
+        if d:
+            self.update(d)
+
+    def update(self,d,strict=True):
+        """Update current values with the specified settings
+
+        Returns the sanitized update values.
+        """
+        ok = self.checkDict(d,strict)
+        #print "UPDATING %s" % ok
+        Dict.update(self,ok)
+        ## THIS SHOULD BE DONE WHILE SETTING THE CFG !!
+        ## if (self.bgcolor2 == self.bgcolor).all():
+        ##     self.bgcolor2 = None
+
+    @classmethod
+    def checkDict(clas,dict,strict=True):
+        """Transform a dict to acceptable settings."""
+        ok = {}
+        for k,v in dict.items():
+            try:
+                if k in [ 'bgcolor', 'bgcolor2', 'fgcolor', 'bkcolor', 'slcolor']:
+                    if v is not None:
+                        v = saneColor(v)
+                elif k in ['colormap','bkcolormap']:
+                    if v is not None:
+                        v =  map(saneColor,v)
+                elif k in ['smoothshading', 'lighting', 'culling']:
+                    v = bool(v)
+                elif k in ['linewidth', 'pointsize', 'marksize']:
+                    v = float(v)
+                elif k == 'linestipple':
+                    v = map(int,v)
+                elif k == 'transparency':
+                    v = max(min(float(v),1.0),0.0)
+                elif k == 'rendermode':
+                    if not v in Canvas.rendermodes:
+                        raise
+                elif k == 'marktype':
+                    pass
+                else:
+                    raise
+                ok[k] = v
+            except:
+                if strict:
+                    raise ValueError,"Invalid key/value for CanvasSettings: %s = %s" % (k,v)
+        return ok
+    
+    def __str__(self):
+        return utils.formatDict(self)
+
+
+    def setMode(self):
+        """Activate the mode canvas settings in the GL machine."""
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        GL.glClearColor(*colors.RGBA(self.bgcolor))
+ 
+
+    def setDefault(self):
+        """Activate the default canvas settings in the GL machine."""
+        GL.glColor3fv(self.fgcolor)
+        GL.glLineWidth(self.linewidth)
+        glLineStipple(*self.linestipple)
+        GL.glPointSize(self.pointsize)
+
+
+##################################################################
+#
 #  The Canvas
 #
 class Canvas(object):
-    """A canvas for OpenGL rendering."""
+    """A canvas for OpenGL rendering.
+
+    The Canvas is a class holding all global data of an OpenGL scene rendering. This includes
+    colors, line types, rendering mode. It also keeps lists of all the actors and decorations
+    in the scene. It always has a Camera object holding import viewing parameters. And finally
+    it stores the lighting information.
+    
+    It does not however contain the viewport size and position.
+    """
 
     rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
                    'smooth_avg']
 
-    def __init__(self):
+    def __init__(self,settings={}):
         """Initialize an empty canvas with default settings."""
         self.actors = ActorList(self)
         self.highlights = ActorList(self)
@@ -431,7 +473,7 @@ class Canvas(object):
         self.bbox = None
         self.resetLighting()
         self.setBbox()
-        self.settings = CanvasSettings()
+        self.settings = CanvasSettings(**settings)
         self.mode2D = False
         self.rendermode = pf.cfg['render/mode']
         self.lighting = pf.cfg['render/lighting']
@@ -440,8 +482,6 @@ class Canvas(object):
         self.polygonfill = False
         self.avgnormals = False
         self.alphablend = False
-        self.dynamouse = True  # dynamic mouse action works on mouse move
-        self.dynamic = None    # what action on mouse move
         self.camera = None
         self.view_angles = camera.view_angles
         self.cursor = None
@@ -507,7 +547,6 @@ class Canvas(object):
         """
         if mode not in Canvas.rendermodes:
             raise ValueError,"Invalid render mode %s" % mode
-            #mode = Canvas.rendermodes[0]
         if lighting not in [True,False]:
             lighting = mode.startswith('smooth')
 
@@ -723,21 +762,16 @@ class Canvas(object):
 
     def clear(self):
         """Clear the canvas to the background color."""
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-        GL.glClearColor(*colors.RGBA(self.settings.bgcolor))
+        self.settings.setMode()
         self.setDefaults()
 
 
     def setDefaults(self):
         """Activate the canvas settings in the GL machine."""
-        GL.glColor3fv(self.settings.fgcolor)
-        GL.glLineWidth(self.settings.linewidth)
-        glLineStipple(*self.settings.linestipple)
-        GL.glPointSize(self.settings.pointsize)
-        #if self.rendermode.startswith('smooth'):
-        #    self.resetLighting()
+        self.settings.setDefault()
         self.do_lighting(self.lighting)
         GL.glDepthFunc(GL.GL_LESS)
+
     
     def setSize (self,w,h):
         if h == 0:	# prevent divide by zero 

@@ -64,7 +64,7 @@ left = -right
 print left
 from plugins.curve import *
 clear()
-x = Formex(mpattern('65')).coords.reshape(-1,3)
+x = Formex('m:65').coords.reshape(-1,3)
 C =  BezierSpline(x)
 print C.pointsOn()
 draw(C.pointsOn())

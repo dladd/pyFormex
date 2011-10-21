@@ -32,7 +32,7 @@ techniques = ['extrude']
 """
 clear()
 smooth()
-M = Formex(mpattern('123')).replic2(60,30).toMesh()#.setProp(5)
+M = Formex('m:123').replic2(60,30).toMesh()#.setProp(5)
 draw(M,color=yellow)
 #drawNumbers(M)
 exit()

@@ -1173,8 +1173,6 @@ class Drawable(object):
             self.list = self.create_list(**kargs)
             self.mode = mode
 
-        #print "PREPARED LIST %s %s %s" % (self.list,self.mode,self.extra)
-
     def use_list(self):
         if self.list:
             GL.glCallList(self.list)

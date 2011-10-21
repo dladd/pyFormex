@@ -742,12 +742,7 @@ def drawAxes(*args,**kargs):
     This draws an AxesActor corresponding to the specified Coordinatesystem.
     The arguments are the same as those of the AxesActor constructor.
     """
-    if 'pos' in kargs:
-        import warnings
-        warnings.warn('warn_drawaxes_changed')
-        A = actors.TriadeActor(**kargs)
-    else:
-        A = actors.AxesActor(*args,**kargs)
+    A = actors.AxesActor(*args,**kargs)
     drawActor(A)
     return A
         
@@ -788,7 +783,7 @@ def drawImage(image,nx=-1,ny=-1,pixel='dot'):
     if isinstance(pixel,Formex) and pixel.nelems()==1:
         F = pixel
     elif pixel == 'quad':
-        F = Formex(mpattern('123'))
+        F = Formex('m:123')
     else:
         F = Formex(origin())
     F = F.replic2(nx,ny).centered()

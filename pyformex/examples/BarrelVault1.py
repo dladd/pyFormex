@@ -46,7 +46,7 @@ if not res:
 globals().update(res)
 
 # Grid
-g = Formex(mpattern('123')).replic2(m,n).toMesh().convert(eltype)
+g = Formex('m:123').replic2(m,n).toMesh().convert(eltype)
 
 # Create barrel
 barrel = g.rotate(90,1).translate(0,r).scale([1.,a/n,l/m]).cylindrical()

@@ -32,9 +32,17 @@ syntax.
 from coords import *
 from utils import deprecation,functionBecameMethod
 from geometry import Geometry
+import re
 
 
 def pattern(s,connect=True):
+    import warnings
+    warnings.warn("The 'pattern' function will change in the next release! For some time, the old behavior will still be provided by the 'lpattern' function. Please change your code to 'lpattern' now, to avoid future problems.")
+    return lpattern(s,connect)
+
+
+
+def lpattern(s,connect=True):
     """Return a line segment pattern created from a string.
 
     This function creates a list of line segments where all points lie on
@@ -861,7 +869,19 @@ class Formex(Geometry):
             data = data.coords
         else:
             if type(data) == str:
-                data = pattern(data)
+                d = re.compile("(((?P<base>[^:]*):)?(?P<data>.*))").match(data).groupdict()
+                base,data = d['base'],d['data']
+                if base is None or base == 'l':
+                    data = lpattern(data)
+                elif base == 'm':
+                    data = mpattern(data)
+                else:
+                    try:
+                        base = int(base)
+                        raise ValueError,"numeric base not yet implemented"
+                    except:
+                        raise ValueError,"Invalid string data for Formex"
+
             data = asarray(data).astype(Float)
             
             if data.size == 0:   ### MAYBE THIS SHOULD BE CHANGED ?????

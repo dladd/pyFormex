@@ -37,8 +37,8 @@ lights(False)
 
 Rendermode = [ 'smooth','flat' ]
 Lights = [ False, True ]
-Shape = { 'triangle':'16',
-          'quad':'123',
+Shape = { 'triangle':'m:16',
+          'quad':'m:123',
           }
 
 
@@ -47,7 +47,7 @@ color1 = red   # single color
 color2 = array([red,green,blue]) # 3 colors: will be repeated
 
 for shape in Shape.keys():
-    F = Formex(mpattern(Shape[shape])).replic2(8,4)
+    F = Formex(Shape[shape]).replic2(8,4)
     color3 = resize(color2,F.shape()) # full color
     for mode in Rendermode:
         renderMode(mode)

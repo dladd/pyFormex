@@ -250,71 +250,6 @@ class AxesActor(Actor):
             GL.glLineWidth(self.linewidth)
         drawLines(x,e,c)
 
- 
-class TriadeActor(Actor):
-    """An OpenGL actor representing a triade of global axes.
-
-    By default, this draws three unit length axes at the origin,
-    and three colored triangles representing the coordinate planes.
-    The size and position of the axes can be changed.
-
-    colored_axes = False draws black axes.
-    draw_planes = False suppress the drawing of the coordinate planes.
-    """
-
-    def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue],colored_axes=True,draw_planes=True,**kargs):
-        Actor.__init__(self,**kargs)
-        self.color = color
-        self.setPos(pos)
-        self.setSize(size)
-
-    def bbox(self):
-        return self.size * array([[0.,0.,0.],[1.,1.,1.]])
-
-    def setPos(self,pos):
-        pos = Coords(pos)
-        if pos.shape == (3,):
-            self.pos = pos
-        self.delete_list()
-
-    def setSize(self,size):
-        size = float(size)
-        if size > 0.0:
-            self.size = size
-        self.delete_list()
-
-    def drawGL(self,**kargs):
-        """Draw the triade."""
-        # When entering here, the modelview matrix has been set
-        # We should make sure it is unchanged on exit
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPushMatrix()
-        GL.glTranslatef (*self.pos) 
-        GL.glScalef (self.size,self.size,self.size) 
-        # Coord axes of size 1.0
-        GL.glBegin(GL.GL_LINES)
-        pts = Formex(pattern('1')).coords.reshape(-1,3)
-        GL.glColor3f(*black)
-        for i in range(3):
-            if colored_axes:
-                GL.glColor(*self.color[i])
-            for x in pts:
-                GL.glVertex3f(*x)
-            pts = pts.rollAxes(1)
-        GL.glEnd()
-        if draw_planes:
-            # Coord plane triangles of size 0.5
-            GL.glBegin(GL.GL_TRIANGLES)
-            pts = Formex(mpattern('16')).scale(0.5).coords.reshape(-1,3)
-            for i in range(3):
-                pts = pts.rollAxes(1)
-                GL.glColor(*self.color[i])
-                for x in pts:
-                    GL.glVertex3f(*x)
-            GL.glEnd()
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPopMatrix()
-
   
 class GridActor(Actor):
     """Draws a (set of) grid(s) in one of the coordinate planes."""
@@ -570,8 +505,6 @@ class GeomActor(Actor):
                 wire.nolight = True
                 wire.ontop = False # True will make objects transparent for edges
                 wire.list = None
-                # THIS SEEMS TO HAVE SIDE EFFECTS !
-                # IT SHOULD NOT DRAW< JUST CREATE
                 Drawable.prepare_list(wire,mode='wireframe',color=asarray(black))
                 self.wire = wire
 
@@ -593,12 +526,6 @@ class GeomActor(Actor):
             self.list = self.create_list(**kargs)
             self.mode = mode
 
-        ## print self.list
-        ## try:
-        ##     print self.wire
-        ## except:
-        ##     pass
-        ## print self.extra
         self.use_list()
 
 

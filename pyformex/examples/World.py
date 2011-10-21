@@ -57,7 +57,7 @@ color,colormap = image2glcolor(im.scaled(nx,ny))
 part = ask("How shall I show the image?",["Plane","Half Sphere","Full Sphere"])
 
 # Create a 2D grid of nx*ny elements
-F = Formex(mpattern('123')).replic2(nx,ny).centered().translate(2,1.)
+F = Formex('m:123').replic2(nx,ny).centered().translate(2,1.)
 
 #color = [ 'yellow' ]*(nx-2) + ['orange','red','orange']
 

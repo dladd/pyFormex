@@ -362,7 +362,7 @@ if __name__ == "draw":
 
 
     clear()
-    F = Formex(mpattern('123'))
+    F = Formex('m:123')
 
     G = Geometry()
     G.coords = F.coords

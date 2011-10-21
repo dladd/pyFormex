@@ -26,7 +26,7 @@
 
 level = 'beginner'
 topics = ['geometry']
-techniques = ['function','import','mpattern','dialog','viewport']
+techniques = ['function','import','dialog','viewport']
 """
 import simple
 from examples.Cube import cube_tri
@@ -52,7 +52,7 @@ wireframe()
 viewport(0)
 view('front')
 clear()
-rtri = Formex(mpattern('16-32')).scale([1.5,1,0])
+rtri = Formex('m:16-32').scale([1.5,1,0])
 F = rtri + rtri.shear(0,1,-0.5).trl(0,-4.0) + rtri.shear(0,1,0.75).trl(0,3.0)
 draw(F)
 

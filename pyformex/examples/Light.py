@@ -34,11 +34,11 @@ techniques = ['dialog', 'color', 'persistence']
 
 smooth()
 
-Shape = { 'triangle':'16',
-          'quad':'123',
+Shape = { 'triangle':'m:16',
+          'quad':'m:123',
           }
 color2 = array([red,green,blue]) # 3 base colors
-F = Formex(mpattern(Shape['triangle'])).replic2(8,4)
+F = Formex(Shape['triangle']).replic2(8,4)
 color3 = resize(color2,F.shape())
 draw(F,color=color3)
 

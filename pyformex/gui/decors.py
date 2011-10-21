@@ -447,11 +447,13 @@ class LineDrawing(Decoration):
 
 
 # Not really a decoration, though it could be made into one
+# Can this be merged with actors.AxesActor ?
+#
 
 class Triade(Drawable):
     """An OpenGL actor representing a triade of global axes.
     
-    - `pos`: position on the canvas: two charaters, of which first sets
+    - `pos`: position on the canvas: two characters, of which first sets
        horizontal position ('l', 'c' or 'r') and second sets vertical
        position ('b', 'c' or 't').
     - `size`: size in pixels of the zone displaying the triade.
@@ -462,7 +464,7 @@ class Triade(Drawable):
       
     """
 
-    def __init__(self,pos='lb',siz=100,pat='12-34',legend='xyz',color=[red,green,blue,cyan,magenta,yellow],**kargs):
+    def __init__(self,pos='lb',siz=100,pat='m:12-34',legend='xyz',color=[red,green,blue,cyan,magenta,yellow],**kargs):
         Drawable.__init__(self,**kargs)
         self.pos = pos
         self.siz = siz
@@ -474,7 +476,7 @@ class Triade(Drawable):
     def _draw_me(self):
         """Draw the triade components."""
         GL.glBegin(GL.GL_LINES)
-        pts = Formex(pattern('1')).coords.reshape(-1,3)
+        pts = Formex('1').coords.reshape(-1,3)
         GL.glColor3f(*black)
         for i in range(3):
             #GL.glColor(*self.color[i])
@@ -485,7 +487,7 @@ class Triade(Drawable):
         # Coord planes
         if self.pat:
             GL.glBegin(GL.GL_TRIANGLES)
-            pts = Formex(mpattern(self.pat))
+            pts = Formex(self.pat)
             #pts += pts.reverse()
             pts = pts.scale(0.5).coords.reshape(-1,3)
             for i in range(3):

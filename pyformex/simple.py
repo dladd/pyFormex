@@ -32,7 +32,7 @@ contents.
 from formex import *
 
 # A collection of simple line element shapes, to be constructed by passing
-# the string to the formex.pattern() function.
+# the string to the formex.lpattern() function.
 # The shape() function below returns the corresponding Formex.
 Pattern = {
     'line'   : '1',
@@ -57,7 +57,7 @@ def shape(name):
     'star', 'star3d'.
     See the Pattern example.
     """
-    return Formex(pattern(Pattern[name]))
+    return Formex(lpattern(Pattern[name]))
 
     
 def regularGrid(x0,x1,nx):
@@ -141,8 +141,7 @@ def rectangle(nx,ny,b=None,h=None,bias=0.,diag=None):
     if diag == 'x':
         base = Formex([[[0.0,0.0,0.0],[1.0,-1.0,0.0],[1.0,1.0,0.0]]]).rosette(4,90.).translate([-1.0,-1.0,0.0]).scale(0.5)
     else:
-        pat = { 'u': '12-34', 'd': '16-82' }.get(diag,'123')
-        base = Formex(mpattern(pat))
+        base = Formex({ 'u': 'm:12-34', 'd': 'm:16-82' }.get(diag,'m:123'))
     if b is None:
         sx = 1.
     else:
@@ -255,7 +254,7 @@ def sphere2(nx,ny,r=1,bot=-90,top=90):
     The sphere caps can be cut off by specifying top and bottom latitude
     angles (measured in degrees from 0 at north pole to 180 at south pole.
     """
-    base = Formex(pattern("543"),[1,2,3])     # single cell
+    base = Formex(lpattern("543"),[1,2,3])    # single cell
     d = base.select([0]).replic2(nx,ny,1,1)   # all diagonals
     m = base.select([1]).replic2(nx,ny,1,1)   # all meridionals
     h = base.select([2]).replic2(nx,ny+1,1,1) # all horizontals

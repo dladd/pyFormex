@@ -29,8 +29,7 @@ topics = ['geometry','curve','mesh']
 techniques = ['sweep',]
 """
 from plugins import curve
-from gui.widgets import simpleInputItem as I, groupInputItem as G
-
+from odict import ODict
 
 import simple
 import re
@@ -46,44 +45,41 @@ rfuncs = [
 #    'custom',
 ]
 
-
-# get the plane line patterns from simple module
-cross_sections_2d = {}
+# Define a dictionary of planar cross sections
+cross_sections_2d = ODict()
+# select the planar patterns from the simple module
 for cs in simple.Pattern:
     if re.search('[a-zA-Z]',simple.Pattern[cs]) is None:
         cross_sections_2d[cs] = simple.Pattern[cs]
 # add some more patterns
 cross_sections_2d.update({
-    'swastika':'12+23+34+41',
-    'channel' : '1223',
-    'H-beam' : '11/322/311',
-    'sigma' : '16253',
-    'octagon':'15263748',
-    'Z-beam': '353',
+    'swastika':'l:12+23+34+41',
+    'channel' : 'l:1223',
+    'H-beam' : 'l:11/322/311',
+    'sigma' : 'l:16253',
+    'octagon':'l:15263748',
+    'Z-beam': 'l:353',
+    'solid_square': 'm:123',
+    'solid_triangle': 'm:12',
+    'swastika3': 'm:12+23+34+41',
     })
-# define some plane surface patterns
-cross_sections_3d = {
-    'filled_square':'123',
-    'filled_triangle':'12',
-    'swastika3':'12+23+34+41',
-    }
 
 
 input_data = [
-    I('nmod',100,text='Number of cells along spiral'),
-    I('turns',2.5,text='Number of 360 degree turns'),
-    I('rfunc',None,text='Spiral function',choices=rfuncs),
-    I('coeffs',(1.,0.5,0.2),text='Coefficients in the spiral function'),
-    I('spiral3d',0.0,text='Out of plane factor'),
-    I('spread',False,text='Spread points evenly along spiral'),
-    I('nwires',1,text='Number of spirals'),
-    G('sweep',text='Sweep Data',checked=True,items= [
-        I('cross_section','cross','select',text='Shape of cross section',choices=cross_sections_2d.keys()+cross_sections_3d.keys()),
-        I('cross_rotate',0.,text='Cross section rotation angle before sweeping'),
-        I('cross_upvector','2',text='Cross section vector that keeps its orientation'),
-        I('cross_scale',0.,text='Cross section scaling factor'),
+    _I('nmod',100,text='Number of cells along spiral'),
+    _I('turns',2.5,text='Number of 360 degree turns'),
+    _I('rfunc',None,text='Spiral function',choices=rfuncs),
+    _I('coeffs',(1.,0.5,0.2),text='Coefficients in the spiral function'),
+    _I('spiral3d',0.0,text='Out of plane factor'),
+    _I('spread',False,text='Spread points evenly along spiral'),
+    _I('nwires',1,text='Number of spirals'),
+    _G('sweep',text='Sweep Data',checked=True,items= [
+        _I('cross_section','cross','select',text='Shape of cross section',choices=cross_sections_2d.keys()),
+        _I('cross_rotate',0.,text='Cross section rotation angle before sweeping'),
+        _I('cross_upvector','2',text='Cross section vector that keeps its orientation'),
+        _I('cross_scale',0.,text='Cross section scaling factor'),
         ]),
-    I('flyalong',False,text='Fly along the spiral'),
+    _I('flyalong',False,text='Fly along the spiral'),
    ]
 
 
@@ -110,10 +106,7 @@ def drawSpiralCurves(PL,nwires,color1,color2=None):
 
 
 def createCrossSection():
-    if cross_section in cross_sections_2d:
-        CS = Formex(pattern(cross_sections_2d[cross_section]))
-    elif cross_section in cross_sections_3d:
-        CS = Formex(mpattern(cross_sections_3d[cross_section]))
+    CS = Formex(cross_sections_2d[cross_section])
     if cross_rotate :
         CS = CS.rotate(cross_rotate)
     if cross_scale:
