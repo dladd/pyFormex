@@ -41,6 +41,7 @@ from arraytools import *
 from lib import misc
 from pyformex import options
 from utils import deprecated,deprecation
+from plugins import inertia
 
 
 def bbox(objects):
@@ -386,6 +387,21 @@ class Coords(ndarray):
           
         """
         return self.distanceFromPoint(self.center()).max()
+
+
+    # Inertia
+
+    def inertia(self,mass=None):
+        """Return inertia related quantities of the :class:`Coords`.
+        
+        This returns the center of gravity, the principal axes of inertia,
+        the principal moments of inertia and the inertia tensor.
+        """
+        if mass is not None:
+            mass = mass.reshape(self.npoints(),1)
+        ctr,I = inertia.inertia(self.points(),mass)
+        Iprin,Iaxes = inertia.principal(I,sort=True,right_handed=True)
+        return (ctr,Iaxes,Iprin,I)
 
 
     #  Distance

@@ -692,10 +692,7 @@ class TriSurface(Mesh):
         This returns the center of gravity, the principal axes of inertia,
         the principal moments of inertia and the inertia tensor.
         """
-        ctr,I = inertia.inertia(self.centroids(),mass=self.facetArea().reshape(-1,1))
-        Iprin,Iaxes = inertia.principal(I,sort=True,right_handed=True)
-        data = (ctr,Iaxes,Iprin,I)
-        return data
+        return self.centroids().inertia(mass=self.facetArea())
 
 
     def surfaceType(self):
