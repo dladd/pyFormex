@@ -1643,12 +1643,12 @@ class CoordinateSystem(Coords):
 
     def origin(self):
         """Return the origin of the CoordinateSystem."""
-        return self[3]
+        return Coords(self[3])
 
 
     def axes(self):
         """Return the axes of the CoordinateSystem."""
-        return self[:3]-self[3]
+        return Coords(self[:3]-self[3])
 
 
     def actor(self,**kargs):
