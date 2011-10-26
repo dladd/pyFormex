@@ -1181,20 +1181,39 @@ class Coords(ndarray):
         return roll(self, int(n) % 3,axis=-1)
 
 
-    def projectOnPlane(self,P,n):
-        """Project :class:`Coords` on the plane(s) (P,n)
+    def projectOnPlane(self,n=2,P=[0.,0.,0.]):
+        """Project a :class:`Coords` on a plane (or planes).
 
-        P and n define a plane or a set of planes by a point P and the normal
-        n. If a set of planes, there should be exactly ncoords planes.
-        Each of P and n thus can have shape (ncoords,3) or (1,3) or (3,).
+        Parameters:
 
-        Return a Coords with same shape as original, with the base points
-        of the lines through all the points of self, perpendicular to the
-        plane(s) (P,n), i.e. the projection of the points on the plane(s).
+        - `n`: the normal direction to the plane. It can be specified either
+          by a list of three floats, or by a single integer (0, 1 or 2) to
+          use one of the global axes.
+        - `P`: a point on the plane, by default the global origin.
+          If an int, the plane is the coordinate plane perpendicular to the
+
+        ..note: For planes parallel to a coordinate plane, it is far more
+          efficient to specify the normal by an axis number than by a
+          three component vector.
+
+        .. note: This method will also work if any or both of P and n have
+          a shape (ncoords,3), where ncoords is the total number of points
+          in the :class:`Coords`. This allows to project each point on an
+          individual plane.
+        ), or by
+
+        Returns: a :class:`Coords` with same shape as original, with all the
+        points projected on the specified plane(s).
         """
+        if type(n) is int:
+            x = self.copy()
+            x[...,n] = P[n]
+            return x
+        
         n = normalize(Coords(n).reshape(-1,3))
-        s =  - dotpr(n,(self.reshape(-1,3)-P))
-        return self + outer(s,n).reshape(self.shape)
+        x = self.reshape(-1,3)
+        x =  - dotpr(n,(x-P))
+        return self + outer(x,n).reshape(self.shape)
 
 
     def projectOnSphere(self,radius=1.,center=[0.,0.,0.]):

@@ -787,8 +787,8 @@ class TriSurface(Mesh):
         the original will create a closed surface.
         If the surface is already closed, an empty list is returned.
 
-        There are two methods, corresponding with the methods of
-        the surfaceInsideBorder.
+        There are two methods, 'radial' and 'border' corresponding with
+        the methods of the surfaceInsideBorder.
         """
         return [ surfaceInsideBorder(b,method).setProp(i) for i,b in enumerate(self.border()) ]
 
