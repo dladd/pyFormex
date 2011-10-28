@@ -241,6 +241,7 @@ class InputItem(QtGui.QWidget):
                 layout.addStretch()
             layout.addWidget(self.label)
             if 'a' in kargs.get('stretch',''):
+                print 'test'
                 layout.addStretch()
 
         if 'data' in kargs:
@@ -271,7 +272,7 @@ class InputItem(QtGui.QWidget):
         ## except:
         ##     pass
 
-        if 'buttons' in kargs:
+        if 'buttons' in kargs and kargs['buttons']:
             #print kargs
             self.buttons = dialogButtons(self,kargs['buttons'])
             layout.addItem(self.buttons)
@@ -512,13 +513,16 @@ class InputList(InputItem):
     are returned. This option sets single==False.
     """
     
-    def __init__(self,name,default=[],choices=[],sort=False,single=False,check=False,*args,**kargs):
+    def __init__(self,name,default=[],choices=[],sort=False,single=False,check=False,fast_sel=False,*args,**kargs):
         """Create the listwidget."""
         if len(choices) == 0:
             raise ValueError,"List input expected choices!"
         self._choices_ = [ str(s) for s in choices ]
         self.input = MyListWidget()
-        InputItem.__init__(self,name,*args,**kargs)
+        if not fast_sel:
+            InputItem.__init__(self,name,*args,**kargs)
+        else:
+            InputItem.__init__(self,name,buttons=[('Select All',self.setAll),('Deselect All',self.setNone)],*args,**kargs)
         self.input.addItems(self._choices_)
         if sort:
             self.input.sortItems()
@@ -582,6 +586,13 @@ class InputList(InputItem):
         f(val,True)
         f(olist.difference(self._choices_,val),False)
 
+    def setAll(self):
+        """Mark all items as selected/checked."""
+        self.setValue(self._choices_)
+
+    def setNone(self):
+        """Mark all items as not selected/checked."""
+        self.setValue([])
 
     
 class InputCombo(InputItem):
