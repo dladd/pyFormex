@@ -519,10 +519,13 @@ class InputList(InputItem):
             raise ValueError,"List input expected choices!"
         self._choices_ = [ str(s) for s in choices ]
         self.input = MyListWidget()
-        if not fast_sel:
-            InputItem.__init__(self,name,*args,**kargs)
-        else:
-            InputItem.__init__(self,name,buttons=[('Select All',self.setAll),('Deselect All',self.setNone)],*args,**kargs)
+        if fast_sel:
+            but = [('Select All',self.setAll),('Deselect All',self.setNone)]
+            if 'buttons' in kargs and kargs['buttons']:
+                kargs['buttons'].extend(but)
+            else:
+                kargs['buttons'] = but
+        InputItem.__init__(self,name,*args,**kargs)
         self.input.addItems(self._choices_)
         if sort:
             self.input.sortItems()

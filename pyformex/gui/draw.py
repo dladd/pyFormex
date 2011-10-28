@@ -467,7 +467,7 @@ def draw(F,
                               color,colormap,bkcolor,bkcolormap,alpha,
                               mode,linewidth,linestipple,shrink,marksize,
                               wait=nowait,clear=clear,allviews=allviews,
-                              highlight=highlight,nolight=nolight,ontop=ontop))
+                              highlight=highlight,nolight=nolight,ontop=ontop,**kargs))
             if Fi is F[0]:
                 clear = False
                 view = None
@@ -532,7 +532,7 @@ def draw(F,
         F = _shrink(F,shrink)
 
     try:
-        actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop)
+        actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
 
         if actor is None:
             return None
