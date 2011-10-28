@@ -1647,6 +1647,49 @@ class Coords(ndarray):
         return GeomActor(Formex(self.reshape(-1,3)),**kargs)
 
 
+
+class BoundVectors(Coords):
+    """A structured collection of bound vectors in a 3D cartesian space.
+
+    Parameters:
+
+    - `coords`: a (...,2,3) shaped array of bound vectors defined by their
+    initial and endpoints.
+    - `origins` and `vectors`: (...,3) shaped arrays defining the initial points
+    and vectors.
+
+    The default constructs a unit vector along the global x-axis :
+    """
+    def __new__(clas,coords=None,origins=None,vectors=None):
+        """Initialize the BoundVectors."""
+        if coords is None:
+            coords = eye(2,3,-1)
+            if vectors is not None:
+                coords = resize(coords,vectors.shape[:-1]+(2,3))
+                coords[...,1,:] = vectors
+            if origins is not None:
+                coords += origins[...,newaxis,:]
+        elif coords.shape[-2:] != (2,3):
+            raise ValueError,"Expected shape (2,3) for last two array axes."
+        return Coords.__new__(clas,coords)
+
+
+    def origins(self):
+        """Return the initial points of the BoundVectors."""
+        return Coords(self[...,0,:])
+
+
+    def heads(self):
+        """Return the endpoints of the BoundVectors."""
+        return Coords(self[...,1,:])
+
+
+    def vectors(self):
+        """Return the vectors of the BoundVectors."""
+        return Coords(self.heads()-self.origins())
+
+
+
 class CoordinateSystem(Coords):
     """A CoordinateSystem defines a coordinate system in 3D space.
 
