@@ -52,7 +52,7 @@ wireframe()
 viewport(0)
 view('front')
 clear()
-rtri = Formex('m:16-32').scale([1.5,1,0])
+rtri = Formex('3:016932').scale([1.5,1,0])
 F = rtri + rtri.shear(0,1,-0.5).trl(0,-4.0) + rtri.shear(0,1,0.75).trl(0,3.0)
 draw(F)
 

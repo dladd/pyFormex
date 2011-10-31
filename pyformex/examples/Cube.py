@@ -36,7 +36,7 @@ from formex import *
 # This could be obtained from a Mesh conversion
 def cube_tri(color=None):
     """Create a cube with triangles."""
-    back = Formex('m:12-34')
+    back = Formex('3:012934')
     left = back.rotate(-90,1) 
     bot = back.rotate(90,0)
     front = back.translate(2,1)

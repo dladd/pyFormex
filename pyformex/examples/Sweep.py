@@ -59,9 +59,9 @@ cross_sections_2d.update({
     'sigma' : 'l:16253',
     'octagon':'l:15263748',
     'Z-beam': 'l:353',
-    'solid_square': 'm:123',
-    'solid_triangle': 'm:12',
-    'swastika3': 'm:12+23+34+41',
+    'solid_square': '4:0123',
+    'solid_triangle': '3:012',
+    'swastika3': '3:012023034041',
     })
 
 

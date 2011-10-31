@@ -47,9 +47,9 @@ def base(type,m,n=None):
         return Formex('l:2').replic2(m+1,n,1,1) + \
                Formex('l:1').replic2(m,n+1,1,1)
     elif type == 'tri':
-        return Formex('m:12-34').replic2(m,n)
+        return Formex('3:012934').replic2(m,n)
     elif type == 'quad':
-        return Formex('m:123').replic2(m,n)
+        return Formex('4:0123').replic2(m,n)
     else:
         raise ValueError,"Unknown type '%s'" % str(type)
 

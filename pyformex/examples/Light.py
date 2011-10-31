@@ -34,8 +34,8 @@ techniques = ['dialog', 'color', 'persistence']
 
 smooth()
 
-Shape = { 'triangle':'m:16',
-          'quad':'m:123',
+Shape = { 'triangle':'3:016',
+          'quad':'4:0123',
           }
 color2 = array([red,green,blue]) # 3 base colors
 F = Formex(Shape['triangle']).replic2(8,4)

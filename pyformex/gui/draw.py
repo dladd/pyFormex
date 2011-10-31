@@ -783,7 +783,7 @@ def drawImage(image,nx=-1,ny=-1,pixel='dot'):
     if isinstance(pixel,Formex) and pixel.nelems()==1:
         F = pixel
     elif pixel == 'quad':
-        F = Formex('m:123')
+        F = Formex('4:0123')
     else:
         F = Formex(origin())
     F = F.replic2(nx,ny).centered()

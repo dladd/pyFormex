@@ -38,11 +38,11 @@ n=5
 nx=4*n
 ny=2*n
 
-M = Formex('m:123').replic2(nx,ny).cselect(arange(4*nx,int(7.5*nx))).toMesh().setProp(1)
+M = Formex('4:0123').replic2(nx,ny).cselect(arange(4*nx,int(7.5*nx))).toMesh().setProp(1)
 draw(M)
 drawNumbers(M.coords,color=red)
 
-M1 = Formex('m:12').replic2(int(0.6*nx),int(0.45*ny),bias=1,taper=-2).toMesh().scale(2).trl(1,1.).setProp(2)
+M1 = Formex('3:012').replic2(int(0.6*nx),int(0.45*ny),bias=1,taper=-2).toMesh().scale(2).trl(1,1.).setProp(2)
 draw(M1)
 zoomAll()
 drawNumbers(M1.coords,color=yellow,trl=[0.,-0.25,0.])

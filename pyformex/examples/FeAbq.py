@@ -37,11 +37,11 @@ from plugins.fe_abq import *
 
 def quad():
     """Return a unit quadrilateral Formex."""
-    return Formex('m:123')
+    return Formex('4:0123')
 
 def triquad():
     """Return a triangularized unit quadrilateral Formex."""
-    return Formex('m:12-34')
+    return Formex('3:012934')
 
 
 na,ma = 4,2  # Size of domain A   

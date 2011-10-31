@@ -464,7 +464,7 @@ class Triade(Drawable):
       
     """
 
-    def __init__(self,pos='lb',siz=100,pat='m:12-34',legend='xyz',color=[red,green,blue,cyan,magenta,yellow],**kargs):
+    def __init__(self,pos='lb',siz=100,pat='3:012934',legend='xyz',color=[red,green,blue,cyan,magenta,yellow],**kargs):
         Drawable.__init__(self,**kargs)
         self.pos = pos
         self.siz = siz

@@ -112,7 +112,7 @@ if __name__ == 'draw':  # allows loading this file as a module
     print "Creating grid"
     R = float(nx)/pi
     L = float(ny)
-    F = Formex('m:123').replic2(nx,ny).centered()
+    F = Formex('4:0123').replic2(nx,ny).centered()
     F = F.translate(2,R)
 
     # Transform grid and draw

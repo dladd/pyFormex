@@ -1747,6 +1747,128 @@ def origin():
     return Coords(zeros((3),dtype=Float))
 
 
+def pattern(s,connect=True):
+    """Return a series of points lying on a regular grid.
+
+    This function creates a series of points that lie on a regular grid
+    with unit step. These points are created from a string input, interpreting
+    each character as a code specifying how to move to the next point.
+    The start position is always the origin (0.,0.,0.).
+
+    Currently the following codes are defined:
+
+    - 0: goto origin (0.,0.,0.)
+    - 1..8: move in the x,y plane
+    - 9: remain at the same place (and duplicate the last point)
+    - A..I: same as 1..9 plus step +1. in z-direction
+    - a..i: same as 1..9 plus step -1. in z-direction
+    - /: do not insert the next point
+    
+    Any other character raises an error. 
+    
+    When looking at the x,y-plane with the x-axis to the right and the
+    y-axis up, we have the following basic moves:
+    1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE.
+    
+    Adding 16 to the ordinal of the character causes an extra move of +1. in
+    the z-direction. Adding 48 causes an extra move of -1. This means that
+    'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra
+    z +/-= 1. This gives the following schema::
+
+                 z+=1             z unchanged            z -= 1
+            
+             F    B    E          6    2    5         f    b    e 
+                  |                    |                   |     
+                  |                    |                   |     
+             C----I----A          3----9----1         c----i----a  
+                  |                    |                   |     
+                  |                    |                   |     
+             G    D    H          7    4    8         g    d    h
+
+    The special character '/' can be put before any character to make the
+    move without inserting the new point. You need to start
+    the string with a '0' or '9' to include the origin in the output.    
+    
+    Returns a list with the generated points as integers.
+
+    Example::
+
+    >>> pattern('0123')
+    [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)]
+    """
+    import warnings
+    warnings.warn("The 'pattern' function has changed! It now returns a list of points, with integer (grid) coordinates. You can still get the old behavior of creating pairs of connected points by using the 'lpattern' function. If your intent is to initialize a Formex, you can just prepend 'l:' to the string and use that string directly as data to the Formex() initializer.")
+
+
+    x = y = z = 0
+    l = []
+    insert = True
+    for c in s:
+        if c == "/":
+            insert = False
+            continue
+        if c == "0":
+            x = y = z = 0
+        else:
+            i = ord(c)
+            d = i/16
+            if d == 3:
+                pass
+            elif d == 4:
+                z += 1
+            elif d == 6:
+                z -= 1
+            else:
+                raise RuntimeError,"Unknown character '%c' in pattern input" % c
+            i %= 16
+            if i == 1:
+                x += 1
+            elif i == 2:
+                y += 1
+            elif i == 3:
+                x -= 1
+            elif i == 4:
+                y -= 1
+            elif i == 5:
+                x += 1
+                y += 1
+            elif i == 6:
+                x -= 1
+                y += 1
+            elif i == 7:
+                x -= 1
+                y -= 1
+            elif i == 8:
+                x += 1
+                y -= 1
+            elif i == 9:
+                pass
+            else:
+                raise RuntimeError,"Unknown pattern character %c ignored" % c
+        if insert:
+            l.append((x,y,z))
+        insert = True
+    return l
+
+
+def xpattern(s,nplex=1):
+    """Create a Coords object from a string pattern.
+
+    This is like pattern, but allows grouping the points into elements.
+    First, the string is expanded to a list of points by calling pattern(s).
+    Then the resulting list of points is transformed in a 2D table of points
+    where each row has the length `nplex`.
+
+    If the number of points produced by `s` is not a multiple of `nplex`,
+    an error is raised.
+    """
+    x = Coords(pattern(s))
+    try:
+        return x.reshape(-1,nplex,3)
+    except:
+        raise ValueError,"Could not reshape points list to plexitude %s" % nplex
+
+
 def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,enddir=None,scalex=None,scaley=None):
     """ Sweep a Coords object along a path, returning a series of copies.
 

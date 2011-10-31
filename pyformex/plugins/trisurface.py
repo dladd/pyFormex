@@ -1942,7 +1942,7 @@ def remove_triangles(elems,remove):
 
 def Rectangle(nx,ny):
     """Create a plane rectangular surface consisting of a nx,ny grid."""
-    F = Formex('m:12-34').replic2(nx,ny,1,1)    
+    F = Formex('3:012934').replic2(nx,ny,1,1)    
     return TriSurface(F)
 
 def Cube():
@@ -1951,7 +1951,7 @@ def Cube():
     Returns a TriSurface representing the surface of a unit cube.
     Each face of the cube is represented by two triangles.
     """
-    back = Formex('m:12-34')
+    back = Formex('3:012934')
     fb = back.reverse() + back.translate(2,1)
     faces = fb + fb.rollAxes(1) + fb.rollAxes(2)
     return TriSurface(faces)

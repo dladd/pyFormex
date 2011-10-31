@@ -140,7 +140,7 @@ def rectangle(nx,ny,b=None,h=None,bias=0.,diag=None):
     if diag == 'x':
         base = Formex([[[0.0,0.0,0.0],[1.0,-1.0,0.0],[1.0,1.0,0.0]]]).rosette(4,90.).translate([-1.0,-1.0,0.0]).scale(0.5)
     else:
-        base = Formex({ 'u': 'm:12-34', 'd': 'm:16-82' }.get(diag,'m:123'))
+        base = Formex({ 'u': '3:012934', 'd': '3:016823' }.get(diag,'4:0123'))
     if b is None:
         sx = 1.
     else:

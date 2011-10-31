@@ -35,13 +35,6 @@ from geometry import Geometry
 import re
 
 
-def pattern(s,connect=True):
-    import warnings
-    warnings.warn("The 'pattern' function will change in the next release! For some time, the old behavior will still be provided by the 'lpattern' function. Please change your code to 'lpattern' now, to avoid future problems.")
-    return lpattern(s,connect)
-
-
-
 def lpattern(s,connect=True):
     """Return a line segment pattern created from a string.
 
@@ -77,6 +70,9 @@ def lpattern(s,connect=True):
     
     The resulting list is directly suited to initialize a Formex.
     """
+    # We do not allow the '+' anymore
+    s = s.replace('+','/0')
+    
     x = y = z = 0
     l = []
     insert = True
@@ -84,9 +80,9 @@ def lpattern(s,connect=True):
         if c == "/":
             insert = False
             continue
-        if c == "+":
-            x = y = z = 0
-            continue
+        ## if c == "+":
+        ##     x = y = z = 0
+        ##     continue
         pos = [x,y,z]
         if c == "0":
             x = y = z = 0
@@ -134,7 +130,9 @@ def lpattern(s,connect=True):
             l.append(element)
         insert = True
     return l
+            
 
+@deprecation("\nFunction mpattern() is deprecated: use xpattern() instead.")
 def mpattern(s):
     """This is like pattern, but allowing lists with more than 2 points.
 
@@ -854,8 +852,8 @@ class Formex(Geometry):
         """Create a new Formex.
 
         The Formex data can be initialized by another Formex,
-        by a 2D or 3D coordinate list, or by a string to be used in the
-        pattern function to create a coordinate list.
+        by a 2D or 3D coordinate list, or by a string to be used in one of the
+        pattern functions to create a coordinate list.
         If 2D coordinates are given, a 3-rd coordinate 0.0 is added.
         Internally, Formices always work with 3D coordinates.
         Thus: ``F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])`` creates a
@@ -880,8 +878,8 @@ class Formex(Geometry):
                     data = mpattern(data)
                 else:
                     try:
-                        base = int(base)
-                        raise ValueError,"numeric base not yet implemented"
+                        nplex = int(base)
+                        data = xpattern(data,nplex)
                     except:
                         raise ValueError,"Invalid string data for Formex"
 

@@ -37,17 +37,14 @@ lights(False)
 
 Rendermode = [ 'smooth','flat' ]
 Lights = [ False, True ]
-Shape = { 'triangle':'m:16',
-          'quad':'m:123',
-          }
-
+Shapes = [ '3:016', '4:0123', ]
 
 color0 = None  # no color: current fgcolor
 color1 = red   # single color
 color2 = array([red,green,blue]) # 3 colors: will be repeated
 
-for shape in Shape.keys():
-    F = Formex(Shape[shape]).replic2(8,4)
+for shape in Shapes:
+    F = Formex(shape).replic2(8,4)
     color3 = resize(color2,F.shape()) # full color
     for mode in Rendermode:
         renderMode(mode)

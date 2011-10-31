@@ -54,7 +54,7 @@ nx,ny = 4,3
 nplex = 8
 clear()
 flatwire()
-M = Formex('m:123').replic2(nx,ny).toMesh().convert('quad%s'%nplex,fuse=True)
+M = Formex('4:0123').replic2(nx,ny).toMesh().convert('quad%s'%nplex,fuse=True)
 #draw(M,color=yellow)
 
 # Create the Mesh interpolateor
