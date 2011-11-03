@@ -267,6 +267,8 @@ def curvature(coords,elems,edges,neighbours=1):
     tmax2 = normalize(tmax2)
     # calculate angles (tmax1,t)
     theta,rot = geomtools.rotationAngle(repeat(tmax1[:,newaxis],t.shape[1],1),t,angle_spec=Rad)
+    theta = theta.reshape(t.shape[:2])
+    rot = rot.reshape(t.shape)
     # check the sign of the angles
     d =  dotpr(rot,n[:,newaxis])/(length(rot)*length(n)[:,newaxis]) # divide by length for round-off errors
     cw = isClose(d,[-1.])
