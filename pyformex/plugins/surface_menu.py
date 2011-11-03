@@ -592,7 +592,7 @@ def showSurfaceValue(S,txt,val,onEdges):
     CL = ColorLegend(CS,100)
     CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
     pf.canvas.addDecoration(CLA)
-    drawText(txt,10,230,'hv18')
+    drawText(txt,10,230,font='hv18')
 
 
 def colorByFront():
