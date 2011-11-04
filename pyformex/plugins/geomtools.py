@@ -492,7 +492,7 @@ def intersectionTimesSWP(S,p,n,mode='all'):
     Parameters:
 
     - `S`: (nS,2,3) shaped array (`mode=all`) or broadcast compatible array
-    (`mode=pair`), defining a single line segment or a set of line segments.
+      (`mode=pair`), defining a single line segment or a set of line segments.
     - `p`,`n`: (np,3) shaped arrays of points and normals (`mode=all`)
       or broadcast compatible arrays (`mode=pair`), defining a single plane
       or a set of planes.
@@ -500,7 +500,8 @@ def intersectionTimesSWP(S,p,n,mode='all'):
       all planes (p,n) or `pair` for pairwise intersections.
 
     Returns: A (nS,np) shaped (`mode=all`) array of parameter values t,
-    such that the intersection points are given by (1-t)*S[...,0,:] + t*S[...,1,:].
+    such that the intersection points are given by
+    `(1-t)*S[...,0,:] + t*S[...,1,:]`.
 
     This function is comparable to intersectionTimesLWP, but ensures that
     parameter values 0<=t<=1 are points inside the line segments.
@@ -575,17 +576,18 @@ def intersectionPointsLWT(q,m,F,mode='all',return_all=False):
 
     Parameters:
 
-    - `q`,`m`: (nq,3) shaped arrays of points and vectors, defining a single line
-      or a set of lines.
-    - `F`: (nF,3,3) shaped array, defining a single triangle or a set of triangles.
+    - `q`,`m`: (nq,3) shaped arrays of points and vectors, defining a single
+      line or a set of lines.
+    - `F`: (nF,3,3) shaped array, defining a single triangle or a set of
+      triangles.
     - `mode`: `all` to calculate the intersection points of each line (q,m) with
       all triangles F or `pair` for pairwise intersections.
-    - `return_all`: if True, all intersection points are returned. Default is to return
-        only the points that lie inside the triangles.
+    - `return_all`: if True, all intersection points are returned. Default is
+      to return only the points that lie inside the triangles.
 
     Returns: if `return_all==True`, a (nq,nF,3) shaped (`mode=all`) array of
-    intersection points, else, a tuple of intersection points with shape (n,3) and line
-    and plane indices with shape (n), where n <= nq*nF.
+    intersection points, else, a tuple of intersection points with shape (n,3)
+    and line and plane indices with shape (n), where n <= nq*nF.
     """
     q = q.reshape(-1,3)
     m = m.reshape(-1,3)
@@ -623,14 +625,15 @@ def intersectionTimesSWT(S,F,mode='all'):
     Parameters:
 
     - `S`: (nS,2,3) shaped array (`mode=all`) or broadcast compatible array
-    (`mode=pair`), defining a single line segment or a set of line segments.
+      (`mode=pair`), defining a single line segment or a set of line segments.
     - `F`: (nF,3,3) shaped array (`mode=all`) or broadcast compatible array
       (`mode=pair`), defining a single triangle or a set of triangles.
     - `mode`: `all` to calculate the intersection of each line segment S with
       all triangles F or `pair` for pairwise intersections.
 
     Returns: A (nS,nF) shaped (`mode=all`) array of parameter values t,
-    such that the intersection points are given by (1-t)*S[...,0,:] + t*S[...,1,:].
+    such that the intersection points are given by
+    `(1-t)*S[...,0,:] + t*S[...,1,:]`.
     """
     Fn = cross(F[...,1,:]-F[...,0,:],F[...,2,:]-F[...,1,:])
     return intersectionTimesSWP(S,F[...,0,:],Fn,mode)
@@ -641,16 +644,18 @@ def intersectionPointsSWT(S,F,mode='all',return_all=False):
 
     Parameters:
 
-    - `S`: (nS,2,3) shaped array, defining a single line segment or a set of line segments.
-    - `F`: (nF,3,3) shaped array, defining a single triangle or a set of triangles.
-    - `mode`: `all` to calculate the intersection points of each line segment S with
-      all triangles F or `pair` for pairwise intersections.
-    - `return_all`: if True, all intersection points are returned. Default is to return
-        only the points that lie on the segments and inside the triangles.
+    - `S`: (nS,2,3) shaped array, defining a single line segment or a set of
+      line segments.
+    - `F`: (nF,3,3) shaped array, defining a single triangle or a set of
+      triangles.
+    - `mode`: `all` to calculate the intersection points of each line segment S       with all triangles F or `pair` for pairwise intersections.
+    - `return_all`: if True, all intersection points are returned. Default is
+      to return only the points that lie on the segments and inside the
+      triangles.
 
     Returns: if `return_all==True`, a (nS,nF,3) shaped (`mode=all`) array of
-    intersection points, else, a tuple of intersection points with shape (n,3) and line
-    and plane indices with shape (n), where n <= nS*nF.
+    intersection points, else, a tuple of intersection points with shape (n,3)
+    and line and plane indices with shape (n), where n <= nS*nF.
     """
     
     S = S.reshape(-1,2,3)
@@ -686,11 +691,12 @@ def intersectionPointsPWP(p1,n1,p2,n2,p3,n3,mode='all'):
 
     Parameters:
 
-    - `pi`,`ni` (i=1...3): (npi,3) shaped arrays of points and normals (`mode=all`)
+    - `pi`,`ni` (i=1...3): (npi,3) shaped arrays of points and normals
+      (`mode=all`)
       or broadcast compatible arrays (`mode=pair`), defining a single plane
       or a set of planes.
-    - `mode`: `all` to calculate the intersection of each plane (p1,n1) with all planes
-      (p2,n2) and (p3,n3) or `pair` for pairwise intersections.
+    - `mode`: `all` to calculate the intersection of each plane (p1,n1) with
+      all planes (p2,n2) and (p3,n3) or `pair` for pairwise intersections.
 
     Returns: A (np1,np2,np3,3) shaped (`mode=all`) array of intersection points.
     """
@@ -719,8 +725,8 @@ def intersectionLinesPWP(p1,n1,p2,n2,mode='all'):
     - `pi`,`ni` (i=1...2): (npi,3) shaped arrays of points and normals (`mode=all`)
       or broadcast compatible arrays (`mode=pair`), defining a single plane
       or a set of planes.
-    - `mode`: `all` to calculate the intersection of each plane (p1,n1) with all planes
-      (p2,n2) or `pair` for pairwise intersections.
+    - `mode`: `all` to calculate the intersection of each plane (p1,n1) with
+      all planes (p2,n2) or `pair` for pairwise intersections.
 
     Returns: A tuple of (np1,np2,3) shaped (`mode=all`) arrays of intersection
     points q and vectors m, such that the intersection lines are given by q+t*m.

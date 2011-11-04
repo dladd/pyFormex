@@ -35,7 +35,7 @@ svnversion = os.path.exists(os.path.join(pyformexdir,'.svn'))
 if svnversion:
 
     def checkLibraries():
-        print "Checking pyFormex libraries"
+        #print "Checking pyFormex libraries"
         msg = ''
         libdir = os.path.join(pyformexdir,'lib')
         libraries = [ 'misc_','nurbs_','drawgl_' ]

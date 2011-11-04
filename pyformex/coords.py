@@ -1628,14 +1628,6 @@ class Coords(ndarray):
     rep = replicate
 
 
-    # Deprecated functions
-
-    # BV: removed in 0.8.4
-    ## @deprecated(reflect)
-    ## def mirror(*args,**kargs):
-    ##     return reflect(*args,**kargs)
-
-
     def actor(self,**kargs):
         """_This allows a Coords object to be drawn directly"""
 
@@ -1649,16 +1641,16 @@ class Coords(ndarray):
 
 
 class BoundVectors(Coords):
-    """A structured collection of bound vectors in a 3D cartesian space.
+    """A collection of bound vectors in a 3D Cartesian space.
 
     Parameters:
 
     - `coords`: a (...,2,3) shaped array of bound vectors defined by their
-    initial and endpoints.
-    - `origins` and `vectors`: (...,3) shaped arrays defining the initial points
-    and vectors.
+      initial and terminal points.
+    - `origins`,`vectors`: (...,3) shaped arrays defining the initial
+      points and vectors from initial to terminal points.
 
-    The default constructs a unit vector along the global x-axis :
+    The default constructs a unit vector along the global x-axis.
     """
     def __new__(clas,coords=None,origins=None,vectors=None):
         """Initialize the BoundVectors."""
@@ -1774,7 +1766,7 @@ def pattern(s,connect=True):
     the z-direction. Adding 48 causes an extra move of -1. This means that
     'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra
     z +/-= 1. This gives the following schema::
-
+      
                  z+=1             z unchanged            z -= 1
             
              F    B    E          6    2    5         f    b    e 

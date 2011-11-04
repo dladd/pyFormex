@@ -50,19 +50,21 @@ EXAMPLES= \
 
 EXAMPLEDATA= $(wildcard ${PYFORMEXDIR}/examples/*.db)
 
+DOCSOURCE= $(wildcard ${SPHINXDIR}/*.rst)
+
 EXECUTABLE= ${PYFORMEXDIR}/pyformex ${PYFORMEXDIR}/sendmail.py ${BINDIR}/read_abq_inp.awk ${LIBDIR}/postabq pyformex-viewer
 
 
-OTHERSTAMPABLE= setup.py Makefile\
+OTHERSTAMPABLE= setup.py Makefile post-install \
 	${PYFORMEXDIR}/pyformexrc \
 	${EXAMPLEDATA} \
 	${LIBDIR}/Makefile.in \
 	${addprefix ${DOCDIR}/, README ReleaseNotes} \
-	post-install
 
 NONSTAMPABLE= ${DOC}/COPYING 
 
-STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) ${EXAMPLES} ${OTHERSTAMPABLE}
+STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) \
+	${EXAMPLES} ${DOCSOURCE} ${OTHERSTAMPABLE}
 
 
 STAMP= stamp 
