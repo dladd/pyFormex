@@ -44,7 +44,7 @@ different install methods.
 +-------------------------------+-------------------------------------------+
 | PROS                          |   CONS                                    |
 +===============================+===========================================+
-|  - Stable                     |  - Linux required                         |
+|  - Stable                     |  - GNU/Linux required                     |
 |  - Well supported             |  - Root access required                   |
 |  - Easy install procedure     |  - Installation of prerequisites required |
 |  - Site-wide install          |  - May be missing latest features         |
@@ -57,7 +57,7 @@ different install methods.
 +------------------------------+--------------------------------------------+
 | PROS                         |   CONS                                     |
 +==============================+============================================+
-|  - Easy install              |  - Linux required                          |
+|  - Easy install              |  - GNU/Linux required                      |
 |    procedure                 |  - Root access required                    |
 |  - Site-wide                 |  - Installation of prerequisites required  |
 |    install                   |  - Latests features                        |
@@ -71,7 +71,7 @@ different install methods.
 +---------------------+--------------------------------------------+
 | PROS                |   CONS                                     |
 +=====================+============================================+
-| - Latest features   | - Linux required                           |
+| - Latest features   | - GNU/Linux required                       |
 | - No                | - No install procedure                     |
 |   root              | - (Usually) single user install            |
 |   access            | - Manual installation of prerequisites     |
@@ -87,7 +87,7 @@ different install methods.
 +-------------------------------------+----------------------------------+
 | PROS                                |                            CONS  |
 +=====================================+==================================+
-| - No Linux required                 | - Missing latest features        |
+| - No GNU/Linux required             | - Missing latest features        |
 | - No root access required           | - Difficult to upgrade           |
 | - No installation required          | - Somewhat slower loading        |
 | - Stable version                    |                                  |
@@ -129,15 +129,15 @@ At regular times we therefore create official releases, which provide a more sta
 
 If you can meet the requirements for using an officially packed release, this is the recommended way to install pyFormex. All the software packages needed to run pyFormex can be obtained for free.
 
-To install an official pyFormex release, you need a working Linux system, root (administrator) privileges to the system, and you need to make sure that the prerequisite packages are installed on the system. 
+To install an official pyFormex release, you need a working GNU/Linux system, root (administrator) privileges to the system, and you need to make sure that the prerequisite packages are installed on the system. 
 
-If you need to install a new Linux system from scratch, and have the choice to
+If you need to install a new GNU/Linux system from scratch, and have the choice to
 pick any distribution, we highly recommend `Debian GNU/Linux`_ or derivatives.
 This is because most of the pyFormex development is done on Debian systems, 
 and we will give you `precise install instructions`_ for this system.
 Also, the Debian software repositories are amongst the most comprehensive to be found on the Internet. 
 
-Most popular Linux distributions provide appropriately packed recent versions
+Most popular GNU/Linux distributions provide appropriately packed recent versions
 of these prerequisites, so that you can install them easily from the pacakge manager of your system. In case a package or version is not available for your system, you can always install it from source. We provide the websites where
 you can find the source packages.
 
@@ -150,7 +150,7 @@ Prerequisites
 In order to install an official release package of pyFormex, you need to have the following installed (and working) on your computer:
 
 **Python** (http://www.python.org)
-   Version 2.4 or higher (2.5 is recommended). Nearly all Linux distributions
+   Version 2.4 or higher (2.5 is recommended). Nearly all GNU/Linux distributions
    come with Python installed, so this should not be no major obstacle. 
 
 **NumPy** (http://www.numpy.org)
@@ -181,8 +181,8 @@ for all functions in the library), using the library will dramatically speed up 
 
 .. _`precise install instructions`:
 
-Installing prerequisites on `Debian GNU/Linux`_
-...............................................
+Installing prerequisites on `Debian GNU/Linux`
+..............................................
 Debian users should just have to install the packages ``python-numpy`` and  ``python-qt4-gl``. The latter will install ``python-qt4`` and ``python-qt4-gl`` as dependencies. Also, for compiling the acceleration library, you should install 
 ``python-dev``, ``python-qt4-dev`` and ``libgl1-mesa-dev``.
 
@@ -241,8 +241,8 @@ install a new release of an already existing version.
 
 .. _subsec:development-version:
 
-Install additional software 
---------------------------- 
+Install additional software
+---------------------------
 
 pyFormex uses a large number of external software packages to enhance
 its functionality. Some of these packages are so essential, that they
@@ -385,7 +385,7 @@ library just like specified above.
 BuMPix Live GNU/Linux system
 ============================
 
-If you do not have access to a running Linux system, or if the above
+If you do not have access to a running GNU/Linux system, or if the above
 installation methods fail for some unknown reason (remember, you can
 ask for help on the pyFormex `Forums`_), you can still run pyFormex by
 using a `Bumpix Live GNU/Linux`_ system. `Bumpix Live` is a full featured

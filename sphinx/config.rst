@@ -6,11 +6,11 @@
 
 .. _cha:config:
 
-**********************
+********************
 Configuring pyFormex
-**********************
+********************
 
-Many aspects of can be configured to better suit the user's needs and likings.
+Many aspects of pyFormex can be configured to better suit the user's needs and likings.
 These can range from merely cosmetic changes to important extensions of the
 functionality. As is written in a scripting language and distributed as source,
 the user can change every single aspect of the program. And the GNU-GPL license
@@ -43,7 +43,7 @@ Configuration files
 On startup, reads its configurable data from a number of files. Often there are
 not less than four configuration files, read in sequence. The settings in each
 file being read override the value read before. The different configuration
-files used serve different purposes. On a typical Linux installation, the
+files used serve different purposes. On a typical GNU/Linux installation, the
 following files will be read in sequence:
 
 * PYFORMEX-INSTALL-PATH/pyformexrc: this file should never be changed , neither
@@ -93,7 +93,7 @@ the following:
 
 * a section header, of the form '[section-name]',
 
-* a valid python instruction.
+* a valid Python instruction.
 
 The configuration file is organized in sections. All lines preceding the first
 section name refer to the general (unnamed) section.

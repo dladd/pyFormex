@@ -6,13 +6,13 @@
 
 .. _cha:bumpix:
 
-************************
-BuMPix Live Linux system
-************************
+****************************
+BuMPix Live GNU/Linux system
+****************************
 
 .. topic:: Abstract
 
-   This document gives a short introduction on the BuMPix Live Linux
+   This document gives a short introduction on the BuMPix Live GNU/Linux
    system and how to use it to run pyFormex directly on nearly any
    computer system without having to install it.
 
@@ -21,15 +21,15 @@ BuMPix Live Linux system
 What is BuMPix
 ==============
 
-`Bumpix Live` is a fully featured Linux system including pyFormex that
+`Bumpix Live` is a fully featured GNU/Linux system including pyFormex that
 can be run from a single removable medium such as a CD or a USB key.
 BuMPix is still an experimental project, but new versions are already
 produced at regular intervals. While those are primarily intended for
 our students, the install images are made available for download on
-the `Bumpix Live Linux`_ FTP server, so that anyone can use them.
+the `Bumpix Live GNU/Linux`_ FTP server, so that anyone can use them.
 
 
-All you need to use the `Bumpix Live Linux`_ is some proper PC
+All you need to use the `Bumpix Live GNU/Linux`_ is some proper PC
 hardware: the system boots and runs from the removable medium and
 leaves everything that is installed on the hard disk of the computer
 untouched.
@@ -64,7 +64,7 @@ BuMPix images is independent from the pyFormex numbering. Just pick
 the `latest BuMPix image`_ to get the most recent pyFormex available
 on USB stick. After you downloaded the .img file, write it to a USB
 stick as an image, not as file! Below, you find instructions on how to do
-this on a Linux system or on a Windows platform.
+this on a GNU/Linux system or on a Windows platform.
 
 .. warning:: Make sure you've got the device designation correct, or
    you might end up overwriting your whole hard disk! 
@@ -72,10 +72,10 @@ this on a Linux system or on a Windows platform.
 Also, be aware that the
 USB stick will no longer be usable to store your files under Windows.
 
-Create the BuMPix USB stick under Linux
----------------------------------------
+Create the BuMPix USB stick under GNU/Linux
+-------------------------------------------
 
-If you have an existing Linux system available, you can write the 
+If you have an existing GNU/Linux system available, you can write the 
 downloaded image to the USB-stick using the command::
 
   dd if=bumpix-VERSION.img of=USBDEV
@@ -95,7 +95,7 @@ so copy your files off the stick before you start, and make sure you've got the 
 Create the BuMPix USB stick under Windows
 -----------------------------------------
 
-If you have no Linux machine available to create the USB key, there
+If you have no GNU/Linux machine available to create the USB key, there
 are ways to do this under Windows as well. 
 We recommend to use `dd for Windows`_. You can then proceed as follows. 
 
@@ -117,8 +117,8 @@ The ``dd`` command above will overwrite everything on the specified device,
 so copy your files off the stick before you start, and make sure you've got the device designation correct.
 
 
-Buy a USB stick with BuMPix 
---------------------------- 
+Buy a USB stick with BuMPix
+---------------------------
 
 Alternatively,
 
@@ -134,7 +134,7 @@ If you think this is the right choice for you, just `email us`_ for a quotation.
 
 .. image:: ../website/images/pyformex_ufd.jpg
    :align: center
-   :alt: pyFormex USB stick with BuMPix Live Linux
+   :alt: pyFormex USB stick with BuMPix Live GNU/Linux
 
 
 .. _sec:boot_bumpix:
@@ -143,7 +143,7 @@ Boot your BuMPix system
 =======================
 Once the image has been written, reboot your computer from the USB
 stick. You may have to change your BIOS settings or use the boot menu
-to do that. On success, you will have a full Linux system running,
+to do that. On success, you will have a full GNU/Linux system running,
 containing pyFormex ready to use. There is even a start button in the 
 toolbar at the bottom.
 
