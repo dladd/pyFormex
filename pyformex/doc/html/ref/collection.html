@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>57. collection — Tools for handling collections of elements belonging to multiple parts. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>57. collection — Tools for handling collections of elements belonging to multiple parts. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="58. config — A general yet simple configuration class." href="config.html" />
     <link rel="prev" title="56. odict — Specialized dictionary type structures." href="odict.html" /> 
@@ -63,7 +87,7 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">collection</span></tt></p>
 <dl class="class">
 <dt id="collection.Collection">
-<em class="property">class </em><tt class="descclassname">collection.</tt><tt class="descname">Collection</tt><a class="headerlink" href="#collection.Collection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">collection.</tt><tt class="descname">Collection</tt><a class="reference internal" href="../_modules/collection.html#Collection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collection.Collection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A collection  is a set of (int,int) tuples.</p>
 <p>The first part of the tuple has a limited number of values and are used
 as the keys in a dict.
@@ -73,7 +97,7 @@ This is e.g. used to identify a set of individual parts of one or more
 OpenGL actors.</p>
 <dl class="method">
 <dt id="collection.Collection.add">
-<tt class="descname">add</tt><big>(</big><em>data</em>, <em>key=-1</em><big>)</big><a class="headerlink" href="#collection.Collection.add" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add</tt><big>(</big><em>data</em>, <em>key=-1</em><big>)</big><a class="reference internal" href="../_modules/collection.html#Collection.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collection.Collection.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add new data to the collection.</p>
 <p>data can be a 2d array with (key,val) tuples or a 1-d array
 of values. In the latter case, the key has to be specified
@@ -82,7 +106,7 @@ separately, or a default value will be used.</p>
 
 <dl class="method">
 <dt id="collection.Collection.set">
-<tt class="descname">set</tt><big>(</big><em>data</em>, <em>key=-1</em><big>)</big><a class="headerlink" href="#collection.Collection.set" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set</tt><big>(</big><em>data</em>, <em>key=-1</em><big>)</big><a class="reference internal" href="../_modules/collection.html#Collection.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collection.Collection.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the collection to the specified data.</p>
 <p>This is equivalent to clearing the corresponding keys
 before adding.</p>
@@ -90,31 +114,31 @@ before adding.</p>
 
 <dl class="method">
 <dt id="collection.Collection.remove">
-<tt class="descname">remove</tt><big>(</big><em>data</em>, <em>key=-1</em><big>)</big><a class="headerlink" href="#collection.Collection.remove" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">remove</tt><big>(</big><em>data</em>, <em>key=-1</em><big>)</big><a class="reference internal" href="../_modules/collection.html#Collection.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collection.Collection.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove data from the collection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="collection.Collection.has_key">
-<tt class="descname">has_key</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#collection.Collection.has_key" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">has_key</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="../_modules/collection.html#Collection.has_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collection.Collection.has_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the collection has an entry for the key.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="collection.Collection.get">
-<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#collection.Collection.get" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get</tt><big>(</big><em>key</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="../_modules/collection.html#Collection.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collection.Collection.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return item with given key or default.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="collection.Collection.keys">
-<tt class="descname">keys</tt><big>(</big><big>)</big><a class="headerlink" href="#collection.Collection.keys" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">keys</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/collection.html#Collection.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collection.Collection.keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a sorted array with the keys</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="collection.Collection.items">
-<tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#collection.Collection.items" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/collection.html#Collection.items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#collection.Collection.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a zipped list of keys and values.</p>
 </dd></dl>
 
@@ -142,7 +166,7 @@ before adding.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -180,7 +204,7 @@ before adding.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

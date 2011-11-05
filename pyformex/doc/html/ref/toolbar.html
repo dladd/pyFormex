@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>29. toolbar — Toolbars for the pyFormex GUI. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>29. toolbar — Toolbars for the pyFormex GUI. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="30. curve — Definition of curves in pyFormex." href="curve.html" />
     <link rel="prev" title="28. scriptMenu — Menu with pyFormex scripts." href="scriptMenu.html" /> 
@@ -64,13 +88,13 @@
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">toolbar</span></tt></p>
 <dl class="function">
 <dt id="toolbar.addActionButtons">
-<tt class="descclassname">toolbar.</tt><tt class="descname">addActionButtons</tt><big>(</big><em>toolbar</em><big>)</big><a class="headerlink" href="#toolbar.addActionButtons" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">addActionButtons</tt><big>(</big><em>toolbar</em><big>)</big><a class="reference internal" href="../_modules/toolbar.html#addActionButtons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.addActionButtons" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the script action buttons to the toolbar.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="toolbar.addButton">
-<tt class="descclassname">toolbar.</tt><tt class="descname">addButton</tt><big>(</big><em>toolbar</em>, <em>tooltip</em>, <em>icon</em>, <em>func</em>, <em>repeat=False</em>, <em>toggle=False</em>, <em>checked=False</em>, <em>icon0=None</em><big>)</big><a class="headerlink" href="#toolbar.addButton" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">addButton</tt><big>(</big><em>toolbar</em>, <em>tooltip</em>, <em>icon</em>, <em>func</em>, <em>repeat=False</em>, <em>toggle=False</em>, <em>checked=False</em>, <em>icon0=None</em><big>)</big><a class="reference internal" href="../_modules/toolbar.html#addButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.addButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a button to a toolbar.</p>
 <ul class="simple">
 <li><cite>toolbar</cite>:  the toolbar where the button will be added</li>
@@ -88,49 +112,62 @@ until pressed again.</li>
 
 <dl class="function">
 <dt id="toolbar.removeButton">
-<tt class="descclassname">toolbar.</tt><tt class="descname">removeButton</tt><big>(</big><em>toolbar</em>, <em>button</em><big>)</big><a class="headerlink" href="#toolbar.removeButton" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">removeButton</tt><big>(</big><em>toolbar</em>, <em>button</em><big>)</big><a class="reference internal" href="../_modules/toolbar.html#removeButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.removeButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a button from a toolbar.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="toolbar.addCameraButtons">
-<tt class="descclassname">toolbar.</tt><tt class="descname">addCameraButtons</tt><big>(</big><em>toolbar</em><big>)</big><a class="headerlink" href="#toolbar.addCameraButtons" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">addCameraButtons</tt><big>(</big><em>toolbar</em><big>)</big><a class="reference internal" href="../_modules/toolbar.html#addCameraButtons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.addCameraButtons" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the camera buttons to a toolbar.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="toolbar.toggleButton">
+<tt class="descclassname">toolbar.</tt><tt class="descname">toggleButton</tt><big>(</big><em>attr</em>, <em>state=None</em><big>)</big><a class="reference internal" href="../_modules/toolbar.html#toggleButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.toggleButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the corresponding viewport attribute.</p>
+<p>This does not update the button state.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="toolbar.updateButton">
+<tt class="descclassname">toolbar.</tt><tt class="descname">updateButton</tt><big>(</big><em>button</em>, <em>attr</em><big>)</big><a class="reference internal" href="../_modules/toolbar.html#updateButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.updateButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the button to correct state.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="toolbar.updateTransparencyButton">
-<tt class="descclassname">toolbar.</tt><tt class="descname">updateTransparencyButton</tt><big>(</big><big>)</big><a class="headerlink" href="#toolbar.updateTransparencyButton" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">updateTransparencyButton</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/toolbar.html#updateTransparencyButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.updateTransparencyButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the transparency button to correct state.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="toolbar.updateLightButton">
-<tt class="descclassname">toolbar.</tt><tt class="descname">updateLightButton</tt><big>(</big><big>)</big><a class="headerlink" href="#toolbar.updateLightButton" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">updateLightButton</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/toolbar.html#updateLightButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.updateLightButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the light button to correct state.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="toolbar.updateNormalsButton">
-<tt class="descclassname">toolbar.</tt><tt class="descname">updateNormalsButton</tt><big>(</big><em>state=True</em><big>)</big><a class="headerlink" href="#toolbar.updateNormalsButton" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">updateNormalsButton</tt><big>(</big><em>state=True</em><big>)</big><a class="reference internal" href="../_modules/toolbar.html#updateNormalsButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.updateNormalsButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the normals button to correct state.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="toolbar.updatePerspectiveButton">
-<tt class="descclassname">toolbar.</tt><tt class="descname">updatePerspectiveButton</tt><big>(</big><big>)</big><a class="headerlink" href="#toolbar.updatePerspectiveButton" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">updatePerspectiveButton</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/toolbar.html#updatePerspectiveButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.updatePerspectiveButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the normals button to correct state.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="toolbar.addTimeoutButton">
-<tt class="descclassname">toolbar.</tt><tt class="descname">addTimeoutButton</tt><big>(</big><em>toolbar</em><big>)</big><a class="headerlink" href="#toolbar.addTimeoutButton" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">addTimeoutButton</tt><big>(</big><em>toolbar</em><big>)</big><a class="reference internal" href="../_modules/toolbar.html#addTimeoutButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.addTimeoutButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add or remove the timeout button,depending on cfg.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="toolbar.timeout">
-<tt class="descclassname">toolbar.</tt><tt class="descname">timeout</tt><big>(</big><em>onoff=None</em><big>)</big><a class="headerlink" href="#toolbar.timeout" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">toolbar.</tt><tt class="descname">timeout</tt><big>(</big><em>onoff=None</em><big>)</big><a class="reference internal" href="../_modules/toolbar.html#timeout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#toolbar.timeout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Programmatically toggle the timeout button</p>
 </dd></dl>
 
@@ -155,7 +192,7 @@ until pressed again.</li>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -193,7 +230,7 @@ until pressed again.</li>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

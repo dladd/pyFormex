@@ -1200,7 +1200,6 @@ class Coords(ndarray):
           a shape (ncoords,3), where ncoords is the total number of points
           in the :class:`Coords`. This allows to project each point on an
           individual plane.
-        ), or by
 
         Returns: a :class:`Coords` with same shape as original, with all the
         points projected on the specified plane(s).
@@ -1780,13 +1779,14 @@ def pattern(s,connect=True):
     The special character '/' can be put before any character to make the
     move without inserting the new point. You need to start
     the string with a '0' or '9' to include the origin in the output.    
-    
+
     Returns a list with the generated points as integers.
 
-    Example::
+    Example:
 
     >>> pattern('0123')
     [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)]
+
     """
     import warnings
     warnings.warn("The 'pattern' function has changed! It now returns a list of points, with integer (grid) coordinates. You can still get the old behavior of creating pairs of connected points by using the 'lpattern' function. If your intent is to initialize a Formex, you can just prepend 'l:' to the string and use that string directly as data to the Formex() initializer.")

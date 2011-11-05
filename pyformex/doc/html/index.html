@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyFormex Documentation &mdash; pyFormex v0.8.4 documentation</title>
+    <title>pyFormex Documentation &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="#" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="#" />
     <link rel="next" title="Introduction to pyFormex" href="intro.html" /> 
   </head>
   <body>
@@ -53,18 +77,7 @@
             
   <div class="section" id="id1">
 <h1>pyFormex Documentation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>This is the pyFormex 0.8.4 documentation, last updated on July 09, 2011.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">We have moved to a new documentation management system
-(<a class="reference external" href="http://sphinx.pocoo.org">Sphinx</a>) and are currently in the process of rewriting the
-documentation. This means that some of these documents are in a
-rather unstable condition and may evolve quickly. The <a class="reference internal" href="intro.html"><em>Introduction to pyFormex</em></a>,
-<a class="reference internal" href="install.html"><em>Installing pyFormex</em></a>, <a class="reference internal" href="tutorial.html"><em>pyFormex tutorial</em></a> and <a class="reference internal" href="refman.html"><em>pyFormex reference manual</em></a> are already fairly
-complete and useable. The <a class="reference internal" href="user-guide.html"><em>pyFormex user guide</em></a> and <a class="reference internal" href="examples.html"><em>pyFormex example scripts</em></a> are
-still in an embryonal state but may already contain valuable information
-for some users.</p>
-</div>
+<p>This is the pyFormex 0.8.5-a1 documentation, last updated on November 05, 2011.</p>
 <p>These documents are to become a full documentation set for the
 installation and use of the pyFormex software. However, as pyFormex is
 still under active development, so is this documentation: it therefore
@@ -74,11 +87,16 @@ accurate for any version of pyFormex.</p>
 to make this preliminary version available to the general public, to
 ease the use of pyFormex. The <a class="reference internal" href="refman.html"><em>pyFormex reference manual</em></a> is automatically generated
 from the docstrings in the Python source, so that might best reflect
-the latest development version of the software.</p>
+the latest development version of the software. The <a class="reference internal" href="intro.html"><em>Introduction to pyFormex</em></a>,
+<a class="reference internal" href="install.html"><em>Installing pyFormex</em></a>, <a class="reference internal" href="tutorial.html"><em>pyFormex tutorial</em></a> are also fairly complete and useable.
+The <a class="reference internal" href="user-guide.html"><em>pyFormex user guide</em></a> and <a class="reference internal" href="examples.html"><em>pyFormex example scripts</em></a> are still in an embryonal
+state but may already contain valuable information for some users.</p>
 <p>The new documentation is available in HTML format for interactive
 browsing. A <a class="reference external" href="ftp://ftp.berlios.de/pub/pyformex/pyformex.pdf">PDF version</a> of the full documentation set can be downloaded
-from our FTP server.</p>
-<p><strong>Parts of the documentation</strong></p>
+from our FTP server. From the pyFormex GUI, a local version of the
+HTML documentation may be accessible from the <strong>Help</strong> menu.</p>
+<div class="section" id="parts-of-the-documentation">
+<h2>Parts of the documentation<a class="headerlink" href="#parts-of-the-documentation" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction to pyFormex</a></li>
@@ -88,17 +106,20 @@ from our FTP server.</p>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">pyFormex example scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="refman.html">pyFormex reference manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="file_format.html">pyFormex file formats</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bumpix.html">BuMPix Live Linux system</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bumpix.html">BuMPix Live GNU/Linux system</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">GNU GENERAL PUBLIC LICENSE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="meta.html">About the pyFormex documentation</a></li>
 </ul>
 </div>
-<p><strong>Indices and tables</strong></p>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
 <li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
 <li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
 </ul>
+</div>
 </div>
 
 
@@ -111,13 +132,24 @@ from our FTP server.</p>
         <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
         </a></p>
     <h3><a href="#">Documentation</a></h3>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyFormex Documentation</a><ul>
+<li><a class="reference internal" href="#parts-of-the-documentation">Parts of the documentation</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Next topic</h4>
   <p class="topless"><a href="intro.html"
                         title="next chapter">Introduction to pyFormex</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -151,7 +183,7 @@ from our FTP server.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

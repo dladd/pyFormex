@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>BuMPix Live Linux system &mdash; pyFormex v0.8.4 documentation</title>
+    <title>BuMPix Live GNU/Linux system &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
     <link rel="next" title="GNU GENERAL PUBLIC LICENSE" href="license.html" />
     <link rel="prev" title="pyFormex file formats" href="file_format.html" /> 
   </head>
@@ -55,23 +79,23 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="bumpix-live-linux-system">
-<span id="cha-bumpix"></span><h1>BuMPix Live Linux system<a class="headerlink" href="#bumpix-live-linux-system" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="bumpix-live-gnu-linux-system">
+<span id="cha-bumpix"></span><h1>BuMPix Live GNU/Linux system<a class="headerlink" href="#bumpix-live-gnu-linux-system" title="Permalink to this headline">¶</a></h1>
 <div class="topic">
 <p class="topic-title first">Abstract</p>
-<p>This document gives a short introduction on the BuMPix Live Linux
+<p>This document gives a short introduction on the BuMPix Live GNU/Linux
 system and how to use it to run pyFormex directly on nearly any
 computer system without having to install it.</p>
 </div>
 <div class="section" id="what-is-bumpix">
 <span id="sec-what-is-bumpix"></span><h2>What is BuMPix<a class="headerlink" href="#what-is-bumpix" title="Permalink to this headline">¶</a></h2>
-<p><cite>Bumpix Live</cite> is a fully featured Linux system including pyFormex that
+<p><cite>Bumpix Live</cite> is a fully featured GNU/Linux system including pyFormex that
 can be run from a single removable medium such as a CD or a USB key.
 BuMPix is still an experimental project, but new versions are already
 produced at regular intervals. While those are primarily intended for
 our students, the install images are made available for download on
-the <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix">Bumpix Live Linux</a> FTP server, so that anyone can use them.</p>
-<p>All you need to use the <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix">Bumpix Live Linux</a> is some proper PC
+the <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix">Bumpix Live GNU/Linux</a> FTP server, so that anyone can use them.</p>
+<p>All you need to use the <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix">Bumpix Live GNU/Linux</a> is some proper PC
 hardware: the system boots and runs from the removable medium and
 leaves everything that is installed on the hard disk of the computer
 untouched.</p>
@@ -99,7 +123,7 @@ BuMPix images is independent from the pyFormex numbering. Just pick
 the <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix/bumpix-latest.img">latest BuMPix image</a> to get the most recent pyFormex available
 on USB stick. After you downloaded the .img file, write it to a USB
 stick as an image, not as file! Below, you find instructions on how to do
-this on a Linux system or on a Windows platform.</p>
+this on a GNU/Linux system or on a Windows platform.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Make sure you&#8217;ve got the device designation correct, or
@@ -108,9 +132,9 @@ you might end up overwriting your whole hard disk!</p>
 <p>Also, be aware that the
 USB stick will no longer be usable to store your files under Windows.</p>
 </div>
-<div class="section" id="create-the-bumpix-usb-stick-under-linux">
-<h3>Create the BuMPix USB stick under Linux<a class="headerlink" href="#create-the-bumpix-usb-stick-under-linux" title="Permalink to this headline">¶</a></h3>
-<p>If you have an existing Linux system available, you can write the
+<div class="section" id="create-the-bumpix-usb-stick-under-gnu-linux">
+<h3>Create the BuMPix USB stick under GNU/Linux<a class="headerlink" href="#create-the-bumpix-usb-stick-under-gnu-linux" title="Permalink to this headline">¶</a></h3>
+<p>If you have an existing GNU/Linux system available, you can write the
 downloaded image to the USB-stick using the command:</p>
 <div class="highlight-python"><pre>dd if=bumpix-VERSION.img of=USBDEV</pre>
 </div>
@@ -126,7 +150,7 @@ so copy your files off the stick before you start, and make sure you&#8217;ve go
 </div>
 <div class="section" id="create-the-bumpix-usb-stick-under-windows">
 <h3>Create the BuMPix USB stick under Windows<a class="headerlink" href="#create-the-bumpix-usb-stick-under-windows" title="Permalink to this headline">¶</a></h3>
-<p>If you have no Linux machine available to create the USB key, there
+<p>If you have no GNU/Linux machine available to create the USB key, there
 are ways to do this under Windows as well.
 We recommend to use <a class="reference external" href="http://www.chrysocome.net/dd">dd for Windows</a>. You can then proceed as follows.</p>
 <ul>
@@ -161,14 +185,14 @@ so copy your files off the stick before you start, and make sure you&#8217;ve go
 sticks with the <tt class="docutils literal"><span class="pre">pyformex.org</span></tt> logo at a cost hardly exceeding that
 of production and distribution.
 If you think this is the right choice for you, just <a class="reference external" href="mailto:benedict&#46;verhegghe&#37;&#52;&#48;ugent&#46;be">email us</a> for a quotation.</p>
-<div align="center" class="align-center"><img alt="pyFormex USB stick with BuMPix Live Linux" class="align-center" src="_images/pyformex_ufd.jpg" /></div>
+<img alt="pyFormex USB stick with BuMPix Live GNU/Linux" class="align-center" src="_images/pyformex_ufd.jpg" />
 </div>
 </div>
 <div class="section" id="boot-your-bumpix-system">
 <span id="sec-boot-bumpix"></span><h2>Boot your BuMPix system<a class="headerlink" href="#boot-your-bumpix-system" title="Permalink to this headline">¶</a></h2>
 <p>Once the image has been written, reboot your computer from the USB
 stick. You may have to change your BIOS settings or use the boot menu
-to do that. On success, you will have a full Linux system running,
+to do that. On success, you will have a full GNU/Linux system running,
 containing pyFormex ready to use. There is even a start button in the
 toolbar at the bottom.</p>
 <div class="admonition warning">
@@ -236,7 +260,7 @@ pyformex</pre>
 you can make this the default version to start from the pyFormex
 button in the top panel. Right click on the button, then
 &#8216;Properties&#8217;. Change the Command to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">bin</span><span class="o">/</span><span class="n">pyformex</span> <span class="o">--</span><span class="n">redirect</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">bin</span><span class="o">/</span><span class="n">pyformex</span> <span class="o">--</span><span class="n">redirect</span>
 </pre></div>
 </div>
 </li>
@@ -267,11 +291,11 @@ svn up</pre>
     <h3><a href="index.html">Documentation</a></h3>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">BuMPix Live Linux system</a><ul>
+<li><a class="reference internal" href="#">BuMPix Live GNU/Linux system</a><ul>
 <li><a class="reference internal" href="#what-is-bumpix">What is BuMPix</a></li>
 <li><a class="reference internal" href="#obtain-a-bumpix-live-bootable-medium">Obtain a BuMPix Live bootable medium</a><ul>
 <li><a class="reference internal" href="#download-bumpix">Download BuMPix</a></li>
-<li><a class="reference internal" href="#create-the-bumpix-usb-stick-under-linux">Create the BuMPix USB stick under Linux</a></li>
+<li><a class="reference internal" href="#create-the-bumpix-usb-stick-under-gnu-linux">Create the BuMPix USB stick under GNU/Linux</a></li>
 <li><a class="reference internal" href="#create-the-bumpix-usb-stick-under-windows">Create the BuMPix USB stick under Windows</a></li>
 <li><a class="reference internal" href="#buy-a-usb-stick-with-bumpix">Buy a USB stick with BuMPix</a></li>
 </ul>
@@ -292,7 +316,7 @@ svn up</pre>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -329,7 +353,7 @@ svn up</pre>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

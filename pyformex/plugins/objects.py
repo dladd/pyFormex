@@ -291,6 +291,7 @@ class DrawableObjects(Objects):
 
     This is a subclass of Objects. The constructor has the same arguments
     as the Objects class, plus the following:
+    
     - `annotations`: a set of functions that draw annotations of the objects.
       Each function should take an object name as argument, and draw the
       requested annotation for the named object. If the object does not have

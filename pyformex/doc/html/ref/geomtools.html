@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>33. geomtools — Basic geometrical operations. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>33. geomtools — Basic geometrical operations. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="34. nurbs — Using NURBS in pyFormex." href="nurbs.html" />
     <link rel="prev" title="32. trisurface — Operations on triangulated surfaces." href="trisurface.html" /> 
@@ -65,7 +89,7 @@ such as lines, triangles, circles, planes.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geomtools</span></tt></p>
 <dl class="function">
 <dt id="geomtools.areaNormals">
-<tt class="descclassname">geomtools.</tt><tt class="descname">areaNormals</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.areaNormals" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">areaNormals</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#areaNormals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.areaNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the area and normal vectors of a collection of triangles.</p>
 <p>x is an (ntri,3,3) array of coordinates.</p>
 <p>Returns a tuple of areas,normals.
@@ -75,7 +99,7 @@ The area is always positive.</p>
 
 <dl class="function">
 <dt id="geomtools.polygonArea">
-<tt class="descclassname">geomtools.</tt><tt class="descname">polygonArea</tt><big>(</big><em>x</em>, <em>project=None</em><big>)</big><a class="headerlink" href="#geomtools.polygonArea" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">polygonArea</tt><big>(</big><em>x</em>, <em>project=None</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#polygonArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.polygonArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute area inside a polygon.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -92,7 +116,7 @@ inside the polygon is not well defined.</p>
 
 <dl class="function">
 <dt id="geomtools.polygonNormals">
-<tt class="descclassname">geomtools.</tt><tt class="descname">polygonNormals</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.polygonNormals" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">polygonNormals</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#polygonNormals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.polygonNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute normals in all points of polygons in x.</p>
 <p>x is an (nel,nplex,3) coordinate array representing nel (possibly nonplanar)
 polygons.</p>
@@ -102,7 +126,7 @@ two edges ending in each point.</p>
 
 <dl class="function">
 <dt id="geomtools.triangleInCircle">
-<tt class="descclassname">geomtools.</tt><tt class="descname">triangleInCircle</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.triangleInCircle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">triangleInCircle</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#triangleInCircle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.triangleInCircle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the incircles of the triangles x</p>
 <p>The incircle of a triangle is the largest circle that can be inscribed
 in the triangle.</p>
@@ -113,7 +137,7 @@ incircles.</p>
 
 <dl class="function">
 <dt id="geomtools.triangleCircumCircle">
-<tt class="descclassname">geomtools.</tt><tt class="descname">triangleCircumCircle</tt><big>(</big><em>x</em>, <em>bounding=False</em><big>)</big><a class="headerlink" href="#geomtools.triangleCircumCircle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">triangleCircumCircle</tt><big>(</big><em>x</em>, <em>bounding=False</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#triangleCircumCircle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.triangleCircumCircle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the circumcircles of the triangles x</p>
 <p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.</p>
 <p>Returns a tuple r,C,n with the radii, Center and unit normals of the
@@ -123,7 +147,7 @@ circles going through the vertices of each triangle.</p>
 
 <dl class="function">
 <dt id="geomtools.triangleBoundingCircle">
-<tt class="descclassname">geomtools.</tt><tt class="descname">triangleBoundingCircle</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.triangleBoundingCircle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">triangleBoundingCircle</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#triangleBoundingCircle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.triangleBoundingCircle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the bounding circles of the triangles x</p>
 <p>The bounding circle is the smallest circle in the plane of the triangle
 such that all vertices of the triangle are on or inside the circle.
@@ -137,7 +161,7 @@ bounding circles.</p>
 
 <dl class="function">
 <dt id="geomtools.triangleObtuse">
-<tt class="descclassname">geomtools.</tt><tt class="descname">triangleObtuse</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geomtools.triangleObtuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">triangleObtuse</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#triangleObtuse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.triangleObtuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks for obtuse triangles</p>
 <p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.</p>
 <p>Returns an (ntri) array of True/False values indicating whether the
@@ -146,7 +170,7 @@ triangles are obtuse.</p>
 
 <dl class="function">
 <dt id="geomtools.lineIntersection">
-<tt class="descclassname">geomtools.</tt><tt class="descname">lineIntersection</tt><big>(</big><em>P1</em>, <em>D1</em>, <em>P2</em>, <em>D2</em><big>)</big><a class="headerlink" href="#geomtools.lineIntersection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">lineIntersection</tt><big>(</big><em>P1</em>, <em>D1</em>, <em>P2</em>, <em>D2</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#lineIntersection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.lineIntersection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the intersection of 2 coplanar lines.</p>
 <p>The lines (P1,D1) and (P2,D2) are defined by a point and a direction
 vector. Let a and b be unit vectors along the lines, and c = P2-P1,
@@ -157,7 +181,7 @@ where sa = det([c,b,d])/ld and sb = det([c,a,d])/ld</p>
 
 <dl class="function">
 <dt id="geomtools.displaceLines">
-<tt class="descclassname">geomtools.</tt><tt class="descname">displaceLines</tt><big>(</big><em>A</em>, <em>N</em>, <em>C</em>, <em>d</em><big>)</big><a class="headerlink" href="#geomtools.displaceLines" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">displaceLines</tt><big>(</big><em>A</em>, <em>N</em>, <em>C</em>, <em>d</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#displaceLines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.displaceLines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move all lines (A,N) over a distance a in the direction of point C.</p>
 <p>A,N are arrays with points and directions defining the lines.
 C is a point.
@@ -169,7 +193,7 @@ Returns a new set of lines (A,N).</p>
 
 <dl class="function">
 <dt id="geomtools.segmentOrientation">
-<tt class="descclassname">geomtools.</tt><tt class="descname">segmentOrientation</tt><big>(</big><em>vertices</em>, <em>vertices2=None</em>, <em>point=None</em><big>)</big><a class="headerlink" href="#geomtools.segmentOrientation" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">segmentOrientation</tt><big>(</big><em>vertices</em>, <em>vertices2=None</em>, <em>point=None</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#segmentOrientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.segmentOrientation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine the orientation of a set of line segments.</p>
 <p>vertices and vertices2 are matching sets of points.
 point is a single point.
@@ -185,7 +209,7 @@ positively around the point.</p>
 
 <dl class="function">
 <dt id="geomtools.rotationAngle">
-<tt class="descclassname">geomtools.</tt><tt class="descname">rotationAngle</tt><big>(</big><em>A</em>, <em>B</em>, <em>m=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#geomtools.rotationAngle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">rotationAngle</tt><big>(</big><em>A</em>, <em>B</em>, <em>m=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#rotationAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.rotationAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return rotation angles and vectors for rotations of A to B.</p>
 <p>A and B are (n,3) shaped arrays where each line represents a vector.
 This function computes the rotation from each vector of A to the
@@ -200,7 +224,7 @@ Specify angle_spec=Rad to get the angles in radians.</p>
 
 <dl class="function">
 <dt id="geomtools.anyPerpendicularVector">
-<tt class="descclassname">geomtools.</tt><tt class="descname">anyPerpendicularVector</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#geomtools.anyPerpendicularVector" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">anyPerpendicularVector</tt><big>(</big><em>A</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#anyPerpendicularVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.anyPerpendicularVector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return arbitrary vectors perpendicular to vectors of A.</p>
 <p>A is a (n,3) shaped array of vectors.
 The return value is a (n,3) shaped array of perpendicular vectors.</p>
@@ -208,153 +232,343 @@ The return value is a (n,3) shaped array of perpendicular vectors.</p>
 
 <dl class="function">
 <dt id="geomtools.perpendicularVector">
-<tt class="descclassname">geomtools.</tt><tt class="descname">perpendicularVector</tt><big>(</big><em>A</em>, <em>B</em><big>)</big><a class="headerlink" href="#geomtools.perpendicularVector" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">perpendicularVector</tt><big>(</big><em>A</em>, <em>B</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#perpendicularVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.perpendicularVector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return vectors perpendicular on both A and B.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.projectionVOV">
-<tt class="descclassname">geomtools.</tt><tt class="descname">projectionVOV</tt><big>(</big><em>A</em>, <em>B</em><big>)</big><a class="headerlink" href="#geomtools.projectionVOV" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">projectionVOV</tt><big>(</big><em>A</em>, <em>B</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#projectionVOV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.projectionVOV" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the projection of vector of A on vector of B.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.projectionVOP">
-<tt class="descclassname">geomtools.</tt><tt class="descname">projectionVOP</tt><big>(</big><em>A</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.projectionVOP" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">projectionVOP</tt><big>(</big><em>A</em>, <em>n</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#projectionVOP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.projectionVOP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the projection of vector of A on plane of B.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="geomtools.pointsAtLines">
+<tt class="descclassname">geomtools.</tt><tt class="descname">pointsAtLines</tt><big>(</big><em>q</em>, <em>m</em>, <em>t</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#pointsAtLines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.pointsAtLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points of lines (q,m) at parameter values t.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>q</cite>,`m`: (...,3) shaped arrays of points and vectors, defining
+a single line or a set of lines.</li>
+<li><cite>t</cite>: array of parameter values, broadcast compatible with <cite>q</cite> and <cite>m</cite>.</li>
+</ul>
+<p>Returns: An array with the points at parameter values t.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.pointsAtSegments">
+<tt class="descclassname">geomtools.</tt><tt class="descname">pointsAtSegments</tt><big>(</big><em>S</em>, <em>t</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#pointsAtSegments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.pointsAtSegments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points of line segments S at parameter values t.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>S</cite>: (...,2,3) shaped array, defining a single line segment or
+a set of line segments.</li>
+<li><cite>t</cite>: array of parameter values, broadcast compatible with <cite>S</cite>.</li>
+</ul>
+<p>Returns: An array with the points at parameter values t.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="geomtools.intersectionTimesLWL">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesLWL</tt><big>(</big><em>q1</em>, <em>m1</em>, <em>q2</em>, <em>m2</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesLWL" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesLWL</tt><big>(</big><em>q1</em>, <em>m1</em>, <em>q2</em>, <em>m2</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionTimesLWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionTimesLWL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection of lines (q1,m1) and lines (q2,m2)</p>
 <p>with the perpendiculars between them.</p>
-<p>q1/m1 is a (nq1,3) shaped array of points/vectors.
-q2/m2 is a (nq2,3) shaped array of points/vectors.</p>
-<p>The return value is a tuple of (nq1,nq2) shaped arrays of parameter
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>qi</cite>,`mi` (i=1...2): (nqi,3) shaped arrays of points and vectors (<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single line or a
+set of lines.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line (q1,m1) with all lines
+(q2,m2) or <cite>pair</cite> for pairwise intersections.</li>
+</ul>
+<p>Returns: A tuple of (nq1,nq2) shaped (<cite>mode=all</cite>) arrays of parameter
 values t1 and t2, such that the intersection points are given by
 q1+t1*m1 and q2+t2*m2.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.intersectionPointsLWL">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsLWL</tt><big>(</big><em>q1</em>, <em>m1</em>, <em>q2</em>, <em>m2</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsLWL" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsLWL</tt><big>(</big><em>q1</em>, <em>m1</em>, <em>q2</em>, <em>m2</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionPointsLWL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionPointsLWL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection points of lines (q1,m1) and lines (q2,m2)</p>
 <p>with the perpendiculars between them.</p>
-<p>This is equivalent to intersectionTimesLWL(q1,m1,q2,m2) but returns a
-tuple of (nq1,nq2,3) shaped arrays of intersection points instead of the
+<p>This is like intersectionTimesLWL but returns a tuple of (nq1,nq2,3)
+shaped (<cite>mode=all</cite>) arrays of intersection points instead of the
 parameter values.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.intersectionTimesLWP">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesLWP</tt><big>(</big><em>q</em>, <em>m</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesLWP" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesLWP</tt><big>(</big><em>q</em>, <em>m</em>, <em>p</em>, <em>n</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionTimesLWP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionTimesLWP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection of lines (q,m) with planes (p,n).</p>
-<p>q/m is a (nq,3) shaped array of points/vectors.
-p/n is a (np,3) shaped array of points/normals.</p>
-<p>The return value is a (nq,np) shaped array of parameter values t,
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>q</cite>,`m`: (nq,3) shaped arrays of points and vectors (<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single line
+or a set of lines.</li>
+<li><cite>p</cite>,`n`: (np,3) shaped arrays of points and normals (<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single plane
+or a set of planes.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line (q,m) with
+all planes (p,n) or <cite>pair</cite> for pairwise intersections.</li>
+</ul>
+<p>Returns: A (nq,np) shaped (<cite>mode=all</cite>) array of parameter values t,
 such that the intersection points are given by q+t*m.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.intersectionPointsLWP">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsLWP</tt><big>(</big><em>q</em>, <em>m</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsLWP" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsLWP</tt><big>(</big><em>q</em>, <em>m</em>, <em>p</em>, <em>n</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionPointsLWP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionPointsLWP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection points of lines (q,m) with planes (p,n).</p>
-<p>This is like intersectionTimesLWP(q,m,p,n) but returns a (nq,np,3)
-shaped array of intersection points instead of the parameter values.</p>
+<p>This is like intersectionTimesLWP but returns a (nq,np,3) shaped
+(<cite>mode=all</cite>) array of intersection points instead of the
+parameter values.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.intersectionTimesSWP">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesSWP</tt><big>(</big><em>S</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesSWP" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the intersection of line segments S with the plane (p,n).</p>
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesSWP</tt><big>(</big><em>S</em>, <em>p</em>, <em>n</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionTimesSWP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionTimesSWP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of line segments S with planes (p,n).</p>
 <p>Parameters:</p>
 <ul class="simple">
-<li><cite>S</cite>:  an (ns,2,3) array with line segments</li>
-<li><cite>p</cite>,`n`: (np,3) arrays with points and normals defining a set of planes</li>
+<li><cite>S</cite>: (nS,2,3) shaped array (<cite>mode=all</cite>) or broadcast compatible array
+(<cite>mode=pair</cite>), defining a single line segment or a set of line segments.</li>
+<li><cite>p</cite>,`n`: (np,3) shaped arrays of points and normals (<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single plane
+or a set of planes.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line segment S with
+all planes (p,n) or <cite>pair</cite> for pairwise intersections.</li>
 </ul>
-<p>Returns: (ns,np) shaped array of parameter values t,
-such that the intersection points are given by (1-t)*S[:,0] + t*S[:,1].</p>
+<p>Returns: A (nS,np) shaped (<cite>mode=all</cite>) array of parameter values t,
+such that the intersection points are given by
+<cite>(1-t)*S[...,0,:] + t*S[...,1,:]</cite>.</p>
 <p>This function is comparable to intersectionTimesLWP, but ensures that
 parameter values 0&lt;=t&lt;=1 are points inside the line segments.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.intersectionPointsSWP">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsSWP</tt><big>(</big><em>S</em>, <em>p</em>, <em>n</em>, <em>return_all=False</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsSWP" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the intersection points of line segments S with the plane (p,n).</p>
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsSWP</tt><big>(</big><em>S</em>, <em>p</em>, <em>n</em>, <em>mode='all'</em>, <em>return_all=False</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionPointsSWP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionPointsSWP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of line segments S with planes (p,n).</p>
 <p>Parameters:</p>
 <ul class="simple">
-<li><cite>S</cite>:  an (ns,2,3) array with line segments</li>
-<li><cite>p</cite>,`n`: (3,) or (np,3) arrays with points and normals defining a
-single plane or a set of planes</li>
+<li><cite>S</cite>: (nS,2,3) shaped array, defining a single line segment or a set of line
+segments.</li>
+<li><cite>p</cite>,`n`: (np,3) shaped arrays of points and normals, defining a single plane
+or a set of planes.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line segment S with
+all planes (p,n) or <cite>pair</cite> for pairwise intersections.</li>
 <li><cite>return_all</cite>: if True, all intersection points of the lines along the
 segments are returned. Default is to return only the points that lie
 on the segments.</li>
 </ul>
-<p>Returns the intersection points as a Coords with shape (ns,np,3) if
-return_all==True, else as a Coords with shape (n,3) where n &lt;= ns*np.</p>
+<p>Returns: if <cite>return_all==True</cite>, a (nS,np,3) shaped (<cite>mode=all</cite>) array of
+intersection points, else, a tuple of intersection points with shape (n,3) and line
+and plane indices with shape (n), where n &lt;= nS*np.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionTimesLWT">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesLWT</tt><big>(</big><em>q</em>, <em>m</em>, <em>F</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionTimesLWT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionTimesLWT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of lines (q,m) with triangles F.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>q</cite>,`m`: (nq,3) shaped arrays of points and vectors (<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single line
+or a set of lines.</li>
+<li><cite>F</cite>: (nF,3,3) shaped array (<cite>mode=all</cite>) or broadcast compatible array
+(<cite>mode=pair</cite>), defining a single triangle or a set of triangles.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line (q,m) with
+all triangles F or <cite>pair</cite> for pairwise intersections.</li>
+</ul>
+<p>Returns: A (nq,nF) shaped (<cite>mode=all</cite>) array of parameter values t,
+such that the intersection points are given q+tm.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionPointsLWT">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsLWT</tt><big>(</big><em>q</em>, <em>m</em>, <em>F</em>, <em>mode='all'</em>, <em>return_all=False</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionPointsLWT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionPointsLWT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of lines (q,m) with triangles F.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>q</cite>,`m`: (nq,3) shaped arrays of points and vectors, defining a single
+line or a set of lines.</li>
+<li><cite>F</cite>: (nF,3,3) shaped array, defining a single triangle or a set of
+triangles.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection points of each line (q,m) with
+all triangles F or <cite>pair</cite> for pairwise intersections.</li>
+<li><cite>return_all</cite>: if True, all intersection points are returned. Default is
+to return only the points that lie inside the triangles.</li>
+</ul>
+<p>Returns: if <cite>return_all==True</cite>, a (nq,nF,3) shaped (<cite>mode=all</cite>) array of
+intersection points, else, a tuple of intersection points with shape (n,3)
+and line and plane indices with shape (n), where n &lt;= nq*nF.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionTimesSWT">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesSWT</tt><big>(</big><em>S</em>, <em>F</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionTimesSWT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionTimesSWT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of lines segments S with triangles F.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>S</cite>: (nS,2,3) shaped array (<cite>mode=all</cite>) or broadcast compatible array
+(<cite>mode=pair</cite>), defining a single line segment or a set of line segments.</li>
+<li><cite>F</cite>: (nF,3,3) shaped array (<cite>mode=all</cite>) or broadcast compatible array
+(<cite>mode=pair</cite>), defining a single triangle or a set of triangles.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each line segment S with
+all triangles F or <cite>pair</cite> for pairwise intersections.</li>
+</ul>
+<p>Returns: A (nS,nF) shaped (<cite>mode=all</cite>) array of parameter values t,
+such that the intersection points are given by
+<cite>(1-t)*S[...,0,:] + t*S[...,1,:]</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.intersectionPointsSWT">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsSWT</tt><big>(</big><em>S</em>, <em>F</em>, <em>mode='all'</em>, <em>return_all=False</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionPointsSWT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionPointsSWT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of lines segments S with triangles F.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>S</cite>: (nS,2,3) shaped array, defining a single line segment or a set of
+line segments.</li>
+<li><cite>F</cite>: (nF,3,3) shaped array, defining a single triangle or a set of
+triangles.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection points of each line segment S       with all triangles F or <cite>pair</cite> for pairwise intersections.</li>
+<li><cite>return_all</cite>: if True, all intersection points are returned. Default is
+to return only the points that lie on the segments and inside the
+triangles.</li>
+</ul>
+<p>Returns: if <cite>return_all==True</cite>, a (nS,nF,3) shaped (<cite>mode=all</cite>) array of
+intersection points, else, a tuple of intersection points with shape (n,3)
+and line and plane indices with shape (n), where n &lt;= nS*nF.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.intersectionPointsPWP">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsPWP</tt><big>(</big><em>p1</em>, <em>n1</em>, <em>p2</em>, <em>n2</em>, <em>p3</em>, <em>n3</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsPWP" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsPWP</tt><big>(</big><em>p1</em>, <em>n1</em>, <em>p2</em>, <em>n2</em>, <em>p3</em>, <em>n3</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionPointsPWP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionPointsPWP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection points of planes (p1,n1), (p2,n2) and (p3,n3).</p>
-<p>p1/n1 is a (np1,3) shaped array of points/normals.
-p2/n2 is a (np2,3) shaped array of points/normals.
-p3/n3 is a (np3,3) shaped array of points/normals.</p>
-<p>The return value is a (np1,np2,np3,3) shaped array of intersection points.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>pi</cite>,`ni` (i=1...3): (npi,3) shaped arrays of points and normals
+(<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single plane
+or a set of planes.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each plane (p1,n1) with
+all planes (p2,n2) and (p3,n3) or <cite>pair</cite> for pairwise intersections.</li>
+</ul>
+<p>Returns: A (np1,np2,np3,3) shaped (<cite>mode=all</cite>) array of intersection points.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.intersectionLinesPWP">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionLinesPWP</tt><big>(</big><em>p1</em>, <em>n1</em>, <em>p2</em>, <em>n2</em><big>)</big><a class="headerlink" href="#geomtools.intersectionLinesPWP" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionLinesPWP</tt><big>(</big><em>p1</em>, <em>n1</em>, <em>p2</em>, <em>n2</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionLinesPWP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionLinesPWP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection lines of planes (p1,n1) and (p2,n2).</p>
-<p>p1/n1 is a (np1,3) shaped array of points/normals.
-p2/n2 is a (np2,3) shaped array of points/normals.</p>
-<p>The return value is a tuple of (np1,np2,3) shaped arrays of intersection
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>pi</cite>,`ni` (i=1...2): (npi,3) shaped arrays of points and normals (<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single plane
+or a set of planes.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection of each plane (p1,n1) with
+all planes (p2,n2) or <cite>pair</cite> for pairwise intersections.</li>
+</ul>
+<p>Returns: A tuple of (np1,np2,3) shaped (<cite>mode=all</cite>) arrays of intersection
 points q and vectors m, such that the intersection lines are given by q+t*m.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="geomtools.intersectionPointsPOP">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsPOP</tt><big>(</big><em>q</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsPOP" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the intersection points of perpendiculars from points q on planes (p,n).</p>
-<p>This is equivalent to intersectionTimesPOP(q,p,n) but returns a (nq,np,3)
-shaped array of intersection points instead of the parameter values.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="geomtools.intersectionTimesPOP">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesPOP</tt><big>(</big><em>q</em>, <em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesPOP" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the intersection of perpendiculars from points q on planes (p,n).</p>
-<p>q is (nq,3) shaped array of points.
-p/n is a (np,3) shaped array of points/normals.</p>
-<p>The return value is a (nq,np) shaped array of parameter values t,
-such that the intersection points are given by q+t*n.</p>
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesPOP</tt><big>(</big><em>X</em>, <em>p</em>, <em>n</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionTimesPOP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionTimesPOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of perpendiculars from points X on planes (p,n).</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>X</cite>: a (nX,3) shaped array of points (<cite>mode=all</cite>)
+or broadcast compatible array (<cite>mode=pair</cite>).</li>
+<li><cite>p</cite>,`n`: (np,3) shaped arrays of points and normals (<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single plane
+or a set of planes.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection for each point X with
+all planes (p,n) or <cite>pair</cite> for pairwise intersections.</li>
+</ul>
+<p>Returns: A (nX,np) shaped (<cite>mode=all</cite>) array of parameter values t,
+such that the intersection points are given by X+t*n.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="geomtools.intersectionPointsPOL">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsPOL</tt><big>(</big><em>p</em>, <em>q</em>, <em>m</em><big>)</big><a class="headerlink" href="#geomtools.intersectionPointsPOL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the intersection points of perpendiculars from points p on lines (q,m).</p>
-<p>This is equivalent to intersectionTimesPWL(p,q,m) but returns a (np,nq,3)
-shaped array of intersection points instead of the parameter values.</p>
+<dt id="geomtools.intersectionPointsPOP">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsPOP</tt><big>(</big><em>X</em>, <em>p</em>, <em>n</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionPointsPOP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionPointsPOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of perpendiculars from points X on planes (p,n).</p>
+<p>This is like intersectionTimesPOP but returns a (nX,np,3) shaped (<cite>mode=all</cite>)
+array of intersection points instead of the parameter values.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="geomtools.intersectionTimesPOL">
-<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesPOL</tt><big>(</big><em>p</em>, <em>q</em>, <em>m</em><big>)</big><a class="headerlink" href="#geomtools.intersectionTimesPOL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the intersection of perpendiculars from points p on lines (q,m).</p>
-<p>p is (np,3) shaped array of points.
-q/m is a (nq,3) shaped array of points/vectors.</p>
-<p>The return value is a (np,nq) shaped array of parameter values t,
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionTimesPOL</tt><big>(</big><em>X</em>, <em>q</em>, <em>m</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionTimesPOL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionTimesPOL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection of perpendiculars from points X on lines (q,m).</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>X</cite>: a (nX,3) shaped array of points (<cite>mode=all</cite>)
+or broadcast compatible array (<cite>mode=pair</cite>).</li>
+<li><cite>q</cite>,`m`: (nq,3) shaped arrays of points and vectors (<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single line
+or a set of lines.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the intersection for each point X with
+all lines (q,m) or <cite>pair</cite> for pairwise intersections.</li>
+</ul>
+<p>Returns: A (nX,nq) shaped (<cite>mode=all</cite>) array of parameter values t,
 such that the intersection points are given by q+t*m.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="geomtools.intersectionPointsPOL">
+<tt class="descclassname">geomtools.</tt><tt class="descname">intersectionPointsPOL</tt><big>(</big><em>X</em>, <em>q</em>, <em>m</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#intersectionPointsPOL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.intersectionPointsPOL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the intersection points of perpendiculars from points X on lines (q,m).</p>
+<p>This is like intersectionTimesPOL but returns a (nX,nq,3) shaped (<cite>mode=all</cite>)
+array of intersection points instead of the parameter values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.distancesPFL">
+<tt class="descclassname">geomtools.</tt><tt class="descname">distancesPFL</tt><big>(</big><em>X</em>, <em>q</em>, <em>m</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#distancesPFL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.distancesPFL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the distances of points X from lines (q,m).</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>X</cite>: a (nX,3) shaped array of points (<cite>mode=all</cite>)
+or broadcast compatible array (<cite>mode=pair</cite>).</li>
+<li><cite>q</cite>,`m`: (nq,3) shaped arrays of points and vectors (<cite>mode=all</cite>)
+or broadcast compatible arrays (<cite>mode=pair</cite>), defining a single line
+or a set of lines.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the distance of each point X from
+all lines (q,m) or <cite>pair</cite> for pairwise distances.</li>
+</ul>
+<p>Returns: A (nX,nq) shaped (<cite>mode=all</cite>) array of distances.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geomtools.distancesPFS">
+<tt class="descclassname">geomtools.</tt><tt class="descname">distancesPFS</tt><big>(</big><em>X</em>, <em>S</em>, <em>mode='all'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#distancesPFS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.distancesPFS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the distances of points X from line segments S.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>X</cite>: a (nX,3) shaped array of points (<cite>mode=all</cite>)
+or broadcast compatible array (<cite>mode=pair</cite>).</li>
+<li><cite>S</cite>: (nS,2,3) shaped array of line segments (<cite>mode=all</cite>)
+or broadcast compatible array (<cite>mode=pair</cite>), defining a single line
+segment or a set of line segments.</li>
+<li><cite>mode</cite>: <cite>all</cite> to calculate the distance of each point X from
+all line segments S or <cite>pair</cite> for pairwise distances.</li>
+</ul>
+<p>Returns: A (nX,nS) shaped (<cite>mode=all</cite>) array of distances.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="geomtools.insideTriangle">
-<tt class="descclassname">geomtools.</tt><tt class="descname">insideTriangle</tt><big>(</big><em>x</em>, <em>P</em>, <em>method='bary'</em><big>)</big><a class="headerlink" href="#geomtools.insideTriangle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">insideTriangle</tt><big>(</big><em>x</em>, <em>P</em>, <em>method='bary'</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#insideTriangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.insideTriangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether the points P are inside triangles x.</p>
 <p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.
 P is a Coords array with shape (npts,ntri,3) representing npts points
@@ -366,7 +580,7 @@ triangles.</p>
 
 <dl class="function">
 <dt id="geomtools.faceDistance">
-<tt class="descclassname">geomtools.</tt><tt class="descname">faceDistance</tt><big>(</big><em>X</em>, <em>Fp</em>, <em>return_points=False</em>, <em>method='bary'</em><big>)</big><a class="headerlink" href="#geomtools.faceDistance" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">faceDistance</tt><big>(</big><em>X</em>, <em>Fp</em>, <em>return_points=False</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#faceDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.faceDistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the closest perpendicular distance to a set of triangles.</p>
 <p>X is a (nX,3) shaped array of points.
 Fp is a (nF,3,3) shaped array of triangles.</p>
@@ -383,7 +597,7 @@ and is only returned if return_points = True.</li>
 
 <dl class="function">
 <dt id="geomtools.edgeDistance">
-<tt class="descclassname">geomtools.</tt><tt class="descname">edgeDistance</tt><big>(</big><em>X</em>, <em>Ep</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#geomtools.edgeDistance" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">edgeDistance</tt><big>(</big><em>X</em>, <em>Ep</em>, <em>return_points=False</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#edgeDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.edgeDistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the closest perpendicular distance of points X to a set of edges.</p>
 <p>X is a (nX,3) shaped array of points.
 Ep is a (nE,2,3) shaped array of edge vertices.</p>
@@ -400,7 +614,7 @@ and is only returned if return_points = True.</li>
 
 <dl class="function">
 <dt id="geomtools.vertexDistance">
-<tt class="descclassname">geomtools.</tt><tt class="descname">vertexDistance</tt><big>(</big><em>X</em>, <em>Vp</em>, <em>return_points=False</em><big>)</big><a class="headerlink" href="#geomtools.vertexDistance" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">vertexDistance</tt><big>(</big><em>X</em>, <em>Vp</em>, <em>return_points=False</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#vertexDistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.vertexDistance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the closest distance of points X to a set of vertices.</p>
 <p>X is a (nX,3) shaped array of points.
 Vp is a (nV,3) shaped array of vertices.</p>
@@ -414,7 +628,7 @@ and is only returned if return_points = True.</li>
 
 <dl class="function">
 <dt id="geomtools.baryCoords">
-<tt class="descclassname">geomtools.</tt><tt class="descname">baryCoords</tt><big>(</big><em>S</em>, <em>P</em><big>)</big><a class="headerlink" href="#geomtools.baryCoords" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">baryCoords</tt><big>(</big><em>S</em>, <em>P</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#baryCoords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.baryCoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the barycentric coordinates of points  P wrt. simplexes S.</p>
 <p>S is a (nel,nplex,3) shaped array of n-simplexes (n=nplex-1):
 - 1-simplex: line segment
@@ -426,7 +640,7 @@ P is a (npts,3), (npts,nel,3) or (npts,1,3) shaped array of points.</p>
 
 <dl class="function">
 <dt id="geomtools.insideSimplex">
-<tt class="descclassname">geomtools.</tt><tt class="descname">insideSimplex</tt><big>(</big><em>BC</em>, <em>bound=True</em><big>)</big><a class="headerlink" href="#geomtools.insideSimplex" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">geomtools.</tt><tt class="descname">insideSimplex</tt><big>(</big><em>BC</em>, <em>bound=True</em><big>)</big><a class="reference internal" href="../_modules/geomtools.html#insideSimplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geomtools.insideSimplex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if points are in simplexes.</p>
 <p>BC is an array of barycentric coordinates (along the first axis),
 which sum up to one.
@@ -455,7 +669,7 @@ be inside the simplex.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -493,7 +707,7 @@ be inside the simplex.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

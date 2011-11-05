@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyFormex example scripts &mdash; pyFormex v0.8.4 documentation</title>
+    <title>pyFormex example scripts &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
     <link rel="next" title="pyFormex reference manual" href="refman.html" />
     <link rel="prev" title="pyFormex FAQ ‘n TRICKS" href="faq.html" /> 
   </head>
@@ -71,7 +95,7 @@ distribution.</p>
 <p>To get acquainted with the modus operandi of pyFormex,
 the <tt class="file docutils literal"><span class="pre">WireStent.py</span></tt> script is studied step by step. The lines are numbered
 for easy referencing, but are not part of the script itself.</p>
-<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><pre>  1
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
   2
   3
   4
@@ -189,7 +213,9 @@ for easy referencing, but are not part of the script itself.</p>
 116
 117
 118
-119</pre></td><td class="code"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex --gui</span>
+119
+120
+121</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex --gui</span>
 <span class="sd">&quot;&quot;&quot;Wirestent.py</span>
 
 <span class="sd">A pyFormex script to generate a geometrical model of a wire stent.</span>
@@ -226,31 +252,31 @@ for easy referencing, but are not part of the script itself.</p>
 <span class="sd">    other with property 3. The connectors have property 2. The wire</span>
 <span class="sd">    set with property 1 is winding positively around the z-axis.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">De</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">be</span><span class="p">,</span><span class="n">ds</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">nb</span><span class="o">=</span><span class="mf">4</span><span class="p">,</span><span class="n">connectors</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">De</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">be</span><span class="p">,</span><span class="n">ds</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">nb</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">connectors</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create the Wire Stent.&quot;&quot;&quot;</span>
-        <span class="n">D</span> <span class="o">=</span> <span class="n">De</span> <span class="o">-</span> <span class="mf">2</span><span class="o">*</span><span class="n">d</span> <span class="o">-</span> <span class="n">ds</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">De</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">d</span> <span class="o">-</span> <span class="n">ds</span>
         <span class="n">r</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">D</span>
         <span class="n">dz</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">ds</span><span class="o">+</span><span class="n">d</span><span class="p">)</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">D</span><span class="o">*</span><span class="n">tand</span><span class="p">(</span><span class="n">be</span><span class="p">)</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nx</span><span class="p">)</span>
         <span class="n">ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">nx</span><span class="o">*</span><span class="n">L</span><span class="o">/</span><span class="n">p</span><span class="p">))</span>  <span class="c"># The actual length may differ a bit from L</span>
         <span class="c"># a single bumped strut, oriented along the x-axis</span>
-        <span class="n">bump_z</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">1.</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">nb</span><span class="p">)</span><span class="o">**</span><span class="mf">2</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;1&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">replic</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">bump1</span><span class="p">(</span><span class="mf">2</span><span class="p">,[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="n">dz</span><span class="p">],</span><span class="n">bump_z</span><span class="p">,</span><span class="mf">0</span><span class="p">)</span>
+        <span class="n">bump_z</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">1.</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">nb</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">(</span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;1&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">replic</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">bump1</span><span class="p">(</span><span class="mi">2</span><span class="p">,[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="n">dz</span><span class="p">],</span><span class="n">bump_z</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
         <span class="c"># scale back to size 1.</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">scale</span><span class="p">([</span><span class="mf">1.</span><span class="o">/</span><span class="n">nb</span><span class="p">,</span><span class="mf">1.</span><span class="o">/</span><span class="n">nb</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
         <span class="c"># NE and SE directed struts</span>
-        <span class="n">NE</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">shear</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
-        <span class="n">SE</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span><span class="o">.</span><span class="n">shear</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
-        <span class="n">NE</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
-        <span class="n">SE</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mf">3</span><span class="p">)</span>
+        <span class="n">NE</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">shear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">)</span>
+        <span class="n">SE</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">shear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span>
+        <span class="n">NE</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">SE</span><span class="o">.</span><span class="n">setProp</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         <span class="c"># a unit cell of crossing struts</span>
-        <span class="n">cell1</span> <span class="o">=</span> <span class="p">(</span><span class="n">NE</span><span class="o">+</span><span class="n">SE</span><span class="p">)</span><span class="o">.</span><span class="n">rosette</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">180</span><span class="p">)</span>
+        <span class="n">cell1</span> <span class="o">=</span> <span class="p">(</span><span class="n">NE</span><span class="o">+</span><span class="n">SE</span><span class="p">)</span><span class="o">.</span><span class="n">rosette</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">180</span><span class="p">)</span>
         <span class="c"># add a connector between first points of NE and SE</span>
         <span class="k">if</span> <span class="n">connectors</span><span class="p">:</span>
-            <span class="n">cell1</span> <span class="o">+=</span> <span class="n">Formex</span><span class="p">([[</span><span class="n">NE</span><span class="p">[</span><span class="mf">0</span><span class="p">][</span><span class="mf">0</span><span class="p">],</span><span class="n">SE</span><span class="p">[</span><span class="mf">0</span><span class="p">][</span><span class="mf">0</span><span class="p">]]],</span><span class="mf">2</span><span class="p">)</span>
+            <span class="n">cell1</span> <span class="o">+=</span> <span class="n">Formex</span><span class="p">([[</span><span class="n">NE</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">SE</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]],</span><span class="mi">2</span><span class="p">)</span>
         <span class="c"># and create its mirror</span>
-        <span class="n">cell2</span> <span class="o">=</span> <span class="n">cell1</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="mf">2</span><span class="p">)</span>
+        <span class="n">cell2</span> <span class="o">=</span> <span class="n">cell1</span><span class="o">.</span><span class="n">reflect</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
         <span class="c"># and move both to appropriate place</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell1</span> <span class="o">=</span> <span class="n">cell1</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell2</span> <span class="o">=</span> <span class="n">cell2</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
@@ -260,7 +286,8 @@ for easy referencing, but are not part of the script itself.</p>
         <span class="n">dy</span> <span class="o">=</span> <span class="mf">4.</span>
         <span class="n">F</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell1</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">cell2</span><span class="p">)</span><span class="o">.</span><span class="n">replic2</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
         <span class="c"># fold it into a cylinder</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">F</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="n">r</span><span class="p">])</span><span class="o">.</span><span class="n">cylindrical</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],</span><span class="n">scale</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">360.</span><span class="o">/</span><span class="p">(</span><span class="n">nx</span><span class="o">*</span><span class="n">dx</span><span class="p">),</span><span class="n">p</span><span class="o">/</span><span class="n">nx</span><span class="o">/</span><span class="n">dy</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">F</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="n">r</span><span class="p">])</span><span class="o">.</span><span class="n">cylindrical</span><span class="p">(</span>
+            <span class="nb">dir</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">scale</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">360.</span><span class="o">/</span><span class="p">(</span><span class="n">nx</span><span class="o">*</span><span class="n">dx</span><span class="p">),</span><span class="n">p</span><span class="o">/</span><span class="n">nx</span><span class="o">/</span><span class="n">dy</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ny</span> <span class="o">=</span> <span class="n">ny</span>
 
     <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -278,7 +305,7 @@ for easy referencing, but are not part of the script itself.</p>
     <span class="n">D</span> <span class="o">=</span> <span class="mf">10.</span>
     <span class="n">L</span> <span class="o">=</span> <span class="mf">80.</span>
     <span class="n">d</span> <span class="o">=</span> <span class="mf">0.2</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="mf">12</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">12</span>
     <span class="n">b</span> <span class="o">=</span> <span class="mf">30.</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">askItems</span><span class="p">([[</span><span class="s">&#39;Diameter&#39;</span><span class="p">,</span><span class="n">D</span><span class="p">],</span>
                     <span class="p">[</span><span class="s">&#39;Length&#39;</span><span class="p">,</span><span class="n">L</span><span class="p">],</span>
@@ -293,7 +320,7 @@ for easy referencing, but are not part of the script itself.</p>
     <span class="n">L</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s">&#39;Length&#39;</span><span class="p">])</span>
     <span class="n">d</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s">&#39;WireDiam&#39;</span><span class="p">])</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s">&#39;NWires&#39;</span><span class="p">])</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mf">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">warning</span><span class="p">(</span><span class="s">&#39;Number of wires must be even!&#39;</span><span class="p">)</span>
         <span class="nb">exit</span><span class="p">()</span>
     <span class="n">b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s">&#39;Pitch&#39;</span><span class="p">])</span>
@@ -304,7 +331,8 @@ for easy referencing, but are not part of the script itself.</p>
     
     <span class="c"># and save it in a lot of graphics formats</span>
     <span class="k">if</span> <span class="n">ack</span><span class="p">(</span><span class="s">&quot;Do you want to save this image (in lots of formats) ?&quot;</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;bmp&#39;</span><span class="p">,</span> <span class="s">&#39;jpg&#39;</span><span class="p">,</span> <span class="s">&#39;pbm&#39;</span><span class="p">,</span> <span class="s">&#39;png&#39;</span><span class="p">,</span> <span class="s">&#39;ppm&#39;</span><span class="p">,</span> <span class="s">&#39;xbm&#39;</span><span class="p">,</span> <span class="s">&#39;xpm&#39;</span><span class="p">,</span> <span class="s">&#39;eps&#39;</span><span class="p">,</span> <span class="s">&#39;ps&#39;</span><span class="p">,</span> <span class="s">&#39;pdf&#39;</span><span class="p">,</span> <span class="s">&#39;tex&#39;</span> <span class="p">]:</span> 
+        <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;bmp&#39;</span><span class="p">,</span> <span class="s">&#39;jpg&#39;</span><span class="p">,</span> <span class="s">&#39;pbm&#39;</span><span class="p">,</span> <span class="s">&#39;png&#39;</span><span class="p">,</span> <span class="s">&#39;ppm&#39;</span><span class="p">,</span> <span class="s">&#39;xbm&#39;</span><span class="p">,</span> <span class="s">&#39;xpm&#39;</span><span class="p">,</span>
+                     <span class="s">&#39;eps&#39;</span><span class="p">,</span> <span class="s">&#39;ps&#39;</span><span class="p">,</span> <span class="s">&#39;pdf&#39;</span><span class="p">,</span> <span class="s">&#39;tex&#39;</span> <span class="p">]:</span> 
             <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&#39;WireStent.&#39;</span><span class="o">+</span><span class="n">ext</span><span class="p">)</span>
 
 <span class="c"># End</span>
@@ -523,8 +551,8 @@ the wire stent geometry is defined as a the <tt class="docutils literal"><span c
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">examples.WireStent</span> <span class="kn">import</span> <span class="n">DoubleHelixStent</span>
 
 <span class="k">for</span> <span class="n">De</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">16.</span><span class="p">,</span><span class="mf">32.</span><span class="p">]:</span>
-    <span class="k">for</span> <span class="n">nx</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">6</span><span class="p">,</span><span class="mf">10</span><span class="p">]:</span>
-        <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">25</span><span class="p">,</span><span class="mf">50</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">nx</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">50</span><span class="p">]:</span>
             <span class="n">stent</span> <span class="o">=</span> <span class="n">DoubleHelixStent</span><span class="p">(</span><span class="n">De</span><span class="p">,</span><span class="mf">40.</span><span class="p">,</span><span class="mf">0.22</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">beta</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="n">draw</span><span class="p">(</span><span class="n">stent</span><span class="p">,</span><span class="n">view</span><span class="o">=</span><span class="s">&#39;iso&#39;</span><span class="p">)</span>
             <span class="n">pause</span><span class="p">()</span>
@@ -627,7 +655,7 @@ is 9.19 mm.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -664,7 +692,7 @@ is 9.19 mm.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

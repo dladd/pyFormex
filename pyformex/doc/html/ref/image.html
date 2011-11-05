@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>24. image — Saving OpenGL renderings to image files. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>24. image — Saving OpenGL renderings to image files. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="25. imagearray — Convert bitmap images into numpy arrays." href="imagearray.html" />
     <link rel="prev" title="23. camera — OpenGL camera handling" href="camera.html" /> 
@@ -67,13 +91,13 @@ a movie from these images.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">image</span></tt></p>
 <dl class="function">
 <dt id="image.initialize">
-<tt class="descclassname">image.</tt><tt class="descname">initialize</tt><big>(</big><big>)</big><a class="headerlink" href="#image.initialize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">initialize</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/image.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.initialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the image module.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="image.imageFormats">
-<tt class="descclassname">image.</tt><tt class="descname">imageFormats</tt><big>(</big><big>)</big><a class="headerlink" href="#image.imageFormats" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">imageFormats</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/image.html#imageFormats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.imageFormats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of the valid image formats.</p>
 <p>image formats are lower case strings as &#8216;png&#8217;, &#8216;gif&#8217;, &#8216;ppm&#8217;, &#8216;eps&#8217;, etc.
 The available image formats are derived from the installed software.</p>
@@ -81,14 +105,14 @@ The available image formats are derived from the installed software.</p>
 
 <dl class="function">
 <dt id="image.checkImageFormat">
-<tt class="descclassname">image.</tt><tt class="descname">checkImageFormat</tt><big>(</big><em>fmt</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#image.checkImageFormat" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">checkImageFormat</tt><big>(</big><em>fmt</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/image.html#checkImageFormat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.checkImageFormat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks image format; if verbose, warn if it is not.</p>
 <p>Returns the image format, or None if it is not OK.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="image.imageFormatFromExt">
-<tt class="descclassname">image.</tt><tt class="descname">imageFormatFromExt</tt><big>(</big><em>ext</em><big>)</big><a class="headerlink" href="#image.imageFormatFromExt" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">imageFormatFromExt</tt><big>(</big><em>ext</em><big>)</big><a class="reference internal" href="../_modules/image.html#imageFormatFromExt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.imageFormatFromExt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine the image format from an extension.</p>
 <p>The extension may or may not have an initial dot and may be in upper or
 lower case. The format is equal to the extension characters in lower case.
@@ -97,7 +121,7 @@ If the supplied extension is empty, the default format &#8216;png&#8217; is retu
 
 <dl class="function">
 <dt id="image.save_canvas">
-<tt class="descclassname">image.</tt><tt class="descname">save_canvas</tt><big>(</big><em>canvas</em>, <em>fn</em>, <em>fmt='png'</em>, <em>quality=-1</em>, <em>size=None</em><big>)</big><a class="headerlink" href="#image.save_canvas" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save_canvas</tt><big>(</big><em>canvas</em>, <em>fn</em>, <em>fmt='png'</em>, <em>quality=-1</em>, <em>size=None</em><big>)</big><a class="reference internal" href="../_modules/image.html#save_canvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.save_canvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the rendering on canvas as an image file.</p>
 <p>canvas specifies the qtcanvas rendering window.
 fn is the name of the file
@@ -105,8 +129,23 @@ fmt is the image file format</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="image.save_PS">
+<tt class="descclassname">image.</tt><tt class="descname">save_PS</tt><big>(</big><em>canvas</em>, <em>filename</em>, <em>filetype=None</em>, <em>title=''</em>, <em>producer=''</em>, <em>viewport=None</em><big>)</big><a class="reference internal" href="../_modules/image.html#save_PS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.save_PS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export OpenGL rendering to PostScript/PDF/TeX format.</p>
+<p>Exporting OpenGL renderings to PostScript is based on the PS2GL
+library by Christophe Geuzaine (<a class="reference external" href="http://geuz.org/gl2ps/">http://geuz.org/gl2ps/</a>), linked
+to Python by Toby Whites&#8217;s wrapper
+(<a class="reference external" href="http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz">http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz</a>)</p>
+<p>This function is only defined if the gl2ps module is found.</p>
+<p>The filetype should be one of &#8216;ps&#8217;, &#8216;eps&#8217;, &#8216;pdf&#8217; or &#8216;tex&#8217;.
+If not specified, the type is derived from the file extension.
+In case of the &#8216;tex&#8217; filetype, two files are written: one with
+the .tex extension, and one with .eps extension.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="image.save_window">
-<tt class="descclassname">image.</tt><tt class="descname">save_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=-1</em>, <em>windowname=None</em><big>)</big><a class="headerlink" href="#image.save_window" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=-1</em>, <em>windowname=None</em><big>)</big><a class="reference internal" href="../_modules/image.html#save_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.save_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a window as an image file.</p>
 <p>This function needs a filename AND format.
 If a window is specified, the named window is saved.
@@ -115,7 +154,7 @@ Else, the main pyFormex window is saved.</p>
 
 <dl class="function">
 <dt id="image.save_main_window">
-<tt class="descclassname">image.</tt><tt class="descname">save_main_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=-1</em>, <em>border=False</em><big>)</big><a class="headerlink" href="#image.save_main_window" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save_main_window</tt><big>(</big><em>filename</em>, <em>format</em>, <em>quality=-1</em>, <em>border=False</em><big>)</big><a class="reference internal" href="../_modules/image.html#save_main_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.save_main_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the main pyFormex window as an image file.</p>
 <p>This function needs a filename AND format.
 This is an alternative for save_window, by grabbin it from the root
@@ -125,13 +164,13 @@ This allows us to grab the border as well.</p>
 
 <dl class="function">
 <dt id="image.save_rect">
-<tt class="descclassname">image.</tt><tt class="descname">save_rect</tt><big>(</big><em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>filename</em>, <em>format</em>, <em>quality=-1</em><big>)</big><a class="headerlink" href="#image.save_rect" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save_rect</tt><big>(</big><em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>filename</em>, <em>format</em>, <em>quality=-1</em><big>)</big><a class="reference internal" href="../_modules/image.html#save_rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.save_rect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a rectangular part of the screen to a an image file.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="image.save">
-<tt class="descclassname">image.</tt><tt class="descname">save</tt><big>(</big><em>filename=None</em>, <em>window=False</em>, <em>multi=False</em>, <em>hotkey=True</em>, <em>autosave=False</em>, <em>border=False</em>, <em>rootcrop=False</em>, <em>format=None</em>, <em>quality=-1</em>, <em>size=None</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#image.save" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">save</tt><big>(</big><em>filename=None</em>, <em>window=False</em>, <em>multi=False</em>, <em>hotkey=True</em>, <em>autosave=False</em>, <em>border=False</em>, <em>rootcrop=False</em>, <em>format=None</em>, <em>quality=-1</em>, <em>size=None</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/image.html#save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves an image to file or Starts/stops multisave mode.</p>
 <p>With a filename and multi==False (default), the current viewport rendering
 is saved to the named file.</p>
@@ -193,7 +232,7 @@ this function is called from the GUI.</p>
 
 <dl class="function">
 <dt id="image.saveNext">
-<tt class="descclassname">image.</tt><tt class="descname">saveNext</tt><big>(</big><big>)</big><a class="headerlink" href="#image.saveNext" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">saveNext</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/image.html#saveNext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.saveNext" title="Permalink to this definition">¶</a></dt>
 <dd><p>In multisave mode, saves the next image.</p>
 <p>This is a quiet function that does nothing if multisave was not activated.
 It can thus safely be called on regular places in scripts where one would
@@ -203,27 +242,27 @@ or not.</p>
 
 <dl class="function">
 <dt id="image.saveIcon">
-<tt class="descclassname">image.</tt><tt class="descname">saveIcon</tt><big>(</big><em>fn</em>, <em>size=32</em><big>)</big><a class="headerlink" href="#image.saveIcon" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">saveIcon</tt><big>(</big><em>fn</em>, <em>size=32</em><big>)</big><a class="reference internal" href="../_modules/image.html#saveIcon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.saveIcon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the current rendering as an icon.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="image.autoSaveOn">
-<tt class="descclassname">image.</tt><tt class="descname">autoSaveOn</tt><big>(</big><big>)</big><a class="headerlink" href="#image.autoSaveOn" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">autoSaveOn</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/image.html#autoSaveOn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.autoSaveOn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if autosave multisave mode is currently on.</p>
 <p>Use this function instead of directly accessing the autosave variable.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="image.createMovie">
-<tt class="descclassname">image.</tt><tt class="descname">createMovie</tt><big>(</big><em>encoder='ffmpeg'</em><big>)</big><a class="headerlink" href="#image.createMovie" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">createMovie</tt><big>(</big><em>encoder='ffmpeg'</em><big>)</big><a class="reference internal" href="../_modules/image.html#createMovie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.createMovie" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a movie from a saved sequence of images.</p>
 <p>encoder is one of: &#8216;ffmpeg, mencoder, convert&#8217;</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="image.saveMovie">
-<tt class="descclassname">image.</tt><tt class="descname">saveMovie</tt><big>(</big><em>filename</em>, <em>format</em>, <em>windowname=None</em><big>)</big><a class="headerlink" href="#image.saveMovie" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">saveMovie</tt><big>(</big><em>filename</em>, <em>format</em>, <em>windowname=None</em><big>)</big><a class="reference internal" href="../_modules/image.html#saveMovie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#image.saveMovie" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a movie from the pyFormex window.</p>
 </dd></dl>
 
@@ -248,7 +287,7 @@ or not.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -286,7 +325,7 @@ or not.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

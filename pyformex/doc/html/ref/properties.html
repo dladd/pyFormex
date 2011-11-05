@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>40. properties — General framework for attributing properties to geometrical elements. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>40. properties — General framework for attributing properties to geometrical elements. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="41. fe — Finite Element Models in pyFormex." href="fe.html" />
     <link rel="prev" title="39. datareader — Numerical data reader" href="datareader.html" /> 
@@ -64,11 +88,11 @@ Properties can be attributed to a set of geometrical elements.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">properties</span></tt></p>
 <dl class="class">
 <dt id="properties.Database">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">Database</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.Database" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">Database</tt><big>(</big><em>data={}</em><big>)</big><a class="reference internal" href="../_modules/properties.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.Database" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing properties in a database.</p>
 <dl class="method">
 <dt id="properties.Database.readDatabase">
-<tt class="descname">readDatabase</tt><big>(</big><em>filename</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#properties.Database.readDatabase" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">readDatabase</tt><big>(</big><em>filename</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/properties.html#Database.readDatabase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.Database.readDatabase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import all records from a database file.</p>
 <p>For now, it can only read databases using flatkeydb.
 args and kargs can be used to specify arguments for the
@@ -103,7 +127,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="properties.MaterialDB">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">MaterialDB</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.MaterialDB" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">MaterialDB</tt><big>(</big><em>data={}</em><big>)</big><a class="reference internal" href="../_modules/properties.html#MaterialDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.MaterialDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing material properties.</p>
 <dl class="method">
 <dt id="properties.MaterialDB.readDatabase">
@@ -142,7 +166,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="properties.SectionDB">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">SectionDB</tt><big>(</big><em>data={}</em><big>)</big><a class="headerlink" href="#properties.SectionDB" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">SectionDB</tt><big>(</big><em>data={}</em><big>)</big><a class="reference internal" href="../_modules/properties.html#SectionDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.SectionDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing section properties.</p>
 <dl class="method">
 <dt id="properties.SectionDB.readDatabase">
@@ -181,7 +205,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="properties.ElemSection">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">ElemSection</tt><big>(</big><em>section=None</em>, <em>material=None</em>, <em>orientation=None</em>, <em>behavior=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#properties.ElemSection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">ElemSection</tt><big>(</big><em>section=None</em>, <em>material=None</em>, <em>orientation=None</em>, <em>behavior=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/properties.html#ElemSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.ElemSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Properties related to the section of an element.</p>
 <p>An element section property can hold the following sub-properties:</p>
 <dl class="docutils">
@@ -227,7 +251,7 @@ shear_modulus, density, poisson_ratio . (see fmtMaterial in fe_abq)</dd>
 </dl>
 <dl class="method">
 <dt id="properties.ElemSection.addSection">
-<tt class="descname">addSection</tt><big>(</big><em>section</em><big>)</big><a class="headerlink" href="#properties.ElemSection.addSection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addSection</tt><big>(</big><em>section</em><big>)</big><a class="reference internal" href="../_modules/properties.html#ElemSection.addSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.ElemSection.addSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create or replace the section properties of the element.</p>
 <p>If &#8216;section&#8217; is a dict, it will be added to &#8216;self.secDB&#8217;.
 If &#8216;section&#8217; is a string, this string will be used as a key to
@@ -236,13 +260,13 @@ search in &#8216;self.secDB&#8217;.</p>
 
 <dl class="method">
 <dt id="properties.ElemSection.computeSection">
-<tt class="descname">computeSection</tt><big>(</big><em>section</em><big>)</big><a class="headerlink" href="#properties.ElemSection.computeSection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">computeSection</tt><big>(</big><em>section</em><big>)</big><a class="reference internal" href="../_modules/properties.html#ElemSection.computeSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.ElemSection.computeSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the section characteristics of specific sections.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="properties.ElemSection.addMaterial">
-<tt class="descname">addMaterial</tt><big>(</big><em>material</em><big>)</big><a class="headerlink" href="#properties.ElemSection.addMaterial" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addMaterial</tt><big>(</big><em>material</em><big>)</big><a class="reference internal" href="../_modules/properties.html#ElemSection.addMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.ElemSection.addMaterial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create or replace the material properties of the element.</p>
 <p>If the argument is a dict, it will be added to &#8216;self.matDB&#8217;.
 If the argument is a string, this string will be used as a key to
@@ -277,7 +301,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="properties.ElemLoad">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">ElemLoad</tt><big>(</big><em>label=None</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#properties.ElemLoad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">ElemLoad</tt><big>(</big><em>label=None</em>, <em>value=None</em><big>)</big><a class="reference internal" href="../_modules/properties.html#ElemLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.ElemLoad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Distributed loading on an element.</p>
 <dl class="method">
 <dt id="properties.ElemLoad.update">
@@ -307,7 +331,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="properties.EdgeLoad">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">EdgeLoad</tt><big>(</big><em>edge=-1</em>, <em>label=None</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#properties.EdgeLoad" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">EdgeLoad</tt><big>(</big><em>edge=-1</em>, <em>label=None</em>, <em>value=None</em><big>)</big><a class="reference internal" href="../_modules/properties.html#EdgeLoad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.EdgeLoad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Distributed loading on an element edge.</p>
 <dl class="method">
 <dt id="properties.EdgeLoad.update">
@@ -337,20 +361,20 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="properties.CoordSystem">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">CoordSystem</tt><big>(</big><em>csys</em>, <em>cdata</em><big>)</big><a class="headerlink" href="#properties.CoordSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">CoordSystem</tt><big>(</big><em>csys</em>, <em>cdata</em><big>)</big><a class="reference internal" href="../_modules/properties.html#CoordSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.CoordSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing coordinate systems.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="properties.Amplitude">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">Amplitude</tt><big>(</big><em>data</em>, <em>definition='TABULAR'</em><big>)</big><a class="headerlink" href="#properties.Amplitude" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">Amplitude</tt><big>(</big><em>data</em>, <em>definition='TABULAR'</em><big>)</big><a class="reference internal" href="../_modules/properties.html#Amplitude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.Amplitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for storing an amplitude.</p>
 <p>The amplitude is a list of tuples (time,value).</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="properties.PropertyDB">
-<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">PropertyDB</tt><a class="headerlink" href="#properties.PropertyDB" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">properties.</tt><tt class="descname">PropertyDB</tt><a class="reference internal" href="../_modules/properties.html#PropertyDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.PropertyDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>A database class for all properties.</p>
 <p>This class collects all properties that can be set on a
 geometrical model.</p>
@@ -365,19 +389,19 @@ geometrical model.</p>
 </ul>
 <dl class="method">
 <dt id="properties.PropertyDB.setMaterialDB">
-<tt class="descname">setMaterialDB</tt><big>(</big><em>aDict</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.setMaterialDB" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setMaterialDB</tt><big>(</big><em>aDict</em><big>)</big><a class="reference internal" href="../_modules/properties.html#PropertyDB.setMaterialDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.PropertyDB.setMaterialDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the materials database to an external source</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="properties.PropertyDB.setSectionDB">
-<tt class="descname">setSectionDB</tt><big>(</big><em>aDict</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.setSectionDB" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setSectionDB</tt><big>(</big><em>aDict</em><big>)</big><a class="reference internal" href="../_modules/properties.html#PropertyDB.setSectionDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.PropertyDB.setSectionDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the sections database to an external source</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="properties.PropertyDB.Prop">
-<tt class="descname">Prop</tt><big>(</big><em>kind=''</em>, <em>tag=None</em>, <em>set=None</em>, <em>name=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.Prop" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Prop</tt><big>(</big><em>kind=''</em>, <em>tag=None</em>, <em>set=None</em>, <em>name=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/properties.html#PropertyDB.Prop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.PropertyDB.Prop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new property, empty by default.</p>
 <p>A property can hold almost anything, just like any Dict type.
 It has however four predefined keys that should not be used for
@@ -402,7 +426,7 @@ without checking.</p>
 
 <dl class="method">
 <dt id="properties.PropertyDB.getProp">
-<tt class="descname">getProp</tt><big>(</big><em>kind=''</em>, <em>rec=None</em>, <em>tag=None</em>, <em>attr=</em><span class="optional">[</span><span class="optional">]</span>, <em>noattr=</em><span class="optional">[</span><span class="optional">]</span>, <em>delete=False</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.getProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getProp</tt><big>(</big><em>kind=''</em>, <em>rec=None</em>, <em>tag=None</em>, <em>attr=</em><span class="optional">[</span><span class="optional">]</span>, <em>noattr=</em><span class="optional">[</span><span class="optional">]</span>, <em>delete=False</em><big>)</big><a class="reference internal" href="../_modules/properties.html#PropertyDB.getProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.PropertyDB.getProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all properties of type kind matching tag and having attr.</p>
 <p>kind is either &#8216;&#8217;, &#8216;n&#8217;, &#8216;e&#8217; or &#8216;m&#8217;
 If rec is given, it is a list of record numbers or a single number.
@@ -417,7 +441,7 @@ Attributes whose value is None are treated as non-existing.</p>
 
 <dl class="method">
 <dt id="properties.PropertyDB.delProp">
-<tt class="descname">delProp</tt><big>(</big><em>kind=''</em>, <em>rec=None</em>, <em>tag=None</em>, <em>attr=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#properties.PropertyDB.delProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">delProp</tt><big>(</big><em>kind=''</em>, <em>rec=None</em>, <em>tag=None</em>, <em>attr=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="../_modules/properties.html#PropertyDB.delProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.PropertyDB.delProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete properties.</p>
 <p>This is equivalent to getProp() but the returned properties
 are removed from the database.</p>
@@ -425,7 +449,7 @@ are removed from the database.</p>
 
 <dl class="method">
 <dt id="properties.PropertyDB.nodeProp">
-<tt class="descname">nodeProp</tt><big>(</big><em>prop=None</em>, <em>set=None</em>, <em>name=None</em>, <em>tag=None</em>, <em>cload=None</em>, <em>bound=None</em>, <em>displ=None</em>, <em>veloc=None</em>, <em>accel=None</em>, <em>csys=None</em>, <em>ampl=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.nodeProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nodeProp</tt><big>(</big><em>prop=None</em>, <em>set=None</em>, <em>name=None</em>, <em>tag=None</em>, <em>cload=None</em>, <em>bound=None</em>, <em>displ=None</em>, <em>veloc=None</em>, <em>accel=None</em>, <em>csys=None</em>, <em>ampl=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/properties.html#PropertyDB.nodeProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.PropertyDB.nodeProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new node property, empty by default.</p>
 <p>A node property can contain any combination of the following fields:</p>
 <ul class="simple">
@@ -447,7 +471,7 @@ acceleration: a list of 6 float values
 
 <dl class="method">
 <dt id="properties.PropertyDB.elemProp">
-<tt class="descname">elemProp</tt><big>(</big><em>prop=None</em>, <em>grp=None</em>, <em>set=None</em>, <em>name=None</em>, <em>tag=None</em>, <em>section=None</em>, <em>eltype=None</em>, <em>dload=None</em>, <em>eload=None</em>, <em>ampl=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#properties.PropertyDB.elemProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">elemProp</tt><big>(</big><em>prop=None</em>, <em>grp=None</em>, <em>set=None</em>, <em>name=None</em>, <em>tag=None</em>, <em>section=None</em>, <em>eltype=None</em>, <em>dload=None</em>, <em>eload=None</em>, <em>ampl=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/properties.html#PropertyDB.elemProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.PropertyDB.elemProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new element property, empty by default.</p>
 <p>An elem property can contain any combination of the following fields:</p>
 <ul class="simple">
@@ -497,7 +521,7 @@ default value if get found a KeyError.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">properties</span></tt></p>
 <dl class="function">
 <dt id="properties.checkIdValue">
-<tt class="descclassname">properties.</tt><tt class="descname">checkIdValue</tt><big>(</big><em>values</em><big>)</big><a class="headerlink" href="#properties.checkIdValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">properties.</tt><tt class="descname">checkIdValue</tt><big>(</big><em>values</em><big>)</big><a class="reference internal" href="../_modules/properties.html#checkIdValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.checkIdValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that a variable is a list of (id,value) tuples</p>
 <p><cite>id</cite> should be convertible to an int, value to a float.
 If ok, return the values as a list of (int,float) tuples.</p>
@@ -505,7 +529,7 @@ If ok, return the values as a list of (int,float) tuples.</p>
 
 <dl class="function">
 <dt id="properties.checkArrayOrIdValue">
-<tt class="descclassname">properties.</tt><tt class="descname">checkArrayOrIdValue</tt><big>(</big><em>values</em><big>)</big><a class="headerlink" href="#properties.checkArrayOrIdValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">properties.</tt><tt class="descname">checkArrayOrIdValue</tt><big>(</big><em>values</em><big>)</big><a class="reference internal" href="../_modules/properties.html#checkArrayOrIdValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.checkArrayOrIdValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that a variable is an list of values or (id,value) tuples</p>
 <p>This convenience function checks that the argument is either:</p>
 <ul class="simple">
@@ -518,7 +542,7 @@ value to a float.</li>
 
 <dl class="function">
 <dt id="properties.checkString">
-<tt class="descclassname">properties.</tt><tt class="descname">checkString</tt><big>(</big><em>a</em>, <em>valid</em><big>)</big><a class="headerlink" href="#properties.checkString" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">properties.</tt><tt class="descname">checkString</tt><big>(</big><em>a</em>, <em>valid</em><big>)</big><a class="reference internal" href="../_modules/properties.html#checkString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.checkString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that a string a has one of the valid values.</p>
 <p>This is case insensitive, and returns the upper case string if valid.
 Else, an error is raised.</p>
@@ -526,7 +550,7 @@ Else, an error is raised.</p>
 
 <dl class="function">
 <dt id="properties.FindListItem">
-<tt class="descclassname">properties.</tt><tt class="descname">FindListItem</tt><big>(</big><em>l</em>, <em>p</em><big>)</big><a class="headerlink" href="#properties.FindListItem" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">properties.</tt><tt class="descname">FindListItem</tt><big>(</big><em>l</em>, <em>p</em><big>)</big><a class="reference internal" href="../_modules/properties.html#FindListItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.FindListItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the item p in the list l.</p>
 <p>If p is an item in the list (not a copy of it!), this returns
 its position. Else, -1 is returned.</p>
@@ -536,7 +560,7 @@ Only the first match will be reported.</p>
 
 <dl class="function">
 <dt id="properties.RemoveListItem">
-<tt class="descclassname">properties.</tt><tt class="descname">RemoveListItem</tt><big>(</big><em>l</em>, <em>p</em><big>)</big><a class="headerlink" href="#properties.RemoveListItem" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">properties.</tt><tt class="descname">RemoveListItem</tt><big>(</big><em>l</em>, <em>p</em><big>)</big><a class="reference internal" href="../_modules/properties.html#RemoveListItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#properties.RemoveListItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the item p from the list l.</p>
 <p>If p is an item in the list (not a copy of it!), it is removed from
 the list.
@@ -567,7 +591,7 @@ such as ndarrays.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -605,7 +629,7 @@ such as ndarrays.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

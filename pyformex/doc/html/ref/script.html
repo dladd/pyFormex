@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4. script — Basic pyFormex script functions &mdash; pyFormex v0.8.4 documentation</title>
+    <title>4. script — Basic pyFormex script functions &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="5. draw — Create 3D graphical representations." href="draw.html" />
     <link rel="prev" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" /> 
@@ -67,7 +91,7 @@ module.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">script</span></tt></p>
 <dl class="function">
 <dt id="script.Globals">
-<tt class="descclassname">script.</tt><tt class="descname">Globals</tt><big>(</big><big>)</big><a class="headerlink" href="#script.Globals" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">Globals</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/script.html#Globals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.Globals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the globals that are passed to the scripts on execution.</p>
 <p>This basically contains the globals defined in draw.py, colors.py,
 and formex.py, as well as the globals from numpy.
@@ -81,37 +105,37 @@ module (&#8211;nogui option).</p>
 
 <dl class="function">
 <dt id="script.export">
-<tt class="descclassname">script.</tt><tt class="descname">export</tt><big>(</big><em>dic</em><big>)</big><a class="headerlink" href="#script.export" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">export</tt><big>(</big><em>dic</em><big>)</big><a class="reference internal" href="../_modules/script.html#export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the variables in the given dictionary.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.export2">
-<tt class="descclassname">script.</tt><tt class="descname">export2</tt><big>(</big><em>names</em>, <em>values</em><big>)</big><a class="headerlink" href="#script.export2" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">export2</tt><big>(</big><em>names</em>, <em>values</em><big>)</big><a class="reference internal" href="../_modules/script.html#export2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.export2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a list of names and values.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.forget">
-<tt class="descclassname">script.</tt><tt class="descname">forget</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#script.forget" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">forget</tt><big>(</big><em>names</em><big>)</big><a class="reference internal" href="../_modules/script.html#forget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.forget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the global variables specified in list.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.forgetAll">
-<tt class="descclassname">script.</tt><tt class="descname">forgetAll</tt><big>(</big><big>)</big><a class="headerlink" href="#script.forgetAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">forgetAll</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/script.html#forgetAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.forgetAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete all the global variables.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.rename">
-<tt class="descclassname">script.</tt><tt class="descname">rename</tt><big>(</big><em>oldnames</em>, <em>newnames</em><big>)</big><a class="headerlink" href="#script.rename" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">rename</tt><big>(</big><em>oldnames</em>, <em>newnames</em><big>)</big><a class="reference internal" href="../_modules/script.html#rename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.rename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rename the global variables in oldnames to newnames.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.listAll">
-<tt class="descclassname">script.</tt><tt class="descname">listAll</tt><big>(</big><em>clas=None</em>, <em>like=None</em>, <em>filter=None</em>, <em>dic=None</em><big>)</big><a class="headerlink" href="#script.listAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">listAll</tt><big>(</big><em>clas=None</em>, <em>like=None</em>, <em>filter=None</em>, <em>dic=None</em><big>)</big><a class="reference internal" href="../_modules/script.html#listAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.listAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all objects in dictionay that match criteria.</p>
 <ul class="simple">
 <li>dic: a dictionary object, defaults to pyformex.PF</li>
@@ -127,19 +151,19 @@ or False. If specified, only objects passing the test will be returned.</li>
 
 <dl class="function">
 <dt id="script.named">
-<tt class="descclassname">script.</tt><tt class="descname">named</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#script.named" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">named</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/script.html#named"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.named" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the global object named name.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.getcfg">
-<tt class="descclassname">script.</tt><tt class="descname">getcfg</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#script.getcfg" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">getcfg</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/script.html#getcfg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.getcfg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a value from the configuration.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.ask">
-<tt class="descclassname">script.</tt><tt class="descname">ask</tt><big>(</big><em>question</em>, <em>choices=None</em>, <em>default=''</em><big>)</big><a class="headerlink" href="#script.ask" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">ask</tt><big>(</big><em>question</em>, <em>choices=None</em>, <em>default=''</em><big>)</big><a class="reference internal" href="../_modules/script.html#ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask a question and present possible answers.</p>
 <p>If no choices are presented, anything will be accepted.
 Else, the question is repeated until one of the choices is selected.
@@ -154,19 +178,19 @@ in the choices list. Thus, ask(&#8216;Do you agree&#8217;,[&#8216;Y&#8217;,&#821
 
 <dl class="function">
 <dt id="script.ack">
-<tt class="descclassname">script.</tt><tt class="descname">ack</tt><big>(</big><em>question</em><big>)</big><a class="headerlink" href="#script.ack" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">ack</tt><big>(</big><em>question</em><big>)</big><a class="reference internal" href="../_modules/script.html#ack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.ack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show a Yes/No question and return True/False depending on answer.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.error">
-<tt class="descclassname">script.</tt><tt class="descname">error</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#script.error" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">error</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="../_modules/script.html#error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show an error message and wait for user acknowlegement.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.system">
-<tt class="descclassname">script.</tt><tt class="descname">system</tt><big>(</big><em>cmdline</em>, <em>result='output'</em><big>)</big><a class="headerlink" href="#script.system" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">system</tt><big>(</big><em>cmdline</em>, <em>result='output'</em><big>)</big><a class="reference internal" href="../_modules/script.html#system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a command and return its output.</p>
 <p>If result == &#8216;status&#8217;, the exit status of the command is returned.
 If result == &#8216;output&#8217;, the output of the command is returned.
@@ -175,13 +199,13 @@ If result == &#8216;both&#8217;, a tuple of status and output is returned.</p>
 
 <dl class="function">
 <dt id="script.executeScript">
-<tt class="descclassname">script.</tt><tt class="descname">executeScript</tt><big>(</big><em>scr</em>, <em>glob</em><big>)</big><a class="headerlink" href="#script.executeScript" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">executeScript</tt><big>(</big><em>scr</em>, <em>glob</em><big>)</big><a class="reference internal" href="../_modules/script.html#executeScript"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.executeScript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute a Python script in specified globals.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.playScript">
-<tt class="descclassname">script.</tt><tt class="descname">playScript</tt><big>(</big><em>scr</em>, <em>name=None</em>, <em>filename=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>pye=False</em><big>)</big><a class="headerlink" href="#script.playScript" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">playScript</tt><big>(</big><em>scr</em>, <em>name=None</em>, <em>filename=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>pye=False</em><big>)</big><a class="reference internal" href="../_modules/script.html#playScript"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.playScript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Play a pyformex script scr. scr should be a valid Python text.</p>
 <p>There is a lock to prevent multiple scripts from being executed at the
 same time. This implies that pyFormex scripts can currently not be
@@ -196,7 +220,7 @@ the script that starts with &#8216;draw&#8217;. Also (in this case), each line
 
 <dl class="function">
 <dt id="script.breakpt">
-<tt class="descclassname">script.</tt><tt class="descname">breakpt</tt><big>(</big><em>msg=None</em><big>)</big><a class="headerlink" href="#script.breakpt" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">breakpt</tt><big>(</big><em>msg=None</em><big>)</big><a class="reference internal" href="../_modules/script.html#breakpt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.breakpt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a breakpoint where the script can be halted on a signal.</p>
 <p>If an argument is specified, it will be written to the message board.</p>
 <p>The exitrequested signal is usually emitted by pressing a button in the GUI.</p>
@@ -204,13 +228,13 @@ the script that starts with &#8216;draw&#8217;. Also (in this case), each line
 
 <dl class="function">
 <dt id="script.stopatbreakpt">
-<tt class="descclassname">script.</tt><tt class="descname">stopatbreakpt</tt><big>(</big><big>)</big><a class="headerlink" href="#script.stopatbreakpt" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">stopatbreakpt</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/script.html#stopatbreakpt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.stopatbreakpt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the exitrequested flag.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.playFile">
-<tt class="descclassname">script.</tt><tt class="descname">playFile</tt><big>(</big><em>fn</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#script.playFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">playFile</tt><big>(</big><em>fn</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="../_modules/script.html#playFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.playFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Play a formex script from file fn.</p>
 <p>fn is the name of a file holding a pyFormex script.
 A list of arguments can be passed. They will be available under the name
@@ -220,7 +244,7 @@ is returned to the caller.</p>
 
 <dl class="function">
 <dt id="script.play">
-<tt class="descclassname">script.</tt><tt class="descname">play</tt><big>(</big><em>fn=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>step=False</em><big>)</big><a class="headerlink" href="#script.play" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">play</tt><big>(</big><em>fn=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>step=False</em><big>)</big><a class="reference internal" href="../_modules/script.html#play"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.play" title="Permalink to this definition">¶</a></dt>
 <dd><p>Play the pyFormex script with filename <cite>fn</cite> or the current script file.</p>
 <p>This function does nothing if no filename is passed or no current
 scriptfile was set.
@@ -230,13 +254,13 @@ the script is executed in step mode.</p>
 
 <dl class="function">
 <dt id="script.exit">
-<tt class="descclassname">script.</tt><tt class="descname">exit</tt><big>(</big><em>all=False</em><big>)</big><a class="headerlink" href="#script.exit" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">exit</tt><big>(</big><em>all=False</em><big>)</big><a class="reference internal" href="../_modules/script.html#exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.exit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exit from the current script or from pyformex if no script running.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.quit">
-<tt class="descclassname">script.</tt><tt class="descname">quit</tt><big>(</big><big>)</big><a class="headerlink" href="#script.quit" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">quit</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/script.html#quit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.quit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quit the pyFormex program</p>
 <p>This is a hard exit from pyFormex. It is normally not called
 directly, but results from an exit(True) call.</p>
@@ -244,7 +268,7 @@ directly, but results from an exit(True) call.</p>
 
 <dl class="function">
 <dt id="script.processArgs">
-<tt class="descclassname">script.</tt><tt class="descname">processArgs</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#script.processArgs" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">processArgs</tt><big>(</big><em>args</em><big>)</big><a class="reference internal" href="../_modules/script.html#processArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.processArgs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the application without gui.</p>
 <p>Arguments are interpreted as names of script files, possibly interspersed
 with arguments for the scripts.
@@ -253,7 +277,7 @@ Each running script should pop the required arguments from the list.</p>
 
 <dl class="function">
 <dt id="script.setPrefs">
-<tt class="descclassname">script.</tt><tt class="descname">setPrefs</tt><big>(</big><em>res</em>, <em>save=False</em><big>)</big><a class="headerlink" href="#script.setPrefs" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">setPrefs</tt><big>(</big><em>res</em>, <em>save=False</em><big>)</big><a class="reference internal" href="../_modules/script.html#setPrefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.setPrefs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the current settings (store) with the values in res.</p>
 <p>res is a dictionary with configuration values.
 The current settings will be update with the values in res.</p>
@@ -263,19 +287,19 @@ configuration file.</p>
 
 <dl class="function">
 <dt id="script.printall">
-<tt class="descclassname">script.</tt><tt class="descname">printall</tt><big>(</big><big>)</big><a class="headerlink" href="#script.printall" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">printall</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/script.html#printall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.printall" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print all Formices in globals()</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.writable">
-<tt class="descclassname">script.</tt><tt class="descname">writable</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#script.writable" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">writable</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="../_modules/script.html#writable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.writable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if the specified path is writeable</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.chdir">
-<tt class="descclassname">script.</tt><tt class="descname">chdir</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#script.chdir" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">chdir</tt><big>(</big><em>fn</em><big>)</big><a class="reference internal" href="../_modules/script.html#chdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.chdir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the current working directory.</p>
 <p>If fn is a directory name, the current directory is set to fn.
 If fn is a file name, the current directory is set to the directory
@@ -287,37 +311,49 @@ for persistence between pyFormex invocations.</p>
 
 <dl class="function">
 <dt id="script.runtime">
-<tt class="descclassname">script.</tt><tt class="descname">runtime</tt><big>(</big><big>)</big><a class="headerlink" href="#script.runtime" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">runtime</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/script.html#runtime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.runtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the time elapsed since start of execution of the script.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.startGui">
-<tt class="descclassname">script.</tt><tt class="descname">startGui</tt><big>(</big><em>args=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#script.startGui" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">startGui</tt><big>(</big><em>args=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="../_modules/script.html#startGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.startGui" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the gui</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.isWritable">
-<tt class="descclassname">script.</tt><tt class="descname">isWritable</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#script.isWritable" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">isWritable</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="../_modules/script.html#isWritable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.isWritable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that the specified path is writeable.</p>
 <p>BEWARE: this only works if the path exists!</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.checkRevision">
-<tt class="descclassname">script.</tt><tt class="descname">checkRevision</tt><big>(</big><em>rev</em>, <em>comp='&gt;='</em><big>)</big><a class="headerlink" href="#script.checkRevision" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check that we have the requested revision number.</p>
-<p>Raises an error if the revision number of the running pyFormex does not
-pass the comparison test with the given revision number.</p>
-<p>rev: a positive integer.
-comp: a string used in the comparison.</p>
-<p>Default is to allow the specified revision and all later ones.</p>
+<tt class="descclassname">script.</tt><tt class="descname">checkRevision</tt><big>(</big><em>rev</em>, <em>comp='&gt;='</em><big>)</big><a class="reference internal" href="../_modules/script.html#checkRevision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.checkRevision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the pyFormex revision number.</p>
+<ul class="simple">
+<li>rev: a positive integer.</li>
+<li>comp: a string specifying a comparison operator.</li>
+</ul>
+<p>By default, this function returns True if the pyFormex revision
+number is equal or larger than the specified number.</p>
+<p>The comp argument may specify another comparison operator.</p>
+<p>If pyFormex is unable to find its revision number (this is the
+case on very old versions) the test returns False.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="script.requireRevision">
+<tt class="descclassname">script.</tt><tt class="descname">requireRevision</tt><big>(</big><em>rev</em>, <em>comp='&gt;='</em><big>)</big><a class="reference internal" href="../_modules/script.html#requireRevision"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.requireRevision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Require a specified pyFormex revision number.</p>
+<p>The arguments are like checkRevision. Ho9wever, this function will
+raise an error if the requirement fails.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="script.writeGeomFile">
-<tt class="descclassname">script.</tt><tt class="descname">writeGeomFile</tt><big>(</big><em>filename</em>, <em>objects</em>, <em>sep=' '</em>, <em>mode='w'</em>, <em>shortlines=False</em><big>)</big><a class="headerlink" href="#script.writeGeomFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">writeGeomFile</tt><big>(</big><em>filename</em>, <em>objects</em>, <em>sep=' '</em>, <em>mode='w'</em>, <em>shortlines=False</em><big>)</big><a class="reference internal" href="../_modules/script.html#writeGeomFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.writeGeomFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save geometric objects to a pyFormex Geometry File.</p>
 <p>A pyFormex Geometry File can store multiple geometrical objects in a
 native format that can be efficiently read back into pyformex.
@@ -339,7 +375,7 @@ will be smaller but less portable.</li>
 
 <dl class="function">
 <dt id="script.readGeomFile">
-<tt class="descclassname">script.</tt><tt class="descname">readGeomFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#script.readGeomFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">readGeomFile</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/script.html#readGeomFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#script.readGeomFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a pyFormex Geometry File.</p>
 <p>A pyFormex Geometry File can store multiple geometrical objects in a
 native format that can be efficiently read back into pyformex.
@@ -374,7 +410,7 @@ Else, default names will be provided.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -412,7 +448,7 @@ Else, default names will be provided.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

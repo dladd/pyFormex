@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>10. project — project.py &mdash; pyFormex v0.8.4 documentation</title>
+    <title>10. project — project.py &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="11. utils — A collection of miscellaneous utility functions." href="utils.html" />
     <link rel="prev" title="9. simple — Predefined geometries with a simple shape." href="simple.html" /> 
@@ -63,36 +87,36 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">project</span></tt></p>
 <dl class="class">
 <dt id="project.Project">
-<em class="property">class </em><tt class="descclassname">project.</tt><tt class="descname">Project</tt><big>(</big><em>filename</em>, <em>create=False</em>, <em>signature='pyFormex'</em>, <em>compression=0</em>, <em>binary=False</em>, <em>legacy=True</em><big>)</big><a class="headerlink" href="#project.Project" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">project.</tt><tt class="descname">Project</tt><big>(</big><em>filename</em>, <em>create=False</em>, <em>signature='pyFormex'</em>, <em>compression=0</em>, <em>binary=False</em>, <em>legacy=True</em><big>)</big><a class="reference internal" href="../_modules/project.html#Project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#project.Project" title="Permalink to this definition">¶</a></dt>
 <dd><p>A project is a persistent storage of a Python dictionary.</p>
 <dl class="method">
 <dt id="project.Project.header_data">
-<tt class="descname">header_data</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.header_data" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">header_data</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/project.html#Project.header_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#project.Project.header_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the data to be saved in the header.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="project.Project.set_data_from_header">
-<tt class="descname">set_data_from_header</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#project.Project.set_data_from_header" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set_data_from_header</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="../_modules/project.html#Project.set_data_from_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#project.Project.set_data_from_header" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the project data from the header.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="project.Project.save">
-<tt class="descname">save</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.save" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">save</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/project.html#Project.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#project.Project.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the project to file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="project.Project.load">
-<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.load" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">load</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/project.html#Project.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#project.Project.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a project from file.</p>
 <p>The loaded definitions will update the current project.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="project.Project.delete">
-<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.delete" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/project.html#Project.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#project.Project.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unrecoverably delete the project file.</p>
 </dd></dl>
 
@@ -120,7 +144,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -158,7 +182,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

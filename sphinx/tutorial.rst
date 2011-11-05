@@ -34,8 +34,6 @@
 pyFormex tutorial
 *****************
 
-.. warning:: This document is currently under revision! 
-
 .. topic:: Abstract
 
    This tutorial will guide you step by step through the most important
@@ -1263,7 +1261,7 @@ Formex: (F.nelems(),F.nplex())::
     [7 6]
     [6 4]]
 
-The reverse operation of transforming a Mesh model back into a Formex
+The inverse operation of transforming a Mesh model back into a Formex
 is also quite simple: ``Formex(nodes[elems])`` will indeed be identical to the
 original F (within the tolerance used in merging of the nodes). ::
 

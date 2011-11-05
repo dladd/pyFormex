@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>38. units — A Python wrapper for unit conversion of physical quantities. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>38. units — A Python wrapper for unit conversion of physical quantities. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="39. datareader — Numerical data reader" href="datareader.html" />
     <link rel="prev" title="37. inertia — inertia.py" href="inertia.html" /> 
@@ -69,7 +93,7 @@ include it in this distribution.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">units</span></tt></p>
 <dl class="class">
 <dt id="units.UnitsSystem">
-<em class="property">class </em><tt class="descclassname">units.</tt><tt class="descname">UnitsSystem</tt><big>(</big><em>system='international'</em><big>)</big><a class="headerlink" href="#units.UnitsSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">units.</tt><tt class="descname">UnitsSystem</tt><big>(</big><em>system='international'</em><big>)</big><a class="reference internal" href="../_modules/units.html#UnitsSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#units.UnitsSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for handling and converting units of physical quantities.</p>
 <p>The units class provides two built-in consistent units systems:
 International() and Engineering().
@@ -90,31 +114,31 @@ special purpose values in its units dictionary:
 Defaults are: model=&#8217;m&#8217;, problem=&#8217;international&#8217;.</p>
 <dl class="method">
 <dt id="units.UnitsSystem.Add">
-<tt class="descname">Add</tt><big>(</big><em>un</em><big>)</big><a class="headerlink" href="#units.UnitsSystem.Add" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Add</tt><big>(</big><em>un</em><big>)</big><a class="reference internal" href="../_modules/units.html#UnitsSystem.Add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#units.UnitsSystem.Add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the units from dictionary un to the units system</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="units.UnitsSystem.Predefined">
-<tt class="descname">Predefined</tt><big>(</big><em>system</em><big>)</big><a class="headerlink" href="#units.UnitsSystem.Predefined" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Predefined</tt><big>(</big><em>system</em><big>)</big><a class="reference internal" href="../_modules/units.html#UnitsSystem.Predefined"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#units.UnitsSystem.Predefined" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the predefined units for the specified system</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="units.UnitsSystem.International">
-<tt class="descname">International</tt><big>(</big><big>)</big><a class="headerlink" href="#units.UnitsSystem.International" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">International</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/units.html#UnitsSystem.International"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#units.UnitsSystem.International" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the international units system.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="units.UnitsSystem.Engineering">
-<tt class="descname">Engineering</tt><big>(</big><big>)</big><a class="headerlink" href="#units.UnitsSystem.Engineering" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Engineering</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/units.html#UnitsSystem.Engineering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#units.UnitsSystem.Engineering" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a consistent engineering units system.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="units.UnitsSystem.Read">
-<tt class="descname">Read</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#units.UnitsSystem.Read" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Read</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/units.html#UnitsSystem.Read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#units.UnitsSystem.Read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read units from file with specified name.</p>
 <p>The units file is an ascii file where each line contains a couple of
 words separated by a colon and a blank. The first word is the type of
@@ -126,7 +150,7 @@ the specified units system.</p>
 
 <dl class="method">
 <dt id="units.UnitsSystem.Get">
-<tt class="descname">Get</tt><big>(</big><em>ent</em><big>)</big><a class="headerlink" href="#units.UnitsSystem.Get" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">Get</tt><big>(</big><em>ent</em><big>)</big><a class="reference internal" href="../_modules/units.html#UnitsSystem.Get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#units.UnitsSystem.Get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get units list for the specified entitities.</p>
 <p>If ent is a single entity, returns the corresponding unit if an entry
 ent exists in the current system or else returns ent unchanged.
@@ -144,7 +168,7 @@ Example: with the default units system:</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">units</span></tt></p>
 <dl class="function">
 <dt id="units.convertUnits">
-<tt class="descclassname">units.</tt><tt class="descname">convertUnits</tt><big>(</big><em>From</em>, <em>To</em><big>)</big><a class="headerlink" href="#units.convertUnits" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">units.</tt><tt class="descname">convertUnits</tt><big>(</big><em>From</em>, <em>To</em><big>)</big><a class="reference internal" href="../_modules/units.html#convertUnits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#units.convertUnits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts between conformable units.</p>
 <p>This function converts the units &#8216;From&#8217; to units &#8216;To&#8217;. The units should
 be conformable. The &#8216;From&#8217; argument can (and usually does) include a value.
@@ -175,7 +199,7 @@ should be installed for this function to work.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -213,7 +237,7 @@ should be installed for this function to work.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

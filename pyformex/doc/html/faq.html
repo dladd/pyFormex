@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyFormex FAQ ‘n TRICKS &mdash; pyFormex v0.8.4 documentation</title>
+    <title>pyFormex FAQ ‘n TRICKS &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
     <link rel="up" title="pyFormex user guide" href="user-guide.html" />
     <link rel="next" title="pyFormex example scripts" href="examples.html" />
     <link rel="prev" title="Configuring pyFormex" href="config.html" /> 
@@ -63,9 +87,9 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Date:</th><td class="field-body">July 09, 2011</td>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">November 05, 2011</td>
 </tr>
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.8.4</td>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.8.5</td>
 </tr>
 <tr class="field"><th class="field-name">Author:</th><td class="field-body">Benedict Verhegghe &lt;<a class="reference external" href="mailto:benedict&#46;verhegghe&#37;&#52;&#48;ugent&#46;be">benedict<span>&#46;</span>verhegghe<span>&#64;</span>ugent<span>&#46;</span>be</a>&gt;</td>
 </tr>
@@ -147,7 +171,7 @@ variable.</p>
 same directory where it is located. In that case you can just add
 the following two lines to the start of your script:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span><span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
 </pre></div>
 </div>
 </li>
@@ -247,7 +271,7 @@ this (on Debian: <tt class="docutils literal"><span class="pre">apt-get</span> <
 </li>
 </ol>
 <blockquote>
-<p>If you have no write permission in your current working directory,
+<div><p>If you have no write permission in your current working directory,
 running a calpy simulation will result in an error like this:</p>
 <div class="highlight-python"><pre>fil = file(self.tempfilename,'w')
 IOError
@@ -259,12 +283,12 @@ where you have write permission (e.g. your home directory).
 You can do this using the <em class="menuselection">File-&gt;Change workdir</em> menu option.
 The setting will be saved when you leave pyFormex (but other scripts
 might change the setting again).</p>
-</blockquote>
+</div></blockquote>
 <ol class="arabic simple">
 <li><strong>How to obtain unequally sized multiple viewports</strong></li>
 </ol>
 <blockquote>
-<p>The multiple viewports are ordered in a grid layout, and you can
+<div><p>The multiple viewports are ordered in a grid layout, and you can
 specify relative sizes for the different columns and/or rows of
 viewports. You can use setColumnStretch and setRowStretch to give
 the columns a relative stretch compared toi the other ones.
@@ -272,14 +296,14 @@ The following example produces 4 viewports in a 2x2
 layout, with the right column(1) having double width of the left
 one(0), while the bottom row has a height equal to 1.5 times the
 height of the top row:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">layout</span><span class="p">(</span><span class="mf">4</span><span class="p">)</span>
-<span class="n">pf</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">viewports</span><span class="o">.</span><span class="n">setColumnStretch</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">)</span>
-<span class="n">pf</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">viewports</span><span class="o">.</span><span class="n">setColumnStretch</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">)</span>
-<span class="n">pf</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">viewports</span><span class="o">.</span><span class="n">setRowStretch</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">)</span>
-<span class="n">pf</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">viewports</span><span class="o">.</span><span class="n">setRowStretch</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">layout</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">viewports</span><span class="o">.</span><span class="n">setColumnStretch</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">viewports</span><span class="o">.</span><span class="n">setColumnStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">viewports</span><span class="o">.</span><span class="n">setRowStretch</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">viewports</span><span class="o">.</span><span class="n">setRowStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 </div>
 </div>
 
@@ -311,7 +335,7 @@ height of the top row:</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -349,7 +373,7 @@ height of the top row:</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

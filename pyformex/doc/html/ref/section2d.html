@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>36. section2d — Some functions operating on 2D structures. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>36. section2d — Some functions operating on 2D structures. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="37. inertia — inertia.py" href="inertia.html" />
     <link rel="prev" title="35. isopar — Isoparametric transformations" href="isopar.html" /> 
@@ -65,7 +89,7 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">section2d</span></tt></p>
 <dl class="class">
 <dt id="section2d.PlaneSection">
-<em class="property">class </em><tt class="descclassname">section2d.</tt><tt class="descname">PlaneSection</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#section2d.PlaneSection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">section2d.</tt><tt class="descname">PlaneSection</tt><big>(</big><em>F</em><big>)</big><a class="reference internal" href="../_modules/section2d.html#PlaneSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#section2d.PlaneSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class describing a general 2D section.</p>
 <p>The 2D section is the area inside a closed curve in the (x,y) plane.
 The curve is decribed by a finite number of points and by straight
@@ -75,7 +99,7 @@ segments connecting them.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">section2d</span></tt></p>
 <dl class="function">
 <dt id="section2d.sectionChar">
-<tt class="descclassname">section2d.</tt><tt class="descname">sectionChar</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#section2d.sectionChar" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">section2d.</tt><tt class="descname">sectionChar</tt><big>(</big><em>F</em><big>)</big><a class="reference internal" href="../_modules/section2d.html#sectionChar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#section2d.sectionChar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute characteristics of plane sections.</p>
 <p>The plane sections are described by their circumference, consisting of a
 sequence of straight segments.
@@ -99,7 +123,7 @@ z axis to yield a positive surface.</p>
 
 <dl class="function">
 <dt id="section2d.extendedSectionChar">
-<tt class="descclassname">section2d.</tt><tt class="descname">extendedSectionChar</tt><big>(</big><em>S</em><big>)</big><a class="headerlink" href="#section2d.extendedSectionChar" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">section2d.</tt><tt class="descname">extendedSectionChar</tt><big>(</big><em>S</em><big>)</big><a class="reference internal" href="../_modules/section2d.html#extendedSectionChar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#section2d.extendedSectionChar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes extended section characteristics for the given section.</p>
 <p>S is a dict with section basic section characteristics as returned by
 sectionChar().
@@ -117,7 +141,7 @@ second area product is always zero.)</li>
 
 <dl class="function">
 <dt id="section2d.princTensor2D">
-<tt class="descclassname">section2d.</tt><tt class="descname">princTensor2D</tt><big>(</big><em>Ixx</em>, <em>Iyy</em>, <em>Ixy</em><big>)</big><a class="headerlink" href="#section2d.princTensor2D" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">section2d.</tt><tt class="descname">princTensor2D</tt><big>(</big><em>Ixx</em>, <em>Iyy</em>, <em>Ixy</em><big>)</big><a class="reference internal" href="../_modules/section2d.html#princTensor2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#section2d.princTensor2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the principal values and directions of a 2D tensor.</p>
 <p>Returns a tuple with three values:</p>
 <ul class="simple">
@@ -147,7 +171,7 @@ second area product is always zero.)</li>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -185,7 +209,7 @@ second area product is always zero.)</li>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

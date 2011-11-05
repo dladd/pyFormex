@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>35. isopar — Isoparametric transformations &mdash; pyFormex v0.8.4 documentation</title>
+    <title>35. isopar — Isoparametric transformations &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="36. section2d — Some functions operating on 2D structures." href="section2d.html" />
     <link rel="prev" title="34. nurbs — Using NURBS in pyFormex." href="nurbs.html" /> 
@@ -62,8 +86,13 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">isopar</span></tt></p>
 <dl class="class">
 <dt id="isopar.Isopar">
-<em class="property">class </em><tt class="descclassname">isopar.</tt><tt class="descname">Isopar</tt><big>(</big><em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="headerlink" href="#isopar.Isopar" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">isopar.</tt><tt class="descname">Isopar</tt><big>(</big><em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="reference internal" href="../_modules/isopar.html#Isopar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#isopar.Isopar" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing an isoparametric transformation</p>
+<blockquote>
+<div>type is one of the keys in Isopar.isodata
+coords and oldcoords can be either arrays, Coords or Formex instances,
+but should be of equal shape, and match the number of atoms in the
+specified transformation type</div></blockquote>
 <p>The following three formulations are equivalent</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">trf</span> <span class="o">=</span> <span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">isopar</span><span class="p">(</span><span class="n">trf</span><span class="p">)</span>
@@ -76,7 +105,7 @@
 </div>
 <dl class="method">
 <dt id="isopar.Isopar.transform">
-<tt class="descname">transform</tt><big>(</big><em>X</em><big>)</big><a class="headerlink" href="#isopar.Isopar.transform" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">transform</tt><big>(</big><em>X</em><big>)</big><a class="reference internal" href="../_modules/isopar.html#Isopar.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#isopar.Isopar.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply isoparametric transform to a set of coordinates.</p>
 <p>Returns a Coords array with same shape as X</p>
 </dd></dl>
@@ -86,7 +115,7 @@
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">isopar</span></tt></p>
 <dl class="function">
 <dt id="isopar.evaluate">
-<tt class="descclassname">isopar.</tt><tt class="descname">evaluate</tt><big>(</big><em>atoms</em>, <em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big><a class="headerlink" href="#isopar.evaluate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">isopar.</tt><tt class="descname">evaluate</tt><big>(</big><em>atoms</em>, <em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big><a class="reference internal" href="../_modules/isopar.html#evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#isopar.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build a matrix of functions of coords.</p>
 <ul class="simple">
 <li><cite>atoms</cite>: a list of text strings representing a mathematical function of
@@ -118,7 +147,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -156,7 +185,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>21. canvas — This implements an OpenGL drawing widget for painting 3D scenes. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>21. canvas — This implements an OpenGL drawing widget for painting 3D scenes. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
     <link rel="prev" title="20. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" /> 
@@ -62,42 +86,70 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
 <dl class="class">
 <dt id="canvas.CanvasSettings">
-<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">CanvasSettings</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">CanvasSettings</tt><big>(</big><em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#CanvasSettings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.CanvasSettings" title="Permalink to this definition">¶</a></dt>
 <dd><p>A collection of settings for an OpenGL Canvas.</p>
 <p>The canvas settings are a collection of settings and default values
-affecting the rendering in an individual viewport. Currently the
-following values are defined:</p>
+affecting the rendering in an individual viewport. There are two type of settings:</p>
+<ul class="simple">
+<li>mode settings are set during the initialization of the canvas and can/should not be
+changed during the drawing of actors and decorations;</li>
+<li>default settings can be used as default values but may be changed during the drawing
+of actors/decorations: they are reset before each individual draw instruction.</li>
+</ul>
+<p>Currently the following mode settings are defined:</p>
 <ul class="simple">
 <li>bgcolor: the viewport background color</li>
 <li>bgcolor2: None for a single color background, bottom color for a
 graded background (the top color then being bgcolor)</li>
+<li>slcolor: the highlight color</li>
+<li>rendermode: the rendering mode</li>
+<li>shading: True is smooth, False is flat</li>
+<li>lighting: True or False</li>
+</ul>
+<p>The list of default settings includes:</p>
+<ul class="simple">
 <li>fgcolor: the default drawing color</li>
 <li>bkcolor: the default backface color</li>
-<li>slcolor: the highlight color</li>
 <li>colormap: the default color map to be used if color is an index</li>
 <li>bklormap: the default color map to be used if bkcolor is an index</li>
+<li>pointsize: the default size for drawing points</li>
+<li>marksize: the default size for drawing markers</li>
+<li>linewidth: the default width for drawing lines</li>
 </ul>
 <p>Any of these values can be set in the constructor using a keyword argument.
 All items that are not set, will get their value from the configuration
 file(s).</p>
 <dl class="method">
 <dt id="canvas.CanvasSettings.reset">
-<tt class="descname">reset</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reset to defaults.</p>
-<p>If a dict is specified, these settings will override defaults.</p>
+<tt class="descname">reset</tt><big>(</big><em>d={}</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#CanvasSettings.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.CanvasSettings.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the CanvasSettings to its defaults.</p>
+<p>The default values are taken from the configuration files.
+An optional dictionary may be specified to override (some of) these defaults.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.CanvasSettings.update">
-<tt class="descname">update</tt><big>(</big><em>d</em>, <em>strict=True</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings.update" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">update</tt><big>(</big><em>d</em>, <em>strict=True</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#CanvasSettings.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.CanvasSettings.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update current values with the specified settings</p>
 <p>Returns the sanitized update values.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="canvas.CanvasSettings.checkDict">
-<em class="property">classmethod </em><tt class="descname">checkDict</tt><big>(</big><em>clas</em>, <em>dict</em>, <em>strict=True</em><big>)</big><a class="headerlink" href="#canvas.CanvasSettings.checkDict" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">checkDict</tt><big>(</big><em>clas</em>, <em>dict</em>, <em>strict=True</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#CanvasSettings.checkDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.CanvasSettings.checkDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a dict to acceptable settings.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.CanvasSettings.setMode">
+<tt class="descname">setMode</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#CanvasSettings.setMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.CanvasSettings.setMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activate the mode canvas settings in the GL machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.CanvasSettings.setDefault">
+<tt class="descname">setDefault</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#CanvasSettings.setDefault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.CanvasSettings.setDefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activate the default canvas settings in the GL machine.</p>
 </dd></dl>
 
 <dl class="method">
@@ -121,47 +173,52 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="canvas.Canvas">
-<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Canvas</tt><a class="headerlink" href="#canvas.Canvas" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Canvas</tt><big>(</big><em>settings={}</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>A canvas for OpenGL rendering.</p>
+<p>The Canvas is a class holding all global data of an OpenGL scene rendering. This includes
+colors, line types, rendering mode. It also keeps lists of all the actors and decorations
+in the scene. It always has a Camera object holding import viewing parameters. And finally
+it stores the lighting information.</p>
+<p>It does not however contain the viewport size and position.</p>
 <dl class="method">
-<dt id="canvas.Canvas.glLight">
-<tt class="descname">glLight</tt><big>(</big><em>onoff</em><big>)</big><a class="headerlink" href="#canvas.Canvas.glLight" title="Permalink to this definition">¶</a></dt>
+<dt id="canvas.Canvas.do_lighting">
+<tt class="descname">do_lighting</tt><big>(</big><em>onoff</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.do_lighting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.do_lighting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle lights on/off.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="canvas.Canvas.hasLight">
-<tt class="descname">hasLight</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.hasLight" title="Permalink to this definition">¶</a></dt>
+<dt id="canvas.Canvas.has_lighting">
+<tt class="descname">has_lighting</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.has_lighting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.has_lighting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the status of the lighting.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.resetDefaults">
-<tt class="descname">resetDefaults</tt><big>(</big><em>dict={}</em><big>)</big><a class="headerlink" href="#canvas.Canvas.resetDefaults" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resetDefaults</tt><big>(</big><em>dict={}</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.resetDefaults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.resetDefaults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all the settings to their default values.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setAmbient">
-<tt class="descname">setAmbient</tt><big>(</big><em>ambient</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setAmbient" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setAmbient</tt><big>(</big><em>ambient</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setAmbient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setAmbient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the global ambient lighting for the canvas</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setMaterial">
-<tt class="descname">setMaterial</tt><big>(</big><em>matname</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setMaterial" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setMaterial</tt><big>(</big><em>matname</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setMaterial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the default material light properties for the canvas</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.resetLighting">
-<tt class="descname">resetLighting</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.resetLighting" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resetLighting</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.resetLighting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.resetLighting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the light parameters</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setRenderMode">
-<tt class="descname">setRenderMode</tt><big>(</big><em>mode</em>, <em>lighting=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setRenderMode" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setRenderMode</tt><big>(</big><em>mode</em>, <em>lighting=None</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setRenderMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setRenderMode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the rendering mode.</p>
 <p>This sets or changes the rendermode and lighting attributes.
 If lighting is not specified, it is set depending on the rendermode.</p>
@@ -175,25 +232,25 @@ and everything is redrawn with the new mode.</p>
 
 <dl class="method">
 <dt id="canvas.Canvas.setLineWidth">
-<tt class="descname">setLineWidth</tt><big>(</big><em>lw</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setLineWidth" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setLineWidth</tt><big>(</big><em>lw</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setLineWidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setLineWidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the linewidth for line rendering.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setLineStipple">
-<tt class="descname">setLineStipple</tt><big>(</big><em>repeat</em>, <em>pattern</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setLineStipple" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setLineStipple</tt><big>(</big><em>repeat</em>, <em>pattern</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setLineStipple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setLineStipple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the linestipple for line rendering.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setPointSize">
-<tt class="descname">setPointSize</tt><big>(</big><em>sz</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setPointSize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setPointSize</tt><big>(</big><em>sz</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setPointSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setPointSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the size for point drawing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setBgColor">
-<tt class="descname">setBgColor</tt><big>(</big><em>color1</em>, <em>color2=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setBgColor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setBgColor</tt><big>(</big><em>color1</em>, <em>color2=None</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setBgColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setBgColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the background color.</p>
 <p>If one color is specified, a solid background is set.
 If two colors are specified, a graded background is set
@@ -202,25 +259,25 @@ and an object is created to display the background.</p>
 
 <dl class="method">
 <dt id="canvas.Canvas.createBackground">
-<tt class="descname">createBackground</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.createBackground" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">createBackground</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.createBackground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.createBackground" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the background object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setFgColor">
-<tt class="descname">setFgColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setFgColor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setFgColor</tt><big>(</big><em>color</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setFgColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setFgColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the default foreground color.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setSlColor">
-<tt class="descname">setSlColor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setSlColor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setSlColor</tt><big>(</big><em>color</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setSlColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setSlColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the highlight color.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setTriade">
-<tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setTriade" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setTriade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setTriade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the display of the global axes on or off.</p>
 <p>If on is True, a triade of global axes is displayed, if False it is
 removed. The default (None) toggles between on and off.</p>
@@ -228,7 +285,7 @@ removed. The default (None) toggles between on and off.</p>
 
 <dl class="method">
 <dt id="canvas.Canvas.glinit">
-<tt class="descname">glinit</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.glinit" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">glinit</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.glinit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.glinit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the rendering machine.</p>
 <p>The rendering machine is initialized according to:
 - self.rendermode: one of
@@ -237,25 +294,25 @@ removed. The default (None) toggles between on and off.</p>
 
 <dl class="method">
 <dt id="canvas.Canvas.glupdate">
-<tt class="descname">glupdate</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.glupdate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">glupdate</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.glupdate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.glupdate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flush all OpenGL commands, making sure the display is updated.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.clear">
-<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.clear" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the canvas to the background color.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setDefaults">
-<tt class="descname">setDefaults</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.setDefaults" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setDefaults</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setDefaults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setDefaults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Activate the canvas settings in the GL machine.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.display">
-<tt class="descname">display</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.display" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">display</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.display" title="Permalink to this definition">¶</a></dt>
 <dd><p>(Re)display all the actors in the scene.</p>
 <p>This should e.g. be used when actors are added to the scene,
 or after changing  camera position/orientation or lens.</p>
@@ -263,7 +320,7 @@ or after changing  camera position/orientation or lens.</p>
 
 <dl class="method">
 <dt id="canvas.Canvas.begin_2D_drawing">
-<tt class="descname">begin_2D_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.begin_2D_drawing" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">begin_2D_drawing</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.begin_2D_drawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.begin_2D_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up the canvas for 2D drawing on top of 3D canvas.</p>
 <p>The 2D drawing operation should be ended by calling end_2D_drawing. 
 It is assumed that you will not try to change/refresh the normal
@@ -272,67 +329,67 @@ It is assumed that you will not try to change/refresh the normal
 
 <dl class="method">
 <dt id="canvas.Canvas.end_2D_drawing">
-<tt class="descname">end_2D_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.end_2D_drawing" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">end_2D_drawing</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.end_2D_drawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.end_2D_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel the 2D drawing mode initiated by begin_2D_drawing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setBbox">
-<tt class="descname">setBbox</tt><big>(</big><em>bbox=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setBbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setBbox</tt><big>(</big><em>bbox=None</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setBbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setBbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the bounding box of the scene you want to be visible.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.addActor">
-<tt class="descname">addActor</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addActor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addActor</tt><big>(</big><em>actor</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.addActor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.addActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a 3D actor to the 3D scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeActor">
-<tt class="descname">removeActor</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeActor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeActor</tt><big>(</big><em>actor</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.removeActor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.removeActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a 3D actor from the 3D scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.addHighlight">
-<tt class="descname">addHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addHighlight" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.addHighlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.addHighlight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a 3D actor highlight to the 3D scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeHighlight">
-<tt class="descname">removeHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeHighlight" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeHighlight</tt><big>(</big><em>actor</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.removeHighlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.removeHighlight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a 3D actor highlight from the 3D scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.addAnnotation">
-<tt class="descname">addAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addAnnotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.addAnnotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.addAnnotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an annotation to the 3D scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeAnnotation">
-<tt class="descname">removeAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAnnotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeAnnotation</tt><big>(</big><em>actor</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.removeAnnotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.removeAnnotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove an annotation from the 3D scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.addDecoration">
-<tt class="descname">addDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.addDecoration" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.addDecoration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.addDecoration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a 2D decoration to the canvas.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeDecoration">
-<tt class="descname">removeDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeDecoration" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeDecoration</tt><big>(</big><em>actor</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.removeDecoration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.removeDecoration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a 2D decoration from the canvas.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.remove">
-<tt class="descname">remove</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#canvas.Canvas.remove" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">remove</tt><big>(</big><em>itemlist</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a list of any actor/highlights/annotation/decoration items.</p>
 <p>This will remove the items from any of the canvas lists in which the
 item appears.
@@ -341,43 +398,43 @@ itemlist can also be a single item instead of a list.</p>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeActors">
-<tt class="descname">removeActors</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeActors" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeActors</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.removeActors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.removeActors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove all actors in actorlist (default = all) from the scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeHighlights">
-<tt class="descname">removeHighlights</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeHighlights" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeHighlights</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.removeHighlights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.removeHighlights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove all highlights in actorlist (default = all) from the scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeAnnotations">
-<tt class="descname">removeAnnotations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAnnotations" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeAnnotations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.removeAnnotations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.removeAnnotations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove all annotations in actorlist (default = all) from the scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeDecorations">
-<tt class="descname">removeDecorations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.removeDecorations" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeDecorations</tt><big>(</big><em>actorlist=None</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.removeDecorations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.removeDecorations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove all decorations in actorlist (default = all) from the scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.removeAll">
-<tt class="descname">removeAll</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.removeAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeAll</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.removeAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.removeAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove all actors and decorations</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.redrawAll">
-<tt class="descname">redrawAll</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.redrawAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">redrawAll</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.redrawAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.redrawAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Redraw all actors in the scene.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.setCamera">
-<tt class="descname">setCamera</tt><big>(</big><em>bbox=None</em>, <em>angles=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setCamera" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setCamera</tt><big>(</big><em>bbox=None</em>, <em>angles=None</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.setCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.setCamera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the camera looking under angles at bbox.</p>
 <p>This function sets the camera angles and adjusts the zooming.
 The camera distance remains unchanged.</p>
@@ -391,60 +448,76 @@ angles can be a set of 3 angles, or a string</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="canvas.Canvas.zoom">
-<tt class="descname">zoom</tt><big>(</big><em>f</em>, <em>dolly=True</em><big>)</big><a class="headerlink" href="#canvas.Canvas.zoom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dolly zooming.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="canvas.Canvas.project">
-<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big><a class="headerlink" href="#canvas.Canvas.project" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map the object coordinates (x,y,z) to window coordinates.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.unProject">
-<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big><a class="headerlink" href="#canvas.Canvas.unProject" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>locked=False</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.unProject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.unProject" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map the window coordinates (x,y,z) to object coordinates.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="canvas.Canvas.zoom">
+<tt class="descname">zoom</tt><big>(</big><em>f</em>, <em>dolly=True</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.zoom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.zoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dolly zooming.</p>
+<p>Zooms in with a factor <cite>f</cite> by moving the camera closer
+to the scene. This does noet change the camera&#8217;s FOV setting.
+It will change the perspective view though.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="canvas.Canvas.zoomRectangle">
-<tt class="descname">zoomRectangle</tt><big>(</big><em>x0</em>, <em>y0</em>, <em>x1</em>, <em>y1</em><big>)</big><a class="headerlink" href="#canvas.Canvas.zoomRectangle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rectangle zooming</p>
-<p>x0,y0,x1,y1 are pixel coordinates of the lower left and upper right
-corners of the area to zoom to the full window</p>
+<tt class="descname">zoomRectangle</tt><big>(</big><em>x0</em>, <em>y0</em>, <em>x1</em>, <em>y1</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.zoomRectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.zoomRectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangle zooming.</p>
+<p>Zooms in/out by changing the area and position of the visible
+part of the lens.
+Unlike zoom(), this does not change the perspective view.</p>
+<p><cite>x0,y0,x1,y1</cite> are pixel coordinates of the lower left and upper right
+corners of the area of the lens that will be mapped on the
+canvas viewport.
+Specifying values that lead to smaller width/height will zoom in.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="canvas.Canvas.zoomCentered">
+<tt class="descname">zoomCentered</tt><big>(</big><em>w</em>, <em>h</em>, <em>x=None</em>, <em>y=None</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.zoomCentered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.zoomCentered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangle zooming with specified center.</p>
+<p>This is like zoomRectangle, but the zoom rectangle is specified
+by its center and size, which may be more appropriate when using
+off-center zooming.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.zoomAll">
-<tt class="descname">zoomAll</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.zoomAll" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rectangle zooming</p>
-<p>x0,y0,x1,y1 are relative corners in (0,0)..(1,1) space</p>
+<tt class="descname">zoomAll</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.zoomAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.zoomAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangle zoom to make full scene visible.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.saveBuffer">
-<tt class="descname">saveBuffer</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.saveBuffer" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">saveBuffer</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.saveBuffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.saveBuffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the current OpenGL buffer</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.showBuffer">
-<tt class="descname">showBuffer</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.Canvas.showBuffer" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">showBuffer</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.showBuffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.showBuffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the saved buffer</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.draw_focus_rectangle">
-<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>width=2</em><big>)</big><a class="headerlink" href="#canvas.Canvas.draw_focus_rectangle" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">draw_focus_rectangle</tt><big>(</big><em>width=2</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.draw_focus_rectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.draw_focus_rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the focus rectangle.</p>
 <p>The specified width is HALF of the line width</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="canvas.Canvas.draw_cursor">
-<tt class="descname">draw_cursor</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#canvas.Canvas.draw_cursor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">draw_cursor</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#Canvas.draw_cursor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.Canvas.draw_cursor" title="Permalink to this definition">¶</a></dt>
 <dd><p>draw the cursor</p>
 </dd></dl>
 
@@ -453,13 +526,13 @@ corners of the area to zoom to the full window</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">canvas</span></tt></p>
 <dl class="function">
 <dt id="canvas.gl_pickbuffer">
-<tt class="descclassname">canvas.</tt><tt class="descname">gl_pickbuffer</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.gl_pickbuffer" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">gl_pickbuffer</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#gl_pickbuffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.gl_pickbuffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of the 2nd numbers in the openGL pick buffer.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="canvas.glLineStipple">
-<tt class="descclassname">canvas.</tt><tt class="descname">glLineStipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big><a class="headerlink" href="#canvas.glLineStipple" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glLineStipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#glLineStipple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.glLineStipple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the line stipple pattern.</p>
 <p>When drawing lines, OpenGl can use a stipple pattern. The stipple
 is defined by two values: a pattern (on/off) of maximum 16 bits,
@@ -469,25 +542,25 @@ used on the pixel level, and a multiplier factor for each bit.</p>
 
 <dl class="function">
 <dt id="canvas.glSmooth">
-<tt class="descclassname">canvas.</tt><tt class="descname">glSmooth</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.glSmooth" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glSmooth</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#glSmooth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.glSmooth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable smooth shading</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="canvas.glFlat">
-<tt class="descclassname">canvas.</tt><tt class="descname">glFlat</tt><big>(</big><big>)</big><a class="headerlink" href="#canvas.glFlat" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glFlat</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/canvas.html#glFlat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.glFlat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disable smooth shading</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="canvas.onOff">
-<tt class="descclassname">canvas.</tt><tt class="descname">onOff</tt><big>(</big><em>onoff</em><big>)</big><a class="headerlink" href="#canvas.onOff" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">onOff</tt><big>(</big><em>onoff</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#onOff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.onOff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert On/Off strings to a boolean</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="canvas.glEnable">
-<tt class="descclassname">canvas.</tt><tt class="descname">glEnable</tt><big>(</big><em>facility</em>, <em>onoff</em><big>)</big><a class="headerlink" href="#canvas.glEnable" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">canvas.</tt><tt class="descname">glEnable</tt><big>(</big><em>facility</em>, <em>onoff</em><big>)</big><a class="reference internal" href="../_modules/canvas.html#glEnable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#canvas.glEnable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable/Disable an OpenGL facility, depending on onoff value</p>
 <p>facility is an OpenGL facility.
 onoff can be True or False to enable, resp. disable the facility, or
@@ -515,7 +588,7 @@ None to leave it unchanged.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -553,7 +626,7 @@ None to leave it unchanged.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

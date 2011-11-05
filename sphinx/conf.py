@@ -49,9 +49,12 @@ print sys.path
 
 # -- General configuration -----------------------------------------------------
 
+# If your documentation needs a minimal Sphinx version, state it here.
+#needs_sphinx = '1.0'
+
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'sphinx.ext.autosummary'] #, 'numpydoc.numpydoc']
+extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'sphinx.ext.autosummary',  'sphinx.ext.viewcode'] #'sphinx.ext.jsmath',
 
 #render_class_autosummary = False
 
@@ -73,8 +76,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'pyFormex'
-copyright = '2010, Benedict Verhegghe'
+project = u'pyFormex'
+copyright = u'2010, Benedict Verhegghe'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -95,12 +98,9 @@ release = '0.8.5-a1'
 # Else, today_fmt is used as the format for a strftime call.
 #today_fmt = '%B %d, %Y'
 
-# List of documents that shouldn't be included in the build.
-#unused_docs = []
-
-# List of directories, relative to source directory, that shouldn't be searched
-# for source files.
-exclude_trees = ['_build','todo']
+# List of patterns, relative to source directory, that match files and
+# directories to ignore when looking for source files.
+exclude_patterns = ['_build', 'HOWTO.rst']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
@@ -125,20 +125,20 @@ pygments_style = 'sphinx'
 
 # -- Options for HTML output ---------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  Major themes that come with
-# Sphinx are currently 'basic', 'default',  'sphinxdoc', 'traditional'.
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
 html_theme = 'default'
+
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
     "rightsidebar": "true",
-    "stickysidebar": "true",
-    "headbgcolor": "silver",
+    "stickysidebar": "false",
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = [ '/home/bene/soft/sphinx-0.6.6/sphinx/theme' ]
+#html_theme_path = []
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -177,7 +177,7 @@ html_static_path = ['_static']
 #html_additional_pages = {}
 
 # If false, no module index is generated.
-#html_use_modindex = True
+#html_domain_indices = True
 
 # If false, no index is generated.
 #html_use_index = True
@@ -189,13 +189,19 @@ html_static_path = ['_static']
 html_copy_source = False
 html_show_sourcelink = False
 
+# If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
+#html_show_sphinx = True
+
+# If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
+#html_show_copyright = True
+
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
 #html_use_opensearch = ''
 
-# If nonempty, this is the file name suffix for HTML files (e.g. ".xhtml").
-#html_file_suffix = ''
+# This is the file name suffix for HTML files (e.g. ".xhtml").
+#html_file_suffix = None
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'pyFormexdoc'
@@ -231,7 +237,7 @@ latex_logo = 'images/pyformex_logo_with_dome.png'
 #latex_appendices = []
 
 # If false, no module index is generated.
-#latex_use_modindex = True
+#latex_domain_indices = True
 
 def setup(app):
     from sphinx.ext.autodoc import cut_lines
@@ -248,6 +254,13 @@ def setup(app):
 ##     return skip
 
 
+# -- Options for manual page output --------------------------------------------
 
+# One entry per manual page. List of tuples
+# (source start file, name, description, authors, manual section).
+man_pages = [
+    ('index', 'sometext', u'sometext Documentation',
+     [u'we'], 1)
+]
 
 # End

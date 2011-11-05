@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>32. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>32. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="33. geomtools — Basic geometrical operations." href="geomtools.html" />
     <link rel="prev" title="31. mesh_ext — Extended functionality of the Mesh class." href="mesh_ext.html" /> 
@@ -65,7 +89,7 @@ a triangulated surface.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">trisurface</span></tt></p>
 <dl class="class">
 <dt id="trisurface.TriSurface">
-<em class="property">class </em><tt class="descclassname">trisurface.</tt><tt class="descname">TriSurface</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">trisurface.</tt><tt class="descname">TriSurface</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a triangulated 3D surface.</p>
 <p>The surface contains <cite>ntri</cite> triangles, each having 3 vertices with
 3 coordinates. The surface can be initialized from one of the following:</p>
@@ -91,55 +115,55 @@ For volume elements the sum of the faces&#8217;areas is returned.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.nedges">
-<tt class="descname">nedges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nedges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nedges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.nedges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.nedges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of edges of the TriSurface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.nfaces">
-<tt class="descname">nfaces</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nfaces" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nfaces</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.nfaces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.nfaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of faces of the TriSurface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.vertices">
-<tt class="descname">vertices</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.vertices" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">vertices</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.vertices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.vertices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the coordinates of the nodes of the TriSurface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.shape">
-<tt class="descname">shape</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.shape" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">shape</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of points, edges, faces of the TriSurface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.getElemEdges">
-<tt class="descname">getElemEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.getElemEdges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getElemEdges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.getElemEdges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.getElemEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the faces&#8217; edge numbers.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.setCoords">
-<tt class="descname">setCoords</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setCoords" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setCoords</tt><big>(</big><em>coords</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.setCoords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.setCoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the coords.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.setElems">
-<tt class="descname">setElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setElems" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setElems</tt><big>(</big><em>elems</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.setElems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.setElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the elems.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.setEdgesAndFaces">
-<tt class="descname">setEdgesAndFaces</tt><big>(</big><em>edges</em>, <em>faces</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setEdgesAndFaces" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setEdgesAndFaces</tt><big>(</big><em>edges</em>, <em>faces</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.setEdgesAndFaces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.setEdgesAndFaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the edges and faces.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.append">
-<tt class="descname">append</tt><big>(</big><em>S</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.append" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">append</tt><big>(</big><em>S</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge another surface with self.</p>
 <p>This just merges the data sets, and does not check
 whether the surfaces intersect or are connected!
@@ -148,7 +172,7 @@ This is intended mostly for use inside higher level functions.</p>
 
 <dl class="classmethod">
 <dt id="trisurface.TriSurface.read">
-<em class="property">classmethod </em><tt class="descname">read</tt><big>(</big><em>clas</em>, <em>fn</em>, <em>ftype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.read" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">read</tt><big>(</big><em>clas</em>, <em>fn</em>, <em>ftype=None</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a surface from file.</p>
 <p>If no file type is specified, it is derived from the filename
 extension.
@@ -164,7 +188,7 @@ Currently supported file types:</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.write">
-<tt class="descname">write</tt><big>(</big><em>fname</em>, <em>ftype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.write" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">write</tt><big>(</big><em>fname</em>, <em>ftype=None</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the surface to file.</p>
 <p>If no filetype is given, it is deduced from the filename extension.
 If the filename has no extension, the &#8216;gts&#8217; file type is used.</p>
@@ -172,13 +196,13 @@ If the filename has no extension, the &#8216;gts&#8217; file type is used.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.avgVertexNormals">
-<tt class="descname">avgVertexNormals</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.avgVertexNormals" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">avgVertexNormals</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.avgVertexNormals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.avgVertexNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the average normals at the vertices.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.areaNormals">
-<tt class="descname">areaNormals</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.areaNormals" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">areaNormals</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.areaNormals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.areaNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the area and normal vectors of the surface triangles.</p>
 <p>The normal vectors are normalized.
 The area is always positive.</p>
@@ -187,26 +211,26 @@ The area is always positive.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.facetArea">
-<tt class="descname">facetArea</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.facetArea" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">facetArea</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.facetArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.facetArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the area of the surface triangles.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.area">
-<tt class="descname">area</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.area" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">area</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the area of the surface</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.volume">
-<tt class="descname">volume</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.volume" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">volume</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the enclosed volume of the surface.</p>
 <p>This will only be correct if the surface is a closed manifold.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.curvature">
-<tt class="descname">curvature</tt><big>(</big><em>neighbours=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.curvature" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">curvature</tt><big>(</big><em>neighbours=1</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.curvature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.curvature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the curvature parameters at the nodes.</p>
 <p>This uses the nodes that are connected to the node via a shortest
 path of &#8216;neighbours&#8217; edges.
@@ -217,7 +241,7 @@ principal directions.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.inertia">
-<tt class="descname">inertia</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.inertia" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inertia</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.inertia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.inertia" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return inertia related quantities of the surface.</p>
 <p>This returns the center of gravity, the principal axes of inertia,
 the principal moments of inertia and the inertia tensor.</p>
@@ -225,13 +249,13 @@ the principal moments of inertia and the inertia tensor.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.surfaceType">
-<tt class="descname">surfaceType</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.surfaceType" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">surfaceType</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.surfaceType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.surfaceType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the TriSurface is a manifold and if it&#8217;s closed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.borderEdges">
-<tt class="descname">borderEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.borderEdges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">borderEdges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.borderEdges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.borderEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect the border elements of TriSurface.</p>
 <p>The border elements are the edges having less than 2 connected elements.
 Returns True where edge is on the border.</p>
@@ -239,13 +263,13 @@ Returns True where edge is on the border.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.borderEdgeNrs">
-<tt class="descname">borderEdgeNrs</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.borderEdgeNrs" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">borderEdgeNrs</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.borderEdgeNrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.borderEdgeNrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the numbers of the border edges.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.borderNodeNrs">
-<tt class="descname">borderNodeNrs</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.borderNodeNrs" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">borderNodeNrs</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.borderNodeNrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.borderNodeNrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect the border nodes of TriSurface.</p>
 <p>The border nodes are the vertices belonging to the border edges.
 Returns a list of vertex numbers.</p>
@@ -253,7 +277,7 @@ Returns a list of vertex numbers.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.isManifold">
-<tt class="descname">isManifold</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.isManifold" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">isManifold</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.isManifold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.isManifold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the TriSurface is a manifold.</p>
 <p>A surface is a manifold if a small sphere exists that cuts the surface
 to a surface that can continously be deformed to an open disk.</p>
@@ -261,26 +285,30 @@ to a surface that can continously be deformed to an open disk.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.nonManifoldEdges">
-<tt class="descname">nonManifoldEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.nonManifoldEdges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nonManifoldEdges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.nonManifoldEdges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.nonManifoldEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds edges and faces that are not Manifold.</p>
-<p>It returns the edges that connect 3 or more faces and the faces.</p>
+<p>Returns a tuple of:</p>
+<ul class="simple">
+<li>the edges that connect 3 or more faces,</li>
+<li>the faces connected to these edges.</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.isClosedManifold">
-<tt class="descname">isClosedManifold</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.isClosedManifold" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">isClosedManifold</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.isClosedManifold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.isClosedManifold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the TriSurface is a closed manifold.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.checkBorder">
-<tt class="descname">checkBorder</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.checkBorder" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">checkBorder</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.checkBorder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.checkBorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the border of TriSurface as a set of segments.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.border">
-<tt class="descname">border</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.border" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">border</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.border"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.border" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the border(s) of TriSurface.</p>
 <p>The complete border of the surface is returned as a list
 of plex-2 Meshes. Each Mesh constitutes a continuous part
@@ -289,33 +317,33 @@ of the border.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.fillBorder">
-<tt class="descname">fillBorder</tt><big>(</big><em>method='radial'</em>, <em>merge=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.fillBorder" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fillBorder</tt><big>(</big><em>method='radial'</em>, <em>merge=False</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.fillBorder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.fillBorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fill the border areas of a surface to make it closed.</p>
 <p>Returns a list of surfaces, each of which fills a singly connected
 part of the border of the input surface. Adding these surfaces to
 the original will create a closed surface.
 If the surface is already closed, an empty list is returned.</p>
-<p>There are two methods, corresponding with the methods of
-the surfaceInsideBorder.</p>
+<p>There are two methods, &#8216;radial&#8217; and &#8216;border&#8217; corresponding with
+the methods of the surfaceInsideBorder.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.edgeCosAngles">
-<tt class="descname">edgeCosAngles</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.edgeCosAngles" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">edgeCosAngles</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.edgeCosAngles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.edgeCosAngles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cos of the angles over all edges.</p>
 <p>The surface should be a manifold (max. 2 elements per edge).
-Edges with only one element get angles = 1.0.</p>
+Edges adjacent to only one element get cosangles = 1.0.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.edgeAngles">
-<tt class="descname">edgeAngles</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.edgeAngles" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">edgeAngles</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.edgeAngles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.edgeAngles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angles over all edges (in degrees). It is the angle (0 to 180) between 2 face normals.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.aspectRatio">
-<tt class="descname">aspectRatio</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.aspectRatio" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">aspectRatio</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.aspectRatio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.aspectRatio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the apect ratio of the triangles of the surface.</p>
 <p>The aspect ratio of a triangle is the ratio of the longest edge
 over the smallest altitude of the triangle.</p>
@@ -324,31 +352,31 @@ over the smallest altitude of the triangle.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.smallestAltitude">
-<tt class="descname">smallestAltitude</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.smallestAltitude" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">smallestAltitude</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.smallestAltitude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.smallestAltitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the smallest altitude of the triangles of the surface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.longestEdge">
-<tt class="descname">longestEdge</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.longestEdge" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">longestEdge</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.longestEdge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.longestEdge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the longest edge of the triangles of the surface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.shortestEdge">
-<tt class="descname">shortestEdge</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.shortestEdge" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">shortestEdge</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.shortestEdge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.shortestEdge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the shortest edge of the triangles of the surface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.stats">
-<tt class="descname">stats</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.stats" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">stats</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a text with full statistics.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.distanceOfPoints">
-<tt class="descname">distanceOfPoints</tt><big>(</big><em>X</em>, <em>return_points=False</em>, <em>method='bary'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.distanceOfPoints" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">distanceOfPoints</tt><big>(</big><em>X</em>, <em>return_points=False</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.distanceOfPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.distanceOfPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the distances of points X to the TriSurface.</p>
 <p>The distance of a point is either:
 - the closest perpendicular distance to the facets;
@@ -361,7 +389,7 @@ the closest (foot)points matching X.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.offset">
-<tt class="descname">offset</tt><big>(</big><em>distance=1.0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.offset" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">offset</tt><big>(</big><em>distance=1.0</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.offset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Offset a surface with a certain distance.</p>
 <p>All the nodes of the surface are translated over a specified distance
 along their normal vector.</p>
@@ -369,7 +397,7 @@ along their normal vector.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.edgeFront">
-<tt class="descname">edgeFront</tt><big>(</big><em>startat=0</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.edgeFront" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">edgeFront</tt><big>(</big><em>startat=0</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.edgeFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.edgeFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generator function returning the frontal elements.</p>
 <p>startat is an element number or list of numbers of the starting front.
 On first call, this function returns the starting front.
@@ -382,7 +410,7 @@ by a front not having the property of the previous plus front_increment.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.walkEdgeFront">
-<tt class="descname">walkEdgeFront</tt><big>(</big><em>startat=0</em>, <em>nsteps=-1</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.walkEdgeFront" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">walkEdgeFront</tt><big>(</big><em>startat=0</em>, <em>nsteps=-1</em>, <em>okedges=None</em>, <em>front_increment=1</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.walkEdgeFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.walkEdgeFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Grow a selection using a frontal method.</p>
 <p>Starting from element <cite>startat</cite>, grow a selection <cite>nsteps</cite> times
 following the common edges of the triangles.</p>
@@ -391,7 +419,7 @@ following the common edges of the triangles.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.growSelection">
-<tt class="descname">growSelection</tt><big>(</big><em>sel</em>, <em>mode='node'</em>, <em>nsteps=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.growSelection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">growSelection</tt><big>(</big><em>sel</em>, <em>mode='node'</em>, <em>nsteps=1</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.growSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.growSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Grow a selection of a surface.</p>
 <p><cite>p</cite> is a single element number or a list of numbers.
 The return value is a list of element numbers obtained by
@@ -405,19 +433,19 @@ The <cite>mode</cite> argument specifies how a single frontal step is done:</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.partitionByEdgeFront">
-<tt class="descname">partitionByEdgeFront</tt><big>(</big><em>okedges</em>, <em>firstprop=0</em>, <em>startat=0</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByEdgeFront" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">partitionByEdgeFront</tt><big>(</big><em>okedges</em>, <em>firstprop=0</em>, <em>startat=0</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.partitionByEdgeFront"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.partitionByEdgeFront" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect different parts of the surface using a frontal method.</p>
 <p>okedges flags the edges where the two adjacent triangles are to be
 in the same part of the surface.
 startat is a list of elements that are in the first part. 
 The partitioning is returned as a property type array having a value
 corresponding to the part number. The lowest property number will be
-firstprop</p>
+firstprop.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.partitionByAngle">
-<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>firstprop=0</em>, <em>sortedbyarea=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">partitionByAngle</tt><big>(</big><em>angle=60.0</em>, <em>firstprop=0</em>, <em>sortedbyarea=True</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.partitionByAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.partitionByAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition the surface by splitting it at sharp edges.</p>
 <p>The surface is partitioned in parts in which all elements can be
 reach without ever crossing a sharp edge angle. More precisely,
@@ -426,14 +454,15 @@ edge between two elements having their normals differ more than
 angle (in degrees), will belong to the same part.</p>
 <p>The partitioning is returned as a property type array having a value
 corresponding to the part number. The lowest property number will be
-firstprop.</p>
-<p>If sortedbyarea is &#8216;up&#8217; or &#8216;down&#8217; the parts will be ordered by 
-increasing or decreasign area.</p>
+firstprop. By default the parts will be assigned property numbers in
+the order of decreasing total area. The sorting can be turned off
+by setting sortedbyarea=False, though nobody probably has a good
+reason to use this.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.cutWithPlane">
-<tt class="descname">cutWithPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.cutWithPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cutWithPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.cutWithPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.cutWithPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cut a surface with a plane or a set of planes.</p>
 <p>Cuts the surface with one or more plane and returns either one side
 or both.</p>
@@ -450,13 +479,13 @@ The returned surface will have its normals fixed wherever possible.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.connectedElements">
-<tt class="descname">connectedElements</tt><big>(</big><em>target</em>, <em>elemlist=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.connectedElements" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">connectedElements</tt><big>(</big><em>target</em>, <em>elemlist=None</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.connectedElements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.connectedElements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the elements from list connected with target</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.intersectionWithPlane">
-<tt class="descname">intersectionWithPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.intersectionWithPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">intersectionWithPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.intersectionWithPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.intersectionWithPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection lines with plane (p,n).</p>
 <p>Returns a plex-2 mesh with the line segments obtained by cutting
 all triangles of the surface with the plane (p,n)
@@ -471,7 +500,7 @@ The splitProp() method can be used to get a list of Meshes.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.slice">
-<tt class="descname">slice</tt><big>(</big><em>dir=0</em>, <em>nplanes=20</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.slice" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">slice</tt><big>(</big><em>dir=0</em>, <em>nplanes=20</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.slice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.slice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Intersect a surface with a sequence of planes.</p>
 <p>A sequence of nplanes planes with normal dir is constructed
 at equal distances spread over the bbox of the surface.</p>
@@ -483,7 +512,7 @@ property number.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.smooth">
-<tt class="descname">smooth</tt><big>(</big><em>method='lowpass'</em>, <em>iterations=1</em>, <em>lambda_value=0.5</em>, <em>neighbourhood=1</em>, <em>alpha=0.0</em>, <em>beta=0.20000000000000001</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.smooth" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">smooth</tt><big>(</big><em>method='lowpass'</em>, <em>iterations=1</em>, <em>lambda_value=0.5</em>, <em>neighbourhood=1</em>, <em>alpha=0.0</em>, <em>beta=0.20000000000000001</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.smooth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.smooth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Smooth the surface.</p>
 <p>Returns a TriSurface which is a smoothed version of the original.
 Three smoothing methods are available: &#8216;lowpass&#8217;, &#8216;laplace&#8217;, and
@@ -514,19 +543,19 @@ command</li>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.smoothLowPass">
-<tt class="descname">smoothLowPass</tt><big>(</big><em>iterations=2</em>, <em>lambda_value=0.5</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.smoothLowPass" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">smoothLowPass</tt><big>(</big><em>iterations=2</em>, <em>lambda_value=0.5</em>, <em>neighbours=1</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.smoothLowPass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.smoothLowPass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply a low pass smoothing to the surface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.smoothLaplaceHC">
-<tt class="descname">smoothLaplaceHC</tt><big>(</big><em>iterations=2</em>, <em>lambda_value=0.5</em>, <em>alpha=0.0</em>, <em>beta=0.20000000000000001</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.smoothLaplaceHC" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">smoothLaplaceHC</tt><big>(</big><em>iterations=2</em>, <em>lambda_value=0.5</em>, <em>alpha=0.0</em>, <em>beta=0.20000000000000001</em>, <em>neighbours=1</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.smoothLaplaceHC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.smoothLaplaceHC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply Laplace smoothing with shrinkage compensation to the surface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.fixNormals">
-<tt class="descname">fixNormals</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.fixNormals" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fixNormals</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.fixNormals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.fixNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix the orientation of the normals.</p>
 <p>Some surface operations may result in improperly oriented normals.
 This tries to reverse improperly oriented normals so that a
@@ -541,7 +570,7 @@ for the <cite>gts</cite> methods to be applicable.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.check">
-<tt class="descname">check</tt><big>(</big><em>verbose=False</em>, <em>matched=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.check" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">check</tt><big>(</big><em>verbose=False</em>, <em>matched=True</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the surface using gtscheck.</p>
 <p>Checks whether the surface is an orientable,
 non self-intersecting manifold.</p>
@@ -560,14 +589,14 @@ the intersecting triangles are returned as element indices of self.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.checkSelfIntersectionsWithTetgen">
-<tt class="descname">checkSelfIntersectionsWithTetgen</tt><big>(</big><em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.checkSelfIntersectionsWithTetgen" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">checkSelfIntersectionsWithTetgen</tt><big>(</big><em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.checkSelfIntersectionsWithTetgen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.checkSelfIntersectionsWithTetgen" title="Permalink to this definition">¶</a></dt>
 <dd><p>check self intersections using tetgen</p>
 <p>Returns couples of intersecting triangles</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.split">
-<tt class="descname">split</tt><big>(</big><em>base</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.split" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">split</tt><big>(</big><em>base</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split the surface using gtssplit.</p>
 <p>Splits the surface into connected and manifold components.
 This uses the external program <cite>gtssplit</cite>. The surface
@@ -579,7 +608,7 @@ each file contains a single connected manifold.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.coarsen">
-<tt class="descname">coarsen</tt><big>(</big><em>min_edges=None</em>, <em>max_cost=None</em>, <em>mid_vertex=False</em>, <em>length_cost=False</em>, <em>max_fold=1.0</em>, <em>volume_weight=0.5</em>, <em>boundary_weight=0.5</em>, <em>shape_weight=0.0</em>, <em>progressive=False</em>, <em>log=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.coarsen" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">coarsen</tt><big>(</big><em>min_edges=None</em>, <em>max_cost=None</em>, <em>mid_vertex=False</em>, <em>length_cost=False</em>, <em>max_fold=1.0</em>, <em>volume_weight=0.5</em>, <em>boundary_weight=0.5</em>, <em>shape_weight=0.0</em>, <em>progressive=False</em>, <em>log=False</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.coarsen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.coarsen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Coarsen the surface using gtscoarsen.</p>
 <p>Construct a coarsened version of the surface.
 This uses the external program <cite>gtscoarsen</cite>. The surface
@@ -607,7 +636,7 @@ default optimized point cost</li>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.refine">
-<tt class="descname">refine</tt><big>(</big><em>max_edges=None</em>, <em>min_cost=None</em>, <em>log=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.refine" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">refine</tt><big>(</big><em>max_edges=None</em>, <em>min_cost=None</em>, <em>log=False</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.refine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.refine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Refine the surface using gtsrefine.</p>
 <p>Construct a refined version of the surface.
 This uses the external program <cite>gtsrefine</cite>. The surface
@@ -626,7 +655,7 @@ an edge is smaller</li>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.boolean">
-<tt class="descname">boolean</tt><big>(</big><em>surf</em>, <em>op</em>, <em>intersection_curve=False</em>, <em>check=False</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.boolean" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">boolean</tt><big>(</big><em>surf</em>, <em>op</em>, <em>intersection_curve=False</em>, <em>check=False</em>, <em>verbose=False</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#TriSurface.boolean"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.TriSurface.boolean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a boolean operation with another surface.</p>
 <p>Boolean operations between surfaces are a basic operation in
 free surface modeling. Both surfaces should be closed orientable
@@ -688,10 +717,10 @@ firstprop.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.splitByConnection">
-<tt class="descname">splitByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitByConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split the Mesh into connected parts.</p>
-<p>Returns a list of Meshes that each form a connected part.</p>
+<dt id="trisurface.TriSurface.addNoise">
+<tt class="descname">addNoise</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.addNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;addNoise&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.addNoise" title="coords.Coords.addNoise"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.addNoise()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
@@ -727,6 +756,13 @@ firstprop.</p>
 <tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.bump2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;bump2&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.bump2" title="coords.Coords.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump2()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.centered">
+<tt class="descname">centered</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.centered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;centered&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.centered" title="coords.Coords.centered"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.centered()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
@@ -905,18 +941,10 @@ firstprop.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.largestByConnection">
-<tt class="descname">largestByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.largestByConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the largest connected part of the Mesh.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.rings">
-<tt class="descname">rings</tt><big>(</big><em>sources</em>, <em>nrings</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.rings" title="Permalink to this definition">¶</a></dt>
-<dd><p>It finds the rings of elems connected to sources by node.</p>
-<p>Sources is a list of elem indices.
-A list of rings is returned, from zero (equal to sources) to step.
-If step is -1, all rings are returned.</p>
+<dt id="trisurface.TriSurface.splitByConnection">
+<tt class="descname">splitByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.splitByConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the Mesh into connected parts.</p>
+<p>Returns a list of Meshes that each form a connected part.</p>
 </dd></dl>
 
 <dl class="method">
@@ -932,15 +960,9 @@ normally set the element type at creation time.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.correctNegativeVolumes">
-<tt class="descname">correctNegativeVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.correctNegativeVolumes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify the connectivity of negative-volume elements to make
-positive-volume elements.</p>
-<p>Negative-volume elements (hex or tet with inconsistent face orientation)
-may appear by error during geometrical trnasformations
-(e.g. reflect, sweep, extrude, revolve).
-This function fixes those elements.
-Currently it only works with linear tet and hex.</p>
+<dt id="trisurface.TriSurface.largestByConnection">
+<tt class="descname">largestByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.largestByConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the largest connected part of the Mesh.</p>
 </dd></dl>
 
 <dl class="method">
@@ -953,6 +975,27 @@ You can specify a single value or a list/array of integer values.
 If the number of passed values is less than the number of elements,
 they wil be repeated. If you give more, they will be ignored.</p>
 <p>If a value None is given, the properties are removed from the Mesh.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.rings">
+<tt class="descname">rings</tt><big>(</big><em>sources</em>, <em>nrings</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.rings" title="Permalink to this definition">¶</a></dt>
+<dd><p>It finds the rings of elems connected to sources by node.</p>
+<p>Sources is a list of elem indices.
+A list of rings is returned, from zero (equal to sources) to step.
+If step is -1, all rings are returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.correctNegativeVolumes">
+<tt class="descname">correctNegativeVolumes</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.correctNegativeVolumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the connectivity of negative-volume elements to make
+positive-volume elements.</p>
+<p>Negative-volume elements (hex or tet with inconsistent face orientation)
+may appear by error during geometrical trnasformations
+(e.g. reflect, sweep, extrude, revolve).
+This function fixes those elements.
+Currently it only works with linear tet and hex.</p>
 </dd></dl>
 
 <dl class="method">
@@ -981,6 +1024,13 @@ volumes and can be fixed with the  correctNegativeVolumes.</p>
 <dt id="trisurface.TriSurface.maxProp">
 <tt class="descname">maxProp</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.maxProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the highest property value used, or None</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
+<p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1237,7 +1287,7 @@ that will be passed to <tt class="xref py py-meth docutils literal"><span class=
 <tt class="descname">matchCentroids</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.matchCentroids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Match elems of Mesh with elems of self.</p>
 <p>self and Mesh are same eltype meshes
-and are both without Doubles.</p>
+and are both without duplicates.</p>
 <p>Elems are matched by their centroids.</p>
 </dd></dl>
 
@@ -1247,7 +1297,7 @@ and are both without Doubles.</p>
 <dd><p>Match faces of mesh with faces of self.</p>
 <p>self and Mesh can be same eltype meshes or different eltype but of the 
 same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
-and are both without Doubles.</p>
+and are both without duplicates.</p>
 <p>Returns the indices array of the elems of self that matches
 the faces of mesh</p>
 </dd></dl>
@@ -1293,6 +1343,18 @@ unchanged.</li>
 </ul>
 <p>Returns a Mesh with all but the selected elements.</p>
 <p>This is the complimentary operation of <cite>select</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.avgNodes">
+<tt class="descname">avgNodes</tt><big>(</big><em>nodsel</em>, <em>wts=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.avgNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create average nodes from the existing nodes of a mesh.</p>
+<p><cite>nodsel</cite> is a local node selector as in <a class="reference internal" href="#trisurface.TriSurface.selectNodes" title="trisurface.TriSurface.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>
+Returns the (weighted) average coordinates of the points in the
+selector as <cite>(nelems*nnod,3)</cite> array of coordinates, where
+nnod is the length of the node selector.
+<cite>wts</cite> is a 1-D array of weights to be attributed to the points.
+Its length should be equal to that of nodsel.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1445,6 +1507,17 @@ degenerate elements.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.removeDuplicate">
+<tt class="descname">removeDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.removeDuplicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the duplicate elements from a Mesh.</p>
+<p>Duplicate elements are elements that consist of the same nodes,
+by default in no particular order. Setting permutations=False will
+only consider elements with the same nodes in the same order as
+duplicates.</p>
+<p>Returns a Mesh with all duplicate elements removed.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.renumber">
 <tt class="descname">renumber</tt><big>(</big><em>order='elems'</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.renumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renumber the nodes of a Mesh in the specified order.</p>
@@ -1484,52 +1557,86 @@ the following predefined strings:<ul>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.connect">
-<tt class="descname">connect</tt><big>(</big><em>mesh1</em>, <em>div=1</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connect a Mesh with another one to form a hypermesh.</p>
+<tt class="descname">connect</tt><big>(</big><em>coordslist</em>, <em>div=1</em>, <em>degree=1</em>, <em>loop=False</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect a sequence of toplogically congruent Meshes into a hypermesh.</p>
 <p>Parameters:</p>
+<ul>
+<li><p class="first"><cite>coordslist</cite>: either a list of Coords instances, all having the same
+shape as self.coords, or a single Mesh instance whose <cite>coords</cite>
+attribute has the same shape.</p>
+<p>If it is a list of Coords, consider a
+list of Meshes obtained by combining each Coords object with the
+connectivity table, element type and property numbers of the current
+Mesh. The return value then is the hypermesh obtained by connecting
+each consecutive slice of (degree+1) of these meshes. The hypermesh
+has a dimensionality that is one higher than the original Mesh (i.e.
+points become lines, lines become surfaces, surfaces become volumes).
+The resulting elements will be of the given <cite>degree</cite> in the
+direction of the connection. Notice that the coords of the current
+Mesh are not used, unless these coords are explicitely included into
+the specified <cite>coordslist</cite>. In many cases <cite>self.coords</cite> will be the
+first item in <cite>coordslist</cite>, but it could occur anywhere in the list
+or even not at all. The number of Coords items in the list should
+be a multiple of <cite>degree</cite> plus 1.</p>
+<p>Specifying a single Mesh instead of a list of Coords is
+just a convenience for the often occurring situation of connecting
+a Mesh (self) with another one (mesh) having the same connectivity:
+in this case the list of Coords will automatically be set to
+<tt class="docutils literal"><span class="pre">[</span> <span class="pre">self.coords,</span> <span class="pre">mesh.coords</span> <span class="pre">]</span></tt>. The <cite>degree</cite> should be 1 in this
+case.</p>
+</li>
+<li><p class="first"><cite>degree</cite>: degree of the connection. Currently only degree 1 and 2
+are supported.</p>
 <ul class="simple">
-<li><cite>mesh1</cite>: a Mesh with the same element type and shape
-(number of elements and plexitude) as self.
-The two Meshes usually also have the same topology.
-Both Meshes are connected to form a hypermesh. The plexitude of the
-new Mesh is two times that of the original Mesh.</li>
-<li><cite>div</cite>: Either an integer, or a sequence of numbers (usually between
-0.0 and 1.0). This parameter has the same meaning as in
-<cite>Coords.interpolate</cite>. If an int is given, div will be set to
-(div+1) equally spaced values in the range [0.0..1.0].</li>
-<li><cite>eltype</cite>: the element type of the constructed hypermesh. If not
-given it is set from the element type database. Otherwise, the
-extrude element type will be created first, and then a conversion
-to the rewuested element is attempted.</li>
+<li>If degree is 1, every Coords from the <cite>coordslist</cite>
+is connected with hyperelements of a linear degree in the
+connection direction.</li>
+<li>If degree is 2, quadratic hyperelements are
+created from one Coords item and the next two in the list.
+Note that all Coords items should contain the same number of nodes,
+even for higher order elements where the intermediate planes
+contain less nodes.</li>
+</ul>
+</li>
+<li><p class="first"><cite>loop</cite>: if True, the connections with loop around the list and
+connect back to the first. This is accomplished by adding the first
+Coords item back at the end of the list.</p>
+</li>
+<li><p class="first"><cite>div</cite>: Either an integer, or a sequence of float numbers (usually
+in the range ]0.0..1.0]). With this parameter the generated elements
+can be further subdivided along the connection direction.
+If an int is given, the connected elements will be divided
+into this number of elements along the connection direction. If a
+sequence of float numbers is given, the numbers specify the relative
+distance along the connection direction where the elements should
+end. If the last value in the sequence is not equal to 1.0, there
+will be a gap between the consecutive connections.</p>
+</li>
+<li><p class="first"><cite>eltype</cite>: the element type of the constructed hypermesh. Normally,
+this is set automatically from the base element type and the
+connection degree. If a different element type is specified,
+a final conversion to the requested element type is attempted.</p>
+</li>
 </ul>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.extrude">
-<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.extrude" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em>, <em>degree=1</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.extrude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extrude a Mesh in one of the axes directions.</p>
 <p>Returns a new Mesh obtained by extruding the given Mesh
 over <cite>n</cite> steps of length <cite>step</cite> in direction of axis <cite>dir</cite>.</p>
-<p>This is a convenience function equivalent to:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span><span class="n">n</span><span class="o">*</span><span class="n">step</span><span class="p">),</span><span class="n">n</span><span class="p">,</span><span class="n">eltype</span><span class="o">=</span><span class="n">eltype</span><span class="p">)</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.revolve">
-<tt class="descname">revolve</tt><big>(</big><em>n</em>, <em>axis=0</em>, <em>angle=360.0</em>, <em>around=None</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.revolve" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">revolve</tt><big>(</big><em>n</em>, <em>axis=0</em>, <em>angle=360.0</em>, <em>around=None</em>, <em>loop=False</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.revolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revolve a Mesh around an axis.</p>
 <p>Returns a new Mesh obtained by revolving the given Mesh
 over an angle around an axis in n steps, while extruding
-the mesh from one step to the next.</p>
-<p>This function is usually used to extrude points into lines,
-lines into surfaces and surfaces into volumes.
-By default it will try to fix the connectivity ordering where
-appropriate. If autofix is switched off, the connectivities
-are merely stacked, and the user may have to fix it himself.</p>
-<p>Currently, this function correctly transforms: point1 to line2,
-line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+the mesh from one step to the next.
+This extrudes points into lines, lines into surfaces and surfaces
+into volumes.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1556,6 +1663,10 @@ the geometry .</p>
 <dd><p>Concatenate a list of meshes of the same plexitude and eltype</p>
 <p>Merging of the nodes can be tuned by specifying extra arguments
 that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+<p>This is a class method, and should be invoked as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Mesh</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">mesh0</span><span class="p">,</span><span class="n">mesh1</span><span class="p">,</span><span class="n">mesh2</span><span class="p">])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1629,7 +1740,7 @@ value is None.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">trisurface</span></tt></p>
 <dl class="function">
 <dt id="trisurface.stlConvert">
-<tt class="descclassname">trisurface.</tt><tt class="descname">stlConvert</tt><big>(</big><em>stlname</em>, <em>outname=None</em>, <em>options='-d'</em><big>)</big><a class="headerlink" href="#trisurface.stlConvert" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">stlConvert</tt><big>(</big><em>stlname</em>, <em>outname=None</em>, <em>options='-d'</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#stlConvert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.stlConvert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform an .stl file to .off or .gts format.</p>
 <p>If outname is given, it is either &#8216;.off&#8217; or &#8216;.gts&#8217; or a filename ending
 on one of these extensions. If it is only an extension, the stlname will
@@ -1646,14 +1757,14 @@ program (or a &#8216;file is already uptodate&#8217; message).</p>
 
 <dl class="function">
 <dt id="trisurface.read_gts">
-<tt class="descclassname">trisurface.</tt><tt class="descname">read_gts</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#trisurface.read_gts" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">read_gts</tt><big>(</big><em>fn</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#read_gts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.read_gts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a GTS surface mesh.</p>
 <p>Return a coords,edges,faces tuple.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="trisurface.read_off">
-<tt class="descclassname">trisurface.</tt><tt class="descname">read_off</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#trisurface.read_off" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">read_off</tt><big>(</big><em>fn</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#read_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.read_off" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read an OFF surface mesh.</p>
 <p>The mesh should consist of only triangles!
 Returns a nodes,elems tuple.</p>
@@ -1661,7 +1772,7 @@ Returns a nodes,elems tuple.</p>
 
 <dl class="function">
 <dt id="trisurface.read_stl">
-<tt class="descclassname">trisurface.</tt><tt class="descname">read_stl</tt><big>(</big><em>fn</em>, <em>intermediate=None</em><big>)</big><a class="headerlink" href="#trisurface.read_stl" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">read_stl</tt><big>(</big><em>fn</em>, <em>intermediate=None</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#read_stl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.read_stl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a surface from .stl file.</p>
 <p>This is done by first coverting the .stl to .gts or .off format.
 The name of the intermediate file may be specified. If not, it will be
@@ -1673,7 +1784,7 @@ intermediate format.</p>
 
 <dl class="function">
 <dt id="trisurface.read_gambit_neutral">
-<tt class="descclassname">trisurface.</tt><tt class="descname">read_gambit_neutral</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#trisurface.read_gambit_neutral" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">read_gambit_neutral</tt><big>(</big><em>fn</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#read_gambit_neutral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.read_gambit_neutral" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a triangular surface mesh in Gambit neutral format.</p>
 <p>The .neu file nodes are numbered from 1!
 Returns a nodes,elems tuple.</p>
@@ -1681,20 +1792,20 @@ Returns a nodes,elems tuple.</p>
 
 <dl class="function">
 <dt id="trisurface.write_stla">
-<tt class="descclassname">trisurface.</tt><tt class="descname">write_stla</tt><big>(</big><em>f</em>, <em>x</em><big>)</big><a class="headerlink" href="#trisurface.write_stla" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">write_stla</tt><big>(</big><em>f</em>, <em>x</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#write_stla"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.write_stla" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export an x[n,3,3] float array as an ascii .stl file.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="trisurface.write_smesh">
-<tt class="descclassname">trisurface.</tt><tt class="descname">write_smesh</tt><big>(</big><em>fn</em>, <em>nodes</em>, <em>elems</em><big>)</big><a class="headerlink" href="#trisurface.write_smesh" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">write_smesh</tt><big>(</big><em>fn</em>, <em>nodes</em>, <em>elems</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#write_smesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.write_smesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a tetgen surface model to .node and .smesh files.</p>
 <p>The provided file name is the .node or the .smesh filename.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="trisurface.surface_volume">
-<tt class="descclassname">trisurface.</tt><tt class="descname">surface_volume</tt><big>(</big><em>x</em>, <em>pt=None</em><big>)</big><a class="headerlink" href="#trisurface.surface_volume" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">surface_volume</tt><big>(</big><em>x</em>, <em>pt=None</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#surface_volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.surface_volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the volume inside a 3-plex Formex.</p>
 <ul class="simple">
 <li><cite>x</cite>: an (ntri,3,3) shaped float array, representing ntri triangles.</li>
@@ -1708,7 +1819,7 @@ the sum of this array will represent the volume inside the surface.</p>
 
 <dl class="function">
 <dt id="trisurface.curvature">
-<tt class="descclassname">trisurface.</tt><tt class="descname">curvature</tt><big>(</big><em>coords</em>, <em>elems</em>, <em>edges</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#trisurface.curvature" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">curvature</tt><big>(</big><em>coords</em>, <em>elems</em>, <em>edges</em>, <em>neighbours=1</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#curvature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.curvature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate curvature parameters at the nodes.</p>
 <p>Algorithms based on Dong and Wang 2005; Koenderink and Van Doorn 1992.
 This uses the nodes that are connected to the node via a shortest
@@ -1720,7 +1831,7 @@ principal directions.</p>
 
 <dl class="function">
 <dt id="trisurface.surfaceInsideBorder">
-<tt class="descclassname">trisurface.</tt><tt class="descname">surfaceInsideBorder</tt><big>(</big><em>border</em>, <em>method='radial'</em><big>)</big><a class="headerlink" href="#trisurface.surfaceInsideBorder" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">surfaceInsideBorder</tt><big>(</big><em>border</em>, <em>method='radial'</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#surfaceInsideBorder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.surfaceInsideBorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a surface inside a closed curve defined by a 2-plex Mesh.</p>
 <p>border is a 2-plex Mesh representing a closed polyline.</p>
 <p>The return value is a TriSurface filling the hole inside the border.</p>
@@ -1741,13 +1852,13 @@ as the input Mesh.</li>
 
 <dl class="function">
 <dt id="trisurface.read_error">
-<tt class="descclassname">trisurface.</tt><tt class="descname">read_error</tt><big>(</big><em>cnt</em>, <em>line</em><big>)</big><a class="headerlink" href="#trisurface.read_error" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">read_error</tt><big>(</big><em>cnt</em>, <em>line</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#read_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.read_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raise an error on reading the stl file.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="trisurface.degenerate">
-<tt class="descclassname">trisurface.</tt><tt class="descname">degenerate</tt><big>(</big><em>area</em>, <em>norm</em><big>)</big><a class="headerlink" href="#trisurface.degenerate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">degenerate</tt><big>(</big><em>area</em>, <em>norm</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#degenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.degenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of the degenerate faces according to area and normals.</p>
 <p>A face is degenerate if its surface is less or equal to zero or the
 normal has a nan.</p>
@@ -1755,7 +1866,7 @@ normal has a nan.</p>
 
 <dl class="function">
 <dt id="trisurface.read_stla">
-<tt class="descclassname">trisurface.</tt><tt class="descname">read_stla</tt><big>(</big><em>fn</em>, <em>dtype=&lt;type 'numpy.float32'&gt;</em>, <em>large=False</em>, <em>guess=True</em><big>)</big><a class="headerlink" href="#trisurface.read_stla" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">read_stla</tt><big>(</big><em>fn</em>, <em>dtype=&lt;type 'numpy.float32'&gt;</em>, <em>large=False</em>, <em>guess=True</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#read_stla"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.read_stla" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read an ascii .stl file into an [n,3,3] float array.</p>
 <p>If the .stl is large, read_ascii_large() is recommended, as it is
 a lot faster.</p>
@@ -1763,7 +1874,7 @@ a lot faster.</p>
 
 <dl class="function">
 <dt id="trisurface.read_ascii_large">
-<tt class="descclassname">trisurface.</tt><tt class="descname">read_ascii_large</tt><big>(</big><em>fn</em>, <em>dtype=&lt;type 'numpy.float32'&gt;</em><big>)</big><a class="headerlink" href="#trisurface.read_ascii_large" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">read_ascii_large</tt><big>(</big><em>fn</em>, <em>dtype=&lt;type 'numpy.float32'&gt;</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#read_ascii_large"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.read_ascii_large" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read an ascii .stl file into an [n,3,3] float array.</p>
 <p>This is an alternative for read_ascii, which is a lot faster on large
 STL models.
@@ -1774,19 +1885,19 @@ Linux/UNIX. It works by first transforming  the input file to a
 
 <dl class="function">
 <dt id="trisurface.off_to_tet">
-<tt class="descclassname">trisurface.</tt><tt class="descname">off_to_tet</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#trisurface.off_to_tet" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">off_to_tet</tt><big>(</big><em>fn</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#off_to_tet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.off_to_tet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform an .off model to tetgen (.node/.smesh) format.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="trisurface.find_row">
-<tt class="descclassname">trisurface.</tt><tt class="descname">find_row</tt><big>(</big><em>mat</em>, <em>row</em>, <em>nmatch=None</em><big>)</big><a class="headerlink" href="#trisurface.find_row" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">find_row</tt><big>(</big><em>mat</em>, <em>row</em>, <em>nmatch=None</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#find_row"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.find_row" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find all rows in matrix matching given row.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="trisurface.find_nodes">
-<tt class="descclassname">trisurface.</tt><tt class="descname">find_nodes</tt><big>(</big><em>nodes</em>, <em>coords</em><big>)</big><a class="headerlink" href="#trisurface.find_nodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">find_nodes</tt><big>(</big><em>nodes</em>, <em>coords</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#find_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.find_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find nodes with given coordinates in a node set.</p>
 <p>nodes is a (nnodes,3) float array of coordinates.
 coords is a (npts,3) float array of coordinates.</p>
@@ -1796,7 +1907,7 @@ ALL the coordinates of ANY of the given points.</p>
 
 <dl class="function">
 <dt id="trisurface.find_first_nodes">
-<tt class="descclassname">trisurface.</tt><tt class="descname">find_first_nodes</tt><big>(</big><em>nodes</em>, <em>coords</em><big>)</big><a class="headerlink" href="#trisurface.find_first_nodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">find_first_nodes</tt><big>(</big><em>nodes</em>, <em>coords</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#find_first_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.find_first_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find nodes with given coordinates in a node set.</p>
 <p>nodes is a (nnodes,3) float array of coordinates.
 coords is a (npts,3) float array of coordinates.</p>
@@ -1806,7 +1917,7 @@ ALL the coordinates of EACH of the given points.</p>
 
 <dl class="function">
 <dt id="trisurface.find_triangles">
-<tt class="descclassname">trisurface.</tt><tt class="descname">find_triangles</tt><big>(</big><em>elems</em>, <em>triangles</em><big>)</big><a class="headerlink" href="#trisurface.find_triangles" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">find_triangles</tt><big>(</big><em>elems</em>, <em>triangles</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#find_triangles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.find_triangles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find triangles with given node numbers in a surface mesh.</p>
 <p>elems is a (nelems,3) integer array of triangles.
 triangles is a (ntri,3) integer array of triangles to find.</p>
@@ -1815,7 +1926,7 @@ triangles is a (ntri,3) integer array of triangles to find.</p>
 
 <dl class="function">
 <dt id="trisurface.remove_triangles">
-<tt class="descclassname">trisurface.</tt><tt class="descname">remove_triangles</tt><big>(</big><em>elems</em>, <em>remove</em><big>)</big><a class="headerlink" href="#trisurface.remove_triangles" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">remove_triangles</tt><big>(</big><em>elems</em>, <em>remove</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#remove_triangles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.remove_triangles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove triangles from a surface mesh.</p>
 <p>elems is a (nelems,3) integer array of triangles.
 remove is a (nremove,3) integer array of triangles to remove.</p>
@@ -1825,13 +1936,13 @@ nelems where the triangles of remove have been removed.</p>
 
 <dl class="function">
 <dt id="trisurface.Rectangle">
-<tt class="descclassname">trisurface.</tt><tt class="descname">Rectangle</tt><big>(</big><em>nx</em>, <em>ny</em><big>)</big><a class="headerlink" href="#trisurface.Rectangle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">Rectangle</tt><big>(</big><em>nx</em>, <em>ny</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#Rectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.Rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a plane rectangular surface consisting of a nx,ny grid.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="trisurface.Cube">
-<tt class="descclassname">trisurface.</tt><tt class="descname">Cube</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.Cube" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">Cube</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/trisurface.html#Cube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.Cube" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the surface of a cube</p>
 <p>Returns a TriSurface representing the surface of a unit cube.
 Each face of the cube is represented by two triangles.</p>
@@ -1839,7 +1950,7 @@ Each face of the cube is represented by two triangles.</p>
 
 <dl class="function">
 <dt id="trisurface.Sphere">
-<tt class="descclassname">trisurface.</tt><tt class="descname">Sphere</tt><big>(</big><em>level=4</em>, <em>verbose=False</em>, <em>filename=None</em><big>)</big><a class="headerlink" href="#trisurface.Sphere" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">trisurface.</tt><tt class="descname">Sphere</tt><big>(</big><em>level=4</em>, <em>verbose=False</em>, <em>filename=None</em><big>)</big><a class="reference internal" href="../_modules/trisurface.html#Sphere"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trisurface.Sphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a spherical surface by calling the gtssphere command.</p>
 <p>If a filename is given, it is stored under that name, else a temporary
 file is created.
@@ -1867,7 +1978,7 @@ Beware: this may take a lot of time if level is 8 or higher.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -1905,7 +2016,7 @@ Beware: this may take a lot of time if level is 8 or higher.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

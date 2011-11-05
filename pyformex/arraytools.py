@@ -1505,6 +1505,7 @@ def movingView(a, size):
       [8 9]]]
 
     Calculate rolling sum of first axis:
+    
     >>> print movingView(x, 3).sum(axis=0)
     [[ 6  9]
      [12 15]

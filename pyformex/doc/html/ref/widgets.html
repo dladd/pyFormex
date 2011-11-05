@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>14. widgets — A collection of custom widgets used in the pyFormex GUI &mdash; pyFormex v0.8.4 documentation</title>
+    <title>14. widgets — A collection of custom widgets used in the pyFormex GUI &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="15. menu — Menus for the pyFormex GUI." href="menu.html" />
     <link rel="prev" title="13. mesh — Finite element meshes in pyFormex." href="mesh.html" /> 
@@ -66,7 +90,7 @@ Qt widgets directly.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">widgets</span></tt></p>
 <dl class="class">
 <dt id="widgets.InputItem">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputItem</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputItem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputItem</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>A single input item.</p>
 <p>This is the base class for widgets holding a single input item.
 A single input item is any item that is treated as a unit and
@@ -150,25 +174,25 @@ redefine both the value() and the setValue() methods.</p>
 input field on display of the dialog.</p>
 <dl class="method">
 <dt id="widgets.InputItem.name">
-<tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputItem.name" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">name</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputItem.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputItem.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the name of the InputItem.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputItem.text">
-<tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputItem.text" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">text</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputItem.text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputItem.text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the displayed text of the InputItem.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputItem.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputItem.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputItem.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputItem.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputItem.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputItem.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputItem.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputItem.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -176,14 +200,14 @@ input field on display of the dialog.</p>
 
 <dl class="class">
 <dt id="widgets.InputInfo">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInfo</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputInfo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInfo</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>An unchangeable input field with a label in front.</p>
 <p>It is just like an InputString, but the text can not be edited.
 The value should be a simple string without newlines.</p>
 <p>There are no specific options.</p>
 <dl class="method">
 <dt id="widgets.InputInfo.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputInfo.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputInfo.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputInfo.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -209,14 +233,14 @@ The value should be a simple string without newlines.</p>
 
 <dl class="class">
 <dt id="widgets.InputLabel">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputLabel</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputLabel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputLabel</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputLabel" title="Permalink to this definition">¶</a></dt>
 <dd><p>An unchangeable information field.</p>
 <p>The value is displayed as a string, but may contain more complex texts.</p>
 <p>By default, the text format will be guessed to be either plain text,
 ReStructuredText ot html. Specify plain=True to display in plain text.</p>
 <dl class="method">
 <dt id="widgets.InputLabel.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputLabel.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputLabel.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputLabel.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -242,7 +266,7 @@ ReStructuredText ot html. Specify plain=True to display in plain text.</p>
 
 <dl class="class">
 <dt id="widgets.InputString">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputString</tt><big>(</big><em>name</em>, <em>value</em>, <em>max=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputString" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputString</tt><big>(</big><em>name</em>, <em>value</em>, <em>max=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputString" title="Permalink to this definition">¶</a></dt>
 <dd><p>A string input field with a label in front.</p>
 <p>If the type of value is not a string, the input string
 will be eval&#8217;ed before returning.</p>
@@ -252,13 +276,13 @@ will be eval&#8217;ed before returning.</p>
 </ul>
 <dl class="method">
 <dt id="widgets.InputString.show">
-<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputString.show" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputString.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputString.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select all text on first display.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputString.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputString.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputString.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputString.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -284,7 +308,7 @@ will be eval&#8217;ed before returning.</p>
 
 <dl class="class">
 <dt id="widgets.InputText">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputText</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputText" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputText</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputText" title="Permalink to this definition">¶</a></dt>
 <dd><p>A scrollable text input field with a label in front.</p>
 <p>By default, the text format will be guessed to be either plain text,
 ReStructuredText ot html.</p>
@@ -293,19 +317,19 @@ ReStructuredText ot html.</p>
 before returning.</p>
 <dl class="method">
 <dt id="widgets.InputText.show">
-<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputText.show" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputText.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputText.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select all text on first display.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputText.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputText.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputText.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputText.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputText.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputText.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputText.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputText.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -325,7 +349,7 @@ before returning.</p>
 
 <dl class="class">
 <dt id="widgets.InputBool">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBool</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputBool" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputBool</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputBool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputBool" title="Permalink to this definition">¶</a></dt>
 <dd><p>A boolean input item.</p>
 <p>Creates a new checkbox for the input of a boolean value.</p>
 <p>Displays the name next to a checkbox, which will initially be set
@@ -334,19 +358,19 @@ The value is either True or False,depending on the setting
 of the checkbox.</p>
 <dl class="method">
 <dt id="widgets.InputBool.text">
-<tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputBool.text" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">text</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputBool.text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputBool.text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the displayed text.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputBool.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputBool.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputBool.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputBool.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputBool.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputBool.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputBool.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputBool.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -360,7 +384,7 @@ of the checkbox.</p>
 
 <dl class="class">
 <dt id="widgets.InputList">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputList</tt><big>(</big><em>name</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>sort=False</em>, <em>single=False</em>, <em>check=False</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputList" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputList</tt><big>(</big><em>name</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>sort=False</em>, <em>single=False</em>, <em>check=False</em>, <em>fast_sel=False</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputList" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list selection InputItem.</p>
 <p>A list selection is a widget allowing the selection of zero, one or more
 items from a list.</p>
@@ -375,26 +399,38 @@ If single is True, only a single item can be selected.</p>
 are returned. This option sets single==False.</p>
 <dl class="method">
 <dt id="widgets.InputList.setSelected">
-<tt class="descname">setSelected</tt><big>(</big><em>selected</em>, <em>flag=True</em><big>)</big><a class="headerlink" href="#widgets.InputList.setSelected" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setSelected</tt><big>(</big><em>selected</em>, <em>flag=True</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputList.setSelected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputList.setSelected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark the specified items as selected or not.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputList.setChecked">
-<tt class="descname">setChecked</tt><big>(</big><em>selected</em>, <em>flag=True</em><big>)</big><a class="headerlink" href="#widgets.InputList.setChecked" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setChecked</tt><big>(</big><em>selected</em>, <em>flag=True</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputList.setChecked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputList.setChecked" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark the specified items as checked or not.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputList.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputList.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputList.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputList.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputList.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputList.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputList.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputList.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputList.setAll">
+<tt class="descname">setAll</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputList.setAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputList.setAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark all items as selected/checked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="widgets.InputList.setNone">
+<tt class="descname">setNone</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputList.setNone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputList.setNone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark all items as not selected/checked.</p>
 </dd></dl>
 
 <dl class="method">
@@ -413,7 +449,7 @@ are returned. This option sets single==False.</p>
 
 <dl class="class">
 <dt id="widgets.InputCombo">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputCombo</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>onselect=None</em>, <em>func=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputCombo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputCombo</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>onselect=None</em>, <em>func=None</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputCombo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputCombo" title="Permalink to this definition">¶</a></dt>
 <dd><p>A combobox InputItem.</p>
 <p>A combobox is a widget allowing the selection of an item from a drop
 down list.</p>
@@ -427,13 +463,13 @@ initially be set to the default value.</p>
 whenever the current selection changes.</p>
 <dl class="method">
 <dt id="widgets.InputCombo.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputCombo.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputCombo.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputCombo.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputCombo.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputCombo.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputCombo.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputCombo.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -453,7 +489,7 @@ whenever the current selection changes.</p>
 
 <dl class="class">
 <dt id="widgets.InputRadio">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputRadio</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputRadio" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputRadio</tt><big>(</big><em>name</em>, <em>default</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputRadio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputRadio" title="Permalink to this definition">¶</a></dt>
 <dd><p>A radiobuttons InputItem.</p>
 <p>Radio buttons are a set of buttons used to select a value from a list.</p>
 <p>choices is a list/tuple of possible values.
@@ -465,13 +501,13 @@ of which the default will initially be pressed.
 If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dl class="method">
 <dt id="widgets.InputRadio.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputRadio.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputRadio.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputRadio.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputRadio.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputRadio.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputRadio.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputRadio.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -491,7 +527,7 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 
 <dl class="class">
 <dt id="widgets.InputPush">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPush</tt><big>(</big><em>name</em>, <em>default=None</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputPush" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPush</tt><big>(</big><em>name</em>, <em>default=None</em>, <em>choices=</em><span class="optional">[</span><span class="optional">]</span>, <em>direction='h'</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputPush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputPush" title="Permalink to this definition">¶</a></dt>
 <dd><p>A pushbuttons InputItem.</p>
 <p>Creates pushbuttons for the selection of a value from a list.</p>
 <p>choices is a list/tuple of possible values.
@@ -503,25 +539,25 @@ of which the default will initially be selected.
 If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 <dl class="method">
 <dt id="widgets.InputPush.setText">
-<tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big><a class="headerlink" href="#widgets.InputPush.setText" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setText</tt><big>(</big><em>text</em>, <em>index=0</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputPush.setText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputPush.setText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the text on button index.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputPush.setIcon">
-<tt class="descname">setIcon</tt><big>(</big><em>icon</em>, <em>index=0</em><big>)</big><a class="headerlink" href="#widgets.InputPush.setIcon" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setIcon</tt><big>(</big><em>icon</em>, <em>index=0</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputPush.setIcon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputPush.setIcon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the icon on button index.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputPush.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputPush.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputPush.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputPush.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputPush.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputPush.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputPush.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputPush.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -541,7 +577,7 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 
 <dl class="class">
 <dt id="widgets.InputInteger">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInteger</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputInteger" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputInteger</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputInteger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputInteger" title="Permalink to this definition">¶</a></dt>
 <dd><p>An integer input item.</p>
 <p>Options:</p>
 <ul class="simple">
@@ -549,19 +585,19 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 </ul>
 <dl class="method">
 <dt id="widgets.InputInteger.show">
-<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputInteger.show" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputInteger.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputInteger.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select all text on first display.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputInteger.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputInteger.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputInteger.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputInteger.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputInteger.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputInteger.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputInteger.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputInteger.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -581,23 +617,23 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 
 <dl class="class">
 <dt id="widgets.InputFloat">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloat</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFloat" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFloat</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputFloat" title="Permalink to this definition">¶</a></dt>
 <dd><p>An float input item.</p>
 <dl class="method">
 <dt id="widgets.InputFloat.show">
-<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloat.show" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputFloat.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputFloat.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select all text on first display.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputFloat.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputFloat.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputFloat.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputFloat.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputFloat.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputFloat.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputFloat.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputFloat.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -617,7 +653,7 @@ If direction == &#8216;v&#8217;, the options are in a vbox.</p>
 
 <dl class="class">
 <dt id="widgets.InputSlider">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputSlider" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputSlider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputSlider" title="Permalink to this definition">¶</a></dt>
 <dd><p>An integer input item using a slider.</p>
 <p>Options:</p>
 <ul class="simple">
@@ -660,7 +696,7 @@ changed. The function takes a float/integer argument.</li>
 
 <dl class="class">
 <dt id="widgets.InputFSlider">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFSlider" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFSlider</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputFSlider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputFSlider" title="Permalink to this definition">¶</a></dt>
 <dd><p>A float input item using a slider.</p>
 <p>Options:</p>
 <ul class="simple">
@@ -706,17 +742,17 @@ be retrieved.</li>
 
 <dl class="class">
 <dt id="widgets.InputPoint">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPoint</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputPoint" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputPoint</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 3D point/vector input item.</p>
 <dl class="method">
 <dt id="widgets.InputPoint.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputPoint.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputPoint.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputPoint.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputPoint.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputPoint.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputPoint.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputPoint.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -736,17 +772,17 @@ be retrieved.</li>
 
 <dl class="class">
 <dt id="widgets.InputIVector">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputIVector</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputIVector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputIVector</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputIVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputIVector" title="Permalink to this definition">¶</a></dt>
 <dd><p>A vector of int values.</p>
 <dl class="method">
 <dt id="widgets.InputIVector.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputIVector.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputIVector.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputIVector.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputIVector.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputIVector.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputIVector.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputIVector.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -766,7 +802,7 @@ be retrieved.</li>
 
 <dl class="class">
 <dt id="widgets.InputButton">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputButton</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputButton" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputButton</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputButton" title="Permalink to this definition">¶</a></dt>
 <dd><p>A button input item.</p>
 <p>The button input field is a button displaying the current value.
 Clicking on the button executes a function responsible for changing
@@ -786,7 +822,7 @@ If no function is specified, the value can not be changed.</li>
 
 <dl class="method">
 <dt id="widgets.InputButton.doFunc">
-<tt class="descname">doFunc</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputButton.doFunc" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">doFunc</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputButton.doFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputButton.doFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value by calling the button&#8217;s func</p>
 </dd></dl>
 
@@ -812,7 +848,7 @@ If no function is specified, the value can not be changed.</li>
 
 <dl class="class">
 <dt id="widgets.InputColor">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputColor</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputColor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputColor</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>A color input item.
 Creates a new color input field with a label in front.</p>
 <p>The color input field is a button displaying the current color.
@@ -820,7 +856,7 @@ Clicking on the button opens a color dialog, and the returned
 value is set in the button.</p>
 <dl class="method">
 <dt id="widgets.InputColor.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#widgets.InputColor.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputColor.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputColor.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -846,7 +882,7 @@ value is set in the button.</p>
 
 <dl class="class">
 <dt id="widgets.InputFont">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFont</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputFont" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputFont</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputFont"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputFont" title="Permalink to this definition">¶</a></dt>
 <dd><p>An input item to select a font.</p>
 <dl class="method">
 <dt id="widgets.InputFont.value">
@@ -876,7 +912,7 @@ value is set in the button.</p>
 
 <dl class="class">
 <dt id="widgets.InputWidget">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputWidget</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputWidget" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputWidget</tt><big>(</big><em>name</em>, <em>value</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputWidget" title="Permalink to this definition">¶</a></dt>
 <dd><p>An input item containing any other widget.</p>
 <p>The widget should have:</p>
 <ul class="simple">
@@ -890,13 +926,13 @@ specified in the dict.</li>
 <p>The return value of this item is an ODict.</p>
 <dl class="method">
 <dt id="widgets.InputWidget.text">
-<tt class="descname">text</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputWidget.text" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">text</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputWidget.text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputWidget.text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the displayed text.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputWidget.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputWidget.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputWidget.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputWidget.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -916,7 +952,7 @@ specified in the dict.</li>
 
 <dl class="class">
 <dt id="widgets.InputForm">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputForm</tt><a class="headerlink" href="#widgets.InputForm" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputForm</tt><a class="reference internal" href="../_modules/widgets.html#InputForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputForm" title="Permalink to this definition">¶</a></dt>
 <dd><p>An input form.</p>
 <p>The input form is a layout box in which the items are layed out
 vertically. The layout can also contain any number of tab widgets
@@ -925,17 +961,17 @@ in which items can be layed out using tab pages.</p>
 
 <dl class="class">
 <dt id="widgets.InputGroup">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputGroup</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputGroup" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputGroup</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>A boxed group of InputItems.</p>
 <dl class="method">
 <dt id="widgets.InputGroup.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputGroup.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputGroup.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputGroup.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the widget&#8217;s value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputGroup.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#widgets.InputGroup.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputGroup.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputGroup.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the widget&#8217;s value.</p>
 </dd></dl>
 
@@ -943,13 +979,13 @@ in which items can be layed out using tab pages.</p>
 
 <dl class="class">
 <dt id="widgets.InputTab">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputTab</tt><big>(</big><em>name</em>, <em>tab</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.InputTab" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputTab</tt><big>(</big><em>name</em>, <em>tab</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputTab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputTab" title="Permalink to this definition">¶</a></dt>
 <dd><p>A tab page in an input form.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="widgets.InputDialog">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>store=None</em>, <em>prefix=''</em>, <em>autoprefix=False</em>, <em>flat=None</em>, <em>modal=None</em>, <em>enablers=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#widgets.InputDialog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">InputDialog</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>parent=None</em>, <em>flags=None</em>, <em>actions=None</em>, <em>default=None</em>, <em>store=None</em>, <em>prefix=''</em>, <em>autoprefix=False</em>, <em>flat=None</em>, <em>modal=None</em>, <em>enablers=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog widget to interactively set the value of one or more items.</p>
 <p>Overview</p>
 <p>The pyFormex user has full access to the Qt4 framework on which the
@@ -997,14 +1033,15 @@ the results of its fields. The default value is equal to the value of
 autoprefix.</li>
 <li>flags:</li>
 <li>modal:</li>
-<li><cite>enablers</cite>: a dictionary of key,value pairs where key is an input item
-name of a boolean field, and value is the name of another field or
-group or tab. Checking the boolean field will enable/disable the
-target field/group/tab.</li>
+<li><cite>enablers</cite>: a list of tuples (key,value,key1,...) where the first two
+items indicate the key and value of the enabler, and the next items
+are keys of fields that are enabled when the field key has the specified
+value. Currentley, key should be a field of type boolean, radio, combo or
+group.</li>
 </ul>
 <dl class="method">
 <dt id="widgets.InputDialog.add_items">
-<tt class="descname">add_items</tt><big>(</big><em>items</em>, <em>form</em>, <em>prefix=''</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.add_items" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add_items</tt><big>(</big><em>items</em>, <em>form</em>, <em>prefix=''</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.add_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.add_items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add input items to form.</p>
 <p>items is a list of input item data
 layout is the widget layout where the input widgets will be added</p>
@@ -1012,37 +1049,37 @@ layout is the widget layout where the input widgets will be added</p>
 
 <dl class="method">
 <dt id="widgets.InputDialog.add_tab">
-<tt class="descname">add_tab</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.add_tab" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add_tab</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.add_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.add_tab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a Tab page of input items.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputDialog.add_group">
-<tt class="descname">add_group</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.add_group" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add_group</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>name</em>, <em>items</em>, <em>**extra</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.add_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.add_group" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a group of input items.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputDialog.add_input">
-<tt class="descname">add_input</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>**item</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.add_input" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add_input</tt><big>(</big><em>form</em>, <em>prefix</em>, <em>**item</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.add_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.add_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a single input item to the form.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputDialog.timeout">
-<tt class="descname">timeout</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputDialog.timeout" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">timeout</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.timeout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.timeout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hide the dialog and set the result code to TIMEOUT</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputDialog.timedOut">
-<tt class="descname">timedOut</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.InputDialog.timedOut" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">timedOut</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.timedOut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.timedOut" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if the result code was set to TIMEOUT</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.InputDialog.show">
-<tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.show" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">show</tt><big>(</big><em>timeout=None</em>, <em>timeoutfunc=None</em>, <em>modal=False</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the dialog.</p>
 <p>For a non-modal dialog, the user has to call this function to
 display the dialog. 
@@ -1052,7 +1089,7 @@ For a modal dialog, this is implicitely executed by getResult().</p>
 
 <dl class="method">
 <dt id="widgets.InputDialog.acceptData">
-<tt class="descname">acceptData</tt><big>(</big><em>result=1</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.acceptData" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">acceptData</tt><big>(</big><em>result=1</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.acceptData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.acceptData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the dialog&#8217;s return value from the field values.</p>
 <p>This function is connected to the &#8216;accepted()&#8217; signal.
 Modal dialogs should normally not need to call it.
@@ -1063,7 +1100,7 @@ would close the dialog).</p>
 
 <dl class="method">
 <dt id="widgets.InputDialog.updateData">
-<tt class="descname">updateData</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.updateData" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">updateData</tt><big>(</big><em>d</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.updateData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.updateData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update a dialog from the data in given dictionary.</p>
 <p>d is a dictionary where the keys are field names in the dialog.
 The values will be set in the corresponding input items.</p>
@@ -1071,7 +1108,7 @@ The values will be set in the corresponding input items.</p>
 
 <dl class="method">
 <dt id="widgets.InputDialog.getResults">
-<tt class="descname">getResults</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#widgets.InputDialog.getResults" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getResults</tt><big>(</big><em>timeout=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#InputDialog.getResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.InputDialog.getResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the results from the input dialog.</p>
 <p>This fuction is used to present a modal dialog to the user (i.e. a
 dialog that must be ended before the user can continue with the
@@ -1115,7 +1152,7 @@ Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
 
 <dl class="class">
 <dt id="widgets.FileSelection">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">FileSelection</tt><big>(</big><em>path='.'</em>, <em>pattern='*.*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em><big>)</big><a class="headerlink" href="#widgets.FileSelection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">FileSelection</tt><big>(</big><em>path='.'</em>, <em>pattern='*.*'</em>, <em>exist=False</em>, <em>multi=False</em>, <em>dir=False</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#FileSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.FileSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A file selection dialog.</p>
 <p>You can specify a default path/filename that will be suggested initially.
 If a pattern is specified, only matching files will be shown.
@@ -1127,7 +1164,7 @@ accept multiple files.
 If dir==True, a single existing directory is asked.</p>
 <dl class="method">
 <dt id="widgets.FileSelection.getFilename">
-<tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#widgets.FileSelection.getFilename" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getFilename</tt><big>(</big><em>timeout=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#FileSelection.getFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.FileSelection.getFilename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask for a filename by user interaction.</p>
 <p>Return the filename selected by the user.
 If the user hits CANCEL or ESC, None is returned.</p>
@@ -1137,7 +1174,7 @@ If the user hits CANCEL or ESC, None is returned.</p>
 
 <dl class="class">
 <dt id="widgets.ProjectSelection">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ProjectSelection</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>compression=4</em>, <em>ignore_signature=True</em><big>)</big><a class="headerlink" href="#widgets.ProjectSelection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ProjectSelection</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>compression=4</em>, <em>ignore_signature=True</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#ProjectSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.ProjectSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A file selection dialog specialized for opening projects.</p>
 <dl class="method">
 <dt id="widgets.ProjectSelection.getFilename">
@@ -1151,7 +1188,7 @@ If the user hits CANCEL or ESC, None is returned.</p>
 
 <dl class="class">
 <dt id="widgets.SaveImageDialog">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">SaveImageDialog</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>multi=False</em><big>)</big><a class="headerlink" href="#widgets.SaveImageDialog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">SaveImageDialog</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>multi=False</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#SaveImageDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.SaveImageDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog for saving to an image file.</p>
 <p>The dialog contains the normal file selection widget plus some
 extra fields to set the Save Image parameters:</p>
@@ -1174,7 +1211,7 @@ If the user hits CANCEL or ESC, None is returned.</p>
 
 <dl class="class">
 <dt id="widgets.ListSelection">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ListSelection</tt><big>(</big><em>choices</em>, <em>caption='ListSelection'</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>single=False</em>, <em>check=False</em>, <em>sort=False</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.ListSelection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ListSelection</tt><big>(</big><em>choices</em>, <em>caption='ListSelection'</em>, <em>default=</em><span class="optional">[</span><span class="optional">]</span>, <em>single=False</em>, <em>check=False</em>, <em>sort=False</em>, <em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#ListSelection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.ListSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog for selecting one or more items from a list.</p>
 <p>This is a convenient class which constructs an input dialog with a single
 input item: an InputList. It allows the user to select one or more items
@@ -1183,19 +1220,19 @@ the InputList classes. The return value is the value of the InputList,
 not the result of the InputDialog.</p>
 <dl class="method">
 <dt id="widgets.ListSelection.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>selected</em><big>)</big><a class="headerlink" href="#widgets.ListSelection.setValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValue</tt><big>(</big><em>selected</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#ListSelection.setValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.ListSelection.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark the specified items as selected.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.ListSelection.value">
-<tt class="descname">value</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ListSelection.value" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#ListSelection.value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.ListSelection.value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the selected items.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.ListSelection.getResult">
-<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ListSelection.getResult" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#ListSelection.getResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.ListSelection.getResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the modal dialog and return the list of selected values.</p>
 <p>If the user cancels the selection operation, the return value is None.
 Else, the result is always a list, possibly empty or with a single
@@ -1294,7 +1331,7 @@ Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.</p>
 
 <dl class="class">
 <dt id="widgets.GenericDialog">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">GenericDialog</tt><big>(</big><em>widgets, title=None, parent=None, actions=[('OK',)], default='OK'</em><big>)</big><a class="headerlink" href="#widgets.GenericDialog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">GenericDialog</tt><big>(</big><em>widgets, title=None, parent=None, actions=[('OK',)], default='OK'</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#GenericDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.GenericDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A generic dialog widget.</p>
 <p>The dialog is formed by a number of widgets stacked in a vertical box
 layout. At the bottom is a horizontal button box with possible actions.</p>
@@ -1311,7 +1348,7 @@ to avoid creation of a button box.</li>
 
 <dl class="class">
 <dt id="widgets.TableModel">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big><a class="headerlink" href="#widgets.TableModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#TableModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.TableModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>A table model that represent data as a two-dimensional array of items.</p>
 <p>data is any tabular data organized in a fixed number of rows and colums.
 This means that an item at row i and column j can be addressed as
@@ -1319,7 +1356,7 @@ data[i][j].
 Optional lists of column and row headers can be specified.</p>
 <dl class="method">
 <dt id="widgets.TableModel.flags">
-<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#widgets.TableModel.flags" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">flags</tt><big>(</big><em>index</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#TableModel.flags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.TableModel.flags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the TableModel flags.</p>
 </dd></dl>
 
@@ -1327,7 +1364,7 @@ Optional lists of column and row headers can be specified.</p>
 
 <dl class="class">
 <dt id="widgets.ArrayModel">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ArrayModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big><a class="headerlink" href="#widgets.ArrayModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ArrayModel</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>edit=True</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#ArrayModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.ArrayModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>A TableModel specialized for represents 2D array data.</p>
 <ul class="simple">
 <li><cite>data</cite>: a numpy array with two dimensions.</li>
@@ -1346,7 +1383,7 @@ the data readonly.</li>
 
 <dl class="class">
 <dt id="widgets.Table">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>label=None</em>, <em>edit=True</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.Table" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>label=None</em>, <em>edit=True</em>, <em>parent=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#Table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.Table" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget to show/edit a two-dimensional array of items.</p>
 <ul class="simple">
 <li><cite>data</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns. If
@@ -1363,7 +1400,7 @@ in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are s
 
 <dl class="class">
 <dt id="widgets.Tabs">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Tabs</tt><big>(</big><em>items</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.Tabs" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Tabs</tt><big>(</big><em>items</em>, <em>parent=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#Tabs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.Tabs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Present a list of widgets as a single tabbed widget.</p>
 <ul class="simple">
 <li><cite>items</cite>: a list of (header,widget) tuples.</li>
@@ -1374,14 +1411,14 @@ in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are s
 
 <dl class="class">
 <dt id="widgets.TableDialog">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableDialog</tt><big>(</big><em>data, chead=None, rhead=None, title=None, parent=None, actions=[('OK',)], default='OK'</em><big>)</big><a class="headerlink" href="#widgets.TableDialog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TableDialog</tt><big>(</big><em>data, chead=None, rhead=None, title=None, parent=None, actions=[('OK',)], default='OK'</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#TableDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.TableDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dialog widget to show/edit a two-dimensional array of items.</p>
 <p>A convenience class representing a Table within a dialog.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="widgets.MessageBox">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">MessageBox</tt><big>(</big><em>text, format='', level='info', actions=['OK'], default=None, timeout=None, modal=None, parent=None, check=None</em><big>)</big><a class="headerlink" href="#widgets.MessageBox" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">MessageBox</tt><big>(</big><em>text, format='', level='info', actions=['OK'], default=None, timeout=None, modal=None, parent=None, check=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#MessageBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.MessageBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>A message box is a widget displaying a short text for the user.</p>
 <p>The message box displays a text, an optional icon depending on the level
 and a number of push buttons.</p>
@@ -1408,13 +1445,13 @@ or hit the ESC key before he can continue.</p>
 message stays open, use the <tt class="xref py py-meth docutils literal"><span class="pre">show()</span></tt> mehod to display it.</p>
 <dl class="method">
 <dt id="widgets.MessageBox.addCheck">
-<tt class="descname">addCheck</tt><big>(</big><em>text</em><big>)</big><a class="headerlink" href="#widgets.MessageBox.addCheck" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addCheck</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#MessageBox.addCheck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.MessageBox.addCheck" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a check field at the bottom of the layout.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.MessageBox.getResult">
-<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.MessageBox.getResult" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getResult</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#MessageBox.getResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.MessageBox.getResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display the message box and wait for user to click a button.</p>
 <p>This will show the message box as a modal dialog, so that the
 user has to click a button (or hit the ESC key) before he can continue.
@@ -1426,7 +1463,7 @@ an empty string if ESC was hit.</p>
 
 <dl class="class">
 <dt id="widgets.TextBox">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TextBox</tt><big>(</big><em>text, format=None, actions=['OK', None], modal=None, parent=None, caption=None, mono=False, timeout=None, flags=None</em><big>)</big><a class="headerlink" href="#widgets.TextBox" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">TextBox</tt><big>(</big><em>text, format=None, actions=['OK', None], modal=None, parent=None, caption=None, mono=False, timeout=None, flags=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#TextBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.TextBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text and wait for user response.</p>
 <p>Possible choices are &#8216;OK&#8217; and &#8216;CANCEL&#8217;.
 The function returns True if the OK button was clicked or &#8216;ENTER&#8217;
@@ -1435,7 +1472,7 @@ was pressed, False if the &#8216;CANCEL&#8217; button was pressed or ESC was pre
 
 <dl class="class">
 <dt id="widgets.ButtonBox">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ButtonBox</tt><big>(</big><em>name, actions=[], parent=None, stretch=[-1, -1]</em><big>)</big><a class="headerlink" href="#widgets.ButtonBox" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ButtonBox</tt><big>(</big><em>name, actions=[], parent=None, stretch=[-1, -1]</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#ButtonBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.ButtonBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>A box with action buttons.</p>
 <ul class="simple">
 <li><cite>name</cite>: a label to be displayed in front of the button box. An empty
@@ -1488,17 +1525,17 @@ widgets.REJECTED.</li>
 
 <dl class="class">
 <dt id="widgets.CoordsBox">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">CoordsBox</tt><big>(</big><em>ndim=3</em>, <em>readonly=False</em>, <em>*args</em><big>)</big><a class="headerlink" href="#widgets.CoordsBox" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">CoordsBox</tt><big>(</big><em>ndim=3</em>, <em>readonly=False</em>, <em>*args</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#CoordsBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.CoordsBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget displaying the coordinates of a point.</p>
 <dl class="method">
 <dt id="widgets.CoordsBox.getValues">
-<tt class="descname">getValues</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.CoordsBox.getValues" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getValues</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#CoordsBox.getValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.CoordsBox.getValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the current x,y,z values as a list of floats.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="widgets.CoordsBox.setValues">
-<tt class="descname">setValues</tt><big>(</big><em>values</em><big>)</big><a class="headerlink" href="#widgets.CoordsBox.setValues" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setValues</tt><big>(</big><em>values</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#CoordsBox.setValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.CoordsBox.setValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the three values of the widget.</p>
 </dd></dl>
 
@@ -1506,11 +1543,11 @@ widgets.REJECTED.</li>
 
 <dl class="class">
 <dt id="widgets.ImageView">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ImageView</tt><big>(</big><em>image=None</em>, <em>maxheight=None</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.ImageView" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ImageView</tt><big>(</big><em>image=None</em>, <em>maxheight=None</em>, <em>parent=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#ImageView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.ImageView" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget displaying an image.</p>
 <dl class="method">
 <dt id="widgets.ImageView.showImage">
-<tt class="descname">showImage</tt><big>(</big><em>image</em><big>)</big><a class="headerlink" href="#widgets.ImageView.showImage" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">showImage</tt><big>(</big><em>image</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#ImageView.showImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.ImageView.showImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show an image in the viewer.</p>
 <p>image: either a filename or an existing QImage instance. If a filename,
 it should be an image file that can be read by the QImage constructor.
@@ -1522,7 +1559,7 @@ gui.image.image_formats_qtr provides a list.</p>
 
 <dl class="class">
 <dt id="widgets.WarningBox">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">WarningBox</tt><a class="headerlink" href="#widgets.WarningBox" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">WarningBox</tt><a class="reference internal" href="../_modules/widgets.html#WarningBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.WarningBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>A message box is a widget displaying a short text for the user.</p>
 <p>The message box displays a text, an optional icon depending on the level
 and a number of push buttons.</p>
@@ -1553,7 +1590,7 @@ message stays open, use the <tt class="xref py py-meth docutils literal"><span c
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">widgets</span></tt></p>
 <dl class="function">
 <dt id="widgets.maxSize">
-<tt class="descclassname">widgets.</tt><tt class="descname">maxSize</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.maxSize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">maxSize</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#maxSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.maxSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the maximum widget size.</p>
 <p>The maximum widget size is the (available) screen size. This may be
 smaller than the physical screen size (e.g. excluding docking panels).</p>
@@ -1561,7 +1598,7 @@ smaller than the physical screen size (e.g. excluding docking panels).</p>
 
 <dl class="function">
 <dt id="widgets.addTimeOut">
-<tt class="descclassname">widgets.</tt><tt class="descname">addTimeOut</tt><big>(</big><em>widget</em>, <em>timeout=None</em>, <em>timeoutfunc=None</em><big>)</big><a class="headerlink" href="#widgets.addTimeOut" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">addTimeOut</tt><big>(</big><em>widget</em>, <em>timeout=None</em>, <em>timeoutfunc=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#addTimeOut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.addTimeOut" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a timeout to a widget.</p>
 <ul class="simple">
 <li><cite>timeoutfunc</cite> is a callable. If None it will be set to the widget&#8217;s
@@ -1578,31 +1615,31 @@ be called is if the widget is destructed before the timer has finished.</p>
 
 <dl class="function">
 <dt id="widgets.defaultItemType">
-<tt class="descclassname">widgets.</tt><tt class="descname">defaultItemType</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#widgets.defaultItemType" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">defaultItemType</tt><big>(</big><em>item</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#defaultItemType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.defaultItemType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Guess the InputItem type from the value</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="widgets.simpleInputItem">
-<tt class="descclassname">widgets.</tt><tt class="descname">simpleInputItem</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>itemtype=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.simpleInputItem" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">simpleInputItem</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>itemtype=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#simpleInputItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.simpleInputItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>A convenience function to create an InputItem dictionary</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="widgets.groupInputItem">
-<tt class="descclassname">widgets.</tt><tt class="descname">groupInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.groupInputItem" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">groupInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#groupInputItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.groupInputItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>A convenience function to create an InputItem dictionary</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="widgets.tabInputItem">
-<tt class="descclassname">widgets.</tt><tt class="descname">tabInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span>, <em>**kargs</em><big>)</big><a class="headerlink" href="#widgets.tabInputItem" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">tabInputItem</tt><big>(</big><em>name</em>, <em>items=</em><span class="optional">[</span><span class="optional">]</span>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#tabInputItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.tabInputItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>A convenience function to create an InputItem dictionary</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="widgets.compatInputItem">
-<tt class="descclassname">widgets.</tt><tt class="descname">compatInputItem</tt><big>(</big><em>name</em>, <em>value</em>, <em>itemtype=None</em>, <em>kargs={}</em><big>)</big><a class="headerlink" href="#widgets.compatInputItem" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">compatInputItem</tt><big>(</big><em>name</em>, <em>value</em>, <em>itemtype=None</em>, <em>kargs={}</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#compatInputItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.compatInputItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>A convenience function to create an InputItem dictionary</p>
 <p>This function accepts InputItem data in the old format:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="p">[</span> <span class="n">itemtype</span><span class="p">,</span> <span class="p">[</span> <span class="n">optionsdict</span> <span class="p">]</span> <span class="p">]</span> <span class="p">)</span>
@@ -1614,7 +1651,7 @@ InputItem format.</p>
 
 <dl class="function">
 <dt id="widgets.convertInputItem">
-<tt class="descclassname">widgets.</tt><tt class="descname">convertInputItem</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#widgets.convertInputItem" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">convertInputItem</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#convertInputItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.convertInputItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert InputItem data to a proper dict.</p>
 <p>This function tries to convert some old style or sloppy InputItem data
 to a proper InputItem data dict.</p>
@@ -1630,7 +1667,7 @@ as arguments.</li>
 
 <dl class="function">
 <dt id="widgets.inputAny">
-<tt class="descclassname">widgets.</tt><tt class="descname">inputAny</tt><big>(</big><em>name</em>, <em>value</em>, <em>itemtype</em>, <em>**options</em><big>)</big><a class="headerlink" href="#widgets.inputAny" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">inputAny</tt><big>(</big><em>name</em>, <em>value</em>, <em>itemtype</em>, <em>**options</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#inputAny"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.inputAny" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an InputItem of any type, depending on the arguments.</p>
 <p>Arguments: only name, value and itemtype are required</p>
 <ul class="simple">
@@ -1642,7 +1679,7 @@ as arguments.</li>
 
 <dl class="function">
 <dt id="widgets.updateDialogItems">
-<tt class="descclassname">widgets.</tt><tt class="descname">updateDialogItems</tt><big>(</big><em>data</em>, <em>newdata</em><big>)</big><a class="headerlink" href="#widgets.updateDialogItems" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">updateDialogItems</tt><big>(</big><em>data</em>, <em>newdata</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#updateDialogItems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.updateDialogItems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the input data fields with new data values</p>
 <ul class="simple">
 <li>data: a list of dialog items, as required by an InputDialog.</li>
@@ -1656,7 +1693,7 @@ this value is None.</p>
 
 <dl class="function">
 <dt id="widgets.selectFont">
-<tt class="descclassname">widgets.</tt><tt class="descname">selectFont</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.selectFont" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">selectFont</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/widgets.html#selectFont"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.selectFont" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask the user to select a font.</p>
 <p>A font selection dialog widget is displayed and the user is requested
 to select a font.
@@ -1667,7 +1704,7 @@ Returns None if the user clicked <em class="guilabel">CANCEL</em>.</p>
 
 <dl class="function">
 <dt id="widgets.getColor">
-<tt class="descclassname">widgets.</tt><tt class="descname">getColor</tt><big>(</big><em>col=None</em>, <em>caption=None</em><big>)</big><a class="headerlink" href="#widgets.getColor" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">getColor</tt><big>(</big><em>col=None</em>, <em>caption=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#getColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.getColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a color selection dialog and return the selected color.</p>
 <p>col is the initial selection.
 If a valid color is selected, its string name is returned, usually as
@@ -1676,7 +1713,7 @@ a hex #RRGGBB string. If the dialog is canceled, None is returned.</p>
 
 <dl class="function">
 <dt id="widgets.updateText">
-<tt class="descclassname">widgets.</tt><tt class="descname">updateText</tt><big>(</big><em>widget</em>, <em>text</em>, <em>format=''</em><big>)</big><a class="headerlink" href="#widgets.updateText" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">updateText</tt><big>(</big><em>widget</em>, <em>text</em>, <em>format=''</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#updateText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.updateText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the text of a text display widget.</p>
 <ul class="simple">
 <li><cite>widget</cite>: a widget that has the <tt class="xref py py-meth docutils literal"><span class="pre">setText()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">setPlainText()</span></tt>
@@ -1705,7 +1742,7 @@ blank line, or your first paragraph could be turned into comments.</li>
 
 <dl class="function">
 <dt id="widgets.dialogButtons">
-<tt class="descclassname">widgets.</tt><tt class="descname">dialogButtons</tt><big>(</big><em>dialog</em>, <em>actions=None</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#widgets.dialogButtons" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">widgets.</tt><tt class="descname">dialogButtons</tt><big>(</big><em>dialog</em>, <em>actions=None</em>, <em>default=None</em><big>)</big><a class="reference internal" href="../_modules/widgets.html#dialogButtons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#widgets.dialogButtons" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a set of dialog buttons</p>
 <p>dia is a dialog widget</p>
 <p>actions is a list of tuples (name,) or (name,function).
@@ -1742,7 +1779,7 @@ is given, it is set to the LAST button.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -1780,7 +1817,7 @@ is given, it is set to the LAST button.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Assigning properties to geometry &mdash; pyFormex v0.8.4 documentation</title>
+    <title>Assigning properties to geometry &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
     <link rel="up" title="pyFormex user guide" href="user-guide.html" />
     <link rel="next" title="Using Widgets" href="widgets.html" />
     <link rel="prev" title="Using Projects" href="projects.html" /> 
@@ -109,7 +133,7 @@ set and setname fields are treated further in <a class="reference internal" href
 <p>So let&#8217;s create a property record in our database. The Prop() method does just
 that. It also returns the property record, so you can directly use it further in
 your code.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Stick</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s">&#39;green&#39;</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Stick&#39;</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mf">25</span><span class="p">,</span> \
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Stick</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s">&#39;green&#39;</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Stick&#39;</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> \
 <span class="go">        comment=&#39;This could be anything: a gum, a frog, a usb-stick,...&#39;})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Stick</span>
 
@@ -174,10 +198,10 @@ that we could address them in the subsequent print and field assigment
 statements. In most cases however, it will be impractical and unnecessary to
 give your records a name. They all are recorded in the <tt class="xref py py-class docutils literal"><span class="pre">PropertyDB</span></tt>
 database, and will exist as long as the database variable lives. There should be
-away though to request selected data from that database. The <tt class="xref py py-meth docutils literal"><span class="pre">getProp()</span></tt>
+a way though to request selected data from that database. The <tt class="xref py py-meth docutils literal"><span class="pre">getProp()</span></tt>
 method returns a list of records satisfying some conditions. The examples below
 show how it can be used.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">P</span><span class="o">.</span><span class="n">getProp</span><span class="p">(</span><span class="n">rec</span><span class="o">=</span><span class="p">[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">]):</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">P</span><span class="o">.</span><span class="n">getProp</span><span class="p">(</span><span class="n">rec</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]):</span>
 <span class="go">        print p.name</span>
 <span class="go">Stick</span>
 <span class="go">John Doe</span>
@@ -222,10 +246,10 @@ a string. If the user did not specify one, a set name will be auto-generated by
 the system. The setname field can be used in other records to refer to the same
 set of elements without having to specify them again. The following examples
 will make this clear.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">set</span><span class="o">=</span><span class="p">[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">3</span><span class="p">],</span><span class="n">setname</span><span class="o">=</span><span class="s">&#39;green_elements&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s">&#39;green&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">setname</span><span class="o">=</span><span class="s">&#39;green_elements&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s">&#39;green&#39;</span><span class="p">)</span>
 <span class="go">    P.Prop(setname=&#39;green_elements&#39;,transparent=True)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">set</span><span class="o">=</span><span class="p">[</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">4</span><span class="p">,</span><span class="mf">6</span><span class="p">],</span><span class="n">thickness</span><span class="o">=</span><span class="mf">3.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span><span class="n">thickness</span><span class="o">=</span><span class="mf">3.2</span><span class="p">)</span>
 <span class="go">    P.Prop(setname=a.setname,material=&#39;steel&#39;)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">P</span><span class="o">.</span><span class="n">getProp</span><span class="p">(</span><span class="n">attr</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;setname&#39;</span><span class="p">]):</span>
@@ -253,7 +277,7 @@ will make this clear.</p>
 <p>In the first case, the user specifies a setname himself. In the second case, the
 auto-generated name is used. As a convenience, the user is allowed to write
 set=name instead of setname=name when referring to an already defined set.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="n">set</span><span class="o">=</span><span class="s">&#39;green_elements&#39;</span><span class="p">,</span><span class="n">transparent</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="s">&#39;green_elements&#39;</span><span class="p">,</span><span class="n">transparent</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="go">    for p in P.getProp(attr=[&#39;setname&#39;]):</span>
 <span class="go">        if p.setname == &#39;green_elements&#39;:</span>
 <span class="go">            print p.nr,p.transparent</span>
@@ -348,9 +372,9 @@ number (1..6) and v is the prescribed value for that DOF.</dd>
 fields. It should be a <tt class="xref py py-class docutils literal"><span class="pre">CoordSys</span></tt> object.</dd>
 </dl>
 <p>Some simple examples:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="n">cload</span><span class="o">=</span><span class="p">[</span><span class="mf">5</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="o">-</span><span class="mf">75</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
-<span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="n">set</span><span class="o">=</span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">],</span><span class="n">bound</span><span class="o">=</span><span class="s">&#39;pinned&#39;</span><span class="p">)</span>
-<span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="mf">5</span><span class="p">,</span><span class="n">displ</span><span class="o">=</span><span class="p">[(</span><span class="mf">1</span><span class="p">,</span><span class="mf">0.7</span><span class="p">)])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="n">cload</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">75</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="nb">set</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">bound</span><span class="o">=</span><span class="s">&#39;pinned&#39;</span><span class="p">)</span>
+<span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">displ</span><span class="o">=</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.7</span><span class="p">)])</span>
 </pre></div>
 </div>
 <p>The first line sets a concentrated load all the nodes, the second line sets a
@@ -360,9 +384,9 @@ positional argument indeed corresponds to the &#8216;set&#8217; attribute.</p>
 <p>Often the properties are computed and stored in variables rather than entered
 directly.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">P1</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span> <span class="p">]</span>
-<span class="n">P2</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">0.0</span> <span class="p">]</span> <span class="o">*</span> <span class="mf">3</span> <span class="o">+</span> <span class="p">[</span> <span class="mf">1.0</span> <span class="p">]</span> <span class="o">*</span> <span class="mf">3</span>
-<span class="n">B1</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">1</span> <span class="p">]</span> <span class="o">+</span> <span class="p">[</span> <span class="mf">0</span> <span class="p">]</span> <span class="o">*</span> <span class="mf">5</span>
-<span class="n">CYL</span> <span class="o">=</span> <span class="n">CoordSystem</span><span class="p">(</span><span class="s">&#39;cylindrical&#39;</span><span class="p">,[</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">])</span>
+<span class="n">P2</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">0.0</span> <span class="p">]</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="p">[</span> <span class="mf">1.0</span> <span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="n">B1</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">1</span> <span class="p">]</span> <span class="o">+</span> <span class="p">[</span> <span class="mi">0</span> <span class="p">]</span> <span class="o">*</span> <span class="mi">5</span>
+<span class="n">CYL</span> <span class="o">=</span> <span class="n">CoordSystem</span><span class="p">(</span><span class="s">&#39;cylindrical&#39;</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="n">bound</span><span class="o">=</span><span class="n">B1</span><span class="p">,</span><span class="n">csys</span><span class="o">=</span><span class="n">CYL</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -374,8 +398,8 @@ the remaining 5 DOF&#8217;s are free. The next line defines a local coordinate s
 in this case a cylindrical coordinate system with axis pointing from point
 <tt class="docutils literal"><span class="pre">[0.,0.,0.]</span></tt> to point <tt class="docutils literal"><span class="pre">[0.,0.,1.]</span></tt>. The last line</p>
 <p>To facilitate property selection, a tag can be added.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">nset1</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s">&#39;loadcase 1&#39;</span><span class="p">,</span><span class="n">set</span><span class="o">=</span><span class="p">[</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">],</span><span class="n">cload</span><span class="o">=</span><span class="n">P1</span><span class="p">)</span><span class="o">.</span><span class="n">nr</span>
-<span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s">&#39;loadcase 2&#39;</span><span class="p">,</span><span class="n">set</span><span class="o">=</span><span class="n">Nset</span><span class="p">(</span><span class="n">nset1</span><span class="p">),</span><span class="n">cload</span><span class="o">=</span><span class="n">P2</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">nset1</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s">&#39;loadcase 1&#39;</span><span class="p">,</span><span class="nb">set</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="n">cload</span><span class="o">=</span><span class="n">P1</span><span class="p">)</span><span class="o">.</span><span class="n">nr</span>
+<span class="n">P</span><span class="o">.</span><span class="n">nodeProp</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s">&#39;loadcase 2&#39;</span><span class="p">,</span><span class="nb">set</span><span class="o">=</span><span class="n">Nset</span><span class="p">(</span><span class="n">nset1</span><span class="p">),</span><span class="n">cload</span><span class="o">=</span><span class="n">P2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The last two lines show how you can avoid duplication of sets in mulitple
@@ -398,10 +422,10 @@ above.</p>
 method, add the kind=&#8217;e&#8217; argument to get element properties.</p>
 <p>Like node properties, element property records have a number of specialize
 fields. Currently, the following ones are recognized by the Abaqus input file
-generatr.</p>
+generator.</p>
 <dl class="docutils">
 <dt>eltype</dt>
-<dd>This is the single most import element property. It sets the element type that
+<dd>This is the single most important element property. It sets the element type that
 will be used during the analysis. Notice that a Formex object also may have an
 <tt class="docutils literal"><span class="pre">eltype</span></tt> attribute; that one however is only used to describe the type of the
 geometric elements involved. The element type discussed here however may also
@@ -518,7 +542,7 @@ element section and an element type &#8216;CPS3&#8217; to all elements.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -556,7 +580,7 @@ element section and an element type &#8216;CPS3&#8217; to all elements.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

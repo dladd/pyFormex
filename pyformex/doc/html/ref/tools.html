@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>51. tools — tools.py &mdash; pyFormex v0.8.4 documentation</title>
+    <title>51. tools — tools.py &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="52. objects — Selection of objects from the global dictionary." href="objects.html" />
     <link rel="prev" title="50. tetgen — read/write tetgen format files." href="tetgen.html" /> 
@@ -64,19 +88,19 @@
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tools</span></tt></p>
 <dl class="function">
 <dt id="tools.getObjectItems">
-<tt class="descclassname">tools.</tt><tt class="descname">getObjectItems</tt><big>(</big><em>obj</em>, <em>items</em>, <em>mode</em><big>)</big><a class="headerlink" href="#tools.getObjectItems" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.</tt><tt class="descname">getObjectItems</tt><big>(</big><em>obj</em>, <em>items</em>, <em>mode</em><big>)</big><a class="reference internal" href="../_modules/tools.html#getObjectItems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.getObjectItems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the specified items from object.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tools.getCollection">
-<tt class="descclassname">tools.</tt><tt class="descname">getCollection</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#tools.getCollection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.</tt><tt class="descname">getCollection</tt><big>(</big><em>K</em><big>)</big><a class="reference internal" href="../_modules/tools.html#getCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.getCollection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a collection.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tools.growCollection">
-<tt class="descclassname">tools.</tt><tt class="descname">growCollection</tt><big>(</big><em>K</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#tools.growCollection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.</tt><tt class="descname">growCollection</tt><big>(</big><em>K</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/tools.html#growCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.growCollection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Grow the collection with n frontal rings.</p>
 <p>K should be a collection of elements.
 This currently only works on surfaces. Objects that do not have a
@@ -85,7 +109,7 @@ nodeFront() generator function are</p>
 
 <dl class="function">
 <dt id="tools.partitionCollection">
-<tt class="descclassname">tools.</tt><tt class="descname">partitionCollection</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#tools.partitionCollection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.</tt><tt class="descname">partitionCollection</tt><big>(</big><em>K</em><big>)</big><a class="reference internal" href="../_modules/tools.html#partitionCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.partitionCollection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition the collection according to node adjacency.</p>
 <p>The actor numbers will be connected to a collection of property numbers,
 e.g. 0 [1 [4,12] 2 [6,20]], where 0 is the actor number, 1 and 2 are the
@@ -94,13 +118,13 @@ property numbers and 4, 12, 6 and 20 are the element numbers.</p>
 
 <dl class="function">
 <dt id="tools.getPartition">
-<tt class="descclassname">tools.</tt><tt class="descname">getPartition</tt><big>(</big><em>K</em>, <em>prop</em><big>)</big><a class="headerlink" href="#tools.getPartition" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.</tt><tt class="descname">getPartition</tt><big>(</big><em>K</em>, <em>prop</em><big>)</big><a class="reference internal" href="../_modules/tools.html#getPartition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.getPartition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove all partitions with property not in prop.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tools.exportObjects">
-<tt class="descclassname">tools.</tt><tt class="descname">exportObjects</tt><big>(</big><em>obj</em>, <em>name</em>, <em>single=False</em><big>)</big><a class="headerlink" href="#tools.exportObjects" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tools.</tt><tt class="descname">exportObjects</tt><big>(</big><em>obj</em>, <em>name</em>, <em>single=False</em><big>)</big><a class="reference internal" href="../_modules/tools.html#exportObjects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.exportObjects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a list of objects under the given name.</p>
 <p>If obj is a list, and single=True, each element of the list is exported
 as a single item. The items will be given the names name-0, name-1, etc.
@@ -128,7 +152,7 @@ Else, the obj is exported as is under the name.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -166,7 +190,7 @@ Else, the obj is exported as is under the name.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

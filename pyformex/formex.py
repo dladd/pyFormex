@@ -1642,6 +1642,7 @@ maxprop  = %s
 
         Reversing an element means reversing the order of its points.
         This is equivalent to::
+        
           self.selectNodes(arange(self.nplex()-1,-1,-1))
         """
         return Formex(self.coords[:,::-1],self.prop,self.eltype)

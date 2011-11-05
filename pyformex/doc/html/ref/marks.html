@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>19. marks — OpenGL marks for annotating 3D actors. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>19. marks — OpenGL marks for annotating 3D actors. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="20. gluttext — 2D text decorations using GLUT fonts" href="gluttext.html" />
     <link rel="prev" title="18. decors — 2D decorations for the OpenGL canvas." href="decors.html" /> 
@@ -62,7 +86,7 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">marks</span></tt></p>
 <dl class="class">
 <dt id="marks.Mark">
-<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">Mark</tt><big>(</big><em>pos</em>, <em>nolight=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#marks.Mark" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">Mark</tt><big>(</big><em>pos</em>, <em>nolight=True</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/marks.html#Mark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#marks.Mark" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D drawing inserted at a 3D position of the scene.</p>
 <dl class="docutils">
 <dt>The minimum attributes and methods are:</dt>
@@ -103,7 +127,7 @@ draw() : function to draw the mark</dd>
 
 <dl class="class">
 <dt id="marks.AxesMark">
-<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">AxesMark</tt><big>(</big><em>pos</em>, <em>color=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#marks.AxesMark" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">AxesMark</tt><big>(</big><em>pos</em>, <em>color=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/marks.html#AxesMark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#marks.AxesMark" title="Permalink to this definition">¶</a></dt>
 <dd><p>Two viewport axes drawn at a 3D position.</p>
 <dl class="method">
 <dt id="marks.AxesMark.pickGL">
@@ -133,7 +157,7 @@ draw() : function to draw the mark</dd>
 
 <dl class="class">
 <dt id="marks.TextMark">
-<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">TextMark</tt><big>(</big><em>pos</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#marks.TextMark" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">TextMark</tt><big>(</big><em>pos</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/marks.html#TextMark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#marks.TextMark" title="Permalink to this definition">¶</a></dt>
 <dd><p>A text drawn at a 3D position.</p>
 <dl class="method">
 <dt id="marks.TextMark.pickGL">
@@ -163,11 +187,11 @@ draw() : function to draw the mark</dd>
 
 <dl class="class">
 <dt id="marks.MarkList">
-<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">MarkList</tt><big>(</big><em>pos</em>, <em>val</em>, <em>color=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>font='sans'</em>, <em>size=18</em>, <em>leader=''</em>, <em>gravity=''</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#marks.MarkList" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">marks.</tt><tt class="descname">MarkList</tt><big>(</big><em>pos</em>, <em>val</em>, <em>color=(0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>font='sans'</em>, <em>size=18</em>, <em>leader=''</em>, <em>gravity=''</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/marks.html#MarkList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#marks.MarkList" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of numbers drawn at 3D positions.</p>
 <dl class="method">
 <dt id="marks.MarkList.drawpick">
-<tt class="descname">drawpick</tt><big>(</big><big>)</big><a class="headerlink" href="#marks.MarkList.drawpick" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">drawpick</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/marks.html#MarkList.drawpick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#marks.MarkList.drawpick" title="Permalink to this definition">¶</a></dt>
 <dd><p>This functions mimicks the drawing of a number list for picking.</p>
 </dd></dl>
 
@@ -219,7 +243,7 @@ draw() : function to draw the mark</dd>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -257,7 +281,7 @@ draw() : function to draw the mark</dd>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>59. flatkeydb — Flat Text File Database. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>59. flatkeydb — Flat Text File Database. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="60. sendmail — sendmail.py: a simple program to send an email message" href="sendmail.html" />
     <link rel="prev" title="58. config — A general yet simple configuration class." href="config.html" /> 
@@ -67,7 +91,7 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">flatkeydb</span></tt></p>
 <dl class="class">
 <dt id="flatkeydb.FlatDB">
-<em class="property">class </em><tt class="descclassname">flatkeydb.</tt><tt class="descname">FlatDB</tt><big>(</big><em>req_keys=</em><span class="optional">[</span><span class="optional">]</span>, <em>comment='#'</em>, <em>key_sep='='</em>, <em>beginrec='beginrec'</em>, <em>endrec='endrec'</em>, <em>strip_blanks=True</em>, <em>strip_quotes=True</em>, <em>check_func=None</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">flatkeydb.</tt><tt class="descname">FlatDB</tt><big>(</big><em>req_keys=</em><span class="optional">[</span><span class="optional">]</span>, <em>comment='#'</em>, <em>key_sep='='</em>, <em>beginrec='beginrec'</em>, <em>endrec='endrec'</em>, <em>strip_blanks=True</em>, <em>strip_quotes=True</em>, <em>check_func=None</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB" title="Permalink to this definition">¶</a></dt>
 <dd><p>A database stored as a dictionary of dictionaries.</p>
 <p>Each record is a dictionary where keys and values are just strings.
 The field names (keys) can be different for each record, but there is at
@@ -129,7 +153,7 @@ checks;</li>
 Overriding is done by changing the instance attibute.</p>
 <dl class="method">
 <dt id="flatkeydb.FlatDB.newRecord">
-<tt class="descname">newRecord</tt><big>(</big><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.newRecord" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">newRecord</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.newRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.newRecord" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a new (empty) record.</p>
 <p>The new record is a temporary storage. It should be added to the
 database by calling append(record).
@@ -138,13 +162,13 @@ This method can be overriden in subclasses.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.checkKeys">
-<tt class="descname">checkKeys</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.checkKeys" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">checkKeys</tt><big>(</big><em>record</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.checkKeys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.checkKeys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that record has the required keys.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.checkRecord">
-<tt class="descname">checkRecord</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.checkRecord" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">checkRecord</tt><big>(</big><em>record</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.checkRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.checkRecord" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check a record.</p>
 <p>This function checks that the record is a dictionary type, that the
 record has the required keys, and that check_func(record) returns
@@ -156,7 +180,7 @@ This method can safely be overriden in subclasses.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.record_error_handler">
-<tt class="descname">record_error_handler</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.record_error_handler" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">record_error_handler</tt><big>(</big><em>record</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.record_error_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.record_error_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Error handler called when a check error on record is discovered.</p>
 <p>Default is to raise a runtime error.
 This method can safely be overriden in subclasses.</p>
@@ -164,7 +188,7 @@ This method can safely be overriden in subclasses.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.key_error_handler">
-<tt class="descname">key_error_handler</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.key_error_handler" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">key_error_handler</tt><big>(</big><em>key</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.key_error_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.key_error_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Error handler called when a duplicate key is found.</p>
 <p>Default is to raise a runtime error.
 This method can safely be overriden in subclasses.</p>
@@ -172,7 +196,7 @@ This method can safely be overriden in subclasses.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.insert">
-<tt class="descname">insert</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.insert" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">insert</tt><big>(</big><em>record</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a record to the database, overwriting existing records.</p>
 <p>This is equivalent to <cite>__setitem__</cite> but using the value stored in the
 the primary key field of the record as key for storing the record.
@@ -182,7 +206,7 @@ the same primary key.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.append">
-<tt class="descname">append</tt><big>(</big><em>record</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.append" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">append</tt><big>(</big><em>record</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a record to the database.</p>
 <p>Since the database is a dictionary, keys are unique and appending a
 record with an existing key is not allowed.
@@ -191,7 +215,7 @@ If you want to overwrite the old record, use insert() instead.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.splitKeyValue">
-<tt class="descname">splitKeyValue</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.splitKeyValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">splitKeyValue</tt><big>(</big><em>line</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.splitKeyValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.splitKeyValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a line in key,value pair.</p>
 <p>The field is split on the first occurrence of the <cite>key_sep</cite>.
 Key and value are then stripped of leading and trailing whitespace.
@@ -202,7 +226,7 @@ the key becomes an empty string.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.parseLine">
-<tt class="descname">parseLine</tt><big>(</big><em>line</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.parseLine" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">parseLine</tt><big>(</big><em>line</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.parseLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.parseLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a line of the flat database file.</p>
 <p>A line starting with the comment string is ignored.
 Leading whitespace on the remaining lines is ignored.
@@ -220,7 +244,7 @@ Else, the variable self.error_msg is set.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.parse">
-<tt class="descname">parse</tt><big>(</big><em>lines</em>, <em>ignore=False</em>, <em>filename=None</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.parse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">parse</tt><big>(</big><em>lines</em>, <em>ignore=False</em>, <em>filename=None</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.parse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a database from text.</p>
 <p>lines is an iterater over text lines (e.g. a text file or a
 multiline string splitted on &#8216;n&#8217;)
@@ -232,7 +256,7 @@ pair are simply ignored. Default is to raise a RuntimeError.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.readFile">
-<tt class="descname">readFile</tt><big>(</big><em>filename</em>, <em>ignore=False</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.readFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">readFile</tt><big>(</big><em>filename</em>, <em>ignore=False</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.readFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.readFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a database from file.</p>
 <p>Lines starting with a comment string are ignored.
 Every record is delimited by a (beginrec,endrec) pair.
@@ -242,7 +266,7 @@ pair are simply ignored. Default is to raise a RuntimeError.</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.writeFile">
-<tt class="descname">writeFile</tt><big>(</big><em>filename</em>, <em>mode='w'</em>, <em>header=None</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.writeFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">writeFile</tt><big>(</big><em>filename</em>, <em>mode='w'</em>, <em>header=None</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.writeFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.writeFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the database to a text file.</p>
 <p>Default mode is &#8216;w&#8217;. Use &#8216;a&#8217; to append to the file.
 The header is written at the start of the database. Make sure to start
@@ -251,7 +275,7 @@ each line with a comment marker if you want to read it back!</p>
 
 <dl class="method">
 <dt id="flatkeydb.FlatDB.match">
-<tt class="descname">match</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="headerlink" href="#flatkeydb.FlatDB.match" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">match</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#FlatDB.match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.FlatDB.match" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of records matching key=value.</p>
 <p>This returns a list of primary keys of the matching records.</p>
 </dd></dl>
@@ -261,7 +285,7 @@ each line with a comment marker if you want to read it back!</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">flatkeydb</span></tt></p>
 <dl class="function">
 <dt id="flatkeydb.firstWord">
-<tt class="descclassname">flatkeydb.</tt><tt class="descname">firstWord</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#flatkeydb.firstWord" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">flatkeydb.</tt><tt class="descname">firstWord</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#firstWord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.firstWord" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the first word of a string.</p>
 <p>Words are delimited by blanks. If the string does not contain a blank,
 the whole string is returned.</p>
@@ -269,7 +293,7 @@ the whole string is returned.</p>
 
 <dl class="function">
 <dt id="flatkeydb.unQuote">
-<tt class="descclassname">flatkeydb.</tt><tt class="descname">unQuote</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#flatkeydb.unQuote" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">flatkeydb.</tt><tt class="descname">unQuote</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#unQuote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.unQuote" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove one level of quotes from a string.</p>
 <p>If the string starts with a quote character (either single or double)
 and ends with the SAME character, they are stripped of the string.</p>
@@ -277,7 +301,7 @@ and ends with the SAME character, they are stripped of the string.</p>
 
 <dl class="function">
 <dt id="flatkeydb.splitKeyValue">
-<tt class="descclassname">flatkeydb.</tt><tt class="descname">splitKeyValue</tt><big>(</big><em>s</em>, <em>key_sep</em><big>)</big><a class="headerlink" href="#flatkeydb.splitKeyValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">flatkeydb.</tt><tt class="descname">splitKeyValue</tt><big>(</big><em>s</em>, <em>key_sep</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#splitKeyValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.splitKeyValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a string in a (key,value) on occurrence of key_sep.</p>
 <p>The string is split on the first occurrence of the substring key_sep.
 Key and value are then stripped of leading and trailing whitespace.
@@ -288,7 +312,7 @@ the key becomes an empty string.</p>
 
 <dl class="function">
 <dt id="flatkeydb.ignore_error">
-<tt class="descclassname">flatkeydb.</tt><tt class="descname">ignore_error</tt><big>(</big><em>dummy</em><big>)</big><a class="headerlink" href="#flatkeydb.ignore_error" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">flatkeydb.</tt><tt class="descname">ignore_error</tt><big>(</big><em>dummy</em><big>)</big><a class="reference internal" href="../_modules/flatkeydb.html#ignore_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#flatkeydb.ignore_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function can be used to override the default error handlers.</p>
 <p>The effect will be to ignore the error (duplicate key, invalid record)
 and to not add the affected data to the database.</p>
@@ -315,7 +339,7 @@ and to not add the affected data to the database.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -353,7 +377,7 @@ and to not add the affected data to the database.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>52. objects — Selection of objects from the global dictionary. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>52. objects — Selection of objects from the global dictionary. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="53. plot2d — plot2d.py" href="plot2d.html" />
     <link rel="prev" title="51. tools — tools.py" href="tools.html" /> 
@@ -63,20 +87,20 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">objects</span></tt></p>
 <dl class="class">
 <dt id="objects.Objects">
-<em class="property">class </em><tt class="descclassname">objects.</tt><tt class="descname">Objects</tt><big>(</big><em>clas=None</em>, <em>like=None</em>, <em>filter=None</em>, <em>namelist=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#objects.Objects" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">objects.</tt><tt class="descname">Objects</tt><big>(</big><em>clas=None</em>, <em>like=None</em>, <em>filter=None</em>, <em>namelist=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects" title="Permalink to this definition">¶</a></dt>
 <dd><p>A selection of objects from the pyFormex Globals().</p>
 <p>The class provides facilities to filter the global objects by their type
 and select one or more objects by their name(s). The values of these
 objects can be changed and the changes can be undone.</p>
 <dl class="method">
 <dt id="objects.Objects.object_type">
-<tt class="descname">object_type</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.object_type" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">object_type</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.object_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.object_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the type of objects in this selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.Objects.set">
-<tt class="descname">set</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#objects.Objects.set" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set</tt><big>(</big><em>names</em><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the selection to a list of names.</p>
 <p>namelist can be a single object name or a list of names.
 This will also store the current values of the variables.</p>
@@ -84,7 +108,7 @@ This will also store the current values of the variables.</p>
 
 <dl class="method">
 <dt id="objects.Objects.append">
-<tt class="descname">append</tt><big>(</big><em>name</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#objects.Objects.append" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">append</tt><big>(</big><em>name</em>, <em>value=None</em><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a name,value to a selection.</p>
 <p>If no value is given, its current value is used.
 If a value is given, it is exported.</p>
@@ -92,13 +116,13 @@ If a value is given, it is exported.</p>
 
 <dl class="method">
 <dt id="objects.Objects.clear">
-<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.clear" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.Objects.listAll">
-<tt class="descname">listAll</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.listAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">listAll</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.listAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.listAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all selectable objects.</p>
 <p>This lists all the global names in pyformex.PF that match
 the class and/or filter (if specified).</p>
@@ -106,7 +130,7 @@ the class and/or filter (if specified).</p>
 
 <dl class="method">
 <dt id="objects.Objects.remember">
-<tt class="descname">remember</tt><big>(</big><em>copy=False</em><big>)</big><a class="headerlink" href="#objects.Objects.remember" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">remember</tt><big>(</big><em>copy=False</em><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.remember"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.remember" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remember the current values of the variables in selection.</p>
 <p>If copy==True, the values are copied, so that the variables&#8217; current
 values can be changed inplace without affecting the remembered values.</p>
@@ -114,7 +138,7 @@ values can be changed inplace without affecting the remembered values.</p>
 
 <dl class="method">
 <dt id="objects.Objects.changeValues">
-<tt class="descname">changeValues</tt><big>(</big><em>newvalues</em><big>)</big><a class="headerlink" href="#objects.Objects.changeValues" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">changeValues</tt><big>(</big><em>newvalues</em><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.changeValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.changeValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replace the current values of selection by new ones.</p>
 <p>The old values are stored locally, to enable undo operations.</p>
 <p>This is only needed to change the values of objects that can not
@@ -123,13 +147,13 @@ be changed inplace!</p>
 
 <dl class="method">
 <dt id="objects.Objects.undoChanges">
-<tt class="descname">undoChanges</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.undoChanges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">undoChanges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.undoChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.undoChanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Undo the last changes of the values.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.Objects.check">
-<tt class="descname">check</tt><big>(</big><em>single=False</em>, <em>warn=True</em><big>)</big><a class="headerlink" href="#objects.Objects.check" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">check</tt><big>(</big><em>single=False</em>, <em>warn=True</em><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that we have a current selection.</p>
 <p>Returns the list of Objects corresponding to the current selection.
 If single==True, the selection should hold exactly one Object name and
@@ -140,7 +164,7 @@ an error message is displayed and None is returned</p>
 
 <dl class="method">
 <dt id="objects.Objects.odict">
-<tt class="descname">odict</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.odict" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">odict</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.odict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.odict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the currently selected items as a dictionary.</p>
 <p>Returns an ODict with the currently selected objects in the order
 of the selection.names.</p>
@@ -148,7 +172,7 @@ of the selection.names.</p>
 
 <dl class="method">
 <dt id="objects.Objects.ask">
-<tt class="descname">ask</tt><big>(</big><em>mode='multi'</em><big>)</big><a class="headerlink" href="#objects.Objects.ask" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">ask</tt><big>(</big><em>mode='multi'</em><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the names of known objects and let the user select one or more.</p>
 <p>mode can be set to&#8217;single&#8217; to select a single item.
 This sets the current selection to the selected names.
@@ -157,44 +181,44 @@ Return a list with the selected names or None.</p>
 
 <dl class="method">
 <dt id="objects.Objects.ask1">
-<tt class="descname">ask1</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.ask1" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">ask1</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.ask1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.ask1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a single object from the list.</p>
 <p>Returns the object, not its name!</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.Objects.forget">
-<tt class="descname">forget</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.forget" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">forget</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.forget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.forget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the selection from the globals.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.Objects.keep">
-<tt class="descname">keep</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.keep" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">keep</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.keep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.keep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove everything except the selection from the globals.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.Objects.printval">
-<tt class="descname">printval</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.printval" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">printval</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.printval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.printval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.Objects.printbbox">
-<tt class="descname">printbbox</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.Objects.printbbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">printbbox</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.printbbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.printbbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the bbox of the current selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.Objects.writeToFile">
-<tt class="descname">writeToFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#objects.Objects.writeToFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">writeToFile</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.writeToFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.writeToFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write objects to a geometry file.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.Objects.readFromFile">
-<tt class="descname">readFromFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#objects.Objects.readFromFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">readFromFile</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/objects.html#Objects.readFromFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.Objects.readFromFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read objects from a geometry file.</p>
 </dd></dl>
 
@@ -202,13 +226,13 @@ Return a list with the selected names or None.</p>
 
 <dl class="class">
 <dt id="objects.DrawableObjects">
-<em class="property">class </em><tt class="descclassname">objects.</tt><tt class="descname">DrawableObjects</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">objects.</tt><tt class="descname">DrawableObjects</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects" title="Permalink to this definition">¶</a></dt>
 <dd><p>A selection of drawable objects from the globals().</p>
 <p>This is a subclass of Objects. The constructor has the same arguments
-as the Objects class, plus the following:
-- <cite>annotations</cite>: a set of functions that draw annotations of the objects.</p>
-<blockquote>
-<p>Each function should take an object name as argument, and draw the
+as the Objects class, plus the following:</p>
+<ul>
+<li><p class="first"><cite>annotations</cite>: a set of functions that draw annotations of the objects.
+Each function should take an object name as argument, and draw the
 requested annotation for the named object. If the object does not have
 the annotation, it should be silently ignored.
 Default annotation functions available are:</p>
@@ -220,16 +244,17 @@ Default annotation functions available are:</p>
 <li>draw_bbox</li>
 </ul>
 <p>No annotation functions are activated by default.</p>
-</blockquote>
+</li>
+</ul>
 <dl class="method">
 <dt id="objects.DrawableObjects.ask">
-<tt class="descname">ask</tt><big>(</big><em>mode='multi'</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.ask" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">ask</tt><big>(</big><em>mode='multi'</em><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects.ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactively sets the current selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.drawChanges">
-<tt class="descname">drawChanges</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.drawChanges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">drawChanges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects.drawChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects.drawChanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draws old and new version of a Formex with different colors.</p>
 <p>old and new can be a either Formex instances or names or lists thereof.
 old are drawn in yellow, new in the current color.</p>
@@ -237,13 +262,13 @@ old are drawn in yellow, new in the current color.</p>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.undoChanges">
-<tt class="descname">undoChanges</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.undoChanges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">undoChanges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects.undoChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects.undoChanges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Undo the last changes of the values.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.toggleAnnotation">
-<tt class="descname">toggleAnnotation</tt><big>(</big><em>f</em>, <em>onoff=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleAnnotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toggleAnnotation</tt><big>(</big><em>f</em>, <em>onoff=None</em><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects.toggleAnnotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects.toggleAnnotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the display of an annotation On or Off.</p>
 <p>If given, onoff is True or False. 
 If no onoff is given, this works as a toggle.</p>
@@ -251,25 +276,25 @@ If no onoff is given, this works as a toggle.</p>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.drawAnnotation">
-<tt class="descname">drawAnnotation</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.drawAnnotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">drawAnnotation</tt><big>(</big><em>f</em><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects.drawAnnotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects.drawAnnotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw some annotation for the current selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.removeAnnotation">
-<tt class="descname">removeAnnotation</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.removeAnnotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeAnnotation</tt><big>(</big><em>f</em><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects.removeAnnotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects.removeAnnotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the annotation f.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.hasAnnotation">
-<tt class="descname">hasAnnotation</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasAnnotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">hasAnnotation</tt><big>(</big><em>f</em><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects.hasAnnotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects.hasAnnotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the status of annotation f</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.setProp">
-<tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.setProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects.setProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects.setProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the property of the current selection.</p>
 <p>prop should be a single integer value or None.
 If None is given, a value will be asked from the user.
@@ -279,7 +304,7 @@ If a selected object does not have a setProp method, it is ignored.</p>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.delProp">
-<tt class="descname">delProp</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.delProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">delProp</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/objects.html#DrawableObjects.delProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.DrawableObjects.delProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete the property of the current selection.</p>
 <p>This well reset the <cite>prop</cite> attribute of all selected objects
 to None.</p>
@@ -405,37 +430,37 @@ of the selection.names.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">objects</span></tt></p>
 <dl class="function">
 <dt id="objects.draw_object_name">
-<tt class="descclassname">objects.</tt><tt class="descname">draw_object_name</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_object_name" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">objects.</tt><tt class="descname">draw_object_name</tt><big>(</big><em>n</em><big>)</big><a class="reference internal" href="../_modules/objects.html#draw_object_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.draw_object_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the name of an object at its center.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="objects.draw_elem_numbers">
-<tt class="descclassname">objects.</tt><tt class="descname">draw_elem_numbers</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_elem_numbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">objects.</tt><tt class="descname">draw_elem_numbers</tt><big>(</big><em>n</em><big>)</big><a class="reference internal" href="../_modules/objects.html#draw_elem_numbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.draw_elem_numbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the numbers of an object&#8217;s elements.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="objects.draw_nodes">
-<tt class="descclassname">objects.</tt><tt class="descname">draw_nodes</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_nodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">objects.</tt><tt class="descname">draw_nodes</tt><big>(</big><em>n</em><big>)</big><a class="reference internal" href="../_modules/objects.html#draw_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.draw_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the nodes of an object.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="objects.draw_node_numbers">
-<tt class="descclassname">objects.</tt><tt class="descname">draw_node_numbers</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_node_numbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">objects.</tt><tt class="descname">draw_node_numbers</tt><big>(</big><em>n</em><big>)</big><a class="reference internal" href="../_modules/objects.html#draw_node_numbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.draw_node_numbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the numbers of an object&#8217;s nodes.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="objects.draw_free_edges">
-<tt class="descclassname">objects.</tt><tt class="descname">draw_free_edges</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_free_edges" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">objects.</tt><tt class="descname">draw_free_edges</tt><big>(</big><em>n</em><big>)</big><a class="reference internal" href="../_modules/objects.html#draw_free_edges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.draw_free_edges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the feature edges of an object.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="objects.draw_bbox">
-<tt class="descclassname">objects.</tt><tt class="descname">draw_bbox</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_bbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">objects.</tt><tt class="descname">draw_bbox</tt><big>(</big><em>n</em><big>)</big><a class="reference internal" href="../_modules/objects.html#draw_bbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#objects.draw_bbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the bbox of an object.</p>
 </dd></dl>
 
@@ -460,7 +485,7 @@ of the selection.names.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -498,7 +523,7 @@ of the selection.names.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

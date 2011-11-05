@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>34. nurbs — Using NURBS in pyFormex. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>34. nurbs — Using NURBS in pyFormex. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="35. isopar — Isoparametric transformations" href="isopar.html" />
     <link rel="prev" title="33. geomtools — Basic geometrical operations." href="geomtools.html" /> 
@@ -64,7 +88,7 @@ NURBS curves and surface in pyFormex.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">nurbs</span></tt></p>
 <dl class="class">
 <dt id="nurbs.NurbsCurve">
-<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">NurbsCurve</tt><big>(</big><em>control</em>, <em>degree=None</em>, <em>wts=None</em>, <em>knots=None</em>, <em>closed=False</em>, <em>blended=True</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">NurbsCurve</tt><big>(</big><em>control</em>, <em>degree=None</em>, <em>wts=None</em>, <em>knots=None</em>, <em>closed=False</em>, <em>blended=True</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsCurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsCurve" title="Permalink to this definition">¶</a></dt>
 <dd><p>A NURBS curve</p>
 <p>The Nurbs curve is defined by nctrl control points, a degree (&gt;= 1) and
 a knot vector with knots = nctrl+degree+1 parameter values.</p>
@@ -78,13 +102,13 @@ the number of control points - 1 if the curve is blended. If not blended,
 the degree is not set larger than 3.</p>
 <dl class="method">
 <dt id="nurbs.NurbsCurve.bbox">
-<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.bbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsCurve.bbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsCurve.bbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the bounding box of the NURBS curve.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nurbs.NurbsCurve.pointsAt">
-<tt class="descname">pointsAt</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.pointsAt" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pointsAt</tt><big>(</big><em>u</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsCurve.pointsAt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsCurve.pointsAt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the points on the Nurbs curve at given parametric values.</p>
 <p>Parameters:</p>
 <dl class="docutils">
@@ -97,20 +121,20 @@ parametric values.</p>
 
 <dl class="method">
 <dt id="nurbs.NurbsCurve.derivatives">
-<tt class="descname">derivatives</tt><big>(</big><em>at</em>, <em>d=1</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.derivatives" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">derivatives</tt><big>(</big><em>at</em>, <em>d=1</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsCurve.derivatives"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsCurve.derivatives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the points and derivatives up to d at parameter values at</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nurbs.NurbsCurve.knotPoints">
-<tt class="descname">knotPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.knotPoints" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">knotPoints</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsCurve.knotPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsCurve.knotPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the points at the knot values.</p>
 <p>The multiplicity of the knots is retained in the points set.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nurbs.NurbsCurve.insertKnots">
-<tt class="descname">insertKnots</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.insertKnots" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">insertKnots</tt><big>(</big><em>u</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsCurve.insertKnots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsCurve.insertKnots" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert a set of knots in the curve.</p>
 <p>u is a vector with knot parameter values to be inserted into the
 curve. The control points are adapted to keep the curve unchanged.</p>
@@ -121,14 +145,14 @@ points adapted.</p>
 
 <dl class="method">
 <dt id="nurbs.NurbsCurve.decompose">
-<tt class="descname">decompose</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.decompose" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">decompose</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsCurve.decompose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsCurve.decompose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decomposes a curve in subsequent Bezier curves.</p>
 <p>Returns an equivalent unblended Nurbs.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nurbs.NurbsCurve.actor">
-<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.actor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsCurve.actor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsCurve.actor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Graphical representation</p>
 </dd></dl>
 
@@ -136,7 +160,7 @@ points adapted.</p>
 
 <dl class="class">
 <dt id="nurbs.NurbsSurface">
-<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">NurbsSurface</tt><big>(</big><em>control</em>, <em>degree=(None</em>, <em>None)</em>, <em>wts=None</em>, <em>knots=(None</em>, <em>None)</em>, <em>closed=(False</em>, <em>False)</em>, <em>blended=(True</em>, <em>True)</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">NurbsSurface</tt><big>(</big><em>control</em>, <em>degree=(None</em>, <em>None)</em>, <em>wts=None</em>, <em>knots=(None</em>, <em>None)</em>, <em>closed=(False</em>, <em>False)</em>, <em>blended=(True</em>, <em>True)</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>A NURBS surface</p>
 <p>The Nurbs surface is defined as a tensor product of NURBS curves in two
 parametrical directions u and v. The control points form a grid of
@@ -154,13 +178,13 @@ the degree is not set larger than 3.</p>
 </div>
 <dl class="method">
 <dt id="nurbs.NurbsSurface.bbox">
-<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.bbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsSurface.bbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsSurface.bbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the bounding box of the NURBS surface.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nurbs.NurbsSurface.pointsAt">
-<tt class="descname">pointsAt</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.pointsAt" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pointsAt</tt><big>(</big><em>u</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsSurface.pointsAt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsSurface.pointsAt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the points on the Nurbs surface at given parametric values.</p>
 <p>Parameters:</p>
 <dl class="docutils">
@@ -173,7 +197,7 @@ parametric values.</p>
 
 <dl class="method">
 <dt id="nurbs.NurbsSurface.actor">
-<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.actor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#NurbsSurface.actor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.NurbsSurface.actor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Graphical representation</p>
 </dd></dl>
 
@@ -181,7 +205,7 @@ parametric values.</p>
 
 <dl class="class">
 <dt id="nurbs.Coords4">
-<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">Coords4</tt><a class="headerlink" href="#nurbs.Coords4" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">Coords4</tt><a class="reference internal" href="../_modules/nurbs.html#Coords4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4" title="Permalink to this definition">¶</a></dt>
 <dd><p>A collection of points represented by their homogeneous coordinates.</p>
 <p>While most of the pyFormex implementation is based on the 3D Cartesian
 coordinates class <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt>, some applications may benefit from using
@@ -230,7 +254,7 @@ used if possible, e.g. if a correctly shaped and typed
 </dl>
 <dl class="method">
 <dt id="nurbs.Coords4.normalize">
-<tt class="descname">normalize</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.Coords4.normalize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">normalize</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the homogeneous coordinates.</p>
 <p>Two sets of homogeneous coordinates that differ only by a
 multiplicative constant refer to the same points in cartesian space.
@@ -247,7 +271,7 @@ NaN values.</p>
 
 <dl class="method">
 <dt id="nurbs.Coords4.deNormalize">
-<tt class="descname">deNormalize</tt><big>(</big><em>w</em><big>)</big><a class="headerlink" href="#nurbs.Coords4.deNormalize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">deNormalize</tt><big>(</big><em>w</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.deNormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.deNormalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Denormalizes the homogeneous coordinates.</p>
 <p>This multiplies the homogeneous coordinates with the values w.
 w normally is a constant or an array with shape
@@ -262,7 +286,7 @@ its 4-th coordinate value after the call.</p>
 
 <dl class="method">
 <dt id="nurbs.Coords4.toCoords">
-<tt class="descname">toCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.Coords4.toCoords" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toCoords</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.toCoords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.toCoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert homogeneous coordinates to cartesian coordinates.</p>
 <p>Returns a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object with the cartesian coordinates
 of the points. Points at infinity (w=0) will result in
@@ -273,7 +297,7 @@ resulting <tt class="xref py py-class docutils literal"><span class="pre">Coords
 
 <dl class="method">
 <dt id="nurbs.Coords4.npoints">
-<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.Coords4.npoints" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.npoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.npoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total number of points.</p>
 </dd></dl>
 
@@ -285,31 +309,31 @@ resulting <tt class="xref py py-class docutils literal"><span class="pre">Coords
 
 <dl class="method">
 <dt id="nurbs.Coords4.x">
-<tt class="descname">x</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.Coords4.x" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">x</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.x" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the x-plane</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nurbs.Coords4.y">
-<tt class="descname">y</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.Coords4.y" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">y</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the y-plane</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nurbs.Coords4.z">
-<tt class="descname">z</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.Coords4.z" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">z</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.z" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the z-plane</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nurbs.Coords4.w">
-<tt class="descname">w</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.Coords4.w" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">w</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.w"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.w" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the w-plane</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nurbs.Coords4.bbox">
-<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.Coords4.bbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.bbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.bbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the bounding box of a set of points.</p>
 <p>Returns the bounding box of the cartesian coordinates of
 the object.</p>
@@ -317,7 +341,7 @@ the object.</p>
 
 <dl class="method">
 <dt id="nurbs.Coords4.actor">
-<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#nurbs.Coords4.actor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#Coords4.actor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.Coords4.actor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Graphical representation</p>
 </dd></dl>
 
@@ -326,7 +350,7 @@ the object.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">nurbs</span></tt></p>
 <dl class="function">
 <dt id="nurbs.globalInterpolationCurve">
-<tt class="descclassname">nurbs.</tt><tt class="descname">globalInterpolationCurve</tt><big>(</big><em>Q</em>, <em>degree=3</em>, <em>strategy=0.5</em><big>)</big><a class="headerlink" href="#nurbs.globalInterpolationCurve" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nurbs.</tt><tt class="descname">globalInterpolationCurve</tt><big>(</big><em>Q</em>, <em>degree=3</em>, <em>strategy=0.5</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#globalInterpolationCurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.globalInterpolationCurve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a global interpolation NurbsCurve.</p>
 <p>Given an ordered set of points Q, the globalInterpolationCurve
 is a NURBS curve of the given degree, passing through all the
@@ -350,7 +374,7 @@ Typical values are:</p>
 
 <dl class="function">
 <dt id="nurbs.uniformParamValues">
-<tt class="descclassname">nurbs.</tt><tt class="descname">uniformParamValues</tt><big>(</big><em>n</em>, <em>umin=0.0</em>, <em>umax=1.0</em><big>)</big><a class="headerlink" href="#nurbs.uniformParamValues" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nurbs.</tt><tt class="descname">uniformParamValues</tt><big>(</big><em>n</em>, <em>umin=0.0</em>, <em>umax=1.0</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#uniformParamValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.uniformParamValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a set of uniformly distributed parameter values in a range.</p>
 <p>Parameters:</p>
 <dl class="docutils">
@@ -364,13 +388,13 @@ value at the center of the interval will be returned. For n&lt;0, an
 empty array is returned.</dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mf">4</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 <span class="go">[0.0, 0.25, 0.5, 0.75, 1.0]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 <span class="go">[0.5]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 <span class="go">[]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniformParamValues</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 <span class="go">[1.5, 2.0, 2.5]</span>
 </pre></div>
 </div>
@@ -378,7 +402,7 @@ empty array is returned.</dd>
 
 <dl class="function">
 <dt id="nurbs.knotVector">
-<tt class="descclassname">nurbs.</tt><tt class="descname">knotVector</tt><big>(</big><em>nctrl</em>, <em>degree</em>, <em>blended=True</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#nurbs.knotVector" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nurbs.</tt><tt class="descname">knotVector</tt><big>(</big><em>nctrl</em>, <em>degree</em>, <em>blended=True</em>, <em>closed=False</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#knotVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.knotVector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute sensible knot vector for a Nurbs curve.</p>
 <p>A knot vector is a sequence of non-decreasing parametric values. These
 values define the <cite>knots</cite>, i.e. the points where the analytical expression
@@ -402,11 +426,11 @@ the knots, thus the curve is smooth, but the curvature may be discontinuous.
 There is an extra requirement in this case: <tt class="docutils literal"><span class="pre">nctrl</span></tt> sohuld be a multiple
 of <tt class="docutils literal"><span class="pre">degree</span></tt> plus 1.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">knotVector</span><span class="p">(</span><span class="mf">7</span><span class="p">,</span><span class="mf">3</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">knotVector</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">[ 0.    0.    0.    0.    0.25  0.5   0.75  1.    1.    1.    1.  ]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">knotVector</span><span class="p">(</span><span class="mf">7</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="n">closed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">knotVector</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">closed</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">[ 0.   0.1  0.2  0.3  0.4  0.5  0.6  0.7  0.8  0.9  1. ]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">knotVector</span><span class="p">(</span><span class="mf">7</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="n">blended</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">knotVector</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">blended</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="go">[ 0.  0.  0.  0.  1.  1.  1.  2.  2.  2.  2.]</span>
 </pre></div>
 </div>
@@ -414,7 +438,7 @@ of <tt class="docutils literal"><span class="pre">degree</span></tt> plus 1.</p>
 
 <dl class="function">
 <dt id="nurbs.toCoords4">
-<tt class="descclassname">nurbs.</tt><tt class="descname">toCoords4</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#nurbs.toCoords4" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nurbs.</tt><tt class="descname">toCoords4</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#toCoords4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.toCoords4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert cartesian coordinates to homogeneous</p>
 <dl class="docutils">
 <dt><cite>x</cite>: <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></dt>
@@ -425,7 +449,7 @@ of <tt class="docutils literal"><span class="pre">degree</span></tt> plus 1.</p>
 
 <dl class="function">
 <dt id="nurbs.pointsOnBezierCurve">
-<tt class="descclassname">nurbs.</tt><tt class="descname">pointsOnBezierCurve</tt><big>(</big><em>P</em>, <em>u</em><big>)</big><a class="headerlink" href="#nurbs.pointsOnBezierCurve" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nurbs.</tt><tt class="descname">pointsOnBezierCurve</tt><big>(</big><em>P</em>, <em>u</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#pointsOnBezierCurve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.pointsOnBezierCurve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute points on a Bezier curve</p>
 <p>Parameters:
 P is an array with n+1 points defining a Bezier curve of degree n.
@@ -440,7 +464,7 @@ examples BezierCurve, Casteljou</p>
 
 <dl class="function">
 <dt id="nurbs.deCasteljou">
-<tt class="descclassname">nurbs.</tt><tt class="descname">deCasteljou</tt><big>(</big><em>P</em>, <em>u</em><big>)</big><a class="headerlink" href="#nurbs.deCasteljou" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nurbs.</tt><tt class="descname">deCasteljou</tt><big>(</big><em>P</em>, <em>u</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#deCasteljou"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.deCasteljou" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute points on a Bezier curve using deCasteljou algorithm</p>
 <p>Parameters:
 P is an array with n+1 points defining a Bezier curve of degree n.
@@ -454,13 +478,13 @@ is the point on the Bezier curve.</p>
 
 <dl class="function">
 <dt id="nurbs.curveToNurbs">
-<tt class="descclassname">nurbs.</tt><tt class="descname">curveToNurbs</tt><big>(</big><em>B</em><big>)</big><a class="headerlink" href="#nurbs.curveToNurbs" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nurbs.</tt><tt class="descname">curveToNurbs</tt><big>(</big><em>B</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#curveToNurbs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.curveToNurbs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a BezierSpline to NurbsCurve</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="nurbs.frenet">
-<tt class="descclassname">nurbs.</tt><tt class="descname">frenet</tt><big>(</big><em>d1</em>, <em>d2</em>, <em>d3=None</em><big>)</big><a class="headerlink" href="#nurbs.frenet" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">nurbs.</tt><tt class="descname">frenet</tt><big>(</big><em>d1</em>, <em>d2</em>, <em>d3=None</em><big>)</big><a class="reference internal" href="../_modules/nurbs.html#frenet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nurbs.frenet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the 3 Frenet vectors and the curvature.</p>
 <p>d1,d2 are the first and second derivatives at points of a curve.
 d3, if given, is the third derivative. 
@@ -490,7 +514,7 @@ if d3 is give, also returns the torsion of the curve.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -528,7 +552,7 @@ if d3 is give, also returns the torsion of the curve.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

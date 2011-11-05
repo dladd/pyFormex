@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>54. olist — Some convenient shortcuts for common list operations. &mdash; pyFormex v0.8.4 documentation</title>
+    <title>54. olist — Some convenient shortcuts for common list operations. &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="55. mydict —" href="mydict.html" />
     <link rel="prev" title="53. plot2d — plot2d.py" href="plot2d.html" /> 
@@ -66,49 +90,49 @@ order of the items in the lists.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">olist</span></tt></p>
 <dl class="function">
 <dt id="olist.roll">
-<tt class="descclassname">olist.</tt><tt class="descname">roll</tt><big>(</big><em>a</em>, <em>n=1</em><big>)</big><a class="headerlink" href="#olist.roll" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olist.</tt><tt class="descname">roll</tt><big>(</big><em>a</em>, <em>n=1</em><big>)</big><a class="reference internal" href="../_modules/olist.html#roll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olist.roll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Roll the elements of a list n positions forward (backward if n &lt; 0)</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="olist.union">
-<tt class="descclassname">olist.</tt><tt class="descname">union</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#olist.union" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olist.</tt><tt class="descname">union</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="../_modules/olist.html#union"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olist.union" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all items in a or in b, in the order of a,b.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="olist.difference">
-<tt class="descclassname">olist.</tt><tt class="descname">difference</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#olist.difference" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olist.</tt><tt class="descname">difference</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="../_modules/olist.html#difference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olist.difference" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all items in a but not in b, in the order of a.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="olist.symdifference">
-<tt class="descclassname">olist.</tt><tt class="descname">symdifference</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#olist.symdifference" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olist.</tt><tt class="descname">symdifference</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="../_modules/olist.html#symdifference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olist.symdifference" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all items in a or b but not in both.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="olist.intersection">
-<tt class="descclassname">olist.</tt><tt class="descname">intersection</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#olist.intersection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olist.</tt><tt class="descname">intersection</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="../_modules/olist.html#intersection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olist.intersection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all items in a and  in b, in the order of a.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="olist.concatenate">
-<tt class="descclassname">olist.</tt><tt class="descname">concatenate</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#olist.concatenate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olist.</tt><tt class="descname">concatenate</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="../_modules/olist.html#concatenate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olist.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate a list of lists</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="olist.flatten">
-<tt class="descclassname">olist.</tt><tt class="descname">flatten</tt><big>(</big><em>a</em>, <em>recurse=False</em><big>)</big><a class="headerlink" href="#olist.flatten" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olist.</tt><tt class="descname">flatten</tt><big>(</big><em>a</em>, <em>recurse=False</em><big>)</big><a class="reference internal" href="../_modules/olist.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olist.flatten" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flatten a nested list.</p>
 <p>By default, lists are flattened one level deep.
 If recurse=True, flattening recurses through all sublists.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">flatten</span><span class="p">([[[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">2</span><span class="p">,],</span><span class="mf">6.5</span><span class="p">,],[</span><span class="mf">5</span><span class="p">],</span><span class="mf">6</span><span class="p">,</span><span class="s">&#39;hi&#39;</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">flatten</span><span class="p">([[[</span><span class="mf">3.</span><span class="p">,</span><span class="mi">2</span><span class="p">,],</span><span class="mf">6.5</span><span class="p">,],[</span><span class="mi">5</span><span class="p">],</span><span class="mi">6</span><span class="p">,</span><span class="s">&#39;hi&#39;</span><span class="p">])</span>
 <span class="go">[[3.0, 2], 6.5, 5, 6, &#39;hi&#39;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">flatten</span><span class="p">([[[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">2</span><span class="p">,],</span><span class="mf">6.5</span><span class="p">,],[</span><span class="mf">5</span><span class="p">],</span><span class="mf">6</span><span class="p">,</span><span class="s">&#39;hi&#39;</span><span class="p">],</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">flatten</span><span class="p">([[[</span><span class="mf">3.</span><span class="p">,</span><span class="mi">2</span><span class="p">,],</span><span class="mf">6.5</span><span class="p">,],[</span><span class="mi">5</span><span class="p">],</span><span class="mi">6</span><span class="p">,</span><span class="s">&#39;hi&#39;</span><span class="p">],</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">[3.0, 2, 6.5, 5, 6, &#39;hi&#39;]</span>
 </pre></div>
 </div>
@@ -116,14 +140,14 @@ If recurse=True, flattening recurses through all sublists.</p>
 
 <dl class="function">
 <dt id="olist.select">
-<tt class="descclassname">olist.</tt><tt class="descname">select</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="headerlink" href="#olist.select" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olist.</tt><tt class="descname">select</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="../_modules/olist.html#select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olist.select" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a subset of items from a list.</p>
 <p>Returns a list with the items of a for which the index is in b.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="olist.collectOnLength">
-<tt class="descclassname">olist.</tt><tt class="descname">collectOnLength</tt><big>(</big><em>items</em>, <em>return_indices=False</em><big>)</big><a class="headerlink" href="#olist.collectOnLength" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olist.</tt><tt class="descname">collectOnLength</tt><big>(</big><em>items</em>, <em>return_indices=False</em><big>)</big><a class="reference internal" href="../_modules/olist.html#collectOnLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olist.collectOnLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collect items of a list in separate bins according to the item length.</p>
 <p>items is a list of items of any type having the len() method.
 The items are put in separate lists according to their length.</p>
@@ -154,7 +178,7 @@ keys, holding the original indices of the items in the lists.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -192,7 +216,7 @@ keys, holding the original indices of the items in the lists.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>

@@ -1,29 +1,53 @@
 
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!-- 
+##  This file is part of pyFormex
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installing pyFormex &mdash; pyFormex v0.8.4 documentation</title>
+    <title>Installing pyFormex &mdash; pyFormex v0.8.5-a1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.4',
+        VERSION:     '0.8.5-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  false
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.4 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
     <link rel="next" title="pyFormex tutorial" href="tutorial.html" />
     <link rel="prev" title="Introduction to pyFormex" href="intro.html" /> 
   </head>
@@ -72,8 +96,8 @@ this document, and advice you on which method might be the best in your case.</p
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p><strong>pyFormex on non-Linux systems</strong></p>
-<p class="last">pyFormex is being developed on Linux systems, and most users run it on a
-Linux platform. The <a class="reference internal" href="#sec-pyformex-nonlinux"><em>Running pyFormex on non-Linux systems</em></a> section holds information
+<p class="last">pyFormex is being developed on GNU/Linux systems, and most users run it on a
+GNU/Linux platform. The <a class="reference internal" href="#sec-pyformex-nonlinux"><em>Running pyFormex on non-Linux systems</em></a> section holds information
 on how pyFormex can be run on other platforms.</p>
 </div>
 <p>Let&#8217;s first give you an overview of the most important pros and cons of the
@@ -98,7 +122,7 @@ different install methods.</p>
 </ul>
 </td>
 <td><ul class="first last simple">
-<li>Linux required</li>
+<li>GNU/Linux required</li>
 <li>Root access required</li>
 <li>Installation of prerequisites required</li>
 <li>May be missing latest features</li>
@@ -127,7 +151,7 @@ install</li>
 </ul>
 </td>
 <td><ul class="first last simple">
-<li>Linux required</li>
+<li>GNU/Linux required</li>
 <li>Root access required</li>
 <li>Installation of prerequisites required</li>
 <li>Latests features</li>
@@ -157,7 +181,7 @@ required</li>
 </ul>
 </td>
 <td><ul class="first last simple">
-<li>Linux required</li>
+<li>GNU/Linux required</li>
 <li>No install procedure</li>
 <li>(Usually) single user install</li>
 <li>Manual installation of prerequisites
@@ -168,7 +192,7 @@ required</li>
 </tr>
 </tbody>
 </table>
-<p><a class="reference internal" href="#sec-bumpix-live-linux"><em>BuMPix Live Linux system</em></a>:</p>
+<p><a class="reference internal" href="#sec-bumpix-live-linux"><em>BuMPix Live GNU/Linux system</em></a>:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="52%" />
@@ -181,7 +205,7 @@ required</li>
 </thead>
 <tbody valign="top">
 <tr><td><ul class="first last simple">
-<li>No Linux required</li>
+<li>No GNU/Linux required</li>
 <li>No root access required</li>
 <li>No installation required</li>
 <li>Stable version</li>
@@ -211,10 +235,10 @@ release, you may be lucky to find it in the latest <a class="reference internal"
 absolutely latest development code, you can run pyFormex directly
 from the anonymously checked out <a class="reference internal" href="#sec-development-version"><em>Development version</em></a>.</li>
 <li>Finally, if you do not have enough permissions to install the prerequisites,
-or if you do not have a Linux system in the first place, or if you just want
+or if you do not have a GNU/Linux system in the first place, or if you just want
 to try out pyFormex without having to install anything,
 or if you want a portable system that can you take
-with you and run anywhere, choose for the <a class="reference internal" href="#sec-bumpix-live-linux"><em>BuMPix Live Linux system</em></a> on
+with you and run anywhere, choose for the <a class="reference internal" href="#sec-bumpix-live-linux"><em>BuMPix Live GNU/Linux system</em></a> on
 USB stick.</li>
 </ul>
 </div>
@@ -224,13 +248,13 @@ USB stick.</li>
 the latest development sources. This holds a certain risk however, because the development version may at times become unstable or incompatible with previous versions and thus break your applications.
 At regular times we therefore create official releases, which provide a more stable and better documented and supported version, together with an easy install procedure.</p>
 <p>If you can meet the requirements for using an officially packed release, this is the recommended way to install pyFormex. All the software packages needed to run pyFormex can be obtained for free.</p>
-<p>To install an official pyFormex release, you need a working Linux system, root (administrator) privileges to the system, and you need to make sure that the prerequisite packages are installed on the system.</p>
-<p>If you need to install a new Linux system from scratch, and have the choice to
+<p>To install an official pyFormex release, you need a working GNU/Linux system, root (administrator) privileges to the system, and you need to make sure that the prerequisite packages are installed on the system.</p>
+<p>If you need to install a new GNU/Linux system from scratch, and have the choice to
 pick any distribution, we highly recommend <a class="reference external" href="http://www.debian.org">Debian GNU/Linux</a> or derivatives.
 This is because most of the pyFormex development is done on Debian systems,
 and we will give you <a class="reference internal" href="#precise-install-instructions">precise install instructions</a> for this system.
 Also, the Debian software repositories are amongst the most comprehensive to be found on the Internet.</p>
-<p>Most popular Linux distributions provide appropriately packed recent versions
+<p>Most popular GNU/Linux distributions provide appropriately packed recent versions
 of these prerequisites, so that you can install them easily from the pacakge manager of your system. In case a package or version is not available for your system, you can always install it from source. We provide the websites where
 you can find the source packages.</p>
 <div class="section" id="prerequisites">
@@ -238,7 +262,7 @@ you can find the source packages.</p>
 <p>In order to install an official release package of pyFormex, you need to have the following installed (and working) on your computer:</p>
 <dl class="docutils">
 <dt><strong>Python</strong> (<a class="reference external" href="http://www.python.org">http://www.python.org</a>)</dt>
-<dd>Version 2.4 or higher (2.5 is recommended). Nearly all Linux distributions
+<dd>Version 2.4 or higher (2.5 is recommended). Nearly all GNU/Linux distributions
 come with Python installed, so this should not be no major obstacle.</dd>
 <dt><strong>NumPy</strong> (<a class="reference external" href="http://www.numpy.org">http://www.numpy.org</a>)</dt>
 <dd>Version 1.0-rc1 or higher. NumPy is the package used for efficient
@@ -261,7 +285,7 @@ Most probably you will want to visualize your structures and for that you need t
 <p>Additionally, we recommend you to also install the GNU C-compiler and the Python and OpenGL header files. The install procedure needs these to compile the pyFormex acceleration library. While pyFormex can run without the library (Python versions will be substituted
 for all functions in the library), using the library will dramatically speed up some low level operations such as drawing, especially when working with large structures .</p>
 <div class="section" id="installing-prerequisites-on-debian-gnu-linux">
-<span id="precise-install-instructions"></span><h4>Installing prerequisites on <a class="reference external" href="http://www.debian.org">Debian GNU/Linux</a><a class="headerlink" href="#installing-prerequisites-on-debian-gnu-linux" title="Permalink to this headline">¶</a></h4>
+<span id="precise-install-instructions"></span><h4>Installing prerequisites on <cite>Debian GNU/Linux</cite><a class="headerlink" href="#installing-prerequisites-on-debian-gnu-linux" title="Permalink to this headline">¶</a></h4>
 <p>Debian users should just have to install the packages <tt class="docutils literal"><span class="pre">python-numpy</span></tt> and  <tt class="docutils literal"><span class="pre">python-qt4-gl</span></tt>. The latter will install <tt class="docutils literal"><span class="pre">python-qt4</span></tt> and <tt class="docutils literal"><span class="pre">python-qt4-gl</span></tt> as dependencies. Also, for compiling the acceleration library, you should install
 <tt class="docutils literal"><span class="pre">python-dev</span></tt>, <tt class="docutils literal"><span class="pre">python-qt4-dev</span></tt> and <tt class="docutils literal"><span class="pre">libgl1-mesa-dev</span></tt>.</p>
 <p>Other optional packages that might be useful are <tt class="docutils literal"><span class="pre">admesh</span></tt>, <tt class="docutils literal"><span class="pre">python-scipy</span></tt>,
@@ -422,15 +446,15 @@ pyFormex. Just remember that after updating your sources, the compiled
 library could be out of sync with your new sources. Rebuild the
 library just like specified above.</p>
 </div>
-<div class="section" id="bumpix-live-linux-system">
-<span id="sec-bumpix-live-linux"></span><h2>BuMPix Live Linux system<a class="headerlink" href="#bumpix-live-linux-system" title="Permalink to this headline">¶</a></h2>
-<p>If you do not have access to a running Linux system, or if the above
+<div class="section" id="bumpix-live-gnu-linux-system">
+<span id="sec-bumpix-live-linux"></span><h2>BuMPix Live GNU/Linux system<a class="headerlink" href="#bumpix-live-gnu-linux-system" title="Permalink to this headline">¶</a></h2>
+<p>If you do not have access to a running GNU/Linux system, or if the above
 installation methods fail for some unknown reason (remember, you can
 ask for help on the pyFormex <a class="reference external" href="http://developer.berlios.de/forum/?group_id=2717">Forums</a>), you can still run pyFormex by
-using a <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix">Bumpix Live Linux</a> system. <cite>Bumpix Live</cite> is a full featured
-Linux system including pyFormex that can be run from a single
+using a <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix">Bumpix Live GNU/Linux</a> system. <cite>Bumpix Live</cite> is a full featured
+Debian GNU/Linux system including pyFormex that can be run from a single
 removable medium such as a CD or a USB key.
-Installation instructions can be found in <a class="reference internal" href="bumpix.html"><em>BuMPix Live Linux system</em></a>.</p>
+Installation instructions can be found in <a class="reference internal" href="bumpix.html"><em>BuMPix Live GNU/Linux system</em></a>.</p>
 <p>Alternatively,</p>
 <ul class="simple">
 <li>if you do not succeed in properly writing the image to a USB key, or</li>
@@ -442,19 +466,19 @@ Installation instructions can be found in <a class="reference internal" href="bu
 sticks with the <tt class="docutils literal"><span class="pre">pyformex.org</span></tt> logo at a cost hardly exceeding that
 of production and distribution.
 If you think this is the right choice for you, just <a class="reference external" href="mailto:benedict&#46;verhegghe&#37;&#52;&#48;ugent&#46;be">email us</a> for a quotation.</p>
-<p>Further guidelines for using the BuMPix system can be found in <a class="reference internal" href="bumpix.html"><em>BuMPix Live Linux system</em></a>.</p>
+<p>Further guidelines for using the BuMPix system can be found in <a class="reference internal" href="bumpix.html"><em>BuMPix Live GNU/Linux system</em></a>.</p>
 </div>
 <div class="section" id="running-pyformex-on-non-linux-systems">
 <span id="sec-pyformex-nonlinux"></span><h2>Running pyFormex on non-Linux systems<a class="headerlink" href="#running-pyformex-on-non-linux-systems" title="Permalink to this headline">¶</a></h2>
-<p>pyFormex is being developed on Linux platforms, and most of its users run
-pyFormex on a Linux system. Because of that, there is no installation
+<p>pyFormex is being developed on GNU/Linux platforms, and most of its users run
+pyFormex on a GNU/Linux system. Because of that, there is no installation
 procedure to run pyFormex natively on other systems.</p>
 <p>Currently, the easiest way to run pyFormex on a non-Linux system is by
-using the <a class="reference internal" href="#sec-bumpix-live-linux"><em>BuMPix Live Linux system</em></a>. We use this frequently with
+using the <a class="reference internal" href="#sec-bumpix-live-linux"><em>BuMPix Live GNU/Linux system</em></a>. We use this frequently with
 large groups of students in classes having only Windows PCs. We also
-have some professional users who could no install Linux due to
+have some professional users who could no install GNU/Linux due to
 corporate regulations, that are working this way.</p>
-<p>Another possibility is to run a virtual Linux instance on the
+<p>Another possibility is to run a virtual GNU/Linux instance on the
 platform. There is currently quite good virtualization software
 available for nearly any platform.</p>
 <p>However, as all the essential underlying packages on which pyFormex is
@@ -498,7 +522,7 @@ successful or not.</p>
 <li><a class="reference internal" href="#choose-installation-type">Choose installation type</a></li>
 <li><a class="reference internal" href="#official-release">Official release</a><ul>
 <li><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
-<li><a class="reference internal" href="#installing-prerequisites-on-debian-gnu-linux">Installing prerequisites on Debian GNU/Linux</a></li>
+<li><a class="reference internal" href="#installing-prerequisites-on-debian-gnu-linux">Installing prerequisites on <cite>Debian GNU/Linux</cite></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#download-pyformex">Download pyFormex</a></li>
@@ -508,7 +532,7 @@ successful or not.</p>
 </li>
 <li><a class="reference internal" href="#alpha-release">Alpha release</a></li>
 <li><a class="reference internal" href="#development-version">Development version</a></li>
-<li><a class="reference internal" href="#bumpix-live-linux-system">BuMPix Live Linux system</a></li>
+<li><a class="reference internal" href="#bumpix-live-gnu-linux-system">BuMPix Live GNU/Linux system</a></li>
 <li><a class="reference internal" href="#running-pyformex-on-non-linux-systems">Running pyFormex on non-Linux systems</a></li>
 </ul>
 </li>
@@ -523,7 +547,7 @@ successful or not.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -560,7 +584,7 @@ successful or not.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.4.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
 </html>
