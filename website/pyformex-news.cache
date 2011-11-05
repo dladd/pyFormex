@@ -1,7 +1,12 @@
-<a href="//developer.berlios.de/forum/forum.php?forum_id=37163"><b>pyFormex on Mac (OS X)</b></a>&nbsp;&nbsp;&nbsp;<i>bverheg - 2011-Jul-15 14:08  &nbsp; - &nbsp; <a href="//developer.berlios.de/projects/pyformex/">pyFormex</a></i><br/>We now have pyFormex running
-    also on Mac OS X. 
-<br/>It still needs a lot of fixes and is unstable at times, but here is a first
-    screenshot of pyFormex on our iMac:
+<a href="//developer.berlios.de/forum/forum.php?forum_id=37541"><b>A new home for pyFormex</b></a>&nbsp;&nbsp;&nbsp;<i>bverheg - 2011-Nov-05 14:27  &nbsp; - &nbsp; <a href="//developer.berlios.de/projects/pyformex/">pyFormex</a></i><br/>As you probably know,
+    BerliOS will shut down by the end of the year, and so we had to find a new home
+    for pyFormex.
+<br/>Well, now we've got one: it's on 
+<br/><a href="https://savannah.nongnu.org/projects/pyformex/" target="_new">https://savannah.nongnu.org/projects/pyformex/</a>
+    <hr width="100%" size="1"/><a href="//developer.berlios.de/forum/forum.php?forum_id=37163"><b>pyFormex on Mac (OS X)</b></a>&nbsp;&nbsp;&nbsp;<i>bverheg - 2011-Jul-15 14:08
+    &nbsp; - &nbsp; <a href="//developer.berlios.de/projects/pyformex/">pyFormex</a></i><br/>We now have pyFormex running also on Mac OS X. 
+<br/>It still needs a lot of fixes and is unstable at
+    times, but here is a first screenshot of pyFormex on our iMac:
 <br/><a href="http://pyformex.berlios.de/images/pyformex_on_Mac.png" target="_new">http://pyformex.berlios.de/images/pyformex_on_Mac.png</a>
     <hr width="100%" size="1"/><a href="//developer.berlios.de/forum/forum.php?forum_id=37148"><b>pyFormex 0.8.4 available</b></a>&nbsp;&nbsp;&nbsp;<i>bverheg - 2011-Jul-09 15:00
     &nbsp; - &nbsp; <a href="//developer.berlios.de/projects/pyformex/">pyFormex</a></i><br/>pyFormex 0.8.4 has been released.
@@ -17,11 +22,6 @@
 <br/>Installation of a the pyFormex-0.8.4 pre-release
     went smoothly, following the installation instructions in the manual for Debian.
     
-    <hr width="100%" size="1"/><a href="//developer.berlios.de/forum/forum.php?forum_id=36186"><b>pyFormex 0.8.3 released</b></a>&nbsp;&nbsp;&nbsp;<i>bverheg - 2010-Dec-05 18:20
-    &nbsp; - &nbsp; <a href="//developer.berlios.de/projects/pyformex/">pyFormex</a></i><br/>pyFormex 0.8.3 has been released!
-<br/><br/>This pyFormex release provides several new
-    and enhanced Mesh functions, resolves all outstanding bugs, and has many other
-    enhancements. More details are in the file doc/ReleaseNotes. 
     <hr width="100%" size="1"/>
     <div align="center"><a href="//developer.berlios.de/news/?group_id=2717">[News archive]</a></div>
   

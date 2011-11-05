@@ -39,7 +39,7 @@ SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/*.py) \
 	$(wildcard ${PYFORMEXDIR}/gui/*.py) \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
-	$(wildcard ${LIBDIR}/*.c) \
+	$(wildcard ${LIBDIR}/*.c) $(wildcard ${LIBDIR}/*.py) \
 	$(addprefix ${BINDIR}/, read_abq_inp.awk) \
 
 

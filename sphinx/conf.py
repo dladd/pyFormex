@@ -44,7 +44,7 @@ sys.path.insert(0,os.path.abspath('../pyformex/gui'))
 sys.path.insert(0,os.path.abspath('../pyformex/plugins'))
 sys.path.insert(0,os.path.abspath('../pyformex'))
 sys.path.insert(0,os.path.abspath('..'))
-sys.path.insert(0,os.path.abspath('.'))  # for our patched numpydoc
+#sys.path.insert(0,os.path.abspath('.'))  # for our patched numpydoc
 print sys.path
 
 # -- General configuration -----------------------------------------------------
@@ -128,11 +128,14 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'basic', 'default',  'sphinxdoc', 'traditional'.
 html_theme = 'default'
-
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {
+    "rightsidebar": "true",
+    "stickysidebar": "true",
+    "headbgcolor": "silver",
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = [ '/home/bene/soft/sphinx-0.6.6/sphinx/theme' ]
@@ -183,6 +186,7 @@ html_static_path = ['_static']
 #html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
+html_copy_source = False
 html_show_sourcelink = False
 
 # If true, an OpenSearch description file will be output, and all pages will

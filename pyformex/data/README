@@ -1,6 +1,5 @@
-# $Id$
 ##
-##  This file is part of pyFormex 0.8.4 Release Sat Jul  9 14:43:11 2011
+##  The files in this directory are part of pyFormex
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -21,26 +20,3 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-#
-"""Python equivalents of the functions in lib.nurbs
-
-The functions in this module should be exact emulations of the
-external functions in the compiled library.
-"""
-
-# There should be no other imports here but numpy
-from math import factorial
-
-def binomial(n,k):
-    """Compute the binomial coefficient Cn,k.
-
-    This computes the binomial coefficient Cn,k = fac(n) / fac(k) / fac(n-k).
-
-    >>> print [ binomial(4,i) for i in range(5) ]
-    [1, 4, 6, 4, 1]
-    """
-    f = factorial
-    return f(n) / f(k) / f(n-k)
-
-
-# End
