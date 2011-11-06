@@ -1,4 +1,4 @@
-# $Id$
+#
 ##
 ##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -23,35 +23,3 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 #
-
-Python wrapper for gl2ps
-========================
-
-This is a Python wrapper for GL2PS, an OpenGL to PostScript Printing Library
-by Christophe Geuzaine. See http://www.geuz.org/gl2ps/.
-
-The wrapper was created by Benedict Verhegghe, and any questions about it
-should be addressed to Benedict.Verhegghe@ugent.be
-
-
-
-Installation in a pyFormex SVN tree
------------------------------------
-- Go to the external/pygl2ps folder and enter the command (as root)
-./pygl2ps.install all
-
-
-Standalone installation
------------------------
-
-- download gl2ps
-- unpack it
-- copy the files gl2ps.i and setup.py to the created gl2ps-* directory
-- go to the gl2ps-* directory and  do the following:
-swig -python gl2ps.i
-python setup.py build
-(as root) python setup.py install
-
-
-
-

@@ -38,7 +38,7 @@ smooth()
 lights(False)
 view('front')
 
-fn = os.path.join(getcfg('datadir'),'Equirectangular-projection-400.jpg')
+fn = os.path.join(getcfg('datadir'),'world.jpg')
 fn = askFilename(cur=fn,filter=utils.fileDescription('img'),)
 if not fn:
     exit()

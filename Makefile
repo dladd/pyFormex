@@ -59,10 +59,9 @@ EXTSOURCE= \
 
 EXAMPLES= \
 	$(wildcard ${PYFORMEXDIR}/examples/*.py) \
-	$(wildcard ${PYFORMEXDIR}/examples/Analysis/*.py) \
 	$(wildcard ${PYFORMEXDIR}/examples/Demos/*.py) \
 
-EXAMPLEDATA= $(wildcard ${PYFORMEXDIR}/examples/*.db)
+EXAMPLEDATA= $(wildcard ${PYFORMEXDIR}/data/*.db)
 
 DOCSOURCE= $(wildcard ${SPHINXDIR}/*.rst) $(wildcard ${SPHINXDIR}/*.py) \
 	$(wildcard ${SPHINXDIR}/*.inc) ${SPHINXDIR}/Makefile \
