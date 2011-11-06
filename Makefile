@@ -36,6 +36,7 @@ PYFORMEXDIR= pyformex
 LIBDIR= ${PYFORMEXDIR}/lib
 DOCDIR= ${PYFORMEXDIR}/doc
 BINDIR= ${PYFORMEXDIR}/bin
+EXTDIR= ${PYFORMEXDIR}/external
 SPHINXDIR= sphinx
 
 SOURCE= ${PYFORMEXDIR}/pyformex \
@@ -45,8 +46,16 @@ SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${LIBDIR}/*.c) \
 	$(wildcard ${LIBDIR}/*.py) \
 	${addprefix ${LIBDIR}/, Makefile.in configure.ac configure_py} \
+
+BINSOURCE= \
 	$(wildcard ${BINDIR}/*.awk) \
 	${addprefix ${BINDIR}/, gambit-neu gambit-neu-hex} \
+
+EXTSOURCE= \
+	$(wildcard ${EXTDIR}/*/README) \
+	$(wildcard ${EXTDIR}/*/install.sh) \
+	$(wildcard ${EXTDIR}/*/install.sh) \
+	${addprefix ${EXTDIR}/pygl2ps/, gl2ps.i setup.py} \
 
 EXAMPLES= \
 	$(wildcard ${PYFORMEXDIR}/examples/*.py) \
@@ -72,7 +81,7 @@ OTHERSTAMPABLE= setup.py Makefile post-install \
 NONSTAMPABLE= ${DOC}/COPYING 
 
 STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) \
-	${EXAMPLES} ${DOCSOURCE} ${OTHERSTAMPABLE}
+	${EXAMPLES} ${DOCSOURCE} ${BINSOURCE} ${EXTSOURCE} ${OTHERSTAMPABLE}
 
 STATICSTAMPABLE= Description History HOWTO-dev.rst MANIFEST.py add_Id \
 	create_revision_graph install-pyformex-svn-desktop-link \
