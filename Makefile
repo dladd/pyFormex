@@ -44,6 +44,7 @@ SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
 	$(wildcard ${LIBDIR}/*.c) $(wildcard ${LIBDIR}/*.py) \
 	$(wildcard ${BINDIR}/*.awk) \
+	${addprefix ${BINDIR}/, gambit-neu gambit-neu-hex} \
 
 EXAMPLES= \
 	$(wildcard ${PYFORMEXDIR}/examples/*.py) \
