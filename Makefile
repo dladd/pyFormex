@@ -42,7 +42,9 @@ SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/*.py) \
 	$(wildcard ${PYFORMEXDIR}/gui/*.py) \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
-	$(wildcard ${LIBDIR}/*.c) $(wildcard ${LIBDIR}/*.py) \
+	$(wildcard ${LIBDIR}/*.c) \
+	$(wildcard ${LIBDIR}/*.py) \
+	${addprefix ${LIBDIR}/, Makefile.in configure.ac configure_py} \
 	$(wildcard ${BINDIR}/*.awk) \
 	${addprefix ${BINDIR}/, gambit-neu gambit-neu-hex} \
 
@@ -80,7 +82,8 @@ STATICSTAMPABLE= Description History HOWTO-dev.rst MANIFEST.py add_Id \
 	$(wildcard website/src/examples/*.txt) \
 	sphinx
 
-STATICDIRS= pyformex/data pyformex/icons \
+STATICDIRS= pyformex/data/README pyformex/icons/README \
+	pyformex/lib/README \
 	screenshots/README sphinx/images/README \
 	website/README website/images/README website/src/README \
 	website/src/examples/README
