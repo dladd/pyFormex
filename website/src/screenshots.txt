@@ -1,5 +1,4 @@
-.. This may look like plain text, but is really -*- rst -*-
-.. $Id$
+.. $Id$    -*- rst -*-
 
 restindex	
     crumb: Screenshots

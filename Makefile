@@ -50,7 +50,9 @@ EXAMPLES= \
 
 EXAMPLEDATA= $(wildcard ${PYFORMEXDIR}/examples/*.db)
 
-DOCSOURCE= $(wildcard ${SPHINXDIR}/*.rst)
+DOCSOURCE= $(wildcard ${SPHINXDIR}/*.rst) $(wildcard ${SPHINXDIR}/*.py) \
+	$(wildcard ${SPHINXDIR}/*.inc) ${SPHINXDIR}/Makefile \
+	${SPHINXDIR}/ref/Makefile
 
 EXECUTABLE= ${PYFORMEXDIR}/pyformex ${PYFORMEXDIR}/sendmail.py ${BINDIR}/read_abq_inp.awk ${LIBDIR}/postabq pyformex-viewer
 
@@ -68,7 +70,14 @@ STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) \
 
 STATICSTAMPABLE= Description History HOWTO-dev.rst MANIFEST.py add_Id \
 	create_revision_graph install-pyformex-svn-desktop-link \
-	pyformex-viewer searchpy sloc.py
+	pyformex-viewer searchpy sloc.py slocstats.awk \
+	user/Makefile $(wildcard user/*.rst) \
+	website/Makefile \
+	$(wildcard website/src/examples/*.txt) \
+	sphinx
+
+STATICDIRS= screenshots/README sphinx/images/README \
+	user 
 
 STAMP= stamp 
 VERSIONSTRING= __version__ = .*
@@ -83,7 +92,7 @@ FTPLOCAL=bumps:/var/ftp/pub/pyformex
 # ftp server on pyformex website
 FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 
-.PHONY: dist pub distclean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic
+.PHONY: dist pub distclean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs
 
 ############ Creating Distribution ##################
 
@@ -153,20 +162,26 @@ setup.py: RELEASE
 # Stamp files with the version/release date
 
 Stamp.stamp: Stamp.template RELEASE
-	${STAMP} -tStamp.template version=${VERSION} -sStamp.stamp
+	${STAMP} -t$< header="This file is part of pyFormex ${VERSION}   $$(env LANG=C date)" -s$@
 
 stampall: Stamp.stamp
-	${STAMP} -tStamp.stamp -i ${STAMPABLE}
+	${STAMP} -t$< -i ${STAMPABLE}
 	chmod +x ${EXECUTABLE}
 
 printstampable:
 	@for f in ${STAMPABLE}; do echo $$f; done
 
 Stamp.static: Stamp.template
-	${STAMP} -tStamp.template version='' datetime='' -sStamp.static
+	${STAMP} -t$< header='This file is part of the pyFormex project.' -s$@
 
 stampstatic: Stamp.static
-	${STAMP} -tStamp.static -i ${STATICSTAMPABLE}
+	${STAMP} -t$< -i ${STATICSTAMPABLE}
+
+Stamp.staticdir: Stamp.template
+	${STAMP} -t$< header='The files in this directory are part of the pyFormex project.' -s$@
+
+stampstaticdirs: Stamp.staticdir
+	${STAMP} -t$< -i ${STATICDIRS}
 
 # Create the distribution
 dist: ${LATEST}
