@@ -1,10 +1,10 @@
-#  -*- Makefile -*-  for creating pyFormex releases
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.4 Release Sat Jul  9 14:43:11 2011
+##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
@@ -22,6 +22,9 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
+
+#
+# Makefile for creating pyFormex releases
 #
 
 include RELEASE
@@ -61,7 +64,8 @@ OTHERSTAMPABLE= setup.py Makefile post-install \
 	${PYFORMEXDIR}/pyformexrc \
 	${EXAMPLEDATA} \
 	${LIBDIR}/Makefile.in \
-	${addprefix ${DOCDIR}/, README ReleaseNotes} \
+	${addprefix ${DOCDIR}/, README ReleaseNotes STYLE TODO} \
+	$(wildcard ${DOCDIR}/*.rst)
 
 NONSTAMPABLE= ${DOC}/COPYING 
 
@@ -72,12 +76,14 @@ STATICSTAMPABLE= Description History HOWTO-dev.rst MANIFEST.py add_Id \
 	create_revision_graph install-pyformex-svn-desktop-link \
 	pyformex-viewer searchpy sloc.py slocstats.awk \
 	user/Makefile $(wildcard user/*.rst) \
-	website/Makefile \
+	website/Makefile $(wildcard website/scripts/*.py) \
 	$(wildcard website/src/examples/*.txt) \
 	sphinx
 
-STATICDIRS= screenshots/README sphinx/images/README \
-	user 
+STATICDIRS= pyformex/data pyformex/icons \
+	screenshots/README sphinx/images/README \
+	website/README website/images/README website/src/README \
+	website/src/examples/README
 
 STAMP= stamp 
 VERSIONSTRING= __version__ = .*

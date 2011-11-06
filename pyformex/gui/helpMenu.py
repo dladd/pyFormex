@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.4 Release Sat Jul  9 14:43:11 2011
+##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
