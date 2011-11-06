@@ -63,8 +63,12 @@ EXAMPLES= \
 
 EXAMPLEDATA= $(wildcard ${PYFORMEXDIR}/data/*.db)
 
-DOCSOURCE= $(wildcard ${SPHINXDIR}/*.rst) $(wildcard ${SPHINXDIR}/*.py) \
-	$(wildcard ${SPHINXDIR}/*.inc) ${SPHINXDIR}/Makefile \
+DOCSOURCE= \
+	$(wildcard ${SPHINXDIR}/*.rst) \
+	$(wildcard ${SPHINXDIR}/*.py) \
+	$(wildcard ${SPHINXDIR}/*.inc) \
+	$(wildcard ${SPHINXDIR}/_static/scripts/*.py) \
+	${SPHINXDIR}/Makefile \
 	${SPHINXDIR}/ref/Makefile
 
 EXECUTABLE= ${PYFORMEXDIR}/pyformex ${PYFORMEXDIR}/sendmail.py ${BINDIR}/read_abq_inp.awk ${LIBDIR}/postabq pyformex-viewer

@@ -22,29 +22,6 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-#
-##
-##  This file is part of pyFormex
-##  pyFormex is a tool for generating, manipulating and transforming 3D
-##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
-##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
-##  Distributed under the GNU General Public License version 3 or later.
-##
-##
-##  This program is free software: you can redistribute it and/or modify
-##  it under the terms of the GNU General Public License as published by
-##  the Free Software Foundation, either version 3 of the License, or
-##  (at your option) any later version.
-##
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU General Public License for more details.
-##
-##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see http://www.gnu.org/licenses/.
-##
 # pyFormex documentation build configuration file, created by
 # sphinx-quickstart on Fri Aug 21 15:05:14 2009.
 #
@@ -77,7 +54,7 @@ print sys.path
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'sphinx.ext.autosummary',  'sphinx.ext.viewcode'] #'sphinx.ext.jsmath',
+extensions = ['sphinx.ext.autodoc','sphinx.ext.pngmath', 'sphinx.ext.autosummary',] #  'sphinx.ext.viewcode'] #'sphinx.ext.jsmath',
 
 #render_class_autosummary = False
 
@@ -151,14 +128,15 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'default'
+#html_theme_options = {
+#    "rightsidebar": "true",
+#    "relbarbgcolor": "black",
+#    "sidebarbgcolor": "silver",
+#}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {
-    "rightsidebar": "true",
-    "stickysidebar": "false",
-}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
@@ -186,7 +164,7 @@ html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-#html_last_updated_fmt = '%b %d, %Y'
+html_last_updated_fmt = '%b %d, %Y'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
