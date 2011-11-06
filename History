@@ -1,12 +1,26 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.7 Release Fri Apr  4 18:41:11 2008
-## pyFormex is a Python implementation of Formex algebra
-## Website: http://pyformex.berlios.de/
-## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  This file is part of pyFormex    
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
 ##
-## This program is distributed under the GNU General Public License
-## version 2 or later (see file COPYING for details)
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
 2009-06 BV: Released pyFormex 0.8
@@ -45,35 +59,12 @@
 
 
 2005-12-09 BV : First anniversary release 0.2.2
-2005-12-06 BV : Lots of changes have been made since the 0.2.1 release.
-                The pyformex program has been split over multiple files and
-                a large code cleanup is underway.
-                Lots of examples have been added, some of them illustrating
-                the practical use of pyFormex by linking it to structural
-		analysis codes.
-2005-04-23 BV : Interim 0.2.1 release with lots f new stuff (like Lindenmayer
-                systems, growing curves, turtle-like graphics
+2005-04-23 BV : Interim 0.2.1 release with lots of new stuff
 2005-01-03 BV : First public release on berlios.de (0.2)
-	        reworked some examples, added ff button to gui
-                moved translatem to deprecated section,
-2004-12-30 BV : Added circulize and shear functions in formex.py,
-2004-12-15 BV : Added model transformation in the Canvas class
-2004-12-09 BV : ===> Registered project pyFormex on berlios.de
-		renamed withProp to hasProp;
-2004-10-15 BV : Added unique,nodes,remove; plotting of uniplex formex;
-2004-10-09 BV : Fully implemented props; added color plotting.
-		by numarray's copy(), added props to Formex. 
-2004-10-08 BV : In Formex.py: fixed replace() function, replaced copy.deepcopy
-		recognize it.
-2004-10-07 BV : Added svn:keyword Id to source files, and changed Stamp to 
-		Reorganized the subversion repository
-2004-07-14 BV : Made the cylindrical and spherical transforms more general,
-		autoload example menu, added saving of images
-2004-07-09 BV : Added file replay, moved examples to separate files, 
+2004-12-09 BV : Registered project pyFormex on berlios.de
 2004-07-08 BV : Created a first release (0.1.1)
-2004-07-07 BV : Added dynamic zoom/pan/rotate
-2004-07-07 BV : Added README, History, COPYING, Makefile, Stamp
-2004-07-06 BV : Created separate Camera class, needed for other project(s) too
 2004-07-02 BV : Created a Subversion repository
-2004-06-30 BV : Added Canvas and simple Menu (stripped from other project)
-2004-06-29 BV :	Quickly hacked together the Formex functionality
+2004-06-29 BV :	After reading about Formian, I quickly hacked together
+                the Formex class
+
+# End

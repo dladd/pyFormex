@@ -50,7 +50,7 @@ if svnversion:
     msg = checkLibraries()
     if msg:
         print "Rebuilding pyFormex libraries, please wait"
-        cmd = "cd %s/lib;make" % pyformexdir
+        cmd = "cd %s/lib;if [ ! -f Makefile ]; then ./configure; fi; make" % pyformexdir
         os.system(cmd)
         msg = checkLibraries()
     
@@ -431,7 +431,7 @@ def run(argv=[]):
 
     ########### Read the config files  ####################
 
-    # These values  should not be changed
+    # These values should not be changed
     pyformex.cfg.userprefs = os.path.join(pyformex.cfg.userconfdir,'pyformexrc')
     pyformex.cfg.autorun = os.path.join(pyformex.cfg.userconfdir,'startup.py')
     
@@ -458,6 +458,7 @@ def run(argv=[]):
     for f in filter(os.path.exists,sysprefs + userprefs[:-1]):
         pyformex.debug("Reading config file %s" % f)
         pyformex.cfg.read(f)
+     
     pyformex.refcfg = pyformex.cfg
     pyformex.debug("="*60)
     pyformex.debug("RefConfig: %s" % pyformex.refcfg)
@@ -513,6 +514,10 @@ def run(argv=[]):
         ## m = re.match(".*//(?P<user>[^@]*)@svn\.berlios\.de.*",s)
         ## pyformex.svnuser = m.group('user')
         ## print pyformex.svnuser
+
+        # Add in subversion specific config
+        pyformex.refcfg.help['developer'][0:0] = [('Developer HOWTO',os.path.join(pyformexdir,'..','HOWTO-dev.rst'))]
+        print pyformex.refcfg.help['developer']
     
 
 

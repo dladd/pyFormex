@@ -44,7 +44,27 @@ The functions defined in this module use the Formian names and conventions,
 thus facilitating the transscription of Formian scripts to pyFormex.
 Just import this module to make them available.
 
-For original pyFormex scripts, the use of this module is discouraged. 
+For original pyFormex scripts, the use of this module is discouraged.
+
+
+Translate formian code to python
+
+No change :
+  + - * / 
+  sign (defined further)
+  abs 
+  sqrt,sin,cos,tan,asin,acos,atan,exp (from math)
+  
+  ln -> log (from math)
+  ric -> int(round())
+  tic -> int()
+  floc -> float()
+  m^n -> pow(m,n) of m**n
+  f|x -> f(x)
+
+  tran(i,j)|F -> F.translate(i-1,j)
+  ref(i,j)|F  -> F.reflect(i-1,j)
+
 """
 
 from formex import Formex

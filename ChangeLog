@@ -1,6 +1,0 @@
-2008-04-10  Benedict Verhegghe
-
-	* formex.py: cut3AtPlane by default returns both sides of the cut.
-
-	* plugins/f2abq.py: renamed to fe_abq.py
-

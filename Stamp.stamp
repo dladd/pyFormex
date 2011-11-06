@@ -1,6 +1,5 @@
-#!/bin/sh
 ##
-##  This file is part of pyFormex    
+##  This file is part of pyFormex 0.8.5   Sun Nov  6 14:46:06 2011
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -22,24 +21,3 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-#
-# Create a pyFormex revision graph
-#
-URL=$(svn info | grep 'URL:' | sed 's|.*//||;s|.*@||')
-
-[ "$URL" = "svn.berlios.de/svnroot/repos/pyformex/trunk" ] || {
-    echo "URL: $URL"
-    echo "This script should be executed in the pyformex checkout directory"
-    exit
-}
-
-REV=$(svn info | gawk '/Revision:/{print $2}')
-RECREV=$(head -n 1 pyformex.revisions | sed 's| .*||')
-
-[ "$RECREV" = "$REV" ] || {
-  echo "Creating new revision list: this may take some time"
-  svn log | gawk '/^r[0-9]+/{ sub("r","",$1); print $1, $5}' > pyformex.revisions
-}
-
-sed -i "s|Created.*\"|Created $(date +'%Y-%m-%d %H:%M:%S')\"|" pyformex-rev.gnu
-gnuplot pyformex-rev.gnu

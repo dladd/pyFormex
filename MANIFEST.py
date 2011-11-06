@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex
+##  This file is part of pyFormex    
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
@@ -23,7 +24,7 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 #
-"""create_manifest.py
+"""MANIFEST.py
 
 This script creates the MANIFEST file which lists all the files
 to be included in a pyFormex source distribution.

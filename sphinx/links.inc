@@ -29,6 +29,9 @@
 .. _`pyFormex website`: http://pyformex.org
 .. _`development`: http://pyformex.berlios.de
 .. _`Official releases`: http://developer.berlios.de/project/showfiles.php?group_id=2717
+
+.. _`development-future`: https://savannah.nongnu.org/projects/pyformex/
+.. _`Official releases-future`: http://download-mirror.savannah.gnu.org/releases/pyformex/
 .. _`SVN repository`: http://developer.berlios.de/svn/?group_id=2717
 .. _`FTP site`: ftp://ftp.berlios.de/pub/pyformex
 .. _`latest`: ftp://ftp.berlios.de/pub/pyformex/pyformex-latest.tar.gz

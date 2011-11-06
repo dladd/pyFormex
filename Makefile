@@ -66,6 +66,9 @@ NONSTAMPABLE= ${DOC}/COPYING
 STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) \
 	${EXAMPLES} ${DOCSOURCE} ${OTHERSTAMPABLE}
 
+STATICSTAMPABLE= Description History HOWTO-dev.rst MANIFEST.py add_Id \
+	create_revision_graph install-pyformex-svn-desktop-link \
+	pyformex-viewer searchpy sloc.py
 
 STAMP= stamp 
 VERSIONSTRING= __version__ = .*
@@ -80,7 +83,7 @@ FTPLOCAL=bumps:/var/ftp/pub/pyformex
 # ftp server on pyformex website
 FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 
-.PHONY: dist pub distclean html pdf pubdoc minutes website stamp dist.stamped version tag register bumprelease bumpversion
+.PHONY: dist pub distclean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic
 
 ############ Creating Distribution ##################
 
@@ -149,15 +152,21 @@ setup.py: RELEASE
 
 # Stamp files with the version/release date
 
-stamp: Stamp.template RELEASE
+Stamp.stamp: Stamp.template RELEASE
 	${STAMP} -tStamp.template version=${VERSION} -sStamp.stamp
 
-stampall: stamp
+stampall: Stamp.stamp
 	${STAMP} -tStamp.stamp -i ${STAMPABLE}
 	chmod +x ${EXECUTABLE}
 
 printstampable:
 	@for f in ${STAMPABLE}; do echo $$f; done
+
+Stamp.static: Stamp.template
+	${STAMP} -tStamp.template version='' datetime='' -sStamp.static
+
+stampstatic: Stamp.static
+	${STAMP} -tStamp.static -i ${STATICSTAMPABLE}
 
 # Create the distribution
 dist: ${LATEST}
@@ -203,8 +212,8 @@ html:
 svndoc:
 	make -C ${SPHINXDIR} svndoc
 
-pdf:
-	make -C ${SPHINXDIR} pdf
+latexpdf:
+	make -C ${SPHINXDIR} latexpdf
 
 pubdoc:
 	make -C ${SPHINXDIR} pub
