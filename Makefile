@@ -43,8 +43,7 @@ SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/gui/*.py) \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
 	$(wildcard ${LIBDIR}/*.c) $(wildcard ${LIBDIR}/*.py) \
-	$(addprefix ${BINDIR}/, read_abq_inp.awk) \
-
+	$(wildcard ${BINDIR}/*.awk) \
 
 EXAMPLES= \
 	$(wildcard ${PYFORMEXDIR}/examples/*.py) \
@@ -172,7 +171,7 @@ Stamp.stamp: Stamp.template RELEASE
 
 stampall: Stamp.stamp
 	${STAMP} -t$< -i ${STAMPABLE}
-	chmod +x ${EXECUTABLE}
+#	chmod +x ${EXECUTABLE}
 
 printstampable:
 	@for f in ${STAMPABLE}; do echo $$f; done
