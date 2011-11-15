@@ -213,9 +213,10 @@ notes = os.path.join(pyformexdir,"doc","ReleaseNotes")
 license = os.path.join(pyformexdir,"doc","COPYING")
 website = "http://pyformex.org"
 webdoc = website+"/doc"
-forums = "http://developer.berlios.de/forum/?group_id=2717"
-bugs = "http://developer.berlios.de/bugs/?group_id=2717"
-links = [('pyFormex','pyformex.org'),('pyFormex-dev','developer.berlios.de/projects/pyformex'),('Python','www.python.org'),('IBiTech-bioMMeda','www.biommeda.ugent.be'),('stent-boys@bioMMeda','www.stent-ibitech.ugent.be'),('FEops','www.feops.com'),]
+projpage = "http://savannah.nongnu.org/projects/pyformex/"
+support = "http://savannah.nongnu.org/support/?func=additem&group=pyformex"
+bugs = "http://savannah.nongnu.org/bugs/?func=additem&group=pyformex"
+links = [('pyFormex','pyformex.org'),('pyFormex-dev',projpage),('Python','www.python.org'),('IBiTech-bioMMeda','www.biommeda.ugent.be'),('stent-boys@bioMMeda','www.stent-ibitech.ugent.be'),('FEops','www.feops.com'),]
 docs = [('&Local documentation',localdoc),('&Reference Manual',refman),('Tutorial',tutorial),('&Module Index',modindex),('&Index',index),('&Online documentation',webdoc),]
 docs2 = [('&Readme',readme),('&ReleaseNotes',notes),('&License',license),('New InputDialog',os.path.join(pyformexdir,"doc","InputDialog.rst")),]
 

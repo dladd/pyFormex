@@ -82,8 +82,8 @@ Your Python version is %s, but pyFormex requires Python >= %s. We advice you to 
 if utils.SaneVersion(found_version[:3]) > utils.SaneVersion(target_version):
 #if utils.checkVersion('python',target_version) > 0:
     startup_warnings += """
-Your Python version is %s, but pyFormex has only been tested with Python <= %s. We expect pyFormex to run correctly with your Python version, but if you encounter problems, please contact the developers at pyformex.berlios.de.
-""" % (found_version,target_version)
+Your Python version is %s, but pyFormex has only been tested with Python <= %s. We expect pyFormex to run correctly with your Python version, but if you encounter problems, please contact the developers at http://pyformex.org.
+""" % (found_version,target_version,)
 
 
 
@@ -512,7 +512,7 @@ def run(argv=[]):
         ## s = getSVNURL()
         ## print s
         ## import re
-        ## m = re.match(".*//(?P<user>[^@]*)@svn\.berlios\.de.*",s)
+        ## m = re.match(".*//(?P<user>[^@]*)@svn\.savanna\.nongnu\.org.*",s)
         ## pyformex.svnuser = m.group('user')
         ## print pyformex.svnuser
 

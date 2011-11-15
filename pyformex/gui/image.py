@@ -76,7 +76,7 @@ def initialize():
 
         import gl2ps
 
-        _producer = pf.Version + ' (http://pyformex.berlios.de)'
+        _producer = pf.Version + ' (%s)' % pf.cfg['help/website']
         _gl2ps_types = {
             'ps':gl2ps.GL2PS_PS,
             'eps':gl2ps.GL2PS_EPS,

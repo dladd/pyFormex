@@ -183,8 +183,8 @@ The maintainers of this script have not yet added a description
 for this example.
 
 You can study the source code, and if anything is unclear,
-ask for help on the pyFormex forums.
-"""
+ask for help on the pyFormex `Support tracker <%s>`_.
+""" % pf.cfg['help/support']
 
         showText(des,modal=False)
 
