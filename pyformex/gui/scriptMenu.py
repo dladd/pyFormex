@@ -165,7 +165,7 @@ class ScriptMenu(QtGui.QMenu):
 
       ScriptMenu('History',files=["/my/script1.py","/some/other/script.pye"],recursive=False)
 
-    is typically used to create a history menu of previously visited files
+    is typically used to create a history menu of previously visited files.
 
     With the resulting file list, a menu is created. Selecting a menu item
     will make the corresponding file the current script and unless the
@@ -315,7 +315,7 @@ class ScriptMenu(QtGui.QMenu):
                 mk = ScriptMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
                 for i in cat[k]:
                     ki = '%s/%s' % (k,i)
-                    mi = ScriptMenu(i.capitalize(),dir=self.dir,files=col[ki],recursive=False,toplevel=False,autoplay=self.autoplay)
+                    mi = ScriptMenu(i.capitalize(),dir=self.dir,files=col.get(ki,[]),recursive=False,toplevel=False,autoplay=self.autoplay)
                     mk.addMenu(mi)
                     mk.menus.append(mi)
                 self.addMenu(mk)

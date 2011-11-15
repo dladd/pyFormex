@@ -32,6 +32,8 @@ external functions in the compiled library.
 # There should be no other imports here but numpy
 from math import factorial
 
+accelerated = False
+
 def binomial(n,k):
     """Compute the binomial coefficient Cn,k.
 

@@ -31,7 +31,6 @@ static char __doc__[] = "misc_ module\n\
 This module provides accelerated versions of miscellaneous pyFormex functions.\n\
 \n";
 
-
 /* Dot product of two vectors of length n */
 /* ia and ib are the strides of the elements addressed starting from a, b */ 
 static float dotprod(float *a, int ia, float *b, int ib, int n)
@@ -619,7 +618,9 @@ static PyMethodDef _methods_[] = {
 /* Initialize the module */
 PyMODINIT_FUNC initmisc_(void)
 {
-  (void) Py_InitModule3("misc_", _methods_, __doc__);
+  PyObject* module;
+  module = Py_InitModule3("misc_", _methods_, __doc__);
+  PyModule_AddIntConstant(module,"accelerated",1);
   import_array(); /* Get access to numpy array API */
 }
 

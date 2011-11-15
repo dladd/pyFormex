@@ -199,7 +199,6 @@ index = os.path.join(htmldir,"genindex.html")
 modindex = os.path.join(htmldir,"py-modindex.html")
 readme = os.path.join(pyformexdir,"doc","README")
 style = os.path.join(pyformexdir,"doc","STYLE")
-builddoc = os.path.join(pyformexdir,"doc","build-local-docs.rst")
 todo = os.path.join(pyformexdir,"doc","TODO")
 notes = os.path.join(pyformexdir,"doc","ReleaseNotes")
 license = os.path.join(pyformexdir,"doc","COPYING")
@@ -211,7 +210,7 @@ links = [('pyFormex','pyformex.org'),('pyFormex-dev','developer.berlios.de/proje
 docs = [('&Local documentation',localdoc),('&Reference Manual',refman),('Tutorial',tutorial),('&Module Index',modindex),('&Index',index),('&Online documentation',webdoc),]
 docs2 = [('&Readme',readme),('&ReleaseNotes',notes),('&License',license),('New InputDialog',os.path.join(pyformexdir,"doc","InputDialog.rst")),]
 
-developer = [('pyFormex TODO list',todo),('&Build local documentation',builddoc),('pyFormex coding style',style),('Numpy documentation guidelines','http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines'),('re-structured text (reST)','http://docutils.sourceforge.net/rst.html')]
+developer = [('pyFormex TODO list',todo),('pyFormex coding style',style),('Numpy documentation guidelines','http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines'),('re-structured text (reST)','http://docutils.sourceforge.net/rst.html')]
 
              
 [keys]

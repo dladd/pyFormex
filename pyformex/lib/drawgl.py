@@ -35,6 +35,8 @@ the user.
 from OpenGL import GL,GLU
 from numpy import *
 
+accelerated = False
+
 def get_version():
     return 0
 

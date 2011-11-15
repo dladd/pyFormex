@@ -32,6 +32,8 @@ external functions in the compiled library.
 # There should be no other imports here than numpy
 import numpy as np
 
+accelerated = False
+
 
 def _fuse(x,val,flag,sel,tol):
     """Fusing nodes.

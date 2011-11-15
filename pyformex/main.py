@@ -517,8 +517,10 @@ def run(argv=[]):
         ## print pyformex.svnuser
 
         # Add in subversion specific config
-        pyformex.refcfg.help['developer'][0:0] = [('Developer HOWTO',os.path.join(pyformexdir,'..','HOWTO-dev.rst'))]
-        print pyformex.refcfg.help['developer']
+        devhowto = os.path.join(pyformexdir,'..','HOWTO-dev.rst')
+        builddoc = os.path.join(pyformexdir,"doc","build-local-docs.rst")
+        pyformex.refcfg.help['developer'][0:0] = [('Developer HOWTO',devhowto),('&Build local documentation',builddoc)]
+        #print pyformex.refcfg.help['developer']
     
 
 

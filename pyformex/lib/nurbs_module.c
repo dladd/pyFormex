@@ -32,6 +32,12 @@
 #include "numpy/arrayobject.h"
 #include <math.h>
 
+static char __doc__[] = "nurbs_ module\n\
+\n\
+This module provides accelerated versions of the pyFormex NURBS\n\
+functions.\n\
+\n";
+
 /****** INTERNAL FUNCTIONS (not callable from Python ********/
 
 int min(int a, int b)
@@ -2155,7 +2161,9 @@ static PyMethodDef _methods_[] =
 /* Initialize the module */
 PyMODINIT_FUNC initnurbs_(void)
 {
-  (void) Py_InitModule3("nurbs_", _methods_, _doc_);
+  PyObject* module;
+  module = Py_InitModule3("nurbs_", _methods_, __doc__);
+  PyModule_AddIntConstant(module,"accelerated",1);
   import_array(); /* Get access to numpy array API */
 }
 

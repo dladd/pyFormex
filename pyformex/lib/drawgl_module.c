@@ -837,7 +837,9 @@ static PyMethodDef _methods_[] = {
 /* Initialize the module */
 PyMODINIT_FUNC initdrawgl_(void)
 {
-  (void) Py_InitModule3("drawgl_", _methods_, __doc__);
+  PyObject* module;
+  module = Py_InitModule3("drawgl_", _methods_, __doc__);
+  PyModule_AddIntConstant(module,"accelerated",1);
   import_array(); /* Get access to numpy array API */
 }
 

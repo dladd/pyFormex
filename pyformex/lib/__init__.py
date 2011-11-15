@@ -85,4 +85,6 @@ if gui and drawgl is None:
     import drawgl
 
 
+debug("Accelerated: %s" % accelerated)
+
 # End
