@@ -23,17 +23,26 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-#
-# Changes should go to /etc/pyformexrc (for site-wide changes)
-# or to ~/.pyformexrc (for personal settings).
-# If your are missing these files, you can safely copy (parts of) this file
-# as a start. 
-# Config settings are read in order from this file, then /etc/pyformexrc,
-# ~/.pyformex/pyformexrc. The last settings will override previous ones.
-#
-# The config is now read by the config.Config class
-# Two variables are already set on entry: pyformexdir, homedir
-#
+
+"""pyformexrc
+
+This is the global configuration file for pyFormex. It should always
+be present in the installation path and not be changed. 
+
+Changes should go to /etc/pyformexrc (for site-wide changes)
+or to ~/.pyformex/pyformexrc (for personal settings).
+If your are missing these files, you can safely copy (parts of) this file
+as a start. 
+
+Config settings are read from the following files in order:
+this file, /etc/pyformexrc, ~/.pyformex/pyformexrc.
+The last settings override previous ones.
+
+The config files are read by the :class:`config.Config`.
+This means that the syntax is a subset of Python.
+Two config variables are already set on entry: `pyformexdir`, `homedir`
+"""
+
 import os
 
 # files and directories

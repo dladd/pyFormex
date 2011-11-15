@@ -220,19 +220,31 @@ class Config(Dict):
         contents = {}
         lineno = 0
         continuation = False
+        comments = False
         for line in fil:
             lineno += 1
             ls = line.strip()
-            if len(ls)==0 or ls[0] == '#':
+            if comments:
+                comments = ls[-3:] != '"""'
+                ls = ''
+            else:
+                comments = ls[:3] == '"""'
+                
+            if comments or len(ls)==0 or ls[0] == '#':
                 continue
+            
             if continuation:
                 s += ls
             else:
                 s = ls
+                
             continuation = s[-1] == '\\'
-            if continuation:
+            if s[-1] == '\\':
                 s = s[:-1]
+              
+            if continuation:
                 continue
+            
             if s[0] == '[':
                 if contents:
                     self.update(name=section,data=contents,removeLocals=True)
