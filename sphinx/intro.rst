@@ -216,7 +216,7 @@ Getting Help
 
 If you get stuck somewhere with using (or installing) pyFormex and you
 need help, the best way is to go to the `pyFormex website`_ and ask for help
-on one of the `Forums`_. There's a good change you will get helped quickly
+via the `Support tracker`_. There's a good change you will get helped quickly
 there. Remember though that pyFormex is a free and open source software
 project and its developers are not paid to develop or maintain pyFormex, 
 they just do this because they find pyFormex very helpful in their normal

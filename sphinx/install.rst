@@ -220,8 +220,8 @@ Download pyFormex
 -----------------
 
 Official pyFormex releases can be downloaded from this website:
-`Official releases`_. As of the writing of this manual, the latest
-release is 0.8. 
+`Releases`_. As of the writing of this manual, the latest
+release is |latest|. 
 
 pyFormex is currently distributed in the form of a .tar.gz (tarball) archive. See :ref:`sec:installation-linux` for how to proceed further with the downloaded file.
 
@@ -375,16 +375,20 @@ by trying the command ``svn help``. If you do not have the command,
 you should install Subversion first. Debian and Ubuntu users can just
 do ``apt-get install subversion``.
 
-Now you can anonymously check out the latest pyFormex source
-from the `SVN repository`_ at the `development`_ site. You can do this
-with the command ``svn checkout svn://svn.berlios.de/pyformex/trunk/pyformex
-MYDIR/pyformex``, where ``MYDIR`` should be replaced with a path name of your
-choice, where you have write permission. 
-Most users choose ``pyformex`` as base directory, but this is not
-required. You can even check out different versions under
-different path names.
+Now you can anonymously check out the latest pyFormex version
+from the `Source code`_ repository at the `Project page`_. You can do this
+with the command ::
+  
+  svn co svn://svn.savannah.nongnu.org/pyformex/trunk/pyformex MYDIR
 
-Now change into the created ``MYDIR/pyformex`` directory and execute
+in which you replace ``MYDIR`` with the path name of a directory
+where you have write permission. 
+Most users choose ``~/pyformex`` as the checkout directory, but this is not
+required. You can even check out different versions under
+different path names. If you leave out the ``MYDIR`` from the above command,
+a new directory ``pyformex`` will be created in the current path.
+
+Now change into the created ``MYDIR`` directory and execute
 the command ``./pyformex``. The latest pyFormex version should
 startup. The acceleration library will however not be available yet.
 To create the library, goto to the ``lib`` subdirectory and execute
@@ -411,7 +415,7 @@ BuMPix Live GNU/Linux system
 
 If you do not have access to a running GNU/Linux system, or if the above
 installation methods fail for some unknown reason (remember, you can
-ask for help on the pyFormex `Forums`_), you can still run pyFormex by
+ask for help on the pyFormex `Support tracker`_), you can still run pyFormex by
 using a `Bumpix Live GNU/Linux`_ system. `Bumpix Live` is a full featured
 Debian GNU/Linux system including pyFormex that can be run from a single
 removable medium such as a CD or a USB key. 
@@ -463,8 +467,7 @@ the bother to try it.
    functionality of pyFormex running on Windows. Thomas Praet has 
    compiled `this document
    <ftp://ftp.berlios.de/pub/pyformex/Install_pyFormex_on_Windows.html>`_ on how to proceed.
-   And a thread for discussing the installation on Windows has been
-   opened in the `forums. <http://developer.berlios.de/forum/forum.php?thread_id=37162&forum_id=8348>`_
+   Submit a request on the `Support tracker`_ if you need any help.
  
 
 There may be a few things that have to be changed to successfully run

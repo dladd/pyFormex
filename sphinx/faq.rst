@@ -47,7 +47,7 @@ pyFormex FAQ 'n TRICKS
    pyFormex and present some nice tips to solve common problems. If
    you have some question that you want answered, or want to present a
    original solution to some problem, feel free to communicate it to
-   us (by preference via the pyFormex `Forums`_) and we'll probably
+   us (by preference via the pyFormex `Support tracker`_) and we'll probably
    include it in the next version of this FAQ.
 
 .. _sec:faq:

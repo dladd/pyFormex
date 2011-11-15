@@ -29,3 +29,4 @@
 
 .. |pyformex| replace:: pyFormex
 .. |year| replace:: 2011
+.. |latest| replace:: 0.8.4
