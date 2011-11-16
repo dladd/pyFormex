@@ -1,0 +1,79 @@
+{# $Id: layout.html 2063 2011-11-06 16:43:46Z bverheg $
+#}
+
+{% extends "basic/layout.html" %}
+
+{# Add copyright notice in all produced .html documents #}
+{%- block doctype -%}
+    {{ super() }} 
+<!-- 
+##
+##  This file is part of the pyFormex project.
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Distributed under the GNU General Public License version 3 or later.
+##
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
+##
+-->
+{%- endblock %}
+
+
+{%- block extrahead %}
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+{% endblock %}
+
+
+{# Add a header with pyFormex logo #}
+{%- block header %}
+{#    {{ super() }} #}
+<div class="header">
+  <img src="_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+{% endblock %}
+
+
+{# put the sidebar after the body #}
+{% block sidebar1 %}{{ sidebar() }}{%- endblock %}
+{% block sidebar2 %}{% endblock %}
+
+{%- block sidebarsearch %}
+  {{ super() }}
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+{% endblock %}
+
+{%- block sidebartoc %}
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   {{ super() }}
+{% endblock %}
+
+{# Use single angle bracket for related bar item separation #}
+{% set reldelim1 = ' &gt;' %}
