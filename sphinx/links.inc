@@ -46,6 +46,7 @@
 .. _`News`: http://savannah.nongnu.org/news/?group=pyformex
 .. _`Releases`: http://download-mirror.savannah.gnu.org/releases/pyformex/
 
+.. _`BerliOS`: http://developer.berlios.de/
 .. _`FTP site`: ftp://ftp.berlios.de/pub/pyformex
 .. _`latest`: ftp://ftp.berlios.de/pub/pyformex/pyformex-latest.tar.gz
 

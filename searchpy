@@ -31,12 +31,17 @@ syntax() {
 Usage: searchpy [-a] [OPTION]... SEARCH
        changepy [-a] [OPTION]... SEARCH TARGET REPLACE
 
-searchpy searches for a string SEARCH in all Python files of pyFormex
-and possibly in other configured (Python or other) files. 
-It displays the matching file names and lines.
+searchpy: searches for a regex/string SEARCH in all the Python files 
+  of pyFormex and possibly in other configured (Python or other) files. 
+  The matching file names and lines are displayed.
+  Any OPTIONs (other than -a) are passed to the grep command which is 
+  used in the background. Some very useful options:
+  -F: intgerpretes SEARCH as a literal string (default is regex)
+  -i: do a case insensitive search 
 
-changepy searches the same files for SEARCH, and in all matching lines 
-it replaces the string TARGET with REPLACE.
+changepy: searches the same files for SEARCH, and in all matching lines 
+  it replaces the string TARGET with REPLACE.
+  Any OPTIONs (other than -a) are disregarded. 
 
 Options:
 -a : Should be the first and a separate option: if specified, the directories
