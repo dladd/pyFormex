@@ -1,0 +1,145 @@
+.. $Id: index.rst 2078 2011-11-15 11:51:58Z bverheg $  -*- rst -*-
+  
+..
+  This file is part of the pyFormex project.
+  pyFormex is a tool for generating, manipulating and transforming 3D
+  geometrical models by sequences of mathematical operations.
+  Home page: http://pyformex.org
+  Project page:  https://savannah.nongnu.org/projects/pyformex/
+  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
+  Distributed under the GNU General Public License version 3 or later.
+  
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see http://www.gnu.org/licenses/.
+  
+  
+
+.. include:: <isonum.txt>
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _`development`: http://savannah.nongnu.org/projects/pyformex/
+
+About
+=====
+pyFormex is a program for generating, transforming and manipulating large
+geometrical models of 3D structures by sequences of mathematical 
+operations. Thanks to a powerful (Python based) scripting language,
+pyFormex is very well suited for the automated design of spatial frame
+structures. It provides a wide range of operations on surface meshes, 
+like STL type triangulated surfaces. There are provisions to import medical 
+scan images. pyFormex can also be used as a pre- and post-processor for 
+Finite Element analysis programs. Finally, it might be used just for 
+creating some nice graphics.
+
+Using pyFormex, the topology of the elements and the final geometrical form
+can be decoupled. Often, topology is created first and then mapped onto the
+geometry. Through the scripting language, the user can define any sequence
+of transformations, built from provided or user defined functions. 
+This way, building parametric models becomes a natural thing.
+
+While pyFormex is still under `development`_, it already provides a
+fairly stable scripting language and an OpenGL GUI environment for
+displaying and manipulating the generated structures.
+
+  
+`News`_
+=======
+
+.. include:: news.inc
+
+
+Overview
+========
+
+.. The following fixes problems with generating the PDF docs
+.. tabularcolumns:: |p{5cm}|p{5cm}|
+
+.. rst-class:: fronttable
+
++--------------------------------------+--------------------------------------+
+| `Gallery <gallery.html>`_            | `Docsumentation <doc/index.html>`_   |
+| to wet your appetite                 | learn all about pyFormex             |
+|                                      |                                      |
+| :mydoc:`support page <support.html>` |                                      |
+| everyone at times needs help with    |  :doc:`contents`                     |
+| something                            |                                      |
++--------------------------------------+--------------------------------------+
+
+.. raw:: html
+
+  <table class="contentstable" align="center" style="margin-left: 30px"><tr>
+    <td width="50%">
+
+      <p class="biglink"><a class="biglink" href="gallery.html">Gallery</a><br/><span class="linkdescr">to wet your appetite</span></p>
+
+      <p class="biglink"><a class="biglink" href="contents.html">Contents</a><br/><span class="linkdescr">for a complete overview</span></p>
+
+    </td><td width="50%">
+
+      <p class="biglink"><a class="biglink" href="doc/index.html">Documentation</a><br/><span class="linkdescr">learn all about pyFormex</span></p>
+
+      <p class="biglink"><a class="biglink" href="support.html">Support</a><br/><span class="linkdescr">everyone at times needs help with something</span></p>
+
+    </td></tr>
+  </table>
+
+.. raw:: html
+
+  <table class="contentstable" align="center" style="margin-left: 30px"><tr>
+    <td width="50%">
+
+      <p class="biglink"><a class="biglink" href="gallery.html">Gallery</a><br/><span class="linkdescr">to wet your appetite</span></p>
+
+      <p class="biglink"><a class="biglink" href="contents.html">Contents</a><br/><span class="linkdescr">for a complete overview</span></p>
+
+    </td><td width="50%">
+
+      <p class="biglink"><a class="biglink" href="doc/index.html">Documentation</a><br/><span class="linkdescr">learn all about pyFormex</span></p>
+
+      <p class="biglink"><a class="biglink" href="support.html">Support</a><br/><span class="linkdescr">everyone at times neeeds help with something</span></p>
+
+    </td></tr>
+  </table>
+
+.. toctree::
+   :hidden:
+ 
+   contents
+
+License 
+======= 
+This program is free software; you can redistribute it
+and/or modify it under the terms of the `GNU General Public License`_
+as published by the Free Software Foundation; either version 3 of the
+License, or (at your option) any later version.
+
+`Project page`_
+===============
+The development of pyFormex can be followed on the `Project page`_ at `Savannah`_.
+
+
+`Links <links.html>`_
+=====================
+A collection of `links <links.html>`_ to some of our partners, to providers of
+software components used in building and maintaining pyFormex,
+to supporters and users of pyFormex, and to projects we sympatize
+with.
+
+.. toctree::
+   :hidden:
+
+   links
+ 
+.. End
