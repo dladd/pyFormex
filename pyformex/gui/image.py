@@ -76,7 +76,7 @@ def initialize():
 
         import gl2ps
 
-        _producer = pf.Version + ' (%s)' % pf.cfg['help/website']
+        _producer = pf.Version + ' (%s)' % pf.cfg.get('help/website','')
         _gl2ps_types = {
             'ps':gl2ps.GL2PS_PS,
             'eps':gl2ps.GL2PS_EPS,
@@ -206,7 +206,6 @@ def save_canvas(canvas,fn,fmt='png',quality=-1,size=None):
                 os.remove(fneps)
 
     return sta
-
 
 initialize()
 

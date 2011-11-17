@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
-    <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" /> 
+    <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="script.html"
+                        title="previous chapter">4. <tt class="docutils literal docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="colors.html"
+                        title="next chapter">6. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -91,7 +138,7 @@ to import it.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">draw</span></tt></p>
 <dl class="function">
 <dt id="draw.closeGui">
-<tt class="descclassname">draw.</tt><tt class="descname">closeGui</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#closeGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.closeGui" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">closeGui</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.closeGui" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the GUI.</p>
 <p>Calling this function from a script closes the GUI and terminates
 pyFormex.</p>
@@ -99,7 +146,7 @@ pyFormex.</p>
 
 <dl class="function">
 <dt id="draw.closeDialog">
-<tt class="descclassname">draw.</tt><tt class="descname">closeDialog</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/draw.html#closeDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.closeDialog" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">closeDialog</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#draw.closeDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close the named dialog.</p>
 <p>Closes the InputDialog with the given name. If multiple dialogs are
 open with the same name, all these dialogs are closed.</p>
@@ -108,7 +155,7 @@ open with the same name, all these dialogs are closed.</p>
 
 <dl class="function">
 <dt id="draw.showMessage">
-<tt class="descclassname">draw.</tt><tt class="descname">showMessage</tt><big>(</big><em>text, actions=['OK'], level='info', modal=True, **kargs</em><big>)</big><a class="reference internal" href="../_modules/draw.html#showMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.showMessage" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showMessage</tt><big>(</big><em>text, actions=['OK'], level='info', modal=True, **kargs</em><big>)</big><a class="headerlink" href="#draw.showMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show a short message widget and wait for user acknowledgement.</p>
 <p>There are three levels of messages: &#8216;info&#8217;, &#8216;warning&#8217; and &#8216;error&#8217;.
 They differ only in the icon that is shown next to the test.
@@ -119,25 +166,25 @@ The return value is the button text.</p>
 
 <dl class="function">
 <dt id="draw.showInfo">
-<tt class="descclassname">draw.</tt><tt class="descname">showInfo</tt><big>(</big><em>text, actions=['OK'], modal=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#showInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.showInfo" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showInfo</tt><big>(</big><em>text, actions=['OK'], modal=True</em><big>)</big><a class="headerlink" href="#draw.showInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show an informational message and wait for user acknowledgement.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.warning">
-<tt class="descclassname">draw.</tt><tt class="descname">warning</tt><big>(</big><em>text, actions=['OK']</em><big>)</big><a class="reference internal" href="../_modules/draw.html#warning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.warning" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">warning</tt><big>(</big><em>text, actions=['OK']</em><big>)</big><a class="headerlink" href="#draw.warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show a warning message and wait for user acknowledgement.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.error">
-<tt class="descclassname">draw.</tt><tt class="descname">error</tt><big>(</big><em>text, actions=['OK']</em><big>)</big><a class="reference internal" href="../_modules/draw.html#error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.error" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">error</tt><big>(</big><em>text, actions=['OK']</em><big>)</big><a class="headerlink" href="#draw.error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show an error message and wait for user acknowledgement.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.ask">
-<tt class="descclassname">draw.</tt><tt class="descname">ask</tt><big>(</big><em>question</em>, <em>choices=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/draw.html#ask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.ask" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">ask</tt><big>(</big><em>question</em>, <em>choices=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask a question and present possible answers.</p>
 <p>Return answer if accepted or default if rejected.
 The remaining arguments are passed to the InputDialog getResult method.</p>
@@ -145,13 +192,13 @@ The remaining arguments are passed to the InputDialog getResult method.</p>
 
 <dl class="function">
 <dt id="draw.ack">
-<tt class="descclassname">draw.</tt><tt class="descname">ack</tt><big>(</big><em>question</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/draw.html#ack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.ack" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">ack</tt><big>(</big><em>question</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.ack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show a Yes/No question and return True/False depending on answer.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.showText">
-<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text, type=None, actions=[('OK', None)], modal=True, mono=False</em><big>)</big><a class="reference internal" href="../_modules/draw.html#showText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text, type=None, actions=[('OK', None)], modal=True, mono=False</em><big>)</big><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text and wait for user response.</p>
 <p>This opens a TextBox widget and displays the text in the widget.
 Scrollbars will be added if the text is too large to display at once.</p>
@@ -162,7 +209,7 @@ recognized and rendered appropriately. See widgets.TextBox.</p>
 
 <dl class="function">
 <dt id="draw.showFile">
-<tt class="descclassname">draw.</tt><tt class="descname">showFile</tt><big>(</big><em>filename</em>, <em>mono=False</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/draw.html#showFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.showFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showFile</tt><big>(</big><em>filename</em>, <em>mono=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.showFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text file.</p>
 <p>This will use the <a class="reference internal" href="#draw.showText" title="draw.showText"><tt class="xref py py-func docutils literal"><span class="pre">showText()</span></tt></a> function to display a text read
 from a file.
@@ -172,7 +219,7 @@ Other arguments may also be passed to ShowText.</p>
 
 <dl class="function">
 <dt id="draw.showDescription">
-<tt class="descclassname">draw.</tt><tt class="descname">showDescription</tt><big>(</big><em>filename=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#showDescription"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.showDescription" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showDescription</tt><big>(</big><em>filename=None</em><big>)</big><a class="headerlink" href="#draw.showDescription" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the Description part of the docstring of a pyFormex script.</p>
 <p>If no file name is specified, the current script is used.
 If the script&#8217;s docstring has no Description part, a default text is
@@ -181,7 +228,7 @@ shown.</p>
 
 <dl class="function">
 <dt id="draw.askItems">
-<tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>timeout=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/draw.html#askItems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.askItems" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askItems</tt><big>(</big><em>items</em>, <em>caption=None</em>, <em>timeout=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.askItems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask the value of some items to the user.</p>
 <p>Create an interactive widget to let the user set the value of some items.
 &#8216;items&#8217; is a list of input items (basically [key,value] pairs).
@@ -212,7 +259,7 @@ Sets the dialog timeout and accepted status in global variables.</p>
 
 <dl class="function">
 <dt id="draw.currentDialog">
-<tt class="descclassname">draw.</tt><tt class="descname">currentDialog</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#currentDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.currentDialog" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">currentDialog</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.currentDialog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the current dialog widget.</p>
 <p>This returns the dialog widget created by the askItems() function,
 while the dialog is still active. If no askItems() has been called
@@ -221,25 +268,25 @@ or if the user already closed the dialog, None is returned.</p>
 
 <dl class="function">
 <dt id="draw.dialogAccepted">
-<tt class="descclassname">draw.</tt><tt class="descname">dialogAccepted</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#dialogAccepted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.dialogAccepted" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">dialogAccepted</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.dialogAccepted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if the last askItems() dialog was accepted.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.dialogRejected">
-<tt class="descclassname">draw.</tt><tt class="descname">dialogRejected</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#dialogRejected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.dialogRejected" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">dialogRejected</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.dialogRejected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if the last askItems() dialog was rejected.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.dialogTimedOut">
-<tt class="descclassname">draw.</tt><tt class="descname">dialogTimedOut</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#dialogTimedOut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.dialogTimedOut" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">dialogTimedOut</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.dialogTimedOut" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if the last askItems() dialog timed out.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.askFilename">
-<tt class="descclassname">draw.</tt><tt class="descname">askFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>exist=True</em>, <em>multi=False</em>, <em>change=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#askFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.askFilename" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em>, <em>exist=True</em>, <em>multi=False</em>, <em>change=True</em><big>)</big><a class="headerlink" href="#draw.askFilename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask for a file name or multiple file names using a file dialog.</p>
 <p>cur is a directory or filename. All the files matching the filter in that
 directory (or that file&#8217;s directory) will be shown.
@@ -251,7 +298,7 @@ working directory.</p>
 
 <dl class="function">
 <dt id="draw.askNewFilename">
-<tt class="descclassname">draw.</tt><tt class="descname">askNewFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em><big>)</big><a class="reference internal" href="../_modules/draw.html#askNewFilename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.askNewFilename" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askNewFilename</tt><big>(</big><em>cur=None</em>, <em>filter='All files (*.*)'</em><big>)</big><a class="headerlink" href="#draw.askNewFilename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask a single new filename.</p>
 <p>This is a convenience function for calling askFilename with the
 arguments exist=False.</p>
@@ -259,7 +306,7 @@ arguments exist=False.</p>
 
 <dl class="function">
 <dt id="draw.askDirname">
-<tt class="descclassname">draw.</tt><tt class="descname">askDirname</tt><big>(</big><em>path=None</em>, <em>change=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#askDirname"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.askDirname" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askDirname</tt><big>(</big><em>path=None</em>, <em>change=True</em><big>)</big><a class="headerlink" href="#draw.askDirname" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactively select a directory and change the current workdir.</p>
 <p>The user is asked to select a directory through the standard file
 dialog. Initially, the dialog shows all the subdirectories in the
@@ -270,14 +317,14 @@ user canceled the operation, or the change parameter was set to False.</p>
 
 <dl class="function">
 <dt id="draw.checkWorkdir">
-<tt class="descclassname">draw.</tt><tt class="descname">checkWorkdir</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#checkWorkdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.checkWorkdir" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">checkWorkdir</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.checkWorkdir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask the user to change the current workdir if it is not writable.</p>
 <p>Returns True if the new workdir is writable.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.printMessage">
-<tt class="descclassname">draw.</tt><tt class="descname">printMessage</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/draw.html#printMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.printMessage" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">printMessage</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.printMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print a message on the message board.</p>
 <p>If a logfile was opened, the message is also written to the log file.</p>
 </dd></dl>
@@ -291,7 +338,7 @@ user canceled the operation, or the change parameter was set to False.</p>
 
 <dl class="function">
 <dt id="draw.draw">
-<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>view=None</em>, <em>bbox=None</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>shrink=None</em>, <em>marksize=None</em>, <em>wait=True</em>, <em>clear=None</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/draw.html#draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.draw" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>view=None</em>, <em>bbox=None</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>shrink=None</em>, <em>marksize=None</em>, <em>wait=True</em>, <em>clear=None</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw object(s) with specified settings and direct camera to it.</p>
 <p>The first argument is an object to be drawn. All other arguments are
 settings that influence how  the object is being drawn.</p>
@@ -350,7 +397,7 @@ mechanism for all subsequent draw statements (until set &gt;0 again).</p>
 
 <dl class="function">
 <dt id="draw.focus">
-<tt class="descclassname">draw.</tt><tt class="descname">focus</tt><big>(</big><em>object</em><big>)</big><a class="reference internal" href="../_modules/draw.html#focus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.focus" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">focus</tt><big>(</big><em>object</em><big>)</big><a class="headerlink" href="#draw.focus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move the camera thus that object comes fully into view.</p>
 <p>object can be anything having a bbox() method or a list thereof.
 if no view is given, the default is used.</p>
@@ -361,7 +408,7 @@ This technique may change in future!</p>
 
 <dl class="function">
 <dt id="draw.setDrawOptions">
-<tt class="descclassname">draw.</tt><tt class="descname">setDrawOptions</tt><big>(</big><em>kargs0={}</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/draw.html#setDrawOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.setDrawOptions" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">setDrawOptions</tt><big>(</big><em>kargs0={}</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.setDrawOptions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set default values for the draw options.</p>
 <p>Draw options are a set of options that hold default values for the
 draw() function arguments and for some canvas settings.
@@ -371,14 +418,14 @@ keyword arguments.</p>
 
 <dl class="function">
 <dt id="draw.askDrawOptions">
-<tt class="descclassname">draw.</tt><tt class="descname">askDrawOptions</tt><big>(</big><em>d={}</em><big>)</big><a class="reference internal" href="../_modules/draw.html#askDrawOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.askDrawOptions" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">askDrawOptions</tt><big>(</big><em>d={}</em><big>)</big><a class="headerlink" href="#draw.askDrawOptions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactively ask the Drawing options from the user.</p>
 <p>A dictionary may be specified to override the current defaults.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.drawVectors">
-<tt class="descclassname">draw.</tt><tt class="descname">drawVectors</tt><big>(</big><em>P</em>, <em>v</em>, <em>size=None</em>, <em>nolight=True</em>, <em>**drawOptions</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawVectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawVectors" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawVectors</tt><big>(</big><em>P</em>, <em>v</em>, <em>size=None</em>, <em>nolight=True</em>, <em>**drawOptions</em><big>)</big><a class="headerlink" href="#draw.drawVectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a set of vectors.</p>
 <p>If size==None, draws the vectors v at the points P.
 If size is specified, draws the vectors size*normalize(v)
@@ -389,7 +436,7 @@ or sets of points. If sets, they should be of the same size.</p>
 
 <dl class="function">
 <dt id="draw.drawMarks">
-<tt class="descclassname">draw.</tt><tt class="descname">drawMarks</tt><big>(</big><em>X</em>, <em>M</em>, <em>color='black'</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawMarks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawMarks" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawMarks</tt><big>(</big><em>X</em>, <em>M</em>, <em>color='black'</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big><a class="headerlink" href="#draw.drawMarks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a list of marks at points X.</p>
 <p>X is a Coords array.
 M is a list with the same length as X.
@@ -399,13 +446,13 @@ The string representation of the marks are drawn at the corresponding
 
 <dl class="function">
 <dt id="draw.drawFreeEdges">
-<tt class="descclassname">draw.</tt><tt class="descname">drawFreeEdges</tt><big>(</big><em>M</em>, <em>color='black'</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawFreeEdges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawFreeEdges" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawFreeEdges</tt><big>(</big><em>M</em>, <em>color='black'</em><big>)</big><a class="headerlink" href="#draw.drawFreeEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the feature edges of a Mesh</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.drawNumbers">
-<tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawNumbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawNumbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big><a class="headerlink" href="#draw.drawNumbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw numbers on all elements of F.</p>
 <p>Normally, the numbers are drawn at the centroids of the elements.
 A translation may be given to put the numbers out of the centroids,
@@ -416,7 +463,7 @@ If an offset is specified, it is added to the shown numbers.</p>
 
 <dl class="function">
 <dt id="draw.drawVertexNumbers">
-<tt class="descclassname">draw.</tt><tt class="descname">drawVertexNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em>, <em>ontop=False</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawVertexNumbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawVertexNumbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawVertexNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em>, <em>ontop=False</em><big>)</big><a class="headerlink" href="#draw.drawVertexNumbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw (local) numbers on all vertices of F.</p>
 <p>Normally, the numbers are drawn at the location of the vertices.
 A translation may be given to put the numbers out of the location,
@@ -426,13 +473,13 @@ or to allow to view a mark at the vertices.</p>
 
 <dl class="function">
 <dt id="draw.drawText3D">
-<tt class="descclassname">draw.</tt><tt class="descname">drawText3D</tt><big>(</big><em>P</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em>, <em>ontop=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawText3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawText3D" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawText3D</tt><big>(</big><em>P</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em>, <em>ontop=True</em><big>)</big><a class="headerlink" href="#draw.drawText3D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a text at a 3D point P.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.drawAxes">
-<tt class="descclassname">draw.</tt><tt class="descname">drawAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawAxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawAxes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.drawAxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the axes of a CoordinateSystem.</p>
 <p>This draws an AxesActor corresponding to the specified Coordinatesystem.
 The arguments are the same as those of the AxesActor constructor.</p>
@@ -440,7 +487,7 @@ The arguments are the same as those of the AxesActor constructor.</p>
 
 <dl class="function">
 <dt id="draw.drawImage">
-<tt class="descclassname">draw.</tt><tt class="descname">drawImage</tt><big>(</big><em>image</em>, <em>nx=-1</em>, <em>ny=-1</em>, <em>pixel='dot'</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawImage" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawImage</tt><big>(</big><em>image</em>, <em>nx=-1</em>, <em>ny=-1</em>, <em>pixel='dot'</em><big>)</big><a class="headerlink" href="#draw.drawImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw an image as a colored Formex</p>
 <p>Draws a raster image as a colored Formex. While there are other and
 better ways to display an image in pyFormex (such as using the imageView
@@ -460,25 +507,25 @@ will be important when zooming in. The default is &#8216;dot&#8217;.</li>
 
 <dl class="function">
 <dt id="draw.drawViewportAxes3D">
-<tt class="descclassname">draw.</tt><tt class="descname">drawViewportAxes3D</tt><big>(</big><em>pos</em>, <em>color=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawViewportAxes3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawViewportAxes3D" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawViewportAxes3D</tt><big>(</big><em>pos</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#draw.drawViewportAxes3D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw two viewport axes at a 3D position.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.drawBbox">
-<tt class="descclassname">draw.</tt><tt class="descname">drawBbox</tt><big>(</big><em>A</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawBbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawBbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawBbox</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#draw.drawBbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the bbox of the actor A.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.drawActor">
-<tt class="descclassname">draw.</tt><tt class="descname">drawActor</tt><big>(</big><em>A</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawActor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawActor" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawActor</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#draw.drawActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw an actor and update the screen.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.undraw">
-<tt class="descclassname">draw.</tt><tt class="descname">undraw</tt><big>(</big><em>itemlist</em><big>)</big><a class="reference internal" href="../_modules/draw.html#undraw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.undraw" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">undraw</tt><big>(</big><em>itemlist</em><big>)</big><a class="headerlink" href="#draw.undraw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove an item or a number of items from the canvas.</p>
 <p>Use the return value from one of the draw... functions to remove
 the item that was drawn from the canvas.
@@ -487,7 +534,7 @@ A single item or a list of items may be specified.</p>
 
 <dl class="function">
 <dt id="draw.view">
-<tt class="descclassname">draw.</tt><tt class="descname">view</tt><big>(</big><em>v</em>, <em>wait=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.view" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">view</tt><big>(</big><em>v</em>, <em>wait=True</em><big>)</big><a class="headerlink" href="#draw.view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show a named view, either a builtin or a user defined.</p>
 <p>This shows the current scene from another viewing angle.
 Switching views of a scene is much faster than redrawing a scene.
@@ -499,7 +546,7 @@ and by default it will restart the lock to retard the next draing operation.</p>
 
 <dl class="function">
 <dt id="draw.setTriade">
-<tt class="descclassname">draw.</tt><tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big><a class="reference internal" href="../_modules/draw.html#setTriade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.setTriade" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">setTriade</tt><big>(</big><em>on=None</em>, <em>pos='lb'</em>, <em>siz=100</em><big>)</big><a class="headerlink" href="#draw.setTriade" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the display of the global axes on or off.</p>
 <p>If on is True, the axes triade is displayed, if False it is
 removed. The default (None) toggles between on and off.</p>
@@ -507,25 +554,25 @@ removed. The default (None) toggles between on and off.</p>
 
 <dl class="function">
 <dt id="draw.drawText">
-<tt class="descclassname">draw.</tt><tt class="descname">drawText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>gravity='E'</em>, <em>font='helvetica'</em>, <em>size=14</em>, <em>color=None</em>, <em>zoom=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawText" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>gravity='E'</em>, <em>font='helvetica'</em>, <em>size=14</em>, <em>color=None</em>, <em>zoom=None</em><big>)</big><a class="headerlink" href="#draw.drawText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show a text at position x,y using font.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.annotate">
-<tt class="descclassname">draw.</tt><tt class="descname">annotate</tt><big>(</big><em>annot</em><big>)</big><a class="reference internal" href="../_modules/draw.html#annotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.annotate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">annotate</tt><big>(</big><em>annot</em><big>)</big><a class="headerlink" href="#draw.annotate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw an annotation.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.decorate">
-<tt class="descclassname">draw.</tt><tt class="descname">decorate</tt><big>(</big><em>decor</em><big>)</big><a class="reference internal" href="../_modules/draw.html#decorate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.decorate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">decorate</tt><big>(</big><em>decor</em><big>)</big><a class="headerlink" href="#draw.decorate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a decoration.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.createView">
-<tt class="descclassname">draw.</tt><tt class="descname">createView</tt><big>(</big><em>name</em>, <em>angles</em>, <em>addtogui=False</em><big>)</big><a class="reference internal" href="../_modules/draw.html#createView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.createView" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">createView</tt><big>(</big><em>name</em>, <em>angles</em>, <em>addtogui=False</em><big>)</big><a class="headerlink" href="#draw.createView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new named view (or redefine an old).</p>
 <p>The angles are (longitude, latitude, twist).
 By default, the view is local to the script&#8217;s viewport.
@@ -534,7 +581,7 @@ If gui is True, it is also added to the GUI.</p>
 
 <dl class="function">
 <dt id="draw.setView">
-<tt class="descclassname">draw.</tt><tt class="descname">setView</tt><big>(</big><em>name</em>, <em>angles=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#setView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.setView" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">setView</tt><big>(</big><em>name</em>, <em>angles=None</em><big>)</big><a class="headerlink" href="#draw.setView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the default view for future drawing operations.</p>
 <p>If no angles are specified, the name should be an existing view, or
 the predefined value &#8216;last&#8217;.
@@ -544,7 +591,7 @@ followed by setView(name).</p>
 
 <dl class="function">
 <dt id="draw.bgcolor">
-<tt class="descclassname">draw.</tt><tt class="descname">bgcolor</tt><big>(</big><em>color</em>, <em>color2=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#bgcolor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.bgcolor" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">bgcolor</tt><big>(</big><em>color</em>, <em>color2=None</em><big>)</big><a class="headerlink" href="#draw.bgcolor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the background color (and redraw).</p>
 <p>If one color is given, the background is a solid color.
 If two colors are given, the background color will get a vertical
@@ -553,31 +600,31 @@ gradient with color on top and color2 at the bottom.</p>
 
 <dl class="function">
 <dt id="draw.fgcolor">
-<tt class="descclassname">draw.</tt><tt class="descname">fgcolor</tt><big>(</big><em>color</em><big>)</big><a class="reference internal" href="../_modules/draw.html#fgcolor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.fgcolor" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">fgcolor</tt><big>(</big><em>color</em><big>)</big><a class="headerlink" href="#draw.fgcolor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the default foreground color.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.colormap">
-<tt class="descclassname">draw.</tt><tt class="descname">colormap</tt><big>(</big><em>color=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#colormap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.colormap" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">colormap</tt><big>(</big><em>color=None</em><big>)</big><a class="headerlink" href="#draw.colormap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets/Sets the current canvas color map</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.lights">
-<tt class="descclassname">draw.</tt><tt class="descname">lights</tt><big>(</big><em>state=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#lights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.lights" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">lights</tt><big>(</big><em>state=True</em><big>)</big><a class="headerlink" href="#draw.lights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the lights on or off</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.transparent">
-<tt class="descclassname">draw.</tt><tt class="descname">transparent</tt><big>(</big><em>state=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#transparent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.transparent" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">transparent</tt><big>(</big><em>state=True</em><big>)</big><a class="headerlink" href="#draw.transparent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the transparency mode on or off.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.set_material_value">
-<tt class="descclassname">draw.</tt><tt class="descname">set_material_value</tt><big>(</big><em>typ</em>, <em>val</em><big>)</big><a class="reference internal" href="../_modules/draw.html#set_material_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.set_material_value" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">set_material_value</tt><big>(</big><em>typ</em>, <em>val</em><big>)</big><a class="headerlink" href="#draw.set_material_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of one of the material lighting parameters</p>
 <p>typ is one of &#8216;ambient&#8217;,&#8217;specular&#8217;,&#8217;emission&#8217;,&#8217;shininess&#8217;
 val is a value between 0.0 and 1.0</p>
@@ -585,38 +632,38 @@ val is a value between 0.0 and 1.0</p>
 
 <dl class="function">
 <dt id="draw.linewidth">
-<tt class="descclassname">draw.</tt><tt class="descname">linewidth</tt><big>(</big><em>wid</em><big>)</big><a class="reference internal" href="../_modules/draw.html#linewidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.linewidth" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">linewidth</tt><big>(</big><em>wid</em><big>)</big><a class="headerlink" href="#draw.linewidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the linewidth to be used in line drawings.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.linestipple">
-<tt class="descclassname">draw.</tt><tt class="descname">linestipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big><a class="reference internal" href="../_modules/draw.html#linestipple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.linestipple" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">linestipple</tt><big>(</big><em>factor</em>, <em>pattern</em><big>)</big><a class="headerlink" href="#draw.linestipple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the linewidth to be used in line drawings.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.pointsize">
-<tt class="descclassname">draw.</tt><tt class="descname">pointsize</tt><big>(</big><em>siz</em><big>)</big><a class="reference internal" href="../_modules/draw.html#pointsize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.pointsize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pointsize</tt><big>(</big><em>siz</em><big>)</big><a class="headerlink" href="#draw.pointsize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the size to be used in point drawings.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.canvasSize">
-<tt class="descclassname">draw.</tt><tt class="descname">canvasSize</tt><big>(</big><em>width</em>, <em>height</em><big>)</big><a class="reference internal" href="../_modules/draw.html#canvasSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.canvasSize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">canvasSize</tt><big>(</big><em>width</em>, <em>height</em><big>)</big><a class="headerlink" href="#draw.canvasSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resize the canvas to (width x height).</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.clear_canvas">
-<tt class="descclassname">draw.</tt><tt class="descname">clear_canvas</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#clear_canvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.clear_canvas" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">clear_canvas</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.clear_canvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the canvas.</p>
 <p>This is a low level function not intended for the user.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.clear">
-<tt class="descclassname">draw.</tt><tt class="descname">clear</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.clear" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the canvas.</p>
 <p>Removes everything from the current scene and displays an empty
 background.</p>
@@ -626,7 +673,7 @@ not reset it.</p>
 
 <dl class="function">
 <dt id="draw.delay">
-<tt class="descclassname">draw.</tt><tt class="descname">delay</tt><big>(</big><em>s=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#delay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.delay" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">delay</tt><big>(</big><em>s=None</em><big>)</big><a class="headerlink" href="#draw.delay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get/Set the draw delay time.</p>
 <p>Returns the current setting of the draw wait time (in seconds).
 This drawing delay is obeyed by drawing and viewing operations.</p>
@@ -638,7 +685,7 @@ to save that value to restore it later.</p>
 
 <dl class="function">
 <dt id="draw.wait">
-<tt class="descclassname">draw.</tt><tt class="descname">wait</tt><big>(</big><em>relock=True</em><big>)</big><a class="reference internal" href="../_modules/draw.html#wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.wait" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">wait</tt><big>(</big><em>relock=True</em><big>)</big><a class="headerlink" href="#draw.wait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait until the drawing lock is released.</p>
 <p>This uses the drawing lock mechanism to pause. The drawing lock
 ensures that subsequent draws are retarded to give the user the time
@@ -651,7 +698,7 @@ screen.</p>
 
 <dl class="function">
 <dt id="draw.fforward">
-<tt class="descclassname">draw.</tt><tt class="descname">fforward</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#fforward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.fforward" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">fforward</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.fforward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Releases the drawing lock mechanism indefinely.</p>
 <p>Releasing the drawing lock indefinely means that the lock will not
 be set again and your script will execute till the end.</p>
@@ -659,7 +706,7 @@ be set again and your script will execute till the end.</p>
 
 <dl class="function">
 <dt id="draw.step">
-<tt class="descclassname">draw.</tt><tt class="descname">step</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.step" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">step</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform one step of a script.</p>
 <p>A step is a set of instructions until the next draw operation.
 If a script is running, this just releases the draw lock.
@@ -668,7 +715,7 @@ Else, it starts the script in step mode.</p>
 
 <dl class="function">
 <dt id="draw.pause">
-<tt class="descclassname">draw.</tt><tt class="descname">pause</tt><big>(</big><em>msg='Use the Step or Continue button to proceed'</em>, <em>timeout=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#pause"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.pause" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pause</tt><big>(</big><em>msg='Use the Step or Continue button to proceed'</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#draw.pause" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pause the execution until an external event occurs or timeout.</p>
 <p>When the pause statement is executed, execution of the pyformex script
 is suspended until some external event forces it to proceed again.
@@ -677,13 +724,13 @@ Clicking the STEP or CONTINUE button will produce such an event.</p>
 
 <dl class="function">
 <dt id="draw.sleep">
-<tt class="descclassname">draw.</tt><tt class="descname">sleep</tt><big>(</big><em>timeout=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#sleep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.sleep" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">sleep</tt><big>(</big><em>timeout=None</em><big>)</big><a class="headerlink" href="#draw.sleep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sleep until key/mouse press in the canvas or until timeout</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.wakeup">
-<tt class="descclassname">draw.</tt><tt class="descname">wakeup</tt><big>(</big><em>mode=0</em><big>)</big><a class="reference internal" href="../_modules/draw.html#wakeup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.wakeup" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">wakeup</tt><big>(</big><em>mode=0</em><big>)</big><a class="headerlink" href="#draw.wakeup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wake up from the sleep function.</p>
 <p>This is the only way to exit the sleep() function.
 Default is to wake up from the current sleep. A mode &gt; 0
@@ -692,25 +739,25 @@ forces wakeup for longer period.</p>
 
 <dl class="function">
 <dt id="draw.zoomRectangle">
-<tt class="descclassname">draw.</tt><tt class="descname">zoomRectangle</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#zoomRectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.zoomRectangle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">zoomRectangle</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.zoomRectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zoom a rectangle selected by the user.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.zoomBbox">
-<tt class="descclassname">draw.</tt><tt class="descname">zoomBbox</tt><big>(</big><em>bb</em><big>)</big><a class="reference internal" href="../_modules/draw.html#zoomBbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.zoomBbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">zoomBbox</tt><big>(</big><em>bb</em><big>)</big><a class="headerlink" href="#draw.zoomBbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zoom thus that the specified bbox becomes visible.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.zoomAll">
-<tt class="descclassname">draw.</tt><tt class="descname">zoomAll</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#zoomAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.zoomAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">zoomAll</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.zoomAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zoom thus that all actors become visible.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.flyAlong">
-<tt class="descclassname">draw.</tt><tt class="descname">flyAlong</tt><big>(</big><em>path, upvector=[0.0, 1.0, 0.0], sleeptime=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#flyAlong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.flyAlong" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">flyAlong</tt><big>(</big><em>path, upvector=[0.0, 1.0, 0.0], sleeptime=None</em><big>)</big><a class="headerlink" href="#draw.flyAlong" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fly through the current scene along the specified path.</p>
 <p>This function moves the camera through the subsequent points
 of a path, looing at the next point of the path, and keeping
@@ -725,7 +772,7 @@ the camera movement.</li>
 
 <dl class="function">
 <dt id="draw.viewport">
-<tt class="descclassname">draw.</tt><tt class="descname">viewport</tt><big>(</big><em>n=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#viewport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.viewport" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">viewport</tt><big>(</big><em>n=None</em><big>)</big><a class="headerlink" href="#draw.viewport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select the current viewport.</p>
 <p>n is an integer number in the range of the number of viewports,
 or is one of the viewport objects in pyformex.GUI.viewports</p>
@@ -734,38 +781,38 @@ or is one of the viewport objects in pyformex.GUI.viewports</p>
 
 <dl class="function">
 <dt id="draw.layout">
-<tt class="descclassname">draw.</tt><tt class="descname">layout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#layout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.layout" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">layout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big><a class="headerlink" href="#draw.layout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the viewports layout.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.addViewport">
-<tt class="descclassname">draw.</tt><tt class="descname">addViewport</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#addViewport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.addViewport" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">addViewport</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.addViewport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new viewport.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.removeViewport">
-<tt class="descclassname">draw.</tt><tt class="descname">removeViewport</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#removeViewport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.removeViewport" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">removeViewport</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.removeViewport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the last viewport.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.linkViewport">
-<tt class="descclassname">draw.</tt><tt class="descname">linkViewport</tt><big>(</big><em>vp</em>, <em>tovp</em><big>)</big><a class="reference internal" href="../_modules/draw.html#linkViewport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.linkViewport" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">linkViewport</tt><big>(</big><em>vp</em>, <em>tovp</em><big>)</big><a class="headerlink" href="#draw.linkViewport" title="Permalink to this definition">¶</a></dt>
 <dd><p>Link viewport vp to viewport tovp.</p>
 <p>Both vp and tovp should be numbers of viewports.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.updateGUI">
-<tt class="descclassname">draw.</tt><tt class="descname">updateGUI</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#updateGUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.updateGUI" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">updateGUI</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.updateGUI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the GUI.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.highlightActors">
-<tt class="descclassname">draw.</tt><tt class="descname">highlightActors</tt><big>(</big><em>K</em><big>)</big><a class="reference internal" href="../_modules/draw.html#highlightActors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.highlightActors" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightActors</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightActors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Highlight a selection of actors on the canvas.</p>
 <p>K is Collection of actors as returned by the pick() method.
 colormap is a list of two colors, for the actors not in, resp. in
@@ -774,7 +821,7 @@ the Collection K.</p>
 
 <dl class="function">
 <dt id="draw.highlightElements">
-<tt class="descclassname">draw.</tt><tt class="descname">highlightElements</tt><big>(</big><em>K</em><big>)</big><a class="reference internal" href="../_modules/draw.html#highlightElements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.highlightElements" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightElements</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightElements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Highlight a selection of actor elements on the canvas.</p>
 <p>K is Collection of actor elements as returned by the pick() method.
 colormap is a list of two colors, for the elements not in, resp. in
@@ -783,7 +830,7 @@ the Collection K.</p>
 
 <dl class="function">
 <dt id="draw.highlightEdges">
-<tt class="descclassname">draw.</tt><tt class="descname">highlightEdges</tt><big>(</big><em>K</em><big>)</big><a class="reference internal" href="../_modules/draw.html#highlightEdges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.highlightEdges" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightEdges</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Highlight a selection of actor edges on the canvas.</p>
 <p>K is Collection of TriSurface actor edges as returned by the pick() method.
 colormap is a list of two colors, for the edges not in, resp. in
@@ -792,14 +839,14 @@ the Collection K.</p>
 
 <dl class="function">
 <dt id="draw.highlightPoints">
-<tt class="descclassname">draw.</tt><tt class="descname">highlightPoints</tt><big>(</big><em>K</em><big>)</big><a class="reference internal" href="../_modules/draw.html#highlightPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.highlightPoints" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightPoints</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Highlight a selection of actor elements on the canvas.</p>
 <p>K is Collection of actor elements as returned by the pick() method.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.highlightPartitions">
-<tt class="descclassname">draw.</tt><tt class="descname">highlightPartitions</tt><big>(</big><em>K</em><big>)</big><a class="reference internal" href="../_modules/draw.html#highlightPartitions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.highlightPartitions" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlightPartitions</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#draw.highlightPartitions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Highlight a selection of partitions on the canvas.</p>
 <p>K is a Collection of actor elements, where each actor element is
 connected to a collection of property numbers, as returned by the
@@ -808,13 +855,13 @@ partitionCollection() method.</p>
 
 <dl class="function">
 <dt id="draw.removeHighlights">
-<tt class="descclassname">draw.</tt><tt class="descname">removeHighlights</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/draw.html#removeHighlights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.removeHighlights" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">removeHighlights</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.removeHighlights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the highlights from the current viewport</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.pick">
-<tt class="descclassname">draw.</tt><tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>filter=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#pick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.pick" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>filter=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.pick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enter interactive picking mode and return selection.</p>
 <p>See viewport.py for more details.
 This function differs in that it provides default highlighting
@@ -830,7 +877,7 @@ presented in a combobox.</li>
 
 <dl class="function">
 <dt id="draw.highlight">
-<tt class="descclassname">draw.</tt><tt class="descname">highlight</tt><big>(</big><em>K</em>, <em>mode</em><big>)</big><a class="reference internal" href="../_modules/draw.html#highlight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.highlight" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">highlight</tt><big>(</big><em>K</em>, <em>mode</em><big>)</big><a class="headerlink" href="#draw.highlight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Highlight a Collection of actor/elements.</p>
 <p>K is usually the return value of a pick operation, but might also
 be set by the user.
@@ -839,13 +886,13 @@ mode is one of the pick modes.</p>
 
 <dl class="function">
 <dt id="draw.set_edit_mode">
-<tt class="descclassname">draw.</tt><tt class="descname">set_edit_mode</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/draw.html#set_edit_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.set_edit_mode" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">set_edit_mode</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.set_edit_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the drawing edit mode.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.drawLinesInter">
-<tt class="descclassname">draw.</tt><tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>single=False</em>, <em>func=None</em><big>)</big><a class="reference internal" href="../_modules/draw.html#drawLinesInter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.drawLinesInter" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>single=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.drawLinesInter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enter interactive drawing mode and return the line drawing.</p>
 <p>See viewport.py for more details.
 This function differs in that it provides default displaying
@@ -856,7 +903,7 @@ are presented in a combobox.</p>
 
 <dl class="function">
 <dt id="draw.showLineDrawing">
-<tt class="descclassname">draw.</tt><tt class="descname">showLineDrawing</tt><big>(</big><em>L</em><big>)</big><a class="reference internal" href="../_modules/draw.html#showLineDrawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#draw.showLineDrawing" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showLineDrawing</tt><big>(</big><em>L</em><big>)</big><a class="headerlink" href="#draw.showLineDrawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show a line drawing.</p>
 <p>L is usually the return value of an interactive draw operation, but
 might also be set by the user.</p>
@@ -866,33 +913,6 @@ might also be set by the user.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="script.html"
-                        title="previous chapter">4. <tt class="docutils literal docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="colors.html"
-                        title="next chapter">6. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -912,15 +932,13 @@ might also be set by the user.</p>
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

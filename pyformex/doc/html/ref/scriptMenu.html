@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>28. scriptMenu — Menu with pyFormex scripts. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="29. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" />
-    <link rel="prev" title="27. imageViewer — A general image viewer" href="imageViewer.html" /> 
+    <link rel="prev" title="27. imageViewer — A general image viewer" href="imageViewer.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="imageViewer.html" title="27. imageViewer — A general image viewer"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="imageViewer.html"
+                        title="previous chapter">27. <tt class="docutils literal docutils literal docutils literal"><span class="pre">imageViewer</span></tt> &#8212; A general image viewer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="toolbar.html"
+                        title="next chapter">29. <tt class="docutils literal docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -86,7 +133,7 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">scriptMenu</span></tt></p>
 <dl class="class">
 <dt id="scriptMenu.ScriptMenu">
-<em class="property">class </em><tt class="descclassname">scriptMenu.</tt><tt class="descname">ScriptMenu</tt><big>(</big><em>title</em>, <em>dir=None</em>, <em>files=None</em>, <em>ext=None</em>, <em>recursive=None</em>, <em>max=0</em>, <em>autoplay=False</em>, <em>toplevel=True</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">scriptMenu.</tt><tt class="descname">ScriptMenu</tt><big>(</big><em>title</em>, <em>dir=None</em>, <em>files=None</em>, <em>ext=None</em>, <em>recursive=None</em>, <em>max=0</em>, <em>autoplay=False</em>, <em>toplevel=True</em><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu" title="Permalink to this definition">¶</a></dt>
 <dd><p>A menu of pyFormex scripts in a directory or list.</p>
 <p>This class creates a menu of pyFormex scripts collected from a directory
 or specified in a list. It is e.g. used in the pyFormex GUI to create
@@ -123,7 +170,7 @@ subdirectories.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">ScriptMenu</span><span class="p">(</span><span class="s">&#39;History&#39;</span><span class="p">,</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;/my/script1.py&quot;</span><span class="p">,</span><span class="s">&quot;/some/other/script.pye&quot;</span><span class="p">],</span><span class="n">recursive</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>is typically used to create a history menu of previously visited files</p>
+<p>is typically used to create a history menu of previously visited files.</p>
 <p>With the resulting file list, a menu is created. Selecting a menu item
 will make the corresponding file the current script and unless the
 <cite>autoplay</cite> configuration variable was set to False, the script is executed.</p>
@@ -155,79 +202,79 @@ pyFormex examples.</p>
 when you created a new script file.</p>
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.fileName">
-<tt class="descname">fileName</tt><big>(</big><em>scriptname</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.fileName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.fileName" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fileName</tt><big>(</big><em>scriptname</em><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.fileName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the full pathname for a scriptname.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.getFiles">
-<tt class="descname">getFiles</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.getFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.getFiles" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getFiles</tt><big>(</big><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.getFiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of scripts in self.dir</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.filterFiles">
-<tt class="descname">filterFiles</tt><big>(</big><em>files</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.filterFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.filterFiles" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">filterFiles</tt><big>(</big><em>files</em><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.filterFiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter a list of scripts</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.loadFiles">
-<tt class="descname">loadFiles</tt><big>(</big><em>files=None</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.loadFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.loadFiles" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">loadFiles</tt><big>(</big><em>files=None</em><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.loadFiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the script files in this menu</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.run">
-<tt class="descname">run</tt><big>(</big><em>action</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.run" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">run</tt><big>(</big><em>action</em><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the selected script.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.runScript">
-<tt class="descname">runScript</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.runScript"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.runScript" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">runScript</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.runScript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the specified script.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.runNext">
-<tt class="descname">runNext</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.runNext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.runNext" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">runNext</tt><big>(</big><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.runNext" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the next script.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.runAllNext">
-<tt class="descname">runAllNext</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.runAllNext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.runAllNext" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">runAllNext</tt><big>(</big><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.runAllNext" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the current and all following scripts.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.runAll">
-<tt class="descname">runAll</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.runAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.runAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">runAll</tt><big>(</big><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.runAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run all scripts.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.runAllFiles">
-<tt class="descname">runAllFiles</tt><big>(</big><em>files</em>, <em>randomize=False</em>, <em>pause=0.0</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.runAllFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.runAllFiles" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">runAllFiles</tt><big>(</big><em>files</em>, <em>randomize=False</em>, <em>pause=0.0</em><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.runAllFiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run all the scripts in given list.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.runRandom">
-<tt class="descname">runRandom</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.runRandom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.runRandom" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">runRandom</tt><big>(</big><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.runRandom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a random script.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.runAllRandom">
-<tt class="descname">runAllRandom</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.runAllRandom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.runAllRandom" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">runAllRandom</tt><big>(</big><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.runAllRandom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run all scripts in a random order.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.reload">
-<tt class="descname">reload</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.reload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.reload" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reload</tt><big>(</big><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.reload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reload the scripts from dir.</p>
 <p>This is only available if a directory path was specified and
 no files.</p>
@@ -235,14 +282,14 @@ no files.</p>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.add">
-<tt class="descname">add</tt><big>(</big><em>filename</em>, <em>strict=True</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.add" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add</tt><big>(</big><em>filename</em>, <em>strict=True</em><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new filename to the front of the menu.</p>
 <p>By default, only legal pyFormex scripts can be added.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scriptMenu.ScriptMenu.classify">
-<tt class="descname">classify</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#ScriptMenu.classify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.ScriptMenu.classify" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">classify</tt><big>(</big><big>)</big><a class="headerlink" href="#scriptMenu.ScriptMenu.classify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Classify the files in submenus according to keywords.</p>
 </dd></dl>
 
@@ -251,7 +298,7 @@ no files.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">scriptMenu</span></tt></p>
 <dl class="function">
 <dt id="scriptMenu.extractKeyword">
-<tt class="descclassname">scriptMenu.</tt><tt class="descname">extractKeyword</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#extractKeyword"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.extractKeyword" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">scriptMenu.</tt><tt class="descname">extractKeyword</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#scriptMenu.extractKeyword" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract a <tt class="docutils literal"><span class="pre">keyword</span> <span class="pre">=</span> <span class="pre">value</span></tt> pair from a string.</p>
 <p>If the input string <cite>s</cite> is of the form <tt class="docutils literal"><span class="pre">keyword</span> <span class="pre">=</span> <span class="pre">value</span></tt>
 a tuple (keyword,value) is returned, else None.</p>
@@ -259,7 +306,7 @@ a tuple (keyword,value) is returned, else None.</p>
 
 <dl class="function">
 <dt id="scriptMenu.scriptKeywords">
-<tt class="descclassname">scriptMenu.</tt><tt class="descname">scriptKeywords</tt><big>(</big><em>fn</em>, <em>keyw=None</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#scriptKeywords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.scriptKeywords" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">scriptMenu.</tt><tt class="descname">scriptKeywords</tt><big>(</big><em>fn</em>, <em>keyw=None</em><big>)</big><a class="headerlink" href="#scriptMenu.scriptKeywords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the script keywords from a script file.</p>
 <ul class="simple">
 <li><cite>fn</cite>: the full path name of a pyFormex script file.</li>
@@ -279,7 +326,7 @@ the matching values.</p>
 
 <dl class="function">
 <dt id="scriptMenu.sortSets">
-<tt class="descclassname">scriptMenu.</tt><tt class="descname">sortSets</tt><big>(</big><em>d</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#sortSets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.sortSets" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">scriptMenu.</tt><tt class="descname">sortSets</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#scriptMenu.sortSets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn the set values in d into sorted lists.</p>
 <ul class="simple">
 <li><cite>d</cite>: a Python dictionary</li>
@@ -290,7 +337,7 @@ the matching values.</p>
 
 <dl class="function">
 <dt id="scriptMenu.createScriptMenu">
-<tt class="descclassname">scriptMenu.</tt><tt class="descname">createScriptMenu</tt><big>(</big><em>parent=None</em>, <em>before=None</em><big>)</big><a class="reference internal" href="../_modules/scriptMenu.html#createScriptMenu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scriptMenu.createScriptMenu" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">scriptMenu.</tt><tt class="descname">createScriptMenu</tt><big>(</big><em>parent=None</em>, <em>before=None</em><big>)</big><a class="headerlink" href="#scriptMenu.createScriptMenu" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the menu(s) with pyFormex scripts</p>
 <p>This creates a menu with all examples distributed with pyFormex.
 By default, this menu is put in the top menu bar with menu label &#8216;Examples&#8217;.</p>
@@ -307,33 +354,6 @@ replaced.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="imageViewer.html"
-                        title="previous chapter">27. <tt class="docutils literal docutils literal docutils literal"><span class="pre">imageViewer</span></tt> &#8212; A general image viewer</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="toolbar.html"
-                        title="next chapter">29. <tt class="docutils literal docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -353,15 +373,13 @@ replaced.</p>
         <li class="right" >
           <a href="imageViewer.html" title="27. imageViewer — A general image viewer"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

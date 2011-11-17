@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>41. fe — Finite Element Models in pyFormex. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="42. fe_abq — Exporting finite element models in Abaqus™ input file format." href="fe_abq.html" />
-    <link rel="prev" title="40. properties — General framework for attributing properties to geometrical elements." href="properties.html" /> 
+    <link rel="prev" title="40. properties — General framework for attributing properties to geometrical elements." href="properties.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="properties.html" title="40. properties — General framework for attributing properties to geometrical elements."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="properties.html"
+                        title="previous chapter">40. <tt class="docutils literal docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fe_abq.html"
+                        title="next chapter">42. <tt class="docutils literal"><span class="pre">fe_abq</span></tt> &#8212; Exporting finite element models in Abaqus™ input file format.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -88,35 +135,35 @@ set of nodal coordinates and one of more sets of elements.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe</span></tt></p>
 <dl class="class">
 <dt id="fe.Model">
-<em class="property">class </em><tt class="descclassname">fe.</tt><tt class="descname">Model</tt><big>(</big><em>coords</em>, <em>elems</em><big>)</big><a class="reference internal" href="../_modules/fe.html#Model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.Model" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">fe.</tt><tt class="descname">Model</tt><big>(</big><em>coords</em>, <em>elems</em><big>)</big><a class="headerlink" href="#fe.Model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains all FE model data.</p>
 <dl class="method">
 <dt id="fe.Model.nnodes">
-<tt class="descname">nnodes</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/fe.html#Model.nnodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.Model.nnodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nnodes</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.nnodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of nodes in the model.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.nelems">
-<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/fe.html#Model.nelems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.Model.nelems" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.nelems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of elements in the model.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.ngroups">
-<tt class="descname">ngroups</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/fe.html#Model.ngroups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.Model.ngroups" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">ngroups</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.ngroups" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of element groups in the model.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.mplex">
-<tt class="descname">mplex</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/fe.html#Model.mplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.Model.mplex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mplex</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.mplex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the maximum plexitude of the model.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.splitElems">
-<tt class="descname">splitElems</tt><big>(</big><em>set</em><big>)</big><a class="reference internal" href="../_modules/fe.html#Model.splitElems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.Model.splitElems" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">splitElems</tt><big>(</big><em>set</em><big>)</big><a class="headerlink" href="#fe.Model.splitElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Splits a set of element numbers over the element groups.</p>
 <p>Returns two lists of element sets, the first in global numbering,
 the second in group numbering.
@@ -126,13 +173,13 @@ belong to the corresponding group.</p>
 
 <dl class="method">
 <dt id="fe.Model.elemNrs">
-<tt class="descname">elemNrs</tt><big>(</big><em>group</em>, <em>set</em><big>)</big><a class="reference internal" href="../_modules/fe.html#Model.elemNrs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.Model.elemNrs" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">elemNrs</tt><big>(</big><em>group</em>, <em>set</em><big>)</big><a class="headerlink" href="#fe.Model.elemNrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the global element numbers for elements set in group</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="fe.Model.getElems">
-<tt class="descname">getElems</tt><big>(</big><em>sets</em><big>)</big><a class="reference internal" href="../_modules/fe.html#Model.getElems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.Model.getElems" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getElems</tt><big>(</big><em>sets</em><big>)</big><a class="headerlink" href="#fe.Model.getElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the definitions of the elements in sets.</p>
 <p>sets should be a list of element sets with length equal to the
 number of element groups. Each set contains element numbers local
@@ -402,7 +449,7 @@ If fil is a string, the file is closed prior to returning.</p>
 
 <dl class="method">
 <dt id="fe.Model.renumber">
-<tt class="descname">renumber</tt><big>(</big><em>old=None</em>, <em>new=None</em><big>)</big><a class="reference internal" href="../_modules/fe.html#Model.renumber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.Model.renumber" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">renumber</tt><big>(</big><em>old=None</em>, <em>new=None</em><big>)</big><a class="headerlink" href="#fe.Model.renumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renumber a set of nodes.</p>
 <p>old and new are equally sized lists with unique node numbers, each
 smaller that the number of nodes in the model.
@@ -423,7 +470,7 @@ old ones.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe</span></tt></p>
 <dl class="function">
 <dt id="fe.mergedModel">
-<tt class="descclassname">fe.</tt><tt class="descname">mergedModel</tt><big>(</big><em>meshes</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/fe.html#mergedModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe.mergedModel" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe.</tt><tt class="descname">mergedModel</tt><big>(</big><em>meshes</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe.mergedModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the fe Model obtained from merging individual meshes.</p>
 <p>The input arguments are (coords,elems) tuples.
 The return value is a merged fe Model.</p>
@@ -433,33 +480,6 @@ The return value is a merged fe Model.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="properties.html"
-                        title="previous chapter">40. <tt class="docutils literal docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="fe_abq.html"
-                        title="next chapter">42. <tt class="docutils literal"><span class="pre">fe_abq</span></tt> &#8212; Exporting finite element models in Abaqus™ input file format.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -479,15 +499,13 @@ The return value is a merged fe Model.</p>
         <li class="right" >
           <a href="properties.html" title="40. properties — General framework for attributing properties to geometrical elements."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>23. camera — OpenGL camera handling &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="24. image — Saving OpenGL renderings to image files." href="image.html" />
-    <link rel="prev" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" /> 
+    <link rel="prev" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="viewport.html" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="viewport.html"
+                        title="previous chapter">22. <tt class="docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="image.html"
+                        title="next chapter">24. <tt class="docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -86,7 +133,7 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">camera</span></tt></p>
 <dl class="class">
 <dt id="camera.ViewAngles">
-<em class="property">class </em><tt class="descclassname">camera.</tt><tt class="descname">ViewAngles</tt><big>(</big><em>data={'right': (90.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'bottom': (0.0</em>, <em>-90.0</em>, <em>0.0)</em>, <em>'top': (0.0</em>, <em>90.0</em>, <em>0.0)</em>, <em>'back': (180.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'iso': (45.0</em>, <em>45.0</em>, <em>0.0)</em>, <em>'front': (0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'left': (270.0</em>, <em>0.0</em>, <em>0.0)}</em><big>)</big><a class="reference internal" href="../_modules/camera.html#ViewAngles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.ViewAngles" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">camera.</tt><tt class="descname">ViewAngles</tt><big>(</big><em>data={'right': (90.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'bottom': (0.0</em>, <em>-90.0</em>, <em>0.0)</em>, <em>'top': (0.0</em>, <em>90.0</em>, <em>0.0)</em>, <em>'back': (180.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'iso': (45.0</em>, <em>45.0</em>, <em>0.0)</em>, <em>'front': (0.0</em>, <em>0.0</em>, <em>0.0)</em>, <em>'left': (270.0</em>, <em>0.0</em>, <em>0.0)}</em><big>)</big><a class="headerlink" href="#camera.ViewAngles" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dict to keep named camera angle settings.</p>
 <p>This class keeps a dictionary of named angle settings. Each value is
 a tuple of (longitude, latitude, twist) camera angles.
@@ -95,7 +142,7 @@ This is a static class which should not need to be instantiated.</p>
 coordinate axes, one isometric view.</p>
 <dl class="method">
 <dt id="camera.ViewAngles.get">
-<tt class="descname">get</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/camera.html#ViewAngles.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.ViewAngles.get" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#camera.ViewAngles.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the angles for a named view.</p>
 <p>Returns a tuple of angles (longitude, latitude, twist) if the
 named view was defined, or None otherwise</p>
@@ -105,7 +152,7 @@ named view was defined, or None otherwise</p>
 
 <dl class="class">
 <dt id="camera.Camera">
-<em class="property">class </em><tt class="descclassname">camera.</tt><tt class="descname">Camera</tt><big>(</big><em>center=[0.0, 0.0, 0.0], long=0.0, lat=0.0, twist=0.0, dist=1.0</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">camera.</tt><tt class="descname">Camera</tt><big>(</big><em>center=[0.0, 0.0, 0.0], long=0.0, lat=0.0, twist=0.0, dist=1.0</em><big>)</big><a class="headerlink" href="#camera.Camera" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class defines a camera for OpenGL rendering.</p>
 <p>It provides functions for manipulating the camera position, the viewing
 direction and the lens parameters.</p>
@@ -146,31 +193,31 @@ For other operations we explicitely switch before and afterwards back
 to MODELVIEW.</p>
 <dl class="method">
 <dt id="camera.Camera.getCenter">
-<tt class="descname">getCenter</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.getCenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.getCenter" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getCenter</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.getCenter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the camera reference point (the scene center).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.getRot">
-<tt class="descname">getRot</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.getRot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.getRot" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getRot</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.getRot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the camera rotation matrix.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.getDist">
-<tt class="descname">getDist</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.getDist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.getDist" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getDist</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.getDist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the camera distance.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.setCenter">
-<tt class="descname">setCenter</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setCenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setCenter" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setCenter</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="headerlink" href="#camera.Camera.setCenter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the center of the camera in global cartesian coordinates.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.setAngles">
-<tt class="descname">setAngles</tt><big>(</big><em>angles</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setAngles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setAngles" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setAngles</tt><big>(</big><em>angles</em><big>)</big><a class="headerlink" href="#camera.Camera.setAngles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the rotation angles.</p>
 <dl class="docutils">
 <dt>angles is either:</dt>
@@ -185,25 +232,25 @@ to MODELVIEW.</p>
 
 <dl class="method">
 <dt id="camera.Camera.setRotation">
-<tt class="descname">setRotation</tt><big>(</big><em>long</em>, <em>lat</em>, <em>twist=0</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setRotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setRotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setRotation</tt><big>(</big><em>long</em>, <em>lat</em>, <em>twist=0</em><big>)</big><a class="headerlink" href="#camera.Camera.setRotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the rotation matrix of the camera from three angles.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.setDist">
-<tt class="descname">setDist</tt><big>(</big><em>dist</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setDist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setDist" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setDist</tt><big>(</big><em>dist</em><big>)</big><a class="headerlink" href="#camera.Camera.setDist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the distance.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.report">
-<tt class="descname">report</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.report" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a report of the current camera settings.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.dolly">
-<tt class="descname">dolly</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.dolly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.dolly" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dolly</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#camera.Camera.dolly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move the camera eye towards/away from the scene center.</p>
 <p>This has the effect of zooming. A value &gt; 1 zooms out,
 a value &lt; 1 zooms in. The resulting enlargement of the view
@@ -215,7 +262,7 @@ a dolly operation.</p>
 
 <dl class="method">
 <dt id="camera.Camera.pan">
-<tt class="descname">pan</tt><big>(</big><em>val</em>, <em>axis=0</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.pan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.pan" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pan</tt><big>(</big><em>val</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#camera.Camera.pan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rotate the camera around axis through its eye.</p>
 <p>The camera is rotated around an axis through the eye point.
 For axes 0 and 1, this will move the center, creating a panning
@@ -227,7 +274,7 @@ For axis = 2 the operation is equivalent to the rotate operation.</p>
 
 <dl class="method">
 <dt id="camera.Camera.tilt">
-<tt class="descname">tilt</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.tilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.tilt" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">tilt</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#camera.Camera.tilt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rotate the camera up/down around its own horizontal axis.</p>
 <p>The camera is rotated around and perpendicular to the plane of the
 y-axis and the viewing axis. This has the effect of a vertical pan.
@@ -237,7 +284,7 @@ The value is specified in degrees.</p>
 
 <dl class="method">
 <dt id="camera.Camera.move">
-<tt class="descname">move</tt><big>(</big><em>dx</em>, <em>dy</em>, <em>dz</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.move" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">move</tt><big>(</big><em>dx</em>, <em>dy</em>, <em>dz</em><big>)</big><a class="headerlink" href="#camera.Camera.move" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move the camera over translation (dx,dy,dz) in global coordinates.</p>
 <p>The center of the camera is moved over the specified translation
 vector. This has the effect of moving the scene in opposite direction.</p>
@@ -245,43 +292,43 @@ vector. This has the effect of moving the scene in opposite direction.</p>
 
 <dl class="method">
 <dt id="camera.Camera.rotate">
-<tt class="descname">rotate</tt><big>(</big><em>val</em>, <em>vx</em>, <em>vy</em>, <em>vz</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.rotate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rotate</tt><big>(</big><em>val</em>, <em>vx</em>, <em>vy</em>, <em>vz</em><big>)</big><a class="headerlink" href="#camera.Camera.rotate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rotate the camera around current camera axes.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.saveModelView">
-<tt class="descname">saveModelView</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.saveModelView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.saveModelView" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">saveModelView</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.saveModelView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the ModelView matrix.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.setModelView">
-<tt class="descname">setModelView</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setModelView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setModelView" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setModelView</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.setModelView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the ModelView matrix from camera parameters.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.loadModelView">
-<tt class="descname">loadModelView</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.loadModelView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.loadModelView" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">loadModelView</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.loadModelView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the saved ModelView matrix.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.loadCurrentRotation">
-<tt class="descname">loadCurrentRotation</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.loadCurrentRotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.loadCurrentRotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">loadCurrentRotation</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.loadCurrentRotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the current ModelView matrix with translations canceled out.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.transform">
-<tt class="descname">transform</tt><big>(</big><em>v</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.transform" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">transform</tt><big>(</big><em>v</em><big>)</big><a class="headerlink" href="#camera.Camera.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a vertex using the currently saved Modelview matrix.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.toWorld">
-<tt class="descname">toWorld</tt><big>(</big><em>v</em>, <em>trl=False</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.toWorld"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.toWorld" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toWorld</tt><big>(</big><em>v</em>, <em>trl=False</em><big>)</big><a class="headerlink" href="#camera.Camera.toWorld" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a vertex from camera to world coordinates.</p>
 <p>The specified vector can have 3 or 4 (homogoneous) components.
 This uses the currently saved rotation matrix.</p>
@@ -289,7 +336,7 @@ This uses the currently saved rotation matrix.</p>
 
 <dl class="method">
 <dt id="camera.Camera.setLens">
-<tt class="descname">setLens</tt><big>(</big><em>fovy=None</em>, <em>aspect=None</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setLens"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setLens" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setLens</tt><big>(</big><em>fovy=None</em>, <em>aspect=None</em><big>)</big><a class="headerlink" href="#camera.Camera.setLens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the field of view of the camera.</p>
 <p>We set the field of view by the vertical opening angle fovy
 and the aspect ratio (width/height) of the viewing volume.
@@ -298,7 +345,7 @@ A parameter that is not specified is left unchanged.</p>
 
 <dl class="method">
 <dt id="camera.Camera.resetArea">
-<tt class="descname">resetArea</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.resetArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.resetArea" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resetArea</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.resetArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set maximal camera area.</p>
 <p>Resets the camera window area to its maximum values corresponding
 to the fovy setting, symmetrical about the camera axes.</p>
@@ -306,13 +353,13 @@ to the fovy setting, symmetrical about the camera axes.</p>
 
 <dl class="method">
 <dt id="camera.Camera.setArea">
-<tt class="descname">setArea</tt><big>(</big><em>hmin</em>, <em>vmin</em>, <em>hmax</em>, <em>vmax</em>, <em>relative=True</em>, <em>center=False</em>, <em>clip=True</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setArea" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setArea</tt><big>(</big><em>hmin</em>, <em>vmin</em>, <em>hmax</em>, <em>vmax</em>, <em>relative=True</em>, <em>center=False</em>, <em>clip=True</em><big>)</big><a class="headerlink" href="#camera.Camera.setArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the viewable area of the camera.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.zoomArea">
-<tt class="descname">zoomArea</tt><big>(</big><em>val=0.5</em>, <em>area=None</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.zoomArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.zoomArea" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">zoomArea</tt><big>(</big><em>val=0.5</em>, <em>area=None</em><big>)</big><a class="headerlink" href="#camera.Camera.zoomArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zoom in/out by shrinking/enlarging the camera view area.</p>
 <p>The zoom factor is relative to the current setting.
 Values smaller than 1.0 zoom in, larger values zoom out.</p>
@@ -320,7 +367,7 @@ Values smaller than 1.0 zoom in, larger values zoom out.</p>
 
 <dl class="method">
 <dt id="camera.Camera.transArea">
-<tt class="descname">transArea</tt><big>(</big><em>dx</em>, <em>dy</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.transArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.transArea" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">transArea</tt><big>(</big><em>dx</em>, <em>dy</em><big>)</big><a class="headerlink" href="#camera.Camera.transArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pan by moving the vamera area.</p>
 <p>dx and dy are relative movements in fractions of the
 current area size.</p>
@@ -328,19 +375,19 @@ current area size.</p>
 
 <dl class="method">
 <dt id="camera.Camera.setClip">
-<tt class="descname">setClip</tt><big>(</big><em>near</em>, <em>far</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setClip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setClip" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setClip</tt><big>(</big><em>near</em>, <em>far</em><big>)</big><a class="headerlink" href="#camera.Camera.setClip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the near and far clipping planes</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.setPerspective">
-<tt class="descname">setPerspective</tt><big>(</big><em>on=True</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setPerspective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setPerspective" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setPerspective</tt><big>(</big><em>on=True</em><big>)</big><a class="headerlink" href="#camera.Camera.setPerspective" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set perspective on or off</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.loadProjection">
-<tt class="descname">loadProjection</tt><big>(</big><em>force=False</em>, <em>pick=None</em>, <em>keepmode=False</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.loadProjection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.loadProjection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">loadProjection</tt><big>(</big><em>force=False</em>, <em>pick=None</em>, <em>keepmode=False</em><big>)</big><a class="headerlink" href="#camera.Camera.loadProjection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the projection/perspective matrix.</p>
 <p>The caller will have to setup the correct GL environment beforehand.
 No need to set matrix mode though. This function will switch to
@@ -355,19 +402,19 @@ detected. You can optionally force loading the matrix.</p>
 
 <dl class="method">
 <dt id="camera.Camera.project">
-<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.project" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">project</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="headerlink" href="#camera.Camera.project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map the object coordinates (x,y,z) to window coordinates.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.unProject">
-<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.unProject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.unProject" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">unProject</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="headerlink" href="#camera.Camera.unProject" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map the window coordinates (x,y,z) to object coordinates.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="camera.Camera.setTracking">
-<tt class="descname">setTracking</tt><big>(</big><em>onoff=True</em><big>)</big><a class="reference internal" href="../_modules/camera.html#Camera.setTracking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.Camera.setTracking" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setTracking</tt><big>(</big><em>onoff=True</em><big>)</big><a class="headerlink" href="#camera.Camera.setTracking" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable/disable coordinate tracking using the camera</p>
 </dd></dl>
 
@@ -376,7 +423,7 @@ detected. You can optionally force loading the matrix.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">camera</span></tt></p>
 <dl class="function">
 <dt id="camera.tand">
-<tt class="descclassname">camera.</tt><tt class="descname">tand</tt><big>(</big><em>arg</em><big>)</big><a class="reference internal" href="../_modules/camera.html#tand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#camera.tand" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">camera.</tt><tt class="descname">tand</tt><big>(</big><em>arg</em><big>)</big><a class="headerlink" href="#camera.tand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the tan of an angle in degrees.</p>
 </dd></dl>
 
@@ -384,33 +431,6 @@ detected. You can optionally force loading the matrix.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="viewport.html"
-                        title="previous chapter">22. <tt class="docutils literal"><span class="pre">viewport</span></tt> &#8212; Interactive OpenGL Canvas embedded in a Qt4 widget.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="image.html"
-                        title="next chapter">24. <tt class="docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -430,15 +450,13 @@ detected. You can optionally force loading the matrix.</p>
         <li class="right" >
           <a href="viewport.html" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

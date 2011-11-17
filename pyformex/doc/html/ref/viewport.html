@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="23. camera — OpenGL camera handling" href="camera.html" />
-    <link rel="prev" title="21. canvas — This implements an OpenGL drawing widget for painting 3D scenes." href="canvas.html" /> 
+    <link rel="prev" title="21. canvas — This implements an OpenGL drawing widget for painting 3D scenes." href="canvas.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="canvas.html" title="21. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="canvas.html"
+                        title="previous chapter">21. <tt class="docutils literal docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="camera.html"
+                        title="next chapter">23. <tt class="docutils literal docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -90,17 +137,17 @@ implements a dynamic array of multiple canvases.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">viewport</span></tt></p>
 <dl class="class">
 <dt id="viewport.CursorShapeHandler">
-<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CursorShapeHandler</tt><big>(</big><em>widget</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#CursorShapeHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.CursorShapeHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CursorShapeHandler</tt><big>(</big><em>widget</em><big>)</big><a class="headerlink" href="#viewport.CursorShapeHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for handling the mouse cursor shape on the Canvas.</p>
 <dl class="method">
 <dt id="viewport.CursorShapeHandler.setCursorShape">
-<tt class="descname">setCursorShape</tt><big>(</big><em>shape</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#CursorShapeHandler.setCursorShape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.CursorShapeHandler.setCursorShape" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setCursorShape</tt><big>(</big><em>shape</em><big>)</big><a class="headerlink" href="#viewport.CursorShapeHandler.setCursorShape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the cursor shape to shape</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.CursorShapeHandler.setCursorShapeFromFunc">
-<tt class="descname">setCursorShapeFromFunc</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#CursorShapeHandler.setCursorShapeFromFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.CursorShapeHandler.setCursorShapeFromFunc" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setCursorShapeFromFunc</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#viewport.CursorShapeHandler.setCursorShapeFromFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the cursor shape to shape</p>
 </dd></dl>
 
@@ -108,7 +155,7 @@ implements a dynamic array of multiple canvases.</p>
 
 <dl class="class">
 <dt id="viewport.QtCanvas">
-<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">QtCanvas</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">QtCanvas</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>A canvas for OpenGL rendering.</p>
 <p>This class provides interactive functionality for the OpenGL canvas
 provided by the canvas.Canvas class.</p>
@@ -117,37 +164,37 @@ functions in a separate class makes it esier to use the Canvas class
 in non-interactive situations or combining it with other GUI toolsets.</p>
 <dl class="method">
 <dt id="viewport.QtCanvas.resetOptions">
-<tt class="descname">resetOptions</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.resetOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.resetOptions" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resetOptions</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.resetOptions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the Drawing options to some defaults</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.setOptions">
-<tt class="descname">setOptions</tt><big>(</big><em>d</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.setOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.setOptions" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setOptions</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setOptions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the Drawing options to some values</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.setCursorShape">
-<tt class="descname">setCursorShape</tt><big>(</big><em>shape</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.setCursorShape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.setCursorShape" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setCursorShape</tt><big>(</big><em>shape</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setCursorShape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the cursor shape to shape</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.setCursorShapeFromFunc">
-<tt class="descname">setCursorShapeFromFunc</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.setCursorShapeFromFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.setCursorShapeFromFunc" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setCursorShapeFromFunc</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setCursorShapeFromFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the cursor shape to shape</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.getMouseFunc">
-<tt class="descname">getMouseFunc</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.getMouseFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.getMouseFunc" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getMouseFunc</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.getMouseFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the mouse function bound to self.button and self.mod</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.mouse_rectangle_zoom">
-<tt class="descname">mouse_rectangle_zoom</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.mouse_rectangle_zoom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.mouse_rectangle_zoom" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mouse_rectangle_zoom</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.mouse_rectangle_zoom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process mouse events during interactive rectangle zooming.</p>
 <p>On PRESS, record the mouse position.
 On MOVE, create a rectangular zoom window.
@@ -156,13 +203,13 @@ On RELEASE, zoom to the picked rectangle.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.setPickable">
-<tt class="descname">setPickable</tt><big>(</big><em>nrs=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.setPickable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.setPickable" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setPickable</tt><big>(</big><em>nrs=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setPickable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the list of pickable actors</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.start_selection">
-<tt class="descname">start_selection</tt><big>(</big><em>mode</em>, <em>filter</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.start_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.start_selection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">start_selection</tt><big>(</big><em>mode</em>, <em>filter</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.start_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start an interactive picking mode.</p>
 <p>If selection mode was already started, mode is disregarded and
 this can be used to change the filter method.</p>
@@ -170,32 +217,32 @@ this can be used to change the filter method.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.wait_selection">
-<tt class="descname">wait_selection</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.wait_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.wait_selection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">wait_selection</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.wait_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for the user to interactively make a selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.finish_selection">
-<tt class="descname">finish_selection</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.finish_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.finish_selection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">finish_selection</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.finish_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>End an interactive picking mode.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.accept_selection">
-<tt class="descname">accept_selection</tt><big>(</big><em>clear=False</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.accept_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.accept_selection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">accept_selection</tt><big>(</big><em>clear=False</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.accept_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accept or cancel an interactive picking mode.</p>
 <p>If clear == True, the current selection is cleared.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.cancel_selection">
-<tt class="descname">cancel_selection</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.cancel_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.cancel_selection" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cancel_selection</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.cancel_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel an interactive picking mode and clear the selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.pick">
-<tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>oneshot=False</em>, <em>func=None</em>, <em>filter=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.pick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.pick" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>oneshot=False</em>, <em>func=None</em>, <em>filter=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactively pick objects from the viewport.</p>
 <ul>
 <li><p class="first"><cite>mode</cite>: defines what to pick : one of
@@ -233,13 +280,13 @@ The return value is always a Collection object.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.pickNumbers">
-<tt class="descname">pickNumbers</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.pickNumbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.pickNumbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pickNumbers</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pickNumbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Go into number picking mode and return the selection.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.idraw">
-<tt class="descname">idraw</tt><big>(</big><em>mode='point'</em>, <em>npoints=-1</em>, <em>zplane=0.0</em>, <em>func=None</em>, <em>coords=None</em>, <em>preview=False</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.idraw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.idraw" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">idraw</tt><big>(</big><em>mode='point'</em>, <em>npoints=-1</em>, <em>zplane=0.0</em>, <em>func=None</em>, <em>coords=None</em>, <em>preview=False</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.idraw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactively draw on the canvas.</p>
 <p>This function allows the user to interactively create points in 3D
 space and collects the subsequent points in a Coords object. The
@@ -270,32 +317,32 @@ The return value is a (n,3) shaped Coords array.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.start_draw">
-<tt class="descname">start_draw</tt><big>(</big><em>mode</em>, <em>zplane</em>, <em>coords</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.start_draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.start_draw" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">start_draw</tt><big>(</big><em>mode</em>, <em>zplane</em>, <em>coords</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.start_draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start an interactive drawing mode.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.finish_draw">
-<tt class="descname">finish_draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.finish_draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.finish_draw" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">finish_draw</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.finish_draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>End an interactive drawing mode.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.accept_draw">
-<tt class="descname">accept_draw</tt><big>(</big><em>clear=False</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.accept_draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.accept_draw" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">accept_draw</tt><big>(</big><em>clear=False</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.accept_draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel an interactive drawing mode.</p>
 <p>If clear == True, the current drawing is cleared.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.cancel_draw">
-<tt class="descname">cancel_draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.cancel_draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.cancel_draw" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cancel_draw</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.cancel_draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel an interactive drawing mode and clear the drawing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.mouse_draw">
-<tt class="descname">mouse_draw</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.mouse_draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.mouse_draw" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mouse_draw</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.mouse_draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process mouse events during interactive drawing.</p>
 <p>On PRESS, do nothing.
 On MOVE, do nothing.
@@ -304,44 +351,44 @@ On RELEASE, add the point to the point list.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.start_drawing">
-<tt class="descname">start_drawing</tt><big>(</big><em>mode</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.start_drawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.start_drawing" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">start_drawing</tt><big>(</big><em>mode</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.start_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start an interactive line drawing mode.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.wait_drawing">
-<tt class="descname">wait_drawing</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.wait_drawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.wait_drawing" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">wait_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.wait_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for the user to interactively draw a line.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.finish_drawing">
-<tt class="descname">finish_drawing</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.finish_drawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.finish_drawing" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">finish_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.finish_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>End an interactive drawing mode.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.accept_drawing">
-<tt class="descname">accept_drawing</tt><big>(</big><em>clear=False</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.accept_drawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.accept_drawing" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">accept_drawing</tt><big>(</big><em>clear=False</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.accept_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel an interactive drawing mode.</p>
 <p>If clear == True, the current drawing is cleared.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.cancel_drawing">
-<tt class="descname">cancel_drawing</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.cancel_drawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.cancel_drawing" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cancel_drawing</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.cancel_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel an interactive drawing mode and clear the drawing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.edit_drawing">
-<tt class="descname">edit_drawing</tt><big>(</big><em>mode</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.edit_drawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.edit_drawing" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">edit_drawing</tt><big>(</big><em>mode</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.edit_drawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edit an interactive drawing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.drawLinesInter">
-<tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.drawLinesInter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.drawLinesInter" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">drawLinesInter</tt><big>(</big><em>mode='line'</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.drawLinesInter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interactively draw lines on the canvas.</p>
 <ul class="simple">
 <li>oneshot: if True, the function returns as soon as the user ends
@@ -358,7 +405,7 @@ The return value is a (n,2,2) shaped array.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.dynarot">
-<tt class="descname">dynarot</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.dynarot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.dynarot" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dynarot</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.dynarot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform dynamic rotation operation.</p>
 <p>This function processes mouse button events controlling a dynamic
 rotation operation. The action is one of PRESS, MOVE or RELEASE.</p>
@@ -366,7 +413,7 @@ rotation operation. The action is one of PRESS, MOVE or RELEASE.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.dynapan">
-<tt class="descname">dynapan</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.dynapan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.dynapan" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dynapan</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.dynapan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform dynamic pan operation.</p>
 <p>This function processes mouse button events controlling a dynamic
 pan operation. The action is one of PRESS, MOVE or RELEASE.</p>
@@ -374,7 +421,7 @@ pan operation. The action is one of PRESS, MOVE or RELEASE.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.dynazoom">
-<tt class="descname">dynazoom</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.dynazoom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.dynazoom" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dynazoom</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.dynazoom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform dynamic zoom operation.</p>
 <p>This function processes mouse button events controlling a dynamic
 zoom operation. The action is one of PRESS, MOVE or RELEASE.</p>
@@ -382,33 +429,33 @@ zoom operation. The action is one of PRESS, MOVE or RELEASE.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.wheel_zoom">
-<tt class="descname">wheel_zoom</tt><big>(</big><em>delta</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.wheel_zoom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.wheel_zoom" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">wheel_zoom</tt><big>(</big><em>delta</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.wheel_zoom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zoom by rotating a wheel over an angle delta</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.emit_done">
-<tt class="descname">emit_done</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.emit_done"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.emit_done" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">emit_done</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.emit_done" title="Permalink to this definition">¶</a></dt>
 <dd><p>Emit a DONE event by clicking the mouse.</p>
 <p>This is equivalent to pressing the ENTER button.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.emit_cancel">
-<tt class="descname">emit_cancel</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.emit_cancel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.emit_cancel" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">emit_cancel</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.emit_cancel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Emit a CANCEL event by clicking the mouse.</p>
 <p>This is equivalent to pressing the ESC button.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.draw_state_rect">
-<tt class="descname">draw_state_rect</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.draw_state_rect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.draw_state_rect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">draw_state_rect</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.draw_state_rect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store the pos and draw a rectangle to it.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.mouse_pick">
-<tt class="descname">mouse_pick</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.mouse_pick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.mouse_pick" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mouse_pick</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.mouse_pick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process mouse events during interactive picking.</p>
 <p>On PRESS, record the mouse position.
 On MOVE, create a rectangular picking window.
@@ -417,13 +464,13 @@ On RELEASE, pick the objects inside the rectangle.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.pick_actors">
-<tt class="descname">pick_actors</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.pick_actors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.pick_actors" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pick_actors</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pick_actors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the list of actors inside the pick_window.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.pick_parts">
-<tt class="descname">pick_parts</tt><big>(</big><em>obj_type</em>, <em>max_objects</em>, <em>store_closest=False</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.pick_parts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.pick_parts" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pick_parts</tt><big>(</big><em>obj_type</em>, <em>max_objects</em>, <em>store_closest=False</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pick_parts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the list of actor parts inside the pick_window.</p>
 <p>obj_type can be &#8216;element&#8217;, &#8216;edge&#8217; or &#8216;point&#8217;
 &#8216;edge&#8217; is only available for mesh type geometry
@@ -438,37 +485,37 @@ By default, the full actor list is used.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.pick_elements">
-<tt class="descname">pick_elements</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.pick_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.pick_elements" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pick_elements</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pick_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the list of actor elements inside the pick_window.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.pick_points">
-<tt class="descname">pick_points</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.pick_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.pick_points" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pick_points</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pick_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the list of actor points inside the pick_window.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.pick_edges">
-<tt class="descname">pick_edges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.pick_edges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.pick_edges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pick_edges</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pick_edges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the list of actor edges inside the pick_window.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.pick_numbers">
-<tt class="descname">pick_numbers</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.pick_numbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.pick_numbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pick_numbers</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.QtCanvas.pick_numbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the numbers inside the pick_window.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.draw_state_line">
-<tt class="descname">draw_state_line</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.draw_state_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.draw_state_line" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">draw_state_line</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.draw_state_line" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store the pos and draw a line to it.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.mouse_draw_line">
-<tt class="descname">mouse_draw_line</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.mouse_draw_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.mouse_draw_line" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mouse_draw_line</tt><big>(</big><em>x</em>, <em>y</em>, <em>action</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.mouse_draw_line" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process mouse events during interactive drawing.</p>
 <p>On PRESS, record the mouse position.
 On MOVE, draw a line.
@@ -477,25 +524,25 @@ On RELEASE, add the line to the drawing.</p>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.mousePressEvent">
-<tt class="descname">mousePressEvent</tt><big>(</big><em>e</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.mousePressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.mousePressEvent" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mousePressEvent</tt><big>(</big><em>e</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.mousePressEvent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a mouse press event.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.mouseMoveEvent">
-<tt class="descname">mouseMoveEvent</tt><big>(</big><em>e</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.mouseMoveEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.mouseMoveEvent" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mouseMoveEvent</tt><big>(</big><em>e</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.mouseMoveEvent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a mouse move event.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.mouseReleaseEvent">
-<tt class="descname">mouseReleaseEvent</tt><big>(</big><em>e</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.mouseReleaseEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.mouseReleaseEvent" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mouseReleaseEvent</tt><big>(</big><em>e</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.mouseReleaseEvent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a mouse release event.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.QtCanvas.wheelEvent">
-<tt class="descname">wheelEvent</tt><big>(</big><em>e</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#QtCanvas.wheelEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.QtCanvas.wheelEvent" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">wheelEvent</tt><big>(</big><em>e</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.wheelEvent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a wheel event.</p>
 </dd></dl>
 
@@ -844,13 +891,13 @@ off-center zooming.</p>
 
 <dl class="class">
 <dt id="viewport.NewMultiCanvas">
-<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">NewMultiCanvas</tt><big>(</big><em>parent=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#NewMultiCanvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.NewMultiCanvas" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">NewMultiCanvas</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL canvas with multiple viewports and QT interaction.</p>
 <p>The MultiCanvas implements a central QT widget containing one or more
 QtCanvas widgets.</p>
 <dl class="method">
 <dt id="viewport.NewMultiCanvas.changeLayout">
-<tt class="descname">changeLayout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#NewMultiCanvas.changeLayout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.NewMultiCanvas.changeLayout" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">changeLayout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.changeLayout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the lay-out of the viewports on the OpenGL widget.</p>
 <p>nvps: number of viewports
 ncols: number of columns
@@ -877,7 +924,7 @@ will be added or removed to match the requested number.</p>
 
 <dl class="method">
 <dt id="viewport.NewMultiCanvas.createView">
-<tt class="descname">createView</tt><big>(</big><em>shared=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#NewMultiCanvas.createView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.NewMultiCanvas.createView" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">createView</tt><big>(</big><em>shared=None</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.createView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new viewport</p>
 <p>If another QtCanvas instance is passed, both will share the same
 display lists and textures.</p>
@@ -885,13 +932,13 @@ display lists and textures.</p>
 
 <dl class="method">
 <dt id="viewport.NewMultiCanvas.addView">
-<tt class="descname">addView</tt><big>(</big><em>view</em>, <em>row</em>, <em>col</em>, <em>rowspan=1</em>, <em>colspan=1</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#NewMultiCanvas.addView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.NewMultiCanvas.addView" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addView</tt><big>(</big><em>view</em>, <em>row</em>, <em>col</em>, <em>rowspan=1</em>, <em>colspan=1</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.addView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new viewport and make it visible</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.NewMultiCanvas.removeView">
-<tt class="descname">removeView</tt><big>(</big><em>view=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#NewMultiCanvas.removeView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.NewMultiCanvas.removeView" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeView</tt><big>(</big><em>view=None</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.removeView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a view from the canvas</p>
 <p>If view is None, the last one is removed.
 You can not remove a view when there is only one left.</p>
@@ -899,14 +946,14 @@ You can not remove a view when there is only one left.</p>
 
 <dl class="method">
 <dt id="viewport.NewMultiCanvas.setCurrent">
-<tt class="descname">setCurrent</tt><big>(</big><em>view</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#NewMultiCanvas.setCurrent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.NewMultiCanvas.setCurrent" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setCurrent</tt><big>(</big><em>view</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.setCurrent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the specified viewport the current one.</p>
 <p>view can be either a viewport or viewport number.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.NewMultiCanvas.setStretch">
-<tt class="descname">setStretch</tt><big>(</big><em>rowstretch</em>, <em>colstretch</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#NewMultiCanvas.setStretch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.NewMultiCanvas.setStretch" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setStretch</tt><big>(</big><em>rowstretch</em>, <em>colstretch</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.setStretch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the row and column stretch factors.</p>
 <p>rowstretch and colstretch are lists of stretch factors to be applied
 on the subsequent rows/columns. If the lists are shorter than the
@@ -915,7 +962,7 @@ number of rows/columns, the</p>
 
 <dl class="method">
 <dt id="viewport.NewMultiCanvas.link">
-<tt class="descname">link</tt><big>(</big><em>vp</em>, <em>to</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#NewMultiCanvas.link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.NewMultiCanvas.link" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">link</tt><big>(</big><em>vp</em>, <em>to</em><big>)</big><a class="headerlink" href="#viewport.NewMultiCanvas.link" title="Permalink to this definition">¶</a></dt>
 <dd><p>Link viewport vp to to</p>
 </dd></dl>
 
@@ -923,19 +970,19 @@ number of rows/columns, the</p>
 
 <dl class="class">
 <dt id="viewport.FramedGridLayout">
-<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">FramedGridLayout</tt><big>(</big><em>parent=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#FramedGridLayout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.FramedGridLayout" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">FramedGridLayout</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#viewport.FramedGridLayout" title="Permalink to this definition">¶</a></dt>
 <dd><p>A QtGui.QGridLayout where each added widget is framed.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="viewport.MultiCanvas">
-<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">MultiCanvas</tt><big>(</big><em>parent=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#MultiCanvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.MultiCanvas" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">MultiCanvas</tt><big>(</big><em>parent=None</em><big>)</big><a class="headerlink" href="#viewport.MultiCanvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL canvas with multiple viewports and QT interaction.</p>
 <p>The MultiCanvas implements a central QT widget containing one or more
 QtCanvas widgets.</p>
 <dl class="method">
 <dt id="viewport.MultiCanvas.newView">
-<tt class="descname">newView</tt><big>(</big><em>shared=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#MultiCanvas.newView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.MultiCanvas.newView" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">newView</tt><big>(</big><em>shared=None</em><big>)</big><a class="headerlink" href="#viewport.MultiCanvas.newView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new viewport</p>
 <p>If another QtCanvas instance is passed, both will share the same
 display lists and textures.</p>
@@ -943,26 +990,26 @@ display lists and textures.</p>
 
 <dl class="method">
 <dt id="viewport.MultiCanvas.addView">
-<tt class="descname">addView</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#MultiCanvas.addView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.MultiCanvas.addView" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addView</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.MultiCanvas.addView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new viewport to the widget</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.MultiCanvas.setCurrent">
-<tt class="descname">setCurrent</tt><big>(</big><em>canv</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#MultiCanvas.setCurrent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.MultiCanvas.setCurrent" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setCurrent</tt><big>(</big><em>canv</em><big>)</big><a class="headerlink" href="#viewport.MultiCanvas.setCurrent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the specified viewport the current one.</p>
 <p>canv can be either a viewport or viewport number.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.MultiCanvas.showWidget">
-<tt class="descname">showWidget</tt><big>(</big><em>w</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#MultiCanvas.showWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.MultiCanvas.showWidget" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">showWidget</tt><big>(</big><em>w</em><big>)</big><a class="headerlink" href="#viewport.MultiCanvas.showWidget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the view w.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="viewport.MultiCanvas.changeLayout">
-<tt class="descname">changeLayout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#MultiCanvas.changeLayout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.MultiCanvas.changeLayout" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">changeLayout</tt><big>(</big><em>nvps=None</em>, <em>ncols=None</em>, <em>nrows=None</em>, <em>pos=None</em>, <em>rstretch=None</em>, <em>cstretch=None</em><big>)</big><a class="headerlink" href="#viewport.MultiCanvas.changeLayout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the lay-out of the viewports on the OpenGL widget.</p>
 <p>nvps: number of viewports
 ncols: number of columns
@@ -985,7 +1032,7 @@ the pos argument can be used to specify the layout of the viewports.</p>
 
 <dl class="method">
 <dt id="viewport.MultiCanvas.link">
-<tt class="descname">link</tt><big>(</big><em>vp</em>, <em>to</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#MultiCanvas.link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.MultiCanvas.link" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">link</tt><big>(</big><em>vp</em>, <em>to</em><big>)</big><a class="headerlink" href="#viewport.MultiCanvas.link" title="Permalink to this definition">¶</a></dt>
 <dd><p>Link viewport vp to to</p>
 </dd></dl>
 
@@ -993,11 +1040,11 @@ the pos argument can be used to specify the layout of the viewports.</p>
 
 <dl class="class">
 <dt id="viewport.CanvasMouseHandler">
-<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CanvasMouseHandler</tt><a class="reference internal" href="../_modules/viewport.html#CanvasMouseHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.CanvasMouseHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">viewport.</tt><tt class="descname">CanvasMouseHandler</tt><a class="headerlink" href="#viewport.CanvasMouseHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for handling the mouse events on the Canvas.</p>
 <dl class="method">
 <dt id="viewport.CanvasMouseHandler.getMouseFunc">
-<tt class="descname">getMouseFunc</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#CanvasMouseHandler.getMouseFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.CanvasMouseHandler.getMouseFunc" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getMouseFunc</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.CanvasMouseHandler.getMouseFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the mouse function bound to self.button and self.mod</p>
 </dd></dl>
 
@@ -1006,25 +1053,25 @@ the pos argument can be used to specify the layout of the viewports.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">viewport</span></tt></p>
 <dl class="function">
 <dt id="viewport.dotpr">
-<tt class="descclassname">viewport.</tt><tt class="descname">dotpr</tt><big>(</big><em>v</em>, <em>w</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#dotpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.dotpr" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">dotpr</tt><big>(</big><em>v</em>, <em>w</em><big>)</big><a class="headerlink" href="#viewport.dotpr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the dot product of vectors v and w</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="viewport.length">
-<tt class="descclassname">viewport.</tt><tt class="descname">length</tt><big>(</big><em>v</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.length" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">length</tt><big>(</big><em>v</em><big>)</big><a class="headerlink" href="#viewport.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the length of the vector v</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="viewport.projection">
-<tt class="descclassname">viewport.</tt><tt class="descname">projection</tt><big>(</big><em>v</em>, <em>w</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#projection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.projection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">projection</tt><big>(</big><em>v</em>, <em>w</em><big>)</big><a class="headerlink" href="#viewport.projection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the (signed) length of the projection of vector v on vector w.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="viewport.setOpenGLFormat">
-<tt class="descclassname">viewport.</tt><tt class="descname">setOpenGLFormat</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/viewport.html#setOpenGLFormat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.setOpenGLFormat" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">setOpenGLFormat</tt><big>(</big><big>)</big><a class="headerlink" href="#viewport.setOpenGLFormat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the correct OpenGL format.</p>
 <p>On a correctly installed system, the default should do well.
 The default OpenGL format can be changed by command line options:</p>
@@ -1036,7 +1083,7 @@ The default OpenGL format can be changed by command line options:</p>
 
 <dl class="function">
 <dt id="viewport.OpenGLFormat">
-<tt class="descclassname">viewport.</tt><tt class="descname">OpenGLFormat</tt><big>(</big><em>fmt=None</em><big>)</big><a class="reference internal" href="../_modules/viewport.html#OpenGLFormat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#viewport.OpenGLFormat" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">viewport.</tt><tt class="descname">OpenGLFormat</tt><big>(</big><em>fmt=None</em><big>)</big><a class="headerlink" href="#viewport.OpenGLFormat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Some information about the OpenGL format.</p>
 </dd></dl>
 
@@ -1044,33 +1091,6 @@ The default OpenGL format can be changed by command line options:</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="canvas.html"
-                        title="previous chapter">21. <tt class="docutils literal docutils literal docutils literal"><span class="pre">canvas</span></tt> &#8212; This implements an OpenGL drawing widget for painting 3D scenes.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="camera.html"
-                        title="next chapter">23. <tt class="docutils literal docutils literal docutils literal"><span class="pre">camera</span></tt> &#8212; OpenGL camera handling</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1090,15 +1110,13 @@ The default OpenGL format can be changed by command line options:</p>
         <li class="right" >
           <a href="canvas.html" title="21. canvas — This implements an OpenGL drawing widget for painting 3D scenes."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

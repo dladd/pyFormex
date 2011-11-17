@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="2. formex — Formex algebra in Python" href="formex.html" />
-    <link rel="prev" title="pyFormex reference manual" href="../refman.html" /> 
+    <link rel="prev" title="pyFormex reference manual" href="../refman.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="../refman.html" title="pyFormex reference manual"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../refman.html"
+                        title="previous chapter">pyFormex reference manual</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="formex.html"
+                        title="next chapter">2. <tt class="docutils literal docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -96,7 +143,7 @@ find good reason to use the <a class="reference internal" href="#coords.Coords" 
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">coords</span></tt></p>
 <dl class="class">
 <dt id="coords.BoundVectors">
-<em class="property">class </em><tt class="descclassname">coords.</tt><tt class="descname">BoundVectors</tt><a class="reference internal" href="../_modules/coords.html#BoundVectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.BoundVectors" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">coords.</tt><tt class="descname">BoundVectors</tt><a class="headerlink" href="#coords.BoundVectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>A collection of bound vectors in a 3D Cartesian space.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -108,19 +155,19 @@ points and vectors from initial to terminal points.</li>
 <p>The default constructs a unit vector along the global x-axis.</p>
 <dl class="method">
 <dt id="coords.BoundVectors.origins">
-<tt class="descname">origins</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#BoundVectors.origins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.BoundVectors.origins" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">origins</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.BoundVectors.origins" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the initial points of the BoundVectors.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="coords.BoundVectors.heads">
-<tt class="descname">heads</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#BoundVectors.heads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.BoundVectors.heads" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">heads</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.BoundVectors.heads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the endpoints of the BoundVectors.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="coords.BoundVectors.vectors">
-<tt class="descname">vectors</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#BoundVectors.vectors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.BoundVectors.vectors" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">vectors</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.BoundVectors.vectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the vectors of the BoundVectors.</p>
 </dd></dl>
 
@@ -1092,7 +1139,7 @@ F.interpolate(G,arange(0,n+1)/float(n))</p>
 
 <dl class="class">
 <dt id="coords.CoordinateSystem">
-<em class="property">class </em><tt class="descclassname">coords.</tt><tt class="descname">CoordinateSystem</tt><a class="reference internal" href="../_modules/coords.html#CoordinateSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.CoordinateSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">coords.</tt><tt class="descname">CoordinateSystem</tt><a class="headerlink" href="#coords.CoordinateSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>A CoordinateSystem defines a coordinate system in 3D space.</p>
 <p>The coordinate system is defined by and stored as a set of four points:
 three endpoints of the unit vectors along the axes at the origin, and
@@ -1106,13 +1153,13 @@ the standard global Cartesian axes system:</p>
 0.  0.  0.</div></blockquote>
 <dl class="method">
 <dt id="coords.CoordinateSystem.origin">
-<tt class="descname">origin</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#CoordinateSystem.origin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.CoordinateSystem.origin" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">origin</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.origin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the origin of the CoordinateSystem.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.axes">
-<tt class="descname">axes</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#CoordinateSystem.axes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.CoordinateSystem.axes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">axes</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.axes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the axes of the CoordinateSystem.</p>
 </dd></dl>
 
@@ -2084,7 +2131,7 @@ F.interpolate(G,arange(0,n+1)/float(n))</p>
 
 <dl class="class">
 <dt id="coords.Coords">
-<em class="property">class </em><tt class="descclassname">coords.</tt><tt class="descname">Coords</tt><a class="reference internal" href="../_modules/coords.html#Coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">coords.</tt><tt class="descname">Coords</tt><a class="headerlink" href="#coords.Coords" title="Permalink to this definition">¶</a></dt>
 <dd><p>A structured collection of points in a 3D cartesian space.</p>
 <p>The <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> class is the basic data structure used throughout
 pyFormex to store coordinates of points in a 3D space.
@@ -2125,7 +2172,7 @@ typed <tt class="xref py py-class docutils literal"><span class="pre">numpy.ndar
 </div>
 <dl class="method">
 <dt id="coords.Coords.points">
-<tt class="descname">points</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.points" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">points</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object as a simple set of points.</p>
 <p>This reshapes the array to a 2-dimensional array, flattening
 the structure of the points.</p>
@@ -2133,7 +2180,7 @@ the structure of the points.</p>
 
 <dl class="method">
 <dt id="coords.Coords.pshape">
-<tt class="descname">pshape</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.pshape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.pshape" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">pshape</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.pshape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the shape of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p>This is the shape of the <a class="reference external" href="http://numpy.scipy.org">NumPy</a> array with the last axis removed.
 The full shape of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> array can be obtained from
@@ -2142,7 +2189,7 @@ its shape attribute.</p>
 
 <dl class="method">
 <dt id="coords.Coords.npoints">
-<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.npoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.npoints" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.npoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total number of points.</p>
 </dd></dl>
 
@@ -2154,7 +2201,7 @@ its shape attribute.</p>
 
 <dl class="method">
 <dt id="coords.Coords.x">
-<tt class="descname">x</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.x" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">x</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.x" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the X-coordinates of all points.</p>
 <p>Returns an array with all the X-coordinates in the Coords.
 The returned array has the same shape as the Coords array along
@@ -2167,7 +2214,7 @@ This is equivalent with</p>
 
 <dl class="method">
 <dt id="coords.Coords.y">
-<tt class="descname">y</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.y" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">y</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the Y-coordinates of all points.</p>
 <p>Returns an array with all the Y-coordinates in the Coords.
 The returned array has the same shape as the Coords array along
@@ -2180,7 +2227,7 @@ This is equivalent with</p>
 
 <dl class="method">
 <dt id="coords.Coords.z">
-<tt class="descname">z</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.z" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">z</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.z" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the Z-coordinates of all points.</p>
 <p>Returns an array with all the Z-coordinates in the Coords.
 The returned array has the same shape as the Coords array along
@@ -2193,7 +2240,7 @@ This is equivalent with</p>
 
 <dl class="method">
 <dt id="coords.Coords.bbox">
-<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.bbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.bbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.bbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the bounding box of a set of points.</p>
 <p>The bounding box is the smallest rectangular volume in the global
 coordinates, such that no point of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> are outside
@@ -2212,7 +2259,7 @@ minimal coordinates, the second has the maximal ones.</div></blockquote>
 
 <dl class="method">
 <dt id="coords.Coords.center">
-<tt class="descname">center</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.center"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.center" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">center</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.center" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the center of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>The center of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> is the center of its bbox().
 The return value is a (3,) shaped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
@@ -2226,7 +2273,7 @@ The return value is a (3,) shaped <a class="reference internal" href="#coords.Co
 
 <dl class="method">
 <dt id="coords.Coords.average">
-<tt class="descname">average</tt><big>(</big><em>wts=None</em>, <em>axis=0</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.average"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.average" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">average</tt><big>(</big><em>wts=None</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#coords.Coords.average" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a (weighted) average of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>The average of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with one
 axis less than the original, obtained by averaging all the points
@@ -2256,7 +2303,7 @@ one divided by the length of the specified axis.</p>
 
 <dl class="method">
 <dt id="coords.Coords.centroid">
-<tt class="descname">centroid</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.centroid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.centroid" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">centroid</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.centroid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the centroid of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>The centroid of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> is the point whose coordinates
 are the mean values of all points.
@@ -2271,7 +2318,7 @@ The return value is a (3,) shaped <a class="reference internal" href="#coords.Co
 
 <dl class="method">
 <dt id="coords.Coords.sizes">
-<tt class="descname">sizes</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.sizes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.sizes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">sizes</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.sizes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sizes of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>Return an array with the length of the bbox along the 3 axes.</p>
 <p>Example:</p>
@@ -2283,7 +2330,7 @@ The return value is a (3,) shaped <a class="reference internal" href="#coords.Co
 
 <dl class="method">
 <dt id="coords.Coords.dsize">
-<tt class="descname">dsize</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.dsize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.dsize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dsize</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.dsize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an estimate of the global size of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>This estimate is the length of the diagonal of the bbox().</p>
 <p>Example:</p>
@@ -2295,7 +2342,7 @@ The return value is a (3,) shaped <a class="reference internal" href="#coords.Co
 
 <dl class="method">
 <dt id="coords.Coords.bsphere">
-<tt class="descname">bsphere</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.bsphere"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.bsphere" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bsphere</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.bsphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the diameter of the bounding sphere of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>The bounding sphere is the smallest sphere with center in the
 center() of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>, and such that no points of the
@@ -2309,7 +2356,7 @@ center() of the <a class="reference internal" href="#coords.Coords" title="coord
 
 <dl class="method">
 <dt id="coords.Coords.inertia">
-<tt class="descname">inertia</tt><big>(</big><em>mass=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.inertia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.inertia" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inertia</tt><big>(</big><em>mass=None</em><big>)</big><a class="headerlink" href="#coords.Coords.inertia" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return inertia related quantities of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>This returns the center of gravity, the principal axes of inertia,
 the principal moments of inertia and the inertia tensor.</p>
@@ -2317,7 +2364,7 @@ the principal moments of inertia and the inertia tensor.</p>
 
 <dl class="method">
 <dt id="coords.Coords.distanceFromPlane">
-<tt class="descname">distanceFromPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.distanceFromPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.distanceFromPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">distanceFromPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#coords.Coords.distanceFromPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the distance of all points from the plane (p,n).</p>
 <p>p is a point specified by 3 coordinates.
 n is the normal vector to a plane, specified by 3 components.</p>
@@ -2334,7 +2381,7 @@ plane indicated by the positive normal.</p>
 
 <dl class="method">
 <dt id="coords.Coords.distanceFromLine">
-<tt class="descname">distanceFromLine</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.distanceFromLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.distanceFromLine" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">distanceFromLine</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#coords.Coords.distanceFromLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the distance of all points from the line (p,n).</p>
 <p>p,n are (1,3) or (npts,3) arrays defining 1 or npts lines
 p is a point on the line specified by 3 coordinates.
@@ -2351,7 +2398,7 @@ All distance values are positive or zero.</p>
 
 <dl class="method">
 <dt id="coords.Coords.distanceFromPoint">
-<tt class="descname">distanceFromPoint</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.distanceFromPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.distanceFromPoint" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">distanceFromPoint</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#coords.Coords.distanceFromPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the distance of all points from the point p.</p>
 <p>p is a single point specified by 3 coordinates.</p>
 <p>The return value is a [...] shaped array with the distance of
@@ -2366,13 +2413,13 @@ Example:</p>
 
 <dl class="method">
 <dt id="coords.Coords.closestToPoint">
-<tt class="descname">closestToPoint</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.closestToPoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.closestToPoint" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">closestToPoint</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#coords.Coords.closestToPoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the point closest to point p.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="coords.Coords.directionalSize">
-<tt class="descname">directionalSize</tt><big>(</big><em>n</em>, <em>p=None</em>, <em>_points=False</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.directionalSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.directionalSize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">directionalSize</tt><big>(</big><em>n</em>, <em>p=None</em>, <em>_points=False</em><big>)</big><a class="headerlink" href="#coords.Coords.directionalSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the extreme distances from the plane p,n.</p>
 <p>The direction n can be specified by a 3 component vector or by
 a single integer 0..2 designing one of the coordinate axes.</p>
@@ -2384,7 +2431,7 @@ extreme distances from the plane p,n.</p>
 
 <dl class="method">
 <dt id="coords.Coords.directionalExtremes">
-<tt class="descname">directionalExtremes</tt><big>(</big><em>n</em>, <em>p=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.directionalExtremes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.directionalExtremes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">directionalExtremes</tt><big>(</big><em>n</em>, <em>p=None</em><big>)</big><a class="headerlink" href="#coords.Coords.directionalExtremes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return extremal planes in the direction n.</p>
 <p><cite>n</cite> and <cite>p</cite> have the same meaning as in <cite>directionalSize</cite>.</p>
 <p>The return value is a list of two points on the line (p,n),
@@ -2394,7 +2441,7 @@ the extremal planes of the Coords.</p>
 
 <dl class="method">
 <dt id="coords.Coords.directionalWidth">
-<tt class="descname">directionalWidth</tt><big>(</big><em>n</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.directionalWidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.directionalWidth" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">directionalWidth</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#coords.Coords.directionalWidth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the width of a Coords in the given direction.</p>
 <p>The direction can be specified by a 3 component vector or by
 a single integer 0..2 designating one of the coordinate axes.</p>
@@ -2403,7 +2450,7 @@ a single integer 0..2 designating one of the coordinate axes.</p>
 
 <dl class="method">
 <dt id="coords.Coords.test">
-<tt class="descname">test</tt><big>(</big><em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.test" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">test</tt><big>(</big><em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#coords.Coords.test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag points having coordinates between min and max.</p>
 <p>This function is very convenient in clipping a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> in a
 specified
@@ -2423,7 +2470,7 @@ are points and should also evaluate to (3,) shaped arrays.</p>
 
 <dl class="method">
 <dt id="coords.Coords.fprint">
-<tt class="descname">fprint</tt><big>(</big><em>fmt='%10.3e %10.3e %10.3e'</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.fprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.fprint" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fprint</tt><big>(</big><em>fmt='%10.3e %10.3e %10.3e'</em><big>)</big><a class="headerlink" href="#coords.Coords.fprint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Formatted printing of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p>The supplied format should contain 3 formatting sequences for the
 three coordinates of a point.</p>
@@ -2431,13 +2478,13 @@ three coordinates of a point.</p>
 
 <dl class="method">
 <dt id="coords.Coords.set">
-<tt class="descname">set</tt><big>(</big><em>f</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.set" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">set</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#coords.Coords.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the coordinates from those in the given array.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="coords.Coords.scale">
-<tt class="descname">scale</tt><big>(</big><em>scale</em>, <em>dir=None</em>, <em>inplace=False</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.scale" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">scale</tt><big>(</big><em>scale</em>, <em>dir=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy scaled with scale[i] in direction i.</p>
 <p>The scale should be a list of 3 scaling factors for the 3 axis
 directions, or a single scaling factor.
@@ -2455,7 +2502,7 @@ homothetic scaling.</p>
 
 <dl class="method">
 <dt id="coords.Coords.translate">
-<tt class="descname">translate</tt><big>(</big><em>dir</em>, <em>step=None</em>, <em>inplace=False</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.translate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">translate</tt><big>(</big><em>dir</em>, <em>step=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.translate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Translate a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p>Translates the Coords in the direction <cite>dir</cite> over a distance
 <cite>step * length(dir)</cite>.</p>
@@ -2489,7 +2536,7 @@ vectors to set the translation distance.</li>
 
 <dl class="method">
 <dt id="coords.Coords.centered">
-<tt class="descname">centered</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.centered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.centered" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">centered</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.centered" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a centered copy of the Coords.</p>
 <p>Returns a Coords which is a translation thus that the center
 coincides with the origin.
@@ -2501,7 +2548,7 @@ This is equivalent with:</p>
 
 <dl class="method">
 <dt id="coords.Coords.align">
-<tt class="descname">align</tt><big>(</big><em>alignment='---'</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.align"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.align" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">align</tt><big>(</big><em>alignment='---'</em><big>)</big><a class="headerlink" href="#coords.Coords.align" title="Permalink to this definition">¶</a></dt>
 <dd><p>Align the Coords along the global axes.</p>
 <p>Alignment involves a translation such that the bounding box
 of the Coords object becomes aligned on the origin of the global axes.
@@ -2522,7 +2569,7 @@ the (slightly faster) <a class="reference internal" href="#coords.Coords.centere
 
 <dl class="method">
 <dt id="coords.Coords.rotate">
-<tt class="descname">rotate</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.rotate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rotate</tt><big>(</big><em>angle</em>, <em>axis=2</em>, <em>around=None</em><big>)</big><a class="headerlink" href="#coords.Coords.rotate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy rotated over angle around axis.</p>
 <p>The angle is specified in degrees.
 The axis is either one of (0,1,2) designating the global axes,
@@ -2537,14 +2584,14 @@ rotation origin is specified in the argument &#8216;around&#8217;.</p>
 
 <dl class="method">
 <dt id="coords.Coords.shear">
-<tt class="descname">shear</tt><big>(</big><em>dir</em>, <em>dir1</em>, <em>skew</em>, <em>inplace=False</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.shear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.shear" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">shear</tt><big>(</big><em>dir</em>, <em>dir1</em>, <em>skew</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.shear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
 <p>The coordinate dir is replaced with (dir + skew * dir1).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="coords.Coords.reflect">
-<tt class="descname">reflect</tt><big>(</big><em>dir=0</em>, <em>pos=0.0</em>, <em>inplace=False</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.reflect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.reflect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reflect</tt><big>(</big><em>dir=0</em>, <em>pos=0.0</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.reflect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -2556,7 +2603,7 @@ rotation origin is specified in the argument &#8216;around&#8217;.</p>
 
 <dl class="method">
 <dt id="coords.Coords.affine">
-<tt class="descname">affine</tt><big>(</big><em>mat</em>, <em>vec=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.affine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.affine" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">affine</tt><big>(</big><em>mat</em>, <em>vec=None</em><big>)</big><a class="headerlink" href="#coords.Coords.affine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a general affine transform of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p><cite>mat</cite>: a 3x3 float matrix</p>
 <p><cite>vec</cite>: a length 3 list or array of floats</p>
@@ -2565,7 +2612,7 @@ rotation origin is specified in the argument &#8216;around&#8217;.</p>
 
 <dl class="method">
 <dt id="coords.Coords.cylindrical">
-<tt class="descname">cylindrical</tt><big>(</big><em>dir=[0, 1, 2], scale=[1.0, 1.0, 1.0], angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.cylindrical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.cylindrical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cylindrical</tt><big>(</big><em>dir=[0, 1, 2], scale=[1.0, 1.0, 1.0], angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#coords.Coords.cylindrical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts from cylindrical to cartesian after scaling.</p>
 <p>dir specifies which coordinates are interpreted as resp.
 distance(r), angle(theta) and height(z). Default order is [r,theta,z].
@@ -2576,7 +2623,7 @@ The resulting angle is interpreted in degrees.</p>
 
 <dl class="method">
 <dt id="coords.Coords.toCylindrical">
-<tt class="descname">toCylindrical</tt><big>(</big><em>dir=[0, 1, 2], angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.toCylindrical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toCylindrical</tt><big>(</big><em>dir=[0, 1, 2], angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#coords.Coords.toCylindrical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts from cartesian to cylindrical coordinates.</p>
 <p>dir specifies which coordinates axes are parallel to respectively the
 cylindrical axes distance(r), angle(theta) and height(z). Default
@@ -2586,7 +2633,7 @@ The angle value is given in degrees.</p>
 
 <dl class="method">
 <dt id="coords.Coords.spherical">
-<tt class="descname">spherical</tt><big>(</big><em>dir=[0, 1, 2], scale=[1.0, 1.0, 1.0], angle_spec=0.017453292519943295, colat=False</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.spherical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.spherical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">spherical</tt><big>(</big><em>dir=[0, 1, 2], scale=[1.0, 1.0, 1.0], angle_spec=0.017453292519943295, colat=False</em><big>)</big><a class="headerlink" href="#coords.Coords.spherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts from spherical to cartesian after scaling.</p>
 <ul class="simple">
 <li><cite>dir</cite> specifies which coordinates are interpreted as resp.
@@ -2601,7 +2648,7 @@ direction of north pole(90). South pole is -90.</p>
 
 <dl class="method">
 <dt id="coords.Coords.superSpherical">
-<tt class="descname">superSpherical</tt><big>(</big><em>n=1.0, e=1.0, k=0.0, dir=[0, 1, 2], scale=[1.0, 1.0, 1.0], angle_spec=0.017453292519943295, colat=False</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.superSpherical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.superSpherical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">superSpherical</tt><big>(</big><em>n=1.0, e=1.0, k=0.0, dir=[0, 1, 2], scale=[1.0, 1.0, 1.0], angle_spec=0.017453292519943295, colat=False</em><big>)</big><a class="headerlink" href="#coords.Coords.superSpherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs a superspherical transformation.</p>
 <p>superSpherical is much like spherical, but adds some extra
 parameters to enable the creation of virtually any surface.</p>
@@ -2624,7 +2671,7 @@ shrink the northern.</p>
 
 <dl class="method">
 <dt id="coords.Coords.toSpherical">
-<tt class="descname">toSpherical</tt><big>(</big><em>dir=[0, 1, 2], angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.toSpherical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.toSpherical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toSpherical</tt><big>(</big><em>dir=[0, 1, 2], angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#coords.Coords.toSpherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts from cartesian to spherical coordinates.</p>
 <p><cite>dir</cite> specifies which coordinates axes are parallel to respectively
 the spherical axes distance(r), longitude(theta) and latitude(phi).
@@ -2636,7 +2683,7 @@ Default order is [0,1,2], thus the equator plane is the (x,y)-plane.</p>
 
 <dl class="method">
 <dt id="coords.Coords.bump1">
-<tt class="descname">bump1</tt><big>(</big><em>dir</em>, <em>a</em>, <em>func</em>, <em>dist</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.bump1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.bump1" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bump1</tt><big>(</big><em>dir</em>, <em>a</em>, <em>func</em>, <em>dist</em><big>)</big><a class="headerlink" href="#coords.Coords.bump1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with a one-dimensional bump.</p>
 <ul class="simple">
 <li><cite>dir</cite> specifies the axis of the modified coordinates;</li>
@@ -2649,7 +2696,7 @@ and should be such that <tt class="docutils literal"><span class="pre">func(0)</
 
 <dl class="method">
 <dt id="coords.Coords.bump2">
-<tt class="descname">bump2</tt><big>(</big><em>dir</em>, <em>a</em>, <em>func</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.bump2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.bump2" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bump2</tt><big>(</big><em>dir</em>, <em>a</em>, <em>func</em><big>)</big><a class="headerlink" href="#coords.Coords.bump2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with a two-dimensional bump.</p>
 <p>dir specifies the axis of the modified coordinates;
 a is the point that forces the bumping;
@@ -2659,7 +2706,7 @@ func is a function that calculates the bump intensity from distance
 
 <dl class="method">
 <dt id="coords.Coords.bump">
-<tt class="descname">bump</tt><big>(</big><em>dir</em>, <em>a</em>, <em>func</em>, <em>dist=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.bump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.bump" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bump</tt><big>(</big><em>dir</em>, <em>a</em>, <em>func</em>, <em>dist=None</em><big>)</big><a class="headerlink" href="#coords.Coords.bump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with a bump.</p>
 <p>A bump is a modification of a set of coordinates by a non-matching
 point. It can produce various effects, but one of the most common
@@ -2679,7 +2726,7 @@ This function is then equivalent to bump2.</p>
 
 <dl class="method">
 <dt id="coords.Coords.flare">
-<tt class="descname">flare</tt><big>(</big><em>xf, f, dir=[0, 2], end=0, exp=1.0</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.flare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.flare" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">flare</tt><big>(</big><em>xf, f, dir=[0, 2], end=0, exp=1.0</em><big>)</big><a class="headerlink" href="#coords.Coords.flare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a flare at the end of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> block.</p>
 <p>The flare extends over a distance <tt class="docutils literal"><span class="pre">xf</span></tt> at the start (<tt class="docutils literal"><span class="pre">end=0</span></tt>)
 or end (<tt class="docutils literal"><span class="pre">end=1</span></tt>) in direction <tt class="docutils literal"><span class="pre">dir[0]</span></tt> of the coords block,
@@ -2688,7 +2735,7 @@ and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f<
 
 <dl class="method">
 <dt id="coords.Coords.map">
-<tt class="descname">map</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.map" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">map</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#coords.Coords.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> mapped by a 3-D function.</p>
 <p>This is one of the versatile mapping functions.
 func is a numerical function which takes three arguments and produces
@@ -2707,7 +2754,7 @@ This method is one of several mapping methods. See also map1 and mapd.</p>
 
 <dl class="method">
 <dt id="coords.Coords.map1">
-<tt class="descname">map1</tt><big>(</big><em>dir</em>, <em>func</em>, <em>x=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.map1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.map1" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">map1</tt><big>(</big><em>dir</em>, <em>func</em>, <em>x=None</em><big>)</big><a class="headerlink" href="#coords.Coords.map1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> where coordinate i is mapped by a 1-D function.</p>
 <p><cite>func</cite> is a numerical function which takes one argument and produces
 one result. The coordinate dir will be replaced by func(coord[x]).
@@ -2720,7 +2767,7 @@ This method is one of several mapping methods. See also map and mapd.</p>
 
 <dl class="method">
 <dt id="coords.Coords.mapd">
-<tt class="descname">mapd</tt><big>(</big><em>dir</em>, <em>func</em>, <em>point</em>, <em>dist=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.mapd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.mapd" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mapd</tt><big>(</big><em>dir</em>, <em>func</em>, <em>point</em>, <em>dist=None</em><big>)</big><a class="headerlink" href="#coords.Coords.mapd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps one coordinate by a function of the distance to a point.</p>
 <p><cite>func</cite> a numerical function which takes one argument and produces
 one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
@@ -2740,13 +2787,13 @@ This method is one of several mapping methods. See also
 
 <dl class="method">
 <dt id="coords.Coords.egg">
-<tt class="descname">egg</tt><big>(</big><em>k</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.egg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.egg" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">egg</tt><big>(</big><em>k</em><big>)</big><a class="headerlink" href="#coords.Coords.egg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps the coordinates to an egg-shape</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="coords.Coords.replace">
-<tt class="descname">replace</tt><big>(</big><em>i</em>, <em>j</em>, <em>other=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.replace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.replace" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">replace</tt><big>(</big><em>i</em>, <em>j</em>, <em>other=None</em><big>)</big><a class="headerlink" href="#coords.Coords.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replace the coordinates along the axes i by those along j.</p>
 <p>i and j are lists of axis numbers or single axis numbers.
 replace ([0,1,2],[1,2,0]) will roll the axes by 1.
@@ -2757,14 +2804,14 @@ the coordinates from. It should have the same dimensions.</p>
 
 <dl class="method">
 <dt id="coords.Coords.swapAxes">
-<tt class="descname">swapAxes</tt><big>(</big><em>i</em>, <em>j</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.swapAxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.swapAxes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">swapAxes</tt><big>(</big><em>i</em>, <em>j</em><big>)</big><a class="headerlink" href="#coords.Coords.swapAxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Swap coordinate axes i and j.</p>
 <p>Beware! This is different from numpy&#8217;s swapaxes() method !</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="coords.Coords.rollAxes">
-<tt class="descname">rollAxes</tt><big>(</big><em>n=1</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.rollAxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.rollAxes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rollAxes</tt><big>(</big><em>n=1</em><big>)</big><a class="headerlink" href="#coords.Coords.rollAxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Roll the axes over the given amount.</p>
 <p>Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
 2 becomes 0.</p>
@@ -2772,7 +2819,7 @@ the coordinates from. It should have the same dimensions.</p>
 
 <dl class="method">
 <dt id="coords.Coords.projectOnPlane">
-<tt class="descname">projectOnPlane</tt><big>(</big><em>n=2, P=[0.0, 0.0, 0.0]</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.projectOnPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnPlane</tt><big>(</big><em>n=2, P=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#coords.Coords.projectOnPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> on a plane (or planes).</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -2793,7 +2840,7 @@ points projected on the specified plane(s).</p>
 
 <dl class="method">
 <dt id="coords.Coords.projectOnSphere">
-<tt class="descname">projectOnSphere</tt><big>(</big><em>radius=1.0, center=[0.0, 0.0, 0.0]</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.projectOnSphere"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnSphere</tt><big>(</big><em>radius=1.0, center=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#coords.Coords.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> on a sphere.</p>
 <p>The default sphere is a unit sphere at the origin.
 The center of the sphere should not be part of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
@@ -2801,7 +2848,7 @@ The center of the sphere should not be part of the <a class="reference internal"
 
 <dl class="method">
 <dt id="coords.Coords.projectOnCylinder">
-<tt class="descname">projectOnCylinder</tt><big>(</big><em>radius=1.0, dir=0, center=[0.0, 0.0, 0.0]</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.projectOnCylinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>radius=1.0, dir=0, center=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#coords.Coords.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> on a cylinder with axis parallel to a global axis.</p>
 <p>The default cylinder has its axis along the x-axis and a unit radius.
 No points of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> should belong to the axis..</p>
@@ -2809,7 +2856,7 @@ No points of the <a class="reference internal" href="#coords.Coords" title="coor
 
 <dl class="method">
 <dt id="coords.Coords.projectOnSurface">
-<tt class="descname">projectOnSurface</tt><big>(</big><em>S</em>, <em>n</em>, <em>ignore_errors=False</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.projectOnSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.projectOnSurface" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnSurface</tt><big>(</big><em>S</em>, <em>n</em>, <em>ignore_errors=False</em><big>)</big><a class="headerlink" href="#coords.Coords.projectOnSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project the Coords on a triangulated surface.</p>
 <p>The points of the Coords are projected in the direction of the
 vector n onto the surface S.</p>
@@ -2826,7 +2873,7 @@ input is returned.</p>
 
 <dl class="method">
 <dt id="coords.Coords.isopar">
-<tt class="descname">isopar</tt><big>(</big><em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.isopar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.isopar" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">isopar</tt><big>(</big><em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="headerlink" href="#coords.Coords.isopar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform an isoparametric transformation on a Coords.</p>
 <p>This is a convenience method to transform a Coords object through
 an isoparametric transformation. It is equivalent to:</p>
@@ -2838,7 +2885,7 @@ an isoparametric transformation. It is equivalent to:</p>
 
 <dl class="method">
 <dt id="coords.Coords.transformCS">
-<tt class="descname">transformCS</tt><big>(</big><em>currentCS</em>, <em>initialCS=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.transformCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.transformCS" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">transformCS</tt><big>(</big><em>currentCS</em>, <em>initialCS=None</em><big>)</big><a class="headerlink" href="#coords.Coords.transformCS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a CoordinateSystem transformation on the Coords.</p>
 <p>This method transforms the Coords object by the transformation that
 turns the initial CoordinateSystem into the currentCoordinateSystem.</p>
@@ -2859,7 +2906,7 @@ instances. If initialCS is None, the global (x,y,z) axes are used.</p>
 
 <dl class="method">
 <dt id="coords.Coords.addNoise">
-<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.10000000000000001</em>, <em>asize=0.0</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.addNoise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.addNoise" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addNoise</tt><big>(</big><em>rsize=0.10000000000000001</em>, <em>asize=0.0</em><big>)</big><a class="headerlink" href="#coords.Coords.addNoise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add random noise to a Coords.</p>
 <p>A random amount is added to eacho individual coordinate in the Coords.
 The difference of any coordinate from its original value will
@@ -2869,7 +2916,7 @@ is to set it to 0.1 times the geometrical size of the structure.</p>
 
 <dl class="method">
 <dt id="coords.Coords.replicate">
-<tt class="descname">replicate</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.replicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.replicate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">replicate</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=None</em><big>)</big><a class="headerlink" href="#coords.Coords.replicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replicate a Coords n times with fixed step in any direction.</p>
 <p>Returns a Coords object with shape <cite>(n,) + self.shape</cite>, thus having
 an extra first axis.
@@ -2882,7 +2929,7 @@ original Coords.</p>
 
 <dl class="method">
 <dt id="coords.Coords.split">
-<tt class="descname">split</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.split" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">split</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.Coords.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split the coordinate array in blocks along first axis.</p>
 <p>The result is a sequence of arrays with shape self.shape[1:].
 Raises an error if self.ndim &lt; 2.</p>
@@ -2890,7 +2937,7 @@ Raises an error if self.ndim &lt; 2.</p>
 
 <dl class="method">
 <dt id="coords.Coords.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1.0000000000000001e-05</em>, <em>atol=1.0000000000000001e-05</em>, <em>repeat=True</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.fuse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1.0000000000000001e-05</em>, <em>atol=1.0000000000000001e-05</em>, <em>repeat=True</em><big>)</big><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find (almost) identical nodes and return a compressed set.</p>
 <p>This method finds the points that are very close and replaces them
 with a single point. The return value is a tuple of two arrays:</p>
@@ -2922,7 +2969,7 @@ Specifying repeat=True will automatically do this.</p>
 
 <dl class="method">
 <dt id="coords.Coords.match">
-<tt class="descname">match</tt><big>(</big><em>coords</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.match" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">match</tt><big>(</big><em>coords</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#coords.Coords.match" title="Permalink to this definition">¶</a></dt>
 <dd><p>Match points form another Coords object.</p>
 <p>This method finds the points from <cite>coords</cite> that coincide with
 (or are very close to) points of <cite>self</cite>.</p>
@@ -2948,7 +2995,7 @@ parts to <cite>self.pshape()</cite>, resp. <cite>coords.pshape()</cite>.</li>
 
 <dl class="method">
 <dt id="coords.Coords.append">
-<tt class="descname">append</tt><big>(</big><em>coords</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.append" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">append</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#coords.Coords.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append coords to a Coords object.</p>
 <p>The appended coords should have matching dimensions in all
 but the first axis.</p>
@@ -2960,7 +3007,7 @@ instead of the last, and it is a method rather than a function.</p>
 
 <dl class="classmethod">
 <dt id="coords.Coords.concatenate">
-<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>L</em>, <em>axis=0</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.concatenate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.concatenate" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>L</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#coords.Coords.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate a list of <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p>All <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object in the list L should have the same shape
 except for the length of the specified axis.
@@ -2971,7 +3018,7 @@ is the first one instead of the last.</p>
 
 <dl class="classmethod">
 <dt id="coords.Coords.fromstring">
-<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.fromstring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.fromstring" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="headerlink" href="#coords.Coords.fromstring" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object with data from a string.</p>
 <p>This convenience function uses the <tt class="xref py py-func docutils literal"><span class="pre">numpy.fromstring()</span></tt>
 function to read coordinates from a string.</p>
@@ -2991,7 +3038,7 @@ does not contain the expected number of values.</p>
 
 <dl class="classmethod">
 <dt id="coords.Coords.fromfile">
-<em class="property">classmethod </em><tt class="descname">fromfile</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.fromfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.fromfile" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">fromfile</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#coords.Coords.fromfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> from file.</p>
 <p>This convenience function uses the numpy fromfile function to read
 the coordinates from file.
@@ -3002,7 +3049,7 @@ coordinates read is a multiple of 3.</p>
 
 <dl class="method">
 <dt id="coords.Coords.interpolate">
-<tt class="descname">interpolate</tt><big>(</big><em>X</em>, <em>div</em><big>)</big><a class="reference internal" href="../_modules/coords.html#Coords.interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.Coords.interpolate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">interpolate</tt><big>(</big><em>X</em>, <em>div</em><big>)</big><a class="headerlink" href="#coords.Coords.interpolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create interpolations between two <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -3092,7 +3139,7 @@ original Coords.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">coords</span></tt></p>
 <dl class="function">
 <dt id="coords.bbox">
-<tt class="descclassname">coords.</tt><tt class="descname">bbox</tt><big>(</big><em>objects</em><big>)</big><a class="reference internal" href="../_modules/coords.html#bbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.bbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">coords.</tt><tt class="descname">bbox</tt><big>(</big><em>objects</em><big>)</big><a class="headerlink" href="#coords.bbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the bounding box of a list of objects.</p>
 <p>The bounding box of an object is the smallest rectangular cuboid
 in the global Cartesian coordinates, such that no points of the
@@ -3120,7 +3167,7 @@ coordinate values, the second has the maximal ones.</dd>
 
 <dl class="function">
 <dt id="coords.origin">
-<tt class="descclassname">coords.</tt><tt class="descname">origin</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/coords.html#origin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.origin" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">coords.</tt><tt class="descname">origin</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.origin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a single point with coordinates [0.,0.,0.].</p>
 <dl class="docutils">
 <dt>Returns:</dt>
@@ -3130,7 +3177,7 @@ coordinate values, the second has the maximal ones.</dd>
 
 <dl class="function">
 <dt id="coords.pattern">
-<tt class="descclassname">coords.</tt><tt class="descname">pattern</tt><big>(</big><em>s</em>, <em>connect=True</em><big>)</big><a class="reference internal" href="../_modules/coords.html#pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.pattern" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">coords.</tt><tt class="descname">pattern</tt><big>(</big><em>s</em>, <em>connect=True</em><big>)</big><a class="headerlink" href="#coords.pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a series of points lying on a regular grid.</p>
 <p>This function creates a series of points that lie on a regular grid
 with unit step. These points are created from a string input, interpreting
@@ -3176,7 +3223,7 @@ the string with a &#8216;0&#8217; or &#8216;9&#8217; to include the origin in th
 
 <dl class="function">
 <dt id="coords.xpattern">
-<tt class="descclassname">coords.</tt><tt class="descname">xpattern</tt><big>(</big><em>s</em>, <em>nplex=1</em><big>)</big><a class="reference internal" href="../_modules/coords.html#xpattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.xpattern" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">coords.</tt><tt class="descname">xpattern</tt><big>(</big><em>s</em>, <em>nplex=1</em><big>)</big><a class="headerlink" href="#coords.xpattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Coords object from a string pattern.</p>
 <p>This is like pattern, but allows grouping the points into elements.
 First, the string is expanded to a list of points by calling pattern(s).
@@ -3188,7 +3235,7 @@ an error is raised.</p>
 
 <dl class="function">
 <dt id="coords.sweepCoords">
-<tt class="descclassname">coords.</tt><tt class="descname">sweepCoords</tt><big>(</big><em>self, path, origin=[0.0, 0.0, 0.0], normal=0, upvector=2, avgdir=False, enddir=None, scalex=None, scaley=None</em><big>)</big><a class="reference internal" href="../_modules/coords.html#sweepCoords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#coords.sweepCoords" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">coords.</tt><tt class="descname">sweepCoords</tt><big>(</big><em>self, path, origin=[0.0, 0.0, 0.0], normal=0, upvector=2, avgdir=False, enddir=None, scalex=None, scaley=None</em><big>)</big><a class="headerlink" href="#coords.sweepCoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sweep a Coords object along a path, returning a series of copies.</p>
 <p>origin and normal define the local path position and direction on the mesh.</p>
 <p>At each point of the curve, a copy of the Coords object is created, with
@@ -3215,33 +3262,6 @@ the curve.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../refman.html"
-                        title="previous chapter">pyFormex reference manual</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="formex.html"
-                        title="next chapter">2. <tt class="docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -3259,15 +3279,13 @@ the curve.</p>
         <li class="right" >
           <a href="../refman.html" title="pyFormex reference manual"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

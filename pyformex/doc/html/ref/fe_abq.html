@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>42. fe_abq — Exporting finite element models in Abaqus™ input file format. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="43. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
-    <link rel="prev" title="41. fe — Finite Element Models in pyFormex." href="fe.html" /> 
+    <link rel="prev" title="41. fe — Finite Element Models in pyFormex." href="fe.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="fe.html" title="41. fe — Finite Element Models in pyFormex."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fe.html"
+                        title="previous chapter">41. <tt class="docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="fe_post.html"
+                        title="next chapter">43. <tt class="docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -104,7 +151,7 @@ the data involved with the finite element model.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_abq</span></tt></p>
 <dl class="class">
 <dt id="fe_abq.Output">
-<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Output</tt><big>(</big><em>kind=None</em>, <em>keys=None</em>, <em>set=None</em>, <em>type='FIELD'</em>, <em>variable='PRESELECT'</em>, <em>extra=''</em>, <em>**options</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#Output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.Output" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Output</tt><big>(</big><em>kind=None</em>, <em>keys=None</em>, <em>set=None</em>, <em>type='FIELD'</em>, <em>variable='PRESELECT'</em>, <em>extra=''</em>, <em>**options</em><big>)</big><a class="headerlink" href="#fe_abq.Output" title="Permalink to this definition">¶</a></dt>
 <dd><p>A request for output to .odb and history.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -128,7 +175,7 @@ for kind==&#8217;NODE&#8217; and &#8216;Eall&#8217; for kind=&#8217;ELEMENT&#821
 </ul>
 <dl class="method">
 <dt id="fe_abq.Output.fmt">
-<tt class="descname">fmt</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#Output.fmt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.Output.fmt" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fmt</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_abq.Output.fmt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format an output request.</p>
 <p>Return a string with the formatted output command.</p>
 </dd></dl>
@@ -161,7 +208,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="fe_abq.Result">
-<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Result</tt><big>(</big><em>kind</em>, <em>keys</em>, <em>set=None</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>time=False</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#Result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.Result" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Result</tt><big>(</big><em>kind</em>, <em>keys</em>, <em>set=None</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>time=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#fe_abq.Result" title="Permalink to this definition">¶</a></dt>
 <dd><p>A request for output of results on nodes or elements.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -205,7 +252,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="fe_abq.Interaction">
-<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Interaction</tt><big>(</big><em>name=None</em>, <em>cross_section=1</em>, <em>friction=0.0</em>, <em>surfacebehavior=None</em>, <em>noseparation=False</em>, <em>pressureoverclosure=None</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#Interaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.Interaction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Interaction</tt><big>(</big><em>name=None</em>, <em>cross_section=1</em>, <em>friction=0.0</em>, <em>surfacebehavior=None</em>, <em>noseparation=False</em>, <em>pressureoverclosure=None</em><big>)</big><a class="headerlink" href="#fe_abq.Interaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Dict for setting surface interactions
 pressureoverclosure is an array = [&#8216;hard&#8217;/&#8217;soft&#8217;,&#8217;linear&#8217;/&#8217;nonlinear&#8217;/&#8217;exponential&#8217;/&#8217;tabular&#8217;/.., value1,value2,value3,... ]
 Leave empty for default hard contact
@@ -240,7 +287,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="fe_abq.AbqData">
-<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">AbqData</tt><big>(</big><em>model</em>, <em>prop</em>, <em>nprop=None</em>, <em>eprop=None</em>, <em>steps=</em><span class="optional">[</span><span class="optional">]</span>, <em>res=</em><span class="optional">[</span><span class="optional">]</span>, <em>out=</em><span class="optional">[</span><span class="optional">]</span>, <em>bound=None</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#AbqData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.AbqData" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">AbqData</tt><big>(</big><em>model</em>, <em>prop</em>, <em>nprop=None</em>, <em>eprop=None</em>, <em>steps=</em><span class="optional">[</span><span class="optional">]</span>, <em>res=</em><span class="optional">[</span><span class="optional">]</span>, <em>out=</em><span class="optional">[</span><span class="optional">]</span>, <em>bound=None</em><big>)</big><a class="headerlink" href="#fe_abq.AbqData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains all data required to write the Abaqus input file.</p>
 <ul class="simple">
 <li><cite>model</cite> : a <tt class="xref py py-class docutils literal"><span class="pre">Model</span></tt> instance.</li>
@@ -254,7 +301,7 @@ Specify a (possibly non-existing) tag to override the default.</li>
 </ul>
 <dl class="method">
 <dt id="fe_abq.AbqData.write">
-<tt class="descname">write</tt><big>(</big><em>jobname=None</em>, <em>group_by_eset=True</em>, <em>group_by_group=False</em>, <em>header=''</em>, <em>create_part=False</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#AbqData.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.AbqData.write" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">write</tt><big>(</big><em>jobname=None</em>, <em>group_by_eset=True</em>, <em>group_by_group=False</em>, <em>header=''</em>, <em>create_part=False</em><big>)</big><a class="headerlink" href="#fe_abq.AbqData.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an Abaqus input file.</p>
 <ul class="simple">
 <li><cite>jobname</cite> : the name of the inputfile, with or without &#8216;.inp&#8217;
@@ -270,7 +317,7 @@ followed by and assembly of that part.</li>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">fe_abq</span></tt></p>
 <dl class="function">
 <dt id="fe_abq.abqInputNames">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">abqInputNames</tt><big>(</big><em>job</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#abqInputNames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.abqInputNames" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">abqInputNames</tt><big>(</big><em>job</em><big>)</big><a class="headerlink" href="#fe_abq.abqInputNames" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns corresponding Abq jobname and input filename.</p>
 <p>job can be either a jobname or input file name, with or without
 directory part, with or without extension (.inp)</p>
@@ -280,25 +327,25 @@ The abq filename is the abspath of the job with extension &#8216;.inp&#8217;</p>
 
 <dl class="function">
 <dt id="fe_abq.nsetName">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">nsetName</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#nsetName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.nsetName" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">nsetName</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#fe_abq.nsetName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine the name for writing a node set property.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.esetName">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">esetName</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#esetName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.esetName" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">esetName</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#fe_abq.esetName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine the name for writing an element set property.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.fmtCmd">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtCmd</tt><big>(</big><em>cmd='*'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtCmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtCmd" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtCmd</tt><big>(</big><em>cmd='*'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtCmd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format a command.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.fmtData1D">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtData1D</tt><big>(</big><em>data</em>, <em>npl=8</em>, <em>sep='</em>, <em>'</em>, <em>linesep='\n'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtData1D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtData1D" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtData1D</tt><big>(</big><em>data</em>, <em>npl=8</em>, <em>sep='</em>, <em>'</em>, <em>linesep='\n'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtData1D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format numerical data in lines with maximum npl items.</p>
 <p>data is a numeric array. The array is flattened and then the data are
 formatted in lines with maximum npl items, separated by sep.
@@ -307,7 +354,7 @@ Lines are separated by linesep.</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtData">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtData</tt><big>(</big><em>data</em>, <em>npl=8</em>, <em>sep='</em>, <em>'</em>, <em>linesep='\n'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtData" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtData</tt><big>(</big><em>data</em>, <em>npl=8</em>, <em>sep='</em>, <em>'</em>, <em>linesep='\n'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format numerical data in lines with maximum npl items.</p>
 <p>data is a numeric array, which is coerced to be a 2D array, either by
 adding a first axis or by collapsing the first ndim-1 axies.
@@ -317,7 +364,7 @@ by sep. Lines are separated by linesep.</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtOptions">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtOptions</tt><big>(</big><em>options</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtOptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtOptions" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtOptions</tt><big>(</big><em>options</em><big>)</big><a class="headerlink" href="#fe_abq.fmtOptions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the options of an Abaqus command line.</p>
 <ul class="simple">
 <li><cite>options</cite>: a dict with ABAQUS command keywords and values. If the keyword
@@ -329,19 +376,19 @@ The string includes an initial comma.</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtHeading">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtHeading</tt><big>(</big><em>text=''</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtHeading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtHeading" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtHeading</tt><big>(</big><em>text=''</em><big>)</big><a class="headerlink" href="#fe_abq.fmtHeading" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the heading of the Abaqus input file.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.fmtPart">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtPart</tt><big>(</big><em>name='Part-1'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtPart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtPart" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtPart</tt><big>(</big><em>name='Part-1'</em><big>)</big><a class="headerlink" href="#fe_abq.fmtPart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start a new Part.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.fmtMaterial">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtMaterial</tt><big>(</big><em>mat</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtMaterial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtMaterial" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtMaterial</tt><big>(</big><em>mat</em><big>)</big><a class="headerlink" href="#fe_abq.fmtMaterial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a material section.</p>
 <p><cite>mat</cite> is the property dict of the material. The following keys are
 recognized and output accordingly:</p>
@@ -394,7 +441,7 @@ from the len of the constants list</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtTransform">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtTransform</tt><big>(</big><em>setname</em>, <em>csys</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtTransform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtTransform" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtTransform</tt><big>(</big><em>setname</em>, <em>csys</em><big>)</big><a class="headerlink" href="#fe_abq.fmtTransform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write transform command for the given set.</p>
 <ul class="simple">
 <li><cite>setname</cite> is the name of a node set</li>
@@ -404,7 +451,7 @@ from the len of the constants list</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtFrameSection">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtFrameSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtFrameSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtFrameSection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtFrameSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtFrameSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a frame section for the named element set.</p>
 <p>Recognized data fields in the property record:</p>
 <ul class="simple">
@@ -441,7 +488,7 @@ from the len of the constants list</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtGeneralBeamSection">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtGeneralBeamSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtGeneralBeamSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtGeneralBeamSection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtGeneralBeamSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtGeneralBeamSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a general beam section for the named element set.</p>
 <p>To specify a beam section when numerical integration over the section is not required.</p>
 <p>Recognized data fields in the property record:</p>
@@ -476,7 +523,7 @@ from the len of the constants list</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtBeamSection">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtBeamSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtBeamSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtBeamSection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtBeamSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtBeamSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a beam section for the named element set.</p>
 <p>To specify a beam section when numerical integration over the section is required.</p>
 <p>Recognized data fields in the property record:</p>
@@ -507,7 +554,7 @@ from the len of the constants list</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtConnectorSection">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConnectorSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtConnectorSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtConnectorSection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConnectorSection</tt><big>(</big><em>el</em>, <em>setname</em><big>)</big><a class="headerlink" href="#fe_abq.fmtConnectorSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a connector section.</p>
 <p>Optional data:</p>
 <ul class="simple">
@@ -518,7 +565,7 @@ from the len of the constants list</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtConnectorBehavior">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConnectorBehavior</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtConnectorBehavior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtConnectorBehavior" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConnectorBehavior</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtConnectorBehavior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a connector behavior.
 Implemented: Elasticity,  Stop
 Examples: 
@@ -530,7 +577,7 @@ P.Prop(name=&#8217;connbehavior3&#8217;,ConnectorBehavior=&#8217;&#8216;,Stop=di
 
 <dl class="function">
 <dt id="fe_abq.fmtSurface">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurface</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtSurface" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurface</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the surface definitions.</p>
 <p>Required:</p>
 <ul class="simple">
@@ -554,7 +601,7 @@ different identifiers for the different elements in the surface. Thus:</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtAnalyticalSurface">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtAnalyticalSurface</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtAnalyticalSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtAnalyticalSurface" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtAnalyticalSurface</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtAnalyticalSurface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the analytical surface rigid body.</p>
 <p>Required:</p>
 <ul class="simple">
@@ -571,7 +618,7 @@ different identifiers for the different elements in the surface. Thus:</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtSurfaceInteraction">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurfaceInteraction</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtSurfaceInteraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtSurfaceInteraction</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtSurfaceInteraction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the interactions.</p>
 <p>Required:</p>
 <p>-name</p>
@@ -586,7 +633,7 @@ different identifiers for the different elements in the surface. Thus:</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtGeneralContact">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtGeneralContact</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtGeneralContact"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtGeneralContact" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtGeneralContact</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtGeneralContact" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the general contact.</p>
 <p>Only implemented on model level</p>
 <p>Required:</p>
@@ -605,7 +652,7 @@ different identifiers for the different elements in the surface. Thus:</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtContactPair">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtContactPair</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtContactPair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtContactPair" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtContactPair</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtContactPair" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the contact pair.</p>
 <p>Required:</p>
 <ul class="simple">
@@ -621,7 +668,7 @@ different identifiers for the different elements in the surface. Thus:</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtConstraint">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConstraint</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtConstraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtConstraint" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtConstraint</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtConstraint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format Tie constraint</p>
 <p>Required:</p>
 <p>-name
@@ -639,7 +686,7 @@ different identifiers for the different elements in the surface. Thus:</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtInitialConditions">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtInitialConditions</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtInitialConditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtInitialConditions" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtInitialConditions</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtInitialConditions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format initial conditions</p>
 <p>Required:</p>
 <p>-type
@@ -653,7 +700,7 @@ different identifiers for the different elements in the surface. Thus:</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtOrientation">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtOrientation</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtOrientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtOrientation" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtOrientation</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtOrientation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the orientation.</p>
 <p>Optional:</p>
 <ul class="simple">
@@ -666,7 +713,7 @@ different identifiers for the different elements in the surface. Thus:</p>
 
 <dl class="function">
 <dt id="fe_abq.fmtEquation">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtEquation</tt><big>(</big><em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#fmtEquation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.fmtEquation" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtEquation</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format multi-point constraint using an equation</p>
 <p>Required:</p>
 <ul class="simple">
@@ -689,7 +736,7 @@ be equal.</p>
 
 <dl class="function">
 <dt id="fe_abq.writeNodes">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeNodes</tt><big>(</big><em>fil</em>, <em>nodes</em>, <em>name='Nall'</em>, <em>nofs=1</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeNodes</tt><big>(</big><em>fil</em>, <em>nodes</em>, <em>name='Nall'</em>, <em>nofs=1</em><big>)</big><a class="headerlink" href="#fe_abq.writeNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write nodal coordinates.</p>
 <p>The nodes are added to the named node set. 
 If a name different from &#8216;Nall&#8217; is specified, the nodes will also
@@ -700,7 +747,7 @@ The default is 1, because Abaqus numbering starts at 1.</p>
 
 <dl class="function">
 <dt id="fe_abq.writeElems">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeElems</tt><big>(</big><em>fil</em>, <em>elems</em>, <em>type</em>, <em>name='Eall'</em>, <em>eid=None</em>, <em>eofs=1</em>, <em>nofs=1</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeElems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeElems" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeElems</tt><big>(</big><em>fil</em>, <em>elems</em>, <em>type</em>, <em>name='Eall'</em>, <em>eid=None</em>, <em>eofs=1</em>, <em>nofs=1</em><big>)</big><a class="headerlink" href="#fe_abq.writeElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write element group of given type.</p>
 <p>elems is the list with the element node numbers.
 The elements are added to the named element set. 
@@ -713,7 +760,7 @@ If eid is specified, it contains the element numbers increased with eofs.</p>
 
 <dl class="function">
 <dt id="fe_abq.writeSet">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeSet</tt><big>(</big><em>fil</em>, <em>type</em>, <em>name</em>, <em>set</em>, <em>ofs=1</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeSet" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeSet</tt><big>(</big><em>fil</em>, <em>type</em>, <em>name</em>, <em>set</em>, <em>ofs=1</em><big>)</big><a class="headerlink" href="#fe_abq.writeSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a named set of nodes or elements (type=NSET|ELSET)</p>
 <p><cite>set</cite> : an ndarray. <cite>set</cite> can be a list of node/element numbers,
 in which case the <cite>ofs</cite> value will be added to them,
@@ -722,14 +769,14 @@ or a list of names the name of another already defined set.</p>
 
 <dl class="function">
 <dt id="fe_abq.writeSection">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeSection</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeSection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeSection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeSection</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an element section.</p>
 <p>prop is a an element property record with a section and eltype attribute</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.writeDisplacements">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDisplacements</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>dtype='DISPLACEMENT'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeDisplacements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeDisplacements" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDisplacements</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>dtype='DISPLACEMENT'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDisplacements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write boundary conditions of type BOUNDARY, TYPE=DISPLACEMENT</p>
 <p>prop is a list of node property records that should be scanned for
 displ attributes to write.</p>
@@ -742,7 +789,7 @@ This will also remove initial conditions!</p>
 
 <dl class="function">
 <dt id="fe_abq.writeCloads">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeCloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeCloads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeCloads" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeCloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="headerlink" href="#fe_abq.writeCloads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write cloads.</p>
 <p>prop is a list of node property records that should be scanned for
 displ attributes to write.</p>
@@ -752,7 +799,7 @@ The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.
 
 <dl class="function">
 <dt id="fe_abq.writeDloads">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeDloads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeDloads" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDloads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write Dloads.</p>
 <p>prop is a list property records having an attribute dload</p>
 <p>By default, the loads are applied as new values in the current step.
@@ -761,7 +808,7 @@ The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.
 
 <dl class="function">
 <dt id="fe_abq.writeDsloads">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDsloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeDsloads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeDsloads" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDsloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDsloads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write Dsloads.</p>
 <p>prop is a list property records having an attribute dsload</p>
 <p>By default, the loads are applied as new values in the current step.
@@ -770,7 +817,7 @@ The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.
 
 <dl class="function">
 <dt id="fe_abq.writeNodeOutput">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeNodeOutput</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Nall'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeNodeOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeNodeOutput" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeNodeOutput</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Nall'</em><big>)</big><a class="headerlink" href="#fe_abq.writeNodeOutput" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a request for nodal result output to the .odb file.</p>
 <ul class="simple">
 <li><cite>keys</cite>: a list of NODE output identifiers</li>
@@ -782,7 +829,7 @@ be written</li>
 
 <dl class="function">
 <dt id="fe_abq.writeNodeResult">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeNodeResult</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Nall'</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>globalaxes=False</em>, <em>lastmode=None</em>, <em>summary=False</em>, <em>total=False</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeNodeResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeNodeResult" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeNodeResult</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Nall'</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>globalaxes=False</em>, <em>lastmode=None</em>, <em>summary=False</em>, <em>total=False</em><big>)</big><a class="headerlink" href="#fe_abq.writeNodeResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a request for nodal result output to the .fil or .dat file.</p>
 <ul class="simple">
 <li><cite>keys</cite>: a list of NODE output identifiers</li>
@@ -809,7 +856,7 @@ easily call it with a <cite>Results</cite> dict as arguments</p>
 
 <dl class="function">
 <dt id="fe_abq.writeElemOutput">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeElemOutput</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Eall'</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeElemOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeElemOutput" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeElemOutput</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Eall'</em><big>)</big><a class="headerlink" href="#fe_abq.writeElemOutput" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a request for element output to the .odb file.</p>
 <ul class="simple">
 <li><cite>keys</cite>: a list of ELEMENT output identifiers</li>
@@ -821,7 +868,7 @@ be written</li>
 
 <dl class="function">
 <dt id="fe_abq.writeElemResult">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeElemResult</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Eall'</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>pos=None</em>, <em>summary=False</em>, <em>total=False</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeElemResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeElemResult" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeElemResult</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>keys</em>, <em>set='Eall'</em>, <em>output='FILE'</em>, <em>freq=1</em>, <em>pos=None</em>, <em>summary=False</em>, <em>total=False</em><big>)</big><a class="headerlink" href="#fe_abq.writeElemResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a request for element result output to the .fil or .dat file.</p>
 <ul class="simple">
 <li><cite>keys</cite>: a list of ELEMENT output identifiers</li>
@@ -856,13 +903,13 @@ easily call it with a Results dict as arguments</p>
 
 <dl class="function">
 <dt id="fe_abq.writeFileOutput">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeFileOutput</tt><big>(</big><em>fil</em>, <em>resfreq=1</em>, <em>timemarks=False</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#writeFileOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.writeFileOutput" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeFileOutput</tt><big>(</big><em>fil</em>, <em>resfreq=1</em>, <em>timemarks=False</em><big>)</big><a class="headerlink" href="#fe_abq.writeFileOutput" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the FILE OUTPUT command for Abaqus/Explicit</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.exportMesh">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">exportMesh</tt><big>(</big><em>filename</em>, <em>mesh</em>, <em>eltype=None</em>, <em>header=''</em><big>)</big><a class="reference internal" href="../_modules/fe_abq.html#exportMesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fe_abq.exportMesh" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">fe_abq.</tt><tt class="descname">exportMesh</tt><big>(</big><em>filename</em>, <em>mesh</em>, <em>eltype=None</em>, <em>header=''</em><big>)</big><a class="headerlink" href="#fe_abq.exportMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export a finite element mesh in Abaqus .inp format.</p>
 <p>This is a convenience function to quickly export a mesh to Abaqus
 without having to go through the whole setup of a complete
@@ -878,33 +925,6 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="fe.html"
-                        title="previous chapter">41. <tt class="docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="fe_post.html"
-                        title="next chapter">43. <tt class="docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -924,15 +944,13 @@ This should be used to set a correct Abaqus element type matchin the mesh.</p>
         <li class="right" >
           <a href="fe.html" title="41. fe — Finite Element Models in pyFormex."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

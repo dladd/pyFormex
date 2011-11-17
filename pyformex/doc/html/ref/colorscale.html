@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>16. colorscale — Color mapping of a range of values. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="17. actors — OpenGL actors for populating the 3D scene." href="actors.html" />
-    <link rel="prev" title="15. menu — Menus for the pyFormex GUI." href="menu.html" /> 
+    <link rel="prev" title="15. menu — Menus for the pyFormex GUI." href="menu.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="menu.html" title="15. menu — Menus for the pyFormex GUI."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="menu.html"
+                        title="previous chapter">15. <tt class="docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="actors.html"
+                        title="next chapter">17. <tt class="docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -86,7 +133,7 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">colorscale</span></tt></p>
 <dl class="class">
 <dt id="colorscale.ColorScale">
-<em class="property">class </em><tt class="descclassname">colorscale.</tt><tt class="descname">ColorScale</tt><big>(</big><em>palet='RAINBOW'</em>, <em>minval=0.0</em>, <em>maxval=1.0</em>, <em>midval=None</em>, <em>exp=1.0</em>, <em>exp2=None</em><big>)</big><a class="reference internal" href="../_modules/colorscale.html#ColorScale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colorscale.ColorScale" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">colorscale.</tt><tt class="descname">ColorScale</tt><big>(</big><em>palet='RAINBOW'</em>, <em>minval=0.0</em>, <em>maxval=1.0</em>, <em>midval=None</em>, <em>exp=1.0</em>, <em>exp2=None</em><big>)</big><a class="headerlink" href="#colorscale.ColorScale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mapping floating point values into colors.</p>
 <p>A colorscale maps floating point values within a certain range
 into colors and can be used to provide visual representation
@@ -97,7 +144,7 @@ postproc plugin).</p>
 on the canvas.</p>
 <dl class="method">
 <dt id="colorscale.ColorScale.scale">
-<tt class="descname">scale</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/colorscale.html#ColorScale.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colorscale.ColorScale.scale" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">scale</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#colorscale.ColorScale.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scale a value to the range -1...1.</p>
 <p>If the ColorScale has only one exponent, values in the range
 mival..maxval are scaled to the range -1..+1.</p>
@@ -108,7 +155,7 @@ exp2 and exp onto the intevals -1..0 and 0..1.</p>
 
 <dl class="method">
 <dt id="colorscale.ColorScale.color">
-<tt class="descname">color</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/colorscale.html#ColorScale.color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colorscale.ColorScale.color" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">color</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#colorscale.ColorScale.color" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the color representing a value val.</p>
 <p>The returned color is a tuple of three RGB values in the range 0-1.
 The color is obtained by first scaling the value to the -1..1 range
@@ -121,7 +168,7 @@ to the -1, 0 and 1 values.</p>
 
 <dl class="class">
 <dt id="colorscale.ColorLegend">
-<em class="property">class </em><tt class="descclassname">colorscale.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorscale</em>, <em>n</em><big>)</big><a class="reference internal" href="../_modules/colorscale.html#ColorLegend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colorscale.ColorLegend" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">colorscale.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorscale</em>, <em>n</em><big>)</big><a class="headerlink" href="#colorscale.ColorLegend" title="Permalink to this definition">¶</a></dt>
 <dd><p>A colorlegend divides a in a number of subranges.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -135,13 +182,13 @@ subranges limited by <tt class="docutils literal"><span class="pre">n+1</span></
 correspond to the middle value of each subrange.</p>
 <dl class="method">
 <dt id="colorscale.ColorLegend.overflow">
-<tt class="descname">overflow</tt><big>(</big><em>oflow=None</em><big>)</big><a class="reference internal" href="../_modules/colorscale.html#ColorLegend.overflow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colorscale.ColorLegend.overflow" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">overflow</tt><big>(</big><em>oflow=None</em><big>)</big><a class="headerlink" href="#colorscale.ColorLegend.overflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raise a runtime error if oflow == None, else return oflow.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="colorscale.ColorLegend.color">
-<tt class="descname">color</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/colorscale.html#ColorLegend.color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colorscale.ColorLegend.color" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">color</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#colorscale.ColorLegend.color" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the color representing a value val.</p>
 <p>The color is that of the subrange holding the value. If the value
 matches a subrange limit, the lower range color is returned.
@@ -163,33 +210,6 @@ The returned color is a tuple of three RGB values in the range 0-1.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="menu.html"
-                        title="previous chapter">15. <tt class="docutils literal"><span class="pre">menu</span></tt> &#8212; Menus for the pyFormex GUI.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="actors.html"
-                        title="next chapter">17. <tt class="docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -207,15 +227,13 @@ The returned color is a tuple of three RGB values in the range 0-1.</p>
         <li class="right" >
           <a href="menu.html" title="15. menu — Menus for the pyFormex GUI."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

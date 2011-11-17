@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
-    <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" /> 
+    <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="coords.html"
+                        title="previous chapter">1. <tt class="docutils literal docutils literal"><span class="pre">coords</span></tt> &#8212; A structured collection of 3D coordinates.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="arraytools.html"
+                        title="next chapter">3. <tt class="docutils literal docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -90,7 +137,7 @@ syntax.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">formex</span></tt></p>
 <dl class="class">
 <dt id="formex.Formex">
-<em class="property">class </em><tt class="descclassname">formex.</tt><tt class="descname">Formex</tt><big>(</big><em>data=</em><span class="optional">[</span><span class="optional">]</span>, <em>prop=None</em>, <em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">formex.</tt><tt class="descname">Formex</tt><big>(</big><em>data=</em><span class="optional">[</span><span class="optional">]</span>, <em>prop=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#formex.Formex" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Formex is a numpy array of order 3 (axes 0,1,2) and type Float.
 A scalar element represents a coordinate (F:uniple).</p>
 <p>A row along the axis 2 is a set of coordinates and represents a point
@@ -175,31 +222,31 @@ methods:
 <cite>trl</cite>.</p>
 <dl class="method">
 <dt id="formex.Formex.element">
-<tt class="descname">element</tt><big>(</big><em>i</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.element" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">element</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#formex.Formex.element" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return element i of the Formex</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.point">
-<tt class="descname">point</tt><big>(</big><em>i</em>, <em>j</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.point"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.point" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">point</tt><big>(</big><em>i</em>, <em>j</em><big>)</big><a class="headerlink" href="#formex.Formex.point" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return point j of element i</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.coord">
-<tt class="descname">coord</tt><big>(</big><em>i</em>, <em>j</em>, <em>k</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.coord" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">coord</tt><big>(</big><em>i</em>, <em>j</em>, <em>k</em><big>)</big><a class="headerlink" href="#formex.Formex.coord" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return coord k of point j of element i</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.nelems">
-<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.nelems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.nelems" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.nelems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of elements in the formex.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.nplex">
-<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.nplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.nplex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.nplex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of points per element.</p>
 <p>Examples:</p>
 <p>1: unconnected points,
@@ -210,7 +257,7 @@ methods:
 
 <dl class="method">
 <dt id="formex.Formex.ndim">
-<tt class="descname">ndim</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.ndim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.ndim" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">ndim</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.ndim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of dimensions.</p>
 <p>This is the number of coordinates for each point. In the
 current implementation this is always 3, though you can
@@ -220,7 +267,7 @@ will automatically be set to zero.</p>
 
 <dl class="method">
 <dt id="formex.Formex.npoints">
-<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.npoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.npoints" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.npoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of points in the formex.</p>
 <p>This is the product of the number of elements in the formex
 with the number of nodes per element.</p>
@@ -228,7 +275,7 @@ with the number of nodes per element.</p>
 
 <dl class="method">
 <dt id="formex.Formex.shape">
-<tt class="descname">shape</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.shape" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">shape</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the shape of the Formex.</p>
 <p>The shape of a Formex is the shape of its data array,
 i.e. a tuple (nelems, nplex, ndim).</p>
@@ -236,7 +283,7 @@ i.e. a tuple (nelems, nplex, ndim).</p>
 
 <dl class="method">
 <dt id="formex.Formex.view">
-<tt class="descname">view</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.view" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">view</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the Formex coordinates as a numpy array (ndarray).</p>
 <p>Since the ndarray object has a method view() returning a view on
 the ndarray, this method allows writing code that works with both
@@ -245,25 +292,25 @@ Formex and ndarray instances. The results is always an ndarray.</p>
 
 <dl class="method">
 <dt id="formex.Formex.getProp">
-<tt class="descname">getProp</tt><big>(</big><em>index=None</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.getProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.getProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getProp</tt><big>(</big><em>index=None</em><big>)</big><a class="headerlink" href="#formex.Formex.getProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the property numbers of the element in index</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.maxProp">
-<tt class="descname">maxProp</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.maxProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.maxProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">maxProp</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.maxProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the highest property value used, or None</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.propSet">
-<tt class="descname">propSet</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.propSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.propSet" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">propSet</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.propSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with unique property values on this Formex.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.centroids">
-<tt class="descname">centroids</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.centroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.centroids" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">centroids</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.centroids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the centroids of all elements of the Formex.</p>
 <p>The centroid of an element is the point whose coordinates
 are the mean values of all points of the element.
@@ -272,7 +319,7 @@ The return value is a Coords object with nelems points.</p>
 
 <dl class="method">
 <dt id="formex.Formex.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>repeat=True</em>, <em>nodesperbox=1</em>, <em>rtol=1.0000000000000001e-05</em>, <em>atol=None</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.fuse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>repeat=True</em>, <em>nodesperbox=1</em>, <em>rtol=1.0000000000000001e-05</em>, <em>atol=None</em><big>)</big><a class="headerlink" href="#formex.Formex.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a tuple of nodal coordinates and element connectivity.</p>
 <p>A tuple of two arrays is returned. The first is float array with
 the coordinates of the unique nodes of the Formex. The second is
@@ -291,7 +338,7 @@ The default settting for atol is rtol * self.dsize()</p>
 
 <dl class="method">
 <dt id="formex.Formex.toMesh">
-<tt class="descname">toMesh</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.toMesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.toMesh" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toMesh</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.toMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a Formex to a Mesh.</p>
 <p>Converts a geometry in Formex model to the equivalent Mesh model.
 In the Mesh model, all points with nearly identical coordinates
@@ -301,25 +348,25 @@ connectivity table with integers pointing to the corresponding vertex.</p>
 
 <dl class="method">
 <dt id="formex.Formex.info">
-<tt class="descname">info</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.info" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">info</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return formatted information about a Formex.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="formex.Formex.point2str">
-<em class="property">classmethod </em><tt class="descname">point2str</tt><big>(</big><em>clas</em>, <em>point</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.point2str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.point2str" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">point2str</tt><big>(</big><em>clas</em>, <em>point</em><big>)</big><a class="headerlink" href="#formex.Formex.point2str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a string representation of a point</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="formex.Formex.element2str">
-<em class="property">classmethod </em><tt class="descname">element2str</tt><big>(</big><em>clas</em>, <em>elem</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.element2str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.element2str" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">element2str</tt><big>(</big><em>clas</em>, <em>elem</em><big>)</big><a class="headerlink" href="#formex.Formex.element2str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a string representation of an element</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.asFormex">
-<tt class="descname">asFormex</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.asFormex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.asFormex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">asFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.asFormex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return string representation of a Formex as in Formian.</p>
 <p>Coordinates are separated by commas, points are separated
 by semicolons and grouped between brackets, elements are
@@ -333,7 +380,7 @@ separated by commas and grouped between braces:</p>
 
 <dl class="method">
 <dt id="formex.Formex.asFormexWithProp">
-<tt class="descname">asFormexWithProp</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.asFormexWithProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.asFormexWithProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">asFormexWithProp</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.asFormexWithProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return string representation as Formex with properties.</p>
 <p>The string representation as done by asFormex() is followed by
 the words &#8220;with prop&#8221; and a list of the properties.</p>
@@ -341,13 +388,13 @@ the words &#8220;with prop&#8221; and a list of the properties.</p>
 
 <dl class="method">
 <dt id="formex.Formex.asArray">
-<tt class="descname">asArray</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.asArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.asArray" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">asArray</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.asArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return string representation as a numpy array.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="formex.Formex.setPrintFunction">
-<em class="property">classmethod </em><tt class="descname">setPrintFunction</tt><big>(</big><em>clas</em>, <em>func</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.setPrintFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.setPrintFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">setPrintFunction</tt><big>(</big><em>clas</em>, <em>func</em><big>)</big><a class="headerlink" href="#formex.Formex.setPrintFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Choose the default formatting for printing formices.</p>
 <p>This sets how formices will be formatted by a print statement.
 Currently there are two available functions: asFormex, asArray.
@@ -358,7 +405,7 @@ Formex.setPrintFunction(Formex.asArray).</p>
 
 <dl class="method">
 <dt id="formex.Formex.setProp">
-<tt class="descname">setProp</tt><big>(</big><em>p=None</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.setProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.setProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setProp</tt><big>(</big><em>p=None</em><big>)</big><a class="headerlink" href="#formex.Formex.setProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create or destroy the property array for the Formex.</p>
 <p>A property array is a rank-1 integer array with dimension equal
 to the number of elements in the Formex (first dimension of data).
@@ -370,7 +417,7 @@ they wil be repeated. If you give more, they will be ignored.</p>
 
 <dl class="method">
 <dt id="formex.Formex.append">
-<tt class="descname">append</tt><big>(</big><em>F</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.append" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">append</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#formex.Formex.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append the members of Formex F to this one.</p>
 <p>This function changes the original one! Use __add__ if you want to
 get a copy with the sum. 
@@ -382,7 +429,7 @@ get a copy with the sum.
 
 <dl class="classmethod">
 <dt id="formex.Formex.concatenate">
-<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>Flist</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.concatenate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.concatenate" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>Flist</em><big>)</big><a class="headerlink" href="#formex.Formex.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate all formices in Flist.</p>
 <p>This is a class method, not an instance method!
 &gt;&gt;&gt; F = Formex([[[1,2,3]]],1)
@@ -398,7 +445,7 @@ would interfere with NumPy&#8217;s own concatenate function.</p>
 
 <dl class="method">
 <dt id="formex.Formex.select">
-<tt class="descname">select</tt><big>(</big><em>idx</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.select" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">select</tt><big>(</big><em>idx</em><big>)</big><a class="headerlink" href="#formex.Formex.select" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex which holds only element with numbers in ids.</p>
 <p>idx can be a single element number or a list of numbers or
 any other index mechanism accepted by numpy&#8217;s ndarray</p>
@@ -406,7 +453,7 @@ any other index mechanism accepted by numpy&#8217;s ndarray</p>
 
 <dl class="method">
 <dt id="formex.Formex.cselect">
-<tt class="descname">cselect</tt><big>(</big><em>idx</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.cselect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.cselect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cselect</tt><big>(</big><em>idx</em><big>)</big><a class="headerlink" href="#formex.Formex.cselect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex without the elements with numbers in ids.</p>
 <p>idx can be a single element number or a list of numbers or
 any other index mechanism accepted by numpy&#8217;s ndarray</p>
@@ -415,7 +462,7 @@ any other index mechanism accepted by numpy&#8217;s ndarray</p>
 
 <dl class="method">
 <dt id="formex.Formex.selectNodes">
-<tt class="descname">selectNodes</tt><big>(</big><em>idx</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.selectNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.selectNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">selectNodes</tt><big>(</big><em>idx</em><big>)</big><a class="headerlink" href="#formex.Formex.selectNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex which holds only some nodes of the parent.</p>
 <p>idx is a list of node numbers to select.
 Thus, if F is a plex 3 Formex representing triangles, the sides of
@@ -426,7 +473,7 @@ The returned Formex inherits the property of its parent.</p>
 
 <dl class="method">
 <dt id="formex.Formex.points">
-<tt class="descname">points</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.points" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">points</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex containing only the points.</p>
 <p>This is obviously a Formex with plexitude 1. It holds the same data
 as the original Formex, but in another shape: the number of points
@@ -439,7 +486,7 @@ any sense.</p>
 
 <dl class="method">
 <dt id="formex.Formex.vertices">
-<tt class="descname">vertices</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.vertices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.vertices" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">vertices</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.vertices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the points of a Formex as a 2dim Coords object.</p>
 <p>The return value holds the same coordinate data as the input Formex,
 but in another shape: (npoints,3).</p>
@@ -448,7 +495,7 @@ but in another shape: (npoints,3).</p>
 
 <dl class="method">
 <dt id="formex.Formex.remove">
-<tt class="descname">remove</tt><big>(</big><em>F</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.remove" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">remove</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#formex.Formex.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex where the elements in F have been removed.</p>
 <p>This is also the subtraction of the current Formex with F.
 Elements are only removed if they have the same nodes in the same
@@ -458,7 +505,7 @@ avoid it where possible.</p>
 
 <dl class="method">
 <dt id="formex.Formex.whereProp">
-<tt class="descname">whereProp</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.whereProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.whereProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">whereProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#formex.Formex.whereProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the numbers of the elements with property val.</p>
 <p>val is either a single integer, or a list/array of integers.
 The return value is an array holding all the numbers of all the
@@ -468,7 +515,7 @@ elements that have the property val, resp. one of the values in val.</p>
 
 <dl class="method">
 <dt id="formex.Formex.withProp">
-<tt class="descname">withProp</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.withProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.withProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">withProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#formex.Formex.withProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex which holds only the elements with property val.</p>
 <p>val is either a single integer, or a list/array of integers.
 The return value is a Formex holding all the elements that
@@ -479,7 +526,7 @@ The returned Formex inherits the matching properties.</p>
 
 <dl class="method">
 <dt id="formex.Formex.splitProp">
-<tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.splitProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.splitProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.splitProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition a Formex according to its prop values.</p>
 <p>Returns a dict with the prop values as keys and the corresponding
 partitions as values. Each value is a Formex instance.
@@ -488,7 +535,7 @@ It the Formex has no props, an empty dict is returned.</p>
 
 <dl class="method">
 <dt id="formex.Formex.elbbox">
-<tt class="descname">elbbox</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.elbbox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.elbbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">elbbox</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.elbbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex where each element is replaced by its bbox.</p>
 <p>The returned Formex has two points for each element: two corners
 of the bbox.</p>
@@ -496,7 +543,7 @@ of the bbox.</p>
 
 <dl class="method">
 <dt id="formex.Formex.removeDuplicate">
-<tt class="descname">removeDuplicate</tt><big>(</big><em>permutations=True</em>, <em>rtol=0.0001</em>, <em>atol=9.9999999999999995e-07</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.removeDuplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.removeDuplicate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeDuplicate</tt><big>(</big><em>permutations=True</em>, <em>rtol=0.0001</em>, <em>atol=9.9999999999999995e-07</em><big>)</big><a class="headerlink" href="#formex.Formex.removeDuplicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex which holds only the unique elements.</p>
 <p>Two elements are considered equal when all its points are (nearly)
 coincident. By default any permutation of point order is also allowed.</p>
@@ -509,7 +556,7 @@ if one&#8217;s points are a permutation of the other&#8217;s.</p>
 
 <dl class="method">
 <dt id="formex.Formex.test">
-<tt class="descname">test</tt><big>(</big><em>nodes='all'</em>, <em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.test" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">test</tt><big>(</big><em>nodes='all'</em>, <em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#formex.Formex.test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag elements having nodal coordinates between min and max.</p>
 <p>This function is very convenient in clipping a Formex in a specified
 direction. It returns a 1D integer array flagging (with a value 1 or
@@ -536,7 +583,7 @@ may be left unspecified.</p>
 
 <dl class="method">
 <dt id="formex.Formex.clip">
-<tt class="descname">clip</tt><big>(</big><em>t</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.clip" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">clip</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#formex.Formex.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex with all the elements where t&gt;0.</p>
 <p>t should be a 1-D integer array with length equal to the number
 of elements of the formex.
@@ -547,13 +594,13 @@ F.select(t&gt;0).</p>
 
 <dl class="method">
 <dt id="formex.Formex.cclip">
-<tt class="descname">cclip</tt><big>(</big><em>t</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.cclip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.cclip" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cclip</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#formex.Formex.cclip" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the complement of clip, returning a Formex where t&lt;=0.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.circulize">
-<tt class="descname">circulize</tt><big>(</big><em>angle</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.circulize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.circulize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">circulize</tt><big>(</big><em>angle</em><big>)</big><a class="headerlink" href="#formex.Formex.circulize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a linear sector into a circular one.</p>
 <p>A sector of the (0,1) plane with given angle, starting from the 0 axis,
 is transformed as follows: points on the sector borders remain in
@@ -565,7 +612,7 @@ angle. See Diamatic example.</p>
 
 <dl class="method">
 <dt id="formex.Formex.circulize1">
-<tt class="descname">circulize1</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.circulize1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.circulize1" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">circulize1</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.circulize1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transforms the first octant of the 0-1 plane into 1/6 of a circle.</p>
 <p>Points on the 0-axis keep their position. Lines parallel to the 1-axis
 are transformed into circular arcs. The bisector of the first quadrant
@@ -576,7 +623,7 @@ all bars have nearly same length. See the Diamatic example.</p>
 
 <dl class="method">
 <dt id="formex.Formex.shrink">
-<tt class="descname">shrink</tt><big>(</big><em>factor</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.shrink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.shrink" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">shrink</tt><big>(</big><em>factor</em><big>)</big><a class="headerlink" href="#formex.Formex.shrink" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shrinks each element with respect to its own center.</p>
 <p>Each element is scaled with the given factor in a local coordinate
 system with origin at the element center. The element center is the
@@ -588,7 +635,7 @@ wireframe draw mode to show all elements disconnected. A factor above
 
 <dl class="method">
 <dt id="formex.Formex.reverse">
-<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.reverse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.reverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex where all elements have been reversed.</p>
 <p>Reversing an element means reversing the order of its points.
 This is equivalent to:</p>
@@ -599,7 +646,7 @@ This is equivalent to:</p>
 
 <dl class="method">
 <dt id="formex.Formex.mirror">
-<tt class="descname">mirror</tt><big>(</big><em>dir=2</em>, <em>pos=0</em>, <em>keep_orig=True</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.mirror"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.mirror" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mirror</tt><big>(</big><em>dir=2</em>, <em>pos=0</em>, <em>keep_orig=True</em><big>)</big><a class="headerlink" href="#formex.Formex.mirror" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reflect a Formex in one of the coordinate directions</p>
 <p>This method behaves like reflect(), but adds the reflected
 part to the original. Setting keep_orig=False makes it behave just
@@ -608,7 +655,7 @@ like reflect().</p>
 
 <dl class="method">
 <dt id="formex.Formex.replicate">
-<tt class="descname">replicate</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=1.0</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.replicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.replicate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">replicate</tt><big>(</big><em>n</em>, <em>dir=0</em>, <em>step=1.0</em><big>)</big><a class="headerlink" href="#formex.Formex.replicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replicate a Formex n times with fixed step in any direction.</p>
 <p>Returns a Formex which is the concatenation of n copies, where each
 copy is equal to the previous one translated over <cite>(dir,step)</cite>, where
@@ -618,14 +665,14 @@ method. The first of the copies is equal to the original.</p>
 
 <dl class="method">
 <dt id="formex.Formex.replic">
-<tt class="descname">replic</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.replic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.replic" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">replic</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em><big>)</big><a class="headerlink" href="#formex.Formex.replic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex with n replications in direction dir with step.</p>
 <p>The original Formex is the first of the n replicas.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.replic2">
-<tt class="descname">replic2</tt><big>(</big><em>n1</em>, <em>n2</em>, <em>t1=1.0</em>, <em>t2=1.0</em>, <em>d1=0</em>, <em>d2=1</em>, <em>bias=0</em>, <em>taper=0</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.replic2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.replic2" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">replic2</tt><big>(</big><em>n1</em>, <em>n2</em>, <em>t1=1.0</em>, <em>t2=1.0</em>, <em>d1=0</em>, <em>d2=1</em>, <em>bias=0</em>, <em>taper=0</em><big>)</big><a class="headerlink" href="#formex.Formex.replic2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replicate in two directions.</p>
 <p>n1,n2 number of replications with steps t1,t2 in directions d1,d2
 bias, taper : extra step and extra number of generations in direction
@@ -634,7 +681,7 @@ d1 for each generation in direction d2</p>
 
 <dl class="method">
 <dt id="formex.Formex.rosette">
-<tt class="descname">rosette</tt><big>(</big><em>n, angle, axis=2, point=[0.0, 0.0, 0.0]</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.rosette"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.rosette" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rosette</tt><big>(</big><em>n, angle, axis=2, point=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#formex.Formex.rosette" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex with n rotational replications with angular
 step angle around an axis parallel with one of the coordinate axes
 going through the given point. axis is the number of the axis (0,1,2).
@@ -644,7 +691,7 @@ The original Formex is the first of the n replicas.</p>
 
 <dl class="method">
 <dt id="formex.Formex.translatem">
-<tt class="descname">translatem</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.translatem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.translatem" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">translatem</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.translatem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiple subsequent translations in axis directions.</p>
 <p>The argument list is a sequence of tuples (axis, step). 
 Thus translatem((0,x),(2,z),(1,y)) is equivalent to
@@ -654,7 +701,7 @@ to translate in calculated directions.</p>
 
 <dl class="method">
 <dt id="formex.Formex.extrude">
-<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.extrude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.extrude" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em><big>)</big><a class="headerlink" href="#formex.Formex.extrude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extrude a Formex in one of the axis directions.</p>
 <p>Returns a Formex with doubled plexitude.</p>
 <p>First the original Formex is translated over n steps of length step in
@@ -667,7 +714,7 @@ line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
 
 <dl class="method">
 <dt id="formex.Formex.divide">
-<tt class="descname">divide</tt><big>(</big><em>div</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.divide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.divide" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">divide</tt><big>(</big><em>div</em><big>)</big><a class="headerlink" href="#formex.Formex.divide" title="Permalink to this definition">¶</a></dt>
 <dd><p>Divide a plex-2 Formex at the values in div.</p>
 <p>Replaces each member of the Formex by a sequence of members obtained
 by dividing the Formex at the relative values specified in div.
@@ -679,7 +726,7 @@ number of divisions for the interval [0..1].</p>
 
 <dl class="method">
 <dt id="formex.Formex.intersectionWithPlane">
-<tt class="descname">intersectionWithPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.intersectionWithPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.intersectionWithPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">intersectionWithPlane</tt><big>(</big><em>p</em>, <em>n</em><big>)</big><a class="headerlink" href="#formex.Formex.intersectionWithPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection of a Formex with the plane (p,n).</p>
 <p>Currently this only works for plex-2 and plex-3 Formices.</p>
 <p>The intersection of the Formex with a plane specified by a point p
@@ -934,7 +981,7 @@ Formex will be of plexitude 1 (points). For a plex-3 Formex
 
 <dl class="method">
 <dt id="formex.Formex.cutWithPlane">
-<tt class="descname">cutWithPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.cutWithPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.cutWithPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cutWithPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="headerlink" href="#formex.Formex.cutWithPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cut a Formex with the plane(s) (p,n).</p>
 <p>..warning :: This method currently only works for plexitude 2 or 3!</p>
 <ul class="simple">
@@ -959,7 +1006,7 @@ actual implementation of this method.</p>
 
 <dl class="method">
 <dt id="formex.Formex.split">
-<tt class="descname">split</tt><big>(</big><em>n=1</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.split"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.split" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">split</tt><big>(</big><em>n=1</em><big>)</big><a class="headerlink" href="#formex.Formex.split" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a Formex in subFormices containing n elements.</p>
 <p>The number of elements in the Formex should be a multiple of n. 
 Returns a list of Formices each comprising n elements.</p>
@@ -967,7 +1014,7 @@ Returns a list of Formices each comprising n elements.</p>
 
 <dl class="method">
 <dt id="formex.Formex.write">
-<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.write" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#formex.Formex.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a Formex to file.</p>
 <p>If fil is a string, a file with that name is opened. Else fil should
 be an open file.
@@ -978,7 +1025,7 @@ If fil is a string, the file is closed prior to returning.</p>
 
 <dl class="classmethod">
 <dt id="formex.Formex.read">
-<em class="property">classmethod </em><tt class="descname">read</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.read" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">read</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#formex.Formex.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a Formex from file.</p>
 <p>fil is a filename or a file object.
 If the file is in a valid Formex file format, the Formex is read and
@@ -988,7 +1035,7 @@ Valid Formex file formats are described in the manual.</p>
 
 <dl class="classmethod">
 <dt id="formex.Formex.fromstring">
-<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.fromstring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.fromstring" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="headerlink" href="#formex.Formex.fromstring" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a class="reference internal" href="#formex.Formex" title="formex.Formex"><tt class="xref py py-class docutils literal"><span class="pre">Formex</span></tt></a> from coodinates in a string.</p>
 <p>This uses the <tt class="xref py py-meth docutils literal"><span class="pre">Coords.fromstring()</span></tt> method to read coordinates
 from a string and restructures them into a Formex of the specified
@@ -1011,7 +1058,7 @@ does not contain the expected number of values.</dd>
 
 <dl class="classmethod">
 <dt id="formex.Formex.fromfile">
-<em class="property">classmethod </em><tt class="descname">fromfile</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em><big>)</big><a class="reference internal" href="../_modules/formex.html#Formex.fromfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.Formex.fromfile" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">fromfile</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em><big>)</big><a class="headerlink" href="#formex.Formex.fromfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the coordinates of a Formex from a file</p>
 </dd></dl>
 
@@ -1058,7 +1105,7 @@ if one&#8217;s points are a permutation of the other&#8217;s.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">formex</span></tt></p>
 <dl class="function">
 <dt id="formex.lpattern">
-<tt class="descclassname">formex.</tt><tt class="descname">lpattern</tt><big>(</big><em>s</em>, <em>connect=True</em><big>)</big><a class="reference internal" href="../_modules/formex.html#lpattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.lpattern" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">lpattern</tt><big>(</big><em>s</em>, <em>connect=True</em><big>)</big><a class="headerlink" href="#formex.lpattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a line segment pattern created from a string.</p>
 <p>This function creates a list of line segments where all points lie on
 a regular grid with unit step.
@@ -1093,7 +1140,7 @@ The effect of any other character is undefined.</p>
 
 <dl class="function">
 <dt id="formex.pointsAt">
-<tt class="descclassname">formex.</tt><tt class="descname">pointsAt</tt><big>(</big><em>F</em>, <em>t</em><big>)</big><a class="reference internal" href="../_modules/formex.html#pointsAt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.pointsAt" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">pointsAt</tt><big>(</big><em>F</em>, <em>t</em><big>)</big><a class="headerlink" href="#formex.pointsAt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the points of a plex-2 Formex at times t.</p>
 <p>F is a plex 2 Formex and t is an array with F.nelems() float values which
 are interpreted as local parameters along the edges of the Formex, such
@@ -1103,7 +1150,7 @@ The return value is a <a class="reference internal" href="coords.html#coords.Coo
 
 <dl class="function">
 <dt id="formex.intersectionLinesWithPlane">
-<tt class="descclassname">formex.</tt><tt class="descname">intersectionLinesWithPlane</tt><big>(</big><em>F</em>, <em>p</em>, <em>n</em>, <em>atol=0.0001</em><big>)</big><a class="reference internal" href="../_modules/formex.html#intersectionLinesWithPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.intersectionLinesWithPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">intersectionLinesWithPlane</tt><big>(</big><em>F</em>, <em>p</em>, <em>n</em>, <em>atol=0.0001</em><big>)</big><a class="headerlink" href="#formex.intersectionLinesWithPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the intersection lines of a plex-3 Formex with plane (p,n).</p>
 <p>F is a Formex of plexitude 3.
 p is a point specified by 3 coordinates.
@@ -1113,7 +1160,7 @@ atol is a tolerance factor defining whether an edge is intersected by the plane.
 
 <dl class="function">
 <dt id="formex.cut2AtPlane">
-<tt class="descclassname">formex.</tt><tt class="descname">cut2AtPlane</tt><big>(</big><em>F</em>, <em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="reference internal" href="../_modules/formex.html#cut2AtPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.cut2AtPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">cut2AtPlane</tt><big>(</big><em>F</em>, <em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="headerlink" href="#formex.cut2AtPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all elements of the Formex cut at plane.</p>
 <p>F is a Formex of plexitude 2.
 p is a point specified by 3 coordinates.
@@ -1137,7 +1184,7 @@ these points.</p>
 
 <dl class="function">
 <dt id="formex.cut3AtPlane">
-<tt class="descclassname">formex.</tt><tt class="descname">cut3AtPlane</tt><big>(</big><em>F</em>, <em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="reference internal" href="../_modules/formex.html#cut3AtPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.cut3AtPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">cut3AtPlane</tt><big>(</big><em>F</em>, <em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="headerlink" href="#formex.cut3AtPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all elements of the Formex cut at plane(s).</p>
 <p>F is a Formex of plexitude 3.
 p is a point or a list of points.
@@ -1176,7 +1223,7 @@ elements with following properties:</p>
 
 <dl class="function">
 <dt id="formex.cutElements3AtPlane">
-<tt class="descclassname">formex.</tt><tt class="descname">cutElements3AtPlane</tt><big>(</big><em>F</em>, <em>p</em>, <em>n</em>, <em>newprops=None</em>, <em>side=''</em>, <em>atol=0.0</em><big>)</big><a class="reference internal" href="../_modules/formex.html#cutElements3AtPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.cutElements3AtPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">cutElements3AtPlane</tt><big>(</big><em>F</em>, <em>p</em>, <em>n</em>, <em>newprops=None</em>, <em>side=''</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#formex.cutElements3AtPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function needs documentation.</p>
 <p>Should it be called by the user? or only via cut3AtPlane?
 For now, lets suppose the last, so no need to check arguments here.</p>
@@ -1186,7 +1233,7 @@ side is either &#8216;+&#8217;, &#8216;-&#8216; or &#8216;&#8217;</p>
 
 <dl class="function">
 <dt id="formex.connect">
-<tt class="descclassname">formex.</tt><tt class="descname">connect</tt><big>(</big><em>Flist</em>, <em>nodid=None</em>, <em>bias=None</em>, <em>loop=False</em><big>)</big><a class="reference internal" href="../_modules/formex.html#connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.connect" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">connect</tt><big>(</big><em>Flist</em>, <em>nodid=None</em>, <em>bias=None</em>, <em>loop=False</em><big>)</big><a class="headerlink" href="#formex.connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Formex which connects the formices in list.</p>
 <p>Flist is a list of formices, nodid is an optional list of nod ids and
 bias is an optional list of element bias values. All lists should have
@@ -1206,7 +1253,7 @@ encountered, and the order of the result is the maximum order in Flist.</p>
 
 <dl class="function">
 <dt id="formex.interpolate">
-<tt class="descclassname">formex.</tt><tt class="descname">interpolate</tt><big>(</big><em>F</em>, <em>G</em>, <em>div</em>, <em>swap=False</em><big>)</big><a class="reference internal" href="../_modules/formex.html#interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#formex.interpolate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">formex.</tt><tt class="descname">interpolate</tt><big>(</big><em>F</em>, <em>G</em>, <em>div</em>, <em>swap=False</em><big>)</big><a class="headerlink" href="#formex.interpolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create interpolations between two formices.</p>
 <p>F and G are two Formices with the same shape.
 v is a list of floating point values.
@@ -1233,33 +1280,6 @@ interpolations.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="coords.html"
-                        title="previous chapter">1. <tt class="docutils literal docutils literal"><span class="pre">coords</span></tt> &#8212; A structured collection of 3D coordinates.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="arraytools.html"
-                        title="next chapter">3. <tt class="docutils literal docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -1277,15 +1297,13 @@ interpolations.</p>
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

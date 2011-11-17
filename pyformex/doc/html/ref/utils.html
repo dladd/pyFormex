@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>11. utils — A collection of miscellaneous utility functions. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="12. elements — Definition of elements." href="elements.html" />
-    <link rel="prev" title="10. project — project.py" href="project.html" /> 
+    <link rel="prev" title="10. project — project.py" href="project.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="project.html" title="10. project — project.py"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="project.html"
+                        title="previous chapter">10. <tt class="docutils literal docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="elements.html"
+                        title="next chapter">12. <tt class="docutils literal docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -86,7 +133,7 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">utils</span></tt></p>
 <dl class="class">
 <dt id="utils.NameSequence">
-<em class="property">class </em><tt class="descclassname">utils.</tt><tt class="descname">NameSequence</tt><big>(</big><em>name</em>, <em>ext=''</em><big>)</big><a class="reference internal" href="../_modules/utils.html#NameSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.NameSequence" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">utils.</tt><tt class="descname">NameSequence</tt><big>(</big><em>name</em>, <em>ext=''</em><big>)</big><a class="headerlink" href="#utils.NameSequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for autogenerating sequences of names.</p>
 <p>The name is a string including a numeric part, which is incremented
 at each call of the &#8216;next()&#8217; method.</p>
@@ -112,19 +159,19 @@ names.</p>
 </div>
 <dl class="method">
 <dt id="utils.NameSequence.next">
-<tt class="descname">next</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/utils.html#NameSequence.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.NameSequence.next" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">next</tt><big>(</big><big>)</big><a class="headerlink" href="#utils.NameSequence.next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the next name in the sequence</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="utils.NameSequence.peek">
-<tt class="descname">peek</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/utils.html#NameSequence.peek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.NameSequence.peek" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">peek</tt><big>(</big><big>)</big><a class="headerlink" href="#utils.NameSequence.peek" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the next name in the sequence without incrementing.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="utils.NameSequence.glob">
-<tt class="descname">glob</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/utils.html#NameSequence.glob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.NameSequence.glob" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">glob</tt><big>(</big><big>)</big><a class="headerlink" href="#utils.NameSequence.glob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a UNIX glob pattern for the generated names.</p>
 <p>A NameSequence is often used as a generator for file names.
 The glob() method returns a pattern that can be used in a
@@ -136,7 +183,7 @@ UNIX-like shell command to select all the generated file names.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">utils</span></tt></p>
 <dl class="function">
 <dt id="utils.checkVersion">
-<tt class="descclassname">utils.</tt><tt class="descname">checkVersion</tt><big>(</big><em>name</em>, <em>version</em>, <em>external=False</em><big>)</big><a class="reference internal" href="../_modules/utils.html#checkVersion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.checkVersion" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">checkVersion</tt><big>(</big><em>name</em>, <em>version</em>, <em>external=False</em><big>)</big><a class="headerlink" href="#utils.checkVersion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks a version of a program/module.</p>
 <p>name is either a module or an external program whose availability has
 been registered.
@@ -149,7 +196,7 @@ Returns -2 if no version found.</p>
 
 <dl class="function">
 <dt id="utils.hasModule">
-<tt class="descclassname">utils.</tt><tt class="descname">hasModule</tt><big>(</big><em>name</em>, <em>check=False</em><big>)</big><a class="reference internal" href="../_modules/utils.html#hasModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.hasModule" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">hasModule</tt><big>(</big><em>name</em>, <em>check=False</em><big>)</big><a class="headerlink" href="#utils.hasModule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test if we have the named module available.</p>
 <p>Returns a nonzero (version) string if the module is available,
 or an empty string if it is not.</p>
@@ -160,7 +207,7 @@ The optional argument check==True forces a new detection.</p>
 
 <dl class="function">
 <dt id="utils.hasExternal">
-<tt class="descclassname">utils.</tt><tt class="descname">hasExternal</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/utils.html#hasExternal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.hasExternal" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">hasExternal</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#utils.hasExternal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test if we have the external command &#8216;name&#8217; available.</p>
 <p>Returns a nonzero string if the command is available,
 or an empty string if it is not.</p>
@@ -170,7 +217,7 @@ The result is remembered in the the_external dict.</p>
 
 <dl class="function">
 <dt id="utils.checkModule">
-<tt class="descclassname">utils.</tt><tt class="descname">checkModule</tt><big>(</big><em>name=None</em><big>)</big><a class="reference internal" href="../_modules/utils.html#checkModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.checkModule" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">checkModule</tt><big>(</big><em>name=None</em><big>)</big><a class="headerlink" href="#utils.checkModule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the named Python module is available, and record its version.</p>
 <p>The version string is returned, empty if the module could not be loaded.
 The (name,version) pair is also inserted into the the_version dict.</p>
@@ -178,7 +225,7 @@ The (name,version) pair is also inserted into the the_version dict.</p>
 
 <dl class="function">
 <dt id="utils.checkExternal">
-<tt class="descclassname">utils.</tt><tt class="descname">checkExternal</tt><big>(</big><em>name=None</em>, <em>command=None</em>, <em>answer=None</em><big>)</big><a class="reference internal" href="../_modules/utils.html#checkExternal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.checkExternal" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">checkExternal</tt><big>(</big><em>name=None</em>, <em>command=None</em>, <em>answer=None</em><big>)</big><a class="headerlink" href="#utils.checkExternal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the named external command is available on the system.</p>
 <p>name is the generic command name,
 command is the command as it will be executed to check its operation,
@@ -198,50 +245,50 @@ value is returned.</p>
 
 <dl class="function">
 <dt id="utils.strNorm">
-<tt class="descclassname">utils.</tt><tt class="descname">strNorm</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/utils.html#strNorm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.strNorm" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">strNorm</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#utils.strNorm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize a string.</p>
 <p>Text normalization removes all &#8216;&amp;&#8217; characters and converts it to lower case.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.prefixFiles">
-<tt class="descclassname">utils.</tt><tt class="descname">prefixFiles</tt><big>(</big><em>prefix</em>, <em>files</em><big>)</big><a class="reference internal" href="../_modules/utils.html#prefixFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.prefixFiles" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">prefixFiles</tt><big>(</big><em>prefix</em>, <em>files</em><big>)</big><a class="headerlink" href="#utils.prefixFiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prepend a prefix to a list of filenames.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.matchMany">
-<tt class="descclassname">utils.</tt><tt class="descname">matchMany</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/utils.html#matchMany"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.matchMany" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">matchMany</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="headerlink" href="#utils.matchMany" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return multiple regular expression matches of the same target string.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.matchCount">
-<tt class="descclassname">utils.</tt><tt class="descname">matchCount</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/utils.html#matchCount"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.matchCount" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">matchCount</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="headerlink" href="#utils.matchCount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of matches of target to  regexps.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.matchAny">
-<tt class="descclassname">utils.</tt><tt class="descname">matchAny</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/utils.html#matchAny"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.matchAny" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">matchAny</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="headerlink" href="#utils.matchAny" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether target matches any of the regular expressions.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.matchNone">
-<tt class="descclassname">utils.</tt><tt class="descname">matchNone</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/utils.html#matchNone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.matchNone" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">matchNone</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="headerlink" href="#utils.matchNone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether targes matches none of the regular expressions.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.matchAll">
-<tt class="descclassname">utils.</tt><tt class="descname">matchAll</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/utils.html#matchAll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.matchAll" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">matchAll</tt><big>(</big><em>regexps</em>, <em>target</em><big>)</big><a class="headerlink" href="#utils.matchAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether targets matches all of the regular expressions.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.listTree">
-<tt class="descclassname">utils.</tt><tt class="descname">listTree</tt><big>(</big><em>path</em>, <em>listdirs=True</em>, <em>topdown=True</em>, <em>sorted=False</em>, <em>excludedirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>excludefiles=</em><span class="optional">[</span><span class="optional">]</span>, <em>includedirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>includefiles=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="../_modules/utils.html#listTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.listTree" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">listTree</tt><big>(</big><em>path</em>, <em>listdirs=True</em>, <em>topdown=True</em>, <em>sorted=False</em>, <em>excludedirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>excludefiles=</em><span class="optional">[</span><span class="optional">]</span>, <em>includedirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>includefiles=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#utils.listTree" title="Permalink to this definition">¶</a></dt>
 <dd><p>List all files in path.</p>
 <p>If <tt class="docutils literal"><span class="pre">dirs==False</span></tt>, directories are not listed.
 By default the tree is listed top down and entries in the same directory
@@ -255,13 +302,13 @@ directories, resp. files matching any of those patterns.</p>
 
 <dl class="function">
 <dt id="utils.removeTree">
-<tt class="descclassname">utils.</tt><tt class="descname">removeTree</tt><big>(</big><em>path</em>, <em>top=True</em><big>)</big><a class="reference internal" href="../_modules/utils.html#removeTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.removeTree" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">removeTree</tt><big>(</big><em>path</em>, <em>top=True</em><big>)</big><a class="headerlink" href="#utils.removeTree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove all files below path. If top==True, also path is removed.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.setSaneLocale">
-<tt class="descclassname">utils.</tt><tt class="descname">setSaneLocale</tt><big>(</big><em>localestring=''</em><big>)</big><a class="reference internal" href="../_modules/utils.html#setSaneLocale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.setSaneLocale" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">setSaneLocale</tt><big>(</big><em>localestring=''</em><big>)</big><a class="headerlink" href="#utils.setSaneLocale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a sane local configuration for LC_NUMERIC.</p>
 <p><cite>locale</cite> is the locale string to be set, e.g. &#8216;en_US.UTF-8&#8217;</p>
 <p>This will change the <tt class="docutils literal"><span class="pre">LC_ALL</span></tt> setting to the specified string,
@@ -279,13 +326,13 @@ call this function when pyFormex is starting up.</p>
 
 <dl class="function">
 <dt id="utils.all_image_extensions">
-<tt class="descclassname">utils.</tt><tt class="descname">all_image_extensions</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/utils.html#all_image_extensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.all_image_extensions" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">all_image_extensions</tt><big>(</big><big>)</big><a class="headerlink" href="#utils.all_image_extensions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all known image extensions.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.fileDescription">
-<tt class="descclassname">utils.</tt><tt class="descname">fileDescription</tt><big>(</big><em>ftype</em><big>)</big><a class="reference internal" href="../_modules/utils.html#fileDescription"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.fileDescription" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">fileDescription</tt><big>(</big><em>ftype</em><big>)</big><a class="headerlink" href="#utils.fileDescription" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a description of the specified file type.</p>
 <p>The description of known types are listed in a dict file_description.
 If the type is unknown, the returned string has the form
@@ -294,7 +341,7 @@ If the type is unknown, the returned string has the form
 
 <dl class="function">
 <dt id="utils.fileType">
-<tt class="descclassname">utils.</tt><tt class="descname">fileType</tt><big>(</big><em>ftype</em><big>)</big><a class="reference internal" href="../_modules/utils.html#fileType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.fileType" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">fileType</tt><big>(</big><em>ftype</em><big>)</big><a class="headerlink" href="#utils.fileType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize a filetype string.</p>
 <p>The string is converted to lower case and a leading dot is removed.
 This makes it fit for use with a filename extension.</p>
@@ -313,7 +360,7 @@ This makes it fit for use with a filename extension.</p>
 
 <dl class="function">
 <dt id="utils.fileTypeFromExt">
-<tt class="descclassname">utils.</tt><tt class="descname">fileTypeFromExt</tt><big>(</big><em>fname</em><big>)</big><a class="reference internal" href="../_modules/utils.html#fileTypeFromExt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.fileTypeFromExt" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">fileTypeFromExt</tt><big>(</big><em>fname</em><big>)</big><a class="headerlink" href="#utils.fileTypeFromExt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Derive the file type from the file name.</p>
 <p>The derived file type is the file extension part in lower case and
 without the leading dot.</p>
@@ -330,27 +377,27 @@ without the leading dot.</p>
 
 <dl class="function">
 <dt id="utils.findIcon">
-<tt class="descclassname">utils.</tt><tt class="descname">findIcon</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/utils.html#findIcon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.findIcon" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">findIcon</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#utils.findIcon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the file name for an icon with given name.</p>
 <p>If no icon file is found, returns the question mark icon.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.projectName">
-<tt class="descclassname">utils.</tt><tt class="descname">projectName</tt><big>(</big><em>fn</em><big>)</big><a class="reference internal" href="../_modules/utils.html#projectName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.projectName" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">projectName</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#utils.projectName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Derive a project name from a file name.</p>
 <p>The project name is the basename f the file without the extension.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.mtime">
-<tt class="descclassname">utils.</tt><tt class="descname">mtime</tt><big>(</big><em>fn</em><big>)</big><a class="reference internal" href="../_modules/utils.html#mtime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.mtime" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">mtime</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#utils.mtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the (UNIX) time of last change of file fn.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.timeEval">
-<tt class="descclassname">utils.</tt><tt class="descname">timeEval</tt><big>(</big><em>s</em>, <em>glob=None</em><big>)</big><a class="reference internal" href="../_modules/utils.html#timeEval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.timeEval" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">timeEval</tt><big>(</big><em>s</em>, <em>glob=None</em><big>)</big><a class="headerlink" href="#utils.timeEval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the time needed for evaluating a string.</p>
 <p>s is a string with a valid Python instructions.
 The string is evaluated using Python&#8217;s eval() and the difference
@@ -364,13 +411,13 @@ microlevel execution time.</p>
 
 <dl class="function">
 <dt id="utils.countLines">
-<tt class="descclassname">utils.</tt><tt class="descname">countLines</tt><big>(</big><em>fn</em><big>)</big><a class="reference internal" href="../_modules/utils.html#countLines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.countLines" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">countLines</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#utils.countLines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of lines in a text file.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.runCommand">
-<tt class="descclassname">utils.</tt><tt class="descname">runCommand</tt><big>(</big><em>cmd</em>, <em>RaiseError=True</em>, <em>quiet=False</em><big>)</big><a class="reference internal" href="../_modules/utils.html#runCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.runCommand" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">runCommand</tt><big>(</big><em>cmd</em>, <em>RaiseError=True</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#utils.runCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a command and raise error if exited with error.</p>
 <p>cmd is a string with the command to be run. The command is run
 in the background, waiting for the result. If no error occurs,
@@ -380,19 +427,19 @@ Else an error is raised by default.</p>
 
 <dl class="function">
 <dt id="utils.spawn">
-<tt class="descclassname">utils.</tt><tt class="descname">spawn</tt><big>(</big><em>cmd</em><big>)</big><a class="reference internal" href="../_modules/utils.html#spawn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.spawn" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">spawn</tt><big>(</big><em>cmd</em><big>)</big><a class="headerlink" href="#utils.spawn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spawn a child process.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.killProcesses">
-<tt class="descclassname">utils.</tt><tt class="descname">killProcesses</tt><big>(</big><em>pids</em>, <em>signal</em><big>)</big><a class="reference internal" href="../_modules/utils.html#killProcesses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.killProcesses" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">killProcesses</tt><big>(</big><em>pids</em>, <em>signal</em><big>)</big><a class="headerlink" href="#utils.killProcesses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send the specified signal to the processes in list</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.changeExt">
-<tt class="descclassname">utils.</tt><tt class="descname">changeExt</tt><big>(</big><em>fn</em>, <em>ext</em><big>)</big><a class="reference internal" href="../_modules/utils.html#changeExt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.changeExt" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">changeExt</tt><big>(</big><em>fn</em>, <em>ext</em><big>)</big><a class="headerlink" href="#utils.changeExt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the extension of a file name.</p>
 <p>The extension is the minimal trailing part of the filename starting
 with a &#8216;.&#8217;. If the filename has no &#8216;.&#8217;, the extension will be appended.
@@ -401,7 +448,7 @@ If the given extension does not start with a dot, one is prepended.</p>
 
 <dl class="function">
 <dt id="utils.tildeExpand">
-<tt class="descclassname">utils.</tt><tt class="descname">tildeExpand</tt><big>(</big><em>fn</em><big>)</big><a class="reference internal" href="../_modules/utils.html#tildeExpand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.tildeExpand" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">tildeExpand</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#utils.tildeExpand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform tilde expansion on a filename.</p>
 <p>Bash, the most used command shell in Linux, expands a &#8216;~&#8217; in arguments
 to the users home direction.
@@ -411,13 +458,13 @@ the bash tilde expansion, such as strings in the configuration file.</p>
 
 <dl class="function">
 <dt id="utils.userName">
-<tt class="descclassname">utils.</tt><tt class="descname">userName</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/utils.html#userName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.userName" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">userName</tt><big>(</big><big>)</big><a class="headerlink" href="#utils.userName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the name of the user.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="utils.is_pyFormex">
-<tt class="descclassname">utils.</tt><tt class="descname">is_pyFormex</tt><big>(</big><em>filename</em><big>)</big><a class="reference internal" href="../_modules/utils.html#is_pyFormex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.is_pyFormex" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">is_pyFormex</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#utils.is_pyFormex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether a file is a pyFormex script.</p>
 <p>A script is considered to be a pyFormex script if its first line
 starts with &#8216;#!&#8217; and contains the substring &#8216;pyformex&#8217;
@@ -431,7 +478,7 @@ Typically, a pyFormex script starts with a line:</p>
 
 <dl class="function">
 <dt id="utils.splitEndDigits">
-<tt class="descclassname">utils.</tt><tt class="descname">splitEndDigits</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/utils.html#splitEndDigits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.splitEndDigits" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">splitEndDigits</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#utils.splitEndDigits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a string in any prefix and a numerical end sequence.</p>
 <p>A string like &#8216;abc-0123&#8217; will be split in &#8216;abc-&#8216; and &#8216;0123&#8217;.
 Any of both can be empty.</p>
@@ -439,7 +486,7 @@ Any of both can be empty.</p>
 
 <dl class="function">
 <dt id="utils.splitStartDigits">
-<tt class="descclassname">utils.</tt><tt class="descname">splitStartDigits</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/utils.html#splitStartDigits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.splitStartDigits" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">splitStartDigits</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#utils.splitStartDigits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a string in a numerical sequence and any suffix.</p>
 <p>A string like &#8216;0123-abc&#8217; will be split in &#8216;0123&#8217; and &#8216;-abc&#8217;.
 Any of both can be empty.</p>
@@ -447,7 +494,7 @@ Any of both can be empty.</p>
 
 <dl class="function">
 <dt id="utils.prefixDict">
-<tt class="descclassname">utils.</tt><tt class="descname">prefixDict</tt><big>(</big><em>d</em>, <em>prefix=''</em><big>)</big><a class="reference internal" href="../_modules/utils.html#prefixDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.prefixDict" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">prefixDict</tt><big>(</big><em>d</em>, <em>prefix=''</em><big>)</big><a class="headerlink" href="#utils.prefixDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prefix all the keys of a dict with the given prefix.</p>
 <ul class="simple">
 <li><cite>d</cite>: a dict where all the keys are strings.</li>
@@ -459,7 +506,7 @@ keys have been prefixed with the given string.</p>
 
 <dl class="function">
 <dt id="utils.subDict">
-<tt class="descclassname">utils.</tt><tt class="descname">subDict</tt><big>(</big><em>d</em>, <em>prefix=''</em>, <em>strip=True</em><big>)</big><a class="reference internal" href="../_modules/utils.html#subDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.subDict" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">subDict</tt><big>(</big><em>d</em>, <em>prefix=''</em>, <em>strip=True</em><big>)</big><a class="headerlink" href="#utils.subDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dict with the items whose key starts with prefix.</p>
 <ul class="simple">
 <li><cite>d</cite>: a dict where all the keys are strings.</li>
@@ -473,7 +520,7 @@ stripped off, unless strip=False is specified.</p>
 
 <dl class="function">
 <dt id="utils.selectDict">
-<tt class="descclassname">utils.</tt><tt class="descname">selectDict</tt><big>(</big><em>d</em>, <em>keys</em><big>)</big><a class="reference internal" href="../_modules/utils.html#selectDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.selectDict" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">selectDict</tt><big>(</big><em>d</em>, <em>keys</em><big>)</big><a class="headerlink" href="#utils.selectDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dict with the items whose key is in keys.</p>
 <ul class="simple">
 <li><cite>d</cite>: a dict where all the keys are strings.</li>
@@ -492,7 +539,7 @@ See <a class="reference internal" href="#utils.removeDict" title="utils.removeDi
 
 <dl class="function">
 <dt id="utils.removeDict">
-<tt class="descclassname">utils.</tt><tt class="descname">removeDict</tt><big>(</big><em>d</em>, <em>keys</em><big>)</big><a class="reference internal" href="../_modules/utils.html#removeDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.removeDict" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">removeDict</tt><big>(</big><em>d</em>, <em>keys</em><big>)</big><a class="headerlink" href="#utils.removeDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a set of keys from a dict.</p>
 <ul class="simple">
 <li><cite>d</cite>: a dict</li>
@@ -511,7 +558,7 @@ This is the complementary operation of selectDict.</p>
 
 <dl class="function">
 <dt id="utils.stuur">
-<tt class="descclassname">utils.</tt><tt class="descname">stuur</tt><big>(</big><em>x</em>, <em>xval</em>, <em>yval</em>, <em>exp=2.5</em><big>)</big><a class="reference internal" href="../_modules/utils.html#stuur"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.stuur" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">stuur</tt><big>(</big><em>x</em>, <em>xval</em>, <em>yval</em>, <em>exp=2.5</em><big>)</big><a class="headerlink" href="#utils.stuur" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a (non)linear response on the input x.</p>
 <p>xval and yval should be lists of 3 values:
 <tt class="docutils literal"><span class="pre">[xmin,x0,xmax],</span> <span class="pre">[ymin,y0,ymax]</span></tt>.
@@ -524,7 +571,7 @@ is returned.</p>
 
 <dl class="function">
 <dt id="utils.interrogate">
-<tt class="descclassname">utils.</tt><tt class="descname">interrogate</tt><big>(</big><em>item</em><big>)</big><a class="reference internal" href="../_modules/utils.html#interrogate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.interrogate" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">interrogate</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#utils.interrogate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print useful information about item.</p>
 </dd></dl>
 
@@ -532,33 +579,6 @@ is returned.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="project.html"
-                        title="previous chapter">10. <tt class="docutils literal docutils literal docutils literal"><span class="pre">project</span></tt> &#8212; project.py</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="elements.html"
-                        title="next chapter">12. <tt class="docutils literal docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -578,15 +598,13 @@ is returned.</p>
         <li class="right" >
           <a href="project.html" title="10. project — project.py"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

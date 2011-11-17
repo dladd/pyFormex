@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>13. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="14. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
-    <link rel="prev" title="12. elements — Definition of elements." href="elements.html" /> 
+    <link rel="prev" title="12. elements — Definition of elements." href="elements.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="elements.html" title="12. elements — Definition of elements."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="elements.html"
+                        title="previous chapter">12. <tt class="docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="widgets.html"
+                        title="next chapter">14. <tt class="docutils literal docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -89,7 +136,7 @@ It also contains some useful functions to create such models.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mesh</span></tt></p>
 <dl class="class">
 <dt id="mesh.Mesh">
-<em class="property">class </em><tt class="descclassname">mesh.</tt><tt class="descname">Mesh</tt><big>(</big><em>coords=None</em>, <em>elems=None</em>, <em>prop=None</em>, <em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">mesh.</tt><tt class="descname">Mesh</tt><big>(</big><em>coords=None</em>, <em>elems=None</em>, <em>prop=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Mesh is a discrete geometrical model defined by nodes and elements.</p>
 <p>In the Mesh geometrical data model, the coordinates of all the points
 are gathered in a single twodimensional array with shape (ncoords,3).
@@ -128,7 +175,7 @@ the element type does not exist or does not match the plexitude.</p>
 or by a single geometric object that provides a toMesh() method.</p>
 <dl class="method">
 <dt id="mesh.Mesh.setType">
-<tt class="descname">setType</tt><big>(</big><em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.setType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.setType" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setType</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.setType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the eltype from a character string.</p>
 <p>This function allows the user to change the element type of the Mesh.
 The input is a character string with the name of one of the element
@@ -140,7 +187,7 @@ normally set the element type at creation time.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.setProp">
-<tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.setProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.setProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.setProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create or destroy the property array for the Mesh.</p>
 <p>A property array is a rank-1 integer array with dimension equal
 to the number of elements in the Mesh.
@@ -152,31 +199,31 @@ they wil be repeated. If you give more, they will be ignored.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getProp">
-<tt class="descname">getProp</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getProp</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the properties as a numpy array (ndarray)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.maxProp">
-<tt class="descname">maxProp</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.maxProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.maxProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">maxProp</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.maxProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the highest property value used, or None</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.propSet">
-<tt class="descname">propSet</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.propSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.propSet" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">propSet</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.propSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with unique property values.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.copy" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy using the same data arrays</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.toFormex">
-<tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.toFormex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.toFormex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.toFormex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a Mesh to a Formex.</p>
 <p>The Formex inherits the element property numbers and eltype from
 the Mesh. Node property numbers however can not be translated to
@@ -185,7 +232,7 @@ the Formex data model.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.nedges">
-<tt class="descname">nedges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.nedges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.nedges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nedges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nedges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of edges.</p>
 <p>This returns the number of rows that would be in getEdges(),
 without actually constructing the edges.
@@ -194,7 +241,7 @@ The edges are not fused!</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.centroids">
-<tt class="descname">centroids</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.centroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.centroids" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">centroids</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.centroids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the centroids of all elements of the Mesh.</p>
 <p>The centroid of an element is the point whose coordinates
 are the mean values of all points of the element.
@@ -203,7 +250,7 @@ The return value is a Coords object with nelems points.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getCoords">
-<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getCoords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getCoords" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getCoords</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getCoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the coords data.</p>
 <p>Returns the full array of coordinates stored in the Mesh object.
 Note that this may contain points that are not used in the mesh.
@@ -212,14 +259,14 @@ Note that this may contain points that are not used in the mesh.
 
 <dl class="method">
 <dt id="mesh.Mesh.getElems">
-<tt class="descname">getElems</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getElems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getElems" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getElems</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the elems data.</p>
 <p>Returns the element connectivity data as stored in the object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.getLowerEntities">
-<tt class="descname">getLowerEntities</tt><big>(</big><em>level=-1</em>, <em>unique=False</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getLowerEntities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getLowerEntities" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getLowerEntities</tt><big>(</big><em>level=-1</em>, <em>unique=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getLowerEntities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the entities of a lower dimensionality.</p>
 <p>If the element type is defined in the <a class="reference internal" href="elements.html#module-elements" title="elements: Definition of elements."><tt class="xref py py-mod docutils literal"><span class="pre">elements</span></tt></a> module,
 this returns a Connectivity table with the entities of a lower
@@ -244,7 +291,7 @@ outside the range 0..3, the return value is None.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getNodes">
-<tt class="descname">getNodes</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getNodes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the set of unique node numbers in the Mesh.</p>
 <p>This returns only the node numbers that are effectively used in
 the connectivity table. For a compacted Mesh, it is equal to
@@ -255,7 +302,7 @@ requests can return it without the need for computing it again.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getPoints">
-<tt class="descname">getPoints</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getPoints" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the nodal coordinates of the Mesh.</p>
 <p>This returns only those points that are effectively used in
 the connectivity table. For a compacted Mesh, it is equal to
@@ -264,7 +311,7 @@ the coords attribute.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getEdges">
-<tt class="descname">getEdges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getEdges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getEdges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the unique edges of all the elements in the Mesh.</p>
 <p>This is a convenient function to create a table with the element
 edges. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(1,unique=True)`</span></tt>,
@@ -274,7 +321,7 @@ requests can return it without the need for computing it again.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getFaces">
-<tt class="descname">getFaces</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getFaces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getFaces" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getFaces</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getFaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the unique faces of all the elements in the Mesh.</p>
 <p>This is a convenient function to create a table with the element
 faces. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(2,unique=True)`</span></tt>,
@@ -284,7 +331,7 @@ requests can return it without the need for computing it again.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getCells">
-<tt class="descname">getCells</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getCells"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getCells" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getCells</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getCells" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cells of the elements.</p>
 <p>This is a convenient function to create a table with the element
 cells. It is equivalent to <tt class="docutils literal"><span class="pre">`self.getLowerEntities(3,unique=True)`</span></tt>,
@@ -294,7 +341,7 @@ requests can return it without the need for computing it again.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getElemEdges">
-<tt class="descname">getElemEdges</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getElemEdges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getElemEdges" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getElemEdges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.getElemEdges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the elements in function of its edges.</p>
 <p>This returns a Connectivity table with the elements defined in
 function of the edges. It is equivalent to
@@ -305,7 +352,7 @@ element to edge connectivity.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getFreeEntities">
-<tt class="descname">getFreeEntities</tt><big>(</big><em>return_indices=False</em>, <em>level=-1</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getFreeEntities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getFreeEntities" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getFreeEntities</tt><big>(</big><em>return_indices=False</em>, <em>level=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEntities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the border of the Mesh.</p>
 <p>This returns a Connectivity table with the border of the Mesh.
 The border entities are of a lower hierarchical level than the
@@ -321,7 +368,7 @@ See also <tt class="xref py py-meth docutils literal"><span class="pre">getBorde
 
 <dl class="method">
 <dt id="mesh.Mesh.getFreeEntitiesMesh">
-<tt class="descname">getFreeEntitiesMesh</tt><big>(</big><em>compact=True</em>, <em>level=-1</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.getFreeEntitiesMesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.getFreeEntitiesMesh" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getFreeEntitiesMesh</tt><big>(</big><em>compact=True</em>, <em>level=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEntitiesMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh with the border elements.</p>
 <p>Returns a Mesh representing the border of the Mesh.
 The returned Mesh is of the next lower hierarchical level.
@@ -333,7 +380,7 @@ switched off by setting <cite>compact=False</cite>.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.reverse">
-<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.reverse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.reverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh where all elements have been reversed.</p>
 <p>Reversing an element has the following meaning:</p>
 <ul class="simple">
@@ -348,7 +395,7 @@ the element reversal caused by the reflection operation.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.reflect">
-<tt class="descname">reflect</tt><big>(</big><em>dir=0</em>, <em>pos=0.0</em>, <em>reverse=True</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.reflect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.reflect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reflect</tt><big>(</big><em>dir=0</em>, <em>pos=0.0</em>, <em>reverse=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reflect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reflect the coordinates in one of the coordinate directions.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -364,55 +411,55 @@ to skip the element reversal.</li>
 
 <dl class="method">
 <dt id="mesh.Mesh.nodeConnections">
-<tt class="descname">nodeConnections</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.nodeConnections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.nodeConnections" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nodeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nodeConnections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find and store the elems connected to nodes.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.nNodeConnected">
-<tt class="descname">nNodeConnected</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.nNodeConnected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.nNodeConnected" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nNodeConnected</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nNodeConnected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the number of elems connected to nodes.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.edgeConnections">
-<tt class="descname">edgeConnections</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.edgeConnections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.edgeConnections" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">edgeConnections</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.edgeConnections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find and store the elems connected to edges.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.nEdgeConnected">
-<tt class="descname">nEdgeConnected</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.nEdgeConnected"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.nEdgeConnected" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nEdgeConnected</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nEdgeConnected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the number of elems connected to edges.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.nodeAdjacency">
-<tt class="descname">nodeAdjacency</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.nodeAdjacency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.nodeAdjacency" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nodeAdjacency</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nodeAdjacency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the elems adjacent to each elem via one or more nodes.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.nNodeAdjacent">
-<tt class="descname">nNodeAdjacent</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.nNodeAdjacent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.nNodeAdjacent" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nNodeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nNodeAdjacent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the number of elems which are adjacent by node to each elem.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.edgeAdjacency">
-<tt class="descname">edgeAdjacency</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.edgeAdjacency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.edgeAdjacency" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">edgeAdjacency</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.edgeAdjacency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the elems adjacent to elems via an edge.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.nEdgeAdjacent">
-<tt class="descname">nEdgeAdjacent</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.nEdgeAdjacent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.nEdgeAdjacent" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nEdgeAdjacent</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nEdgeAdjacent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the number of adjacent elems.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.report">
-<tt class="descname">report</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.report" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a report on the Mesh shape and size.</p>
 <p>The report contains the number of nodes, number of elements,
 plexitude, element type, bbox and size.</p>
@@ -420,7 +467,7 @@ plexitude, element type, bbox and size.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.fuse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fuse the nodes of a Meshes.</p>
 <p>All nodes that are within the tolerance limits of each other
 are merged into a single node.</p>
@@ -430,7 +477,7 @@ that will be passed to <tt class="xref py py-meth docutils literal"><span class=
 
 <dl class="method">
 <dt id="mesh.Mesh.matchCoords">
-<tt class="descname">matchCoords</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.matchCoords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.matchCoords" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">matchCoords</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.matchCoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Match nodes of Mesh with nodes of self.</p>
 <p>This is a convenience function equivalent to:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
@@ -441,7 +488,7 @@ that will be passed to <tt class="xref py py-meth docutils literal"><span class=
 
 <dl class="method">
 <dt id="mesh.Mesh.matchCentroids">
-<tt class="descname">matchCentroids</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.matchCentroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.matchCentroids" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">matchCentroids</tt><big>(</big><em>mesh</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.matchCentroids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Match elems of Mesh with elems of self.</p>
 <p>self and Mesh are same eltype meshes
 and are both without duplicates.</p>
@@ -450,7 +497,7 @@ and are both without duplicates.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.matchFaces">
-<tt class="descname">matchFaces</tt><big>(</big><em>mesh</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.matchFaces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.matchFaces" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">matchFaces</tt><big>(</big><em>mesh</em><big>)</big><a class="headerlink" href="#mesh.Mesh.matchFaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Match faces of mesh with faces of self.</p>
 <p>self and Mesh can be same eltype meshes or different eltype but of the 
 same hierarchical type (i.e. hex8-quad4 or tet4 - tri3) 
@@ -461,7 +508,7 @@ the faces of mesh</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.compact">
-<tt class="descname">compact</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.compact"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.compact" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">compact</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.compact" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove unconnected nodes and renumber the mesh.</p>
 <p>Returns a mesh where all nodes that are not used in any
 element have been removed, and the nodes are renumbered to
@@ -470,7 +517,7 @@ a compacter scheme.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.select">
-<tt class="descname">select</tt><big>(</big><em>selected</em>, <em>compact=True</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.select" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">select</tt><big>(</big><em>selected</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.select" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh only holding the selected elements.</p>
 <ul class="simple">
 <li><cite>selected</cite>: an object that can be used as an index in the
@@ -487,7 +534,7 @@ unchanged.</li>
 
 <dl class="method">
 <dt id="mesh.Mesh.cselect">
-<tt class="descname">cselect</tt><big>(</big><em>selected</em>, <em>compact=True</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.cselect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.cselect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cselect</tt><big>(</big><em>selected</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.cselect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a mesh without the selected elements.</p>
 <ul class="simple">
 <li><cite>selected</cite>: an object that can be used as an index in the
@@ -504,7 +551,7 @@ unchanged.</li>
 
 <dl class="method">
 <dt id="mesh.Mesh.avgNodes">
-<tt class="descname">avgNodes</tt><big>(</big><em>nodsel</em>, <em>wts=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.avgNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.avgNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">avgNodes</tt><big>(</big><em>nodsel</em>, <em>wts=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.avgNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create average nodes from the existing nodes of a mesh.</p>
 <p><cite>nodsel</cite> is a local node selector as in <a class="reference internal" href="#mesh.Mesh.selectNodes" title="mesh.Mesh.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>
 Returns the (weighted) average coordinates of the points in the
@@ -516,7 +563,7 @@ Its length should be equal to that of nodsel.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.meanNodes">
-<tt class="descname">meanNodes</tt><big>(</big><em>nodsel</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.meanNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.meanNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">meanNodes</tt><big>(</big><em>nodsel</em><big>)</big><a class="headerlink" href="#mesh.Mesh.meanNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create nodes from the existing nodes of a mesh.</p>
 <p><cite>nodsel</cite> is a local node selector as in <a class="reference internal" href="#mesh.Mesh.selectNodes" title="mesh.Mesh.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>
 Returns the mean coordinates of the points in the selector as
@@ -526,7 +573,7 @@ of the node selector.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.addNodes">
-<tt class="descname">addNodes</tt><big>(</big><em>newcoords</em>, <em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.addNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.addNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addNodes</tt><big>(</big><em>newcoords</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.addNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add new nodes to elements.</p>
 <p><cite>newcoords</cite> is an <cite>(nelems,nnod,3)</cite> or`(nelems*nnod,3)` array of
 coordinates. Each element gets exactly <cite>nnod</cite> extra nodes from this
@@ -535,7 +582,7 @@ array. The result is a Mesh with plexitude <cite>self.nplex() + nnod</cite>.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.addMeanNodes">
-<tt class="descname">addMeanNodes</tt><big>(</big><em>nodsel</em>, <em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.addMeanNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.addMeanNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addMeanNodes</tt><big>(</big><em>nodsel</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.addMeanNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add new nodes to elements by averaging existing ones.</p>
 <p><cite>nodsel</cite> is a local node selector as in <a class="reference internal" href="#mesh.Mesh.selectNodes" title="mesh.Mesh.selectNodes"><tt class="xref py py-meth docutils literal"><span class="pre">selectNodes()</span></tt></a>
 Returns a Mesh where the mean coordinates of the points in the
@@ -546,7 +593,7 @@ The new element type should be set to correct value.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.selectNodes">
-<tt class="descname">selectNodes</tt><big>(</big><em>nodsel</em>, <em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.selectNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.selectNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">selectNodes</tt><big>(</big><em>nodsel</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.selectNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a mesh with subsets of the original nodes.</p>
 <p><cite>nodsel</cite> is an object that can be converted to a 1-dim or 2-dim
 array. Examples are a tuple of local node numbers, or a list
@@ -557,7 +604,7 @@ should be retained in the new connectivity table.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.withProp">
-<tt class="descname">withProp</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.withProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.withProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">withProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#mesh.Mesh.withProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh which holds only the elements with property val.</p>
 <p>val is either a single integer, or a list/array of integers.
 The return value is a Mesh holding all the elements that
@@ -568,7 +615,7 @@ The returned Mesh inherits the matching properties.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.withoutProp">
-<tt class="descname">withoutProp</tt><big>(</big><em>val</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.withoutProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.withoutProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">withoutProp</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#mesh.Mesh.withoutProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh without the elements with property val.</p>
 <p>This is the complementary method of Mesh.withProp().
 val is either a single integer, or a list/array of integers.
@@ -580,7 +627,7 @@ The returned Mesh inherits the matching properties.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.splitProp">
-<tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.splitProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.splitProp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">splitProp</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.splitProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition a Mesh according to its propery values.</p>
 <p>Returns a dict with the property values as keys and the
 corresponding partitions as values. Each value is a Mesh instance.
@@ -589,7 +636,7 @@ It the Mesh has no props, an empty dict is returned.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.splitRandom">
-<tt class="descname">splitRandom</tt><big>(</big><em>n</em>, <em>compact=True</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.splitRandom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.splitRandom" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">splitRandom</tt><big>(</big><em>n</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitRandom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a mesh in n parts, distributing the elements randomly.</p>
 <p>Returns a list of n Mesh objects, constituting together the same
 Mesh as the original. The elements are randomly distributed over
@@ -600,7 +647,7 @@ off for efficiency reasons.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.convert">
-<tt class="descname">convert</tt><big>(</big><em>totype</em>, <em>fuse=False</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.convert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">convert</tt><big>(</big><em>totype</em>, <em>fuse=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a Mesh to another element type.</p>
 <p>Converting a Mesh from one element type to another can only be
 done if both element types are of the same dimensionality.
@@ -624,13 +671,13 @@ default in future.</dd>
 
 <dl class="method">
 <dt id="mesh.Mesh.convertRandom">
-<tt class="descname">convertRandom</tt><big>(</big><em>choices</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.convertRandom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.convertRandom" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">convertRandom</tt><big>(</big><em>choices</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convertRandom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert choosing randomly between choices</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.reduceDegenerate">
-<tt class="descname">reduceDegenerate</tt><big>(</big><em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.reduceDegenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.reduceDegenerate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reduceDegenerate</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.reduceDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce degenerate elements to lower plexitude elements.</p>
 <p>This will try to reduce the degenerate elements of the mesh to elements
 of a lower plexitude. If a target element type is given, only the matching
@@ -643,7 +690,7 @@ Property numbers propagate to the children.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.splitDegenerate">
-<tt class="descname">splitDegenerate</tt><big>(</big><em>autofix=True</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.splitDegenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.splitDegenerate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">splitDegenerate</tt><big>(</big><em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.splitDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a Mesh in degenerate and non-degenerate elements.</p>
 <p>If autofix is True, the degenerate elements will be tested against
 known degeneration patterns, and the matching elements will be
@@ -658,14 +705,14 @@ degenerate elements.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.removeDegenerate">
-<tt class="descname">removeDegenerate</tt><big>(</big><em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.removeDegenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.removeDegenerate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeDegenerate</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.removeDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the degenerate elements from a Mesh.</p>
 <p>Returns a Mesh with all degenerate elements removed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.removeDuplicate">
-<tt class="descname">removeDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.removeDuplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.removeDuplicate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.removeDuplicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the duplicate elements from a Mesh.</p>
 <p>Duplicate elements are elements that consist of the same nodes,
 by default in no particular order. Setting permutations=False will
@@ -676,7 +723,7 @@ duplicates.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.renumber">
-<tt class="descname">renumber</tt><big>(</big><em>order='elems'</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.renumber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.renumber" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">renumber</tt><big>(</big><em>order='elems'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.renumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renumber the nodes of a Mesh in the specified order.</p>
 <p>order is an index with length equal to the number of nodes. The
 index specifies the node number that should come at this position.
@@ -692,7 +739,7 @@ Mesh connectivity.</li>
 
 <dl class="method">
 <dt id="mesh.Mesh.renumberElems">
-<tt class="descname">renumberElems</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.renumberElems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.renumberElems" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">renumberElems</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.renumberElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renumber the elements of a Mesh.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -714,7 +761,7 @@ the following predefined strings:<ul>
 
 <dl class="method">
 <dt id="mesh.Mesh.connect">
-<tt class="descname">connect</tt><big>(</big><em>coordslist</em>, <em>div=1</em>, <em>degree=1</em>, <em>loop=False</em>, <em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.connect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">connect</tt><big>(</big><em>coordslist</em>, <em>div=1</em>, <em>degree=1</em>, <em>loop=False</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connect a sequence of toplogically congruent Meshes into a hypermesh.</p>
 <p>Parameters:</p>
 <ul>
@@ -779,7 +826,7 @@ a final conversion to the requested element type is attempted.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.extrude">
-<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em>, <em>degree=1</em>, <em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.extrude"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.extrude" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.0</em>, <em>dir=0</em>, <em>degree=1</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.extrude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extrude a Mesh in one of the axes directions.</p>
 <p>Returns a new Mesh obtained by extruding the given Mesh
 over <cite>n</cite> steps of length <cite>step</cite> in direction of axis <cite>dir</cite>.</p>
@@ -787,7 +834,7 @@ over <cite>n</cite> steps of length <cite>step</cite> in direction of axis <cite
 
 <dl class="method">
 <dt id="mesh.Mesh.revolve">
-<tt class="descname">revolve</tt><big>(</big><em>n</em>, <em>axis=0</em>, <em>angle=360.0</em>, <em>around=None</em>, <em>loop=False</em>, <em>eltype=None</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.revolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.revolve" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">revolve</tt><big>(</big><em>n</em>, <em>axis=0</em>, <em>angle=360.0</em>, <em>around=None</em>, <em>loop=False</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.revolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revolve a Mesh around an axis.</p>
 <p>Returns a new Mesh obtained by revolving the given Mesh
 over an angle around an axis in n steps, while extruding
@@ -798,7 +845,7 @@ into volumes.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.sweep">
-<tt class="descname">sweep</tt><big>(</big><em>path</em>, <em>eltype=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.sweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.sweep" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">sweep</tt><big>(</big><em>path</em>, <em>eltype=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.sweep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sweep a mesh along a path, creating an extrusion</p>
 <p>Returns a new Mesh obtained by sweeping the given Mesh
 over a path.
@@ -816,7 +863,7 @@ the geometry .</p>
 
 <dl class="classmethod">
 <dt id="mesh.Mesh.concatenate">
-<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>meshes</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.concatenate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.concatenate" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>meshes</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate a list of meshes of the same plexitude and eltype</p>
 <p>Merging of the nodes can be tuned by specifying extra arguments
 that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
@@ -828,7 +875,7 @@ that will be passed to <tt class="xref py py-meth docutils literal"><span class=
 
 <dl class="method">
 <dt id="mesh.Mesh.test">
-<tt class="descname">test</tt><big>(</big><em>nodes='all'</em>, <em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.test" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">test</tt><big>(</big><em>nodes='all'</em>, <em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#mesh.Mesh.test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag elements having nodal coordinates between min and max.</p>
 <p>This function is very convenient in clipping a Mesh in a specified
 direction. It returns a 1D integer array flagging (with a value 1 or
@@ -857,7 +904,7 @@ may be left unspecified.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.clip">
-<tt class="descname">clip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.clip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.clip" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">clip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.clip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh with all the elements where t&gt;0.</p>
 <p>t should be a 1-D integer array with length equal to the number
 of elements of the Mesh.
@@ -866,13 +913,13 @@ The resulting Mesh will contain all elements where t &gt; 0.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.cclip">
-<tt class="descname">cclip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.cclip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.cclip" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cclip</tt><big>(</big><em>t</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.cclip" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the complement of clip, returning a Mesh where t&lt;=0.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.clipAtPlane">
-<tt class="descname">clipAtPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>nodes='any'</em>, <em>side='+'</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.clipAtPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.clipAtPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">clipAtPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>nodes='any'</em>, <em>side='+'</em><big>)</big><a class="headerlink" href="#mesh.Mesh.clipAtPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the Mesh clipped at plane (p,n).</p>
 <p>This is a convenience function returning the part of the Mesh
 at one side of the plane (p,n)</p>
@@ -880,7 +927,7 @@ at one side of the plane (p,n)</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.volumes">
-<tt class="descname">volumes</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.volumes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.volumes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">volumes</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.volumes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the signed volume of all the mesh elements</p>
 <p>For a &#8216;tet4&#8217; tetraeder Mesh, the volume of the elements is calculated
 as 1/3 * surface of base * height.</p>
@@ -894,7 +941,7 @@ value is None.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.volume">
-<tt class="descname">volume</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/mesh.html#Mesh.volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.Mesh.volume" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">volume</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total volume of a Mesh.</p>
 <p>If the Mesh can not be converted to tet4 type, 0 is returned</p>
 </dd></dl>
@@ -1146,7 +1193,7 @@ If fil is a string, the file is closed prior to returning.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">mesh</span></tt></p>
 <dl class="function">
 <dt id="mesh.mergeNodes">
-<tt class="descclassname">mesh.</tt><tt class="descname">mergeNodes</tt><big>(</big><em>nodes</em>, <em>fuse=True</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#mergeNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.mergeNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">mesh.</tt><tt class="descname">mergeNodes</tt><big>(</big><em>nodes</em>, <em>fuse=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.mergeNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge all the nodes of a list of node sets.</p>
 <p>Merging the nodes creates a single Coords object containing all nodes,
 and the indices to find the points of the original node sets in the
@@ -1171,7 +1218,7 @@ that will be passed to <tt class="xref py py-meth docutils literal"><span class=
 
 <dl class="function">
 <dt id="mesh.mergeMeshes">
-<tt class="descclassname">mesh.</tt><tt class="descname">mergeMeshes</tt><big>(</big><em>meshes</em>, <em>fuse=True</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/mesh.html#mergeMeshes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mesh.mergeMeshes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">mesh.</tt><tt class="descname">mergeMeshes</tt><big>(</big><em>meshes</em>, <em>fuse=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.mergeMeshes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge all the nodes of a list of Meshes.</p>
 <p>Each item in meshes is a Mesh instance.
 The return value is a tuple with:</p>
@@ -1192,33 +1239,6 @@ not fuse them.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="elements.html"
-                        title="previous chapter">12. <tt class="docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Definition of elements.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="widgets.html"
-                        title="next chapter">14. <tt class="docutils literal docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -1236,15 +1256,13 @@ not fuse them.</p>
         <li class="right" >
           <a href="elements.html" title="12. elements — Definition of elements."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

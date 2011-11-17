@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>8. connectivity — A class and functions for handling nodal connectivity. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="9. simple — Predefined geometries with a simple shape." href="simple.html" />
-    <link rel="prev" title="7. geometry — A generic interface to the Coords transformation methods" href="geometry.html" /> 
+    <link rel="prev" title="7. geometry — A generic interface to the Coords transformation methods" href="geometry.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="geometry.html" title="7. geometry — A generic interface to the Coords transformation methods"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="geometry.html"
+                        title="previous chapter">7. <tt class="docutils literal docutils literal"><span class="pre">geometry</span></tt> &#8212; A generic interface to the Coords transformation methods</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="simple.html"
+                        title="next chapter">9. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -92,7 +139,7 @@ adjacency of elements can easily be detected from common node numbers.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">connectivity</span></tt></p>
 <dl class="class">
 <dt id="connectivity.Connectivity">
-<em class="property">class </em><tt class="descclassname">connectivity.</tt><tt class="descname">Connectivity</tt><a class="reference internal" href="../_modules/connectivity.html#Connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">connectivity.</tt><tt class="descname">Connectivity</tt><a class="headerlink" href="#connectivity.Connectivity" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for handling element/node connectivity.</p>
 <p>A connectivity object is a 2-dimensional integer array with all
 non-negative values. Each row of the array defines an element by listing
@@ -136,7 +183,7 @@ specified plexitude.</li>
 </div>
 <dl class="method">
 <dt id="connectivity.Connectivity.nelems">
-<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.nelems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.nelems" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nelems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of elements in the Connectivity table.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">nelems</span><span class="p">()</span>
@@ -147,7 +194,7 @@ specified plexitude.</li>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.nplex">
-<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.nplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.nplex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nplex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the plexitude of the elements in the Connectivity table.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">nplex</span><span class="p">()</span>
@@ -158,13 +205,13 @@ specified plexitude.</li>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.report">
-<tt class="descname">report</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.report" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format a Connectivity table</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.testDegenerate">
-<tt class="descname">testDegenerate</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.testDegenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.testDegenerate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">testDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.testDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag the degenerate elements (rows).</p>
 <p>A degenerate element is a row which contains at least two
 equal values.</p>
@@ -181,7 +228,7 @@ equal values.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.listDegenerate">
-<tt class="descname">listDegenerate</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.listDegenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.listDegenerate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">listDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the degenerate elements.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDegenerate</span><span class="p">()</span>
@@ -192,7 +239,7 @@ equal values.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.listNonDegenerate">
-<tt class="descname">listNonDegenerate</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.listNonDegenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.listNonDegenerate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">listNonDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listNonDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the non-degenerate elements.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listNonDegenerate</span><span class="p">()</span>
@@ -203,7 +250,7 @@ equal values.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.removeDegenerate">
-<tt class="descname">removeDegenerate</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.removeDegenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.removeDegenerate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeDegenerate</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.removeDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the degenerate elements from a Connectivity table.</p>
 <p>Degenerate elements are rows with repeating values.
 Returns a Connectivity with the degenerate elements removed.</p>
@@ -217,7 +264,7 @@ Returns a Connectivity with the degenerate elements removed.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.reduceDegenerate">
-<tt class="descname">reduceDegenerate</tt><big>(</big><em>target=None</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.reduceDegenerate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.reduceDegenerate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reduceDegenerate</tt><big>(</big><em>target=None</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.reduceDegenerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce degenerate elements to lower plexitude elements.</p>
 <p>This will try to reduce the degenerate elements of the Connectivity
 to a lower plexitude. This is only possible if an element type
@@ -247,7 +294,7 @@ the property numbers into the resulting Meshes.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.testDuplicate">
-<tt class="descname">testDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.testDuplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.testDuplicate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">testDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.testDuplicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the Connectivity list for duplicates.</p>
 <p>By default, duplicates are elements that consist of the same set of
 nodes, in any particular order. Setting permutations to False
@@ -268,7 +315,7 @@ and False for those of the duplicates.</li>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.listUnique">
-<tt class="descname">listUnique</tt><big>(</big><em>permutations=True</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.listUnique"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.listUnique" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">listUnique</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listUnique" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the unique elements.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listUnique</span><span class="p">()</span>
@@ -279,7 +326,7 @@ and False for those of the duplicates.</li>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.listDuplicate">
-<tt class="descname">listDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.listDuplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.listDuplicate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">listDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.listDuplicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with the numbers of the duplicate elements.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Connectivity</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">listDuplicates</span><span class="p">()</span>
@@ -290,7 +337,7 @@ and False for those of the duplicates.</li>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.removeDuplicate">
-<tt class="descname">removeDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.removeDuplicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.removeDuplicate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">removeDuplicate</tt><big>(</big><em>permutations=True</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.removeDuplicate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove duplicate elements from a Connectivity list.</p>
 <p>By default, duplicates are elements that consist of the same set of
 nodes, in any particular order. Setting permutations to False
@@ -307,7 +354,7 @@ matching positions.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.reorder">
-<tt class="descname">reorder</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.reorder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.reorder" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reorder</tt><big>(</big><em>order='nodes'</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.reorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reorder the elements of a Connectivity in a specified order.</p>
 <p>This does not actually reorder the elements itself, but returns
 an index with the order of the rows (elements) in the connectivity
@@ -360,7 +407,7 @@ checking that it is indeed a permutation of <cite>range(self.nelems()</cite>.</d
 
 <dl class="method">
 <dt id="connectivity.Connectivity.inverse">
-<tt class="descname">inverse</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.inverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.inverse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">inverse</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.inverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the inverse index of a Connectivity table.</p>
 <p>This returns the inverse index of the Connectivity, as computed
 by <a class="reference internal" href="arraytools.html#arraytools.inverseIndex" title="arraytools.inverseIndex"><tt class="xref py py-func docutils literal"><span class="pre">arraytools.inverseIndex()</span></tt></a>. See</p>
@@ -376,7 +423,7 @@ by <a class="reference internal" href="arraytools.html#arraytools.inverseIndex" 
 
 <dl class="method">
 <dt id="connectivity.Connectivity.adjacency">
-<tt class="descname">adjacency</tt><big>(</big><em>kind='e'</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.adjacency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.adjacency" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">adjacency</tt><big>(</big><em>kind='e'</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.adjacency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a table of adjacent items.</p>
 <p>Returns an element adjacency table (kind=&#8217;e&#8217;) or node adjacency
 table (kind=&#8217;n&#8217;).</p>
@@ -418,7 +465,7 @@ list length for all items.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.selectNodes">
-<tt class="descname">selectNodes</tt><big>(</big><em>selector</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.selectNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.selectNodes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">selectNodes</tt><big>(</big><em>selector</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.selectNodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a <a class="reference internal" href="#connectivity.Connectivity" title="connectivity.Connectivity"><tt class="xref py py-class docutils literal"><span class="pre">Connectivity</span></tt></a> containing subsets of the nodes.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -446,7 +493,7 @@ is equal to that of the selector, possibly None.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.insertLevel">
-<tt class="descname">insertLevel</tt><big>(</big><em>selector</em>, <em>lower_only=False</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.insertLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.insertLevel" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">insertLevel</tt><big>(</big><em>selector</em>, <em>lower_only=False</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.insertLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert an extra hierarchical level in a Connectivity table.</p>
 <p>A Connectivity table identifies higher hierchical entities in function
 of lower ones. This method inserts an extra hierarchical level.
@@ -503,7 +550,7 @@ The resulting rows may however be permutations of the original.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.combine">
-<tt class="descname">combine</tt><big>(</big><em>lo</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.combine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.combine" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">combine</tt><big>(</big><em>lo</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.combine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combine two hierarchical Connectivity levels to a single one.</p>
 <p>self and lo are two hierarchical Connectivity tables, representing
 higher and lower level respectively. This means that the elements
@@ -530,7 +577,7 @@ unique.</p>
 
 <dl class="method">
 <dt id="connectivity.Connectivity.resolve">
-<tt class="descname">resolve</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/connectivity.html#Connectivity.resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.Connectivity.resolve" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resolve</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.resolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve the connectivity into plex-2 connections.</p>
 <p>Creates a Connectivity table with a plex-2 (edge) connection
 between any two nodes that are connected to a common element.</p>
@@ -556,7 +603,7 @@ pairs. In each element the nodes are sorted.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">connectivity</span></tt></p>
 <dl class="function">
 <dt id="connectivity.sortAdjacency">
-<tt class="descclassname">connectivity.</tt><tt class="descname">sortAdjacency</tt><big>(</big><em>adj</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#sortAdjacency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.sortAdjacency" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">connectivity.</tt><tt class="descname">sortAdjacency</tt><big>(</big><em>adj</em><big>)</big><a class="headerlink" href="#connectivity.sortAdjacency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sort an adjacency table.</p>
 <p>An adjacency table is an integer array where each row lists the numbers
 of the items that are connected to the item with number equal to the row
@@ -586,7 +633,7 @@ and where columns with only -1 values are removed.</p>
 
 <dl class="function">
 <dt id="connectivity.reduceAdjacency">
-<tt class="descclassname">connectivity.</tt><tt class="descname">reduceAdjacency</tt><big>(</big><em>adj</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#reduceAdjacency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.reduceAdjacency" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">connectivity.</tt><tt class="descname">reduceAdjacency</tt><big>(</big><em>adj</em><big>)</big><a class="headerlink" href="#connectivity.reduceAdjacency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reduce an adjacency table.</p>
 <p>An adjacency table is an integer array where each row lists the numbers
 of the items that are connected to the item with number equal to the row
@@ -626,7 +673,7 @@ padded with -1 values.</p>
 
 <dl class="function">
 <dt id="connectivity.findConnectedLineElems">
-<tt class="descclassname">connectivity.</tt><tt class="descname">findConnectedLineElems</tt><big>(</big><em>elems</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#findConnectedLineElems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.findConnectedLineElems" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">connectivity.</tt><tt class="descname">findConnectedLineElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.findConnectedLineElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a single path of connected line elems.</p>
 <p>This function is intended as a helper function for
 <a class="reference internal" href="#connectivity.connectedLineElems" title="connectivity.connectedLineElems"><tt class="xref py py-func docutils literal"><span class="pre">connectedLineElems()</span></tt></a>. It should probably not be used directly,
@@ -680,7 +727,7 @@ have their entries in the input table <cite>elems</cite> changed to -1.</p>
 
 <dl class="function">
 <dt id="connectivity.connectedLineElems">
-<tt class="descclassname">connectivity.</tt><tt class="descname">connectedLineElems</tt><big>(</big><em>elems</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#connectedLineElems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.connectedLineElems" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">connectivity.</tt><tt class="descname">connectedLineElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.connectedLineElems" title="Permalink to this definition">¶</a></dt>
 <dd><p>Partition a segmented curve into connected segments.</p>
 <p>The input argument is a (nelems,2) shaped array of integers.
 Each row holds the two vertex numbers of a single line segment.</p>
@@ -714,7 +761,7 @@ Each row holds the two vertex numbers of a single line segment.</p>
 
 <dl class="function">
 <dt id="connectivity.adjacencyArrays">
-<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyArrays</tt><big>(</big><em>elems</em>, <em>nsteps=1</em><big>)</big><a class="reference internal" href="../_modules/connectivity.html#adjacencyArrays"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#connectivity.adjacencyArrays" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyArrays</tt><big>(</big><em>elems</em>, <em>nsteps=1</em><big>)</big><a class="headerlink" href="#connectivity.adjacencyArrays" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create adjacency arrays for 2-node elements.</p>
 <p>elems is a (nr,2) shaped integer array.
 The result is a list of adjacency arrays, where row i of adjacency array j
@@ -747,33 +794,6 @@ This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="geometry.html"
-                        title="previous chapter">7. <tt class="docutils literal docutils literal"><span class="pre">geometry</span></tt> &#8212; A generic interface to the Coords transformation methods</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="simple.html"
-                        title="next chapter">9. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -791,15 +811,13 @@ This is: [adj0, adj1, ..., adjj, ... , adjn] with n=nsteps.</p>
         <li class="right" >
           <a href="geometry.html" title="7. geometry — A generic interface to the Coords transformation methods"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

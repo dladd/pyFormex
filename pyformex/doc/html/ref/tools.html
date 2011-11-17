@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>51. tools — tools.py &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="52. objects — Selection of objects from the global dictionary." href="objects.html" />
-    <link rel="prev" title="50. tetgen — read/write tetgen format files." href="tetgen.html" /> 
+    <link rel="prev" title="50. tetgen — read/write tetgen format files." href="tetgen.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,87 +77,31 @@
         <li class="right" >
           <a href="tetgen.html" title="50. tetgen — read/write tetgen format files."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
-            
-  <div class="section" id="module-tools">
-<span id="tools-tools-py"></span><span id="sec-ref-tools"></span><h1>51. <a class="reference internal" href="#module-tools" title="tools: tools.py"><tt class="xref py py-mod docutils literal"><span class="pre">tools</span></tt></a> &#8212; tools.py<a class="headerlink" href="#module-tools" title="Permalink to this headline">¶</a></h1>
-<p>Graphic Tools for pyFormex.</p>
-<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tools</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tools</span></tt></p>
-<dl class="function">
-<dt id="tools.getObjectItems">
-<tt class="descclassname">tools.</tt><tt class="descname">getObjectItems</tt><big>(</big><em>obj</em>, <em>items</em>, <em>mode</em><big>)</big><a class="reference internal" href="../_modules/tools.html#getObjectItems"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.getObjectItems" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the specified items from object.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.getCollection">
-<tt class="descclassname">tools.</tt><tt class="descname">getCollection</tt><big>(</big><em>K</em><big>)</big><a class="reference internal" href="../_modules/tools.html#getCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.getCollection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a collection.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.growCollection">
-<tt class="descclassname">tools.</tt><tt class="descname">growCollection</tt><big>(</big><em>K</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/tools.html#growCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.growCollection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Grow the collection with n frontal rings.</p>
-<p>K should be a collection of elements.
-This currently only works on surfaces. Objects that do not have a
-nodeFront() generator function are</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.partitionCollection">
-<tt class="descclassname">tools.</tt><tt class="descname">partitionCollection</tt><big>(</big><em>K</em><big>)</big><a class="reference internal" href="../_modules/tools.html#partitionCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.partitionCollection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Partition the collection according to node adjacency.</p>
-<p>The actor numbers will be connected to a collection of property numbers,
-e.g. 0 [1 [4,12] 2 [6,20]], where 0 is the actor number, 1 and 2 are the
-property numbers and 4, 12, 6 and 20 are the element numbers.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.getPartition">
-<tt class="descclassname">tools.</tt><tt class="descname">getPartition</tt><big>(</big><em>K</em>, <em>prop</em><big>)</big><a class="reference internal" href="../_modules/tools.html#getPartition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.getPartition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all partitions with property not in prop.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.exportObjects">
-<tt class="descclassname">tools.</tt><tt class="descname">exportObjects</tt><big>(</big><em>obj</em>, <em>name</em>, <em>single=False</em><big>)</big><a class="reference internal" href="../_modules/tools.html#exportObjects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.exportObjects" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export a list of objects under the given name.</p>
-<p>If obj is a list, and single=True, each element of the list is exported
-as a single item. The items will be given the names name-0, name-1, etc.
-Else, the obj is exported as is under the name.</p>
-</dd></dl>
-
-</div>
-
-
-          </div>
-        </div>
-      </div>
+    </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="tetgen.html"
                         title="previous chapter">50. <tt class="docutils literal docutils literal docutils literal"><span class="pre">tetgen</span></tt> &#8212; read/write tetgen format files.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="objects.html"
                         title="next chapter">52. <tt class="docutils literal docutils literal docutils literal"><span class="pre">objects</span></tt> &#8212; Selection of objects from the global dictionary.</a></p>
+  
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -162,6 +115,73 @@ Else, the obj is exported as is under the name.</p>
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-tools">
+<span id="tools-tools-py"></span><span id="sec-ref-tools"></span><h1>51. <a class="reference internal" href="#module-tools" title="tools: tools.py"><tt class="xref py py-mod docutils literal"><span class="pre">tools</span></tt></a> &#8212; tools.py<a class="headerlink" href="#module-tools" title="Permalink to this headline">¶</a></h1>
+<p>Graphic Tools for pyFormex.</p>
+<p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tools</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">tools</span></tt></p>
+<dl class="function">
+<dt id="tools.getObjectItems">
+<tt class="descclassname">tools.</tt><tt class="descname">getObjectItems</tt><big>(</big><em>obj</em>, <em>items</em>, <em>mode</em><big>)</big><a class="headerlink" href="#tools.getObjectItems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the specified items from object.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.getCollection">
+<tt class="descclassname">tools.</tt><tt class="descname">getCollection</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#tools.getCollection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a collection.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.growCollection">
+<tt class="descclassname">tools.</tt><tt class="descname">growCollection</tt><big>(</big><em>K</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#tools.growCollection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grow the collection with n frontal rings.</p>
+<p>K should be a collection of elements.
+This currently only works on surfaces. Objects that do not have a
+nodeFront() generator function are</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.partitionCollection">
+<tt class="descclassname">tools.</tt><tt class="descname">partitionCollection</tt><big>(</big><em>K</em><big>)</big><a class="headerlink" href="#tools.partitionCollection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partition the collection according to node adjacency.</p>
+<p>The actor numbers will be connected to a collection of property numbers,
+e.g. 0 [1 [4,12] 2 [6,20]], where 0 is the actor number, 1 and 2 are the
+property numbers and 4, 12, 6 and 20 are the element numbers.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.getPartition">
+<tt class="descclassname">tools.</tt><tt class="descname">getPartition</tt><big>(</big><em>K</em>, <em>prop</em><big>)</big><a class="headerlink" href="#tools.getPartition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all partitions with property not in prop.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.exportObjects">
+<tt class="descclassname">tools.</tt><tt class="descname">exportObjects</tt><big>(</big><em>obj</em>, <em>name</em>, <em>single=False</em><big>)</big><a class="headerlink" href="#tools.exportObjects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export a list of objects under the given name.</p>
+<p>If obj is a list, and single=True, each element of the list is exported
+as a single item. The items will be given the names name-0, name-1, etc.
+Else, the obj is exported as is under the name.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
         </div>
       </div>
       <div class="clearer"></div>
@@ -181,15 +201,13 @@ Else, the obj is exported as is under the name.</p>
         <li class="right" >
           <a href="tetgen.html" title="50. tetgen — read/write tetgen format files."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

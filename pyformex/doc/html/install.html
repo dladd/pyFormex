@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Installing pyFormex &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,12 +48,19 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
     <link rel="next" title="pyFormex tutorial" href="tutorial.html" />
-    <link rel="prev" title="Introduction to pyFormex" href="intro.html" /> 
+    <link rel="prev" title="Introduction to pyFormex" href="intro.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -67,12 +76,72 @@
         <li class="right" >
           <a href="intro.html" title="Introduction to pyFormex"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
- 
+        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installing pyFormex</a><ul>
+<li><a class="reference internal" href="#choose-installation-type">Choose installation type</a></li>
+<li><a class="reference internal" href="#official-release">Official release</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li><a class="reference internal" href="#installing-prerequisites-on-debian-gnu-linux">Installing prerequisites on <cite>Debian GNU/Linux</cite></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#download-pyformex">Download pyFormex</a></li>
+<li><a class="reference internal" href="#install-pyformex">Install pyFormex</a></li>
+<li><a class="reference internal" href="#install-additional-software">Install additional software</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#alpha-release">Alpha release</a></li>
+<li><a class="reference internal" href="#development-version">Development version</a></li>
+<li><a class="reference internal" href="#bumpix-live-gnu-linux-system">BuMPix Live GNU/Linux system</a></li>
+<li><a class="reference internal" href="#running-pyformex-on-non-linux-systems">Running pyFormex on non-Linux systems</a></li>
+</ul>
+</li>
+</ul>
+
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Introduction to pyFormex</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="next chapter">pyFormex tutorial</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -295,8 +364,8 @@ for all functions in the library), using the library will dramatically speed up 
 <div class="section" id="download-pyformex">
 <span id="sec-downloading"></span><h3>Download pyFormex<a class="headerlink" href="#download-pyformex" title="Permalink to this headline">¶</a></h3>
 <p>Official pyFormex releases can be downloaded from this website:
-<a class="reference external" href="http://developer.berlios.de/project/showfiles.php?group_id=2717">Official releases</a>. As of the writing of this manual, the latest
-release is 0.8.</p>
+<a class="reference external" href="http://download-mirror.savannah.gnu.org/releases/pyformex/">Releases</a>. As of the writing of this manual, the latest
+release is 0.8.4.</p>
 <p>pyFormex is currently distributed in the form of a .tar.gz (tarball) archive. See <a class="reference internal" href="#sec-installation-linux"><em>Install pyFormex</em></a> for how to proceed further with the downloaded file.</p>
 </div>
 <div class="section" id="install-pyformex">
@@ -422,15 +491,18 @@ prerequisites installed as for the
 by trying the command <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">help</span></tt>. If you do not have the command,
 you should install Subversion first. Debian and Ubuntu users can just
 do <tt class="docutils literal"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">subversion</span></tt>.</p>
-<p>Now you can anonymously check out the latest pyFormex source
-from the <a class="reference external" href="http://developer.berlios.de/svn/?group_id=2717">SVN repository</a> at the <a class="reference external" href="http://pyformex.berlios.de">development</a> site. You can do this
-with the command <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">checkout</span> <span class="pre">svn://svn.berlios.de/pyformex/trunk/pyformex</span>
-<span class="pre">MYDIR/pyformex</span></tt>, where <tt class="docutils literal"><span class="pre">MYDIR</span></tt> should be replaced with a path name of your
-choice, where you have write permission.
-Most users choose <tt class="docutils literal"><span class="pre">pyformex</span></tt> as base directory, but this is not
+<p>Now you can anonymously check out the latest pyFormex version
+from the <a class="reference external" href="http://savannah.nongnu.org/svn/?group=pyformex">Source code</a> repository at the <a class="reference external" href="http://savannah.nongnu.org/projects/pyformex/">Project page</a>. You can do this
+with the command</p>
+<div class="highlight-python"><pre>svn co svn://svn.savannah.nongnu.org/pyformex/trunk/pyformex MYDIR</pre>
+</div>
+<p>in which you replace <tt class="docutils literal"><span class="pre">MYDIR</span></tt> with the path name of a directory
+where you have write permission.
+Most users choose <tt class="docutils literal"><span class="pre">~/pyformex</span></tt> as the checkout directory, but this is not
 required. You can even check out different versions under
-different path names.</p>
-<p>Now change into the created <tt class="docutils literal"><span class="pre">MYDIR/pyformex</span></tt> directory and execute
+different path names. If you leave out the <tt class="docutils literal"><span class="pre">MYDIR</span></tt> from the above command,
+a new directory <tt class="docutils literal"><span class="pre">pyformex</span></tt> will be created in the current path.</p>
+<p>Now change into the created <tt class="docutils literal"><span class="pre">MYDIR</span></tt> directory and execute
 the command <tt class="docutils literal"><span class="pre">./pyformex</span></tt>. The latest pyFormex version should
 startup. The acceleration library will however not be available yet.
 To create the library, goto to the <tt class="docutils literal"><span class="pre">lib</span></tt> subdirectory and execute
@@ -450,7 +522,7 @@ library just like specified above.</p>
 <span id="sec-bumpix-live-linux"></span><h2>BuMPix Live GNU/Linux system<a class="headerlink" href="#bumpix-live-gnu-linux-system" title="Permalink to this headline">¶</a></h2>
 <p>If you do not have access to a running GNU/Linux system, or if the above
 installation methods fail for some unknown reason (remember, you can
-ask for help on the pyFormex <a class="reference external" href="http://developer.berlios.de/forum/?group_id=2717">Forums</a>), you can still run pyFormex by
+ask for help on the pyFormex <a class="reference external" href="http://savannah.nongnu.org/support/?group=pyformex">Support tracker</a>), you can still run pyFormex by
 using a <a class="reference external" href="ftp://bumps.ugent.be/pub/bumpix">Bumpix Live GNU/Linux</a> system. <cite>Bumpix Live</cite> is a full featured
 Debian GNU/Linux system including pyFormex that can be run from a single
 removable medium such as a CD or a USB key.
@@ -493,8 +565,7 @@ the bother to try it.</p>
 Lately there have been some successful attempts to get the basic
 functionality of pyFormex running on Windows. Thomas Praet has
 compiled <a class="reference external" href="ftp://ftp.berlios.de/pub/pyformex/Install_pyFormex_on_Windows.html">this document</a> on how to proceed.
-And a thread for discussing the installation on Windows has been
-opened in the <a class="reference external" href="http://developer.berlios.de/forum/forum.php?thread_id=37162&amp;forum_id=8348">forums.</a></p>
+Submit a request on the <a class="reference external" href="http://savannah.nongnu.org/support/?group=pyformex">Support tracker</a> if you need any help.</p>
 </div>
 <p>There may be a few things that have to be changed to successfully run
 pyFormex on other platforms (especially on Windows), but it should all
@@ -508,55 +579,6 @@ successful or not.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="index.html">Documentation</a></h3>
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Installing pyFormex</a><ul>
-<li><a class="reference internal" href="#choose-installation-type">Choose installation type</a></li>
-<li><a class="reference internal" href="#official-release">Official release</a><ul>
-<li><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
-<li><a class="reference internal" href="#installing-prerequisites-on-debian-gnu-linux">Installing prerequisites on <cite>Debian GNU/Linux</cite></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#download-pyformex">Download pyFormex</a></li>
-<li><a class="reference internal" href="#install-pyformex">Install pyFormex</a></li>
-<li><a class="reference internal" href="#install-additional-software">Install additional software</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#alpha-release">Alpha release</a></li>
-<li><a class="reference internal" href="#development-version">Development version</a></li>
-<li><a class="reference internal" href="#bumpix-live-gnu-linux-system">BuMPix Live GNU/Linux system</a></li>
-<li><a class="reference internal" href="#running-pyformex-on-non-linux-systems">Running pyFormex on non-Linux systems</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="intro.html"
-                        title="previous chapter">Introduction to pyFormex</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="tutorial.html"
-                        title="next chapter">pyFormex tutorial</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -576,14 +598,12 @@ successful or not.</p>
         <li class="right" >
           <a href="intro.html" title="Introduction to pyFormex"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
- 
+        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>47. turtle — Turtle graphics for pyFormex &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="48. dxf — Export geometry in DXF format." href="dxf.html" />
-    <link rel="prev" title="46. lima — Lindenmayer Systems" href="lima.html" /> 
+    <link rel="prev" title="46. lima — Lindenmayer Systems" href="lima.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="lima.html" title="46. lima — Lindenmayer Systems"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="lima.html"
+                        title="previous chapter">46. <tt class="docutils literal docutils literal docutils literal"><span class="pre">lima</span></tt> &#8212; Lindenmayer Systems</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dxf.html"
+                        title="next chapter">48. <tt class="docutils literal docutils literal docutils literal"><span class="pre">dxf</span></tt> &#8212; Export geometry in DXF format.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -102,19 +149,19 @@ thereby creating a line between start and endpoint or not.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">turtle</span></tt></p>
 <dl class="function">
 <dt id="turtle.sind">
-<tt class="descclassname">turtle.</tt><tt class="descname">sind</tt><big>(</big><em>arg</em><big>)</big><a class="reference internal" href="../_modules/turtle.html#sind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.sind" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">sind</tt><big>(</big><em>arg</em><big>)</big><a class="headerlink" href="#turtle.sind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sine of an angle in degrees.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="turtle.cosd">
-<tt class="descclassname">turtle.</tt><tt class="descname">cosd</tt><big>(</big><em>arg</em><big>)</big><a class="reference internal" href="../_modules/turtle.html#cosd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.cosd" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">cosd</tt><big>(</big><em>arg</em><big>)</big><a class="headerlink" href="#turtle.cosd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cosine of an angle in degrees.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="turtle.reset">
-<tt class="descclassname">turtle.</tt><tt class="descname">reset</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/turtle.html#reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.reset" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#turtle.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the turtle graphics engine to start conditions.</p>
 <p>This resets the turtle&#8217;s state to the starting conditions
 <tt class="docutils literal"><span class="pre">pos=(0,0),</span> <span class="pre">step=1.,</span> <span class="pre">angle=0.</span></tt>, removes everything from the state save
@@ -123,20 +170,20 @@ stack and empties the resulting path.</p>
 
 <dl class="function">
 <dt id="turtle.push">
-<tt class="descclassname">turtle.</tt><tt class="descname">push</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/turtle.html#push"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.push" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">push</tt><big>(</big><big>)</big><a class="headerlink" href="#turtle.push" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the current state of the turtle.</p>
 <p>The turtle state includes its position, step and angle.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="turtle.pop">
-<tt class="descclassname">turtle.</tt><tt class="descname">pop</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/turtle.html#pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.pop" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">pop</tt><big>(</big><big>)</big><a class="headerlink" href="#turtle.pop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restore the turtle state to the last saved state.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="turtle.fd">
-<tt class="descclassname">turtle.</tt><tt class="descname">fd</tt><big>(</big><em>d=None</em>, <em>connect=True</em><big>)</big><a class="reference internal" href="../_modules/turtle.html#fd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.fd" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">fd</tt><big>(</big><em>d=None</em>, <em>connect=True</em><big>)</big><a class="headerlink" href="#turtle.fd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move forward over a step <cite>d</cite>, with or without drawing.</p>
 <p>The direction is the current direction.
 If <cite>d</cite> is not given, the step size is the current step.</p>
@@ -146,19 +193,19 @@ straight line segment.</p>
 
 <dl class="function">
 <dt id="turtle.mv">
-<tt class="descclassname">turtle.</tt><tt class="descname">mv</tt><big>(</big><em>d=None</em><big>)</big><a class="reference internal" href="../_modules/turtle.html#mv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.mv" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">mv</tt><big>(</big><em>d=None</em><big>)</big><a class="headerlink" href="#turtle.mv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move over step <cite>d</cite> without drawing.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="turtle.ro">
-<tt class="descclassname">turtle.</tt><tt class="descname">ro</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="../_modules/turtle.html#ro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.ro" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">ro</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#turtle.ro" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rotate over angle <cite>a</cite>. The new direction is incremented with <cite>a</cite></p>
 </dd></dl>
 
 <dl class="function">
 <dt id="turtle.go">
-<tt class="descclassname">turtle.</tt><tt class="descname">go</tt><big>(</big><em>p</em><big>)</big><a class="reference internal" href="../_modules/turtle.html#go"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.go" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">go</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#turtle.go" title="Permalink to this definition">¶</a></dt>
 <dd><p>Go to position <cite>p</cite> (without drawing).</p>
 <p>While the <cite>mv</cite> method performs a relative move, this is an absolute move.
 <cite>p</cite> is a tuple of (x,y) values.</p>
@@ -166,19 +213,19 @@ straight line segment.</p>
 
 <dl class="function">
 <dt id="turtle.st">
-<tt class="descclassname">turtle.</tt><tt class="descname">st</tt><big>(</big><em>d</em><big>)</big><a class="reference internal" href="../_modules/turtle.html#st"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.st" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">st</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#turtle.st" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the step size.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="turtle.an">
-<tt class="descclassname">turtle.</tt><tt class="descname">an</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="../_modules/turtle.html#an"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.an" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">an</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#turtle.an" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the angle</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="turtle.play">
-<tt class="descclassname">turtle.</tt><tt class="descname">play</tt><big>(</big><em>scr</em>, <em>glob=None</em><big>)</big><a class="reference internal" href="../_modules/turtle.html#play"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#turtle.play" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">turtle.</tt><tt class="descname">play</tt><big>(</big><em>scr</em>, <em>glob=None</em><big>)</big><a class="headerlink" href="#turtle.play" title="Permalink to this definition">¶</a></dt>
 <dd><p>Play all the commands in the script <cite>scr</cite></p>
 <p>The script is a string of turtle commands, where each command
 is ended with a semicolon (&#8216;;&#8217;).</p>
@@ -190,33 +237,6 @@ module&#8217;s globals() after each turtle command.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="lima.html"
-                        title="previous chapter">46. <tt class="docutils literal docutils literal docutils literal"><span class="pre">lima</span></tt> &#8212; Lindenmayer Systems</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="dxf.html"
-                        title="next chapter">48. <tt class="docutils literal docutils literal docutils literal"><span class="pre">dxf</span></tt> &#8212; Export geometry in DXF format.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -236,15 +256,13 @@ module&#8217;s globals() after each turtle command.</p>
         <li class="right" >
           <a href="lima.html" title="46. lima — Lindenmayer Systems"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

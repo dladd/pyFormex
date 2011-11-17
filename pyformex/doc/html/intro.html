@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Introduction to pyFormex &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,12 +48,19 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
     <link rel="next" title="Installing pyFormex" href="install.html" />
-    <link rel="prev" title="pyFormex Documentation" href="index.html" /> 
+    <link rel="prev" title="pyFormex Documentation" href="index.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -67,12 +76,62 @@
         <li class="right" >
           <a href="index.html" title="pyFormex Documentation"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
- 
+        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to pyFormex</a><ul>
+<li><a class="reference internal" href="#what-is-pyformex">What is pyFormex?</a></li>
+<li><a class="reference internal" href="#license-and-disclaimer">License and Disclaimer</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#using-pyformex">Using pyFormex</a></li>
+<li><a class="reference internal" href="#getting-help">Getting Help</a></li>
+</ul>
+</li>
+</ul>
+
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">pyFormex Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Installing pyFormex</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -181,7 +240,7 @@ without charging a fee for it. <a class="footnote-reference" href="#id6" id="id3
 </div>
 <div class="section" id="license-and-disclaimer">
 <span id="sec-license"></span><h2>License and Disclaimer<a class="headerlink" href="#license-and-disclaimer" title="Permalink to this headline">¶</a></h2>
-<p>pyFormex is ©2004-2010 Benedict Verhegghe</p>
+<p>pyFormex is ©2004-2011 Benedict Verhegghe</p>
 <p>This program is free software; you can redistribute it and/or modify it under
 the terms of the <a class="reference external" href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> (GNU GPL), as published by the <a class="reference external" href="http://fsf.org">Free Software Foundation</a>; either version 3 of the License,
 or (at your option) any later version.</p>
@@ -212,7 +271,7 @@ of all aspects of pyFormex.</p>
 <h2>Getting Help<a class="headerlink" href="#getting-help" title="Permalink to this headline">¶</a></h2>
 <p>If you get stuck somewhere with using (or installing) pyFormex and you
 need help, the best way is to go to the <a class="reference external" href="http://pyformex.org">pyFormex website</a> and ask for help
-on one of the <a class="reference external" href="http://developer.berlios.de/forum/?group_id=2717">Forums</a>. There&#8217;s a good change you will get helped quickly
+via the <a class="reference external" href="http://savannah.nongnu.org/support/?group=pyformex">Support tracker</a>. There&#8217;s a good change you will get helped quickly
 there. Remember though that pyFormex is a free and open source software
 project and its developers are not paid to develop or maintain pyFormex,
 they just do this because they find pyFormex very helpful in their normal
@@ -242,45 +301,6 @@ support that are fee-based.</td></tr>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="index.html">Documentation</a></h3>
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Introduction to pyFormex</a><ul>
-<li><a class="reference internal" href="#what-is-pyformex">What is pyFormex?</a></li>
-<li><a class="reference internal" href="#license-and-disclaimer">License and Disclaimer</a></li>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#using-pyformex">Using pyFormex</a></li>
-<li><a class="reference internal" href="#getting-help">Getting Help</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">pyFormex Documentation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="install.html"
-                        title="next chapter">Installing pyFormex</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -298,14 +318,12 @@ support that are fee-based.</td></tr>
         <li class="right" >
           <a href="index.html" title="pyFormex Documentation"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
- 
+        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

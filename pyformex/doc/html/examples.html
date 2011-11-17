@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>pyFormex example scripts &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,12 +48,19 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
     <link rel="next" title="pyFormex reference manual" href="refman.html" />
-    <link rel="prev" title="pyFormex FAQ ‘n TRICKS" href="faq.html" /> 
+    <link rel="prev" title="pyFormex FAQ ‘n TRICKS" href="faq.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -67,12 +76,69 @@
         <li class="right" >
           <a href="faq.html" title="pyFormex FAQ ‘n TRICKS"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
- 
+        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pyFormex example scripts</a><ul>
+<li><a class="reference internal" href="#wirestent">WireStent</a><ul>
+<li><a class="reference internal" href="#creating-the-base-module">Creating the base module</a></li>
+<li><a class="reference internal" href="#extending-the-base-module">Extending the base module</a></li>
+<li><a class="reference internal" href="#full-nearly-planar-pattern">Full nearly planar pattern</a></li>
+<li><a class="reference internal" href="#cylindrical-stent-structure">Cylindrical stent structure</a></li>
+<li><a class="reference internal" href="#parametric-stent-geometry">Parametric stent geometry</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#operating-on-surface-meshes">Operating on surface meshes</a><ul>
+<li><a class="reference internal" href="#unroll-stent">Unroll stent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="faq.html"
+                        title="previous chapter">pyFormex FAQ &#8216;n TRICKS</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="refman.html"
+                        title="next chapter">pyFormex reference manual</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -215,7 +281,53 @@ for easy referencing, but are not part of the script itself.</p>
 118
 119
 120
-121</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex --gui</span>
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex --gui</span>
+<span class="c">##</span>
+<span class="c">##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011</span>
+<span class="c">##  pyFormex is a tool for generating, manipulating and transforming 3D</span>
+<span class="c">##  geometrical models by sequences of mathematical operations.</span>
+<span class="c">##  Home page: http://pyformex.org</span>
+<span class="c">##  Project page:  https://savannah.nongnu.org/projects/pyformex/</span>
+<span class="c">##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) </span>
+<span class="c">##  Distributed under the GNU General Public License version 3 or later.</span>
+<span class="c">##</span>
+<span class="c">##</span>
+<span class="c">##  This program is free software: you can redistribute it and/or modify</span>
+<span class="c">##  it under the terms of the GNU General Public License as published by</span>
+<span class="c">##  the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c">##  (at your option) any later version.</span>
+<span class="c">##</span>
+<span class="c">##  This program is distributed in the hope that it will be useful,</span>
+<span class="c">##  but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">##  GNU General Public License for more details.</span>
+<span class="c">##</span>
+<span class="c">##  You should have received a copy of the GNU General Public License</span>
+<span class="c">##  along with this program.  If not, see http://www.gnu.org/licenses/.</span>
+<span class="c">##</span>
 <span class="sd">&quot;&quot;&quot;Wirestent.py</span>
 
 <span class="sd">A pyFormex script to generate a geometrical model of a wire stent.</span>
@@ -548,7 +660,33 @@ the wire stent geometry is defined as a the <tt class="docutils literal"><span c
 <img alt="Stent variant" src="_images/WireStentD32L40d22n10b50.png" style="width: 300px;" />
 <p class="caption">Stent variant with <img class="math" src="_images/math/03093f6aafd62c55673071ae075bcc438f87e571.png" alt="De=32, nx=10, \beta=50"/></p>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">examples.WireStent</span> <span class="kn">import</span> <span class="n">DoubleHelixStent</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex</span>
+<span class="c">##</span>
+<span class="c">##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011</span>
+<span class="c">##  pyFormex is a tool for generating, manipulating and transforming 3D</span>
+<span class="c">##  geometrical models by sequences of mathematical operations.</span>
+<span class="c">##  Home page: http://pyformex.org</span>
+<span class="c">##  Project page:  https://savannah.nongnu.org/projects/pyformex/</span>
+<span class="c">##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) </span>
+<span class="c">##  Distributed under the GNU General Public License version 3 or later.</span>
+<span class="c">##</span>
+<span class="c">##</span>
+<span class="c">##  This program is free software: you can redistribute it and/or modify</span>
+<span class="c">##  it under the terms of the GNU General Public License as published by</span>
+<span class="c">##  the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c">##  (at your option) any later version.</span>
+<span class="c">##</span>
+<span class="c">##  This program is distributed in the hope that it will be useful,</span>
+<span class="c">##  but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c">##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c">##  GNU General Public License for more details.</span>
+<span class="c">##</span>
+<span class="c">##  You should have received a copy of the GNU General Public License</span>
+<span class="c">##  along with this program.  If not, see http://www.gnu.org/licenses/.</span>
+<span class="c">##</span>
+
+
+<span class="kn">from</span> <span class="nn">examples.WireStent</span> <span class="kn">import</span> <span class="n">DoubleHelixStent</span>
 
 <span class="k">for</span> <span class="n">De</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">16.</span><span class="p">,</span><span class="mf">32.</span><span class="p">]:</span>
     <span class="k">for</span> <span class="n">nx</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">]:</span>
@@ -621,52 +759,6 @@ is 9.19 mm.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="index.html">Documentation</a></h3>
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">pyFormex example scripts</a><ul>
-<li><a class="reference internal" href="#wirestent">WireStent</a><ul>
-<li><a class="reference internal" href="#creating-the-base-module">Creating the base module</a></li>
-<li><a class="reference internal" href="#extending-the-base-module">Extending the base module</a></li>
-<li><a class="reference internal" href="#full-nearly-planar-pattern">Full nearly planar pattern</a></li>
-<li><a class="reference internal" href="#cylindrical-stent-structure">Cylindrical stent structure</a></li>
-<li><a class="reference internal" href="#parametric-stent-geometry">Parametric stent geometry</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#operating-on-surface-meshes">Operating on surface meshes</a><ul>
-<li><a class="reference internal" href="#unroll-stent">Unroll stent</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="faq.html"
-                        title="previous chapter">pyFormex FAQ &#8216;n TRICKS</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="refman.html"
-                        title="next chapter">pyFormex reference manual</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -684,14 +776,12 @@ is 9.19 mm.</p>
         <li class="right" >
           <a href="faq.html" title="pyFormex FAQ ‘n TRICKS"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
- 
+        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

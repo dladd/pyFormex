@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>7. geometry — A generic interface to the Coords transformation methods &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
-    <link rel="prev" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" /> 
+    <link rel="prev" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="colors.html"
+                        title="previous chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="connectivity.html"
+                        title="next chapter">8. <tt class="docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -89,7 +136,7 @@ Coords class to the derived classes.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">geometry</span></tt></p>
 <dl class="class">
 <dt id="geometry.Geometry">
-<em class="property">class </em><tt class="descclassname">geometry.</tt><tt class="descname">Geometry</tt><a class="reference internal" href="../_modules/geometry.html#Geometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">geometry.</tt><tt class="descname">Geometry</tt><a class="headerlink" href="#geometry.Geometry" title="Permalink to this definition">¶</a></dt>
 <dd><p>A generic geometry object allowing transformation of coords sets.</p>
 <p>The Geometry class is a generic parent class for all geometric classes,
 intended to make the Coords transformations available without explicit
@@ -182,230 +229,230 @@ arguments of these methods:</p>
 <a class="reference internal" href="#geometry.Geometry.trl" title="geometry.Geometry.trl"><tt class="xref py py-meth docutils literal"><span class="pre">trl()</span></tt></a>.</p>
 <dl class="method">
 <dt id="geometry.Geometry.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.copy" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#geometry.Geometry.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a deep copy of the object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.scale">
-<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.scale" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;scale&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.scale" title="coords.Coords.scale"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.scale()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.resized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#geometry.Geometry.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.translate">
-<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.translate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.translate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.centered">
-<tt class="descname">centered</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.centered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.centered" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">centered</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.centered" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;centered&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.centered" title="coords.Coords.centered"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.centered()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.align">
-<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.align"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.align" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.align" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;align&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.align" title="coords.Coords.align"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.align()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.rotate">
-<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.rotate" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.rotate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.shear">
-<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.shear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.shear" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.shear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;shear&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.shear" title="coords.Coords.shear"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.shear()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.reflect">
-<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.reflect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.reflect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.reflect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;reflect&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.reflect" title="coords.Coords.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.reflect()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.affine">
-<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.affine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.affine" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.affine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;affine&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.affine" title="coords.Coords.affine"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.affine()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.cylindrical">
-<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.cylindrical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.cylindrical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.cylindrical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;cylindrical&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.cylindrical" title="coords.Coords.cylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.cylindrical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.hyperCylindrical">
-<tt class="descname">hyperCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.hyperCylindrical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">hyperCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;hyperCylindrical&#8217; transformation to the Geometry object.</p>
 <p>See <tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.hyperCylindrical()</span></tt> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.toCylindrical">
-<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.toCylindrical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.toCylindrical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;toCylindrical&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.toCylindrical" title="coords.Coords.toCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toCylindrical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.spherical">
-<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.spherical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.spherical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.spherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;spherical&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.spherical" title="coords.Coords.spherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.spherical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.superSpherical">
-<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.superSpherical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.superSpherical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.superSpherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;superSpherical&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.superSpherical" title="coords.Coords.superSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.superSpherical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.egg">
-<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.egg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.egg" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.egg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;egg&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.egg" title="coords.Coords.egg"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.egg()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.toSpherical">
-<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.toSpherical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.toSpherical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.toSpherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;toSpherical&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.toSpherical" title="coords.Coords.toSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toSpherical()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.bump">
-<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.bump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.bump" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.bump" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;bump&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.bump" title="coords.Coords.bump"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.bump1">
-<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.bump1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.bump1" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.bump1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;bump1&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.bump1" title="coords.Coords.bump1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump1()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.bump2">
-<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.bump2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.bump2" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.bump2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;bump2&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.bump2" title="coords.Coords.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump2()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.flare">
-<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.flare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.flare" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.flare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;flare&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.flare" title="coords.Coords.flare"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.flare()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.map">
-<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.map" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;map&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.map" title="coords.Coords.map"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.map1">
-<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.map1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.map1" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.map1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;map1&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map1()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.mapd">
-<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.mapd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.mapd" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.mapd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;mapd&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.mapd" title="coords.Coords.mapd"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.mapd()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.replace">
-<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.replace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.replace" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;replace&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.replace" title="coords.Coords.replace"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.replace()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.swapAxes">
-<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.swapAxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.swapAxes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.swapAxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;swapAxes&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.swapAxes" title="coords.Coords.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.swapAxes()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.rollAxes">
-<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.rollAxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.rollAxes" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.rollAxes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;rollAxes&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.rollAxes" title="coords.Coords.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rollAxes()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.projectOnPlane">
-<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.projectOnPlane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.projectOnPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.projectOnSphere">
-<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.projectOnSphere"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnSphere" title="coords.Coords.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnSphere()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.projectOnCylinder">
-<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.projectOnCylinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.isopar">
-<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.isopar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.isopar" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.isopar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;isopar&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.isopar" title="coords.Coords.isopar"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.isopar()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.transformCS">
-<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.transformCS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.transformCS" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.transformCS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;transformCS&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.transformCS" title="coords.Coords.transformCS"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.transformCS()</span></tt></a> for details.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="geometry.Geometry.addNoise">
-<tt class="descname">addNoise</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.addNoise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.addNoise" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">addNoise</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#geometry.Geometry.addNoise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;addNoise&#8217; transformation to the Geometry object.</p>
 <p>See <a class="reference internal" href="coords.html#coords.Coords.addNoise" title="coords.Coords.addNoise"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.addNoise()</span></tt></a> for details.</p>
 </dd></dl>
@@ -426,7 +473,7 @@ arguments of these methods:</p>
 
 <dl class="method">
 <dt id="geometry.Geometry.write">
-<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="reference internal" href="../_modules/geometry.html#Geometry.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#geometry.Geometry.write" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#geometry.Geometry.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a Geometry to a .pgf file.</p>
 <p>If fil is a string, a file with that name is opened. Else fil should
 be an open file.
@@ -442,33 +489,6 @@ If fil is a string, the file is closed prior to returning.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="colors.html"
-                        title="previous chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="connectivity.html"
-                        title="next chapter">8. <tt class="docutils literal docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -488,15 +508,13 @@ If fil is a string, the file is closed prior to returning.</p>
         <li class="right" >
           <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

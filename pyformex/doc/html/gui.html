@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>The Graphical User Interface &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
     <link rel="up" title="pyFormex user guide" href="user-guide.html" />
     <link rel="next" title="Modeling Geometry" href="geometry.html" />
-    <link rel="prev" title="Running pyFormex" href="running.html" /> 
+    <link rel="prev" title="Running pyFormex" href="running.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,74 @@
         <li class="right" >
           <a href="running.html" title="Running pyFormex"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="user-guide.html" accesskey="U">pyFormex user guide</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The Graphical User Interface</a><ul>
+<li><a class="reference internal" href="#starting-the-gui">Starting the GUI</a></li>
+<li><a class="reference internal" href="#basic-use-of-the-gui">Basic use of the GUI</a></li>
+<li><a class="reference internal" href="#the-file-menu">The <em class="menuselection">File</em> menu</a></li>
+<li><a class="reference internal" href="#the-settings-menu">The <em class="menuselection">Settings</em> menu</a></li>
+<li><a class="reference internal" href="#the-viewport-menu">The viewport menu</a></li>
+<li><a class="reference internal" href="#mouse-interactions-on-the-canvas">Mouse interactions on the canvas</a><ul>
+<li><a class="reference internal" href="#rotate-pan-and-zoom">Rotate, pan and zoom</a></li>
+<li><a class="reference internal" href="#interactive-selection">Interactive selection</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#customizing-the-gui">Customizing the GUI</a><ul>
+<li><a class="reference internal" href="#changing-the-appearance-of-the-gui">Changing the appearance of the GUI</a></li>
+<li><a class="reference internal" href="#adding-your-scripts-in-a-menu">Adding your scripts in a menu</a></li>
+<li><a class="reference internal" href="#adding-custom-menus">Adding custom menus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="running.html"
+                        title="previous chapter">Running pyFormex</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="geometry.html"
+                        title="next chapter">Modeling Geometry</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -342,56 +412,6 @@ use is illustrated in the example Stl.py.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="index.html">Documentation</a></h3>
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">The Graphical User Interface</a><ul>
-<li><a class="reference internal" href="#starting-the-gui">Starting the GUI</a></li>
-<li><a class="reference internal" href="#basic-use-of-the-gui">Basic use of the GUI</a></li>
-<li><a class="reference internal" href="#the-file-menu">The <em class="menuselection">File</em> menu</a></li>
-<li><a class="reference internal" href="#the-settings-menu">The <em class="menuselection">Settings</em> menu</a></li>
-<li><a class="reference internal" href="#the-viewport-menu">The viewport menu</a></li>
-<li><a class="reference internal" href="#mouse-interactions-on-the-canvas">Mouse interactions on the canvas</a><ul>
-<li><a class="reference internal" href="#rotate-pan-and-zoom">Rotate, pan and zoom</a></li>
-<li><a class="reference internal" href="#interactive-selection">Interactive selection</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#customizing-the-gui">Customizing the GUI</a><ul>
-<li><a class="reference internal" href="#changing-the-appearance-of-the-gui">Changing the appearance of the GUI</a></li>
-<li><a class="reference internal" href="#adding-your-scripts-in-a-menu">Adding your scripts in a menu</a></li>
-<li><a class="reference internal" href="#adding-custom-menus">Adding custom menus</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="running.html"
-                        title="previous chapter">Running pyFormex</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="geometry.html"
-                        title="next chapter">Modeling Geometry</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -409,15 +429,13 @@ use is illustrated in the example Stl.py.</p>
         <li class="right" >
           <a href="running.html" title="Running pyFormex"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="user-guide.html" >pyFormex user guide</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

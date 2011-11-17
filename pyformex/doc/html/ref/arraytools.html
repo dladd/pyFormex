@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="4. script — Basic pyFormex script functions" href="script.html" />
-    <link rel="prev" title="2. formex — Formex algebra in Python" href="formex.html" /> 
+    <link rel="prev" title="2. formex — Formex algebra in Python" href="formex.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="formex.html" title="2. formex — Formex algebra in Python"
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="formex.html"
+                        title="previous chapter">2. <tt class="docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="script.html"
+                        title="next chapter">4. <tt class="docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -93,7 +140,7 @@ everything from this module:</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">arraytools</span></tt></p>
 <dl class="function">
 <dt id="arraytools.sind">
-<tt class="descclassname">arraytools.</tt><tt class="descname">sind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#sind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.sind" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">sind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.sind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sine of an angle in degrees.</p>
 <p>For convenience, this can also be used with an angle in radians,
 by specifying <cite>angle_spec=Rad</cite>.</p>
@@ -105,7 +152,7 @@ by specifying <cite>angle_spec=Rad</cite>.</p>
 
 <dl class="function">
 <dt id="arraytools.cosd">
-<tt class="descclassname">arraytools.</tt><tt class="descname">cosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#cosd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.cosd" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">cosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.cosd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cosine of an angle in degrees.</p>
 <p>For convenience, this can also be used with an angle in radians,
 by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
@@ -117,7 +164,7 @@ by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</spa
 
 <dl class="function">
 <dt id="arraytools.tand">
-<tt class="descclassname">arraytools.</tt><tt class="descname">tand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#tand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.tand" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">tand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.tand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the tangens of an angle in degrees.</p>
 <p>For convenience, this can also be used with an angle in radians,
 by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</span></tt>.</p>
@@ -125,7 +172,7 @@ by specifying <tt class="docutils literal"><span class="pre">angle_spec=Rad</spa
 
 <dl class="function">
 <dt id="arraytools.arcsind">
-<tt class="descclassname">arraytools.</tt><tt class="descname">arcsind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#arcsind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.arcsind" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">arcsind</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arcsind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle whose sine is equal to the argument.</p>
 <p>By default, the angle is returned in Degrees.
 Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
@@ -137,7 +184,7 @@ Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
 
 <dl class="function">
 <dt id="arraytools.arccosd">
-<tt class="descclassname">arraytools.</tt><tt class="descname">arccosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#arccosd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.arccosd" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">arccosd</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arccosd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle whose cosine is equal to the argument.</p>
 <p>By default, the angle is returned in Degrees.
 Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
@@ -149,7 +196,7 @@ Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
 
 <dl class="function">
 <dt id="arraytools.arctand">
-<tt class="descclassname">arraytools.</tt><tt class="descname">arctand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#arctand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.arctand" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">arctand</tt><big>(</big><em>arg</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arctand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle whose tangens is equal to the argument.</p>
 <p>By default, the angle is returned in Degrees.
 Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
@@ -161,7 +208,7 @@ Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.</p>
 
 <dl class="function">
 <dt id="arraytools.arctand2">
-<tt class="descclassname">arraytools.</tt><tt class="descname">arctand2</tt><big>(</big><em>sin</em>, <em>cos</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#arctand2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.arctand2" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">arctand2</tt><big>(</big><em>sin</em>, <em>cos</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.arctand2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle whose sine and cosine values are given.</p>
 <p>By default, the angle is returned in Degrees.
 Specifying <cite>angle_spec=Rad</cite> will return the angle in radians.
@@ -174,7 +221,7 @@ This returns an angle in the range ]-180,180].</p>
 
 <dl class="function">
 <dt id="arraytools.niceLogSize">
-<tt class="descclassname">arraytools.</tt><tt class="descname">niceLogSize</tt><big>(</big><em>f</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#niceLogSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.niceLogSize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">niceLogSize</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#arraytools.niceLogSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the smallest integer e such that 10**e &gt; abs(f).</p>
 <p>This returns the number of digits before the decimal point.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="p">[</span> <span class="n">niceLogSize</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.3</span><span class="p">,</span> <span class="mf">35679.23</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.00045676</span><span class="p">]</span> <span class="p">]</span>
@@ -185,7 +232,7 @@ This returns an angle in the range ]-180,180].</p>
 
 <dl class="function">
 <dt id="arraytools.niceNumber">
-<tt class="descclassname">arraytools.</tt><tt class="descname">niceNumber</tt><big>(</big><em>f</em>, <em>below=False</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#niceNumber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.niceNumber" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">niceNumber</tt><big>(</big><em>f</em>, <em>below=False</em><big>)</big><a class="headerlink" href="#arraytools.niceNumber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a nice number close to f.</p>
 <p>f is a float number, whose sign is disregarded.</p>
 <p>A number close to abs(f) but having only 1 significant digit is returned.
@@ -202,7 +249,7 @@ value above.</p>
 
 <dl class="function">
 <dt id="arraytools.dotpr">
-<tt class="descclassname">arraytools.</tt><tt class="descname">dotpr</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#dotpr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.dotpr" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">dotpr</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.dotpr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the dot product of vectors of A and B in the direction of axis.</p>
 <p>This multiplies the elements of the arrays A and B, and the sums the
 result in the direction of the specified axis. Default is the last axis.
@@ -219,28 +266,28 @@ A and B should be broadcast compatible.</p>
 
 <dl class="function">
 <dt id="arraytools.length">
-<tt class="descclassname">arraytools.</tt><tt class="descname">length</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.length" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">length</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the length of the vectors of A in the direction of axis.</p>
 <p>The default axis is the last.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.normalize">
-<tt class="descclassname">arraytools.</tt><tt class="descname">normalize</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.normalize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">normalize</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the vectors of A in the direction of axis.</p>
 <p>The default axis is the last.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.projection">
-<tt class="descclassname">arraytools.</tt><tt class="descname">projection</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#projection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.projection" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">projection</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.projection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the (signed) length of the projection of vector of A on B.</p>
 <p>The default axis is the last.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.norm">
-<tt class="descclassname">arraytools.</tt><tt class="descname">norm</tt><big>(</big><em>v</em>, <em>n=2</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.norm" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">norm</tt><big>(</big><em>v</em>, <em>n=2</em><big>)</big><a class="headerlink" href="#arraytools.norm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return thr <cite>n</cite>-norm of the vector <cite>v</cite>.</p>
 <p>Default is the quadratic norm (vector length).
 <cite>n == 1</cite> returns the sum.
@@ -249,7 +296,7 @@ A and B should be broadcast compatible.</p>
 
 <dl class="function">
 <dt id="arraytools.horner">
-<tt class="descclassname">arraytools.</tt><tt class="descname">horner</tt><big>(</big><em>a</em>, <em>u</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#horner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.horner" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">horner</tt><big>(</big><em>a</em>, <em>u</em><big>)</big><a class="headerlink" href="#arraytools.horner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the value of a polynom using Horner&#8217;s rule.</p>
 <p>Params:</p>
 <ul class="simple">
@@ -268,7 +315,7 @@ float(nu,nd), nd-dimensional values of the polynom.</p>
 
 <dl class="function">
 <dt id="arraytools.solveMany">
-<tt class="descclassname">arraytools.</tt><tt class="descname">solveMany</tt><big>(</big><em>A</em>, <em>b</em>, <em>direct=True</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#solveMany"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.solveMany" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">solveMany</tt><big>(</big><em>A</em>, <em>b</em>, <em>direct=True</em><big>)</big><a class="headerlink" href="#arraytools.solveMany" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solve many systems of linear equations.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -285,13 +332,13 @@ method used if <tt class="docutils literal"><span class="pre">ndof</span> <span 
 
 <dl class="function">
 <dt id="arraytools.inside">
-<tt class="descclassname">arraytools.</tt><tt class="descname">inside</tt><big>(</big><em>p</em>, <em>mi</em>, <em>ma</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#inside"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.inside" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">inside</tt><big>(</big><em>p</em>, <em>mi</em>, <em>ma</em><big>)</big><a class="headerlink" href="#arraytools.inside" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if point p is inside bbox defined by points mi and ma</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.isClose">
-<tt class="descclassname">arraytools.</tt><tt class="descname">isClose</tt><big>(</big><em>values</em>, <em>target</em>, <em>rtol=1.0000000000000001e-05</em>, <em>atol=1e-08</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#isClose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.isClose" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">isClose</tt><big>(</big><em>values</em>, <em>target</em>, <em>rtol=1.0000000000000001e-05</em>, <em>atol=1e-08</em><big>)</big><a class="headerlink" href="#arraytools.isClose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an array flagging the elements close to target.</p>
 <p><cite>values</cite> is a float array, <cite>target</cite> is a float value.
 <cite>values</cite> and <cite>target</cite> should be broadcastable to the same shape.</p>
@@ -303,7 +350,7 @@ Two values <cite>a</cite> and <cite>b</cite> are considered close if
 
 <dl class="function">
 <dt id="arraytools.anyVector">
-<tt class="descclassname">arraytools.</tt><tt class="descname">anyVector</tt><big>(</big><em>v</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#anyVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.anyVector" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">anyVector</tt><big>(</big><em>v</em><big>)</big><a class="headerlink" href="#arraytools.anyVector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a 3D vector.</p>
 <p>v is some data compatible with a (3)-shaped float array.
 Returns v as such an array.</p>
@@ -311,7 +358,7 @@ Returns v as such an array.</p>
 
 <dl class="function">
 <dt id="arraytools.unitVector">
-<tt class="descclassname">arraytools.</tt><tt class="descname">unitVector</tt><big>(</big><em>v</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#unitVector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.unitVector" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">unitVector</tt><big>(</big><em>v</em><big>)</big><a class="headerlink" href="#arraytools.unitVector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a unit vector in the direction of v.</p>
 <p><cite>v</cite> is either an integer specifying one of the global axes (0,1,2),
 or a 3-element array or compatible.</p>
@@ -319,7 +366,7 @@ or a 3-element array or compatible.</p>
 
 <dl class="function">
 <dt id="arraytools.rotationMatrix">
-<tt class="descclassname">arraytools.</tt><tt class="descname">rotationMatrix</tt><big>(</big><em>angle</em>, <em>axis=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#rotationMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.rotationMatrix" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">rotationMatrix</tt><big>(</big><em>angle</em>, <em>axis=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.rotationMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a rotation matrix over angle, optionally around axis.</p>
 <p>The angle is specified in degrees, unless angle_spec=Rad is specified.
 If axis==None (default), a 2x2 rotation matrix is returned.
@@ -339,7 +386,7 @@ The result is returned as an array.</p>
 
 <dl class="function">
 <dt id="arraytools.rotMatrix">
-<tt class="descclassname">arraytools.</tt><tt class="descname">rotMatrix</tt><big>(</big><em>u, w=[0.0, 0.0, 1.0], n=3</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#rotMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.rotMatrix" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">rotMatrix</tt><big>(</big><em>u, w=[0.0, 0.0, 1.0], n=3</em><big>)</big><a class="headerlink" href="#arraytools.rotMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a rotation matrix that rotates axis 0 to the given vector.</p>
 <p>u is a vector representing the 
 Return either a 3x3(default) or 4x4(if n==4) rotation matrix.</p>
@@ -347,7 +394,7 @@ Return either a 3x3(default) or 4x4(if n==4) rotation matrix.</p>
 
 <dl class="function">
 <dt id="arraytools.rotationAnglesFromMatrix">
-<tt class="descclassname">arraytools.</tt><tt class="descname">rotationAnglesFromMatrix</tt><big>(</big><em>mat</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#rotationAnglesFromMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.rotationAnglesFromMatrix" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">rotationAnglesFromMatrix</tt><big>(</big><em>mat</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#arraytools.rotationAnglesFromMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return rotation angles from rotation matrix mat.</p>
 <p>This returns the three angles around the global axes 0, 1 and 2.
 The angles are returned in degrees, unless angle_spec=Rad.</p>
@@ -355,7 +402,7 @@ The angles are returned in degrees, unless angle_spec=Rad.</p>
 
 <dl class="function">
 <dt id="arraytools.vectorRotation">
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorRotation</tt><big>(</big><em>vec1, vec2, upvec=[0.0, 0.0, 1.0]</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#vectorRotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.vectorRotation" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorRotation</tt><big>(</big><em>vec1, vec2, upvec=[0.0, 0.0, 1.0]</em><big>)</big><a class="headerlink" href="#arraytools.vectorRotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a rotation matrix for rotating vector vec1 to vec2</p>
 <p>The rotation matrix will be such that the plane of vec2 and the
 rotated upvec will be parallel to the original upvec.</p>
@@ -366,7 +413,7 @@ The returned matrix should be used in postmultiplication to the Coords.</p>
 
 <dl class="function">
 <dt id="arraytools.growAxis">
-<tt class="descclassname">arraytools.</tt><tt class="descname">growAxis</tt><big>(</big><em>a</em>, <em>add</em>, <em>axis=-1</em>, <em>fill=0</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#growAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.growAxis" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">growAxis</tt><big>(</big><em>a</em>, <em>add</em>, <em>axis=-1</em>, <em>fill=0</em><big>)</big><a class="headerlink" href="#arraytools.growAxis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increase the length of a single array axis.</p>
 <p>The specified axis of the array <cite>a</cite> is increased with a value <cite>add</cite> and
 the new elements all get the value <cite>fill</cite>.</p>
@@ -397,7 +444,7 @@ value <cite>fill</cite>.</dd>
 
 <dl class="function">
 <dt id="arraytools.reorderAxis">
-<tt class="descclassname">arraytools.</tt><tt class="descname">reorderAxis</tt><big>(</big><em>a</em>, <em>order</em>, <em>axis=-1</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#reorderAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.reorderAxis" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">reorderAxis</tt><big>(</big><em>a</em>, <em>order</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.reorderAxis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reorder the planes of an array along the specified axis.</p>
 <p>The elements of the array are reordered along the specified axis
 according to the specified order.</p>
@@ -434,7 +481,7 @@ along the specified axis has been changed.</dd>
 
 <dl class="function">
 <dt id="arraytools.reverseAxis">
-<tt class="descclassname">arraytools.</tt><tt class="descname">reverseAxis</tt><big>(</big><em>a</em>, <em>axis=-1</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#reverseAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.reverseAxis" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">reverseAxis</tt><big>(</big><em>a</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.reverseAxis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reverse the elements along a computed axis.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reverseAxis</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],</span><span class="mi">0</span><span class="p">)</span>
@@ -448,7 +495,7 @@ an indexing operation, like <tt class="docutils literal"><span class="pre">a[:,:
 
 <dl class="function">
 <dt id="arraytools.addAxis">
-<tt class="descclassname">arraytools.</tt><tt class="descname">addAxis</tt><big>(</big><em>a</em>, <em>axis=0</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#addAxis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.addAxis" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">addAxis</tt><big>(</big><em>a</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#arraytools.addAxis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an additional axis with length 1 to an array.</p>
 <p>The new axis is inserted before the specified one. Default is to
 add it at the front.</p>
@@ -456,7 +503,7 @@ add it at the front.</p>
 
 <dl class="function">
 <dt id="arraytools.stack">
-<tt class="descclassname">arraytools.</tt><tt class="descname">stack</tt><big>(</big><em>al</em>, <em>axis=0</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.stack" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">stack</tt><big>(</big><em>al</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#arraytools.stack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stack a list of arrays along a new axis.</p>
 <p>al is a list of arrays all of the same shape.
 The return value is a new array with one extra axis, along which the
@@ -466,7 +513,7 @@ and is the first axis by default.</p>
 
 <dl class="function">
 <dt id="arraytools.checkArray">
-<tt class="descclassname">arraytools.</tt><tt class="descname">checkArray</tt><big>(</big><em>a</em>, <em>shape=None</em>, <em>kind=None</em>, <em>allow=None</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#checkArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.checkArray" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkArray</tt><big>(</big><em>a</em>, <em>shape=None</em>, <em>kind=None</em>, <em>allow=None</em><big>)</big><a class="headerlink" href="#arraytools.checkArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that an array a has the correct shape and type.</p>
 <p>The input <cite>a</cite> is anything that can be converted into a numpy array.
 Either <cite>shape</cite> and/or <cite>kind</cite> can be specified. and will then be checked.
@@ -479,7 +526,7 @@ conversion to the requested type is attempted.</p>
 
 <dl class="function">
 <dt id="arraytools.checkArray1D">
-<tt class="descclassname">arraytools.</tt><tt class="descname">checkArray1D</tt><big>(</big><em>a</em>, <em>size=None</em>, <em>kind=None</em>, <em>allow=None</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#checkArray1D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.checkArray1D" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkArray1D</tt><big>(</big><em>a</em>, <em>size=None</em>, <em>kind=None</em>, <em>allow=None</em><big>)</big><a class="headerlink" href="#arraytools.checkArray1D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that an array a has the correct size and type.</p>
 <p>Either size and or kind can be specified.
 If kind does not match, but is included in allow, conversion to the
@@ -490,7 +537,7 @@ Else, an error is raised.</p>
 
 <dl class="function">
 <dt id="arraytools.checkArrayDim">
-<tt class="descclassname">arraytools.</tt><tt class="descname">checkArrayDim</tt><big>(</big><em>a</em>, <em>ndim=-1</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#checkArrayDim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.checkArrayDim" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkArrayDim</tt><big>(</big><em>a</em>, <em>ndim=-1</em><big>)</big><a class="headerlink" href="#arraytools.checkArrayDim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that an array has the correct dimensionality.</p>
 <p>Returns asarray(a) if ndim &lt; 0 or a.ndim == ndim
 Else, an error is raised.</p>
@@ -498,7 +545,7 @@ Else, an error is raised.</p>
 
 <dl class="function">
 <dt id="arraytools.checkUniqueNumbers">
-<tt class="descclassname">arraytools.</tt><tt class="descname">checkUniqueNumbers</tt><big>(</big><em>nrs</em>, <em>nmin=0</em>, <em>nmax=None</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#checkUniqueNumbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.checkUniqueNumbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">checkUniqueNumbers</tt><big>(</big><em>nrs</em>, <em>nmin=0</em>, <em>nmax=None</em><big>)</big><a class="headerlink" href="#arraytools.checkUniqueNumbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that an array contains a set of unique integers in a given range.</p>
 <p>This functions tests that all integer numbers in the array are within the
 range math:<cite>nmin &lt;= i &lt; nmax</cite></p>
@@ -512,7 +559,7 @@ is raised. Else, the sorted list of unique values is returned.</p>
 
 <dl class="function">
 <dt id="arraytools.readArray">
-<tt class="descclassname">arraytools.</tt><tt class="descname">readArray</tt><big>(</big><em>file</em>, <em>dtype</em>, <em>shape</em>, <em>sep=' '</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#readArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.readArray" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">readArray</tt><big>(</big><em>file</em>, <em>dtype</em>, <em>shape</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#arraytools.readArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read an array from an open file.</p>
 <p>This uses <tt class="xref py py-func docutils literal"><span class="pre">numpy.fromfile()</span></tt> to read an array with known shape and
 data type from an open file.
@@ -521,7 +568,7 @@ The sep parameter can be specified as in fromfile.</p>
 
 <dl class="function">
 <dt id="arraytools.writeArray">
-<tt class="descclassname">arraytools.</tt><tt class="descname">writeArray</tt><big>(</big><em>file</em>, <em>array</em>, <em>sep=' '</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#writeArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.writeArray" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">writeArray</tt><big>(</big><em>file</em>, <em>array</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#arraytools.writeArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an array to an open file.</p>
 <p>This uses <tt class="xref py py-func docutils literal"><span class="pre">numpy.tofile()</span></tt> to write an array to an open file.
 The sep parameter can be specified as in tofile.</p>
@@ -529,7 +576,7 @@ The sep parameter can be specified as in tofile.</p>
 
 <dl class="function">
 <dt id="arraytools.cubicEquation">
-<tt class="descclassname">arraytools.</tt><tt class="descname">cubicEquation</tt><big>(</big><em>a</em>, <em>b</em>, <em>c</em>, <em>d</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#cubicEquation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.cubicEquation" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">cubicEquation</tt><big>(</big><em>a</em>, <em>b</em>, <em>c</em>, <em>d</em><big>)</big><a class="headerlink" href="#arraytools.cubicEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solve a cubiq equation using a direct method.</p>
 <p>a,b,c,d are the (floating point) coefficients of a third degree
 polynomial equation:</p>
@@ -582,7 +629,7 @@ r2+i*r3 en r2-i*r3, where i = sqrt(-1).</td>
 
 <dl class="function">
 <dt id="arraytools.uniqueOrdered">
-<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueOrdered</tt><big>(</big><em>ar1</em>, <em>return_index=False</em>, <em>return_inverse=False</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#uniqueOrdered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.uniqueOrdered" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueOrdered</tt><big>(</big><em>ar1</em>, <em>return_index=False</em>, <em>return_inverse=False</em><big>)</big><a class="headerlink" href="#arraytools.uniqueOrdered" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the unique elements of an array.</p>
 <p>This works like numpy&#8217;s unique, but uses a stable sorting algorithm.
 The returned index may therefore hold other entries for multiply
@@ -649,7 +696,7 @@ True.</p>
 
 <dl class="function">
 <dt id="arraytools.renumberIndex">
-<tt class="descclassname">arraytools.</tt><tt class="descname">renumberIndex</tt><big>(</big><em>index</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#renumberIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.renumberIndex" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">renumberIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.renumberIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renumber an index sequentially.</p>
 <p>Given a one-dimensional integer array with only non-negative values,
 and <cite>nval</cite> being the number of different values in it, and you want to
@@ -683,7 +730,7 @@ needed to replace the values in the index by the new ones.</dd>
 
 <dl class="function">
 <dt id="arraytools.inverseUniqueIndex">
-<tt class="descclassname">arraytools.</tt><tt class="descname">inverseUniqueIndex</tt><big>(</big><em>index</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#inverseUniqueIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.inverseUniqueIndex" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">inverseUniqueIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#arraytools.inverseUniqueIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inverse an index.</p>
 <p>Given a 1-D integer array with <em>unique</em> non-negative values, and
 <cite>max</cite> being the highest value in it, this function returns the position
@@ -715,7 +762,7 @@ sequential index, so that
 
 <dl class="function">
 <dt id="arraytools.sortByColumns">
-<tt class="descclassname">arraytools.</tt><tt class="descname">sortByColumns</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#sortByColumns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.sortByColumns" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">sortByColumns</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#arraytools.sortByColumns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sort an array on all its columns, from left to right.</p>
 <p>The rows of a 2-dimensional array are sorted, first on the first
 column, then on the second to resolve ties, etc..</p>
@@ -737,7 +784,7 @@ be taken to obtain an array sorted by columns.</dd>
 
 <dl class="function">
 <dt id="arraytools.uniqueRows">
-<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueRows</tt><big>(</big><em>a</em>, <em>permutations=False</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#uniqueRows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.uniqueRows" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">uniqueRows</tt><big>(</big><em>a</em>, <em>permutations=False</em><big>)</big><a class="headerlink" href="#arraytools.uniqueRows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return (the indices of) the unique rows of a 2-D array.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -767,7 +814,7 @@ numbers of <cite>uniq</cite> corresponding to each of the rows of <cite>a</cite>
 
 <dl class="function">
 <dt id="arraytools.argNearestValue">
-<tt class="descclassname">arraytools.</tt><tt class="descname">argNearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#argNearestValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.argNearestValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">argNearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="headerlink" href="#arraytools.argNearestValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the index of the item nearest to target.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -785,7 +832,7 @@ nearest to <cite>target</cite>.</p>
 
 <dl class="function">
 <dt id="arraytools.nearestValue">
-<tt class="descclassname">arraytools.</tt><tt class="descname">nearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#nearestValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.nearestValue" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">nearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="headerlink" href="#arraytools.nearestValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the item nearest to target.</p>
 <p><tt class="docutils literal"><span class="pre">values</span></tt>: a list of float values</p>
 <p><tt class="docutils literal"><span class="pre">target</span></tt>: a single value</p>
@@ -795,7 +842,7 @@ nearest to <tt class="docutils literal"><span class="pre">target</span></tt>.</p
 
 <dl class="function">
 <dt id="arraytools.inverseIndex">
-<tt class="descclassname">arraytools.</tt><tt class="descname">inverseIndex</tt><big>(</big><em>index</em>, <em>maxcon=4</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#inverseIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.inverseIndex" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">inverseIndex</tt><big>(</big><em>index</em>, <em>maxcon=4</em><big>)</big><a class="headerlink" href="#arraytools.inverseIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an inverse index.</p>
 <p>An index is an array pointing at other items by their position.
 The inverse index is a collection of the reverse pointers.
@@ -837,7 +884,7 @@ non-existing entries.</p>
 
 <dl class="function">
 <dt id="arraytools.matchIndex">
-<tt class="descclassname">arraytools.</tt><tt class="descname">matchIndex</tt><big>(</big><em>target</em>, <em>values</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#matchIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.matchIndex" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">matchIndex</tt><big>(</big><em>target</em>, <em>values</em><big>)</big><a class="headerlink" href="#arraytools.matchIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find position of values in target.</p>
 <p>This function finds the position in the array <cite>target</cite> of the elements
 from the array <cite>values</cite>.</p>
@@ -866,7 +913,7 @@ currently undefined which of those positions is returned.</p>
 
 <dl class="function">
 <dt id="arraytools.groupArgmin">
-<tt class="descclassname">arraytools.</tt><tt class="descname">groupArgmin</tt><big>(</big><em>val</em>, <em>gid</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#groupArgmin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.groupArgmin" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">groupArgmin</tt><big>(</big><em>val</em>, <em>gid</em><big>)</big><a class="headerlink" href="#arraytools.groupArgmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the group minimum</p>
 <p>Computes the minimum value per group of a set of values tagged with
 a group number.</p>
@@ -894,7 +941,7 @@ are given by <tt class="docutils literal"><span class="pre">val[minpos]</span></
 
 <dl class="function">
 <dt id="arraytools.vectorLength">
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorLength</tt><big>(</big><em>vec</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#vectorLength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.vectorLength" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorLength</tt><big>(</big><em>vec</em><big>)</big><a class="headerlink" href="#arraytools.vectorLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the lengths of a set of vectors.</p>
 <p>vec is an (n,3) shaped array holding a collection of vectors.
 The result is an (n,) shaped array with the length of each vector.</p>
@@ -902,7 +949,7 @@ The result is an (n,) shaped array with the length of each vector.</p>
 
 <dl class="function">
 <dt id="arraytools.vectorNormalize">
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorNormalize</tt><big>(</big><em>vec</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#vectorNormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.vectorNormalize" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorNormalize</tt><big>(</big><em>vec</em><big>)</big><a class="headerlink" href="#arraytools.vectorNormalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize a set of vectors.</p>
 <p>vec is a (n,3) shaped arrays holding a collection of vectors.
 The result is a tuple of two arrays:</p>
@@ -914,7 +961,7 @@ The result is a tuple of two arrays:</p>
 
 <dl class="function">
 <dt id="arraytools.vectorPairAreaNormals">
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAreaNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#vectorPairAreaNormals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.vectorPairAreaNormals" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAreaNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairAreaNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute area of and normals on parallellograms formed by vec1 and vec2.</p>
 <p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
 The result is a tuple of two arrays:</p>
@@ -930,7 +977,7 @@ an axis with components NaN.</p>
 
 <dl class="function">
 <dt id="arraytools.vectorPairArea">
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairArea</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#vectorPairArea"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.vectorPairArea" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairArea</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute area of the parallellogram formed by a vector pair vec1,vec2.</p>
 <p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
 The result is an (n) shaped array with the area of the parallellograms
@@ -939,7 +986,7 @@ formed by each pair of vectors (vec1,vec2).</p>
 
 <dl class="function">
 <dt id="arraytools.vectorPairNormals">
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#vectorPairNormals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.vectorPairNormals" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairNormals" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute vectors normal to vec1 and vec2.</p>
 <p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
 The result is an (n,3) shaped array of unit length vectors normal to
@@ -948,7 +995,7 @@ each couple (edg1,edg2).</p>
 
 <dl class="function">
 <dt id="arraytools.vectorTripleProduct">
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorTripleProduct</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>vec3</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#vectorTripleProduct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.vectorTripleProduct" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorTripleProduct</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>vec3</em><big>)</big><a class="headerlink" href="#arraytools.vectorTripleProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute triple product vec1 . (vec2 x vec3).</p>
 <p>vec1, vec2, vec3 are (n,3) shaped arrays holding collections of vectors.
 The result is a (n,) shaped array with the triple product of each set
@@ -961,7 +1008,7 @@ If vec1 is a unit normal, the result is also the area of the parallellogram
 
 <dl class="function">
 <dt id="arraytools.vectorPairCosAngle">
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairCosAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#vectorPairCosAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.vectorPairCosAngle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairCosAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairCosAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the cosinus of the angle between the vectors v1 and v2.</p>
 <p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
 The result is an (n) shaped array with the cosinus of the angle between
@@ -970,7 +1017,7 @@ each pair of vectors (vec1,vec2).</p>
 
 <dl class="function">
 <dt id="arraytools.vectorPairAngle">
-<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#vectorPairAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.vectorPairAngle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">vectorPairAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#arraytools.vectorPairAngle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the angle (in radians) between the vectors v1 and v2.</p>
 <p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
 The result is an (n) shaped array with the angle between
@@ -979,7 +1026,7 @@ each pair of vectors (vec1,vec2).</p>
 
 <dl class="function">
 <dt id="arraytools.histogram2">
-<tt class="descclassname">arraytools.</tt><tt class="descname">histogram2</tt><big>(</big><em>a</em>, <em>bins</em>, <em>range=None</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#histogram2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.histogram2" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">histogram2</tt><big>(</big><em>a</em>, <em>bins</em>, <em>range=None</em><big>)</big><a class="headerlink" href="#arraytools.histogram2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the histogram of a set of data.</p>
 <p>This function is a like numpy&#8217;s histogram function, but also returns
 the bin index for each individual entry in the data set.</p>
@@ -1014,7 +1061,7 @@ returns the bin edges.</li>
 
 <dl class="function">
 <dt id="arraytools.movingView">
-<tt class="descclassname">arraytools.</tt><tt class="descname">movingView</tt><big>(</big><em>a</em>, <em>size</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#movingView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.movingView" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">movingView</tt><big>(</big><em>a</em>, <em>size</em><big>)</big><a class="headerlink" href="#arraytools.movingView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a moving view along the first axis of an array</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -1058,7 +1105,7 @@ axis of length w.</p>
 
 <dl class="function">
 <dt id="arraytools.movingAverage">
-<tt class="descclassname">arraytools.</tt><tt class="descname">movingAverage</tt><big>(</big><em>a</em>, <em>n</em>, <em>m0=None</em>, <em>m1=None</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#movingAverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.movingAverage" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">movingAverage</tt><big>(</big><em>a</em>, <em>n</em>, <em>m0=None</em>, <em>m1=None</em><big>)</big><a class="headerlink" href="#arraytools.movingAverage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the moving average along the first axis of an array.</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -1098,7 +1145,7 @@ a.shape[0].</p>
 
 <dl class="function">
 <dt id="arraytools.randomNoise">
-<tt class="descclassname">arraytools.</tt><tt class="descname">randomNoise</tt><big>(</big><em>shape</em>, <em>min=0.0</em>, <em>max=1.0</em><big>)</big><a class="reference internal" href="../_modules/arraytools.html#randomNoise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arraytools.randomNoise" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">arraytools.</tt><tt class="descname">randomNoise</tt><big>(</big><em>shape</em>, <em>min=0.0</em>, <em>max=1.0</em><big>)</big><a class="headerlink" href="#arraytools.randomNoise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an array with random values between min and max</p>
 </dd></dl>
 
@@ -1106,33 +1153,6 @@ a.shape[0].</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="formex.html"
-                        title="previous chapter">2. <tt class="docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="script.html"
-                        title="next chapter">4. <tt class="docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1152,15 +1172,13 @@ a.shape[0].</p>
         <li class="right" >
           <a href="formex.html" title="2. formex — Formex algebra in Python"
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

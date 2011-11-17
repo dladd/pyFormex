@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>18. decors — 2D decorations for the OpenGL canvas. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="19. marks — OpenGL marks for annotating 3D actors." href="marks.html" />
-    <link rel="prev" title="17. actors — OpenGL actors for populating the 3D scene." href="actors.html" /> 
+    <link rel="prev" title="17. actors — OpenGL actors for populating the 3D scene." href="actors.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="actors.html" title="17. actors — OpenGL actors for populating the 3D scene."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="actors.html"
+                        title="previous chapter">17. <tt class="docutils literal docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="marks.html"
+                        title="next chapter">19. <tt class="docutils literal"><span class="pre">marks</span></tt> &#8212; OpenGL marks for annotating 3D actors.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -86,7 +133,7 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">decors</span></tt></p>
 <dl class="class">
 <dt id="decors.Decoration">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Decoration</tt><big>(</big><em>x</em>, <em>y</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#Decoration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.Decoration" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Decoration</tt><big>(</big><em>x</em>, <em>y</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Decoration" title="Permalink to this definition">¶</a></dt>
 <dd><p>A decoration is a 2-D drawing at canvas position x,y.</p>
 <p>All decorations have at least the following attributes:</p>
 <ul>
@@ -134,7 +181,7 @@ allowed in a display list.</p>
 
 <dl class="class">
 <dt id="decors.Mark">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Mark</tt><big>(</big><em>x</em>, <em>y</em>, <em>mark='dot'</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#Mark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.Mark" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Mark</tt><big>(</big><em>x</em>, <em>y</em>, <em>mark='dot'</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Mark" title="Permalink to this definition">¶</a></dt>
 <dd><p>A mark at a fixed position on the canvas.</p>
 <dl class="method">
 <dt id="decors.Mark.pickGL">
@@ -164,7 +211,7 @@ allowed in a display list.</p>
 
 <dl class="class">
 <dt id="decors.Line">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Line</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#Line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.Line" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Line</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Line" title="Permalink to this definition">¶</a></dt>
 <dd><p>A straight line on the canvas.</p>
 <dl class="method">
 <dt id="decors.Line.pickGL">
@@ -194,7 +241,7 @@ allowed in a display list.</p>
 
 <dl class="class">
 <dt id="decors.GlutText">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">GlutText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>font='9x15'</em>, <em>size=None</em>, <em>gravity=None</em>, <em>color=None</em>, <em>zoom=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#GlutText"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.GlutText" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">GlutText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>font='9x15'</em>, <em>size=None</em>, <em>gravity=None</em>, <em>color=None</em>, <em>zoom=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.GlutText" title="Permalink to this definition">¶</a></dt>
 <dd><p>A viewport decoration showing a text string.</p>
 <ul class="simple">
 <li>text: a simple string, a multiline string or a list of strings. If it is
@@ -207,7 +254,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 </ul>
 <dl class="method">
 <dt id="decors.GlutText.drawGL">
-<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#GlutText.drawGL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.GlutText.drawGL" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">drawGL</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#decors.GlutText.drawGL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the text.</p>
 </dd></dl>
 
@@ -245,7 +292,7 @@ for the horizontal. The default(empty) string will center the text.</li>
 
 <dl class="class">
 <dt id="decors.ColorLegend">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorlegend</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>ngrid=0</em>, <em>linewidth=None</em>, <em>nlabel=-1</em>, <em>font=None</em>, <em>size=None</em>, <em>dec=2</em>, <em>scale=0</em>, <em>lefttext=False</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#ColorLegend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.ColorLegend" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorlegend</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>ngrid=0</em>, <em>linewidth=None</em>, <em>nlabel=-1</em>, <em>font=None</em>, <em>size=None</em>, <em>dec=2</em>, <em>scale=0</em>, <em>lefttext=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.ColorLegend" title="Permalink to this definition">¶</a></dt>
 <dd><p>A labeled colorscale legend.</p>
 <p>When showing the distribution of some variable over a domain by means
 of a color encoding, the viewer expects some labeled colorscale as a
@@ -329,7 +376,7 @@ different settings.</p>
 
 <dl class="class">
 <dt id="decors.Rectangle">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Rectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#Rectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.Rectangle" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Rectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D-rectangle on the canvas.</p>
 <dl class="method">
 <dt id="decors.Rectangle.pickGL">
@@ -359,7 +406,7 @@ different settings.</p>
 
 <dl class="class">
 <dt id="decors.Grid">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Grid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx=1</em>, <em>ny=1</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#Grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.Grid" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Grid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx=1</em>, <em>ny=1</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.Grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 2D-grid on the canvas.</p>
 <dl class="method">
 <dt id="decors.Grid.pickGL">
@@ -389,7 +436,7 @@ different settings.</p>
 
 <dl class="class">
 <dt id="decors.LineDrawing">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">LineDrawing</tt><big>(</big><em>data</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#LineDrawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.LineDrawing" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">LineDrawing</tt><big>(</big><em>data</em>, <em>color=None</em>, <em>linewidth=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#decors.LineDrawing" title="Permalink to this definition">¶</a></dt>
 <dd><p>A collection of straight lines on the canvas.</p>
 <dl class="method">
 <dt id="decors.LineDrawing.pickGL">
@@ -419,7 +466,7 @@ different settings.</p>
 
 <dl class="class">
 <dt id="decors.Triade">
-<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Triade</tt><big>(</big><em>pos='lb', siz=100, pat='3:012934', legend='xyz', color=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 1.0, 1.0), (1.0, 0.0, 1.0), (1.0, 1.0, 0.0)], **kargs</em><big>)</big><a class="reference internal" href="../_modules/decors.html#Triade"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.Triade" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Triade</tt><big>(</big><em>pos='lb', siz=100, pat='3:012934', legend='xyz', color=[(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 1.0, 1.0), (1.0, 0.0, 1.0), (1.0, 1.0, 0.0)], **kargs</em><big>)</big><a class="headerlink" href="#decors.Triade" title="Permalink to this definition">¶</a></dt>
 <dd><p>An OpenGL actor representing a triade of global axes.</p>
 <ul>
 <li><dl class="first docutils">
@@ -473,19 +520,19 @@ string or a tuple of 3 strings.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">decors</span></tt></p>
 <dl class="function">
 <dt id="decors.drawDot">
-<tt class="descclassname">decors.</tt><tt class="descname">drawDot</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="reference internal" href="../_modules/decors.html#drawDot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.drawDot" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">decors.</tt><tt class="descname">drawDot</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#decors.drawDot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a dot at canvas coordinates (x,y).</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="decors.drawLine">
-<tt class="descclassname">decors.</tt><tt class="descname">drawLine</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em><big>)</big><a class="reference internal" href="../_modules/decors.html#drawLine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.drawLine" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">decors.</tt><tt class="descname">drawLine</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em><big>)</big><a class="headerlink" href="#decors.drawLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a straight line from (x1,y1) to (x2,y2) in canvas coordinates.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="decors.drawGrid">
-<tt class="descclassname">decors.</tt><tt class="descname">drawGrid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx</em>, <em>ny</em><big>)</big><a class="reference internal" href="../_modules/decors.html#drawGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.drawGrid" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">decors.</tt><tt class="descname">drawGrid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx</em>, <em>ny</em><big>)</big><a class="headerlink" href="#decors.drawGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a rectangular grid of lines</p>
 <p>The rectangle has (x1,y1) and and (x2,y2) as opposite corners.
 There are (nx,ny) subdivisions along the (x,y)-axis. So the grid
@@ -496,13 +543,13 @@ ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
 
 <dl class="function">
 <dt id="decors.drawRect">
-<tt class="descclassname">decors.</tt><tt class="descname">drawRect</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em><big>)</big><a class="reference internal" href="../_modules/decors.html#drawRect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.drawRect" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">decors.</tt><tt class="descname">drawRect</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em><big>)</big><a class="headerlink" href="#decors.drawRect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the circumference of a rectangle.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="decors.drawRectangle">
-<tt class="descclassname">decors.</tt><tt class="descname">drawRectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color</em><big>)</big><a class="reference internal" href="../_modules/decors.html#drawRectangle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#decors.drawRectangle" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">decors.</tt><tt class="descname">drawRectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color</em><big>)</big><a class="headerlink" href="#decors.drawRectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a single rectangular quad.</p>
 </dd></dl>
 
@@ -510,33 +557,6 @@ ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="actors.html"
-                        title="previous chapter">17. <tt class="docutils literal docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="marks.html"
-                        title="next chapter">19. <tt class="docutils literal"><span class="pre">marks</span></tt> &#8212; OpenGL marks for annotating 3D actors.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -556,15 +576,13 @@ ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
         <li class="right" >
           <a href="actors.html" title="17. actors — OpenGL actors for populating the 3D scene."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>

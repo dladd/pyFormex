@@ -1,16 +1,18 @@
 
 
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <!-- 
-##  This file is part of pyFormex
+##
+##  This file is part of the pyFormex project.
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Home page: http://pyformex.org
+##  Project page:  https://savannah.nongnu.org/projects/pyformex/
 ##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
+##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -32,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>12. elements — Definition of elements. &mdash; pyFormex v0.8.5-a1 documentation</title>
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -46,13 +48,20 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="13. mesh — Finite element meshes in pyFormex." href="mesh.html" />
-    <link rel="prev" title="11. utils — A collection of miscellaneous utility functions." href="utils.html" /> 
+    <link rel="prev" title="11. utils — A collection of miscellaneous utility functions." href="utils.html" />
+<link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
+
   </head>
   <body>
+
+<div class="header">
+  <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+</div>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -68,13 +77,51 @@
         <li class="right" >
           <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
              accesskey="P">previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div align="center">
+<p align="center">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+</div>
+   
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="utils.html"
+                        title="previous chapter">11. <tt class="docutils literal"><span class="pre">utils</span></tt> &#8212; A collection of miscellaneous utility functions.</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mesh.html"
+                        title="next chapter">13. <tt class="docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
+  
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<div align="center">
+<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+</div>
+
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -91,7 +138,7 @@ should be done by the interface modules.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
 <dl class="class">
 <dt id="elements.Element">
-<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Element</tt><big>(</big><em>name</em>, <em>doc</em>, <em>ndim</em>, <em>vertices</em>, <em>edges=(''</em><span class="optional">[</span><span class="optional">]</span>, <em>)</em>, <em>faces=(''</em><span class="optional">[</span><span class="optional">]</span>, <em>)</em>, <em>**kargs</em><big>)</big><a class="reference internal" href="../_modules/elements.html#Element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#elements.Element" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Element</tt><big>(</big><em>name</em>, <em>doc</em>, <em>ndim</em>, <em>vertices</em>, <em>edges=(''</em><span class="optional">[</span><span class="optional">]</span>, <em>)</em>, <em>faces=(''</em><span class="optional">[</span><span class="optional">]</span>, <em>)</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#elements.Element" title="Permalink to this definition">¶</a></dt>
 <dd><p>Element base class: an empty element.</p>
 <p>All derived classes should have a capitalized name: starting with
 an uppercase character and further only lower case and digits.</p>
@@ -151,7 +198,7 @@ different but equivalent conversion paths.</dd>
 </dl>
 <dl class="method">
 <dt id="elements.Element.getEntities">
-<tt class="descname">getEntities</tt><big>(</big><em>level</em>, <em>reduce=False</em><big>)</big><a class="reference internal" href="../_modules/elements.html#Element.getEntities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#elements.Element.getEntities" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getEntities</tt><big>(</big><em>level</em>, <em>reduce=False</em><big>)</big><a class="headerlink" href="#elements.Element.getEntities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the type and connectivity table of some element entities.</p>
 <p>The full list of entities with increasing dimensionality  0,1,2,3 is:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;points&#39;</span><span class="p">,</span> <span class="s">&#39;edges&#39;</span><span class="p">,</span> <span class="s">&#39;faces&#39;</span><span class="p">,</span> <span class="s">&#39;cells&#39;</span> <span class="p">]</span>
@@ -178,7 +225,7 @@ the return value is None.</p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">elements</span></tt></p>
 <dl class="function">
 <dt id="elements.elementType">
-<tt class="descclassname">elements.</tt><tt class="descname">elementType</tt><big>(</big><em>name=None</em>, <em>nplex=-1</em><big>)</big><a class="reference internal" href="../_modules/elements.html#elementType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#elements.elementType" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">elements.</tt><tt class="descname">elementType</tt><big>(</big><em>name=None</em>, <em>nplex=-1</em><big>)</big><a class="headerlink" href="#elements.elementType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the requested element type</p>
 <p>Parameters:</p>
 <ul class="simple">
@@ -204,7 +251,7 @@ was given, the default element type for this plexitude is returned.</li>
 
 <dl class="function">
 <dt id="elements.elementTypes">
-<tt class="descclassname">elements.</tt><tt class="descname">elementTypes</tt><big>(</big><em>ndim=None</em><big>)</big><a class="reference internal" href="../_modules/elements.html#elementTypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#elements.elementTypes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">elements.</tt><tt class="descname">elementTypes</tt><big>(</big><em>ndim=None</em><big>)</big><a class="headerlink" href="#elements.elementTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the names of available elements.</p>
 <p>If a value is specified for ndim, only the elements with the matching
 dimensionality are returned.</p>
@@ -212,7 +259,7 @@ dimensionality are returned.</p>
 
 <dl class="function">
 <dt id="elements.printElementTypes">
-<tt class="descclassname">elements.</tt><tt class="descname">printElementTypes</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/elements.html#printElementTypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#elements.printElementTypes" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">elements.</tt><tt class="descname">printElementTypes</tt><big>(</big><big>)</big><a class="headerlink" href="#elements.printElementTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print all available element types.</p>
 <p>Prints a list of the names of all availabale element types,
 grouped by their dimensionality.</p>
@@ -222,33 +269,6 @@ grouped by their dimensionality.</p>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-        <p class="logo"><a href="http://pyformex.org/">
-        <img class="logo" src="../_static/pyformex_logo_small.png" alt="Logo"/>
-        </a></p>
-    <h3><a href="../index.html">Documentation</a></h3>
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="utils.html"
-                        title="previous chapter">11. <tt class="docutils literal"><span class="pre">utils</span></tt> &#8212; A collection of miscellaneous utility functions.</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="mesh.html"
-                        title="next chapter">13. <tt class="docutils literal"><span class="pre">mesh</span></tt> &#8212; Finite element meshes in pyFormex.</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -268,15 +288,13 @@ grouped by their dimensionality.</p>
         <li class="right" >
           <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
              >previous</a> |</li>
-    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
-    
-        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
-
+        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Benedict Verhegghe.
+      Last updated on Nov 17, 2011.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
