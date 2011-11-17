@@ -28,7 +28,7 @@
 .. the LaTeX version at http://www.gnu.org/licenses/gpl-3.0.tex
 
 .. include:: defines.inc
-.. include:: ../website/src/links.inc
+.. include:: links.inc
 
 .. _cha:license:
 

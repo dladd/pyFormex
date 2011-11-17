@@ -26,7 +26,7 @@
   
 
 .. include:: defines.inc
-.. include:: ../website/src/links.inc
+.. include:: links.inc
 
 .. _cha:imaging:
 
