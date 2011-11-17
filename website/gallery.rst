@@ -52,7 +52,7 @@ what pyFormex can do for you.
 
 
 Want other examples?
---------------------
+....................
 The pyFormex distribution (see the `Install manual <doc/install.html>`_) 
 contains a wide collection of example scripts, 
 with levels ranging from beginner to

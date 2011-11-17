@@ -49,46 +49,12 @@
 <ul>
 <div class="menu">
 <li><a class="thispage" href="pyformex.html">Home</a></li>
-<ul>
-<li><a href="#about">About</a></li>
-<li><a href="#news">News</a></li>
-<li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#platform">Platform</a></li>
-<li><a href="#options">Options</a></li>
-<li><a href="#license">License</a></li>
-</ul>
 <li><a class="page" href="screenshots.html">Screenshots</a></li>
 <li><a class="page" href="examples/index.html">Examples</a></li>
 <li><a class="page" href="pyformexinuse.html">pyFormex in use</a></li>
 <li><a class="page" href="install.html">Install</a></li>
 <li><a class="page" href="support.html">Support</a></li>
 <li><a class="page" href="links.html">Links</a></li>
-</div>
-
-
-<div class="menu">
-
-<li><a class="main" href="http://pyformex.berlios.de/doc/index.html">Documentation</a></li>
-
-<li><a class="main" href="http://developer.berlios.de/forum/forum.php?forum_id=8348">Help Forum</a></li>
-
-<li><a class="main" href="http://pyformex.berlios.de/doc/install.html">Installation</a></li>
-
-<li><a class="main" href="http://developer.berlios.de/project/showfiles.php?group_id=2717">Downloads</a></li>
-
-<li><a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page</a></li>
-
-<li><a href="http://www.fsf.org/register_form?referrer=8491"><img src="images/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></li>
-
-<li>
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
-<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
-</form>
-
-</li>
 </div>
 </ul>
 </div>
@@ -97,48 +63,6 @@
 <div id="content">
 
   <div class="document">
-<!-- $Id$  -*- rst -*- -->
-<!-- This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
-pyFormex is a tool for generating, manipulating and transforming 3D
-geometrical models by sequences of mathematical operations.
-Home page: http://pyformex.org
-Project page:  https://savannah.nongnu.org/projects/pyformex/
-Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
-Distributed under the GNU General Public License version 3 or later.
-
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see http://www.gnu.org/licenses/. -->
-<!-- This file is part of pyFormex
-pyFormex is a tool for generating, manipulating and transforming 3D
-geometrical models by sequences of mathematical operations.
-Homepage: http://pyformex.org   (http://pyformex.berlios.de)
-Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
-Distributed under the GNU General Public License version 3 or later.
-
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see http://www.gnu.org/licenses/. -->
 <!-- Links (URLs) for inclusion on the website pages -->
 <!-- End -->
 <div class="section" id="migrate" style="font-size:150%">
@@ -192,27 +116,8 @@ This way, building parametric models becomes a natural thing.</p>
     
     <hr width="100%" size="1"/>
     <div align="center"><a href="//developer.berlios.de/news/?group_id=2717">[News archive]</a></div>
-  
-</div>
-<div class="section" id="prerequisites">
-<h2>Prerequisites</h2>
-<p>If you only want to use the Formex class, its mathematical transformation methods and scripting, without a Graphical User Interface(GUI), all you need is recent versions of <a class="reference external" href="http://www.python.org">Python</a> and <a class="reference external" href="http://numpy.scipy.org">NumPy</a>.</p>
-<p>If you want to use the Graphical User Interface to run scripts and to render the created structures either to screen or to image files, you also need <a class="reference external" href="http://pyopengl.sourceforge.net">PyOpenGL</a>, <a class="reference external" href="http://trolltech.com/products/qt">Qt4</a> and <a class="reference external" href="http://www.riverbankcomputing.co.uk/pyqt">PyQt4</a>.</p>
-<p>Full details are in the <a class="reference external" href="http://pyformex.berlios.de/doc/index.html">pyFormex documentation</a>.</p>
-</div>
-<div class="section" id="platform">
-<h2>Platform</h2>
-<p>pyFormex is written completely in Python. While it is developed on GNU/Linux platforms, it can be made to work on other platforms too, provided that you have installed the required packages.</p>
-</div>
-<div class="section" id="options">
-<h2>Options</h2>
-<p>There are some optional packages you can install to enhance some of the functionality of pyFormex.</p>
-<ul class="simple">
-<li>If you want to save the images in .PS, .EPS or .PDF format (as shown in the WireStent example), you need the gl2ps OpenGL to PostScript printing library.</li>
-<li>If you want to perform the structural analysis of the truss in the X_truss_analysis example, you need the <a class="reference external" href="ftp://bumps.ugent.be/pub/calpy">Calpy</a> analysis package. Install by preference from the source; compiling should work without problems if you have a full NumPy installation.</li>
-</ul>
-</div>
-<div class="section" id="license">
+
+    <div class="section" id="license">
 <h2>License</h2>
 <p>This program is free software; you can redistribute it and/or modify it under the terms of the <a class="reference external" href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.</p>
 <!-- End -->
@@ -240,30 +145,3 @@ This way, building parametric models becomes a natural thing.</p>
 
 </body>
 </html>
-<a href="//developer.berlios.de/forum/forum.php?forum_id=37541"><b>A new home for pyFormex</b></a>&nbsp;&nbsp;&nbsp;<i>bverheg - 2011-Nov-05 14:27  &nbsp; - &nbsp; <a href="//developer.berlios.de/projects/pyformex/">pyFormex</a></i><br/>As you probably know,
-    BerliOS will shut down by the end of the year, and so we had to find a new home
-    for pyFormex.
-<br/>Well, now we've got one: it's on 
-<br/><a href="https://savannah.nongnu.org/projects/pyformex/" target="_new">https://savannah.nongnu.org/projects/pyformex/</a>
-    <hr width="100%" size="1"/><a href="//developer.berlios.de/forum/forum.php?forum_id=37163"><b>pyFormex on Mac (OS X)</b></a>&nbsp;&nbsp;&nbsp;<i>bverheg - 2011-Jul-15 14:08
-    &nbsp; - &nbsp; <a href="//developer.berlios.de/projects/pyformex/">pyFormex</a></i><br/>We now have pyFormex running also on Mac OS X. 
-<br/>It still needs a lot of fixes and is unstable at
-    times, but here is a first screenshot of pyFormex on our iMac:
-<br/><a href="http://pyformex.berlios.de/images/pyformex_on_Mac.png" target="_new">http://pyformex.berlios.de/images/pyformex_on_Mac.png</a>
-    <hr width="100%" size="1"/><a href="//developer.berlios.de/forum/forum.php?forum_id=37148"><b>pyFormex 0.8.4 available</b></a>&nbsp;&nbsp;&nbsp;<i>bverheg - 2011-Jul-09 15:00
-    &nbsp; - &nbsp; <a href="//developer.berlios.de/projects/pyformex/">pyFormex</a></i><br/>pyFormex 0.8.4 has been released.
-<br/><br/>This pyFormex release contains many new features,
-    functional enhancements and bug fixes. Most prominent are the improvements for
-    working with Mesh type geometries. As always, see the file pyformex/doc/ReleaseNotes
-    for more details.
-    <hr width="100%" size="1"/><a href="//developer.berlios.de/forum/forum.php?forum_id=36784"><b>pyFormex on ARM</b></a>&nbsp;&nbsp;&nbsp;<i>bverheg - 2011-Apr-28 14:38
-    &nbsp; - &nbsp; <a href="//developer.berlios.de/projects/pyformex/">pyFormex</a></i><br/>pyFormex is making its inroads on non-x86 hardware.
-    Indeed, we got pyFormex running on a Genesi Efika MX Smartbook with ARM v7 porcessor,
-    running Ubuntu Maverick. 
-<br/>See <a href="http://pyformex.berlios.de/screenshots.html" target="_new">http://pyformex.berlios.de/screenshots.html</a> for some links to screenshots. 
-<br/>Installation of a the pyFormex-0.8.4 pre-release
-    went smoothly, following the installation instructions in the manual for Debian.
-    
-    <hr width="100%" size="1"/>
-    <div align="center"><a href="//developer.berlios.de/news/?group_id=2717">[News archive]</a></div>
-  

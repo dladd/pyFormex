@@ -29,9 +29,10 @@
 .. include:: defines.inc
 .. include:: links.inc
   
+.. index:: Support
+
 Support
 =======
-
 
 `Support tracker`_
 ------------------
@@ -39,6 +40,7 @@ If you need help with the installation or use of pyFormex, or if you want to
 discuss existing features or request new ones, the best way is to use the
 pyFormex `Support tracker`_.
 
+.. index:: Bugs
 
 `Bug tracker`_
 --------------

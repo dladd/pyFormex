@@ -38,14 +38,8 @@ Contents
    support
    links
 
+:ref:`genindex`
 
-Indices and tables
-==================
-
-..* :ref:`genindex`
-..* :ref:`modindex`
-* :ref:`search`
-
-.. * :ref:`glossary`
+:ref:`search`
 
 .. End

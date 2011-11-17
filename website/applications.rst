@@ -29,6 +29,7 @@
 .. include:: defines.inc
 .. include:: links.inc
   
+.. index:: Applications
 
 Applications
 ============
