@@ -28,7 +28,9 @@
 .. include:: <isonum.txt>
 .. include:: defines.inc
 .. include:: links.inc
-  
+ 
+.. index:: Gallery
+
 Gallery
 -------
 

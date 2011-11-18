@@ -29,7 +29,7 @@
 .. _`Bifurcation meshing`: http://www.youtube.com/watch?v=T1pVFCzrmGI
 .. _`Image projection`: http://www.youtube.com/watch?v=0nscJWbl5rQ
 
-
+.. index:: Videos
 
 Videos
 ------

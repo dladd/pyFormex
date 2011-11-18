@@ -27,6 +27,8 @@
 
 .. include:: links.inc
 
+.. index:: Links
+
 Links
 =====
 

@@ -49,7 +49,7 @@ DOCUPLOAD= ${UPLOAD}/pyformex/htdocs/doc
 FTPUPLOAD= ${UPLOAD}/ftp/pub/pyformex
 FTPLOCAL= bumps.ugent.be:/var/ftp/pub/pyformex
 
-.PHONY: ref
+.PHONY: prereq ref pdf svndoc pubn pub pubpdf publocal
 
 .PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest
 
@@ -187,13 +187,20 @@ pyformex.help: ../pyformex/pyformex
 	../pyformex/pyformex --help > $@
 
 
+pdf: latexpdf
+
 # Transfer the html docs to doc
 svndoc:
 	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${SVNDOC} 
 
-# Transfer the files to BerliOS
+# Transfer the files to www for publication
+pubn: 
+	rsync _build/html/* ../www/doc --exclude CVS --delete -avn
+
 pub: 
-	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${DOCUPLOAD}
+	rsync _build/html/* ../www/doc --exclude CVS --delete -av
+
+# Transfer the files to BerliOS
 
 pubpdf: ${PDF}
 	${RSYNC} -t $< ${FTPUPLOAD}
