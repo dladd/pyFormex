@@ -29,6 +29,9 @@
 .. include:: defines.inc
 .. include:: links.inc
 
+.. _`pyFormex`: http://pyformex.org
+.. _`development`: http://www.nongnu.org/pyformex/
+
 ######################
 pyFormex Documentation
 ######################
@@ -36,8 +39,8 @@ pyFormex Documentation
 This is the pyFormex |release| documentation, last updated on |today|.
 
 These documents are to become a full documentation set for the
-installation and use of the pyFormex software. However, as pyFormex is
-still under active development, so is this documentation: it therefore
+installation and use of the `pyFormex`_ software. However, as pyFormex is
+still under active `development`_, so is this documentation: it therefore
 is by no means final and complete; it does not even pretend to be
 accurate for any version of pyFormex.
 
