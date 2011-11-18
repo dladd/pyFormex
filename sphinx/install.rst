@@ -208,7 +208,7 @@ for all functions in the library), using the library will dramatically speed up 
 Installing prerequisites on `Debian GNU/Linux`
 ..............................................
 Debian users should just have to install the packages ``python-numpy`` and  ``python-qt4-gl``. The latter will install ``python-qt4`` and ``python-qt4-gl`` as dependencies. Also, for compiling the acceleration library, you should install 
-``python-dev``, ``python-qt4-dev`` and ``libgl1-mesa-dev``.
+``python-dev``, ``python-qt4-dev`` and ``libglu1-mesa-dev``.
 
 Other optional packages that might be useful are ``admesh``, ``python-scipy``,
 ``python-numpy-ext``, ``units``.

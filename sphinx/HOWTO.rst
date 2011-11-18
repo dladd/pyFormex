@@ -74,7 +74,14 @@ Guidelines for creating pyFormex documentation
 
     patch -p1 < ???/pyformex/sphinx/sphinx-1.0.4-bv.diff
 
-- To create the html documentation, do ``make html`` in the ``sphinx`` directory.
+- To create the html documentation, do ``make html`` in the ``sphinx``
+  directory.
+
+- The prefered command is ::
+  
+    make html 2>&1 | tee > errors
+
+  This will log the stdout and stderr to a file 'errors'.
 
 - To convert LaTeX source to ReST, you can use the converter from the Python 
   doctools. Best is to install the doctools from Subversion sources, in your

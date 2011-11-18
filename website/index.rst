@@ -35,6 +35,15 @@
    :description: pyFormex - A tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations
    :keywords: pyformex 3D modeling geometry surface mesh STL finite element stent python numpy
 
+.. toctree::
+   :titlesonly:
+   :hidden:
+
+   documentation <http://www.nongnu.org/pyformex/doc/index.html>
+   gallery
+   support
+   links
+
 .. index:: About
 
 About
@@ -65,15 +74,6 @@ displaying and manipulating the generated structures.
 =======
 
 .. include:: news.inc
-
-.. toctree::
-   :titlesonly:
-   :hidden:
-
-   documentation <http://www.nongnu.org/pyformex/doc/index.html>
-   gallery
-   support
-   links
 
 .. index::
    Documentation

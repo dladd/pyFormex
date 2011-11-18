@@ -39,10 +39,18 @@ div.header {
 div.footer {
     background-color: #ccc;
     color: #666;
-    padding: 3px 8px 3px 0;
+    padding: 3px 8px 3px 3px;
     clear: both;
     text-align: center;
     font-size: 75%;
+}
+
+span.left {
+    float: left;
+}
+
+span.right {
+    float: right;
 }
 
 div.footer a {
@@ -144,7 +152,7 @@ p {
 }
 
 a {
-    color: #468;
+    color: #57a;
     text-decoration: none;
 }
 
@@ -347,3 +355,27 @@ pre {
     border-left: none;
     border-right: none;
 }
+
+
+/* -- front page table ----------------------------------------------- */
+table.fronttable {
+    width: 90%;
+}
+
+table.fronttable p {
+    line-height: 150%;
+}
+
+table.fronttable a {
+    font-size: 1.3em;
+}
+
+/*
+span.linkdescr {
+    font-style: italic;
+    padding-top: 5px;
+    font-size: 90%;
+}
+*/
+
+/* -- end ----------------------------------------------------------- */

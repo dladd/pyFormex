@@ -70,20 +70,8 @@ def function_key(i):
     return i[1].func_code.co_firstlineno
 
 def class_key(i):
-    if hasattr(i[1],'__init__'):
-        f = i[1].__init__
-    elif hasattr(i[1],'__new__'):
-        f = i[1].__new__
-    else:
-        methods = inspect.getmembers(obj,inspect.ismethod)
-        if methods:
-            f = methods[0][1]
-        else:
-            return 999999
-    try:
-        return f.__func__.func_code.co_firstlineno
-    except:
-        return 99999999
+    methods = inspect.getmembers(i[1],inspect.ismethod)
+    return inspect.getsourcelines(i[1])[1]
 
 
 def do_class(name,obj):
@@ -109,7 +97,10 @@ def do_module(filename):
     classes = [ c for c in inspect.getmembers(module,inspect.isclass) if c[1].__module__ == modname ]
     classes = filter_names(classes)
     classes = filter_docstrings(classes)
+    #print classes
+    #print [ class_key(i) for i in classes ]
     classes = sorted(classes,key=class_key)
+    #print classes
 
     # Functions #
     functions = [ c for c in inspect.getmembers(module,inspect.isfunction) if c[1].__module__ == modname ]

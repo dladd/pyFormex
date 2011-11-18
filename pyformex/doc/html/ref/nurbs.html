@@ -58,8 +58,10 @@
   <body>
 
 <div class="header">
+  <a href="http://pyformex.org">
   <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
   <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+  </a>
 </div>
 
     <div class="related">
@@ -84,14 +86,14 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
 <div align="center">
-<p align="center">
+
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
-<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q"/>
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!"/>
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1"/>
 </form>
-</p>
+
 </div>
    
 
@@ -117,7 +119,13 @@
 <script type="text/javascript">$('#searchbox').show(0);</script>
 
 <div align="center">
-<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+  <p>
+  <a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a>
+  </p>
+  <p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+  </p>
 </div>
 
         </div>
@@ -133,123 +141,6 @@
 <p>The <a class="reference internal" href="#module-nurbs" title="nurbs: Using NURBS in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">nurbs</span></tt></a> module defines functions and classes to manipulate
 NURBS curves and surface in pyFormex.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">nurbs</span></tt></p>
-<dl class="class">
-<dt id="nurbs.NurbsCurve">
-<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">NurbsCurve</tt><big>(</big><em>control</em>, <em>degree=None</em>, <em>wts=None</em>, <em>knots=None</em>, <em>closed=False</em>, <em>blended=True</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve" title="Permalink to this definition">¶</a></dt>
-<dd><p>A NURBS curve</p>
-<p>The Nurbs curve is defined by nctrl control points, a degree (&gt;= 1) and
-a knot vector with knots = nctrl+degree+1 parameter values.</p>
-<p>The knots vector should hold nknots values in ascending order. The values
-are only defined upon a multiplicative constant and will be normalized
-to set the last value to 1.
-Sensible default values are constructed automatically by calling
-<a class="reference internal" href="#nurbs.knotVector" title="nurbs.knotVector"><tt class="xref py py-func docutils literal"><span class="pre">knotVector()</span></tt></a>.</p>
-<p>If no knots are given and no degree is specified, the degree is set to
-the number of control points - 1 if the curve is blended. If not blended,
-the degree is not set larger than 3.</p>
-<dl class="method">
-<dt id="nurbs.NurbsCurve.bbox">
-<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.bbox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the bounding box of the NURBS curve.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nurbs.NurbsCurve.pointsAt">
-<tt class="descname">pointsAt</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.pointsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points on the Nurbs curve at given parametric values.</p>
-<p>Parameters:</p>
-<dl class="docutils">
-<dt><cite>u</cite>: (nu,) shaped float array: parametric values at which a point</dt>
-<dd>is to be placed.</dd>
-</dl>
-<p>Returns: (nu,3) shaped Coords with nu points at the specified
-parametric values.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nurbs.NurbsCurve.derivatives">
-<tt class="descname">derivatives</tt><big>(</big><em>at</em>, <em>d=1</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.derivatives" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the points and derivatives up to d at parameter values at</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nurbs.NurbsCurve.knotPoints">
-<tt class="descname">knotPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.knotPoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the points at the knot values.</p>
-<p>The multiplicity of the knots is retained in the points set.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nurbs.NurbsCurve.insertKnots">
-<tt class="descname">insertKnots</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.insertKnots" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert a set of knots in the curve.</p>
-<p>u is a vector with knot parameter values to be inserted into the
-curve. The control points are adapted to keep the curve unchanged.</p>
-<p>Returns a Nurbs curve equivalent with the original but with the
-specified knot values inserted in the knot vector, and the control
-points adapted.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nurbs.NurbsCurve.decompose">
-<tt class="descname">decompose</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.decompose" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decomposes a curve in subsequent Bezier curves.</p>
-<p>Returns an equivalent unblended Nurbs.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nurbs.NurbsCurve.actor">
-<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.actor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Graphical representation</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="nurbs.NurbsSurface">
-<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">NurbsSurface</tt><big>(</big><em>control</em>, <em>degree=(None</em>, <em>None)</em>, <em>wts=None</em>, <em>knots=(None</em>, <em>None)</em>, <em>closed=(False</em>, <em>False)</em>, <em>blended=(True</em>, <em>True)</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface" title="Permalink to this definition">¶</a></dt>
-<dd><p>A NURBS surface</p>
-<p>The Nurbs surface is defined as a tensor product of NURBS curves in two
-parametrical directions u and v. The control points form a grid of
-(nctrlu,nctrlv) points. The other data are like those for a NURBS curve,
-but need to be specified as a tuple for the (u,v) directions.</p>
-<p>The knot values are only defined upon a multiplicative constant, equal to
-the largest value. Sensible default values are constructed automatically
-by a call to the knotVector() function.</p>
-<p>If no knots are given and no degree is specified, the degree is set to
-the number of control points - 1 if the curve is blended. If not blended,
-the degree is not set larger than 3.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">This is a class under development!</p>
-</div>
-<dl class="method">
-<dt id="nurbs.NurbsSurface.bbox">
-<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.bbox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the bounding box of the NURBS surface.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nurbs.NurbsSurface.pointsAt">
-<tt class="descname">pointsAt</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.pointsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points on the Nurbs surface at given parametric values.</p>
-<p>Parameters:</p>
-<dl class="docutils">
-<dt><cite>u</cite>: (nu,2) shaped float array: <cite>nu</cite> parametric values (u,v) at which</dt>
-<dd>a point is to be placed.</dd>
-</dl>
-<p>Returns: (nu,3) shaped Coords with <cite>nu</cite> points at the specified
-parametric values.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nurbs.NurbsSurface.actor">
-<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.actor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Graphical representation</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="nurbs.Coords4">
 <em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">Coords4</tt><a class="headerlink" href="#nurbs.Coords4" title="Permalink to this definition">¶</a></dt>
@@ -389,6 +280,123 @@ the object.</p>
 <dl class="method">
 <dt id="nurbs.Coords4.actor">
 <tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#nurbs.Coords4.actor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Graphical representation</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nurbs.NurbsCurve">
+<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">NurbsCurve</tt><big>(</big><em>control</em>, <em>degree=None</em>, <em>wts=None</em>, <em>knots=None</em>, <em>closed=False</em>, <em>blended=True</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>A NURBS curve</p>
+<p>The Nurbs curve is defined by nctrl control points, a degree (&gt;= 1) and
+a knot vector with knots = nctrl+degree+1 parameter values.</p>
+<p>The knots vector should hold nknots values in ascending order. The values
+are only defined upon a multiplicative constant and will be normalized
+to set the last value to 1.
+Sensible default values are constructed automatically by calling
+<a class="reference internal" href="#nurbs.knotVector" title="nurbs.knotVector"><tt class="xref py py-func docutils literal"><span class="pre">knotVector()</span></tt></a>.</p>
+<p>If no knots are given and no degree is specified, the degree is set to
+the number of control points - 1 if the curve is blended. If not blended,
+the degree is not set larger than 3.</p>
+<dl class="method">
+<dt id="nurbs.NurbsCurve.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.bbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the bounding box of the NURBS curve.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsCurve.pointsAt">
+<tt class="descname">pointsAt</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.pointsAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points on the Nurbs curve at given parametric values.</p>
+<p>Parameters:</p>
+<dl class="docutils">
+<dt><cite>u</cite>: (nu,) shaped float array: parametric values at which a point</dt>
+<dd>is to be placed.</dd>
+</dl>
+<p>Returns: (nu,3) shaped Coords with nu points at the specified
+parametric values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsCurve.derivatives">
+<tt class="descname">derivatives</tt><big>(</big><em>at</em>, <em>d=1</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.derivatives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the points and derivatives up to d at parameter values at</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsCurve.knotPoints">
+<tt class="descname">knotPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.knotPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the points at the knot values.</p>
+<p>The multiplicity of the knots is retained in the points set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsCurve.insertKnots">
+<tt class="descname">insertKnots</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.insertKnots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert a set of knots in the curve.</p>
+<p>u is a vector with knot parameter values to be inserted into the
+curve. The control points are adapted to keep the curve unchanged.</p>
+<p>Returns a Nurbs curve equivalent with the original but with the
+specified knot values inserted in the knot vector, and the control
+points adapted.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsCurve.decompose">
+<tt class="descname">decompose</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.decompose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decomposes a curve in subsequent Bezier curves.</p>
+<p>Returns an equivalent unblended Nurbs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsCurve.actor">
+<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.actor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Graphical representation</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nurbs.NurbsSurface">
+<em class="property">class </em><tt class="descclassname">nurbs.</tt><tt class="descname">NurbsSurface</tt><big>(</big><em>control</em>, <em>degree=(None</em>, <em>None)</em>, <em>wts=None</em>, <em>knots=(None</em>, <em>None)</em>, <em>closed=(False</em>, <em>False)</em>, <em>blended=(True</em>, <em>True)</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>A NURBS surface</p>
+<p>The Nurbs surface is defined as a tensor product of NURBS curves in two
+parametrical directions u and v. The control points form a grid of
+(nctrlu,nctrlv) points. The other data are like those for a NURBS curve,
+but need to be specified as a tuple for the (u,v) directions.</p>
+<p>The knot values are only defined upon a multiplicative constant, equal to
+the largest value. Sensible default values are constructed automatically
+by a call to the knotVector() function.</p>
+<p>If no knots are given and no degree is specified, the degree is set to
+the number of control points - 1 if the curve is blended. If not blended,
+the degree is not set larger than 3.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is a class under development!</p>
+</div>
+<dl class="method">
+<dt id="nurbs.NurbsSurface.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.bbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the bounding box of the NURBS surface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsSurface.pointsAt">
+<tt class="descname">pointsAt</tt><big>(</big><em>u</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.pointsAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points on the Nurbs surface at given parametric values.</p>
+<p>Parameters:</p>
+<dl class="docutils">
+<dt><cite>u</cite>: (nu,2) shaped float array: <cite>nu</cite> parametric values (u,v) at which</dt>
+<dd>a point is to be placed.</dd>
+</dl>
+<p>Returns: (nu,3) shaped Coords with <cite>nu</cite> points at the specified
+parametric values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsSurface.actor">
+<tt class="descname">actor</tt><big>(</big><em>**kargs</em><big>)</big><a class="headerlink" href="#nurbs.NurbsSurface.actor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Graphical representation</p>
 </dd></dl>
 
@@ -568,9 +576,13 @@ if d3 is give, also returns the torsion of the curve.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2010, Benedict Verhegghe.
+    <span class="left">
+        &copy; Copyright 2004-2011, Benedict Verhegghe.
+    </span>
       Last updated on Nov 18, 2011.
+    <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+    </span>
     </div>
   </body>
 </html>

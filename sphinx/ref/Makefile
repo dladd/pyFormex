@@ -67,7 +67,7 @@ clean:
 #plugins.%.rst: %.py ${PY2RST}
 #	${PY2RST} $< > $@
 
-%.rst: %.py ${PY2RST}
+%.rst: %.py
 	${PY2RST} $< > $@
 
 

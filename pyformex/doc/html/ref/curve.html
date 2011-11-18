@@ -58,8 +58,10 @@
   <body>
 
 <div class="header">
+  <a href="http://pyformex.org">
   <img src="http://www.nongnu.org/pyformex/_static/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
   <img src="http://www.nongnu.org/pyformex/_static/pyformex-logo-2.png" alt="pyformex logo" border="0" hspace="10" vspace="8" align="left" />
+  </a>
 </div>
 
     <div class="related">
@@ -84,14 +86,14 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
 <div align="center">
-<p align="center">
+
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q">
-<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
+<input type="hidden" name="cmd" value="_s-xclick"/>
+<input type="hidden" name="hosted_button_id" value="P7J4AM4QULB4Q"/>
+<input type="image" src="https://www.paypal.com/en_US/BE/i/btn/btn_donateCC_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!"/>
+<img alt="" border="0" src="https://www.paypal.com/nl_NL/i/scr/pixel.gif" width="1" height="1"/>
 </form>
-</p>
+
 </div>
    
 
@@ -117,7 +119,13 @@
 <script type="text/javascript">$('#searchbox').show(0);</script>
 
 <div align="center">
-<p align="center"><a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a></p>
+  <p>
+  <a href="http://www.fsf.org/register_form?referrer=8491"><img src="http://www.nongnu.org/pyformex/_static/fsf-member8491.png" alt="[FSF Associate Member]" width="89" height="31"  /></a>
+  </p>
+  <p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+      src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+  </p>
 </div>
 
         </div>
@@ -1914,443 +1922,6 @@ be an open file.
 The Geometry is then written to that file in a native format, using
 sep as separator between the coordinates.
 If fil is a string, the file is closed prior to returning.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="curve.QuadBezierSpline">
-<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">QuadBezierSpline</tt><big>(</big><em>*_args</em>, <em>**_kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline" title="Permalink to this definition">¶</a></dt>
-<dd><p>A class representing a Quadratic Bezier spline curve.</p>
-<p>This is a (deprecated) convenience class for BezierSpline with fixed
-value of degree=2. The constructor takes the same parameters as
-BezierSpline, except for degree, which is fixed to a value 2.</p>
-<dl class="method">
-<dt id="curve.QuadBezierSpline.sub_points_2">
-<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_points_2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at values,parts given by zip(t,j)</p>
-<p>t and j can both be arrays, but should have the same length.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.sub_directions_2">
-<tt class="descname">sub_directions_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_directions_2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the directions at values,parts given by zip(t,j)</p>
-<p>t and j can both be arrays, but should have the same length.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.pointsAt">
-<tt class="descname">pointsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.pointsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
-<p>Parameter values are floating point values. Their integer part
-is interpreted as the curve segment number, and the decimal part
-goes from 0 to 1 over the segment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.directionsAt">
-<tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.directionsAt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at parameter values t.</p>
-<p>Parameter values are floating point values. Their integer part
-is interpreted as the curve segment number, and the decimal part
-goes from 0 to 1 over the segment.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.addNoise">
-<tt class="descname">addNoise</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.addNoise" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;addNoise&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.addNoise" title="coords.Coords.addNoise"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.addNoise()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.affine">
-<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.affine" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;affine&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.affine" title="coords.Coords.affine"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.affine()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.align">
-<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.align" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;align&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.align" title="coords.Coords.align"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.align()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.bump">
-<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.bump" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;bump&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.bump" title="coords.Coords.bump"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.bump1">
-<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.bump1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;bump1&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.bump1" title="coords.Coords.bump1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump1()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.bump2">
-<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.bump2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;bump2&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.bump2" title="coords.Coords.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump2()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.centered">
-<tt class="descname">centered</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.centered" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;centered&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.centered" title="coords.Coords.centered"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.centered()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.cylindrical">
-<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.cylindrical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;cylindrical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.cylindrical" title="coords.Coords.cylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.cylindrical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.egg">
-<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.egg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;egg&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.egg" title="coords.Coords.egg"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.egg()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.flare">
-<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.flare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;flare&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.flare" title="coords.Coords.flare"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.flare()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.hyperCylindrical">
-<tt class="descname">hyperCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;hyperCylindrical&#8217; transformation to the Geometry object.</p>
-<p>See <tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.hyperCylindrical()</span></tt> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.isopar">
-<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.isopar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;isopar&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.isopar" title="coords.Coords.isopar"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.isopar()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.map">
-<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;map&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.map" title="coords.Coords.map"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.map1">
-<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.map1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;map1&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map1()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.mapd">
-<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.mapd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;mapd&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.mapd" title="coords.Coords.mapd"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.mapd()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.projectOnCylinder">
-<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.projectOnPlane">
-<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.projectOnPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.projectOnSphere">
-<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.projectOnSphere" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnSphere" title="coords.Coords.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnSphere()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.reflect">
-<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.reflect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;reflect&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.reflect" title="coords.Coords.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.reflect()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.replace">
-<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.replace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;replace&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.replace" title="coords.Coords.replace"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.replace()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.rollAxes">
-<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.rollAxes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;rollAxes&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.rollAxes" title="coords.Coords.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rollAxes()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.rot">
-<tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.rot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.rotate">
-<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.rotate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.scale">
-<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;scale&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.scale" title="coords.Coords.scale"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.scale()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.shear">
-<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.shear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;shear&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.shear" title="coords.Coords.shear"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.shear()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.spherical">
-<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.spherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;spherical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.spherical" title="coords.Coords.spherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.spherical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.superSpherical">
-<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.superSpherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;superSpherical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.superSpherical" title="coords.Coords.superSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.superSpherical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.swapAxes">
-<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.swapAxes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;swapAxes&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.swapAxes" title="coords.Coords.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.swapAxes()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.toCylindrical">
-<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.toCylindrical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;toCylindrical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.toCylindrical" title="coords.Coords.toCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toCylindrical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.toSpherical">
-<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.toSpherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;toSpherical&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.toSpherical" title="coords.Coords.toSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toSpherical()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.transformCS">
-<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.transformCS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;transformCS&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.transformCS" title="coords.Coords.transformCS"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.transformCS()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.translate">
-<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.translate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.trl">
-<tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.trl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
-<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.subPoints">
-<tt class="descname">subPoints</tt><big>(</big><em>div=10, extend=[0.0, 0.0]</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.subPoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a sequence of points on the Curve.</p>
-<ul class="simple">
-<li><cite>div</cite>: int or a list of floats (usually in the range [0.,1.])
-If <cite>div</cite> is an integer, a list of floats is constructed by dividing
-the range [0.,1.] into <cite>div</cite> equal parts.
-The list of floats then specifies a set of parameter values for which
-points at in each part are returned. The points are returned in a
-single Coords in order of the parts.</li>
-</ul>
-<p>The extend parameter allows to extend the curve beyond the endpoints.
-The normal parameter space of each part is [0.0 .. 1.0]. The extend
-parameter will add a curve with parameter space [-extend[0] .. 0.0]
-for the first part, and a curve with parameter space
-[1.0 .. 1 + extend[0]] for the last part.
-The parameter step in the extensions will be adjusted slightly so
-that the specified extension is a multiple of the step size.
-If the curve is closed, the extend parameter is disregarded.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.length">
-<tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the total length of the curve.</p>
-<p>This is only available for curves that implement the &#8216;lengths&#8217;
-method.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.approx">
-<tt class="descname">approx</tt><big>(</big><em>ndiv=None</em>, <em>ntot=None</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.approx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a PolyLine approximation of the curve</p>
-<p>If no <cite>ntot</cite> is given, the curve is approximated by <cite>ndiv</cite>
-straight segments over each part of the curve.
-If <cite>ntot</cite> is given, the curve is approximated by <cite>ntot</cite>
-straight segments over the total curve. This is based on a
-first approximation with ndiv segments over each part.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a deep copy of the object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.resized" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
-<p>If a direction has zero size, it is not rescaled.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.toFormex">
-<tt class="descname">toFormex</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.toFormex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a curve to a Formex.</p>
-<p>This creates a polyline approximation as a plex-2 Formex.
-This is mainly used for drawing curves that do not implement
-their own drawing routines.</p>
-<p>The method can be passed the same arguments as the <cite>approx</cite> method.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.write">
-<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a Geometry to a .pgf file.</p>
-<p>If fil is a string, a file with that name is opened. Else fil should
-be an open file.
-The Geometry is then written to that file in a native format, using
-sep as separator between the coordinates.
-If fil is a string, the file is closed prior to returning.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.pointsOn">
-<tt class="descname">pointsOn</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.pointsOn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points on the curve.</p>
-<p>This returns a Coords object of shape [nparts+1]. For a closed curve,
-the last point will be equal to the first.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.pointsOff">
-<tt class="descname">pointsOff</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.pointsOff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points off the curve (the control points)</p>
-<p>This returns a Coords object of shape [nparts,ndegree-1], or
-an empty Coords if degree &lt;= 1.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.part">
-<tt class="descname">part</tt><big>(</big><em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.part" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the points defining part j of the curve.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.sub_points">
-<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the points at values t in part j.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.sub_directions">
-<tt class="descname">sub_directions</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_directions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the unit direction vectors at values t in part j.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.sub_curvature">
-<tt class="descname">sub_curvature</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_curvature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the curvature at values t in part j.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.length_intgrnd">
-<tt class="descname">length_intgrnd</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.length_intgrnd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the arc length integrand at value t in part j.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.lengths">
-<tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.lengths" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the length of the parts of the curve.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.toMesh">
-<tt class="descname">toMesh</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.toMesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the BezierSpline to a Mesh.</p>
-<p>For degrees 1 or 2, the returned Mesh is equivalent with the
-BezierSpline, and will have element type &#8216;line1&#8217;, resp. &#8216;line2&#8217;.</p>
-<p>For degree 3, the returned Mesh will currently be a quadratic
-approximation with element type &#8216;line2&#8217;.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.approx_by_subdivision">
-<tt class="descname">approx_by_subdivision</tt><big>(</big><em>tol=0.001</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.approx_by_subdivision" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a PolyLine approximation of the curve.</p>
-<p>tol is a tolerance value for the flatness of the curve.
-The flatness of each part is calculated as the maximum
-orthogonal distance of its intermediate control points
-from the straight segment through its end points.</p>
-<p>Parts for which the distance is larger than tol are subdivided
-using de Casteljau&#8217;s algorithm. The subdivision stops
-if all parts are sufficiently flat. The return value is a PolyLine
-connecting the end points of all parts.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.extend">
-<tt class="descname">extend</tt><big>(</big><em>extend=[1.0, 1.0]</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.extend" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extend the curve beyond its endpoints.</p>
-<p>This function will add a Bezier curve before the first part and/or
-after the last part by applying de Casteljau&#8217;s algorithm on this part.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="curve.QuadBezierSpline.reverse">
-<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.reverse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the same curve with the parameter direction reversed.</p>
 </dd></dl>
 
 </dd></dl>
@@ -4557,6 +4128,443 @@ If fil is a string, the file is closed prior to returning.</p>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="curve.QuadBezierSpline">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">QuadBezierSpline</tt><big>(</big><em>*_args</em>, <em>**_kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a Quadratic Bezier spline curve.</p>
+<p>This is a (deprecated) convenience class for BezierSpline with fixed
+value of degree=2. The constructor takes the same parameters as
+BezierSpline, except for degree, which is fixed to a value 2.</p>
+<dl class="method">
+<dt id="curve.QuadBezierSpline.sub_points_2">
+<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_points_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values,parts given by zip(t,j)</p>
+<p>t and j can both be arrays, but should have the same length.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.sub_directions_2">
+<tt class="descname">sub_directions_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_directions_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the directions at values,parts given by zip(t,j)</p>
+<p>t and j can both be arrays, but should have the same length.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.pointsAt">
+<tt class="descname">pointsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.pointsAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at parameter values t.</p>
+<p>Parameter values are floating point values. Their integer part
+is interpreted as the curve segment number, and the decimal part
+goes from 0 to 1 over the segment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.directionsAt">
+<tt class="descname">directionsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.directionsAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at parameter values t.</p>
+<p>Parameter values are floating point values. Their integer part
+is interpreted as the curve segment number, and the decimal part
+goes from 0 to 1 over the segment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.addNoise">
+<tt class="descname">addNoise</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.addNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;addNoise&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.addNoise" title="coords.Coords.addNoise"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.addNoise()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.affine">
+<tt class="descname">affine</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;affine&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.affine" title="coords.Coords.affine"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.affine()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.align">
+<tt class="descname">align</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;align&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.align" title="coords.Coords.align"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.align()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.bump">
+<tt class="descname">bump</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.bump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;bump&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump" title="coords.Coords.bump"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.bump1">
+<tt class="descname">bump1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.bump1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;bump1&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump1" title="coords.Coords.bump1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump1()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.bump2">
+<tt class="descname">bump2</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.bump2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;bump2&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.bump2" title="coords.Coords.bump2"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.bump2()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.centered">
+<tt class="descname">centered</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.centered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;centered&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.centered" title="coords.Coords.centered"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.centered()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.cylindrical">
+<tt class="descname">cylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.cylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;cylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.cylindrical" title="coords.Coords.cylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.cylindrical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.egg">
+<tt class="descname">egg</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.egg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;egg&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.egg" title="coords.Coords.egg"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.egg()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.flare">
+<tt class="descname">flare</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.flare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;flare&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.flare" title="coords.Coords.flare"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.flare()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.hyperCylindrical">
+<tt class="descname">hyperCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;hyperCylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.hyperCylindrical()</span></tt> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.isopar">
+<tt class="descname">isopar</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.isopar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;isopar&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.isopar" title="coords.Coords.isopar"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.isopar()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.map">
+<tt class="descname">map</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;map&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.map" title="coords.Coords.map"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.map1">
+<tt class="descname">map1</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.map1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;map1&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.map1()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.mapd">
+<tt class="descname">mapd</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.mapd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;mapd&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.mapd" title="coords.Coords.mapd"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.mapd()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.projectOnCylinder">
+<tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnCylinder" title="coords.Coords.projectOnCylinder"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnCylinder()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnPlane&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnPlane" title="coords.Coords.projectOnPlane"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnPlane()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.projectOnSphere">
+<tt class="descname">projectOnSphere</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.projectOnSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;projectOnSphere&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.projectOnSphere" title="coords.Coords.projectOnSphere"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.projectOnSphere()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.reflect">
+<tt class="descname">reflect</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.reflect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;reflect&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.reflect" title="coords.Coords.reflect"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.reflect()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.replace">
+<tt class="descname">replace</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;replace&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.replace" title="coords.Coords.replace"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.replace()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.rollAxes">
+<tt class="descname">rollAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.rollAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;rollAxes&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rollAxes" title="coords.Coords.rollAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rollAxes()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.rot">
+<tt class="descname">rot</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.rot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.rotate">
+<tt class="descname">rotate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;rotate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.rotate" title="coords.Coords.rotate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.rotate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.scale">
+<tt class="descname">scale</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;scale&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.scale" title="coords.Coords.scale"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.scale()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.shear">
+<tt class="descname">shear</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.shear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;shear&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.shear" title="coords.Coords.shear"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.shear()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.spherical">
+<tt class="descname">spherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;spherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.spherical" title="coords.Coords.spherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.spherical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.superSpherical">
+<tt class="descname">superSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.superSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;superSpherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.superSpherical" title="coords.Coords.superSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.superSpherical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.swapAxes">
+<tt class="descname">swapAxes</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.swapAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;swapAxes&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.swapAxes" title="coords.Coords.swapAxes"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.swapAxes()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.toCylindrical">
+<tt class="descname">toCylindrical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;toCylindrical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.toCylindrical" title="coords.Coords.toCylindrical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toCylindrical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.toSpherical">
+<tt class="descname">toSpherical</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.toSpherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;toSpherical&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.toSpherical" title="coords.Coords.toSpherical"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.toSpherical()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.transformCS">
+<tt class="descname">transformCS</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.transformCS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;transformCS&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.transformCS" title="coords.Coords.transformCS"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.transformCS()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.translate">
+<tt class="descname">translate</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.trl">
+<tt class="descname">trl</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.trl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;translate&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.translate" title="coords.Coords.translate"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.translate()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.subPoints">
+<tt class="descname">subPoints</tt><big>(</big><em>div=10, extend=[0.0, 0.0]</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.subPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sequence of points on the Curve.</p>
+<ul class="simple">
+<li><cite>div</cite>: int or a list of floats (usually in the range [0.,1.])
+If <cite>div</cite> is an integer, a list of floats is constructed by dividing
+the range [0.,1.] into <cite>div</cite> equal parts.
+The list of floats then specifies a set of parameter values for which
+points at in each part are returned. The points are returned in a
+single Coords in order of the parts.</li>
+</ul>
+<p>The extend parameter allows to extend the curve beyond the endpoints.
+The normal parameter space of each part is [0.0 .. 1.0]. The extend
+parameter will add a curve with parameter space [-extend[0] .. 0.0]
+for the first part, and a curve with parameter space
+[1.0 .. 1 + extend[0]] for the last part.
+The parameter step in the extensions will be adjusted slightly so
+that the specified extension is a multiple of the step size.
+If the curve is closed, the extend parameter is disregarded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.length">
+<tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total length of the curve.</p>
+<p>This is only available for curves that implement the &#8216;lengths&#8217;
+method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.approx">
+<tt class="descname">approx</tt><big>(</big><em>ndiv=None</em>, <em>ntot=None</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.approx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PolyLine approximation of the curve</p>
+<p>If no <cite>ntot</cite> is given, the curve is approximated by <cite>ndiv</cite>
+straight segments over each part of the curve.
+If <cite>ntot</cite> is given, the curve is approximated by <cite>ntot</cite>
+straight segments over the total curve. This is based on a
+first approximation with ndiv segments over each part.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a deep copy of the object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.resized">
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.resized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
+<p>If a direction has zero size, it is not rescaled.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.toFormex">
+<tt class="descname">toFormex</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a curve to a Formex.</p>
+<p>This creates a polyline approximation as a plex-2 Formex.
+This is mainly used for drawing curves that do not implement
+their own drawing routines.</p>
+<p>The method can be passed the same arguments as the <cite>approx</cite> method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.write">
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a Geometry to a .pgf file.</p>
+<p>If fil is a string, a file with that name is opened. Else fil should
+be an open file.
+The Geometry is then written to that file in a native format, using
+sep as separator between the coordinates.
+If fil is a string, the file is closed prior to returning.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.pointsOn">
+<tt class="descname">pointsOn</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.pointsOn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points on the curve.</p>
+<p>This returns a Coords object of shape [nparts+1]. For a closed curve,
+the last point will be equal to the first.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.pointsOff">
+<tt class="descname">pointsOff</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.pointsOff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points off the curve (the control points)</p>
+<p>This returns a Coords object of shape [nparts,ndegree-1], or
+an empty Coords if degree &lt;= 1.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.part">
+<tt class="descname">part</tt><big>(</big><em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.part" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the points defining part j of the curve.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values t in part j.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.sub_directions">
+<tt class="descname">sub_directions</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unit direction vectors at values t in part j.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.sub_curvature">
+<tt class="descname">sub_curvature</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_curvature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the curvature at values t in part j.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.length_intgrnd">
+<tt class="descname">length_intgrnd</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.length_intgrnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the arc length integrand at value t in part j.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.lengths">
+<tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.lengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the length of the parts of the curve.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.toMesh">
+<tt class="descname">toMesh</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.toMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the BezierSpline to a Mesh.</p>
+<p>For degrees 1 or 2, the returned Mesh is equivalent with the
+BezierSpline, and will have element type &#8216;line1&#8217;, resp. &#8216;line2&#8217;.</p>
+<p>For degree 3, the returned Mesh will currently be a quadratic
+approximation with element type &#8216;line2&#8217;.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.approx_by_subdivision">
+<tt class="descname">approx_by_subdivision</tt><big>(</big><em>tol=0.001</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.approx_by_subdivision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PolyLine approximation of the curve.</p>
+<p>tol is a tolerance value for the flatness of the curve.
+The flatness of each part is calculated as the maximum
+orthogonal distance of its intermediate control points
+from the straight segment through its end points.</p>
+<p>Parts for which the distance is larger than tol are subdivided
+using de Casteljau&#8217;s algorithm. The subdivision stops
+if all parts are sufficiently flat. The return value is a PolyLine
+connecting the end points of all parts.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.extend">
+<tt class="descname">extend</tt><big>(</big><em>extend=[1.0, 1.0]</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.extend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extend the curve beyond its endpoints.</p>
+<p>This function will add a Bezier curve before the first part and/or
+after the last part by applying de Casteljau&#8217;s algorithm on this part.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.reverse">
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the same curve with the parameter direction reversed.</p>
+</dd></dl>
+
+</dd></dl>
+
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">curve</span></tt></p>
 <dl class="function">
 <dt id="curve.circle">
@@ -4606,9 +4614,13 @@ with curl 0.375058 through 8 points.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2010, Benedict Verhegghe.
+    <span class="left">
+        &copy; Copyright 2004-2011, Benedict Verhegghe.
+    </span>
       Last updated on Nov 18, 2011.
+    <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+    </span>
     </div>
   </body>
 </html>

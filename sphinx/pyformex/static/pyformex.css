@@ -39,10 +39,18 @@ div.header {
 div.footer {
     background-color: #ccc;
     color: #666;
-    padding: 3px 8px 3px 0;
+    padding: 3px 8px 3px 3px;
     clear: both;
     text-align: center;
     font-size: 75%;
+}
+
+span.left {
+    float: left;
+}
+
+span.right {
+    float: right;
 }
 
 div.footer a {
