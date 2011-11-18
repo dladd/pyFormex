@@ -415,13 +415,13 @@ class TriSurface(Mesh):
 
     def __init__(self,*args,**kargs):
         """Create a new surface."""
-        Mesh.__init__(self)
         self.areas = self.normals = None
         self.adj = None
         if hasattr(self,'edglen'):
             del self.edglen
             
         if len(args) == 0:
+            Mesh.__init__(self)
             return  # an empty surface
         
         if len(args) == 1:

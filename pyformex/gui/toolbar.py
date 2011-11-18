@@ -192,6 +192,7 @@ def toggleButton(attr,state=None):
 def updateButton(button,attr):
     """Update the button to correct state."""
     vp = pf.GUI.viewports.current
+    pf.debug("VP %s / %s" % (vp,pf.canvas))
     if vp == pf.canvas:
         button.setChecked(getattr(vp,attr))
     pf.GUI.processEvents()

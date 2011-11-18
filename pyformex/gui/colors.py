@@ -96,6 +96,17 @@ def colorName(color):
     except:
         return None
 
+def RGBcolor(color):
+    """Return an RGB (0-255) tuple for an OpenGL color"""
+    col = array(color)*255
+    return col.round().astype(Int)
+
+def WEBcolor(color):
+    """Return an RGB hex string for an OpenGL color"""
+    col = RGBcolor(color)
+    return "#%02x%02x%02x" % tuple(col)
+
+
 def createColorDict():
     for c in QtGui.QColor.colorNames():
         col = QtGui.QColor
