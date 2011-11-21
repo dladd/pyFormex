@@ -33,6 +33,7 @@ from pyformex.utils import listTree
 
 files = [
     'README',
+    'COPYING',
     'post-install',
     'pyformex-pyformex.desktop',
     'pyformex-viewer',

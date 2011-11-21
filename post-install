@@ -24,22 +24,25 @@
 ##
 #
 # This is the pyformex post install script
+# It normally gets the target directory as a parameter, to avoid problems
+# like mentioned below.
 #
-
+# If not, it tries to find it from running pyFormex: this may not work
+# in a sandboxed environment, like Gentoo, where pyFormex is only installed
+# after finishing this command.
 #
-# We really should avoid calling pyformex here, to ease the installation
-# in sandboxed environments (e.g. Gentoo)
-#
-instdir=$(pyformex --whereami | grep '^Script' | sed 's|.* ||')
-echo "Executables installed in $instdir"
+instdir=$1
+[ -d "${instdir}" ] || instdir=$(pyformex --whereami | grep '^Script' | sed 's|.* ||')
+echo "  Installing executables to $instdir"
 
 # install postabq here, because installing from setup.py creates a failure
 # if postabq was not compiled
-[ -d "$instdir" ] && install -m 0755 pyformex/lib/postabq $instdir
+[ -d "${instdir}" ] && install -m 0755 pyformex/lib/postabq ${instdir}
 
 # install the .desktop file on xdg compliant systems
 
 [ -n "$(type -P xdg-desktop-menu)" ] && {
+    echo "  Creating desktop menu entries"
     xdg-icon-resource install --size 64 pyformex/icons/pyformex-64x64.png
     xdg-desktop-icon install pyformex-pyformex.desktop
     xdg-desktop-menu install pyformex-pyformex.desktop

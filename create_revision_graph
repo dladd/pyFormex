@@ -27,7 +27,7 @@
 #
 URL=$(svn info | grep 'URL:' | sed 's|.*//||;s|.*@||')
 
-[ "$URL" = "svn.berlios.de/svnroot/repos/pyformex/trunk" ] || {
+[ "$URL" = "svn.savannah.nongnu.org/pyformex/trunk" ] || {
     echo "URL: $URL"
     echo "This script should be executed in the pyformex checkout directory"
     exit

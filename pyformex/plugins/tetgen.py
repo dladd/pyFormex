@@ -27,6 +27,7 @@
 import os
 import utils
 from formex import *
+from filewrite import *
 
 def invalid(line,fn):
     """Print message for invalid line."""
@@ -127,7 +128,6 @@ def readNeigh(fn):
 
 def writeNodes(fn,coords,offset=0):
     """Write a tetgen .node file."""
-    from filewrite import *
     coords = asarray(coords).reshape((-1,3))
     fil = file(fn,'w')
     fil.write("%d %d 0 0\n" % coords.shape)

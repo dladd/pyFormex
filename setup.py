@@ -36,7 +36,7 @@ from distutils.core import setup, Extension
 import os,sys,commands
 from pyformex.utils import listTree
 
-DOC_FILES = [ 'COPYING', 'README', f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
+DOC_FILES = [ f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
 
 EXT_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
 
@@ -50,7 +50,7 @@ class install(_install):
     def run(self):
         _install.run(self)
         print("Running pyFormex post-install script")
-        os.system("./post-install")
+        os.system("./post-install %s" % self.install_lib)
         
 
 class build_ext(_build_ext):
@@ -119,9 +119,9 @@ transformations.
       ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in EXT_MODULES ],
       packages=['pyformex','pyformex.gui','pyformex.lib','pyformex.plugins','pyformex.examples'],
       package_data={
-          '.': ['COPYING','README'],
           'pyformex': [
               'pyformexrc',
+              'icons/README',
               'icons/*.xpm',
               'icons/pyformex*.png',
               'examples/scripts.cat',

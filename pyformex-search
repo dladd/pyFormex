@@ -77,8 +77,6 @@ search=$1
 
 cd $(dirname $0)
 
-echo $script
-
 case "$script" in
     ${SEARCH} | searchpy) 
 	grep "$@" $files ;;
