@@ -36,7 +36,7 @@ from distutils.core import setup, Extension
 import os,sys,commands
 from pyformex.utils import listTree
 
-DOC_FILES = [ f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
+DOC_FILES = [ 'COPYING', 'README', f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
 
 EXT_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
 
@@ -119,6 +119,7 @@ transformations.
       ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in EXT_MODULES ],
       packages=['pyformex','pyformex.gui','pyformex.lib','pyformex.plugins','pyformex.examples'],
       package_data={
+          '.': ['COPYING','README'],
           'pyformex': [
               'pyformexrc',
               'icons/*.xpm',

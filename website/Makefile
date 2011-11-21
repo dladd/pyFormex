@@ -189,7 +189,7 @@ pyformex.help: ../pyformex/pyformex
 svndoc:
 	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${SVNDOC} 
 
-# Transfer the files to BerliOS
+# Transfer the files to www for publication
 pubn: 
 	rsync _build/html/* ../www --exclude CVS --delete -avn
 

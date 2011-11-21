@@ -36,6 +36,7 @@ files = [
     'post-install',
     'pyformex-pyformex.desktop',
     'pyformex-viewer',
+    'pyformex-search',
     'setup.py',
     ] + \
     listTree('pyformex',listdirs=False,sorted=True,
@@ -57,8 +58,23 @@ files = [
              includefiles=['.*\.py$','scripts.cat','README']
              ) + \
     listTree('pyformex/data',listdirs=False,sorted=True,
-             excludedirs=['.svn'],
+             excludedirs=['.svn','benchmark'],
              excludefiles=['.*\.pyc','.*~$','PTAPE.*'],
+             includefiles=[
+                'README',
+                'benedict_6.jpg',
+                'blippo.pgf',
+                'butterfly.png',
+                'hesperia-nieve.prop',
+                'horse.off',
+                'horse.pgf',
+                'materials.db',
+                'sections.db',
+                'splines.pgf',
+                'supershape.txt',
+                'teapot.off',
+                'world.jpg',
+                ],
              ) + \
     listTree('pyformex/doc',listdirs=False,sorted=True,
              excludedirs=['.svn'],

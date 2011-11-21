@@ -24,30 +24,35 @@
 ##
 # 
 script=$(basename $0)
-config=searchpy.conf
+config=.pyformex/search.conf
+SEARCH=pyformex-search
+REPLACE=pyformex-replace
 
 syntax() {
     cat <<EOF
-Usage: searchpy [-a] [OPTION]... SEARCH
-       changepy [-a] [OPTION]... SEARCH TARGET REPLACE
+Usage: ${SEARCH} [-a] [OPTION]... SEARCH
+       ${REPLACE} [-a] [OPTION]... SEARCH TARGET REPLACE
 
-searchpy: searches for a regex/string SEARCH in all the Python files 
+${SEARCH}: searches for a regex (or string) SEARCH in all the Python files 
   of pyFormex and possibly in other configured (Python or other) files. 
   The matching file names and lines are displayed.
   Any OPTIONs (other than -a) are passed to the grep command which is 
   used in the background. Some very useful options:
-  -F: intgerpretes SEARCH as a literal string (default is regex)
+  -F: interpretes SEARCH as a literal string (default is regex)
   -i: do a case insensitive search 
 
-changepy: searches the same files for SEARCH, and in all matching lines 
-  it replaces the string TARGET with REPLACE.
+${REPLACE}: searches the same files for SEARCH, and in all matching 
+  lines it replaces the string TARGET with REPLACE.
   Any OPTIONs (other than -a) are disregarded. 
 
 Options:
 -a : Should be the first and a separate option: if specified, the directories
-     specified in the user configuration file (searchpy.conf) will also be
-     searched. The searchpy.conf file holds a line myfiles=... with same
-     format as files=... in this script.
+     specified in the user configuration file:
+       ~/${config}
+     will also be searched. This configuration file holds a line 
+       myfiles="list of paths"
+     where list of paths is a blank separated list of paths relative
+     from the place where the script is installed.
 
 EOF
 }
@@ -72,13 +77,13 @@ search=$1
 
 cd $(dirname $0)
 
-#echo $files
+echo $script
 
 case "$script" in
-    searchpy ) 
+    ${SEARCH} | searchpy) 
 	grep "$@" $files ;;
     
-    changepy ) 
+    ${REPLACE} | changepy) 
 	target=$2
 	replace=$3
 	[ -n "$target" ] && sed -i "/$search/s|$target|$replace|" $files
