@@ -620,7 +620,7 @@ class Coords(ndarray):
     #  is set True, however, the coordinates are changed inplace. 
 
    
-    def scale(self,scale,dir=None,inplace=False):
+    def scale(self,scale,dir=None,center=None,inplace=False):
         """Return a copy scaled with scale[i] in direction i.
 
         The scale should be a list of 3 scaling factors for the 3 axis
@@ -628,6 +628,10 @@ class Coords(ndarray):
         In the latter case, dir (a single axis number or a list) may be given
         to specify the direction(s) to scale. The default is to produce a
         homothetic scaling.
+        The center of the scaling, if not specified, is the global origin.
+        If a center is specified, the result is equivalent to::
+
+          self.translate(-center).scale(scale,dir).translate(center)
 
         Example:
 
@@ -637,6 +641,10 @@ class Coords(ndarray):
           [ 2.  3.  4.]
           
         """
+        if center is not None:
+            center = asarray(center)
+            return self.trl(-center).scale(scale,dir).translate(center)
+        
         if inplace:
             out = self
         else:
@@ -1441,11 +1449,11 @@ class Coords(ndarray):
             return x,e
 
         vol = esz.prod()
-        nboxes = nnod / nodesperbox # ideal total number of boxes
-        boxsz = (vol/nboxes) ** (1./esz.shape[0])
-        nx = (sz/boxsz).astype(int32)
         # avoid error message on the global sz/nx calculation
         errh = seterr(all='ignore')
+        nboxes = nnod // nodesperbox # ideal total number of boxes
+        boxsz = (vol/nboxes) ** (1./esz.shape[0])
+        nx = (sz/boxsz).astype(int32)
         dx = where(nx>0,sz/nx,boxsz)
         seterr(**errh)
         #

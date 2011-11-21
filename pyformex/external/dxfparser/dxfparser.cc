@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
       printf("Unknown switch '%s'\n",argv[i]);
       return 1;
     }
-    printf("Converting %s\n",argv[i]);
+    printf("# Converting %s\n",argv[i]);
     if (!dxf.in(argv[i], &f)) {
       printf(" !! file could not be opened.\n");
       return 1;

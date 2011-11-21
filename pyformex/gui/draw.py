@@ -696,9 +696,11 @@ def drawFreeEdges(M,color='black'):
     draw(B,color=color,nolight=True)
     
 
-def drawNumbers(F,color='black',trl=None,offset=0,leader='',ontop=True):
+def drawNumbers(F,numbers=None,color='black',trl=None,offset=0,leader='',ontop=True):
     """Draw numbers on all elements of F.
 
+    numbers is an array with F.nelems() integer numbers.
+    If no numbers are given, the range from 0 to nelems()-1 is used.
     Normally, the numbers are drawn at the centroids of the elements.
     A translation may be given to put the numbers out of the centroids,
     e.g. to put them in front of the objects to make them visible,
@@ -712,8 +714,24 @@ def drawNumbers(F,color='black',trl=None,offset=0,leader='',ontop=True):
     if trl is not None:
         X = X.trl(trl)
     X = X.reshape(-1,3)
-    return drawMarks(X,numpy.arange(X.shape[0])+offset,color=color,leader=leader,ontop=ontop)
+    if numbers is None:
+        numbers = numpy.arange(X.shape[0])
+    return drawMarks(X,numbers+offset,color=color,leader=leader,ontop=ontop)
+    
 
+def drawPropNumbers(F,**kargs):
+    """Draw property numbers on all elements of F.
+
+    This calls drawNumbers to draw the property numbers on the elements.
+    All arguments of drawNumbers except `numbers` may be passed.
+    If the object F thus not have property numbers, -1 values are drawn.
+    """
+    if F.prop is None:
+        nrs = [ -1 ] * self.nelems()
+    else:
+        nrs = F.prop
+    drawNumbers(F,nrs,**kargs)
+                
 
 def drawVertexNumbers(F,color='black',trl=None,ontop=False):
     """Draw (local) numbers on all vertices of F.

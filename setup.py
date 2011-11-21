@@ -129,7 +129,7 @@ transformations.
               'data/*',
               ] + DOC_FILES
           },
-      scripts=['pyformex/pyformex','pyformex-viewer'],#,'pyformex/lib/postabq'],
+      scripts=['pyformex/pyformex','pyformex-viewer','pyformex-search'],
       data_files=DATA_FILES,
       classifiers=[
           'Development Status :: 4 - Beta',

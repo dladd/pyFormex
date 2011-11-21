@@ -72,6 +72,7 @@ class Curve(Geometry):
 
     def __init__(self):
         Geometry.__init__(self)
+        self.prop = None
 
     def pointsOn(self):
         return self.coords
@@ -229,7 +230,7 @@ class Curve(Geometry):
             at = PL.atLength(ntot)
             X = PL.pointsAt(at)
             PL = PolyLine(X,closed=PL.closed)
-        return PL
+        return PL.setProp(self.prop)
 
 
     def toFormex(self,*args,**kargs):
@@ -242,6 +243,24 @@ class Curve(Geometry):
         The method can be passed the same arguments as the `approx` method.
         """
         return self.approx(*args,**kargs).toFormex()
+
+
+    def setProp(self,p=None):
+        """Create or destroy the property array for the Formex.
+
+        A property array is a rank-1 integer array with dimension equal
+        to the number of elements in the Formex (first dimension of data).
+        You can specify a single value or a list/array of integer values.
+        If the number of passed values is less than the number of elements,
+        they wil be repeated. If you give more, they will be ignored.
+        
+        If a value None is given, the properties are removed from the Formex.
+        """
+        try:
+            self.prop = int(p)
+        except:
+            self.prop = None
+        return self
   
 
 ##############################################################################
@@ -297,7 +316,7 @@ class PolyLine(Curve):
         """Return the polyline as a Formex."""
         x = self.coords
         F = connect([x,x],bias=[0,1],loop=self.closed)
-        return F
+        return F.setProp(self.prop)
 
     
     def toMesh(self):
@@ -309,7 +328,7 @@ class PolyLine(Curve):
         elems = column_stack([e1,roll(e1,-1)])
         if not self.closed:
             elems = elems[:-1]
-        return Mesh(self.coords,elems,eltype='line2')
+        return Mesh(self.coords,elems,eltype='line2').setProp(self.prop)
 
 
     def sub_points(self,t,j):
@@ -520,11 +539,32 @@ class PolyLine(Curve):
             if len(res[sid]) == 1 and len(res[1-sid]) == 0:
                 res[sid][0].closed = True
 
-        # DO not use side in '+-', because '' in '+-' returns True
+        # Do not use side in '+-', because '' in '+-' returns True
         if side in ['+','-']:
             return res['+-'.index(side)]
         else:
             return res
+
+
+    def append(self,PL,fuse=True,**kargs):
+        """Append another PolyLine to this one.
+
+        Returns the concatenation of two open PolyLines. Closed PolyLines
+        cannot be concatenated.
+        """
+        if self.closed or PL.closed:
+            raise RuntimeError,"Closed PolyLines cannot be concatenated."
+        X = PL.coords
+        if fuse:
+            x = Coords.concatenate([self.coords[-1],X[0]])
+            x,e = x.fuse(nodesperbox=3) # !!! YES ! > 2 !!!
+            if e[0] == e[1]:
+                X = X[1:]
+        return PolyLine(Coords.concatenate([self.coords,X]))
+
+
+    # allow syntax PL1 + PL2
+    __add__ = append
 
 
     # BV: I'm not sure what this does and if it belongs here
@@ -1234,6 +1274,7 @@ class Arc3(Curve):
 
         The arc is specified by 3 non-colinear points.
         """
+        Curve.__init__(self)
         self.nparts = 1
         self.closed = False
         self._set_coords(Coords(coords))
@@ -1270,6 +1311,7 @@ class Arc(Curve):
         or by center, radius and two angles. In the latter case, the arc
         lies in a plane parallel to the x,y plane.
         """
+        Curve.__init__(self)
         self.nparts = 1
         self.closed = False
         if coords is not None:
@@ -1314,6 +1356,7 @@ class Spiral(Curve):
     """A class representing a spiral curve."""
 
     def __init__(self,turns=2.0,nparts=100,rfunc=None):
+        Curve.__init__(self)
         if rfunc == None:
             rfunc = lambda x:x
         self.coords = Coords([0.,0.,0.]).replic(npoints+1).hypercylindrical()
