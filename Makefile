@@ -52,9 +52,11 @@ BINSOURCE= \
 	${addprefix ${BINDIR}/, gambit-neu gambit-neu-hex} \
 
 EXTSOURCE= \
-	$(wildcard ${EXTDIR}/*/README) \
+	$(wildcard ${EXTDIR}/*/README*) \
 	$(wildcard ${EXTDIR}/*/install.sh) \
-	$(wildcard ${EXTDIR}/*/install.sh) \
+	$(wildcard ${EXTDIR}/*/*.h) \
+	$(wildcard ${EXTDIR}/*/*.cc) \
+	$(wildcard ${EXTDIR}/*/*.py) \
 	${addprefix ${EXTDIR}/pygl2ps/, gl2ps.i setup.py} \
 
 EXAMPLES= \

@@ -1,4 +1,4 @@
-#
+# $Id$
 ##
 ##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -23,3 +23,43 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 #
+
+#
+############# SET THESE TO SUIT YOUR INSTALLATION ####################
+
+# !! An environment variable DESTDIR can be set to specify a path for
+# !! the installation tree. All install paths specified hereafter will
+# !! be relative to that installation path.
+
+# root of the installation tree: this is a reasonable default
+prefix:= /usr/local
+# where to install the executable files
+bindir:= $(prefix)/bin
+# where to install calpy modules: some may prefer to use $(PREFIX) 
+libdir:= $(prefix)/lib
+# where to install the documentation
+docdir:= $(prefix)/share/doc
+
+#####################################################################
+
+PKG:= dxfparser
+
+BINDIR:= ${DESTDIR}${bindir}
+
+INSTALL:= install
+INSTALL_EXE:= ${INSTALL} -m 0755
+INSTALL_DATA:= ${INSTALL} -m 0644
+
+LFLAGS = -l dxflib
+
+
+dxfparser: dxfparser.o
+	g++ $(LFLAGS) $< -o $@
+
+dxfparser.o: dxfparser.h dxfparser.cc
+
+
+install: dxfparser
+	${INSTALL_EXE} $< ${BINDIR}
+
+# End
