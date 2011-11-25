@@ -2730,7 +2730,7 @@ def dialogButtons(dialog,actions=None,default=None):
     """
     if actions is None:
         actions = [('Cancel',),('OK',)]
-    if default is None:
+    if actions and default is None:
         default = actions[-1][0].lower()
     but = QtGui.QHBoxLayout()
     spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
