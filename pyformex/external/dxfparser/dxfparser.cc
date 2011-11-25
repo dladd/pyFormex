@@ -38,16 +38,27 @@
 
 const char* _version_ = "dxfparser 0.1";
 const char* _copyright_ = "Copyright (C) 2011 Benedict Verhegghe";
-const char* LineFmt = "Line(%f,%f,%f,%f,%f,%f)\n";
 const char* ArcFmt = "Arc(%f,%f,%f,%f,%f,%f)\n";
+const char* LineFmt = "Line(%f,%f,%f,%f,%f,%f)\n";
+const char* PolylineFmt = "Polyline(%d)\n";
+const char* VertexFmt = "Vertex(%f,%f,%f)\n";
+
+void MyDxfFilter::addArc(const DL_ArcData& d) {
+  printf(ArcFmt,d.cx,d.cy,d.cz,d.radius,d.angle1,d.angle2);
+}
 
 void MyDxfFilter::addLine(const DL_LineData& d) {
   printf(LineFmt,d.x1,d.y1,d.z1,d.x2,d.y2,d.z2);
 }
 
-void MyDxfFilter::addArc(const DL_ArcData& d) {
-  printf(ArcFmt,d.cx,d.cy,d.cz,d.radius,d.angle1,d.angle2);
+void MyDxfFilter::addPolyline(const DL_PolylineData& d){
+  printf(PolylineFmt,d.number);
 }
+
+void MyDxfFilter::addVertex(const DL_VertexData& d){
+  printf(VertexFmt,d.x,d.y,d.z);
+}
+
 
 
 int main(int argc, char* argv[])
@@ -57,14 +68,18 @@ int main(int argc, char* argv[])
   for(int i = 1; i < argc; i++) {
     if (argv[i][0] == '-') {
       // Process switch
-      if (!strcmp(argv[i],"-v")) {
+      if (!strcmp(argv[i],"--version")) {
 	printf("%s\n",_version_);
+	return 0;
+      }
+      if (!strcmp(argv[i],"--copyright")) {
+	printf("%s\n",_copyright_);
 	return 0;
       }
       printf("Unknown switch '%s'\n",argv[i]);
       return 1;
     }
-    printf("# Converting %s\n",argv[i]);
+    printf("# Converted from %s by %s\n",argv[i],_version_);
     if (!dxf.in(argv[i], &f)) {
       printf(" !! file could not be opened.\n");
       return 1;

@@ -370,7 +370,7 @@ class FlatDB(dict):
         """
         infile=None
         try:
-            infile = file(filename,'r')
+            infile = open(filename,'r')
             lines = infile.readlines()
         finally:
             if infile:
@@ -386,7 +386,7 @@ class FlatDB(dict):
         The header is written at the start of the database. Make sure to start
         each line with a comment marker if you want to read it back! 
         """
-        outfile = file(filename,mode)
+        outfile = open(filename,mode)
         if type(header) == str:
             outfile.writelines(header)
         for record in self.itervalues():

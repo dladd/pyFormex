@@ -26,7 +26,7 @@
 
 import pyformex as pf
 
-import os,re,sys
+import os,re,sys,tempfile
 from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
 
@@ -63,6 +63,7 @@ known_externals = {
     'ffmpeg': ('ffmpeg -version','FFmpeg version (\\S+)'),
     'gts': ('gtsset -h','Usage(:) set'),
     'calix': ('calix --version','CALIX-(\S+)'),
+    'dxfparser': ('dxfparser -V','dxfparser (\S+)'),
     }
 
 def checkVersion(name,version,external=False):
@@ -413,21 +414,23 @@ def all_image_extensions():
 
 file_description = {
     'all': 'All files (*)',
-    'img': 'Images (*.png *.jpg *.eps *.gif)',
-    'png': 'PNG images (*.png)',
-    'icon': 'Icons (*.xpm)',
+    'dxf': 'AutoCAD .dxf files (*.dxf)',
+    'dxftext': 'Converted AutoCAD files (*.dxftext)',
+    'flavia' : 'flavia results (*.flavia.msh *.flavia.res)',
     'gts': 'GTS files (*.gts)',
-    'stl': 'STL files (*.stl)',
-    'off': 'OFF files (*.off)',
-    'smesh': 'Tetgen surface mesh files (*.smesh)',
+    'icon': 'Icons (*.xpm)',
+    'img': 'Images (*.png *.jpg *.eps *.gif)',
+    'inp': 'Abaqus input files (*.inp)',
     'neu': 'Gambit Neutral files (*.neu)',
-    'surface': 'Any Surface file (*.gts *.stl *.off *.smesh *.neu)',
+    'off': 'OFF files (*.off)',
+    'pgf': 'pyFormex geometry files (*.pgf)',
+    'png': 'PNG images (*.png)',
+    'postproc': 'Postproc scripts (*_post.py *.post)',
     'pyformex': 'pyFormex scripts (*.py *.pye)',
     'pyf': 'pyFormex projects (*.pyf)',
-    'pgf': 'pyFormex geometry files (*.pgf)',
-    'postproc': 'Postproc scripts (*_post.py *.post)',
-    'flavia' : 'flavia results (*.flavia.msh *.flavia.res)',
-    'inp': 'Abaqus input files (*.inp)',
+    'smesh': 'Tetgen surface mesh files (*.smesh)',
+    'stl': 'STL files (*.stl)',
+    'surface': 'Any Surface file (*.gts *.stl *.off *.smesh *.neu)',
 }
 
 
@@ -636,13 +639,16 @@ def is_pyFormex(filename):
     ok = filename.endswith(".py")
     if ok:
         try:
-            f = file(filename,'r')
+            f = open(filename,'r')
             ok = f.readline().strip().find('pyformex') >= 0
             f.close()
         except IOError:
             ok = False
     return ok
     
+
+tempFile = tempfile.NamedTemporaryFile
+
 
 # BV: We could turn this into a factory
 

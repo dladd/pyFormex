@@ -43,7 +43,7 @@ import filewrite
 import utils
 from gui.drawable import interpolateNormals
 
-import os,tempfile
+import os
 
 utils.hasExternal('admesh')
 utils.hasExternal('tetgen')
@@ -97,7 +97,7 @@ def read_gts(fn):
     Return a coords,edges,faces tuple.
     """
     pf.message("Reading GTS file %s" % fn)
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     header = fil.readline().split()
     ncoords,nedges,nfaces = map(int,header[:3])
     if len(header) >= 7 and header[6].endswith('Binary'):
@@ -122,7 +122,7 @@ def read_off(fn):
     Returns a nodes,elems tuple.
     """
     pf.message("Reading .OFF %s" % fn)
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     head = fil.readline().strip()
     if head != "OFF":
         print("%s is not an OFF file!" % fn)
@@ -180,7 +180,7 @@ def write_stla(f,x):
 
     own = type(f) == str
     if own:
-        f = file(f,'w')
+        f = open(f,'w')
     f.write("solid  Created by %s\n" % pf.Version)
     area,norm = geomtools.areaNormals(x)
     degen = degenerate(area,norm)
@@ -1797,7 +1797,7 @@ def read_stla(fn,dtype=Float,large=False,guess=True):
         n = utils.countLines(fn) / 7 # ASCII STL has 7 lines per triangle
     else:
         n = 100
-    f = file(fn,'r')
+    f = open(fn,'r')
     a = zeros(shape=[n,3,3],dtype=dtype)
     x = zeros(shape=[3,3],dtype=dtype)
     i = 0
@@ -2051,7 +2051,7 @@ def intersectSurfaceWithSegments(s1, segm, atol=1.e-5):
 # Surface = TriSurface
 
 if __name__ == '__main__':
-    f = file('unit_triangle.stl','r')
+    f = open('unit_triangle.stl','r')
     a = read_ascii(f)
     f.close()
     print(a)

@@ -49,7 +49,7 @@ from gui import menu
 from gui.draw import *
 from gui.widgets import simpleInputItem as _I, groupInputItem as _G
 
-from plugins import objects,trisurface,inertia,partition,sectionize
+from plugins import objects,trisurface,inertia,partition,sectionize,dxf
 
 import commands, os, timer
 
@@ -234,12 +234,12 @@ def readMesh(fn):
     """
     d = {}
     pf.GUI.setBusy(True)
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     for line in fil:
         if line[0] == '#':
             line = line[1:]
         globals().update(getParams(line))
-        dfil = file(filename,'r')
+        dfil = open(filename,'r')
         if mode == 'nodes':
             d['coords'] = readNodes(dfil)
         elif mode == 'elems':
@@ -283,8 +283,8 @@ def importModel(fn=None):
         export(dict([("%s-%d"%(modelname,i), Mesh(x,ei)) for i,ei in enumerate(e)])) 
 
 
-def convert_inp(fn=None):
-    """Convert an Abaqus .inp file to pyFormex .mesh.
+def readInp(fn=None):
+    """Read an Abaqus .inp file and convert to pyFormex .mesh.
 
     """
     if fn is None:
@@ -296,7 +296,6 @@ def convert_inp(fn=None):
             convert_inp(f)
         return
 
-
     converter = os.path.join(pf.cfg['pyformexdir'],'bin','read_abq_inp.awk')
     dirname = os.path.dirname(fn)
     basename = os.path.basename(fn)
@@ -305,7 +304,62 @@ def convert_inp(fn=None):
     pf.GUI.setBusy()
     print(utils.runCommand(cmd))
     pf.GUI.setBusy(False)
-     
+
+    
+def importDxf(convert=False,keep=False):
+    """Import a DXF file.
+
+    The user is asked for the name of a .DXF file. Depending on the
+    parameters, the following processing is done:
+
+    =======     =====     ================================================
+    convert     keep      actions
+    =======     =====     ================================================
+    False       False     import DXF entities to pyFormex (default)
+    False       True      import DXF and save intermediate .dxftext format
+    True        any       convert .dxf to .dxftext only
+    =======     =====     ================================================
+    """
+    fn = askFilename(filter=utils.fileDescription('dxf'))
+    if not fn:
+        return
+
+    pf.GUI.setBusy()    
+    text = dxf.readDXF(fn)
+    pf.GUI.setBusy(False)
+    if text:
+        if convert or keep:
+            f = file(utils.changeExt(fn,'.dxftext'),'w')
+            f.write(text)
+            f.close()
+        if not convert:
+            importDxftext(text)
+
+
+def importSaveDxf():
+    """Import a DXF file and save the intermediate .dxftext."""
+    importDxf(keep=True)
+
+    
+def convertDxf():
+    """Read a DXF file and convert to dxftext."""
+    importDxf(convert=True)
+
+    
+def importDxftext(text=None):
+    """Import a dxftext script or file."""
+    if text is None:
+        fn = askFilename(filter=utils.fileDescription('dxftext'))
+        if not fn:
+            return
+        text = open(fn).read()
+        
+    pf.GUI.setBusy()    
+    dxf_parts = dxf.convertDXF(text)
+    pf.GUI.setBusy(False)
+    export({'_dxf_import_':dxf_parts})
+    draw(dxf_parts,color='black')
+           
 
 def writeGeometry(obj,filename,filetype=None,shortlines=False):
     """Write the geometry items in objdict to the specified file.
@@ -702,9 +756,17 @@ def create_menu():
             ("pyFormex Geometry File (.pgf)",importPgf),
             ("Surface File (*.gts, *.stl, *.off, *.neu)",importSurface),
             ("All known geometry formats",importAny),
-            ("&Convert Abaqus .inp file",convert_inp),
-            ("&Import Converted Abaqus Model",importModel),
-            ('&Convert pyFormex Geometry File',convertGeometryFile,dict(tooltip="Convert a pyFormex Geometry File (.pgf) to the latest format, overwriting the file.")),
+            ("Abaqus .inp",[
+                ("&Convert Abaqus .inp file",readInp),
+                ("&Import Converted Abaqus Model",importModel),
+                ]),
+            ("AutoCAD .dxf",[
+                ("&Import AutoCAD .dxf",importDxf),
+                ("&Import AutoCAD .dxf and save .dxftext",importSaveDxf),
+                ("&Convert AutoCAD .dxf to .dxftext",convertDxf,dict(tooltip="Parse a .DXF file and output dxftext script.")),
+                ("&Import .dxftext",importDxftext),
+                ]),
+            ('&Upgrade pyFormex Geometry File',convertGeometryFile,dict(tooltip="Convert a pyFormex Geometry File (.pgf) to the latest format, overwriting the file.")),
             ]),
         ("&Export ",[
             ("pyFormex Geometry File (.pgf)",exportPgf),

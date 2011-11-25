@@ -74,7 +74,7 @@ if not checkWorkdir():
     exit()
 
 outfilename = 'WireStent_calpy.out'
-outfile = file(outfilename,'w')
+outfile = open(outfilename,'w')
 message("Output is written to file '%s' in %s" % (outfilename,os.getcwd()))
 stdout_saved = sys.stdout
 sys.stdout = outfile

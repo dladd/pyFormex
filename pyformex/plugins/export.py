@@ -33,7 +33,7 @@ import pyformex
 
 class ObjFile(object):
     def __init__(self,filename):
-        self.file = file(filename,'w')
+        self.file = open(filename,'w')
         self.file.write("# .obj file written by %s\n" % pyformex.Version)
 
     def write(self,mesh,name=None):

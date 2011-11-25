@@ -35,7 +35,7 @@
 prefix:= /usr/local
 # where to install the executable files
 bindir:= $(prefix)/bin
-# where to install calpy modules: some may prefer to use $(PREFIX) 
+# where to install library files
 libdir:= $(prefix)/lib
 # where to install the documentation
 docdir:= $(prefix)/share/doc
@@ -51,6 +51,13 @@ INSTALL_EXE:= ${INSTALL} -m 0755
 INSTALL_DATA:= ${INSTALL} -m 0644
 
 LFLAGS = -l dxflib
+
+.PHONY: all build install
+
+
+build: dxfparser
+
+all: install
 
 
 dxfparser: dxfparser.o

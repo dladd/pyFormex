@@ -125,7 +125,7 @@ def writeOFF(fn,coords,elems):
     if coords.dtype.kind != 'f' or coords.ndim != 2 or coords.shape[1] != 3 or elems.dtype.kind != 'i' or elems.ndim != 2:
         raise runtimeError, "Invalid type or shape of argument(s)"
     
-    fil = file(fn,'w')
+    fil = open(fn,'w')
     fil.write("OFF\n")
     fil.write("%d %d 0\n" % (coords.shape[0],elems.shape[0]))
     writeData(coords,fil,'%f ')
@@ -154,7 +154,7 @@ def writeGTS(fn,coords,edges,faces):
     if coords.dtype.kind != 'f' or coords.ndim != 2 or coords.shape[1] != 3 or edges.dtype.kind != 'i' or edges.ndim != 2 or edges.shape[1] != 2 or faces.dtype.kind != 'i' or faces.ndim != 2 or faces.shape[1] != 3:
         raise runtimeError, "Invalid type or shape of argument(s)"
 
-    fil = file(fn,'w')
+    fil = open(fn,'w')
     fil.write("%d %d %d\n" % (coords.shape[0],edges.shape[0],faces.shape[0]))
     writeData(coords,fil,'%f ')
     writeData(edges+1,fil,'%i ')

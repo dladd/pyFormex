@@ -190,7 +190,7 @@ def save():
     if savefile is None:
         filename = askNewFilename(filter="Text files (*.txt)")
         if filename:
-            savefile = file(filename,'a')
+            savefile = open(filename,'a')
     if savefile:
         print "Saving to file"
         savefile.write('%s\n' % str(dialog.results))
@@ -209,12 +209,12 @@ def play():
         filename = os.path.join(getcfg('datadir'),'supershape.txt')
         filename = askFilename(cur=filename,filter="Text files (*.txt)")
     if filename:
-        savefile = file(filename,'r')
+        savefile = open(filename,'r')
         for line in savefile:
             print line
             globals().update(eval(line))
             create_and_show()
-        savefile = file(filename,'a')
+        savefile = open(filename,'a')
 
 
 ################# Dialog

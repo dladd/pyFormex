@@ -1137,7 +1137,7 @@ def runGUI():
         pf.debug('EGG')
         if type(egg) is str:
             pye = egg.endswith('pye')
-            egg = file(egg).read()
+            egg = open(egg).read()
         else:
             pye = True
             egg = ''.join(egg)

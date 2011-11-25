@@ -406,7 +406,7 @@ class AstData(object):
             fil = sys.stdout
         else:
             jobname,filename = astInputNames(jobname,extension='mail')
-            fil = file(filename,'w')
+            fil = open(filename,'w')
             pf.message("Writing mesh to file %s" % (filename))
         
         fil.write(fmtHeadingMesh("""Model: %s     Date: %s      Created by pyFormex
@@ -518,7 +518,7 @@ Script: %s
             fil = sys.stdout
         else:
             jobname,filename = astInputNames(jobname,extension='comm')
-            fil = file(filename,'w')
+            fil = open(filename,'w')
             pf.message("Writing command to file %s" % (filename))
         
         fil.write(fmtHeadingComm("""Model: %s     Date: %s      Created by pyFormex

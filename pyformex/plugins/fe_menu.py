@@ -49,7 +49,7 @@ def readModel(fn):
         return None
 
     print("Importing model %s" % fn)
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     noffset = 0
     #noffset = int(fil.readline().split()[1])
     a = fromfile(fil,sep=" ").reshape(-1,3)

@@ -178,7 +178,7 @@ if outfilename is None:
     error("No writeable path: I can not execute the simulation.\nCopy the script to a writeable path and try running from there.")
     exit()
 
-outfile = file(outfilename,'w')
+outfile = open(outfilename,'w')
 message("Output is written to file '%s'" % os.path.realpath(outfilename))
 stdout_saved = sys.stdout
 sys.stdout = outfile

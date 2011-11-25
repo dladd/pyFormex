@@ -226,7 +226,7 @@ if gl2ps:
         In case of the 'tex' filetype, two files are written: one with
         the .tex extension, and one with .eps extension.
         """
-        fp = file(filename, "wb")
+        fp = open(filename, "wb")
         if filetype:
             filetype = _gl2ps_types[filetype]
         else:

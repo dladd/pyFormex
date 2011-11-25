@@ -87,7 +87,7 @@ draw(e,alpha=0.8)
 
 if export and checkWorkdir():
     from plugins import trisurface
-    f = file('novation.stl','w')
+    f = open('novation.stl','w')
     F = e # + b
     # Create triangles
     G = F.selectNodes([0,1,2])

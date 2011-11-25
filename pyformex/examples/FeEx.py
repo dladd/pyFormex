@@ -221,8 +221,8 @@ def drawModel(offset=0):
     clear()
     meshes =  [ Mesh(model.coords,e,eltype='quad4') for e in model.elems ]
     draw(meshes,color='yellow')
-    drawNumbers(Formex(model.coords),color=red,offset=offset)
-    [ drawNumbers(m,leader='%s-'%i) for i,m in enumerate(meshes) ]
+    #drawNumbers(Formex(model.coords),color=red,offset=offset)
+    #[ drawNumbers(m,leader='%s-'%i) for i,m in enumerate(meshes) ]
     zoomAll()
 
 

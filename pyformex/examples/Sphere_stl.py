@@ -96,7 +96,7 @@ if ack("Create Surface model?"):
         fn = askNewFilename(getcfg('workdir'),"Stl files (*.stl)")
         if fn:
             from plugins import trisurface
-            f = file(fn,'w')
+            f = open(fn,'w')
             surface.write_stla(f,T.coords)
             f.close()
 

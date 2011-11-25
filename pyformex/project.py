@@ -79,7 +79,7 @@ class Project(dict):
 
     def save(self):
         """Save the project to file."""
-        f = file(self.filename,'w'+self.mode)
+        f = open(self.filename,'w'+self.mode)
         f.write("%s\n" % self.signature)
         pickle.dump(self.header_data(),f,pickle.HIGHEST_PROTOCOL)
         if self.gzip:
@@ -96,7 +96,7 @@ class Project(dict):
         
         The loaded definitions will update the current project.
         """
-        f = file(self.filename,'rb')
+        f = open(self.filename,'rb')
         s = f.readline()
         if s.startswith(self.signature):
             # This is the new format: the first pickle contains attributes

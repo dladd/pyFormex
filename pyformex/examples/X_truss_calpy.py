@@ -127,7 +127,7 @@ loads[:,0]=AssembleVector(loads[:,0],[ 0.0, -50.0, 0.0 ],bcon[nr_loaded,:])
 
 message("Performing analysis: this may take some time")
 outfilename = os.path.splitext(os.path.basename(pf.scriptName))[0] + '.out'
-outfile = file(outfilename,'w')
+outfile = open(outfilename,'w')
 message("Output is written to file '%s' in %s" % (outfilename,os.getcwd()))
 stdout_saved = sys.stdout
 sys.stdout = outfile

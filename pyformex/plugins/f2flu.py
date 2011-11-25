@@ -185,7 +185,7 @@ def tetgen2fluent(filename):
     if nodes is None or elems is None:
         print("Error while reading model %s" % filename)
         return
-    fil = file(filename+'.flu','w')
+    fil = open(filename+'.flu','w')
     if fil:
         output_fluent(fil,nodes,elems)
         fil.close()

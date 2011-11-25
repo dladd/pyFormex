@@ -356,12 +356,12 @@ if __name__ == '__main__':
     def testpickle():
         global C
         print("Test (un)pickle")
-        f = file('test.pickle','w')
+        f = open('test.pickle','w')
         print(type(C))
         print(C._default_)
         pickle.dump(C,f)
         f.close()
-        f = file('test.pickle','r')
+        f = open('test.pickle','r')
         C = pickle.load(f)
         print(type(C))
         print(C._default_)

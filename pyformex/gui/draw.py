@@ -154,7 +154,7 @@ def showFile(filename,mono=False,**kargs):
     Other arguments may also be passed to ShowText.
     """
     try:
-        f = file(filename,'r')
+        f = open(filename,'r')
     except IOError:
         return
     showText(f.read(),mono=mono,**kargs)

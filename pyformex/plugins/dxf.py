@@ -23,12 +23,157 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Export geometry in DXF format.
+"""Read/write geometry in DXF format.
 
-This module allows to export some simple geometrical items in DXF format.
+This module allows to import and export some simple geometrical items
+in DXF format.
 """
 
-from numpy import *
+from formex import *
+from plugins import curve
+    
+
+def importDXF(filename):
+    """Import (parts of) a DXF file into pyFormex.
+
+    This function scans a DXF file for recognized entities and imports
+    those entities as pyFormex objects. It is only a very partial importer,
+    but has proven to be already very valuable for many users.
+
+    `filename`: name of a DXF file.
+    The return value is a list of pyFormex objects.
+    
+    Importing a DXF file is done in two steps:
+
+    - First the DXF file is scanned and the recognized entities are
+      formatted into a text with standard function calling syntax.
+      See :func:`readDXF`.
+    - Then the created text is executed as a Python script, producing
+      equivalent pyFormex objects.
+      See :func:`convertDXF`.
+
+    """
+    text = readDXF(filename)
+    if text:
+        return convertDXF(text)
+    else:
+        return []
+
+
+def readDXF(filename):
+    """Read a DXF file and extract the recognized entities.
+
+    `filename`: name of a .DXF file.
+
+    Returns a multiline string with one line for each recognized entity,
+    in a format that can directly be used by :func:`convertDXF`.
+    
+    This function requires the external program `dxfparser` which comes
+    with the pyFormex distribution. It currently recognizes entities of
+    type 'Arc', 'Line', 'Polyline', 'Vertex'.
+    """
+    import utils
+    sta,out = utils.runCommand('dxfparser %s 2>/dev/null' % filename)
+    if sta==0:
+        return out
+    else:
+        return ''
+
+
+Parts = []
+Vertices = []
+
+def convertDXF(text):
+    """Convert a textual representation of a DXF format to pyFormex objects.
+
+    `text` : a multiline text representation of the contents of a DXF file.
+      This text representation can e.g. be obtained by the function
+      :func:`readDXF`. It contains lines defining DXF items. A small
+      example::
+
+        Arc(0.0,0.0,0.0,1.0,-90.,90.)
+        Arc(0.0,0.0,0.0,3.0,-90.,90.)
+        Line(0.0,-1.0,0.0,0.0,1.0,0.0)
+        Polyline(0)
+        Vertex(0.0,3.0,0.0)
+        Vertex(-2.0,3.0,0.0)
+        Vertex(-2.0,-7.0,0.0)
+        Vertex(0.0,-7.0,0.0)
+        Vertex(0.0,-3.0,0.0)
+
+      Each line of the text defines a single object or starts a multiple
+      component object. The text should be well aligned to constitute a
+      proper Python script. Currently, the only defined objects are
+      'Arc', 'Line', 'Polyline', 'Vertex'.
+
+    Returns a list of pyFormex objects corresponding to the text. The
+    returned objects are of the following type:
+
+        =============         ================================
+        function name         object
+        =============         ================================
+        Arc                   :class:`plugins.curve.Arc`
+        Line                  :class:`formax.Formex`
+        Polyline              :class:`plugins.curve.PolyLine`
+        =============         ================================
+
+    No object is returned for the `Vertex` function: they define the
+    vertices of a PolyLine.
+      
+    """
+    
+    global Parts,Vertices
+    
+    Parts = []
+    Vertices = []
+
+    def EndEntity():
+        global Parts,Vertices
+        if Parts and type(Parts[-1]) is str:
+            f = globals().get('End'+Parts[-1],None)
+            if f:
+                f()
+
+    def Arc(x0,y0,z0,r,a0,a1):
+        global Parts,Vertices
+        count = len(Parts)
+        part = curve.Arc(center=[x0,y0,z0],radius=r,angles=[a0,a1]).setProp(count)
+        part.dxftype = 'Arc'
+        Parts.append(part)
+
+    def Line(x0,y0,z0,x1,y1,z1):
+        global Parts,Vertices
+        count = len(Parts)
+        part = Formex([[[x0,y0,z0],[x1,y1,z1]]],count)
+        part.dxftype = 'Line'
+        Parts.append(part)
+
+    def Polyline(n):
+        global Parts,Vertices
+        #print "POLY"
+        EndEntity()
+        Parts.append('Polyline')
+        Vertices = []
+
+    def EndPolyline():
+        global Parts,Vertices
+        count = len(Parts) - 1
+        #print "ENDPOLY %s (%s vertices)" % (count, len(Vertices))
+        part = curve.PolyLine(Vertices).setProp(count)
+        part.dxftype = 'Arc'
+        Parts[-1] = part
+        Vertices = []
+
+    def Vertex(x,y,z):
+        global Parts,Vertices
+        Vertices.append([x,y,z])
+        
+
+    g = globals()
+    g.update({'Line':Line, 'Arc':Arc, 'Polyline':Polyline, 'EndPolyline':EndPolyline, 'Vertex':Vertex})
+    exec text in g
+    EndEntity()
+    return Parts
 
 class DxfExporter(object):
     """Export geometry in DXF format.
@@ -47,7 +192,7 @@ class DxfExporter(object):
         An existing file will be overwritten without warning!
         """
         self.filename = filename
-        self.fil = file(self.filename,'w')
+        self.fil = open(self.filename,'w')
         self.term = terminator
 
 

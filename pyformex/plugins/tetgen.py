@@ -40,7 +40,7 @@ def readNodes(fn):
 
     Returns a tuple of two arrays: nodal coordinates and node numbers.
     """
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     line = fil.readline()
     s = line.strip('\n').split()
     npts,ndim,nattr,nbmark = map(int,s)
@@ -56,7 +56,7 @@ def readElems(fn):
       elemnr : the element numbers
       attr: the element attributes.
     """
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     line = fil.readline()
     s = line.strip('\n').split()
     nelems,nplex,nattr = map(int,s)
@@ -69,7 +69,7 @@ def readFaces(fn):
 
     Returns an array of triangle elements.
     """
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     line = fil.readline()
     s = line.strip('\n').split()
     nelems,bmark = map(int,s[:2])
@@ -84,7 +84,7 @@ def readSmesh(fn):
 
     Returns an array of triangle elements.
     """
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     part = 0
     elems = None
     line = fil.readline()
@@ -118,7 +118,7 @@ def readNeigh(fn):
 
     Returns an arrays containing the tetrahedra neighbours:
     """
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     line = fil.readline()
     s = line.strip('\n').split()
     nelems, nneigh = map(int,s)
@@ -129,7 +129,7 @@ def readNeigh(fn):
 def writeNodes(fn,coords,offset=0):
     """Write a tetgen .node file."""
     coords = asarray(coords).reshape((-1,3))
-    fil = file(fn,'w')
+    fil = open(fn,'w')
     fil.write("%d %d 0 0\n" % coords.shape)
     writeIData(coords,fil,"%f ",ind=offset)
     fil.close()
@@ -141,7 +141,7 @@ def writeSmesh(fn,facets,coords=None,holes=None,regions=None):
     Currently it only writes the facets of a triangular surface mesh.
     Coords should be written independently to a .node file.
     """
-    fil = file(fn,'w')
+    fil = open(fn,'w')
     fil.write("# part 1: node list.\n")
     if coords is None:
         fil.write("0  3  0  0  # coords are found in %s.node.\n")

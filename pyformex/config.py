@@ -216,7 +216,7 @@ class Config(Dict):
                 fil = fil.split('\n')
             else:
                 filename = fil
-                fil = file(fil,'r')
+                fil = open(fil,'r')
         section = None
         contents = {}
         lineno = 0
@@ -350,7 +350,7 @@ class Config(Dict):
         Python statements (or comments) and that they contain the needed
         line separators, if you want to be able to read it back.
         """
-        fil = file(filename,'w')
+        fil = open(filename,'w')
         fil.write(header)
         fil.write("%s" % self)
         fil.write(trailer)

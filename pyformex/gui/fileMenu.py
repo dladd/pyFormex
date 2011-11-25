@@ -139,7 +139,7 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
         elif res == _edit:
             fn = "_autoscript_.py"
             draw.checkWorkdir()
-            f = file(fn,'w')
+            f = open(fn,'w')
             f.write(proj._autoscript_)
             f.close()
             openScript(fn)
@@ -202,7 +202,7 @@ def setAutoScript():
     """Set the current script as autoScript in the project"""
     global the_project
     if the_project is not None and pf.cfg['curfile'] and pf.GUI.canPlay:
-        the_project._autoscript_ = file(pf.cfg['curfile']).read()
+        the_project._autoscript_ = open(pf.cfg['curfile']).read()
  
 
 def setAutoFile():

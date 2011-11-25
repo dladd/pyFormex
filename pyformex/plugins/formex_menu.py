@@ -374,7 +374,7 @@ def partitionSelection():
         fn = askNewFilename(pf.cfg['workdir'],types)
         if fn:
             chdir(fn)
-            fil = file(fn,'w')
+            fil = open(fn,'w')
             fil.write("%s\n" % cuts)
             fil.close()
     
@@ -409,7 +409,7 @@ def sectionizeSelection():
         fn = askNewFilename(pf.cfg['workdir'],types)
         if fn:
             chdir(fn)
-            fil = file(fn,'w')
+            fil = open(fn,'w')
             fil.write("%s\n" % ctr)
             fil.write("%s\n" % diam)
             fil.close()

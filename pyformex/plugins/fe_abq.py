@@ -1881,7 +1881,7 @@ class AbqData(object):
             fil = sys.stdout
         else:
             jobname,filename = abqInputNames(jobname)
-            fil = file(filename,'w')
+            fil = open(filename,'w')
             pf.message("Writing to file %s" % (filename))
         
         fil.write(fmtHeading("""Model: %s     Date: %s      Created by pyFormex
@@ -2059,7 +2059,7 @@ def exportMesh(filename,mesh,eltype=None,header=''):
     If an eltype is specified, it will oerride the value stored in the mesh.
     This should be used to set a correct Abaqus element type matchin the mesh.
     """
-    fil = file(filename,'w')
+    fil = open(filename,'w')
     fil.write(fmtHeading(header))
     if eltype is None:
         eltype = mesh.eltype

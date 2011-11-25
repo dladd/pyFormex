@@ -25,13 +25,13 @@
   
   
 
-dxf2ascii
+dxfparser
 ---------
 
-dxf2ascii converts an AutoCAD DXF file to an ascii format, allowing easy
+dxfparser converts an AutoCAD DXF file to an ascii format, allowing easy
 inspection and further processing by other tools.
 
-dxf2ascii relies on DXFlib (http://www.qcad.org/dxflib.html) for
+dxfparser relies on DXFlib (http://www.qcad.org/dxflib.html) for
 parsing the DXF files. This exporter to ascii format was written by
 Benedict Verhegghe with the purpose of importing some DXF files into
 pyFormex (http://pyformex.org).
@@ -43,7 +43,7 @@ This software is distributed under the GPL v3 or higher.
 install
 -------
 
-To compile dxf2ascii, you need to first install the DXFlib library and
+To compile dxfparser, you need to first install the DXFlib library and
 development files. On Debian GNU/Linux (or Ubuntu), you can just
 install the package 'libdxflib-dev'::
 
@@ -54,21 +54,21 @@ Then, inside this directory, run::
   make
   make install (with root privileges)
 
-This will install the executable program 'dxf2ascii' in
+This will install the executable program 'dxfparser' in
 /usr/local/bin. Change the path in Makefile if you want to install elsewhere.
 
 usage
 -----
 ::
 
-  dxf2ascii DXFfile(s)
+  dxfparser DXFfile(s)
 
 will write the (recognized) contents of the named DXF files to
 standard output. It will write the name of processed files to standard
 error.
 Thus you can use the syntax::
 
-  dxf2ascii DXFfile.dxf > DXFfile.txt
+  dxfparser DXFfile.dxf > DXFfile.txt
 
 to get an ascii file with the contents.
 

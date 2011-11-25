@@ -505,7 +505,7 @@ def openLogFile():
     fn = draw.askFilename(filter=['*.log','*'],multi=False)
     if fn:
         closeLogFile()
-        draw.logfile = file(fn,'w')
+        draw.logfile = open(fn,'w')
 
 
 def saveBoard():

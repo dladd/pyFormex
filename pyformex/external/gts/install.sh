@@ -28,9 +28,12 @@
 #
 # Prerequisites: libglib2.0-dev
 #
-# ./gts_install get unpack patch make
-# sudo ./gts_install install rename
-# ./gts_install clean
+# TO INSTALL:
+# ./install.sh get unpack patch make
+# sudo ./install.sh install rename
+# ./install.sh clean
+#
+# OR:    ./install.sh all     TO DO IT ALL AT ONCE
 #
 # Use at your own risk if you do not understand what is happening!
 #

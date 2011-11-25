@@ -72,7 +72,7 @@ def scriptKeywords(fn,keyw=None):
     If a list of keywords is given, the return dictionary will only contain
     the matching values.
     """
-    fil = file(fn,'r')
+    fil = open(fn,'r')
     keys = {}
     ok = False
     for line in fil:
@@ -501,7 +501,7 @@ class ScriptMenu(QtGui.QMenu):
         if self.dir:
             f = os.path.join(self.dir,catname)
             s = "kat = %r\ncat = %r\ncol = %r\n" % self.classify()
-            file(f,'w').writelines(s)
+            open(f,'w').writelines(s)
             self.reload()
 
 

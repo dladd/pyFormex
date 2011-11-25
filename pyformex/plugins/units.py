@@ -124,7 +124,7 @@ class UnitsSystem:
         A 'problem: system' line sets all units to the corresponding value of
         the specified units system.
         """
-        fil = file(filename,'r')
+        fil = open(filename,'r')
         self.units = {}
         for line in fil:
             if line[0] == '#':
