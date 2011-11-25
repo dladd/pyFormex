@@ -30,7 +30,7 @@ import widgets
 import draw
 from gettext import gettext as _
 
-from widgets import simpleInputItem as I, compatInputItem as C
+from widgets import simpleInputItem as _I, compatInputItem as _C
 
 
 def setTriade():
@@ -49,49 +49,21 @@ def setTriade():
         draw.setTriade(res['triade'],res['pos'],res['size'])
 
 
-_the_dialog = None
-
-def set_the_color(field='top'):
-    """Set the_color from a dialog"""
-    _the_dialog.acceptData()
-    color = _the_dialog.results[field]
-    color = widgets.getColor(color)
-    #print(color)
-    if color:
-        _the_dialog.updateData({field:color})
-
-
-def set_the_color_top():
-    set_the_color('top')
-def set_the_color_bottom():
-    set_the_color('bottom')
-                
-
 def setBgColor():
-    """Change the background color."""
-    color = pf.canvas.settings.bgcolor
-    color = widgets.getColor(color)
-    if color:
-        pf.canvas.setBgColor(color)
-
-
-def setBgColor2():
     """Interactively set the viewport background colors."""
-    global _the_dialog
+    mode = pf.canvas.settings.bgmode
     color = pf.canvas.settings.bgcolor
     color2 = pf.canvas.settings.bgcolor2
-    if color2 is None:
-        color2 = color
-    itemlist = [C('top',color,'color',{'text':'Top background color'}),
-                C('bottom',color2,'color',{'text':'Bottom background color'}),
-                ]
-    _the_dialog = widgets.InputDialog(itemlist,'Config Dialog')
-    res = _the_dialog.getResult()
+    dialog = widgets.InputDialog([
+        _I('mode',mode,choices=pf.canvas.bgmodes),
+        _I('bgcolor',color,itemtype='color',text='Solid/Top/Left background color'),
+        _I('bgcolor2',color2,itemtype='color',text='Bottom/Right background color'),
+        ],caption='Config Dialog',enablers=[('mode','vertical gradient','bgcolor2'),('mode','horizontal gradient','bgcolor2')])
+    res = dialog.getResult()
     pf.debug(res)
     if res:
-        pf.canvas.setBgColor(res['top'],res['bottom'])
+        pf.canvas.setBgColor(res['bgcolor'],res['bgcolor2'],res['mode'])
         pf.canvas.update()
-    _the_dialog = None
 
         
 def setFgColor():
@@ -114,7 +86,7 @@ def setSlColor():
 def setLineWidth():
     """Change the default line width."""
     lw = pf.canvas.settings.linewidth
-    itemlist = [C('Line Width', lw, 'float')]
+    itemlist = [_C('Line Width', lw, 'float')]
     res = widgets.InputDialog(itemlist,'Choose default line width').getResult()
     if res:
         pf.canvas.setLineWidth(res['Line Width'])
@@ -122,7 +94,7 @@ def setLineWidth():
     
 def setCanvasSize():
     """Save the current viewport size"""
-    itemlist = [I('w',pf.canvas.width()),I('h',pf.canvas.height())]
+    itemlist = [_I('w',pf.canvas.width()),_I('h',pf.canvas.height())]
     res = widgets.InputDialog(itemlist,'Set Canvas Size').getResult()
     if res:
         pf.canvas.resize(int(res['w']),int(res['h']))
@@ -135,13 +107,13 @@ def viewportSettings():
     s = pf.canvas.settings
     if s.bgcolor2 is None:
         s.bgcolor2 = s.bgcolor
-    itemlist = [I('rendermode', mode, choices=modes),
-                I('linewidth', s.linewidth, itemtype='float'),
-                I('bgcolor', s.bgcolor, itemtype='color'),
-                I('bgcolor2', s.bgcolor2, itemtype='color'),
-                I('fgcolor', s.fgcolor, itemtype='color'),
-                I('slcolor', s.slcolor, itemtype='color'),
-                I('Store these settings as defaults', False),
+    itemlist = [_I('rendermode', mode, choices=modes),
+                _I('linewidth', s.linewidth, itemtype='float'),
+                _I('bgcolor', s.bgcolor, itemtype='color'),
+                _I('bgcolor2', s.bgcolor2, itemtype='color'),
+                _I('fgcolor', s.fgcolor, itemtype='color'),
+                _I('slcolor', s.slcolor, itemtype='color'),
+                _I('Store these settings as defaults', False),
                 ]
     res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
     if res:
@@ -162,9 +134,9 @@ def viewportLayout():
         current = directions[0]
     else:
         current = directions[1]
-    itemlist = [C('Number of viewports',len(pf.GUI.viewports.all)),
-                C('Viewport layout direction',current,'select',{'choices':directions}),
-                C('Number of viewports per row/column',pf.GUI.viewports.ncols),
+    itemlist = [_C('Number of viewports',len(pf.GUI.viewports.all)),
+                _C('Viewport layout direction',current,'select',{'choices':directions}),
+                _C('Number of viewports per row/column',pf.GUI.viewports.ncols),
                 ]
     res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
     if res:
@@ -198,7 +170,7 @@ def canvasSettings():
     dia = widgets.InputDialog(
         caption='Canvas Settings',
         items=[
-            C('near',-1.0,'slider',{'min':-100,'max':100,'scale':0.01,'func': set_near_clip,'text':'Near clipping plane'}),
+            _C('near',-1.0,'slider',{'min':-100,'max':100,'scale':0.01,'func': set_near_clip,'text':'Near clipping plane'}),
             ],
         actions=[('Done',close),('Apply',apply_)]
         )
@@ -216,10 +188,10 @@ def openglSettings():
     dia = widgets.InputDialog(
         caption='OpenGL Settings',
         items=[
-            C('Line Smoothing','Off','radio',{'choices':['On','Off']}),
-            C('Polygon Mode',None,'radio',{'choices':['Fill','Line']}),
-            C('Polygon Fill',None,'radio',{'choices':['Front and Back','Front','Back']}),
-            C('Culling','Off','radio',{'choices':['On','Off']}),
+            _C('Line Smoothing','Off','radio',{'choices':['On','Off']}),
+            _C('Polygon Mode',None,'radio',{'choices':['Fill','Line']}),
+            _C('Polygon Fill',None,'radio',{'choices':['Front and Back','Front','Back']}),
+            _C('Culling','Off','radio',{'choices':['On','Off']}),
 # These are currently set by the render mode
 #            ('Shading',None,'radio',{'choices':['Smooth','Flat']}),
 #            ('Lighting',None,'radio',{'choices':['On','Off']}),
@@ -252,7 +224,6 @@ MenuData = [
         (_('&Axes Triade'),setTriade), 
 #        (_('&Transparency'),setOpacity), 
         (_('&Background Color'),setBgColor), 
-        (_('&Background 2Color'),setBgColor2), 
         (_('&Foreground Color'),setFgColor), 
         (_('&Highlight Color'),setSlColor), 
         (_('Line&Width'),setLineWidth), 

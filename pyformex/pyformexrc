@@ -138,11 +138,12 @@ showfocus = True
 
 # Default canvas settings
 [canvas]
-bgcolor = 'lightgrey'       # canvas background color
-bgcolor2 = None             # if defined, canvas has a graded background
-fgcolor = 'black'           # default drawing color
-bkcolor = None              # if defined, backsides of planes have this color
-slcolor = 'yellow'          # highlighting color
+bgmode = 'solid'        # solid background mode
+bgcolor = 'grey90'      # canvas background color, left/top for graded modes
+bgcolor2 = 'grey80'     # canvas background color, right/bottom
+fgcolor = 'black'       # default drawing color
+bkcolor = None          # if defined, backsides of planes have this color
+slcolor = 'yellow'      # highlighting color
 colormap = ['black','red','green','blue','cyan','magenta','yellow','white'] 
 bkcolormap = colormap
 transparency = 0.5          # default transparency value
@@ -151,7 +152,7 @@ linewidth = 1.0             # width of lines
 linestipple = (0,1)         # line stipple (factor,pattern)
 marksize = 0.4              # size of 3D marks
 marktype = 'sphere'         # type of 3D mark
-rendermode = 'wireframe'
+rendermode = 'wireframe'    # default rendering mode
 
 
 [mark]

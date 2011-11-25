@@ -40,7 +40,7 @@ def updateSettings(res,save=None):
     """Update the current settings (store) with the values in res.
 
     res is a dictionary with configuration values.
-    The current settings will be update with the values in res.
+    The current settings will be updated with the values in res.
 
     If res contains a key '_save_', or a `save` argument is supplied,
     and its value is True, the preferences will also be saved to the
@@ -56,6 +56,7 @@ def updateSettings(res,save=None):
     # Do not use 'pf.cfg.update(res)' here!
     # It will not work with our Config class!
 
+    # a set to uniquely register updatefunctions
     todo = set([])
     for k in res:
         if k.startswith('_'): # skip temporary variables
@@ -75,12 +76,14 @@ def updateSettings(res,save=None):
             changed = True
 
         if changed and pf.GUI:
+            # register the corresponding update function
             if k in _activate_settings:
                 todo.add(_activate_settings[k])
 
     # We test for pf.GUI in case we want to call updateSettings before
     # the GUI is created
     if pf.GUI:
+        print todo
         for f in todo:
             f()
 
@@ -178,6 +181,12 @@ def settings():
                 I('gui/splash',text='Splash image',itemtype='button',func=changeSplash),
                 viewer,
                 ]),
+            T('Canvas',[
+                I('canvas/bgmode',pf.cfg['canvas/bgmode'],choices=pf.canvas.bgmodes),
+                I('canvas/bgcolor',pf.cfg['canvas/bgcolor'],itemtype='color'),
+                I('canvas/bgcolor2',pf.cfg['canvas/bgcolor2'],itemtype='color'),
+                ],
+              ),
             T('Drawing',[
                 I('_info_00_',itemtype='info',text='Changes to these options currently only become effective after restarting pyFormex!'),
                 I('draw/quadline',text='Draw as quadratic lines',itemtype='list',check=True,choices=elementTypes(1),tooltip='Line elements checked here will be drawn as quadratic lines whenever possible.'),
@@ -191,12 +200,17 @@ def settings():
 #                G('Jobs',jobs_settings),
                 ]),
             ],
+        enablers =[
+            ('canvas/bgmode','vertical gradient','canvas/bgcolor2'),
+            ('canvas/bgmode','horizontal gradient','canvas/bgcolor2'),
+            ],
         actions=[
             ('Close',close),
             ('Accept and Save',acceptAndSave),
             ('Accept',accept),
-        ])
-    dia.resize(800,400)
+        ],
+        )
+    #dia.resize(800,400)
     dia.show()
 
 
@@ -544,7 +558,7 @@ def setOptions():
 
 # Functions defined to delay binding
 def coordsbox():
-    """Toggle the coordinate display box onor off"""
+    """Toggle the coordinate display box on or off"""
     pf.GUI.coordsbox.setVisible(pf.cfg['gui/coordsbox'])
     
 def timeoutbutton():
@@ -561,6 +575,10 @@ def updateStyle():
 def updateToolbars():
     pf.GUI.updateToolBars()
 
+def updateBackground():
+    pf.canvas.setBgColor(pf.cfg['canvas/bgcolor'],pf.cfg['canvas/bgcolor2'],pf.cfg['canvas/bgmode'])
+    pf.canvas.update()
+
     
 # This sets the functions that should be called when a setting has changed
 _activate_settings = {
@@ -572,6 +590,9 @@ _activate_settings = {
     'gui/camerabar':updateToolbars,
     'gui/viewbar':updateToolbars,
     'gui/modebar':updateToolbars,
+    'canvas/bgmode':updateBackground,
+    'canvas/bgcolor':updateBackground,
+    'canvas/bgcolor2':updateBackground,
     }
    
 

@@ -1285,11 +1285,9 @@ def convertInputItem(data):
 
 # define a function to have the same enabling name as for InputItem
 def enableItem(self,*args):
-    #print "TRY %s, %s" % (self.name(),self.enabled_by)
     try:
-        src,val = self.enabled_by
-        #print "%s, %s, %s" % (self.name(),self.enabled_by,src.value())
-        self.setEnabled(src.value() == val)
+        ok = any([ src.value() == val for src,val in self.enabled_by ])
+        self.setEnabled(ok)
     except:
         warnings.warn("Error in a dialog item enabler. This should not happen!")
         pass
@@ -1364,8 +1362,8 @@ class InputDialog(QtGui.QDialog):
     - `enablers`: a list of tuples (key,value,key1,...) where the first two
       items indicate the key and value of the enabler, and the next items
       are keys of fields that are enabled when the field key has the specified
-      value. Currentley, key should be a field of type boolean, radio, combo or
-      group.
+      value. Currentley, key should be a field of type boolean, [radio],
+      combo or group. Also, any input field should only have one enabler!
          
     """
     def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,store=None,prefix='',autoprefix=False,flat=None,modal=None,enablers=[]):
@@ -1419,7 +1417,10 @@ class InputDialog(QtGui.QDialog):
                     tgt = self[t]
                     #print "%s" % (tgt)
                     if tgt:
-                        tgt.enabled_by = (src,val)
+                        try:
+                            tgt.enabled_by.append((src,val))
+                        except:
+                            tgt.enabled_by = [(src,val)]
                         signal = None
                         if isinstance(src,InputBool):
                             signal = QtCore.SIGNAL("stateChanged(int)")

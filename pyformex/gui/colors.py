@@ -141,6 +141,7 @@ def GREY(val,alpha=1.0):
 def grey(i):
     return (i,i,i)
 
+lightlightgrey = grey(0.9)
 lightgrey = grey(0.8)
 mediumgrey = grey(0.7)
 darkgrey = grey(0.5)

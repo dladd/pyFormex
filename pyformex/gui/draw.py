@@ -369,6 +369,201 @@ message = printMessage
 
 ############################## drawing functions ########################
 
+def draw1(F,
+         view=None,bbox=None,
+         color='prop',colormap=None,bkcolor=None,bkcolormap=None,alpha=None,
+         mode=None,linewidth=None,linestipple=None,shrink=None,marksize=None,
+         wait=True,clear=None,allviews=False,
+         highlight=False,nolight=False,ontop=False,**kargs):
+    """Draw object(s) with specified settings and direct camera to it.
+
+    The first argument is an object to be drawn. All other arguments are
+    settings that influence how  the object is being drawn.
+
+    F is either a Formex or a TriSurface object, or a name of such object
+    (global or exported), or a list thereof.
+    If F is a list, the draw() function is called repeatedly with each of
+    ithe items of the list as first argument and with the remaining arguments
+    unchanged.
+
+    The remaining arguments are drawing options. If None, they are filled in
+    from the current viewport drawing options.
+    
+    view is either the name of a defined view or 'last' or None.
+    Predefined views are 'front','back','top','bottom','left','right','iso'.
+    With view=None the camera settings remain unchanged (but might be changed
+    interactively through the user interface). This may make the drawn object
+    out of view!
+    With view='last', the camera angles will be set to the same camera angles
+    as in the last draw operation, undoing any interactive changes.
+    The initial default view is 'front' (looking in the -z direction).
+
+    bbox specifies the 3D volume at which the camera will be aimed (using the
+    angles set by view). The camera position wil be set so that the volume
+    comes in view using the current lens (default 45 degrees).
+    bbox is a list of two points or compatible (array with shape (2,3)).
+    Setting the bbox to a volume not enclosing the object may make the object
+    invisible on the canvas.
+    The special value bbox='auto' will use the bounding box of the objects
+    getting drawn (object.bbox()), thus ensuring that the camera will focus
+    on these objects.
+    The special value bbox=None will use the bounding box of the previous
+    drawing operation, thus ensuring that the camera's target volume remains
+    unchanged.
+
+    color,colormap,linewidth,alpha,marksize are passed to the
+    creation of the 3D actor.
+
+        
+    if color is None, it is drawn with the color specified on creation.
+    if color == 'prop' and a colormap was installed, props define color.
+    else, color should be an array of RGB values, either with shape
+    (3,) for a single color, or (nelems,3) for differently colored
+    elements 
+
+
+    shrink is a floating point shrink factor that will be applied to object
+    before drawing it.
+
+    If the Formex has properties and a color list is specified, then the
+    the properties will be used as an index in the color list and each member
+    will be drawn with the resulting color.
+    If color is one color value, the whole Formex will be drawn with
+    that color.
+    Finally, if color=None is specified, the whole Formex is drawn in black.
+    
+    Each draw action activates a locking mechanism for the next draw action,
+    which will only be allowed after drawdelay seconds have elapsed. This
+    makes it easier to see subsequent images and is far more elegant that an
+    explicit sleep() operation, because all script processing will continue
+    up to the next drawing instruction.
+    The value of drawdelay is set in the config, or 2 seconds by default.
+    The user can disable the wait cycle for the next draw operation by
+    specifying wait=False. Setting drawdelay=0 will disable the waiting
+    mechanism for all subsequent draw statements (until set >0 again).
+    """
+    if 'flat' in kargs:
+        import warnings
+        warnings.warn('warn_flat_removed',DeprecationWarning,stacklevel=2)
+        
+    # Facility for drawing database objects by name
+    if type(F) == str:
+        F = named(F)
+        if F is None:
+            return None
+
+    # We need to get the default for bbox before processing a list,
+    # because bbox should be set only once for the whole list of objects
+    if bbox is None:
+        bbox = pf.canvas.options.get('bbox','auto')
+        
+    if type(F) == list:
+        actor = []
+        nowait = False
+        save_bbox = bbox
+        for Fi in F:
+            if Fi is F[-1]:
+                nowait = wait
+            actor.append(draw(Fi,view,bbox,
+                              color,colormap,bkcolor,bkcolormap,alpha,
+                              mode,linewidth,linestipple,shrink,marksize,
+                              wait=nowait,clear=clear,allviews=allviews,
+                              highlight=highlight,nolight=nolight,ontop=ontop,**kargs))
+            if Fi is F[0]:
+                clear = False
+                view = None
+                bbox = 'last'
+
+        bbox = save_bbox
+        if bbox == 'auto':
+            bbox = coords.bbox(actor)
+            pf.canvas.setCamera(bbox,view)
+            pf.canvas.update()
+                
+        return actor           
+
+    # We now should have a single object to draw
+    # Check if it is something we can draw
+
+    
+    if not hasattr(F,'actor') and hasattr(F,'toFormex'):
+        pf.debug("CONVERTING %s TO FORMEX TO ENABLE DRAWING" %  type(F))
+        F = F.toFormex()
+
+    if not hasattr(F,'actor'):
+        # Don't know how to draw this object
+        raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
+
+    # Fill in the remaining defaults
+    if shrink is None:
+        shrink = pf.canvas.options.get('shrink',None)
+ 
+    if marksize is None:
+        marksize = pf.canvas.options.get('marksize',pf.cfg.get('marksize',5.0))
+
+    if alpha is None:
+        alpha = pf.canvas.options.get('alpha',0.5)
+       
+    # Create the colors
+    if color == 'prop':
+        if hasattr(F,'p'):
+            color = F.prop
+        elif hasattr(F,'prop'):
+            color = F.prop
+        else:
+            color = colors.black
+    elif color == 'random':
+        # create random colors
+        color = numpy.random.rand(F.nelems(),3)
+
+    pf.GUI.drawlock.wait()
+
+    if clear is None:
+        clear = pf.canvas.options.get('clear',False)
+    if clear:
+        clear_canvas()
+
+    if view is not None and view != 'last':
+        pf.debug("SETTING VIEW to %s" % view)
+        setView(view)
+
+    pf.GUI.setBusy()
+    pf.app.processEvents()
+    if shrink is not None:
+        F = _shrink(F,shrink)
+
+    try:
+        actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
+
+        if actor is None:
+            return None
+        
+        if highlight:
+            pf.canvas.addHighlight(actor)
+        else:
+            pf.canvas.addActor(actor)
+            if view is not None or bbox not in [None,'last']:
+                pf.debug("CHANGING VIEW to %s" % view)
+                if view == 'last':
+                    view = pf.canvas.options['view']
+                if bbox == 'auto':
+                    bbox = F.bbox()
+                pf.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
+                pf.canvas.setCamera(bbox,view)
+                #setView(view)
+
+        pf.canvas.update()
+        pf.app.processEvents()
+        #pf.debug("AUTOSAVE %s" % image.autoSaveOn())
+        if image.autoSaveOn():
+            image.saveNext()
+        if wait: # make sure next drawing operation is retarded
+            pf.GUI.drawlock.lock()
+    finally:
+        pf.GUI.setBusy(False)
+    return actor
+
+
 def draw(F,
          view=None,bbox=None,
          color='prop',colormap=None,bkcolor=None,bkcolormap=None,alpha=None,
@@ -562,6 +757,9 @@ def draw(F,
     finally:
         pf.GUI.setBusy(False)
     return actor
+
+if pf.options.newdraw:
+    draw = draw1
 
 
 def _setFocus(object,bbox,view):
@@ -946,14 +1144,14 @@ def isoView():
     view("iso")
 
 
-def bgcolor(color,color2=None):
+def bgcolor(color,color2=None,mode='h'):
     """Change the background color (and redraw).
 
     If one color is given, the background is a solid color.
     If two colors are given, the background color will get a vertical
     gradient with color on top and color2 at the bottom.
     """
-    pf.canvas.setBgColor(color,color2)
+    pf.canvas.setBgColor(color,color2,mode)
     pf.canvas.display()
     pf.canvas.update()
 

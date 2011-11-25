@@ -342,9 +342,10 @@ class CanvasSettings(Dict):
       
     Currently the following mode settings are defined:
     
-    - bgcolor: the viewport background color
-    - bgcolor2: None for a single color background, bottom color for a
-      graded background (the top color then being bgcolor)
+    - bgmode: the viewport background mode. Should be one of
+      'solid', 'vertical gradient', 'horizontal gradient'
+    - bgcolor: the viewport background color (left/top color for graded modes)
+    - bgcolor2: right/bottom color for a grade background
     - slcolor: the highlight color
     - rendermode: the rendering mode
     - shading: True is smooth, False is flat
@@ -388,11 +389,7 @@ class CanvasSettings(Dict):
         Returns the sanitized update values.
         """
         ok = self.checkDict(d,strict)
-        #print "UPDATING %s" % ok
         Dict.update(self,ok)
-        ## THIS SHOULD BE DONE WHILE SETTING THE CFG !!
-        ## if (self.bgcolor2 == self.bgcolor).all():
-        ##     self.bgcolor2 = None
 
     @classmethod
     def checkDict(clas,dict,strict=True):
@@ -400,7 +397,10 @@ class CanvasSettings(Dict):
         ok = {}
         for k,v in dict.items():
             try:
-                if k in [ 'bgcolor', 'bgcolor2', 'fgcolor', 'bkcolor', 'slcolor']:
+                if k == 'bgmode':
+                    if not v in Canvas.bgmodes:
+                        raise
+                elif k in [ 'bgcolor', 'bgcolor2', 'fgcolor', 'bkcolor', 'slcolor']:
                     if v is not None:
                         v = saneColor(v)
                 elif k in ['colormap','bkcolormap']:
@@ -462,6 +462,7 @@ class Canvas(object):
 
     rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
                    'smooth_avg']
+    bgmodes = [ 'solid', 'vertical gradient', 'horizontal gradient' ]
 
     def __init__(self,settings={}):
         """Initialize an empty canvas with default settings."""
@@ -615,17 +616,22 @@ class Canvas(object):
         self.settings.pointsize = float(sz)
 
 
-    def setBgColor(self,color1,color2=None):
+    def setBgColor(self,color1,color2=None,mode='solid'):
         """Set the background color.
 
         If one color is specified, a solid background is set.
         If two colors are specified, a graded background is set
         and an object is created to display the background.
         """
+        #
+        # THIS SHOULD USE self.settings.update
+        #
+        self.settings.bgmode = mode
         self.settings.bgcolor = colors.GLColor(color1)
-        if color2 is None:
+        
+        if mode == 'solid' or color2 is None:
             pf.debug("Clearing twocolor background")
-            self.settings.bgcolor2 = None
+            self.settings.bgmode = 'solid'
             self.background = None
         else:
             self.settings.bgcolor2 = colors.GLColor(color2)
@@ -641,6 +647,8 @@ class Canvas(object):
         x1,y1 = 0,0
         x2,y2 = self.Size()
         color4 = [self.settings.bgcolor2,self.settings.bgcolor2,self.settings.bgcolor,self.settings.bgcolor]
+        if self.settings.bgmode == 'horizontal gradient':
+            color4 = color4[-1:] + color4[:-1]
         self.background = decors.Rectangle(x1,y1,x2,y2,color=color4)
         
 
@@ -653,38 +661,6 @@ class Canvas(object):
         """Set the highlight color."""
         self.settings.slcolor = colors.GLColor(color)
 
-
-    ## def updateSettings(self,settings):
-    ##     """Update the viewport settings"""
-    ##     for k,v in settings.items():
-    ##         if k == 'linewidth':
-    ##             self.setLineWidth(v)
-    ##         elif k == 'bgcolor':
-    ##             if 'bgcolor2' in settings:
-    ##                 self.setBgColor(v,settings.get('bgcolor2',None))
-    ##         elif k == 'bgcolor2':
-    ##             if 'bgcolor' in settings:
-    ##                 pass
-    ##             else:
-    ##                 self.setBgColor(self.settings.bgcolor,v)
-    ##         elif k == 'color':
-    ##             self.setFgColor(v)
-    ##         elif k == 'slcolor':
-    ##             self.setSlColor(v)
-        
-        
-    ## def setLightValue(self,nr,key,val):
-    ##     """(Re)Define a light on the scene."""
-    ##     self.lights.set_value(nr,key,val)
-    ##     self.lights.enable(nr)
-
-    ## def enableLight(self,nr):
-    ##     """Enable an existing light."""
-    ##     self.lights[nr].enable()
-
-    ## def disableLight(self,nr):
-    ##     """Disable an existing light."""
-    ##     self.lights[nr].disable()
 
 
     def setTriade(self,on=None,pos='lb',siz=100):
@@ -719,9 +695,8 @@ class Canvas(object):
         - self.rendermode: one of
         - self.lighting
         """
-        self.setBgColor(self.settings.bgcolor,self.settings.bgcolor2)
+        self.setBgColor(self.settings.bgcolor,self.settings.bgcolor2,self.settings.bgmode)
         self.clear()
-        #GL.glClearColor(*colors.RGBA(self.default.bgcolor))# Clear The Background Color
         GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
         GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
         #GL.glEnable(GL.GL_CULL_FACE)
