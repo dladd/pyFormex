@@ -82,4 +82,7 @@ warn_mesh_reverse = "The meaning of Mesh.reverse has changed. Before, it would j
 warn_mesh_reflect = "The Mesh.reflect will now by default reverse the elements after the reflection, since that is what the user will want in most cases. The extra reversal can be skipped by specifying 'reverse=False' in the argument list of the `reflect` operation."
 
 radio_enabler = "A 'radio' type input item can currently not be used as an enabler for other input fields."
+
+warn_pattern = "The 'pattern' function has changed! It now returns a list of points, with integer (grid) coordinates. You can still get the old behavior of creating pairs of connected points by using the 'lpattern' function. If your intent is to initialize a Formex, you can just prepend 'l:' to the string and use that string directly as data to the Formex() initializer."
+
 # End

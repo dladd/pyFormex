@@ -1798,8 +1798,7 @@ def pattern(s,connect=True):
 
     """
     import warnings
-    warnings.warn("The 'pattern' function has changed! It now returns a list of points, with integer (grid) coordinates. You can still get the old behavior of creating pairs of connected points by using the 'lpattern' function. If your intent is to initialize a Formex, you can just prepend 'l:' to the string and use that string directly as data to the Formex() initializer.")
-
+    warnings.warn("warn_pattern")
 
     x = y = z = 0
     l = []
