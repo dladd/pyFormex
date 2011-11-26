@@ -50,18 +50,20 @@ def bbox(objects):
 
     The bounding box of an object is the smallest rectangular cuboid
     in the global Cartesian coordinates, such that no points of the
-    objects lie outside that cuboid.
+    objects lie outside that cuboid. The resulting bounding box of the list
+    of objects is the smallest bounding box that encloses all the objects
+    in the list. Objects that do not have a :meth:`bbox` method or whose
+    :meth:`bbox` method returns invalid values, are ignored.
     
     Parameters:
 
-    - `objects`: a list of objects which all should have the method
-      :meth:`bbox`. The resulting bounding encloses all the objects
-      in the list. Objects whose :meth:`bbox` method returns `None`
-      are ignored.
+    - `objects`: a list of objects (which should probably have the method
+      :meth:`bbox`).
 
     Returns:
       A Coords object with two points: the first contains the minimal
-      coordinate values, the second has the maximal ones. 
+      coordinate values, the second has the maximal ones of the overall
+      bounding box. 
 
     Example:
     

@@ -27,12 +27,11 @@
 
 """
 
-
 from draw2d import *
-
 from plugins.objects import *
-from plugins import tools_menu
+from plugins.tools_menu import _drawables
 from plugins.geometry_menu import autoname 
+from gui import menu
 
 # We subclass the DrawableObject to change its toggleAnnotation method
 class NurbsObjects(DrawableObjects):
@@ -174,7 +173,7 @@ _menu = 'Nurbs'
 def create_menu(before='help'):
     """Create the menu."""
     MenuData = [
-        ("&Select drawable",drawable.ask),
+        ("&Select drawable",_drawables.ask),
         ("&Set grid",create_grid),
         ("&Remove grid",remove_grid),
         ("---",None),

@@ -36,7 +36,7 @@ from odict import ODict
 from plugins.geomtools import triangleCircumCircle
 from plugins.curve import *
 from plugins.nurbs import *
-from plugins.tools_menu import *
+from plugins.tools_menu import _drawables
 from plugins import objects
 from plugins.geometry_menu import autoname,autoName 
 
@@ -296,7 +296,7 @@ def create_grid():
         ny = int(ceil(height/dy))
         obj = None
         if autosize:
-            obj = drawable.check()
+            obj = _drawables.check()
             if obj:
                 bb = bbox(obj)
                 nx = ny = 20

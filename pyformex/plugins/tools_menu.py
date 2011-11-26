@@ -75,10 +75,9 @@ def command():
 ##################### database tools ##########################
 
 def _init_():
-    global database,drawable
+    global database,_drawables
     database = pf.GUI.database
-    #drawable = pf.GUI.drawable
-    drawable = pf.GUI.selection['geometry']
+    _drawables = pf.GUI.selection['geometry']
 
 
 def printall():
@@ -264,7 +263,7 @@ def query(mode):
 def pick_actors():
     set_selection('actor')
 def pick_elements():
-    print drawable.names
+    print _drawables.names
     set_selection('element')
 def pick_points():
     set_selection('point')
@@ -318,7 +317,7 @@ def edit_points(K):
     if K.obj_type == 'point':
         for k in K.keys():
             o = pf.canvas.actors[k].object
-            n =  drawable.names[k]
+            n =  _drawables.names[k]
             ind = K[k]
             print "CHANGING points %s of object %s" % (ind,n)
             print o[ind]
@@ -343,7 +342,7 @@ def setpropCollection(K,prop):
             a = pf.canvas.actors[k]
             o = a.object
             print "SETPROP ACTOR %s" % type(o)
-            n =  drawable.names[k]
+            n =  _drawables.names[k]
             print "SETPROP DRAWABLE %s" % n
             O = named(n)
             print 'From actor: %s' % id(o)
@@ -563,7 +562,7 @@ def create_menu():
             ('  &Select',database.ask),
             ('  &Print Value',printval),
             ('  &Print BBox',printbbox),
-            ('  &Draw',drawable.ask),
+            ('  &Draw',_drawables.ask),
             ('  &Create',create),
             ('  &Change Value',edit),
             ('  &Rename',rename_),
