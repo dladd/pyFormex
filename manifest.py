@@ -24,14 +24,24 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 #
-"""MANIFEST.py
+"""manifest.py
 
-This script creates the MANIFEST file which lists all the files
-to be included in a pyFormex source distribution.
+This script creates the list of files to be included in
+the pyFormex source distribution.
 """
+
 from pyformex.utils import listTree
 
-files = [
+DOC_FILES = [ f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
+
+LIB_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
+
+DATA_FILES = [
+   ('pixmaps', ['pyformex/icons/pyformex-64x64.png']),
+   ('applnk', ['pyformex-pyformex.desktop']),
+   ]
+
+DIST_FILES =  [
     'README',
     'COPYING',
     'post-install',
@@ -62,25 +72,25 @@ files = [
              excludedirs=['.svn','benchmark'],
              excludefiles=['.*\.pyc','.*~$','PTAPE.*'],
              includefiles=[
-                'README',
-                'benedict_6.jpg',
-                'blippo.pgf',
-                'butterfly.png',
-                'hesperia-nieve.prop',
-                'horse.off',
-                'horse.pgf',
-                'materials.db',
-                'sections.db',
-                'splines.pgf',
-                'supershape.txt',
-                'teapot.off',
-                'world.jpg',
-                ],
-             ) + \
-    listTree('pyformex/doc',listdirs=False,sorted=True,
-             excludedirs=['.svn'],
-             includefiles=['COPYING$','README$','ReleaseNotes$']
-             ) + \
+               'README',
+               'benedict_6.jpg',
+               'blippo.pgf',
+               'butterfly.png',
+               'hesperia-nieve.prop',
+               'horse.off',
+               'horse.pgf',
+               'materials.db',
+               'sections.db',
+               'splines.pgf',
+               'supershape.txt',
+               'teapot.off',
+               'world.jpg',
+               ],
+            ) + \
+   listTree('pyformex/doc',listdirs=False,sorted=True,
+            excludedirs=['.svn'],
+            includefiles=['COPYING$','README$','ReleaseNotes$']
+            ) + \
     listTree('pyformex/doc/html',listdirs=False,sorted=True,
              excludedirs=['.svn'],
              ) + \
@@ -93,8 +103,9 @@ files = [
              excludefiles=['.*~$'],
              )
 
-for f in files:
-   print 'include %s' % f
+
+if __name__ == '__main__':
+   print '\n'.join(DIST_FILES)
 
 # End
 

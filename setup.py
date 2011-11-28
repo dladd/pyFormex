@@ -31,19 +31,61 @@ To uninstall pyFormex: pyformex --remove
 
 from distutils.command.install import install as _install
 from distutils.command.build_ext import build_ext as _build_ext
+from distutils.command.sdist import sdist as _sdist
 from distutils.core import setup, Extension
+from distutils import filelist
 
 import os,sys,commands
-from pyformex.utils import listTree
+from manifest import *
 
-DOC_FILES = [ f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
+      
+class sdist(_sdist):
 
-EXT_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
+    def get_file_list(self):
+        """Figure out the list of files to include in the source
+        distribution, and put it in 'self.filelist'.  This might involve
+        reading the manifest template (and writing the manifest), or just
+        reading the manifest, or just using the default file set -- it all
+        depends on the user's options.
+        """
+        self.filelist = filelist.FileList()
+        self.filelist.files = DIST_FILES
+        ## # new behavior:
+        ## # the file list is recalculated everytime because
+        ## # even if MANIFEST.in or setup.py are not changed
+        ## # the user might have added some files in the tree that
+        ## # need to be included.
+        ## #
+        ## #  This makes --force the default and only behavior.
+        ## template_exists = os.path.isfile(self.template)
+        ## if not template_exists:
+        ##     self.warn(("manifest template '%s' does not exist " +
+        ##                 "(using default file list)") %
+        ##                 self.template)
 
-DATA_FILES = [
-              ('pixmaps', ['pyformex/icons/pyformex-64x64.png']),
-              ('applnk', ['pyformex-pyformex.desktop']),
-             ]
+        ## # BV: only use what is under 'pyformex'
+        ## self.filelist.findall('pyformex')
+        ## print self.filelist.allfiles
+        ## return
+
+        ## if self.use_defaults:
+        ##     self.add_defaults()
+
+        ## print self.filelist.files
+        ## return
+
+        ## if template_exists:
+        ##     self.read_template()
+
+        ## print self.filelist.files
+        ## return
+
+        ## if self.prune:
+        ##     self.prune_file_list()
+
+        self.filelist.sort()
+        self.filelist.remove_duplicates()
+        self.write_manifest()
 
 
 class install(_install):
@@ -100,10 +142,9 @@ without the library, but some operations on large data sets may run slowly.
 See the manual or the website for information onhow to install the missing
 files.
 """)
-      
 
 
-setup(cmdclass={'build_ext': build_ext,'install':install},
+setup(cmdclass={'build_ext': build_ext,'install':install,'sdist':sdist},
       name='pyformex',
       version='0.8.5-a1',
       description='A tool to generate and manipulate complex 3D geometries.',
@@ -116,7 +157,7 @@ transformations.
       author_email='benedict.verhegghe@ugent.be',
       url='http://pyformex.org',
       license='GNU General Public License (GPL)',
-      ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in EXT_MODULES ],
+      ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in LIB_MODULES ],
       packages=['pyformex','pyformex.gui','pyformex.lib','pyformex.plugins','pyformex.examples'],
       package_data={
           'pyformex': [
