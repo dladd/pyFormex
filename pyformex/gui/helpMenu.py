@@ -194,10 +194,30 @@ def createMenuData():
             (_('&Developers'),developers), 
             (_('&About'),about), 
             ('---',None),
-            (_('&Developer Guidelines '),DevLinksMenuData),
+            (_('&Developer Guidelines'),DevLinksMenuData),
             ]
     except:
         MenuData = []
+
+    if pf.svnversion:
+        def install_dxfparser():
+            extdir = os.path.join(pf.cfg['pyformexdir'],'external','dxfparser')
+            sta,out = utils.runCommand("cd %s; make && gksu make install" % extdir)
+            if sta:
+                info = out
+            else:
+                if utils.hasExternal('dxfparser',force=True):
+                    info = "Succesfully installed dxfparser"
+                else:
+                    info ="You should now restart pyFormex!"
+            draw.showInfo(info)
+                
+            return sta
+        
+        MenuData.append((_('&Install Externals'),[
+            (_('dxfparser'),install_dxfparser),
+            ]))
+
 
     return MenuData
 

@@ -333,12 +333,14 @@ class CanvasSettings(Dict):
     """A collection of settings for an OpenGL Canvas.
 
     The canvas settings are a collection of settings and default values
-    affecting the rendering in an individual viewport. There are two type of settings:
+    affecting the rendering in an individual viewport. There are two type of
+    settings:
     
-    - mode settings are set during the initialization of the canvas and can/should not be
-      changed during the drawing of actors and decorations;
-    - default settings can be used as default values but may be changed during the drawing
-      of actors/decorations: they are reset before each individual draw instruction.
+    - mode settings are set during the initialization of the canvas and
+      can/should not be changed during the drawing of actors and decorations;
+    - default settings can be used as default values but may be changed during
+      the drawing of actors/decorations: they are reset before each individual
+      draw instruction.
       
     Currently the following mode settings are defined:
     

@@ -52,12 +52,13 @@ INSTALL_DATA:= ${INSTALL} -m 0644
 
 LFLAGS = -l dxflib
 
-.PHONY: all build install
+.PHONY: all build install clean
 
 
 build: dxfparser
 
-all: install
+all: dxfparser
+	gksu make install
 
 
 dxfparser: dxfparser.o
@@ -68,5 +69,8 @@ dxfparser.o: dxfparser.h dxfparser.cc
 
 install: dxfparser
 	${INSTALL_EXE} $< ${BINDIR}
+
+clean:
+	rm -f dxfparser dxfparser.o
 
 # End

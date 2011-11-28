@@ -63,7 +63,7 @@ known_externals = {
     'ffmpeg': ('ffmpeg -version','FFmpeg version (\\S+)'),
     'gts': ('gtsset -h','Usage(:) set'),
     'calix': ('calix --version','CALIX-(\S+)'),
-    'dxfparser': ('dxfparser -V','dxfparser (\S+)'),
+    'dxfparser': ('dxfparser --version','dxfparser (\S+)'),
     }
 
 def checkVersion(name,version,external=False):
@@ -108,7 +108,7 @@ def hasModule(name,check=False):
         return checkModule(name)
 
 
-def hasExternal(name):
+def hasExternal(name,force=False):
     """Test if we have the external command 'name' available.
 
     Returns a nonzero string if the command is available,
@@ -117,7 +117,7 @@ def hasExternal(name):
     The external command is only checked on the first call.
     The result is remembered in the the_external dict.
     """
-    if the_external.has_key(name):
+    if the_external.has_key(name) and not force:
         return the_external[name]
     else:
         return checkExternal(name)

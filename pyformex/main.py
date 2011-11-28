@@ -26,14 +26,15 @@
 
 # This is the only pyFormex module that is imported from the main script,
 # so this is the place to put startup code
+import pyformex as pf
 
 import sys,os
 startup_warnings = ''
 startup_messages = ''
 
 pyformexdir = sys.path[0]
-svnversion = os.path.exists(os.path.join(pyformexdir,'.svn'))
-if svnversion:
+pf.svnversion = os.path.exists(os.path.join(pyformexdir,'.svn'))
+if pf.svnversion:
 
     def checkLibraries():
         #print "Checking pyFormex libraries"
@@ -67,7 +68,7 @@ import utils
 
 # intended Python version
 minimal_version = '2.5'
-target_version = '2.6'
+target_version = '2.7'
 found_version = utils.hasModule('python')
 
 
@@ -87,7 +88,6 @@ Your Python version is %s, but pyFormex has only been tested with Python <= %s. 
 
 
 
-import pyformex
 from config import Config
 
 
@@ -99,38 +99,38 @@ from config import Config
 
 def filterWarnings():
     try:
-        for w in pyformex.cfg['warnings/filters']:
+        for w in pf.cfg['warnings/filters']:
             utils.filterWarning(*w)
     except:
-        pyformex.debug("Error while processing warning filters: %s" % pyformex.cfg['warnings/filters'])
+        pf.debug("Error while processing warning filters: %s" % pf.cfg['warnings/filters'])
     
 
 def refLookup(key):
     """Lookup a key in the reference configuration."""
     try:
-        return pyformex.refcfg[key]
+        return pf.refcfg[key]
     except:
-        pyformex.debug("!There is no key '%s' in the reference config!"%key)
+        pf.debug("!There is no key '%s' in the reference config!"%key)
         return None
 
 
 def prefLookup(key):
     """Lookup a key in the reference configuration."""
-    return pyformex.prefcfg[key]
+    return pf.prefcfg[key]
     
 
 def printcfg(key):
     try:
-        print("!! refcfg[%s] = %s" % (key,pyformex.refcfg[key]))
+        print("!! refcfg[%s] = %s" % (key,pf.refcfg[key]))
     except KeyError:
         pass
-    print("!! cfg[%s] = %s" % (key,pyformex.cfg[key]))
+    print("!! cfg[%s] = %s" % (key,pf.cfg[key]))
 
 
 def setRevision():
-    sta,out = utils.runCommand('cd %s && svnversion' % pyformex.cfg['pyformexdir'],quiet=True)
+    sta,out = utils.runCommand('cd %s && svnversion' % pf.cfg['pyformexdir'],quiet=True)
     if sta == 0 and not out.startswith('exported'):
-        pyformex.__revision__ = out.strip()
+        pf.__revision__ = out.strip()
 
 
 def remove_pyFormex(pyformexdir,scriptdir):
@@ -148,7 +148,7 @@ You will need proper permissions to actually delete the files.
         print("Removing %s" % pyformexdir)
         utils.removeTree(pyformexdir)
         script = os.path.join(scriptdir,'pyformex')
-        egginfo = "%s-%s.egg-info" % (pyformexdir,pyformex.__version__.replace('-','_'))
+        egginfo = "%s-%s.egg-info" % (pyformexdir,pf.__version__.replace('-','_'))
         for f in [ script,egginfo ]:
             if os.path.exists(f):
                 print("Removing %s" % f)
@@ -171,11 +171,11 @@ def savePreferences():
     creating that file.
     If ``pyformex.preffile`` is None, preferences are not saved.
     """
-    if pyformex.preffile is None:
+    if pf.preffile is None:
         return
 
     # Create the user conf dir
-    prefdir = os.path.dirname(pyformex.preffile)
+    prefdir = os.path.dirname(pf.preffile)
     if not os.path.exists(prefdir):
         try:
             os.makedirs(prefdir)
@@ -185,24 +185,24 @@ def savePreferences():
 
 
     # Cleanup up the prefcfg
-    del pyformex.prefcfg['__ref__']
+    del pf.prefcfg['__ref__']
 
     # Currently erroroneously processed, therefore not saved
-    del pyformex.prefcfg['render']['light0']
-    del pyformex.prefcfg['render']['light1']
-    del pyformex.prefcfg['render']['light2']
-    del pyformex.prefcfg['render']['light3']
+    del pf.prefcfg['render']['light0']
+    del pf.prefcfg['render']['light1']
+    del pf.prefcfg['render']['light2']
+    del pf.prefcfg['render']['light3']
 
-    pyformex.options.debug = 1
-    pyformex.debug("="*60)
-    pyformex.debug("!!!Saving config:\n%s" % pyformex.prefcfg)
+    pf.options.debug = 1
+    pf.debug("="*60)
+    pf.debug("!!!Saving config:\n%s" % pf.prefcfg)
     
     try:
-        pyformex.prefcfg.write(pyformex.preffile)
+        pf.prefcfg.write(pf.preffile)
         res = "Saved"
     except:
         res = "Could not save"
-    pyformex.debug("%s preferences to file %s" % (res,pyformex.preffile))
+    pf.debug("%s preferences to file %s" % (res,pf.preffile))
 
 
 def apply_config_changes(cfg):
@@ -278,19 +278,19 @@ def run(argv=[]):
     in all but the last one.
     """
     # Create a config instance
-    pyformex.cfg = Config()
+    pf.cfg = Config()
     # Fill in the pyformexdir and homedir variables
     # (use a read, not an update)
     if os.name == 'posix':
         homedir = os.environ['HOME']
     elif os.name == 'nt':
         homedir = os.environ['HOMEDRIVE']+os.environ['HOMEPATH']
-    pyformex.cfg.read("pyformexdir = '%s'\n" % pyformexdir)
-    pyformex.cfg.read("homedir = '%s'\n" % homedir)
+    pf.cfg.read("pyformexdir = '%s'\n" % pyformexdir)
+    pf.cfg.read("homedir = '%s'\n" % homedir)
 
     # Read the defaults (before the options)
     defaults = os.path.join(pyformexdir,"pyformexrc")
-    pyformex.cfg.read(defaults)
+    pf.cfg.read(defaults)
     
     # Process options
     import optparse
@@ -300,7 +300,7 @@ def run(argv=[]):
         # SEE the comments in the gui.startGUI function  
         usage = "usage: %prog [<options>] [ [ scriptname [scriptargs] ] ...]",
         version = utils.FullVersion(),
-        description = pyformex.Description,
+        description = pf.Description,
         formatter = optparse.TitledHelpFormatter(),
         option_list=[
         MO("--gui",
@@ -396,40 +396,40 @@ def run(argv=[]):
            help="show detected helper software and exit",
            ),
         ])
-    pyformex.options, args = parser.parse_args(argv)
-    pyformex.print_help = parser.print_help
+    pf.options, args = parser.parse_args(argv)
+    pf.print_help = parser.print_help
 
 
     # process options
-    if pyformex.options.nodefaultconfig and not pyformex.options.config:
+    if pf.options.nodefaultconfig and not pf.options.config:
         print("\nInvalid options: --nodefaultconfig but no --config option\nDo pyformex --help for help on options.\n")
         sys.exit()
 
-    pyformex.debug("Options: %s" % pyformex.options)
+    pf.debug("Options: %s" % pf.options)
 
 
     ########## Process special options which will not start pyFormex #######
 
-    if pyformex.options.remove or \
-       pyformex.options.whereami or \
-       pyformex.options.detect or \
-       pyformex.options.testmodule:
+    if pf.options.remove or \
+       pf.options.whereami or \
+       pf.options.detect or \
+       pf.options.testmodule:
 
-        if pyformex.options.remove:
-            remove_pyFormex(pyformexdir,pyformex.scriptdir)
+        if pf.options.remove:
+            remove_pyFormex(pyformexdir,pf.scriptdir)
 
-        if pyformex.options.whereami or pyformex.options.debug :
-            print("Script started from %s" % pyformex.scriptdir)
+        if pf.options.whereami or pf.options.debug :
+            print("Script started from %s" % pf.scriptdir)
             print("I found pyFormex in %s " %  pyformexdir)
             print("Current Python sys.path: %s" % sys.path)
 
-        if pyformex.options.detect or pyformex.options.debug :
+        if pf.options.detect or pf.options.debug :
             print("Detecting all installed helper software")
             utils.checkExternal()
             print(utils.reportDetected())
 
-        if pyformex.options.testmodule:
-            for a in pyformex.options.testmodule.split(','):
+        if pf.options.testmodule:
+            for a in pf.options.testmodule.split(','):
                 test_module(a)
 
         sys.exit()
@@ -437,66 +437,66 @@ def run(argv=[]):
     ########### Read the config files  ####################
 
     # These values should not be changed
-    pyformex.cfg.userprefs = os.path.join(pyformex.cfg.userconfdir,'pyformexrc')
-    pyformex.cfg.autorun = os.path.join(pyformex.cfg.userconfdir,'startup.py')
+    pf.cfg.userprefs = os.path.join(pf.cfg.userconfdir,'pyformexrc')
+    pf.cfg.autorun = os.path.join(pf.cfg.userconfdir,'startup.py')
     
     # Set the config files
-    if pyformex.options.nodefaultconfig:
+    if pf.options.nodefaultconfig:
         sysprefs = []
         userprefs = []
     else:
-        sysprefs = [ pyformex.cfg.siteprefs ]
-        userprefs = [ pyformex.cfg.userprefs ]
-        if os.path.exists(pyformex.cfg.localprefs):
-            userprefs.append(pyformex.cfg.localprefs)
+        sysprefs = [ pf.cfg.siteprefs ]
+        userprefs = [ pf.cfg.userprefs ]
+        if os.path.exists(pf.cfg.localprefs):
+            userprefs.append(pf.cfg.localprefs)
 
-    if pyformex.options.config:
-        userprefs.append(pyformex.options.config)
+    if pf.options.config:
+        userprefs.append(pf.options.config)
 
     if len(userprefs) == 0:
         # We should always have a place to store the user preferences
-        userprefs = [ pyformex.cfg.userprefs ]
+        userprefs = [ pf.cfg.userprefs ]
 
-    pyformex.preffile = os.path.abspath(userprefs[-1]) # Settings will be saved here
+    pf.preffile = os.path.abspath(userprefs[-1]) # Settings will be saved here
    
     # Read all but the last as reference
     for f in filter(os.path.exists,sysprefs + userprefs[:-1]):
-        pyformex.debug("Reading config file %s" % f)
-        pyformex.cfg.read(f)
+        pf.debug("Reading config file %s" % f)
+        pf.cfg.read(f)
      
-    pyformex.refcfg = pyformex.cfg
-    pyformex.debug("="*60)
-    pyformex.debug("RefConfig: %s" % pyformex.refcfg)
+    pf.refcfg = pf.cfg
+    pf.debug("="*60)
+    pf.debug("RefConfig: %s" % pf.refcfg)
 
     # Use the last as place to save preferences
-    pyformex.prefcfg = Config(default=refLookup)
-    if os.path.exists(pyformex.preffile):
-        pyformex.debug("Reading config file %s" % pyformex.preffile)
-        pyformex.prefcfg.read(pyformex.preffile)
-    pyformex.debug("="*60)
-    pyformex.debug("Config: %s" % pyformex.prefcfg)
+    pf.prefcfg = Config(default=refLookup)
+    if os.path.exists(pf.preffile):
+        pf.debug("Reading config file %s" % pf.preffile)
+        pf.prefcfg.read(pf.preffile)
+    pf.debug("="*60)
+    pf.debug("Config: %s" % pf.prefcfg)
 
     # Fix incompatible changes in configuration
-    apply_config_changes(pyformex.prefcfg)
+    apply_config_changes(pf.prefcfg)
 
     # Create an empty one for the session settings
-    pyformex.cfg = Config(default=prefLookup)
+    pf.cfg = Config(default=prefLookup)
 
     # This should probably be changed to options overriding config
     # Set option from config if it was not explicitely given
-    if pyformex.options.uselib is None:
-        pyformex.options.uselib = pyformex.cfg['uselib']
+    if pf.options.uselib is None:
+        pf.options.uselib = pf.cfg['uselib']
 
 
     # Set default --nogui if first remaining argument is a pyformex script.
-    if pyformex.options.gui is None:
-        pyformex.options.gui = not (len(args) > 0 and utils.is_pyFormex(args[0]))
+    if pf.options.gui is None:
+        pf.options.gui = not (len(args) > 0 and utils.is_pyFormex(args[0]))
 
-    if pyformex.options.gui:
-        pyformex.options.interactive = True
+    if pf.options.gui:
+        pf.options.interactive = True
 
     # Set Revision and run svnclean if we run from an SVN version
-    if svnversion:
+    if pf.svnversion:
         setRevision()
         svnclean = os.path.join(pyformexdir,'svnclean')
         if os.path.exists(svnclean):
@@ -517,14 +517,14 @@ def run(argv=[]):
         ## print s
         ## import re
         ## m = re.match(".*//(?P<user>[^@]*)@svn\.savanna\.nongnu\.org.*",s)
-        ## pyformex.svnuser = m.group('user')
-        ## print pyformex.svnuser
+        ## pf.svnuser = m.group('user')
+        ## print pf.svnuser
 
         # Add in subversion specific config
         devhowto = os.path.join(pyformexdir,'..','HOWTO-dev.rst')
         builddoc = os.path.join(pyformexdir,"doc","build-local-docs.rst")
-        pyformex.refcfg.help['developer'][0:0] = [('Developer HOWTO',devhowto),('&Build local documentation',builddoc)]
-        #print pyformex.refcfg.help['developer']
+        pf.refcfg.help['developer'][0:0] = [('Developer HOWTO',devhowto),('&Build local documentation',builddoc)]
+        #print pf.refcfg.help['developer']
     
 
 
@@ -554,7 +554,7 @@ pyFormex Warning
         return message
 
 
-    if pyformex.cfg['warnings/nice']:
+    if pf.cfg['warnings/nice']:
         import warnings
         warnings.formatwarning = _format_warning
     
@@ -562,9 +562,9 @@ pyFormex Warning
 
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
-    if pyformex.options.gui:
+    if pf.options.gui:
         from gui import guimain
-        pyformex.debug("GUI version")
+        pf.debug("GUI version")
         res = guimain.startGUI(args)
         if res != 0:
             print("Could not start the pyFormex GUI: %s" % res)
@@ -572,18 +572,18 @@ pyFormex Warning
 
     # Display the startup warnings and messages
     if startup_warnings:
-        if pyformex.cfg['startup_warnings']:
-            pyformex.warning(startup_warnings)
+        if pf.cfg['startup_warnings']:
+            pf.warning(startup_warnings)
         else:
             print(startup_warnings)
     if startup_messages:
         print(startup_messages)
 
-    if pyformex.options.debug: # Avoid computing the report if not printed
-        pyformex.debug(utils.reportDetected())
+    if pf.options.debug: # Avoid computing the report if not printed
+        pf.debug(utils.reportDetected())
  
-    #print(pyformex.cfg.keys())
-    #print(pyformex.refcfg.keys())
+    #print(pf.cfg.keys())
+    #print(pf.refcfg.keys())
       
     #
     # Qt4 may have changed the locale.
@@ -596,11 +596,11 @@ pyFormex Warning
     # Initialize the libraries
     #print("NOW LOAIDNG LIBS")
     #import lib
-    #lib.init_libs(pyformex.options.uselib,pyformex.options.gui)
+    #lib.init_libs(pf.options.uselib,pf.options.gui)
 
 
     # Prepend the autorun scripts
-    ar = pyformex.cfg.get('autorun','')
+    ar = pf.cfg.get('autorun','')
     if ar :
         if type(ar) is str:
             ar = [ ar ]
@@ -611,18 +611,18 @@ pyFormex Warning
     # remaining args are interpreted as scripts and their parameters
     res = 0
     if args:
-        pyformex.debug("Remaining args: %s" % args)
+        pf.debug("Remaining args: %s" % args)
         from script import processArgs
         res = processArgs(args)
         
         if res:
-            if pyformex.options.gui:
-                pyformex.message("There was an error while executing a script")
+            if pf.options.gui:
+                pf.message("There was an error while executing a script")
             else:
                 return res # EXIT
                 
     else:
-        pyformex.debug("stdin is a tty: %s" % sys.stdin.isatty())
+        pf.debug("stdin is a tty: %s" % sys.stdin.isatty())
         # Play script from stdin
         # Can we check for interactive session: stdin connected to terminal?
         #from script import playScript
@@ -630,10 +630,10 @@ pyFormex Warning
         
 
     # after processing all args, go into interactive mode
-    if pyformex.options.gui and pyformex.app:
+    if pf.options.gui and pf.app:
         res = guimain.runGUI()
 
-    ## elif pyformex.options.interactive:
+    ## elif pf.options.interactive:
     ##     print("Enter your script and end with CTRL-D")
     ##     from script import playScript
     ##     playScript(sys.stdin)

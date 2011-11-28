@@ -85,4 +85,17 @@ radio_enabler = "A 'radio' type input item can currently not be used as an enabl
 
 warn_pattern = "The 'pattern' function has changed! It now returns a list of points, with integer (grid) coordinates. You can still get the old behavior of creating pairs of connected points by using the 'lpattern' function. If your intent is to initialize a Formex, you can just prepend 'l:' to the string and use that string directly as data to the Formex() initializer."
 
+warn_no_dxfparser = """..
+
+No dxfparser
+------------
+I can not import .DXF format on your machine, because I can not find the required external program *dxfparser*.
+
+*dxfparser* comes with pyFormex, so this probably means that it just was not (properly) installed. The pyFormex install manual describes how to do it.
+"""
+if pf.svnversion:
+    warn_no_dxfparser += """    
+If you are running pyFormex from SVN sources and you can get root access, you can go to the directory `...pyformex/external/dxfparser/` and follow the instructions there, or you can just try the **Install externals** menu option of the **Help** menu.
+"""
+
 # End

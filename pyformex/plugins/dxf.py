@@ -73,10 +73,14 @@ def readDXF(filename):
     type 'Arc', 'Line', 'Polyline', 'Vertex'.
     """
     import utils
-    sta,out = utils.runCommand('dxfparser %s 2>/dev/null' % filename)
-    if sta==0:
-        return out
+    if utils.hasExternal('dxfparser'):
+        sta,out = utils.runCommand('dxfparser %s 2>/dev/null' % filename)
+        if sta==0:
+            return out
+        else:
+            return ''
     else:
+        utils.warn('warn_no_dxfparser')
         return ''
 
 

@@ -27,12 +27,17 @@
 This module initializes the pyFormex global variables and
 defines a few essential functions.
 """
+
+# This is the very first thing that is executed when starting pyFormex
+# It is loaded even before main.
+
 __version__ = "0.8.5-a1"
 __revision__ = '2091:2092M'
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2011 Benedict Verhegghe'
 Url = 'http://pyformex.org'
 Description = "pyFormex is a tool for generating, manipulating and transforming large geometrical models of 3D structures by sequences of mathematical transformations."
+svnversion = False
 
 # The GUI parts
 app_started = False

@@ -855,7 +855,11 @@ def create_menu():
         ("&Reload menu",reload_menu),
         ("&Close",close_menu),
         ]
-    return menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before='help')
+    M = menu.Menu(_menu,items=MenuData,parent=pf.GUI.menu,before='help')
+    ## if not utils.hasExternal('dxfparser'):
+    ##     I = M.item("&Import ").item("AutoCAD .dxf")
+    ##     I.setEnabled(False)
+    return M
 
     
 def show_menu():
@@ -883,7 +887,6 @@ def reload_menu():
 ######### What to do when the script is executed ###################
 
 if __name__ == "draw":
-    print "GO"
     _init_()
     reload_menu()
 
