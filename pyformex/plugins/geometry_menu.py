@@ -319,6 +319,8 @@ def importDxf(convert=False,keep=False):
     False       True      import DXF and save intermediate .dxftext format
     True        any       convert .dxf to .dxftext only
     =======     =====     ================================================
+
+    If convert == False, this function returns the list imported DXF entities.
     """
     fn = askFilename(filter=utils.fileDescription('dxf'))
     if not fn:
@@ -333,7 +335,7 @@ def importDxf(convert=False,keep=False):
             f.write(text)
             f.close()
         if not convert:
-            importDxftext(text)
+            return importDxftext(text)
 
 
 def importSaveDxf():
@@ -347,18 +349,32 @@ def convertDxf():
 
     
 def importDxftext(text=None):
-    """Import a dxftext script or file."""
+    """Import a dxftext script or file.
+
+    A dxftext script is a script containing only function calls that
+    generate dxf entities. See :func:`dxf.convertDXF`.
+
+    - Without parameter, the name of a .dxftext file is asked and the
+      script is read from that file.
+    - If `text` is a single line string, it is used as the filename of the
+      script.
+    - If `text` contains at least one newline character, it is interpreted
+      as the dxf script text.
+    """
     if text is None:
         fn = askFilename(filter=utils.fileDescription('dxftext'))
         if not fn:
             return
         text = open(fn).read()
+    elif '\n' not in text:
+        text = open(text).read()
         
     pf.GUI.setBusy()    
     dxf_parts = dxf.convertDXF(text)
     pf.GUI.setBusy(False)
     export({'_dxf_import_':dxf_parts})
     draw(dxf_parts,color='black')
+    return dxf_parts
            
 
 def writeGeometry(obj,filename,filetype=None,shortlines=False):

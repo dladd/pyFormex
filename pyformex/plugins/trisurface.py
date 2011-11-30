@@ -43,7 +43,7 @@ import filewrite
 import utils
 from gui.drawable import interpolateNormals
 
-import os
+import os,tempfile
 import tempfile
 
 utils.hasExternal('admesh')

@@ -329,12 +329,17 @@ def anyPerpendicularVector(A):
     
     A is a (n,3) shaped array of vectors.
     The return value is a (n,3) shaped array of perpendicular vectors.
+
+    If the vector is parallel to the x,y plane, the resulting vector is the
+    z-axis, else, it is a vector in the x,y plane.
     """
     A = asarray(A)
     x,y,z = hsplit(A,[1,2])
     n = zeros(x.shape,dtype=Float)
-    t = (x!=0.)+(y!=0.)
-    B = where(t,column_stack([-y,x,n]),column_stack([-z,n,x]))
+    i = ones(x.shape,dtype=Float)
+    ## t = (x!=0.)+(y!=0.)
+    ## B = where(t,column_stack([-y,x,n]),column_stack([-z,n,x]))
+    B = where(z==0.,column_stack([n,n,i]),column_stack([-y,x,n]))
     return B
 
 

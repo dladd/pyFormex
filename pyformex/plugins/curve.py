@@ -35,11 +35,12 @@ but special cases may be created for handling plane curves.
 # Any copyright claims made by my employer should therefore be considered void.
 # Acknowledgements: Gianluca De Santis
 
+import pyformex as pf
 from coords import *
 from geometry import Geometry
 from formex import Formex,connect
 from mesh import Mesh
-from geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPointsSWP
+from geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPointsSWP,anyPerpendicularVector
 from utils import deprecation
 
 ##############################################################################
@@ -85,6 +86,17 @@ class Curve(Geometry):
 
     def npoints(self):
         return self.pointsOn().shape[0]
+
+    def endPoints(self):
+        """Return start and end points of the curve.
+
+        Returns a Coords with two points, or None if the curve is closed.
+        """
+        if self.closed:
+            #return self.coords[[0,0]]
+            return None
+        else:
+            return self.coords[[0,-1]]
     
     def sub_points(self,t,j):
         """Return the points at values t in part j
@@ -299,8 +311,8 @@ class PolyLine(Curve):
         else:
             coords = Coords(coords)
             
-        if coords.ndim != 2 or coords.shape[1] != 3:
-            raise ValueError,"Expected an (npoints,3) coordinate array"
+        if coords.ndim != 2 or coords.shape[1] != 3 or coords.shape[0] < 2:
+            raise ValueError,"Expected an (npoints,3) coordinate array with npoints >= 2"
         self.coords = coords
         self.nparts = self.coords.shape[0]
         if not closed:
@@ -655,6 +667,25 @@ class Polygon(PolyLine):
         return self.area(n)
 
 
+
+##############################################################################
+#
+class Line(PolyLine):
+    """A Line is a PolyLine with exactly two points.
+
+    Parameters:
+
+    - `coords`: compatible with (2,3) shaped float array
+
+    """
+
+    def __init__(self,coords):
+        """Initialize the Line."""
+        PolyLine.__init__(self,coords)
+        if self.coords.shape[0] != 2:
+            raise ValueError, "Expected exactly two points, got %s" % coords.shape[0]
+
+
 ##############################################################################
 #
 class BezierSpline(Curve):
@@ -970,7 +1001,7 @@ class BezierSpline(Curve):
         try:
             from scipy.integrate import quad
         except:
-            warning("""..
+            pf.warning("""..
         
 **The **lengths** function is not available.
 Most likely because 'python-scipy' is not installed on your system.""")
@@ -1307,10 +1338,14 @@ class Arc(Curve):
     def __init__(self,coords=None,center=None,radius=None,angles=None,angle_spec=Deg):
         """Create a circular arc.
 
-        The arc can be specified by 3 points: center, begin and end-point;
+        The arc can be specified by 3 points (begin, center, end)
         or by center, radius and two angles. In the latter case, the arc
         lies in a plane parallel to the x,y plane.
+        If specified by 3 colinear points, the plane of the circle will be
+        parallel to the x,y plane if the points are in such plane, else the
+        plane will be parallel to the z-axis.
         """
+        # Internally, we store the coords 
         Curve.__init__(self)
         self.nparts = 1
         self.closed = False
@@ -1319,11 +1354,15 @@ class Arc(Curve):
             if self.coords.shape != (3,3):
                 raise ValueError,"Expected 3 points"
 
-            self.center = self.coords[0]
+            self.center = self.coords[1]
             v = self.coords-self.center
             self.radius = length(v[1])
-            self.normal = unitVector(cross(v[1],v[2]))
-            self.angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self.center) for x in self.coords[[1,2]] ]
+            try:
+                self.normal = unitVector(cross(v[0],v[2]))
+            except:
+                pf.warning("The three points defining the Arc seem to be colinear: I will use a random orientation.")
+                self.normal = anyPerpendicularVector(v[0])
+            self.angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self.center) for x in self.coords[[0,2]] ]
 
         else:
             #try:
@@ -1333,8 +1372,10 @@ class Arc(Curve):
                 self.angles = [ a * angle_spec for a in angles ]
                 while self.angles[1] < self.angles[0]:
                     self.angles[1] += 2*pi
+                while self.angles[1] > self.angles[0] + 2*pi:
+                    self.angles[1] -= 2*pi
                 begin,end = self.sub_points(array([0.0,1.0]),0)
-                self.coords = Coords([self.center,begin,end])
+                self.coords = Coords([begin,self.center,end])
             #except:
             #    raise ValueError,"Invalid data for Arc"
                
@@ -1349,6 +1390,27 @@ class Arc(Curve):
         X = Coords(column_stack([cos(a),sin(a),zeros_like(a)]))
         X = X.scale(self.radius).rotate(self.angles[0]/Deg).translate(self.center)
         return X
+
+
+    def approx(self,chordal=0.01,ndiv=None):
+        """Return a PolyLine approximation of the Arc.
+
+        Approximates the Arc by a sequence of inscribed straight line
+        segments.
+        
+        If `ndiv` is specified, the arc is divided in pecisely `ndiv`
+        segments.
+
+        If `ndiv` is not given, the number of segments is determined
+        from the chordal distance tolerance. It will guarantee that the
+        distance of any point of the arc to the chordal approximation
+        is less or equal than `chordal` times the radius of the arc.
+        """
+        if ndiv is None:
+            phi = 2.*arccos(1.-chordal)
+            rng = abs(self.angles[1] - self.angles[0])
+            ndiv = int(ceil(rng/phi))
+        return Curve.approx(self,ndiv)
 
 
 

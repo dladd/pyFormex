@@ -31,7 +31,7 @@ in DXF format.
 
 from formex import *
 from plugins import curve
-    
+
 
 def importDXF(filename):
     """Import (parts of) a DXF file into pyFormex.
@@ -84,7 +84,7 @@ def readDXF(filename):
         return ''
 
 
-Parts = []
+Entities = []
 Vertices = []
 
 def convertDXF(text):
@@ -92,7 +92,7 @@ def convertDXF(text):
 
     `text` : a multiline text representation of the contents of a DXF file.
       This text representation can e.g. be obtained by the function
-      :func:`readDXF`. It contains lines defining DXF items. A small
+      :func:`readDXF`. It contains lines defining DXF entities. A small
       example::
 
         Arc(0.0,0.0,0.0,1.0,-90.,90.)
@@ -105,9 +105,9 @@ def convertDXF(text):
         Vertex(0.0,-7.0,0.0)
         Vertex(0.0,-3.0,0.0)
 
-      Each line of the text defines a single object or starts a multiple
-      component object. The text should be well aligned to constitute a
-      proper Python script. Currently, the only defined objects are
+      Each line of the text defines a single entity or starts a multiple
+      component entity. The text should be well aligned to constitute a
+      proper Python script. Currently, the only defined entities are
       'Arc', 'Line', 'Polyline', 'Vertex'.
 
     Returns a list of pyFormex objects corresponding to the text. The
@@ -117,7 +117,7 @@ def convertDXF(text):
         function name         object
         =============         ================================
         Arc                   :class:`plugins.curve.Arc`
-        Line                  :class:`formax.Formex`
+        Line                  :class:`plugins.curve.Line`
         Polyline              :class:`plugins.curve.PolyLine`
         =============         ================================
 
@@ -125,59 +125,63 @@ def convertDXF(text):
     vertices of a PolyLine.
       
     """
+    import types
+    global Entities,Vertices
     
-    global Parts,Vertices
-    
-    Parts = []
+    Entities = []
     Vertices = []
 
+    # Simple type (Line, Arc) create the object and append it to the
+    # Entities list
+    # Compound types (like Polyline) append the corresponding
+    # EndEntity function to the Entities list
+
+
     def EndEntity():
-        global Parts,Vertices
-        if Parts and type(Parts[-1]) is str:
-            f = globals().get('End'+Parts[-1],None)
-            if f:
+        global Entities,Vertices
+        if Entities:
+            f = Entities[-1]
+            if type(f) is types.FunctionType:
                 f()
 
     def Arc(x0,y0,z0,r,a0,a1):
-        global Parts,Vertices
-        count = len(Parts)
+        global Entities,Vertices
+        count = len(Entities)
         part = curve.Arc(center=[x0,y0,z0],radius=r,angles=[a0,a1]).setProp(count)
         part.dxftype = 'Arc'
-        Parts.append(part)
+        Entities.append(part)
 
     def Line(x0,y0,z0,x1,y1,z1):
-        global Parts,Vertices
-        count = len(Parts)
-        part = Formex([[[x0,y0,z0],[x1,y1,z1]]],count)
+        global Entities,Vertices
+        count = len(Entities)
+        part = curve.Line([[x0,y0,z0],[x1,y1,z1]]).setProp(count)
         part.dxftype = 'Line'
-        Parts.append(part)
+        Entities.append(part)
 
     def Polyline(n):
-        global Parts,Vertices
-        #print "POLY"
+        global Entities,Vertices
         EndEntity()
-        Parts.append('Polyline')
+        Entities.append(EndPolyline)
         Vertices = []
 
     def EndPolyline():
-        global Parts,Vertices
-        count = len(Parts) - 1
-        #print "ENDPOLY %s (%s vertices)" % (count, len(Vertices))
+        global Entities,Vertices
+        count = len(Entities) - 1
         part = curve.PolyLine(Vertices).setProp(count)
-        part.dxftype = 'Arc'
-        Parts[-1] = part
+        part.dxftype = 'Polyline'
+        Entities[-1] = part
         Vertices = []
 
     def Vertex(x,y,z):
-        global Parts,Vertices
+        global Entities,Vertices
         Vertices.append([x,y,z])
         
 
-    g = globals()
-    g.update({'Line':Line, 'Arc':Arc, 'Polyline':Polyline, 'EndPolyline':EndPolyline, 'Vertex':Vertex})
-    exec text in g
+    l = {'Line':Line, 'Arc':Arc, 'Polyline':Polyline, 'EndPolyline':EndPolyline, 'Vertex':Vertex}
+    exec text in l
     EndEntity()
-    return Parts
+    return Entities
+
 
 class DxfExporter(object):
     """Export geometry in DXF format.
@@ -270,7 +274,6 @@ def exportDXF(filename,F):
         dxf.line(i)
     dxf.endSection()
     dxf.close()
-
 
 # An example
 

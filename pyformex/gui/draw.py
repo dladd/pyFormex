@@ -585,13 +585,14 @@ def draw(F,
                     pf.canvas.addActor(actor)
 
         # Adjust the camera
+        #print "adjusting camera"
+        #print "VIEW = %s; BBOX = %s" % (view,bbox)
         if view is not None or bbox not in [None,'last']:
-            pf.debug("CHANGING VIEW to %s" % view)
             if view == 'last':
                 view = pf.canvas.options['view']
             if bbox == 'auto':
                 bbox = coords.bbox(FL)
-            pf.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
+            #print("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
             pf.canvas.setCamera(bbox,view)
             #setView(view)
 

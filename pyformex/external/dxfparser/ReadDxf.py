@@ -38,45 +38,70 @@ one or more lines explaining the intention of the script.
 clear()
 wireframe()
 
-from plugins import curve, dxf_in
+from plugins.curve import *
+from plugins.dxf import *
+
+
+class LineDrawing(object):
+    """A collection of curves.
+
+    """
+    def __init__(self,data):
+        self.all = data
+        print data
+        print [ type(i) for i in data ]
+        print [ i.__class__ for i in data ]
+        print Arc,Line,PolyLine
+        self.lines = [ i for i in data if i.__class__ == Line ]
+        self.polylines = [  i for i in data if type(i) is PolyLine ]
+        self.arcs = [ i for i in data if type(i) is Arc ]
+        self.report()
+
+
+    def report(self):
+        print "LineDrawing: %s Lines, %s PolyLines, %s Arcs" % (len(self.lines),len(self.polylines),len(self.arcs))
+ 
+
+    def assembleCurves(self):
+        print len(self.all)
+        FL = [Formex([a.endPoints()]).setProp(i) for i,a in enumerate(self.all)]
+        FL = Formex.concatenate(FL)
+        print FL.shape()
+        print FL
+        M = FL.toMesh()
+        self.parts = M.partitionByConnection()
+        return M.setProp(self.parts)
+
+
+    def setProp(self,prop):
+        for a,p in zip(self.all,prop):
+            print a,p
+            a.setProp(p)
 
         
-## Lines = []
-## Arcs = []
 
-## def Line(coords):
-##     Lines.append(coords)
-            
-## def Arc(c,r,a):
-##     Arcs.append(curve.Arc(center=c,radius=r,angles=a))
+if ack('Custom file?'):
+    fn = askFilename(filter=utils.fileDescription('dxf'))
+    if not fn:
+        exit()
+    model = importDXF(fn)
+else:
+    fn = os.path.join(pf.cfg['pyformexdir'],'data','P.dxftext')
+    model = convertDXF(open(fn).read())
 
-## def readDXF(filename):
-##     import utils
-##     sta,out = utils.runCommand('dxf_reader %s' % filename)
-##     if sta==0:
-##         print out
-##         exec(out)
+for a in model:
+    print a.prop
+draw(model)
 
-
-def assembleLinesArcs(Lines,Arcs,ndiv=8):
-    Arcs = [ a.toFormex() for a in Arcs ] +  [ Lines ]
-    return Formex.concatenate(Arcs) 
-
-
+D = LineDrawing(model)
+D.assembleCurves()
+print D.parts
+#D.setProp(D.parts)
 clear()
-filename = askFilename(filter="AutoCAD .dxf files (*.dxf)")
-if not filename:
-    exit()
+for a,c in zip(D.all,D.parts):
+    draw(a,color=c)
 
-model = dxf_in.importDXF(filename)
-F = assembleLinesArcs(model['Line'],model['Arc'],ndiv=24)
-draw(F)
-zoomAll()
 
-M = F.toMesh()
-M.setProp(M.partitionByConnection())
-clear()
-draw(M)
 
 
 # End
