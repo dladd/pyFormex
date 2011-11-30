@@ -44,6 +44,7 @@ import utils
 from gui.drawable import interpolateNormals
 
 import os
+import tempfile
 
 utils.hasExternal('admesh')
 utils.hasExternal('tetgen')
