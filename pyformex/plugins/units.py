@@ -55,7 +55,7 @@ def convertUnits(From,To):
     return string.split(output)[1]
 
 
-class UnitsSystem:
+class UnitsSystem(object):
     """A class for handling and converting units of physical quantities.
 
     The units class provides two built-in consistent units systems:

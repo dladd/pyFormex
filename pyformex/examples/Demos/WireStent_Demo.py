@@ -38,7 +38,7 @@ reference manual.
 # needed if we import this from another script
 from formex import *
 
-class DoubleHelixStent:
+class DoubleHelixStent(object):
     """Constructs a double helix wire stent.
 
     A stent is a tubular shape such as used for opening obstructed

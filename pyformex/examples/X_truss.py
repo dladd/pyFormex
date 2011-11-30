@@ -34,7 +34,7 @@ techniques = ['color']
 # This is needed if we want to import this module in another script
 from formex import *
 
-class X_truss:
+class X_truss(object):
     """An X-shaped truss girder.
 
     The truss has a constant height and consists of n modules of the same

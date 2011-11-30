@@ -97,6 +97,17 @@ DIST_FILES =  [
     listTree('pyformex/external',listdirs=False,sorted=True,
              excludedirs=['.svn','pyftgl','sippy-ftgl'],
              excludefiles=['.*~$'],
+             includefiles=[
+                'README',
+                'Makefile',
+                '.*\.sh',
+                '.*\.rst'
+                '.*\.patch',
+                '.*\.c',
+                '.*\.cc',
+                '.*\.i',
+                '.*\.py',
+                ],
              ) + \
     listTree('pyformex/bin',listdirs=False,sorted=True,
              excludedirs=['.svn'],

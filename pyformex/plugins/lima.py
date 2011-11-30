@@ -27,7 +27,7 @@
 
 import turtle
 
-class Lima:
+class Lima(object):
     """A class for operations on Lindenmayer Systems."""
 
     def __init__(self,axiom="",rules={}):

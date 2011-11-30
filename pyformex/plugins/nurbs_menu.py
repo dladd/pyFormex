@@ -74,7 +74,7 @@ def toggleAvgNormals():
 ##                               [draw_avg_normals,False],
 ##                               ])
 
-class _options:
+class _options(object):
     color = 'blue';
     ctrl = True;
     ctrl_numbers = False;

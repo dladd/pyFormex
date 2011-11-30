@@ -85,7 +85,7 @@ view_angles = ViewAngles()
 ## ! We now store the rotation of the camera as a combined rotation matrix,
 ##   not by the individual rotation angles.
 
-class Camera:
+class Camera(object):
     """This class defines a camera for OpenGL rendering.
 
     It provides functions for manipulating the camera position, the viewing

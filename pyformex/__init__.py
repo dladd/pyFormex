@@ -32,7 +32,7 @@ defines a few essential functions.
 # It is loaded even before main.
 
 __version__ = "0.8.5-a1"
-__revision__ = '2100:2101M'
+__revision__ = '2102M'
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2011 Benedict Verhegghe'
 Url = 'http://pyformex.org'
