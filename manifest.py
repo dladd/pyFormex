@@ -44,10 +44,12 @@ DATA_FILES = [
 DIST_FILES =  [
     'README',
     'COPYING',
+    'ReleaseNotes',
     'post-install',
     'pyformex-pyformex.desktop',
     'pyformex-viewer',
     'pyformex-search',
+    'manifest.py',
     'setup.py',
     ] + \
     listTree('pyformex',listdirs=False,sorted=True,

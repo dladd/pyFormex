@@ -1,0 +1,116 @@
+.. $Id$    -*- rst -*-
+  
+..
+  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
+  pyFormex is a tool for generating, manipulating and transforming 3D
+  geometrical models by sequences of mathematical operations.
+  Home page: http://pyformex.org
+  Project page:  https://savannah.nongnu.org/projects/pyformex/
+  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
+  Distributed under the GNU General Public License version 3 or later.
+  
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see http://www.gnu.org/licenses/.
+  
+  
+
+
+pyFormex 0.8.5  Releasenotes
+============================
+
+This is a collection of the most prominent changes in pyFormex 0.8.5
+compared to the previous release 0.8.4. Like always, besides the new
+things mentioned below, we also have lots of bug fixes, code cleanup
+and functionality enhancements.
+
+
+
+Documentation
+-------------
+- The official documentation is now on the new website at
+  http://www.nongnu.org/pyformex/doc/index.html
+
+
+Installation
+------------
+- The post-install script will normally not need to run pyformex, easing
+  the installation in sandboxed environments.
+
+
+Command line
+------------
+
+
+Configuration
+-------------
+
+
+Core
+----
+- coords: new Coords methods: average, inertia, centered; 
+  new class BoundVectors; new functions pattern and xpattern
+- formex: the pattern and mpattern functions are replaced by the functions 
+  pattern and xpattern in the coords module. Some functions are provided 
+  for compatibility, but users are urged to transform their code to the 
+  new conventions.
+- geomtools: new functions pointsAtLines, pointsAtSegments, distancesPFL, 
+  distancesPFS; mode parameter to intersection* functions
+- Mesh: new methods: partitionByAngle, avgNodes, removeDuplicate, enhanced
+  and unified connect, extrude and revolve methods
+
+Gui
+---
+- canvas background can have a horizontal grading
+- more configuration settings can be changed from the GUI
+
+Widgets
+-------
+
+
+Drawing
+-------
+- faster drawing of large lists
+- improved Nurbs drawing
+
+Scripting
+---------
+
+
+Plugin menus
+------------
+- geometry_menu: added(moved) some functionality from Surface menu,
+  added (some) DXF import
+
+
+Plugins
+-------
+- curve: Curve.endpoints method; Arc (enhanced) and Line (new) classes,
+  PolyLine concatenation (append), BezierSpline.toMesh
+- dxf: added import of some entities from .DXF files: Line, Polyline, Arc
+
+External
+--------
+- a new program *dxfparser* is provided to import (parts of) .DXF files.
+- pyformex-search script for searching the pyFormex source
+
+Examples
+--------
+New examples:
+- Multicut
+- ExtrudeMesh
+- Connect
+
+
+
+.. End
