@@ -312,7 +312,7 @@ class PolyLine(Curve):
             coords = Coords(coords)
             
         if coords.ndim != 2 or coords.shape[1] != 3 or coords.shape[0] < 2:
-            raise ValueError,"Expected an (npoints,3) coordinate array with npoints >= 2"
+            raise ValueError,"Expected an (npoints,3) shaped coordinate array with npoints >= 2, got shape " + str(coords.shape)
         self.coords = coords
         self.nparts = self.coords.shape[0]
         if not closed:
@@ -781,6 +781,7 @@ class BezierSpline(Curve):
 
     def __init__(self,coords=None,deriv=None,curl=1./3.,control=None,closed=False,degree=3,endzerocurv=False):
         """Create a BezierSpline curve."""
+        Curve.__init__(self)
 
         if not degree > 0:
             raise ValueError,"Degree of BezierSpline should be >= 0!"
@@ -1162,6 +1163,7 @@ class CardinalSpline2(Curve):
         For open curves, it misses the interpolation in the two end
         intervals of the point set.
         """
+        Curve.__init__(self)
         coords = Coords(coords)
         self.coords = coords
         self.nparts = self.coords.shape[0]
@@ -1203,6 +1205,7 @@ class NaturalSpline(Curve):
         values to specify different end conditions for both ends.
         This argument is ignored for a closed curve.
         """
+        Curve.__init__(self)
         coords = Coords(coords)
         if closed:
             coords = Coords.concatenate([coords,coords[:1]])

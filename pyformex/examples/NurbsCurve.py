@@ -88,18 +88,17 @@ def drawNurbs(points,pointtype,degree,strategy,closed,blended,weighted=False,Cle
     if Clear:
         clear()
 
-    C = Formex(points)
-    X = C.coords
-    draw(C)
-    draw(X,marksize=10)
-    drawNumbers(X,leader='P',trl=[0.02,0.02,0.])
+    X = pattern(points)
+    F = Formex(X)
+    draw(F,marksize=10,bbox='auto',view='front')
+    drawNumbers(F,leader='P',trl=[0.02,0.02,0.])
     if closed:
         # remove last point if it coincides with first
         x,e = Coords.concatenate([X[0],X[-1]]).fuse()
         if x.shape[0] == 1:
             X = X[:-1]
         blended=True
-    draw(PolyLine(X,closed=closed),bbox='auto',view='front')
+    draw(PolyLine(X,closed=closed))
     if not blended:
         nX = ((len(X)-1) // degree) * degree + 1
         X = X[:nX]

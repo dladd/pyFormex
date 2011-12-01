@@ -562,18 +562,18 @@ def draw(F,
 
             # Create the colors
             if color == 'prop':
-                if hasattr(F,'p'):
-                    color = F.prop
-                elif hasattr(F,'prop'):
-                    color = F.prop
-                else:
-                    color = colors.black
+                try:
+                    Fcolor = F.prop
+                except:
+                    Fcolor = colors.black
             elif color == 'random':
                 # create random colors
-                color = numpy.random.rand(F.nelems(),3)
+                Fcolor = numpy.random.rand(F.nelems(),3)
+            else:
+                Fcolor = color
 
             # Create the actor
-            actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
+            actor = F.actor(color=Fcolor,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
             
             actors.append(actor)
             
@@ -641,11 +641,7 @@ def olddraw(F,
         for Fi in F:
             if Fi is F[-1]:
                 nowait = wait
-            actor.append(olddraw(Fi,view,bbox,
-                              color,colormap,bkcolor,bkcolormap,alpha,
-                              mode,linewidth,linestipple,shrink,marksize,
-                              wait=nowait,clear=clear,allviews=allviews,
-                              highlight=highlight,nolight=nolight,ontop=ontop,**kargs))
+            actor.append(olddraw(Fi,view,bbox,color,colormap,bkcolor,bkcolormap,alpha,mode,linewidth,linestipple,shrink,marksize,wait=nowait,clear=clear,allviews=allviews,highlight=highlight,nolight=nolight,ontop=ontop,**kargs))
             if Fi is F[0]:
                 clear = False
                 view = None
@@ -711,7 +707,7 @@ def olddraw(F,
 
     try:
         actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
-
+        
         if actor is None:
             return None
         
