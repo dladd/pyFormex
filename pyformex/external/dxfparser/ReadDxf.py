@@ -37,6 +37,17 @@ one or more lines explaining the intention of the script.
 """
 clear()
 wireframe()
+from pyformex.plugins.geomtools import anyPerpendicularVector as av
+
+print av([0.,0.,1.])
+print av([0.,1.,1.])
+print av([1.,1.,1.])
+print av([1.,0.,1.])
+print av([1.,0.,0.])
+print av([0.,1.,0.])
+exit()
+
+
 
 from plugins.curve import *
 from plugins.dxf import *
