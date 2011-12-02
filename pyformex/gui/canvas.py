@@ -451,6 +451,11 @@ class CanvasSettings(Dict):
 #
 #  The Canvas
 #
+
+def print_camera(self):
+    print self.report()
+
+    
 class Canvas(object):
     """A canvas for OpenGL rendering.
 
@@ -683,11 +688,10 @@ class Canvas(object):
     
 
     def initCamera(self):
-        #if pf.options.makecurrent:
         self.makeCurrent()  # we need correct OpenGL context for camera
         self.camera = camera.Camera()
-        #pf.debug("camera.rot = %s" % self.camera.rot)
-        #pf.debug("view angles: %s" % self.view_angles)
+        if pf.options.testcamera:
+            self.camera.modelview_callback = print_camera
 
 
     def glinit(self):

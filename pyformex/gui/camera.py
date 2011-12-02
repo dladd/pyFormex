@@ -45,7 +45,22 @@ import OpenGL.GLU as GLU
 def printModelviewMatrix(s="%s"):
     print(s % GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX))
 
-
+built_in_views = {
+    'front': (0.,0.,0.),
+    'back': (180.,0.,0.),
+    'right': (90.,0.,0.),
+    'left': (270.,0.,0.),
+    'top': (0.,90.,0.),
+    'bottom': (0.,-90.,0.),
+    'iso0': (45.,45.,0.),
+    'iso1': (45.,135.,0.),
+    'iso2': (45.,225.,0.),
+    'iso3': (45.,315.,0.),
+    'iso4': (-45.,45.,0.),
+    'iso5': (-45.,135.,0.),
+    'iso6': (-45.,225.,0.),
+    'iso7': (-45.,315.,0.),
+    }
 
 class ViewAngles(dict):
     """A dict to keep named camera angle settings.
@@ -58,15 +73,9 @@ class ViewAngles(dict):
     coordinate axes, one isometric view.
     """
 
-    def __init__(self,data = { 'front': (0.,0.,0.),
-                          'back': (180.,0.,0.),
-                          'right': (90.,0.,0.),
-                          'left': (270.,0.,0.),
-                          'top': (0.,90.,0.),
-                          'bottom': (0.,-90.,0.),
-                          'iso': (45.,45.,0.),
-                          }):
-        dict.__init__(self,data)
+    def __init__(self,data = built_in_views):
+       dict.__init__(self,data)
+       self['iso'] = self['iso0']
         
 
     def get(self,name):
@@ -350,12 +359,22 @@ class Camera(object):
 
 
     def loadModelView (self):
-        """Load the saved ModelView matrix."""
+        """Load the ModelView matrix.
+
+        If the viewing parameters have not changed since the last save of the ModelView matrix, this will
+        just reload the ModelView matrix from the saved value.
+        Else, a new ModelView matrix is set up, loaded and saved, and if a camera attribute `modelview_callback`
+        has been set, a call to this function is tried, passing the camera instance as parameter.
+        """
         if not self.locked:
             GL.glMatrixMode(GL.GL_MODELVIEW)
             if self.viewChanged:
                 self.setModelView()
                 self.saveModelView()
+                try:
+                    self.modelview_callback(self)
+                except:
+                    pass
                 self.viewChanged = False
             else:
                 GL.glLoadMatrixf(self.m)
@@ -570,6 +589,10 @@ class Camera(object):
                 GL.glFrustum(*frustum)
             else:
                 GL.glOrtho(*frustum)
+            try:
+                self.projection_callback(self)
+            except:
+                pass
         if not keepmode:
             GL.glMatrixMode(GL.GL_MODELVIEW)     
 

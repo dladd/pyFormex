@@ -47,19 +47,19 @@ rfuncs = [
 ]
 
 # Define a dictionary of planar cross sections
-cross_sections_2d = ODict()
+cross_sections = ODict()
 # select the planar patterns from the simple module
 for cs in simple.Pattern:
-    if re.search('[a-zA-Z]',simple.Pattern[cs]) is None:
-        cross_sections_2d[cs] = simple.Pattern[cs]
+    if re.search('[a-zA-Z]',simple.Pattern[cs][2:]) is None:
+        cross_sections[cs] = simple.Pattern[cs]
 # add some more patterns
-cross_sections_2d.update({
-    'swastika':'l:12+23+34+41',
+cross_sections.update({
     'channel' : 'l:1223',
     'H-beam' : 'l:11/322/311',
     'sigma' : 'l:16253',
-    'octagon':'l:15263748',
     'Z-beam': 'l:353',
+    'octagon':'l:15263748',
+    'swastika':'l:12+23+34+41',
     'solid_square': '4:0123',
     'solid_triangle': '3:012',
     'swastika3': '3:012023034041',
@@ -75,7 +75,7 @@ input_data = [
     _I('spread',False,text='Spread points evenly along spiral'),
     _I('nwires',1,text='Number of spirals'),
     _G('sweep',text='Sweep Data',checked=True,items= [
-        _I('cross_section','cross','select',text='Shape of cross section',choices=cross_sections_2d.keys()),
+        _I('cross_section','cross','select',text='Shape of cross section',choices=cross_sections.keys()),
         _I('cross_rotate',0.,text='Cross section rotation angle before sweeping'),
         _I('cross_upvector','2',text='Cross section vector that keeps its orientation'),
         _I('cross_scale',0.,text='Cross section scaling factor'),
@@ -107,7 +107,7 @@ def drawSpiralCurves(PL,nwires,color1,color2=None):
 
 
 def createCrossSection():
-    CS = Formex(cross_sections_2d[cross_section])
+    CS = Formex(cross_sections[cross_section])
     if cross_rotate :
         CS = CS.rotate(cross_rotate)
     if cross_scale:
