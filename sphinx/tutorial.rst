@@ -1,7 +1,7 @@
 .. $Id$
   
 ..
-  This file is part of pyFormex 0.8.5  (Sun Dec  4 15:52:41 CET 2011)
+  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
   pyFormex is a tool for generating, manipulating and transforming 3D
   geometrical models by sequences of mathematical operations.
   Home page: http://pyformex.org
@@ -123,7 +123,7 @@ Getting started
   with extension ``.py``. This will open up your favorite editor with
   a pyFormex script template like the one below.
 
-  .. literalinclude:: _static/scripts/template.py
+  .. literalinclude:: static/scripts/template.py
      :linenos:
 
 .. note:: If the editor does not open, you may need to configure
@@ -174,7 +174,7 @@ Getting started
   You can now execute the script if you want, but it will not produce anything
   visible. We'll learn you how to visualize geometry later on.
 
-  .. literalinclude:: _static/scripts/example1.py
+  .. literalinclude:: static/scripts/example1.py
      :linenos:
 
 * Exit |pyFormex| (using the :menuselection:`File --> Exit`) and then restart
@@ -228,7 +228,7 @@ continue with this tutorial.
 
 Here is a small example Python script.
     
-.. literalinclude:: _static/scripts/python_intro.py
+.. literalinclude:: static/scripts/python_intro.py
    :linenos:
 
 
@@ -1048,7 +1048,7 @@ Yet the geometry of this complex structure was built from the very
 simple pyFormex script shown below (Use :menuselection:`File --> Edit
 script` to load it in your editor.
 
-.. literalinclude:: _static/scripts/Helix.py
+.. literalinclude:: static/scripts/Helix.py
    :linenos:
 
 The script shows all steps in the building of the helical structure. 

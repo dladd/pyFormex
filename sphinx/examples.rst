@@ -1,7 +1,7 @@
 .. $Id$
   
 ..
-  This file is part of pyFormex 0.8.5  (Sun Dec  4 15:52:41 CET 2011)
+  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
   pyFormex is a tool for generating, manipulating and transforming 3D
   geometrical models by sequences of mathematical operations.
   Home page: http://pyformex.org
@@ -54,7 +54,7 @@ the :file:`WireStent.py` script is studied step by step. The lines are numbered
 for easy referencing, but are not part of the script itself.
 
 
-.. literalinclude:: _static/scripts/WireStent.py
+.. literalinclude:: static/scripts/WireStent.py
    :language: python
    :linenos:
 
@@ -414,7 +414,7 @@ the wire stent geometry is defined as a the ``DoubleHelixStent`` class in the
 
    Stent variant with :math:`De=32, nx=10, \beta=50`
 
-.. include:: _static/scripts/WireStentParametricExample.py
+.. include:: static/scripts/WireStentParametricExample.py
    :literal:
 
 Obviously, generating such parametric wire stent geometries with classical CAD

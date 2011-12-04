@@ -36,6 +36,7 @@ Options
                         Run the docstring tests for module TESTMODULE.
                         TESTMODULE is the name of the module, using . as path
                         separator.
+--testcamera            Print camera settings whenever they change.
 --testexecutor          test alternate executor: only for developers!
 --fastnurbs             test C library nurbs drawing: only for developers!
 --remove                remove the pyformex installation and exit
