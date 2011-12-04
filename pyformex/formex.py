@@ -206,7 +206,7 @@ def mpattern(s):
 
 # REMOVED in 0.9
 
-## @deprecation("\nUse Formex.intersectionWithPlane() or plugins.geomtools functions instead.")
+## @deprecation("\nUse Formex.intersectionWithPlane() or geomtools functions instead.")
 ## def intersectionWithPlane(F,p,n):
 ##     """Return the intersection of a Formex F with the plane (p,n).
 
@@ -242,7 +242,7 @@ def pointsAt(F,t):
 
 # REMOVED in 0.9
 
-## @deprecation("\nUse Formex.intersectionWithPlane() or plugins.geomtools functions instead.")
+## @deprecation("\nUse Formex.intersectionWithPlane() or geomtools functions instead.")
 ## def intersectionPointsWithPlane(F,p,n):
 ##     """Return the intersection points of a Formex with plane p,n.
 
@@ -256,7 +256,7 @@ def pointsAt(F,t):
 ##     f = F.coords
 ##     t = intersectionWithPlane(F,p,n).reshape((-1,1))
 ##     #print t.shape
-##     from plugins.geomtools import intersectionTimesSWP
+##     from geomtools import intersectionTimesSWP
 ##     t = intersectionTimesSWP(f,p,n,mode='pair').reshape((-1,1))    
 ##     #print t.shape
 ##     return Formex((1.-t) * f[:,0,:] + t * f[:,1,:])
@@ -428,7 +428,9 @@ def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
     if cutting.any():
         G = F.clip(cutting)
         H = G.copy()
-        g = intersectionPointsWithPlane(G,p,n)
+
+        
+        g = G.intersectionWithPlane(p,n)
         dist = dist[cutting]
         i0 = dist[:,0] < 0.
         i1 = dist[:,1] < 0.
@@ -579,7 +581,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         else:
             return newp
     
-    from plugins.geomtools import intersectionTimesSWP,intersectionPointsSWP
+    from geomtools import intersectionTimesSWP,intersectionPointsSWP
     C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([intersectionTimesSWP(Ci.coords,p,n,mode='pair') for Ci in C])
     P = stack([intersectionPointsSWP(Ci.coords,p,n,mode='pair',return_all=True) for Ci in C],axis=1)    
@@ -1800,7 +1802,7 @@ maxprop  = %s
         (triangles) the returned Fomrex has plexitude 2 (lines).
         """
         if self.nplex() == 2:
-            from plugins.geomtools import intersectionPointsSWP
+            from geomtools import intersectionPointsSWP
             return intersectionPointsSWP(self.coords,p,n,mode='pair')[0]
         elif self.nplex() == 3:
             return Formex(intersectionLinesWithPlane(self,p,n))

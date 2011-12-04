@@ -30,7 +30,6 @@ such as lines, triangles, circles, planes.
 
 from coords import *
 
-
 class Plane(object):
     def __init__(self,P,n):
         self.coords = Coords.concatenate([P,normalize(n)])
@@ -522,10 +521,10 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
 
     Parameters:
 
-    - `S`: (nS,2,3) shaped array, defining a single line segment or a set of line
-      segments.
-    - `p`,`n`: (np,3) shaped arrays of points and normals, defining a single plane
-      or a set of planes.
+    - `S`: (nS,2,3) shaped array, defining a single line segment or a set of
+      line segments.
+    - `p`,`n`: (np,3) shaped arrays of points and normals, defining a single
+      plane or a set of planes.
     - `mode`: `all` to calculate the intersection of each line segment S with
       all planes (p,n) or `pair` for pairwise intersections.
     - `return_all`: if True, all intersection points of the lines along the
@@ -533,12 +532,12 @@ def intersectionPointsSWP(S,p,n,mode='all',return_all=False):
       on the segments.
 
     Returns: if `return_all==True`, a (nS,np,3) shaped (`mode=all`) array of
-    intersection points, else, a tuple of intersection points with shape (n,3) and line
-    and plane indices with shape (n), where n <= nS*np.
+    intersection points, else, a tuple of intersection points with shape (n,3)
+    and line and plane indices with shape (n), where n <= nS*np.
     """
-    S = S.reshape(-1,2,3)
-    p = p.reshape(-1,3)
-    n = n.reshape(-1,3)
+    S = asanyarray(S).reshape(-1,2,3)
+    p = asanyarray(p).reshape(-1,3)
+    n = asanyarray(n).reshape(-1,3)
     t = intersectionTimesSWP(S,p,n,mode)
     if mode == 'all':
         S = S[:,newaxis]
@@ -595,9 +594,9 @@ def intersectionPointsLWT(q,m,F,mode='all',return_all=False):
     intersection points, else, a tuple of intersection points with shape (n,3)
     and line and plane indices with shape (n), where n <= nq*nF.
     """
-    q = q.reshape(-1,3)
-    m = m.reshape(-1,3)
-    F = F.reshape(-1,3,3)
+    q = asanyarray(q).reshape(-1,3)
+    m = asanyarray(m).reshape(-1,3)
+    F = asanyarray(F).reshape(-1,3,3)
     if not return_all:
         # Find lines passing through the bounding spheres of the triangles
         r,c,n = triangleBoundingCircle(F)        
@@ -664,8 +663,8 @@ def intersectionPointsSWT(S,F,mode='all',return_all=False):
     and line and plane indices with shape (n), where n <= nS*nF.
     """
     
-    S = S.reshape(-1,2,3)
-    F = F.reshape(-1,3,3)
+    S = asanyarray(S).reshape(-1,2,3)
+    F = asanyarray(F).reshape(-1,3,3)
     if not return_all:
         # Find lines passing through the bounding spheres of the triangles
         r,c,n = triangleBoundingCircle(F)        
@@ -707,12 +706,12 @@ def intersectionPointsPWP(p1,n1,p2,n2,p3,n3,mode='all'):
     Returns: A (np1,np2,np3,3) shaped (`mode=all`) array of intersection points.
     """
     if mode == 'all':
-        p1 = asarray(p1).reshape(-1,1,1,3)
-        n1 = asarray(n1).reshape(-1,1,1,3)
-        p2 = asarray(p2).reshape(1,-1,1,3)
-        n2 = asarray(n2).reshape(1,-1,1,3)
-        p3 = asarray(p3).reshape(1,1,-1,3)
-        n3 = asarray(n3).reshape(1,1,-1,3)
+        p1 = asanyarray(p1).reshape(-1,1,1,3)
+        n1 = asanyarray(n1).reshape(-1,1,1,3)
+        p2 = asanyarray(p2).reshape(1,-1,1,3)
+        n2 = asanyarray(n2).reshape(1,-1,1,3)
+        p3 = asanyarray(p3).reshape(1,1,-1,3)
+        n3 = asanyarray(n3).reshape(1,1,-1,3)
     dot1 = dotpr(p1,n1)[...,newaxis]
     dot2 = dotpr(p2,n2)[...,newaxis]
     dot3 = dotpr(p3,n3)[...,newaxis]
@@ -738,10 +737,10 @@ def intersectionLinesPWP(p1,n1,p2,n2,mode='all'):
     points q and vectors m, such that the intersection lines are given by q+t*m.
     """
     if mode == 'all':
-        p1 = asarray(p1).reshape(-1,1,3)
-        n1 = asarray(n1).reshape(-1,1,3)
-        p2 = asarray(p2).reshape(1,-1,3)
-        n2 = asarray(n2).reshape(1,-1,3)
+        p1 = asanyarray(p1).reshape(-1,1,3)
+        n1 = asanyarray(n1).reshape(-1,1,3)
+        p2 = asanyarray(p2).reshape(1,-1,3)
+        n2 = asanyarray(n2).reshape(1,-1,3)
     m =  cross(n1,n2)
     q = intersectionPointsPWP(p1,n1,p2,n2,p1,m,mode='pair')
     return q,m
@@ -833,9 +832,9 @@ def distancesPFL(X,q,m,mode='all'):
     Returns: A (nX,nq) shaped (`mode=all`) array of distances.
     """    
     if mode == 'all':
-        X = asarray(X).reshape(-1,1,3)
-        q = asarray(q).reshape(1,-1,3)
-        m = asarray(m).reshape(1,-1,3)
+        X = asanyarray(X).reshape(-1,1,3)
+        q = asanyarray(q).reshape(1,-1,3)
+        m = asanyarray(m).reshape(1,-1,3)
     C = length(X-q)
     A = abs(dotpr(X,m)-dotpr(q,m))/length(m)
     d = sqrt(abs(C**2-A**2))

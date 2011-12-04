@@ -31,7 +31,7 @@ techniques = ['function','import','dialog','viewport']
 """
 import simple
 from examples.Cube import cube_tri
-from plugins.geomtools import *
+from geomtools import *
 
 
 def draw_circles(circles,color=red):

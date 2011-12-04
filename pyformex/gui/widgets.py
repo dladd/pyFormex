@@ -948,8 +948,10 @@ class InputFSlider(InputFloat):
         self.layout().addWidget(self.slider)
 
     def set_value(self,val):
+        print val
         val = float(val)
         value = val*self.scale
+        print value
         self.input.setText(str(value))
         if self.func:
             self.func(self)
@@ -2792,15 +2794,6 @@ class ButtonBox(InputPush):
         return s
 
 
-# removed in 0.8.4
-## ############################# Combo box ###########################
-
-## class ComboBox(InputCombo):
-##     def __init__(self,name,choices,func=None,*args,**kargs):
-##         warnings.warn("ComboBox is deprecated! Use InputCombo instead")
-##         InputCombo.__init__(self,name,None,choices=choices,onselect=func,*args,**kargs)
-
-
 ############################# Coords box ###########################
 
 # BV: this should be merged into InputPoint
@@ -2835,7 +2828,7 @@ class CoordsBox(QtGui.QWidget):
         for v,val in zip(self.values,map(float,values)):
             v.setText(str(val))
 
-
+    
 
 ############################# ImageView ###########################
 

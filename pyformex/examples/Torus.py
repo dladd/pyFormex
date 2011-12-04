@@ -46,7 +46,7 @@ H = G.translate(0,5).cylindrical([0,2,1],[1.,360./m,1.])
 clear();draw(H,view='iso');pause()
 message("Cut a part from the torus")
 
-K = H.cutWithPlane([0.,-2.,0.],[1.,1.,1.],side='+')
+K = H.cutWithPlane([0.,2.,0.],[1.,1.,1.],side='-')
 clear()
 draw(K)
 

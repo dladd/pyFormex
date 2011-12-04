@@ -31,8 +31,8 @@ from OpenGL import GL,GLU
 from colors import *
 from numpy import *
 from formex import *
-from plugins import geomtools
 
+import geomtools
 import simple
 import utils
 import olist

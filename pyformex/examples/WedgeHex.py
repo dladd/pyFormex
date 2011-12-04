@@ -50,9 +50,12 @@ sleep(2)
 draw(R,color='yellow')
 
 # reduce the degenerate elements to WEDGE6
-sleep(2)
 clear()
-ML = R.splitDegenerate()
+print R
+ML = R.fuse().splitDegenerate()
+print "AFTER SPLITTING: %s MESHES" % len(ML)
+for m in ML:
+    print m
 ML = [ Mi.setProp(i) for i,Mi in enumerate(ML) ]
 draw(ML)
 

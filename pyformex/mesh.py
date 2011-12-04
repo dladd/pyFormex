@@ -731,34 +731,6 @@ Size: %s
         return enr
     
 
-    # BV removed in 0.8.4
-    ## @deprecation("Mesh.findCoincidentNodes is deprecated. Use Coords.match or Mesh.matchCoords. Beware for order of arguments!")
-    ## def findCoincidentCoords(self,mesh,**kargs):
-    ##     return mesh.coords.match(self.coords)
-
-
-    ## # Since this is used in only a few places, we could
-    ## # throw it away and only use compact()
-    ## def _compact(self):
-    ##     """Remove unconnected nodes and renumber the mesh.
-
-    ##     Beware! This function changes the object in place and therefore
-    ##     returns nothing. It is mostly intended for internal use.
-    ##     Normal users should use compact().
-    ##     """
-    ##     nodes = unique(self.elems)
-    ##     if nodes.size == 0:
-    ##         self.__init__([],[])
-        
-    ##     elif nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
-    ##         coords = self.coords[nodes]
-    ##         if nodes[-1] >= nodes.size:
-    ##             elems = inverseUniqueIndex(nodes)[self.elems]
-    ##         else:
-    ##             elems = self.elems
-    ##         self.__init__(coords,elems,prop=self.prop,eltype=self.eltype)
-    
-
     def compact(self):
         """Remove unconnected nodes and renumber the mesh.
 
@@ -1058,8 +1030,9 @@ Size: %s
         """Reduce degenerate elements to lower plexitude elements.
 
         This will try to reduce the degenerate elements of the mesh to elements
-        of a lower plexitude. If a target element type is given, only the matching
-        recuce scheme is tried. Else, all the target element types for which
+        of a lower plexitude. If a target element type is given, only the
+        matching reduce scheme is tried.
+        Else, all the target element types for which
         a reduce scheme from the Mesh eltype is available, will be tried.
 
         The result is a list of Meshes of which the last one contains the
@@ -1067,9 +1040,14 @@ Size: %s
         Property numbers propagate to the children. 
         """
         #
-        # This duplicates a lot of functionality of Connectivity.reduceDegenerate
-        # But this was really needed to keep the properties
+        # This duplicates a lot of the functionality of
+        # Connectivity.reduceDegenerate
+        # But this is really needed to keep the properties
         #
+        
+        if self.nelems() == 0:
+            return [self]
+        
         try:
             strategies = self.eltype.degenerate
         except:
@@ -1143,7 +1121,7 @@ Size: %s
             ML = [M0] + M1.reduceDegenerate()
         else:
             ML = [M0,M1]
-            
+
         return ML
 
 

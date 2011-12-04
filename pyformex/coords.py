@@ -1279,7 +1279,7 @@ class Coords(ndarray):
         x = self.reshape(-1,3)
         # Create planes through x in direction n
         # WE SHOULD MOVE THIS TO arraytools?
-        from plugins.geomtools import anyPerpendicularVector
+        from geomtools import anyPerpendicularVector
         v1 = anyPerpendicularVector(n)
         v2 = cross(n,v1)
         # Create set of cuts with set of planes

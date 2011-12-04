@@ -29,6 +29,7 @@ import draw
 import toolbar
 from gettext import gettext as _
 from guifunc import *
+from plugins.cameratools import showCameraTool
 
 @viewport_function
 def zoomIn(*args,**kargs):
@@ -134,6 +135,7 @@ MenuData = [
     (_('&Unlock'),unlockCamera), 
     ('---',None),
     (_('&Report'),reportCamera), 
+    (_('&Settings'),showCameraTool), 
     ]
 
 

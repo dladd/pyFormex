@@ -692,6 +692,7 @@ class Canvas(object):
         self.camera = camera.Camera()
         if pf.options.testcamera:
             self.camera.modelview_callback = print_camera
+            self.camera.projection_callback = print_camera
 
 
     def glinit(self):

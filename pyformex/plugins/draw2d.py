@@ -33,7 +33,7 @@ has 3D coordinates in the global cartesian coordinate system.
 
 from simple import circle
 from odict import ODict
-from plugins.geomtools import triangleCircumCircle
+from geomtools import triangleCircumCircle
 from plugins.curve import *
 from plugins.nurbs import *
 from plugins.tools_menu import _drawables
