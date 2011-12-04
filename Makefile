@@ -1,11 +1,11 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
+##  This file is part of pyFormex 0.8.5  (Sun Dec  4 15:52:41 CET 2011)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
-##  Project page:  https://savannah.nongnu.org/projects/pyformex/
-##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Project page:  http://savannah.nongnu.org/projects/pyformex/
+##  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -73,19 +73,22 @@ DOCSOURCE= \
 	${SPHINXDIR}/Makefile \
 	${SPHINXDIR}/ref/Makefile
 
-EXECUTABLE= ${PYFORMEXDIR}/pyformex ${PYFORMEXDIR}/sendmail.py ${BINDIR}/read_abq_inp.awk ${LIBDIR}/postabq pyformex-viewer
+EXECUTABLE= ${PYFORMEXDIR}/pyformex ${PYFORMEXDIR}/sendmail.py \
+	${BINDIR}/read_abq_inp.awk \
+	pyformex-viewer pyformex-search pre-install post-install
 
 
-OTHERSTAMPABLE= setup.py Makefile post-install \
+OTHERSTAMPABLE= README Makefile ReleaseNotes \
+	manifest.py setup.py \
 	${PYFORMEXDIR}/pyformexrc \
 	${EXAMPLEDATA} \
 	${LIBDIR}/Makefile.in \
-	${addprefix ${DOCDIR}/, README ReleaseNotes STYLE TODO} \
+	${addprefix ${DOCDIR}/, STYLE TODO} \
 	$(wildcard ${DOCDIR}/*.rst)
 
-NONSTAMPABLE= ${DOC}/COPYING 
+NONSTAMPABLE= COPYING 
 
-STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) \
+STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) ${EXECUTABLE} \
 	${EXAMPLES} ${DOCSOURCE} ${BINSOURCE} ${EXTSOURCE} ${OTHERSTAMPABLE}
 
 STATICSTAMPABLE= Description History HOWTO-dev.rst MANIFEST.py add_Id \
@@ -185,11 +188,13 @@ setup.py: RELEASE
 # Stamp files with the version/release date
 
 Stamp.stamp: Stamp.template RELEASE
-	${STAMP} -t$< header="This file is part of pyFormex ${VERSION}   $$(env LANG=C date)" -s$@
+	${STAMP} -t$< header="This file is part of pyFormex ${VERSION}  ($$(env LANG=C date))" -s$@
 
 stampall: Stamp.stamp
 	${STAMP} -t$< -i ${STAMPABLE}
-#	chmod +x ${EXECUTABLE}
+	chmod +x ${EXECUTABLE}
+# this should be fixed in stamp !
+
 
 printstampable:
 	@for f in ${STAMPABLE}; do echo $$f; done
@@ -234,8 +239,9 @@ upload:
 	python setup.py sdist upload --show-response
 
 # Tag the release in the svn repository
+# THIS WILL ONLY WORK IF YOU HAVE YOUR USER NAME CONFIGURED IN .ssh/config
 tag:
-	svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
+	svn copy svn+ssh://svn.savannah.nongnu.org/pyformex/trunk svn+ssh://svn.savannah.nongnu.org/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
 
 # Creates statistics
 stats:

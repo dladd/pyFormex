@@ -24,7 +24,7 @@
 ##
 # 
 script=$(basename $0)
-config=.pyformex/search.conf
+config=~/.pyformex/search.conf
 SEARCH=pyformex-search
 REPLACE=pyformex-replace
 
@@ -60,11 +60,12 @@ EOF
 
 # These are the default pyformex paths that are searched
 
-files="pyformex/pyformex pyformex/pyformexrc pyformex/*.py pyformex/gui/*.py pyformex/plugins/*.py pyformex/lib/*.py  pyformex/examples/*.py pyformex/examples/*/*.py"
-
+pyformexdir=pyformex
+files=$(echo $pyformexdir/pyformexrc $pyformexdir/*{,/*,/*/*}.py)
 
 if [ "$1" = "-a" ]; then
     shift
+    echo $config
     [ -f "$config" ] && {
 	. $config
 	files="$files $myfiles"

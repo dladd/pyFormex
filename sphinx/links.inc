@@ -1,12 +1,12 @@
 .. $Id: links.inc 2075 2011-11-14 10:16:40Z bverheg $  -*- rst -*- 
   
 ..
-  This file is part of the pyFormex project.
+  This file is part of pyFormex 0.8.5  (Sun Dec  4 15:52:41 CET 2011)
   pyFormex is a tool for generating, manipulating and transforming 3D
   geometrical models by sequences of mathematical operations.
   Home page: http://pyformex.org
-  Project page:  https://savannah.nongnu.org/projects/pyformex/
-  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
+  Project page:  http://savannah.nongnu.org/projects/pyformex/
+  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be)
   Distributed under the GNU General Public License version 3 or later.
   
   
@@ -22,6 +22,7 @@
   
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
+  
   
 
 .. _`email us`: mailto:benedict.verhegghe@ugent.be

@@ -1,11 +1,12 @@
 #!/bin/bash
+# $Id$
 ##
-##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
+##  This file is part of pyFormex 0.8.5  (Sun Dec  4 15:52:41 CET 2011)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
-##  Project page:  https://savannah.nongnu.org/projects/pyformex/
-##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Project page:  http://savannah.nongnu.org/projects/pyformex/
+##  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -22,22 +23,22 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
+echo "pyFormex post-install script"
 #
-# This is the pyformex post install script
-# It normally gets the target directory as a parameter, to avoid problems
+# This normally gets the target directory as a parameter, to avoid problems
 # like mentioned below.
-#
 # If not, it tries to find it from running pyFormex: this may not work
 # in a sandboxed environment, like Gentoo, where pyFormex is only installed
 # after finishing this command.
 #
 instdir=$1
 [ -d "${instdir}" ] || instdir=$(pyformex --whereami | grep '^Script' | sed 's|.* ||')
-echo "  Installing executables to $instdir"
 
 # install postabq here, because installing from setup.py creates a failure
 # if postabq was not compiled
 [ -d "${instdir}" ] && install -m 0755 pyformex/lib/postabq ${instdir}
+
+
 
 # install the .desktop file on xdg compliant systems
 

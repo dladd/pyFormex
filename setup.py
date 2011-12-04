@@ -1,11 +1,11 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
+##  This file is part of pyFormex 0.8.5  (Sun Dec  4 15:52:41 CET 2011)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
-##  Project page:  https://savannah.nongnu.org/projects/pyformex/
-##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Project page:  http://savannah.nongnu.org/projects/pyformex/
+##  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -30,10 +30,12 @@ To uninstall pyFormex: pyformex --remove
 """
 
 from distutils.command.install import install as _install
+from distutils.command.install_scripts import install_scripts as _install_scripts
 from distutils.command.build_ext import build_ext as _build_ext
 from distutils.command.sdist import sdist as _sdist
 from distutils.core import setup, Extension
 from distutils import filelist
+from distutils.util import get_platform
 
 import os,sys,commands
 from manifest import *
@@ -90,10 +92,42 @@ class sdist(_sdist):
 
 class install(_install):
     def run(self):
+
+        # Obviously have to build before we can run pre-install
+        if not self.skip_build:
+            self.run_command('build')
+            # If we built for any other platform, we can't install.
+            build_plat = self.distribution.get_command_obj('build').plat_name
+            # check warn_dir - it is a clue that the 'install' is happening
+            # internally, and not to sys.path, so we don't check the platform
+            # matches what we are running.
+            if self.warn_dir and build_plat != get_platform():
+                raise DistutilsPlatformError("Can't install when "
+                                             "cross-compiling")
+        os.system("./pre-install %s %s" % (self.build_base,self.install_lib))
         _install.run(self)
-        print("Running pyFormex post-install script")
         os.system("./post-install %s" % self.install_lib)
-        
+
+
+## class install_scripts(_install_scripts):
+##     def run (self):
+##         if not self.skip_build:
+##             self.run_command('build_scripts')
+##         # Set pyformex dir in pyformex-search script
+##         os.system("sed -i 's|^pyformexdir=|pyformexdir=%s|' %s/pyformex-search" % (self.install_lib,self.build_base))
+##         #
+##         self.outfiles = self.copy_tree(self.build_dir, self.install_dir)
+##         if os.name == 'posix':
+##             # Set the executable bits (owner, group, and world) on
+##             # all the scripts we just installed.
+##             for file in self.get_outputs():
+##                 if self.dry_run:
+##                     log.info("changing mode of %s", file)
+##                 else:
+##                     mode = ((os.stat(file)[ST_MODE]) | 0555) & 07777
+##                     log.info("changing mode of %s to %o", file, mode)
+##                     os.chmod(file, mode)
+
 
 class build_ext(_build_ext):
     """Specialized Python Extension builder.
@@ -144,7 +178,12 @@ files.
 """)
 
 
-setup(cmdclass={'build_ext': build_ext,'install':install,'sdist':sdist},
+setup(cmdclass={
+#    'install_scripts': install_scripts,
+    'build_ext': build_ext,
+    'install':install,
+    'sdist':sdist
+    },
       name='pyformex',
       version='0.8.5-a1',
       description='A tool to generate and manipulate complex 3D geometries.',
