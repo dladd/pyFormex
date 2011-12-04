@@ -33,13 +33,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyFormex example scripts &mdash; pyFormex v0.8.5-a1 documentation</title>
+    <title>pyFormex example scripts &mdash; pyFormex v0.8.5 documentation</title>
     <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.5-a1',
+        VERSION:     '0.8.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -48,7 +48,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.5 documentation" href="index.html" />
     <link rel="next" title="pyFormex reference manual" href="refman.html" />
     <link rel="prev" title="pyFormex FAQ ‘n TRICKS" href="faq.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
@@ -78,7 +78,7 @@
         <li class="right" >
           <a href="faq.html" title="pyFormex FAQ ‘n TRICKS"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
+        <li><a href="index.html">pyFormex v0.8.5 documentation</a> &gt;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -314,12 +314,12 @@ for easy referencing, but are not part of the script itself.</p>
 143
 144</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex --gui</span>
 <span class="c">##</span>
-<span class="c">##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011</span>
+<span class="c">##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)</span>
 <span class="c">##  pyFormex is a tool for generating, manipulating and transforming 3D</span>
 <span class="c">##  geometrical models by sequences of mathematical operations.</span>
 <span class="c">##  Home page: http://pyformex.org</span>
-<span class="c">##  Project page:  https://savannah.nongnu.org/projects/pyformex/</span>
-<span class="c">##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) </span>
+<span class="c">##  Project page:  http://savannah.nongnu.org/projects/pyformex/</span>
+<span class="c">##  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) </span>
 <span class="c">##  Distributed under the GNU General Public License version 3 or later.</span>
 <span class="c">##</span>
 <span class="c">##</span>
@@ -459,20 +459,22 @@ for easy referencing, but are not part of the script itself.</p>
 </pre></div>
 </td></tr></table></div>
 <p>As all pyFormex scripts, it starts with a comments line holding the word
-<tt class="docutils literal"><span class="pre">pyformex</span></tt> (line 1). This is followed by a documentation string explaining
-the purpose of the script (lines 2-7).</p>
-<p>The script then starts by importing all definitions from
+<tt class="docutils literal"><span class="pre">pyformex</span></tt> (line 1). This is followed more comments lines specifying the
+copyright and license notices. If you intend to distribute your scripts, you should give these certainly special consideration.</p>
+<p>Next is a documentation string explaining
+the purpose of the script (lines 25-30).
+The script then starts by importing all definitions from
 other modules required to run the <tt class="file docutils literal"><span class="pre">WireStent.py</span></tt>
-script (line 9).</p>
+script (line 32).</p>
 <p>Subsequently, the class <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> is defined which
 allows the simple use of the geometrical model in other scripts for e.g.
 parametric, optimization and finite element analyses of braided wire stents.
 Consequently, the latter scripts do not have to contain the wire stent geometry
 building and can be condensed and conveniently arranged. The definition of the
 class starts with a documentation string, explaining
-its aim and functioning (lines 11-37).</p>
+its aim and functioning (lines 34-60).</p>
 <p>The constructor <tt class="docutils literal"><span class="pre">__init__</span></tt> of the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class requires 8
-arguments (line 38):</p>
+arguments (line 61):</p>
 <ul class="simple">
 <li>stent external diameter <img class="math" src="_images/math/80c2d7b999148a9a1b9740bd873c5365df7f461a.png" alt="De"/> (mm).</li>
 <li>stent length <img class="math" src="_images/math/859ccf4cd60c7bc6b8fa1afc9a42dc811a826d6f.png" alt="L"/> (mm).</li>
@@ -499,7 +501,7 @@ plane; and (iv) Rolling the nearly planar grid into the cylindrical stent
 structure, which is easily parametric adaptable.</p>
 <div class="section" id="creating-the-base-module">
 <h3>Creating the base module<a class="headerlink" href="#creating-the-base-module" title="Permalink to this headline">¶</a></h3>
-<p>(lines 40-48)</p>
+<p>(lines 63-71)</p>
 <p>Depending on the specified arguments in the constructor, the mean stent diameter
 <img class="math" src="_images/math/9ffb448918db29f2a72f8f87f421b3b3cad18f95.png" alt="D"/>, the average stent radius <img class="math" src="_images/math/b55ca7a0aa88ab7d58f4fc035317fdac39b17861.png" alt="r"/>, the <tt class="docutils literal"><span class="pre">bump</span></tt> or curvature of the
 wires <img class="math" src="_images/math/b4f7f56319a1ec5982ca6ee623972e083fcd0fba.png" alt="dz"/>, the pitch <img class="math" src="_images/math/36f73fc1312ee0349b3f3a0f3bd9eb5504339011.png" alt="p"/> and the number of base modules in the
@@ -552,7 +554,7 @@ of crossing struts by <img class="math" src="_images/math/41c544263a265ff15498ee
 [180]:math:<cite>deg</cite> around the Z-axis (the original Formex is the first of the
 <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> replicas). If specified in the constructor, an additional Formex with
 property <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> connects the first points of the <tt class="docutils literal"><span class="pre">NE</span></tt> and <tt class="docutils literal"><span class="pre">SE</span></tt> Formices.</p>
-<p>(lines 49-61)</p>
+<p>(lines 72-83)</p>
 <div class="figure align-center" id="fig-rescaled">
 <img alt="rescaled bumped line segment" src="_images/WireStentDemot2Step04.png" style="width: 300px;" />
 <p class="caption">Rescaled bumped strut</p>
@@ -577,7 +579,7 @@ attribute of the <tt class="docutils literal"><span class="pre">DoubleHelixStent
 allowing their use after every <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> initialisation. Such further
 use is impossible with local variables, such as for example the <tt class="docutils literal"><span class="pre">NE</span></tt> and
 <tt class="docutils literal"><span class="pre">SE</span></tt> Formices.</p>
-<p>(lines 61-66)</p>
+<p>(lines 84-89)</p>
 <div class="figure align-center" id="fig-mirrored-unit-cell">
 <img alt="mirrored unit cell" src="_images/WireStentDemot2Step10.png" style="width: 300px;" />
 <p class="caption">Mirrored unit cell</p>
@@ -593,7 +595,7 @@ use is impossible with local variables, such as for example the <tt class="docut
 directions and shown in Figure <a class="reference internal" href="#fig-full-plane"><em>Full planar topology</em></a>. <tt class="docutils literal"><span class="pre">replic2()</span></tt> generates this
 pattern with <img class="math" src="_images/math/435f3a43ae59ed41768ef39b59d4515a9f150105.png" alt="nx"/> and <img class="math" src="_images/math/46587de496607a13f873f771a0964285cbe8f638.png" alt="ny"/> replications with steps <img class="math" src="_images/math/953640113c8002037caa26af92570f9cb7d5773c.png" alt="dx"/> and
 <img class="math" src="_images/math/5a687ff25b068f70b5def1fdb4f1c49344997391.png" alt="dy"/> in respectively, the default X- and Y-direction.</p>
-<p>(lines 67-70)</p>
+<p>(lines 90-93)</p>
 <div class="figure align-center" id="fig-full-plane">
 <img alt="Full planar topology" src="_images/WireStentDemot2Step12.png" style="width: 300px;" />
 <p class="caption">Full planar topology</p>
@@ -610,12 +612,13 @@ Z-direction and transformed to the cylindrical stent structure by a coordinate
 transformation with the Z-coordinates as distance <img class="math" src="_images/math/b55ca7a0aa88ab7d58f4fc035317fdac39b17861.png" alt="r"/>, the X-coordinates
 as angle <img class="math" src="_images/math/52e8ed7a3ba22130ad3984eb2cd413406475a689.png" alt="\theta"/> and the Y-coordinates as height <img class="math" src="_images/math/b13f21416d84e13708696f34dea81026cda583c9.png" alt="z"/>. The
 <tt class="docutils literal"><span class="pre">scale()</span></tt>-operator rescales the stent structure to the correct circumference
-and length. The resulting stent geometry is depicted in Figure <a class="reference internal" href="#fig-stent"><em>Cylindrical stent</em></a>.</p>
-<p>(lines 71-73)</p>
+and length. The resulting stent geometry is depicted in Figure <a class="reference internal" href="#fig-stent"><em>Cylindrical stent</em></a>.
+(lines 94-96)</p>
 <p>In addition to the stent initialization, the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class script
 contains a function <tt class="docutils literal"><span class="pre">all()</span></tt> representing the complete stent Formex.
 Consequently, the <tt class="docutils literal"><span class="pre">DoubleHelixStent</span></tt> class has four attributes: the Formices
-<tt class="docutils literal"><span class="pre">cell1</span></tt>, <tt class="docutils literal"><span class="pre">cell2</span></tt> and <tt class="docutils literal"><span class="pre">all</span></tt>; and the number <img class="math" src="_images/math/46587de496607a13f873f771a0964285cbe8f638.png" alt="ny"/>.</p>
+<tt class="docutils literal"><span class="pre">cell1</span></tt>, <tt class="docutils literal"><span class="pre">cell2</span></tt> and <tt class="docutils literal"><span class="pre">all</span></tt>; and the number <img class="math" src="_images/math/46587de496607a13f873f771a0964285cbe8f638.png" alt="ny"/>.
+(lines 97-100)</p>
 <div class="figure align-center" id="fig-stent">
 <img alt="cylindrical stent" src="_images/WireStentDemot2Step16.png" style="width: 300px;" />
 <p class="caption">Cylindrical stent</p>
@@ -624,7 +627,6 @@ Consequently, the <tt class="docutils literal"><span class="pre">DoubleHelixSten
 <img alt="orthogonal view of thecylindrical stent" src="_images/WireStentDemot2Step15.png" style="width: 300px;" />
 <p class="caption">Orthogonal view of the cylindrical stent</p>
 </div>
-<p>(lines 74-77)</p>
 </div>
 <div class="section" id="parametric-stent-geometry">
 <h3>Parametric stent geometry<a class="headerlink" href="#parametric-stent-geometry" title="Permalink to this headline">¶</a></h3>
@@ -670,12 +672,12 @@ the wire stent geometry is defined as a the <tt class="docutils literal"><span c
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env pyformex</span>
 <span class="c">##</span>
-<span class="c">##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011</span>
+<span class="c">##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)</span>
 <span class="c">##  pyFormex is a tool for generating, manipulating and transforming 3D</span>
 <span class="c">##  geometrical models by sequences of mathematical operations.</span>
 <span class="c">##  Home page: http://pyformex.org</span>
-<span class="c">##  Project page:  https://savannah.nongnu.org/projects/pyformex/</span>
-<span class="c">##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) </span>
+<span class="c">##  Project page:  http://savannah.nongnu.org/projects/pyformex/</span>
+<span class="c">##  Copyright 2004-2011 (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) </span>
 <span class="c">##  Distributed under the GNU General Public License version 3 or later.</span>
 <span class="c">##</span>
 <span class="c">##</span>
@@ -784,14 +786,14 @@ is 9.19 mm.</p>
         <li class="right" >
           <a href="faq.html" title="pyFormex FAQ ‘n TRICKS"
              >previous</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
+        <li><a href="index.html">pyFormex v0.8.5 documentation</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Nov 18, 2011.
+      Last updated on Dec 04, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

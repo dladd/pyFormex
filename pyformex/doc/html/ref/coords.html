@@ -33,13 +33,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.5-a1 documentation</title>
+    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.5 documentation</title>
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.5-a1',
+        VERSION:     '0.8.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -48,7 +48,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="2. formex — Formex algebra in Python" href="formex.html" />
     <link rel="prev" title="pyFormex reference manual" href="../refman.html" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="../refman.html" title="pyFormex reference manual"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -504,13 +504,18 @@ three coordinates of a point.</p>
 
 <dl class="method">
 <dt id="coords.Coords.scale">
-<tt class="descname">scale</tt><big>(</big><em>scale</em>, <em>dir=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.scale" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">scale</tt><big>(</big><em>scale</em>, <em>dir=None</em>, <em>center=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy scaled with scale[i] in direction i.</p>
 <p>The scale should be a list of 3 scaling factors for the 3 axis
 directions, or a single scaling factor.
 In the latter case, dir (a single axis number or a list) may be given
 to specify the direction(s) to scale. The default is to produce a
-homothetic scaling.</p>
+homothetic scaling.
+The center of the scaling, if not specified, is the global origin.
+If a center is specified, the result is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="o">-</span><span class="n">center</span><span class="p">)</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span><span class="nb">dir</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="go">[ 2.  2.  2.]</span>
@@ -1500,13 +1505,18 @@ three coordinates of a point.</p>
 
 <dl class="method">
 <dt id="coords.BoundVectors.scale">
-<tt class="descname">scale</tt><big>(</big><em>scale</em>, <em>dir=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.scale" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">scale</tt><big>(</big><em>scale</em>, <em>dir=None</em>, <em>center=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy scaled with scale[i] in direction i.</p>
 <p>The scale should be a list of 3 scaling factors for the 3 axis
 directions, or a single scaling factor.
 In the latter case, dir (a single axis number or a list) may be given
 to specify the direction(s) to scale. The default is to produce a
-homothetic scaling.</p>
+homothetic scaling.
+The center of the scaling, if not specified, is the global origin.
+If a center is specified, the result is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="o">-</span><span class="n">center</span><span class="p">)</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span><span class="nb">dir</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="go">[ 2.  2.  2.]</span>
@@ -2492,13 +2502,18 @@ three coordinates of a point.</p>
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.scale">
-<tt class="descname">scale</tt><big>(</big><em>scale</em>, <em>dir=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.scale" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">scale</tt><big>(</big><em>scale</em>, <em>dir=None</em>, <em>center=None</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.scale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a copy scaled with scale[i] in direction i.</p>
 <p>The scale should be a list of 3 scaling factors for the 3 axis
 directions, or a single scaling factor.
 In the latter case, dir (a single axis number or a list) may be given
 to specify the direction(s) to scale. The default is to produce a
-homothetic scaling.</p>
+homothetic scaling.
+The center of the scaling, if not specified, is the global origin.
+If a center is specified, the result is equivalent to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="o">-</span><span class="n">center</span><span class="p">)</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span><span class="nb">dir</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="go">[ 2.  2.  2.]</span>
@@ -3151,18 +3166,20 @@ F.interpolate(G,arange(0,n+1)/float(n))</p>
 <dd><p>Compute the bounding box of a list of objects.</p>
 <p>The bounding box of an object is the smallest rectangular cuboid
 in the global Cartesian coordinates, such that no points of the
-objects lie outside that cuboid.</p>
+objects lie outside that cuboid. The resulting bounding box of the list
+of objects is the smallest bounding box that encloses all the objects
+in the list. Objects that do not have a <a class="reference internal" href="#coords.bbox" title="coords.bbox"><tt class="xref py py-meth docutils literal"><span class="pre">bbox()</span></tt></a> method or whose
+<a class="reference internal" href="#coords.bbox" title="coords.bbox"><tt class="xref py py-meth docutils literal"><span class="pre">bbox()</span></tt></a> method returns invalid values, are ignored.</p>
 <p>Parameters:</p>
 <ul class="simple">
-<li><cite>objects</cite>: a list of objects which all should have the method
-<a class="reference internal" href="#coords.bbox" title="coords.bbox"><tt class="xref py py-meth docutils literal"><span class="pre">bbox()</span></tt></a>. The resulting bounding encloses all the objects
-in the list. Objects whose <a class="reference internal" href="#coords.bbox" title="coords.bbox"><tt class="xref py py-meth docutils literal"><span class="pre">bbox()</span></tt></a> method returns <cite>None</cite>
-are ignored.</li>
+<li><cite>objects</cite>: a list of objects (which should probably have the method
+<a class="reference internal" href="#coords.bbox" title="coords.bbox"><tt class="xref py py-meth docutils literal"><span class="pre">bbox()</span></tt></a>).</li>
 </ul>
 <dl class="docutils">
 <dt>Returns:</dt>
 <dd>A Coords object with two points: the first contains the minimal
-coordinate values, the second has the maximal ones.</dd>
+coordinate values, the second has the maximal ones of the overall
+bounding box.</dd>
 </dl>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">formex</span> <span class="kn">import</span> <span class="o">*</span>
@@ -3287,7 +3304,7 @@ the curve.</p>
         <li class="right" >
           <a href="../refman.html" title="pyFormex reference manual"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -3295,7 +3312,7 @@ the curve.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Nov 18, 2011.
+      Last updated on Dec 04, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

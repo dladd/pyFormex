@@ -134,7 +134,9 @@ Getting started
 
 * The template script shows the typical layout of a pyFormex script:
 
-  - The script starts with a line ``#!/usr/bin/env pyformex``.
+  - The script starts with a line ``#!/usr/bin/env pyformex``, followed by a 
+    number of comments lines (all lines starting with a '#'). For the sake of
+    this tutorial, you can just disregard the comments. 
   - Then comes a multiline documentation string, contained between two ``"""`` 
     delimiters. Read it: it repeats this instructions on how a legal
     pyFormex script should be structured.
@@ -155,7 +157,7 @@ Getting started
   lines. As expected, the template script just prints the text from line 16
   of the script.
 
-* Now change the text of the string in line 16, but do not save your changes.
+* Now change the text of the string in line 33, but do not save your changes.
   Execute the script again, and notice that the printed text has not changed!
   This is because the editor is an external program to pyFormex, and *the 
   executed script is always the text as read from file*, not necessarily equal
@@ -1060,18 +1062,18 @@ Wait Time`. Or alternatively, you can start the script with the
 |button-step| button: pyFormex will then halt before each ``draw``
 function and wait until you push the |button-step| again.
  
-The script starts (lines 3-4) with setting the two parameters ``m`` and ``n``. It is
+The script starts (lines 26-27) with setting the two parameters ``m`` and ``n``. It is
 always a good idea to put constants in a variable. That makes it easy to
 change the values in a single place when you want to create another
 structure:
 `your model has become a parametric model.`
 
-Lines 5 resets the drawing options to the defaults. It is not essential in this script but it is often a good idea to restore the defaults, in case they would have been changed by a script that was run previously.
-Setting the ``clear=True`` option in line 6 makes sure the subsequent drawing instructions will remove the previous step from the canvas.
+Lines 28 resets the drawing options to the defaults. It is not essential in this script but it is often a good idea to restore the defaults, in case they would have been changed by a script that was run previously.
+Setting the ``clear=True`` option in line 29 makes sure the subsequent drawing instructions will remove the previous step from the canvas.
 
-In line 7 we create the basic geometrical entity for this structure: a triangle consisting of three lines, which we give the properties 1, 2 and 3, so that the three lines are shown in a different color::
+In line 30 we create the basic geometrical entity for this structure: a triangle consisting of three lines, which we give the properties 1, 2 and 3, so that the three lines are shown in a different color::
 
-   F = Formex(pattern("164"),[1,2,3]) 
+   F = Formex(pattern("l:164"),[1,2,3]) 
 
 .. _`fig:helix-000`:
 

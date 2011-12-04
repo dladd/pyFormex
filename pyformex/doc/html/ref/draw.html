@@ -33,13 +33,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.5-a1 documentation</title>
+    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.5 documentation</title>
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.5-a1',
+        VERSION:     '0.8.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -48,7 +48,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.5 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
     <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" />
@@ -79,7 +79,7 @@
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -345,16 +345,52 @@ user canceled the operation, or the change parameter was set to False.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="draw.flatten">
+<tt class="descclassname">draw.</tt><tt class="descname">flatten</tt><big>(</big><em>objects</em>, <em>recurse=True</em><big>)</big><a class="headerlink" href="#draw.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flatten a list of geometric objects.</p>
+<p>Each item in the list should be either:</p>
+<ul class="simple">
+<li>a drawable object,</li>
+<li>a string with the name of such an object,</li>
+<li>a list of any of these three.</li>
+</ul>
+<p>This function will flatten the lists and replace the string items with
+the object they point to. The result is a single list of drawable
+objects. This function does not enforce the objects to be drawable.
+That should be done by the caller.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawable">
+<tt class="descclassname">draw.</tt><tt class="descname">drawable</tt><big>(</big><em>objects</em><big>)</big><a class="headerlink" href="#draw.drawable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters the drawable objects from a list.</p>
+<p>The input is a list, usually of drawable objects. For each item in the
+list, the following is done:</p>
+<ul class="simple">
+<li>if the item is drawable, it is kept as is,</li>
+<li>if the item is not drawable but can be converted to a Formex, it is
+converted,</li>
+<li>if it is neither drawable nor convertible to Formex, it is removed.</li>
+</ul>
+<p>The result is a list of drawable objects (since a Formex is drawable).</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="draw.draw">
-<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>view=None</em>, <em>bbox=None</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>shrink=None</em>, <em>marksize=None</em>, <em>wait=True</em>, <em>clear=None</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.draw" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">draw</tt><big>(</big><em>F</em>, <em>view=None</em>, <em>bbox=None</em>, <em>color='prop'</em>, <em>colormap=None</em>, <em>bkcolor=None</em>, <em>bkcolormap=None</em>, <em>alpha=None</em>, <em>mode=None</em>, <em>linewidth=None</em>, <em>linestipple=None</em>, <em>shrink=None</em>, <em>marksize=None</em>, <em>wait=True</em>, <em>clear=None</em>, <em>allviews=False</em>, <em>highlight=False</em>, <em>nolight=False</em>, <em>ontop=False</em>, <em>silent=True</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw object(s) with specified settings and direct camera to it.</p>
 <p>The first argument is an object to be drawn. All other arguments are
 settings that influence how  the object is being drawn.</p>
-<p>F is either a Formex or a TriSurface object, or a name of such object
-(global or exported), or a list thereof.
-If F is a list, the draw() function is called repeatedly with each of
-ithe items of the list as first argument and with the remaining arguments
-unchanged.</p>
+<p>F is one of:</p>
+<ul class="simple">
+<li>a drawable object (a geometry object like Formex, Mesh or TriSurface),</li>
+<li>the name of a global pyFormex variable refering to such an object,</li>
+<li>a list of any of these three items.</li>
+</ul>
+<p>The variables are replaced with their value and the lists are flattened,
+to create a single list of objects. This then filtered for the drawable
+objects, and the resulting list of drawables is drawn using the remaining
+arguments.</p>
 <p>The remaining arguments are drawing options. If None, they are filled in
 from the current viewport drawing options.</p>
 <p>view is either the name of a defined view or &#8216;last&#8217; or None.
@@ -460,13 +496,24 @@ The string representation of the marks are drawn at the corresponding
 
 <dl class="function">
 <dt id="draw.drawNumbers">
-<tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big><a class="headerlink" href="#draw.drawNumbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawNumbers</tt><big>(</big><em>F</em>, <em>numbers=None</em>, <em>color='black'</em>, <em>trl=None</em>, <em>offset=0</em>, <em>leader=''</em>, <em>ontop=True</em><big>)</big><a class="headerlink" href="#draw.drawNumbers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw numbers on all elements of F.</p>
-<p>Normally, the numbers are drawn at the centroids of the elements.
+<p>numbers is an array with F.nelems() integer numbers.
+If no numbers are given, the range from 0 to nelems()-1 is used.
+Normally, the numbers are drawn at the centroids of the elements.
 A translation may be given to put the numbers out of the centroids,
 e.g. to put them in front of the objects to make them visible,
 or to allow to view a mark at the centroids.
 If an offset is specified, it is added to the shown numbers.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.drawPropNumbers">
+<tt class="descclassname">draw.</tt><tt class="descname">drawPropNumbers</tt><big>(</big><em>F</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#draw.drawPropNumbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw property numbers on all elements of F.</p>
+<p>This calls drawNumbers to draw the property numbers on the elements.
+All arguments of drawNumbers except <cite>numbers</cite> may be passed.
+If the object F thus not have property numbers, -1 values are drawn.</p>
 </dd></dl>
 
 <dl class="function">
@@ -599,7 +646,7 @@ followed by setView(name).</p>
 
 <dl class="function">
 <dt id="draw.bgcolor">
-<tt class="descclassname">draw.</tt><tt class="descname">bgcolor</tt><big>(</big><em>color</em>, <em>color2=None</em><big>)</big><a class="headerlink" href="#draw.bgcolor" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">bgcolor</tt><big>(</big><em>color</em>, <em>color2=None</em>, <em>mode='h'</em><big>)</big><a class="headerlink" href="#draw.bgcolor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the background color (and redraw).</p>
 <p>If one color is given, the background is a solid color.
 If two colors are given, the background color will get a vertical
@@ -940,7 +987,7 @@ might also be set by the user.</p>
         <li class="right" >
           <a href="script.html" title="4. script — Basic pyFormex script functions"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -948,7 +995,7 @@ might also be set by the user.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Nov 18, 2011.
+      Last updated on Dec 04, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.5  (Sun Dec  4 15:52:41 CET 2011)
+##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -69,13 +69,14 @@ DOCSOURCE= \
 	$(wildcard ${SPHINXDIR}/*.rst) \
 	$(wildcard ${SPHINXDIR}/*.py) \
 	$(wildcard ${SPHINXDIR}/*.inc) \
-	$(wildcard ${SPHINXDIR}/_static/scripts/*.py) \
+	$(wildcard ${SPHINXDIR}/static/scripts/[A-Z]*.py) \
 	${SPHINXDIR}/Makefile \
 	${SPHINXDIR}/ref/Makefile
 
 EXECUTABLE= ${PYFORMEXDIR}/pyformex ${PYFORMEXDIR}/sendmail.py \
 	${BINDIR}/read_abq_inp.awk \
-	pyformex-viewer pyformex-search pre-install post-install
+	pyformex-viewer pyformex-search pre-install post-install \
+	${SPHINXDIR}/py2rst.py
 
 
 OTHERSTAMPABLE= README Makefile ReleaseNotes \
@@ -96,12 +97,12 @@ STATICSTAMPABLE= Description History HOWTO-dev.rst MANIFEST.py add_Id \
 	pyformex-viewer searchpy sloc.py slocstats.awk \
 	user/Makefile $(wildcard user/*.rst) \
 	website/Makefile $(wildcard website/scripts/*.py) \
-	$(wildcard website/src/examples/*.txt) \
-	sphinx
+	$(wildcard website/src/examples/*.txt)
 
 STATICDIRS= pyformex/data/README pyformex/icons/README \
 	pyformex/lib/README \
-	screenshots/README sphinx/images/README \
+	screenshots/README \
+	sphinx/images/README sphinx/static/scripts/README \
 	website/README website/images/README website/src/README \
 	website/src/examples/README
 

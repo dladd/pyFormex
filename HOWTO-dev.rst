@@ -158,6 +158,7 @@ First, create the distribution and test it out locally: both the installation pr
 
 - Set the final version in RELEASE (RELEASE==VERSION) ::
 
+   edt RELEASE
    make version
 
 - Stamp the files with the version ::
@@ -166,6 +167,7 @@ First, create the distribution and test it out locally: both the installation pr
 
 - Create updated documentation ::
 
+   cd sphinx
    make html
    make latexpdf
    make svndoc

@@ -59,12 +59,14 @@ for easy referencing, but are not part of the script itself.
    :linenos:
 
 As all pyFormex scripts, it starts with a comments line holding the word
-``pyformex`` (line 1). This is followed by a documentation string explaining
-the purpose of the script (lines 2-7). 
+``pyformex`` (line 1). This is followed more comments lines specifying the
+copyright and license notices. If you intend to distribute your scripts, you should give these certainly special consideration.
 
+Next is a documentation string explaining
+the purpose of the script (lines 25-30). 
 The script then starts by importing all definitions from
 other modules required to run the :file:`WireStent.py`
-script (line 9).
+script (line 32).
 
 
 Subsequently, the class ``DoubleHelixStent`` is defined which
@@ -73,11 +75,11 @@ parametric, optimization and finite element analyses of braided wire stents.
 Consequently, the latter scripts do not have to contain the wire stent geometry
 building and can be condensed and conveniently arranged. The definition of the
 class starts with a documentation string, explaining
-its aim and functioning (lines 11-37).
+its aim and functioning (lines 34-60).
 
 
 The constructor ``__init__`` of the ``DoubleHelixStent`` class requires 8
-arguments (line 38):
+arguments (line 61):
 
 * stent external diameter :math:`De` (mm).
 
@@ -113,7 +115,7 @@ structure, which is easily parametric adaptable.
 
 Creating the base module
 ------------------------
-(lines 40-48)
+(lines 63-71)
 
 Depending on the specified arguments in the constructor, the mean stent diameter
 :math:`D`, the average stent radius :math:`r`, the ``bump`` or curvature of the
@@ -190,7 +192,7 @@ of crossing struts by :math:`2` rotational replications with an angular step of
 :math:`2` replicas). If specified in the constructor, an additional Formex with
 property :math:`2` connects the first points of the ``NE`` and ``SE`` Formices.
 
-(lines 49-61)
+(lines 72-83)
 
 .. _`fig:rescaled`:
 
@@ -234,7 +236,7 @@ allowing their use after every ``DoubleHelixStent`` initialisation. Such further
 use is impossible with local variables, such as for example the ``NE`` and
 ``SE`` Formices.
 
-(lines 61-66)
+(lines 84-89)
 
 .. _`fig:mirrored_unit_cell`:
 
@@ -264,7 +266,7 @@ directions and shown in Figure :ref:`fig:full_plane`. ``replic2()`` generates th
 pattern with :math:`nx` and :math:`ny` replications with steps :math:`dx` and
 :math:`dy` in respectively, the default X- and Y-direction.
 
-(lines 67-70)
+(lines 90-93)
 
 .. _`fig:full_plane`:
 
@@ -295,13 +297,13 @@ transformation with the Z-coordinates as distance :math:`r`, the X-coordinates
 as angle :math:`\theta` and the Y-coordinates as height :math:`z`. The
 ``scale()``\ -operator rescales the stent structure to the correct circumference
 and length. The resulting stent geometry is depicted in Figure :ref:`fig:stent`.
-
-(lines 71-73)
+(lines 94-96)
 
 In addition to the stent initialization, the ``DoubleHelixStent`` class script
 contains a function ``all()`` representing the complete stent Formex.
 Consequently, the ``DoubleHelixStent`` class has four attributes: the Formices
 ``cell1``, ``cell2`` and ``all``; and the number :math:`ny`.
+(lines 97-100)
 
 .. _`fig:stent`:
 
@@ -320,8 +322,6 @@ Consequently, the ``DoubleHelixStent`` class has four attributes: the Formices
    :alt: orthogonal view of thecylindrical stent
 
    Orthogonal view of the cylindrical stent
-
-(lines 74-77)
 
 Parametric stent geometry
 -------------------------

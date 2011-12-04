@@ -1,13 +1,7 @@
 #!/usr/bin/env pyformex --gui
 ##
-##  This file is part of pyFormex 0.8.5     Sun Nov  6 17:27:05 CET 2011
-##  pyFormex is a tool for generating, manipulating and transforming 3D
-##  geometrical models by sequences of mathematical operations.
-##  Home page: http://pyformex.org
-##  Project page:  https://savannah.nongnu.org/projects/pyformex/
-##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  Copyright (C) 2011 John Doe (j.doe@somewhere.org) 
 ##  Distributed under the GNU General Public License version 3 or later.
-##
 ##
 ##  This program is free software: you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by

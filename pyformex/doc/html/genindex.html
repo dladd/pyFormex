@@ -33,13 +33,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; pyFormex v0.8.5-a1 documentation</title>
+    <title>Index &mdash; pyFormex v0.8.5 documentation</title>
     <link rel="stylesheet" href="_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.5-a1',
+        VERSION:     '0.8.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -48,7 +48,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.5-a1 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.5 documentation" href="index.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -70,7 +70,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
+        <li><a href="index.html">pyFormex v0.8.5 documentation</a> &gt;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -225,6 +225,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.addNoise">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.addNoise">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.addNoise">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.addNoise">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.addNoise">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.addNoise">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.addNoise">(curve.Polygon method)</a></dt>
@@ -260,6 +261,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.affine">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.affine">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.affine">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.affine">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.affine">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.affine">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.affine">(curve.Polygon method)</a></dt>
@@ -281,6 +283,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.align">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.align">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.align">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.align">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.align">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.align">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.align">(curve.Polygon method)</a></dt>
@@ -305,6 +308,9 @@
     <dd><dl>
       <dt><a href="ref/coords.html#coords.CoordinateSystem.append">(coords.CoordinateSystem method)</a></dt>
       <dt><a href="ref/coords.html#coords.Coords.append">(coords.Coords method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.append">(curve.Line method)</a></dt>
+      <dt><a href="ref/curve.html#curve.PolyLine.append">(curve.PolyLine method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Polygon.append">(curve.Polygon method)</a></dt>
       <dt><a href="ref/flatkeydb.html#flatkeydb.FlatDB.append">(flatkeydb.FlatDB method)</a></dt>
       <dt><a href="ref/formex.html#formex.Formex.append">(formex.Formex method)</a></dt>
       <dt><a href="ref/objects.html#objects.DrawableObjects.append">(objects.DrawableObjects method)</a></dt>
@@ -318,6 +324,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.approx">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.approx">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.approx">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.approx">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.approx">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.approx">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.approx">(curve.Polygon method)</a></dt>
@@ -370,9 +377,10 @@
     <dt><a href="ref/draw.html#draw.askItems">askItems() (in module draw)</a></dt>
     <dt><a href="ref/draw.html#draw.askNewFilename">askNewFilename() (in module draw)</a></dt>
     <dt><a href="ref/trisurface.html#trisurface.TriSurface.aspectRatio">aspectRatio() (trisurface.TriSurface method)</a></dt>
-    <dt><a href="ref/curve.html#curve.Polygon.atLength">atLength() (curve.Polygon method)</a></dt>
+    <dt><a href="ref/curve.html#curve.Line.atLength">atLength() (curve.Line method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.PolyLine.atLength">(curve.PolyLine method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Polygon.atLength">(curve.Polygon method)</a></dt>
   </dl></dd>
     <dt><a href="config.html#index-0">autorun</a></dt>
     <dt><a href="ref/image.html#image.autoSaveOn">autoSaveOn() (in module image)</a></dt>
@@ -381,9 +389,10 @@
       <dt><a href="ref/coords.html#coords.CoordinateSystem.average">(coords.CoordinateSystem method)</a></dt>
       <dt><a href="ref/coords.html#coords.Coords.average">(coords.Coords method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/curve.html#curve.Polygon.avgDirections">avgDirections() (curve.Polygon method)</a></dt>
+    <dt><a href="ref/curve.html#curve.Line.avgDirections">avgDirections() (curve.Line method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.PolyLine.avgDirections">(curve.PolyLine method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Polygon.avgDirections">(curve.Polygon method)</a></dt>
   </dl></dd>
     <dt><a href="ref/mesh.html#mesh.Mesh.avgNodes">avgNodes() (mesh.Mesh method)</a></dt>
     <dd><dl>
@@ -442,6 +451,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.bump">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.bump">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.bump">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.bump">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.bump">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.bump">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.bump">(curve.Polygon method)</a></dt>
@@ -463,6 +473,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.bump1">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.bump1">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.bump1">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.bump1">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.bump1">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.bump1">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.bump1">(curve.Polygon method)</a></dt>
@@ -484,6 +495,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.bump2">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.bump2">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.bump2">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.bump2">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.bump2">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.bump2">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.bump2">(curve.Polygon method)</a></dt>
@@ -537,6 +549,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.centered">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.centered">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.centered">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.centered">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.centered">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.centered">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.centered">(curve.Polygon method)</a></dt>
@@ -676,6 +689,7 @@
     <dd><dl>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.convert">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
+    <dt><a href="ref/dxf.html#dxf.convertDXF">convertDXF() (in module dxf)</a></dt>
     <dt><a href="ref/curve.html#curve.convertFormexToCurve">convertFormexToCurve() (in module curve)</a></dt>
     <dt><a href="ref/widgets.html#widgets.convertInputItem">convertInputItem() (in module widgets)</a></dt>
     <dt><a href="ref/mesh.html#mesh.Mesh.convertRandom">convertRandom() (mesh.Mesh method)</a></dt>
@@ -698,6 +712,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.copy">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.copy">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.copy">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.copy">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.copy">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.copy">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.copy">(curve.Polygon method)</a></dt>
@@ -757,9 +772,10 @@
     <dt><a href="ref/formex.html#formex.cut2AtPlane">cut2AtPlane() (in module formex)</a></dt>
     <dt><a href="ref/formex.html#formex.cut3AtPlane">cut3AtPlane() (in module formex)</a></dt>
     <dt><a href="ref/formex.html#formex.cutElements3AtPlane">cutElements3AtPlane() (in module formex)</a></dt>
-    <dt><a href="ref/curve.html#curve.Polygon.cutWithPlane">cutWithPlane() (curve.Polygon method)</a></dt>
+    <dt><a href="ref/curve.html#curve.Line.cutWithPlane">cutWithPlane() (curve.Line method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.PolyLine.cutWithPlane">(curve.PolyLine method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Polygon.cutWithPlane">(curve.Polygon method)</a></dt>
       <dt><a href="ref/formex.html#formex.Formex.cutWithPlane">(formex.Formex method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.cutWithPlane">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
@@ -774,6 +790,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.cylindrical">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.cylindrical">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.cylindrical">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.cylindrical">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.cylindrical">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.cylindrical">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.cylindrical">(curve.Polygon method)</a></dt>
@@ -830,9 +847,10 @@
       <dt><a href="ref/coords.html#coords.CoordinateSystem.directionalWidth">(coords.CoordinateSystem method)</a></dt>
       <dt><a href="ref/coords.html#coords.Coords.directionalWidth">(coords.Coords method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/curve.html#curve.Polygon.directions">directions() (curve.Polygon method)</a></dt>
+    <dt><a href="ref/curve.html#curve.Line.directions">directions() (curve.Line method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.PolyLine.directions">(curve.PolyLine method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Polygon.directions">(curve.Polygon method)</a></dt>
   </dl></dd>
     <dt><a href="ref/curve.html#curve.Arc.directionsAt">directionsAt() (curve.Arc method)</a></dt>
     <dd><dl>
@@ -841,6 +859,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.directionsAt">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.directionsAt">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.directionsAt">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.directionsAt">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.directionsAt">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.directionsAt">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.directionsAt">(curve.Polygon method)</a></dt>
@@ -882,9 +901,9 @@
       <dt><a href="ref/viewport.html#viewport.dotpr">(in module viewport)</a></dt>
   </dl></dd>
     <dt><a href="ref/draw.html#module-draw">draw (module)</a></dt>
+    <dt><a href="ref/draw.html#draw.draw">draw() (in module draw)</a></dt>
 </dl></td>
   <td style="width: 33%" valign="top"><dl>
-    <dt><a href="ref/draw.html#draw.draw">draw() (in module draw)</a></dt>
     <dt><a href="ref/objects.html#objects.draw_bbox">draw_bbox() (in module objects)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.draw_cursor">draw_cursor() (canvas.Canvas method)</a></dt>
     <dd><dl>
@@ -901,6 +920,7 @@
     <dt><a href="ref/objects.html#objects.draw_object_name">draw_object_name() (in module objects)</a></dt>
     <dt><a href="ref/viewport.html#viewport.QtCanvas.draw_state_line">draw_state_line() (viewport.QtCanvas method)</a></dt>
     <dt><a href="ref/viewport.html#viewport.QtCanvas.draw_state_rect">draw_state_rect() (viewport.QtCanvas method)</a></dt>
+    <dt><a href="ref/draw.html#draw.drawable">drawable() (in module draw)</a></dt>
     <dt><a href="ref/objects.html#objects.DrawableObjects">DrawableObjects (class in objects)</a></dt>
     <dt><a href="ref/draw.html#draw.drawActor">drawActor() (in module draw)</a></dt>
     <dt><a href="ref/objects.html#objects.DrawableObjects.drawAnnotation">drawAnnotation() (objects.DrawableObjects method)</a></dt>
@@ -934,6 +954,7 @@
     <dt><a href="ref/draw.html#draw.drawMarks">drawMarks() (in module draw)</a></dt>
     <dt><a href="ref/draw.html#draw.drawNumbers">drawNumbers() (in module draw)</a></dt>
     <dt><a href="ref/marks.html#marks.MarkList.drawpick">drawpick() (marks.MarkList method)</a></dt>
+    <dt><a href="ref/draw.html#draw.drawPropNumbers">drawPropNumbers() (in module draw)</a></dt>
     <dt><a href="ref/decors.html#decors.drawRect">drawRect() (in module decors)</a></dt>
     <dt><a href="ref/decors.html#decors.drawRectangle">drawRectangle() (in module decors)</a></dt>
     <dt><a href="ref/draw.html#draw.drawText">drawText() (in module draw)</a></dt>
@@ -981,6 +1002,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.egg">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.egg">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.egg">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.egg">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.egg">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.egg">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.egg">(curve.Polygon method)</a></dt>
@@ -1004,13 +1026,27 @@
     <dt><a href="ref/fe.html#fe.Model.elemNrs">elemNrs() (fe.Model method)</a></dt>
     <dt><a href="ref/properties.html#properties.PropertyDB.elemProp">elemProp() (properties.PropertyDB method)</a></dt>
     <dt><a href="ref/properties.html#properties.ElemSection">ElemSection (class in properties)</a></dt>
+    <dt><a href="ref/viewport.html#viewport.QtCanvas.emit_cancel">emit_cancel() (viewport.QtCanvas method)</a></dt>
 </dl></td>
   <td style="width: 33%" valign="top"><dl>
-    <dt><a href="ref/viewport.html#viewport.QtCanvas.emit_cancel">emit_cancel() (viewport.QtCanvas method)</a></dt>
     <dt><a href="ref/viewport.html#viewport.QtCanvas.emit_done">emit_done() (viewport.QtCanvas method)</a></dt>
     <dt><a href="ref/canvas.html#canvas.Canvas.end_2D_drawing">end_2D_drawing() (canvas.Canvas method)</a></dt>
     <dd><dl>
       <dt><a href="ref/viewport.html#viewport.QtCanvas.end_2D_drawing">(viewport.QtCanvas method)</a></dt>
+  </dl></dd>
+    <dt><a href="ref/curve.html#curve.Arc.endPoints">endPoints() (curve.Arc method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/curve.html#curve.Arc3.endPoints">(curve.Arc3 method)</a></dt>
+      <dt><a href="ref/curve.html#curve.BezierSpline.endPoints">(curve.BezierSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.CardinalSpline.endPoints">(curve.CardinalSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.CardinalSpline2.endPoints">(curve.CardinalSpline2 method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Curve.endPoints">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.endPoints">(curve.Line method)</a></dt>
+      <dt><a href="ref/curve.html#curve.NaturalSpline.endPoints">(curve.NaturalSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.PolyLine.endPoints">(curve.PolyLine method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Polygon.endPoints">(curve.Polygon method)</a></dt>
+      <dt><a href="ref/curve.html#curve.QuadBezierSpline.endPoints">(curve.QuadBezierSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Spiral.endPoints">(curve.Spiral method)</a></dt>
   </dl></dd>
     <dt><a href="ref/dxf.html#dxf.DxfExporter.endSection">endSection() (dxf.DxfExporter method)</a></dt>
     <dt><a href="ref/units.html#units.UnitsSystem.Engineering">Engineering() (units.UnitsSystem method)</a></dt>
@@ -1088,6 +1124,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.flare">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.flare">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.flare">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.flare">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.flare">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.flare">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.flare">(curve.Polygon method)</a></dt>
@@ -1101,7 +1138,10 @@
   </dl></dd>
     <dt><a href="ref/flatkeydb.html#flatkeydb.FlatDB">FlatDB (class in flatkeydb)</a></dt>
     <dt><a href="ref/flatkeydb.html#module-flatkeydb">flatkeydb (module)</a></dt>
-    <dt><a href="ref/olist.html#olist.flatten">flatten() (in module olist)</a></dt>
+    <dt><a href="ref/draw.html#draw.flatten">flatten() (in module draw)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/olist.html#olist.flatten">(in module olist)</a></dt>
+  </dl></dd>
     <dt><a href="ref/flavia.html#module-flavia">flavia (module)</a></dt>
     <dt><a href="ref/draw.html#draw.flyAlong">flyAlong() (in module draw)</a></dt>
     <dt><a href="ref/fe_abq.html#fe_abq.Output.fmt">fmt() (fe_abq.Output method)</a></dt>
@@ -1350,6 +1390,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.hyperCylindrical">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.hyperCylindrical">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.hyperCylindrical">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.hyperCylindrical">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.hyperCylindrical">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.hyperCylindrical">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.hyperCylindrical">(curve.Polygon method)</a></dt>
@@ -1377,6 +1418,7 @@
     <dt><a href="ref/image.html#image.imageFormats">imageFormats() (in module image)</a></dt>
     <dt><a href="ref/widgets.html#widgets.ImageView">ImageView (class in widgets)</a></dt>
     <dt><a href="ref/imageViewer.html#module-imageViewer">imageViewer (module)</a></dt>
+    <dt><a href="ref/dxf.html#dxf.importDXF">importDXF() (in module dxf)</a></dt>
     <dt><a href="ref/menu.html#menu.BaseMenu.index">index() (menu.BaseMenu method)</a></dt>
     <dd><dl>
       <dt><a href="ref/menu.html#menu.Menu.index">(menu.Menu method)</a></dt>
@@ -1431,13 +1473,13 @@
       <dt><a href="ref/menu.html#menu.Menu.insert_menu">(menu.Menu method)</a></dt>
       <dt><a href="ref/menu.html#menu.MenuBar.insert_menu">(menu.MenuBar method)</a></dt>
   </dl></dd>
+</dl></td>
+  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/menu.html#menu.BaseMenu.insert_sep">insert_sep() (menu.BaseMenu method)</a></dt>
     <dd><dl>
       <dt><a href="ref/menu.html#menu.Menu.insert_sep">(menu.Menu method)</a></dt>
       <dt><a href="ref/menu.html#menu.MenuBar.insert_sep">(menu.MenuBar method)</a></dt>
   </dl></dd>
-</dl></td>
-  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/menu.html#menu.BaseMenu.insertItems">insertItems() (menu.BaseMenu method)</a></dt>
     <dd><dl>
       <dt><a href="ref/menu.html#menu.Menu.insertItems">(menu.Menu method)</a></dt>
@@ -1499,6 +1541,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.isopar">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.isopar">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.isopar">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.isopar">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.isopar">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.isopar">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.isopar">(curve.Polygon method)</a></dt>
@@ -1566,6 +1609,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.length">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.length">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.length">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.length">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.length">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.length">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.length">(curve.Polygon method)</a></dt>
@@ -1582,6 +1626,7 @@
     <dt><a href="ref/curve.html#curve.BezierSpline.lengths">lengths() (curve.BezierSpline method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.CardinalSpline.lengths">(curve.CardinalSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.lengths">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.lengths">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.lengths">(curve.Polygon method)</a></dt>
       <dt><a href="ref/curve.html#curve.QuadBezierSpline.lengths">(curve.QuadBezierSpline method)</a></dt>
@@ -1590,7 +1635,10 @@
     <dt><a href="ref/lima.html#lima.Lima">Lima (class in lima)</a></dt>
     <dt><a href="ref/lima.html#module-lima">lima (module)</a></dt>
     <dt><a href="ref/lima.html#lima.lima">lima() (in module lima)</a></dt>
-    <dt><a href="ref/decors.html#decors.Line">Line (class in decors)</a></dt>
+    <dt><a href="ref/curve.html#curve.Line">Line (class in curve)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/decors.html#decors.Line">(class in decors)</a></dt>
+  </dl></dd>
     <dt><a href="ref/dxf.html#dxf.DxfExporter.line">line() (dxf.DxfExporter method)</a></dt>
     <dd><dl>
       <dt><a href="ref/simple.html#simple.line">(in module simple)</a></dt>
@@ -1643,6 +1691,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.map">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.map">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.map">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.map">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.map">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.map">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.map">(curve.Polygon method)</a></dt>
@@ -1664,6 +1713,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.map1">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.map1">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.map1">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.map1">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.map1">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.map1">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.map1">(curve.Polygon method)</a></dt>
@@ -1685,6 +1735,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.mapd">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.mapd">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.mapd">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.mapd">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.mapd">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.mapd">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.mapd">(curve.Polygon method)</a></dt>
@@ -2011,6 +2062,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.pointsAt">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.pointsAt">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.pointsAt">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.pointsAt">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.pointsAt">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.pointsAt">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.pointsAt">(curve.Polygon method)</a></dt>
@@ -2088,6 +2140,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.projectOnCylinder">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.projectOnCylinder">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.projectOnCylinder">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.projectOnCylinder">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.projectOnCylinder">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.projectOnCylinder">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.projectOnCylinder">(curve.Polygon method)</a></dt>
@@ -2109,6 +2162,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.projectOnPlane">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.projectOnPlane">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.projectOnPlane">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.projectOnPlane">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.projectOnPlane">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.projectOnPlane">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.projectOnPlane">(curve.Polygon method)</a></dt>
@@ -2130,6 +2184,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.projectOnSphere">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.projectOnSphere">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.projectOnSphere">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.projectOnSphere">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.projectOnSphere">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.projectOnSphere">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.projectOnSphere">(curve.Polygon method)</a></dt>
@@ -2203,6 +2258,7 @@
       <dt><a href="ref/properties.html#properties.MaterialDB.readDatabase">(properties.MaterialDB method)</a></dt>
       <dt><a href="ref/properties.html#properties.SectionDB.readDatabase">(properties.SectionDB method)</a></dt>
   </dl></dd>
+    <dt><a href="ref/dxf.html#dxf.readDXF">readDXF() (in module dxf)</a></dt>
     <dt><a href="ref/flavia.html#flavia.readElems">readElems() (in module flavia)</a></dt>
     <dd><dl>
       <dt><a href="ref/tetgen.html#tetgen.readElems">(in module tetgen)</a></dt>
@@ -2248,6 +2304,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.reflect">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.reflect">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.reflect">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.reflect">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.reflect">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.reflect">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.reflect">(curve.Polygon method)</a></dt>
@@ -2328,9 +2385,9 @@
       <dt><a href="ref/menu.html#menu.Menu.removeItem">(menu.Menu method)</a></dt>
       <dt><a href="ref/menu.html#menu.MenuBar.removeItem">(menu.MenuBar method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/properties.html#properties.RemoveListItem">RemoveListItem() (in module properties)</a></dt>
 </dl></td>
   <td style="width: 33%" valign="top"><dl>
+    <dt><a href="ref/properties.html#properties.RemoveListItem">RemoveListItem() (in module properties)</a></dt>
     <dt><a href="ref/utils.html#utils.removeTree">removeTree() (in module utils)</a></dt>
     <dt><a href="ref/viewport.html#viewport.NewMultiCanvas.removeView">removeView() (viewport.NewMultiCanvas method)</a></dt>
     <dt><a href="drawing.html#removeViewport">removeViewport() (built-in function)</a></dt>
@@ -2366,6 +2423,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.replace">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.replace">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.replace">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.replace">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.replace">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.replace">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.replace">(curve.Polygon method)</a></dt>
@@ -2417,6 +2475,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.resized">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.resized">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.resized">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.resized">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.resized">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.resized">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.resized">(curve.Polygon method)</a></dt>
@@ -2434,6 +2493,7 @@
     <dt><a href="ref/curve.html#curve.BezierSpline.reverse">reverse() (curve.BezierSpline method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.CardinalSpline.reverse">(curve.CardinalSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.reverse">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.reverse">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.reverse">(curve.Polygon method)</a></dt>
       <dt><a href="ref/curve.html#curve.QuadBezierSpline.reverse">(curve.QuadBezierSpline method)</a></dt>
@@ -2465,6 +2525,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.rollAxes">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.rollAxes">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.rollAxes">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.rollAxes">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.rollAxes">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.rollAxes">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.rollAxes">(curve.Polygon method)</a></dt>
@@ -2488,6 +2549,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.rot">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.rot">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.rot">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.rot">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.rot">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.rot">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.rot">(curve.Polygon method)</a></dt>
@@ -2510,6 +2572,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.rotate">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.rotate">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.rotate">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.rotate">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.rotate">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.rotate">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.rotate">(curve.Polygon method)</a></dt>
@@ -2573,6 +2636,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.scale">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.scale">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.scale">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.scale">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.scale">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.scale">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.scale">(curve.Polygon method)</a></dt>
@@ -2798,8 +2862,20 @@
   </dl></dd>
     <dt><a href="ref/script.html#script.setPrefs">setPrefs() (in module script)</a></dt>
     <dt><a href="ref/formex.html#formex.Formex.setPrintFunction">setPrintFunction() (formex.Formex class method)</a></dt>
-    <dt><a href="ref/formex.html#formex.Formex.setProp">setProp() (formex.Formex method)</a></dt>
+    <dt><a href="ref/curve.html#curve.Arc.setProp">setProp() (curve.Arc method)</a></dt>
     <dd><dl>
+      <dt><a href="ref/curve.html#curve.Arc3.setProp">(curve.Arc3 method)</a></dt>
+      <dt><a href="ref/curve.html#curve.BezierSpline.setProp">(curve.BezierSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.CardinalSpline.setProp">(curve.CardinalSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.CardinalSpline2.setProp">(curve.CardinalSpline2 method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Curve.setProp">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.setProp">(curve.Line method)</a></dt>
+      <dt><a href="ref/curve.html#curve.NaturalSpline.setProp">(curve.NaturalSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.PolyLine.setProp">(curve.PolyLine method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Polygon.setProp">(curve.Polygon method)</a></dt>
+      <dt><a href="ref/curve.html#curve.QuadBezierSpline.setProp">(curve.QuadBezierSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Spiral.setProp">(curve.Spiral method)</a></dt>
+      <dt><a href="ref/formex.html#formex.Formex.setProp">(formex.Formex method)</a></dt>
       <dt><a href="ref/mesh.html#mesh.Mesh.setProp">(mesh.Mesh method)</a></dt>
       <dt><a href="ref/objects.html#objects.DrawableObjects.setProp">(objects.DrawableObjects method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.setProp">(trisurface.TriSurface method)</a></dt>
@@ -2875,6 +2951,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.shear">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.shear">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.shear">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.shear">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.shear">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.shear">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.shear">(curve.Polygon method)</a></dt>
@@ -2951,6 +3028,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.spherical">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.spherical">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.spherical">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.spherical">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.spherical">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.spherical">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.spherical">(curve.Polygon method)</a></dt>
@@ -2968,6 +3046,7 @@
     <dd><dl>
       <dt><a href="ref/coords.html#coords.CoordinateSystem.split">(coords.CoordinateSystem method)</a></dt>
       <dt><a href="ref/coords.html#coords.Coords.split">(coords.Coords method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.split">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.split">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.split">(curve.Polygon method)</a></dt>
       <dt><a href="ref/formex.html#formex.Formex.split">(formex.Formex method)</a></dt>
@@ -3023,6 +3102,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.sub_directions">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.sub_directions">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.sub_directions">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.sub_directions">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.sub_directions">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.sub_directions">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.sub_directions">(curve.Polygon method)</a></dt>
@@ -3036,6 +3116,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.sub_directions_2">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.sub_directions_2">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.sub_directions_2">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.sub_directions_2">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.sub_directions_2">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.sub_directions_2">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.sub_directions_2">(curve.Polygon method)</a></dt>
@@ -3046,14 +3127,16 @@
     <dd><dl>
       <dt><a href="ref/curve.html#curve.CardinalSpline.sub_points">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.sub_points">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.sub_points">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.sub_points">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.sub_points">(curve.Polygon method)</a></dt>
       <dt><a href="ref/curve.html#curve.QuadBezierSpline.sub_points">(curve.QuadBezierSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.Spiral.sub_points">(curve.Spiral method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/curve.html#curve.Polygon.sub_points2">sub_points2() (curve.Polygon method)</a></dt>
+    <dt><a href="ref/curve.html#curve.Line.sub_points2">sub_points2() (curve.Line method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.PolyLine.sub_points2">(curve.PolyLine method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Polygon.sub_points2">(curve.Polygon method)</a></dt>
   </dl></dd>
     <dt><a href="ref/curve.html#curve.Arc.sub_points_2">sub_points_2() (curve.Arc method)</a></dt>
     <dd><dl>
@@ -3062,6 +3145,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.sub_points_2">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.sub_points_2">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.sub_points_2">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.sub_points_2">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.sub_points_2">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.sub_points_2">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.sub_points_2">(curve.Polygon method)</a></dt>
@@ -3076,6 +3160,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.subPoints">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.subPoints">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.subPoints">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.subPoints">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.subPoints">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.subPoints">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.subPoints">(curve.Polygon method)</a></dt>
@@ -3092,6 +3177,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.superSpherical">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.superSpherical">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.superSpherical">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.superSpherical">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.superSpherical">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.superSpherical">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.superSpherical">(curve.Polygon method)</a></dt>
@@ -3116,6 +3202,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.swapAxes">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.swapAxes">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.swapAxes">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.swapAxes">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.swapAxes">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.swapAxes">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.swapAxes">(curve.Polygon method)</a></dt>
@@ -3212,6 +3299,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.toCylindrical">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.toCylindrical">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.toCylindrical">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.toCylindrical">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.toCylindrical">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.toCylindrical">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.toCylindrical">(curve.Polygon method)</a></dt>
@@ -3230,6 +3318,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.toFormex">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.toFormex">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.toFormex">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.toFormex">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.toFormex">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.toFormex">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.toFormex">(curve.Polygon method)</a></dt>
@@ -3245,6 +3334,7 @@
     <dt><a href="ref/curve.html#curve.BezierSpline.toMesh">toMesh() (curve.BezierSpline method)</a></dt>
     <dd><dl>
       <dt><a href="ref/curve.html#curve.CardinalSpline.toMesh">(curve.CardinalSpline method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.toMesh">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.toMesh">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.toMesh">(curve.Polygon method)</a></dt>
       <dt><a href="ref/curve.html#curve.QuadBezierSpline.toMesh">(curve.QuadBezierSpline method)</a></dt>
@@ -3262,6 +3352,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.toSpherical">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.toSpherical">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.toSpherical">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.toSpherical">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.toSpherical">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.toSpherical">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.toSpherical">(curve.Polygon method)</a></dt>
@@ -3289,6 +3380,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.transformCS">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.transformCS">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.transformCS">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.transformCS">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.transformCS">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.transformCS">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.transformCS">(curve.Polygon method)</a></dt>
@@ -3310,6 +3402,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.translate">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.translate">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.translate">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.translate">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.translate">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.translate">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.translate">(curve.Polygon method)</a></dt>
@@ -3343,6 +3436,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.trl">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.trl">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.trl">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.trl">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.trl">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.trl">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.trl">(curve.Polygon method)</a></dt>
@@ -3461,6 +3555,7 @@
   <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/coords.html#coords.BoundVectors.vectors">vectors() (coords.BoundVectors method)</a></dt>
     <dd><dl>
+      <dt><a href="ref/curve.html#curve.Line.vectors">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.vectors">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.vectors">(curve.Polygon method)</a></dt>
   </dl></dd>
@@ -3523,6 +3618,7 @@
       <dt><a href="ref/curve.html#curve.CardinalSpline.write">(curve.CardinalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.CardinalSpline2.write">(curve.CardinalSpline2 method)</a></dt>
       <dt><a href="ref/curve.html#curve.Curve.write">(curve.Curve method)</a></dt>
+      <dt><a href="ref/curve.html#curve.Line.write">(curve.Line method)</a></dt>
       <dt><a href="ref/curve.html#curve.NaturalSpline.write">(curve.NaturalSpline method)</a></dt>
       <dt><a href="ref/curve.html#curve.PolyLine.write">(curve.PolyLine method)</a></dt>
       <dt><a href="ref/curve.html#curve.Polygon.write">(curve.Polygon method)</a></dt>
@@ -3645,14 +3741,14 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">pyFormex v0.8.5-a1 documentation</a> &gt;</li> 
+        <li><a href="index.html">pyFormex v0.8.5 documentation</a> &gt;</li> 
       </ul>
     </div>
     <div class="footer">
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Nov 18, 2011.
+      Last updated on Dec 04, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

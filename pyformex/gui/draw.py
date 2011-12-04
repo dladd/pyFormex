@@ -1,6 +1,6 @@
 ## $Id$
 ##
-##  This file is part of pyFormex 0.8.5  (Sun Dec  4 15:52:41 CET 2011)
+##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -611,133 +611,133 @@ def draw(F,
     else:
         return actors[0]
 
-
-def olddraw(F,
-         view=None,bbox=None,
-         color='prop',colormap=None,bkcolor=None,bkcolormap=None,alpha=None,
-         mode=None,linewidth=None,linestipple=None,shrink=None,marksize=None,
-         wait=True,clear=None,allviews=False,
-         highlight=False,nolight=False,ontop=False,**kargs):
-    """_Old recursive draw function"""
-    if 'flat' in kargs:
-        import warnings
-        warnings.warn('warn_flat_removed',DeprecationWarning,stacklevel=2)
+# Commented in 0.8.5
+## def olddraw(F,
+##          view=None,bbox=None,
+##          color='prop',colormap=None,bkcolor=None,bkcolormap=None,alpha=None,
+##          mode=None,linewidth=None,linestipple=None,shrink=None,marksize=None,
+##          wait=True,clear=None,allviews=False,
+##          highlight=False,nolight=False,ontop=False,**kargs):
+##     """_Old recursive draw function"""
+##     if 'flat' in kargs:
+##         import warnings
+##         warnings.warn('warn_flat_removed',DeprecationWarning,stacklevel=2)
         
-    # Facility for drawing database objects by name
-    if type(F) == str:
-        F = named(F)
-        if F is None:
-            return None
+##     # Facility for drawing database objects by name
+##     if type(F) == str:
+##         F = named(F)
+##         if F is None:
+##             return None
 
-    # We need to get the default for bbox before processing a list,
-    # because bbox should be set only once for the whole list of objects
-    if bbox is None:
-        bbox = pf.canvas.options.get('bbox','auto')
+##     # We need to get the default for bbox before processing a list,
+##     # because bbox should be set only once for the whole list of objects
+##     if bbox is None:
+##         bbox = pf.canvas.options.get('bbox','auto')
         
-    if type(F) == list:
-        actor = []
-        nowait = False
-        save_bbox = bbox
-        for Fi in F:
-            if Fi is F[-1]:
-                nowait = wait
-            actor.append(olddraw(Fi,view,bbox,color,colormap,bkcolor,bkcolormap,alpha,mode,linewidth,linestipple,shrink,marksize,wait=nowait,clear=clear,allviews=allviews,highlight=highlight,nolight=nolight,ontop=ontop,**kargs))
-            if Fi is F[0]:
-                clear = False
-                view = None
-                bbox = 'last'
+##     if type(F) == list:
+##         actor = []
+##         nowait = False
+##         save_bbox = bbox
+##         for Fi in F:
+##             if Fi is F[-1]:
+##                 nowait = wait
+##             actor.append(olddraw(Fi,view,bbox,color,colormap,bkcolor,bkcolormap,alpha,mode,linewidth,linestipple,shrink,marksize,wait=nowait,clear=clear,allviews=allviews,highlight=highlight,nolight=nolight,ontop=ontop,**kargs))
+##             if Fi is F[0]:
+##                 clear = False
+##                 view = None
+##                 bbox = 'last'
 
-        bbox = save_bbox
-        if bbox == 'auto':
-            bbox = coords.bbox(actor)
-            pf.canvas.setCamera(bbox,view)
-            pf.canvas.update()
+##         bbox = save_bbox
+##         if bbox == 'auto':
+##             bbox = coords.bbox(actor)
+##             pf.canvas.setCamera(bbox,view)
+##             pf.canvas.update()
                 
-        return actor           
+##         return actor           
 
-    # We now should have a single object to draw
-    # Check if it is something we can draw
+##     # We now should have a single object to draw
+##     # Check if it is something we can draw
 
     
-    if not hasattr(F,'actor') and hasattr(F,'toFormex'):
-        pf.debug("CONVERTING %s TO FORMEX TO ENABLE DRAWING" %  type(F))
-        F = F.toFormex()
+##     if not hasattr(F,'actor') and hasattr(F,'toFormex'):
+##         pf.debug("CONVERTING %s TO FORMEX TO ENABLE DRAWING" %  type(F))
+##         F = F.toFormex()
 
-    if not hasattr(F,'actor'):
-        # Don't know how to draw this object
-        raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
+##     if not hasattr(F,'actor'):
+##         # Don't know how to draw this object
+##         raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
 
-    # Fill in the remaining defaults
-    if shrink is None:
-        shrink = pf.canvas.options.get('shrink',None)
+##     # Fill in the remaining defaults
+##     if shrink is None:
+##         shrink = pf.canvas.options.get('shrink',None)
  
-    if marksize is None:
-        marksize = pf.canvas.options.get('marksize',pf.cfg.get('marksize',5.0))
+##     if marksize is None:
+##         marksize = pf.canvas.options.get('marksize',pf.cfg.get('marksize',5.0))
 
-    if alpha is None:
-        alpha = pf.canvas.options.get('alpha',0.5)
+##     if alpha is None:
+##         alpha = pf.canvas.options.get('alpha',0.5)
        
-    # Create the colors
-    if color == 'prop':
-        if hasattr(F,'p'):
-            color = F.prop
-        elif hasattr(F,'prop'):
-            color = F.prop
-        else:
-            color = colors.black
-    elif color == 'random':
-        # create random colors
-        color = numpy.random.rand(F.nelems(),3)
+##     # Create the colors
+##     if color == 'prop':
+##         if hasattr(F,'p'):
+##             color = F.prop
+##         elif hasattr(F,'prop'):
+##             color = F.prop
+##         else:
+##             color = colors.black
+##     elif color == 'random':
+##         # create random colors
+##         color = numpy.random.rand(F.nelems(),3)
 
-    pf.GUI.drawlock.wait()
+##     pf.GUI.drawlock.wait()
 
-    if clear is None:
-        clear = pf.canvas.options.get('clear',False)
-    if clear:
-        clear_canvas()
+##     if clear is None:
+##         clear = pf.canvas.options.get('clear',False)
+##     if clear:
+##         clear_canvas()
 
-    if view is not None and view != 'last':
-        pf.debug("SETTING VIEW to %s" % view)
-        setView(view)
+##     if view is not None and view != 'last':
+##         pf.debug("SETTING VIEW to %s" % view)
+##         setView(view)
 
-    pf.GUI.setBusy()
-    pf.app.processEvents()
-    if shrink is not None:
-        F = _shrink(F,shrink)
+##     pf.GUI.setBusy()
+##     pf.app.processEvents()
+##     if shrink is not None:
+##         F = _shrink(F,shrink)
 
-    try:
-        actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
+##     try:
+##         actor = F.actor(color=color,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
         
-        if actor is None:
-            return None
+##         if actor is None:
+##             return None
         
-        if highlight:
-            pf.canvas.addHighlight(actor)
-        else:
-            pf.canvas.addActor(actor)
-            if view is not None or bbox not in [None,'last']:
-                pf.debug("CHANGING VIEW to %s" % view)
-                if view == 'last':
-                    view = pf.canvas.options['view']
-                if bbox == 'auto':
-                    bbox = F.bbox()
-                pf.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
-                pf.canvas.setCamera(bbox,view)
-                #setView(view)
+##         if highlight:
+##             pf.canvas.addHighlight(actor)
+##         else:
+##             pf.canvas.addActor(actor)
+##             if view is not None or bbox not in [None,'last']:
+##                 pf.debug("CHANGING VIEW to %s" % view)
+##                 if view == 'last':
+##                     view = pf.canvas.options['view']
+##                 if bbox == 'auto':
+##                     bbox = F.bbox()
+##                 pf.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
+##                 pf.canvas.setCamera(bbox,view)
+##                 #setView(view)
 
-        pf.canvas.update()
-        pf.app.processEvents()
-        #pf.debug("AUTOSAVE %s" % image.autoSaveOn())
-        if image.autoSaveOn():
-            image.saveNext()
-        if wait: # make sure next drawing operation is retarded
-            pf.GUI.drawlock.lock()
-    finally:
-        pf.GUI.setBusy(False)
-    return actor
+##         pf.canvas.update()
+##         pf.app.processEvents()
+##         #pf.debug("AUTOSAVE %s" % image.autoSaveOn())
+##         if image.autoSaveOn():
+##             image.saveNext()
+##         if wait: # make sure next drawing operation is retarded
+##             pf.GUI.drawlock.lock()
+##     finally:
+##         pf.GUI.setBusy(False)
+##     return actor
 
-if pf.options.olddraw:
-    draw = olddraw
+## if pf.options.olddraw:
+##     draw = olddraw
 
 
 def _setFocus(object,bbox,view):
