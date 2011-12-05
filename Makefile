@@ -112,12 +112,13 @@ NEWVERSIONSTRING= __version__ = "${RELEASE}"
 
 PKGVER= ${PKGNAME}-${RELEASE}.tar.gz
 PKGDIR= dist
+PUBDIR= ${PKGDIR}/pyformex
 LATEST= ${PKGNAME}-latest.tar.gz
 
 # our local ftp server
-FTPLOCAL=bumps:/var/ftp/pub/pyformex
-# ftp server on pyformex website
-FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
+FTPLOCAL= bumps:/var/ftp/pub/pyformex
+# ftp server on Savannah
+FTPPUB= bverheg@dl.sv.nongnu.org:/releases/pyformex/
 
 .PHONY: dist pub distclean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs
 
@@ -213,9 +214,9 @@ stampstaticdirs: Stamp.staticdir
 	${STAMP} -t$< -i ${STATICDIRS}
 
 # Create the distribution
-dist: ${LATEST}
+dist: ${PKGDIR}/${LATEST}
 
-${LATEST}: ${PKGDIR}/${PKGVER}
+${PKGDIR}/${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
 
 ${PKGDIR}/${PKGVER}: revision version # MANIFEST.in
@@ -226,11 +227,21 @@ MANIFEST.in: MANIFEST.py
 	python $< >$@
 
 # Publish the distribution to our ftp server and berlios
-publocal: 
+
+publocal: ${PKGDIR}/${LATEST}
 	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
 
-pub:
-	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPPYFORMEX}
+sign: ${PUBDIR}/${PKGVER}.sig
+
+${PUBDIR}/${PKGVER}.sig:
+	mv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${PUBDIR}
+	cd ${PUBDIR}; gpg -b --use-agent ${PKGVER}
+
+pubn: ${PUBDIR}/${PKGVER}.sig
+	rsync ${PUBDIR}/* ${FTPPUB} -rtlvn 
+
+pub: ${PUBDIR}/${PKGVER}.sig
+	rsync ${PUBDIR}/* ${FTPPUB} -rtlv
 
 # Register with the python package index
 register:
@@ -242,7 +253,7 @@ upload:
 # Tag the release in the svn repository
 # THIS WILL ONLY WORK IF YOU HAVE YOUR USER NAME CONFIGURED IN .ssh/config
 tag:
-	svn copy svn+ssh://svn.savannah.nongnu.org/pyformex/trunk svn+ssh://svn.savannah.nongnu.org/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
+	svn copy svn+ssh://svn.savannah.nongnu.org/pyformex/trunk svn+ssh://svnsavannah.nongnu.org/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
 
 # Creates statistics
 stats:
@@ -260,10 +271,24 @@ svndoc:
 latexpdf:
 	make -C ${SPHINXDIR} latexpdf
 
+# Publish the documentation on the website
+
 pubdoc:
 	make -C ${SPHINXDIR} pub
 
+
+listwww:
+	cd www; cvs ls | grep '^?'
+	echo "Add these files by hand!"
+
+commit:
+	cd www; cvs commit
+
+# Make the PDF manual available for download
+
 pubpdf:
 	make -C ${SPHINXDIR} pubpdf
+
+
 
 # End

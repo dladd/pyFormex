@@ -189,30 +189,12 @@ First, create the distribution and test it out locally: both the installation pr
    svn up
    make dist
 
-- Put the file on berlios ftp server ::
-   
-   ftp ftp.berlios.de
-   name: ftp (anoniem)
-   cd incoming
-   lcd dist
-   put fullfilename (pyformex-version.tar.gz)
-   quit
+- Put the files on Savannah (see dist/HOWTO) ::
 
-- Release the file via project administration
-  
-  * inloggen
-  * project
-  * admin
-  * edit/release files
-  * QRS: quick release a file
-
-    + Release: vb: 0.4.2
-    + Select a file
-    + File type : source gz
-    + Processor type :Any
-    + Release Notes
-
-  * Release file
+   make sign
+   make pubpdf
+   make pubn
+   make pub
 
 - Announce the release on the pyFormex news
 
@@ -221,19 +203,20 @@ First, create the distribution and test it out locally: both the installation pr
 
     text: pyFormex Version released....
 
-- Make the release available on Berlios FTP server ::
-  
-   make pub
-   make pubdoc
-   make pubpdf
-
-- Make the release available on our local FTP server ::
+- Put the files on our local FTP server ::
 
    make publocal
 
+- Put the documentation on the web site ::
+  
+   make pubdoc
+   make listwww
+   # now add the missing files by hand : cvs add FILE
+   make commit
+
 - Upload to the python package index ::
   
-   make upload
+   make upload  # should replace make sdist above
 
 - Add the release data to the database ::
    

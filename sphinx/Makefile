@@ -41,12 +41,13 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
 MANDOCS= _build/html/*
 RSYNC= rsync -v -e ssh
-PDF= _build/latex/pyformex.pdf
+
+PDF= pyformex.pdf
+THE_PDF= _build/latex/${PDF}
+PKGDIR= ../dist
+PUBDIR= ${PKGDIR}/pyformex/doc
 
 SVNDOC= ../pyformex/doc/html
-UPLOAD= shell.berlios.de:/home/groups
-DOCUPLOAD= ${UPLOAD}/pyformex/htdocs/doc
-FTPUPLOAD= ${UPLOAD}/ftp/pub/pyformex
 FTPLOCAL= bumps.ugent.be:/var/ftp/pub/pyformex
 
 .PHONY: prereq ref pdf svndoc pubn pub pubpdf publocal
@@ -194,19 +195,25 @@ svndoc:
 	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${SVNDOC} 
 
 # Transfer the files to www for publication
-pubn: 
-	rsync _build/html/* ../www/doc --exclude CVS --delete -avn
-
 pub: 
-	rsync _build/html/* ../www/doc --exclude CVS --delete -av
+	rsync _build/html/* ../www/doc --exclude CVS --exclude .svn --delete -av
 
-# Transfer the files to BerliOS
+# Publish the PDF manual
 
-pubpdf: ${PDF}
-	${RSYNC} -t $< ${FTPUPLOAD}
-
-# and to our ftp server
-publocal: ${PDF}
+# 1. on our ftp server
+publocal: ${THE_PDF}
 	rsync -lt $< ${FTPLOCAL}
+
+# 2. on Savannah
+
+pubpdf: ${PUBDIR}/${PDF}.sig
+
+${PUBDIR}/${PDF}.sig: ${PUBDIR}/${PDF}
+	cd ${PUBDIR}; gpg -b --use-agent ${PDF}
+
+${PUBDIR}/${PDF}:
+	cp ${THE_PDF} ${PUBDIR}
+
+
 
 # End

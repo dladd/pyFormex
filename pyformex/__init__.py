@@ -31,8 +31,8 @@ defines a few essential functions.
 # This is the very first thing that is executed when starting pyFormex
 # It is loaded even before main.
 
-__version__ = "0.8.5"
-__revision__ = '2110:2111M'
+__version__ = "0.8.6-a1"
+__revision__ = '2115'
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2011 Benedict Verhegghe'
 Url = 'http://pyformex.org'

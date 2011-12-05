@@ -185,7 +185,7 @@ setup(cmdclass={
     'sdist':sdist
     },
       name='pyformex',
-      version='0.8.5',
+      version='0.8.6-a1',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
 pyFormex is a tool for generating, manipulating and operating on 
