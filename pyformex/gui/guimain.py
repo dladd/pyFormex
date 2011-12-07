@@ -272,6 +272,16 @@ class Gui(QtGui.QMainWindow):
             icons = viewicons
             )
 
+        ## TESTING SAVE CURRENT VIEW ##
+
+        self.saved_views = {}
+        self.saved_views_name = utils.NameSequence('View')
+            
+        if self.viewsMenu:
+            name = self.saved_views_name.next()
+            self.menu.item('camera').addAction('Save View',self.saveView)
+
+
         # Restore previous pos/size
         self.resize(*size)
         self.move(*pos)
@@ -297,7 +307,31 @@ class Gui(QtGui.QMainWindow):
         ## for m in self.materials:
         ##     print self.materials[m]
 
-          
+
+    def saveView(self,name=None,addtogui=True):
+        """Save the current view and optionally create a button for it.
+
+        This saves the current viewport ModelView and Projection matrices
+        under the specified name.
+
+        It adds the view to the views Menu and Toolbar, if these exist and
+        do not have the name yet.
+        """
+        if name is None:
+            name = self.saved_views_name.next()
+        self.saved_views[name] = (pf.canvas.camera.m,None)
+        if name not in self.viewbtns.names():
+            iconpath = os.path.join(pf.cfg['icondir'],'userview')+pf.cfg['gui/icontype']
+            self.viewbtns.add(name,iconpath)
+
+
+    def applyView(self,name):
+        """Apply a saved view to the current camera.
+
+        """
+        m,p = self.saved_views.get(name,(None,None))
+        if m is not None:
+            self.viewports.current.camera.loadModelView(m)
 
 
     def createView(self,name,angles):
@@ -320,7 +354,10 @@ class Gui(QtGui.QMainWindow):
 
         view is the name of one of the defined views.
         """
-        self.viewports.current.setCamera(angles=view)
+        if view in self.saved_views:
+            self.applyView(view)
+        else:
+            self.viewports.current.setCamera(angles=view)
         self.viewports.current.update()
  
 

@@ -61,12 +61,6 @@ all: ${AUTOSRC}
 clean:
 	rm -f ${AUTOSRC}
 
-#gui.%.rst: %.py ${PY2RST}
-#	${PY2RST} $< > $@
-
-#plugins.%.rst: %.py ${PY2RST}
-#	${PY2RST} $< > $@
-
 %.rst: %.py
 	${PY2RST} $< > $@
 

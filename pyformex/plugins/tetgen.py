@@ -46,6 +46,18 @@ def readNodes(fn):
     npts,ndim,nattr,nbmark = map(int,s)
     nodes = fromfile(fil,sep=' ',dtype=Float,count=npts*(ndim+1)).reshape((npts,ndim+1))
     return nodes[:,1:],nodes[:,0].astype(int32)
+    
+
+def readNodesBlock(fil):
+    """Read a tetgen nodes block.
+
+    Returns a tuple of two arrays: nodal coordinates and node numbers.
+    """
+    line = fil.readline()
+    s = line.strip('\n').split()
+    npts,ndim,nattr,nbmark = map(int,s)
+    nodes = fromfile(fil,sep=' ',dtype=Float,count=npts*(ndim+1)).reshape((npts,ndim+1))
+    return nodes[:,1:],nodes[:,0].astype(int32)
 
 
 def readElems(fn):
@@ -96,6 +108,26 @@ def readSmesh(fn):
     elems = fromfile(fil,sep=' ',dtype=int32, count=4*nelems)
     elems = elems.reshape((-1,4))
     return elems[:,1:]
+
+
+def readPoly(fn):
+    """Read a tetgen .poly file.
+
+    Returns an array of triangle elements.
+    """
+    fil = open(fn,'r')
+    part = 0
+    elems = None
+    line = fil.readline()
+    if line.startswith('# vertices'):
+        nodes,node_numbers = readNodesBlock(fil)
+    return nodes
+    ## line = fil.readline()
+    ## s = line.strip('\n').split()
+    ## nelems = int(s[0])
+    ## elems = fromfile(fil,sep=' ',dtype=int32, count=4*nelems)
+    ## elems = elems.reshape((-1,4))
+    ## return elems[:,1:]
 
 
 def readSurface(fn):

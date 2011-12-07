@@ -47,8 +47,7 @@ pyformexdir = os.path.join(parent,'pyformex')
 for d in [ 'lib', 'gui', 'plugins' ]: # this order is important!
     sys.path.insert(0,os.path.join(pyformexdir,d))
 sys.path.insert(0,pyformexdir)
-
-#print sys.path
+sys.path.insert(0,os.path.dirname(pyformexdir))
 
 from pyformex.odict import ODict
 

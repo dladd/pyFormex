@@ -35,11 +35,8 @@ def tand(arg):
     return tan(arg*pi/180.)
 
 import copy
-
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
-
-
 
 
 def printModelviewMatrix(s="%s"):
@@ -90,52 +87,82 @@ class ViewAngles(dict):
 view_angles = ViewAngles()
 
 
-## ! For developers: the information in this module is not fully correct
-## ! We now store the rotation of the camera as a combined rotation matrix,
-##   not by the individual rotation angles.
-
 class Camera(object):
-    """This class defines a camera for OpenGL rendering.
+    """A camera for OpenGL rendering.
 
-    It provides functions for manipulating the camera position, the viewing
-    direction and the lens parameters.
+    The Camera class holds all the camera related settings related to
+    the rendering of a scene in OpenGL. These include camera position,
+    the viewing direction of the camera, and the lens parameters (opening
+    angle, front and back clipping planes).
+    This class also provides convenient methods to change the settings so as
+    to get smooth camera manipulation.
 
-    The camera viewing line can be defined by two points : the position of
-    the camera and the center of the scene the camera is looking at.
-    To enable continuous camera rotations however, it is essential that the
-    camera angles are stored as such, and not be calculated from the camera
-    position and the center point, because the transformation from cartesian
-    to spherical coordinates is not unique.
-    Furthermore, to enable smooth mouse-controlled camera rotation based on
-    the current camera angles, it is essential to store the camera angles as
-    the combined rotation matrix, not as the individual angles.
+    Camera position and orientation:
+
+        The camera viewing line is defined by two points: the position of
+        the camera and the center of the scene the camera is looking at.
+        We use the center of the scene as the origin of a local coordinate
+        system to define the camera position. For convenience, this could be
+        stored in spherical coordinates, as a distance value and two angles:
+        longitude and latitude. Furthermore, the camera can also rotate around
+        its viewing line. We can define this by a third angle, the twist.
+        From these four values, the needed translation vector and rotation
+        matrix for the scene rendering may be calculated. 
+
+        Inversely however, we can not compute a unique set of angles from
+        a given rotation matrix (this is known as 'gimball lock').
+        As a result, continuous (smooth) camera rotation by e.g. mouse control
+        requires that the camera orientation be stored as the full rotation
+        matrix, rather than as three angles. Therefore we store the camera
+        position and orientation as follows:
     
-    Therefore we store the camera position/direction as follows:
-        ctr: [ x,y,z ] : the reference point of the camera: this is always
-              a point on the viewing axis. Usualy, it is the center point of
-              the scene we are looking at.
+        - `ctr`: `[ x,y,z ]` : the reference point of the camera:
+          this is always a point on the viewing axis. Usually, it is set to
+          the center of the scene you are looking at.
+        - `dist`: distance of the camera to the reference point. 
+        - `rot`: a 3x3 rotation matrix, rotating the global coordinate system
+          thus that the z-direction is oriented from center to camera.
 
-        rot: 
-        twist : rotation angle around the camera's viewing axis
+        These values have influence on the ModelView matrix.
+       
+    Camera lens settings:
+
+        The lens parameters define the volume that is seen by the camera.
+        It is described by the following parameters:
+
+        - `fovy`: the vertical lens opening angle (Field Of View Y),
+        - `aspect`: the aspect ratio (width/height) of the lens. The product
+          `fovy * aspect` is the horizontal field of view.
+        - `near, far`: the position of the front and back clipping planes.
+          They are given as distances from the camera and should both be
+          strictly positive. Anything that is closer to the camera than
+          the `near` plane or further away than the `far` plane, will not be
+          shown on the canvas.
+
+        Camera methods that change these values will not directly change
+        the ModelView matrix. The :meth:`loadModelView` method has to be called
+        explicitely to make the settings active.
+
+        These values have influence on the Projection matrix.
+
+    Methods that change the camera position, orientation or lens parameters
+    will not directly change the related ModelView or Projection matrix.
+    They will just flag a change in the camera settings. The changes are
+    only activated by a call to the :meth:`loadModelView` or
+    :meth:`loadProjection` method, which will test the flags to see whether
+    the corresponding matrix needs a rebuild.
         
-    The default camera is at [0,0,0] and looking in the -z direction.
-    Near and far clipping planes are by
-    default set to 0.1, resp 10 times the camera distance.
-
-    Some camera terminology:
-    Position (eye) : position of the camera
-    Scene center (ctr) : the point the camera is looking at.
-    Up Vector : a vector pointing up from the camera.
-    Viewing direction (rotx,roty,rotz)
-    Lens angle (fovy)
-    Aspect ratio (aspect)
-    Clip (front/back)
-    Perspective/Orthogonal
-
-    We assume that matrixmode is always MODELVIEW.
-    For other operations we explicitely switch before and afterwards back
-    to MODELVIEW.
+    The default camera is at distance 1.0 of the center point [0.,0.,0.] and
+    looking in the -z direction.
+    Near and far clipping planes are by default set to 0.1, resp 10 times
+    the camera distance.
     """
+
+    # DEVELOPERS:
+    #    The camera class assumes that matrixmode is always ModelView on entry.
+    #    For operations in other modes, an explicit switch before the operations
+    #    and afterwards back to ModelView should be performed.
+
 
     def __init__(self,center=[0.,0.,0.], long=0., lat=0., twist=0., dist=1.):
         """Create a new camera at position (0,0,0) looking along the -z axis"""
@@ -166,8 +193,14 @@ class Camera(object):
         return self.dist
 
     def lock(self,onoff=True):
-        self.locked = onoff
-        print("Camera locked is %s" % self.locked)
+        """Lock/unlock a camera.
+
+        When a camera is locked, its position and lens parameters can not be
+        changed.
+        This can e.g. be used in multiple viewports layouts to create fixed
+        views from different angles.
+        """
+        self.locked = bool(onoff)
 
 
     def setCenter(self,x,y,z):
@@ -181,9 +214,10 @@ class Camera(object):
         """Set the rotation angles.
 
         angles is either:
-            - a tuple of angles (long,lat,twist)
-            - a named view corresponding to angles in view_angles
-            - None
+
+        - a tuple of angles (long,lat,twist)
+        - a named view corresponding to angles in view_angles
+        - None
         """
         if not self.locked:
             if type(angles) is str:
@@ -338,7 +372,6 @@ class Camera(object):
             self.rot[3,0:3] = [0.,0.,0.]
             #print "Rotation: %s" % self.rot
 
-
         
     def setModelView(self):
         """Set the ModelView matrix from camera parameters.
@@ -358,24 +391,41 @@ class Camera(object):
             GL.glTranslatef(-dx,-dy,-dz)
 
 
-    def loadModelView (self):
+    def loadModelView (self,m=None):
         """Load the ModelView matrix.
 
-        If the viewing parameters have not changed since the last save of the ModelView matrix, this will
-        just reload the ModelView matrix from the saved value.
-        Else, a new ModelView matrix is set up, loaded and saved, and if a camera attribute `modelview_callback`
-        has been set, a call to this function is tried, passing the camera instance as parameter.
+        There are thrre uses of this function:
+
+        - Without argument and if the viewing parameters have not changed
+          since the last save of the ModelView matrix, this will just reload
+          the ModelView matrix from the saved value.
+
+        - If an argument is supplied, it should be a legal ModelView matrix
+          and that matrix will be loaded (and saved) as the new ModelView
+          matrix.
+
+        - Else, a new ModelView matrix is set up from the camera parameters,
+          and it is loaded and saved.
+
+        In the latter two cases, the new ModelView matrix is saved, and if
+        a camera attribute `modelview_callback` has been set, a call to
+        this function is done, passing the camera instance as parameter.
         """
         if not self.locked:
             GL.glMatrixMode(GL.GL_MODELVIEW)
-            if self.viewChanged:
-                self.setModelView()
+
+            if m is not None or self.viewChanged:
+                if m is not None:
+                    GL.glLoadMatrixf(m)
+                else:
+                    self.setModelView()
                 self.saveModelView()
                 try:
                     self.modelview_callback(self)
                 except:
                     pass
                 self.viewChanged = False
+                
             else:
                 GL.glLoadMatrixf(self.m)
 
@@ -414,22 +464,6 @@ class Camera(object):
         v = multiply(array(v),a)
         return v[0:3] / v[3]
 
-       
-    
-    # Camera Lens Setting.
-    #
-    # These include :
-    #   - the vertical lens opening angle (fovy),
-    #   - the aspect ratio (aspect = width/height)
-    #   - the front and back clipping planes (near,far)
-    #
-    # These functions do not auto-reload the projection matrix, so you
-    # do not need to make the GL-environment current before using them.
-    # The client has to explicitely call the loadProjection() method to
-    # make the settings active 
-    # These functions will flag a change in the camera settings, which
-    # can be tested by your display() function to know if it has to reload
-    # the projection matrix.
 
     def setLens(self,fovy=None,aspect=None):
         """Set the field of view of the camera.
@@ -628,8 +662,8 @@ class Camera(object):
             self.set3DMatrices()
         else:
             self.tracking = False
-        
 
+#############################################################################
 
 if __name__ == "__main__":
     
@@ -735,3 +769,5 @@ if __name__ == "__main__":
         return 0
 
     main()
+
+# End

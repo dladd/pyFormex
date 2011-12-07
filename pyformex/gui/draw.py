@@ -1106,6 +1106,10 @@ def setView(name,angles=None):
     setDrawOptions({'view':name})
 
 
+def saveView(name,addtogui=False):
+    pf.GUI.saveView(name)
+    
+
 def frontView():
     view("front")
 def backView():
