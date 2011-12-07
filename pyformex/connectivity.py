@@ -142,10 +142,14 @@ class Connectivity(ndarray):
         ar.inv = None   # inverse index
         ar.maxval = maxval
 
-        if eltype is not None:
-            ar.eltype = eltype
+        ar.eltype = eltype
 
         return ar
+
+
+    def __array_finalize__(self,obj):
+        # reset the attribute from passed original object
+        self.eltype = getattr(obj, 'eltype', None)
 
 
     def nelems(self):
@@ -172,11 +176,8 @@ class Connectivity(ndarray):
 
     def report(self):
         """Format a Connectivity table"""
-        s = "Conn %s" % (self.shape,)
-        if hasattr(self,'eltype'):
-            s += ", eltype=%s" % self.eltype
-        s += '\n'
-        return s + ndarray.__str__(self)
+        s = "Conn %s, eltype=%s" % (self.shape,self.eltype)
+        return s + '\n' + ndarray.__str__(self)
 
 ############### Detecting degenerates and duplicates ##############
 
@@ -275,7 +276,7 @@ class Connectivity(ndarray):
         
         """
         from elements import elementType
-        if not hasattr(self,'eltype'):
+        if self.eltype is None:
            return [ self ]
 
         eltype = elementType(self.eltype)
@@ -380,7 +381,7 @@ class Connectivity(ndarray):
 
         Example:
         
-          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).listDuplicates()
+          >>> Connectivity([[0,1,2],[0,2,1],[0,3,2]]).listDuplicate()
           array([1])
           
         """
@@ -658,6 +659,7 @@ class Connectivity(ndarray):
             hi = lo = Connectivity()
         #
         # PUT THIS BEHIND THE SELECTION, BECAUSE IT LOOSES THE 'eltype'
+        # ** PROBABLY SOLVED BY __finalize__, so could go up
         #
         if hasattr(sel,'eltype'):
             lo.eltype = sel.eltype
@@ -751,7 +753,7 @@ class Connectivity(ndarray):
 
         - `schemes`: a dictionary having pyFormex element names as keys and
           the matching nodal permutation arrays as values. The length of
-          the aray should match the plexitude of the Connectivity.
+          the array should match the plexitude of the Connectivity.
         - `reverse`: if True, the conversion is from external to internal.
           In this case, the Connectivity's eltype is interpreted as the
           pyFormex target element type (and should be set beforehand).
@@ -775,8 +777,9 @@ class Connectivity(ndarray):
           key, the input Connectivity is returned unchanged.
 
         """
-        if hasattr(self,'eltype'):
-            key = elems.eltype.name()
+        if self.eltype is not None:
+            eltype = ElementType(self.eltype)
+            key = eltype.name()
             if scheme.haskey(key):
                 print 'key = %s' % key
                 trl = scheme[key]

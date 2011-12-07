@@ -431,6 +431,7 @@ file_description = {
     'smesh': 'Tetgen surface mesh files (*.smesh)',
     'stl': 'STL files (*.stl)',
     'surface': 'Any Surface file (*.gts *.stl *.off *.smesh *.neu)',
+    'tetgen': 'Any Tetgen file (*.poly *.smesh *.face *.ele *.edge *.node *.neigh)',
 }
 
 
@@ -853,9 +854,8 @@ def interrogate(item):
 def deprecation(message):
     def decorator(func):
         def wrapper(*_args,**_kargs):
-            import warnings
             print func.__name__
-            warnings.warn(message, DeprecationWarning, stacklevel=2)
+            warn(message, DeprecationWarning, stacklevel=2)
             return func(*_args,**_kargs)
         return wrapper
     return decorator

@@ -224,7 +224,7 @@ First, create the distribution and test it out locally: both the installation pr
 
 - Create statistics ::
    
-   make stats
+   make stats   # currently gives an error
 
 - Bump the RELEASE and VERSION variables in the file RELEASE, then ::
 

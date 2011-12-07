@@ -190,11 +190,9 @@ svndoc:
 	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${SVNDOC} 
 
 # Transfer the files to www for publication
-pubn: 
-	rsync _build/html/* ../www --exclude CVS --delete -avn
 
 pub: 
-	rsync _build/html/* ../www --exclude CVS --delete -av
+	rsync _build/html/* ../www --exclude CVS --exclude .svn --delete -av
 
 pubpdf: ${PDF}
 	${RSYNC} -t $< ${FTPUPLOAD}

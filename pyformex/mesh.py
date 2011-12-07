@@ -137,7 +137,7 @@ class Mesh(Geometry):
             if self.elems.size > 0 and (
                 self.elems.max() >= self.coords.shape[0] or
                 self.elems.min() < 0):
-                raise ValueError,"\nInvalid connectivity data: some node number(s) not in coords array"
+                raise ValueError,"\nInvalid connectivity data: some node number(s) not in coords array (min=%s, max=%s, ncoords=%s)" % (self.elems.min(),self.elems.max(),self.coords.shape[0])
         except:
             raise
 
@@ -466,6 +466,7 @@ class Mesh(Geometry):
         #
         # WE SET THE eltype HERE, BECAUSE THE INDEX OPERATION ABOVE
         # LOOSES THE eltype
+        # SHOULD BE FIXED !!! BV
         #
         brd.eltype = sel.eltype
         if not return_indices:
@@ -498,6 +499,7 @@ class Mesh(Geometry):
             brd,indices = self.getFreeEntities(return_indices=True,level=level)
             enr = indices[:,0]
             M = Mesh(self.coords,brd,prop=self.prop[enr])
+            # THIS SEEMS SUPERFLUOUS
             M.setType(brd.eltype)
 
         if compact:
@@ -527,8 +529,7 @@ class Mesh(Geometry):
         The :meth:`reflect` method by default calls this method to undo
         the element reversal caused by the reflection operation. 
         """
-        import warnings
-        warnings.warn('warn_mesh_reverse')
+        utils.warn('warn_mesh_reverse')
 
         if hasattr(self.eltype,'reversed'):
             elems = self.elems[:,self.eltype.reversed]
@@ -551,14 +552,12 @@ class Mesh(Geometry):
           to skip the element reversal.
         """
         if 'autofix' in kargs:
-            import warnings
-            warnings.warn("The `autofix` parameter of Mesh.reflect has been renamed to `reverse`.")
+            utils.warn("The `autofix` parameter of Mesh.reflect has been renamed to `reverse`.")
             reverse = kargs['autofix']
             
         if reverse is None:
             reverse = True
-            import warnings
-            warnings.warn("warn_mesh_reflect")
+            utils.warn("warn_mesh_reflect")
         
         M = Geometry.reflect(self,dir=dir,pos=pos)
         if reverse:

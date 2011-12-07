@@ -41,8 +41,8 @@ find good reason to use the :class:`Coords` class directly as well.
 from arraytools import *
 from lib import misc
 from pyformex import options
-from utils import deprecated,deprecation
 from plugins import inertia
+from utils import deprecated,deprecation,warn
 
 
 def bbox(objects):
@@ -1799,8 +1799,7 @@ def pattern(s,connect=True):
     [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)]
 
     """
-    import warnings
-    warnings.warn("warn_pattern")
+    warn("warn_pattern")
 
     x = y = z = 0
     l = []

@@ -33,6 +33,14 @@
 -->
 {%- endblock %}
 
+{%- block htmltitle %}
+{%- if title == 'pyFormex Home' %}
+    <title>{{ title }}</title>
+{% else %}
+    <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
+{% endif %}
+{%- endblock %}
+
 
 {%- block extrahead %}
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />

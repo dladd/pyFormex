@@ -31,6 +31,8 @@
 
 .. _`development`: http://savannah.nongnu.org/projects/pyformex/
 
+.. title:: pyFormex Home
+
 .. meta::
    :description: pyFormex - A tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations
    :keywords: pyformex 3D modeling geometry surface mesh STL finite element stent python numpy
