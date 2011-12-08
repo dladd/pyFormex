@@ -1097,6 +1097,19 @@ class Formex(Geometry):
         x,e = self.fuse(*args,**kargs)
         return Mesh(x,e,prop=self.prop,eltype=self.eltype)
 
+    
+    def toSurface(self):
+        """Convert a Formex to a Surface.
+
+        If the plexitude of the Formex is 3, returns a TriSurface equivalent
+        with the Formex. Else, an error is raised.
+        """
+        from plugins.trisurface import TriSurface
+        if self.nplex() == 3:
+            return TriSurface(self)
+        else:
+            raise ValueError,"Only plexitude-3 Formices can be converted to TriSurface. Got plexitude %s" % self.nplex()
+
 
     def info(self):
         """Return formatted information about a Formex."""

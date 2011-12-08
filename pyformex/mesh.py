@@ -254,7 +254,20 @@ class Mesh(Geometry):
         """
         return Formex(self.coords[self.elems],self.prop,self.eltype.name())
 
-    
+
+    def toSurface(self):
+        """Convert a Mesh to a Surface.
+
+        If the plexitude of the mesh is 3, returns a TriSurface equivalent
+        with the Mesh. Else, an error is raised.
+        """
+        from plugins.trisurface import TriSurface
+        if self.nplex() == 3:
+            return TriSurface(self)
+        else:
+            raise ValueError,"Only plexitude-3 Meshes can be converted to TriSurface. Got plexitude %s" % self.nplex()
+
+            
     def ndim(self):
         return 3
     def ngrade(self):

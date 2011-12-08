@@ -430,8 +430,8 @@ file_description = {
     'pyf': 'pyFormex projects (*.pyf)',
     'smesh': 'Tetgen surface mesh files (*.smesh)',
     'stl': 'STL files (*.stl)',
-    'surface': 'Any Surface file (*.gts *.stl *.off *.smesh *.neu)',
-    'tetgen': 'Any Tetgen file (*.poly *.smesh *.face *.ele *.edge *.node *.neigh)',
+    'surface': 'Surface model (*.off *.gts *.stl *.neu)',
+    'tetgen': 'Tetgen file (*.poly *.smesh *.ele *.face *.edge *.node *.neigh)',
 }
 
 

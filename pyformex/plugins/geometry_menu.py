@@ -49,7 +49,7 @@ from gui import menu
 from gui.draw import *
 from gui.widgets import simpleInputItem as _I, groupInputItem as _G
 
-from plugins import objects,trisurface,inertia,partition,sectionize,dxf
+from plugins import objects,trisurface,inertia,partition,sectionize,dxf,tetgen
 
 import commands, os, timer
 
@@ -145,9 +145,12 @@ def readGeometry(filename,filetype=None):
     if filetype == 'pgf':
         res = GeometryFile(filename).read()
 
-    elif filetype in ['surface','stl','off','gts','smesh','neu']:
+    elif filetype in ['surface','stl','off','gts','neu']:
         surf = TriSurface.read(filename)
         res = {autoName(TriSurface).next():surf}
+
+    elif filetype in tetgen.filetypes:
+        res = tetgen.readTetgen(filename)
 
     else:
         error("Can not import from file %s of type %s" % (filename,filetype))
@@ -187,6 +190,9 @@ def importPgf():
 
 def importSurface():
     importGeometry(ftype='surface')
+
+def importTetgen():
+    importGeometry(ftype='tetgen')
 
 def importAny():
     importGeometry(ftype=None)
@@ -471,7 +477,7 @@ def toFormex(suffix=''):
 def toMesh(suffix=''):
     """Transform the selected Geometry objects to Meshes.
 
-    If a suffix is given, the TriSurfaces are stored with names equal to the
+    If a suffix is given, the Meshes are stored with names equal to the
     Formex names plus the suffix, else, the Formex names will be used
     (and the Formices will thus be cleared from memory).
     """
@@ -492,6 +498,39 @@ def toMesh(suffix=''):
     export(meshes)
 
     selection.set(meshes.keys())
+    
+
+def toSurface(suffix=''):
+    """Transform the selected Geometry objects to TriSurfaces.
+
+    If a suffix is given, the TriSurfaces are stored with names equal to the
+    Formex names plus the suffix, else, the Formex names will be used
+    (and the Formices will thus be cleared from memory).
+    """
+    if not selection.check():
+        selection.ask()
+
+    if not selection.names:
+        return
+
+    names = selection.names
+    objects = [ named(n) for n in names ]
+
+    ok = [ o.nplex()==3 for o in objects ]
+    print ok
+    if not all(ok):
+        warning("Only objects with plexitude 3 can be converted to TriSurface. I can not convert the following objects: %s" % [ n for i,n in zip(ok,names) if not i ])
+        return
+    
+    if suffix:
+        names = [ n + suffix for n in names ]
+    
+    print "CONVERTING %s" % names
+    surfaces =  dict([ (n,TriSurface(o)) for n,o in zip(names,objects)])
+    print("Converted %s" % surfaces.keys())
+    export(surfaces)
+
+    selection.set(surfaces.keys())
 
 
 #############################################
@@ -769,8 +808,9 @@ def create_menu():
     _init_()
     MenuData = [
         ("&Import ",[
-            ("pyFormex Geometry File (.pgf)",importPgf),
-            ("Surface File (*.gts, *.stl, *.off, *.neu)",importSurface),
+            (utils.fileDescription('pgf'),importPgf),
+            (utils.fileDescription('surface'),importSurface),
+            (utils.fileDescription('tetgen'),importTetgen),
             ("All known geometry formats",importAny),
             ("Abaqus .inp",[
                 ("&Convert Abaqus .inp file",readInp),
@@ -785,7 +825,7 @@ def create_menu():
             ('&Upgrade pyFormex Geometry File',convertGeometryFile,dict(tooltip="Convert a pyFormex Geometry File (.pgf) to the latest format, overwriting the file.")),
             ]),
         ("&Export ",[
-            ("pyFormex Geometry File (.pgf)",exportPgf),
+            (utils.fileDescription('pgf'),exportPgf),
             ("pyFormex Geometry File with short lines",exportPgfShortlines),
             ("Object File Format (.off)",exportOff),
             ]),
@@ -817,7 +857,7 @@ def create_menu():
         ("&Convert",[
             ("To &Formex",toFormex),
             ("To &Mesh",toMesh),
-            ## ("To &TriSurface",toSurface),
+            ("To &TriSurface",toSurface),
             ## ("To &PolyLine",toPolyLine),
             ## ("To &BezierSpline",toBezierSpline),
             ## ("To &NurbsCurve",toNurbsCurve),

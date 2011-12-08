@@ -1,4 +1,4 @@
-# $Id$
+# $Id$ pyformex
 ##
 ##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -22,112 +22,285 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""read/write tetgen format files."""
+"""Interface with tetgen
+
+A collection of functions to read/write tetgen files and to run the
+tetgen program
+
+tetgen is a quality tetrahedral mesh generator and a 3D Delaunay triangulator.
+See http://tetgen.berlios.de
+"""
+
+from coords import *
+from formex import Formex
+from connectivity import Connectivity
+from mesh import Mesh
+from filewrite import *
+import utils
 
 import os
-import utils
-from formex import *
-from filewrite import *
 
-def invalid(line,fn):
-    """Print message for invalid line."""
-    print("The following line in file %s is invalid:" % fn)
-    print(line)
-    
+filetypes = [ 'poly', 'smesh', 'ele', 'face', 'node' ]
 
-def readNodes(fn):
+def readNodeFile(fn):
     """Read a tetgen .node file.
 
-    Returns a tuple of two arrays: nodal coordinates and node numbers.
+    Returns a tuple as described in readNodesBlock.
     """
     fil = open(fn,'r')
-    line = fil.readline()
-    s = line.strip('\n').split()
-    npts,ndim,nattr,nbmark = map(int,s)
-    nodes = fromfile(fil,sep=' ',dtype=Float,count=npts*(ndim+1)).reshape((npts,ndim+1))
-    return nodes[:,1:],nodes[:,0].astype(int32)
-    
-
-def readNodesBlock(fil):
-    """Read a tetgen nodes block.
-
-    Returns a tuple of two arrays: nodal coordinates and node numbers.
-    """
-    line = fil.readline()
-    s = line.strip('\n').split()
-    npts,ndim,nattr,nbmark = map(int,s)
-    nodes = fromfile(fil,sep=' ',dtype=Float,count=npts*(ndim+1)).reshape((npts,ndim+1))
-    return nodes[:,1:],nodes[:,0].astype(int32)
+    line = skipComments(fil)
+    npts,ndim,nattr,nbmark = getInts(line,4)
+    return readNodesBlock(fil,npts,ndim,nattr,nbmark)
 
 
-def readElems(fn):
+def readEleFile(fn):
     """Read a tetgen .ele file.
 
-    Returns a tuple of 3 arrays:
-      elems : the element connectivity
-      elemnr : the element numbers
-      attr: the element attributes.
+    Returns a tuple as described in readElemsBlock.
     """
     fil = open(fn,'r')
-    line = fil.readline()
-    s = line.strip('\n').split()
-    nelems,nplex,nattr = map(int,s)
-    elems = fromfile(fil,sep=' ',dtype=int32,count=(nplex+1)*nelems).reshape((nelems,nplex+nattr+1))
-    return elems[:,1:nplex+1],elems[:,0],elems[:,nplex+1:]
+    line = skipComments(fil)
+    nelems,nplex,nattr = getInts(line,3)
+    return readElemsBlock(fil,nelems,nplex,nattr)
 
 
-def readFaces(fn):
+def readFaceFile(fn):
     """Read a tetgen .face file.
 
-    Returns an array of triangle elements.
+    Returns a tuple as described in readFacesBlock.
     """
     fil = open(fn,'r')
-    line = fil.readline()
-    s = line.strip('\n').split()
-    nelems,bmark = map(int,s[:2])
-    ncols = 4 + bmark
-    elems = fromfile(fil,sep=' ',dtype=int32, count=ncols*nelems)
-    elems = elems.reshape((-1,ncols))
-    return elems[:,1:4]
+    line = skipComments(fil)
+    nelems,nbmark = getInts(line,2)
+    return readFacesBlock(fil,nelems,nbmark)
 
 
-def readSmesh(fn):
+def readSmeshFile(fn):
     """Read a tetgen .smesh file.
 
     Returns an array of triangle elements.
     """
     fil = open(fn,'r')
-    part = 0
-    elems = None
-    line = fil.readline()
-    while not line.startswith('# part 2:'):
-        line = fil.readline()
-    line = fil.readline()
-    s = line.strip('\n').split()
-    nelems = int(s[0])
-    elems = fromfile(fil,sep=' ',dtype=int32, count=4*nelems)
-    elems = elems.reshape((-1,4))
-    return elems[:,1:]
+
+    # node section.
+    line = skipComments(fil)
+    npts,ndim,nattr,nbmark = getInts(line,4)
+    if npts > 0:
+        nodeInfo = readNodesBlock(fil,npts,ndim,nattr,nbmark)
+    else:
+        # corresponding .node file
+        nodeInfo = readNodeFile(utils.changeExt(fn,'.node'))
+
+    # facet section
+    line = skipComments(fil)
+    nelems,nbmark = getInts(line,2)
+    facetInfo = readSmeshFacetsBlock(fil,nelems,nbmark)
+
+    nodenrs = nodeInfo[1]
+    if nodenrs.min() == 1 and nodenrs.max()==nodenrs.size:
+        elems = facetInfo[0]
+        for e in elems:
+            elems[e] -= 1
+
+    # We currently do not read the holes and attributes
+    
+    return nodeInfo[0],facetInfo[0]
 
 
-def readPoly(fn):
+def readPolyFile(fn):
     """Read a tetgen .poly file.
 
     Returns an array of triangle elements.
     """
     fil = open(fn,'r')
-    part = 0
-    elems = None
-    line = fil.readline()
-    if line.startswith('# vertices'):
-        nodes,node_numbers = readNodesBlock(fil)
-    return nodes
-    ## line = fil.readline()
+
+    # node section.
+    line = skipComments(fil)
+    npts,ndim,nattr,nbmark = getInts(line,4)
+    if npts > 0:
+        nodeInfo = readNodesBlock(fil,npts,ndim,nattr,nbmark)
+    else:
+        # corresponding .node file
+        nodeInfo = readNodes(utils.changeExt(fn,'.node'))
+
+    # facet section
+    line = skipComments(fil)
+    nelems,nbmark = getInts(line,2)
+    facetInfo = readFacetsBlock(fil,nelems,nbmark)
+    print "NEXT LINE:"
+    print line
+    return nodeInfo[0],facetinfo[0]
+
     ## s = line.strip('\n').split()
     ## nelems = int(s[0])
     ## elems = fromfile(fil,sep=' ',dtype=int32, count=4*nelems)
     ## elems = elems.reshape((-1,4))
     ## return elems[:,1:]
+
+
+######### Support functions ####################################
+
+
+def skipComments(fil):
+    """Skip comments and blank lines on a tetgen file.
+
+    Reads from a file until the first non-comment and non-empty line.
+    Then returns the non-empty, non-comment line, stripped from possible
+    trailing comments.
+    Returns None if end of file is reached.
+    """
+    while True:
+        line = fil.readline()
+        if len(line) == 0:
+            return None      # EOF
+        line = stripLine(line)
+        if len(line) > 0:
+            return line         # non-comment line found
+
+
+def stripLine(line):
+    """Strip blanks, newline and comments from a line of text.
+
+    """
+    nc = line.find('#')
+    if nc >= 0:
+        line = line[:nc] # strip comments
+    return line.strip()  # strips blanks and end of line
+
+
+def getInts(line,nint):
+    """Read a number of ints from a line, adding zero for omitted values.
+
+    line is a string with b;anks separated integer values.
+    Returns a list of nint integers. The trailing ones are set to zero
+    if the strings contains less values.
+    """
+    s = map(int,line.split())
+    if len(s) < nint:
+        s.extend([0]*(nint-len(s)))
+    return s
+
+
+def addElem(elems,nrs,e,n,nplex):
+    """Add an element to a collection."""
+    if not elems.has_key(nplex):
+        elems[nplex] = []
+        nrs[nplex] = []
+    elems[nplex].append(e)
+    nrs[nplex].append(n)
+    
+
+def readNodesBlock(fil,npts,ndim,nattr,nbmark):
+    """Read a tetgen nodes block.
+
+    Returns a tuple with:
+
+    - coords: Coords array with nodal coordinates
+    - nrs: node numbers
+    - attr: node attributes
+    - bmrk: node boundary marker
+
+    The last two may be None.
+    """
+    ndata = 1 + ndim + nattr + nbmark
+    data = fromfile(fil,sep=' ',dtype=Float,count=npts*(ndata)).reshape(npts,ndata)
+    nrs = data[:,0].astype(int32)
+    coords = Coords(data[:,1:ndim+1])
+    if nattr > 0:
+        attr = data[:,1+ndim:1+ndim+nattr].astype(int32)
+    else:
+        attr = None
+    if nbmark == 1:
+        bmark = data[:,-1].astype(int32)
+    else:
+        bmark = None
+    return coords,nrs,attr,bmark
+
+
+def readElemsBlock(fil,nelems,nplex,nattr):
+    """Read a tetgen elems block.
+
+    Returns a tuple with:
+
+    - elems: Connectivity of type 'tet4' or 'tet10'
+    - nrs: the element numbers
+    - attr: the element attributes
+
+    The last can be None.
+    """
+    ndata = 1 + nplex + nattr
+    data = fromfile(fil,sep=' ',dtype=int32,count=ndata*nelems).reshape(nelems,ndata)
+    nrs = data[:,0]
+    elems = data[:,1:1+nplex]
+    if nattr > 0:
+        attr = data[:,1+nplex:]
+    else:
+        attr = None
+    if nplex == 4:
+        eltype = 'tet4'
+    elif nplex == 10:
+        eltype= 'tet10'
+    else:
+        raise ValueError,"Unknown tetgen .ele plexitude %s" % nplex
+    return Connectivity(elems,eltype=eltype),nrs,attr
+
+
+def readFacesBlock(fil,nelems,nbmark):
+    """Read a tetgen faces block.
+
+    Returns a a tuple with:
+
+    - elems: Connectivity of type 'tri3'
+    - nrs: face numbers
+    - bmrk: face boundary marker
+
+    The last can be None.
+    """
+    ndata = 1 + 3 + nbmark
+    data = fromfile(fil,sep=' ',dtype=int32, count=ndata*nelems).reshape(nelems,ndata)
+    nrs = data[:,0]
+    elems = data[:,1:4]
+    if nbmark == 1:
+        bmark = data[:,-1]
+    else:
+        bmark = None
+    return Connectivity(elems,eltype='tri3'),nrs,bmark
+
+
+def readSmeshFacetsBlock(fil,nfacets,nbmark):
+    """Read a tetgen .smesh facets bock.
+
+    Returns a tuple of dictionaries with plexitudes as keys:
+
+    - elems: for each plexitude a Connectivity array
+    - nrs: for each plexitude a list of element numbers in corresponding elems
+    
+    """
+    elems = {}
+    nrs = {}
+    for i in range(nfacets):
+        line = fil.readline()
+        line = line.strip()
+        if len(line) > 0:
+            data = fromstring(line,sep=' ',dtype=int32)
+            nplex = data[0]
+            if nplex > 0:
+                e = data[1:1+nplex]
+                # bmark currently not read
+                addElem(elems,nrs,e,i,nplex)
+            else:
+                raise ValueError,"Invalid data line:\n%s" % line
+            
+    for np in elems:
+        if np == 3:
+            eltype= 'tri3'
+        elif np == 4:
+            eltype = 'quad4'
+        else:
+            eltype = None
+        elems[np] = Connectivity(elems[np],eltype=eltype)
+        nrs[np] = array(nrs[np])
+    return elems,nrs
 
 
 def readSurface(fn):
@@ -220,5 +393,45 @@ def runTetgen(fn):
     """
     if os.path.exists(fn):
         sta,out = utils.runCommand('tetgen -z %s' % fn)
+
+
+def readTetgen(fn):
+    """Read and draw a tetgen file.
+
+    This is an experimental function for the geometry import menu.
+    """
+    res = {}
+    base,ext = os.path.splitext(fn)
+    if ext == '.node':
+        nodes = readNodeFile(fn)[0]
+        res['tetgen'+ext] = nodes
+    elif ext in [ '.ele', '.face' ]:
+        nodes,nodenrs = readNodeFile(utils.changeExt(fn,'.node'))[:2]
+        if ext == '.ele':
+            elems = readEleFile(fn)[0]
+        elif ext == '.face':
+            elems = readFaceFile(fn)[0]
+        if nodenrs.min() == 1 and nodenrs.max()==nodenrs.size:
+            elems = elems-1
+        M = Mesh(nodes,elems,eltype=elems.eltype)
+        res['tetgen'+ext] = nodes
+        
+    elif ext == '.smesh':
+        nodes,elems = readSmeshFile(fn)
+        ML = [ Mesh(nodes,elems[e]) for e in elems ]
+        res = dict([('Mesh-%s'%M.nplex(),M) for M in ML])
+
+    return res
+    
+
+if __name__ == 'draw':
+
+    clear()
+    dir = os.path.dirname(pf.cfg['pyformexdir'])
+    fn = askFilename(filter=utils.fileDescription('tetgen'))
+    if not fn:
+        exit()
+        
+    readTetgen(fn)
     
 # End

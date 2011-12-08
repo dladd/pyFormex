@@ -77,7 +77,11 @@ def Globals():
     was executed in the 'draw' module (--gui option) or the 'script'
     module (--nogui option).
     """
-    g = copy.copy(pf.PF)
+    # :DEV it is not a good idea to put the pf.PF in the globals(),
+    # because pf.PF may contain keys that are not acceptible as
+    # Python names
+    # g = copy.copy(pf.PF)
+    g = {}
     g.update(globals())
     if pf.GUI:
         from gui import colors,draw
@@ -149,9 +153,9 @@ def named(name):
     """Returns the global object named name."""
     if pf.PF.has_key(name):
         dic = pf.PF
-    elif pf._PF_.has_key(name):
-        pf.debug("Found %s in pyformex._PF_" % name)
-        dic = pf._PF_
+#    elif pf._PF_.has_key(name):
+#        pf.debug("Found %s in pyformex._PF_" % name)
+#        dic = pf._PF_
     else:
         raise NameError,"Name %s is in neither pyformex.PF nor pyformex._PF_" % name
     return dic[name]
@@ -316,7 +320,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     g.update({'argv':argv})
 
     # Make this directory available
-    pf._PF_ = g
+    #pf._PF_ = g
 
     # Now we can execute the script using these collected globals
     exportNames = []
@@ -366,7 +370,22 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                 
         if pf.cfg['autoglobals']:
             exportNames.extend(listAll(clas=Geometry,dic=g))
+        ## try:
+        ##     print "ENDRUN"
+        ##     print "g is %s" % id(g)
+        ##     print "pf.PF is %s" % id(pf.PF)
+        ##     print "pf.PF['Mesh-3'] is %s" % id(pf.PF['Mesh-3'])
+        ## except:
+        ##     pass
+        ## print exportNames
         pf.PF.update([(k,g[k]) for k in exportNames])
+        ## try:
+        ##     print "UPDATED"
+        ##     print "g is %s" % id(g)
+        ##     print "pf.PF is %s" % id(pf.PF)
+        ##     print "pf.PF['Mesh-3'] is %s" % id(pf.PF['Mesh-3'])
+        ## except:
+        ##     pass
 
         scriptRelease('__auto__') # release the lock
         elapsed = time.clock() - starttime
@@ -426,9 +445,9 @@ def breakpt(msg=None):
 
 
 def raiseExit():
-    print "EEEEEEEEEEEEXXXXXXXXXXXXXXXXIIIIIIIIIIIIIIIITTTTTTTTTTTTTTTTTTT"
+    #print "EEEEEEEEEEEEXXXXXXXXXXXXXXXXIIIIIIIIIIIIIIIITTTTTTTTTTTTTTTTTTT"
     pf.debug("RAISED EXIT")
-    print scriptlock
+    #print scriptlock
     if pf.GUI:
         pf.GUI.drawlock.release()   
     raise _Exit,"EXIT REQUESTED FROM SCRIPT"
@@ -555,11 +574,11 @@ def printall():
 
 
 def printglobals():
-    print(globals())
+    print(Globals())
 
 
 def printglobalnames():
-    a = globals().keys()
+    a = Globals().keys()
     a.sort()
     print(a)
 
