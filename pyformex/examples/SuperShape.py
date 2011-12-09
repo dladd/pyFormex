@@ -32,12 +32,8 @@ techniques = ['dialog','persistence']
 
 from simple import rectangle
 from utils import NameSequence
-from gui.widgets import *
 from gui.draw import *
 from gui.imagecolor import *
-
-print "This example is currently broken!"
-exit()
 
 dialog = None
 savefile = None
@@ -45,43 +41,6 @@ tol = 1.e-4
 
 gname = NameSequence('Grid-0')
 sname = NameSequence('Shape-0')
-
-
-def reset_data(initialize=False):
-    """Reset the data to defaults"""
-    grid_data = dict(
-        grid_size = [24,12],
-        x_range = (-180.,180.),
-        y_range = (-90.,90.),
-        grid_base = 'quad',
-        grid_bias = 0.0,
-        grid_skewness = 0.0,
-        x_clip = (-360.,360.),
-        y_clip = (-90.,90.),
-        grid_name = gname.peek(),
-        grid_color = 'blue',
-        )
-    shape_data = dict(
-        north_south = 1.0,
-        east_west = 1.0,
-        eggness = 0.0,
-        scale = [1.,1.,1.],
-        post = '',
-        name = sname.peek(),
-        color = 'red',
-        )
-    pf.PF['_SuperShape_grid_data'] = grid_data
-    pf.PF['_SuperShape_shape_data'] = shape_data
-    globals().update(grid_data)
-    globals().update(shape_data)
-    if dialog:
-        dialog.updateData(grid_data)
-        dialog.updateData(shape_data)
-
-
-def refresh(tgt,src):
-    """Refresh tgt dict with values from src dict"""
-    tgt.update([ (k,src[k]) for k in tgt if k in src ])
 
 
 def createGrid():
@@ -109,17 +68,16 @@ def createSuperShape():
     B = pf.PF[grid_name]
     F = B.superSpherical(n=north_south,e=east_west,k=eggness)
     if scale == [1.0,1.0,1.0]:
-        print "No need to scale"
+        pass
     else:
-        print "Scaling"
-    F = F.scale(scale)
+        F = F.scale(scale)
     if post:
         print "Post transformation"
         F = eval(post)
     export({name:F})
 
 
-def showGrid():
+def drawGrid():
     """Show the last created grid"""
     clear()
     wireframe()
@@ -127,7 +85,7 @@ def showGrid():
     draw(B,color=grid_color)
     
 
-def showSuperShape():
+def drawSuperShape():
     """Show the last created super shape"""
     global color
     clear()
@@ -145,29 +103,31 @@ def showSuperShape():
     draw(F,color=color)
 
 
+def acceptData():
+    dialog.acceptData()
+    pf.PF['_SuperShape_data_'] = dialog.results
+    globals().update(dialog.results)
+
+##########################
 # Button Functions
-def show_grid():
-    dialog.acceptData()
-    refresh(pf.PF['_SuperShape_grid_data'],dialog.results)
-    refresh(pf.PF['_SuperShape_shape_data'],dialog.results)
-    globals().update(dialog.results)
-    createGrid()
-    showGrid()
 
-def show_shape():
-    dialog.acceptData()
-    globals().update(dialog.results)
+def showGrid():
+    """Accept data, create and show grid."""
+    acceptData()
+    createGrid()
+    drawGrid()
+
+def replayShape():
+    """Create and show grid from current data."""
     createGrid()
     createSuperShape()
-    showSuperShape()
+    drawSuperShape()
 
-def create_and_show(data={}):
-    # Currently, this does not update the input dialog
-    if (data):
-        globals().update(data)
-    createGrid()
-    createSuperShape()
-    showSuperShape()
+def show():
+    """Accept data, create and show shape."""
+    acceptData()
+    replayShape()
+
 
 def close():
     global dialog,savefile
@@ -179,9 +139,6 @@ def close():
         savefile = None
     scriptRelease(__file__)
 
-
-def reset():
-    reset_data()
 
 
 def save():
@@ -200,7 +157,8 @@ def save():
            dialog['grid_name'].setValue(grid_name)
            dialog['name'].setValue(name)            
 
-def play():
+
+def replay():
     global savefile
     if savefile:
         filename = savefile.name
@@ -213,64 +171,83 @@ def play():
         for line in savefile:
             print line
             globals().update(eval(line))
-            create_and_show()
+            replayShape()
         savefile = open(filename,'a')
 
 
 ################# Dialog
 
+dialog_items = [
+    _G('Grid data',[
+        _I('grid_size',[24,12],),
+        _I('x_range',(-180.,180.),),
+        _I('y_range',(-90.,90.),),
+        _I('grid_base','quad',itemtype='radio',choices=['quad','tri-u','tri-d','tri-x']),
+        _I('grid_bias',0.0,),
+        _I('grid_skewness',0.0,),
+        _I('x_clip',(-360.,360.),),
+        _I('y_clip',(-90.,90.),),
+        _I('grid_name',gname.peek(),),
+        _I('grid_color','blue',),
+        ]),
+    _G('Shape data',[
+        _I('north_south',1.0,),
+        _I('east_west',1.0,),
+        _I('eggness',0.0,),
+        _I('scale',[1.,1.,1.],),
+        _I('post','',),
+        _I('name',sname.peek(),),
+        _I('color','red',),
+        ]),
+    ]
 
-def dialog_timeout():
+dialog_actions = [
+    ('Close',close),
+    ('Reset',reset),
+    ('Replay',replay),
+    ('Save',save),
+    ('Show Grid',showGrid),
+    ('Show',show)
+    ]
+
+dialog_default = 'Show'
+
+
+def timeOut():
     play()
     close()
     
         
-def openSuperShapeDialogs():
+def createDialog():
     global dialog
 
-    reset()
-    smoothwire()
-    lights(True)
-    transparent(False)
-    setView('eggview',(0.,-30.,0.))
-    view('eggview')
-    
-    grid_items = [ [n,globals()[n]] for n in [
-        'x_range','y_range','grid_size','grid_base','grid_bias','grid_skewness',
-        'x_clip','y_clip','grid_name','grid_color'] ]
-    # turn 'diag' into a complex input widget
-    grid_items[3].extend(['radio',['quad','tri-u','tri-d','tri-x']])
+    # Create the dialog
+    dialog = widgets.InputDialog(
+        caption = 'SuperShape parameters',
+        items = dialog_items,
+        actions = dialog_actions,
+        default = dialog_default
+        )
 
-    print grid_items
-    
-    items = [ [n,globals()[n]] for n in [
-        'north_south','east_west','eggness','scale', 'post',
-        'name','color'] ]
+    # Update its data from stored values
+    if pf.PF.has_key('_SuperShape_data_'):
+        dialog.updateData(pf.PF['_SuperShape_data_'])
 
-    # Action buttons
-    actions = [('Close',close),('Reset',reset),('Replay',play),('Save',save),('Show Grid',show_grid),('Show',show_shape)]
-
-    # The dialog
-    dialog = InputDialog(grid_items+items,caption='SuperShape parameters',actions=actions,default='Show')
-
-    dialog.timeout = dialog_timeout
-
-    dialog.show()
+    # Always install a timeout in official examples!
+    dialog.timeout = timeOut
 
     
 if __name__ == "draw":
-    if not ('_SuperShape_grid_data' in pf.PF and
-            '_SuperShape_shape_data' in pf.PF):
-        reset_data()
-    else:
-        print "set globals from pf.PF"
-        print pf.PF['_SuperShape_grid_data']
-        globals().update(pf.PF['_SuperShape_grid_data'])
-        globals().update(pf.PF['_SuperShape_shape_data'])
-        print globals()
 
-    close()
-    openSuperShapeDialogs()
+    # when executed as a script, show the dialog 
+    clear()
+    smoothwire()
+    lights(True)
+    transparent(False)
+    createDialog()
+    setView('eggview',(0.,-30.,0.))
+    view('eggview')
+    dialog.show()
     scriptLock(__file__)
 
 

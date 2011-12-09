@@ -210,7 +210,7 @@ def readNodes(fil):
     """Read a set of nodes from an open mesh file"""
     a = fromfile(fil,sep=" ").reshape(-1,3)
     x = Coords(a)
-    print(x.shape)
+    #print(x.shape)
     return x
 
 
@@ -219,7 +219,7 @@ def readElems(fil,nplex):
     print("Reading elements of plexitude %s" % nplex)
     e = fromfile(fil,sep=" ",dtype=Int).reshape(-1,nplex) 
     e = Connectivity(e)
-    print(e.shape)
+    #print(e.shape)
     return e
 
 

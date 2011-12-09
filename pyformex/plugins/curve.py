@@ -41,7 +41,7 @@ from geometry import Geometry
 from formex import Formex,connect
 from mesh import Mesh
 from geomtools import triangleCircumCircle,intersectionTimesLWP,intersectionPointsSWP,anyPerpendicularVector
-from utils import deprecation
+import utils
 
 ##############################################################################
 # THIS IS A PROPOSAL FOR THE CURVE API!
@@ -320,6 +320,36 @@ class PolyLine(Curve):
         self.closed = closed
 
 
+    def close(self):
+        """Close a PolyLine.
+
+        If the PolyLine is already closed, it is returned unchanged.
+        Else it is closed by adding a segment from the last to the first
+        point (even if these are coincident).
+
+        ..warning :: This method changes the PolyLine inplace.
+        """
+        if not self.closed:
+            self.closed = True
+            self.parts += 1
+
+
+    def open(self):
+        """Open a closed PolyLine.
+
+        If the PolyLine is closed, it is opened by removing the last segment.
+        Else, it is returned unchanged.
+
+        ..warning :: This method changes the PolyLine inplace.
+
+        Use :meth:`split` if you want to open the PolyLine without losing
+        a segment.
+        """
+        if self.closed:
+            self.closed = False
+            self.parts -= 1
+
+
     def nelems(self):
         return self.nparts
     
@@ -482,7 +512,7 @@ class PolyLine(Curve):
 
 
     def split(self,i):
-        """Split the curve at point i.
+        """Split the curve at the point i.
 
         Returns a list of open PolyLines: one, if the PolyLine is closed or
         i is one of the endpoints of an open PolyLine, two in other cases.
@@ -633,38 +663,6 @@ class PolyLine(Curve):
         if return_points:
             return res[1],p[res[0]],res[2]
         return res[1]
-
-
-##############################################################################
-#
-class Polygon(PolyLine):
-    """A Polygon is a closed PolyLine."""
-
-    def __init__(self,coords=[]):
-        PolyLine.__init__(self,coords,closed=True)
-
-
-    def area(self,project=None):
-        """Compute area inside a polygon.
-
-        Parameters:
-
-        - `project`: (3,) Coords array representing a unit direction vector.
-
-        Returns: a single float value with the area inside the polygon. If a
-        direction vector is given, the area projected in that direction is
-        returned.
-
-        Note that if the polygon is nonplanar and no direction is given,
-        the area inside the polygon is not well defined.
-        """
-        from geomtools import polygonArea
-        return polygonArea(self.coords,project)
-
-
-    def planarArea(self,n):
-        utils.warn("Polygon.planarArea is deprecated. Use Polygon.area instead.|")
-        return self.area(n)
 
 
 
@@ -1460,16 +1458,18 @@ Formex.toCurve = convertFormexToCurve
 #
 # DEPRECATED
 #
+class Polygon(PolyLine):
+    @utils.deprecation("The curve.Polygon class is deprecated. Please use curve.Polyline(closed=True) or polygon.Polygon instead.")
+    def __init__(self,coords=[]):
+        PolyLine.__init__(self,coords,closed=True)
+
+    def area(self,project=None):
+        from geomtools import polygonArea
+        return polygonArea(self.coords,project)
+
 
 class QuadBezierSpline(BezierSpline):
-    """A class representing a Quadratic Bezier spline curve.
-
-    This is a (deprecated) convenience class for BezierSpline with fixed
-    value of degree=2. The constructor takes the same parameters as
-    BezierSpline, except for degree, which is fixed to a value 2.
-    """
-
-    @deprecation("The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead.")
+    @utils.deprecation("The use of the QuadBezierSpline class is deprecated. Use the BezierSpline class with parameter `degree = 2` instead.")
     def __init__(self,coords,**kargs):
         """Create a natural spline through the given points."""
         kargs['degree'] = 2

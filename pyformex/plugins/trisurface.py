@@ -322,7 +322,7 @@ def surfaceInsideBorder(border,method='radial'):
       endpoints of two consecutive border segments and thus works its way
       inwards until the hole is closed. Triangles are created at the segments
       that form the smallest angle. This method is slower, but works also
-      for most complex borders. Also, because it does not create any new
+      for most complex borders. Because it does not create any new
       points, the returned surface uses the same point coordinate array
       as the input Mesh.
     """

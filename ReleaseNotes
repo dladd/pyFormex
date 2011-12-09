@@ -26,6 +26,69 @@
   
 
 
+pyFormex 0.8.6  Releasenotes
+============================
+
+This is a collection of the most prominent changes in pyFormex 0.8.6
+compared to the previous release 0.8.5. Like always, besides the new
+things mentioned below, we also have lots of bug fixes, code cleanup
+and functionality enhancements.
+
+
+
+Documentation
+-------------
+
+
+Installation
+------------
+
+
+Command line
+------------
+
+
+Configuration
+-------------
+
+
+Core
+----
+
+Gui
+---
+- Camera Settings dialog, with e.g. interactive front and back plane
+  clipping
+- Save current camera settings (and restore)
+
+Widgets
+-------
+
+
+Drawing
+-------
+
+Scripting
+---------
+
+
+Plugin menus
+------------
+
+
+Plugins
+-------
+
+External
+--------
+
+Examples
+--------
+
+  
+  
+
+
 pyFormex 0.8.5  Releasenotes
 ============================
 
@@ -110,7 +173,6 @@ New examples:
 - Multicut
 - ExtrudeMesh
 - Connect
-
 
 
 .. End

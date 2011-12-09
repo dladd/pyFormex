@@ -770,7 +770,7 @@ def selectDict(d,keys):
     """Return a dict with the items whose key is in keys.
 
     - `d`: a dict where all the keys are strings.
-    - `keys`: a set of key values
+    - `keys`: a set of key values, can be a list or another dict.
     
     The return value is a dict with all the items from d whose key
     is in keys.
@@ -802,6 +802,16 @@ def removeDict(d,keys):
     {1: 1, 2: 4, 3: 9, 5: 25}
     """
     return dict([ (k,d[k]) for k in d if k not in keys ])
+
+
+def refreshDict(d,src):
+    """Refresh a dict with values from another dict.
+
+    The values in the dict d are update with those in src.
+    Unlike the dict.update method, this will only update existing keys
+    but not add new keys.
+    """
+    d.update(selectDict(src,d))
 
     
 def stuur(x,xval,yval,exp=2.5):
@@ -855,7 +865,8 @@ def deprecation(message):
     def decorator(func):
         def wrapper(*_args,**_kargs):
             print func.__name__
-            warn(message, DeprecationWarning, stacklevel=2)
+            import warnings
+            warnings.warn(message, Warning, stacklevel=2)
             return func(*_args,**_kargs)
         return wrapper
     return decorator

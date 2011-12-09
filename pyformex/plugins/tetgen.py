@@ -420,6 +420,11 @@ def readTetgen(fn):
         nodes,elems = readSmeshFile(fn)
         ML = [ Mesh(nodes,elems[e]) for e in elems ]
         res = dict([('Mesh-%s'%M.nplex(),M) for M in ML])
+        
+    elif ext == '.poly':
+        nodes,elems = readPolyFile(fn)
+        ML = [ Mesh(nodes,elems[e]) for e in elems ]
+        res = dict([('Mesh-%s'%M.nplex(),M) for M in ML])
 
     return res
     
@@ -432,6 +437,8 @@ if __name__ == 'draw':
     if not fn:
         exit()
         
-    readTetgen(fn)
+    res = readTetgen(fn)
+    print res
+    draw(res.values())
     
 # End

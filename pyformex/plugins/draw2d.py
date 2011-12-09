@@ -38,7 +38,8 @@ from plugins.curve import *
 from plugins.nurbs import *
 from plugins.tools_menu import _drawables
 from plugins import objects
-from plugins.geometry_menu import autoname,autoName 
+from plugins.geometry_menu import autoname,autoName
+from gui.draw import *
 
 draw_mode_2d = ['point','polyline','curve','nurbs','circle']
 autoname['point'] = autoName('coords')
@@ -122,6 +123,7 @@ def highlightDrawing(points,mode):
 
     pts is an array of points.
     """
+    from gui import actors
     pf.canvas.removeHighlights()
     #print points[-1]
     PA = actors.GeomActor(Formex(points))
