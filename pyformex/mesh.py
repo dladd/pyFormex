@@ -448,21 +448,16 @@ class Mesh(Geometry):
         return self.elem_edges
 
     
-    def getFreeEntities(self,return_indices=False,level=-1):
+    def getFreeEntities(self,level=-1,return_indices=False):
         """Return the border of the Mesh.
 
-        This returns a Connectivity table with the border of the Mesh.
-        The border entities are of a lower hierarchical level than the
-        mesh itself. These entities become part of the border if they
-        are connected to only one element.
+        Returns a Connectivity table with the free entities of the
+        specified level of the Mesh. Free entities are entities
+        that are only connected with a single element.
 
-        If return_indices==True, it returns also an (nborder,2) index
+        If return_indices==True, also returns an (nentities,2) index
         for inverse lookup of the higher entity (column 0) and its local
-        border part number (column 1).
-
-        The returned Connectivity can be used together with the
-        Mesh.coords to construct a Mesh of the border geometry.
-        See also :meth:`getBorderMesh`.
+        lower entity number (column 1).
         """
         sel = self.eltype.getEntities(level)
         if sel.size == 0:
@@ -479,7 +474,7 @@ class Mesh(Geometry):
         #
         # WE SET THE eltype HERE, BECAUSE THE INDEX OPERATION ABOVE
         # LOOSES THE eltype
-        # SHOULD BE FIXED !!! BV
+        # SHOULD BE FIXED, BUT NEEDS TO BE CHECKED !!! BV
         #
         brd.eltype = sel.eltype
         if not return_indices:
@@ -494,12 +489,11 @@ class Mesh(Geometry):
         return brd,column_stack([enr,fnr])
 
 
-    def getFreeEntitiesMesh(self,compact=True,level=-1):
-        """Return a Mesh with the border elements.
+    def getFreeEntitiesMesh(self,level=-1,compact=True):
+        """Return a Mesh with lower entities.
 
-        Returns a Mesh representing the border of the Mesh.
-        The returned Mesh is of the next lower hierarchical level.
-        If the Mesh has property numbers, the border elements inherit
+        Returns a Mesh representing the lower entities of the specified
+        level. If the Mesh has property numbers, the lower entities inherit
         the property of the element to which they belong.
 
         By default, the resulting Mesh is compacted. Compaction can be
@@ -519,14 +513,61 @@ class Mesh(Geometry):
             M = M.compact()
         return M
 
+
     def getBorder(self,return_indices=False):
-        return self.getFreeEntities(return_indices,level=-1);
+        """Return the border of the Mesh.
+
+        This returns a Connectivity table with the border of the Mesh.
+        The border entities are of a lower hierarchical level than the
+        mesh itself. These entities become part of the border if they
+        are connected to only one element.
+
+        If return_indices==True, it returns also an (nborder,2) index
+        for inverse lookup of the higher entity (column 0) and its local
+        border part number (column 1).
+
+        This is a convenient shorthand for ::
+
+          self.getFreeEntities(level=-1,return_indices=return_indices)
+        """
+        return self.getFreeEntities(level=-1,return_indices=return_indices)
+
 
     def getBorderMesh(self,compact=True):
-        return self.getFreeEntitiesMesh(compact=compact,level=-1)
+        """Return a Mesh with the border elements.
+
+        The returned Mesh is of the next lower hierarchical level and
+        contains all the free entitites of that level.
+        If the Mesh has property numbers, the border elements inherit
+        the property of the element to which they belong.
+
+        By default, the resulting Mesh is compacted. Compaction can be
+        switched off by setting `compact=False`.
+
+        This is a convenient shorthand for ::
+
+          self.getFreeEntitiesMesh(level=-1,compact=compact)
+        """
+        return self.getFreeEntitiesMesh(level=-1,compact=compact)
+
 
     def getFreeEdgesMesh(self,compact=True):
-        return self.getFreeEntitiesMesh(compact=compact,level=1)
+        """Return a Mesh with the free edge elements.
+
+        The returned Mesh is of the hierarchical level 1 (no mather what
+        the level of the parent Mesh is) and contains all the free entitites
+        of that level.
+        If the Mesh has property numbers, the border elements inherit
+        the property of the element to which they belong.
+
+        By default, the resulting Mesh is compacted. Compaction can be
+        switched off by setting `compact=False`.
+
+        This is a convenient shorthand for ::
+
+          self.getFreeEntitiesMesh(level=1,compact=compact)
+        """
+        return self.getFreeEntitiesMesh(level=1,compact=compact)
         
 
     def reverse(self):

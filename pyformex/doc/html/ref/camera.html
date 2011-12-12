@@ -33,13 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>23. camera — OpenGL camera handling &mdash; pyFormex v0.8.5 documentation</title>
+    <title>23. camera — OpenGL camera handling &mdash; pyFormex v0.8.6-a1 documentation</title>
+
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.5',
+        VERSION:     '0.8.6-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -48,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.5 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.6-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="24. image — Saving OpenGL renderings to image files." href="image.html" />
     <link rel="prev" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget." href="viewport.html" />
@@ -79,7 +80,7 @@
         <li class="right" >
           <a href="viewport.html" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -161,44 +162,69 @@ named view was defined, or None otherwise</p>
 <dl class="class">
 <dt id="camera.Camera">
 <em class="property">class </em><tt class="descclassname">camera.</tt><tt class="descname">Camera</tt><big>(</big><em>center=[0.0, 0.0, 0.0], long=0.0, lat=0.0, twist=0.0, dist=1.0</em><big>)</big><a class="headerlink" href="#camera.Camera" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class defines a camera for OpenGL rendering.</p>
-<p>It provides functions for manipulating the camera position, the viewing
-direction and the lens parameters.</p>
-<p>The camera viewing line can be defined by two points : the position of
+<dd><p>A camera for OpenGL rendering.</p>
+<p>The Camera class holds all the camera related settings related to
+the rendering of a scene in OpenGL. These include camera position,
+the viewing direction of the camera, and the lens parameters (opening
+angle, front and back clipping planes).
+This class also provides convenient methods to change the settings so as
+to get smooth camera manipulation.</p>
+<p>Camera position and orientation:</p>
+<blockquote>
+<div><p>The camera viewing line is defined by two points: the position of
 the camera and the center of the scene the camera is looking at.
-To enable continuous camera rotations however, it is essential that the
-camera angles are stored as such, and not be calculated from the camera
-position and the center point, because the transformation from cartesian
-to spherical coordinates is not unique.
-Furthermore, to enable smooth mouse-controlled camera rotation based on
-the current camera angles, it is essential to store the camera angles as
-the combined rotation matrix, not as the individual angles.</p>
-<dl class="docutils">
-<dt>Therefore we store the camera position/direction as follows:</dt>
-<dd><dl class="first docutils">
-<dt>ctr: [ x,y,z ] <span class="classifier-delimiter">:</span> <span class="classifier">the reference point of the camera: this is always</span></dt>
-<dd>a point on the viewing axis. Usualy, it is the center point of
-the scene we are looking at.</dd>
-</dl>
-<p class="last">rot: 
-twist : rotation angle around the camera&#8217;s viewing axis</p>
-</dd>
-</dl>
-<p>The default camera is at [0,0,0] and looking in the -z direction.
-Near and far clipping planes are by
-default set to 0.1, resp 10 times the camera distance.</p>
-<p>Some camera terminology:
-Position (eye) : position of the camera
-Scene center (ctr) : the point the camera is looking at.
-Up Vector : a vector pointing up from the camera.
-Viewing direction (rotx,roty,rotz)
-Lens angle (fovy)
-Aspect ratio (aspect)
-Clip (front/back)
-Perspective/Orthogonal</p>
-<p>We assume that matrixmode is always MODELVIEW.
-For other operations we explicitely switch before and afterwards back
-to MODELVIEW.</p>
+We use the center of the scene as the origin of a local coordinate
+system to define the camera position. For convenience, this could be
+stored in spherical coordinates, as a distance value and two angles:
+longitude and latitude. Furthermore, the camera can also rotate around
+its viewing line. We can define this by a third angle, the twist.
+From these four values, the needed translation vector and rotation
+matrix for the scene rendering may be calculated.</p>
+<p>Inversely however, we can not compute a unique set of angles from
+a given rotation matrix (this is known as &#8216;gimball lock&#8217;).
+As a result, continuous (smooth) camera rotation by e.g. mouse control
+requires that the camera orientation be stored as the full rotation
+matrix, rather than as three angles. Therefore we store the camera
+position and orientation as follows:</p>
+<ul class="simple">
+<li><cite>ctr</cite>: <cite>[ x,y,z ]</cite> : the reference point of the camera:
+this is always a point on the viewing axis. Usually, it is set to
+the center of the scene you are looking at.</li>
+<li><cite>dist</cite>: distance of the camera to the reference point.</li>
+<li><cite>rot</cite>: a 3x3 rotation matrix, rotating the global coordinate system
+thus that the z-direction is oriented from center to camera.</li>
+</ul>
+<p>These values have influence on the ModelView matrix.</p>
+</div></blockquote>
+<p>Camera lens settings:</p>
+<blockquote>
+<div><p>The lens parameters define the volume that is seen by the camera.
+It is described by the following parameters:</p>
+<ul class="simple">
+<li><cite>fovy</cite>: the vertical lens opening angle (Field Of View Y),</li>
+<li><cite>aspect</cite>: the aspect ratio (width/height) of the lens. The product
+<cite>fovy * aspect</cite> is the horizontal field of view.</li>
+<li><cite>near, far</cite>: the position of the front and back clipping planes.
+They are given as distances from the camera and should both be
+strictly positive. Anything that is closer to the camera than
+the <cite>near</cite> plane or further away than the <cite>far</cite> plane, will not be
+shown on the canvas.</li>
+</ul>
+<p>Camera methods that change these values will not directly change
+the ModelView matrix. The <a class="reference internal" href="#camera.Camera.loadModelView" title="camera.Camera.loadModelView"><tt class="xref py py-meth docutils literal"><span class="pre">loadModelView()</span></tt></a> method has to be called
+explicitely to make the settings active.</p>
+<p>These values have influence on the Projection matrix.</p>
+</div></blockquote>
+<p>Methods that change the camera position, orientation or lens parameters
+will not directly change the related ModelView or Projection matrix.
+They will just flag a change in the camera settings. The changes are
+only activated by a call to the <a class="reference internal" href="#camera.Camera.loadModelView" title="camera.Camera.loadModelView"><tt class="xref py py-meth docutils literal"><span class="pre">loadModelView()</span></tt></a> or
+<a class="reference internal" href="#camera.Camera.loadProjection" title="camera.Camera.loadProjection"><tt class="xref py py-meth docutils literal"><span class="pre">loadProjection()</span></tt></a> method, which will test the flags to see whether
+the corresponding matrix needs a rebuild.</p>
+<p>The default camera is at distance 1.0 of the center point [0.,0.,0.] and
+looking in the -z direction.
+Near and far clipping planes are by default set to 0.1, resp 10 times
+the camera distance.</p>
 <dl class="method">
 <dt id="camera.Camera.getCenter">
 <tt class="descname">getCenter</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.getCenter" title="Permalink to this definition">¶</a></dt>
@@ -218,6 +244,16 @@ to MODELVIEW.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="camera.Camera.lock">
+<tt class="descname">lock</tt><big>(</big><em>onoff=True</em><big>)</big><a class="headerlink" href="#camera.Camera.lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock/unlock a camera.</p>
+<p>When a camera is locked, its position and lens parameters can not be
+changed.
+This can e.g. be used in multiple viewports layouts to create fixed
+views from different angles.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="camera.Camera.setCenter">
 <tt class="descname">setCenter</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em><big>)</big><a class="headerlink" href="#camera.Camera.setCenter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the center of the camera in global cartesian coordinates.</p>
@@ -227,15 +263,12 @@ to MODELVIEW.</p>
 <dt id="camera.Camera.setAngles">
 <tt class="descname">setAngles</tt><big>(</big><em>angles</em><big>)</big><a class="headerlink" href="#camera.Camera.setAngles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the rotation angles.</p>
-<dl class="docutils">
-<dt>angles is either:</dt>
-<dd><ul class="first last simple">
+<p>angles is either:</p>
+<ul class="simple">
 <li>a tuple of angles (long,lat,twist)</li>
 <li>a named view corresponding to angles in view_angles</li>
 <li>None</li>
 </ul>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="method">
@@ -318,12 +351,22 @@ vector. This has the effect of moving the scene in opposite direction.</p>
 
 <dl class="method">
 <dt id="camera.Camera.loadModelView">
-<tt class="descname">loadModelView</tt><big>(</big><big>)</big><a class="headerlink" href="#camera.Camera.loadModelView" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">loadModelView</tt><big>(</big><em>m=None</em><big>)</big><a class="headerlink" href="#camera.Camera.loadModelView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the ModelView matrix.</p>
-<p>If the viewing parameters have not changed since the last save of the ModelView matrix, this will
-just reload the ModelView matrix from the saved value.
-Else, a new ModelView matrix is set up, loaded and saved, and if a camera attribute <cite>modelview_callback</cite>
-has been set, a call to this function is tried, passing the camera instance as parameter.</p>
+<p>There are thrre uses of this function:</p>
+<ul class="simple">
+<li>Without argument and if the viewing parameters have not changed
+since the last save of the ModelView matrix, this will just reload
+the ModelView matrix from the saved value.</li>
+<li>If an argument is supplied, it should be a legal ModelView matrix
+and that matrix will be loaded (and saved) as the new ModelView
+matrix.</li>
+<li>Else, a new ModelView matrix is set up from the camera parameters,
+and it is loaded and saved.</li>
+</ul>
+<p>In the latter two cases, the new ModelView matrix is saved, and if
+a camera attribute <cite>modelview_callback</cite> has been set, a call to
+this function is done, passing the camera instance as parameter.</p>
 </dd></dl>
 
 <dl class="method">
@@ -462,7 +505,7 @@ detected. You can optionally force loading the matrix.</p>
         <li class="right" >
           <a href="viewport.html" title="22. viewport — Interactive OpenGL Canvas embedded in a Qt4 widget."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -470,7 +513,7 @@ detected. You can optionally force loading the matrix.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 04, 2011.
+      Last updated on Dec 12, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

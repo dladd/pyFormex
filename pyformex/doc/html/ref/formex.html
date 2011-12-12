@@ -33,13 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.5 documentation</title>
+    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.6-a1 documentation</title>
+
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.5',
+        VERSION:     '0.8.6-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -48,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.5 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.6-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
     <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" />
@@ -79,7 +80,7 @@
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -352,6 +353,14 @@ The default settting for atol is rtol * self.dsize()</p>
 In the Mesh model, all points with nearly identical coordinates
 are fused into a single point, and elements are defined by a
 connectivity table with integers pointing to the corresponding vertex.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="formex.Formex.toSurface">
+<tt class="descname">toSurface</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.toSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Formex to a Surface.</p>
+<p>If the plexitude of the Formex is 3, returns a TriSurface equivalent
+with the Formex. Else, an error is raised.</p>
 </dd></dl>
 
 <dl class="method">
@@ -849,6 +858,13 @@ Formex will be of plexitude 1 (points). For a plex-3 Formex
 </dd></dl>
 
 <dl class="method">
+<dt id="formex.Formex.position">
+<tt class="descname">position</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;position&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.position" title="coords.Coords.position"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.position()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="formex.Formex.projectOnCylinder">
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#formex.Formex.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
@@ -1305,7 +1321,7 @@ interpolations.</p>
         <li class="right" >
           <a href="coords.html" title="1. coords — A structured collection of 3D coordinates."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1313,7 +1329,7 @@ interpolations.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 04, 2011.
+      Last updated on Dec 12, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

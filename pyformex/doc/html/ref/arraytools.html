@@ -33,13 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.5 documentation</title>
+    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.6-a1 documentation</title>
+
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.5',
+        VERSION:     '0.8.6-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -48,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.5 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.6-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="4. script — Basic pyFormex script functions" href="script.html" />
     <link rel="prev" title="2. formex — Formex algebra in Python" href="formex.html" />
@@ -79,7 +80,7 @@
         <li class="right" >
           <a href="formex.html" title="2. formex — Formex algebra in Python"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -276,21 +277,32 @@ A and B should be broadcast compatible.</p>
 <dt id="arraytools.length">
 <tt class="descclassname">arraytools.</tt><tt class="descname">length</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the length of the vectors of A in the direction of axis.</p>
-<p>The default axis is the last.</p>
+<p>The components of the vectors are stored along the specified array axis
+(default axis is the last).</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.normalize">
 <tt class="descclassname">arraytools.</tt><tt class="descname">normalize</tt><big>(</big><em>A</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the vectors of A in the direction of axis.</p>
-<p>The default axis is the last.</p>
+<p>The components of the vectors are stored along the specified array axis
+(default axis is the last).</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="arraytools.projection">
 <tt class="descclassname">arraytools.</tt><tt class="descname">projection</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.projection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the (signed) length of the projection of vector of A on B.</p>
-<p>The default axis is the last.</p>
+<p>The components of the vectors are stored along the specified array axis
+(default axis is the last).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.orthog">
+<tt class="descclassname">arraytools.</tt><tt class="descname">orthog</tt><big>(</big><em>A</em>, <em>B</em>, <em>axis=-1</em><big>)</big><a class="headerlink" href="#arraytools.orthog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the (signed) length of the projection of vector of A on B.</p>
+<p>The components of the vectors are stored along the specified array axis
+(default axis is the last).</p>
 </dd></dl>
 
 <dl class="function">
@@ -390,6 +402,39 @@ Note that:</p>
 </ul>
 <p>but the latter functions calls are more efficient.
 The result is returned as an array.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.rotmat">
+<tt class="descclassname">arraytools.</tt><tt class="descname">rotmat</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#arraytools.rotmat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a rotation matrix defined by 3 points in space.</p>
+<p>x is an array of 3 points.
+After applying the resulting rotation matrix to the global axes,
+the 0 axis becomes // to the vecors x0-x1,
+the 1 axis lies in the plane x0,x1,x2 and is orthogonal to x0-x1,
+and the 3 axis is orthogonal to the plane x0,x1,x2.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.trfMatrix">
+<tt class="descclassname">arraytools.</tt><tt class="descname">trfMatrix</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#arraytools.trfMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the transformation matrix from points x0 to x1.</p>
+<p>x and y are each arrays of 3 non-colinear points.
+The return value is a tuple of a translation vector and a rotation
+matrix.
+The returned translation trl and rotationmatrix rot transform the
+points x thus that:</p>
+<ul class="simple">
+<li>point x0 coincides with point y0,</li>
+<li>line x0,x1 coincides with line y0,y1</li>
+<li>plane x0,x1,x2 coincides with plane y0,y1,y2</li>
+</ul>
+<p>The rotation is to be applied first and should be around the first
+point x0. The full transformation of a Coords object is thus obtained
+by</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">coords</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">*</span> <span class="n">rot</span> <span class="o">+</span> <span class="n">trl</span> <span class="o">+</span> <span class="n">x0</span>  <span class="o">=</span> <span class="n">coords</span> <span class="o">*</span> <span class="n">rot</span> <span class="o">+</span> <span class="p">(</span><span class="n">trl</span><span class="o">+</span><span class="n">x0</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">rot</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -1180,7 +1225,7 @@ a.shape[0].</p>
         <li class="right" >
           <a href="formex.html" title="2. formex — Formex algebra in Python"
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1188,7 +1233,7 @@ a.shape[0].</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 04, 2011.
+      Last updated on Dec 12, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

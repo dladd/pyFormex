@@ -33,13 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>13. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.5 documentation</title>
+    <title>13. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.6-a1 documentation</title>
+
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.5',
+        VERSION:     '0.8.6-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -48,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.5 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.6-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="14. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
     <link rel="prev" title="12. elements — Definition of elements." href="elements.html" />
@@ -79,7 +80,7 @@
         <li class="right" >
           <a href="elements.html" title="12. elements — Definition of elements."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -239,6 +240,14 @@ the Formex data model.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.toSurface">
+<tt class="descname">toSurface</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.toSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mesh to a Surface.</p>
+<p>If the plexitude of the mesh is 3, returns a TriSurface equivalent
+with the Mesh. Else, an error is raised.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.nedges">
 <tt class="descname">nedges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nedges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of edges.</p>
@@ -360,7 +369,30 @@ element to edge connectivity.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.getFreeEntities">
-<tt class="descname">getFreeEntities</tt><big>(</big><em>return_indices=False</em>, <em>level=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEntities" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getFreeEntities</tt><big>(</big><em>level=-1</em>, <em>return_indices=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEntities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the border of the Mesh.</p>
+<p>Returns a Connectivity table with the free entities of the
+specified level of the Mesh. Free entities are entities
+that are only connected with a single element.</p>
+<p>If return_indices==True, also returns an (nentities,2) index
+for inverse lookup of the higher entity (column 0) and its local
+lower entity number (column 1).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getFreeEntitiesMesh">
+<tt class="descname">getFreeEntitiesMesh</tt><big>(</big><em>level=-1</em>, <em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEntitiesMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with lower entities.</p>
+<p>Returns a Mesh representing the lower entities of the specified
+level. If the Mesh has property numbers, the lower entities inherit
+the property of the element to which they belong.</p>
+<p>By default, the resulting Mesh is compacted. Compaction can be
+switched off by setting <cite>compact=False</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getBorder">
+<tt class="descname">getBorder</tt><big>(</big><em>return_indices=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the border of the Mesh.</p>
 <p>This returns a Connectivity table with the border of the Mesh.
 The border entities are of a lower hierarchical level than the
@@ -369,21 +401,43 @@ are connected to only one element.</p>
 <p>If return_indices==True, it returns also an (nborder,2) index
 for inverse lookup of the higher entity (column 0) and its local
 border part number (column 1).</p>
-<p>The returned Connectivity can be used together with the
-Mesh.coords to construct a Mesh of the border geometry.
-See also <tt class="xref py py-meth docutils literal"><span class="pre">getBorderMesh()</span></tt>.</p>
+<p>This is a convenient shorthand for</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">getFreeEntities</span><span class="p">(</span><span class="n">level</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">return_indices</span><span class="o">=</span><span class="n">return_indices</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
-<dt id="mesh.Mesh.getFreeEntitiesMesh">
-<tt class="descname">getFreeEntitiesMesh</tt><big>(</big><em>compact=True</em>, <em>level=-1</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEntitiesMesh" title="Permalink to this definition">¶</a></dt>
+<dt id="mesh.Mesh.getBorderMesh">
+<tt class="descname">getBorderMesh</tt><big>(</big><em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getBorderMesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a Mesh with the border elements.</p>
-<p>Returns a Mesh representing the border of the Mesh.
-The returned Mesh is of the next lower hierarchical level.
+<p>The returned Mesh is of the next lower hierarchical level and
+contains all the free entitites of that level.
 If the Mesh has property numbers, the border elements inherit
 the property of the element to which they belong.</p>
 <p>By default, the resulting Mesh is compacted. Compaction can be
 switched off by setting <cite>compact=False</cite>.</p>
+<p>This is a convenient shorthand for</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">getFreeEntitiesMesh</span><span class="p">(</span><span class="n">level</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">compact</span><span class="o">=</span><span class="n">compact</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.getFreeEdgesMesh">
+<tt class="descname">getFreeEdgesMesh</tt><big>(</big><em>compact=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.getFreeEdgesMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Mesh with the free edge elements.</p>
+<p>The returned Mesh is of the hierarchical level 1 (no mather what
+the level of the parent Mesh is) and contains all the free entitites
+of that level.
+If the Mesh has property numbers, the border elements inherit
+the property of the element to which they belong.</p>
+<p>By default, the resulting Mesh is compacted. Compaction can be
+switched off by setting <cite>compact=False</cite>.</p>
+<p>This is a convenient shorthand for</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">getFreeEntitiesMesh</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">compact</span><span class="o">=</span><span class="n">compact</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1061,6 +1115,13 @@ value is None.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.position">
+<tt class="descname">position</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply &#8216;position&#8217; transformation to the Geometry object.</p>
+<p>See <a class="reference internal" href="coords.html#coords.Coords.position" title="coords.Coords.position"><tt class="xref py py-meth docutils literal"><span class="pre">coords.Coords.position()</span></tt></a> for details.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.projectOnCylinder">
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>*args</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply &#8216;projectOnCylinder&#8217; transformation to the Geometry object.</p>
@@ -1265,7 +1326,7 @@ not fuse them.</p>
         <li class="right" >
           <a href="elements.html" title="12. elements — Definition of elements."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.5 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1273,7 +1334,7 @@ not fuse them.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 04, 2011.
+      Last updated on Dec 12, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>
