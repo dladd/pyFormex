@@ -269,7 +269,8 @@ def dotpr (A,B,axis=-1):
 def length(A,axis=-1):
     """Returns the length of the vectors of A in the direction of axis.
 
-    The default axis is the last.
+    The components of the vectors are stored along the specified array axis
+    (default axis is the last).
     """
     A = asarray(A)
     return sqrt((A*A).sum(axis))
@@ -278,7 +279,8 @@ def length(A,axis=-1):
 def normalize(A,axis=-1):
     """Normalize the vectors of A in the direction of axis.
 
-    The default axis is the last.
+    The components of the vectors are stored along the specified array axis
+    (default axis is the last).
     """
     A = asarray(A)
     shape = list(A.shape)
@@ -292,13 +294,24 @@ def normalize(A,axis=-1):
 def projection(A,B,axis=-1):
     """Return the (signed) length of the projection of vector of A on B.
 
-    The default axis is the last.
+    The components of the vectors are stored along the specified array axis
+    (default axis is the last).
     """
     d = dotpr(A,B,axis)
     Bl = length(B,axis)
     if (Bl == 0.).any():
         raise ValueError,"Projection on zero vector."
     return d/Bl
+
+
+def orthog(A,B,axis=-1):
+    """Return the (signed) length of the projection of vector of A on B.
+
+    The components of the vectors are stored along the specified array axis
+    (default axis is the last).
+    """
+    p = projection(A,B,axis=-1)
+    return A - p * normalize(B)
 
 
 def norm(v,n=2):
@@ -480,6 +493,52 @@ def rotationMatrix(angle,axis=None,angle_spec=Deg):
     return array(f)
 
 
+def rotmat(x):
+    """Create a rotation matrix defined by 3 points in space.
+
+    x is an array of 3 points.
+    After applying the resulting rotation matrix to the global axes,
+    the 0 axis becomes // to the vecors x0-x1,
+    the 1 axis lies in the plane x0,x1,x2 and is orthogonal to x0-x1,
+    and the 3 axis is orthogonal to the plane x0,x1,x2.
+    """
+    u = normalize(x[1]-x[0])
+    v = normalize(x[2]-x[0])
+    v = normalize(orthog(v,u))
+    w = cross(u,v) # is orthog and normalized
+    m = row_stack([u,v,w])
+    return m
+
+    
+def trfMatrix(x,y):
+    """Find the transformation matrix from points x0 to x1.
+
+    x and y are each arrays of 3 non-colinear points.
+    The return value is a tuple of a translation vector and a rotation
+    matrix.
+    The returned translation trl and rotationmatrix rot transform the
+    points x thus that:
+
+    - point x0 coincides with point y0,
+    - line x0,x1 coincides with line y0,y1
+    - plane x0,x1,x2 coincides with plane y0,y1,y2
+
+    The rotation is to be applied first and should be around the first
+    point x0. The full transformation of a Coords object is thus obtained
+    by ::
+
+      (coords - x0) * rot + trl + x0  = coords * rot + (trl+x0-x0*rot)
+    """
+    # rotation matrices for both systems
+    r1 = rotmat(x)
+    r2 = rotmat(y)
+    # combined rtoation matrix
+    r = dot(r1.transpose(),r2)
+    # translation vector (in a roate first operation
+    t = y[0] - dot(x[0],r)
+    return r,t
+
+
 def rotMatrix(u,w=[0.,0.,1.],n=3):
     """Create a rotation matrix that rotates axis 0 to the given vector.
 
@@ -508,7 +567,7 @@ def rotMatrix(u,w=[0.,0.,1.],n=3):
         a[0:3,0:3] = m
         return a
 
-
+# HOW DOES THIS DEAL WITH GIMBALL LOCK?
 def rotationAnglesFromMatrix(mat,angle_spec=Deg):
     """Return rotation angles from rotation matrix mat.
     
@@ -531,6 +590,7 @@ def rotationAnglesFromMatrix(mat,angle_spec=Deg):
     return rx / angle_spec, ry / angle_spec, rz / angle_spec
 
 
+# WHAT IF EITHER vec1 or vec2 is // to upvec?
 def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
     """Return a rotation matrix for rotating vector vec1 to vec2
 

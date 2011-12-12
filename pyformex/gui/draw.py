@@ -929,7 +929,7 @@ def drawText3D(P,text,color=None,font='sans',size=18,ontop=True):
     pf.canvas.addAnnotation(M)
     pf.canvas.update()
     return M
-
+        
 
 def drawAxes(*args,**kargs):
     """Draw the axes of a CoordinateSystem.

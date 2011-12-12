@@ -108,6 +108,7 @@ class Geometry(object):
     :meth:`shear`,
     :meth:`reflect`,
     :meth:`affine`,
+    :meth:`position`,
     :meth:`cylindrical`,
     :meth:`hyperCylindrical`,
     :meth:`toCylindrical`,
@@ -257,6 +258,9 @@ class Geometry(object):
         pass
     @_coords_transform
     def affine(self,*args,**kargs):
+        pass
+    @_coords_transform
+    def position(self,*args,**kargs):
         pass
 
 

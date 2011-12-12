@@ -818,6 +818,17 @@ class Coords(ndarray):
         if vec is not None:
             out += vec
         return out
+
+
+    def position(self,x,y):
+        """Position an object so that points x are aligned with y.
+
+        Parameters as for arraytools.trfMatrix
+
+        """
+        r,t =  trfMatrix(x,y)
+        return self.affine(r,t)
+
 #
 #
 #   B. Non-Affine transformations.

@@ -115,7 +115,7 @@ class Polygon(Geometry):
     
 
 
-def surfaceInsideBorder(border,method='radial'):
+def fillBorder(coords,elems=None,method='radial'):
     """Create a surface inside a closed curve defined by a 2-plex Mesh.
 
     border is a 2-plex Mesh representing a closed polyline.
@@ -136,23 +136,65 @@ def surfaceInsideBorder(border,method='radial'):
       as the input Mesh.
     """
     from plugins.trisurface import TriSurface
-    if border.nplex() != 2:
-        raise ValueError,"Expected Mesh with plexitude 2, got %s" % border.nplex()
 
+    if not isinstance(coords,Coords):
+        raise ValueError,"Expected a Coords array as first argument"
+    coords = coords.reshape(-1,3)
+
+    if elems is None:
+        elems = arange(coords.shape[0])
+
+    n = elems.shape[0]
+    if n < 3:
+        raise ValueError,"Expected at least 3 points."
+    
     if method == 'radial':
-        x = border.getPoints().center()
-        n = zeros_like(border.elems[:,:1]) + border.coords.shape[0]
-        elems = concatenate([border.elems,n],axis=1)
-        coords = Coords.concatenate([border.coords,x])
+        coords = Coords.concatenate([coords,coords.center()])
+        elems = column_stack([elems,roll(elems,-1),n*ones(elems.shape[0],dtype=Int)])
 
     elif method == 'border':
-        coords = border.coords
-        segments = border.elems
-        elems = empty((0,3,),dtype=int)
-        while len(segments) != 3:
-            segments,triangle = _create_border_triangle(coords,segments)
-            elems = row_stack([elems,triangle])
-        elems = row_stack([elems,segments[:,0]])
+        # creating elems array at once (more efficient than appending)
+        tri = -ones((n-2,3),dtype=Int)
+        print tri
+        # compute all internal angles
+        x = coords[elems]
+        e = arange(n)
+        v = roll(x,-1,axis=0) - x
+        v = normalize(v)
+        c = vectorPairCosAngle(roll(v,1,axis=0),v)
+        # loop in order of smallest angles
+        itri = 0
+        while n > 3:
+            print "c",c,n
+            # find minimal angle
+            j = c.argmin()
+            i = (j - 1) % n
+            k = (j + 1) % n
+            tri[itri] = [ e[i],e[j],e[k]]
+            print "tr",tri
+            # remove the point j
+            ii = (i-1) % n
+            kk = (k+1) % n
+            v1 = normalize([ v[e[ii]], x[e[k]] - x[e[i]] ])
+            v2 = normalize([ x[e[k]] - x[e[i]], v[e[k]] ])
+            #print "v1",v1
+            #print "v2",v2
+            cnew = vectorPairCosAngle(v1,v2)
+            print [ii,i,j,k,kk]
+            print "cnew",c[:ii], cnew, c[kk+1:]
+            c = roll(concatenate([cnew,roll(c,-i)[3:]]),i)
+            e = roll(roll(e,-j)[1:],j)
+            print "new c",c
+            print "new e",e
+            n -= 1
+            itri += 1
+        print tri.shape
+        print e.shape
+        print itri
+        tri[itri] = e
+        print tri
+        elems = elems[tri]
+        print elems
 
     else:
         raise ValueError,"Strategy should be either 'radial' or 'border'"
@@ -160,7 +202,7 @@ def surfaceInsideBorder(border,method='radial'):
     return TriSurface(coords,elems)
 
 
-def reducePolyline(X,seq):
+def reducePolyline(x,e):
     """Create a triangle within a border.
     
     - coords: (npoints,3) Coords: the ordered vertices of the border.
@@ -168,38 +210,12 @@ def reducePolyline(X,seq):
     the border element numbers and must be ordered.
     A list of two objects is returned: the new border elements and the triangle.
     """
-    P = PolyLine(X[seq],closed=True)
-    v = normalize(P.vectors())
-    c = vectorPairCosAngle(roll(v,1,axis=0),v)
-    print c
-    j = c.argmin()
-    n = len(seq)
-    i = j - 1
-    if i < 0:
-        i += n
-    k = j + 1
-    if k >= n:
-        k -= n
-    tri = [ i,j,k]
-    retur
-    n = shape(elems)[0]
-    if j == n:
-        j -= n
-    old_edges = take(elems,[i,j],0)
-    elems = delete(elems,[i,j],0)
-    new_edge = asarray([old_edges[0,0],old_edges[-1,1]])
-    if j == 0:
-        elems = insert(elems,0,new_edge,0)
-    else:
-        elems = insert(elems,i,new_edge,0)
-    triangle = append(old_edges[:,0],old_edges[-1,1].reshape(1),0)
-    return elems,triangle
 
 if __name__ == 'draw':
 
     clear()
 
-    n = 6
+    n = 5
     x = randomNoise((n),2.,3.)
     y = randomNoise((n),0.,360.)
     y.sort()    # sort
@@ -227,8 +243,18 @@ if __name__ == 'draw':
     print "The polygon is convex: %s" % PG.isConvex()
 
     M = PL.toMesh()
-    #S = surfaceInsideBorder(M,method='border')
-    #draw(S)
-    #drawNumbers(S)
-    
+
+    layout(2)
+    if PG.isConvex():
+        S = fillBorder(PL.coords,method='border')
+        viewport(0)
+        clear()
+        draw(S)
+        drawNumbers(S)
+        viewport(1)
+        clear()
+        S1 = fillBorder(PL.coords,method='radial')
+        draw(S1,color=red)
+        drawNumbers(S1)
+   
 # End

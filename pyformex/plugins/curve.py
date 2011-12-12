@@ -609,6 +609,9 @@ class PolyLine(Curve):
     __add__ = append
 
 
+    
+
+
     # BV: I'm not sure what this does and if it belongs here
     
     def distanceOfPoints(self,p,n,return_points=False):

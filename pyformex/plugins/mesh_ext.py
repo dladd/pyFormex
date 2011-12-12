@@ -318,6 +318,7 @@ def partitionByAngle(self,**arg):
     Also, the 'quad4' partitioning method currently only works corectly
     if the quads are nearly planar.
     """
+    from plugins.trisurface import TriSurface
     if self.eltype.name() not in [ 'tri3', 'quad4' ]:
         raise ValueError, "partitionByAngle currently only works for 'tri3' and 'quad4' type Meshes."
 
