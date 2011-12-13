@@ -870,7 +870,8 @@ Size: %s
         return self.coords[elems].average(wts=wts,axis=1)
 
 
-    # The following is equivalent to avgNodes(self,nodsel)
+    # The following is equivalent to avgNodes(self,nodsel,wts=None)
+    # But is probably more efficient
     def meanNodes(self,nodsel):
         """Create nodes from the existing nodes of a mesh.
 

@@ -306,6 +306,107 @@ def curvature(coords,elems,edges,neighbours=1):
 ############################################################################
 
 
+def fillBorder(border,method='radial'):
+    """Create a surface inside a given closed border line.
+
+    The border line is a closed polygonal line and can be specified as
+    one of the following:
+
+    - a closed PolyLine,
+    - a 2-plex Mesh, with a Connectivity table such that the elements
+      in order form a closed polyline,
+    - a simple Coords specifying the subsequent vertices of the polygonal
+      border line.
+
+    The return value is a TriSurface filling the hole inside the border.
+
+    There are currently two fill methods available:
+    
+    - 'radial': this method adds a central point and connects all border
+      segments with the center to create triangles. 
+    - 'border': this method creates subsequent triangles by connecting the
+      endpoints of two consecutive border segments and thus works its way
+      inwards until the hole is closed. Triangles are created at the line
+      segments that form the smallest angle.
+
+    The 'radial' method produces nice results if the border is relative smooth,
+    nearly convex and nearly planar. It adds an extra point though, which may
+    be unwanted. On irregular 3D borders there is a high change that the
+    result contains intersecting triangles.
+
+    This 'border' method is slower on large borders, does not introduce any
+    new point and has a better chance of avoiding intersecting triangles
+    on irregular 3D borders.
+
+    The resulting surface can be checked for intersecting triangles by the
+    :meth:`check` method.
+
+    ..note :: Because the 'border' does not create any new points, the
+      returned surface will use the same point coordinate array as the input
+      object.
+    """
+    from plugins.trisurface import TriSurface
+
+    if isinstance(border,Mesh) and border.nplex()==2:
+        coords = border.coords
+        elems = border.elems[:,0]
+    elif isinstance(border,PolyLine):
+        coords = border.coords
+        elems = None
+    elif isinstance(border,Coords):
+        coords = border.reshape(-1,3)
+        elems = None
+    else:
+        raise ValueError,"Expected a 2-plex Mesh, a PolyLine or a Coords array as first argument"
+    
+    if elems is None:
+        elems = arange(coords.shape[0])
+
+    n = elems.shape[0]
+    if n < 3:
+        raise ValueError,"Expected at least 3 points."
+    
+    if method == 'radial':
+        coords = Coords.concatenate([coords,coords.center()])
+        elems = column_stack([elems,roll(elems,-1),n*ones(elems.shape[0],dtype=Int)])
+
+    elif method == 'border':
+        # creating elems array at once (more efficient than appending)
+        tri = -ones((n-2,3),dtype=Int)
+        # compute all internal angles
+        x = coords[elems]
+        e = arange(n)
+        v = roll(x,-1,axis=0) - x
+        v = normalize(v)
+        c = vectorPairCosAngle(roll(v,1,axis=0),v)
+        # loop in order of smallest angles
+        itri = 0
+        while n > 3:
+            # find minimal angle
+            j = c.argmin()
+            i = (j - 1) % n
+            k = (j + 1) % n
+            tri[itri] = [ e[i],e[j],e[k]]
+            # remove the point j
+            ii = (i-1) % n
+            kk = (k+1) % n
+            v1 = normalize([ v[e[ii]], x[e[k]] - x[e[i]] ])
+            v2 = normalize([ x[e[k]] - x[e[i]], v[e[k]] ])
+            cnew = vectorPairCosAngle(v1,v2)
+            c = roll(concatenate([cnew,roll(c,-i)[3:]]),i)
+            e = roll(roll(e,-j)[1:],j)
+            n -= 1
+            itri += 1
+        tri[itri] = e
+        elems = elems[tri]
+
+    else:
+        raise ValueError,"Strategy should be either 'radial' or 'border'"
+    
+    return TriSurface(coords,elems)
+
+
+@utils.deprecation("surfaceInsideBorder is deprecated. Please use fillBorder instead.")
 def surfaceInsideBorder(border,method='radial'):
     """Create a surface inside a closed curve defined by a 2-plex Mesh.
 
@@ -788,34 +889,18 @@ class TriSurface(Mesh):
 
         Returns a list of surfaces, each of which fills a singly connected
         part of the border of the input surface. Adding these surfaces to
-        the original will create a closed surface.
+        the original will create a closed surface. The surfaces will have
+        property values set above those used in the parent surface.
         If the surface is already closed, an empty list is returned.
 
         There are two methods, 'radial' and 'border' corresponding with
         the methods of the surfaceInsideBorder.
         """
-        return [ surfaceInsideBorder(b,method).setProp(i) for i,b in enumerate(self.border()) ]
-
-
-    ## # BV: There are too many of these! cfr getBorder,
-    ## def boundaryEdges(self):
-    ##     """_Returns the border edges of a surface, grouped by id property. """
-    ##     be=Mesh(self.coords, self.getEdges()[self.borderEdges()] )#.renumber()
-    ##     be.elems=be.elems.removeDegenerate().removeDoubles()
-    ##     parts = connectedLineElems(be.elems)
-    ##     prop = concatenate([ [i]*p.nelems() for i,p in enumerate(parts)])
-    ##     elems = concatenate(parts,axis=0)
-    ##     return Mesh(be.coords,elems,prop=prop)
-    
-    ## # BV: There are too many of these!
-    ## def boundaryFiller(self):
-    ##     """_Fills the holes of a surface by creating extra faces at the boundary edges. Original surface and boundaries are returned with different id prop."""
-    ##     brd=self.boundaryEdges()
-    ##     Brd=[ brd.withProp(p).compact() for p in brd.propSet() ]
-    ##     if self.prop==None:self=self.setProp(0)
-    ##     maxp=self.maxProp()+1
-    ##     capsm=[Mesh( surfaceInsideLoop(Brd[i].coords,Brd[i].elems) ).setProp(i+maxp) for i in range(len(Brd))]
-    ##     return TriSurface( Mesh.concatenate( capsm+[self] ) )#.renumber()
+        if self.prop is None:
+            mprop = 1
+        else:
+            mprop = self.prop.max()+1
+        return [ fillBorder(b,method).setProp(mprop+i) for i,b in enumerate(self.border()) ]
 
 
     def edgeCosAngles(self):
@@ -1451,40 +1536,38 @@ Shortest altitude: %s; largest aspect ratio: %s
         return S.setProp(self.prop)
 
 
-    def check(self,verbose=False, matched=True):
+    def check(self,matched=True):
         """Check the surface using gtscheck.
 
-        Checks whether the surface is an orientable,
+        Uses `gtscheck` to check whether the surface is an orientable,
         non self-intersecting manifold.
-
-        For the use of the `gts` methods (split, coarsen, refine, boolean),
-        this is a necessary condition; additionally, the surface has to be
-        closed (can be checked with :meth:`isClosedManifold`).
-
-        Returns 0 if the surface passes the test, nonzero if not.
-        A full report is printed out.
         
-        If surface is not an orientable manifold returns 512.
-        The :meth:`fixNormals` and :meth:`reverse` methods may be used to fix
-        the normals of an otherwise correct closed manifold.
+        This is a necessary condition the `gts` methods:
+        split, coarsen, refine, boolean. (Additionally, the surface should be
+        closed, wich can be checked with :meth:`isClosedManifold`).
+
+        Returns a tuple of:
         
-        If surface is an orientable manifold but is self-intersecting, 
-        returns 768 and the self intersecting triangles. If matched is True,
-        the intersecting triangles are returned as element indices of self.
+        - an integer return code with the value:
 
+          - 0: the surface is an orientable, non self-intersecting manifold.
+          - 2: the surface is not an orientable manifold. This may be due to
+            misoriented normals. The :meth:`fixNormals` and :meth:`reverse`
+            methods may be used to help fixing the problem in such case.
+          - 3: the surface is an orientable manifold but is
+            self-intersecting. The self intersecting triangles are returned as
+            the second return value.
 
+        - the intersecting triangles in the case of a return code 3, else None.
+          If matched==True, intersecting triangles are returned as element
+          indices of self, otherwise as a separate TriSurface object.
         """
-        cmd = 'gtscheck'
-        if verbose:
-            cmd += ' -v'
         tmp = tempfile.mktemp('.gts')
-        pf.message("Writing temp file %s" % tmp)
         self.write(tmp,'gts')
-        pf.message("Checking with command\n %s" % cmd)
-        cmd += ' < %s' % tmp
+        
+        cmd = "gtscheck < %s" % tmp
         sta,out = utils.runCommand(cmd,False)
         os.remove(tmp)
-        pf.message(out)
         if sta == 0:
             pf.message('The surface is an orientable non self-intersecting manifold')
             return sta, None
@@ -1493,20 +1576,17 @@ Shortest altitude: %s; largest aspect ratio: %s
             return sta, None
         if sta==3:
             pf.message('The surface is an orientable manifold but is self-intersecting')
-            outs= out.split('\n')
-            first=0
-            if verbose:
-                first=27
-            [nfa, ned, nve]= [int(item) for item in outs[first].split(' ')[0:3] ]
-            d=outs[first+1: len(outs)]
-            ive, ied, ifa= d[0:nfa], d[nfa:nfa+ned], d[nfa+ned:nfa+ned+nve]
-            ve=asarray( [ [float(item2) for  item2 in item1.split(' ')] for item1 in ive] )
-            ed=asarray( [ [int(item2) for  item2 in item1.split(' ')] for item1 in ied] )
-            fa=asarray( [ [int(item2) for  item2 in item1.split(' ')] for item1 in ifa] )
+            tmp = tempfile.mktemp('.gts')
+            pf.message("Writing temp file %s" % tmp)
+            fil = open(tmp,'w')
+            fil.write(out)
+            fil.close()
+            Si = TriSurface.read(tmp)
+            os.remove(tmp)
             if matched:
-                return sta, self.matchElemsCentroids( TriSurface(ve,ed-1,  fa-1.) )
+                return sta, self.matchCentroids(Si)
             else:
-                return sta, TriSurface(ve,ed-1,  fa-1.)
+                return sta, Si
         else:
             pf.message('Status of gtscheck not understood')
             return sta, None
