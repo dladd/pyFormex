@@ -11,6 +11,11 @@ Position an object A thus that its three points X are aligned with the
 three points X of object B.
 """
 
+out = grepSource('showText')
+showText(out,mono=True)
+exit()
+
+
 def drawObjectWithName(obj,name):
     """Draw an object and show its name at the center"""
     drawText3D(obj.center(),name)

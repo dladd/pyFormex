@@ -35,6 +35,7 @@ import random
 import viewport
 from gettext import gettext as _
 
+
 def help(page=None):
     """Display a html help page.
 
@@ -53,13 +54,13 @@ def help(page=None):
     pid = utils.spawn(' '.join([browser,page]))
 
 
-def catchAndDisplay(cmd):
-    """Catch stdout from a Python cmd and display it in a window."""
+def catchAndDisplay(expression):
+    """Catch stdout from a Python expression and display it in a window."""
     save = sys.stdout
     try:
         f = tempfile.TemporaryFile('w+')
         sys.stdout = f
-        eval(cmd)
+        eval(expression)
         f.seek(0)
         draw.showText(f.read())
     finally:
@@ -69,6 +70,7 @@ def catchAndDisplay(cmd):
 def cmdline():
     """Display the pyFormex command line help."""
     catchAndDisplay('pf.print_help()')
+
 
 ## def qappargs():
 ##     """Display informeation on the Qt application arguments."""
@@ -174,6 +176,16 @@ def showFileOrURL(link):
         draw.showFile(link)
 
 
+def searchText():
+    from widgets import simpleInputItem as _I
+    res = draw.askItems([_I('text','',text='String to grep')])
+    if res:
+        text = res['text']
+        out = draw.grepSource(text)
+        draw.showText(out,mono=True)
+ 
+
+
 def createMenuData():
     """Returns the help menu data"""
     DocsMenuData = [(k,help,{'data':v}) for k,v in pf.cfg['help/docs']] 
@@ -183,6 +195,7 @@ def createMenuData():
 
     try:
         MenuData = DocsMenuData + [
+            (_('&Search text in source'),searchText),
             (_('&About current script'),draw.showDescription),
             ('---',None),
             (_('&Command line options'),cmdline),

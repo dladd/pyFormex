@@ -349,12 +349,20 @@ def removeTree(path,top=True):
         os.rmdir(path)
 
 
+def pyformexFiles():  # WE COULD ADD other=None):
+    """Return a list of the pyformex source .py files.
+
+    """
+    files = listTree(pf.cfg['pyformexdir'],listdirs=False,sorted=True,includedirs=['gui','plugins','examples','lib'],includefiles=['.*\.py$'])
+    return files
+
+
 ###################### locale ###################
 
 def setSaneLocale(localestring=''):
     """Set a sane local configuration for LC_NUMERIC.
 
-    `locale` is the locale string to be set, e.g. 'en_US.UTF-8'
+    `localestring` is the locale string to be set, e.g. 'en_US.UTF-8'
 
     This will change the ``LC_ALL`` setting to the specified string,
     and set the ``LC_NUMBERIC`` to 'C'.
@@ -838,7 +846,8 @@ def stuur(x,xval,yval,exp=2.5):
     else:
         return ymax
 
-
+###########################################################################
+    
 
 def interrogate(item):
     """Print useful information about item."""
