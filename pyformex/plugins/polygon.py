@@ -126,6 +126,7 @@ def reducePolyline(x,e):
 
 if __name__ == 'draw':
 
+
     layout(2)
     for i in range(2):
         viewport(i)

@@ -182,7 +182,7 @@ def searchText():
     if res:
         text = res['text']
         out = draw.grepSource(text)
-        draw.showText(out,mono=True)
+        draw.showText(out,mono=True,modal=False)
  
 
 

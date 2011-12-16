@@ -66,7 +66,7 @@ cross_sections.update({
     })
 
 
-input_data = [
+dialog_items = [
     _I('nmod',100,text='Number of cells along spiral'),
     _I('turns',2.5,text='Number of 360 degree turns'),
     _I('rfunc',None,text='Spiral function',choices=rfuncs),
@@ -200,26 +200,32 @@ def timeOut():
     """
     show()
     close()
+    
+        
+def createDialog():
+    global dialog
+
+    # Create the dialog
+    dialog = Dialog(
+        caption = 'Sweep parameters',
+        items = dialog_items,
+        actions = [('Close',close),('Show',show)],
+        default = 'Show'
+        )
+
+    # Update its data from stored values
+    if pf.PF.has_key('_Sweep_data_'):
+        dialog.updateData(pf.PF['_Sweep_data_'])
+
+    # Always install a timeout in official examples!
+    dialog.timeout = timeOut
 
 
 if __name__ == 'draw':
 
-    # Update the data items from saved values
-    try:
-        saved_data = pf.PF.get('Sweep_data',{})
-        #
-        widgets.updateDialogItems(input_data,saved_data)
-    except:
-        raise
-
-
-    # Create the modeless dialog widget
-    dialog = widgets.InputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
-
-    # Examples style requires a timeout action
-    dialog.timeout = timeOut
-
     # Show the dialog and let the user have fun
+    clear()
+    createDialog()
     dialog.show()
     scriptLock(__file__)
 

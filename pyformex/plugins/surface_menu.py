@@ -34,7 +34,7 @@ from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *
 from plugins.trisurface import *
 from plugins.objects import *
-from plugins import plot2d,formex_menu,geometry_menu,fe_abq
+from plugins import plot2d,formex_menu,fe_abq
 import simple
 from plugins.tools import Plane
 from pyformex.arraytools import niceLogSize
@@ -239,6 +239,7 @@ def toMesh(suffix=''):
     surface names plus the suffix, else, the surface names will be used
     (and the surfaces will thus be cleared from memory).
     """
+    from plugins import geometry_menu
     if not selection.check():
         selection.ask()
 
@@ -266,6 +267,7 @@ def fromMesh(suffix=''):
     Mesh names plus the suffix, else, the Mesh names will be used
     (and the Meshes will thus be cleared from memory).
     """
+    from plugins import geometry_menu
     if not geometry_menu.selection.check():
         geometry_menu.selection.ask()
 
@@ -324,7 +326,7 @@ def merge():
     """Merge the selected surfaces."""
     SL = selection.check(warn=False)
     if len(SL) < 2:
-        warning("You should at least selct two surfaces!")
+        warning("You should at least select two surfaces!")
         return
 
     S = TriSurface.concatenate(SL)
@@ -376,13 +378,28 @@ def fillBorders():
         res = askItems([
             _I('Fill which borders',itemtype='radio',choices=['All','One']),
             _I('Filling method',itemtype='radio',choices=['radial','border']),
+            _I('merge',False,text='Merge fills into current surface'),
             ])
         if res['Fill which borders'] == 'One':
             B = B[:1]
         fills = [ fillBorder(b,method=res['Filling method']).setProp(i+1) for i,b in enumerate(B) ]
-        draw(fills)
-        export(dict([('fill-%s'%i,f) for i,f in enumerate(fills)]))
+        if res['merge']:
+            name = selection.names[0]
+            S = named(selection.names[0])
+            for f in fills:
+                S += f
+            export({name:S})
+            selection.draw()
+        else:
+            draw(fills)
+            export(dict([('fill-%s'%i,f) for i,f in enumerate(fills)]))
+
         
+def deleteTriangles():
+    S = selection.check(single=True)
+    if S:
+        picked = pick('elements')
+        print picked
 
 ## def fillHoles():
 ##     """Fill the holes in the selected surface."""
@@ -1176,26 +1193,6 @@ def show_volume():
     PF['vol_model'] = F
 
 
-
-def createGrid():
-    res = askItems([_I('name','__auto__'),
-                    _I('nx',3),
-                    _I('ny',3),
-                    _I('b',1),
-                    _I('h',1),
-                    ])
-    if res:
-        globals().update(res)
-        #name = res['name']
-        #nx = res['nx']
-        #ny = res['ny']
-        #b = 
-        S = TriSurface(simple.rectangle(nx,ny,b,h,diag='d'))
-        export({name:S})
-        selection.set([name])
-        selection.draw()
-
-
 def createCube():
     res = askItems([_I('name','__auto__'),
                     ])
@@ -1217,12 +1214,6 @@ def createSphere():
         export({name:S})
         selection.set([name])
         selection.draw()
-
-
-def createCylinder():
-    pf.warning("This function has been moved to the Geometry menu")
-
-createCone = createCylinder
 
 
 ###################  Operations using gts library  ########################
@@ -1335,11 +1326,8 @@ def create_menu():
         ("&Write Surface Model",write_surface),
         ("---",None),
         ("&Create surface",
-         [('&Plane Grid',createGrid),
-          ('&Cube',createCube),
+         [('&Cube',createCube),
           ('&Sphere',createSphere),
-          ('&Cylinder, Cone, Truncated Cone',createCylinder),
-          ('&Circle, Sector, Cone',createCone),
           ]),
         ("&Merge Selection",merge),
         ("&Fix Normals",fixNormals),
@@ -1371,9 +1359,10 @@ def create_menu():
           ("&Partition By Connection",partitionByConnection),
           ("&Partition By Angle",partitionByAngle),
           ]),
-        ("&Border Line",showBorder),
+        ("&Show Border",showBorder),
         ("&Fill Border",fillBorders),
 #        ("&Fill Holes",fillHoles),
+        ("&Delete Triangles",deleteTriangles),
         ("---",None),
         ("&Transform",
          [("&Scale",scaleSelection),

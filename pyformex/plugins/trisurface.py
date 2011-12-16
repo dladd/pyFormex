@@ -884,7 +884,7 @@ class TriSurface(Mesh):
         return [ Mesh(self.coords,e) for e in self.checkBorder() ]
 
 
-    def fillBorder(self,method='radial',merge=False):
+    def fillBorder(self,method='radial'):
         """Fill the border areas of a surface to make it closed.
 
         Returns a list of surfaces, each of which fills a singly connected

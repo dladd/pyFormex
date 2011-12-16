@@ -33,6 +33,9 @@ techniques = ['dialog','persistence']
 from simple import rectangle
 from utils import NameSequence
 from gui.draw import *
+k = globals().keys()
+k.sort()
+print k
 from gui.imagecolor import *
 
 dialog = None

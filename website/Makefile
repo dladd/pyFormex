@@ -44,14 +44,13 @@ RSYNC= rsync -v -e ssh
 PDF= _build/latex/pyformex.pdf
 
 SVNDOC= ../pyformex/doc/html
-UPLOAD= shell.berlios.de:/home/groups
-DOCUPLOAD= ${UPLOAD}/pyformex/htdocs/doc
-FTPUPLOAD= ${UPLOAD}/ftp/pub/pyformex
+BERLIOS= shell.berlios.de:/home/groups
+UPLOAD= ${BERLIOS}/pyformex/htdocs
+DOCUPLOAD= ${UPLOAD}/doc
+FTPUPLOAD= ${BERLIOS}/ftp/pub/pyformex
 FTPLOCAL= bumps.ugent.be:/var/ftp/pub/pyformex
 
-.PHONY: ref
-
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest berlios berliosn ref
 
 # where to search for source files
 PYFORMEXDIR=../pyformex
@@ -200,5 +199,12 @@ pubpdf: ${PDF}
 # and to our ftp server
 publocal: ${PDF}
 	rsync -lt $< ${FTPLOCAL}
+
+# and to berlios
+berliosn:
+	rsync _build/html/* ${UPLOAD} --exclude CVS --exclude .svn --delete -avn
+
+berlios:
+	rsync _build/html/* ${UPLOAD} --exclude CVS --exclude .svn --delete -av
 
 # End

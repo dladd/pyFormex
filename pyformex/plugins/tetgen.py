@@ -121,7 +121,7 @@ def readPolyFile(fn):
         nodeInfo = readNodesBlock(fil,npts,ndim,nattr,nbmark)
     else:
         # corresponding .node file
-        nodeInfo = readNodes(utils.changeExt(fn,'.node'))
+        nodeInfo = readNodeFile(utils.changeExt(fn,'.node'))
 
     # facet section
     line = skipComments(fil)
@@ -136,6 +136,23 @@ def readPolyFile(fn):
     ## elems = fromfile(fil,sep=' ',dtype=int32, count=4*nelems)
     ## elems = elems.reshape((-1,4))
     ## return elems[:,1:]
+
+
+def readSurface(fn):
+    """Read a tetgen surface from a .node/.face file pair.
+
+    The given filename is either the .node or .face file.
+    Returns a tuple of (nodes,elems).
+    """
+    nodeInfo = readNodeFile(utils.changeExt(fn,'.node'))
+    nodes = nodeInfo[0]
+    print("Read %s nodes" % nodes.shape[0])
+    elemInfo = readFaceFile(utils.changeExt(fn,'.face'))
+    elems = elemInfo[0]
+    print("Read %s elems" % elems.shape[0])
+    #if numbers[0] == 1:
+    #    elems -= 1 
+    return nodes,elems
 
 
 ######### Support functions ####################################
@@ -301,21 +318,6 @@ def readSmeshFacetsBlock(fil,nfacets,nbmark):
         elems[np] = Connectivity(elems[np],eltype=eltype)
         nrs[np] = array(nrs[np])
     return elems,nrs
-
-
-def readSurface(fn):
-    """Read a tetgen surface from a .node/.face file pair.
-
-    The given filename is either the .node or .face file.
-    Returns a tuple of (nodes,elems).
-    """
-    nodes,numbers = readNodes(utils.changeExt(fn,'.node'))
-    print("Read %s nodes" % nodes.shape[0])
-    elems = readFaces(utils.changeExt(fn,'.face'))
-    print("Read %s elems" % elems.shape[0])
-    #if numbers[0] == 1:
-    #    elems -= 1 
-    return nodes,elems
 
 
 def readNeigh(fn):

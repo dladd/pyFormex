@@ -137,12 +137,21 @@ def showText(text,type=None,actions=[('OK',None)],modal=True,mono=False):
 
     `mono=True` forces the use of a monospaced font.
     """
-    w = widgets.TextBox(text,type,actions,modal=modal,mono=mono)
+    ## w = widgets.TextBox(text,type,actions,modal=modal,mono=mono)
+    if mono:
+        font = "DejaVu Sans Mono"
+    else:
+        font = None
+    w = Dialog(
+        items=[_I('text',text,itemtype='text',text='',font=font)],
+        modal=modal,
+        actions=[('Ok',)]
+        )
     if modal:
         return w.getResult()
     else:
         w.show()
-        return None
+        return w.results
 
 
 def showFile(filename,mono=False,**kargs):
@@ -1545,34 +1554,43 @@ def zoom(f):
 def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
     """Fly through the current scene along the specified path.
 
-    This function moves the camera through the subsequent points
-    of a path, looing at the next point of the path, and keeping
-    the upvector of the camera oriented along the specified direction.
-    
-    - `path`: a PolyLine or plex-2 Formex specifyin the camera path.
-    - `upvector`: the direction of the vertical axis of the camera.
+    - `path`: a plex-2 or plex-3 Formex (or convertibel to such Formex)
+      specifying the paths of camera eye and center (and upvector).
+    - `upvector`: the direction of the vertical axis of the camera, in case
+      of a 2-plex camera path.
     - `sleeptime`: a delay between subsequent images, to slow down
       the camera movement.
+      
+    This function moves the camera through the subsequent elements of the
+    Formex. For each element the first point is used as the center of the
+    camera and the second point as the eye (the center of the scene looked at).
+    For a 3-plex Formex, the third point is used to define the upvector
+    (i.e. the vertical axis of the image) of the camera. For a 2-plex
+    Formex, the upvector is constant as specified in the arguments.
     """
-    from plugins.curve import PolyLine
-
     try:
         if not isinstance(path,Formex):
-            path = path.toFormex() 
+            path = path.toFormex()
         if not path.nplex() in (2,3):
             raise ValueError
     except:
         raise ValueError,"The camera path should be (convertible to) a plex-2 or plex-3 Formex!"
 
+    nplex = path.nplex()
     if sleeptime is None:
         sleeptime = pf.cfg['draw/flywait']
     saved = delay(sleeptime)
     saved1 = pf.GUI.actions['Continue'].isEnabled()
     pf.GUI.actions['Continue'].setEnabled(True)
-    
-    for eye,center in path:
-        pf.debug("Eye: %s; Center: %s" % (eye,center))
-        pf.canvas.camera.lookAt(eye,center,upvector)
+
+    for elem in path:
+        center,eye = elem[:2]
+        if nplex == 3:
+            upv = elem[2] - center
+        else:
+            upv = upvector
+        #pf.debug("Eye: %s; Center: %s; Upvector: %s" % (eye,center,upv))
+        pf.canvas.camera.lookAt(eye,center,upv)
         wait()
         pf.canvas.display()
         pf.canvas.update()
@@ -1898,6 +1916,12 @@ def drawtext(*args,**kargs):
 @deprecation("`drawNormals` is deprecated: use `drawVectors` instead.\nNotice that the argument order is different!")
 def drawNormals(v,P,size=None,**drawOptions):
     drawVectors(P,v,size=size,**drawOptions)
+
+
+###########################################################################
+# Make _I, _G and _T be included when doing 'from gui.draw import *'
+#
+__all__ = globals().keys() + ['_I','_G','_T']
 
 
 #### End

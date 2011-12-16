@@ -535,30 +535,53 @@ class Coords(ndarray):
         dmin,dmax = self.directionalSize(n)
         return dmax-dmin
 
-
     # Test position
 
     def test(self,dir=0,min=None,max=None,atol=0.):
         """Flag points having coordinates between min and max.
 
-        This function is very convenient in clipping a :class:`Coords` in a
-        specified
-        direction. It returns a 1D integer array flagging (with a value 1 or
-        True) the elements having nodal coordinates in the required range.
-        Use where(result) to get a list of element numbers passing the test.
-        Or directly use clip() or cclip() to create the clipped :class:`Coords`.
+        Tests the position of the points of the :class:`Coords` with respect to
+        one or two planes. This method is very convenient in clipping a
+        :class:`Coords` in a specified direction. In most cases the clipping
+        direction is one of the global cooordinate axes, but a general
+        direction may be used as well.
+
+        Parameters:
+
+        - `dir`: either a global axis number (0, 1 or 2) or a direction vector
+          consisting of 3 floats. It specifies the direction in which the
+          distances are measured. Default is the 0 (or x) direction.
+
+        - `min`,`max`: position of the minimum and maximum clipping planes.
+          If `dir` was specified as an integer (0,1,2), this is a single float
+          value corresponding with the coordinate in that axis direction.
+          Else, it is a point in the clipping plane with normal direction `dir`.
+          One of the two clipping planes may be left unspecified.
+
         
-        The test plane can be define in two ways depending on the value of dir.
-        If dir == 0, 1 or 2, it specifies a global axis and min and max are
-        the minimum and maximum values for the coordinates along that axis.
-        Default is the 0 (or x) direction.
+        Returns: a 1D integer array with same length as the number of points.
+          For each point the value is 1 (True) if the point is above the
+          minimum clipping plane and below the maximum clipping plane,
+          or 0 (False) otherwise.
+          An unspecified clipping plane corresponds with an infinitely low or
+          high value. The return value can directly be used as an index to
+          obtain a :class:`Coords` with the points satisfying the test (or not).
+          See the examples below.
 
-        Else, dir should be compatible with a (3,) shaped array and specifies
-        the direction of the normal on the planes. In this case, min and max
-        are points and should also evaluate to (3,) shaped arrays.
+        Example:
 
-        One of the two clipping planes may be left unspecified.
-        """
+        >>> x = Coords([[0.,0.],[1.,0.],[0.,1.],[0.,2.]])
+        >>> print x.test(min=0.5)
+        [False  True False False]
+        >>> t = x.test(dir=1,min=0.5,max=1.5)
+        >>> print x[t]
+        [[ 0.  1.  0.]]
+        >>> print x[~t]
+        [[ 0.  0.  0.]
+         [ 1.  0.  0.]
+         [ 0.  2.  0.]]
+       
+       """
         if min is None and max is None:
             raise ValueError,"At least one of min or max have to be specified."
 

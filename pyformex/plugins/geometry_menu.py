@@ -47,9 +47,8 @@ import simple
 from gui import actors
 from gui import menu
 from gui.draw import *
-from gui.widgets import simpleInputItem as _I, groupInputItem as _G
 
-from plugins import objects,trisurface,inertia,partition,sectionize,dxf,tetgen
+from plugins import objects,trisurface,inertia,partition,sectionize,dxf,tetgen,surface_menu
 
 import commands, os, timer
 
@@ -561,6 +560,48 @@ def convertFormex(F,totype):
         if totype == 'TriSurface':
             F = TriSurface(F)
     return F
+
+
+base_patterns = [
+    'l:1',
+    'l:2',
+    'l:12',
+    'l:127',
+    ]    
+
+def createGrid():
+    _data_ = __name__+'_createGrid_data'
+    dia = Dialog(
+        items = [
+            _I('name','__auto__'),
+            _I('object type',choices=['Formex','Mesh','TriSurface']),
+            _I('base',choices=base_patterns),
+            _I('nx',4),
+            _I('ny',2),
+            _I('stepx',1.),
+            _I('stepy',1.),
+            _I('taper',0),
+            _I('bias',0.),
+             ]
+        )
+    if pf.PF.has_key(_data_):
+        dia.updateData(pf.PF[_data_])
+    res = dia.getResults()
+    if res:
+        pf.PF[_data_] = res
+        name = res['name']
+        if name == '__auto__':
+            name = autoName(res['object type']).next()
+        F = Formex(res['base']).replic2(
+            n1=res['nx'], n2=res['ny'],
+            t1=res['stepx'], t2=res['stepy'],
+            bias=res['bias'], taper=res['taper'])
+        F = convertFormex(F,res['object type'])
+        export({name:F})
+        selection.set([name])
+        if res['object type'] == 'TriSurface':
+            surface_menu.selection.set([name])
+        selection.draw()
     
 
 def createCylinder():
@@ -598,13 +639,22 @@ def createCylinder():
         if name == '__auto__':
             name = autoName(res['object type']).next()
 
-        F = simple.cylinder(L=res['height'],D=res['base diameter'],D1=res['top diameter'],
-                            angle=res['angle'],nt=res['div_along_circ'],nl=res['div_along_length'],
-                            bias=res['bias'],diag=res['diagonals'][0])
+        F = simple.cylinder(
+            L=res['height'],
+            D=res['base diameter'],
+            D1=res['top diameter'],
+            angle=res['angle'],
+            nt=res['div_along_circ'],
+            nl=res['div_along_length'],
+            bias=res['bias'],
+            diag=res['diagonals'][0]
+            )
 
         F = convertFormex(F,res['object type'])
         export({name:F})
         selection.set([name])
+        if res['object type'] == 'TriSurface':
+            surface_menu.selection.set([name])
         selection.draw()
 
 
@@ -646,6 +696,8 @@ def createCone():
         F = convertFormex(F,res['object type'])
         export({name:F})
         selection.set([name])
+        if res['object type'] == 'TriSurface':
+            surface_menu.selection.set([name])
         selection.draw()
 
 #############################################
@@ -868,6 +920,7 @@ def create_menu():
             ("&Split",splitProp),
             ]),
         ("&Create Object",[
+            ('&Grid',createGrid),
             ('&Cylinder, Cone, Truncated Cone',createCylinder),
             ('&Circle, Sector, Cone',createCone),
             ]),

@@ -416,6 +416,11 @@ class InputText(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
         self.layout().insertWidget(1,self.input)
+        if 'font' in kargs:
+            try:
+                self.setFont(QtGui.QFont(kargs['font']))
+            except:
+                pass
 
     def show(self):
         """Select all text on first display.""" 
@@ -491,7 +496,7 @@ class MyListWidget(QtGui.QListWidget):
             r = self.visualItemRect(i)
             h += r.height()
             w = max(w,r.width())
-        print "Need total height of %s" % h
+        #print "Need total height of %s" % h
         self.setFixedSize(w,h)
 
 
