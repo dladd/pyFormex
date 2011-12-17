@@ -1209,7 +1209,7 @@ Shortest altitude: %s; largest aspect ratio: %s
     
 
 
-    def partitionByAngle(self,angle=60.,firstprop=0,sortedbyarea=True):
+    def partitionByAngle(self,angle=60.,firstprop=0,sort='number',sortedbyarea=None):
         """Partition the surface by splitting it at sharp edges.
 
         The surface is partitioned in parts in which all elements can be
@@ -1220,13 +1220,17 @@ Shortest altitude: %s; largest aspect ratio: %s
        
         The partitioning is returned as a property type array having a value
         corresponding to the part number. The lowest property number will be
-        firstprop. By default the parts will be assigned property numbers in
-        the order of decreasing total area. The sorting can be turned off
-        by setting sortedbyarea=False, though nobody probably has a good
-        reason to use this.
+        firstprop.
+
+        By default the parts are assigned property numbers in decreasing
+        order of the number of triangles in the part. Setting the sort
+        argument to 'area' will sort the parts according to decreasing
+        area. Any other value will return the parts unsorted.
         """
-        if not sortedbyarea in [True,False]:
-            pf.warning("The sortedbyarea parameter should be a boolean. The sorting is now on by default and is always done by decreasing area.")
+        if sortedbyarea is not None:
+            pf.warning("The sortedbyarea parameter is obsolete. Use the sort parameter instead.")
+            if sortedbyarea:
+                sort = 'area'
             
         conn = self.edgeConnections()
         # Flag edges that connect two faces
@@ -1238,11 +1242,17 @@ Shortest altitude: %s; largest aspect ratio: %s
         small_angle = ones(conn2.shape,dtype=bool)
         small_angle[conn2] = dotpr(n[:,0],n[:,1]) >= cosangle
         p = self.partitionByEdgeFront(small_angle)
-        if sortedbyarea:
-            area = [a[p==j].sum() for j in unique(p)]
-            srt = argsort(a)[::-1]
+        if sort == 'number':
+            h = histogram(p,list(unique(p))+[p.max()+1])[0]
+        elif sort == 'area':
+            h = [a[p==j].sum() for j in unique(p)]
+        else:
+            sort = False
+        if sort:
+            srt = argsort(h)[::-1]
             inv = inverseUniqueIndex(srt)
             p = inv[p]
+        
         return firstprop + p
 
 

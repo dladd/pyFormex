@@ -386,7 +386,7 @@ def nextFilename(fn):
         return '.1'.join(os.path.splitext(fn))
 
 
-def runTetgen(fn):
+def runTetgen(fn,options=''):
     """Run tetgen mesher on the specified file.
 
     The input file is a closed triangulated surface.
@@ -394,7 +394,7 @@ def runTetgen(fn):
     and create a new approximation of the surface as a by-product.
     """
     if os.path.exists(fn):
-        sta,out = utils.runCommand('tetgen -z %s' % fn)
+        sta,out = utils.runCommand('tetgen -z%s %s' % (options,fn))
 
 
 def readTetgen(fn):

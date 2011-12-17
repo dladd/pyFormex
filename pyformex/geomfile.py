@@ -383,7 +383,7 @@ class GeometryFile(object):
             if objtype == 'Formex':
                 obj = self.readFormex(nelems,nplex,props,eltype,sep)
             elif objtype in ['Mesh','TriSurface']:
-                obj = self.readMesh(ncoords,nelems,nplex,props,eltype,sep)
+                obj = self.readMesh(ncoords,nelems,nplex,props,eltype,sep,objtype)
             elif objtype == 'PolyLine':
                 obj = self.readPolyLine(ncoords,closed,sep)
             elif objtype == 'BezierSpline':
@@ -445,6 +445,9 @@ class GeometryFile(object):
         Returns the Mesh constructed from these data, or a subclass if
         an objtype is specified.
         """
+        # Make sure to import the Mesh subclasses that can be read
+        from plugins.trisurface import TriSurface
+        
         ndim = 3
         x = readArray(self.fil,Float,(ncoords,ndim),sep=sep)
         e = readArray(self.fil,Float,(nelems,nplex),sep=sep)
@@ -454,7 +457,10 @@ class GeometryFile(object):
             p = None
         M = Mesh(x,e,p,eltype)
         if objtype != 'Mesh':
-            clas = globals()[objtype]
+            try:
+                clas = locals()[objtype]
+            except:
+                clas = globals()[objtype]
             M = clas(M)
         return M
  

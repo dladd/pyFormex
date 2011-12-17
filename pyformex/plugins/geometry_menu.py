@@ -52,6 +52,7 @@ from plugins import objects,trisurface,inertia,partition,sectionize,dxf,tetgen,s
 
 import commands, os, timer
 
+_name_ = 'geometry_menu'
 ################### automatic naming of objects ##########################
 
 _autoname = {}
@@ -93,23 +94,21 @@ def _init_():
     drawable = pf.GUI.drawable
     selection = pf.GUI.selection['geometry']
     drawAll = drawable.draw
-    ## selection_F = pf.GUI.selection['formex']
-    ## selection_M = pf.GUI.selection['mesh']
-    ## selection_TS = pf.GUI.selection['surface']
-    ## selection_PL = pf.GUI.selection['polyline']
-    ## selection_NC = pf.GUI.selection['nurbs']
-    ## setSelection = selection.set
-    ## drawSelection = selection.draw
     
 
 def set_selection(clas='geometry'):
     sel = pf.GUI.selection.get(clas)
     if sel:
-        sel.ask()
-        selection.set(sel.names)
-        selection.draw()
-    else:
-        warning('Nothing to select')
+        res = sel.ask()
+        if res is None:
+            warning('Nothing to select')
+            return
+
+        if not sel.names:
+            message("Nothing selected")
+            
+#        selection.set(sel.names)
+#        selection.draw()
         
 
 ##################### read and write ##########################
@@ -176,7 +175,7 @@ def importGeometry(select=True,draw=True,ftype=None):
         res = readGeometry(fn)
         export(res)
         #selection.readFromFile(fn)
-        print res.keys()
+        print "Items read: %s" % [ "%s(%s)" % (k,res[k].__class__.__name__) for k in res]
         if select:
             selection.set(res.keys())
             if draw:
@@ -570,7 +569,7 @@ base_patterns = [
     ]    
 
 def createGrid():
-    _data_ = __name__+'_createGrid_data'
+    _data_ = _name_+'createGrid_data'
     dia = Dialog(
         items = [
             _I('name','__auto__'),
@@ -602,37 +601,60 @@ def createGrid():
         if res['object type'] == 'TriSurface':
             surface_menu.selection.set([name])
         selection.draw()
+
+
+def createRectangle():
+    _data_ = _name_+'createRectangle_data'
+    dia = Dialog(
+        items = [
+            _I('name','__auto__'),
+            _I('object type',choices=['Formex','Mesh','TriSurface']),
+            _I('nx',1),
+            _I('ny',1),
+            _I('width',1.),
+            _I('height',1.),
+            _I('bias',0.),
+            _I('diag','up',choices=['none','up','down','x-both']),
+             ]
+        )
+    if pf.PF.has_key(_data_):
+        dia.updateData(pf.PF[_data_])
+    res = dia.getResults()
+    if res:
+        pf.PF[_data_] = res
+        name = res['name']
+        if name == '__auto__':
+            name = autoName(res['object type']).next()
+        F = simple.rectangle(
+            nx=res['nx'],ny=res['ny'],
+            b=res['width'],h=res['height'],
+            bias=res['bias'],diag=res['diag'][0])
+        F = convertFormex(F,res['object type'])
+        export({name:F})
+        selection.set([name])
+        if res['object type'] == 'TriSurface':
+            surface_menu.selection.set([name])
+        selection.draw()
     
 
 def createCylinder():
-    _data_ = __name__+'_createCylinder_data'
-    res = {
-        'name':'__auto__',
-        'object type':'Formex',
-        'base diameter':1.,
-        'top diameter':1.,
-        'height':2.,
-        'angle':360.,
-        'div_along_length':6,
-        'div_along_circ':12,
-        'bias':0.,
-        'diagonals':'up',
-        }
+    _data_ = _name_+'createCylinder_data'
+    dia = Dialog(items=[
+            _I('name','__auto__'),
+            _I('object type',choices=['Formex','Mesh','TriSurface']),
+            _I('base diameter',1.),
+            _I('top diameter',1.),
+            _I('height',2.),
+            _I('angle',360.),
+            _I('div_along_length',6),
+            _I('div_along_circ',12),
+            _I('bias',0.),
+            _I('diag','up',choices=['none','up','down','x-both']),
+            ],
+        )
     if pf.PF.has_key(_data_):
-        res.update(pf.PF[_data_])
-    res = askItems(store=res, items=[
-        _I('name'),
-        _I('object type',choices=['Formex','Mesh','TriSurface']),
-        _I('base diameter'),
-        _I('top diameter'),
-        _I('height'),
-        _I('angle'),
-        _I('div_along_length'),
-        _I('div_along_circ'),
-        _I('bias'),
-        _I('diagonals',choices=['none','up','down']),
-        ])
-
+        dia.updateData(pf.PF[_data_])
+    res = dia.getResults()
     if res:
         pf.PF[_data_] = res
         name = res['name']
@@ -647,7 +669,7 @@ def createCylinder():
             nt=res['div_along_circ'],
             nl=res['div_along_length'],
             bias=res['bias'],
-            diag=res['diagonals'][0]
+            diag=res['diag'][0]
             )
 
         F = convertFormex(F,res['object type'])
@@ -659,7 +681,7 @@ def createCylinder():
 
 
 def createCone():
-    _data_ = __name__+'_createCone_data'
+    _data_ = _name_+'createCone_data'
     res = {
         'name' : '__auto__',
         'object type':'Formex',
@@ -882,7 +904,7 @@ def create_menu():
             ("Object File Format (.off)",exportOff),
             ]),
         ("&Select ",[
-            ('Any',selection.ask),
+            ('Any',set_selection),
             ('Formex',set_selection,{'data':'formex'}),
             ('Mesh',set_selection,{'data':'mesh'}),
             ('TriSurface',set_selection,{'data':'surface'}),
@@ -921,6 +943,7 @@ def create_menu():
             ]),
         ("&Create Object",[
             ('&Grid',createGrid),
+            ('&Rectangle',createRectangle),
             ('&Cylinder, Cone, Truncated Cone',createCylinder),
             ('&Circle, Sector, Cone',createCone),
             ]),

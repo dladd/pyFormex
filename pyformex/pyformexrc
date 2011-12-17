@@ -76,7 +76,7 @@ uselib = True
 
 [warnings]
 nice = True
-popup=True
+popup = True
 # Warnings to be filtered out: a list of tuples (message,module,category)
 # module and category have defaults
 # Example: filterwarnings = [('warn_viewport_switching',)]

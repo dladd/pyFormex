@@ -29,13 +29,9 @@ level = 'advanced'
 topic = ['geometry']
 techniques = ['dialog','persistence']
 """
-
 from simple import rectangle
 from utils import NameSequence
 from gui.draw import *
-k = globals().keys()
-k.sort()
-print k
 from gui.imagecolor import *
 
 dialog = None
@@ -93,7 +89,6 @@ def drawSuperShape():
     global color
     clear()
     smoothwire()
-    print color
     if type(color) == str and color.startswith('file:'):
         print "trying to convert color"
         im = QtGui.QImage('Elevation-800.jpg')
@@ -225,7 +220,7 @@ def createDialog():
     global dialog
 
     # Create the dialog
-    dialog = widgets.InputDialog(
+    dialog = Dialog(
         caption = 'SuperShape parameters',
         items = dialog_items,
         actions = dialog_actions,
@@ -239,7 +234,7 @@ def createDialog():
     # Always install a timeout in official examples!
     dialog.timeout = timeOut
 
-    
+
 if __name__ == "draw":
 
     # when executed as a script, show the dialog 

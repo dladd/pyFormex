@@ -80,7 +80,7 @@ def Globals():
     # :DEV it is not a good idea to put the pf.PF in the globals(),
     # because pf.PF may contain keys that are not acceptible as
     # Python names
-    # g = copy.copy(pf.PF)
+    #g = copy.copy(pf.PF)
     g = {}
     g.update(globals())
     if pf.GUI:
@@ -327,14 +327,10 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     pf.scriptName = name
     exitall = False
 
-    starttime = time.clock()
-    pf.debug('STARTING SCRIPT (%s)' % starttime)
-    #pf.debug(scr)
-    #pf.debug(pye)
+    #starttime = time.clock()
     try:
         try:
             if pf.GUI and stepmode:
-                #pf.debug("STEPPING THROUGH SCRIPT")
                 step_script(scr,g,True)
             else:
                 if pye:
@@ -388,8 +384,8 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
         ##     pass
 
         scriptRelease('__auto__') # release the lock
-        elapsed = time.clock() - starttime
-        pf.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
+        #elapsed = time.clock() - starttime
+        #pf.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if pf.GUI:
             stepmode = False
             pf.GUI.drawlock.release() # release the lock

@@ -42,6 +42,7 @@ from pyformex.arraytools import niceLogSize
 from gui.widgets import simpleInputItem as _I, groupInputItem as _G
 import os, timer
 
+_name_ = '_surface_menu_'
 ##################### selection and annotations ##########################
 
 
@@ -363,43 +364,68 @@ def showBorder():
             coloredB = [ b.compact().setProp(i+1) for i,b in enumerate(border) ]
             draw(coloredB,linewidth=3)
             for i,b in enumerate(coloredB):
-                drawText3D(b.center(),str(i),color=pf.canvas.settings.colormap[i+1],font='sans',size=18,ontop=True)
+                c = roll(pf.canvas.settings.colormap,i+1,axis=0)
+                drawText3D(b.center(),str(i),color=c,font='sans',size=18,ontop=True)
             export({'border':coloredB})
         else:
             warning("The surface %s does not have a border" % selection[0])
             forget('border')
+    return S
 
 
 def fillBorders():
-    showBorder()
-    B = named('border')
-    props = [ b.prop[0] for b in B ]
+    _data_ = _name_+'fillBorders_data'
+    S = showBorder()
+    try:
+        B = named('border')
+    except:
+        return
     if B:
-        res = askItems([
+        props = [ b.prop[0] for b in B ]
+        dia = Dialog([
             _I('Fill which borders',itemtype='radio',choices=['All','One']),
             _I('Filling method',itemtype='radio',choices=['radial','border']),
             _I('merge',False,text='Merge fills into current surface'),
             ])
-        if res['Fill which borders'] == 'One':
-            B = B[:1]
-        fills = [ fillBorder(b,method=res['Filling method']).setProp(i+1) for i,b in enumerate(B) ]
-        if res['merge']:
-            name = selection.names[0]
-            S = named(selection.names[0])
-            for f in fills:
-                S += f
-            export({name:S})
-            selection.draw()
-        else:
-            draw(fills)
-            export(dict([('fill-%s'%i,f) for i,f in enumerate(fills)]))
+        if pf.PF.has_key(_data_):
+            dia.updateData(pf.PF[_data_])
+        res = dia.getResults()
+        if res:
+            pf.PF[_data_] = res
+        
+            if res['Fill which borders'] == 'One':
+                B = B[:1]
+            fills = [ fillBorder(b,method=res['Filling method']).setProp(i+1) for i,b in enumerate(B) ]
+            if res['merge']:
+                name = selection.names[0]
+                S = named(name)
+                for f in fills:
+                    S += f
+                #print "MERGE",type(S)
+                export({name:S})
+                selection.draw()
+            else:
+                draw(fills)
+                export(dict([('fill-%s'%i,f) for i,f in enumerate(fills)]))
 
         
 def deleteTriangles():
     S = selection.check(single=True)
     if S:
-        picked = pick('elements')
-        print picked
+        picked = pick('element')
+        #print picked
+        if picked:
+            picked = picked[0]
+            #print picked
+            if len(picked) > 0:
+                #print S.nelems()
+                S = S.cselect(picked)
+                #print "DELETE",type(S)
+                name = selection.names[0]
+                #print name
+                #print S.nelems()
+                export({name:S})
+                selection.draw()
 
 ## def fillHoles():
 ##     """Fill the holes in the selected surface."""

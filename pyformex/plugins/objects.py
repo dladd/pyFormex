@@ -161,6 +161,7 @@ class Objects(object):
         If there is no selection, or more than one in case of single==True,
         an error message is displayed and None is returned
         """
+        self.names = [ n for n in self.names if n in pf.PF ]
         if len(self.names) == 0:
             if warn:
                 warning("No %sobjects were selected" % self.object_type())
@@ -188,16 +189,22 @@ class Objects(object):
         """Show the names of known objects and let the user select one or more.
 
         mode can be set to'single' to select a single item.
-        This sets the current selection to the selected names.
-        Return a list with the selected names or None.
+        Return a list with the selected names, possibly empty (if nothing
+        was selected by the user), or None if there is nothing to choose from.
+        This also sets the current selection to the selected names, unless
+        the return value is None, in which case the selection remains unchanged.
         """
+        choices = self.listAll()
+        if not choices:
+            return None
         res = widgets.ListSelection(
             caption='Known %sobjects' % self.object_type(),
             choices=self.listAll(),
             default=self.names,
             sort=True).getResult()
-        if res is not None:
-            self.set(res)
+        if res is None:
+            res = []
+        self.set(res)
         return res
 
 
@@ -322,6 +329,7 @@ class DrawableObjects(Objects):
         new = Objects.ask(self,mode)
         if new is not None:
             self.draw()
+        return new
 
 
     def draw(self,**kargs):

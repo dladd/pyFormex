@@ -276,7 +276,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                      'busy'   : QtCore.Qt.BusyCursor,
                      }
 
-    selection_filters = [ 'none', 'single', 'closest', 'connected' ]
+    selection_filters = [ 'none', 'single', 'closest', 'connected', 'closest-connected' ]
 
     
     def __init__(self,*args):
@@ -536,7 +536,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
           objects is passed as an argument. This can e.g. be used to highlight
           the selected objects during picking.
         - `filter`: defines what elements to retain from the selection: one of
-          ``[None,'closest,'connected']``.
+          ``[None,'single','closest,'connected']``.
 
           - None (default) will return the complete selection.
           - 'closest' will only keep the element closest to the user.

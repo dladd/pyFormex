@@ -1437,8 +1437,10 @@ Size: %s
         It allows us to write simple expressions as M1+M2 to concatenate
         the Meshes M1 and M2. Both meshes should be of the same plexitude
         and have the same eltype.
+        The result will be of the same class as self (either a Mesh or a
+        subclass thereof).
         """
-        return Mesh.concatenate([self,other])
+        return self.__class__.concatenate([self,other])
     
 
     @classmethod

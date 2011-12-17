@@ -566,9 +566,10 @@ def draw(F,
        
         actors = []
 
-        # loop of the objects
+        # loop over the objects
         for F in FL:
 
+            print "DRAW %s" % type(F)
             # Create the colors
             if color == 'prop':
                 try:
@@ -1921,7 +1922,7 @@ def drawNormals(v,P,size=None,**drawOptions):
 ###########################################################################
 # Make _I, _G and _T be included when doing 'from gui.draw import *'
 #
-__all__ = globals().keys() + ['_I','_G','_T']
 
+__all__ = [ n for n in globals().keys() if not n.startswith('_')] + ['_I','_G','_T']
 
 #### End
