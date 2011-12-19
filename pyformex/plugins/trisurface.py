@@ -346,7 +346,8 @@ def fillBorder(border,method='radial'):
       object.
     """
     from plugins.trisurface import TriSurface
-    border=border.compact()#GDS otherwise it fails
+    if method != 'border':
+        border = border.compact()
     if isinstance(border,Mesh) and border.nplex()==2:
         coords = border.coords
         elems = border.elems[:,0]
