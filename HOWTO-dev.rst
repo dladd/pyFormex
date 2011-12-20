@@ -23,25 +23,29 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
   
+.. |date| date::
 
 =============================
 HOWTO for pyFormex developers
 =============================
+:Date: |date|
+:Author: benedict.verhegghe@ugent.be
 
-..warning :: This document is currently under development!
+.. warning:: 
+  This document is currently under development!
 
 This document describes the different tasks to be performed by pyFormex
 developers, the prefered way(s) that should be followed to perform these
 tasks, and the tools available to help with performing the tasks.
 
-In the current version of this document we use the term `developer' for 
+In the current version of this document we use the term *developer* for 
 a pyFormex group member. All developers have the same tasks and privileges.
 The project manager of course has some extra tasks and extra privileges. 
 We will handle these separately at the end of this document. 
 
 In the future however, we might create distinct classes of group members
 with different tasks: coding, documenting, providing support and promotion.
-The word `developer' might then get a narrower meaning, but for now we use
+The term *developer* might then get a narrower meaning, but for now we use
 it to designate any pyFormex group member.
  
 First, let's list the different tasks that an open source software project
@@ -72,7 +76,7 @@ For new pyFormex developers
 How to become a pyFormex developer
 ----------------------------------
 
-- register on Savannah.nongnu.org
+- register on `Savannah <http://savannah.nongnu.org>`_
 - request membership of the pyFormex group
 
 Install required basic tools
@@ -82,7 +86,7 @@ You will need a computer running Linux. We advice Debian GNU/Linux, but
 other distributions can certainly be used as well. Make sure that you
 have internet connection from your Linux system.
 
-..note :: We should describe alternative linux systems here
+.. note:: We should describe alternative linux systems here
 
 - You will certainly need to (learn to) use a decent text editor. pyFormex
   code, documentation, website, tools: everything is based on source text 
@@ -91,7 +95,7 @@ have internet connection from your Linux system.
   `python-mode.el` extension (it has a somewhat steep learning curve, but
   this will be rewarded). Many other editors will qualify as well.    
 
-..note :: We should add a list of good editors here
+.. note:: We should add a list of good editors here
 
 - Make sure you have Subversion installed and that your configuration file
   ``.subversion/config`` contains at least the following::
@@ -121,32 +125,32 @@ your home directory.
   You can just accept all defaults by clicking 'ENTER'. After that, you
   will have an SSH private,public keypair in your directory `.ssh`. 
 
-..warning :: Never give the private part (`id_rsa`) of your key to anybody
+.. warning:: Never give the private part (`id_rsa`) of your key to anybody
   or do not make it accessible by anybody but yourself! 
 
 - The public part (`id_rsa.pub`) should be registered on Savannah
   to get easy developer access to the pyFormex repository. 
-   Login to Savannah and go to 
-  `My Account Conf`. Under `Authentication Setup` you can enter your 
-  public SSH key. Just copy/paste the contents of the file `.ssh/id_rsa.pub`.
+  Login to Savannah and go to 
+  *My Account Conf*. Under *Authentication Setup* you can enter your 
+  public SSH key. Just copy/paste the contents of the file *.ssh/id_rsa.pub*.
 
 Now you are all set to checkout the pyFormex repository.
 
 Further reading
 ---------------
 
-This basic guide is not comprehensive enough to tell you everything 
-you need to know to help with the pyFormex project. Hereafter we give
-a list of the basic tools and software packages that we use to 
-develop/document/manage/use pyFormex.
-About all of these there is ample information available on the internet.
+This basic guide can not tell you everything you need to know as pyFormex
+group member. Depending on your tasks you may at times have to study some
+other resources. Hereafter we give a list of the basic tools and software
+packages that are needed in developing/documenting/managing/using pyFormex.
+For all of these information is widely available on the internet.
  
-..note:: Maybe add here some good links.
+.. note:: Maybe add here some good links.
 
 - Subversion
 - Python
 - Numerical Python (NumPy)
-- reStructuredText
+- reStructuredText: http://docutils.sourceforge.net/rst.html
 - Sphinx
 - OpenGL (PyOpenGL)
 - QT4 (PyQt4)
@@ -165,7 +169,7 @@ are satisfied, you can then commit (checkin) your changes back to the repository
 so that other users can enjoy your work too.
 
 To checkout the latest revision of the pyFormex repository, use the following
-command, replacing **USER** with you username on Savannah::
+command, replacing *USER* with you username on Savannah::
 
   svn co svn+ssh://USER@svn.savannah.nongnu.org/pyformex/trunk pyformex
 
@@ -192,7 +196,7 @@ You should be aware though that anybody (including developers) can checkout
 the whole pyFormex repository by anonymous access (see below). 
 This means that everything that you commit (checkin) to the repository, constitues an immediate worldwide distribution. 
 
-..warning :: Never put anything in the repository that is not meant to be distributed worldwide!
+.. warning:: Never put anything in the repository that is not meant to be distributed worldwide!
 
 
 Anonymous access
@@ -207,6 +211,39 @@ An anonymous checkout differs from a developer checkout in that it can not
 commit changes back to the repository.
 
 
+Structure of the pyFormex repository
+====================================
+After you checked out the trunk, you will find the following in the top directory of your local copy.
+
+:pyformex: This is where all the pyFormex source code (and more) is located.
+  Everything that is included in the distributed releases should be located
+  under this directory.
+
+:screenshots: This contains some (early) screenshots. It could develop into
+  a container for all kinds of promotional material (images, movies, ...)
+
+:sphinx: This is where we build the documentation (not surprisingly, we use
+  **Sphinx** for this task). The built documents are copied in `pyformex/doc`
+  for inclusion in the release.
+
+:user: Contains the minutes of pyFormex user meetings.
+
+:website: Holds the source for the pyFormex website. Since the move to 
+  Savannah recently, we also use Sphinx to build the website. 
+  Since the whole html documentation tree is also published as part of 
+  the website (`<http://www.nongnu.org/pyformex/doc/>`_) we could actually
+  integrate the *sphinx* part under *website*. The reasons for keeping them
+  apart are:
+  
+  - the html documents under *sphinx* are made part of the release (for use
+    as local documentation accessible from the pyFormex GUI), but the 
+    *website* documents are not, and    
+  - the *sphinx* documents need to be regenerated more often, because of the
+    fast development process of pyFormex, while the *website* is more static.
+ 
+Furthermore the top directory contains a bunch of other files, mostly managing tools and statistics. The most important will be treated further.
+
+
 Working with the subversion repository
 ======================================
 
@@ -216,10 +253,6 @@ repository and/or import the changes made by others. While we refer
 to the Subversion manual for full details, we describe here some of the
 most used and useful commands. These commands should normally be executed
 in the top level directory of your checkout.
-
-- Show information about your local copy::
-
-    svn info
 
 - Update your local copy to the latest revision::
 
@@ -238,17 +271,16 @@ in the top level directory of your checkout.
     svn ci
 
   You will be asked to enter a message to describe the changes you've made.
-  This uses a default or configured editor. See below for suggestions on how
+  This uses a default or configured editor (can be set in `.ssh/config`). 
+  See `Subversion commit messages`_ below for suggestions on how
   to construct the message. After you finished the message, your changes
   are uploaded to the repository.
 
+- Adding a new file ::
 
-..warning:: 
-  The remainder of this document is just a collection of old
-  documents and needs some serious further work before it can be trusted.
+    svn add FILENAME
 
-
-- Create a branch **MYBRANCH** of the current subversion archive ::
+- Create a branch *MYBRANCH* of the current subversion archive (do not do this lightly: merging changes between branches can be a tidious work) ::
 
    svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk \
      svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/MYBRANCH \
@@ -258,13 +290,17 @@ in the top level directory of your checkout.
   
    svn switch svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch
 
-- Convert your local tree to a change in repository server ::
+- Show information about your local copy::
+
+    svn info
+
+- Convert your local tree to reflect a change in repository server (the *OLDURL* can be found from the *svn info* command ::
   
    svn switch --relocate OLDURL NEWURL
 
 
 Subversion commit messages
-==========================
+--------------------------
 Always write a comment when committing something to the repository. Your comment should be brief and to the point, describing what was changed and possibly why. If you made several changes, write one line or sentence about each part. If you find yourself writing a very long list of changes, consider splitting your commit into smaller parts, as described earlier. Prefixing your comments with identifiers like Fix or Add is a good way of indicating what type of change you did. It also makes it easier to filter the content later, either visually, by a human reader, or automatically, by a program.
 
 If you fixed a specific bug or implemented a specific change request, I also recommend to reference the bug or issue number in the commit message. Some tools may process this information and generate a link to the corresponding page in a bug tracking system or automatically update the issue based on the commit.
@@ -272,24 +308,54 @@ If you fixed a specific bug or implemented a specific change request, I also rec
 
 Create the pyFormex acceleration library
 ========================================
+Most of the pyFormex source code is written in the Python scripting language: this allows for quick development, elegant error recovery and powerful interfacing with other software. The drawback is that it may be slow for loop operations over large data sets. In pyFormex, that problem has largely been solved by using **Numpy**, which handles most such operations by a call to a (fast) compiled C-library. 
 
-- create the acceleration library in the svn tree ::
+Some bottlenecks remained however, and therefore we have developed our own compiled C-libraries to further speed up some tasks. While we try to always provide Python equivalents for all the functions in the library, the penalty for using those may be quite high, and we recommend everyone to always try to use the compiled libraries. Therefore, after creating a new local svn tree, you should first proceed to compiling these libraries. 
 
-   make lib
+Prerequisites for compiling the libraries
+-----------------------------------------
+These are Debian GNU/Linux package names. They will most likely be available
+under the same names on Debian derivatives and Ubuntu and derivatives.
 
-  or, if you want to include debug messages::
+- make
+- gcc
+- python-dev
+- libglu1-mesa-dev
+
+
+Creating the libraries
+----------------------
+The source for the libraries are in the `pyformex/lib` directory of your
+svn tree. Go to that directory and execute the commands::
+
+  ./configure   
+  make
+
+Alternatively, you can also just do ::
+
+  make lib
+
+in the top level directory.
+
+If you are a C-developer making changes to the C sources, you may want to
+activate debug messages in the libraries. This can be done by using the 
+following instead ::
 
    make libdebug
 
-  If you switch from a non-debug to debug version, you need to do a ::
+Remark that if you switch from a non-debug to debug version or vice-versa, 
+you need to do a reset between version with ::
 
    make libreset
 
-  to reset between versions.
+
+.. warning:: 
+  The remainder of this document is just a collection of old
+  documents and needs some serious further work before it can be trusted.
 
 
-Create the manual
------------------
+Create the pyFormex manual
+==========================
 
 - You need a patched version of **Sphinx**. See the howto in the
   `sphinx` directory for instructions.
@@ -321,7 +387,7 @@ pyFormex website, ask the project manager.
 
   
 Create a distribution
----------------------
+=====================
 
 In the main pyformex directory (svn tree) do ::
 
@@ -470,8 +536,8 @@ Docstrings
   itself.
 
 
-2. Things that have to be done by the project manager
-=====================================================
+Things that have to be done by the project manager
+==================================================
 
 Make file(s) public
 -------------------
@@ -587,3 +653,4 @@ First, create the distribution and test it out locally: both the installation pr
 Well, that was easy, uh? ~)
 
 
+.. End
