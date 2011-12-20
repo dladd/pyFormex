@@ -1,4 +1,4 @@
-.. $Id$                      -*- rst -*-
+.. $Id$    *- rst -*-
   
 ..
   This file is part of the pyFormex project.
@@ -23,39 +23,255 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/.
   
-  
-
 
 =============================
 HOWTO for pyFormex developers
 =============================
 
-1. Things that can be done by any developer
-===========================================
+..warning :: This document is currently under development!
 
-Work with the subversion repository
------------------------------------
+This document describes the different tasks to be performed by pyFormex
+developers, the prefered way(s) that should be followed to perform these
+tasks, and the tools available to help with performing the tasks.
 
-These examples are shown for an anonymously checked out SVN
-tree. For developer access, add **username@** after the 'svn+ssh://'.
+In the current version of this document we use the term `developer' for 
+a pyFormex group member. All developers have the same tasks and privileges.
+The project manager of course has some extra tasks and extra privileges. 
+We will handle these separately at the end of this document. 
 
-- checkout the current subversion archive in a subdir `pyformex` ::
+In the future however, we might create distinct classes of group members
+with different tasks: coding, documenting, providing support and promotion.
+The word `developer' might then get a narrower meaning, but for now we use
+it to designate any pyFormex group member.
+ 
+First, let's list the different tasks that an open source software project
+may entail:
 
-   svn co svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk pyformex
+- code development
+- program testing and bug reporting
+- providing and testing examples
+- writing documentation
+- documentation proofreading
+- creating source releases
+- packaging and distribution
+- porting to other platforms/OSes
+- website development/maintenance/proofreading
+- support (helping users, providing small solutions, resolving bugs)
+- publicity and distribution
+- organizing user meetings
+- discussion and planning 
 
-- create a branch `mybranch` of the current subversion archive ::
+Until now, code development has got the most attention, but if we want 
+pyFormex to remain useful and attract more users, other tasks will become
+more important.
+
+
+For new pyFormex developers
+===========================
+
+How to become a pyFormex developer
+----------------------------------
+
+- register on Savannah.nongnu.org
+- request membership of the pyFormex group
+
+Install required basic tools
+----------------------------
+
+You will need a computer running Linux. We advice Debian GNU/Linux, but
+other distributions can certainly be used as well. Make sure that you
+have internet connection from your Linux system.
+
+..note :: We should describe alternative linux systems here
+
+- You will certainly need to (learn to) use a decent text editor. pyFormex
+  code, documentation, website, tools: everything is based on source text 
+  files. Since we use a lot of `Python` code, an editor that can nicely
+  highlight the Python syntax is recommended. We suggest `emacs` with the
+  `python-mode.el` extension (it has a somewhat steep learning curve, but
+  this will be rewarded). Many other editors will qualify as well.    
+
+..note :: We should add a list of good editors here
+
+- Make sure you have Subversion installed and that your configuration file
+  ``.subversion/config`` contains at least the following::
+
+    [miscellany]
+    global-ignores = *~ *.pyc
+    use-commit-times = yes
+    enable-auto-props = yes
+    [auto-props]
+    *.c = svn:eol-style=native;svn:keywords=Id
+    *.py = svn:eol-style=native;svn:keywords=Id
+    *.rst = svn:eol-style=native;svn:keywords=Id
+      
+Get access to the repositories
+------------------------------
+
+While anybody can get read access to the repositories on Savannah, 
+write access is restricted to pyFormex group members. To authenticate
+yourself on Savannah, you need to provide an SSH key. Your SSH key is
+a pair of files `id_rsa` and `id_rsa.pub` the directory `.ssh` under 
+your home directory. 
+
+- If you do not have such files, create them first, using the command::
+
+    ssh-keygen 
+
+  You can just accept all defaults by clicking 'ENTER'. After that, you
+  will have an SSH private,public keypair in your directory `.ssh`. 
+
+..warning :: Never give the private part (`id_rsa`) of your key to anybody
+  or do not make it accessible by anybody but yourself! 
+
+- The public part (`id_rsa.pub`) should be registered on Savannah
+  to get easy developer access to the pyFormex repository. 
+   Login to Savannah and go to 
+  `My Account Conf`. Under `Authentication Setup` you can enter your 
+  public SSH key. Just copy/paste the contents of the file `.ssh/id_rsa.pub`.
+
+Now you are all set to checkout the pyFormex repository.
+
+Further reading
+---------------
+
+This basic guide is not comprehensive enough to tell you everything 
+you need to know to help with the pyFormex project. Hereafter we give
+a list of the basic tools and software packages that we use to 
+develop/document/manage/use pyFormex.
+About all of these there is ample information available on the internet.
+ 
+..note:: Maybe add here some good links.
+
+- Subversion
+- Python
+- Numerical Python (NumPy)
+- reStructuredText
+- Sphinx
+- OpenGL (PyOpenGL)
+- QT4 (PyQt4)
+
+
+
+Checkout the pyFormex repository
+================================
+
+Developer access
+----------------
+
+Checking out a Subversion repository means creating a local copy on your
+machine, where you can work on and make change and test them out. When you 
+are satisfied, you can then commit (checkin) your changes back to the repository
+so that other users can enjoy your work too.
+
+To checkout the latest revision of the pyFormex repository, use the following
+command, replacing **USER** with you username on Savannah::
+
+  svn co svn+ssh://USER@svn.savannah.nongnu.org/pyformex/trunk pyformex
+
+This will checkout the subdirectory *trunk* of the pyFormex repository and put
+it in a subdirectory *pyformex* of your current path. Most users put this under
+their home directory. You can use any other target directory name if you wish. 
+
+The above command will always checkout the latest version, but sometimes you
+may need to have an older revision, e.g. to diagnose a bug in that particular
+revision or to run a script that only works with that version. Just specify the
+requested revision number in the command. We recommend to use a target 
+directory name reflecting that value::
+
+  svn co svn+ssh://USER@svn.savannah.nongnu.org/pyformex/trunk -r NUMBER pyformex-rNUMBER
+
+The trunk is only part of the pyFormex repository, but it is the part where all current development takes place. Other parts are *tags* and *branches*. In *tags* you can find every released version. The following command checks out the version of the pyFormex release 0.8.4::
+
+  svn co svn+ssh://USER@svn.savannah.nongnu.org/pyformex/tags/0.8.4 pyformex-0.8.4
+
+*branches* is used for temporary experiments and for non-compatible development paths. We will show further how to create a new branch. Their use should be restricted though, because merging changes between branches is quite complicated.
+
+The commands shown here give you full developer access (read and write) to the repository.
+You should be aware though that anybody (including developers) can checkout
+the whole pyFormex repository by anonymous access (see below). 
+This means that everything that you commit (checkin) to the repository, constitues an immediate worldwide distribution. 
+
+..warning :: Never put anything in the repository that is not meant to be distributed worldwide!
+
+
+Anonymous access
+----------------
+
+Anybody (including group members) can checkout the complete 
+pyFormex repository anonymously. Anonymous checkout is done with the command::
+ 
+  svn co svn://svn.savannah.nongnu.org/pyformex/trunk pyformex
+
+An anonymous checkout differs from a developer checkout in that it can not
+commit changes back to the repository.
+
+
+Working with the subversion repository
+======================================
+
+After you have created a checkout, you can start working in your local
+version, make changes, contribute these changes back to the central
+repository and/or import the changes made by others. While we refer
+to the Subversion manual for full details, we describe here some of the
+most used and useful commands. These commands should normally be executed
+in the top level directory of your checkout.
+
+- Show information about your local copy::
+
+    svn info
+
+- Update your local copy to the latest revision::
+
+    svn up
+
+  This will import the changes made to the repository by other developers
+  (or by you from another checkout). You can also use this command to revert
+  your tree to any previous version, by adding the revision number::
+
+    svn up -r NUMBER
+
+- After you have made some changes and are convinced that they form a
+  working improvement, you can check your modifications back into the
+  repository using::
+
+    svn ci
+
+  You will be asked to enter a message to describe the changes you've made.
+  This uses a default or configured editor. See below for suggestions on how
+  to construct the message. After you finished the message, your changes
+  are uploaded to the repository.
+
+
+..warning:: 
+  The remainder of this document is just a collection of old
+  documents and needs some serious further work before it can be trusted.
+
+
+- Create a branch **MYBRANCH** of the current subversion archive ::
 
    svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk \
-     svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch \
+     svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/MYBRANCH \
      -m "Creating a branch for some purpose"
 
-- change your local directory to another branch ::
+- Change your local directory to another branch ::
   
    svn switch svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch
 
-- update your local version ::
+- Convert your local tree to a change in repository server ::
+  
+   svn switch --relocate OLDURL NEWURL
 
-   svn up
+
+Subversion commit messages
+==========================
+Always write a comment when committing something to the repository. Your comment should be brief and to the point, describing what was changed and possibly why. If you made several changes, write one line or sentence about each part. If you find yourself writing a very long list of changes, consider splitting your commit into smaller parts, as described earlier. Prefixing your comments with identifiers like Fix or Add is a good way of indicating what type of change you did. It also makes it easier to filter the content later, either visually, by a human reader, or automatically, by a program.
+
+If you fixed a specific bug or implemented a specific change request, I also recommend to reference the bug or issue number in the commit message. Some tools may process this information and generate a link to the corresponding page in a bug tracking system or automatically update the issue based on the commit.
+
+
+Create the pyFormex acceleration library
+========================================
 
 - create the acceleration library in the svn tree ::
 
@@ -116,6 +332,142 @@ In the main pyformex directory (svn tree) do ::
 This will create a pyformex-${VERSION}.tar.gz in `dist/`.
 After the installation and operation has been tested, it can be
 published by the project manager.
+  
+  
+
+Style for source and text files used by the pyFormex project
+============================================================
+
+Here are some recommendations on the style to be used for pyFormex
+development and on the use of the pyFormex Subversion repository. 
+All developers should follow these guidelines as closely as possible.
+
+
+General guidelines for source (text) files
+------------------------------------------
+
+- Name of .py files should be only lowercase, except for the approved
+  examples distributed with pyFormex, which should start with an upper case.
+
+- All new source (text) files in the pyFormex repository should be
+  created with the following line as the first OR second line::
+  
+  # $Id$
+
+  Start executable Python scripts with the following two lines::
+
+  #!/usr/bin/env python	  
+  # $Id$
+
+  Start pyformex GUI scripts with the following two lines::
+
+  #!/usr/bin/env pyformex --gui
+  # $Id$
+
+  Start pyformex non-GUI scripts with the following two lines::
+
+  #!/usr/bin/env pyformex --nogui
+  # $Id$
+
+- Never directly edit the ``$Id`` line: it is automatically handled by Subversion.
+
+- End your text files with a line::
+
+  # End
+
+- In Python files, always use 4 blanks for indenting, never TABs. Use
+  a decent Python-aware editor that allows you to configure this. The
+  main author of pyFormex uses ``Emacs`` with ``python-mode.el``. 
+
+
+pyFormex modules
+----------------
+
+- pyFormex modules providing a functionality that can be used under
+  plain Python can, and probably should, end with a section to test
+  the modules::
+
+    if __name__ == "__main__":
+        # Statements to test the module functionality
+   
+
+  The statements in this section will be executed when the module is
+  run with the command::
+
+    python module.py
+
+
+pyFormex scripts
+----------------
+
+- pyFormex scripts (this includes the examples provided with pyFormex)
+  can test the ``__name__`` variable to find out whether the script is
+  running under the GUI or not::
+
+    if __name__ == "draw":
+        # Statements to execute when run under the GUI
+    
+    elif __name__ == "script":
+        # Statements to execute when run without the GUI
+
+
+Coding style
+------------
+
+- Variables, functions, classes and their methods should be named
+  as closely as possible according to the following scheme:
+  
+  - classes: ``UpperUpperUpper`` 
+  - functions and methods: ``lowerUpperUpper``
+  - variables: ``lowercaseonly``
+
+  Lower case only names can have underscores inserted to visually separate
+  the constituant parts: ``lower_case_only``.
+  
+  Local names that are not supposed to be used directly by the user
+  or application programmer, can have underscores inserted or
+  appended.
+
+  Local names may start with an underscore to hide them from the user.
+  These names will indeed not be made available by Python's ``import``
+  statements.
+
+- Do not put blanks before or after operators, except with the assignment
+  operator (``=``), where you should always put a single blank before and after it.
+
+- Always start a new line after the colon (``:``) in ``if`` and ``for`` statements. 
+
+- Always try to use implicit for loops instead of explicit ones.
+
+- Numpy often provides a choice of using an attribute, a method or a
+  function to get to the same result. The preference ordering is:
+  attribute > method > function. E.g. use ``A.shape`` and not ``shape(A)``.
+
+Docstrings
+----------
+
+- All functions, methods, classes and modules should have a docstring,
+  consisting of a single first line with the short description,
+  possibly followed by a blank line and an extended description. It
+  is recommended to add an extended description for all but the trivial
+  components.
+
+- Docstrings should end and start with triple double-quotes (""").
+
+- Docstrings should not exceed the 80 character total line length. 
+  Python statements can exceed that length, if the result is more easy
+  to read than splitting the line.
+
+- Docstrings should be written with `re-structured text (reST)
+  <http://docutils.sourceforge.net/rst.html>`_ syntax. This allows us
+  to use the docstrings to autmoatically generate the reference
+  manual in a nice layout, while the docstrings keep being easily
+  readible. Where in doubt, try to follow the `Numpy documentation guidelines
+  <http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines>`_.
+
+- The parameters of class constructor methods (``__init__``) should be
+  documented in the Class doctring, not in the ``__init__`` method
+  itself.
 
 
 2. Things that have to be done by the project manager
