@@ -1,4 +1,4 @@
-.. $Id$    *- rst -*-
+.. HOWTO-dev.rst  $Revision$  $Date$  $Author$   *- rst -*-
   
 ..
   This file is part of the pyFormex project.
@@ -78,6 +78,14 @@ How to become a pyFormex developer
 
 - register on `Savannah <http://savannah.nongnu.org>`_
 - request membership of the pyFormex group
+
+License
+-------
+pyFormex is distributed under the GNU GPL version 3 or later. This means that all contributions you make to the pyFormex project will be distributed with this license. By becoming a pyFormex group member and by contributing code or text of any kind, you implicitely agree with the distribution under this license. 
+
+The only exception we can make is for material on the pyFormex website that is
+not distributed with pyFormex. Media (images, movies) and data files may be placed there under other compatible licenses, but you should explicitely state the license and ask the project manager for approval.
+
 
 Install required basic tools
 ----------------------------
@@ -286,6 +294,15 @@ in the top level directory of your checkout.
      svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/MYBRANCH \
      -m "Creating a branch for some purpose"
 
+- See what you have changed::
+
+    svn diff
+
+- If you do not want to go ahead with the changes you've made to a file, you
+  can revert them::
+
+    svn revert FILENAME
+
 - Change your local directory to another branch ::
   
    svn switch svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch
@@ -304,6 +321,17 @@ Subversion commit messages
 Always write a comment when committing something to the repository. Your comment should be brief and to the point, describing what was changed and possibly why. If you made several changes, write one line or sentence about each part. If you find yourself writing a very long list of changes, consider splitting your commit into smaller parts, as described earlier. Prefixing your comments with identifiers like Fix or Add is a good way of indicating what type of change you did. It also makes it easier to filter the content later, either visually, by a human reader, or automatically, by a program.
 
 If you fixed a specific bug or implemented a specific change request, I also recommend to reference the bug or issue number in the commit message. Some tools may process this information and generate a link to the corresponding page in a bug tracking system or automatically update the issue based on the commit.
+
+
+Using the *make* command
+========================
+A lot of the recipes below use the *make* command. There is no place here to give a full description of what this command does (see http://www.gnu.org/software/make/). But for those unfamiliar with the command: *make* creates derived files according to recipes in a file *Makefile*. Usually a target describing what is to be made is specified in the make command (see many examples below). The *-C* option allows to change directory before executing the make. Thus, the command::
+
+  make -C pyformex/lib debug
+
+will excute *make debug* in the directory *pyformex/lib*. We use this a lot to mallow most *make* commands be executed from the top level directory.
+
+A final tip: if you add a *-n* option to the make command, make will not actually execute any commands, but rather show what it would execute if the *-n* is left off. A good thing to try if you are unsure.
 
 
 Create the pyFormex acceleration library
@@ -354,6 +382,38 @@ you need to do a reset between version with ::
   documents and needs some serious further work before it can be trusted.
 
 
+Run pyFormex from the svn sources
+=================================
+In the toplevel directory, execute the command::
+
+  pyformex/pyformex
+
+and the pyFormex GUI should start. If you want to run this version as your
+default pyFormex, it makes sense to create a link in a directory that is in
+your *PATH*. On many systems, users have their own *~/bin* directory that is
+in the front of the *PATH*. You can check this with::
+
+  echo $PATH
+
+The result may e.g. contain */home/USER/bin*. If not, add the following to your
+*.profile* or *.bash_profile*::
+
+  PATH=$HOME/bin:$PATH
+  export PATH
+
+and make sure that you create the bin directory if it does not exist.
+Then create the link with the following command::
+
+  ln -sfn TOPDIR/pyformex/pyformex ~/bin/pyformex
+
+where *TOPDIR* is the absolute path of the top directory (created from the
+repository checkout). You can also use a relative path, but this should be
+as seen from the *~/bin* directory.
+
+After starting a new terminal, you should be able to just enter the command
+*pyformex* to run your svn version from anywhere.  
+
+
 Create the pyFormex manual
 ==========================
 
@@ -386,60 +446,80 @@ If you want to have the newly created documentation published on the
 pyFormex website, ask the project manager.
 
   
-Create a distribution
-=====================
+Creating a distribution
+=======================
 
-In the main pyformex directory (svn tree) do ::
+A distribution (or package) is a full set of all pyFormex files
+needed to install and run it on a system, packaged in a single archive
+together with an install procedure. This is primarily targeted at normal
+users that want a stable system and are not doing development work.
+
+It is therefore a good idea to first checkin your last modifications and to
+update your tree, so that your current svn version corresponds to a single
+unchanged revision version in the repository.
+In the top directory of your svn tree do ::
 
   svn ci
   svn up
   make dist
 
-This will create a pyformex-${VERSION}.tar.gz in `dist/`.
-After the installation and operation has been tested, it can be
-published by the project manager.
+This will create the package file  `pyformex-${VERSION}.tar.gz` in `dist/`.
+The version is read from the `RELEASE` file in the top directory. Do not 
+change the *VERSION* or *RELEASE* settings in this file by hand: we have
+make commands to do this (see below). Make sure that the *RELEASE* contains
+an alpha number (it ends with *-aNUMBER*). This means that it is an intermediate, unfinished, unsupported release. Official, supported releases do not have the alpha trailer. However, *currently only the project manager is allowed to create/distribute official releases!*
+
+After you have tested that pyFormex installation and operation from the
+resulting works fine, you can distribute the package to other users, e.g. 
+by passing them the package file explicitely (make sure they understand the
+alpha status) or by uploading the file to our local file server. 
+Once the package file has been distributed by any means, you should immediately
+bump the version, so that the next created distribution will have a higher number::
+
+  make bumpversion
+
+.. note:: There is a (rather small) risk here that two developers might
+  independently create a release with the same number.
   
-  
 
-Style for source and text files used by the pyFormex project
-============================================================
+Style guidelines for source and text files
+==========================================
 
-Here are some recommendations on the style to be used for pyFormex
-development and on the use of the pyFormex Subversion repository. 
-All developers should follow these guidelines as closely as possible.
+Here are some recommendations on the style to be used for source (mainly
+Python) and other text files in the pyFormex repository.
 
 
-General guidelines for source (text) files
-------------------------------------------
+General guidelines
+------------------
 
 - Name of .py files should be only lowercase, except for the approved
   examples distributed with pyFormex, which should start with an upper case.
 
-- All new source (text) files in the pyFormex repository should be
+- All new source and text files in the pyFormex repository should be
   created with the following line as the first OR second line::
   
-  # $Id$
+    # $Id$
 
   Start executable Python scripts with the following two lines::
 
-  #!/usr/bin/env python	  
-  # $Id$
+    #!/usr/bin/env python	  
+    # $Id$
 
   Start pyformex GUI scripts with the following two lines::
 
-  #!/usr/bin/env pyformex --gui
-  # $Id$
+    #!/usr/bin/env pyformex --gui
+    # $Id$
 
   Start pyformex non-GUI scripts with the following two lines::
 
-  #!/usr/bin/env pyformex --nogui
-  # $Id$
+    #!/usr/bin/env pyformex --nogui
+    # $Id$
 
 - Never directly edit the ``$Id`` line: it is automatically handled by Subversion.
 
 - End your text files with a line::
 
-  # End
+    # End
 
 - In Python files, always use 4 blanks for indenting, never TABs. Use
   a decent Python-aware editor that allows you to configure this. The

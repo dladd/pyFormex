@@ -63,7 +63,7 @@ refcfg = None      # the reference configuration
 preffile = None    # the file where the preferenced configuration will be saved
 
 PF = {}            # explicitely exported globals
-_PF_ = {}          # globals that will be offered to scripts
+#_PF_ = {}          # globals that will be offered to scripts
     
 scriptName = None
 

@@ -1959,24 +1959,33 @@ class ProjectSelection(FileSelection):
         grid = self.layout()
         nr,nc = grid.rowCount(),grid.columnCount()
 
-        if not exist:
-            self.cpw = InputSlider("Compression level (0-9)",compression,min=0,max=9,ticks=1)
-            self.cpw.setToolTip("Higher compression levels result in smaller files, but higher load and save times.")
-            grid.addWidget(self.cpw,nr,0,1,-1)
-            nr += 1
-
         if exist:
-            self.sig = QtGui.QCheckBox("Ignore Signature Version")
-            if ignore_signature:
-                self.sig.setCheckState(QtCore.Qt.Checked)
-            self.sig.setToolTip("Check this box to allow opening projects saved with an older version number in the header.")
-            grid.addWidget(self.sig,nr,0,1,-1)
+            access = [ 'rw', 'r' ]
+        else:
+            access = [ 'wr', 'rw', 'w', 'r' ] 
+        self.acc = InputRadio("Access Mode",None,choices=access)
+        self.acc.setToolTip("wr=read if exist; rw=must exist; w=overwrite; r=readonly")
+        grid.addWidget(self.acc,nr,0,1,-1)
+        nr += 1
+
+        if not exist:
+            self.cpr = InputSlider("Compression level (0-9)",compression,min=0,max=9,ticks=1)
+            self.cpr.setToolTip("Higher compression levels result in smaller files, but higher load and save times.")
+            grid.addWidget(self.cpr,nr,0,1,-1)
             nr += 1
 
-            self.leg = QtGui.QCheckBox("Allow Opening Legacy Format")
-            self.leg.setToolTip("Check this box to allow opening projects saved in the headerless legacy format.")
-            grid.addWidget(self.leg,nr,0,1,-1)
-            nr += 1
+        ## if exist:
+        ##     self.sig = QtGui.QCheckBox("Ignore Signature Version")
+        ##     if ignore_signature:
+        ##         self.sig.setCheckState(QtCore.Qt.Checked)
+        ##     self.sig.setToolTip("Check this box to allow opening projects saved with an older version number in the header.")
+        ##     grid.addWidget(self.sig,nr,0,1,-1)
+        ##     nr += 1
+
+        ##     self.leg = QtGui.QCheckBox("Allow Opening Legacy Format")
+        ##     self.leg.setToolTip("Check this box to allow opening projects saved in the headerless legacy format.")
+        ##     grid.addWidget(self.leg,nr,0,1,-1)
+        ##     nr += 1
 
 
     def getResult(self):
@@ -1984,6 +1993,7 @@ class ProjectSelection(FileSelection):
         if self.result() == QtGui.QDialog.Accepted:
             opt = mydict.Dict()
             opt.fn = str(self.selectedFiles()[0])
+            opt.acc = self.acc.value()
             opt.cpr = opt.sig = opt.leg = None
             if hasattr(self,'cpr'):
                 opt.cpr = self.cpr.value()
@@ -2715,6 +2725,10 @@ class TextBox(QtGui.QDialog):
 
 
 ############################# Button box ###########################
+
+#
+# THESE TWO SHOULD BE MERGED
+#
 
 
 def dialogButtons(dialog,actions=None,default=None):

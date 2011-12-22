@@ -29,9 +29,7 @@ rendering capabilities of pyFormex. The full contents of this module
 is available to scripts running in the pyFormex GUI without the need
 to import it.
 """
-
 import pyformex as pf
-
 import threading,os,sys,types,copy,commands,time
 
 import numpy
@@ -569,7 +567,7 @@ def draw(F,
         # loop over the objects
         for F in FL:
 
-            print "DRAW %s" % type(F)
+            #print "DRAW %s" % type(F)
             # Create the colors
             if color == 'prop':
                 try:

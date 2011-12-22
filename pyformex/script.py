@@ -34,6 +34,8 @@ import pyformex as pf
 import formex
 import geomfile
 import utils
+from project import Project
+from geometry import Geometry
 
 ########################
 # Imported here only to make it available in scripts
@@ -157,7 +159,8 @@ def named(name):
 #        pf.debug("Found %s in pyformex._PF_" % name)
 #        dic = pf._PF_
     else:
-        raise NameError,"Name %s is in neither pyformex.PF nor pyformex._PF_" % name
+#        raise NameError,"Name %s is in neither pyformex.PF nor pyformex._PF_" % name
+        raise NameError,"Name %s is not in pyformex.PF" % name
     return dic[name]
 
 
@@ -279,7 +282,6 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
-    from geometry import Geometry
     global exitrequested
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant

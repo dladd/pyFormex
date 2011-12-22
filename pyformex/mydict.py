@@ -105,7 +105,6 @@ class Dict(dict):
 
       will print ``foo``
     
-
     To avoid name clashes with user defines, many Python internal names start
     and end with '__'. The user should avoid such names.
     The Python dict has the following attributes not enclosed between '__',

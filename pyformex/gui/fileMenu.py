@@ -40,11 +40,19 @@ from prefMenu import updateSettings
 
 ##################### handle project files ##########################
 
-the_project = None
 
+def openProject(fn=None,exist=False,access='wr',addGlobals=None,makeDefault=True):
+    """Open a (new or old) Project file.
 
-def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
-    """Open a file selection dialog and let the user select a project.
+    The user is asked for a Project file name and the access modalities.
+    Depending on the results of the dialog:
+
+    - either an new project is create or an old is opened,
+    - the old data may be discarded, added to the current exported symbols,
+      or replace them
+    - the opened Project may become the current Project, or its data are
+      just imported in the current Project.
+
 
     The default will let the user create new project files as well as open
     existing ones.
@@ -67,23 +75,18 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
     should be added to the project. Set True or False to force or reject
     the adding without asking.
     """
-    global the_project
-
-    # ask filename from user
-    if the_project is None:
-        cur = pf.cfg.get('workdir','.')
-    else:
-        if makeDefault:
-            options = ['Cancel','Close without saving','Save and Close']
-            ans = draw.ask("Another project is still open. Shall I close it first?",
-                        options)
-            if ans == 'Cancel':
-                return
-            if ans == options[2]:
-                the_project.save()
-        cur = the_project.filename
+    cur = fn if fn else '.'
+    if makeDefault and pf.PF.filename is not None:
+        options = ['Cancel','Close without saving','Save and Close']
+        ans = draw.ask("What shall I do with your current project?",options)
+        if ans == 'Cancel':
+            return
+        if ans == options[2]:
+            pf.PF.save()
+        cur = pf.PF.filename
+    
     typ = utils.fileDescription(['pyf','all'])
-    res = widgets.ProjectSelection(cur,typ,exist=not create).getResult()
+    res = widgets.ProjectSelection(cur,typ,exist=exist).getResult()
     if res is None:
         # user canceled
         return
@@ -91,23 +94,33 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
     fn = res.fn
     if not fn.endswith('.pyf'):
         fn += '.pyf'
-    legacy = res.leg
-    ignoresig = res.sig
+    access = res.acc
+    ## legacy = res.leg
+    ## ignoresig = res.sig
     compression = res.cpr
     #print(fn,legacy,compression)
 
-    if create and os.path.exists(fn):
-        res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
-        if res == 'Cancel':
-            return
-        if res == 'Add':
-            create = False
+    ## if create and os.path.exists(fn):
+    ##     res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
+    ##     if res == 'Cancel':
+    ##         return
+    ##     if res == 'Add':
+    ##         create = False
     pf.message("Opening project %s" % fn)
     
     if pf.PF:
-        pf.message("Exported symbols: %s" % pf.PF.keys())
+        ## pf.message("Exported symbols: %s" % pf.PF.keys())
+        ## if addGlobals is None:
+        ##     res = draw.ask("pyFormex already contains exported symbols.\nShall I delete them or add them to your project?",['Delete','Add','Cancel'])
+        ##     if res == 'Cancel':
+        ##         # ESCAPE FROM CREATING THE PROJECT
+        ##         return
+
+        ##     addGlobals = res == 'Add'
+
         if addGlobals is None:
-            res = draw.ask("pyFormex already contains exported symbols.\nShall I delete them or add them to your project?",['Delete','Add','Cancel'])
+            pf.message("Currently exported symbols: %s" % pf.PF.keys())
+            res = draw.ask("pyFormex already contains exported symbols.\nShall I delete them or add them to your project?",['Cancel','Delete','Add'])
             if res == 'Cancel':
                 # ESCAPE FROM CREATING THE PROJECT
                 return
@@ -117,14 +130,22 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
     # OK, we have all data, now create/open the project
         
     updateSettings({'workdir':os.path.dirname(fn)},save=True)
-    sig = pf.Version[:pf.Version.rfind('-')]
-    if ignoresig:
-        sig = ''
+    signature = pf.Version[:pf.Version.rfind('-')]
+    ## if ignoresig:
+    ##     sig = ''
 
-    proj = _open_project(fn,create,sig,compression,legacy)
+    # Loading the project may take a long while; attent user
+    pf.GUI.setBusy()
+    try:
+        proj = project.Project(fn,access=access,signature=signature,compression=compression)
+    except:
+        proj = None
+        raise
+    finally:
+        pf.GUI.setBusy(False)
         
     pf.message("Project contents: %s" % proj.keys())
-    
+
     if hasattr(proj,'_autoscript_'):
         _ignore = "Ignore it!"
         _show = "Show it"
@@ -149,10 +170,9 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
         processArgs([proj.autofile])
 
     if makeDefault:
-        the_project = proj
         if pf.PF and addGlobals:
-            the_project.update(pf.PF)
-        pf.PF = the_project
+            proj.update(pf.PF)
+        pf.PF = proj
         pf.GUI.setcurproj(fn)
 
     else:
@@ -162,12 +182,20 @@ def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
     pf.message("Exported symbols: %s" % pf.PF.keys())
 
 
-def openProject():
-    """Open an existing project.
+## def createProject():
+##     """Open an new project.
 
-    Ask the user to select an existing project file, and then open it.
-    """
-    createProject(create=False)
+##     Ask the user to select an existing project file, and then open it.
+##     """
+##     openProject(exist=False,access='w')
+
+
+## def openExistingProject():
+##     """Open an existing project.
+
+##     Ask the user to select an existing project file, and then open it.
+##     """
+##     openProject(exist=True,access='rw')
 
 
 def importProject():
@@ -176,61 +204,41 @@ def importProject():
     Ask the user to select an existing project file, and then import
     its data into the current project.
     """
-    createProject(create=False,addGlobals=False,makeDefault=False)
-
-
-def _open_project(fn,create,signature,compression,legacy):
-    """Open a project in the GUI
-
-    This is a low level function not intended for the user.
-    It is equivalent to creating a project instance, but has
-    exception trapping
-    """
-    # Loading the project may take a long while; attent user
-    pf.GUI.setBusy()
-    try:
-        proj = project.Project(fn,create,signature,compression,legacy)
-    except:
-        proj = None
-        raise
-    finally:
-        pf.GUI.setBusy(False)
-    return proj
+    openProject(exist=True,access='r',addGlobals=False,makeDefault=False)
     
 
 def setAutoScript():
     """Set the current script as autoScript in the project"""
-    global the_project
-    if the_project is not None and pf.cfg['curfile'] and pf.GUI.canPlay:
-        the_project._autoscript_ = open(pf.cfg['curfile']).read()
+    if pf.cfg['curfile'] and pf.GUI.canPlay:
+        pf.PF._autoscript_ = open(pf.cfg['curfile']).read()
  
 
 def setAutoFile():
     """Set the current script as autoScriptFile in the project"""
-    global the_project
-    if the_project is not None and pf.cfg['curfile'] and pf.GUI.canPlay:
-        the_project.autofile = pf.cfg['curfile']
-            
+    if pf.cfg['curfile'] and pf.GUI.canPlay:
+        pf.PF.autofile = pf.cfg['curfile']
+
+
 def removeAutoScript():
-    global the_project
-    delattr(the_project,'_autoscript_')
-            
+    delattr(pf.PF,'_autoscript_')
+
+
 def removeAutoFile():
-    global the_project
-    delattr(the_project,'autofile')
+    delattr(pf.PF,'autofile')
+
 
 def saveProject():
-    if the_project is not None:
-        pf.message("Project contents: %s" % the_project.keys())
+    if pf.PF:
+        pf.message("Project contents: %s" % pf.PF.keys())
         pf.GUI.setBusy()
-        the_project.save()
+        pf.PF.save()
         pf.GUI.setBusy(False)
 
 
 def saveAsProject():
-    if the_project is not None:
+    if pf.PF:
         closeProjectWithoutSaving()
-        createProject(addGlobals=True)
+        openProject(pf.PF.filename,addGlobals=True)
         saveProject()
 
 
@@ -241,24 +249,25 @@ def closeProjectWithoutSaving():
 
 def closeProject(save=True):
     """Close the current project, saving it by default."""
-    global the_project
-    if the_project is not None:
-        pf.message("Closing project %s" % the_project.filename)
+    if pf.PF.filename is not None:
+        pf.message("Closing project %s" % pf.PF.filename)
         if save:
             saveProject()
-        # The following is needed to copy the globals to a new dictionary
-        # before destroying the project
-        pf.PF = {}
-        pf.PF.update(the_project)
-        pf.GUI.setcurproj('None')
-    the_project = None
-        
+            if pf.PF:
+                pf.message("Exported symbols: %s" % pf.PF.keys())
+                if draw.ask("What shall I do with the exported symbols?",["Delete","Keep"]) == "Delete":
+                    proj.clear()
+
+    pf.PF.filename = None
+    pf.GUI.setcurproj('None')
     
 
 def askCloseProject():
-    if the_project is not None:
+    if pf.PF and pf.PF.filename is not None:
         choices = ['Exit without saving','SaveAs and Exit','Save and Exit']
-        res = draw.ask("You have an unsaved open project: %s\nWhat do you want me to do?"%the_project.filename,choices,default=2)
+        if pf.PF.access == 'r':
+            choices = choices[:2]
+        res = draw.ask("You have an unsaved open project: %s\nWhat do you want me to do?"%pf.PF.filename,choices,default=2)
         res = choices.index(res)
         if res == 1:
             saveAsProject()
@@ -390,8 +399,9 @@ def showImage():
 
 
 MenuData = [
-    (_('&Start new project'),createProject),
-    (_('&Open existing project'),openProject),
+    (_('&Open project'),openProject),
+    ## (_('&Start new project'),createProject),
+    ## (_('&Open existing project'),openExistingProject),
     (_('&Import a project'),importProject),
     (_('&Set current script as AutoScript'),setAutoScript),
     (_('&Remove the AutoScript'),removeAutoScript),

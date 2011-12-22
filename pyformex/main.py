@@ -561,8 +561,10 @@ pyFormex Warning
     if pf.cfg['warnings/nice']:
         import warnings
         warnings.formatwarning = _format_warning
-    
 
+    # Make sure pf.PF is a Project
+    from project import Project
+    pf.PF = Project()
 
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!

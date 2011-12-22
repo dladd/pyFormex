@@ -83,7 +83,7 @@ def updateSettings(res,save=None):
     # We test for pf.GUI in case we want to call updateSettings before
     # the GUI is created
     if pf.GUI:
-        print todo
+        #print todo
         for f in todo:
             f()
 
