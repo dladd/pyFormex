@@ -1430,6 +1430,46 @@ Size: %s
         return self.connect(seq,eltype=eltype)
 
 
+    def smooth(self, iterations=1, lamb=0.5, k=0.1, edg=True):
+        """Return a smoothened mesh.
+        
+        Smoothing algorithm based on lowpass filters.
+        
+        If edg is True, the algorithm tries to smooth the
+        outer border of the mesh seperately to reduce mesh shrinkage.
+        
+        Higher values of k can reduce shrinkage even more
+        (up to a point where the mesh expands),
+        but will result in less smoothing per iteration.
+        """
+        if iterations<1: 
+            return self
+        mu = -lamb/(1-k*lamb)
+        adj=self.getEdges().adjacency(kind='n')
+        if edg:
+            externals = resize(False,self.ncoords())
+            expoints = unique(self.getFreeEntities())
+            if len(expoints) != self.ncoords():
+                externals[expoints] = True
+                a = adj[externals].ravel()
+                inpoints = delete(range(self.ncoords()), expoints)
+                for i in range(len(a)):
+                    if a[i] in inpoints:
+                        a[i]=-2
+                adj[externals] = a.reshape(adj[externals].shape)
+            else:
+                message('Failed to recognize external points.\nShrinkage may be considerable.')
+        w = ones(adj.shape,dtype=float)
+        w[adj<0] = 0.
+        w /= (adj>=0).sum(-1).reshape(-1,1)
+        w = w.reshape(adj.shape[0],adj.shape[1],1)
+        c = self.coords.copy()
+        for i in range(iterations):
+            c = (1.-lamb)*c + lamb*(w*c[adj]).sum(1)
+            c = (1.-mu)*c + mu*(w*c[adj]).sum(1)
+        return Mesh(c, self.elems, self.prop, eltype=self.eltype)
+
+
     def __add__(self,other):
         """Return the sum of two Meshes.
 
@@ -1615,7 +1655,6 @@ Size: %s
         except:
             return 0.0
     
-
 
     def actor(self,**kargs):
 
