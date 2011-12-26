@@ -28,11 +28,37 @@
 Functions for managing a project in pyFormex.
 """
 
-import os
-import cPickle as pickle
+import os,sys
+import cPickle
 import gzip
 
 _signature_ = 'pyFormex 0.8.6'
+
+module_relocations = {
+    'plugins.mesh' : 'mesh',
+    'plugins.surface' : 'plugins.trisurface',
+}
+
+def find_global(module,name):
+    """Override the import path of some classes"""
+    print "I want to import %s from %s" % (name,module)
+    if module in module_relocations:
+        module = module_relocations[module]
+        print "  I will try module %s instead" % module
+    __import__(module)
+    mod = sys.modules[module]
+    clas = getattr(mod, name)
+    return clas        
+    
+
+def pickle_load(f,try_resolve=True):
+    """Load data from pickle file f."""
+    pi = cPickle.Unpickler(f)
+    if try_resolve:
+        pi.find_global = find_global
+
+    return pi.load()
+
 
 class Project(dict):
     """Project: a persistent storage of pyFormex data.
@@ -102,17 +128,20 @@ class Project(dict):
       may override values read from the file.  
     """
 
-    def __init__(self,filename=None,access='wr',signature=_signature_,compression=4,binary=True,legacy=False,data={},**kargs):
+    def __init__(self,filename=None,access='wr',signature=_signature_,compression=5,binary=True,data={},**kargs):
         """Create a new project."""
         if 'create' in kargs:
             import warnings
             warnings.warn("The create=True argument should be replaced with access='w'")
+        if 'legacy' in kargs:
+            import warnings
+            warnings.warn("The legacy=True argument has become superfluous")
+            
         self.filename = filename
         self.access = access 
         self.signature = str(signature)
         self.gzip = compression if compression in range(1,10) else 0
         self.mode = 'b' if binary else ''
-        self.legacy=legacy
         
         dict.__init__(self)
         if filename and os.path.exists(filename) and 'r' in self.access:
@@ -149,67 +178,136 @@ class Project(dict):
         f.flush()
         if self.mode == 'b':
             # When using binary, can as well use highest protocol
-            protocol = pickle.HIGHEST_PROTOCOL
+            protocol = cPickle.HIGHEST_PROTOCOL
         else:
             protocol = 0
         if self.gzip:
             pyf = gzip.GzipFile(self.filename,'w'+self.mode,self.gzip,f)
-            pickle.dump(self,pyf,protocol)
+            cPickle.dump(self,pyf,protocol)
             pyf.close()
         else:
-            pickle.dump(self,f,protocol)
+            cPickle.dump(self,f,protocol)
         f.close()
 
 
-    def load(self):
+    def readHeader(self):
+        """Read the header from a project file.
+        
+        Tries to read the header from different legacy formats,
+        and if succesfull, adjusts the project attributes according
+        to the values in the header.
+        Returns the open file if succesfull.
+        """
+        self.format = -1
+        print("Reading project file: %s" % self.filename)
+        f = open(self.filename,'rb')
+        s = f.readline()
+        print "header = %s" % s
+        # Try subsequent formats
+        try:
+            # newest format has header in text format
+            header = eval(s)
+            self.__dict__.update(header)
+            self.format = 3
+        except:
+
+            # try OLD new format: the first pickle contains attributes
+            try:
+                print "trying format 2"
+                p = pickle_load(f)
+                self.__dict__.update(p)
+                self.format = 2
+            except:
+                pass
+
+            if 'gzip' in s:
+                # transitional format
+                self.gzip = 5
+                self.format = 1
+            else:
+                # headerless format
+                self.legacy = True
+                f.seek(0)
+                self.gzip = 0
+                self.format = 0
+                
+            import warnings
+            warnings.warn("This is an old format project file. Unless you need to read this project file from an older pyFormex version, we strongly advise you to convert the project file to the latest format. Otherwise future versions of pyFormex might not be able to read it back.")
+
+        return f
+
+
+    def load(self,try_resolve=False):
         """Load a project from file.
         
         The loaded definitions will update the current project.
         """
-        print("Reading project file: %s" % self.filename)
-        f = open(self.filename,'rb')
-        s = f.readline()
-        try:
-            # new format has header in text format
-            header = eval(s)
-            #print("Read project header: %s" % header)
-            self.__dict__.update(header)
-        except:
-            # Try one of the older formats
-            if s.startswith(self.signature):
-                # This is the OLD new format: the first pickle contains attributes
-                p = pickle.load(f)
-                self.__dict__.update(p)
-                #print("OK, unpickled old header %s" % p)
-            elif 'gzip' in s:
-                #print("Looks like a transitionary format %s" % s)
-                # Enables readback of transitionary format
-                self.gzip = 5
+        f = self.readHeader()
+        if f:
+            if self.gzip:
+                pyf = gzip.GzipFile(self.filename,'r',self.gzip,f)
+                p = pickle_load(pyf,try_resolve)
+                pyf.close()
             else:
-                #print("Looks like a legacy headerless format: try the legacy=True option and hope for the best")
-                # Enable readback of legacy format
-                if self.legacy:
-                    f.seek(0)
-                    self.gzip = 0
-                else:
-                    # Incompatible format
-                    #print("HEADER IS %s" % s)
-                    #print("EXPECTED %s" % self.signature)
-                    raise ValueError,"File %s does not have a matching signature\nIf it is an old project file, try opening it with the 'legacy' option checked." % self.filename
-            import warnings
-            warnings.warn("This is an old format project file. Unless you need to read this project file from an older pyFormex version, we strongly advise you to convert the project file to the latest format. Otherwise future versions of pyFormex might not be able to read it back.")
-
-        #print "Reading contents"
-        if self.gzip:
-            pyf = gzip.GzipFile(self.filename,'r',self.gzip,f)
-            #print "unzipped",pyf
-            p = pickle.load(pyf)
-            pyf.close()
-        else:
-            p = pickle.load(f)
-            #print "unzipped",pyf
+                p = pickle_load(f,try_resolve)
+            self.update(p)
         f.close()
-        self.update(p)
+    
+
+    def convert(self,filename=None):
+        """Convert an old format project file.
+        
+        The project file is read, and if successfull, is immediately
+        saved. By default, this will overwrite the original file.
+        If a filename is specified, the converted data are saved to
+        that file.
+        In both cases, access is set to 'wr', so the tha saved data can
+        be read back immediately.
+        """
+        self.load(True)
+        print "GOT KEYS %s" % self.keys()
+        if filename is not None:
+            self.filename = filename
+        self.access = 'w'
+        print "Will now save to %s" % self.filename
+        self.save()
+    
+
+    def uncompress(self):
+        """Uncompress a compressed project file.
+        
+        The project file is read, and if successfull, is written
+        back in uncompressed format. This allows to make conversions
+        of the data inside.
+        """
+        f = self.readHeader()
+        print self.format,self.gzip
+        if f:
+            if self.gzip:
+                try: 
+                    pyf = gzip.GzipFile(self.filename,'r',self.gzip,f)
+                except:
+                    self.gzip = 0
+
+            if self.gzip:
+                fn = self.filename.replace('.pyf','_uncompressed.pyf')
+                fu = open(fn,'w'+self.mode)
+                h = self.header_data()
+                h['gzip'] = 0
+                fu.write("%s\n" % h)
+                while True:
+                    x = pyf.read()
+                    if x:
+                        fu.write(x)
+                    else:
+                        break
+                fu.close()
+                print "Uncompressed %s to %s" % (self.filename,fn)
+                
+            else:    
+                import warnings
+                warnings.warn("The contents of the file does not appear to be compressed.")
+            f.close()
 
  
     def delete(self):

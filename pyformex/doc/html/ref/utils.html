@@ -316,10 +316,16 @@ directories, resp. files matching any of those patterns.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="utils.pyformexFiles">
+<tt class="descclassname">utils.</tt><tt class="descname">pyformexFiles</tt><big>(</big><big>)</big><a class="headerlink" href="#utils.pyformexFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the pyformex source .py files.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="utils.setSaneLocale">
 <tt class="descclassname">utils.</tt><tt class="descname">setSaneLocale</tt><big>(</big><em>localestring=''</em><big>)</big><a class="headerlink" href="#utils.setSaneLocale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a sane local configuration for LC_NUMERIC.</p>
-<p><cite>locale</cite> is the locale string to be set, e.g. &#8216;en_US.UTF-8&#8217;</p>
+<p><cite>localestring</cite> is the locale string to be set, e.g. &#8216;en_US.UTF-8&#8217;</p>
 <p>This will change the <tt class="docutils literal"><span class="pre">LC_ALL</span></tt> setting to the specified string,
 and set the <tt class="docutils literal"><span class="pre">LC_NUMBERIC</span></tt> to &#8216;C&#8217;.</p>
 <p>Changing the LC_NUMERIC setting is a very bad idea! It makes floating
@@ -624,7 +630,7 @@ is returned.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 12, 2011.
+      Last updated on Dec 23, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

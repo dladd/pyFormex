@@ -41,7 +41,6 @@ find good reason to use the :class:`Coords` class directly as well.
 from arraytools import *
 from lib import misc
 from pyformex import options
-from plugins import inertia
 from utils import deprecated,deprecation,warn
 
 
@@ -400,6 +399,7 @@ class Coords(ndarray):
         This returns the center of gravity, the principal axes of inertia,
         the principal moments of inertia and the inertia tensor.
         """
+        from plugins import inertia
         if mass is not None:
             mass = mass.reshape(self.npoints(),1)
         ctr,I = inertia.inertia(self.points(),mass)

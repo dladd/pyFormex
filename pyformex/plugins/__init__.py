@@ -31,6 +31,11 @@ plugin menus.
 import pyformex as pf
 from types import ModuleType
 
+# The following imports help with reading back old projects
+# (We moved these modules from pluginst to core)
+import project
+import mesh
+
 
 def load(plugin):
     """Load the named plugin"""

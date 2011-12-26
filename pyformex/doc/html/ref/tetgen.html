@@ -181,6 +181,14 @@ See <a class="reference external" href="http://tetgen.berlios.de">http://tetgen.
 </dd></dl>
 
 <dl class="function">
+<dt id="tetgen.readSurface">
+<tt class="descclassname">tetgen.</tt><tt class="descname">readSurface</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#tetgen.readSurface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a tetgen surface from a .node/.face file pair.</p>
+<p>The given filename is either the .node or .face file.
+Returns a tuple of (nodes,elems).</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="tetgen.skipComments">
 <tt class="descclassname">tetgen.</tt><tt class="descname">skipComments</tt><big>(</big><em>fil</em><big>)</big><a class="headerlink" href="#tetgen.skipComments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Skip comments and blank lines on a tetgen file.</p>
@@ -263,14 +271,6 @@ if the strings contains less values.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="tetgen.readSurface">
-<tt class="descclassname">tetgen.</tt><tt class="descname">readSurface</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#tetgen.readSurface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a tetgen surface from a .node/.face file pair.</p>
-<p>The given filename is either the .node or .face file.
-Returns a tuple of (nodes,elems).</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="tetgen.readNeigh">
 <tt class="descclassname">tetgen.</tt><tt class="descname">readNeigh</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#tetgen.readNeigh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a tetgen .neigh file.</p>
@@ -306,7 +306,7 @@ Coords should be written independently to a .node file.</p>
 
 <dl class="function">
 <dt id="tetgen.runTetgen">
-<tt class="descclassname">tetgen.</tt><tt class="descname">runTetgen</tt><big>(</big><em>fn</em><big>)</big><a class="headerlink" href="#tetgen.runTetgen" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">tetgen.</tt><tt class="descname">runTetgen</tt><big>(</big><em>fn</em>, <em>options=''</em><big>)</big><a class="headerlink" href="#tetgen.runTetgen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run tetgen mesher on the specified file.</p>
 <p>The input file is a closed triangulated surface.
 tetgen will generate a volume tetraeder mesh inside the surface,
@@ -351,7 +351,7 @@ and create a new approximation of the surface as a by-product.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 12, 2011.
+      Last updated on Dec 23, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

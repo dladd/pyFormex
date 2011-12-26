@@ -815,15 +815,20 @@ forces wakeup for longer period.</p>
 <dt id="draw.flyAlong">
 <tt class="descclassname">draw.</tt><tt class="descname">flyAlong</tt><big>(</big><em>path, upvector=[0.0, 1.0, 0.0], sleeptime=None</em><big>)</big><a class="headerlink" href="#draw.flyAlong" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fly through the current scene along the specified path.</p>
-<p>This function moves the camera through the subsequent points
-of a path, looing at the next point of the path, and keeping
-the upvector of the camera oriented along the specified direction.</p>
 <ul class="simple">
-<li><cite>path</cite>: a PolyLine or plex-2 Formex specifyin the camera path.</li>
-<li><cite>upvector</cite>: the direction of the vertical axis of the camera.</li>
+<li><cite>path</cite>: a plex-2 or plex-3 Formex (or convertibel to such Formex)
+specifying the paths of camera eye and center (and upvector).</li>
+<li><cite>upvector</cite>: the direction of the vertical axis of the camera, in case
+of a 2-plex camera path.</li>
 <li><cite>sleeptime</cite>: a delay between subsequent images, to slow down
 the camera movement.</li>
 </ul>
+<p>This function moves the camera through the subsequent elements of the
+Formex. For each element the first point is used as the center of the
+camera and the second point as the eye (the center of the scene looked at).
+For a 3-plex Formex, the third point is used to define the upvector
+(i.e. the vertical axis of the image) of the camera. For a 2-plex
+Formex, the upvector is constant as specified in the arguments.</p>
 </dd></dl>
 
 <dl class="function">
@@ -996,7 +1001,7 @@ might also be set by the user.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 12, 2011.
+      Last updated on Dec 23, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

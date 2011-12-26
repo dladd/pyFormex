@@ -950,6 +950,22 @@ class Formex(Geometry):
         """
         self.coords[i] = val
 
+
+    def __setstate__(self,state):
+        """Set the object from serialized state.
+        
+        This allows to read back old pyFormex Project files where the Formex
+        class had 'f' and 'p' attributes.
+        """
+        if "p" in state:
+            state['prop'] = state['p']
+            del state['p']
+        if 'f'  in state:
+            state['coords'] = state['f']
+            del state['f']
+        self.__dict__.update(state)
+
+
     def element(self,i):
         """Return element i of the Formex"""
         return self.coords[i]

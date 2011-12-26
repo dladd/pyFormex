@@ -223,6 +223,7 @@ def surface_volume(x,pt=None):
     a,b,c = [ x[:,i,:] for i in range(3) ]
     d = cross(b,c)
     e = (a*d).sum(axis=-1)
+    # IS THIS ANY DIFFERENT FROM  e / 6.  ????
     v = sign(e) * abs(e)/6.
     return v
 
@@ -587,6 +588,16 @@ class TriSurface(Mesh):
 
         if 'prop' in kargs:
             self.setProp(kargs['prop'])
+
+
+    def __setstate__(self,state):
+        """Set the object from serialized state.
+        
+        This allows to read back old pyFormex Project files where the
+        Surface class did not set an element type.
+        """
+        self.__dict__.update(state)
+        self.setType('tri3')
 
 
 ###########################################################################

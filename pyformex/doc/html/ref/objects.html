@@ -231,8 +231,10 @@ of the selection.names.</p>
 <tt class="descname">ask</tt><big>(</big><em>mode='multi'</em><big>)</big><a class="headerlink" href="#objects.Objects.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the names of known objects and let the user select one or more.</p>
 <p>mode can be set to&#8217;single&#8217; to select a single item.
-This sets the current selection to the selected names.
-Return a list with the selected names or None.</p>
+Return a list with the selected names, possibly empty (if nothing
+was selected by the user), or None if there is nothing to choose from.
+This also sets the current selection to the selected names, unless
+the return value is None, in which case the selection remains unchanged.</p>
 </dd></dl>
 
 <dl class="method">
@@ -551,7 +553,7 @@ of the selection.names.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 12, 2011.
+      Last updated on Dec 23, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

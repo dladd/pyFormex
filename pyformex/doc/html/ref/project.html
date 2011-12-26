@@ -143,18 +143,76 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">project</span></tt></p>
 <dl class="class">
 <dt id="project.Project">
-<em class="property">class </em><tt class="descclassname">project.</tt><tt class="descname">Project</tt><big>(</big><em>filename</em>, <em>create=False</em>, <em>signature='pyFormex'</em>, <em>compression=0</em>, <em>binary=False</em>, <em>legacy=True</em><big>)</big><a class="headerlink" href="#project.Project" title="Permalink to this definition">¶</a></dt>
-<dd><p>A project is a persistent storage of a Python dictionary.</p>
+<em class="property">class </em><tt class="descclassname">project.</tt><tt class="descname">Project</tt><big>(</big><em>filename=None</em>, <em>access='wr'</em>, <em>signature='pyFormex 0.8.6'</em>, <em>compression=4</em>, <em>binary=True</em>, <em>legacy=False</em>, <em>data={}</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#project.Project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project: a persistent storage of pyFormex data.</p>
+<p>A pyFormex Project is a regular Python dict that can contain named data
+of any kind, and can be saved to a file to create persistence over
+different pyFormex sessions.</p>
+<p>While the Project class is mainly used by pyFormex for the pyformex.PF
+global variable that collects variables exported from pyFormex scripts,
+the user may also create and handle his own Project objects.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">In the current implementation there is no guarantee that
+a project file written by one version of pyFormex can be read back
+by a later version. The project files are mainly intended as a means
+to easily save lots of data and to restore them in your next session,
+or pass them to another user (with the same pyFormex version). If you
+need guarantee that you stored data will always remain accessible,
+you can save geometry type of data to pyFormex .pgf format files.
+Other data you should take care of yourself.</p>
+</div>
+<p>Parameters:</p>
+<ul>
+<li><p class="first"><cite>filename</cite>: the name of the file where the Project data will be saved.
+If the file exists (and <cite>access</cite> is not <cite>w</cite>), it should be a previously
+saved Project and an attempt will be made to load the data from this
+file into the Project.
+If this fails, an error is raised.</p>
+<p>If the file exists and <cite>access</cite> is <cite>w</cite>, it will be overwritten,
+destroying any previous contents.</p>
+<p>If no filename is specified, a temporary file will be created when
+the Project is saved for the first time. The file with not be
+automatically deleted. The generated name can be retrieved from the
+filename attribute.</p>
+</li>
+<li><p class="first"><cite>access</cite>: One of &#8216;wr&#8217; (default), &#8216;rw&#8217;, &#8216;w&#8217; or &#8216;r&#8217;.
+If the string contains an &#8216;r&#8217; the data from an existing file will be
+read into the dict. If the string starts with an &#8216;r&#8217;, the file should
+exist. If the string contains a &#8216;w&#8217;, the data can be written back to
+the file. The &#8216;r&#8217; access mode is a read-only mode. 
+======  ===============  ============  ===================
+access  File must exist  File is read  File can be written
+======  ===============  ============  ===================</p>
+<blockquote>
+<div><p>r           yes             yes             no
+rw          yes             yes             yes
+wr          no         if it exists         yes  
+w           no              no              yes</p>
+</div></blockquote>
+</li>
+<li><p class="first"><cite>signature</cite>: A text that will be written in the header record of the
+file. This can e.g. be used to record format version info.</p>
+</li>
+<li><p class="first"><cite>compression</cite>: An integer from 0 to 9: compression level. For large
+data sets, compression leads to much smaller files. 0 is no compression,
+9 is maximal compression. The default is 4.</p>
+</li>
+<li><p class="first"><cite>binary</cite>: if False and no compression is used, storage is done
+in an ASCII format, allowing to edit the file. Otherwise, storage
+uses a binary format. Using binary=False is deprecated though.</p>
+</li>
+<li><p class="first"><cite>legacy</cite>: if True, the Project is allowed to read old headerless file
+formats. This option has no effect on the creation of new Project files.</p>
+</li>
+<li><p class="first"><cite>data</cite>: a dict-like object to initialize the Project contents. These data
+may override values read from the file.</p>
+</li>
+</ul>
 <dl class="method">
 <dt id="project.Project.header_data">
 <tt class="descname">header_data</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.header_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the data to be saved in the header.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="project.Project.set_data_from_header">
-<tt class="descname">set_data_from_header</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#project.Project.set_data_from_header" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the project data from the header.</p>
 </dd></dl>
 
 <dl class="method">
@@ -210,7 +268,7 @@
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 12, 2011.
+      Last updated on Dec 23, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

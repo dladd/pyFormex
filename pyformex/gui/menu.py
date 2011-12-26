@@ -202,30 +202,37 @@ class BaseMenu(object):
 
     def insertItems(self,items,before=None):
         """Insert a list of items in the menu.
-        
-        Each item is a tuple of two to five elements:
-        Text, Action, [ Icon,  ShortCut, ToolTip ].
 
-        Item text is the text that will be displayed in the menu.
-        It will be stored in a normalized way: all lower case and with
-        '&' removed.
+        Parameters:
 
-        Action can be any of the following:
-        
-        - a Python function or instance method : it will be called when the
-          item is selected,
-        - a string with the name of a function/method,
-        - a list of Menu Items: a popup Menu will be created that will appear
-          when the item is selected,
-        - an existing Menu,
-        - None : this will create a separator item with no action.
+        - `items`: a list of menuitem tuples. Each item is a tuple of two
+          or three elements: (text, action, options):
 
-        Icon is the name of one of the icons in the installed icondir.
-        ShortCut is an optional key combination to select the item.
-        Tooltip is a popup help string.
+          - `text`: the text that will be displayed in the menu item.
+            It is stored in a normalized way: all lower case and with
+            '&' removed.
 
-        If before is given, it specifies the text OR the action of one of the
-        items in the menu: the new items will be inserted before that one.
+          - `action`: can be any of the following:
+
+            - a Python function or instance method : it will be called when the
+              item is selected,
+            - a string with the name of a function/method,
+            - a list of Menu Items: a popup Menu will be created that will
+              appear when the item is selected,
+            - an existing Menu,
+            - None : this will create a separator item with no action.
+
+          - `options`: optional dictionary with following honoured fields:
+
+            - `icon`: the name of an icon to be displayed with the item text.
+              This name should be that of one of the icons in the pyFormex
+              icondir.
+            - `shortcut`: is an optional key combination to select the item.
+            - `tooltip`: a text that is displayed as popup help.
+
+        - `before`: if specified, should be the text *or* the action of one
+          of the items in the Menu (not the items list!): the new list of
+          items will be inserted before the specified item.
         """
         before = self.action(before)
         for item in items:

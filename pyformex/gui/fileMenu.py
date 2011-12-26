@@ -41,8 +41,52 @@ from prefMenu import updateSettings
 ##################### handle project files ##########################
 
 
-def openProject(fn=None,exist=False,access='wr',addGlobals=None,makeDefault=True):
+def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default='wr'):
     """Open a (new or old) Project file.
+
+    The user is asked for a Project file name and the access modalities.
+    Depending on the parameters and the results of the dialog, either a
+    new project is create or an old is opened, or nothing is done.
+    In case a project is opened, it is returned, else the return value is
+    None.
+
+    The default will let the user create new project files as well as open
+    existing ones.
+    Use create=False or the convenience function openProject to only accept
+    existing project files.
+
+    If a compression level (1..9) is given, the contents will be compressed,
+    resulting in much smaller project files at the cost of  
+    """
+    cur = fn if fn else '.'
+    typ = utils.fileDescription(['pyf','all'])
+    res = widgets.ProjectSelection(cur,typ,exist=exist,access=access,default=default).getResult()
+    if not res:
+        return
+
+    fn = res.fn
+    if not fn.endswith('.pyf'):
+        fn += '.pyf'
+    access = res.acc
+    compression = res.cpr
+    signature = pf.Version[:pf.Version.rfind('-')]
+
+    # OK, we have all data, now create/open the project
+    pf.message("Opening project %s" % fn)
+    pf.GUI.setBusy() # loading  may take a while
+    try:
+        proj = project.Project(fn,access=access,signature=signature,compression=compression)
+    except:
+        proj = None
+        raise
+    finally:
+        pf.GUI.setBusy(False)
+        
+    return proj
+
+
+def setProject(proj):
+    """Open a (new or old) Project file and make it the current project.
 
     The user is asked for a Project file name and the access modalities.
     Depending on the results of the dialog:
@@ -75,77 +119,13 @@ def openProject(fn=None,exist=False,access='wr',addGlobals=None,makeDefault=True
     should be added to the project. Set True or False to force or reject
     the adding without asking.
     """
-    cur = fn if fn else '.'
-    if makeDefault and pf.PF.filename is not None:
-        options = ['Cancel','Close without saving','Save and Close']
-        ans = draw.ask("What shall I do with your current project?",options)
-        if ans == 'Cancel':
-            return
-        if ans == options[2]:
-            pf.PF.save()
-        cur = pf.PF.filename
-    
-    typ = utils.fileDescription(['pyf','all'])
-    res = widgets.ProjectSelection(cur,typ,exist=exist).getResult()
-    if res is None:
-        # user canceled
-        return
-
-    fn = res.fn
-    if not fn.endswith('.pyf'):
-        fn += '.pyf'
-    access = res.acc
-    ## legacy = res.leg
-    ## ignoresig = res.sig
-    compression = res.cpr
-    #print(fn,legacy,compression)
-
-    ## if create and os.path.exists(fn):
-    ##     res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
-    ##     if res == 'Cancel':
-    ##         return
-    ##     if res == 'Add':
-    ##         create = False
-    pf.message("Opening project %s" % fn)
-    
-    if pf.PF:
-        ## pf.message("Exported symbols: %s" % pf.PF.keys())
-        ## if addGlobals is None:
-        ##     res = draw.ask("pyFormex already contains exported symbols.\nShall I delete them or add them to your project?",['Delete','Add','Cancel'])
-        ##     if res == 'Cancel':
-        ##         # ESCAPE FROM CREATING THE PROJECT
-        ##         return
-
-        ##     addGlobals = res == 'Add'
-
-        if addGlobals is None:
-            pf.message("Currently exported symbols: %s" % pf.PF.keys())
-            res = draw.ask("pyFormex already contains exported symbols.\nShall I delete them or add them to your project?",['Cancel','Delete','Add'])
-            if res == 'Cancel':
-                # ESCAPE FROM CREATING THE PROJECT
-                return
-
-            addGlobals = res == 'Add'
-
-    # OK, we have all data, now create/open the project
-        
-    updateSettings({'workdir':os.path.dirname(fn)},save=True)
-    signature = pf.Version[:pf.Version.rfind('-')]
-    ## if ignoresig:
-    ##     sig = ''
-
-    # Loading the project may take a long while; attent user
-    pf.GUI.setBusy()
-    try:
-        proj = project.Project(fn,access=access,signature=signature,compression=compression)
-    except:
-        proj = None
-        raise
-    finally:
-        pf.GUI.setBusy(False)
-        
+    pf.message("Setting current project to %s" % proj.filename)
     pf.message("Project contents: %s" % proj.keys())
-
+    pf.PF = proj
+    if pf.PF.filename:
+        updateSettings({'workdir':os.path.dirname(pf.PF.filename)},save=True)
+    pf.GUI.setcurproj(pf.PF.filename)
+    
     if hasattr(proj,'_autoscript_'):
         _ignore = "Ignore it!"
         _show = "Show it"
@@ -169,33 +149,29 @@ def openProject(fn=None,exist=False,access='wr',addGlobals=None,makeDefault=True
     if hasattr(proj,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % proj.autofile):
         processArgs([proj.autofile])
 
-    if makeDefault:
-        if pf.PF and addGlobals:
-            proj.update(pf.PF)
-        pf.PF = proj
-        pf.GUI.setcurproj(fn)
-
-    else:
-        # Just import the data into current project
-        pf.PF.update(proj)
-
     pf.message("Exported symbols: %s" % pf.PF.keys())
 
 
-## def createProject():
-##     """Open an new project.
+def createProject():
+    """Open an new project.
 
-##     Ask the user to select an existing project file, and then open it.
-##     """
-##     openProject(exist=False,access='w')
+    Ask the user to select an existing project file, and then open it.
+    """
+    closeProject()
+    proj = openProject(pf.PF.filename,exist=False)
+    if proj is not None: # may be empty
+        setProject(proj)
 
 
-## def openExistingProject():
-##     """Open an existing project.
+def openExistingProject():
+    """Open an existing project.
 
-##     Ask the user to select an existing project file, and then open it.
-##     """
-##     openProject(exist=True,access='rw')
+    Ask the user to select an existing project file, and then open it.
+    """
+    closeProject()
+    proj = openProject(pf.PF.filename,exist=True)
+    if proj is not None: # may be empty
+        setProject(proj)
 
 
 def importProject():
@@ -204,7 +180,9 @@ def importProject():
     Ask the user to select an existing project file, and then import
     its data into the current project.
     """
-    openProject(exist=True,access='r',addGlobals=False,makeDefault=False)
+    proj = openProject(exist=True,access='r')
+    if proj: # only if non-empty
+        pf.PF.update(proj)
     
 
 def setAutoScript():
@@ -228,38 +206,57 @@ def removeAutoFile():
 
 
 def saveProject():
-    if pf.PF:
-        pf.message("Project contents: %s" % pf.PF.keys())
+    """Save the current project.
+
+    If the current project is a named one, its contents are written to file.
+    This function does nothing if the current project is a temporary one.
+    """
+    if pf.PF.filename is not None:
+        pf.message("Saving Project contents: %s" % pf.PF.keys())
         pf.GUI.setBusy()
         pf.PF.save()
         pf.GUI.setBusy(False)
 
 
 def saveAsProject():
-    if pf.PF:
-        closeProjectWithoutSaving()
-        openProject(pf.PF.filename,addGlobals=True)
+    proj = openProject(pf.PF.filename,exist=False)
+    if proj is not None: # even if empty
+        pf.PF.filename = proj.filename
         saveProject()
-
-
-def closeProjectWithoutSaving():
-    """Close the current project without saving it."""
-    closeProject(False)
     
 
-def closeProject(save=True):
-    """Close the current project, saving it by default."""
+def clearProject():
+    """Clear the contents of the current project."""
+    pf.PF.clear()
+
+def closeProject(save=None):
+    """Close the current project, saving it or not.
+
+    Parameters:
+
+    - `save`: None, True or False. Determines whether the project should be
+      saved prior to closing it. If None, it will be asked from the user.
+      Note that this parameter is only used for named Projects. Temporary
+      Projects are never saved implicitely.
+    """
     if pf.PF.filename is not None:
-        pf.message("Closing project %s" % pf.PF.filename)
+        if save is None:
+            save = draw.ack("Save the current project?")
+        pf.message("Closing project %s (save=%s)" % (pf.PF.filename,save))
         if save:
             saveProject()
             if pf.PF:
                 pf.message("Exported symbols: %s" % pf.PF.keys())
                 if draw.ask("What shall I do with the exported symbols?",["Delete","Keep"]) == "Delete":
-                    proj.clear()
+                    pf.PF.clear()
 
     pf.PF.filename = None
     pf.GUI.setcurproj('None')
+
+
+def closeProjectWithoutSaving():
+    """Close the current project without saving it."""
+    closeProject(False)
     
 
 def askCloseProject():
@@ -273,6 +270,20 @@ def askCloseProject():
             saveAsProject()
         elif res == 2:
             saveProject()
+
+
+def convertProjectFile():
+    proj = openProject(pf.PF.filename,access=['c'],default='c',exist=True)
+    print "got proj"
+    if proj is not None:
+        print "will now convert"
+        proj.convert(proj.filename.replace('.pyf','_converted.pyf'))
+
+
+def uncompressProjectFile():
+    proj = openProject(pf.PF.filename,access=['u'],default='u',exist=True)
+    if proj is not None:
+        proj.uncompress(proj.filename.replace('.pyf','_uncompressed.pyf'))
 
 
 ##################### handle script files ##########################
@@ -399,9 +410,9 @@ def showImage():
 
 
 MenuData = [
-    (_('&Open project'),openProject),
-    ## (_('&Start new project'),createProject),
-    ## (_('&Open existing project'),openExistingProject),
+    ## (_('&Open project'),openProject),
+    (_('&Start new project'),createProject),
+    (_('&Open existing project'),openExistingProject),
     (_('&Import a project'),importProject),
     (_('&Set current script as AutoScript'),setAutoScript),
     (_('&Remove the AutoScript'),removeAutoScript),
@@ -409,8 +420,12 @@ MenuData = [
     (_('&Remove the AutoFile'),removeAutoFile),
     (_('&Save project'),saveProject),
     (_('&Save project As'),saveAsProject),
-    (_('&Close project without saving'),closeProjectWithoutSaving),
-    (_('&Save and Close project'),closeProject),
+    ## (_('&Close project without saving'),closeProjectWithoutSaving),
+    (_('&Clear project'),clearProject),
+    (_('&Close project'),closeProject),
+    ('---',None),
+    (_('&Convert Project File'),convertProjectFile),
+    (_('&Uncompress Project File'),uncompressProjectFile),
     ('---',None),
     (_('&Create new script'),createScript),
     (_('&Open existing script'),openScript),

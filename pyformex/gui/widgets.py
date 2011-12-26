@@ -1949,7 +1949,8 @@ class FileSelection(QtGui.QFileDialog):
 
 class ProjectSelection(FileSelection):
     """A file selection dialog specialized for opening projects."""
-    def __init__(self,path=None,pattern=None,exist=False,compression=4,ignore_signature=True):
+    def __init__(self,path=None,pattern=None,exist=False,compression=4,
+                 access=None,default=None):
         """Create the dialog."""
         if path is None:
             path = pf.cfg['workdir']
@@ -1959,11 +1960,9 @@ class ProjectSelection(FileSelection):
         grid = self.layout()
         nr,nc = grid.rowCount(),grid.columnCount()
 
-        if exist:
-            access = [ 'rw', 'r' ]
-        else:
-            access = [ 'wr', 'rw', 'w', 'r' ] 
-        self.acc = InputRadio("Access Mode",None,choices=access)
+        if access is None:
+            access = [ 'rw', 'r' ] if exist else [ 'wr', 'rw', 'w', 'r' ] 
+        self.acc = InputRadio("Access Mode",default,choices=access)
         self.acc.setToolTip("wr=read if exist; rw=must exist; w=overwrite; r=readonly")
         grid.addWidget(self.acc,nr,0,1,-1)
         nr += 1
@@ -1973,19 +1972,6 @@ class ProjectSelection(FileSelection):
             self.cpr.setToolTip("Higher compression levels result in smaller files, but higher load and save times.")
             grid.addWidget(self.cpr,nr,0,1,-1)
             nr += 1
-
-        ## if exist:
-        ##     self.sig = QtGui.QCheckBox("Ignore Signature Version")
-        ##     if ignore_signature:
-        ##         self.sig.setCheckState(QtCore.Qt.Checked)
-        ##     self.sig.setToolTip("Check this box to allow opening projects saved with an older version number in the header.")
-        ##     grid.addWidget(self.sig,nr,0,1,-1)
-        ##     nr += 1
-
-        ##     self.leg = QtGui.QCheckBox("Allow Opening Legacy Format")
-        ##     self.leg.setToolTip("Check this box to allow opening projects saved in the headerless legacy format.")
-        ##     grid.addWidget(self.leg,nr,0,1,-1)
-        ##     nr += 1
 
 
     def getResult(self):

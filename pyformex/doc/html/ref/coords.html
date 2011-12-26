@@ -473,20 +473,45 @@ a single integer 0..2 designating one of the coordinate axes.</p>
 <dt id="coords.Coords.test">
 <tt class="descname">test</tt><big>(</big><em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#coords.Coords.test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag points having coordinates between min and max.</p>
-<p>This function is very convenient in clipping a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> in a
-specified
-direction. It returns a 1D integer array flagging (with a value 1 or
-True) the elements having nodal coordinates in the required range.
-Use where(result) to get a list of element numbers passing the test.
-Or directly use clip() or cclip() to create the clipped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
-<p>The test plane can be define in two ways depending on the value of dir.
-If dir == 0, 1 or 2, it specifies a global axis and min and max are
-the minimum and maximum values for the coordinates along that axis.
-Default is the 0 (or x) direction.</p>
-<p>Else, dir should be compatible with a (3,) shaped array and specifies
-the direction of the normal on the planes. In this case, min and max
-are points and should also evaluate to (3,) shaped arrays.</p>
-<p>One of the two clipping planes may be left unspecified.</p>
+<p>Tests the position of the points of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with respect to
+one or two planes. This method is very convenient in clipping a
+<a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> in a specified direction. In most cases the clipping
+direction is one of the global cooordinate axes, but a general
+direction may be used as well.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>dir</cite>: either a global axis number (0, 1 or 2) or a direction vector
+consisting of 3 floats. It specifies the direction in which the
+distances are measured. Default is the 0 (or x) direction.</li>
+<li><cite>min</cite>,`max`: position of the minimum and maximum clipping planes.
+If <cite>dir</cite> was specified as an integer (0,1,2), this is a single float
+value corresponding with the coordinate in that axis direction.
+Else, it is a point in the clipping plane with normal direction <cite>dir</cite>.
+One of the two clipping planes may be left unspecified.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns: a 1D integer array with same length as the number of points.</dt>
+<dd>For each point the value is 1 (True) if the point is above the
+minimum clipping plane and below the maximum clipping plane,
+or 0 (False) otherwise.
+An unspecified clipping plane corresponds with an infinitely low or
+high value. The return value can directly be used as an index to
+obtain a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the points satisfying the test (or not).
+See the examples below.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">2.</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[False  True False False]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="nb">max</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+<span class="go">[[ 0.  1.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">t</span><span class="p">]</span>
+<span class="go">[[ 0.  0.  0.]</span>
+<span class="go"> [ 1.  0.  0.]</span>
+<span class="go"> [ 0.  2.  0.]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1481,20 +1506,45 @@ a single integer 0..2 designating one of the coordinate axes.</p>
 <dt id="coords.BoundVectors.test">
 <tt class="descname">test</tt><big>(</big><em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag points having coordinates between min and max.</p>
-<p>This function is very convenient in clipping a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> in a
-specified
-direction. It returns a 1D integer array flagging (with a value 1 or
-True) the elements having nodal coordinates in the required range.
-Use where(result) to get a list of element numbers passing the test.
-Or directly use clip() or cclip() to create the clipped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
-<p>The test plane can be define in two ways depending on the value of dir.
-If dir == 0, 1 or 2, it specifies a global axis and min and max are
-the minimum and maximum values for the coordinates along that axis.
-Default is the 0 (or x) direction.</p>
-<p>Else, dir should be compatible with a (3,) shaped array and specifies
-the direction of the normal on the planes. In this case, min and max
-are points and should also evaluate to (3,) shaped arrays.</p>
-<p>One of the two clipping planes may be left unspecified.</p>
+<p>Tests the position of the points of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with respect to
+one or two planes. This method is very convenient in clipping a
+<a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> in a specified direction. In most cases the clipping
+direction is one of the global cooordinate axes, but a general
+direction may be used as well.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>dir</cite>: either a global axis number (0, 1 or 2) or a direction vector
+consisting of 3 floats. It specifies the direction in which the
+distances are measured. Default is the 0 (or x) direction.</li>
+<li><cite>min</cite>,`max`: position of the minimum and maximum clipping planes.
+If <cite>dir</cite> was specified as an integer (0,1,2), this is a single float
+value corresponding with the coordinate in that axis direction.
+Else, it is a point in the clipping plane with normal direction <cite>dir</cite>.
+One of the two clipping planes may be left unspecified.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns: a 1D integer array with same length as the number of points.</dt>
+<dd>For each point the value is 1 (True) if the point is above the
+minimum clipping plane and below the maximum clipping plane,
+or 0 (False) otherwise.
+An unspecified clipping plane corresponds with an infinitely low or
+high value. The return value can directly be used as an index to
+obtain a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the points satisfying the test (or not).
+See the examples below.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">2.</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[False  True False False]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="nb">max</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+<span class="go">[[ 0.  1.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">t</span><span class="p">]</span>
+<span class="go">[[ 0.  0.  0.]</span>
+<span class="go"> [ 1.  0.  0.]</span>
+<span class="go"> [ 0.  2.  0.]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -2485,20 +2535,45 @@ a single integer 0..2 designating one of the coordinate axes.</p>
 <dt id="coords.CoordinateSystem.test">
 <tt class="descname">test</tt><big>(</big><em>dir=0</em>, <em>min=None</em>, <em>max=None</em>, <em>atol=0.0</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.test" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag points having coordinates between min and max.</p>
-<p>This function is very convenient in clipping a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> in a
-specified
-direction. It returns a 1D integer array flagging (with a value 1 or
-True) the elements having nodal coordinates in the required range.
-Use where(result) to get a list of element numbers passing the test.
-Or directly use clip() or cclip() to create the clipped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>.</p>
-<p>The test plane can be define in two ways depending on the value of dir.
-If dir == 0, 1 or 2, it specifies a global axis and min and max are
-the minimum and maximum values for the coordinates along that axis.
-Default is the 0 (or x) direction.</p>
-<p>Else, dir should be compatible with a (3,) shaped array and specifies
-the direction of the normal on the planes. In this case, min and max
-are points and should also evaluate to (3,) shaped arrays.</p>
-<p>One of the two clipping planes may be left unspecified.</p>
+<p>Tests the position of the points of the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with respect to
+one or two planes. This method is very convenient in clipping a
+<a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> in a specified direction. In most cases the clipping
+direction is one of the global cooordinate axes, but a general
+direction may be used as well.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>dir</cite>: either a global axis number (0, 1 or 2) or a direction vector
+consisting of 3 floats. It specifies the direction in which the
+distances are measured. Default is the 0 (or x) direction.</li>
+<li><cite>min</cite>,`max`: position of the minimum and maximum clipping planes.
+If <cite>dir</cite> was specified as an integer (0,1,2), this is a single float
+value corresponding with the coordinate in that axis direction.
+Else, it is a point in the clipping plane with normal direction <cite>dir</cite>.
+One of the two clipping planes may be left unspecified.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns: a 1D integer array with same length as the number of points.</dt>
+<dd>For each point the value is 1 (True) if the point is above the
+minimum clipping plane and below the maximum clipping plane,
+or 0 (False) otherwise.
+An unspecified clipping plane corresponds with an infinitely low or
+high value. The return value can directly be used as an index to
+obtain a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the points satisfying the test (or not).
+See the examples below.</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">2.</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">[False  True False False]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="nb">max</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+<span class="go">[[ 0.  1.  0.]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">t</span><span class="p">]</span>
+<span class="go">[[ 0.  0.  0.]</span>
+<span class="go"> [ 1.  0.  0.]</span>
+<span class="go"> [ 0.  2.  0.]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -3334,7 +3409,7 @@ the curve.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 12, 2011.
+      Last updated on Dec 23, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

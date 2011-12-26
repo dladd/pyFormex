@@ -216,6 +216,16 @@ class Mesh(Geometry):
         that the data match the plexitude of the element. 
         """
         self.coords[i] = val
+
+
+    def __setstate__(self,state):
+        """Set the object from serialized state.
+        
+        This allows to read back old pyFormex Project files where the Mesh
+        class did not set element type yet.
+        """
+        self.__dict__.update(state)
+        self.setType(self.eltype)
     
 
     def getProp(self):
