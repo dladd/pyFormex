@@ -168,6 +168,22 @@ TRICKS
    script, before any scripts specified on the command line, and
    before giving the input focus to the user.
 
+#. **Multiple viewports with unequal size**
+
+   The multiple viewports are ordered in a grid layout, and you can
+   specify relative sizes for the different columns and/or rows of
+   viewports. You can use setColumnStretch and setRowStretch to give
+   the columns a relative stretch compared toi the other ones. 
+   The following example produces 4 viewports in a 2x2
+   layout, with the right column(1) having double width of the left
+   one(0), while the bottom row has a height equal to 1.5 times the
+   height of the top row ::
+
+      layout(4)
+      pf.GUI.viewports.setColumnStretch(0,1)
+      pf.GUI.viewports.setColumnStretch(1,2)
+      pf.GUI.viewports.setRowStretch(0,2)
+      pf.GUI.viewports.setRowStretch(1,3)
 
 #. **Activate pyFormex debug messages from your script**
 
@@ -245,38 +261,60 @@ TRICKS
 
 #. **Permission denied error when running calpy simulation**
 
-  If you have no write permission in your current working directory,
-  running a calpy simulation will result in an error like this::
+   If you have no write permission in your current working directory,
+   running a calpy simulation will result in an error like this::
 
-    fil = file(self.tempfilename,'w')
-    IOError
-    : 
-    [Errno 13] Permission denied: 'calpy.tmp.part-0'
+     fil = file(self.tempfilename,'w')
+     IOError
+     : 
+     [Errno 13] Permission denied: 'calpy.tmp.part-0'
 
-  You can fix this by changing your current working directory to a path
-  where you have write permission (e.g. your home directory). 
-  You can do this using the :menuselection:`File->Change workdir` menu option.
-  The setting will be saved when you leave pyFormex (but other scripts
-  might change the setting again).
-
-
-#. **How to obtain unequally sized multiple viewports**
-
-  The multiple viewports are ordered in a grid layout, and you can
-  specify relative sizes for the different columns and/or rows of
-  viewports. You can use setColumnStretch and setRowStretch to give
-  the columns a relative stretch compared toi the other ones. 
-  The following example produces 4 viewports in a 2x2
-  layout, with the right column(1) having double width of the left
-  one(0), while the bottom row has a height equal to 1.5 times the
-  height of the top row::
-
-    layout(4)
-    pf.GUI.viewports.setColumnStretch(0,1)
-    pf.GUI.viewports.setColumnStretch(1,2)
-    pf.GUI.viewports.setRowStretch(0,2)
-    pf.GUI.viewports.setRowStretch(1,3)
+   You can fix this by changing your current working directory to a path
+   where you have write permission (e.g. your home directory). 
+   You can do this using the :menuselection:`File->Change workdir` menu option.
+   The setting will be saved when you leave pyFormex (but other scripts
+   might change the setting again).
 
 
+#. **Reading back old Project (.pyf) files**
+
+   When the implementation of some pyFormex class changes, or when the
+   location of a module is changed, an error may result when trying to
+   read back old Project (.pyf) files. While in principle it is possible
+   to create the necessary interfaces to read back the old data and transform
+   them to new ones, our current policy is to not do this by default for
+   all classes and all changes. That would just require too much resources
+   for maybe a few or no cases occurring.
+   We do provide here some guidelines to help you with solving the problems
+   yourself. And if you are not able to fix it, just file a support request
+   at our `Support tracker`_ and we will try to help you.
+
+   If the problem is with a changed implementation of a class, it can usually
+   be fixed by adding an appropriate __set_state__ method to the class.
+   Currently we have this for Formex and Mesh classes. Look at the code
+   in formex.py and mesh.py respectively.
+
+   If the problem comes from a relocation of a module (e.g. the mesh module
+   was moved from plugins to the pyFormex core), you may get an error like
+   this::
+
+     AttributeError: 'NoneType' object has no attribute 'Mesh'
+  
+   The reason is that the path recorded in the Project file pointed to the
+   old location of the mesh module under ``plugins`` while the mesh module
+   is now in the top pyformex directory. This can be fixed in two ways:
+
+   - The easy (but discouraged) way is to add a symbolic link in the old 
+     position, linking to the new one. We do not encourage to use this
+     method, because it sustains the dependency on legacy versions.
+
+   - The recommended way is to convert your Project file to point to the
+     new path. To take care of the above relocation of the mesh module,
+     you could e.g. use the following command to convert your ``old.pyf`` to
+     a ``new.pyf`` that can be properly read. It just replaces the old module
+     path (``plugins.mesh``) with the current path (``mesh``)::
+
+       sed 's|plugins.mesh|mesh|'g old.pyf >new.pyf
+  
 
 .. End

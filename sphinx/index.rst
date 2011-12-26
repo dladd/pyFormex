@@ -72,6 +72,8 @@ Parts of the documentation
    user-guide
    examples
    refman
+   faq
+   test
    file_format
    bumpix
    license

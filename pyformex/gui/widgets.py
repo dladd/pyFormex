@@ -168,7 +168,7 @@ class InputItem(QtGui.QWidget):
       the items in the programming.
       `text` can be set to an empty string to suppress the creation of a label
       in front of the input field. This is useful if the input field
-      widget itself already provides a label (see e.g. InputBoolean).
+      widget itself already provides a label (see e.g. InputBool).
       `text` can also be a QtGui.QPixmap, allowing for icons to be used
       as labels.
     - `buttons`: a list of (label,function) tuples. For each tuple a button
@@ -1950,7 +1950,7 @@ class FileSelection(QtGui.QFileDialog):
 class ProjectSelection(FileSelection):
     """A file selection dialog specialized for opening projects."""
     def __init__(self,path=None,pattern=None,exist=False,compression=4,
-                 access=None,default=None):
+                 access=None,default=None,convert=True):
         """Create the dialog."""
         if path is None:
             path = pf.cfg['workdir']
@@ -1967,6 +1967,12 @@ class ProjectSelection(FileSelection):
         grid.addWidget(self.acc,nr,0,1,-1)
         nr += 1
 
+        if exist:
+            self.cvt = InputBool("Automatically convert file to latest format",convert)
+            self.cvt.setToolTip("It is recommended to automatically convert your project files to the latest format, to avoid future compatibility problems. The only reason to not convert is if you still need to read your files with olde versions of pyFormex. The conversion will not be performed if pyFormex can not correctly read your file.")
+            grid.addWidget(self.cvt,nr,0,1,-1)
+            nr += 1
+            
         if not exist:
             self.cpr = InputSlider("Compression level (0-9)",compression,min=0,max=9,ticks=1)
             self.cpr.setToolTip("Higher compression levels result in smaller files, but higher load and save times.")
@@ -1980,13 +1986,11 @@ class ProjectSelection(FileSelection):
             opt = mydict.Dict()
             opt.fn = str(self.selectedFiles()[0])
             opt.acc = self.acc.value()
-            opt.cpr = opt.sig = opt.leg = None
+            opt.cpr = opt.cvt = None
             if hasattr(self,'cpr'):
                 opt.cpr = self.cpr.value()
-            if hasattr(self,'leg'):
-                opt.leg = self.leg.isChecked()
-            if hasattr(self,'sig'):
-                opt.sig = self.sig.isChecked()
+            if hasattr(self,'cvt'):
+                opt.cvt = self.cvt.value()
             return opt
 
         else:

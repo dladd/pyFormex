@@ -60,7 +60,7 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default='wr'):
     """
     cur = fn if fn else '.'
     typ = utils.fileDescription(['pyf','all'])
-    res = widgets.ProjectSelection(cur,typ,exist=exist,access=access,default=default).getResult()
+    res = widgets.ProjectSelection(cur,typ,exist=exist,access=access,default=default,convert=True).getResult()
     if not res:
         return
 
@@ -69,13 +69,14 @@ def openProject(fn=None,exist=False,access=['wr','rw','w','r'],default='wr'):
         fn += '.pyf'
     access = res.acc
     compression = res.cpr
+    convert = res.cvt
     signature = pf.Version[:pf.Version.rfind('-')]
 
     # OK, we have all data, now create/open the project
     pf.message("Opening project %s" % fn)
     pf.GUI.setBusy() # loading  may take a while
     try:
-        proj = project.Project(fn,access=access,signature=signature,compression=compression)
+        proj = project.Project(fn,access=access,convert=convert,signature=signature,compression=compression)
     except:
         proj = None
         raise
@@ -219,11 +220,16 @@ def saveProject():
 
 
 def saveAsProject():
-    proj = openProject(pf.PF.filename,exist=False)
+    proj = openProject(pf.PF.filename,exist=False,access=['w'],default='w')
     if proj is not None: # even if empty
         pf.PF.filename = proj.filename
+        pf.PF.gzip = proj.gzip
         saveProject()
     
+
+def listProject():
+    """Print all global variable names."""
+    pf.message("Exported symbols: %s" % pf.PF.keys())
 
 def clearProject():
     """Clear the contents of the current project."""
@@ -418,6 +424,7 @@ MenuData = [
     (_('&Remove the AutoScript'),removeAutoScript),
     (_('&Set current script as AutoFile'),setAutoFile),
     (_('&Remove the AutoFile'),removeAutoFile),
+    (_('&List project contents'),draw.listAll),
     (_('&Save project'),saveProject),
     (_('&Save project As'),saveAsProject),
     ## (_('&Close project without saving'),closeProjectWithoutSaving),

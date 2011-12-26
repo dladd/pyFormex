@@ -60,7 +60,6 @@ pyFormex user guide
    widgets
    plugins
    config
-   faq
 
 .. End
 

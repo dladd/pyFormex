@@ -98,4 +98,11 @@ if pf.svnversion:
 If you are running pyFormex from SVN sources and you can get root access, you can go to the directory `...pyformex/external/dxfparser/` and follow the instructions there, or you can just try the **Install externals** menu option of the **Help** menu.
 """
 
+warn_old_project = """..
+
+Old project format
+------------------
+This is an old format project file. Unless you need to read this project file from an older pyFormex version, we strongly advise you to convert the project file to the latest format. Otherwise future versions of pyFormex might not be able to read it back.
+"""
+
 # End

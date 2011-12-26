@@ -27,7 +27,8 @@
 
 Functions for managing a project in pyFormex.
 """
-
+import pyformex as pf
+from pyformex import utils
 import os,sys
 import cPickle
 import gzip
@@ -41,10 +42,10 @@ module_relocations = {
 
 def find_global(module,name):
     """Override the import path of some classes"""
-    print "I want to import %s from %s" % (name,module)
+    pf.debug("I want to import %s from %s" % (name,module))
     if module in module_relocations:
         module = module_relocations[module]
-        print "  I will try module %s instead" % module
+        pf.debug("  I will try module %s instead" % module)
     __import__(module)
     mod = sys.modules[module]
     clas = getattr(mod, name)
@@ -60,6 +61,8 @@ def pickle_load(f,try_resolve=True):
     return pi.load()
 
 
+highest_format = 3
+
 class Project(dict):
     """Project: a persistent storage of pyFormex data.
 
@@ -67,18 +70,44 @@ class Project(dict):
     of any kind, and can be saved to a file to create persistence over
     different pyFormex sessions.
 
-    While the Project class is mainly used by pyFormex for the pyformex.PF
-    global variable that collects variables exported from pyFormex scripts,
-    the user may also create and handle his own Project objects.
+    The :class:`Project` class is used by pyFormex for the ``pyformex.PF``
+    global variable that collects variables exported from pyFormex scripts.
+    While projects are mostly handled through the pyFormex GUI, notably the
+    *File* menu, the user may also create and handle his own Project objects
+    from a script.
 
-    .. warning:: In the current implementation there is no guarantee that
-      a project file written by one version of pyFormex can be read back
-      by a later version. The project files are mainly intended as a means
-      to easily save lots of data and to restore them in your next session,
-      or pass them to another user (with the same pyFormex version). If you
-      need guarantee that you stored data will always remain accessible,
-      you can save geometry type of data to pyFormex .pgf format files.
-      Other data you should take care of yourself.
+    Because of the way pyFormex Projects are written to file,
+    there may be problems when trying to read a project file that was
+    created with another pyFormex version. Problems may occur if the
+    project contains data of a class whose implementation has changed,
+    or whose definition has been relocated. Our policy is to provide
+    backwards compatibility: newer versions of pyFormex will normally
+    read the older project formats. Saving is always done in the
+    newest format, and these can generally not be read back by older
+    program versions (unless you are prepared to do some hacking).
+
+    .. warning:: Compatibility issues.
+
+       Occasionally you may run into problems when reading back an
+       old project file, especially when it was created by an unreleased
+       (development) version of pyFormex. Because pyFormex is evolving fast,
+       we can not test the full compatibility with every revision.
+       You can file a support request on the pyFormex
+       `support tracker <http://savannah.nongnu.org/support/?func=additem&group=pyformex>`_
+       and we will try to add the requireded conversion code to
+       pyFormex.
+
+       The project files are mainly intended as a means to easily save lots
+       of data of any kind and to restore them in the same session or a later
+       session, to pass them to another user (with the same or later pyFormex
+       version), to store them over a medium time period. Occasionally opening
+       and saving back your project files with newer pyFormex versions may help
+       to avoid read-back problems over longer time.
+
+       For a problemless long time storage of Geometry type objects you may
+       consider to write them to a pyFormex Geometry file (.pgf) instead, since
+       this uses a stable ascii based format. It can (currently) not deal
+       with other data types however.
 
     Parameters:
 
@@ -109,7 +138,13 @@ class Project(dict):
         wr          no         if it exists         yes  
         w           no              no              yes 
       ======  ===============  ============  ===================
-         
+
+    - `convert`: if True (default), and the file is opened for reading, an
+      attempt is made to open old projects in a compatibility mode, doing the
+      necessary conversions to new data formats. If convert is set False,
+      only the latest format can be read and older formats will generate
+      an error.
+    
     - `signature`: A text that will be written in the header record of the
       file. This can e.g. be used to record format version info.
 
@@ -119,34 +154,29 @@ class Project(dict):
 
     - `binary`: if False and no compression is used, storage is done
       in an ASCII format, allowing to edit the file. Otherwise, storage
-      uses a binary format. Using binary=False is deprecated though.
-
-    - `legacy`: if True, the Project is allowed to read old headerless file
-      formats. This option has no effect on the creation of new Project files.
+      uses a binary format. Using binary=False is deprecated.
 
     - `data`: a dict-like object to initialize the Project contents. These data
       may override values read from the file.  
     """
 
-    def __init__(self,filename=None,access='wr',signature=_signature_,compression=5,binary=True,data={},**kargs):
+    def __init__(self,filename=None,access='wr',convert=True,signature=_signature_,compression=5,binary=True,data={},**kargs):
         """Create a new project."""
         if 'create' in kargs:
-            import warnings
-            warnings.warn("The create=True argument should be replaced with access='w'")
+            utils.warn("The create=True argument should be replaced with access='w'")
         if 'legacy' in kargs:
-            import warnings
-            warnings.warn("The legacy=True argument has become superfluous")
+            utils.warn("The legacy=True argument has become superfluous")
             
         self.filename = filename
         self.access = access 
         self.signature = str(signature)
         self.gzip = compression if compression in range(1,10) else 0
-        self.mode = 'b' if binary else ''
+        self.mode = 'b' if binary or compression > 0 else ''
         
         dict.__init__(self)
         if filename and os.path.exists(filename) and 'r' in self.access:
             # read existing contents
-            self.load()
+            self.load(convert)
         self.update(data)
         if filename and access=='w':
             # destroy existing contents
@@ -171,7 +201,8 @@ class Project(dict):
             fd,fn = tempfile.mkstemp(prefix='pyformex_',suffix='.pyf')
             self.filename = fn
         else:
-            print "Saving project %s with compression %s" % (self.filename,self.gzip)
+            print "Saving project %s with mode %s and compression %s" % (self.filename,self.mode,self.gzip)
+            #print("  Contents: %s" % self.keys()) 
         f = open(self.filename,'w'+self.mode)
         # write header
         f.write("%s\n" % self.header_data())
@@ -182,7 +213,7 @@ class Project(dict):
         else:
             protocol = 0
         if self.gzip:
-            pyf = gzip.GzipFile(self.filename,'w'+self.mode,self.gzip,f)
+            pyf = gzip.GzipFile(mode='w'+self.mode,compresslevel=self.gzip,fileobj=f)
             cPickle.dump(self,pyf,protocol)
             pyf.close()
         else:
@@ -201,8 +232,8 @@ class Project(dict):
         self.format = -1
         print("Reading project file: %s" % self.filename)
         f = open(self.filename,'rb')
+        fpos = f.tell()
         s = f.readline()
-        print "header = %s" % s
         # Try subsequent formats
         try:
             # newest format has header in text format
@@ -213,26 +244,23 @@ class Project(dict):
 
             # try OLD new format: the first pickle contains attributes
             try:
-                print "trying format 2"
                 p = pickle_load(f)
                 self.__dict__.update(p)
                 self.format = 2
             except:
-                pass
-
-            if 'gzip' in s:
-                # transitional format
-                self.gzip = 5
-                self.format = 1
-            else:
-                # headerless format
-                self.legacy = True
-                f.seek(0)
-                self.gzip = 0
-                self.format = 0
-                
-            import warnings
-            warnings.warn("This is an old format project file. Unless you need to read this project file from an older pyFormex version, we strongly advise you to convert the project file to the latest format. Otherwise future versions of pyFormex might not be able to read it back.")
+                s = s.strip()
+                print "Header = '%s'" % s
+                if s=='gzip' or s=='' or 'pyFormex' in s:
+                    # transitional format
+                    self.gzip = 5
+                    self.format = 1
+                    # NOT SURE IF THIS IS OK, NEED EXAMPLE FILE
+                    f.seek(fpos)
+                else:
+                    # headerless format
+                    f.seek(0)
+                    self.gzip = 0
+                    self.format = 0
 
         return f
 
@@ -243,15 +271,19 @@ class Project(dict):
         The loaded definitions will update the current project.
         """
         f = self.readHeader()
-        if f:
-            if self.gzip:
-                pyf = gzip.GzipFile(self.filename,'r',self.gzip,f)
+        if self.format < highest_format:
+            print "Format looks like %s" % self.format
+            utils.warn('warn_old_project')
+        with f:
+            try:
+                print "Unpickling gzip"
+                pyf = gzip.GzipFile(fileobj=f,mode='rb')
                 p = pickle_load(pyf,try_resolve)
                 pyf.close()
-            else:
+            except:
+                print "Unpickling clear"
                 p = pickle_load(f,try_resolve)
             self.update(p)
-        f.close()
     
 
     def convert(self,filename=None):
@@ -305,8 +337,7 @@ class Project(dict):
                 print "Uncompressed %s to %s" % (self.filename,fn)
                 
             else:    
-                import warnings
-                warnings.warn("The contents of the file does not appear to be compressed.")
+                utils.warn("The contents of the file does not appear to be compressed.")
             f.close()
 
  
