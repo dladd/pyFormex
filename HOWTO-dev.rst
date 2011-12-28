@@ -290,8 +290,8 @@ in the top level directory of your checkout.
 
 - Create a branch *MYBRANCH* of the current subversion archive (do not do this lightly: merging changes between branches can be a tidious work) ::
 
-   svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk \
-     svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/MYBRANCH \
+   svn copy svn+ssh://USER@svn.savannah.nongnu.org/pyformex/trunk \
+     svn+ssh://USER@svn.savannah.nongnu.org/pyformex/branches/MYBRANCH \
      -m "Creating a branch for some purpose"
 
 - See what you have changed::
@@ -305,7 +305,7 @@ in the top level directory of your checkout.
 
 - Change your local directory to another branch ::
   
-   svn switch svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch
+   svn switch svn+ssh://USER@svn.savannah.nongnu.org/pyformex/branches/mybranch
 
 - Show information about your local copy::
 
@@ -406,19 +406,113 @@ Then create the link with the following command::
 
   ln -sfn TOPDIR/pyformex/pyformex ~/bin/pyformex
 
-where *TOPDIR* is the absolute path of the top directory (created from the
+where ``TOPDIR`` is the absolute path of the top directory (created from the
 repository checkout). You can also use a relative path, but this should be
-as seen from the *~/bin* directory.
+as seen from the ``~/bin`` directory.
 
 After starting a new terminal, you should be able to just enter the command
-*pyformex* to run your svn version from anywhere.  
+``pyformex`` to run your svn version from anywhere.  
+
+  
+Creating pyFormex documentation
+===============================
+
+The pyFormex documentation (as well as the website) are created by the 
+**Sphinx** system from source files written in ReST (ReStructuredText).
+The source files are in the ``sphinx`` directory of your svn tree and	
+have an extension ``.rst``.
+
+Install Sphinx
+--------------
+You need a (slightly) patched version of Sphinx. The patch adds a small
+functionality leaving normal operation intact. Therefore, if you have root
+access, we advise to just patch a normally installed version of Sphinx.
+ 
+- First, install the required packages. On Debian GNU/Linux do ::
+ 
+    apt-get install dvipng
+    apt-get install python-sphinx
+
+- Then Patch the sphinx installation. Find out where the installed Sphinx
+  package resides. On Debian this is ``/usr/share/pyshared/sphinx``. 
+  The pyformex source tree contains the required patch in a file 
+  ``sphinx/sphinx-1.04-bv.diff``. It was created for Sphinx 1.0.4 but will
+  still work for slightly newer versions (it was tested on 1.0.8). 
+  Do the following as root::
+
+    cd /usr/share/pyshared/sphinx
+    patch -p1 --dry-run < TOPDIR/sphinx/sphinx-1.0.4-bv.diff
+
+  This will only test the patching. If all hunks succeed, run the
+  command again without the '--dry-run'::
+
+    patch -p1 < ???/pyformex/sphinx/sphinx-1.0.4-bv.diff
+
+Writing documentation source files
+----------------------------------
+Documentation is written in ReST (ReStructuredText). The source files are
+in the ``sphinx`` directory of your svn tree and have an extension ``.rst``.
+
+When you create a new .rst files with the following header::
+
+  .. $Id$
+  .. pyformex documentation --- chaptername
+  ..
+  .. include:: defines.inc
+  .. include:: links.inc
+  ..
+  .. _cha:partname:
+
+Replace in this header chaptername with the documentation chapter name.
+
+See also the following links for more information:
+
+- guidelines for documenting Python: http://docs.python.org/documenting/index.html
+- Sphinx documentation: http://sphinx.pocoo.org/
+- ReStructuredText page of the docutils project: http://docutils.sourceforge.net/rst.html
+
+When refering to pyFormex as the name of the software or project,
+always use the upper case 'F'. When refering to the command to run
+the program, or a directory path name, use all lower case: ``pyformex``.
+
+The source .rst files in the ``sphinx/ref`` directory are automatically
+generated with the ``py2rst.py`` script. They will generate the pyFormex
+reference manual automatically from the docstrings in the Python
+source files of pyFormex. Never add or change any of the .rst files in
+``sphinx/ref`` directly. Also, these files should *not* be added to the
+svn repository.    
+ 
+
+Adding image files
+------------------
+
+- Put original images in the subdirectory ``images``.
+
+- Create images with a transparent or white background.
+
+- Use PNG images whenever possible.
+
+- Create the reasonable size for inclusion on a web page. Use a minimal canvas size and maximal zooming.
+
+- Give related images identical size (set canvas size and use autozoom).
+
+- Make composite images to combine multiple small images in a single large one.
+  If you have ``ImageMagick``, the following command create a horizontal
+  composition ``result.png``  of three images::
+
+     convert +append image-000.png image-001.png image-003.png result.png
 
 
 Create the pyFormex manual
-==========================
+--------------------------
 
-- You need a patched version of **Sphinx**. See the howto in the
-  `sphinx` directory for instructions.
+The pyFormex documentation is normally generated in HTML format, allowing it
+to be published on the website. This is also the format that is included in
+the pyFormex distributions. Alternative formats (like PDF) may also be 
+generated and made available online, but are not distributed with pyFormex.
+
+The ``make`` commands to generate the documentation are normally executed
+from the ``sphinx`` directory (though some work from the ``TOPDIR`` as well).
 
 - Create the html documentation ::
 
@@ -426,28 +520,41 @@ Create the pyFormex manual
 
   This will generate the documentation in `sphinx/_build/html`, but
   these files are *not* in the svn tree and will not be used in the
-  pyFormex **Help** system, nor can they be made available publicly.
+  pyFormex **Help** system, nor can they be made available to the public
+  directly.
   Check the correctness of the generated files by pointing your
   browser to `sphinx/_build/html/index.html`.
 
-- Include the created documentation files into the pyFormex SVN tree
-  (under pyformex/doc/html) and thus into the **Help** system
-  of pyFormex ::
+- The make procedure often produces a long list of warnings and errors.
+  You may therefore prefer to use the following command instead ::
+  
+    make html 2>&1 | tee > errors
+
+  This will log the stdout and stderr to a file ``errors``, where you
+  can check afterwards what needs to be fixed.
+
+- When the generated documentation seems ok, include the files into
+  the pyFormex SVN tree (under ``pyformex/doc/html``) and thus into
+  the **Help** system of pyFormex ::
 
    make svndoc
 
-- Create a PDF version of the manual ::
+  Note: If you created any *new* files, do not forget to ``svn add`` them.
+ 
+- A PDF version of the full manual can be created with ::
 
    make pdf
  
-  This will create the PDF manual in `sphinx/_build/latex`.
+  This will put the PDF manual in ``sphinx/_build/latex``. 
 
-If you want to have the newly created documentation published on the
-pyFormex website, ask the project manager.
+The newly generated documentation is not automatically published on the
+pyFormex website. Currently, only the project manager can do that. After you
+have made substantial improvements (and checked them in), you should contact 
+the project maanger and ask him to publish the new docs.
 
   
-Creating a distribution
-=======================
+Create a distribution
+=====================
 
 A distribution (or package) is a full set of all pyFormex files
 needed to install and run it on a system, packaged in a single archive
@@ -628,7 +735,7 @@ for the full procedure to make and publish an official release tarball.
 
    make publocal
 
-- Make a distribution file available on Berlios FTP server ::
+- Make a distribution file available on Savannah FTP server ::
 
    make pub
   
