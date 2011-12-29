@@ -91,10 +91,9 @@ class Project(dict):
        Occasionally you may run into problems when reading back an
        old project file, especially when it was created by an unreleased
        (development) version of pyFormex. Because pyFormex is evolving fast,
-       we can not test the full compatibility with every revision.
-       You can file a support request on the pyFormex
-       `support tracker <http://savannah.nongnu.org/support/?func=additem&group=pyformex>`_
-       and we will try to add the requireded conversion code to
+       we can not test the full compatibility with every revision
+       You can file a support request on the pyFormex `support tracker`_.
+       and we will try to add the required conversion code to
        pyFormex.
 
        The project files are mainly intended as a means to easily save lots
@@ -129,14 +128,15 @@ class Project(dict):
       If the string contains an 'r' the data from an existing file will be
       read into the dict. If the string starts with an 'r', the file should
       exist. If the string contains a 'w', the data can be written back to
-      the file. The 'r' access mode is a read-only mode. 
+      the file. The 'r' access mode is a read-only mode.
+      
       ======  ===============  ============  ===================
       access  File must exist  File is read  File can be written
       ======  ===============  ============  ===================
-        r           yes             yes             no
-        rw          yes             yes             yes
-        wr          no         if it exists         yes  
-        w           no              no              yes 
+        r           yes             yes             no          
+        rw          yes             yes             yes         
+        wr          no         if it exists         yes         
+        w           no              no              yes         
       ======  ===============  ============  ===================
 
     - `convert`: if True (default), and the file is opened for reading, an

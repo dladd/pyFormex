@@ -39,7 +39,6 @@ PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-MANDOCS= _build/html/*
 RSYNC= rsync -v -e ssh
 
 PDF= pyformex.pdf
@@ -47,7 +46,6 @@ THE_PDF= _build/latex/${PDF}
 PKGDIR= ../dist
 PUBDIR= ${PKGDIR}/pyformex/doc
 
-SVNDOC= ../pyformex/doc/html
 FTPLOCAL= bumps.ugent.be:/var/ftp/pub/pyformex
 
 .PHONY: prereq ref pdf svndoc pubn pub pubpdf publocal
@@ -192,11 +190,11 @@ pdf: latexpdf
 
 # Transfer the html docs to doc
 svndoc:
-	${RSYNC} -a --exclude '.svn' --delete ${MANDOCS} ${SVNDOC} 
+	${RSYNC} -a --exclude '.svn' --exclude '.buildinfo' --delete _build/html ../pyformex/doc
 
-# Transfer the files to www for publication
-pub: 
-	rsync _build/html/* ../www/doc --exclude CVS --exclude .svn --delete -av
+# Transfer the html docs to www for publication
+pubdoc: 
+	${RSYNC} -a --exclude 'CVS' --exclude '.svn' --exclude '.buildinfo' --delete _build/html/ ../www/doc
 
 # Publish the PDF manual
 
@@ -214,6 +212,6 @@ ${PUBDIR}/${PDF}.sig: ${PUBDIR}/${PDF}
 ${PUBDIR}/${PDF}:
 	cp ${THE_PDF} ${PUBDIR}
 
-
+cvswww: 
 
 # End

@@ -274,15 +274,15 @@ latexpdf:
 # Publish the documentation on the website
 
 pubdoc:
-	make -C ${SPHINXDIR} pub
+	make -C ${SPHINXDIR} pubdoc
 
 
 listwww:
-	cd www; cvs ls | grep '^?'
-	echo "Add these files by hand!"
+	cd www; cvs ls | grep '^?'; cd ..
+	@echo "Add the ? files by hand!"
 
 commit:
-	cd www; cvs commit
+	cd www; cvs commit; cd ..
 
 # Make the PDF manual available for download
 

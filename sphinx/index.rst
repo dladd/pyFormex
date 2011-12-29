@@ -73,7 +73,6 @@ Parts of the documentation
    examples
    refman
    faq
-   test
    file_format
    bumpix
    license

@@ -280,11 +280,35 @@ question is not solved in the FAQ below.</p>
 <div class="section" id="faq">
 <span id="sec-bumpix-faq"></span><h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
 <p>A collection of hints and answers to frequently asked questions.</p>
-<ol class="arabic simple">
-<li>The initial user name is <cite>user</cite> and the password <cite>live</cite>.</li>
-<li>On shutdown/reboot, the system pauses with the advice to remove the
-USB stick before hitting <cite>ENTER</cite> to proceed. We advice not to do this:
-first hit <cite>ENTER</cite> and remove the USB stick when the screen goes black.</li>
+<ol class="arabic">
+<li><p class="first">The initial user name is <cite>user</cite> and the password <cite>live</cite>.</p>
+</li>
+<li><p class="first">On shutdown/reboot, the system pauses with the advice to remove the
+USB stick before hitting <cite>ENTER</cite> to proceed. We advice not to do this
+(especially when running in <em>PERSISTENT</em> mode): instead
+first hit <cite>ENTER</cite> and remove the USB stick when the screen goes black.</p>
+</li>
+<li><p class="first">BuMPix 0.7.0 may contain a few user configuration files with incorrect
+owner settings. As a result some XFCE configuration may not be permanent.
+To solve the problem, you should run the following command in a terminal</p>
+<div class="highlight-python"><pre>sudo chown -R user:user /home/user</pre>
+</div>
+</li>
+<li><p class="first">For BuMPix 0.7.0 (featuring pyFormex 0.8.4) with XFCE desktop, some users
+have reported occaional problems with starting the window manager. Windows
+remain undecorated and the mouse cursor keeps showing the <em>BUSY</em> symbol.
+This is probably caused by an improper previous shutdown and can be resolved
+as follows: open a terminal and enter the command <tt class="docutils literal"><span class="pre">xfwm4</span></tt>. That will start
+up the window manager for your current session and most likely will also
+remove the problem for your next sessions.</p>
+</li>
+<li><p class="first">Install the latest pyFormex version from the SVN repository. The BuMPix
+stick contains a script <tt class="docutils literal"><span class="pre">pyformex-svn</span></tt> under the user&#8217;s <tt class="docutils literal"><span class="pre">bin</span></tt> directory
+to install a pyFormex version directly from the SVN repository.
+However, the repository has been relocated to a ne server and the script
+might still contain the old location. You can download a fixed script from
+<a class="reference external" href="ftp://bumps.ugent.be/pub/pyformex/pyformex-svn">ftp://bumps.ugent.be/pub/pyformex/pyformex-svn</a>.</p>
+</li>
 </ol>
 </div>
 <div class="section" id="upgrade-the-pyformex-version-on-a-bumpix-0-6-1-usb-stick">
@@ -381,7 +405,7 @@ svn up</pre>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 23, 2011.
+      Last updated on Dec 28, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

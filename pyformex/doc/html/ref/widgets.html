@@ -180,7 +180,7 @@ input fields in the dialog, while keeping short and simple names for
 the items in the programming.
 <cite>text</cite> can be set to an empty string to suppress the creation of a label
 in front of the input field. This is useful if the input field
-widget itself already provides a label (see e.g. InputBoolean).
+widget itself already provides a label (see e.g. InputBool).
 <cite>text</cite> can also be a QtGui.QPixmap, allowing for icons to be used
 as labels.</li>
 <li><cite>buttons</cite>: a list of (label,function) tuples. For each tuple a button
@@ -1230,7 +1230,7 @@ If the user hits CANCEL or ESC, None is returned.</p>
 
 <dl class="class">
 <dt id="widgets.ProjectSelection">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ProjectSelection</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>compression=4</em>, <em>ignore_signature=True</em><big>)</big><a class="headerlink" href="#widgets.ProjectSelection" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ProjectSelection</tt><big>(</big><em>path=None</em>, <em>pattern=None</em>, <em>exist=False</em>, <em>compression=4</em>, <em>access=None</em>, <em>default=None</em>, <em>convert=True</em><big>)</big><a class="headerlink" href="#widgets.ProjectSelection" title="Permalink to this definition">¶</a></dt>
 <dd><p>A file selection dialog specialized for opening projects.</p>
 <dl class="method">
 <dt id="widgets.ProjectSelection.getFilename">
@@ -1845,7 +1845,7 @@ is given, it is set to the LAST button.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 23, 2011.
+      Last updated on Dec 28, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

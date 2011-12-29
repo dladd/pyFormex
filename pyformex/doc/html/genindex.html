@@ -672,6 +672,7 @@
     <dt><a href="ref/connectivity.html#module-connectivity">connectivity (module)</a></dt>
     <dt><a href="ref/mesh.html#mesh.Mesh.convert">convert() (mesh.Mesh method)</a></dt>
     <dd><dl>
+      <dt><a href="ref/project.html#project.Project.convert">(project.Project method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.convert">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
     <dt><a href="ref/dxf.html#dxf.convertDXF">convertDXF() (in module dxf)</a></dt>
@@ -1074,6 +1075,7 @@
   </dl></dd>
     <dt><a href="ref/scriptMenu.html#scriptMenu.ScriptMenu.filterFiles">filterFiles() (scriptMenu.ScriptMenu method)</a></dt>
     <dt><a href="ref/trisurface.html#trisurface.find_first_nodes">find_first_nodes() (in module trisurface)</a></dt>
+    <dt><a href="ref/project.html#project.find_global">find_global() (in module project)</a></dt>
     <dt><a href="ref/trisurface.html#trisurface.find_nodes">find_nodes() (in module trisurface)</a></dt>
     <dt><a href="ref/trisurface.html#trisurface.find_row">find_row() (in module trisurface)</a></dt>
     <dt><a href="ref/trisurface.html#trisurface.find_triangles">find_triangles() (in module trisurface)</a></dt>
@@ -2009,6 +2011,7 @@
       <dt><a href="ref/marks.html#marks.MarkList.pickGL">(marks.MarkList method)</a></dt>
       <dt><a href="ref/marks.html#marks.TextMark.pickGL">(marks.TextMark method)</a></dt>
   </dl></dd>
+    <dt><a href="ref/project.html#project.pickle_load">pickle_load() (in module project)</a></dt>
     <dt><a href="ref/viewport.html#viewport.QtCanvas.pickNumbers">pickNumbers() (viewport.QtCanvas method)</a></dt>
     <dt><a href="ref/actors.html#actors.PlaneActor">PlaneActor (class in actors)</a></dt>
     <dt><a href="ref/section2d.html#section2d.PlaneSection">PlaneSection (class in section2d)</a></dt>
@@ -2057,9 +2060,9 @@
     <dd><dl>
       <dt><a href="ref/curve.html#curve.CardinalSpline.pointsOn">(curve.CardinalSpline method)</a></dt>
   </dl></dd>
-    <dt><a href="ref/nurbs.html#nurbs.pointsOnBezierCurve">pointsOnBezierCurve() (in module nurbs)</a></dt>
 </dl></td>
   <td style="width: 33%" valign="top"><dl>
+    <dt><a href="ref/nurbs.html#nurbs.pointsOnBezierCurve">pointsOnBezierCurve() (in module nurbs)</a></dt>
     <dt><a href="ref/simple.html#simple.polygon">polygon() (in module simple)</a></dt>
     <dt><a href="ref/geomtools.html#geomtools.polygonArea">polygonArea() (in module geomtools)</a></dt>
     <dt><a href="ref/geomtools.html#geomtools.polygonNormals">polygonNormals() (in module geomtools)</a></dt>
@@ -2256,6 +2259,7 @@
       <dt><a href="ref/objects.html#objects.Objects.readFromFile">(objects.Objects method)</a></dt>
   </dl></dd>
     <dt><a href="ref/script.html#script.readGeomFile">readGeomFile() (in module script)</a></dt>
+    <dt><a href="ref/project.html#project.Project.readHeader">readHeader() (project.Project method)</a></dt>
     <dt><a href="ref/flavia.html#flavia.readMesh">readMesh() (in module flavia)</a></dt>
     <dt><a href="ref/tetgen.html#tetgen.readNeigh">readNeigh() (in module tetgen)</a></dt>
     <dt><a href="ref/tetgen.html#tetgen.readNodeFile">readNodeFile() (in module tetgen)</a></dt>
@@ -2353,14 +2357,14 @@
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.removeDegenerate">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
     <dt><a href="ref/utils.html#utils.removeDict">removeDict() (in module utils)</a></dt>
+</dl></td>
+  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/connectivity.html#connectivity.Connectivity.removeDuplicate">removeDuplicate() (connectivity.Connectivity method)</a></dt>
     <dd><dl>
       <dt><a href="ref/formex.html#formex.Formex.removeDuplicate">(formex.Formex method)</a></dt>
       <dt><a href="ref/mesh.html#mesh.Mesh.removeDuplicate">(mesh.Mesh method)</a></dt>
       <dt><a href="ref/trisurface.html#trisurface.TriSurface.removeDuplicate">(trisurface.TriSurface method)</a></dt>
   </dl></dd>
-</dl></td>
-  <td style="width: 33%" valign="top"><dl>
     <dt><a href="ref/canvas.html#canvas.Canvas.removeHighlight">removeHighlight() (canvas.Canvas method)</a></dt>
     <dd><dl>
       <dt><a href="ref/viewport.html#viewport.QtCanvas.removeHighlight">(viewport.QtCanvas method)</a></dt>
@@ -2973,7 +2977,10 @@
     <dt><a href="ref/draw.html#draw.sleep">sleep() (in module draw)</a></dt>
     <dt><a href="ref/trisurface.html#trisurface.TriSurface.slice">slice() (trisurface.TriSurface method)</a></dt>
     <dt><a href="ref/trisurface.html#trisurface.TriSurface.smallestAltitude">smallestAltitude() (trisurface.TriSurface method)</a></dt>
-    <dt><a href="ref/trisurface.html#trisurface.TriSurface.smooth">smooth() (trisurface.TriSurface method)</a></dt>
+    <dt><a href="ref/mesh.html#mesh.Mesh.smooth">smooth() (mesh.Mesh method)</a></dt>
+    <dd><dl>
+      <dt><a href="ref/trisurface.html#trisurface.TriSurface.smooth">(trisurface.TriSurface method)</a></dt>
+  </dl></dd>
     <dt><a href="ref/trisurface.html#trisurface.TriSurface.smoothLaplaceHC">smoothLaplaceHC() (trisurface.TriSurface method)</a></dt>
     <dt><a href="ref/trisurface.html#trisurface.TriSurface.smoothLowPass">smoothLowPass() (trisurface.TriSurface method)</a></dt>
     <dt><a href="ref/arraytools.html#arraytools.solveMany">solveMany() (in module arraytools)</a></dt>
@@ -3399,6 +3406,7 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
+    <dt><a href="ref/project.html#project.Project.uncompress">uncompress() (project.Project method)</a></dt>
     <dt><a href="ref/objects.html#objects.DrawableObjects.undoChanges">undoChanges() (objects.DrawableObjects method)</a></dt>
     <dd><dl>
       <dt><a href="ref/objects.html#objects.Objects.undoChanges">(objects.Objects method)</a></dt>
@@ -3689,7 +3697,7 @@
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 23, 2011.
+      Last updated on Dec 28, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

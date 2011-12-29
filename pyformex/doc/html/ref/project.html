@@ -143,24 +143,45 @@
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">project</span></tt></p>
 <dl class="class">
 <dt id="project.Project">
-<em class="property">class </em><tt class="descclassname">project.</tt><tt class="descname">Project</tt><big>(</big><em>filename=None</em>, <em>access='wr'</em>, <em>signature='pyFormex 0.8.6'</em>, <em>compression=4</em>, <em>binary=True</em>, <em>legacy=False</em>, <em>data={}</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#project.Project" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">project.</tt><tt class="descname">Project</tt><big>(</big><em>filename=None</em>, <em>access='wr'</em>, <em>convert=True</em>, <em>signature='pyFormex 0.8.6'</em>, <em>compression=5</em>, <em>binary=True</em>, <em>data={}</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#project.Project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project: a persistent storage of pyFormex data.</p>
 <p>A pyFormex Project is a regular Python dict that can contain named data
 of any kind, and can be saved to a file to create persistence over
 different pyFormex sessions.</p>
-<p>While the Project class is mainly used by pyFormex for the pyformex.PF
-global variable that collects variables exported from pyFormex scripts,
-the user may also create and handle his own Project objects.</p>
+<p>The <a class="reference internal" href="#project.Project" title="project.Project"><tt class="xref py py-class docutils literal"><span class="pre">Project</span></tt></a> class is used by pyFormex for the <tt class="docutils literal"><span class="pre">pyformex.PF</span></tt>
+global variable that collects variables exported from pyFormex scripts.
+While projects are mostly handled through the pyFormex GUI, notably the
+<em>File</em> menu, the user may also create and handle his own Project objects
+from a script.</p>
+<p>Because of the way pyFormex Projects are written to file,
+there may be problems when trying to read a project file that was
+created with another pyFormex version. Problems may occur if the
+project contains data of a class whose implementation has changed,
+or whose definition has been relocated. Our policy is to provide
+backwards compatibility: newer versions of pyFormex will normally
+read the older project formats. Saving is always done in the
+newest format, and these can generally not be read back by older
+program versions (unless you are prepared to do some hacking).</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">In the current implementation there is no guarantee that
-a project file written by one version of pyFormex can be read back
-by a later version. The project files are mainly intended as a means
-to easily save lots of data and to restore them in your next session,
-or pass them to another user (with the same pyFormex version). If you
-need guarantee that you stored data will always remain accessible,
-you can save geometry type of data to pyFormex .pgf format files.
-Other data you should take care of yourself.</p>
+<p>Compatibility issues.</p>
+<p>Occasionally you may run into problems when reading back an
+old project file, especially when it was created by an unreleased
+(development) version of pyFormex. Because pyFormex is evolving fast,
+we can not test the full compatibility with every revision
+You can file a support request on the pyFormex <a class="reference external" href="http://savannah.nongnu.org/support/?group=pyformex">support tracker</a>.
+and we will try to add the required conversion code to
+pyFormex.</p>
+<p>The project files are mainly intended as a means to easily save lots
+of data of any kind and to restore them in the same session or a later
+session, to pass them to another user (with the same or later pyFormex
+version), to store them over a medium time period. Occasionally opening
+and saving back your project files with newer pyFormex versions may help
+to avoid read-back problems over longer time.</p>
+<p class="last">For a problemless long time storage of Geometry type objects you may
+consider to write them to a pyFormex Geometry file (.pgf) instead, since
+this uses a stable ascii based format. It can (currently) not deal
+with other data types however.</p>
 </div>
 <p>Parameters:</p>
 <ul>
@@ -180,16 +201,70 @@ filename attribute.</p>
 If the string contains an &#8216;r&#8217; the data from an existing file will be
 read into the dict. If the string starts with an &#8216;r&#8217;, the file should
 exist. If the string contains a &#8216;w&#8217;, the data can be written back to
-the file. The &#8216;r&#8217; access mode is a read-only mode. 
-======  ===============  ============  ===================
-access  File must exist  File is read  File can be written
-======  ===============  ============  ===================</p>
-<blockquote>
-<div><p>r           yes             yes             no
-rw          yes             yes             yes
-wr          no         if it exists         yes  
-w           no              no              yes</p>
-</div></blockquote>
+the file. The &#8216;r&#8217; access mode is a read-only mode.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="29%" />
+<col width="23%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head"><p class="first last">access</p>
+</th>
+<th class="head"><p class="first last">File must exist</p>
+</th>
+<th class="head"><p class="first last">File is read</p>
+</th>
+<th class="head"><p class="first last">File can be written</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><p class="first last">r</p>
+</td>
+<td><p class="first last">yes</p>
+</td>
+<td><p class="first last">yes</p>
+</td>
+<td><p class="first last">no</p>
+</td>
+</tr>
+<tr><td><p class="first last">rw</p>
+</td>
+<td><p class="first last">yes</p>
+</td>
+<td><p class="first last">yes</p>
+</td>
+<td><p class="first last">yes</p>
+</td>
+</tr>
+<tr><td><p class="first last">wr</p>
+</td>
+<td><p class="first last">no</p>
+</td>
+<td><p class="first last">if it exists</p>
+</td>
+<td><p class="first last">yes</p>
+</td>
+</tr>
+<tr><td><p class="first last">w</p>
+</td>
+<td><p class="first last">no</p>
+</td>
+<td><p class="first last">no</p>
+</td>
+<td><p class="first last">yes</p>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first"><cite>convert</cite>: if True (default), and the file is opened for reading, an
+attempt is made to open old projects in a compatibility mode, doing the
+necessary conversions to new data formats. If convert is set False,
+only the latest format can be read and older formats will generate
+an error.</p>
 </li>
 <li><p class="first"><cite>signature</cite>: A text that will be written in the header record of the
 file. This can e.g. be used to record format version info.</p>
@@ -200,10 +275,7 @@ data sets, compression leads to much smaller files. 0 is no compression,
 </li>
 <li><p class="first"><cite>binary</cite>: if False and no compression is used, storage is done
 in an ASCII format, allowing to edit the file. Otherwise, storage
-uses a binary format. Using binary=False is deprecated though.</p>
-</li>
-<li><p class="first"><cite>legacy</cite>: if True, the Project is allowed to read old headerless file
-formats. This option has no effect on the creation of new Project files.</p>
+uses a binary format. Using binary=False is deprecated.</p>
 </li>
 <li><p class="first"><cite>data</cite>: a dict-like object to initialize the Project contents. These data
 may override values read from the file.</p>
@@ -222,10 +294,41 @@ may override values read from the file.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="project.Project.readHeader">
+<tt class="descname">readHeader</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.readHeader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the header from a project file.</p>
+<p>Tries to read the header from different legacy formats,
+and if succesfull, adjusts the project attributes according
+to the values in the header.
+Returns the open file if succesfull.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="project.Project.load">
-<tt class="descname">load</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.load" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">load</tt><big>(</big><em>try_resolve=False</em><big>)</big><a class="headerlink" href="#project.Project.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a project from file.</p>
 <p>The loaded definitions will update the current project.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="project.Project.convert">
+<tt class="descname">convert</tt><big>(</big><em>filename=None</em><big>)</big><a class="headerlink" href="#project.Project.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an old format project file.</p>
+<p>The project file is read, and if successfull, is immediately
+saved. By default, this will overwrite the original file.
+If a filename is specified, the converted data are saved to
+that file.
+In both cases, access is set to &#8216;wr&#8217;, so the tha saved data can
+be read back immediately.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="project.Project.uncompress">
+<tt class="descname">uncompress</tt><big>(</big><big>)</big><a class="headerlink" href="#project.Project.uncompress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uncompress a compressed project file.</p>
+<p>The project file is read, and if successfull, is written
+back in uncompressed format. This allows to make conversions
+of the data inside.</p>
 </dd></dl>
 
 <dl class="method">
@@ -237,6 +340,18 @@ may override values read from the file.</p>
 </dd></dl>
 
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">project</span></tt></p>
+<dl class="function">
+<dt id="project.find_global">
+<tt class="descclassname">project.</tt><tt class="descname">find_global</tt><big>(</big><em>module</em>, <em>name</em><big>)</big><a class="headerlink" href="#project.find_global" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the import path of some classes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="project.pickle_load">
+<tt class="descclassname">project.</tt><tt class="descname">pickle_load</tt><big>(</big><em>f</em>, <em>try_resolve=True</em><big>)</big><a class="headerlink" href="#project.pickle_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load data from pickle file f.</p>
+</dd></dl>
+
 </div>
 
 
@@ -268,7 +383,7 @@ may override values read from the file.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 23, 2011.
+      Last updated on Dec 28, 2011.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

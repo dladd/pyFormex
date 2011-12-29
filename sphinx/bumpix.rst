@@ -187,9 +187,32 @@ A collection of hints and answers to frequently asked questions.
 #) The initial user name is `user` and the password `live`.
 
 #) On shutdown/reboot, the system pauses with the advice to remove the
-   USB stick before hitting `ENTER` to proceed. We advice not to do this:
+   USB stick before hitting `ENTER` to proceed. We advice not to do this 
+   (especially when running in *PERSISTENT* mode): instead 
    first hit `ENTER` and remove the USB stick when the screen goes black.
 
+#) BuMPix 0.7.0 may contain a few user configuration files with incorrect
+   owner settings. As a result some XFCE configuration may not be permanent.
+   To solve the problem, you should run the following command in a terminal ::
+
+      sudo chown -R user:user /home/user
+
+#) For BuMPix 0.7.0 (featuring pyFormex 0.8.4) with XFCE desktop, some users
+   have reported occaional problems with starting the window manager. Windows
+   remain undecorated and the mouse cursor keeps showing the *BUSY* symbol.
+   This is probably caused by an improper previous shutdown and can be resolved
+   as follows: open a terminal and enter the command ``xfwm4``. That will start
+   up the window manager for your current session and most likely will also
+   remove the problem for your next sessions.
+  
+#) Install the latest pyFormex version from the SVN repository. The BuMPix
+   stick contains a script ``pyformex-svn`` under the user's ``bin`` directory
+   to install a pyFormex version directly from the SVN repository.
+   However, the repository has been relocated to a ne server and the script
+   might still contain the old location. You can download a fixed script from
+   ftp://bumps.ugent.be/pub/pyformex/pyformex-svn.
+ 
+    
 
 
 Upgrade the pyFormex version on a BuMPix-0.6.1 USB stick
