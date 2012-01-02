@@ -50,62 +50,43 @@ PY_INCLUDE= @PYTHON_INCLUDE@
 NUMPY_INCLUDE= @NUMPY_INCLUDE@
 
 ######################
-# LOCAL CONFIGURATION
-# To change these values, put the changes in a file `Makefile.local'
+# CONFIGURATION
 DEBUG=NDEBUG # debug output: DEBUG/NDEBUG
 BUGFIX=0 # fix an opengl bug on some platforms: 0/1
--include Makefile.local
+######################
 
 INCLUDES= -I/usr/include -I$(PY_INCLUDE) -I$(NUMPY_INCLUDE)
 
 CFLAGS= -g -O3 -Wall -Wstrict-prototypes -fPIC -D$(DEBUG) -DBUGFIX=$(BUGFIX)
 
-# -DMAJOR_VERSION=1 -DMINOR_VERSION=0
 
-.PHONY: Makefile.local
-
-all: Makefile $(SOBJECTS) $(PROGRAMS)
+all: $(SOBJECTS) $(PROGRAMS)
 
 
 debug:
-	make clean
+	make reset
 	make DEBUG=DEBUG
 
 nodebug:
-	make clean
+	make reset
 	make DEBUG=NDEBUG
 
 postabq: postabq.c
 	$(CC) -o $@ $<
 
-%.o: %.c Makefile Makefile.local
+%.o: %.c Makefile
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<
 
 %.so: %.o
 	$(CC) -shared $< -L/usr/lib -o $@
-
-Makefile: Makefile.in config.status
-	./config.status
-
-Makefile.local:
-	if [ ! -f $@ ]; then touch $@; fi 
-
-
-config.status: #configure
-	./configure
-
-#	./config.status --recheck
-
-#configure: configure.ac
-#	autoconf
  
 clean:
-	rm -rf *.o *~ config.log config.status
+	rm -rf *.o *~ config.log config.status autom4te.cache
 
-reset: clean
-	rm -rf *.so
+reset:
+	rm -rf $(SOBJECTS) $(PROGRAMS)
 
 distclean: reset
-	rm -rf autom4te.cache Makefile configure
+	rm -rf Makefile
 
 # End

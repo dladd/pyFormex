@@ -24,7 +24,7 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-# This is the only pyFormex module that is imported from the main script,
+# This is the only pyFormex module that is imported by the main script,
 # so this is the place to put startup code
 import pyformex as pf
 
@@ -138,6 +138,7 @@ def remove_pyFormex(pyformexdir,scriptdir):
     print("""
 BEWARE!
 This procedure will remove the complete pyFormex installation!
+You should only use this on a pyFormex installed with 'python setup.py install'.
 If you continue, pyFormex will exit and you will not be able to run it again.
 The pyFormex installation is in: %s
 The pyFormex executable script is in: %s

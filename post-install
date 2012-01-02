@@ -36,7 +36,7 @@ instdir=$1
 
 # install postabq here, because installing from setup.py creates a failure
 # if postabq was not compiled
-[ -d "${instdir}" ] && install -m 0755 pyformex/lib/postabq ${instdir}
+#[ -d "${instdir}" ] && install -m 0755 pyformex/lib/postabq ${instdir}
 
 
 

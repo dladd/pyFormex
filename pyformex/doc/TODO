@@ -103,6 +103,7 @@ Release 0.9
   :rem:  This could be made part of a generalized 'Camera handling'
     plugin which could provide also things like move a camera
     along a path. 
+  :sta: PARTIAL
       
 **Provide a formian to pyformex translator**
   :rem: There is a formian plugin, allowing to run formian scripts with minor
@@ -137,19 +138,21 @@ Release 0.9
 **Complete the Coords.fromfile and Formex.fromfile arguments**
       
 **post-install script should not execute pyformex**
+  :dev: bverheg
+  :sta: DONE
       
 Release 0.9.1
 -------------
 
 **Remove the old InputDialog**
 
-**Fix all docstrings for the sphinx system**
-
 **Finish the tutorial and user guide**
 
 **Set up procedures to follow up submitted bugs/questions**
 
 **Create Debian packages**
+  :dev: bverheg
+  :sta: IN PROGRESS (see Debian bug 653594)
       
 Release 1.0
 -----------

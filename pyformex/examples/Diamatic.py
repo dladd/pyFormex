@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex --gui
+# *** pyformex ***
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
@@ -30,6 +30,8 @@ topics = ['structure','domes']
 techniques = ['color']
 
 """
+
+wireframe()
 
 u = 3.     # modular length
 n = 6      # number of modules in one sector

@@ -1,4 +1,3 @@
-#!/usr/bin/env pyformex --nogui
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
@@ -23,7 +22,7 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Create tetraeder mesh in side .STL surface and export in Abaqus format.
+"""Create tetraeder mesh inside .STL surface and export in Abaqus format.
 
 Usage: pyformex --nogui surface_abq SURFACE_FILES
 Generates input-surface.inp and input-volume.inp with the

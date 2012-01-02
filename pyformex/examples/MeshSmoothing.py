@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex --gui
+# *** pyformex ***
 # $Id:$
 
 """MeshSmoothing

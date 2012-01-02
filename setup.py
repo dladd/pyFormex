@@ -38,8 +38,33 @@ from distutils import filelist
 from distutils.util import get_platform
 
 import os,sys,commands
-from manifest import *
 
+# Detect platform
+pypy = hasattr(sys, 'pypy_version_info')
+jython = sys.platform.startswith('java')
+py3k = False
+if sys.version_info < (2, 4):
+    raise Exception("pyFormex requires Python 2.4 or higher.")
+elif sys.version_info >= (3, 0):
+    py3k = True
+
+
+# define the things to include
+from manifest import *   
+ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in LIB_MODULES ]
+
+
+class BuildFailed(Exception):
+
+    def __init__(self):
+        self.cause = sys.exc_info()[1] # work around py 2/3 different syntax
+
+def status_msgs(*msgs):
+    """Print status messages"""
+    print('*' * 75)
+    for msg in msgs:
+        print(msg)
+    print('*' * 75)
       
 class sdist(_sdist):
 
@@ -52,39 +77,6 @@ class sdist(_sdist):
         """
         self.filelist = filelist.FileList()
         self.filelist.files = DIST_FILES
-        ## # new behavior:
-        ## # the file list is recalculated everytime because
-        ## # even if MANIFEST.in or setup.py are not changed
-        ## # the user might have added some files in the tree that
-        ## # need to be included.
-        ## #
-        ## #  This makes --force the default and only behavior.
-        ## template_exists = os.path.isfile(self.template)
-        ## if not template_exists:
-        ##     self.warn(("manifest template '%s' does not exist " +
-        ##                 "(using default file list)") %
-        ##                 self.template)
-
-        ## # BV: only use what is under 'pyformex'
-        ## self.filelist.findall('pyformex')
-        ## print self.filelist.allfiles
-        ## return
-
-        ## if self.use_defaults:
-        ##     self.add_defaults()
-
-        ## print self.filelist.files
-        ## return
-
-        ## if template_exists:
-        ##     self.read_template()
-
-        ## print self.filelist.files
-        ## return
-
-        ## if self.prune:
-        ##     self.prune_file_list()
-
         self.filelist.sort()
         self.filelist.remove_duplicates()
         self.write_manifest()
@@ -104,29 +96,9 @@ class install(_install):
             if self.warn_dir and build_plat != get_platform():
                 raise DistutilsPlatformError("Can't install when "
                                              "cross-compiling")
-        os.system("./pre-install %s %s" % (self.build_base,self.install_lib))
+        #os.system("./pre-install %s %s" % (self.build_base,self.install_lib))
         _install.run(self)
-        os.system("./post-install %s" % self.install_lib)
-
-
-## class install_scripts(_install_scripts):
-##     def run (self):
-##         if not self.skip_build:
-##             self.run_command('build_scripts')
-##         # Set pyformex dir in pyformex-search script
-##         os.system("sed -i 's|^pyformexdir=|pyformexdir=%s|' %s/pyformex-search" % (self.install_lib,self.build_base))
-##         #
-##         self.outfiles = self.copy_tree(self.build_dir, self.install_dir)
-##         if os.name == 'posix':
-##             # Set the executable bits (owner, group, and world) on
-##             # all the scripts we just installed.
-##             for file in self.get_outputs():
-##                 if self.dry_run:
-##                     log.info("changing mode of %s", file)
-##                 else:
-##                     mode = ((os.stat(file)[ST_MODE]) | 0555) & 07777
-##                     log.info("changing mode of %s to %o", file, mode)
-##                     os.chmod(file, mode)
+        #os.system("./post-install %s" % self.install_lib)
 
 
 class build_ext(_build_ext):
@@ -163,10 +135,10 @@ class build_ext(_build_ext):
             print("Compiling the pyFormex acceleration library")
             _build_ext.run(self)
             # Should we compile postabq even if configure failed?
-            print("Compiling the pyFormex postabq converter")
-            cmd = "cd pyformex/lib;make postabq"
-            sta,out = commands.getstatusoutput(cmd)
-            print(out)
+            #print("Compiling the pyFormex postabq converter")
+            #cmd = "cd pyformex/lib;make postabq"
+            #sta,out = commands.getstatusoutput(cmd)
+            #print(out)
 
         else:
             print("""
@@ -178,59 +150,104 @@ files.
 """)
 
 
-setup(cmdclass={
-#    'install_scripts': install_scripts,
-    'build_ext': build_ext,
-    'install':install,
-    'sdist':sdist
-    },
-      name='pyformex',
-      version='0.8.6-a1',
-      description='A tool to generate and manipulate complex 3D geometries.',
-      long_description="""
-pyFormex is a tool for generating, manipulating and operating on 
-large geometrical models of 3D structures by sequences of mathematical
-transformations.
-""",
-      author='Benedict Verhegghe',
-      author_email='benedict.verhegghe@ugent.be',
-      url='http://pyformex.org',
-      license='GNU General Public License (GPL)',
-      ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in LIB_MODULES ],
-      packages=['pyformex','pyformex.gui','pyformex.lib','pyformex.plugins','pyformex.examples'],
-      package_data={
-          'pyformex': [
-              'pyformexrc',
-              'icons/README',
-              'icons/*.xpm',
-              'icons/pyformex*.png',
-              'examples/scripts.cat',
-              'examples/Demos/*',
-              'data/*',
-              ] + DOC_FILES
-          },
-      scripts=['pyformex/pyformex','pyformex-viewer','pyformex-search'],
-      data_files=DATA_FILES,
-      classifiers=[
-          'Development Status :: 4 - Beta',
-          'Environment :: Console',
-          'Environment :: X11 Applications :: Qt',
-          'Intended Audience :: End Users/Desktop',
-          'Intended Audience :: Science/Research',
-          'Intended Audience :: Education',
-          'License :: OSI Approved :: GNU General Public License (GPL)',
-          'Operating System :: POSIX :: Linux',
-          'Operating System :: POSIX',
-          'Operating System :: OS Independent',
-          'Programming Language :: Python',
-          'Programming Language :: C',
-          'Topic :: Multimedia :: Graphics :: 3D Modeling',
-          'Topic :: Multimedia :: Graphics :: 3D Rendering',
-          'Topic :: Scientific/Engineering :: Mathematics',
-          'Topic :: Scientific/Engineering :: Visualization',
-          'Topic :: Scientific/Engineering :: Physics',
-          ],
-      requires=['numpy','OpenGL','PyQt4'],
-      )
+def run_setup(with_cext):
+    kargs = {}
+    if with_cext:
+            kargs['ext_modules'] = ext_modules
+            
+    setup(cmdclass={
+    #    'install_scripts': install_scripts,
+        'build_ext': build_ext,
+        'install':install,
+        'sdist':sdist
+        },
+          name='pyformex',
+          version='0.8.6-a1',
+          description='A tool to generate and manipulate complex 3D geometries.',
+          long_description="""
+    pyFormex is a tool for generating, manipulating and operating on 
+    large geometrical models of 3D structures by sequences of mathematical
+    transformations.
+    """,
+          author='Benedict Verhegghe',
+          author_email='benedict.verhegghe@ugent.be',
+          url='http://pyformex.org',
+          license='GNU General Public License (GPL)',
+          packages=[
+              'pyformex',
+              'pyformex.gui',
+              'pyformex.lib',
+              'pyformex.plugins',
+              #'pyformex.examples'
+              ],
+          package_data={
+              'pyformex': [
+                  'pyformexrc',
+                  'icons/README',
+                  'icons/*.xpm',
+                  'icons/pyformex*.png',
+                  'examples/scripts.cat',
+                  'examples/Demos/*',
+                  'data/*',
+                  ] + DOC_FILES
+              },
+          scripts=['pyformex/pyformex'],#'pyformex-viewer','pyformex-search'],
+          data_files=DATA_FILES,
+          classifiers=[
+              'Development Status :: 4 - Beta',
+              'Environment :: Console',
+              'Environment :: X11 Applications :: Qt',
+              'Intended Audience :: End Users/Desktop',
+              'Intended Audience :: Science/Research',
+              'Intended Audience :: Education',
+              'License :: OSI Approved :: GNU General Public License (GPL)',
+              'Operating System :: POSIX :: Linux',
+              'Operating System :: POSIX',
+              'Operating System :: OS Independent',
+              'Programming Language :: Python',
+              'Programming Language :: C',
+              'Topic :: Multimedia :: Graphics :: 3D Modeling',
+              'Topic :: Multimedia :: Graphics :: 3D Rendering',
+              'Topic :: Scientific/Engineering :: Mathematics',
+              'Topic :: Scientific/Engineering :: Visualization',
+              'Topic :: Scientific/Engineering :: Physics',
+              ],
+          requires=['numpy','OpenGL','PyQt4'],
+          **kargs
+          )
+
+
+
+
+
+if pypy or jython or py3k:
+    run_setup(False)
+    status_msgs(
+        "WARNING: C extensions are not supported on " +
+            "this Python platform, speedups are not enabled.",
+        "Plain-Python build succeeded."
+    )
+else:
+    try:
+        run_setup(False)
+#        run_setup(True)
+    except BuildFailed:
+        exc = sys.exc_info()[1] # work around py 2/3 different syntax
+        status_msgs(
+            exc.cause,
+            "WARNING: The C extension could not be compiled, " +
+                "speedups are not enabled.",
+            "Failure information, if any, is above.",
+            "Retrying the build without the C extension now."
+        )
+
+        run_setup(False)
+
+        status_msgs(
+            "WARNING: The C extension could not be compiled, " +
+                "speedups are not enabled.",
+            "Plain-Python build succeeded."
+        )
+
 
 # End
