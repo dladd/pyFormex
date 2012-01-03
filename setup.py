@@ -51,7 +51,10 @@ elif sys.version_info >= (3, 0):
 
 # define the things to include
 from manifest import *   
-ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in LIB_MODULES ]
+ext_modules = [Extension('pyformex/lib/%s'%m,
+                         sources = ['pyformex/lib/%smodule.c'%m],
+                         optional=True,
+                         ) for m in LIB_MODULES ]
 
 
 class BuildFailed(Exception):
@@ -114,12 +117,13 @@ class build_ext(_build_ext):
 
     def configure(self):
         """Detect the required header files"""
-        print("Configuring the pyFormex acceleration library")
-        cmd = "cd pyformex/lib;./configure >/dev/null && grep '^SUCCESS=' config.log"
-        sta,out = commands.getstatusoutput(cmd)
-        print(out)
-        exec(out)
-        return SUCCESS=='1'
+        print("NOT Configuring the pyFormex acceleration library")
+        #cmd = "cd pyformex/lib;./configure >/dev/null && grep '^SUCCESS=' config.log"
+        #sta,out = commands.getstatusoutput(cmd)
+        #print(out)
+        #exec(out)
+        #return SUCCESS=='1'
+        return True
     
 
     def run (self):
@@ -229,8 +233,8 @@ if pypy or jython or py3k:
     )
 else:
     try:
-        run_setup(False)
-#        run_setup(True)
+#        run_setup(False)
+        run_setup(True)
     except BuildFailed:
         exc = sys.exc_info()[1] # work around py 2/3 different syntax
         status_msgs(

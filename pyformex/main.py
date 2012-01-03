@@ -43,7 +43,7 @@ if pf.svnversion:
         libraries = [ 'misc_','nurbs_','drawgl_' ]
         for lib in libraries:
             src = os.path.join(libdir,lib+'module.c')
-            obj = os.path.join(libdir,lib+'module.so')
+            obj = os.path.join(libdir,lib+'.so')
             if not os.path.exists(obj) or os.path.getmtime(obj) < os.path.getmtime(src):
                 msg += "\nThe compiled library '%smodule' is not up to date!" % lib
         return msg
@@ -52,7 +52,7 @@ if pf.svnversion:
     msg = checkLibraries()
     if msg:
         print "Rebuilding pyFormex libraries, please wait"
-        cmd = "cd %s/lib;if [ ! -f Makefile ]; then ./configure; fi; make" % pyformexdir
+        cmd = "cd %s/..; make lib" % pyformexdir
         os.system(cmd)
         msg = checkLibraries()
     

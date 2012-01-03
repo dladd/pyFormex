@@ -43,9 +43,12 @@ SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/*.py) \
 	$(wildcard ${PYFORMEXDIR}/gui/*.py) \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
-	$(wildcard ${LIBDIR}/*.c) \
 	$(wildcard ${LIBDIR}/*.py) \
-	${addprefix ${LIBDIR}/, Makefile.in configure.ac configure_py} \
+
+LIBSOURCE= ${addprefix ${LIBDIR}/, \
+	drawgl_module.c misc_module.c nurbs_module.c} 
+LIBOBJECTS= $(CSOURCE:.c=.o)
+LIBOBJECTS= $(CSOURCE:.c=.so)
 
 BINSOURCE= \
 	$(wildcard ${BINDIR}/*.awk) \
@@ -55,6 +58,7 @@ EXTSOURCE= \
 	$(wildcard ${EXTDIR}/*/README*) \
 	$(wildcard ${EXTDIR}/*/install.sh) \
 	$(wildcard ${EXTDIR}/*/*.h) \
+	$(wildcard ${EXTDIR}/*/*.c) \
 	$(wildcard ${EXTDIR}/*/*.cc) \
 	$(wildcard ${EXTDIR}/*/*.py) \
 	${addprefix ${EXTDIR}/pygl2ps/, gl2ps.i setup.py} \
@@ -83,14 +87,14 @@ OTHERSTAMPABLE= README Makefile ReleaseNotes \
 	manifest.py setup.py \
 	${PYFORMEXDIR}/pyformexrc \
 	${EXAMPLEDATA} \
-	${LIBDIR}/Makefile.in \
 	${addprefix ${DOCDIR}/, STYLE TODO} \
 	$(wildcard ${DOCDIR}/*.rst)
 
 NONSTAMPABLE= COPYING 
 
 STAMPABLE= $(filter-out ${PYFORMEXDIR}/template.py,${SOURCE}) ${EXECUTABLE} \
-	${EXAMPLES} ${DOCSOURCE} ${BINSOURCE} ${EXTSOURCE} ${OTHERSTAMPABLE}
+	${CSOURCE} ${EXAMPLES} ${DOCSOURCE} ${BINSOURCE} ${EXTSOURCE} \
+	${OTHERSTAMPABLE}
 
 STATICSTAMPABLE= Description History HOWTO-dev.rst MANIFEST.py add_Id \
 	create_revision_graph install-pyformex-svn-desktop-link \
@@ -120,34 +124,39 @@ FTPLOCAL= bumps:/var/ftp/pub/pyformex
 # ftp server on Savannah
 FTPPUB= bverheg@dl.sv.nongnu.org:/releases/pyformex/
 
-.PHONY: dist pub distclean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs
+.PHONY: dist pub clean html latexpdf pubdoc minutes website dist.stamped version tag register bumprelease bumpversion stampall stampstatic stampstaticdirs
 
-############ Creating Distribution ##################
+##############################
 
 default:
 	@echo Please specify a target
 
-distclean:
-	alldirs . "rm -f *~"
+clean:
+	alldirs . "rm -f *~" 
+
+distclean: clean
+	alldirs . "rm -f *.pyc *.so"
 
 # Create the C library
-lib: ${LIBDIR}/Makefile
-	make -C ${LIBDIR}
+lib: 
+	python setup.py build_ext
+	find build -name '*.so' -exec mv {} pyformex/lib \;
+	rm -rf build
 
 # Create the C library with debug option
-libdebug: ${LIBDIR}/Makefile
-	make -C ${LIBDIR} debug
+#libdebug: ${LIBDIR}/Makefile
+#	make -C ${LIBDIR} debug
 
 # Create the C library without debug option
-libnodebug: ${LIBDIR}/Makefile
-	make -C ${LIBDIR} nodebug
+#libnodebug: ${LIBDIR}/Makefile
+#	make -C ${LIBDIR} nodebug
 
 # Clean C library
-libreset: ${LIBDIR}/Makefile
-	make -C ${LIBDIR} reset
+#libreset: ${LIBDIR}/Makefile
+#	make -C ${LIBDIR} reset
 
-${LIBDIR}/Makefile: ${LIBDIR}/configure
-	cd ${LIBDIR} && ./configure
+#${LIBDIR}/Makefile: ${LIBDIR}/configure
+#	cd ${LIBDIR} && ./configure
 
 # Create the minutes of the user meeting
 minutes: 
