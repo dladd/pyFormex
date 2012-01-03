@@ -1,5 +1,4 @@
-# *** pyformex ***
-# $Id$
+# $Id$ *** pyformex ***
 
 """Position
 

@@ -109,19 +109,37 @@ DOC_FILES = []
 LIB_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
 
 DATA_FILES = [
-   ('share/pixmaps', [
-      'pyformex/icons/pyformex-64x64.png',
-      'pyformex/icons/pyformex.xpm',
-      ]),
-   ('share/applications', [
-      'pyformex-pyformex.desktop',
-      ]),
-   ('share/doc/pyformex', listTree(
-      'pyformex/doc',listdirs=False,sorted=True,
-      excludedirs=['.svn','dutch','html'],
-      includefiles=['pyformex.1$']
-   )),
-   ]
+    ('share/pixmaps', [
+        'pyformex/icons/pyformex-64x64.png',
+        'pyformex/icons/pyformex.xpm',
+        ]),
+    ('share/applications', ['pyformex-pyformex.desktop']),
+    ## ('share/doc/pyformex',listTree('pyformex/doc/html',
+    ##                                listdirs=False,sorted=True,
+    ##                                excludedirs=['.svn'],
+    ##                                )),
+    ('share/man/man1', ['pyformex/doc/pyformex.1']),
+    ('share/pyformex/data', listTree(
+        'pyformex/data',listdirs=False,sorted=True,
+        excludedirs=['.svn','benchmark'],
+        excludefiles=['.*\.pyc','.*~$','PTAPE.*'],
+        includefiles=[
+            'README',
+            'benedict_6.jpg',
+            'blippo.pgf',
+            'butterfly.png',
+            'hesperia-nieve.prop',
+            'horse.off',
+            'horse.pgf',
+            'materials.db',
+            'sections.db',
+            'splines.pgf',
+            'supershape.txt',
+            'teapot.off',
+            'world.jpg',
+            ],
+        )),
+    ]
 
 DIST_FILES = [
     'README',
@@ -147,41 +165,13 @@ DIST_FILES = [
              ) + \
     listTree('pyformex/lib',listdirs=False,sorted=True,
              excludedirs=['.svn'],
-             includefiles=['.*\.c$','.*\.py$','configure(_py)?$','Makefile.in$']
-#             includefiles=['.*\.py$']
+             includefiles=['.*\.c$','.*\.py$']
+             ) + \
+    listTree('pyformex/examples',listdirs=False,sorted=True,
+             excludedirs=['.svn'],
+             excludefiles=['.*\.pyc','.*~$'],
+             includefiles=['[A-Z].*\.py$','scripts.cat','README']
              )
-     
-             
-    ## prefixFiles('pyformex',DOC_FILES) 
-             
-    ## listTree('pyformex/examples',listdirs=False,sorted=True,
-    ##          excludedirs=['.svn'],
-    ##          excludefiles=['.*\.pyc','.*~$'],
-    ##          includefiles=['[A-Z].*\.py$','scripts.cat','README']
-    ##          ) + \
-    ## listTree('pyformex/data',listdirs=False,sorted=True,
-    ##          excludedirs=['.svn','benchmark'],
-    ##          excludefiles=['.*\.pyc','.*~$','PTAPE.*'],
-    ##          includefiles=[
-    ##            'README',
-    ##            'benedict_6.jpg',
-    ##            'blippo.pgf',
-    ##            'butterfly.png',
-    ##            'hesperia-nieve.prop',
-    ##            'horse.off',
-    ##            'horse.pgf',
-    ##            'materials.db',
-    ##            'sections.db',
-    ##            'splines.pgf',
-    ##            'supershape.txt',
-    ##            'teapot.off',
-    ##            'world.jpg',
-    ##            ],
-    ##         ) + \
-    ## listTree('pyformex/doc/html',listdirs=False,sorted=True,
-    ##          excludedirs=['.svn'],
-    ##          excludefiles=['COPYING$','README$']
-    ##          ) + \
     ## listTree('pyformex/external',listdirs=False,sorted=True,
     ##          excludedirs=['.svn','pyftgl','sippy-ftgl'],
     ##          excludefiles=['.*~$'],

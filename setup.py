@@ -153,7 +153,6 @@ class sdist(_sdist):
 ## files.
 ## """)
 
-
 def run_setup(with_cext):
     kargs = {}
     if with_cext:
@@ -167,11 +166,11 @@ def run_setup(with_cext):
         },
           name='pyformex',
           version='0.8.6-a1',
-          description='A tool to generate and manipulate complex 3D geometries.',
+          description='Scripting tool to generate and transform 3D geometries.',
           long_description="""
-    pyFormex is a tool for generating, manipulating and operating on 
-    large geometrical models of 3D structures by sequences of mathematical
-    transformations.
+    pyFormex is a tool to generate, transform and manipulate large and complex
+    geometrical models of 3D structures by sequences of mathematical
+    operations in a Python script.
     """,
           author='Benedict Verhegghe',
           author_email='benedict.verhegghe@ugent.be',
@@ -182,17 +181,16 @@ def run_setup(with_cext):
               'pyformex.gui',
               'pyformex.lib',
               'pyformex.plugins',
-              #'pyformex.examples'
+              'pyformex.examples'
               ],
           package_data={
               'pyformex': [
                   'pyformexrc',
-                  'icons/README',
-                  'icons/*.xpm',
-                  'icons/pyformex*.png',
+                  ## 'icons/README',
+                  ## 'icons/*.xpm',
+                  ## 'icons/pyformex*.png',
                   'examples/scripts.cat',
                   'examples/Demos/*',
-                  'data/*',
                   ]
               },
           scripts=['pyformex/pyformex'],#'pyformex-viewer','pyformex-search'],
@@ -233,8 +231,8 @@ if pypy or jython or py3k:
     )
 else:
     try:
-#        run_setup(False)
-        run_setup(True)
+        run_setup(False)
+#        run_setup(True)
     except BuildFailed:
         exc = sys.exc_info()[1] # work around py 2/3 different syntax
         status_msgs(

@@ -1,4 +1,4 @@
-#!/usr/bin/pyformex
+# $Id$ *** pyformex ***
 ##
 ##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D

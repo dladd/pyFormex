@@ -619,31 +619,37 @@ General guidelines
 - Name of .py files should be only lowercase, except for the approved
   examples distributed with pyFormex, which should start with an upper case.
 
-- All new source and text files in the pyFormex repository should be
-  created with the following line as the first OR second line::
+- All new (Python, C) source and other text files in the pyFormex repository
+  should be created with the following line as the first line::
   
     # $Id$
 
-  Start executable Python scripts with the following two lines::
+  If the file is an executable Python script, it should be started
+  with the following two lines::
 
     #!/usr/bin/env python	  
     # $Id$
 
-  Start pyformex GUI scripts with the following two lines::
+  Start pyFormex examples with the following line::
 
-    #!/usr/bin/env pyformex --gui
-    # $Id$
+    # $Id$ *** pyformex ***
 
-  Start pyformex non-GUI scripts with the following two lines::
+  Start reStructuredText with the following two lines (the second being
+  an empty line)::
 
-    #!/usr/bin/env pyformex --nogui
-    # $Id$
+    .. $Id$
+    
 
-- Never directly edit the ``$Id`` line: it is automatically handled by Subversion.
+- The ``$Id$`` will be sustituted by Subversion on your next updates. Never
+  edit this ``$Id:...$`` field directly.
 
-- End your text files with a line::
+- End your source and text files with a line::
 
     # End
+
+  and .rst files with::
+
+    .. End
 
 - In Python files, always use 4 blanks for indenting, never TABs. Use
   a decent Python-aware editor that allows you to configure this. The
