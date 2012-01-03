@@ -29,17 +29,98 @@
 This script creates the list of files to be included in
 the pyFormex source distribution.
 """
+import os,re
 
-from pyformex.utils import listTree
+def prefixFiles(prefix,files):
+    """Prepend a prefix to a list of filenames."""
+    return [ os.path.join(prefix,f) for f in files ]
 
-DOC_FILES = [ f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
+
+def matchMany(regexps,target):
+    """Return multiple regular expression matches of the same target string."""
+    return [re.match(r,target) for r in regexps]
+
+
+def matchCount(regexps,target):
+    """Return the number of matches of target to  regexps."""
+    return len(filter(None,matchMany(regexps,target)))
+                  
+
+def matchAny(regexps,target):
+    """Check whether target matches any of the regular expressions."""
+    return matchCount(regexps,target) > 0
+
+
+def matchNone(regexps,target):
+    """Check whether targes matches none of the regular expressions."""
+    return matchCount(regexps,target) == 0
+
+
+def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],excludefiles=[],includedirs=[],includefiles=[]):
+    """List all files in path.
+
+    If ``dirs==False``, directories are not listed.
+    By default the tree is listed top down and entries in the same directory
+    are unsorted.
+    
+    `exludedirs` and `excludefiles` are lists of regular expressions with
+    dirnames, resp. filenames to exclude from the result.
+
+    `includedirs` and `includefiles` can be given to include only the
+    directories, resp. files matching any of those patterns.
+
+    Note that 'excludedirs' and 'includedirs' force top down handling.
+    """
+    filelist = []
+    if excludedirs or includedirs:
+        topdown = True
+    for root, dirs, files in os.walk(path, topdown=topdown):
+        if sorted:
+            dirs.sort()
+            files.sort()
+        if excludedirs:
+            remove = [ d for d in dirs if matchAny(excludedirs,d) ]
+            for d in remove:
+                dirs.remove(d)
+        if includedirs:
+            remove = [ d for d in dirs if not matchAny(includedirs,d) ]
+            for d in remove:
+                dirs.remove(d)
+        if listdirs and topdown:
+            filelist.append(root)
+        if excludefiles:
+            files = [ f for f in files if matchNone(excludefiles,f) ]
+        if includefiles:
+            files = [ f for f in files if matchAny(includefiles,f) ]
+        filelist.extend(prefixFiles(root,files))
+        if listdirs and not topdown:
+            filelist.append(root)
+    return filelist
+
+
+DOC_FILES = []
+## f[9:] for f in listTree(
+##    'pyformex/doc',listdirs=False,sorted=True,
+##    excludedirs=['.svn','dutch','html'],
+##    includefiles=['pyformex.1$']
+##    ) ]
+             
 
 LIB_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
 
 DATA_FILES = [
-   ('share/pixmaps', ['pyformex/icons/pyformex-64x64.png']),
-   ('share/pixmaps', ['pyformex/icons/pyformex.xpm']),
-   ('share/applications', ['pyformex-pyformex.desktop']),
+   ('share/pixmaps', [
+      'pyformex/icons/pyformex-64x64.png',
+      'pyformex/icons/pyformex.xpm',
+      ]),
+   ('share/applications', [
+      'pyformex-pyformex.desktop',
+      ]),
+   ('share/doc/pyformex', listTree(
+      'pyformex/doc',listdirs=False,sorted=True,
+      excludedirs=['.svn','dutch','html'],
+      includefiles=['pyformex.1$']
+   )),
    ]
 
 DIST_FILES = [
@@ -66,13 +147,12 @@ DIST_FILES = [
              ) + \
     listTree('pyformex/lib',listdirs=False,sorted=True,
              excludedirs=['.svn'],
-#             includefiles=['.*\.c$','.*\.py$','configure(_py)?$','Makefile.in$']
-             includefiles=['.*\.py$']
-             ) + \
-    listTree('pyformex/doc',listdirs=False,sorted=True,
-            excludedirs=['.svn','dutch','html'],
-            includefiles=['pyformex.1$']
-            )
+             includefiles=['.*\.c$','.*\.py$','configure(_py)?$','Makefile.in$']
+#             includefiles=['.*\.py$']
+             )
+     
+             
+    ## prefixFiles('pyformex',DOC_FILES) 
              
     ## listTree('pyformex/examples',listdirs=False,sorted=True,
     ##          excludedirs=['.svn'],
@@ -123,8 +203,27 @@ DIST_FILES = [
     ##          )
 
 
+for i in DATA_FILES:
+   DIST_FILES += i[1]
+
 if __name__ == '__main__':
-   print '\n'.join(DIST_FILES)
+   import sys
+
+   todo = sys.argv[1:]
+   if not todo:
+      todo = ['doc','data','dist']
+      
+   for a in todo:
+      if a == 'doc':
+         print "=========DOC_FILES========="
+         print '\n'.join(DOC_FILES)
+      elif a == 'data':
+         print "=========DATA_FILES========"
+         for i in DATA_FILES:
+            print '\n'.join(i[1])
+      else:
+         print "=========DIST_FILES========"
+         print '\n'.join(DIST_FILES)
 
 # End
 

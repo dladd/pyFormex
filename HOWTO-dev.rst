@@ -138,11 +138,25 @@ your home directory.
 
 - The public part (`id_rsa.pub`) should be registered on Savannah
   to get easy developer access to the pyFormex repository. 
-  Login to Savannah and go to 
+  Login to Savannah and go to  
   *My Account Conf*. Under *Authentication Setup* you can enter your 
   public SSH key. Just copy/paste the contents of the file *.ssh/id_rsa.pub*.
 
-Now you are all set to checkout the pyFormex repository.
+It may take some hours before the key is activated on Savannah. But after that,
+you are all set to checkout the pyFormex repository with developer access 
+(see below).
+
+.. note:: 
+
+  If you are connecting from an Ubuntu system, and you find that you still can
+  not get access after more than one day, you may try the following:  
+
+  - Check the end part of the public SSH key you pasted on Savannah, with the
+    help of the scroll bar.
+  - If it ends with '/' before "username@host.domain", replace the '/' with '=='.
+  - After the update, wait for another day for the server to refresh, then try
+    again to access the SVN.
+
 
 Further reading
 ---------------
@@ -163,6 +177,9 @@ For all of these information is widely available on the internet.
 - OpenGL (PyOpenGL)
 - QT4 (PyQt4)
 
+To install these tools on Debian GNU/Linux::
+
+  apt-get install subversion python-dev python-numpy python-sphinx python-opengl python-qt4-gl
 
 
 Checkout the pyFormex repository

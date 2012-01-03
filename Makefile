@@ -155,9 +155,6 @@ lib:
 #libreset: ${LIBDIR}/Makefile
 #	make -C ${LIBDIR} reset
 
-#${LIBDIR}/Makefile: ${LIBDIR}/configure
-#	cd ${LIBDIR} && ./configure
-
 # Create the minutes of the user meeting
 minutes: 
 	make -C user
@@ -181,14 +178,11 @@ bumprelease:
 revision:
 	sed -i "s|__revision__ = .*|__revision__ = '$$(svnversion)'|" ${PYFORMEXDIR}/__init__.py
 
-version: ${PYFORMEXDIR}/__init__.py setup.py ${LIBDIR}/configure.ac ${SPHINXDIR}/conf.py
+version: ${PYFORMEXDIR}/__init__.py setup.py ${SPHINXDIR}/conf.py
 
 ${PYFORMEXDIR}/__init__.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
 	sed -i "/^Copyright/s|2004-....|2004-$$(date +%Y)|" $@
-
-${LIBDIR}/configure.ac: RELEASE
-	sed -i 's|^AC_INIT.*|AC_INIT(pyformex-lib,${RELEASE})|'  $@
 
 ${SPHINXDIR}/conf.py: RELEASE
 	sed -i "s|^version =.*|version = '${VERSION}'|;s|^release =.*|release = '${RELEASE}'|" $@

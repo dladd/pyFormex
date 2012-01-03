@@ -7,7 +7,7 @@ Wat is pyFormex
 ---------------
 pyFormex is een open source software voor de creatie, manipulatie en visualisatie van grote geometrische modellen in 3D.
 
-pyFormex wordt momenteel ontwikkeld onder leiding van prof. Benedict Verhegghe van de Universiteit Gent en wordt verspreid onder de GNU General Public License v2.0 of hoger via de website http://pyformex.berlios.de.
+pyFormex wordt momenteel ontwikkeld onder leiding van prof. Benedict Verhegghe van de Universiteit Gent en wordt verspreid onder de GNU General Public License v2.0 of hoger via de website http://pyformex.org.
 
 
 Opvatting
@@ -107,7 +107,7 @@ pyFormex is nog volop in ontwikkeling maar biedt al voldoende mogelijkheden voor
 
 
 
-.. _pyformex: http://pyformex.berlios.de/
+.. _pyformex: http://pyformex.org/
 .. _python: http://www.python.org/
 .. _numpy: http://numpy.scipy.org/
 .. _opengl: http://www.opengl.org/
