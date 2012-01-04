@@ -139,7 +139,7 @@ distclean: clean
 
 # Create the C library
 lib: 
-	python setup.py build_ext
+	python setup.py build_ext --with-acceleration
 	find build -name '*.so' -exec mv {} pyformex/lib \;
 	rm -rf build
 

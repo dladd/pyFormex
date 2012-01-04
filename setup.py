@@ -32,6 +32,7 @@ To uninstall pyFormex: pyformex --remove
 from distutils.command.install import install as _install
 from distutils.command.install_scripts import install_scripts as _install_scripts
 from distutils.command.build_ext import build_ext as _build_ext
+from distutils.command.build import build as _build
 from distutils.command.sdist import sdist as _sdist
 from distutils.core import setup, Extension
 from distutils import filelist
@@ -50,10 +51,14 @@ elif sys.version_info >= (3, 0):
 
 
 # define the things to include
-from manifest import *   
+from manifest import *
+             
+# The acceleration libraries
+LIB_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
+
 ext_modules = [Extension('pyformex/lib/%s'%m,
                          sources = ['pyformex/lib/%smodule.c'%m],
-                         optional=True,
+#                         optional=True,
                          ) for m in LIB_MODULES ]
 
 
@@ -153,15 +158,49 @@ class sdist(_sdist):
 ## files.
 ## """)
 
+## class build(_build):
+
+##     sub_commands = [('config_cc',     lambda *args: True),
+##                     ('config_fc',     lambda *args: True),
+##                     ('build_src',     _build.has_ext_modules),
+##                     ] + _build.sub_commands
+
+##     user_options = _build.user_options + [
+##         ('fcompiler=', None,
+##          "specify the Fortran compiler type"),
+##         ]
+
+##     help_options = _build.help_options + [
+##         ('help-fcompiler',None, "list available Fortran compilers",
+##          show_fortran_compilers),
+##         ]
+
+##     def initialize_options(self):
+##         _build.initialize_options(self)
+##         self.fcompiler = None
+
+##     def finalize_options(self):
+##         build_scripts = self.build_scripts
+##         _build.finalize_options(self)
+##         plat_specifier = ".%s-%s" % (get_platform(), sys.version[0:3])
+##         if build_scripts is None:
+##             self.build_scripts = os.path.join(self.build_base,
+##                                               'scripts' + plat_specifier)
+
+##     def run(self):
+##         _build.run(self)
+
+ 
 def run_setup(with_cext):
     kargs = {}
     if with_cext:
             kargs['ext_modules'] = ext_modules
-            
+
     setup(cmdclass={
-    #    'install_scripts': install_scripts,
-    #    'build_ext': build_ext,
-#        'install':install,
+        ## 'install_scripts': install_scripts,
+        ## 'build_ext': build_ext,
+        ## 'build': build,
+        ## 'install':install,
         'sdist':sdist
         },
           name='pyformex',
@@ -186,15 +225,16 @@ def run_setup(with_cext):
           package_data={
               'pyformex': [
                   'pyformexrc',
-                  ## 'icons/README',
-                  ## 'icons/*.xpm',
-                  ## 'icons/pyformex*.png',
+                  'icons/README',
+                  'icons/*.xpm',
+                  'icons/pyformex*.png',
                   'examples/scripts.cat',
                   'examples/Demos/*',
+                  'data/*',
                   ]
               },
           scripts=['pyformex/pyformex'],#'pyformex-viewer','pyformex-search'],
-          data_files=DATA_FILES,
+          data_files=OTHER_DATA,
           classifiers=[
               'Development Status :: 4 - Beta',
               'Environment :: Console',
@@ -219,20 +259,24 @@ def run_setup(with_cext):
           )
 
 
-
-
+# Detect the --with-acceleration option
+i = sys.argv.index('--with-acceleration')
+accel = i >= 0
+if accel:
+    del(sys.argv[i])
 
 if pypy or jython or py3k:
-    run_setup(False)
+    accel = False
     status_msgs(
-        "WARNING: C extensions are not supported on " +
-            "this Python platform, speedups are not enabled.",
-        "Plain-Python build succeeded."
+        "WARNING: C extensions are not supported on this Python platform,"
+        "I will continue without compiling the acceleration libraries."
     )
-else:
+
+# Try with compilation
+if accel:
     try:
-        run_setup(False)
-#        run_setup(True)
+        run_setup(accel)
+        sys.exit()
     except BuildFailed:
         exc = sys.exc_info()[1] # work around py 2/3 different syntax
         status_msgs(
@@ -243,13 +287,14 @@ else:
             "Retrying the build without the C extension now."
         )
 
-        run_setup(False)
+# Run without compilation
+run_setup(False)
 
-        status_msgs(
-            "WARNING: The C extension could not be compiled, " +
-                "speedups are not enabled.",
-            "Plain-Python build succeeded."
-        )
+status_msgs(
+    "WARNING: The C extension could not be compiled, " +
+    "speedups are not enabled.",
+    "Plain-Python build succeeded."
+    )
 
 
 # End

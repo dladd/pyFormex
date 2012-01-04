@@ -91,7 +91,9 @@ def draw_polygons(x,n,c,alpha,objtype):
         
     if nplex <= 4 and glObjType(nplex) == objtype:
         GL.glBegin(objtype)
-        if c is None:
+        if c is None or c.ndim == 1:       # no or single color 
+            if c is not None:                      # single color
+                glColor(c,alpha)
             if n is None:
                 for xi in x.reshape((-1,3)):
                     GL.glVertex3fv(xi)
@@ -109,18 +111,18 @@ def draw_polygons(x,n,c,alpha,objtype):
         elif c.ndim == 2:
             if n is None:
                 for xi,ci in zip(x,c):
-                    GL.glColor3fv(ci)
+                    glColor(ci,alpha)
                     for j in range(nplex):
                         GL.glVertex3fv(xi[j])
             elif n.ndim == 2:
                 for xi,ni,ci in zip(x,n,c):
-                    GL.glColor3fv(ci)
+                    glColor(ci,alpha)
                     GL.glNormal3fv(ni)
                     for j in range(nplex):
                         GL.glVertex3fv(xi[j])
             elif n.ndim == 3:
                 for xi,ni,ci in zip(x,n,c):
-                    GL.glColor3fv(ci)
+                    glColor(ci,alpha)
                     for j in range(nplex):
                         GL.glNormal3fv(ni[j])
                         GL.glVertex3fv(xi[j])
@@ -128,17 +130,17 @@ def draw_polygons(x,n,c,alpha,objtype):
         elif c.ndim == 3:
             if n is None:
                 for xi,ci in zip(x.reshape((-1,3)),c.reshape((-1,3))):
-                    GL.glColor3fv(ci)
+                    glColor(ci,alpha)
                     GL.glVertex3fv(xi)
             elif n.ndim == 2:
                 for xi,ni,ci in zip(x,n,c):
                     GL.glNormal3fv(ni)
                     for j in range(nplex):
-                        GL.glColor3fv(ci[j])
+                        glColor(ci[j],alpha)
                         GL.glVertex3fv(xi[j])
             elif n.ndim == 3:
                 for xi,ni,ci in zip(x.reshape((-1,3)),n.reshape((-1,3)),c.reshape((-1,3))):
-                    GL.glColor3fv(ci)
+                    glColor(ci,alpha)
                     GL.glNormal3fv(ni)
                     GL.glVertex3fv(xi)
         GL.glEnd()
@@ -171,14 +173,14 @@ def draw_polygons(x,n,c,alpha,objtype):
             if n is None:
                 for xi,ci in zip(x,c):
                     GL.glBegin(objtype)
-                    GL.glColor3fv(ci)
+                    glColor(ci,alpha)
                     for j in range(nplex):
                         GL.glVertex3fv(xi[j])
                     GL.glEnd()
             elif n.ndim == 2:
                 for xi,ni,ci in zip(x,n,c):
                     GL.glBegin(objtype)
-                    GL.glColor3fv(ci)
+                    glColor(ci,alpha)
                     GL.glNormal3fv(ni)
                     for j in range(nplex):
                         GL.glVertex3fv(xi[j])
@@ -186,7 +188,7 @@ def draw_polygons(x,n,c,alpha,objtype):
             elif n.ndim == 3:
                 for xi,ni,ci in zip(x,n,c):
                     GL.glBegin(objtype)
-                    GL.glColor3fv(ci)
+                    glColor(ci,alpha)
                     for j in range(nplex):
                         GL.glNormal3fv(ni[j])
                         GL.glVertex3fv(xi[j])
@@ -196,9 +198,9 @@ def draw_polygons(x,n,c,alpha,objtype):
             if n is None:
                 for xi,ci in zip(x,c):
                     GL.glBegin(objtype)
-                    GL.glColor3fv(ci)
+                    glColor(ci,alpha)
                     for j in range(nplex):
-                        GL.glColor3fv(ci[j])
+                        glColor(ci[j],alpha)
                         GL.glVertex3fv(xi[j])
                     GL.glEnd()
             elif n.ndim == 2:
@@ -206,14 +208,14 @@ def draw_polygons(x,n,c,alpha,objtype):
                     GL.glBegin(objtype)
                     GL.glNormal3fv(ni)
                     for j in range(nplex):
-                        GL.glColor3fv(ci[j])
+                        glColor(ci[j],alpha)
                         GL.glVertex3fv(xi[j])
                     GL.glEnd()
             elif n.ndim == 3:
                 for xi,ni,ci in zip(x,n,c):
                     GL.glBegin(objtype)
                     for j in range(nplex):
-                        GL.glColor3fv(ci[j])
+                        glColor(ci[j],alpha)
                         GL.glNormal3fv(ni[j])
                         GL.glVertex3fv(xi[j])
                     GL.glEnd()

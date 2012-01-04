@@ -104,11 +104,33 @@ DOC_FILES = []
 ##    excludedirs=['.svn','dutch','html'],
 ##    includefiles=['pyformex.1$']
 ##    ) ]
-             
 
-LIB_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
+# pyFormex data files (installed in the pyformex tree)
+DATA_FILES = listTree(
+    'pyformex/data',
+    listdirs=False,sorted=True,
+    excludedirs=['.svn','benchmark'],
+    excludefiles=['.*\.pyc','.*~$','PTAPE.*'],
+    includefiles=[
+        'README',
+        'benedict_6.jpg',
+        'blippo.pgf',
+        'butterfly.png',
+        'hesperia-nieve.prop',
+        'horse.off',
+        'horse.pgf',
+        'materials.db',
+        'sections.db',
+        'splines.pgf',
+        'supershape.txt',
+        'teapot.off',
+        'world.jpg',
+        ],
+    )
 
-DATA_FILES = [
+# Data files to be installed outside the pyformex tree
+# These are tuples (installdir,filelist)
+OTHER_DATA = [
     ('share/pixmaps', [
         'pyformex/icons/pyformex-64x64.png',
         'pyformex/icons/pyformex.xpm',
@@ -119,26 +141,7 @@ DATA_FILES = [
     ##                                excludedirs=['.svn'],
     ##                                )),
     ('share/man/man1', ['pyformex/doc/pyformex.1']),
-    ('share/pyformex/data', listTree(
-        'pyformex/data',listdirs=False,sorted=True,
-        excludedirs=['.svn','benchmark'],
-        excludefiles=['.*\.pyc','.*~$','PTAPE.*'],
-        includefiles=[
-            'README',
-            'benedict_6.jpg',
-            'blippo.pgf',
-            'butterfly.png',
-            'hesperia-nieve.prop',
-            'horse.off',
-            'horse.pgf',
-            'materials.db',
-            'sections.db',
-            'splines.pgf',
-            'supershape.txt',
-            'teapot.off',
-            'world.jpg',
-            ],
-        )),
+    ## ('share/pyformex/data',DATA_FILES),
     ]
 
 DIST_FILES = [
@@ -148,8 +151,8 @@ DIST_FILES = [
     'pre-install',
     'post-install',
     'pyformex-pyformex.desktop',
-#    'pyformex-viewer',
-#    'pyformex-search',
+    #    'pyformex-viewer',
+    #    'pyformex-search',
     'manifest.py',
     'setup.py',
     'setup.cfg',
@@ -171,7 +174,9 @@ DIST_FILES = [
              excludedirs=['.svn'],
              excludefiles=['.*\.pyc','.*~$'],
              includefiles=['[A-Z].*\.py$','scripts.cat','README']
-             )
+             ) + \
+    DATA_FILES
+
     ## listTree('pyformex/external',listdirs=False,sorted=True,
     ##          excludedirs=['.svn','pyftgl','sippy-ftgl'],
     ##          excludefiles=['.*~$'],
@@ -193,7 +198,7 @@ DIST_FILES = [
     ##          )
 
 
-for i in DATA_FILES:
+for i in OTHER_DATA:
    DIST_FILES += i[1]
 
 if __name__ == '__main__':
@@ -209,7 +214,10 @@ if __name__ == '__main__':
          print '\n'.join(DOC_FILES)
       elif a == 'data':
          print "=========DATA_FILES========"
-         for i in DATA_FILES:
+         print '\n'.join(DATA_FILES)
+      elif a == 'other':
+         print "=========OTHER_DATA========"
+         for i in OTHER_DATA:
             print '\n'.join(i[1])
       else:
          print "=========DIST_FILES========"
