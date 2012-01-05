@@ -138,18 +138,18 @@ class Connectivity(ndarray):
         # Transform 'subarr' from an ndarray to our new subclass.
         ar = ar.view(self)
 
-        ## # Other data
-        ar.inv = None   # inverse index
-        ar.maxval = maxval
-
+        ## # Other data 
         ar.eltype = eltype
+        ar.inv = None   # inverse index
 
         return ar
 
 
     def __array_finalize__(self,obj):
-        # reset the attribute from passed original object
+        # reset the attributes from passed original object
+        # all extra attributes added in __new__ should be reset here
         self.eltype = getattr(obj, 'eltype', None)
+        self.inv = getattr(obj, 'inv', None)
 
 
     def nelems(self):

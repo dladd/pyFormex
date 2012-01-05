@@ -31,6 +31,7 @@ external functions in the compiled library.
 
 # There should be no other imports here but numpy
 from math import factorial
+from numpy import zeros
 
 accelerated = False
 
@@ -45,5 +46,31 @@ def binomial(n,k):
     f = factorial
     return f(n) / f(k) / f(n-k)
 
+
+def allBernstein(n,u):
+    """Compute the value of all n-th degree Bernstein polynomials.
+
+    Parameters:
+
+    - `n`: int, degree of the polynomials
+    - `u`: float, parametric value where the polynomials are evaluated
+
+    Returns: an (n+1,) shaped float array with the value of all n-th
+    degree Bernstein polynomials B(i,n) at parameter value u.
+
+    Algorithm A1.3 from 'The NURBS Book' p20.
+    """
+    # THIS IS NOT OPTIMIZED FOR PYTHON.
+    B = zeros(n+1)
+    B[0] = 1.0
+    u1 = 1.0-u
+    for j in range(1,n+1):
+        saved = 0.0
+        for k in range(j):
+            temp = B[k]
+            B[k] = saved + u1*temp
+            saved = u * temp
+        B[j] = saved
+    return B
 
 # End

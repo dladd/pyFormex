@@ -43,6 +43,8 @@ from plugins.nurbs import *
 
 predefined = [
     '2584',
+    '58',
+    '214',
     '184',
     '514',
     '1234',
@@ -61,12 +63,14 @@ res = askItems([
     dict(name='custom',value=custom),
     dict(name='casteljou',value=casteljou),
     dict(name='showNurbs',value=showNurbs),
-    ])
+    ],enablers=[('pat','custom','custom')])
 
 if not res:
     exit()
 
 globals().update(res)
+if pat == 'custom':
+    pat = custom
 
 if not pat.startswith('l:'):
     pat = 'l:' + pat

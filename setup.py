@@ -260,16 +260,18 @@ def run_setup(with_cext):
 
 
 # Detect the --with-acceleration option
-i = sys.argv.index('--with-acceleration')
-accel = i >= 0
-if accel:
+try:
+    i = sys.argv.index('--with-acceleration')
     del(sys.argv[i])
+    accel = True
+except ValueError:
+    accel = False
 
 if pypy or jython or py3k:
     accel = False
     status_msgs(
         "WARNING: C extensions are not supported on this Python platform,"
-        "I will continue without compiling the acceleration libraries."
+        "I will continue without the acceleration libraries."
     )
 
 # Try with compilation
@@ -281,20 +283,13 @@ if accel:
         exc = sys.exc_info()[1] # work around py 2/3 different syntax
         status_msgs(
             exc.cause,
-            "WARNING: The C extension could not be compiled, " +
-                "speedups are not enabled.",
-            "Failure information, if any, is above.",
-            "Retrying the build without the C extension now."
-        )
+            "WARNING: The acceleration library could not be compiled, "
+            "I will retry without them.")
 
 # Run without compilation
 run_setup(False)
 
-status_msgs(
-    "WARNING: The C extension could not be compiled, " +
-    "speedups are not enabled.",
-    "Plain-Python build succeeded."
-    )
+status_msgs("WARNING: Building without the acceleration library")
 
 
 # End
