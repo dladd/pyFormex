@@ -204,7 +204,7 @@ def run_setup(with_cext):
         'sdist':sdist
         },
           name='pyformex',
-          version='0.8.6-a1',
+          version='0.8.6-a2',
           description='Scripting tool to generate and transform 3D geometries.',
           long_description="""
     pyFormex is a tool to generate, transform and manipulate large and complex

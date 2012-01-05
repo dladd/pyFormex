@@ -31,10 +31,10 @@ defines a few essential functions.
 # This is the very first thing that is executed when starting pyFormex
 # It is loaded even before main.
 
-__version__ = "0.8.6-a1"
-__revision__ = '2141:2143M'
+__version__ = "0.8.6-a2"
+__revision__ = '2144'
 Version = 'pyFormex %s' % __version__
-Copyright = 'Copyright (C) 2004-2011 Benedict Verhegghe'
+Copyright = 'Copyright (C) 2004-2012 Benedict Verhegghe'
 Url = 'http://pyformex.org'
 Description = "pyFormex is a tool for generating, manipulating and transforming large geometrical models of 3D structures by sequences of mathematical transformations."
 svnversion = False
