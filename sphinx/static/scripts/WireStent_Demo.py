@@ -1,4 +1,4 @@
-#!/usr/bin/env python pyformex.py
+# $Id$   *** pyformex ***
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)

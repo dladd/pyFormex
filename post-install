@@ -45,8 +45,8 @@ instdir=$1
 [ -n "$(type -P xdg-desktop-menu)" ] && {
     echo "  Creating desktop menu entries"
     xdg-icon-resource install --size 64 pyformex/icons/pyformex-64x64.png
-    xdg-desktop-icon install pyformex-pyformex.desktop
-    xdg-desktop-menu install pyformex-pyformex.desktop
+    xdg-desktop-icon install pyformex.desktop
+    xdg-desktop-menu install pyformex.desktop
 }
 
 echo "Post-install done"

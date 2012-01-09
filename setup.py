@@ -30,6 +30,7 @@ To uninstall pyFormex: pyformex --remove
 """
 
 from distutils.command.install import install as _install
+from distutils.command.install_data import install_data as _install_data
 from distutils.command.install_scripts import install_scripts as _install_scripts
 from distutils.command.build_ext import build_ext as _build_ext
 from distutils.command.build import build as _build
@@ -107,6 +108,31 @@ class sdist(_sdist):
 ##         #os.system("./pre-install %s %s" % (self.build_base,self.install_lib))
 ##         _install.run(self)
 ##         #os.system("./post-install %s" % self.install_lib)
+
+
+## class install(_install):
+##     def run(self):
+##         global srcdir
+##         _install.run(self)
+##         if os.path.exists(srcdir):
+##             tgtdir = os.path.join(self.install_lib,'pyformex/doc')
+##             print "Link %s" % srcdir
+##             print "Into %s" % tgtdir
+##             if not os.path.exists(tgtdir):
+##                 os.makedirs(tgtdir)
+##             target = os.path.join(tgtdir,'html')
+##             if os.path.exists(target):
+##                 print "The path %s already exists."
+##                 print "This is probably a leftover from a previous pyFormex install."
+##                 print "Remove the path and rerun the setup command." 
+##             os.symlink(srcdir,target)
+
+
+## class install_data(_install_data):
+##     def run(self):
+##         global srcdir
+##         srcdir = os.path.join(self.install_dir,'share/doc/pyformex/html')
+##         _install_data.run(self)
 
 
 ## class build_ext(_build_ext):
@@ -201,6 +227,7 @@ def run_setup(with_cext):
         ## 'build_ext': build_ext,
         ## 'build': build,
         ## 'install':install,
+        ## 'install_data':install_data,
         'sdist':sdist
         },
           name='pyformex',
@@ -231,9 +258,10 @@ def run_setup(with_cext):
                   'examples/scripts.cat',
                   'examples/Demos/*',
                   'data/*',
-                  ]
+                  ] + [ i[9:] for i in DOC_FILES ]
+              
               },
-          scripts=['pyformex/pyformex'],#'pyformex-viewer','pyformex-search'],
+          scripts=['pyformex/pyformex','pyformex/pyformex-search'],#'pyformex-viewer'],
           data_files=OTHER_DATA,
           classifiers=[
               'Development Status :: 4 - Beta',
@@ -259,13 +287,13 @@ def run_setup(with_cext):
           )
 
 
-# Detect the --with-acceleration option
+# Detect the --no-accel option
 try:
-    i = sys.argv.index('--with-acceleration')
+    i = sys.argv.index('--no-accel')
     del(sys.argv[i])
-    accel = True
-except ValueError:
     accel = False
+except ValueError:
+    accel = True
 
 if pypy or jython or py3k:
     accel = False

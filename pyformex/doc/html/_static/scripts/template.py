@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex --gui
+#        *** pyformex ***
 ##
 ##  Copyright (C) 2011 John Doe (j.doe@somewhere.org) 
 ##  Distributed under the GNU General Public License version 3 or later.

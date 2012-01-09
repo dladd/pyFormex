@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>30. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.6-a1 documentation</title>
+    <title>30. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.6-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.6-a1',
+        VERSION:     '0.8.6-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.6-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.6-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="31. mesh_ext — Extended functionality of the Mesh class." href="mesh_ext.html" />
     <link rel="prev" title="29. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="toolbar.html" title="29. toolbar — Toolbars for the pyFormex GUI."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -516,7 +516,7 @@ they wil be repeated. If you give more, they will be ignored.</p>
 
 <dl class="method">
 <dt id="curve.Curve.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.Curve.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Curve.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -1013,7 +1013,7 @@ first approximation with ndiv segments over each part.</p>
 
 <dl class="method">
 <dt id="curve.PolyLine.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.PolyLine.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.PolyLine.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -1377,7 +1377,7 @@ first approximation with ndiv segments over each part.</p>
 
 <dl class="method">
 <dt id="curve.Line.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.Line.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Line.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -1551,7 +1551,7 @@ cannot be concatenated.</p>
 
 <dl class="class">
 <dt id="curve.BezierSpline">
-<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">BezierSpline</tt><big>(</big><em>coords=None</em>, <em>deriv=None</em>, <em>curl=0.33333333333333331</em>, <em>control=None</em>, <em>closed=False</em>, <em>degree=3</em>, <em>endzerocurv=False</em><big>)</big><a class="headerlink" href="#curve.BezierSpline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">BezierSpline</tt><big>(</big><em>coords=None</em>, <em>deriv=None</em>, <em>curl=0.3333333333333333</em>, <em>control=None</em>, <em>closed=False</em>, <em>degree=3</em>, <em>endzerocurv=False</em><big>)</big><a class="headerlink" href="#curve.BezierSpline" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a Bezier spline curve of degree 1, 2 or 3.</p>
 <p>A Bezier spline of degree <cite>d</cite> is a continuous curve consisting of <cite>nparts</cite>
 successive parts, where each part is a Bezier curve of the same degree.
@@ -2038,7 +2038,7 @@ first approximation with ndiv segments over each part.</p>
 
 <dl class="method">
 <dt id="curve.BezierSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -2414,7 +2414,7 @@ first approximation with ndiv segments over each part.</p>
 
 <dl class="method">
 <dt id="curve.CardinalSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -2881,7 +2881,7 @@ first approximation with ndiv segments over each part.</p>
 
 <dl class="method">
 <dt id="curve.CardinalSpline2.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -3258,7 +3258,7 @@ first approximation with ndiv segments over each part.</p>
 
 <dl class="method">
 <dt id="curve.NaturalSpline.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -3635,7 +3635,7 @@ first approximation with ndiv segments over each part.</p>
 
 <dl class="method">
 <dt id="curve.Arc3.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.Arc3.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc3.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -4001,7 +4001,7 @@ method.</p>
 
 <dl class="method">
 <dt id="curve.Arc.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.Arc.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Arc.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -4399,7 +4399,7 @@ first approximation with ndiv segments over each part.</p>
 
 <dl class="method">
 <dt id="curve.Spiral.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#curve.Spiral.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#curve.Spiral.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -4483,7 +4483,7 @@ with curl 0.375058 through 8 points.</p>
         <li class="right" >
           <a href="toolbar.html" title="29. toolbar — Toolbars for the pyFormex GUI."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -4491,7 +4491,7 @@ with curl 0.375058 through 8 points.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 28, 2011.
+      Last updated on Jan 08, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

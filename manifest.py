@@ -98,12 +98,12 @@ def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],exclude
     return filelist
 
 
-DOC_FILES = []
-## f[9:] for f in listTree(
-##    'pyformex/doc',listdirs=False,sorted=True,
-##    excludedirs=['.svn','dutch','html'],
-##    includefiles=['pyformex.1$']
-##    ) ]
+# pyFormex documentation (installed in the pyformex tree)
+DOC_FILES = listTree(
+    'pyformex/doc/html',
+    listdirs=False,sorted=True,
+    excludedirs=['.svn'],
+    )
 
 # pyFormex data files (installed in the pyformex tree)
 DATA_FILES = listTree(
@@ -135,13 +135,10 @@ OTHER_DATA = [
         'pyformex/icons/pyformex-64x64.png',
         'pyformex/icons/pyformex.xpm',
         ]),
-    ('share/applications', ['pyformex-pyformex.desktop']),
-    ## ('share/doc/pyformex',listTree('pyformex/doc/html',
-    ##                                listdirs=False,sorted=True,
-    ##                                excludedirs=['.svn'],
-    ##                                )),
+    ('share/applications', ['pyformex.desktop']),
     ('share/man/man1', ['pyformex/doc/pyformex.1']),
-    ## ('share/pyformex/data',DATA_FILES),
+    # the full html documentation
+    ## ('share/doc/pyformex/html',DOC_FILES),
     ]
 
 DIST_FILES = [
@@ -150,7 +147,7 @@ DIST_FILES = [
     'ReleaseNotes',
     'pre-install',
     'post-install',
-    'pyformex-pyformex.desktop',
+    #'pyformex.desktop',
     #    'pyformex-viewer',
     #    'pyformex-search',
     'manifest.py',
@@ -160,7 +157,7 @@ DIST_FILES = [
     listTree('pyformex',listdirs=False,sorted=True,
              excludedirs=['.svn'],
              includedirs=['gui','plugins'],
-             includefiles=['.*\.py$','pyformex(rc)?$']
+             includefiles=['.*\.py$','pyformex(rc)?$'] #,'pyformex-search']
              ) + \
     listTree('pyformex/icons',listdirs=False,sorted=True,
              excludedirs=['.svn'],
@@ -178,7 +175,10 @@ DIST_FILES = [
                            ],
              includefiles=['[_A-Z].*\.py$','scripts.cat','README']
              ) + \
-    DATA_FILES
+    DATA_FILES + \
+    DOC_FILES
+
+
 
     ## listTree('pyformex/external',listdirs=False,sorted=True,
     ##          excludedirs=['.svn','pyftgl','sippy-ftgl'],

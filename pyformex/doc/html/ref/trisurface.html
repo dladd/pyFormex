@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>32. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.6-a1 documentation</title>
+    <title>32. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.6-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.6-a1',
+        VERSION:     '0.8.6-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.6-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.6-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="33. geomtools — Basic geometrical operations." href="geomtools.html" />
     <link rel="prev" title="31. mesh_ext — Extended functionality of the Mesh class." href="mesh_ext.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="mesh_ext.html" title="31. mesh_ext — Extended functionality of the Mesh class."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -570,7 +570,7 @@ property number.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.smooth">
-<tt class="descname">smooth</tt><big>(</big><em>method='lowpass'</em>, <em>iterations=1</em>, <em>lambda_value=0.5</em>, <em>neighbourhood=1</em>, <em>alpha=0.0</em>, <em>beta=0.20000000000000001</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.smooth" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">smooth</tt><big>(</big><em>method='lowpass'</em>, <em>iterations=1</em>, <em>lambda_value=0.5</em>, <em>neighbourhood=1</em>, <em>alpha=0.0</em>, <em>beta=0.2</em>, <em>verbose=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.smooth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Smooth the surface.</p>
 <p>Returns a TriSurface which is a smoothed version of the original.
 Three smoothing methods are available: &#8216;lowpass&#8217;, &#8216;laplace&#8217;, and
@@ -607,7 +607,7 @@ command</li>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.smoothLaplaceHC">
-<tt class="descname">smoothLaplaceHC</tt><big>(</big><em>iterations=2</em>, <em>lambda_value=0.5</em>, <em>alpha=0.0</em>, <em>beta=0.20000000000000001</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.smoothLaplaceHC" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">smoothLaplaceHC</tt><big>(</big><em>iterations=2</em>, <em>lambda_value=0.5</em>, <em>alpha=0.0</em>, <em>beta=0.2</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.smoothLaplaceHC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply Laplace smoothing with shrinkage compensation to the surface.</p>
 </dd></dl>
 
@@ -1095,7 +1095,7 @@ volumes and can be fixed with the  correctNegativeVolumes.</p>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -2125,7 +2125,7 @@ Beware: this may take a lot of time if level is 8 or higher.</p>
         <li class="right" >
           <a href="mesh_ext.html" title="31. mesh_ext — Extended functionality of the Mesh class."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -2133,7 +2133,7 @@ Beware: this may take a lot of time if level is 8 or higher.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 28, 2011.
+      Last updated on Jan 08, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

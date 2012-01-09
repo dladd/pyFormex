@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>13. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.6-a1 documentation</title>
+    <title>13. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.6-a2 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.6-a1',
+        VERSION:     '0.8.6-a2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.6-a1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.6-a2 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="14. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
     <link rel="prev" title="12. elements — Definition of elements." href="elements.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="elements.html" title="12. elements — Definition of elements."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -926,7 +926,7 @@ the geometry .</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.smooth">
-<tt class="descname">smooth</tt><big>(</big><em>iterations=1</em>, <em>lamb=0.5</em>, <em>k=0.10000000000000001</em>, <em>edg=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.smooth" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">smooth</tt><big>(</big><em>iterations=1</em>, <em>lamb=0.5</em>, <em>k=0.1</em>, <em>edg=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.smooth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a smoothened mesh.</p>
 <p>Smoothing algorithm based on lowpass filters.</p>
 <p>If edg is True, the algorithm tries to smooth the
@@ -1254,7 +1254,7 @@ value is None.</p>
 
 <dl class="method">
 <dt id="mesh.Mesh.resized">
-<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1.0000000000000001e-05</em><big>)</big><a class="headerlink" href="#mesh.Mesh.resized" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">resized</tt><big>(</big><em>size=1.0</em>, <em>tol=1e-05</em><big>)</big><a class="headerlink" href="#mesh.Mesh.resized" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a scaled copy of the Formex with given size in all directions.</p>
 <p>If a direction has zero size, it is not rescaled.</p>
 </dd></dl>
@@ -1338,7 +1338,7 @@ not fuse them.</p>
         <li class="right" >
           <a href="elements.html" title="12. elements — Definition of elements."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6-a1 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.6-a2 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1346,7 +1346,7 @@ not fuse them.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Dec 28, 2011.
+      Last updated on Jan 08, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

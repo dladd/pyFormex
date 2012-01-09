@@ -35,12 +35,12 @@ if [ -n "$(type -P xdg-desktop-menu)" ]; then
     convert pyformex/icons/pyformex-64x64.png -pointsize 20 -style normal -weight bold -fill navy -gravity southeast -draw "text 0,0 \"SVN\"" pyformex-svn.png
 
     # Create the .desktop file
-    sed "s|^Exec=.*|Exec=$svndir/pyformex/pyformex --redirect|;s|^Icon=.*|Icon=$svndir/pyformex-svn.png|;s|^Name=.*|Name=pyFormex (SVN)|" pyformex-pyformex.desktop > pyformex-pyformex-svn.desktop
+    sed "s|^Exec=.*|Exec=$svndir/pyformex/pyformex --redirect|;s|^Icon=.*|Icon=$svndir/pyformex-svn.png|;s|^Name=.*|Name=pyFormex (SVN)|" pyformex.desktop > pyformex-pyformex-svn.desktop
 
     # Install the .desktop file on xdg compliant systems
     xdg-icon-resource install --size 64 pyformex-svn.png
-    xdg-desktop-icon install pyformex-pyformex-svn.desktop
-    xdg-desktop-menu install pyformex-pyformex-svn.desktop
+    xdg-desktop-icon install pyformex-svn.desktop
+    xdg-desktop-menu install pyformex-svn.desktop
 
 else
     echo "I can not install a desktop link because your system is not xdg compliant"

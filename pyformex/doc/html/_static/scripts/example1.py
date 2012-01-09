@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex --gui
+# $Id$   *** pyformex ***
 
 """Example 1"""
 
