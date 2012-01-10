@@ -103,7 +103,17 @@ DOC_FILES = listTree(
     'pyformex/doc/html',
     listdirs=False,sorted=True,
     excludedirs=['.svn'],
+    ) + listTree(
+    'pyformex/doc',
+    listdirs=False,sorted=True,
+    excludedirs=['.svn','dutch','html'],
+    includefiles=[
+        'README',
+        'COPYING',
+        'ReleaseNotes',
+        ],
     )
+
 
 # pyFormex data files (installed in the pyformex tree)
 DATA_FILES = listTree(

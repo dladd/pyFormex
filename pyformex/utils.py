@@ -349,11 +349,14 @@ def removeTree(path,top=True):
         os.rmdir(path)
 
 
-def pyformexFiles():  # WE COULD ADD other=None):
+def pyformexFiles(relative=False):  # WE COULD ADD other=None):
     """Return a list of the pyformex source .py files.
 
     """
-    files = listTree(pf.cfg['pyformexdir'],listdirs=False,sorted=True,includedirs=['gui','plugins','examples','lib'],includefiles=['.*\.py$'])
+    path = pf.cfg['pyformexdir']
+    if relative:
+        path = os.path.relpath(path)
+    files = listTree(path,listdirs=False,sorted=True,includedirs=['gui','plugins','examples','lib'],includefiles=['.*\.py$'])
     return files
 
 

@@ -388,6 +388,14 @@ def run(argv=[]):
            action="store_true", dest="fastnurbs", default=False,
            help="test C library nurbs drawing: only for developers!",
            ),
+        MO("--listfiles",
+           action="store_true", dest="listfiles", default=False,
+           help="list the pyformex Python source files.",
+           ),
+        MO("--search",
+           action="store_true", dest="search", default=False,
+           help="search the pyformex source for a specified pattern and exit. This can optionally be followed by -- followed by options for the grep command. The final argument is the pattern to search.",
+           ),
         MO("--remove",
            action="store_true", dest="remove", default=False,
            help="remove the pyformex installation and exit",
@@ -415,10 +423,21 @@ def run(argv=[]):
 
     ########## Process special options which will not start pyFormex #######
 
-    if pf.options.remove or \
+    if pf.options.listfiles or \
+       pf.options.search or \
+       pf.options.remove or \
        pf.options.whereami or \
        pf.options.detect or \
        pf.options.testmodule:
+
+        if pf.options.listfiles:
+            print '\n'.join(utils.pyformexFiles(relative=True))
+
+        if pf.options.search:
+            if len(args) > 0:
+                #from script import grepSource
+                #print grepSource(args[-1],' '.join(args[:-1]),quiet=True)
+                os.system("grep %s %s" % (' '.join(args),' '.join(utils.pyformexFiles(relative=True))))
 
         if pf.options.remove:
             remove_pyFormex(pyformexdir,pf.scriptdir)

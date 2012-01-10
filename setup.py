@@ -261,7 +261,7 @@ def run_setup(with_cext):
                   ] + [ i[9:] for i in DOC_FILES ]
               
               },
-          scripts=['pyformex/pyformex','pyformex/pyformex-search'],#'pyformex-viewer'],
+          scripts=['pyformex/pyformex'],#,'pyformex/pyformex-search'],#'pyformex-viewer'],
           data_files=OTHER_DATA,
           classifiers=[
               'Development Status :: 4 - Beta',
