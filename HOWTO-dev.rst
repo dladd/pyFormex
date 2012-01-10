@@ -340,6 +340,25 @@ Always write a comment when committing something to the repository. Your comment
 If you fixed a specific bug or implemented a specific change request, I also recommend to reference the bug or issue number in the commit message. Some tools may process this information and generate a link to the corresponding page in a bug tracking system or automatically update the issue based on the commit.
 
 
+Dealing with problems
+---------------------
+Some possible problems during ``svn up`` operation:
+
+- svn: Failed to add file 'SOME_FILE': an unversioned file of the same
+  name already exists.
+
+  If your version of SOME_FILE contains changes you have made (and
+  want to keep), move the file away to some other name. Then repeat
+  the ``svn up`` command. When the ``svn up`` ended successfully,
+  merge your changes back into SOME_FILE.
+
+  If the file didn't contain any important changes you want to keep,
+  just remove the file and ``svn up`` again.
+
+
+
+
+
 Using the *make* command
 ========================
 A lot of the recipes below use the *make* command. There is no place here to give a full description of what this command does (see http://www.gnu.org/software/make/). But for those unfamiliar with the command: *make* creates derived files according to recipes in a file *Makefile*. Usually a target describing what is to be made is specified in the make command (see many examples below). The *-C* option allows to change directory before executing the make. Thus, the command::

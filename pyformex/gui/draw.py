@@ -141,7 +141,7 @@ def showText(text,type=None,actions=[('OK',None)],modal=True,mono=False):
     else:
         font = None
     w = Dialog(
-        items=[_I('text',text,itemtype='text',text='',font=font)],
+        items=[_I('text',text,itemtype='text',text='',font=font,size=(-1,-1))],
         modal=modal,
         actions=[('Ok',)]
         )

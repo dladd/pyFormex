@@ -65,11 +65,6 @@ def catchAndDisplay(expression):
         draw.showText(f.read())
     finally:
         sys.stdout = save
-        
-
-def cmdline():
-    """Display the pyFormex command line help."""
-    catchAndDisplay('pf.print_help()')
 
 
 ## def qappargs():
@@ -164,12 +159,24 @@ def cookie():
 
 
 def showURL(link):
+    """Show a html document in the browser.
+
+    `link` is an URL of a html document. If it does not start with `http://`, this will
+    be prepended. The resulting URL is passed to the user's default or configured browser.
+    """
     if not link.startswith('http://'):
         link = 'http://'+link
     help(link)
 
 
 def showFileOrURL(link):
+    """Show a html document or a text file.
+
+    `link` is either a file name or an URL of a html document.
+    If `link` starts with `http://`, it is interpreted as an URL and the corresponding
+    document is shown in the user's browser. Else, `link` is interpreted as a filename
+    and iof the file exists, it is shown in a pyFormex text window.
+    """
     if link.startswith('http://'):
         showURL(link)
     else:
@@ -198,7 +205,6 @@ def createMenuData():
             (_('&Search text in source'),searchText),
             (_('&About current script'),draw.showDescription),
             ('---',None),
-            (_('&Command line options'),cmdline),
             ] + Docs2MenuData + [
             (_('&Detected Software'),detected), 
             (_('&OpenGL Format'),opengl), 

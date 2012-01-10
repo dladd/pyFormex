@@ -60,7 +60,7 @@ EOF
 
 # These are the default pyformex paths that are searched
 
-pyformexdir=pyformex
+pyformexdir=.
 files=$(echo $pyformexdir/pyformexrc $pyformexdir/*{,/*,/*/*}.py)
 
 if [ "$1" = "-a" ]; then

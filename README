@@ -42,9 +42,10 @@ geometry. Through the scripting language, the user can define any sequence
 of transformations, built from provided or user defined functions. 
 This way, building parametric models becomes a natural thing.
 
-While pyFormex is still under development (http://pyformex.berlios.de), 
-it already provides a fairly stable scripting language and an OpenGL GUI
-environment for displaying and manipulating the generated structures. 
+While pyFormex is still under development (see the project page at
+http://savannah.nongnu.org/projects/pyformex/), it already provides a
+fairly stable scripting language and an OpenGL GUI environment for
+displaying and manipulating the generated structures. 
 
 
 Installation
@@ -185,17 +186,19 @@ directory.
 Documentation
 =============
 
-The manual is included with the pyFormex distribution. Execute the command
-pyformex --whereami to find out where the pyformex files are installed.
-When working with the pyFormex gui, you can load the manual in your browser
-through the help menu, or view the online manual at
-http://pyformex.berlios.de/manual    
+The documentation is included with the pyFormex distribution. Execute the command
+pyformex --whereami to find out where the pyformex files are
+installed. The pyformex path contains a directory doc/html with the
+full html ocumentation.
+When working with the pyFormex GUI, you can load this local documentation in your browser
+using the help menu, or view the online documentation at
+http://pyformex.org/doc.
 
 To use pyFormex, you create a script that builds a structure layout and 
 geometry. Look at the examples to get the feeling of how it is working. 
 Use the File->Play menu selection to display the structure. 
 
-The examples and the python source are relatively well documented.
+The examples and the Python source are relatively well documented.
 
 
 Help and Feedback

@@ -124,6 +124,11 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
         raise ValueError,"Could not start the timeout timer"
 
 
+def setExpanding(w):
+    freePol = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
+    w.setSizePolicy(freePol)
+    w.adjustSize()
+
 #####################################################################
 ########### General Input Dialog ####################################
 #####################################################################
@@ -333,35 +338,38 @@ class InputLabel(InputItem):
         self._plain = kargs.get('plain',False)
         self.input =  QtGui.QLabel()
         maxw,maxh = maxSize()
-        self.input.setMaximumSize(int(0.75*maxw),maxh)
+        self.input.setMaximumSize(0.6*maxw,0.6*maxh)
+        self.input.setMinimumSize(0.2*maxw,0.2*maxh)
+        setExpanding(self.input)
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
-        self.layout().insertWidget(1,self.input)
-        self.label.setWordWrap(True)
-        self.setSize()
+        self.layout().insertWidget(1,self.input)     
+ #       self.setSize()
 
     def setValue(self,val):
         """Change the widget's value."""
         val = str(val)
         if self._plain:
             self.input.setText(val)
+            self.input.setWordWrap(False)
         else:
             updateText(self.input,val)
+            self.input.setWordWrap(True)
 
 
-    def layoutMinimumWidth(self):
-        self.activate()
-        return self.totalMinimumSize().width()
+##     def layoutMinimumWidth(self):
+## #        self.input.activate()
+##         return self.totalMinimumSize().width()
 
 
-    def setSize(self):
-        maxw,maxh = maxSize()
-        maxw -= 40
+##     def setSize(self):
+##         maxw,maxh = maxSize()
+##         maxw -= 40
 
-        self.label.setWordWrap(False) # makes the label return min size
-        width = self.layoutMinimumWidth()
-        #print "min size: %s" % width
-        self.label.setWordWrap(True)
+##         self.input.setWordWrap(False) # makes the label return min size
+##         width = self.layoutMinimumWidth()
+##         #print "min size: %s" % width
+##         self.input.setWordWrap(True)
    
 
 class InputString(InputItem):
@@ -413,6 +421,10 @@ class InputText(InputItem):
         self._is_string_ = type(value) == str
         self._plain = kargs.get('plain',False)
         self.input =  QtGui.QTextEdit()
+#        maxw,maxh = maxSize()
+#        self.input.setMaximumSize(0.6*maxw,0.6*maxh)
+#        self.input.setMinimumSize(0.2*maxw,0.2*maxh)
+        setExpanding(self.input)
         InputItem.__init__(self,name,*args,**kargs)
         self.setValue(value)
         self.layout().insertWidget(1,self.input)
@@ -421,6 +433,30 @@ class InputText(InputItem):
                 self.setFont(QtGui.QFont(kargs['font']))
             except:
                 pass
+        if 'size' in kargs:
+            self.size = kargs['size']
+
+    def sizeHint(self):
+        if not hasattr(self,'size'):
+            size = QtGui.QTextEdit.sizeHint(self.input)
+        else:
+            width,height = self.size
+            docsize = self.input.document().size().toSize()
+            #print "docsize = %s" % docsize
+            font = self.input.font()
+            if width < 0:
+                #print "Pixelsize = %s" % font.pixelSize()
+                #print "Pointsize = %s" % font.pointSize()
+                width = max(80 * font.pixelSize(), 50* font.pointSize())
+                #width = docsize.width() + (self.input.width() - self.input.viewport().width())
+            if height < 0:
+                height = docsize.height() + (self.input.height() - self.input.viewport().height())
+                height = max(height, 0.75*width)
+            size = QtCore.QSize(width,height)
+            #print "newsize = %s" % size
+            
+        return size
+    
 
     def show(self):
         """Select all text on first display.""" 
@@ -437,10 +473,16 @@ class InputText(InputItem):
 
     def setValue(self,val):
         """Change the widget's value."""
+        val = str(val)
         if self._plain:
-            self.input.setPlainText(str(val))
+            self.input.setPlainText(val)
+            ## self.input.setLineWrapMode(QtGui.QTextEdit.FixedColumnWidth)
+            ## self.input.setLineWrapColumnOrWidth(200) 
         else:
-            updateText(self.input,str(val))
+            updateText(self.input,val)
+            ## self.input.setLineWrapMode(QtGui.QTextEdit.FixedPixelWidth)
+            ## self.input.setLineWrapColumnOrWidth(600)
+        self.input.adjustSize()
 
 
 class InputBool(InputItem):
