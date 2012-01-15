@@ -74,7 +74,7 @@ def sloccount(rel):
         return
         
     if not os.path.exists(workdir):
-        cmd = "svn co svn://svn.berlios.de/pyformex/trunk -r%s %s" % (rev,tmpdir)
+        cmd = "svn co svn://svn.savannah.nongnu.org/pyformex/trunk -r%s %s" % (rev,tmpdir)
         runCmd(cmd)
 
     cmd = "cd %s;svn up -r%s" % (tmpdir,rev)
@@ -92,7 +92,8 @@ def sloccount(rel):
 
 for release in keys:
     sloccount(DB[release])
-    removeTree(workdir)
+    if os.path.exists(workdir):
+        removeTree(workdir)
     
 
 # Now, create some statistics
@@ -136,7 +137,7 @@ outfile = 'pyformex-stats.png'
 gnu = """set terminal png size 640,480
 set output "%s"
 set datafile missing '*'
-set title "pyFormex history (http://pyformex.berlios.de)\\nCreated %s"
+set title "pyFormex history (http://pyformex.org)\\nCreated %s"
 set key top left
 #set offsets 0,0.1,0,0
 set xdata time

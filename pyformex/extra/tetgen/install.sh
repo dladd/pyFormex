@@ -41,7 +41,7 @@ EOF
 VERSION=1.4.3
 NAME=tetgen$VERSION
 ARCHIVE=$NAME.tar.gz
-URI=http://tetgen.berlios.de/files/$ARCHIVE
+URI=http://tetgen.org/files/$ARCHIVE
 
 _get() {
     [ -f $ARCHIVE ] || wget $URI

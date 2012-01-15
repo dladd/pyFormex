@@ -131,38 +131,30 @@ and then answering 'yes' to the question.
 
 
  
-Howto install the external packages
+Howto install the extra packages
 -----------------------------------
-pyFormex makes use of external software components to enhance its functionality.
+pyFormex makes use of extra software components to enhance its functionality.
 While they are not required for the core operation of pyFormex, many users may
 want to install them. Some of these extras (admesh, units) can easily be
 installed from your regular distribution repositories.
 Some extra components however either are not available in packaged format, or
-thew existing packages do not work together well with pyFormex.
+the existing packages do not work together well with pyFormex.
 For these components, the pyFormex distribution contains an adhoc install
 procedure to help our users with the installation. The procedures are located
-in dedicated subdirectories of the pyformex-VERSION/pyformex/external directory
-of the unpacked release tree. Each subdirectory contains a PKG.install script.
-To install the corresponding package, execute the script from within the 
-subdirectory, with root privileges and with a single parameter 'all'.
-
+in dedicated subdirectories of the pyformex-VERSION/pyformex/extra directory
+of the unpacked release tree. Each subdirectory contains a install script 
+`install.sh`. To install the corresponding package, execute the script from
+within the subdirectory, with root privileges and with a single parameter 'all':
+  ``(sudo) ./install.sh all``
 
 - gl2ps: Image output to in vector formats (PS, EPS, PDF and SVG). Requires
   a Python interface, provided by our install procedure. 
-  Install from external/pygl2ps with:
-  ``(sudo) ./pygl2ps.install all``
 - gts: Operations on triangulated surfaces. The available standard packages do
   not install all required files. Our install procedure will also fix some bugs.
-  Install from external/gts with:
-  ``(sudo) ./gts.install all``
 - tetgen: Create quality tetraeder meshes. 
-  Install from external/tetgen with:
-  ``(sudo) ./tetgen.install all``
-- calpy: Simple finite element simulation framework. Needed for the ?_calpy 
+- calpy: Simple finite element simulation framework. Needed for the *_calpy 
   examples. Has to be installed from source, because is has to be compiled
   against the same numpy version as pyFormex itself.
-  Install from external/calpy with:
-  ``(sudo) ./calpy.install all``
 
 
 Running pyFormex from Subversion (SVN) sources
@@ -172,12 +164,9 @@ you can try installing pyFormex from the Subversion sources. Besides the basic
 prerequisites (see above), you will also need to have 'Subversion' installed.
 
 The `SVN repository`_ on the developer site is accessible by anonymous SVN.
-The command ``svn checkout svn://svn.berlios.de/pyformex/trunk`` will checkout
-the source to a local directory ``trunk``. Provided you have all the 
-prerequisites installed, pyFormex can then be run directly from the checked out
-source: ``trunk/pyformex/pyformex``. 
+The command ``svn co svn://svn.savannah.nongnu.org/pyformex/trunk/pyformex MYDIR`` will checkout the source to a local directory ``MYDIR``. Provided you have all the prerequisites installed, pyFormex can then be run directly from the checked out source with the command: ``MYDIR/pyformex/pyformex``. 
 If you want to use the compiled accelerator library however, you will have to
-create it first: ``cd trunk/pyformex/lib; ./configure; make`` should do it.
+create it first: ``cd MYDIR/pyformex/lib; ./configure; make`` should do it.
 
 Once you have a checked-out source tree, you can easily sync it to the latest
 repository version by just issuing the command ``svn up`` from your checkout
@@ -204,14 +193,13 @@ The examples and the Python source are relatively well documented.
 Help and Feedback
 =================
 
-For any questions or feedback, please go to the pyFormex website at
-http://pyformex.berlios.de
+For any questions or feedback, please go to the pyFormex support tracker at
+http://savannah.nongnu.org/support/?group=pyformex
 
 If you find any bugs or malfunctions in pyFormex, please submit them to
-http://developer.berlios.de/bugs/?group_id=2717
+the pyFormex Bug tracker http://savannah.nongnu.org/bugs/?group=pyformex
 
-
-.. _`SVN repository`: http://developer.berlios.de/svn/?group_id=2717
+.. _`SVN repository`: http://savannah.nongnu.org/svn/?group=pyformex
 
 .. target-notes::
 

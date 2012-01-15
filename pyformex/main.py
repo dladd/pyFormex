@@ -150,10 +150,19 @@ You will need proper permissions to actually delete the files.
         utils.removeTree(pyformexdir)
         script = os.path.join(scriptdir,'pyformex')
         egginfo = "%s-%s.egg-info" % (pyformexdir,pf.__version__.replace('-','_'))
-        for f in [ script,egginfo ]:
+        datadir = os.path.commonprefix(['/usr/local/share',pyformexdir])
+        datadir = os.path.join(datadir,'share')
+        data = utils.prefixFiles(datadir,['man/man1/pyformex.1',
+                                          'applications/pyformex.desktop',
+                                          'pixmaps/pyformex-64x64.png',
+                                          'pixmaps/pyformex.xpm'])
+        for f in [ script,egginfo ] + data:
             if os.path.exists(f):
                 print("Removing %s" % f)
                 os.remove(f)
+            else:
+                print("Could not remove %s" % f)
+        
         print("\nBye, bye! I won't be back until you reinstall me!")
     elif s.startswith('y') or s.startswith('Y'):
         print("You need to type exactly 'yes' to remove me.")

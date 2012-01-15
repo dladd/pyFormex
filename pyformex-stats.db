@@ -25,6 +25,19 @@ release
 
 release
   sh=290
+  python=36450
+  dollars=1415162
+  rev=2115
+  manyears=10.48
+  years=1.31
+  tag=0.8.5
+  sloc=43381
+  date=2011-12-05
+  ansic=6367
+  size=2503591	
+
+release
+  sh=290
   python=35594
   dollars=1359964
   rev=1995

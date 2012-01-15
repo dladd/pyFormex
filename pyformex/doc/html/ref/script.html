@@ -409,11 +409,13 @@ raise an error if the requirement fails.</p>
 
 <dl class="function">
 <dt id="script.grepSource">
-<tt class="descclassname">script.</tt><tt class="descname">grepSource</tt><big>(</big><em>text</em><big>)</big><a class="headerlink" href="#script.grepSource" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds text in the pyFormex source .py files.</p>
-<p>Uses the <cite>grep</cite> program to find all occurrences of the specified
-text in the pyFormex source .py files (including the examples).
-Returns the output of the grep command.</p>
+<tt class="descclassname">script.</tt><tt class="descname">grepSource</tt><big>(</big><em>pattern</em>, <em>options=''</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#script.grepSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds pattern in the pyFormex source .py files.</p>
+<p>Uses the <cite>grep</cite> program to find all occurrences of some specified
+pattern text in the pyFormex source .py files (including the examples).
+Extra options can be passed to the grep command. See <cite>man grep</cite> for
+more info.</p>
+<p>Returns the output of the grep command.</p>
 </dd></dl>
 
 <dl class="function">
@@ -485,7 +487,7 @@ Else, default names will be provided.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 08, 2012.
+      Last updated on Jan 15, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

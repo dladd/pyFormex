@@ -100,8 +100,7 @@ def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],exclude
 
 # pyFormex documentation (installed in the pyformex tree)
 DOC_FILES = listTree(
-    'pyformex/doc/html',
-    listdirs=False,sorted=True,
+    'pyformex/doc/html',listdirs=False,sorted=True,
     excludedirs=['.svn'],
     ) + listTree(
     'pyformex/doc',
@@ -117,8 +116,7 @@ DOC_FILES = listTree(
 
 # pyFormex data files (installed in the pyformex tree)
 DATA_FILES = listTree(
-    'pyformex/data',
-    listdirs=False,sorted=True,
+    'pyformex/data',listdirs=False,sorted=True,
     excludedirs=['.svn','benchmark'],
     excludefiles=['.*\.pyc','.*~$','PTAPE.*'],
     includefiles=[
@@ -135,6 +133,31 @@ DATA_FILES = listTree(
         'supershape.txt',
         'teapot.off',
         'world.jpg',
+        ],
+    )
+
+# scripts to install extra programs
+EXTRA_FILES = listTree(
+    'pyformex/extra',listdirs=True,sorted=True,
+    excludedirs=[
+        '.svn',
+        'build',
+        'calix',
+        'dxfparser',
+        'postabq'
+        'pyftgl',
+        ],
+    excludefiles=['.*~$'],
+    includefiles=[
+        'README',
+        'Makefile',
+        '.*\.sh',
+        '.*\.rst'
+        '.*\.patch',
+        '.*\.c',
+        '.*\.cc',
+        '.*\.i',
+        '.*\.py',
         ],
     )
 
@@ -186,25 +209,10 @@ DIST_FILES = [
              includefiles=['[_A-Z].*\.py$','scripts.cat','README']
              ) + \
     DATA_FILES + \
-    DOC_FILES
+    DOC_FILES + \
+    EXTRA_FILES
 
 
-
-    ## listTree('pyformex/external',listdirs=False,sorted=True,
-    ##          excludedirs=['.svn','pyftgl','sippy-ftgl'],
-    ##          excludefiles=['.*~$'],
-    ##          includefiles=[
-    ##             'README',
-    ##             'Makefile',
-    ##             '.*\.sh',
-    ##             '.*\.rst'
-    ##             '.*\.patch',
-    ##             '.*\.c',
-    ##             '.*\.cc',
-    ##             '.*\.i',
-    ##             '.*\.py',
-    ##             ],
-    ##          ) + \
     ## listTree('pyformex/bin',listdirs=False,sorted=True,
     ##          excludedirs=['.svn'],
     ##          excludefiles=['.*~$'],

@@ -466,7 +466,8 @@ the bother to try it.
    Lately there have been some successful attempts to get the basic 
    functionality of pyFormex running on Windows. Thomas Praet has 
    compiled `this document
-   <ftp://ftp.berlios.de/pub/pyformex/Install_pyFormex_on_Windows.html>`_ on how to proceed.
+   <ftp://bumps.ugent.be/pub/pyformex/Install_pyFormex_on_Windows.html>`_ 
+   on how to proceed.
    Submit a request on the `Support tracker`_ if you need any help.
  
 

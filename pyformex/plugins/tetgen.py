@@ -28,7 +28,7 @@ A collection of functions to read/write tetgen files and to run the
 tetgen program
 
 tetgen is a quality tetrahedral mesh generator and a 3D Delaunay triangulator.
-See http://tetgen.berlios.de
+See http://tetgen.org
 """
 
 from coords import *

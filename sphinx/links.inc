@@ -37,7 +37,7 @@
 .. _`pyFormex reference manual`: http:///www.nongnu.org/pyformex/doc/refman.html
 .. _`pyFormex user guide`: http:///www.nongnu.org/pyformex/doc/user-guide.html
 .. _`pyFormex examples`: http:///www.nongnu.org/pyformex/doc/examples.html
-.. _`PDF version`: ftp://ftp.berlios.de/pub/pyformex/pyformex.pdf
+.. _`PDF version`: http://download.savannah.gnu.org/releases/pyformex/pyformex.pdf
 
 .. _`Savannah`: http://savannah.nongnu.org/
 .. _`Project page`: http://savannah.nongnu.org/projects/pyformex/
@@ -45,11 +45,11 @@
 .. _`Bug tracker`: http://savannah.nongnu.org/bugs/?group=pyformex
 .. _`Source code`: http://savannah.nongnu.org/svn/?group=pyformex
 .. _`News`: http://savannah.nongnu.org/news/?group=pyformex
-.. _`Releases`: http://download-mirror.savannah.gnu.org/releases/pyformex/
+.. _`Releases`: http://download.savannah.gnu.org/releases/pyformex/
 
 .. _`BerliOS`: http://developer.berlios.de/
-.. _`FTP site`: ftp://ftp.berlios.de/pub/pyformex
-.. _`latest`: ftp://ftp.berlios.de/pub/pyformex/pyformex-latest.tar.gz
+.. _`FTP site`: ftp://bumps.ugent.be/pub/pyformex/
+.. _`latest`: http://download.savannah.gnu.org/releases/pyformex/pyformex-latest.tar.gz
 
 .. _`local FTP server`: ftp://bumps.ugent.be/pub/pyformex
 .. _`latest BuMPix image`: ftp://bumps.ugent.be/pub/bumpix/bumpix-latest.img

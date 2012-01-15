@@ -59,12 +59,12 @@ LIB_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
 
 ext_modules = [Extension('pyformex/lib/%s'%m,
                          sources = ['pyformex/lib/%smodule.c'%m],
-#                         optional=True,
+                         # optional=True,
                          ) for m in LIB_MODULES ]
 
 
 class BuildFailed(Exception):
-
+    
     def __init__(self):
         self.cause = sys.exc_info()[1] # work around py 2/3 different syntax
 
@@ -110,22 +110,21 @@ class sdist(_sdist):
 ##         #os.system("./post-install %s" % self.install_lib)
 
 
-## class install(_install):
-##     def run(self):
-##         global srcdir
-##         _install.run(self)
-##         if os.path.exists(srcdir):
-##             tgtdir = os.path.join(self.install_lib,'pyformex/doc')
-##             print "Link %s" % srcdir
-##             print "Into %s" % tgtdir
-##             if not os.path.exists(tgtdir):
-##                 os.makedirs(tgtdir)
-##             target = os.path.join(tgtdir,'html')
-##             if os.path.exists(target):
-##                 print "The path %s already exists."
-##                 print "This is probably a leftover from a previous pyFormex install."
-##                 print "Remove the path and rerun the setup command." 
-##             os.symlink(srcdir,target)
+class install(_install):
+    def run(self):
+        global srcdir,globaldocs
+        _install.run(self)
+        if globaldocs:
+            print dir(self)
+            localdir = os.path.join(self.install_lib,'pyformex/doc/html')
+            globaldir = os.path.join(self.install_data,'share/doc/pyformex/html')
+            print "html doc is in ",localdir
+            print "html doc should be in ",globaldir
+            import shutil
+            if os.path.exists(globaldir):
+                shutil.rmtree(globaldir)
+            shutil.move(localdir,globaldir)
+            os.symlink(globaldir,localdir)
 
 
 ## class install_data(_install_data):
@@ -218,21 +217,42 @@ class sdist(_sdist):
 
  
 def run_setup(with_cext):
+    global OTHER_DATA
     kargs = {}
     if with_cext:
             kargs['ext_modules'] = ext_modules
 
+    # PKG_DATA, relative from pyformex path
+    PKG_DATA = [
+        'pyformexrc',
+        'icons/README',
+        'icons/*.xpm',
+        'icons/pyformex*.png',
+        'examples/scripts.cat',
+        'examples/Demos/*',
+        'data/*',
+        ## 'extra/*/*',
+        ]
+    ## if globaldocs:
+    ##     # Install in the global doc path
+    ##     OTHER_DATA.append(('share/doc/pyformex/html',['pyformex/doc/html/*']))
+    ## else:
+    ##     # Install docs in package path
+    ##     PKG_DATA += [ i[9:] for i in DOC_FILES ]
+    ## print OTHER_DATA
+    
+    PKG_DATA += [ i[9:] for i in DOC_FILES ]
     setup(cmdclass={
         ## 'install_scripts': install_scripts,
         ## 'build_ext': build_ext,
         ## 'build': build,
-        ## 'install':install,
+        'install':install,
         ## 'install_data':install_data,
         'sdist':sdist
         },
           name='pyformex',
           version='0.8.6-a2',
-          description='Scripting tool to generate and transform 3D geometries.',
+          description='Program to generate and transform 3D geometries from scripts.',
           long_description="""
     pyFormex is a tool to generate, transform and manipulate large and complex
     geometrical models of 3D structures by sequences of mathematical
@@ -249,18 +269,7 @@ def run_setup(with_cext):
               'pyformex.plugins',
               'pyformex.examples'
               ],
-          package_data={
-              'pyformex': [
-                  'pyformexrc',
-                  'icons/README',
-                  'icons/*.xpm',
-                  'icons/pyformex*.png',
-                  'examples/scripts.cat',
-                  'examples/Demos/*',
-                  'data/*',
-                  ] + [ i[9:] for i in DOC_FILES ]
-              
-              },
+          package_data={ 'pyformex': PKG_DATA },
           scripts=['pyformex/pyformex'],#,'pyformex/pyformex-search'],#'pyformex-viewer'],
           data_files=OTHER_DATA,
           classifiers=[
@@ -294,6 +303,16 @@ try:
     accel = False
 except ValueError:
     accel = True
+
+# Detect the --globaldocs option
+globaldocs = False
+try:
+    i = sys.argv.index('--globaldocs')
+    del(sys.argv[i])
+    globaldocs = True
+except ValueError:
+    pass
+
 
 if pypy or jython or py3k:
     accel = False
