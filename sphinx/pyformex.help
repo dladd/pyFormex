@@ -39,6 +39,11 @@ Options
 --testcamera            Print camera settings whenever they change.
 --testexecutor          test alternate executor: only for developers!
 --fastnurbs             test C library nurbs drawing: only for developers!
+--listfiles             list the pyformex Python source files.
+--search                search the pyformex source for a specified pattern and
+                        exit. This can optionally be followed by -- followed
+                        by options for the grep command. The final argument is
+                        the pattern to search.
 --remove                remove the pyformex installation and exit
 --whereami              show where the pyformex package is installed and exit
 --detect                show detected helper software and exit

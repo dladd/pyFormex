@@ -819,11 +819,7 @@ First, create the distribution and test it out locally: both the installation pr
    make latexpdf
    make svndoc
 
-- Stamp the created doc files ::
-
-   make stampdocs
-
-- Check in (creating the dist may modify some files) :: 
+- Check in (creating the dist may modify some files) ::
 
    svn ci -m "Creating release ..."
 

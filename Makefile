@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
+##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -79,7 +79,7 @@ DOCSOURCE= \
 
 EXECUTABLE= ${PYFORMEXDIR}/pyformex ${PYFORMEXDIR}/sendmail.py \
 	${BINDIR}/read_abq_inp.awk \
-	pyformex-viewer pyformex-search pre-install post-install \
+	pyformex-viewer \
 	${SPHINXDIR}/py2rst.py
 
 
@@ -229,7 +229,7 @@ ${PKGDIR}/${PKGVER}: revision version # MANIFEST.in
 MANIFEST.in: MANIFEST.py
 	python $< >$@
 
-# Publish the distribution to our ftp server and berlios
+# Publish the distribution to our ftp server
 
 publocal: ${PKGDIR}/${LATEST}
 	rsync -ltv ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}

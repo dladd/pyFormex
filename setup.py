@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
+##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -110,21 +110,21 @@ class sdist(_sdist):
 ##         #os.system("./post-install %s" % self.install_lib)
 
 
-class install(_install):
-    def run(self):
-        global srcdir,globaldocs
-        _install.run(self)
-        if globaldocs:
-            print dir(self)
-            localdir = os.path.join(self.install_lib,'pyformex/doc/html')
-            globaldir = os.path.join(self.install_data,'share/doc/pyformex/html')
-            print "html doc is in ",localdir
-            print "html doc should be in ",globaldir
-            import shutil
-            if os.path.exists(globaldir):
-                shutil.rmtree(globaldir)
-            shutil.move(localdir,globaldir)
-            os.symlink(globaldir,localdir)
+## class install(_install):
+##     def run(self):
+##         global srcdir,globaldocs
+##         _install.run(self)
+##         if globaldocs:
+##             print dir(self)
+##             localdir = os.path.join(self.install_lib,'pyformex/doc/html')
+##             globaldir = os.path.join(self.install_data,'share/doc/pyformex/html')
+##             print "html doc is in ",localdir
+##             print "html doc should be in ",globaldir
+##             import shutil
+##             if os.path.exists(globaldir):
+##                 shutil.rmtree(globaldir)
+##             shutil.move(localdir,globaldir)
+##             os.symlink(globaldir,localdir)
 
 
 ## class install_data(_install_data):
@@ -246,12 +246,12 @@ def run_setup(with_cext):
         ## 'install_scripts': install_scripts,
         ## 'build_ext': build_ext,
         ## 'build': build,
-        'install':install,
+        ## 'install':install,
         ## 'install_data':install_data,
         'sdist':sdist
         },
           name='pyformex',
-          version='0.8.6-a2',
+          version='0.8.6',
           description='Program to generate and transform 3D geometries from scripts.',
           long_description="""
     pyFormex is a tool to generate, transform and manipulate large and complex
@@ -304,14 +304,14 @@ try:
 except ValueError:
     accel = True
 
-# Detect the --globaldocs option
-globaldocs = False
-try:
-    i = sys.argv.index('--globaldocs')
-    del(sys.argv[i])
-    globaldocs = True
-except ValueError:
-    pass
+## # Detect the --globaldocs option
+## globaldocs = False
+## try:
+##     i = sys.argv.index('--globaldocs')
+##     del(sys.argv[i])
+##     globaldocs = True
+## except ValueError:
+##     pass
 
 
 if pypy or jython or py3k:

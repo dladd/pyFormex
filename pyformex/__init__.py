@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
+##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Home page: http://pyformex.org
@@ -31,8 +31,8 @@ defines a few essential functions.
 # This is the very first thing that is executed when starting pyFormex
 # It is loaded even before main.
 
-__version__ = "0.8.6-a2"
-__revision__ = '2148M'
+__version__ = "0.8.6"
+__revision__ = '2149M'
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2012 Benedict Verhegghe'
 Url = 'http://pyformex.org'

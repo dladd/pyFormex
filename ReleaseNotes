@@ -1,7 +1,7 @@
 .. $Id$    -*- rst -*-
   
 ..
-  This file is part of pyFormex 0.8.5  (Sun Dec  4 21:24:46 CET 2011)
+  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
   pyFormex is a tool for generating, manipulating and transforming 3D
   geometrical models by sequences of mathematical operations.
   Home page: http://pyformex.org
@@ -30,62 +30,33 @@ pyFormex 0.8.6  Releasenotes
 ============================
 
 This is a collection of the most prominent changes in pyFormex 0.8.6
-compared to the previous release 0.8.5. Like always, besides the new
-things mentioned below, we also have lots of bug fixes, code cleanup
-and functionality enhancements.
-
-
-
-Documentation
--------------
+compared to the previous release 0.8.5. There are not many new features
+in this release. The major change is the installation procedure, triggered
+by our attempts to create Debian packages. And we have a couple of bug fixes.
 
 
 Installation
 ------------
+- The installation procedure now includes a configuration file (setup.py)
+  which sets the default installation prefix to '/usr/local'. The command to
+  install (if you accept the defaults) is thus::
 
+    python setup.py install
 
-Command line
-------------
+- Secondly, if the compilation of the acceleration libraries fails, the 
+  installation procedure continues without the libraries.
 
+- Finally, it is now possible to enforce installation without the libraries,
+  by using the command::
 
-Configuration
--------------
+    python setup.py install --no-accel
 
-
-Core
-----
 
 Gui
 ---
 - Camera Settings dialog, with e.g. interactive front and back plane
   clipping
 - Save current camera settings (and restore)
-
-Widgets
--------
-
-
-Drawing
--------
-
-Scripting
----------
-
-
-Plugin menus
-------------
-
-
-Plugins
--------
-
-External
---------
-
-Examples
---------
-
-  
   
 
 
