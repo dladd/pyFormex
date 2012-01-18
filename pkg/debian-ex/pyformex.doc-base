@@ -1,0 +1,10 @@
+Document: pyformex
+Title: pyFormex Documentation
+Author: Benedict Verhegghe
+Abstract: This document describe pyFormex - a program to generate 3D 
+ geometrical models from Numerical Python scripts.
+Section: Programming/Python
+
+Format: HTML
+Index: /usr/share/doc/pyformex/html/index.html
+Files: /usr/share/doc/pyformex/html/*.html

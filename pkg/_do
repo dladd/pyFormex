@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+
+. ../RELEASE
+PYFDIR=pyformex-$VERSION
+SOURCE=../dist/pyformex/pyformex-$VERSION.tar.gz
+ORIG=pyformex_$VERSION.orig.tar.gz
+
+
+unpack() {
+    [ -d "$PYFDIR" ] && rm -rf $PYFDIR
+    tar xf $SOURCE
+    cp -a debian-ex $PYFDIR/debian
+    ln -sfn ${SOURCE} ${ORIG}
+    # For now !!!
+    rm $PYFDIR/debian/*.doc-base
+}
+
+
+build() {
+    pushd $PYFDIR
+    debuild -us -uc
+    popd
+}
+
+
+buildlib() {
+    pushd $PYFDIR
+    debuild -i -us -uc -B
+    popd
+}
+
+
+final() {
+    pushd $PYFDIR
+    debuild
+    popd
+}
+
+
+upload() {
+    PKGVER=$(expr "$(head -n 1 $PYFDIR/debian/changelog)" : '.*(\(.*\)).*')
+    CHANGES=pyformex_${PKGVER}_amd64.changes
+    echo Uploading ${CHANGES}
+    [ -f "$CHANGES" ] && dput mentors $CHANGES
+}
+
+clean() {
+    pushd $PYFDIR
+    dh_clean
+    popd
+}
+
+
+for cmd in "$@"; do
+    $cmd
+done

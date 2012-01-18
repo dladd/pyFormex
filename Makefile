@@ -256,7 +256,7 @@ upload:
 # Tag the release in the svn repository
 # THIS WILL ONLY WORK IF YOU HAVE YOUR USER NAME CONFIGURED IN .ssh/config
 tag:
-	svn copy svn+ssh://svn.savannah.nongnu.org/pyformex/trunk svn+ssh://svnsavannah.nongnu.org/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
+	svn copy svn+ssh://svn.savannah.nongnu.org/pyformex/trunk svn+ssh://svn.savannah.nongnu.org/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
 
 # Creates statistics
 stats:

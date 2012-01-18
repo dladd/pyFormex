@@ -1,0 +1,17 @@
+pyformex (0.8.6-3) unstable; urgency=low
+
+  * Fixed building of architecture-dependent -lib package (Closes: #656294) 
+
+ -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Wed, 18 Jan 2012 10:27:49 +0100
+
+pyformex (0.8.6-2) unstable; urgency=low
+
+  * Replaced build-dependency on (python,python-dev) by python-all-dev 
+
+ -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Tue, 17 Jan 2012 10:23:22 +0100
+
+pyformex (0.8.6-1) unstable; urgency=low
+
+  * Initial release. (Closes: #653594)
+
+ -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Mon, 16 Jan 2012 19:42:10 +0100

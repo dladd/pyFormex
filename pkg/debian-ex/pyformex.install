@@ -1,0 +1,11 @@
+usr/bin/pyformex
+usr/share/pixmaps
+usr/lib/python2*/dist-packages/pyformex/pyformexrc
+usr/lib/python2*/dist-packages/pyformex/*.py
+usr/lib/python2*/dist-packages/pyformex/data
+usr/lib/python2*/dist-packages/pyformex/examples
+usr/lib/python2*/dist-packages/pyformex/gui
+usr/lib/python2*/dist-packages/pyformex/icons
+usr/lib/python2*/dist-packages/pyformex/lib
+usr/lib/python2*/dist-packages/pyformex/plugins
+

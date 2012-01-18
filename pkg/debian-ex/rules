@@ -1,0 +1,34 @@
+#!/usr/bin/make -f       
+# -*- makefile -*-
+# debian/rules  for pyFormex, using debhelper.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+export DH_OPTIONS
+
+%:
+	dh $@ --with python2
+
+
+override_dh_install:
+	dh_install -i -ppyformex --exclude=".so"
+	dh_install -a -ppyformex-lib
+
+
+override_dh_python2:
+	dh_python2
+	# Replace embedded Javascript libraries with symlinks
+	set -e; if [ -d "debian/pyformex" ]; then \
+		for FILENAME in jquery underscore; do \
+		find $(CURDIR)/debian/pyformex -name $$FILENAME.js -print \
+                -exec ln -sf /usr/share/javascript/$$FILENAME/$$FILENAME.js {} \; \
+		; done; fi
+	# Link documentation 
+	set -e; if [ -d "debian/pyformex" ]; then \
+		mkdir $(CURDIR)/debian/pyformex/usr/share/pyshared/pyformex/doc; \
+		ln -sf /usr/share/doc/pyformex/html $(CURDIR)/debian/pyformex/usr/share/pyshared/pyformex/doc/html; \
+		for py in $(shell pyversions -s); do \
+		mkdir $(CURDIR)/debian/pyformex/usr/lib/$$py/dist-packages/pyformex/doc; \
+		ln -sf /usr/share/doc/pyformex/html $(CURDIR)/debian/pyformex/usr/lib/$$py/dist-packages/pyformex/doc/html; \
+		done; fi

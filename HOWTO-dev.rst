@@ -832,7 +832,7 @@ First, create the distribution and test it out locally: both the installation pr
    svn up
    make dist
 
-- Put the files on Savannah (see dist/HOWTO) ::
+- Put the files on Savannah::
 
    make sign
    make pubpdf
@@ -848,7 +848,7 @@ First, create the distribution and test it out locally: both the installation pr
 
 - Put the files on our local FTP server ::
 
-   make publocal
+   (NOT CORRECT) make publocal
 
 - Put the documentation on the web site ::
   
@@ -859,7 +859,7 @@ First, create the distribution and test it out locally: both the installation pr
 
 - Upload to the python package index ::
   
-   make upload  # should replace make sdist above
+   (NOT CORRECT) make upload  # should replace make sdist above
 
 - Add the release data to the database ::
    
@@ -877,5 +877,19 @@ First, create the distribution and test it out locally: both the installation pr
 
 Well, that was easy, uh? ~)
 
+
+Creating (official) Debian packages
+-----------------------------------
+
+.. note: This section needs further clarification
+
+- Needed software:
+- Needed dependencies: python-all-dev
+
+- Unpack latest relesae: _do unpack
+- Build: _do build
+- If OK, build final (signed): _do final
+- upload: dput mentors PYFVER.changes
+  
 
 .. End
