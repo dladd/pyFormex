@@ -5,6 +5,7 @@
 PYFDIR=pyformex-$VERSION
 SOURCE=../dist/pyformex/pyformex-$VERSION.tar.gz
 ORIG=pyformex_$VERSION.orig.tar.gz
+[ -f $PYFDIR/debian/changelog ] && PKGVER=$(expr "$(head -n 1 $PYFDIR/debian/changelog)" : '.*(\(.*\)).*')
 
 
 unpack() {
@@ -13,7 +14,7 @@ unpack() {
     cp -a debian-ex $PYFDIR/debian
     ln -sfn ${SOURCE} ${ORIG}
     # For now !!!
-    rm $PYFDIR/debian/*.doc-base
+    #rm $PYFDIR/debian/*.doc-base
 }
 
 
@@ -31,6 +32,14 @@ buildlib() {
 }
 
 
+install() {
+    sudo debi pyformex_${PKGVER}_amd64.changes
+}
+
+pkglst() {
+    debc pyformex_${PKGVER}_amd64.changes > pkglst
+}
+
 final() {
     pushd $PYFDIR
     debuild
@@ -45,10 +54,24 @@ upload() {
     [ -f "$CHANGES" ] && dput mentors $CHANGES
 }
 
+
 clean() {
     pushd $PYFDIR
     dh_clean
     popd
+}
+
+
+bump() {
+    OLDPKGVER=$(expr "$(head -n 1 $PYFDIR/debian/changelog)" : '.*(\(.*\)).*')
+    ARCHDIR=uploaded/${OLDPKGVER}
+    mkdir $ARCHDIR && mv pyformex_${PKGVER}[_.]* $ARCHDIR
+    pushd $PYFDIR
+    dch -i
+    PKGVER=$(expr "$(head -n 1 debian/changelog)" : '.*(\(.*\)).*')
+    sed -i "s|pyformex(=$OLDPKGVER)|pyformex(=$PKGVER)|" debian/control
+    popd
+    cp $PYFDIR/debian/control $PYFDIR/debian/changelog debian-ex
 }
 
 

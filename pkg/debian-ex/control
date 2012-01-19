@@ -26,7 +26,7 @@ Depends: ${misc:Depends},
 	 libjs-underscore
 Recommends: pyformex-lib, admesh, imagemagick, libgl2ps0, libgts-bin
 Suggests: units
-Description: Program to generate and transform 3D geometrical models using Python scripts.
+Description: program to create 3D geometry from Python scripts.
  pyFormex can be used to generate, transform and manipulate large
  geometrical models of 3D structures by sequences of mathematical operations.
  Unlike traditional CAD systems, pyFormex provides a powerful (Python based)
@@ -49,8 +49,8 @@ Description: Program to generate and transform 3D geometrical models using Pytho
 
 Package: pyformex-lib
 Architecture: any
-Depends: pyformex(=0.8.6-3), ${misc:Depends}, ${shlibs:Depends}
-Description: Program to generate and transform 3D geometrical models using Python scripts.
+Depends: pyformex(=${source:Version}), ${misc:Depends}, ${shlibs:Depends}
+Description: program to create 3D geometry from Python scripts.
  pyFormex can be used to generate, transform and manipulate large
  geometrical models of 3D structures by sequences of mathematical operations.
  Unlike traditional CAD systems, pyFormex provides a powerful (Python based)

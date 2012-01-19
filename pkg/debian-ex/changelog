@@ -1,3 +1,13 @@
+pyformex (0.8.6-4) unstable; urgency=low
+
+  * Registered documentation with doc-base
+  
+  * Made pyformex-lib depend on pyformex(=${source:Version})
+  
+  * Restored corrupted changelog entries
+
+ -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Wed, 18 Jan 2012 16:41:52 +0100
+
 pyformex (0.8.6-3) unstable; urgency=low
 
   * Fixed building of architecture-dependent -lib package (Closes: #656294) 
@@ -6,7 +16,10 @@ pyformex (0.8.6-3) unstable; urgency=low
 
 pyformex (0.8.6-2) unstable; urgency=low
 
-  * Replaced build-dependency on (python,python-dev) by python-all-dev 
+  * Replaced build-dependency on (python,python-dev) by python-all-dev
+  
+  * Moved html documentation to /usr/share/doc/pyformex/html and 
+    linked to it from pyformex paths.
 
  -- Benedict Verhegghe <benedict.verhegghe@ugent.be>  Tue, 17 Jan 2012 10:23:22 +0100
 
