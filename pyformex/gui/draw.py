@@ -1313,12 +1313,12 @@ def wait(relock=True):
 
     This uses the drawing lock mechanism to pause. The drawing lock
     ensures that subsequent draws are retarded to give the user the time
-    to view. This use of this function is prefered over that of
+    to view. The use of this function is prefered over that of
     :func:`pause` or :func:`sleep`, because it allows your script to
     continue the numerical computations while waiting to draw the next
     screen.
 
-    This function can be used to retard other functions than `
+    This function can be used to retard other functions than `draw` and `view`.
     """
     pf.GUI.drawlock.wait()
     if relock:

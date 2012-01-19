@@ -729,6 +729,8 @@ Icosa = Element(
     """An icosahedron: a regular polyhedron with 20 triangular surfaces.,
 
     nfaces = 20, nedges = 30, nvertices = 12
+
+    All points of the icosahedron lie on a sphere with unit radius.  
     """,
     ndim = 3,
     vertices = [ ( 0.0, 1.0, phi ),

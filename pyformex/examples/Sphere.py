@@ -25,7 +25,7 @@
 """Sphere
 
 level = 'normal'
-topics = ['geometry','surface']
+topics = ['geometry','surface',sphere']
 techniques = ['dialog', 'color']
 
 """

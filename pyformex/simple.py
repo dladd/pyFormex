@@ -241,26 +241,25 @@ def quadraticCurve(x=None,n=8):
     H = column_stack([ hi(t) for hi in h ])
     return dot(H,x)
 
+        
+def sphere(ndiv):
+    """Create a triangulated spherical surface.
 
-def sphere2(nx,ny,r=1,bot=-90,top=90):
-    """Return a sphere consisting of line elements.
+    A high quality approximation of a spherical surface is constructed as
+    follows. First an icosahedron is constructed. Its triangular facets are
+    subdivided by dividing all edges in `ndiv` parts. The resulting mesh is
+    then projected on a sphere with unit radius. The higher `ndiv` is taken,
+    the better the approximation. `ndiv=1` results in an icosahedron.
 
-    A sphere with radius r is modeled by a regular grid of nx
-    longitude circles, ny latitude circles and their diagonals.
-    
-    The 3 sets of lines can be distinguished by their property number:
-    1: diagonals, 2: meridionals, 3: horizontals.
-
-    The sphere caps can be cut off by specifying top and bottom latitude
-    angles (measured in degrees from 0 at north pole to 180 at south pole.
+    Returns: a Mesh with eltype 'tri3', representing a triangulated
+      approximation of a spherical surface with radius 1 and center
+      at the origin.
     """
-    base = Formex('l:543',[1,2,3])           # single cell
-    d = base.select([0]).replic2(nx,ny,1,1)   # all diagonals
-    m = base.select([1]).replic2(nx,ny,1,1)   # all meridionals
-    h = base.select([2]).replic2(nx,ny+1,1,1) # all horizontals
-    grid = m+d+h
-    s = float(top-bot) / ny
-    return grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
+    from elements import Icosa
+    from mesh import Mesh
+    I = Mesh(Icosa.vertices,Icosa.faces)
+    M = I.refine(ndiv).fuse()
+    return M.projectOnSphere()
 
         
 def sphere3(nx,ny,r=1,bot=-90,top=90):
@@ -279,6 +278,27 @@ def sphere3(nx,ny,r=1,bot=-90,top=90):
                     [[1,1,0],[0,1,0],[0,0,0]]],
                    [1,2])
     grid = base.replic2(nx,ny,1,1)
+    s = float(top-bot) / ny
+    return grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
+
+
+def sphere2(nx,ny,r=1,bot=-90,top=90):
+    """Return a sphere consisting of line elements.
+
+    A sphere with radius r is modeled by a regular grid of nx
+    longitude circles, ny latitude circles and their diagonals.
+    
+    The 3 sets of lines can be distinguished by their property number:
+    1: diagonals, 2: meridionals, 3: horizontals.
+
+    The sphere caps can be cut off by specifying top and bottom latitude
+    angles (measured in degrees from 0 at north pole to 180 at south pole.
+    """
+    base = Formex('l:543',[1,2,3])           # single cell
+    d = base.select([0]).replic2(nx,ny,1,1)   # all diagonals
+    m = base.select([1]).replic2(nx,ny,1,1)   # all meridionals
+    h = base.select([2]).replic2(nx,ny+1,1,1) # all horizontals
+    grid = m+d+h
     s = float(top-bot) / ny
     return grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
 

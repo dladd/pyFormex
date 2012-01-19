@@ -2063,6 +2063,7 @@ def Cube():
     return TriSurface(faces)
 
 
+@deprecation("trisurface.Sphere is deprecated: use simple.sphere(ndiv=2**(level-1)) instead")
 def Sphere(level=4,verbose=False,filename=None):
     """Create a spherical surface by calling the gtssphere command.
 

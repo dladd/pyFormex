@@ -588,7 +588,7 @@ def globalInterpolationCurve(Q,degree=3,strategy=0.5):
     Returns a NurbsCurve through the given point set. The number of
     control points is the same as the number of input points.
 
-    ..warning: Currently there is the limitation that two consecutive
+    .. warning:: Currently there is the limitation that two consecutive
       points should not coincide. If they do, a warning is shown and
       the double points will be removed.
 

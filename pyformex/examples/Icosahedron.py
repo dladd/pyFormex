@@ -1,4 +1,4 @@
-# $Id$ *** pyformex ***
+# $Id$  *** pyformex ***
 ##
 ##  This file is part of pyFormex 0.8.6  (Mon Jan 16 21:15:46 CET 2012)
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -22,34 +22,44 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Sphere2
+
+"""Icosahedron
+
+Draws an icosahedron and its projection on a sphere.
 
 level = 'normal'
-topics = ['geometry','surface','sphere']
-techniques = ['color']
-
+topics = ['Mesh','Geometry',Sphere']
+techniques = ['refine','project','animation']
 """
 
-from simple import sphere2,sphere3
+clear()
 
-reset()
+from arraytools import golden_ratio as phi
+s = sqrt(1.+phi*phi)
+a = sqrt(3.)/6.*(3.+sqrt(5.))
 
-nx = 4
-ny = 4
-m = 1.6
-ns = 6
+from elements import Icosa
+I = Mesh(Icosa.vertices,Icosa.faces)
+M = I.refine(10)
+S = M.projectOnSphere()
 
-smooth()
-setView('front')
-for i in range(ns):
-    b = sphere2(nx,ny,bot=-90,top=90).translate(0,-1.0)
-    s = sphere3(nx,ny,bot=-90,top=90)
-    s = s.translate(0,1.0)
-    s.setProp(3)
-    clear()
-    bb = bbox([b,s])
-    draw(b,bbox=bb,wait=False)
-    draw(s,bbox=bb)#,color='random')
-    nx = int(m*nx)
-    ny = int(m*ny)
+delay(0)
+draw(S,color='red')
 
+a0 = 1./a
+a1 = 1./s - a0
+A = draw(I.scale(a0),color='yellow')
+zoomAll()
+n = 100
+delay(0)
+for i in arange(n+1)/float(n):
+    B = draw(I.scale(a0+i*a1),color='yellow',bbox='last')
+    undraw(A)
+    A = B
+
+delay(2)
+wait()
+draw(I.scale(1./phi),color='yellow')
+undraw(A)
+delay(0)
+# End

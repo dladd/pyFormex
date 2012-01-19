@@ -125,7 +125,11 @@ class Mesh(Geometry):
         if elems is None:
             try:
                 # initialize from a single object
-                coords,elems = coords.toMesh()
+                if isinstance(coords,Mesh):
+                    M = coords
+                else:
+                    M = coords.toMesh()
+                coords,elems = M.coords,M.elems
             except:
                 raise ValueError,"No `elems` specified and the first argument can not be converted to a Mesh."
 
@@ -1023,7 +1027,7 @@ Size: %s
         
         If the requested conversion is not implemented, an error is raised.
 
-        ..warning: Conversion strategies that add new nodes may produce
+        .. warning:: Conversion strategies that add new nodes may produce
           double nodes at the common border of elements. The :meth:`fuse`
           method can be used to merge such coincident nodes. Specifying
           fuse=True will also enforce the fusing. This option become the
@@ -1089,6 +1093,28 @@ Size: %s
         eltype = eltype.pop()
         return Mesh(self.coords,elems,prop,eltype)
 
+
+    def refine(self,ndiv):
+        """Refine the elements of a Mesh.
+
+        Returns a Mesh where each element is replaced by a number of
+        smaller elements.
+        `ndiv` specifies the number of divisions along
+        the edges of the elements.
+
+        ..note:: This is currently only implemented for Meshes of type 'tri3'.  
+        """
+        if self.eltype.name() == 'tri3':
+            wts = tri_refine_points(ndiv)
+            X = self.coords[self.elems]
+            U = dot(wts,X).transpose([1,0,2]).reshape(-1,3)
+            els = tri_refine_elems(ndiv)
+            els = concatenate([els+i*wts.shape[0] for i in range(self.nelems())])
+            return Mesh(U,els,eltype='tri3')
+
+        else:
+            raise ValueError,"Can not refine element of type '%s'" % self.eltype.name()
+        
 
     def reduceDegenerate(self,eltype=None):
         """Reduce degenerate elements to lower plexitude elements.
@@ -1829,6 +1855,25 @@ def mergeMeshes(meshes,fuse=True,**kargs):
     elems = [ m.elems for m in meshes ]
     coords,index = mergeNodes(coords,fuse,**kargs)
     return coords,[Connectivity(i[e]) for i,e in zip(index,elems)]
+
+# Local utilities
+
+def tri_refine_points(ndiv):
+    n = ndiv+1
+    seeds = arange(n)
+    pts = concatenate([
+        column_stack([seeds[:n-i],[i]*(n-i)])
+        for i in range(n)])
+    pts = column_stack([ndiv-pts.sum(axis=-1),pts])
+    return pts / float(ndiv)
+
+def tri_refine_elems(ndiv):
+    n = ndiv+1
+    els1 = [ row_stack([ array([0,1,n-j]) + i for i in range(ndiv-j) ]) + j * n - j*(j-1)/2 for j in range(ndiv) ]
+    els2 = [ row_stack([ array([1,1+n-j,n-j]) + i for i in range(ndiv-j-1) ]) + j * n - j*(j-1)/2 for j in range(ndiv-1) ]
+    elems = row_stack(els1+els2)
+    
+    return elems
 
 
 ########### Deprecated #####################

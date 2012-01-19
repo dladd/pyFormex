@@ -1237,11 +1237,11 @@ class Coords(ndarray):
         - `P`: a point on the plane, by default the global origin.
           If an int, the plane is the coordinate plane perpendicular to the
 
-        ..note: For planes parallel to a coordinate plane, it is far more
+        ..note:: For planes parallel to a coordinate plane, it is far more
           efficient to specify the normal by an axis number than by a
           three component vector.
 
-        .. note: This method will also work if any or both of P and n have
+        ..note:: This method will also work if any or both of P and n have
           a shape (ncoords,3), where ncoords is the total number of points
           in the :class:`Coords`. This allows to project each point on an
           individual plane.
@@ -1883,7 +1883,7 @@ def pattern(s,connect=True):
         if insert:
             l.append((x,y,z))
         insert = True
-    return l
+    return Coords(l)
 
 
 def xpattern(s,nplex=1):

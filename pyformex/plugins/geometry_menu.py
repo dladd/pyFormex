@@ -40,7 +40,7 @@ from geomfile import GeometryFile
 from formex import Formex
 from connectivity import Connectivity
 from mesh import Mesh,mergeMeshes
-from trisurface import TriSurface
+from trisurface import TriSurface,Sphere
 from elements import elementType
 import simple
 
@@ -561,6 +561,13 @@ def convertFormex(F,totype):
     return F
 
 
+def convert_Mesh_TriSurface(F,totype):
+    if totype == 'Formex':
+        return F.toFormex()
+    else:
+        return globals()[totype](F)
+
+
 base_patterns = [
     'l:1',
     'l:2',
@@ -721,6 +728,46 @@ def createCone():
         if res['object type'] == 'TriSurface':
             surface_menu.selection.set([name])
         selection.draw()
+
+
+def createSphere():
+    _data_ = _name_+'createSphere_data'
+    dia = Dialog(
+        items = [
+            _I('name','__auto__'),
+            _I('object type',itemtype='radio',choices=['TriSurface','Mesh','Formex']),
+            _I('method',choices=['icosa','geo']),
+            _I('ndiv',8),
+            _I('nx',36),
+            _I('ny',18),
+             ],
+        enablers=[
+            ('method','icosa','ndiv'),
+            ('method','geo','nx','ny'),
+            ],
+        )
+    if pf.PF.has_key(_data_):
+        dia.updateData(pf.PF[_data_])
+    res = dia.getResults()
+    if res:
+        pf.PF[_data_] = res
+        name = res['name']
+        if name == '__auto__':
+            name = autoName(res['object type']).next()
+        if res['method'] == 'icosa':
+            F = simple.sphere(res['ndiv'])
+            print "Surface has %s vertices and %s faces" % (F.ncoords(),F.nelems())
+            F = convert_Mesh_TriSurface(F,res['object type'])
+        else:
+            F = simple.sphere3(res['nx'],res['ny'])
+            F = convertFormex(F,res['object type'])
+            print "Surface has  %s faces" % F.nelems()
+        export({name:F})
+        selection.set([name])
+        if res['object type'] == 'TriSurface':
+            surface_menu.selection.set([name])
+        selection.draw()
+        
 
 #############################################
 ###  Mesh functions
@@ -946,6 +993,7 @@ def create_menu():
             ('&Rectangle',createRectangle),
             ('&Cylinder, Cone, Truncated Cone',createCylinder),
             ('&Circle, Sector, Cone',createCone),
+            ('&Sphere',createSphere),
             ]),
         ## ("&Shrink",shrink),
         ## ("&Bbox",
