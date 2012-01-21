@@ -82,6 +82,10 @@ class Mesh(Geometry):
 
     A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
     or by a single geometric object that provides a toMesh() method.
+
+    If only an element type is provided, a unit sized single element Mesh
+    of that type is created. Without parameters, an empty Mesh is created.
+    
     """
     ###################################################################
     ## DEVELOPERS: ATTENTION
@@ -119,10 +123,18 @@ class Mesh(Geometry):
         self.conn = self.econn = self.fconn = None 
         
         if coords is None:
-            # Create an empty Mesh object
-            return
+            if eltype is None:
+                # Create an empty Mesh object
+                return
+
+            else:
+                # Create unit Mesh of specified type
+                el = elementType(eltype)
+                coords = el.vertices
+                elems = el.getElement()
 
         if elems is None:
+            # A single object was specified instead of (coords,elems) pair
             try:
                 # initialize from a single object
                 if isinstance(coords,Mesh):
@@ -1094,27 +1106,50 @@ Size: %s
         return Mesh(self.coords,elems,prop,eltype)
 
 
-    def refine(self,ndiv):
-        """Refine the elements of a Mesh.
+    ## TODO:
+    ## - We should add prop inheritance here
+    ## - mesh_wts and mesh_els functions should be moved to elements.py
+    def subdivide(self,*ndiv,**kargs):
+        """Subdivide the elements of a Mesh.
 
-        Returns a Mesh where each element is replaced by a number of
-        smaller elements.
-        `ndiv` specifies the number of divisions along
-        the edges of the elements.
+        Parameters:
 
-        ..note:: This is currently only implemented for Meshes of type 'tri3'.  
+        - `ndiv`: specifies the number (and place) of divisions (seeds)
+          along the edges of the elements. Accepted type and value depend
+          on the element type of the Mesh. Currently implemented:
+
+          tri3: ndiv is a single int value specifying the number of
+            divisions (of equal size) for each edge.
+          quad4: ndiv is a sequence of two int values nx,ny, specifying
+            the number of divisions along the first, resp. second
+            parametric direction of the element
+
+        - `fuse`: bool, if True (default), the resulting Mesh is completely
+          fused. If False, the Mesh is only fused over each individual
+          element of the original Mesh.
+
+        Returns: a Mesh where each element is replaced by a number of
+          smaller elements of the same type.
+
+        ..note:: This is currently only implemented for Meshes of type 'tri3'
+          and 'quad4'.
         """
-        if self.eltype.name() == 'tri3':
-            wts = tri_refine_points(ndiv)
-            X = self.coords[self.elems]
-            U = dot(wts,X).transpose([1,0,2]).reshape(-1,3)
-            els = tri_refine_elems(ndiv)
-            els = concatenate([els+i*wts.shape[0] for i in range(self.nelems())])
-            return Mesh(U,els,eltype='tri3')
+        elname = self.eltype.name()
+        try:
+            mesh_wts = globals()[elname+'_wts']
+            mesh_els = globals()[elname+'_els']
+        except:
+            raise ValueError,"Can not subdivide element of type '%s'" % elname
 
-        else:
-            raise ValueError,"Can not refine element of type '%s'" % self.eltype.name()
-        
+        wts = mesh_wts(*ndiv)
+        els = mesh_els(*ndiv)
+        X = self.coords[self.elems]
+        U = dot(wts,X).transpose([1,0,2]).reshape(-1,3)
+        e = concatenate([els+i*wts.shape[0] for i in range(self.nelems())])
+        M = Mesh(U,e,eltype=self.eltype)
+        if kargs.get('fuse',True):
+            M = M.fuse()
+        return M
 
     def reduceDegenerate(self,eltype=None):
         """Reduce degenerate elements to lower plexitude elements.
@@ -1856,9 +1891,11 @@ def mergeMeshes(meshes,fuse=True,**kargs):
     coords,index = mergeNodes(coords,fuse,**kargs)
     return coords,[Connectivity(i[e]) for i,e in zip(index,elems)]
 
-# Local utilities
+# 
+# Local utilities: move these to elements.py ??
+#
 
-def tri_refine_points(ndiv):
+def tri3_wts(ndiv):
     n = ndiv+1
     seeds = arange(n)
     pts = concatenate([
@@ -1867,13 +1904,27 @@ def tri_refine_points(ndiv):
     pts = column_stack([ndiv-pts.sum(axis=-1),pts])
     return pts / float(ndiv)
 
-def tri_refine_elems(ndiv):
+def tri3_els(ndiv):
     n = ndiv+1
     els1 = [ row_stack([ array([0,1,n-j]) + i for i in range(ndiv-j) ]) + j * n - j*(j-1)/2 for j in range(ndiv) ]
     els2 = [ row_stack([ array([1,1+n-j,n-j]) + i for i in range(ndiv-j-1) ]) + j * n - j*(j-1)/2 for j in range(ndiv-1) ]
     elems = row_stack(els1+els2)
     
     return elems
+
+def quad4_wts(nx,ny):
+    x1 = arange(nx+1)
+    y1 = arange(ny+1)
+    x0 = nx-x1
+    y0 = ny-y1
+    pts = dstack([outer(y0,x0),outer(y0,x1),outer(y1,x1),outer(y1,x0)]).reshape(-1,4)
+    return pts / float(nx*ny)
+
+def quad4_els(nx,ny):
+    n = nx+1
+    els = [ row_stack([ array([0,1,n+1,n]) + i for i in range(nx) ]) + j * n for j in range(ny) ]
+    return row_stack(els)
+ 
 
 
 ########### Deprecated #####################

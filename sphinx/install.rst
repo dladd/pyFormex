@@ -161,6 +161,16 @@ This is because most of the pyFormex development is done on Debian systems,
 and we will give you `precise install instructions`_ for this system.
 Also, the Debian software repositories are amongst the most comprehensive to be found on the Internet. 
 
+.. note:: If you are running Debian Sid (unstable), you are lucky: pyFormex is 
+  now in the Debian repositories, and you can install it with the normal 
+  installation procedures (aptitude/apt-get/synaptic). Be sure to install the 
+  pyformex-lib package as well. It contains the acceleration libraries for 
+  enhanced performance. The advantage of using your ditribution's packaging 
+  system is that all dependencies will be installed automatically. So go ahead 
+  and just do::
+
+    apt-get install pyformex-lib
+
 Most popular GNU/Linux distributions provide appropriately packed recent versions
 of these prerequisites, so that you can install them easily from the pacakge manager of your system. In case a package or version is not available for your system, you can always install it from source. We provide the websites where
 you can find the source packages.
@@ -321,12 +331,12 @@ directory where you unpacked the pyFormex distribution:
 subdirectory, where you will find a subdirectory for each of the
 above packages. Go into the directory of the package you wish to
 install and execute the following command (with root privileges):
-``./PACKAGENAME.install all``
+``./install.sh all``
 
 All these procedures will install under ``/usr/local``. If you wish to
 change this, you will have to change the install procedure. 
 The install procedures can also be sued to perform only part of the
-installation process. Thus, ``./PACKAGENAME.install get unpack`` will
+installation process. Thus, ``./install.sh get unpack`` will
 only download and unpack that package. See the README files and the
 install procedures themselves for more info.
 

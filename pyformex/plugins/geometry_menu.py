@@ -820,7 +820,7 @@ def fuseMesh():
 
 
 
-def divideMesh():
+def subdivideMesh():
     """Create a mesh by subdividing existing elements.
 
     """
@@ -833,14 +833,34 @@ def divideMesh():
         return
 
     meshes = [ named(n) for n in selection.names ]
-    eltypes = set([ m.eltype for m in meshes if m.eltype is not None])
+    eltypes = set([ m.eltype.name() for m in meshes if m.eltype is not None])
     print "eltypes in selected meshes: %s" % eltypes
     if len(eltypes) > 1:
-        warning("I can only divide meshes with the same element type\nPlease narrow your selection before trying conversion.")
+        warning("I can only subdivide meshes with the same element type\nPlease narrow your selection before trying conversion.")
         return
-    if len(eltypes) == 1:
-        fromtype = eltypes.pop()
-    showInfo("Sorry, this function is not implemented yet!")
+
+    oktypes = ['tri3','quad4']
+    eltype = eltypes.pop()
+    if eltype not in ['tri3','quad4']:
+        warning("I can only subdivide meshes of types %s" % ', '.join(oktypes))
+        return
+
+    if eltype == 'tri3':
+        items = [_I('ndiv',4)]
+    elif eltype == 'quad4':
+        items = [_I('nx',4),_I('ny',4)]
+    res = askItems(items)
+
+    if not res:
+        return
+    if eltype == 'tri3':
+        ndiv = [ res['ndiv'] ]
+    elif eltype == 'quad4':
+        ndiv = [ res['nx'], res['ny'] ]
+    meshes = [ m.subdivide(*ndiv) for m in meshes ]
+    export2(selection.names,meshes)
+    clear()
+    selection.draw()
 
 
 def convertMesh():
@@ -1027,7 +1047,7 @@ def create_menu():
         ## ("&Fly",fly),
         ("Mesh",[
             ("&Convert element type",convertMesh),
-            ("&Subdivide",divideMesh),
+            ("&Subdivide",subdivideMesh),
             ("&Fuse nodes",fuseMesh),
             ("&Renumber nodes in element order",renumberMeshInElemsOrder),
             ]),

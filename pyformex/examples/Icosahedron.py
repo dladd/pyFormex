@@ -29,7 +29,7 @@ Draws an icosahedron and its projection on a sphere.
 
 level = 'normal'
 topics = ['Mesh','Geometry',Sphere']
-techniques = ['refine','project','animation']
+techniques = ['subdivide','project','animation']
 """
 
 clear()
@@ -38,9 +38,8 @@ from arraytools import golden_ratio as phi
 s = sqrt(1.+phi*phi)
 a = sqrt(3.)/6.*(3.+sqrt(5.))
 
-from elements import Icosa
-I = Mesh(Icosa.vertices,Icosa.faces)
-M = I.refine(10)
+I = Mesh(eltype='icosa').getBorderMesh()
+M = I.subdivide(10)
 S = M.projectOnSphere()
 
 delay(0)
@@ -51,7 +50,7 @@ a1 = 1./s - a0
 A = draw(I.scale(a0),color='yellow')
 zoomAll()
 n = 100
-delay(0)
+delay(0.05)
 for i in arange(n+1)/float(n):
     B = draw(I.scale(a0+i*a1),color='yellow',bbox='last')
     undraw(A)
