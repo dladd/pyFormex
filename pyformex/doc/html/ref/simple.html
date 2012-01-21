@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>9. simple — Predefined geometries with a simple shape. &mdash; pyFormex v0.8.6 documentation</title>
+    <title>9. simple — Predefined geometries with a simple shape. &mdash; pyFormex v0.8.7-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.6',
+        VERSION:     '0.8.7-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="10. project — project.py" href="project.html" />
     <link rel="prev" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -271,15 +271,19 @@ in n segments.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="simple.sphere2">
-<tt class="descclassname">simple.</tt><tt class="descname">sphere2</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=-90</em>, <em>top=90</em><big>)</big><a class="headerlink" href="#simple.sphere2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a sphere consisting of line elements.</p>
-<p>A sphere with radius r is modeled by a regular grid of nx
-longitude circles, ny latitude circles and their diagonals.</p>
-<p>The 3 sets of lines can be distinguished by their property number:
-1: diagonals, 2: meridionals, 3: horizontals.</p>
-<p>The sphere caps can be cut off by specifying top and bottom latitude
-angles (measured in degrees from 0 at north pole to 180 at south pole.</p>
+<dt id="simple.sphere">
+<tt class="descclassname">simple.</tt><tt class="descname">sphere</tt><big>(</big><em>ndiv</em><big>)</big><a class="headerlink" href="#simple.sphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a triangulated spherical surface.</p>
+<p>A high quality approximation of a spherical surface is constructed as
+follows. First an icosahedron is constructed. Its triangular facets are
+subdivided by dividing all edges in <cite>ndiv</cite> parts. The resulting mesh is
+then projected on a sphere with unit radius. The higher <cite>ndiv</cite> is taken,
+the better the approximation. <cite>ndiv=1</cite> results in an icosahedron.</p>
+<dl class="docutils">
+<dt>Returns: a Mesh with eltype &#8216;tri3&#8217;, representing a triangulated</dt>
+<dd>approximation of a spherical surface with radius 1 and center
+at the origin.</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -290,6 +294,18 @@ angles (measured in degrees from 0 at north pole to 180 at south pole.</p>
 grid of nx longitude circles, ny latitude circles and their diagonals.</p>
 <p>The two sets of triangles can be distinguished by their property number:
 1: horizontal at the bottom, 2: horizontal at the top.</p>
+<p>The sphere caps can be cut off by specifying top and bottom latitude
+angles (measured in degrees from 0 at north pole to 180 at south pole.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="simple.sphere2">
+<tt class="descclassname">simple.</tt><tt class="descname">sphere2</tt><big>(</big><em>nx</em>, <em>ny</em>, <em>r=1</em>, <em>bot=-90</em>, <em>top=90</em><big>)</big><a class="headerlink" href="#simple.sphere2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sphere consisting of line elements.</p>
+<p>A sphere with radius r is modeled by a regular grid of nx
+longitude circles, ny latitude circles and their diagonals.</p>
+<p>The 3 sets of lines can be distinguished by their property number:
+1: diagonals, 2: meridionals, 3: horizontals.</p>
 <p>The sphere caps can be cut off by specifying top and bottom latitude
 angles (measured in degrees from 0 at north pole to 180 at south pole.</p>
 </dd></dl>
@@ -374,7 +390,7 @@ axes through the points xmin and xmax.</p>
         <li class="right" >
           <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -382,7 +398,7 @@ axes through the points xmin and xmax.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 16, 2012.
+      Last updated on Jan 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

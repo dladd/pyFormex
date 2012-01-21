@@ -33,14 +33,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>13. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.6 documentation</title>
+    <title>13. mesh — Finite element meshes in pyFormex. &mdash; pyFormex v0.8.7-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.6',
+        VERSION:     '0.8.7-a1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  false
@@ -49,7 +49,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="pyFormex v0.8.6 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="14. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
     <link rel="prev" title="12. elements — Definition of elements." href="elements.html" />
@@ -80,7 +80,7 @@
         <li class="right" >
           <a href="elements.html" title="12. elements — Definition of elements."
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -182,6 +182,8 @@ The user can override the default value, but an error will occur if
 the element type does not exist or does not match the plexitude.</p>
 <p>A Mesh can be initialized by its attributes (coords,elems,prop,eltype)
 or by a single geometric object that provides a toMesh() method.</p>
+<p>If only an element type is provided, a unit sized single element Mesh
+of that type is created. Without parameters, an empty Mesh is created.</p>
 <dl class="method">
 <dt id="mesh.Mesh.setType">
 <tt class="descname">setType</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.setType" title="Permalink to this definition">¶</a></dt>
@@ -524,7 +526,7 @@ to skip the element reversal.</li>
 <tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a report on the Mesh shape and size.</p>
 <p>The report contains the number of nodes, number of elements,
-plexitude, element type, bbox and size.</p>
+plexitude, bbox and size.</p>
 </dd></dl>
 
 <dl class="method">
@@ -722,19 +724,52 @@ in a table. New strategies may be added however.</p>
 <p>The return value is a Mesh of the requested element type, representing
 the same geometry (possibly approximatively) as the original mesh.</p>
 <p>If the requested conversion is not implemented, an error is raised.</p>
-<dl class="docutils">
-<dt>..warning: Conversion strategies that add new nodes may produce</dt>
-<dd>double nodes at the common border of elements. The <a class="reference internal" href="#mesh.Mesh.fuse" title="mesh.Mesh.fuse"><tt class="xref py py-meth docutils literal"><span class="pre">fuse()</span></tt></a>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Conversion strategies that add new nodes may produce
+double nodes at the common border of elements. The <a class="reference internal" href="#mesh.Mesh.fuse" title="mesh.Mesh.fuse"><tt class="xref py py-meth docutils literal"><span class="pre">fuse()</span></tt></a>
 method can be used to merge such coincident nodes. Specifying
 fuse=True will also enforce the fusing. This option become the
-default in future.</dd>
-</dl>
+default in future.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.convertRandom">
 <tt class="descname">convertRandom</tt><big>(</big><em>choices</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convertRandom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert choosing randomly between choices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.subdivide">
+<tt class="descname">subdivide</tt><big>(</big><em>*ndiv</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.subdivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subdivide the elements of a Mesh.</p>
+<p>Parameters:</p>
+<ul>
+<li><p class="first"><cite>ndiv</cite>: specifies the number (and place) of divisions (seeds)
+along the edges of the elements. Accepted type and value depend
+on the element type of the Mesh. Currently implemented:</p>
+<dl class="docutils">
+<dt>tri3: ndiv is a single int value specifying the number of</dt>
+<dd><p class="first last">divisions (of equal size) for each edge.</p>
+</dd>
+<dt>quad4: ndiv is a sequence of two int values nx,ny, specifying</dt>
+<dd><p class="first last">the number of divisions along the first, resp. second
+parametric direction of the element</p>
+</dd>
+</dl>
+</li>
+<li><p class="first"><cite>fuse</cite>: bool, if True (default), the resulting Mesh is completely
+fused. If False, the Mesh is only fused over each individual
+element of the original Mesh.</p>
+</li>
+</ul>
+<dl class="docutils">
+<dt>Returns: a Mesh where each element is replaced by a number of</dt>
+<dd>smaller elements of the same type.</dd>
+<dt>..note:: This is currently only implemented for Meshes of type &#8216;tri3&#8217;</dt>
+<dd>and &#8216;quad4&#8217;.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1338,7 +1373,7 @@ not fuse them.</p>
         <li class="right" >
           <a href="elements.html" title="12. elements — Definition of elements."
              >previous</a> |</li>
-        <li><a href="../index.html">pyFormex v0.8.6 documentation</a> &gt;</li>
+        <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
       </ul>
     </div>
@@ -1346,7 +1381,7 @@ not fuse them.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 16, 2012.
+      Last updated on Jan 21, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>
