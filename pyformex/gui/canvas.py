@@ -469,7 +469,7 @@ class Canvas(object):
 
     rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
                    'smooth_avg']
-    bgmodes = [ 'solid', 'vertical gradient', 'horizontal gradient' ]
+    bgmodes = [ 'solid', 'vertical gradient', 'horizontal gradient', 'image' ]
 
     def __init__(self,settings={}):
         """Initialize an empty canvas with default settings."""
@@ -623,7 +623,7 @@ class Canvas(object):
         self.settings.pointsize = float(sz)
 
 
-    def setBgColor(self,color1,color2=None,mode='solid'):
+    def setBgColor(self,color=None,color2=None,mode='solid',image=None):
         """Set the background color.
 
         If one color is specified, a solid background is set.
@@ -631,17 +631,20 @@ class Canvas(object):
         and an object is created to display the background.
         """
         #
-        # THIS SHOULD USE self.settings.update
+        # TODO: THIS SHOULD USE self.settings.update
         #
         self.settings.bgmode = mode
-        self.settings.bgcolor = colors.GLColor(color1)
+        self.settings.bgcolor = colors.GLColor(color)
         
-        if mode == 'solid' or color2 is None:
-            pf.debug("Clearing twocolor background")
+        if mode == 'solid' or (color2 is None and image is None):
+            pf.debug("Clearing fancy background")
             self.settings.bgmode = 'solid'
             self.background = None
         else:
-            self.settings.bgcolor2 = colors.GLColor(color2)
+            if image is None:
+                self.settings.bgcolor2 = colors.GLColor(color2)
+            else:
+                self.settings.bgimage = image
             self.createBackground()
             glSmooth()
             glFill()

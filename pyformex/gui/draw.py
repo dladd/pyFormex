@@ -511,7 +511,7 @@ def draw(F,
         utils.warn('warn_flat_removed',DeprecationWarning,stacklevel=2)
         
     # For simplicity of the code, put objects to draw always in a list
-    if type(F) is list:
+    if isinstance(F,list):
         FL = F
     else:
         FL = [ F ]

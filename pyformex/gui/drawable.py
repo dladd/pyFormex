@@ -164,6 +164,22 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
         drawgl.draw_polygon_elems(x,e,n,color,alpha,objtype)
 
 
+def drawTexturedPolygons(x,e,mode,texid,texc=None):
+    pf.debug("drawTexturedPolygons")
+    #print mode,texid,texc
+    if e is None:
+        coords = x
+    else:
+        coords = x[e]
+    pf.debug("COORDS SHAPE: %s" % str(x.shape))
+    if texc is None:
+        texc = array([[0.,0.],[1.,0.],[1.,1.],[0.,1.]])
+    #print coords
+    #print texc
+    #print texid
+    drawgl.draw_tex_polygons(coords,texc,texid,-1)
+
+
 def drawPolyLines(x,e,color):
     """Draw the circumference of polygons."""
     pf.debug("drawPolyLines")
@@ -422,11 +438,11 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,alpha=1.0,normals='auto',sampli
                 # gluNurbs always wants 4 colors
                 color = growAxis(color,3,axis=-1,fill=alpha)
 
-        print "COLOR = %s" % color
+        #print "COLOR = %s" % color
         if color is not None:
-            print color.dtype
-            print color.shape
-        print x.shape
+            #print color.dtype
+            #print color.shape
+        #print x.shape
         # color=array([1.,0.,0.,0.5],dtype=Float)
         nb = drawgl.draw_nurbs_surfaces(x,sknots,tknots,color,alpha,samplingTolerance)
 
@@ -608,6 +624,32 @@ def draw_faces(x,e,mode,color=None,alpha=1.0):
     drawPolygons(x,e,mode,color,alpha)
 
 
+def draw_textured_faces(x,e,mode,texid,texc=None):
+    """Draw a collection of faces.
+
+    (x,e) are one of:
+    - x is a (nelems,nfaces,nplex,3) shaped coordinates and e is None,
+    - x is a (ncoords,3) shaped coordinates and e is a (nelems,nfaces,nplex)
+    connectivity array.
+       
+    Each of the nfaces sets of nplex points defines a polygon. 
+
+    If color is given it is either an (3,), (nelems,3), (nelems,faces,3)
+    or (nelems,faces,nplex,3) array of RGB values.
+    In the second case, this function will multiplex the colors, so that
+    `nfaces` faces are drawn in the same color.
+    This is e.g. convenient when drawing faces of a solid element.
+    """
+    if e is None:
+        nelems,nfaces,nplex = x.shape[:3]
+        x = x.reshape(-1,nplex,3)
+    else:
+        nelems,nfaces,nplex = e.shape[:3]
+        e = e.reshape(-1,nplex)
+
+    drawTexturedPolygons(x,e,mode,texid,texc)
+
+
 def drawEdges(x,e,edges,eltype,color=None):
     """Draw the edges of a geometry.
 
@@ -695,6 +737,35 @@ def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0):
         else:
             #print "USING POLYGON"
             draw_faces(coords,elems,mode,color,alpha)
+
+def drawTexturedFaces(x,e,faces,eltype,mode,texid,texc=None):
+    """Draw the faces of a geometry.
+
+    This function draws the faces of a geometry collection, usually of a higher
+    dimensionality (i.c. a volume).
+    The faces are identified by a constant indices into all element vertices.
+
+    The geometry is specified by x or (x,e)
+    The faces are specified by a list of lists. Each list defines a single
+    face of the solid, in local vertex numbers (0..nplex-1). The faces are
+    sorted and collected according to their plexitude before drawing them. 
+    """
+    pf.debug("drawTexturedFaces")
+    # We may have faces with different plexitudes!
+    # We collect them according to plexitude.
+    # But first convert to a list, so that we can call this function
+    # with an array too (in case of a single plexitude)
+    faces = list(faces)
+    for fac in olist.collectOnLength(faces).itervalues():
+        fa = asarray(fac)
+        nplex = fa.shape[1]
+        if e is None:
+            coords = x[:,fa,:]
+            elems = None
+        else:
+            coords = x
+            elems = e[:,fa]
+        draw_textured_faces(coords,elems,mode,texid,texc)
 
 
 def drawAtPoints(x,mark,color=None):

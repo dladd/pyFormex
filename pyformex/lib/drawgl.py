@@ -68,6 +68,50 @@ def glObjType(nplex):
     return objtype
 
 
+def glTexture(texid):
+    """Render-time texture environment setup"""
+    # Configure the texture rendering parameters
+    GL.glEnable(GL.GL_TEXTURE_2D)
+    GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
+    GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
+    GL.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_DECAL)
+    # Re-select our texture, could use other generated textures
+    # if we had generated them earlier...
+    GL.glBindTexture(GL.GL_TEXTURE_2D,texid)
+
+
+def draw_tex_polygons(x,t,texid,objtype):
+    """Draw a collection of polygons.
+
+    x : float (nel,nplex,3) : coordinates.
+    t : float (nplex,3) or (nel,nplex,3) : texture coords
+    imageID : texture
+    objtype : GL Object type (-1 = auto)
+    """
+    print "draw_tex_polygons",x.shape,t.shape,texid,objtype
+    glTexture(texid)
+    x = x.astype(float32)
+    nplex = x.shape[1]
+    if t is not None:
+        t = t.astype(float32)
+    if objtype < 0:
+        objtype = glObjType(nplex)
+        
+    if nplex <= 4 and glObjType(nplex) == objtype:
+        GL.glBegin(objtype)
+        if t.ndim == 2:
+            for xi in x:
+                for j in range(nplex):
+                    GL.glTexCoord2fv(t[j]) 
+                    GL.glVertex3fv(xi[j])
+
+        elif t.ndim == 3:
+            for xi,ti in zip(x.reshape((-1,3)),t.reshape((-1,3))):
+                GL.glTexCoord2fv(t) 
+                GL.glVertex3fv(xi)
+        GL.glEnd()
+
+                    
 def draw_polygons(x,n,c,alpha,objtype):
     """Draw a collection of polygons.
 

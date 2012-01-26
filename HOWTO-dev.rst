@@ -344,6 +344,19 @@ Dealing with problems
 ---------------------
 Some possible problems during ``svn up`` operation:
 
+- Conflict discovered in 'SOME_FILE'.
+  Select: (p) postpone, (df) diff-full, (e) edit,
+          (mc) mine-conflict, (tc) theirs-conflict,
+          (s) show all options: tc
+
+  If your version of SOME_FILE contains changes you have made (and
+  want to keep), the best thing is to postpone (p) and resolve the conflicts
+  after the update operation has finished. You may use 'df' first to see if
+  your changes are worthwile keeping. 
+
+  If you know however that your changes are not important, you can just use 
+  'tc' to remove your version and get the changes from the repository.
+
 - svn: Failed to add file 'SOME_FILE': an unversioned file of the same
   name already exists.
 

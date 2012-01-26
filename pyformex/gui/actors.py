@@ -375,7 +375,7 @@ class GeomActor(Actor):
     """
     mark = False
 
-    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,linestipple=None,marksize=None,**kargs):
+    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,linestipple=None,marksize=None,texture=None,**kargs):
         """Create a geometry actor.
 
         The geometry is either in Formex model: a coordinate block with
@@ -435,6 +435,7 @@ class GeomActor(Actor):
         self.setBkColor(bkcolor,bkcolormap)
         self.setAlpha(alpha)
         self.marksize = marksize
+        self.texture = texture
         #print "GEOMACTOR: %s -> %s" % (color.shape,self.color.shape)
 
 
@@ -629,6 +630,11 @@ class GeomActor(Actor):
                 if bkcolor is not None:
                     GL.glEnable(GL.GL_CULL_FACE)
                     GL.glCullFace(GL.GL_BACK)
+                # EXPERIMENTAL: TEXTURE DRAWING
+                if self.texture:
+                    print "DRAWING WITH TEXTURE"
+                    drawTexturedPolygons(self.coords,self.elems,mode,self.texture)
+                    return
                 drawPolygons(self.coords,self.elems,mode,color,alpha)
                 if bkcolor is not None:
                     GL.glCullFace(GL.GL_FRONT)
@@ -647,6 +653,13 @@ class GeomActor(Actor):
                         # Enable drawing front and back with different colors
                         GL.glEnable(GL.GL_CULL_FACE)
                         GL.glCullFace(GL.GL_BACK)
+
+                    # EXPERIMENTAL: TEXTURE DRAWING
+                    if self.texture:
+                        print "DRAWING WITH TEXTURE"
+                        drawTexturedFaces(self.coords,self.elems,faces,faces.eltype,mode,self.texture)
+                        return
+                    
                     # Draw the front sides
                     drawFaces(self.coords,self.elems,faces,faces.eltype,mode,color,alpha)
                     if bkcolor is not None:
