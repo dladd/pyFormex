@@ -32,6 +32,7 @@ from pyformex.arraytools import *
 from PyQt4.QtGui import QImage
 from imagearray import qimage2numpy
 
+
 def image2glcolor(im,flip=True):
     """Convert a bitmap image to corresponding OpenGL colors.
 
@@ -47,10 +48,14 @@ def image2glcolor(im,flip=True):
     if flip:
         c = flipud(c)
     if t is None:
+        # TODO: this should probably be done in qimage2numpy
         color = dstack([c['r'],c['g'],c['b']]).reshape(-1,3)
-        # print(color.shape)
+        # TODO: replace this with a standard rgb2gl color converter
         return color.astype(Float)/255.,t
     else:
+        # TODO: THIS IS UNTESTED AND PROBABLY INCORRECT
+        # the colortable t should be converted to opengl colors?
         return c,t
+
 
 # End

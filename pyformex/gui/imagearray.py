@@ -38,7 +38,29 @@ _bgra_rec = numpy.dtype({'b': (numpy.uint8, 0),
                          'r': (numpy.uint8, 2),
                          'a': (numpy.uint8, 3)})
 
-def qimage2numpy(qimage):
+def qimage2numpy(qimage,expand=False):
+    """Transform a QImage to a Numpy array.
+
+    Parameters:
+
+    - qimage: a QImage
+    - expand: boolean: if True, an indexed image format will be converted
+      to a full color array.
+
+    Returns:
+
+    - if expand is False: a tuple (colors,colortable) where the meaning of
+      colors and colortable depends on the format of the QImage:
+
+      - for Indexed8 format, colors is an array of integer indices into
+        the colortable, which is a single list if colors (i.e. a
+        float array with shape (ncolors,3 or 4)
+      - for RGB32, ARGB32 and ARGB32_Premultiplied formats, colors returns
+        the real colors and colortable is None
+
+    - if expand is True, always returns a single array with the full colors
+    
+    """
     if qimage.format() == QImage.Format_Indexed8:
         # The colortable method does not work yet:
         # work around is to convert to full color
@@ -50,7 +72,7 @@ def qimage2numpy(qimage):
         buf = qimage.bits().asstring(qimage.numBytes())
         ar = numpy.frombuffer(buf, dtype)
         h,w = qimage.height(),qimage.width()
-        return ar.reshape(h,w),None
+        colortable = None
 
     elif qimage.format() == QImage.Format_Indexed8:
         ncolors = qimage.numColors()
@@ -71,10 +93,20 @@ def qimage2numpy(qimage):
         print(ar.dtype)
         print(ar.shape)
         print(ar)
+    
         return ar.reshape(h,w),colortable
         
     else:
         raise ValueError("qimage2numpy only supports 32bit and 8bit images")
+
+    ar = ar.reshape(h,w)
+    if expand and colortable:
+        ar = colortable[ar]
+    if expand:
+        return ar
+    else:
+        return ar,colortable
+    
 
 def numpy2qimage(array):
         if numpy.ndim(array) == 2:

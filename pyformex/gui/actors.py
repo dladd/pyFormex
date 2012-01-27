@@ -435,8 +435,7 @@ class GeomActor(Actor):
         self.setBkColor(bkcolor,bkcolormap)
         self.setAlpha(alpha)
         self.marksize = marksize
-        self.texture = texture
-        #print "GEOMACTOR: %s -> %s" % (color.shape,self.color.shape)
+        self.setTexture(texture)
 
 
     def getType(self):
@@ -486,6 +485,18 @@ class GeomActor(Actor):
         """Set the Actors alpha value."""
         self.alpha = float(alpha)
         self.trans = self.alpha < 1.0
+
+
+    def setTexture(self,texture):
+        """Set the Actors texture data."""
+        
+        if texture is not None:
+            if not isinstance(texture,Texture):
+                try:
+                    texture = Texture(texture)
+                except:
+                    texture = None
+        self.texture = texture
             
 
     def bbox(self):

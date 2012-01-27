@@ -85,7 +85,7 @@ def draw_tex_polygons(x,t,texid,objtype):
 
     x : float (nel,nplex,3) : coordinates.
     t : float (nplex,3) or (nel,nplex,3) : texture coords
-    imageID : texture
+    texid : id of an OpenGL 2D texture object
     objtype : GL Object type (-1 = auto)
     """
     print "draw_tex_polygons",x.shape,t.shape,texid,objtype

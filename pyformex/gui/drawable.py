@@ -164,7 +164,7 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
         drawgl.draw_polygon_elems(x,e,n,color,alpha,objtype)
 
 
-def drawTexturedPolygons(x,e,mode,texid,texc=None):
+def drawTexturedPolygons(x,e,mode,texture,texc=None):
     pf.debug("drawTexturedPolygons")
     #print mode,texid,texc
     if e is None:
@@ -177,7 +177,10 @@ def drawTexturedPolygons(x,e,mode,texid,texc=None):
     #print coords
     #print texc
     #print texid
-    drawgl.draw_tex_polygons(coords,texc,texid,-1)
+    if pf.options.uselib:
+        utils.warn("Sorry, you can not yet use textures with the acceleration library. Try 'pyformex --nouselib' to experiment with textures")
+        return
+    drawgl.draw_tex_polygons(coords,texc,texture.tex,-1)
 
 
 def drawPolyLines(x,e,color):
@@ -245,8 +248,7 @@ def drawNurbsCurves(x,knots,color=None,alpha=1.0,samplingTolerance=5.0):
     nknots = asarray(knots).shape[-1]
     order = nknots-nctrl
     if  order > 8:
-        import warnings
-        warnings.warn('Nurbs curves of degree > 7 can currently not be drawn! You can create some approximation by evaluating the curve at some points.')
+        utils.warn('Nurbs curves of degree > 7 can currently not be drawn! You can create some approximation by evaluating the curve at some points.')
         return
 
     if x.ndim == 2:
@@ -389,8 +391,7 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,alpha=1.0,normals='auto',sampli
     sorder = nsk-ns
     torder = ntk-nt
     if sorder > 8 or torder > 8:
-        import warnings
-        warnings.warn('Nurbs surfaces of degree > 7 can currently not be drawn! You can approximate the surface by a lower order surface.')
+        utils.warn('Nurbs surfaces of degree > 7 can currently not be drawn! You can approximate the surface by a lower order surface.')
         return
 
     if x.ndim == 3:
@@ -438,16 +439,9 @@ def drawNurbsSurfaces(x,sknots,tknots,color=None,alpha=1.0,normals='auto',sampli
                 # gluNurbs always wants 4 colors
                 color = growAxis(color,3,axis=-1,fill=alpha)
 
-        #print "COLOR = %s" % color
-        if color is not None:
-            #print color.dtype
-            #print color.shape
-        #print x.shape
-        # color=array([1.,0.,0.,0.5],dtype=Float)
         nb = drawgl.draw_nurbs_surfaces(x,sknots,tknots,color,alpha,samplingTolerance)
 
     else:
-
         nurb = GLU.gluNewNurbsRenderer()
         if not nurb:
             raise RuntimeError,"Could not create a new NURBS renderer"
@@ -624,7 +618,7 @@ def draw_faces(x,e,mode,color=None,alpha=1.0):
     drawPolygons(x,e,mode,color,alpha)
 
 
-def draw_textured_faces(x,e,mode,texid,texc=None):
+def draw_textured_faces(x,e,mode,texture,texc=None):
     """Draw a collection of faces.
 
     (x,e) are one of:
@@ -647,7 +641,7 @@ def draw_textured_faces(x,e,mode,texid,texc=None):
         nelems,nfaces,nplex = e.shape[:3]
         e = e.reshape(-1,nplex)
 
-    drawTexturedPolygons(x,e,mode,texid,texc)
+    drawTexturedPolygons(x,e,mode,texture,texc)
 
 
 def drawEdges(x,e,edges,eltype,color=None):
@@ -738,7 +732,7 @@ def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0):
             #print "USING POLYGON"
             draw_faces(coords,elems,mode,color,alpha)
 
-def drawTexturedFaces(x,e,faces,eltype,mode,texid,texc=None):
+def drawTexturedFaces(x,e,faces,eltype,mode,texture,texc=None):
     """Draw the faces of a geometry.
 
     This function draws the faces of a geometry collection, usually of a higher
@@ -765,7 +759,7 @@ def drawTexturedFaces(x,e,faces,eltype,mode,texid,texc=None):
         else:
             coords = x
             elems = e[:,fa]
-        draw_textured_faces(coords,elems,mode,texid,texc)
+        draw_textured_faces(coords,elems,mode,texture,texc)
 
 
 def drawAtPoints(x,mark,color=None):
@@ -1014,12 +1008,13 @@ def pickPolygons(x,e=None,objtype=-1):
 
 
 def pickPolygonEdges(x,e,edg):
-    warning("pickPolygonEdges IS NOT IMPLEMENTED YET!")
+    utils.warn("pickPolygonEdges IS NOT IMPLEMENTED YET!")
 
 
 def pickPoints(x):
     x = x.reshape((-1,1,3))
     pickPolygons(x)
+
 
 
 ### Settings ###############################################
@@ -1286,5 +1281,37 @@ class Drawable(object):
     def setColor(self,color=None,colormap=None,ncolors=1):
         """Set the color of the Drawable."""
         self.color,self.colormap = saneColorSet(color,colormap,shape=(ncolors,))
+
+
+### Textures ###############################################
+
+class Texture(object):
+    """An OpenGL 2D Texture.
+
+    image: raw image data (unsigned byte RGBA data)
+    """
+
+    def __init__(self,image,flip=False):
+        self.tex = None
+        image = asarray(image)
+        print "Texture: type %s, size %s" % (image.dtype, image.shape)
+        image = require(image,dtype='ubyte',requirements='C')
+        print "Converted to: type %s, size %s" % (image.dtype, image.shape)
+        ny,nx = image.shape[:2]
+        
+        # Generate a texture id
+        tex = GL.glGenTextures(1)
+        # Make our new texture the current 2D texture
+        GL.glBindTexture(GL.GL_TEXTURE_2D,tex)
+        GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1)
+        # Copy the texture data into the current texture
+        GL.glTexImage2D(GL.GL_TEXTURE_2D,0,3,nx,ny,0,
+                        GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,image)
+        self.tex = tex
+        
+
+    def __del__(self):
+        if self.tex:
+            GL.glDeleteTexture(self.tex)
 
 ### End
