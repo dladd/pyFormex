@@ -30,7 +30,7 @@ techniques = ['color']
 
 """
 from gui.widgets import ImageView,simpleInputItem as I
-from gui.imagecolor import *
+from gui.imagearray import *
 
 def selectImage(fn):
     fn = askImageFile(fn)

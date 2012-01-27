@@ -644,7 +644,7 @@ class GeomActor(Actor):
                 # EXPERIMENTAL: TEXTURE DRAWING
                 if self.texture:
                     print "DRAWING WITH TEXTURE"
-                    drawTexturedPolygons(self.coords,self.elems,mode,self.texture)
+                    drawPolygons(self.coords,self.elems,mode,color,alpha,self.texture,None)
                     return
                 drawPolygons(self.coords,self.elems,mode,color,alpha)
                 if bkcolor is not None:
@@ -668,7 +668,7 @@ class GeomActor(Actor):
                     # EXPERIMENTAL: TEXTURE DRAWING
                     if self.texture:
                         print "DRAWING WITH TEXTURE"
-                        drawTexturedFaces(self.coords,self.elems,faces,faces.eltype,mode,self.texture)
+                        drawFaces(self.coords,self.elems,faces,faces.eltype,mode,color,alpha,self.texture)
                         return
                     
                     # Draw the front sides

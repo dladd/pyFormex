@@ -35,7 +35,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-static char __doc__[] = "drawgl_ module\n\
+static char __doc__[] = "drawgl_\n\
 \n\
 This module provides accelerated versions of the pyFormex basic\n\
 OpenGL drawing functions.\n\

@@ -30,7 +30,7 @@ techniques = ['color','filename']
 
 """
 
-from gui.imagecolor import *
+from gui.imagearray import *
 
 clear()
 smooth()
@@ -52,6 +52,7 @@ nx,ny = im.width(),im.height()
 
 # Create the colors
 color,colormap = image2glcolor(im.scaled(nx,ny))
+print color.shape,colormap
 
 
 part = ask("How shall I show the image?",["Plane","Half Sphere","Full Sphere"])

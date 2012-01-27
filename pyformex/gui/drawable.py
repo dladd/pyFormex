@@ -100,7 +100,7 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     drawgl.draw_polygons(x,None,color,alpha,-1)
     
 
-def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
+def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1,texture=None,t=None):
     """Draw a collection of polygon elements.
 
     This function is like drawPolygons, but the vertices of the polygons
@@ -143,6 +143,18 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
             except:
                 raise ValueError,"""Invalid normals specified"""
 
+    # Texture
+    if texture is not None:
+        if pf.options.uselib:
+            utils.warn("Sorry, you can not yet use textures with the acceleration library. Try 'pyformex --nouselib' to experiment with textures")
+            return
+        if t is None:
+            t = array([[0.,0.],[1.,0.],[1.,1.],[0.,1.]])
+        texid = texture.tex
+    else:
+        texid = t = None
+
+
     # Sanitize data before calling library function
     x = x.astype(float32)
     if e is not None:
@@ -156,31 +168,17 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
             color.ndim > 1 and color.shape[0] != nelems) :
             pf.debug("INCOMPATIBLE COLOR SHAPE: %s, while nelems=%s" % (str(color.shape),nelems))
             color = None
+    if t is not None:
+        t = t.astype(float32)
             
     # Call library function
     if e is None:
-        drawgl.draw_polygons(x,n,color,alpha,objtype)
+        if pf.options.uselib:
+            drawgl.draw_polygons(x,n,color,alpha,objtype,)
+        else:
+            drawgl.draw_tex_polygons(x,n,color,t,alpha,texid,objtype,)
     else:
         drawgl.draw_polygon_elems(x,e,n,color,alpha,objtype)
-
-
-def drawTexturedPolygons(x,e,mode,texture,texc=None):
-    pf.debug("drawTexturedPolygons")
-    #print mode,texid,texc
-    if e is None:
-        coords = x
-    else:
-        coords = x[e]
-    pf.debug("COORDS SHAPE: %s" % str(x.shape))
-    if texc is None:
-        texc = array([[0.,0.],[1.,0.],[1.,1.],[0.,1.]])
-    #print coords
-    #print texc
-    #print texid
-    if pf.options.uselib:
-        utils.warn("Sorry, you can not yet use textures with the acceleration library. Try 'pyformex --nouselib' to experiment with textures")
-        return
-    drawgl.draw_tex_polygons(coords,texc,texture.tex,-1)
 
 
 def drawPolyLines(x,e,color):
@@ -583,7 +581,7 @@ def color_multiplex(color,nparts):
     return color.reshape(-1,3)
 
 
-def draw_faces(x,e,mode,color=None,alpha=1.0):
+def draw_faces(x,e,mode,color=None,alpha=1.0,texture=None,texc=None):
     """Draw a collection of faces.
 
     (x,e) are one of:
@@ -615,33 +613,7 @@ def draw_faces(x,e,mode,color=None,alpha=1.0):
             color = color.reshape((nelems*nfaces,) + color.shape[-2:]).squeeze()
             pf.debug("COLOR SHAPE AFTER RESHAPING %s" % str(color.shape))
 
-    drawPolygons(x,e,mode,color,alpha)
-
-
-def draw_textured_faces(x,e,mode,texture,texc=None):
-    """Draw a collection of faces.
-
-    (x,e) are one of:
-    - x is a (nelems,nfaces,nplex,3) shaped coordinates and e is None,
-    - x is a (ncoords,3) shaped coordinates and e is a (nelems,nfaces,nplex)
-    connectivity array.
-       
-    Each of the nfaces sets of nplex points defines a polygon. 
-
-    If color is given it is either an (3,), (nelems,3), (nelems,faces,3)
-    or (nelems,faces,nplex,3) array of RGB values.
-    In the second case, this function will multiplex the colors, so that
-    `nfaces` faces are drawn in the same color.
-    This is e.g. convenient when drawing faces of a solid element.
-    """
-    if e is None:
-        nelems,nfaces,nplex = x.shape[:3]
-        x = x.reshape(-1,nplex,3)
-    else:
-        nelems,nfaces,nplex = e.shape[:3]
-        e = e.reshape(-1,nplex)
-
-    drawTexturedPolygons(x,e,mode,texture,texc)
+    drawPolygons(x,e,mode,color,alpha,None,-1,texture,texc)
 
 
 def drawEdges(x,e,edges,eltype,color=None):
@@ -667,7 +639,6 @@ def drawEdges(x,e,edges,eltype,color=None):
     for edg in olist.collectOnLength(edges).itervalues():
         fa = asarray(edg)
         nplex = fa.shape[1]
-        #print fa
         if e is None:
             coords = x[:,fa,:]
             elems = None
@@ -689,7 +660,7 @@ def drawEdges(x,e,edges,eltype,color=None):
             draw_faces(coords,elems,'wireframe',color,1.0)
 
 
-def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0):
+def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0,texture=None,texc=None):
     """Draw the faces of a geometry.
 
     This function draws the faces of a geometry collection, usually of a higher
@@ -730,36 +701,7 @@ def drawFaces(x,e,faces,eltype,mode,color=None,alpha=1.0):
             drawQuadraticSurfaces(coords,elems,color)
         else:
             #print "USING POLYGON"
-            draw_faces(coords,elems,mode,color,alpha)
-
-def drawTexturedFaces(x,e,faces,eltype,mode,texture,texc=None):
-    """Draw the faces of a geometry.
-
-    This function draws the faces of a geometry collection, usually of a higher
-    dimensionality (i.c. a volume).
-    The faces are identified by a constant indices into all element vertices.
-
-    The geometry is specified by x or (x,e)
-    The faces are specified by a list of lists. Each list defines a single
-    face of the solid, in local vertex numbers (0..nplex-1). The faces are
-    sorted and collected according to their plexitude before drawing them. 
-    """
-    pf.debug("drawTexturedFaces")
-    # We may have faces with different plexitudes!
-    # We collect them according to plexitude.
-    # But first convert to a list, so that we can call this function
-    # with an array too (in case of a single plexitude)
-    faces = list(faces)
-    for fac in olist.collectOnLength(faces).itervalues():
-        fa = asarray(fac)
-        nplex = fa.shape[1]
-        if e is None:
-            coords = x[:,fa,:]
-            elems = None
-        else:
-            coords = x
-            elems = e[:,fa]
-        draw_textured_faces(coords,elems,mode,texture,texc)
+            draw_faces(coords,elems,mode,color,alpha,texture,texc)
 
 
 def drawAtPoints(x,mark,color=None):
@@ -1312,6 +1254,6 @@ class Texture(object):
 
     def __del__(self):
         if self.tex:
-            GL.glDeleteTexture(self.tex)
+            GL.glDeleteTextures(self.tex)
 
 ### End

@@ -1,24 +1,16 @@
 # $Id$  *** pyformex ***
 
+"""Texture
+
+Shows how to draw with textures.
+
+level = 'normal'
+topics = ['Image','Geometry']
+techniques = ['texture']
+"""
+
 from gui.imagearray import qimage2numpy
 from PyQt4.QtGui import QImage
-
-def image2gltexture(im,flip=True):
-    """Convert a bitmap image to texture data.
-
-    """
-    data = qimage2numpy(QImage(im),expand=True)
-    if flip:
-        data = flipud(data)
-    print data.dtype
-    print data.shape
-    print data['r'].shape
-    data = dstack([data['r'],data['g'],data['b'],data['a']]).reshape(data.shape+(4,))
-    print data.dtype
-    print data.shape
-    data = require(data,dtype='ubyte',requirements='C')
-    ny,nx = data.shape[:2]
-    return nx,ny,data
  
 
 def imagefile2gltexture(filename):
@@ -35,6 +27,16 @@ def imagefile2gltexture(filename):
 clear()
 
 imagefile = os.path.join(pf.cfg['pyformexdir'],'data','butterfly.png')
+imagefile = os.path.join(pf.cfg['pyformexdir'],'data','benedict_6.jpg')
+im = QImage(imagefile)
+data = qimage2numpy(im,expand=True)
+## h,w = im.height(),im.width()
+## print im.numBytes()
+## buf = im.bits().asstring(im.numBytes())
+## data = frombuffer(buf,dtype='ubyte',count=im.numBytes()).reshape(h,w,4)
+## data = data[...,[2,1,0,3]] # transform BGRA to RGBA storage
+## print data.shape
+## print data.dtype
 
 ## nx,ny,data = imagefile2gltexture(imagefile)
 ## print nx,ny,type(data),len(data)
@@ -45,8 +47,8 @@ import simple
 F = simple.cuboid()
 ## draw(F,texture=tex1)
 
-nx,ny,data = image2gltexture(imagefile)
-print nx,ny,type(data)
+#nx,ny,data = image2gltexture(imagefile)
+#print nx,ny,type(data)
 ## tex2 = glGenTexture(nx,ny,data)
 ## print tex2
 

@@ -58,7 +58,7 @@ from manifest import *
 LIB_MODULES = [ 'drawgl_', 'misc_', 'nurbs_' ]
 
 ext_modules = [Extension('pyformex/lib/%s'%m,
-                         sources = ['pyformex/lib/%smodule.c'%m],
+                         sources = ['pyformex/lib/%s.c'%m],
                          # optional=True,
                          ) for m in LIB_MODULES ]
 

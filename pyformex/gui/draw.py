@@ -970,7 +970,7 @@ def drawImage(image,nx=-1,ny=-1,pixel='dot'):
 
     """
     pf.GUI.setBusy()
-    from gui.imagecolor import image2glcolor
+    from gui.imagearray import image2glcolor
     w,h = image.width(),image.height()
     if nx <= 0:
         nx = w
@@ -979,7 +979,7 @@ def drawImage(image,nx=-1,ny=-1,pixel='dot'):
     if nx != w or ny != h:
         image = image.scaled(nx,ny)
     # Create the colors
-    color,colortable = image2glcolor(image)
+    color,colortable = image2glcolor(image),None
 
     # Create a 2D grid of nx*ny elements
     # !! THIS CAN PROBABLY BE DONE FASTER

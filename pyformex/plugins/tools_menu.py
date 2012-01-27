@@ -485,7 +485,7 @@ def selectImage():
     """
     global image
     from gui.widgets import ImageView
-    from gui.imagecolor import image2glcolor,QImage
+    from gui.imagearray import QImage
     
     # some default values
     filename = getcfg('datadir')+'/butterfly.png'

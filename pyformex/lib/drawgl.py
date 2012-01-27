@@ -80,36 +80,112 @@ def glTexture(texid):
     GL.glBindTexture(GL.GL_TEXTURE_2D,texid)
 
 
-def draw_tex_polygons(x,t,texid,objtype):
+## def draw_tex_polygons(x,t,texid,objtype):
+##     """Draw a collection of polygons.
+
+##     x : float (nel,nplex,3) : coordinates.
+##     t : float (nplex,3) or (nel,nplex,3) : texture coords
+##     texid : id of an OpenGL 2D texture object
+##     objtype : GL Object type (-1 = auto)
+##     """
+##     glTexture(texid)
+##     x = x.astype(float32)
+##     nplex = x.shape[1]
+##     if t is not None:
+##         t = t.astype(float32)
+##     if objtype < 0:
+##         objtype = glObjType(nplex)
+        
+##     if nplex <= 4 and glObjType(nplex) == objtype:
+##         GL.glBegin(objtype)
+##         if t.ndim == 2:
+##             for xi in x:
+##                 for j in range(nplex):
+##                     GL.glTexCoord2fv(t[j]) 
+##                     GL.glVertex3fv(xi[j])
+
+##         elif t.ndim == 3:
+##             for xi,ti in zip(x.reshape((-1,3)),t.reshape((-1,3))):
+##                 GL.glTexCoord2fv(t) 
+##                 GL.glVertex3fv(xi)
+##         GL.glEnd()
+
+                    
+def draw_tex_polygons(x,n,c,t,alpha,texid,objtype):
     """Draw a collection of polygons.
 
     x : float (nel,nplex,3) : coordinates.
+    n : float (nel,3) or (nel,nplex,3) : normals.
+    c : float (nel,3) or (nel,nplex,3) : color(s)
     t : float (nplex,3) or (nel,nplex,3) : texture coords
+    alpha : float
     texid : id of an OpenGL 2D texture object
     objtype : GL Object type (-1 = auto)
+
+    If nplex colors per element are given, and shading mode is flat,
+    the last color will be used.
     """
-    print "draw_tex_polygons",x.shape,t.shape,texid,objtype
-    glTexture(texid)
+    print "draw_tex_polygons"
     x = x.astype(float32)
-    nplex = x.shape[1]
+    nelems,nplex = x.shape[:2]
+    ndim = cdim = tdim = 0
+    if n is not None:
+        n = n.astype(float32)
+        ndim = n.ndim
+    if c is not None:
+        c = c.astype(float32)
+        cdim = c.ndim
     if t is not None:
         t = t.astype(float32)
+        tdim = t.ndim
+        glTexture(texid)
     if objtype < 0:
         objtype = glObjType(nplex)
-        
-    if nplex <= 4 and glObjType(nplex) == objtype:
-        GL.glBegin(objtype)
-        if t.ndim == 2:
-            for xi in x:
-                for j in range(nplex):
-                    GL.glTexCoord2fv(t[j]) 
-                    GL.glVertex3fv(xi[j])
 
-        elif t.ndim == 3:
-            for xi,ti in zip(x.reshape((-1,3)),t.reshape((-1,3))):
-                GL.glTexCoord2fv(t) 
-                GL.glVertex3fv(xi)
+    print nelems,nplex,ndim,cdim,tdim,texid,objtype
+    
+    simple = nplex <= 4 and glObjType(nplex) == objtype
+    if simple:
+        GL.glBegin(objtype)
+        if cdim == 1:       # single color 
+            glColor(c,alpha)
+        for i in range(nelems):
+            if cdim == 2:
+                glColor(c[i],alpha)
+            if ndim == 2:
+                GL.glNormal3fv(n[i])
+            for j in range(nplex):
+                if cdim == 3:
+                    glColor(c[i,j],alpha)
+                if ndim == 3:
+                    GL.glNormal3fv(n[i,j])
+                if tdim == 2:
+                    GL.glTexCoord2fv(t[j]) 
+                elif tdim == 3:
+                    GL.glTexCoord2fv(t[i,j]) 
+                GL.glVertex3fv(x[i,j])
         GL.glEnd()
+
+    else:
+        if cdim == 1:       # single color 
+            glColor(c,alpha)
+        for i in range(nelems):
+            GL.glBegin(objtype)
+            if cdim == 2:
+                glColor(c[i],alpha)
+            if ndim == 2:
+                GL.glNormal3fv(n[i])
+            for j in range(nplex):
+                if cdim == 3:
+                    glColor(c[i,j],alpha)
+                if ndim == 3:
+                    GL.glNormal3fv(n[i,j])
+                if tdim == 2:
+                    GL.glTexCoord2fv(t[j]) 
+                elif tdim == 3:
+                    GL.glTexCoord2fv(t[i,j]) 
+                GL.glVertex3fv(x[i,j])
+            GL.glEnd()
 
                     
 def draw_polygons(x,n,c,alpha,objtype):
@@ -264,7 +340,7 @@ def draw_polygons(x,n,c,alpha,objtype):
                         GL.glVertex3fv(xi[j])
                     GL.glEnd()
 
-        
+         
 
 def pick_polygons(x,objtype):
     """Mimics draw_polygons for picking purposes.

@@ -27,25 +27,29 @@
 This module contains functions to convert bitmap images into numpy
 arrays and vice versa.
 
-Most of this code was borrowed from the PyQwt mailing list
+This code was based on ideas found on the PyQwt mailing list.
 """
 
 from PyQt4.QtGui import QImage, QColor
 import numpy
 
-_bgra_rec = numpy.dtype({'b': (numpy.uint8, 0),
-                         'g': (numpy.uint8, 1),
-                         'r': (numpy.uint8, 2),
-                         'a': (numpy.uint8, 3)})
-
-def qimage2numpy(qimage,expand=False):
-    """Transform a QImage to a Numpy array.
+def image2numpy(image,order='RGBA',expand=False,flip=True):
+    """Transform an image to a Numpy array.
 
     Parameters:
 
-    - qimage: a QImage
+    - image: a QImage or any data that can be converted to a QImage,
+      e.g. the name of an image file.
+    - order: string with a permutation of the characters 'RGBA', defining
+      the order in which the colors are returned. Default is RGBA, so that
+      result[...,0] gives the red component. Note however that QImage stores
+      in ARGB order. 
     - expand: boolean: if True, an indexed image format will be converted
       to a full color array.
+    - flip: boolean: if True, the image scanlines are flipped upside down.
+      This is practical because image files are usually stored in top down
+      order, while OpenGL uses an upwards positive direction, requiring a
+      flip to show the image upright.
 
     Returns:
 
@@ -54,38 +58,50 @@ def qimage2numpy(qimage,expand=False):
 
       - for Indexed8 format, colors is an array of integer indices into
         the colortable, which is a single list if colors (i.e. a
-        float array with shape (ncolors,3 or 4)
+        float array with shape (ncolors,3 or 4).
+
+        !!!Beware! This currently does not work! All images are returned in
+        full color mode!
+
       - for RGB32, ARGB32 and ARGB32_Premultiplied formats, colors returns
         the real colors and colortable is None
 
     - if expand is True, always returns a single array with the full colors
     
     """
-    if qimage.format() == QImage.Format_Indexed8:
+    if not isinstance(image,QImage):
+        image = QImage(image)
+        
+    if image.format() == QImage.Format_Indexed8:
+        # TODO: make the colortable method work
         # The colortable method does not work yet:
         # work around is to convert to full color
-        qimage = qimage.convertToFormat(QImage.Format_ARGB32)
-    if qimage.format() in (QImage.Format_ARGB32_Premultiplied,
+        image = image.convertToFormat(QImage.Format_ARGB32)
+        
+    if image.format() in (QImage.Format_ARGB32_Premultiplied,
                            QImage.Format_ARGB32,
                            QImage.Format_RGB32):
-        dtype = _bgra_rec
-        buf = qimage.bits().asstring(qimage.numBytes())
-        ar = numpy.frombuffer(buf, dtype)
-        h,w = qimage.height(),qimage.width()
+        h,w = image.height(),image.width()
+        buf = image.bits().asstring(image.numBytes())
+        ar = numpy.frombuffer(buf,dtype='ubyte',count=image.numBytes()).reshape(h,w,4)
+        idx = [ 'BGRA'.index(c) for c in order ]
+        ar = ar[...,idx]
+        if flip:
+            ar = numpy.flipud(ar)
         colortable = None
 
-    elif qimage.format() == QImage.Format_Indexed8:
-        ncolors = qimage.numColors()
+    elif image.format() == QImage.Format_Indexed8:
+        ncolors = image.numColors()
         print("Number of colors: %s" % ncolors)
-        colortable = qimage.colorTable()
+        colortable = image.colorTable()
         print(colortable)
         colortable = numpy.array(colortable)
         print(colortable.dtype)
         print(colortable.size)
         dtype = numpy.uint8
-        buf = qimage.bits().asstring(qimage.numBytes())
+        buf = image.bits().asstring(image.numBytes())
         ar = numpy.frombuffer(buf, dtype)
-        h,w = qimage.height(),qimage.width()
+        h,w = image.height(),image.width()
         if w*h != ar.size:
             print("!! Size of image (%s) does not match dimensions: %s x %s = %s" % (ar.size,w,h,w*h))
         ar = ar[:w*h]
@@ -97,9 +113,8 @@ def qimage2numpy(qimage,expand=False):
         return ar.reshape(h,w),colortable
         
     else:
-        raise ValueError("qimage2numpy only supports 32bit and 8bit images")
+        raise ValueError("image2numpy only supports 32bit and 8bit images")
 
-    ar = ar.reshape(h,w)
     if expand and colortable:
         ar = colortable[ar]
     if expand:
@@ -114,6 +129,7 @@ def numpy2qimage(array):
         elif numpy.ndim(array) == 3:
                 return rgb2qimage(array)
         raise ValueError("can only convert 2D or 3D arrays")
+
 
 def gray2qimage(gray):
         """Convert the 2D numpy array `gray` into a 8-bit QImage with a gray
@@ -130,6 +146,7 @@ def gray2qimage(gray):
         for i in range(256):
                 result.setColor(i, QColor(i, i, i).rgb())
         return result
+
 
 def rgb2qimage(rgb):
         """Convert the 3D numpy array `rgb` into a 32-bit QImage.  `rgb` must
@@ -151,6 +168,23 @@ def rgb2qimage(rgb):
         result = QImage(bgra.data, w, h, QImage.Format_RGB32)
         result.ndarray = bgra
         return result
+
+
+
+def image2glcolor(im):
+    """Convert a bitmap image to corresponding OpenGL colors.
+
+    im is a QImage or any data from which a QImage can be initialized.
+    The image RGB colors are converted to OpenGL colors.
+    The return value is a (w,h,3) shaped array of values in the range
+    0.0 to 1.0.
+    By default the image is flipped upside-down because the vertical
+    OpenGL axis points upwards, while bitmap images are stored downwards.
+    """
+    c = image2numpy(im,order='RGB',flip=True,expand=True)
+    c = c.reshape(-1,3)
+    c = c / 255.
+    return c, None
 
 
 # End

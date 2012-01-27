@@ -31,7 +31,7 @@ techniques = ['dialog','persistence']
 from simple import rectangle
 from utils import NameSequence
 from gui.draw import *
-from gui.imagecolor import *
+from gui.imagearray import *
 
 dialog = None
 savefile = None
@@ -94,7 +94,7 @@ def drawSuperShape():
         print im
         print im.isNull()
         nx,ny = grid_size
-        color=image2glcolor(im.scaled(nx,ny))
+        color=image2glcolor(im.scaled(nx,ny))[0]
         print color.shape
 
     draw(F,color=color)
