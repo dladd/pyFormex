@@ -23,8 +23,7 @@ image = image2numpy(im,expand=True)
 
 import simple
 F = simple.cuboid()
-#F = Formex('4:0123')#.replic2(3,2)#.toMesh()
-
+#F = Formex('4:0123').replic2(3,2).toMesh()
 draw(F,texture=image,color=white)
 view('iso')
 

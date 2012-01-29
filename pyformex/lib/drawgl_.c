@@ -120,7 +120,7 @@ GLenum gl_map2_vertexmode(int ndim)
 
 /********************************************** draw_polygons ****/
 /* Draw polygons */
-/* args:  x
+/* args:
     x : float (nel,nplex,3) : coordinates
     n : float (nel,3) or (nel,nplex,3) normals.
     c : float (nel,3) or (nel,nplex,3) colors
@@ -134,7 +134,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
   float *x, *n=NULL, *c=NULL, *t=NULL, alpha;
-  int objtype,nel,nplex,ndn=0,ndc=0,ndt=0,i,j;
+  int objtype,simple,nel,nplex,ndn=0,ndc=0,ndt=0,i,j;
 
 #ifdef DEBUG
   printf("** draw_polygons\n");
@@ -147,10 +147,6 @@ draw_polygons(PyObject *dummy, PyObject *args)
   x = (float *)PyArray_DATA(arr1);
   nel = PyArray_DIMS(arr1)[0];
   nplex = PyArray_DIMS(arr1)[1];
-#ifdef DEBUG
-  printf("** nel = %d\n",nel);
-  printf("** nplex = %d\n",nplex);
-#endif
 
   arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr2 != NULL) { 
@@ -176,307 +172,182 @@ draw_polygons(PyObject *dummy, PyObject *args)
   printf("** nelems=%d, nplex=%d, ndn=%d, ndc=%d, ndt=%d, objtype=%d\n",nel,nplex,ndn,ndc,ndt,objtype);
 #endif
 
-  if (nplex <= 4 && objtype == gl_objtype(nplex)) { 
-    /*********** Points, Lines, Triangles, Quads **************/
+  simple = nplex <= 4 && objtype == gl_objtype(nplex);
+
+  if (simple)
     glBegin(objtype);
 
-    if (ndc == 1)
-      gl_color(c,alpha);
-
-    for (i=0; i<nel; i++) {
-      if (ndc == 2) {  
-	gl_color(c,alpha);
-	c += 3;
-      }
-      if (ndn == 2) {
-	glNormal3fv(n);
-	n += 3;
-      }
-      for (j=0; j<nplex; j++) {
-	if (ndn == 3) {
-	  glNormal3fv(n);
-	  n += 3;
-	}
-	if (ndc == 3) {
-	  gl_color(c,alpha);
-	  c += 3;
-	}
-	if (ndt == 2) {
-	  glTexCoord2fv(t+2*j); 
-	} else if (ndt == 3) {
-	  glTexCoord2fv(t);
-	  t += 2;
-	}
-	glVertex3fv(x);
-	x += 3;
-      }
-    }
-    glEnd();
-    
-  } else {
-    /************** Polygons ********************/
-
-    if (ndc == 1)
-      gl_color(c,alpha);
-
-    for (i=0; i<nel; i++) {
+  if (ndc == 1)
+    gl_color(c,alpha);
+  
+  for (i=0; i<nel; i++) {
+    if (!simple)
       glBegin(objtype);
-      if (ndc == 2) {  
-	gl_color(c,alpha);
-	c += 3;
-      }
-      if (ndn == 2) {
+
+    if (ndc == 2) {  
+      gl_color(c,alpha);
+      c += 3;
+    }
+    if (ndn == 2) {
+      glNormal3fv(n);
+      n += 3;
+    }
+    for (j=0; j<nplex; j++) {
+      if (ndn == 3) {
 	glNormal3fv(n);
 	n += 3;
       }
-      for (j=0; j<nplex; j++) {
-	if (ndn == 3) {
-	  glNormal3fv(n);
-	  n += 3;
-	}
-	if (ndc == 3) {
-	  gl_color(c,alpha);
-	  c += 3;
-	}
-	if (ndt == 2)
-	  glTexCoord2fv(t+2*j); 
-	else if (ndt == 3) {
-	  glTexCoord2fv(t);
-	  t += 2;
-	}
-	glVertex3fv(x);
-	x += 3;
+      if (ndc == 3) {
+	gl_color(c,alpha);
+	c += 3;
       }
-      glEnd();
+      if (ndt == 2) {
+	glTexCoord2fv(t+2*j); 
+      } else if (ndt == 3) {
+	glTexCoord2fv(t);
+	t += 2;
+      }
+      glVertex3fv(x);
+      x += 3;
     }
+    if (!simple)
+      glEnd();
   }
+  if (simple) 
+    glEnd();
 
   /* cleanup: */
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
+  Py_XDECREF(arr4);
   Py_INCREF(Py_None);
   return Py_None;
 }
 
-/********************************************** draw_polygons ****/
-/* Draw polygons */
-/* args:  x
-    x : float (nel,nplex,3) : coordinates
+
+/********************************************** draw_polygon_elements ****/
+/* Draw polygon elements */
+/* args:
+    x : float (npts,3) : coordinates
+    e : int32 (nel,nplex) : element connectivity
     n : float (nel,3) or (nel,nplex,3) normals.
     c : float (nel,3) or (nel,nplex,3) colors
+    t : float (nplex,2) or (nel,nplex,2) : texture coords
     alpha : float
     objtype : GL Object type (-1 = auto)
 */  
 static PyObject *
-old_draw_polygons(PyObject *dummy, PyObject *args)
+draw_polygon_elems(PyObject *dummy, PyObject *args)
 {
-  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL;
-  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL;
-  float *x, *n=NULL, *c=NULL, alpha;
-  int objtype,nel,nplex,ndc=0,ndn=0,i,j;
+  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL, *arg5=NULL;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL, *arr5=NULL;
+  float *x, *n=NULL, *c=NULL, *t=NULL, alpha;
+  int *e;
+  int objtype,simple,nel,nplex,ndn=0,ndc=0,ndt=0,i,j;
 
 #ifdef DEBUG
-  printf("** draw_polygons\n");
+  int npts;
+  printf("** draw_polygon_elements\n");
 #endif
 
-  if (!PyArg_ParseTuple(args,"OOOfi",&arg1,&arg2,&arg3,&alpha,&objtype)) return NULL;
+  if (!PyArg_ParseTuple(args,"OOOOOfi",&arg1,&arg2,&arg3,&arg4,&arg5,&alpha,&objtype)) return NULL;
 
-  arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
+  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
   x = (float *)PyArray_DATA(arr1);
-  nel = PyArray_DIMS(arr1)[0];
-  nplex = PyArray_DIMS(arr1)[1];
-#ifdef DEBUG
-  printf("** nel = %d\n",nel);
-  printf("** nplex = %d\n",nplex);
-#endif
 
-  arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr2 != NULL) { 
-    ndn = PyArray_NDIM(arr2);
-    n = (float *)PyArray_DATA(arr2);
-  }
+  arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
+  if (arr2 == NULL) goto fail;
+  e = (int *)PyArray_DATA(arr2);
+  nel = PyArray_DIMS(arr2)[0];
+  nplex = PyArray_DIMS(arr2)[1];
 
   arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr3 != NULL) { 
-    ndc = PyArray_NDIM(arr3);
-    c = (float *)PyArray_DATA(arr3);
+    ndn = PyArray_NDIM(arr3);
+    n = (float *)PyArray_DATA(arr3);
   }
-#ifdef DEBUG
-  printf("** ndn = %d\n",ndn);
-  printf("** ndc = %d\n",ndc);
-#endif
+
+  arr4 = PyArray_FROM_OTF(arg4, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr4 != NULL) { 
+    ndc = PyArray_NDIM(arr4);
+    c = (float *)PyArray_DATA(arr4);
+  }
+
+  arr5 = PyArray_FROM_OTF(arg5, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr5 != NULL) { 
+    ndt = PyArray_NDIM(arr5);
+    t = (float *)PyArray_DATA(arr5);
+  }
   
   if (objtype < 0) objtype = gl_objtype(nplex);
+    
+#ifdef DEBUG
+  npts = PyArray_DIMS(arr1)[0];
+  printf("** npts = %d, nelems=%d, nplex=%d, ndn=%d, ndc=%d, ndt=%d, objtype=%d\n",npts,nel,nplex,ndn,ndc,ndt,objtype);
+#endif
 
-  if (nplex <= 4 && objtype == gl_objtype(nplex)) { 
-    /*********** Points, Lines, Triangles, Quads **************/
+  simple = nplex <= 4 && objtype == gl_objtype(nplex);
+
+  if (simple)
     glBegin(objtype);
 
-    if (ndc < 2) {        /* no or single color */
-      if (ndc == 1) {    	/* single color */
-	gl_color(c,alpha);
-      }
-      if (ndn == 0) {
-	for (i=0; i<nel*nplex*3; i+=3) {
-	  glVertex3fv(x+i);
-	}
-      } else if (ndn == 2) {
-	for (i=0; i<nel; i++) {
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
-	}
-      } else if (ndn == 3) {
-	for (j=0;j<nel*nplex*3;j+=3) {
-	  glNormal3fv(n+j);
-	  glVertex3fv(x+j);
-	}
-      }
-    } else if (ndc == 2) {     /* element color */
-      if (ndn == 0) {
-	for (i=0; i<nel; i++) {
-	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
-	}
-      } else if (ndn == 2){
-	for (i=0; i<nel; i++) {
-	  gl_color(c+3*i,alpha);
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
-	}
-      } else if (ndn == 3) {
-	for (i=0; i<nel; i++) {
-	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex*3;j+=3) {
-	    glNormal3fv(n+nplex*3*i+j);
-	    glVertex3fv(x+nplex*3*i+j);
-	  }
-	}
-      }
-    } else if (ndc == 3) {     /* vertex color */
-      if (ndn == 0) {
-	for (i=0; i<nel*nplex*3; i+=3) {
-	  gl_color(c+i,alpha);
-	  glVertex3fv(x+i);
-	}
-      } else if (ndn == 2) {
-	for (i=0; i<nel; i++) {
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) {
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
-	  }
-	}
-      } else if (ndn == 3) { 
-	for (i=0; i<nel; i++) {
-	  for (j=0;j<nplex*3;j+=3) {
-	    glNormal3fv(n+nplex*3*i+j);
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
-	  }
-	}
-      }
-    }
-    glEnd();
+  if (ndc == 1)
+    gl_color(c,alpha);
+  
+  for (i=0; i<nel; i++) {
+    if (!simple)
+      glBegin(objtype);
 
-  } else {
-    /************** Polygons ********************/
-
-    if (ndc < 2) {        /* no or single color */
-      if (ndc == 1) {    	/* single color */
-	gl_color(c,alpha);
-      }
-      if (ndn == 0) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
-	  glEnd();
-	}
-      } else if (ndn == 2) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
-	  glEnd();
-	}
-      } else if (ndn == 3) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  for (j=0;j<nplex*3;j+=3) {
-	    glNormal3fv(n+nplex*3*i+j);
-	    glVertex3fv(x+nplex*3*i+j);
-	  }
-	  glEnd();
-	}
-      }
-    } else if (ndc == 2) {    /* element color */
-      if (ndn == 0) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
-	  glEnd();
-	}
-      } else if (ndn == 2){
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  gl_color(c+3*i,alpha);
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
-	  glEnd();
-	}
-      } else if (ndn == 3) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex*3;j+=3) {
-	    glNormal3fv(n+nplex*3*i+j);
-	    glVertex3fv(x+nplex*3*i+j);
-	  }
-	  glEnd();
-	}
-      }
-    } else if (ndc == 3) {         /* vertex color */
-      if (ndn == 0) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  for (j=0;j<nplex*3;j+=3) {
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
-	  }
-	  glEnd();
-	}
-      } else if (ndn == 2) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) {
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
-	  }
-	  glEnd();
-	}
-      } else if (ndn == 3) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  for (j=0;j<nplex*3;j+=3) {
-	    glNormal3fv(n+nplex*3*i+j);
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
-	  }
-	  glEnd();
-	}
-      }
+    if (ndc == 2) {  
+      gl_color(c,alpha);
+      c += 3;
     }
+    if (ndn == 2) {
+      glNormal3fv(n);
+      n += 3;
+    }
+    for (j=0; j<nplex; j++) {
+      if (ndn == 3) {
+	glNormal3fv(n);
+	n += 3;
+      }
+      if (ndc == 3) {
+	gl_color(c,alpha);
+	c += 3;
+      }
+      if (ndt == 2) {
+	glTexCoord2fv(t+2*j); 
+      } else if (ndt == 3) {
+	glTexCoord2fv(t);
+	t += 2;
+      }
+      glVertex3fv(x+3*(*e));
+      e++;
+    }
+    if (!simple)
+      glEnd();
   }
-
+  if (simple) 
+    glEnd();
+  
   /* cleanup: */
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
+  Py_XDECREF(arr4);
+  Py_XDECREF(arr5);
   Py_INCREF(Py_None);
   return Py_None;
+
+ fail:
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
+  Py_XDECREF(arr4);
+  Py_XDECREF(arr5);
+  return NULL;
 }
 
 
@@ -527,251 +398,6 @@ pick_polygons(PyObject *dummy, PyObject *args)
   Py_XDECREF(arr1);
   Py_INCREF(Py_None);
   return Py_None;
-}
-
-
-/********************************************** draw_polygon_elements ****/
-/* Draw polygon elements */
-/* args:  x
-    x : float (npts,3) : coordinates
-    e : int32 (nel,nplex) : element connectivity
-    n : float (nel,3) or (nel,nplex,3) normals.
-    c : float (nel,3) or (nel,nplex,3) colors
-    alpha : float
-    objtype : GL Object type (-1 = auto)
-*/  
-static PyObject *
-draw_polygon_elems(PyObject *dummy, PyObject *args)
-{
-  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
-  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
-  float *x, *n=NULL, *c=NULL, alpha;
-  int *e, objtype;
-  int nel,nplex,ndc=0,ndn=0,i,j;
-
-#ifdef DEBUG
-  int npts;
-  printf("** draw_polygon_elements\n");
-#endif
-
-  if (!PyArg_ParseTuple(args,"OOOOfi",&arg1,&arg2,&arg3,&arg4,&alpha,&objtype)) return NULL;
-
-  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr1 == NULL) goto fail;
-  x = (float *)PyArray_DATA(arr1);
-#ifdef DEBUG
-  npts = PyArray_DIMS(arr1)[0];
-  printf("** npts = %d\n",npts);
-#endif
-
-  arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
-  if (arr2 == NULL) goto fail;
-  e = (int *)PyArray_DATA(arr2);
-  nel = PyArray_DIMS(arr2)[0];
-  nplex = PyArray_DIMS(arr2)[1];
-#ifdef DEBUG
-  printf("** nel = %d\n",nel);
-  printf("** nplex = %d\n",nplex);
-#endif
-
-  arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr3 != NULL) { 
-    ndn = PyArray_NDIM(arr3);
-    n = (float *)PyArray_DATA(arr3);
-  }
-
-  arr4 = PyArray_FROM_OTF(arg4, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr4 != NULL) { 
-    ndc = PyArray_NDIM(arr4);
-    c = (float *)PyArray_DATA(arr4);
-  }
-  
-#ifdef DEBUG
-  printf("** ndn = %d\n",ndn);
-  printf("** ndc = %d\n",ndc);
-#endif
-  
-  if (objtype < 0) objtype = gl_objtype(nplex);
-
-  if (nplex <= 4 && objtype == gl_objtype(nplex)) { 
-    glBegin(objtype);
-
-    if (ndc < 2) {        /* no or single color */
-      if (ndc == 1) {    	/* single color */
-	gl_color(c,alpha);
-      }
-      if (ndn == 0) {
-	for (i=0; i<nel*nplex; ++i) {
-	  glVertex3fv(x+3*e[i]);
-	}
-      } else if (ndn == 2) {
-	for (i=0; i<nel; i++) {
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex; ++j) glVertex3fv(x+3*e[nplex*i+j]);
-	}
-      } else if (ndn == 3) {
-	for (j=0;j<nel*nplex;++j) {
-#if BUGFIX & 1
-	  gl_color(c,alpha);
-#endif
-	  glNormal3fv(n+3*j);
-	  glVertex3fv(x+3*e[j]);
-	}
-      }
-    } else if (ndc == 2) {
-      if (ndn == 0) {
-	for (i=0; i<nel; i++) {
-	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
-	}
-      } else if (ndn == 2){
-	for (i=0; i<nel; i++) {
-	  gl_color(c+3*i,alpha);
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
-	}
-      } else if (ndn == 3) {
-	for (i=0; i<nel; i++) {
-	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex;++j) {
-	    glNormal3fv(n+3*(nplex*i+j));
-	    glVertex3fv(x+3*e[nplex*i+j]);
-	  }
-	}
-      }
-    } else if (ndc == 3) {
-      if (ndn == 0) {  // DONE
-	for (i=0; i<nel*nplex; i++) {
-	  gl_color(c+3*i,alpha);
-	  glVertex3fv(x+3*e[i]);
-	}
-      } else if (ndn == 2) {   // DONE
-	for (i=0; i<nel; i++) {
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex;++j) {
-	    gl_color(c+3*(nplex*i+j),alpha);
-	    glVertex3fv(x+3*e[nplex*i+j]);
-	  }
-	}
-      } else if (ndn == 3) {
-	for (i=0; i<nel; i++) {
-	  for (j=0;j<nplex;++j) {
-	    glNormal3fv(n+3*(nplex*i+j));
-	    gl_color(c+3*(nplex*i+j),alpha);
-	    glVertex3fv(x+3*e[nplex*i+j]);
-	  }
-	}
-      }
-    }
-    glEnd();
-
-  } else {
-
-#ifdef DEBUG
-    printf("** objtype = %d\n",objtype);
-#endif
-    if (ndc < 2) {        /* no or single color */
-      if (ndc == 1) {    	/* single color */
-	gl_color(c,alpha);
-      }
-      if (ndn == 0) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
-	  glEnd();
-	}
-      } else if (ndn == 2) {   // DONE
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
-	  glEnd();
-	}
-      } else if (ndn == 3) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  for (j=0;j<nplex;++j) {
-	    glNormal3fv(n+3*(nplex*i+j));
-	    glVertex3fv(x+3*e[nplex*i+j]);
-	  }
-	  glEnd();
-	}
-      }
-    } else if (ndc == 2) {   // DONE
-      if (ndn == 0) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
-	  glEnd();
-	}
-      } else if (ndn == 2){   // DONE
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  gl_color(c+3*i,alpha);
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
-	  glEnd();
-	}
-      } else if (ndn == 3) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex;++j) {
-	    glNormal3fv(n+3*(nplex*i+j));
-	    glVertex3fv(x+3*e[nplex*i+j]);
-	  }
-	  glEnd();
-	}
-      }
-    } else if (ndc == 3) {   // DONE
-      if (ndn == 0) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  for (j=0;j<nplex;++j) {
-	    gl_color(c+3*(nplex*i+j),alpha);
-	    glVertex3fv(x+3*e[nplex*i+j]);
-	  }
-	  glEnd();
-	}
-      } else if (ndn == 2) {   // DONE
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex;++j) {
-	    gl_color(c+3*(nplex*i+j),alpha);
-	    glVertex3fv(x+3*e[nplex*i+j]);
-	  }
-	  glEnd();
-	}
-      } else if (ndn == 3) {
-	for (i=0; i<nel; i++) {
-	  glBegin(objtype);
-	  for (j=0;j<nplex;++j) {
-	    glNormal3fv(n+3*(nplex*i+j));
-	    gl_color(c+3*(nplex*i+j),alpha);
-	    glVertex3fv(x+3*e[nplex*i+j]);
-	  }
-	  glEnd();
-	}
-      }
-    }
-  }
-  
-  /* cleanup: */
-  Py_XDECREF(arr1);
-  Py_XDECREF(arr2);
-  Py_XDECREF(arr3);
-  Py_XDECREF(arr4);
-  Py_INCREF(Py_None);
-  return Py_None;
-  
- fail:
-  Py_XDECREF(arr1);
-  Py_XDECREF(arr2);
-  Py_XDECREF(arr3);
-  Py_XDECREF(arr4);
-  return NULL;
 }
 
 
@@ -970,7 +596,6 @@ static PyObject* draw_nurbs_surfaces(PyObject *dummy, PyObject *args)
 static PyMethodDef _methods_[] = {
     {"get_version", get_version, METH_VARARGS, "Return library version."},
     {"draw_polygons", draw_polygons, METH_VARARGS, "Draw polygons."},
-    {"old_draw_polygons", old_draw_polygons, METH_VARARGS, "Draw polygons."},
     {"pick_polygons", pick_polygons, METH_VARARGS, "Pick polygons."},
     {"draw_polygon_elems", draw_polygon_elems, METH_VARARGS, "Draw polygon elements."},
     {"pick_polygon_elems", pick_polygon_elems, METH_VARARGS, "Pick polygon elements."},

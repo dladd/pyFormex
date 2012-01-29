@@ -184,15 +184,9 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,texture=None,t=None,normals=None,
         
     # Call library function
     if e is None:
-        #print "NO ELEMS, DRAWING WITH TEXTURE"
         drawgl.draw_polygons(x,n,color,t,alpha,objtype)
     else:
-        if pf.options.uselib:
-            #print "ELEMS, DRAWING WITHOUT TEXTURE"
-            drawgl.draw_polygon_elems(x,e,n,color,alpha,objtype)
-        else:
-            #print "ELEMS, DRAWING WITH TEXTURE"
-            drawgl.draw_polygon_elems(x,e,n,color,t,alpha,objtype)
+        drawgl.draw_polygon_elems(x,e,n,color,t,alpha,objtype)
 
 
 def drawPolyLines(x,e,color):

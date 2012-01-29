@@ -91,7 +91,7 @@ def draw_polygons(x,n,c,t,alpha,objtype):
     if objtype < 0:
         objtype = glObjType(nplex)
 
-    print nelems,nplex,ndn,ndc,ndt,objtype
+    pf.debug("nelems=%s, nplex=%s, ndn=%s, ndc=%s, ndt=%s, objtype=%s"%(nelems,nplex,ndn,ndc,ndt,objtype),pf.DEBUG.DRAW)
     
     simple = nplex <= 4 and objtype == glObjType(nplex)
     if simple:
@@ -157,7 +157,7 @@ def pick_polygons(x,objtype):
         GL.glPopName()
 
         
-def draw_polygon_elems(x,e,n,c,t,alpha,texid,objtype):
+def draw_polygon_elems(x,e,n,c,t,alpha,objtype):
     """Draw a collection of polygon elements.
 
     This function is like draw_polygons, but the vertices of the polygons
@@ -169,7 +169,7 @@ def draw_polygon_elems(x,e,n,c,t,alpha,texid,objtype):
     alpha : float
     objtype : GL Object type (-1 = auto)
     """
-    draw_polygons(x[e],n,c,t,alpha,texid,objtype)
+    draw_polygons(x[e],n,c,t,alpha,objtype)
     
 
 def pick_polygon_elems(x,e,objtype):
