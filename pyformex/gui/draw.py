@@ -1134,14 +1134,20 @@ def isoView():
     view("iso")
 
 
-def bgcolor(color,color2=None,mode='h'):
-    """Change the background color (and redraw).
+def bgcolor(color=None,image=None):
+    """Change the background color and image.
 
-    If one color is given, the background is a solid color.
-    If two colors are given, the background color will get a vertical
-    gradient with color on top and color2 at the bottom.
+    Parameters:
+    
+    - `color`: a single color or a list of 4 colors. A single color sets a
+      solid background color. A list of four colors specifies a gradient.
+      These 4 colors are those of the Bottom Left, Bottom Right, Top Right
+      and Top Left corners respectively.
+    - `image`: the name of an image file. If specified, the image will be
+      overlayed on the background colors. Specify a solid white background
+      color to sea the image unaltered.
     """
-    pf.canvas.setBgColor(color,color2,mode)
+    pf.canvas.setBackground(color=color,image=image)
     pf.canvas.display()
     pf.canvas.update()
 

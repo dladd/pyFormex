@@ -71,9 +71,6 @@ for i,v in enumerate(['front','right','top','iso']):
     viewport(i)
     view(v)
     bgcolor(colors[i])
-    pf.canvas.setBgColor(pf.canvas.settings.bgcolor)
-    pf.canvas.display()
-    pf.canvas.update()
 
 pause('NEXT: Cut the horse in viewport 3, notice results visible in all')
 

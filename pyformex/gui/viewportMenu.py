@@ -51,18 +51,59 @@ def setTriade():
 
 def setBgColor():
     """Interactively set the viewport background colors."""
-    mode = pf.canvas.settings.bgmode
-    color = pf.canvas.settings.bgcolor
-    color2 = pf.canvas.settings.bgcolor2
-    dialog = widgets.InputDialog([
-        _I('mode',mode,choices=pf.canvas.bgmodes),
-        _I('bgcolor',color,itemtype='color',text='Solid/Top/Left background color'),
-        _I('bgcolor2',color2,itemtype='color',text='Bottom/Right background color'),
-        ],caption='Config Dialog',enablers=[('mode','vertical gradient','bgcolor2'),('mode','horizontal gradient','bgcolor2')])
+    from gui.drawable import saneColorArray
+    from numpy import resize
+    import os
+    bgmodes = [ 'solid', 'vertical', 'horizontal', 'full' ]
+    color = saneColorArray(pf.canvas.settings.bgcolor,(4,))
+    color = resize(color,(4,3))
+    cur = pf.canvas.settings.bgimage
+    showimage = os.path.exists(cur)
+    if not showimage:
+        cur = pf.cfg['gui/splash']
+    viewer = widgets.ImageView(cur,maxheight=200)
+    def changeImage(fn):
+        fn = draw.askImageFile(fn)
+        if fn:
+            viewer.showImage(fn)
+        return fn
+    dialog = widgets.InputDialog(
+        [
+            _I('mode',choices=bgmodes),
+            _I('color1',color[0],itemtype='color',text='Background color 1 (Bottom Left)'),
+            _I('color2',color[1],itemtype='color',text='Background color 2 (Bottom Right)'),
+            _I('color3',color[2],itemtype='color',text='Background color 3 (Top Right)'),
+            _I('color4',color[3],itemtype='color',text='Background color 4 (Top Left'),
+            _I('showimage',showimage,text='Show background image'),
+            _I('image',cur,text='Background image',itemtype='button',func=changeImage),
+            viewer,
+            ],
+        caption='Config Dialog',
+        enablers=[
+            ('mode','vertical','color4'),
+            ('mode','horizontal','color2'),
+            ('mode','full','color2','color3','color4'),
+            ('showimage',True,'image'),
+            ]
+        )
     res = dialog.getResult()
     pf.debug(res)
     if res:
-        pf.canvas.setBgColor(res['bgcolor'],res['bgcolor2'],res['mode'])
+        if res['mode'] == 'solid':
+            color = res['color1']
+        elif res['mode'] == 'vertical':
+            c1,c4 = res['color1'],res['color4']
+            color = [c1,c1,c4,c4]
+        elif res['mode'] == 'horizontal':
+            c1,c2 = res['color1'],res['color2']
+            color = [c1,c2,c2,c1]
+        elif res['mode'] == 'full':
+            color = [res['color1'],res['color2'],res['color3'],res['color4']]
+        if res['showimage']:
+            image = res['image']
+        else:
+            image = None
+        pf.canvas.setBackground(color=color,image=image)
         pf.canvas.update()
 
         

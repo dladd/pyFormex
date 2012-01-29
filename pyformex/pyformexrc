@@ -138,9 +138,8 @@ showfocus = True
 
 # Default canvas settings
 [canvas]
-bgmode = 'solid'        # solid background mode
-bgcolor = 'grey90'      # canvas background color, left/top for graded modes
-bgcolor2 = 'grey80'     # canvas background color, right/bottom
+bgcolor = 'grey90'      # background color (single color or list of 2 or 4)
+bgimage = ''            # background image, filename
 fgcolor = 'black'       # default drawing color
 bkcolor = None          # if defined, backsides of planes have this color
 slcolor = 'yellow'      # highlighting color

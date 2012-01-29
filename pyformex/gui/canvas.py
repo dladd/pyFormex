@@ -344,10 +344,9 @@ class CanvasSettings(Dict):
       
     Currently the following mode settings are defined:
     
-    - bgmode: the viewport background mode. Should be one of
-      'solid', 'vertical gradient', 'horizontal gradient'
-    - bgcolor: the viewport background color (left/top color for graded modes)
-    - bgcolor2: right/bottom color for a grade background
+    - bgcolor: the viewport background color: a single color or a list of
+      colors (max. 4 are used).
+    - bgimage: background image filename
     - slcolor: the highlight color
     - rendermode: the rendering mode
     - shading: True is smooth, False is flat
@@ -399,15 +398,14 @@ class CanvasSettings(Dict):
         ok = {}
         for k,v in dict.items():
             try:
-                if k == 'bgmode':
-                    if not v in Canvas.bgmodes:
-                        raise
-                elif k in [ 'bgcolor', 'bgcolor2', 'fgcolor', 'bkcolor', 'slcolor']:
+                if k in [ 'bgcolor', 'fgcolor', 'bkcolor', 'slcolor']:
                     if v is not None:
                         v = saneColor(v)
                 elif k in ['colormap','bkcolormap']:
                     if v is not None:
                         v =  map(saneColor,v)
+                elif k in ['bgimage']:
+                    v = str(v)
                 elif k in ['smoothshading', 'lighting', 'culling']:
                     v = bool(v)
                 elif k in ['linewidth', 'pointsize', 'marksize']:
@@ -436,7 +434,11 @@ class CanvasSettings(Dict):
     def setMode(self):
         """Activate the mode canvas settings in the GL machine."""
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-        GL.glClearColor(*colors.RGBA(self.bgcolor))
+        if self.bgcolor.ndim > 1:
+            color = self.bgcolor[0]
+        else:
+            color = self.bgcolor
+        GL.glClearColor(*colors.RGBA(color))
  
 
     def setDefault(self):
@@ -459,17 +461,17 @@ def print_camera(self):
 class Canvas(object):
     """A canvas for OpenGL rendering.
 
-    The Canvas is a class holding all global data of an OpenGL scene rendering. This includes
-    colors, line types, rendering mode. It also keeps lists of all the actors and decorations
-    in the scene. It always has a Camera object holding import viewing parameters. And finally
-    it stores the lighting information.
+    The Canvas is a class holding all global data of an OpenGL scene rendering.
+    This includes colors, line types, rendering mode.
+    It also keeps lists of the actors and decorations in the scene.
+    The canvas has a Camera object holding important viewing parameters.
+    Finally, it stores the lighting information.
     
     It does not however contain the viewport size and position.
     """
 
     rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
                    'smooth_avg']
-    bgmodes = [ 'solid', 'vertical gradient', 'horizontal gradient', 'image' ]
 
     def __init__(self,settings={}):
         """Initialize an empty canvas with default settings."""
@@ -623,43 +625,49 @@ class Canvas(object):
         self.settings.pointsize = float(sz)
 
 
-    def setBgColor(self,color=None,color2=None,mode='solid',image=None):
-        """Set the background color.
+    def setBackground(self,color=None,image=None):
+        """Set the color(s) and image.
 
-        If one color is specified, a solid background is set.
-        If two colors are specified, a graded background is set
-        and an object is created to display the background.
-        """
-        #
-        # TODO: THIS SHOULD USE self.settings.update
-        #
-        self.settings.bgmode = mode
-        self.settings.bgcolor = colors.GLColor(color)
+        Change the background settings according to the specified parameters
+        and set the canvas background accordingly. Only (and all) the specified
+        parameters get a new value.
         
-        if mode == 'solid' or (color2 is None and image is None):
-            pf.debug("Clearing fancy background")
-            self.settings.bgmode = 'solid'
+        Parameters:
+
+        - `color`: either a single color, a list of two colors or a list of
+          four colors.
+        - `image`: an image to be set. 
+        """
+        self.settings.update(dict(bgcolor=color,bgimage=image))
+        color = self.settings.bgcolor
+        if color.ndim == 1 and not self.settings.bgimage:
+            pf.debug("Clearing fancy background",pf.DEBUG.DRAW)
             self.background = None
         else:
-            if image is None:
-                self.settings.bgcolor2 = colors.GLColor(color2)
-            else:
-                self.settings.bgimage = image
             self.createBackground()
             glSmooth()
             glFill()
         self.clear()
         self.redrawAll()
+        #self.update()
 
 
     def createBackground(self):
         """Create the background object."""
         x1,y1 = 0,0
         x2,y2 = self.Size()
-        color4 = [self.settings.bgcolor2,self.settings.bgcolor2,self.settings.bgcolor,self.settings.bgcolor]
-        if self.settings.bgmode == 'horizontal gradient':
-            color4 = color4[-1:] + color4[:-1]
-        self.background = decors.Rectangle(x1,y1,x2,y2,color=color4)
+        from gui.drawable import saneColorArray
+        color = saneColorArray(self.settings.bgcolor,(4,))
+        #print color.shape,color
+        image = None
+        if self.settings.bgimage:
+            from gui.imagearray import image2numpy
+            try:
+                image = image2numpy(self.settings.bgimage,expand=True)
+            except:
+                pass
+            
+        self.background = decors.Rectangle(x1,y1,x2,y2,color=color,texture=image)
         
 
     def setFgColor(self,color):
@@ -705,7 +713,7 @@ class Canvas(object):
         - self.rendermode: one of
         - self.lighting
         """
-        self.setBgColor(self.settings.bgcolor,self.settings.bgcolor2,self.settings.bgmode)
+        self.setBackground(self.settings.bgcolor,self.settings.bgimage)
         self.clear()
         GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
         GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing

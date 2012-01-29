@@ -9,17 +9,16 @@ topics = ['Image','Geometry']
 techniques = ['texture']
 """
 
-from gui.imagearray import image2numpy
-from PyQt4.QtGui import QImage
+pf.canvas.setBackground(color=['red'])
+exit()
 
-smooth()
+from gui.imagearray import image2numpy
 
 clear()
+smooth()
 
 imagefile = os.path.join(pf.cfg['pyformexdir'],'data','butterfly.png')
-im = QImage(imagefile)
-image = image2numpy(im,expand=True)
-
+image = image2numpy(imagefile,expand=True)
 
 import simple
 F = simple.cuboid()
@@ -27,5 +26,8 @@ F = simple.cuboid()
 draw(F,texture=image,color=white)
 view('iso')
 
+from gui.decors import Rectangle
+R = Rectangle(100,100,400,300,color=yellow,texture=image)
+decorate(R)
 
 # End

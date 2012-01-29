@@ -72,7 +72,6 @@ def glColor(color,alpha=None):
                 GL.glColor4fv(append(color,alpha))
         else:
             GL.glColor4fv(color)
-            
 
 
 def glTexture(texture,mode='*'):
@@ -129,9 +128,7 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,texture=None,t=None,normals=None,
     The value can be set to GL.GL_LINE_LOOP to draw the element's circumference
     independent from the drawing mode.
     """
-    #print "drawPolygons"
-    ## if texture is not None:
-    ##     print "  With texture %s" % texture.tex
+    pf.debug("drawPolygons",pf.DEBUG.DRAW)
     if e is None:
         nelems = x.shape[0]
     else:
@@ -1221,16 +1218,26 @@ class Drawable(object):
             
     
     def setLineWidth(self,linewidth):
-        """Set the linewidth of the Actor."""
+        """Set the linewidth of the Drawable."""
         self.linewidth = saneLineWidth(linewidth)
     
     def setLineStipple(self,linestipple):
-        """Set the linewidth of the Actor."""
+        """Set the linewidth of the Drawable."""
         self.linestipple = saneLineStipple(linestipple)
 
     def setColor(self,color=None,colormap=None,ncolors=1):
         """Set the color of the Drawable."""
         self.color,self.colormap = saneColorSet(color,colormap,shape=(ncolors,))
+
+    def setTexture(self,texture):
+        """Set the texture data of the Drawable."""
+        if texture is not None:
+            if not isinstance(texture,Texture):
+                try:
+                    texture = Texture(texture)
+                except:
+                    texture = None
+        self.texture = texture
 
 
 ### Textures ###############################################

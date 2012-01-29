@@ -31,7 +31,7 @@ import os
 from gettext import gettext as _
 import utils
 import widgets
-from widgets import simpleInputItem as I, groupInputItem as G, tabInputItem as T
+from widgets import simpleInputItem as _I, groupInputItem as _G, tabInputItem as _T
 import toolbar
 import draw
 
@@ -115,7 +115,7 @@ def settings():
         accept(save=True)
 
     def autoSettings(keylist):
-        return [I(k,pf.cfg[k]) for k in keylist]
+        return [_I(k,pf.cfg[k]) for k in keylist]
 
     def changeScriptDirs():
         setScriptDirs()
@@ -125,17 +125,17 @@ def settings():
 
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
  
-    plugin_items = [ I('_plugins/'+name,name in pf.cfg['gui/plugins'],text=text) for name,text in plugins.pluginMenus() ]
+    plugin_items = [ _I('_plugins/'+name,name in pf.cfg['gui/plugins'],text=text) for name,text in plugins.pluginMenus() ]
     #print plugin_items
 
     appearence = [
-        I('gui/style',pf.GUI.currentStyle(),choices=pf.GUI.getStyles()),
-        I('gui/font',pf.app.font().toString(),'font'),
+        _I('gui/style',pf.GUI.currentStyle(),choices=pf.GUI.getStyles()),
+        _I('gui/font',pf.app.font().toString(),'font'),
         ]
 
     toolbartip = "Currently, changing the toolbar position will only be in effect when you restart pyFormex"
     toolbars = [
-        I('gui/%s'%t,pf.cfg['gui/%s'%t],text=getattr(pf.GUI,t).windowTitle(),choices=['left','right','top','bottom'],tooltip=toolbartip) for t in [ 'camerabar','modebar','viewbar' ]
+        _I('gui/%s'%t,pf.cfg['gui/%s'%t],text=getattr(pf.GUI,t).windowTitle(),choices=['left','right','top','bottom'],tooltip=toolbartip) for t in [ 'camerabar','modebar','viewbar' ]
         ]
 
     cur = pf.cfg['gui/splash']
@@ -151,58 +151,55 @@ def settings():
         return fn
 
     mail_settings = [
-        I('mail/sender',pf.cfg.get('mail/sender',sendmail.mail),text="My mail address"),
-        I('mail/server',pf.cfg.get('mail/server','localhost'),text="Outgoing mail server")
+        _I('mail/sender',pf.cfg.get('mail/sender',sendmail.mail),text="My mail address"),
+        _I('mail/server',pf.cfg.get('mail/server','localhost'),text="Outgoing mail server")
         ]
 
     dia = widgets.InputDialog(
         caption='pyFormex Settings',
         store=pf.cfg,
         items=[
-            T('General',[
-                I('syspath',tooltip="If you need to import modules from a non-standard path, you can supply additional paths to search here."),
-                I('editor',tooltip="The command to be used to edit a script file. The command will be executed with the path to the script file as argument."),
-                I('viewer',tooltip="The command to be used to view an HTML file. The command will be executed with the path to the HTML file as argument."),
-                I('browser',tooltip="The command to be used to browse the internet. The command will be executed with an URL as argument."),
-                I('help/docs'),
-                I('autorun',text='Startup script',tooltip='This script will automatically be run at pyFormex startup'),
-                I('scriptdirs',text='Script Paths',tooltip='pyFormex will look for scripts in these directories',buttons=[('Edit',changeScriptDirs)]),
+            _T('General',[
+                _I('syspath',tooltip="If you need to import modules from a non-standard path, you can supply additional paths to search here."),
+                _I('editor',tooltip="The command to be used to edit a script file. The command will be executed with the path to the script file as argument."),
+                _I('viewer',tooltip="The command to be used to view an HTML file. The command will be executed with the path to the HTML file as argument."),
+                _I('browser',tooltip="The command to be used to browse the internet. The command will be executed with an URL as argument."),
+                _I('help/docs'),
+                _I('autorun',text='Startup script',tooltip='This script will automatically be run at pyFormex startup'),
+                _I('scriptdirs',text='Script Paths',tooltip='pyFormex will look for scripts in these directories',buttons=[('Edit',changeScriptDirs)]),
                 ],
              ),
-            T('GUI',[
-                G('Appearence',appearence),
-                G('Components',toolbars+[
-                    I('gui/coordsbox',pf.cfg['gui/coordsbox']),
-                    I('gui/showfocus',pf.cfg['gui/showfocus']),
-                    I('gui/timeoutbutton',pf.cfg['gui/timeoutbutton']),
-                    I('gui/timeoutvalue',pf.cfg['gui/timeoutvalue']),
+            _T('GUI',[
+                _G('Appearence',appearence),
+                _G('Components',toolbars+[
+                    _I('gui/coordsbox',pf.cfg['gui/coordsbox']),
+                    _I('gui/showfocus',pf.cfg['gui/showfocus']),
+                    _I('gui/timeoutbutton',pf.cfg['gui/timeoutbutton']),
+                    _I('gui/timeoutvalue',pf.cfg['gui/timeoutvalue']),
                     ],
                  ),
-                I('gui/splash',text='Splash image',itemtype='button',func=changeSplash),
+                _I('gui/splash',text='Splash image',itemtype='button',func=changeSplash),
                 viewer,
                 ]),
-            T('Canvas',[
-                I('canvas/bgmode',pf.cfg['canvas/bgmode'],choices=pf.canvas.bgmodes),
-                I('canvas/bgcolor',pf.cfg['canvas/bgcolor'],itemtype='color'),
-                I('canvas/bgcolor2',pf.cfg['canvas/bgcolor2'],itemtype='color'),
+            _T('Canvas',[
+                _I('_not_active_','The canvas background settings can be set from the Viewport Menu',itemtype='info',label=''),
+               # _I('canvas/bgcolor',pf.cfg['canvas/bgcolor'],itemtype='color'),
                 ],
               ),
-            T('Drawing',[
-                I('_info_00_',itemtype='info',text='Changes to these options currently only become effective after restarting pyFormex!'),
-                I('draw/quadline',text='Draw as quadratic lines',itemtype='list',check=True,choices=elementTypes(1),tooltip='Line elements checked here will be drawn as quadratic lines whenever possible.'),
-                I('draw/quadsurf',text='Draw as quadratic surfaces',itemtype='list',check=True,choices=elementTypes(2)+elementTypes(3),tooltip='Surface and volume elements checked here will be drawn as quadratic surfaces whenever possible.'),
+            _T('Drawing',[
+                _I('_info_00_',itemtype='info',text='Changes to these options currently only become effective after restarting pyFormex!'),
+                _I('draw/quadline',text='Draw as quadratic lines',itemtype='list',check=True,choices=elementTypes(1),tooltip='Line elements checked here will be drawn as quadratic lines whenever possible.'),
+                _I('draw/quadsurf',text='Draw as quadratic surfaces',itemtype='list',check=True,choices=elementTypes(2)+elementTypes(3),tooltip='Surface and volume elements checked here will be drawn as quadratic surfaces whenever possible.'),
                 ]
               ),
-            T('Mouse',mouse_settings),
-            T('Plugins',plugin_items),
-            T('Environment',[
-                G('Mail',mail_settings),
-#                G('Jobs',jobs_settings),
+            _T('Mouse',mouse_settings),
+            _T('Plugins',plugin_items),
+            _T('Environment',[
+                _G('Mail',mail_settings),
+#                _G('Jobs',jobs_settings),
                 ]),
             ],
         enablers =[
-            ('canvas/bgmode','vertical gradient','canvas/bgcolor2'),
-            ('canvas/bgmode','horizontal gradient','canvas/bgcolor2'),
             ],
         actions=[
             ('Close',close),
@@ -230,8 +227,8 @@ def askConfigPreferences(items,prefix=None,store=None):
         store = pf.cfg
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
-    itemlist = [ I(i,store[i]) for i in items ] + [
-        I('_save_',True,text='Save changes')
+    itemlist = [ _I(i,store[i]) for i in items ] + [
+        _I('_save_',True,text='Save changes')
         ]
     res = widgets.InputDialog(itemlist,'Config Dialog',pf.GUI).getResult()
     pf.debug(res)
@@ -289,11 +286,11 @@ def createLightDialogItems(light=0,enabled=True):
     #print "DICT %s" % dir(pf.canvas.lights.lights[light])
     
     items = [
-        I('enabled',enabled),
+        _I('enabled',enabled),
         ] + [
-        I(k,val[k],itemtype='slider',min=0,max=100,scale=0.01,func=set_light_value,data=light)  for k in [ 'ambient', 'diffuse',  'specular' ]
+        _I(k,val[k],itemtype='slider',min=0,max=100,scale=0.01,func=set_light_value,data=light)  for k in [ 'ambient', 'diffuse',  'specular' ]
         ] + [
-        I('position',val['position']),
+        _I('position',val['position']),
         ]
     return items
 
@@ -319,10 +316,10 @@ def createLightDialogItems(light=0,enabled=True):
 ##     choices = [ 'ambient and diffuse' ]
 ##     items = [
 ##         {'name':'lightmodel','value':pf.canvas.lightmodel,'choices':choices,'tooltip':"""The light model defines which light components are set by the color setting functions. The default light model is 'ambient and diffuse'. The other modes are experimentally. Use them only if you know what you are doing."""},
-##         G('material',mat_items),
-## #        I('nlights',4,text='Number of lights'),
+##         _G('material',mat_items),
+## #        _I('nlights',4,text='Number of lights'),
 ##         ] + [
-##         T('light%s'%light, createLightDialogItems(light,True)) for light in range(nlights)
+##         _T('light%s'%light, createLightDialogItems(light,True)) for light in range(nlights)
 ##         ]
 
 ##     enablers = [
@@ -437,16 +434,16 @@ def setRendering():
         matnames = pf.GUI.materials.keys()
         mat = vp.material
         mat_items = [
-            I(a,text=a,value=getattr(mat,a),itemtype='slider',min=0,max=100,scale=0.01,func=set_mat_value) for a in [ 'ambient', 'diffuse', 'specular', 'emission']
+            _I(a,text=a,value=getattr(mat,a),itemtype='slider',min=0,max=100,scale=0.01,func=set_mat_value) for a in [ 'ambient', 'diffuse', 'specular', 'emission']
             ] + [
-            I(a,text=a,value=getattr(mat,a),itemtype='slider',min=1,max=128,scale=1.,func=set_mat_value) for a in ['shininess']
+            _I(a,text=a,value=getattr(mat,a),itemtype='slider',min=1,max=128,scale=1.,func=set_mat_value) for a in ['shininess']
             ]
         items = [
-            I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes),#,onselect=enableLightParams),
-            I('render/lighting',vp.lighting,text='Use Lighting'),
-            I('render/ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
-            I('render/material',vp.material.name,text='Material',choices=matnames,onselect=updateLightParams),
-            G('material',text='Material Parameters',items=mat_items),
+            _I('render/mode',vp.rendermode,text='Rendering Mode',itemtype='select',choices=canvas.Canvas.rendermodes),#,onselect=enableLightParams),
+            _I('render/lighting',vp.lighting,text='Use Lighting'),
+            _I('render/ambient',vp.lightprof.ambient,text='Global Ambient Lighting'),
+            _I('render/material',vp.material.name,text='Material',choices=matnames,onselect=updateLightParams),
+            _G('material',text='Material Parameters',items=mat_items),
             ]
 
         enablers = [
@@ -536,14 +533,14 @@ def createScriptDirsDialog():
 def setOptions():
     options = [ 'debug' ] # Currently No user changeable options ['test']
     options = [ o for o in options if hasattr(pf.options,o) ]
-    items = [ I(o,getattr(pf.options,o)) for o in options ]
+    items = [ _I(o,getattr(pf.options,o)) for o in options ]
     ## # currently we only have All or None as debug levels
     ## debug_levels = [ 'All','None' ]
     ## if pf.options.debug:
     ##     debug = 'All'
     ## else:
     ##     debug = 'None'
-    ## items.append(I('debug',debug,'vradio',choices=debug_levels))
+    ## items.append(_I('debug',debug,'vradio',choices=debug_levels))
     res = draw.askItems(items)
     if res:
         print res
@@ -576,7 +573,7 @@ def updateToolbars():
     pf.GUI.updateToolBars()
 
 def updateBackground():
-    pf.canvas.setBgColor(pf.cfg['canvas/bgcolor'],pf.cfg['canvas/bgcolor2'],pf.cfg['canvas/bgmode'])
+    #pf.canvas.setBgColor(pf.cfg['canvas/bgcolor'],pf.cfg['canvas/bgcolor2'],pf.cfg['canvas/bgmode'])
     pf.canvas.update()
 
     

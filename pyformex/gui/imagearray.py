@@ -185,7 +185,7 @@ def image2glcolor(im):
     c = c.reshape(-1,3)
     c = c / 255.
     return c, None
-
+     
 
 # Image to data using PIL
 

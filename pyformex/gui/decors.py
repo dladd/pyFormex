@@ -91,14 +91,22 @@ def drawRect(x1,y1,x2,y2):
     drawGrid(x1,y1,x2,y2,1,1)
 
 
-def drawRectangle(x1,y1,x2,y2,color):
+def drawRectangle(x1,y1,x2,y2,color,texture=None):
     """Draw a single rectangular quad."""
-    color = resize(asarray(color),(4,3))
-    coord = [(x1,y1),(x2,y1),(x2,y2),(x1,y2)]
+    x = array([(x1,y1),(x2,y1),(x2,y2),(x1,y2)])
+    c = resize(asarray(color),(4,3))
+    ##drawPolygons(coord,None,'flat',color=color,texture=texture)
+    if texture is not None:
+        glTexture(texture)
+        t = [[0.,0.],[1.,0.],[1.,1.],[0.,1.]]
+    else:
+        t = None
     GL.glBegin(GL.GL_QUADS)
-    for c,x in zip(color,coord):
-        GL.glColor3fv(c)
-        GL.glVertex2fv(x)
+    for i in range(4):
+        GL.glColor3fv(c[i])
+        if texture is not None:
+            GL.glTexCoord2fv(t[i]) 
+        GL.glVertex2fv(x[i])
     GL.glEnd()
 
 
@@ -383,16 +391,17 @@ class ColorLegend(Decoration):
 
 class Rectangle(Decoration):
     """A 2D-rectangle on the canvas."""
-    def __init__(self,x1,y1,x2,y2,color=None,**kargs):
+    def __init__(self,x1,y1,x2,y2,color=None,texture=None,**kargs):
         Decoration.__init__(self,x1,y1,**kargs)
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
         self.setColor(color,ncolors=4)
+        self.setTexture(texture)
 
     def drawGL(self,**kargs):
-        drawRectangle(self.x1,self.y1,self.x2,self.y2,self.color)
+        drawRectangle(self.x1,self.y1,self.x2,self.y2,self.color,self.texture)
 
 
 class Grid(Decoration):
