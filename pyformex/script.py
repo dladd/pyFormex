@@ -670,7 +670,7 @@ def requireRevision(rev,comp='>='):
         raise RuntimeError,"Your current pyFormex revision (%s) does not pass the test %s %s" % (pf.__revision__,comp,rev)
 
 
-def grepSource(pattern,options='',quiet=False):
+def grepSource(pattern,options='',relative=True,quiet=False):
     """Finds pattern in the pyFormex source .py files.
 
     Uses the `grep` program to find all occurrences of some specified
@@ -680,7 +680,7 @@ def grepSource(pattern,options='',quiet=False):
     
     Returns the output of the grep command.
     """
-    files = utils.pyformexFiles()
+    files = utils.pyformexFiles(relative=relative)
     cmd = "grep %s '%s' %s" % (options,pattern,' '.join(files))
     sta,out = utils.runCommand(cmd,quiet=quiet) 
     return out

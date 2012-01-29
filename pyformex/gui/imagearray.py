@@ -187,4 +187,16 @@ def image2glcolor(im):
     return c, None
 
 
+# Image to data using PIL
+
+def imagefile2string(filename):
+    import Image
+    im = Image.open(filename)
+    nx,ny = im.size[0],im.size[1]
+    try:
+        data = im.tostring("raw","RGBA",0,-1)
+    except SystemError:
+        data = im.tostring("raw","RGBX",0,-1)
+    return nx,ny,data
+
 # End

@@ -124,11 +124,152 @@ GLenum gl_map2_vertexmode(int ndim)
     x : float (nel,nplex,3) : coordinates
     n : float (nel,3) or (nel,nplex,3) normals.
     c : float (nel,3) or (nel,nplex,3) colors
+    t : float (nplex,2) or (nel,nplex,2) : texture coords
     alpha : float
     objtype : GL Object type (-1 = auto)
 */  
 static PyObject *
 draw_polygons(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
+  float *x, *n=NULL, *c=NULL, *t=NULL, alpha;
+  int objtype,nel,nplex,ndn=0,ndc=0,ndt=0,i,j;
+
+#ifdef DEBUG
+  printf("** draw_polygons\n");
+#endif
+
+  if (!PyArg_ParseTuple(args,"OOOOfi",&arg1,&arg2,&arg3,&arg4,&alpha,&objtype)) return NULL;
+
+  arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
+  if (arr1 == NULL) return NULL;
+  x = (float *)PyArray_DATA(arr1);
+  nel = PyArray_DIMS(arr1)[0];
+  nplex = PyArray_DIMS(arr1)[1];
+#ifdef DEBUG
+  printf("** nel = %d\n",nel);
+  printf("** nplex = %d\n",nplex);
+#endif
+
+  arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr2 != NULL) { 
+    ndn = PyArray_NDIM(arr2);
+    n = (float *)PyArray_DATA(arr2);
+  }
+
+  arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr3 != NULL) { 
+    ndc = PyArray_NDIM(arr3);
+    c = (float *)PyArray_DATA(arr3);
+  }
+
+  arr4 = PyArray_FROM_OTF(arg4, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr4 != NULL) { 
+    ndt = PyArray_NDIM(arr4);
+    t = (float *)PyArray_DATA(arr4);
+  }
+  
+  if (objtype < 0) objtype = gl_objtype(nplex);
+    
+#ifdef DEBUG
+  printf("** nelems=%d, nplex=%d, ndn=%d, ndc=%d, ndt=%d, objtype=%d\n",nel,nplex,ndn,ndc,ndt,objtype);
+#endif
+
+  if (nplex <= 4 && objtype == gl_objtype(nplex)) { 
+    /*********** Points, Lines, Triangles, Quads **************/
+    glBegin(objtype);
+
+    if (ndc == 1)
+      gl_color(c,alpha);
+
+    for (i=0; i<nel; i++) {
+      if (ndc == 2) {  
+	gl_color(c,alpha);
+	c += 3;
+      }
+      if (ndn == 2) {
+	glNormal3fv(n);
+	n += 3;
+      }
+      for (j=0; j<nplex; j++) {
+	if (ndn == 3) {
+	  glNormal3fv(n);
+	  n += 3;
+	}
+	if (ndc == 3) {
+	  gl_color(c,alpha);
+	  c += 3;
+	}
+	if (ndt == 2) {
+	  glTexCoord2fv(t+2*j); 
+	} else if (ndt == 3) {
+	  glTexCoord2fv(t);
+	  t += 2;
+	}
+	glVertex3fv(x);
+	x += 3;
+      }
+    }
+    glEnd();
+    
+  } else {
+    /************** Polygons ********************/
+
+    if (ndc == 1)
+      gl_color(c,alpha);
+
+    for (i=0; i<nel; i++) {
+      glBegin(objtype);
+      if (ndc == 2) {  
+	gl_color(c,alpha);
+	c += 3;
+      }
+      if (ndn == 2) {
+	glNormal3fv(n);
+	n += 3;
+      }
+      for (j=0; j<nplex; j++) {
+	if (ndn == 3) {
+	  glNormal3fv(n);
+	  n += 3;
+	}
+	if (ndc == 3) {
+	  gl_color(c,alpha);
+	  c += 3;
+	}
+	if (ndt == 2)
+	  glTexCoord2fv(t+2*j); 
+	else if (ndt == 3) {
+	  glTexCoord2fv(t);
+	  t += 2;
+	}
+	glVertex3fv(x);
+	x += 3;
+      }
+      glEnd();
+    }
+  }
+
+  /* cleanup: */
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+/********************************************** draw_polygons ****/
+/* Draw polygons */
+/* args:  x
+    x : float (nel,nplex,3) : coordinates
+    n : float (nel,3) or (nel,nplex,3) normals.
+    c : float (nel,3) or (nel,nplex,3) colors
+    alpha : float
+    objtype : GL Object type (-1 = auto)
+*/  
+static PyObject *
+old_draw_polygons(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL;
@@ -406,9 +547,10 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
   float *x, *n=NULL, *c=NULL, alpha;
   int *e, objtype;
-  int npts,nel,nplex,ndc=0,ndn=0,i,j;
+  int nel,nplex,ndc=0,ndn=0,i,j;
 
 #ifdef DEBUG
+  int npts;
   printf("** draw_polygon_elements\n");
 #endif
 
@@ -417,8 +559,8 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) goto fail;
   x = (float *)PyArray_DATA(arr1);
-  npts = PyArray_DIMS(arr1)[0];
 #ifdef DEBUG
+  npts = PyArray_DIMS(arr1)[0];
   printf("** npts = %d\n",npts);
 #endif
 
@@ -646,17 +788,18 @@ pick_polygon_elems(PyObject *dummy, PyObject *args)
   PyObject *arg1=NULL, *arg2=NULL;
   PyObject *arr1=NULL, *arr2=NULL;
   float *x;
-  int *e,objtype,npts,nel,nplex,i,j;
+  int *e,objtype,nel,nplex,i,j;
 
 #ifdef DEBUG
+  int npts
   printf("** pick_polygon_elems\n");
 #endif
   if (!PyArg_ParseTuple(args,"OOi",&arg1,&arg2,&objtype)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
   if (arr1 == NULL) goto fail;
   x = (float *)PyArray_DATA(arr1);
-  npts = PyArray_DIMS(arr1)[0];
 #ifdef DEBUG
+  npts = PyArray_DIMS(arr1)[0];
   printf("** npts = %d\n",npts);
 #endif
 
@@ -827,6 +970,7 @@ static PyObject* draw_nurbs_surfaces(PyObject *dummy, PyObject *args)
 static PyMethodDef _methods_[] = {
     {"get_version", get_version, METH_VARARGS, "Return library version."},
     {"draw_polygons", draw_polygons, METH_VARARGS, "Draw polygons."},
+    {"old_draw_polygons", old_draw_polygons, METH_VARARGS, "Draw polygons."},
     {"pick_polygons", pick_polygons, METH_VARARGS, "Pick polygons."},
     {"draw_polygon_elems", draw_polygon_elems, METH_VARARGS, "Draw polygon elements."},
     {"pick_polygon_elems", pick_polygon_elems, METH_VARARGS, "Pick polygon elements."},

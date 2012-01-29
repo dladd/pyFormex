@@ -102,7 +102,7 @@ def filterWarnings():
         for w in pf.cfg['warnings/filters']:
             utils.filterWarning(*w)
     except:
-        pf.debug("Error while processing warning filters: %s" % pf.cfg['warnings/filters'])
+        pf.debug("Error while processing warning filters: %s" % pf.cfg['warnings/filters'],pf.DEBUG.WARNING)
     
 
 def refLookup(key):
@@ -110,7 +110,7 @@ def refLookup(key):
     try:
         return pf.refcfg[key]
     except:
-        pf.debug("!There is no key '%s' in the reference config!"%key)
+        pf.debug("!There is no key '%s' in the reference config!"%key,pf.DEBUG.WARNING)
         return None
 
 
@@ -203,16 +203,15 @@ def savePreferences():
     del pf.prefcfg['render']['light2']
     del pf.prefcfg['render']['light3']
 
-    pf.options.debug = 1
-    pf.debug("="*60)
-    pf.debug("!!!Saving config:\n%s" % pf.prefcfg)
+    pf.debug("="*60,pf.DEBUG.CONFIG)
+    pf.debug("!!!Saving config:\n%s" % pf.prefcfg,pf.DEBUG.CONFIG)
     
     try:
         pf.prefcfg.write(pf.preffile)
         res = "Saved"
     except:
         res = "Could not save"
-    pf.debug("%s preferences to file %s" % (res,pf.preffile))
+    pf.debug("%s preferences to file %s" % (res,pf.preffile),pf.DEBUG.CONFIG)
 
 
 def apply_config_changes(cfg):
@@ -358,17 +357,13 @@ def run(argv=[]):
            help="Redirect standard output to the message board (ignored with --nogui)",
            ),
         MO("--debug",
-           action="store_const", dest="debug", const=-1,
+           action="store", dest="debug", default='',
            help="display debugging info to sys.stdout",
            ),
         MO("--debuglevel",
-           action="store", dest="debug", type="int", default=0,
-           help="display debugging info to sys.stdout",
+           action="store", dest="debuglevel", type="int", default=0,
+           help="display debugging info to sys.stdout. The value is an int with the bits of the requested debug levels set. A value of -1 switches on all debug info. If this option is used, it overrides the --debug option.",
            ),
-        ## MO("--classify",
-        ##    action="store_true", dest="classify", default=False,
-        ##    help="classify the examples in categories",
-        ##    ),
         MO("--newviewports",
            action="store_true", dest="newviewports", default=False,
            help="Use the new multiple viewport canvas implementation. This is an experimental feature only intended for developers.",
@@ -427,45 +422,53 @@ def run(argv=[]):
         print("\nInvalid options: --nodefaultconfig but no --config option\nDo pyformex --help for help on options.\n")
         sys.exit()
 
-    pf.debug("Options: %s" % pf.options)
+    pf.debug("Options: %s" % pf.options,pf.DEBUG.OPTION)
 
 
     ########## Process special options which will not start pyFormex #######
 
-    if pf.options.listfiles or \
-       pf.options.search or \
-       pf.options.remove or \
-       pf.options.whereami or \
-       pf.options.detect or \
-       pf.options.testmodule:
 
-        if pf.options.listfiles:
-            print '\n'.join(utils.pyformexFiles(relative=True))
+    if pf.options.listfiles:
+        print '\n'.join(utils.pyformexFiles(relative=True))
+        return
 
-        if pf.options.search:
-            if len(args) > 0:
-                #from script import grepSource
-                #print grepSource(args[-1],' '.join(args[:-1]),quiet=True)
-                os.system("grep %s %s" % (' '.join(args),' '.join(utils.pyformexFiles(relative=True))))
+    if pf.options.search:
+        if len(args) > 0:
+            #from script import grepSource
+            #print grepSource(args[-1],' '.join(args[:-1]),quiet=True)
+            options = [ a for a in args if a.startswith('-') ]
+            args = [ a for a in args if not a in options ]
+            if len(args) > 1:
+                files = args[1:]
+            else:
+                files = utils.pyformexFiles(relative=True)
+            cmd = "grep %s '%s' %s" % (' '.join(options),args[0],' '.join(files))
+            os.system(cmd)
+        return
 
-        if pf.options.remove:
-            remove_pyFormex(pyformexdir,pf.scriptdir)
+    if pf.options.testmodule:
+        for a in pf.options.testmodule.split(','):
+            test_module(a)
+        return
 
-        if pf.options.whereami or pf.options.debug :
-            print("Script started from %s" % pf.scriptdir)
-            print("I found pyFormex in %s " %  pyformexdir)
-            print("Current Python sys.path: %s" % sys.path)
+    if pf.options.remove:
+        remove_pyFormex(pyformexdir,pf.scriptdir)
+        return
 
-        if pf.options.detect or pf.options.debug :
-            print("Detecting all installed helper software")
-            utils.checkExternal()
-            print(utils.reportDetected())
+    if pf.options.whereami or pf.options.detect :
+        pf.options.debuglevel |= pf.DEBUG.INFO
+            
+    pf.debug("Script started from %s" % pf.scriptdir,pf.DEBUG.INFO)
+    pf.debug("I found pyFormex in %s " %  pyformexdir,pf.DEBUG.INFO)
+    pf.debug("Current Python sys.path: %s" % sys.path,pf.DEBUG.INFO)
 
-        if pf.options.testmodule:
-            for a in pf.options.testmodule.split(','):
-                test_module(a)
+    if pf.options.detect:
+        print("Detecting all installed helper software")
+        utils.checkExternal()
+        print(utils.reportDetected())
 
-        sys.exit()
+    if pf.options.whereami or pf.options.detect :
+        return
 
     ########### Read the config files  ####################
 

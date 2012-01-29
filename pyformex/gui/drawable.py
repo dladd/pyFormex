@@ -74,6 +74,18 @@ def glColor(color,alpha=None):
             GL.glColor4fv(color)
             
 
+
+def glTexture(texture,mode='*'):
+    """Render-time texture environment setup"""
+    texmode = {'*': GL.GL_MODULATE, '1': GL.GL_DECAL}[mode]
+    # Configure the texture rendering parameters
+    GL.glEnable(GL.GL_TEXTURE_2D)
+    GL.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_MAG_FILTER,GL.GL_NEAREST)
+    GL.glTexParameterf(GL.GL_TEXTURE_2D,GL.GL_TEXTURE_MIN_FILTER,GL.GL_NEAREST)
+    GL.glTexEnvf(GL.GL_TEXTURE_ENV,GL.GL_TEXTURE_ENV_MODE,texmode)
+    # Re-select the texture
+    GL.glBindTexture(GL.GL_TEXTURE_2D,texture.tex)
+
 #
 # Though all three functions drawPoints, drawLines and drawPolygons
 # call the same low level drawgl.draw_polygons function, we keep 3 separate
@@ -100,7 +112,7 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     drawgl.draw_polygons(x,None,color,alpha,-1)
     
 
-def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1,texture=None,t=None):
+def drawPolygons(x,e,mode,color=None,alpha=1.0,texture=None,t=None,normals=None,objtype=-1):
     """Draw a collection of polygon elements.
 
     This function is like drawPolygons, but the vertices of the polygons
@@ -117,7 +129,9 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1,texture=N
     The value can be set to GL.GL_LINE_LOOP to draw the element's circumference
     independent from the drawing mode.
     """
-    pf.debug("drawPolygons")
+    #print "drawPolygons"
+    ## if texture is not None:
+    ##     print "  With texture %s" % texture.tex
     if e is None:
         nelems = x.shape[0]
     else:
@@ -145,14 +159,11 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1,texture=N
 
     # Texture
     if texture is not None:
-        if pf.options.uselib:
-            utils.warn("Sorry, you can not yet use textures with the acceleration library. Try 'pyformex --nouselib' to experiment with textures")
-            return
+        glTexture(texture)
         if t is None:
             t = array([[0.,0.],[1.,0.],[1.,1.],[0.,1.]])
-        texid = texture.tex
     else:
-        texid = t = None
+        t = None
 
 
     # Sanitize data before calling library function
@@ -170,15 +181,18 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1,texture=N
             color = None
     if t is not None:
         t = t.astype(float32)
-            
+        
     # Call library function
     if e is None:
-        if pf.options.uselib:
-            drawgl.draw_polygons(x,n,color,alpha,objtype,)
-        else:
-            drawgl.draw_tex_polygons(x,n,color,t,alpha,texid,objtype,)
+        #print "NO ELEMS, DRAWING WITH TEXTURE"
+        drawgl.draw_polygons(x,n,color,t,alpha,objtype)
     else:
-        drawgl.draw_polygon_elems(x,e,n,color,alpha,objtype)
+        if pf.options.uselib:
+            #print "ELEMS, DRAWING WITHOUT TEXTURE"
+            drawgl.draw_polygon_elems(x,e,n,color,alpha,objtype)
+        else:
+            #print "ELEMS, DRAWING WITH TEXTURE"
+            drawgl.draw_polygon_elems(x,e,n,color,t,alpha,objtype)
 
 
 def drawPolyLines(x,e,color):
@@ -613,7 +627,7 @@ def draw_faces(x,e,mode,color=None,alpha=1.0,texture=None,texc=None):
             color = color.reshape((nelems*nfaces,) + color.shape[-2:]).squeeze()
             pf.debug("COLOR SHAPE AFTER RESHAPING %s" % str(color.shape))
 
-    drawPolygons(x,e,mode,color,alpha,None,-1,texture,texc)
+    drawPolygons(x,e,mode,color,alpha,texture,texc)
 
 
 def drawEdges(x,e,edges,eltype,color=None):
@@ -1236,18 +1250,20 @@ class Texture(object):
     def __init__(self,image,flip=False):
         self.tex = None
         image = asarray(image)
-        print "Texture: type %s, size %s" % (image.dtype, image.shape)
+        # print "Texture: type %s, size %s" % (image.dtype, image.shape)
         image = require(image,dtype='ubyte',requirements='C')
-        print "Converted to: type %s, size %s" % (image.dtype, image.shape)
+        # print "Converted to: type %s, size %s" % (image.dtype, image.shape)
         ny,nx = image.shape[:2]
         
         # Generate a texture id
         tex = GL.glGenTextures(1)
         # Make our new texture the current 2D texture
+        GL.glEnable(GL.GL_TEXTURE_2D)
+        #GL.glTexEnvf(GL.GL_TEXTURE_ENV,GL.GL_TEXTURE_ENV_MODE,GL.GL_MODULATE)
         GL.glBindTexture(GL.GL_TEXTURE_2D,tex)
         GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1)
         # Copy the texture data into the current texture
-        GL.glTexImage2D(GL.GL_TEXTURE_2D,0,3,nx,ny,0,
+        GL.glTexImage2D(GL.GL_TEXTURE_2D,0,4,nx,ny,0,
                         GL.GL_RGBA,GL.GL_UNSIGNED_BYTE,image)
         self.tex = tex
         

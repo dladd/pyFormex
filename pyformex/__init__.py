@@ -74,14 +74,31 @@ def message(s):
 
 warning = message
 
-def debug(s,lead="DEBUG",level=-1):
+class DebugLevels(object):
+    """A class with debug levels.
+
+    This class holds the defined debug levels as attributes.
+    Each debug level is a binary value with a single bit set (a power of 2).
+    Debug levels can be combined with & (AND), | (OR) and ^ (XOR).
+    Two extra values are defined: None swtiches off all debugging, All
+    activates all debug levels.
+
+    """
+    ALL = -1
+    NONE = 0
+    INFO, WARNING, OPTION, CONFIG, SCRIPT, GUI, DRAW, LIB = \
+       1,       2,      4,      8,     16,  32,   64, 128
+
+DEBUG = DebugLevels
+
+def debug(s,level=DEBUG.ALL):
     """Print a debug message"""
     try: # to make sure that debug() can be used before options are set
-        if options.debug < 0 or (options.debug % level > 0):
+        if options.debuglevel & level:
             raise
         pass
     except:
-        print("%s: %s" % (lead,str(s)))
+        print("DEBUG(%s): %s" % (level,str(s)))
 
 
 def debugt(s):
@@ -91,4 +108,4 @@ def debugt(s):
 
 
 
-### End
+# End

@@ -641,12 +641,8 @@ class GeomActor(Actor):
                 if bkcolor is not None:
                     GL.glEnable(GL.GL_CULL_FACE)
                     GL.glCullFace(GL.GL_BACK)
-                # EXPERIMENTAL: TEXTURE DRAWING
-                if self.texture:
-                    print "DRAWING WITH TEXTURE"
-                    drawPolygons(self.coords,self.elems,mode,color,alpha,self.texture,None)
-                    return
-                drawPolygons(self.coords,self.elems,mode,color,alpha)
+                    
+                drawPolygons(self.coords,self.elems,mode,color,alpha,self.texture,None)
                 if bkcolor is not None:
                     GL.glCullFace(GL.GL_FRONT)
                     drawPolygons(self.coords,self.elems,mode,bkcolor,alpha)
@@ -665,14 +661,8 @@ class GeomActor(Actor):
                         GL.glEnable(GL.GL_CULL_FACE)
                         GL.glCullFace(GL.GL_BACK)
 
-                    # EXPERIMENTAL: TEXTURE DRAWING
-                    if self.texture:
-                        print "DRAWING WITH TEXTURE"
-                        drawFaces(self.coords,self.elems,faces,faces.eltype,mode,color,alpha,self.texture)
-                        return
-                    
-                    # Draw the front sides
-                    drawFaces(self.coords,self.elems,faces,faces.eltype,mode,color,alpha)
+                    drawFaces(self.coords,self.elems,faces,faces.eltype,mode,color,alpha,self.texture)
+
                     if bkcolor is not None:
                         # Draw the back sides
                         GL.glCullFace(GL.GL_FRONT)
