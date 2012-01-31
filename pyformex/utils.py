@@ -636,13 +636,11 @@ def userName():
 def is_pyFormex(filename):
     """Checks whether a file is a pyFormex script.
 
-    A script is considered to be a pyFormex script if its first line
-    starts with '#!' and contains the substring 'pyformex'
     A file is considered to be a pyFormex script if its name ends in '.py'
     and the first line of the file contains the substring 'pyformex'.
     Typically, a pyFormex script starts with a line::
 
-       #!/usr/bin/pyformex
+       # *** pyformex ***
     """
     filename = str(filename) # force it into a string
     if filename.endswith(".pye"):
@@ -652,7 +650,7 @@ def is_pyFormex(filename):
     if ok:
         try:
             f = open(filename,'r')
-            ok = f.readline().strip().find('pyformex') >= 0
+            ok = f.readline().find('pyformex') >= 0
             f.close()
         except IOError:
             ok = False

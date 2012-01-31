@@ -402,37 +402,20 @@ under the same names on Debian derivatives and Ubuntu and derivatives.
 
 Creating the libraries
 ----------------------
-The source for the libraries are in the `pyformex/lib` directory of your
-svn tree. Go to that directory and execute the commands::
-
-  ./configure   
-  make
-
-Alternatively, you can also just do ::
+The source for the libraries are the '.c' files in the `pyformex/lib` 
+directory of your svn tree. You will find there also the equivalent
+Python implementations. To compile the liraries, got to ``TOPDIR`` and execute
+the command::
 
   make lib
 
-in the top level directory.
-
-If you are a C-developer making changes to the C sources, you may want to
-activate debug messages in the libraries. This can be done by using the 
-following instead ::
-
-   make libdebug
-
-Remark that if you switch from a non-debug to debug version or vice-versa, 
-you need to do a reset between version with ::
-
-   make libreset
+Note that this command is executed automatically when you run pyFormex directly
+from the SVN sources (sse below). This is to ensure that you pick up any changes made to
+the library. If compilation of the libraries during startup fails,  
 
 
-.. warning:: 
-  The remainder of this document is just a collection of old
-  documents and needs some serious further work before it can be trusted.
-
-
-Run pyFormex from the svn sources
-=================================
+Run pyFormex from the svn source
+================================
 In the toplevel directory, execute the command::
 
   pyformex/pyformex
@@ -462,7 +445,49 @@ as seen from the ``~/bin`` directory.
 After starting a new terminal, you should be able to just enter the command
 ``pyformex`` to run your svn version from anywhere.  
 
-  
+When pyformex starts up from the svn source, it will first check that the 
+compiled acceleration libraries are not outdated, and if they are, pyformex
+will try to recompile them by invoking the 'make lib' command from the 
+parent directory. This is to avoid nasty crashes when the implementation of
+the library has changed. If this automatic compilation fails, pyformex will
+nevertheless continue, using the old compiled libraries or the slower Python
+implementation.
+
+
+Searching the pyFormex sources
+==============================
+While developing or using pyFormex, it is often desirable to be able to search
+the pyFormex sources, e.g.
+
+- to find examples of similar constructs for what you want to do,
+- to find the implementation place of some feature you want to change,
+- to update all code dependent on a feature you have changed.
+
+The ``pyformex`` command provides the necessary tool to do so::
+
+    pyformex --search -- [OPTIONS] PATTERN
+
+This will actually execute the command::
+    
+    grep OPTIONS PATTERN FILES
+
+where ``FILES`` will be replaced with the list of Python source files in the
+pyformex directories. The command will list all occasions of ``PATTERN`` in
+these files. All normal ``grep`` options (see ``man grep``) can be added, like
+ '-f' to search for a plain string instead of a regular expression, or '-i'
+make the search case insensitive.
+
+If you find the pyformext command above to elaborate, you can just define a
+shorter alias. If you put the following line in your ``.bashrc``
+file ::
+
+    alias pysea='pyformex --search --'  
+
+you will be able to just do ::
+
+    pysea PATTERN
+
+
 Creating pyFormex documentation
 ===============================
 

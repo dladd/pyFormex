@@ -38,8 +38,9 @@ from project import Project
 from geometry import Geometry
 
 ########################
-# Imported here only to make it available in scripts
+# Imported here only to make available in scripts
 from mesh import Mesh
+from plugins.trisurface import TriSurface
 
 ########################
 
@@ -86,8 +87,7 @@ def Globals():
     g = {}
     g.update(globals())
     if pf.GUI:
-        from gui import colors,draw
-        g.update(colors.__dict__)
+        from gui import draw
         g.update(draw.__dict__)
     g.update(formex.__dict__)
     return g
@@ -250,7 +250,9 @@ scriptThread = None
 exitrequested = False
 stepmode = False
 starttime = 0.0
-pye = False
+
+# BV: do we need this??
+#pye = False
 
 scriptlock = set()
 
@@ -300,7 +302,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
     if pf.GUI:
         global stepmode,exportNames,starttime
-        #pf.debug('GUI SCRIPT MODE %s'% (stepmode))
+        pf.debug('GUI SCRIPT MODE %s'% (stepmode),pf.DEBUG.SCRIPT)
         pf.GUI.drawlock.allow()
         pf.canvas.update()
         pf.GUI.actions['Play'].setEnabled(False)
@@ -320,9 +322,6 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     if filename:
         g.update({'__file__':filename})
     g.update({'argv':argv})
-
-    # Make this directory available
-    #pf._PF_ = g
 
     # Now we can execute the script using these collected globals
     exportNames = []
@@ -368,22 +367,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                 
         if pf.cfg['autoglobals']:
             exportNames.extend(listAll(clas=Geometry,dic=g))
-        ## try:
-        ##     print "ENDRUN"
-        ##     print "g is %s" % id(g)
-        ##     print "pf.PF is %s" % id(pf.PF)
-        ##     print "pf.PF['Mesh-3'] is %s" % id(pf.PF['Mesh-3'])
-        ## except:
-        ##     pass
-        ## print exportNames
         pf.PF.update([(k,g[k]) for k in exportNames])
-        ## try:
-        ##     print "UPDATED"
-        ##     print "g is %s" % id(g)
-        ##     print "pf.PF is %s" % id(pf.PF)
-        ##     print "pf.PF['Mesh-3'] is %s" % id(pf.PF['Mesh-3'])
-        ## except:
-        ##     pass
 
         scriptRelease('__auto__') # release the lock
         #elapsed = time.clock() - starttime
@@ -473,10 +457,37 @@ def playFile(fn,argv=[]):
     t = Timer()
     message("Running script (%s)" % fn)
     pf.debug("  Executing with arguments: %s" % argv)
-    res = playScript(file(fn,'r'),fn,fn,argv,fn.endswith('.pye'))
+    pye = fn.endswith('.pye')
+    res = playScript(file(fn,'r'),fn,fn,argv,pye)
     pf.debug("  Arguments left after execution: %s" % argv)
     message("Finished script %s in %s seconds" % (fn,t.seconds()))
     return res
+
+
+def runApplication(app):
+    import sys
+    # Get the globals
+    g = Globals()
+    ## if pf.GUI:
+    ##     modname = 'draw'
+    ##     # by default, we run the script in the current GUI viewport
+    ##     pf.canvas = pf.GUI.viewports.current
+    ## else:
+    ##     modname = 'script'
+    ## g.update({'__name__':modname})
+    ## if filename:
+    ##     g.update({'__file__':filename})
+    ## g.update({'argv':argv})
+    __import__(app,g)
+    app =  sys.modules[name]
+    reload(app)
+    print dir(app)
+    if hasattr(app,'run'):
+        print "RUNNING"
+        app.run()
+    else:
+        print "CAN NOT RUN"
+    return app
 
 
 def play(fn=None,argv=[],step=False):
@@ -493,9 +504,17 @@ def play(fn=None,argv=[],step=False):
             fn = pf.cfg['curfile']
         else:
             return
-    stepmode = step
     pf.GUI.history.add(fn)
     stepmode = step
+    ## if pf.options.appmode:
+    ##     try:
+    ##         f = open(fn,'r')
+    ##         ok = f.readline().find('pyformex.app') >= 0
+    ##         f.close()
+    ##     except IOError:
+    ##         ok = False
+    ##     if ok:
+    ##         appname = os.path
     return playFile(fn,argv)
 
 
