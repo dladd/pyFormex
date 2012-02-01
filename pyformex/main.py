@@ -133,7 +133,7 @@ def setRevision():
         pf.__revision__ = out.strip()
 
 
-def remove_pyFormex(pyformexdir,scriptdir):
+def remove_pyFormex(pyformexdir,bindir):
     """Remove the pyFormex installation."""
     print("""
 BEWARE!
@@ -143,12 +143,12 @@ If you continue, pyFormex will exit and you will not be able to run it again.
 The pyFormex installation is in: %s
 The pyFormex executable script is in: %s
 You will need proper permissions to actually delete the files.
-""" % (pyformexdir,scriptdir))
+""" % (pyformexdir,bindir))
     s = raw_input("Are you sure you want to remove pyFormex? yes/NO: ")
     if s == 'yes':
         print("Removing %s" % pyformexdir)
         utils.removeTree(pyformexdir)
-        script = os.path.join(scriptdir,'pyformex')
+        script = os.path.join(bindir,'pyformex')
         egginfo = "%s-%s.egg-info" % (pyformexdir,pf.__version__.replace('-','_'))
         datadir = os.path.commonprefix(['/usr/local/share',pyformexdir])
         datadir = os.path.join(datadir,'share')
@@ -449,13 +449,13 @@ def run(argv=[]):
         return
 
     if pf.options.remove:
-        remove_pyFormex(pyformexdir,pf.scriptdir)
+        remove_pyFormex(pyformexdir,pf.bindir)
         return
 
     if pf.options.whereami or pf.options.detect :
         pf.options.debuglevel |= pf.DEBUG.INFO
             
-    pf.debug("Script started from %s" % pf.scriptdir,pf.DEBUG.INFO)
+    pf.debug("Script started from %s" % pf.bindir,pf.DEBUG.INFO)
     pf.debug("I found pyFormex in %s " %  pyformexdir,pf.DEBUG.INFO)
     pf.debug("Current Python sys.path: %s" % sys.path,pf.DEBUG.INFO)
 

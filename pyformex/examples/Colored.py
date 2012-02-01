@@ -43,6 +43,8 @@ color0 = None  # no color: current fgcolor
 color1 = red   # single color
 color2 = array([red,green,blue]) # 3 colors: will be repeated
 
+delay(5)
+i=0
 for shape in Shapes:
     F = Formex(shape).replic2(8,4)
     color3 = resize(color2,F.shape()) # full color
@@ -56,7 +58,9 @@ for shape in Shapes:
             zoomAll()
             for light in Lights:
                 lights(light)
-                sleep(1)
+                print i,light
+                i += 1
+                wait()
 
 
 # End

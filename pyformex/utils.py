@@ -356,7 +356,7 @@ def pyformexFiles(relative=False):  # WE COULD ADD other=None):
     path = pf.cfg['pyformexdir']
     if relative:
         path = os.path.relpath(path)
-    files = listTree(path,listdirs=False,sorted=True,includedirs=['gui','plugins','examples','lib'],includefiles=['.*\.py$'])
+    files = listTree(path,listdirs=False,sorted=True,includedirs=['gui','plugins','apps','examples','lib'],includefiles=['.*\.py$'])
     return files
 
 

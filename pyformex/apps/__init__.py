@@ -31,30 +31,26 @@ applications.
 import pyformex as pf
 import utils
 
-from types import ModuleType
 import os
 
 
-def load(app):
+def load(appname,refresh=False,autorun=True):
     """Load and run the named app"""
     import sys
-    name = 'apps.'+app
-    __import__(name)
-    module = sys.modules[name]
-    #reload(module)
-    if type(module) is ModuleType and hasattr(module,'run'):
-        module.run()
-
-
-def refresh(app):
-    """Reload the named app"""
-    __import__('apps.'+app)
-    module = globals().get(app,None)
-    if type(module) is ModuleType and hasattr(module,'show_menu'):
-        reload(module)
-    else:
-        error("No such module: %s" % app)
-
+    name = 'apps.'+appname
+    try:
+        __import__(name)
+        app = sys.modules[name]
+        if pf.GUI:
+            pf.GUI.setcurfile(app)
+        if refresh:
+            reload(module)
+        if autorun and hasattr(app,'run'):
+            app.run()
+        return app
+    except:
+        raise
+    
 
 def available_apps():
     appdir = os.path.dirname(__file__)

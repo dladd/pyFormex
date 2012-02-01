@@ -286,8 +286,13 @@ class Gui(QtGui.QMainWindow):
         self.resize(*size)
         self.move(*pos)
         self.board.resize(*bdsize)
-        
-        self.setcurfile()
+
+        app = pf.cfg['curfile']
+        if not (app.endswith('.py') or app.endswith('.pye')):
+            import apps
+            app = app.replace('apps.','')
+            app = apps.load(app,autorun=False)
+        self.setcurfile(app)
         self.setcurdir()
         if pf.options.redirect:
             sys.stderr = self.board
@@ -499,29 +504,31 @@ class Gui(QtGui.QMainWindow):
         self.curproj.setText(project)
 
 
-    def setcurfile(self,filename=''):
-        """Set the current file and check whether it is a pyFormex script.
+    def setcurfile(self,app):
+        """Set the current script or application.
 
-        The checking is done by the function is_pyFormex().
-        A file that is not a pyFormex script can be loaded in the editor,
-        but it can not be played as a pyFormex script.
+        app is either an imported application module, an application
+        module name or a script file.
         """
-        if filename:
-            # We always set it to be saved in the prefs
-            pf.prefcfg['curfile'] = filename
+        from types import ModuleType
+        is_app = type(app) is ModuleType
+        if is_app:
+            name = app.__name__.replace('apps.','')
+            self.canPlay = hasattr(app,'run')
+            self.curfile.label.setText('App:')
+            pf.prefcfg['curfile'] = name
         else:
-            filename = pf.cfg['curfile']
-        if filename:
-            self.canPlay = utils.is_pyFormex(filename) or filename.endswith('.pye')
-            self.curfile.setText(os.path.basename(filename))
-            self.actions['Play'].setEnabled(self.canPlay)
+            name = os.path.basename(app)
+            self.canPlay = utils.is_pyFormex(app) or app.endswith('.pye')
+            self.curfile.label.setText('Script:')
             self.actions['Step'].setEnabled(self.canPlay)
-            self.actions['Stop'].setEnabled(self.canPlay)
-            if self.canPlay:
-                icon = 'ok'
-            else:
-                icon = 'notok'
-            self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(pf.cfg['icondir'],icon)+pf.cfg['gui/icontype'])),0)
+            pf.prefcfg['curfile'] = app
+
+        self.curfile.setText(name)
+        self.actions['Play'].setEnabled(self.canPlay)
+        self.actions['Stop'].setEnabled(self.canPlay)
+        icon = 'ok' if self.canPlay else 'notok'
+        self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(pf.cfg['icondir'],icon)+pf.cfg['gui/icontype'])),0)
 
 
     def setcurdir(self):

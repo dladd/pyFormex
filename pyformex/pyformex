@@ -36,30 +36,42 @@ own needs.
 
 pyFormex is being developed at the IBiTech, Ghent University, and can be
 distributed under the GNU General Public License, version 3 or later.
-(C) 2004-2009 Benedict Verhegghe (benedict.verhegghe@ugent.be)) 
+(C) 2004-2012 Benedict Verhegghe (benedict.verhegghe@ugent.be)) 
 """
 
 # Get the pyformex dir and put it on the head of sys.path
 import sys,os
-_scriptdir = sys.path[0]
+_bindir = sys.path[0]
 
 # In case we execute the pyformex script from inside the
 # pyformex package dir: add the parent to the front of sys.path
-# to pick up this package by preference
+# to pick up the package here instead of from default path
 
-if _scriptdir.endswith('pyformex'):
-    sys.path[:0] = [ os.path.dirname(_scriptdir) ]
+if _bindir.endswith('pyformex'):
+    sys.path[:0] = [ os.path.dirname(_bindir) ]
     
 try:
     import pyformex
-    pyformex.scriptdir = _scriptdir
-    # we could remove the sys.path[0] again?
 except:
     print("Could not import pyformex.")
     print("This probably means that pyFormex was not properly installed.")
+    raise
 
-# Put the pyformex path in front.
-sys.path = [ pyformex.__path__[0] ] + sys.path
+# Remember where we got started
+pyformex.bindir = _bindir
+
+# Put the pyformex module path in front to avoid picking up modules
+# from other packages installed next to pyformex.
+pyformex_path = pyformex.__path__[0]
+
+if pyformex_path == _bindir:
+    # pyformex path is second, its parent is first: exchange the two
+    sys.path[:2] = sys.path[1::-1]
+else:
+    # pointless _bindir parent is first: it can be removed
+    # pyformex path is not there: add it at the front
+    # so, just overwrite first path
+    sys.path[0] = pyformex.__path__
 
 #from pyformex.main import run
 from main import run

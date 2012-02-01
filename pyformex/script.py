@@ -464,58 +464,37 @@ def playFile(fn,argv=[]):
     return res
 
 
-def runApplication(app):
-    import sys
-    # Get the globals
-    g = Globals()
-    ## if pf.GUI:
-    ##     modname = 'draw'
-    ##     # by default, we run the script in the current GUI viewport
-    ##     pf.canvas = pf.GUI.viewports.current
-    ## else:
-    ##     modname = 'script'
-    ## g.update({'__name__':modname})
-    ## if filename:
-    ##     g.update({'__file__':filename})
-    ## g.update({'argv':argv})
-    __import__(app,g)
-    app =  sys.modules[name]
-    reload(app)
-    print dir(app)
-    if hasattr(app,'run'):
-        print "RUNNING"
-        app.run()
-    else:
-        print "CAN NOT RUN"
-    return app
+def runApplication(app,argv=[]):
+    import apps
+    from timer import Timer
+    t = Timer()
+    message("Running application %s" % app)
+    pf.debug("  Passing arguments: %s" % argv)
+    apps.load(app)
+    pf.debug("  Arguments left after execution: %s" % argv)
+    message("Finished %s in %s seconds" % (app,t.seconds()))
 
 
-def play(fn=None,argv=[],step=False):
-    """Play the pyFormex script with filename `fn` or the current script file.
-
-    This function does nothing if no filename is passed or no current
+def play(app=None,argv=[],step=False):
+    """Run the current pyFormex application or script file.
+    
+    This function does nothing if no appname/filename is passed or no current
     scriptfile was set.
     If arguments are given, they are passed to the script. If `step` is True,
     the script is executed in step mode.
     """
     global stepmode
-    if not fn:
+    if app is None:
         if pf.GUI.canPlay:
-            fn = pf.cfg['curfile']
+            app = pf.cfg['curfile']
         else:
             return
-    pf.GUI.history.add(fn)
-    stepmode = step
-    ## if pf.options.appmode:
-    ##     try:
-    ##         f = open(fn,'r')
-    ##         ok = f.readline().find('pyformex.app') >= 0
-    ##         f.close()
-    ##     except IOError:
-    ##         ok = False
-    ##     if ok:
-    ##         appname = os.path
-    return playFile(fn,argv)
+    pf.GUI.history.add(app)
+    if app.endswith('.py') or app.endswith('.pye'):
+        stepmode = step
+        return playFile(app,argv)
+
+    runApplication(app,argv)
 
 
 def exit(all=False):
