@@ -95,9 +95,9 @@ class TranslatedActor(Actor):
     def bbox(self):
         return self.actor.bbox() + self.trl
 
-    def redraw(self,mode,color=None):
-        self.actor.redraw(mode=mode,color=color)
-        Drawable.redraw(self,mode=mode,color=color)
+    def redraw(self,**kargs):
+        self.actor.redraw(**kargs)
+        Drawable.redraw(self,**kargs)
 
     def drawGL(self,**kargs):
         GL.glMatrixMode(GL.GL_MODELVIEW)
@@ -130,9 +130,9 @@ class RotatedActor(Actor):
     def bbox(self):
         return self.actor.bbox() # TODO : rotate the bbox !
 
-    def redraw(self,mode,color=None):
-        self.actor.redraw(mode=mode,color=color)
-        Drawable.redraw(self,mode=mode,color=color)
+    def redraw(self,**kargs):
+        self.actor.redraw(**kargs)
+        Drawable.redraw(self,**kargs)
 
     def drawGL(self,**kargs):
         GL.glMatrixMode(GL.GL_MODELVIEW)

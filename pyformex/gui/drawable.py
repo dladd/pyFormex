@@ -108,7 +108,7 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     if size:
         GL.glPointSize(size)
     x = x.reshape(-1,1,3)
-    drawgl.draw_polygons(x,None,color,alpha,-1)
+    drawgl.draw_polygons(x,None,color,None,alpha,-1)
     
 
 def drawPolygons(x,e,mode,color=None,alpha=1.0,texture=None,t=None,normals=None,objtype=-1):

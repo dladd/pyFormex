@@ -258,7 +258,7 @@ def sphere(ndiv):
     from elements import Icosa
     from mesh import Mesh
     I = Mesh(Icosa.vertices,Icosa.faces)
-    M = I.refine(ndiv).fuse()
+    M = I.subdivide(ndiv).fuse()
     return M.projectOnSphere()
 
         

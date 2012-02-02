@@ -1268,6 +1268,238 @@ Shortest altitude: %s; largest aspect ratio: %s
         return firstprop + p
 
 
+    # This may replace CutWithPlane after it has been proved stable
+    # and has been expanded to multiple planes
+    def cutWithPlane1(self,p,n,side=''):
+        """Cut a surface with a plane.
+
+        Cuts the surface with a plane defined by a point p and normal n.
+
+        Parameters:
+        
+        - `p`: float, shape (3,): a point in the cutting plane
+        - `n`: float, shape (3,): the normal vector to the plane
+        - `side`: '', '+' or '-': selector of the returned parts. Default
+          is to return a tuple of two surfaces, with the parts at the positive,
+          resp. negative side of the plane as defined by the normal vector.
+          If a '+' or '-' is specified, only the corresponding part is returned.
+
+        Returns: a tuple of two TriSurfaces, or a single TriSurface,
+          depending on the value of `side`. The returned surfaces will have
+          their normals fixed wherever possible. Property values will be set
+          containing the triangle number of the original surface from which
+          the elements resulted.
+        """
+        from gui.draw import draw,drawPlane
+        from formex import _sane_side, _select_side
+        side = _sane_side(side)
+
+        p = array(p).reshape(3)
+        n = array(n).reshape(3)
+
+        # Make sure we inherit element number
+        save_prop = self.prop
+        self.prop = arange(self.elems.shape[0])
+
+        # Compute distance to plane of all vertices
+        d = self.distanceFromPlane(p,n)
+
+        p_pos = d > 0.
+        p_neg = d < 0.
+        p_in = ~(p_pos+p_neg)
+        p_posin = p_pos + p_in
+        p_negin = p_neg + p_in
+        
+        # Reduce the surface to the part intersecting with the plane:
+        # Remember triangles with all up or all down vertices
+        # Elements completely in the plane end up in both parts.
+        # BV: SHOULD WE CHANGE THIS???
+        ## d_ele = d[self.elems]
+        ## ele_all_up = (d_ele >= 0.).all(axis=1)
+        ## ele_all_do = (d_ele <= 0.).all(axis=1)
+        ele_all_up = p_posin[self.elems].all(axis=1)
+        ele_all_do = p_negin[self.elems].all(axis=1)
+        S = self.cclip(ele_all_up+ele_all_do)  # DOES THIS COMPACT? NO
+        Sp = self.clip(ele_all_up)
+        Sn = self.clip(ele_all_do)
+        # Restore properties
+        self.prop = save_prop
+
+        print "POS: %s; NEG: %s; CUT: %s" % (Sp.nelems(),Sn.nelems(),S.nelems())
+
+        # If there is no intersection, we're done
+        # (we might have cut right along facet edges!)
+        if S.nelems() == 0:
+            res = _select_side(side,[Sp,Sn])
+            return res
+
+        #######################
+        # Cut S with the plane.
+        #######################
+        # First define facets in terms of edges
+        coords = S.coords
+        edg = S.getEdges()
+        fac = S.getElemEdges()
+        ele = S.elems
+
+        # Get the edges intersecting with the plane: 1 up and 1 down vertex
+        d_edg = d[edg]
+        edg_1_up = (d_edg > 0.).sum(axis=1) == 1
+        edg_1_do = (d_edg < 0.).sum(axis=1) == 1
+        cutedg = edg_1_up * edg_1_do
+        ind = where(cutedg)[0]
+        if ind.size == 0:
+            raise ValueError,"This really should not happen!"
+        
+        # Compute the intersection points
+        M = Mesh(S.coords,edg[cutedg])
+        x = geomtools.intersectionPointsSWP(M.toFormex().coords,p,n,mode='pair',return_all=True).reshape(-1,3)
+        # Create inverse index to lookup the point using the edge number
+        rev = inverseUniqueIndex(ind) + coords.shape[0]
+        # Concatenate the coords arrays
+        coords = coords.concatenate([coords,x])
+        
+        #drawPlane(p,n,((4.,4.),(4.,4.)))
+        draw(Sp,color='red')
+        draw(S,color='green')
+        #E = Mesh(coords,edg)
+        #drawNumbers(E)
+        drawNumbers(coords,color='green')
+        draw(Sn,color='blue')
+        ## X = Formex(x)
+        ## draw(X,marksize=10,color=red)
+        ## drawNumbers(X,color=red,trl=[0.2,0.,0.0])
+       
+        # For each triangle, compute the number of cutting edges
+        cut = cutedg[fac]
+        ncut = cut.sum(axis=1)
+        print 'ncut',ncut
+
+        if (ncut < 1).any() or (ncut > 2).any():
+            # Maybe we should issue a warning and ignore these cases?
+            print "NCUT: ",ncut
+            raise ValueError, "I expected all triangles to be cut along 1 or 2 edges. I do not know how to proceed now."
+        
+        # Process the elements cutting one edge
+        #######################################
+        ncut1 = ncut==1
+        if ncut1.any():
+            prop1 = where(ncut1)[0]
+            fac1 = fac[ncut1]
+            ele1 = ele[ncut1]
+
+            cutedg1 = cutedg[fac1]
+            cut_edges =  fac1[cutedg1]
+            #non_cut_edges =  fac1[~cutedg1].reshape(-1,2)
+            #print cut_edges
+
+            # Identify the node numbers
+            # 0 : vertex on positive side
+            # 1 : vertex in plane
+            # 2 : new point dividing edge
+            # 3 : vertex on negative side
+            elems = column_stack([
+                ele1[p_pos[ele1]],
+                ele1[p_in[ele1]],
+                rev[cut_edges],
+                ele1[p_neg[ele1]],
+                ])
+            print elems
+
+            if side in '+':
+                Sp += TriSurface(coords,elems[:,0:3],prop=prop1)
+            if side in '-':
+                Sn += TriSurface(coords,elems[:,1:4],prop=prop1)
+        
+        # Process the elements cutting two edges
+        ########################################
+        ncut2 = ncut==2
+        if ncut2.any():
+            ele2 = ele[ncut2]
+            pp2 = p_pos[ele2]
+            pn2 = p_neg[ele2]
+            ncut2p = pp2.sum(axis=-1)==1
+            ncut2n = pn2.sum(axis=-1)==1
+            #print ncut2p,ncut2n 
+
+            if ncut2p.any():
+                print "# one vertex at positive side"
+                prop1 = where(ncut2p)[0]
+                fac1 = fac[ncut2p]
+                ele1 = ele[ncut2p]
+
+                cutedg1 = cutedg[fac1]
+                cut_edges =  fac1[cutedg1].reshape(-1,2)
+                #print cut_edges
+
+                corner = ele1[p_pos[ele1]]
+                print corner
+                quad = edg[cut_edges].reshape(-1,4)
+                print quad
+                print quad != corner.reshape(-1,1)
+                quad2 = quad[ quad != corner.reshape(-1,1) ]
+                print quad2
+            # Identify the node numbers
+            # 0   : vertex on positive side
+            # 1,2 : new points dividing edges
+            # 3,4 : vertices on negative side
+            elems = column_stack([
+                ele1[p_pos[ele1]],
+                rev[cut_edges],
+                quad2.reshape(-1,2)
+#                ele1[p_neg[ele1]].reshape(-1,2),
+                ])
+            print elems
+
+            if side in '+':
+                Sp += TriSurface(coords,elems[:,0:3],prop=prop1)
+            if side in '-':
+                Sn += TriSurface(coords,elems[:,1:4],prop=prop1)
+                Sn += TriSurface(coords,elems[:,2:5],prop=prop1)
+
+            if ncut2n.any():
+                print "# one vertex at negative side"
+                prop1 = where(ncut2n)[0]
+                fac1 = fac[ncut2n]
+                ele1 = ele[ncut2n]
+
+                cutedg1 = cutedg[fac1]
+                cut_edges =  fac1[cutedg1].reshape(-1,2)
+                #print cut_edges
+
+                corner = ele1[p_neg[ele1]]
+                print corner
+                quad = edg[cut_edges].reshape(-1,4)
+                print quad
+                print quad != corner.reshape(-1,1)
+                quad2 = quad[ quad != corner.reshape(-1,1) ]
+                print quad2
+
+            # 0   : vertex on negative side
+            # 1,2 : new points dividing edges
+            # 3,4 : vertices on positive side
+            elems = column_stack([
+                quad2.reshape(-1,2),
+#                ele1[p_pos[ele1]].reshape(-1,2),
+                rev[cut_edges],
+                ele1[p_neg[ele1]],
+                ])
+            print elems
+
+            if side in '+':
+                Sp += TriSurface(coords,elems[:,0:3],prop=prop1)
+                Sp += TriSurface(coords,elems[:,1:4],prop=prop1)
+            if side in '-':
+                Sn += TriSurface(coords,elems[:,2:5],prop=prop1)
+          
+        # Result
+        if side in '+':
+            Sp = Sp.compact()#.fixNormals()
+        if side in '-':
+            Sn = Sn.compact()#.fixNormals()
+        return _select_side(side,[Sp,Sn])
+
+
     def cutWithPlane(self,*args,**kargs):
         """Cut a surface with a plane or a set of planes.
 
@@ -1340,7 +1572,8 @@ Shortest altitude: %s; largest aspect ratio: %s
         edg = S.getEdges()
         fac = S.getElemEdges()
         ele = S.elems
-        d = S.distanceFromPlane(p,n)
+        # No need to recompute distances, as clipping does not compact! 
+        #d = S.distanceFromPlane(p,n) #
 
         # Get the edges intersecting with the plane: 1 up and 1 down vertex
         d_edg = d[edg]
