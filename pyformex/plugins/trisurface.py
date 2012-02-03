@@ -914,6 +914,12 @@ class TriSurface(Mesh):
         return [ fillBorder(b,method).setProp(mprop+i) for i,b in enumerate(self.border()) ]
 
 
+    def close(self,method='radial'):
+        border = self.fillBorder(method)
+        return self.concatenate([self]+border)
+        
+
+
     def edgeCosAngles(self):
         """Return the cos of the angles over all edges.
         
