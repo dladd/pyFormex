@@ -346,7 +346,6 @@ def fillBorder(border,method='radial'):
       returned surface will use the same point coordinate array as the input
       object.
     """
-    from plugins.trisurface import TriSurface
     if method != 'border':
         border = border.compact()
     if isinstance(border,Mesh) and border.nplex()==2:

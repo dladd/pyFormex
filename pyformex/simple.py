@@ -256,10 +256,12 @@ def sphere(ndiv):
       at the origin.
     """
     from elements import Icosa
-    from mesh import Mesh
-    I = Mesh(Icosa.vertices,Icosa.faces)
-    M = I.subdivide(ndiv).fuse()
-    return M.projectOnSphere()
+    from plugins.trisurface import TriSurface
+
+    M = TriSurface(Icosa.vertices,Icosa.faces)
+    M = M.subdivide(ndiv).fuse()
+    M = M.projectOnSphere()
+    return M
 
         
 def sphere3(nx,ny,r=1,bot=-90,top=90):
@@ -318,8 +320,6 @@ def connectCurves(curve1,curve2,n):
     curves = interpolate(curve1,curve2,n).split(curve1.nelems())
     quads = [ connect([c1,c1,c2,c2],nodid=[0,1,1,0]) for c1,c2 in zip(curves[:-1],curves[1:]) ]
     return Formex.concatenate(quads)
-
-
 
 
 def sector(r,t,nr,nt,h=0.,diag=None):

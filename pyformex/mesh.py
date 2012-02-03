@@ -1092,6 +1092,9 @@ Size: %s
     def convertRandom(self,choices):
         """Convert choosing randomly between choices
 
+        Returns a Mesh obtained by converting the current Mesh by a
+        randomly selected method from the available conversion type
+        for the current element type.
         """
         ml = self.splitRandom(len(choices),compact=False)
         ml = [ m.convert(c) for m,c in zip(ml,choices) ]
@@ -1132,7 +1135,7 @@ Size: %s
           smaller elements of the same type.
 
         ..note:: This is currently only implemented for Meshes of type 'tri3'
-          and 'quad4'.
+          and 'quad4' and for the derived class 'TriSurface'.
         """
         elname = self.eltype.name()
         try:
@@ -1146,7 +1149,7 @@ Size: %s
         X = self.coords[self.elems]
         U = dot(wts,X).transpose([1,0,2]).reshape(-1,3)
         e = concatenate([els+i*wts.shape[0] for i in range(self.nelems())])
-        M = Mesh(U,e,eltype=self.eltype)
+        M = self.__class__(U,e,eltype=self.eltype)
         if kargs.get('fuse',True):
             M = M.fuse()
         return M
@@ -1502,7 +1505,7 @@ Size: %s
 
 
     def smooth(self, iterations=1, lamb=0.5, k=0.1, edg=True):
-        """Return a smoothened mesh.
+        """Return a smoothed mesh.
         
         Smoothing algorithm based on lowpass filters.
         
@@ -1538,7 +1541,7 @@ Size: %s
         for i in range(iterations):
             c = (1.-lamb)*c + lamb*(w*c[adj]).sum(1)
             c = (1.-mu)*c + mu*(w*c[adj]).sum(1)
-        return Mesh(c, self.elems, self.prop, eltype=self.eltype)
+        return self.__class__(c, self.elems, self.prop, eltype=self.eltype)
 
 
     def __add__(self,other):

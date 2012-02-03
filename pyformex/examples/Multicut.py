@@ -37,12 +37,12 @@ It uses the cutWithPlane function with a series of cutting planes.
 
 """
 clear()
-smoothwire()
+
 from simple import sphere
-S = TriSurface(sphere(3).scale(4.))
-P = S.cutWithPlane([[2.,0.,0.],[0.,1.,0.],[-2.,0.,0.],[0.,-2.,0.]],
+S = sphere(8).scale(3.)
+T = S.cutWithPlane([[2.,0.,0.],[0.,1.,0.],[-2.,0.,0.],[0.,-1.,0.]],
                    [[-1.,0.,0.],[0.,-1.,0.],[1.,0.,0.],[0.,+1.,0.]],
                    side = '-')
-draw(P)
+draw(T)
 
 # End
