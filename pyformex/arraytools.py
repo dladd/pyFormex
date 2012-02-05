@@ -234,7 +234,8 @@ def niceNumber(f,below=False):
 
     >>> [ str(niceNumber(f)) for f in [ 0.0837, 0.837, 8.37, 83.7, 93.7] ]
     ['0.09', '0.9', '9.0', '90.0', '100.0']
-    >>> [ str(niceNumber(f,below=True)) for f in [ 0.0837, 0.837, 8.37, 83.7, 93.7] ]
+    >>> [ str(niceNumber(f,below=True)) for f in [ 0.0837, 0.837, 8.37,
+    83.7, 93.7] ]
     ['0.08', '0.8', '8.0', '80.0', '90.0']
 
     """
@@ -319,7 +320,7 @@ def norm(v,n=2):
 
     Default is the quadratic norm (vector length).
     `n == 1` returns the sum.
-    ``n <= 0`` returns the max absolute value.
+    ``n<=0`` returns the max absolute value.
     """
     a = asarray(v).flat
     if n == 2:
@@ -372,7 +373,7 @@ def solveMany(A,b,direct=True):
     For ndof in [1,2,3], all solutions are by default computed directly and
     simultaneously. If ``direct=False`` is specified, a general linear
     equation solver is called for each system of equations. This is also the
-    method used if ``ndof > 4``.
+    method used if ``ndof>4``.
     """
     ndof,nrhs,nsys = b.shape
     if A.shape[:2] != (ndof,ndof):
@@ -525,9 +526,9 @@ def trfMatrix(x,y):
 
     The rotation is to be applied first and should be around the first
     point x0. The full transformation of a Coords object is thus obtained
-    by ::
+    by::
 
-      (coords - x0) * rot + trl + x0  = coords * rot + (trl+x0-x0*rot)
+      (coords-x0)*rot+trl+x0=coords*rot+(trl+x0-x0*rot)
     """
     # rotation matrices for both systems
     r1 = rotmat(x)
@@ -622,10 +623,10 @@ def growAxis(a,add,axis=-1,fill=0):
 
     Parameters:
 
-    - `a`: array
+    - `a`: array.
 
     - `add`: int
-      The value to add to the axis length. If <= 0, the unchanged array
+      The value to add to the axis length. If<=0, the unchanged array
       is returned.
 
     - `axis`: int
@@ -635,8 +636,9 @@ def growAxis(a,add,axis=-1,fill=0):
       The value to set the new elements to.
 
     Returns:
+
       An array with same dimension and type as `a`, but with a length along
-      `axis` equal to ``a.shape[axis] + add``. The new elements all have the
+      `axis` equal to ``a.shape[axis]+add``. The new elements all have the
       value `fill`.
 
     Example:
@@ -680,6 +682,7 @@ def reorderAxis(a,order,axis=-1):
       - 'random': the elements along axis are placed in random order
 
     Returns:
+
       An array with the same elements of self, where only the order
       along the specified axis has been changed.
 
@@ -710,8 +713,10 @@ def reverseAxis(a,axis=-1):
       array([[4, 5, 6],
              [1, 2, 3]])
       
-    Remark: if the axis is known in advance, it may be more efficient to use
-    an indexing operation, like ``a[:,::-1,:]``
+    Remark: 
+
+      If the axis is known in advance, it may be more efficient to use
+      an indexing operation, like ``a[:,::-1,:]``
     """
     return reorderAxis(a,'reverse',axis)
 
@@ -855,7 +860,7 @@ def cubicEquation(a,b,c,d):
     a,b,c,d are the (floating point) coefficients of a third degree
     polynomial equation::
   
-      a * x**3  +  b * x**2  +  c * x  +  d   =   0
+      a*x**3+b*x**2+c*x+d=0
 
     This function computes the three roots (real and complex) of this equation
     and returns full information about their kind, sorting order, occurrence
@@ -866,17 +871,17 @@ def cubicEquation(a,b,c,d):
 
     Depending on the value of `kind`, the roots are defined as follows:
     
-    ====      ==========================================================
-    kind      roots
-    ====      ==========================================================
-    0         three real roots r1 < r2 < r3
-    1         three real roots r1 < r2 = r3
-    2         three real roots r1 = r2 < r3
-    3         three real roots r1 = r2 = r3
-    4         one real root r1 and two complex conjugate roots with real
-              part r2 and imaginary part r3; the complex roots are thus:
-              r2+i*r3 en r2-i*r3, where i = sqrt(-1).
-    ====      ==========================================================
+    ======     ============================================================
+     kind        roots
+    ======     ============================================================
+      0         three real roots r1 < r2 < r3
+      1         three real roots r1 < r2 = r3
+      2         three real roots r1 = r2 < r3
+      3         three real roots r1 = r2 = r3
+      4         one real root r1 and two complex conjugate roots with real
+                part r2 and imaginary part r3; the complex roots are thus:
+                r2+i*r3 en r2-i*r3, where i=sqrt(-1).
+    ======     ============================================================
 
     If the coefficient a==0, a ValueError is raised.
 
@@ -987,33 +992,35 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
 
     Parameters:
     
-    - `ar1` : array_like
-        This array will be flattened if it is not already 1-D.
-    - `return_index` : bool, optional
-        If True, also return the indices against `ar1` that result in the
-        unique array.
-    - `return_inverse` : bool, optional
-        If True, also return the indices against the unique array that
-        result in `ar1`.
+    - `ar1`: array_like
+      This array will be flattened if it is not already 1-D.
+    - `return_index`: bool, optional
+      If True, also return the indices against `ar1` that result in the
+      unique array.
+    - `return_inverse`: bool, optional
+      If True, also return the indices against the unique array that
+      result in `ar1`.
 
     Returns:
     
-    - `unique` : ndarray
-        The unique values.
-    - `unique_indices` : ndarray, optional
-        The indices of the unique values. Only provided if `return_index` is
-        True.
-    - `unique_inverse` : ndarray, optional
-        The indices to reconstruct the original array. Only provided if
-        `return_inverse` is True.
+    - `unique`: ndarray
+      The unique values.
+    - `unique_indices`: ndarray, optional
+      The indices of the unique values. Only provided if `return_index` is
+      True.
+    - `unique_inverse`: ndarray, optional
+      The indices to reconstruct the original array. Only provided if
+      `return_inverse` is True.
 
     Example::
     
       >>> a = array([2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,7,8])
       >>> unique(a,True,True)
-      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]), array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))
+      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]),
+      array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))
       >>> uniqueOrdered(a,True,True)
-      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]), array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))
+      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]), 
+      array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))
 
     Notice the difference in the 4-th entry of the second array.
 
@@ -1065,11 +1072,13 @@ def renumberIndex(index):
       An array with non-negative integer values
 
     Returns:
+
       A 1-D integer array with length equal to `nval`, where `nval`
       is the number of different values in `index`, and holding the original
       values corresponding to the new value `0..nval`.
 
     Remark:
+
       Use :func:`inverseUniqueIndex` to find the inverse mapping
       needed to replace the values in the index by the new ones.
 
@@ -1101,11 +1110,13 @@ def inverseUniqueIndex(index):
       An array with non-negative values, wihch all have to be unique.
 
     Returns:
+
       A 1-D integer array with length `max+1`, with the positions in
       `index` of the values `0..max`, or -1 if the value does not occur in
       `index`.
     
     Remark:
+
       The inverse index translates the unique index numbers in a
       sequential index, so that
       ``inverseUniqueIndex(index)[index] == arange(1+index.max())``.
@@ -1136,6 +1147,7 @@ def sortByColumns(a):
     - `a`: array_like, 2-D
 
     Returns:
+
       A 1-D integer array specifying the order in which the rows have to
       be taken to obtain an array sorted by columns.
     
@@ -1203,8 +1215,10 @@ def argNearestValue(values,target):
     - `values`: a list of float values
     - `target`: a float value
 
-    Returns: the position of the item in `values` that is
-    nearest to `target`.
+    Returns: 
+
+      The position of the item in `values` that is
+      nearest to `target`.
 
     Example:
     
@@ -1223,8 +1237,10 @@ def nearestValue(values,target):
     
     ``target``: a single value
 
-    Return value: the item in ``values`` values that is
-    nearest to ``target``.
+    Returns: 
+
+      The item in ``values`` values that is
+      nearest to ``target``.
     """
     return values[argNearestValue(values,target)]
 
@@ -1249,6 +1265,7 @@ def inverseIndex(index,maxcon=4):
       because the procedure will automatically enlarge it when needed.
 
     Returns:
+
       An (mr,mc) shaped integer array where:
     
       - `mr` will be equal to the highest positive value in index, +1.
@@ -1315,11 +1332,13 @@ def matchIndex(target,values):
     - `values`: an index array with all non-negative values. If not 1-D, it
       will be flattened.
 
-    Returns: an index array with the same size as `values`.
-    For each number in `values`, the index contains the position of that value
-    in the flattened `target`, or -1 if that number does not occur in `target`.
-    If an element from `values` occurs more than once in `target`, it is
-    currently undefined which of those positions is returned.
+    Returns: 
+
+      An index array with the same size as `values`.
+      For each number in `values`, the index contains the position of that value
+      in the flattened `target`, or -1 if that number does not occur in `target`.
+      If an element from `values` occurs more than once in `target`, it is
+      currently undefined which of those positions is returned.
 
     Remark that after ``m = matchIndex(target,values)`` the equality
     ``values[m] == target`` holds in all the non-negative positions of `m`.
@@ -1537,10 +1556,10 @@ def movingView(a, size):
 
     Returns:
     
-    An array that is a view of the original array with an extra first
-    axis of length w.
+      An array that is a view of the original array with an extra first
+      axis of length w.
 
-    Using swapaxes(0,axis) moving views over any axis can be created.
+      Using swapaxes(0,axis) moving views over any axis can be created.
     
     Examples:
     
@@ -1595,16 +1614,16 @@ def movingAverage(a,n,m0=None,m1=None):
 
     Returns:
     
-    An array with the moving average over n data sets along the first axis of a.
-    The array has the same shape as a, except possibly for the length of the
-    first axis.
-    If neither m0 nor m1 are set, the first axis will have a length of
-    a.shape[0] - (n-1).
-    If both m0 and m1 are give, the first axis will have a length of
-    a.shape[0] - (n-1) + m0 + m1. 
-    If either m0 or m1 are set and the other not, the missing value m0 or m1
-    will be computed thus that the return array has a first axis with length
-    a.shape[0].
+      An array with the moving average over n data sets along the first axis of a.
+      The array has the same shape as a, except possibly for the length of the
+      first axis.
+      If neither m0 nor m1 are set, the first axis will have a length of
+      a.shape[0] - (n-1).
+      If both m0 and m1 are give, the first axis will have a length of
+      a.shape[0] - (n-1) + m0 + m1. 
+      If either m0 or m1 are set and the other not, the missing value m0 or m1
+      will be computed thus that the return array has a first axis with length
+      a.shape[0].
 
     Examples:
     

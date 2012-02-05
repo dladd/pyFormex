@@ -142,9 +142,15 @@ your home directory.
   *My Account Conf*. Under *Authentication Setup* you can enter your 
   public SSH key. Just copy/paste the contents of the file *.ssh/id_rsa.pub*.
 
-It may take some hours before the key is activated on Savannah. But after that,
-you are all set to checkout the pyFormex repository with developer access 
-(see below).
+.. instructions:: - For those who may use Ubuntu as their system, after copy/paste
+  the SSH key, please check the end part of it with the help of your scroll bar to
+  make sure there is a "==" instead of "//" before "username@lockalhost.localdomain",
+  otherwise it may cause conncecting problems when accessing the SVN. - After the
+  update, please wait it for another day for the server to refresh, then try to access
+  the SVN using the previous command.
+
+
+Now you are all set to checkout the pyFormex repository.
 
 .. note:: 
 

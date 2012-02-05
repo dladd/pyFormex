@@ -307,17 +307,18 @@ class Coords(ndarray):
 
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],\
+          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],
                   [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).average()
           [[ 2.  0.  0.]
            [ 3.  0.  0.]
            [ 4.  0.  0.]]
-          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],\
+          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],
                   [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).average(axis=1)
           [[ 1.  0.  0.]
            [ 5.  0.  0.]]
-          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],\
-                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).average(wts=[0.5,0.25,0.25],axis=1)
+          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],
+                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).
+                  average(wts=[0.5,0.25,0.25],axis=1)
           [[ 0.75  0.    0.  ]
            [ 4.75  0.    0.  ]]
         """
@@ -422,7 +423,8 @@ class Coords(ndarray):
         
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).distanceFromPlane([0.,0.,0.],[1.,0.,0.])
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).
+              distanceFromPlane([0.,0.,0.],[1.,0.,0.])
           [[ 0.  3.  0.]]
           
         """
@@ -446,7 +448,8 @@ class Coords(ndarray):
 
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).distanceFromLine([0.,0.,0.],[1.,0.,0.])
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).
+              distanceFromLine([0.,0.,0.],[1.,0.,0.])
           [[ 0.  0.  3.]]
           
         """
@@ -465,9 +468,11 @@ class Coords(ndarray):
         The return value is a [...] shaped array with the distance of
         each point to point p.
         All distance values are positive or zero.
+
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).distanceFromPoint([0.,0.,0.])
+          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).
+              distanceFromPoint([0.,0.,0.])
           [[ 0.  3.  3.]]
           
         """
@@ -552,14 +557,16 @@ class Coords(ndarray):
           consisting of 3 floats. It specifies the direction in which the
           distances are measured. Default is the 0 (or x) direction.
 
-        - `min`,`max`: position of the minimum and maximum clipping planes.
+        - `min`, `max`: position of the minimum and maximum clipping planes.
           If `dir` was specified as an integer (0,1,2), this is a single float
           value corresponding with the coordinate in that axis direction.
           Else, it is a point in the clipping plane with normal direction `dir`.
           One of the two clipping planes may be left unspecified.
 
         
-        Returns: a 1D integer array with same length as the number of points.
+        Returns: 
+
+          A 1D integer array with same length as the number of points.
           For each point the value is 1 (True) if the point is above the
           minimum clipping plane and below the maximum clipping plane,
           or 0 (False) otherwise.
@@ -1237,17 +1244,19 @@ class Coords(ndarray):
         - `P`: a point on the plane, by default the global origin.
           If an int, the plane is the coordinate plane perpendicular to the
 
-        ..note:: For planes parallel to a coordinate plane, it is far more
+        .. note:: For planes parallel to a coordinate plane, it is far more
           efficient to specify the normal by an axis number than by a
           three component vector.
 
-        ..note:: This method will also work if any or both of P and n have
+        .. note:: This method will also work if any or both of P and n have
           a shape (ncoords,3), where ncoords is the total number of points
           in the :class:`Coords`. This allows to project each point on an
           individual plane.
 
-        Returns: a :class:`Coords` with same shape as original, with all the
-        points projected on the specified plane(s).
+        Returns: 
+
+          a :class:`Coords` with same shape as original, with all the
+          points projected on the specified plane(s).
         """
         if type(n) is int:
             x = self.copy()
@@ -1381,7 +1390,7 @@ class Coords(ndarray):
 
         A random amount is added to eacho individual coordinate in the Coords.
         The difference of any coordinate from its original value will
-        not be maximally ``asize + rsize * self.sizes().max()``. The default
+        not be maximally ``asize+rsize*self.sizes().max()``. The default
         is to set it to 0.1 times the geometrical size of the structure.
         """
         max = asize + rsize * self.sizes().max()
@@ -1643,11 +1652,11 @@ class Coords(ndarray):
 
         Returns:
 
-        A :class:`Coords` with an extra (first) axis, containing the
-        concatenation of the interpolations of `self` and `X` at all
-        values in `div`.
-        Its shape is (n,) + self.shape, where n is the number of values
-        in `div`.
+          A :class:`Coords` with an extra (first) axis, containing the
+          concatenation of the interpolations of `self` and `X` at all
+          values in `div`.
+          Its shape is (n,) + self.shape, where n is the number of values
+          in `div`.
         
         An interpolation of F and G at value v is a :class:`Coords` H where
         each coordinate Hijk is obtained from:  Fijk = Fijk + v * (Gijk-Fijk).
@@ -1691,7 +1700,7 @@ class BoundVectors(Coords):
 
     - `coords`: a (...,2,3) shaped array of bound vectors defined by their
       initial and terminal points.
-    - `origins`,`vectors`: (...,3) shaped arrays defining the initial
+    - `origins`, `vectors`: (...,3) shaped arrays defining the initial
       points and vectors from initial to terminal points.
 
     The default constructs a unit vector along the global x-axis.
@@ -1734,7 +1743,7 @@ class CoordinateSystem(Coords):
     the origin itself as fourth point.
 
     The constructor takes a (4,3) array as input. The default constructs
-    the standard global Cartesian axes system:
+    the standard global Cartesian axes system::
 
       1.  0.  0.
       0.  1.  0.
@@ -1778,6 +1787,7 @@ def origin():
     """Return a single point with coordinates [0.,0.,0.].
 
     Returns:
+
       A :class:`Coords` object with shape(3,) holding three zero coordinates.
     """
     return Coords(zeros((3),dtype=Float))

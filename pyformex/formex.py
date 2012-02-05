@@ -458,33 +458,33 @@ def cut3AtPlane(F,p,n,side='',atol=None,newprops=None):
     
     The return value is:
     
-    - with side = '+' or '-' or 'positive'or 'negative' :
+    - with side='+' or '-' or 'positive'or 'negative' :
       a Formex of the same plexitude with all elements
       located completely at the positive/negative side of the plane(s) (p,n)
       retained, all elements lying completely at the negative/positive side
       removed and the elements intersecting the plane(s) replaced by new
       elements filling up the parts at the positive/negative side.
-    - with side = '': two Formices of the same plexitude, one representing
+    - with side='': two Formices of the same plexitude, one representing
       the positive side and one representing the negative side.
 
     Let :math:`dist` be the signed distance of the vertices to a plane.
     The elements located completely at the positive or negative side of
-    a plane have three vertices for which :math:`|dist| > atol`.
+    a plane have three vertices for which :math:`|dist|>atol`.
     The elements intersecting a plane can have one or more vertices for which
-    :math:`|dist| < atol`.
+    :math:`|dist|<atol`.
     These vertices are projected on the plane so that their distance is zero.
     
     If the Formex has a property set, the new elements will get the property
     numbers defined in newprops. This is a list of 7 property numbers flagging
     elements with following properties:
     
-    0) no vertices with :math:`|dist| < atol`, triangle after cut
-    1) no vertices with :math:`|dist| < atol`, triangle 1 from quad after cut
-    2) no vertices with :math:`|dist| < atol`, triangle 2 from quad after cut
-    3) one vertex with :math:`|dist| < atol`, two vertices at pos. or neg. side
-    4) one vertex with :math:`|dist| < atol`, one vertex at pos. side, one at neg.
-    5) two vertices with :math:`|dist| < atol`, one vertex at pos. or neg. side
-    6) three vertices with :math:`|dist| < atol`
+    0) no vertices with :math:`|dist|<atol`, triangle after cut
+    1) no vertices with :math:`|dist|<atol`, triangle 1 from quad after cut
+    2) no vertices with :math:`|dist|<atol`, triangle 2 from quad after cut
+    3) one vertex with :math:`|dist|<atol`, two vertices at pos. or neg. side
+    4) one vertex with :math:`|dist|<atol`, one vertex at pos. side, one at neg.
+    5) two vertices with :math:`|dist|<atol`, one vertex at pos. or neg. side
+    6) three vertices with :math:`|dist|<atol`
     """
     if atol is None:
         atol = 1.e-5*F.dsize()
@@ -995,10 +995,10 @@ class Formex(Geometry):
 
         Examples:
         
-        1: unconnected points,
-        2: straight line elements,
-        3: triangles or quadratic line elements,
-        4: tetraeders or quadrilaterals or cubic line elements.
+        1. unconnected points,
+        2. straight line elements,
+        3. triangles or quadratic line elements,
+        4. tetraeders or quadrilaterals or cubic line elements.
         """
         return self.coords.shape[1]
     
@@ -1083,13 +1083,13 @@ class Formex(Geometry):
         an integer array with the node numbers connected by each element.
         The elements come in the same order as they are in the Formex, but
         the order of the nodes is unspecified.
-        By the way, the reverse operation of ``coords,elems = fuse(F)``
-        is accomplished by ``F = Formex(coords[elems])``
+        By the way, the reverse operation of ``coords,elems=fuse(F)``
+        is accomplished by ``F=Formex(coords[elems])``
 
         There is a (very small) probability that two very close nodes are
         not equivalenced  by this procedure. Use it multiple times with
         different parameters to check.
-        You can also set the rtol /atol parameters to influence the
+        You can also set the rtol/atol parameters to influence the
         equivalence checking of two points.
         The default settting for atol is rtol * self.dsize()
         """
@@ -1249,6 +1249,7 @@ maxprop  = %s
 
         This function changes the original one! Use __add__ if you want to
         get a copy with the sum. 
+
         >>> F = Formex([[[1.0,1.0,1.0]]])
         >>> G = F.append(F)
         >>> print(F)
@@ -1330,6 +1331,7 @@ maxprop  = %s
         """Concatenate all formices in Flist.
 
         This is a class method, not an instance method!
+
         >>> F = Formex([[[1,2,3]]],1)
         >>> print(Formex.concatenate([F,F,F]))
         {[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}
@@ -1547,7 +1549,7 @@ maxprop  = %s
         Or directly use clip() or cclip() to create the clipped Formex.
         
         The test plane can be defined in two ways, depending on the value of dir.
-        If dir == 0, 1 or 2, it specifies a global axis and min and max are
+        If dir==0, 1 or 2, it specifies a global axis and min and max are
         the minimum and maximum values for the coordinates along that axis.
         Default is the 0 (or x) direction.
 
@@ -1854,7 +1856,7 @@ maxprop  = %s
     def cutWithPlane(self,p,n,side='',atol=None,newprops=None):
         """Cut a Formex with the plane(s) (p,n).
 
-        ..warning :: This method currently only works for plexitude 2 or 3!
+        .. warning:: This method currently only works for plexitude 2 or 3!
         
         - `p`,`n`: a point and normal vector defining the cutting plane.
           In case of plexitude 3, p and n can be sequences of points and vector,
@@ -1945,18 +1947,19 @@ maxprop  = %s
         This uses the :meth:`Coords.fromstring` method to read coordinates
         from a string and restructures them into a Formex of the specified
         plexitude.
+        
+        Parameters:
 
-        fil: a string containing a single sequence of float numbers separated
-             by whitespace and a possible separator string.
-        sep: the separator used between the coordinates. If not a space,
-             all extra whitespace is ignored. 
-        ndim: number of coordinates per point. Should be 1, 2 or 3 (default).
-             If 1, resp. 2, the coordinate string only holds x, resp. x,y
-             values.
-        count: total number of coordinates to read. This should be a multiple
-               of 3. The default is to read all the coordinates in the string.
-               ``count`` can be used to force an error condition if the string
-               does not contain the expected number of values.
+        - `fil`: a string containing a single sequence of float numbers separated
+          by whitespace and a possible separator string.
+        - `sep`: the separator used between the coordinates. If not a space,
+          all extra whitespace is ignored. 
+        - `ndim`: number of coordinates per point. Should be 1, 2 or 3 (default).
+          If 1, resp. 2, the coordinate string only holds x, resp. x,y values.
+        - `count`: total number of coordinates to read. This should be a multiple
+          of 3. The default is to read all the coordinates in the string.
+          ``count`` can be used to force an error condition if the string
+          does not contain the expected number of values.
 
         The return value is a :class:`Coords` object.
         """
