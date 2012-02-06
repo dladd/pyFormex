@@ -232,10 +232,10 @@ def niceNumber(f,below=False):
 
     Example:
 
-    >>> [ str(niceNumber(f)) for f in [ 0.0837, 0.837, 8.37, 83.7, 93.7] ]
+    >>> numbers = [ 0.0837, 0.837, 8.37, 83.7, 93.7]
+    >>> [ str(niceNumber(f)) for f in numbers ]
     ['0.09', '0.9', '9.0', '90.0', '100.0']
-    >>> [ str(niceNumber(f,below=True)) for f in [ 0.0837, 0.837, 8.37,
-    83.7, 93.7] ]
+    >>> [ str(niceNumber(f,below=True)) for f in numbers ]
     ['0.08', '0.8', '8.0', '80.0', '90.0']
 
     """
@@ -713,10 +713,14 @@ def reverseAxis(a,axis=-1):
       array([[4, 5, 6],
              [1, 2, 3]])
       
-    Remark: 
+    Note that if the axis is known in advance, it may be more efficient to use
+    an indexing operation::
 
-      If the axis is known in advance, it may be more efficient to use
-      an indexing operation, like ``a[:,::-1,:]``
+      >>> A = array([[1,2,3],[4,5,6]])
+      >>> print A[:,::-1]
+      [[3 2 1]
+       [6 5 4]]
+      
     """
     return reorderAxis(a,'reverse',axis)
 
@@ -1015,14 +1019,22 @@ def uniqueOrdered(ar1, return_index=False, return_inverse=False):
     Example::
     
       >>> a = array([2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,7,8])
-      >>> unique(a,True,True)
-      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]),
-      array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))
-      >>> uniqueOrdered(a,True,True)
-      (array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]), 
-      array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))
+      >>> uniq,ind,inv = unique(a,True,True)
+      >>> print uniq
+      [1 2 3 4 5 6 7 8]
+      >>> print ind
+      [ 7  0  1 10  3  4  5  6]
+      >>> print inv
+      [1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 6 7]
+      >>> uniq,ind,inv = uniqueOrdered(a,True,True)
+      >>> print uniq
+      [1 2 3 4 5 6 7 8]
+      >>> print ind
+      [7 0 1 2 3 4 5 6]
+      >>> print inv
+      [1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 6 7]
 
-    Notice the difference in the 4-th entry of the second array.
+    Notice the difference in the fourth element of the `ind` array.
 
     """
     import numpy as np
@@ -1529,8 +1541,16 @@ def histogram2(a,bins,range=None):
 
     Example:
 
-    >>> histogram2([1,2,3,4,2,3,1],[1,2,3,4,5])
-    (array([2, 2, 2, 1]), [array([0, 6]), array([1, 4]), array([2, 5]), array([3])], array([1, 2, 3, 4, 5]))
+    >>> hist,ind,xbins = histogram2([1,2,3,4,2,3,1],[1,2,3,4,5])
+    >>> print hist
+    [2 2 2 1]
+    >>> for i in ind: print i
+    [0 6]
+    [1 4]
+    [2 5]
+    [3]
+    >>> print xbins
+    [1 2 3 4 5]
 
     """
     ar = asarray(a)

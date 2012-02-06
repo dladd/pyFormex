@@ -142,13 +142,6 @@ your home directory.
   *My Account Conf*. Under *Authentication Setup* you can enter your 
   public SSH key. Just copy/paste the contents of the file *.ssh/id_rsa.pub*.
 
-.. instructions:: - For those who may use Ubuntu as their system, after copy/paste
-  the SSH key, please check the end part of it with the help of your scroll bar to
-  make sure there is a "==" instead of "//" before "username@lockalhost.localdomain",
-  otherwise it may cause conncecting problems when accessing the SVN. - After the
-  update, please wait it for another day for the server to refresh, then try to access
-  the SVN using the previous command.
-
 
 Now you are all set to checkout the pyFormex repository.
 
@@ -350,10 +343,12 @@ Dealing with problems
 ---------------------
 Some possible problems during ``svn up`` operation:
 
-- Conflict discovered in 'SOME_FILE'.
-  Select: (p) postpone, (df) diff-full, (e) edit,
-          (mc) mine-conflict, (tc) theirs-conflict,
-          (s) show all options: tc
+- Conflict::
+
+    Conflict discovered in 'SOME_FILE'.
+    Select: (p) postpone, (df) diff-full, (e) edit,
+            (mc) mine-conflict, (tc) theirs-conflict,
+            (s) show all options: tc
 
   If your version of SOME_FILE contains changes you have made (and
   want to keep), the best thing is to postpone (p) and resolve the conflicts
@@ -363,8 +358,10 @@ Some possible problems during ``svn up`` operation:
   If you know however that your changes are not important, you can just use 
   'tc' to remove your version and get the changes from the repository.
 
-- svn: Failed to add file 'SOME_FILE': an unversioned file of the same
-  name already exists.
+- Blocked by unversioned file::
+
+    svn: Failed to add file 'SOME_FILE': an unversioned file of the same
+    name already exists.
 
   If your version of SOME_FILE contains changes you have made (and
   want to keep), move the file away to some other name. Then repeat
@@ -480,7 +477,7 @@ This will actually execute the command::
 where ``FILES`` will be replaced with the list of Python source files in the
 pyformex directories. The command will list all occasions of ``PATTERN`` in
 these files. All normal ``grep`` options (see ``man grep``) can be added, like
- '-f' to search for a plain string instead of a regular expression, or '-i'
+'-f' to search for a plain string instead of a regular expression, or '-i'
 make the search case insensitive.
 
 If you find the pyformext command above to elaborate, you can just define a
@@ -797,16 +794,99 @@ Docstrings
   Python statements can exceed that length, if the result is more easy
   to read than splitting the line.
 
-- Docstrings should be written with `re-structured text (reST)
+- Docstrings should be written with `reStructuredText (reST)
   <http://docutils.sourceforge.net/rst.html>`_ syntax. This allows us
   to use the docstrings to autmoatically generate the reference
   manual in a nice layout, while the docstrings keep being easily
   readible. Where in doubt, try to follow the `Numpy documentation guidelines
   <http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines>`_.
 
+- reStructuredText is very keen to the precise indentation (but as Python
+  coders we are already used to that). All text belonging to the same
+  logical unit should get the same indentation. And beware espacially for
+  the required blank lines to delimit different section. A typical 
+  example is that of a bullet list::
+
+    Text before the bullet list.
+    
+    - Bullet item 1
+    - Bullet item 2, somewhat longer and continued
+      on the next line.
+    - Bullet item 3
+    
+    Text below the bullet item
+
+
+- The extended description should contain a section describing the parameters
+  and one describing the return value (if any). These should
+  be structured as follows::
+    
+    Parameters:
+    
+    - `par1`: type: meaning of parameter 1.
+    - `par2`: type: meaning of parameter 2.
+    - `par3`, `par4`: type(s): meaning of parameters 3 and 4.
+    
+    Returns:
+    
+    - `ret1`: type: return value 1.
+    - `ret2`: type: return value 2.
+
+  If two or more parameters or return values are decribed in the same item,
+  be sure to leave a space after the comma in the list of names!
+  If there is just a single return value, its type and value can also be
+  described in a single sentence, e.g.::
+
+    Returns an int which is zero upon success.
+
 - The parameters of class constructor methods (``__init__``) should be
-  documented in the Class doctring, not in the ``__init__`` method
+  documented in the Class docstring, not in the ``__init__`` method
   itself.
+
+- Special sections (note, warning) can be used to draw special attention of 
+  the user. Format these as follows (leave a space after '..')::
+
+    .. note::
+
+      This is a note.
+
+    .. warning::
+
+      Be careful!
+
+- Wherever possible add an example of the use of the function. By preference
+  this should be a live example that can be used through the --testmodule
+  framework. This should be structured as follows::
+
+    Examples:
+    
+      >>> F = Formex('3:012934',[1,3])
+      >>> print F.coords
+      [[[ 0.  0.  0.]
+       [ 1.  0.  0.]
+       [ 1.  1.  0.]]
+
+      [[ 1.  1.  0.]
+       [ 0.  1.  0.]
+       [ 0.  0.  0.]]]
+
+  Lines starting with '>>>' should be executable Python (pyFormex) code.
+  If the code creates any output, that output should be added exactly as
+  generated (but aligned with the '>>>' below the code line. 
+  When the module is tested with::
+
+    pyformex --testmodule MODULENAME
+
+  Python will execute all these code and check that the results match.
+  In order to get good quality formatting in both the HTML and PDF versions,
+  both the code lines and the output it generates should be kept short.
+  You can use intermediate variables in the code to obtain this. For the
+  output, you may have to use properly formatted printing of the data or
+  subdata. E.g., a ``print F`` above instead of ``print F.coords`` would
+  result in a too long line.
+
+  See also the documentation for arraytools.uniqueOrdered for another
+  example.
 
 
 Things that have to be done by the project manager

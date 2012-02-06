@@ -72,7 +72,7 @@ scripts without explicitly importing them. Also available is the complete
 The definitions in the other modules can only be accessed using the
 normal Python ``import`` statements.
 
-.. _sec:autoloaded modules
+.. _sec:autoloaded modules:
 
 **Autoloaded modules**
 
