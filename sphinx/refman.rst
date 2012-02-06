@@ -72,9 +72,10 @@ scripts without explicitly importing them. Also available is the complete
 The definitions in the other modules can only be accessed using the
 normal Python ``import`` statements.
 
-.. _sec:autoloaded modules:
+.. _sec:autoloaded-modules:
 
-**Autoloaded modules**
+Autoloaded modules
+==================
 
 The definitions in these modules are always available to your scripts, without
 the need to explicitely import them.
@@ -93,7 +94,10 @@ the need to explicitely import them.
    ref/colors
 
 
-**Other pyFormex core modules**
+.. _sec:core-modules:
+
+Other pyFormex core modules
+===========================
 
 Together with the autoloaded modules, the following modules located under the
 main pyformex path are considered to belong to the pyformex core functionality. 
@@ -111,7 +115,10 @@ main pyformex path are considered to belong to the pyformex core functionality.
    ref/mesh
 
 
-**pyFormex GUI modules**
+.. _sec:gui-modules:
+
+pyFormex GUI modules
+====================
 
 These modules are located under pyformex/gui.
 
@@ -136,7 +143,10 @@ These modules are located under pyformex/gui.
    ref/toolbar
 
 
-**pyFormex plugins**
+.. _sec:plugins-modules:
+
+pyFormex plugins
+================
 
 Plugin modules extend the basic pyFormex functions to variety of 
 specific applications. Apart from being located under the pyformex/plugins
@@ -175,8 +185,11 @@ path, these modules are in no way different from other pyFormex modules.
 ..   ref/surface_menu
 ..   ref/postproc_menu
 
-   
-**pyFormex tools**
+
+.. _sec:tools-modules:
+
+pyFormex tools
+==============
 
 The main pyformex path contains a number of modules that are not
 considered to be part of the pyFormex core, but are rather tools that
