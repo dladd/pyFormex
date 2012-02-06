@@ -22,6 +22,7 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
+
 #
 # Makefile for pyFormex reference manual sections
 #
@@ -35,7 +36,7 @@ COREMODULES= arraytools collection config connectivity coords elements  \
   flatkeydb formex geometry mesh mydict odict olist project \
   script sendmail simple timer utils
 GUIMODULES= actors camera canvas colors colorscale decors draw gluttext \
-  image imageViewer imagearray imagecolor marks menu\
+  image imageViewer imagearray marks menu\
   scriptMenu toolbar viewport widgets 
 PLUGINMODULES= curve datareader dxf export fe fe_abq fe_post flavia geomtools \
   inertia isopar lima mesh_ext nurbs objects plot2d postproc properties \

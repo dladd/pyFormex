@@ -98,6 +98,7 @@ A tool for generating, manipulating and transforming 3D geometrical models by se
 Distributed under the GNU GPL version 3 or later
 """ % (pf.Version,'='*len(pf.Version),pf.Copyright))
 
+# List of developers/contributors (current and past)
 _developers = [
     'Matthieu De Beule',
     'Gianluca De Santis',
@@ -108,6 +109,7 @@ _developers = [
     'Tomas Praet',
     'Sofie Van Cauter',
     'Benedict Verhegghe',
+    'Zhou Wenxuan',
     ]
 
 def developers():

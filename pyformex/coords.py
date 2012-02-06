@@ -307,18 +307,16 @@ class Coords(ndarray):
 
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],
-                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).average()
+          >>> X = Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],\
+                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]])
+          >>> print X.average()
           [[ 2.  0.  0.]
            [ 3.  0.  0.]
            [ 4.  0.  0.]]
-          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],
-                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).average(axis=1)
+          >>> print X.average(axis=1)
           [[ 1.  0.  0.]
            [ 5.  0.  0.]]
-          >>> print Coords([[[0.,0.,0.],[1.,0.,0.],[2.,0.,0.]],
-                  [[4.,0.,0.],[5.,0.,0.],[6.,0.,0.]]]).
-                  average(wts=[0.5,0.25,0.25],axis=1)
+          >>> print X.average(wts=[0.5,0.25,0.25],axis=1)
           [[ 0.75  0.    0.  ]
            [ 4.75  0.    0.  ]]
         """
@@ -423,8 +421,8 @@ class Coords(ndarray):
         
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).
-              distanceFromPlane([0.,0.,0.],[1.,0.,0.])
+          >>> X = Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]])
+          >>> print X.distanceFromPlane([0.,0.,0.],[1.,0.,0.])
           [[ 0.  3.  0.]]
           
         """
@@ -448,8 +446,8 @@ class Coords(ndarray):
 
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).
-              distanceFromLine([0.,0.,0.],[1.,0.,0.])
+          >>> X = Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]])
+          >>> print X.distanceFromLine([0.,0.,0.],[1.,0.,0.])
           [[ 0.  0.  3.]]
           
         """
@@ -471,8 +469,8 @@ class Coords(ndarray):
 
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).
-              distanceFromPoint([0.,0.,0.])
+          >>> X = Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]])
+          >>> print X.distanceFromPoint([0.,0.,0.])
           [[ 0.  3.  3.]]
           
         """
@@ -1111,7 +1109,7 @@ class Coords(ndarray):
 
 
     def map(self,func):
-        """Return a :class:`Coords` mapped by a 3-D function.
+        """Map a :class:`Coords` by a 3-D function.
 
         This is one of the versatile mapping functions.
         func is a numerical function which takes three arguments and produces
@@ -1137,7 +1135,7 @@ class Coords(ndarray):
 
 
     def map1(self,dir,func,x=None):
-        """Return a :class:`Coords` where coordinate i is mapped by a 1-D function.
+        """Map one coordinate by a 1-D function of one coordinate.
 
         `func` is a numerical function which takes one argument and produces
         one result. The coordinate dir will be replaced by func(coord[x]).
@@ -1155,7 +1153,7 @@ class Coords(ndarray):
 
 
     def mapd(self,dir,func,point,dist=None):
-        """Maps one coordinate by a function of the distance to a point.
+        """Map one coordinate by a function of the distance to a point.
 
         `func` a numerical function which takes one argument and produces
         one result. The coordinate `dir` will be replaced by ``func(d)``,
@@ -1168,9 +1166,9 @@ class Coords(ndarray):
         This method is one of several mapping methods. See also
         :meth:`map3` and :meth:`map1`.
         
-        Example:
+        Example::
         
-          E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])
+          E.mapd(2,lambda d:sqrt(10**2-d**2),E.center(),[0,1])
 
         maps ``E`` on a sphere with radius 10.
         """
@@ -1793,7 +1791,7 @@ def origin():
     return Coords(zeros((3),dtype=Float))
 
 
-def pattern(s,connect=True):
+def pattern(s,aslist=False):
     """Return a series of points lying on a regular grid.
 
     This function creates a series of points that lie on a regular grid
@@ -1835,12 +1833,22 @@ def pattern(s,connect=True):
     move without inserting the new point. You need to start
     the string with a '0' or '9' to include the origin in the output.    
 
-    Returns a list with the generated points as integers.
+    Parameters:
+
+    - `s`: string: with the characters generating subsequent points.
+    - `aslist`: bool: if True, the points are returned as lists of
+      integer coordinates instead of a :class:`Coords` object.
+
+    Returns a :class:`Coords` with the generated points (default) or a list
+      of tuples with 3 integer coordinates (if `aslist` is True).
 
     Example:
 
-    >>> pattern('0123')
-    [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)]
+    >>> print pattern('0123')
+    [[ 0.  0.  0.]
+     [ 1.  0.  0.]
+     [ 1.  1.  0.]
+     [ 0.  1.  0.]]
 
     """
     warn("warn_pattern")

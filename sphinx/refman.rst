@@ -131,7 +131,6 @@ These modules are located under pyformex/gui.
    ref/camera
    ref/image
    ref/imagearray
-   ref/imagecolor
    ref/imageViewer
    ref/scriptMenu
    ref/toolbar
@@ -145,7 +144,7 @@ path, these modules are in no way different from other pyFormex modules.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 29
+   :numbered: 28
 
    ref/curve
    ref/mesh_ext
@@ -186,7 +185,7 @@ elsewhere.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 53
+   :numbered: 52
 
    ref/olist
    ref/mydict
