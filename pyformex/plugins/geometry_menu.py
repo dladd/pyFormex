@@ -297,16 +297,19 @@ def readInp(fn=None):
             return
 
         for f in fn:
-            convert_inp(f)
+            convertInp(f)
         return
 
+
+def convertInp(fn):
     converter = os.path.join(pf.cfg['pyformexdir'],'bin','read_abq_inp.awk')
     dirname = os.path.dirname(fn)
     basename = os.path.basename(fn)
     cmd = 'cd %s;%s %s' % (dirname,converter,basename)
     print(cmd)
     pf.GUI.setBusy()
-    print(utils.runCommand(cmd))
+    sta, out = utils.runCommand(cmd)
+    print out
     pf.GUI.setBusy(False)
 
     
