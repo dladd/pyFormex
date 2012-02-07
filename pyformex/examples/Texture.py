@@ -12,9 +12,7 @@ techniques = ['texture']
 from gui.draw import *
 from gui.imagearray import image2numpy
 
-# This function is executed when the module is loaded as an 'app'
 def run():
-    """Run the Texture example."""
     clear()
     smooth()
 
@@ -36,7 +34,7 @@ def run():
 
 
 if __name__ == 'draw':
-    # What to do when this app is executed as a script
+    # if executed as a script
     run()
 
 # End

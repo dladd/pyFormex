@@ -29,11 +29,8 @@ topics = ['illustration']
 techniques = ['dialog','lima']
 
 """
-
-# We use the lima module
-from plugins import lima,turtle
-# allow this example to be used as a module
 from gui.draw import *
+from plugins import lima,turtle
 
 # return standard Turtle rules 
 def turtlecmds(rules={}):
@@ -139,8 +136,7 @@ def setDefaultGenerations(rule):
             d.updateData({'ngen':ngen})
         
 
-if __name__ == "draw":
-
+def run():
     layout(1)
     viewport(0)
     clear()
@@ -182,4 +178,7 @@ if __name__ == "draw":
         else:
             grow(**res)
 
+
+if __name__ == "draw":
+    run()
 # End
