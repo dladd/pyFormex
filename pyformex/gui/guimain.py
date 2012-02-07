@@ -41,6 +41,7 @@ import menu
 import cameraMenu
 import fileMenu
 import scriptMenu
+import appMenu
 import prefMenu
 import toolbar
 import canvas
@@ -1108,6 +1109,10 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     # Scripts menu
     pf.GUI.scriptmenu = scriptMenu.createScriptMenu(pf.GUI.menu,before='help')
+   
+
+    # App menu
+    pf.GUI.appmenu = appMenu.createMenu(pf.GUI.menu,before='help')
 
     # Create databases
     createDatabases()
@@ -1125,7 +1130,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         pf.apps = apps._available_apps
         print "Applications: "+ ', '.join(pf.apps)
         appmenu = pf.GUI.menu.item('file')
-        pf.gui.app_menu = apps.create_app_menu(filemenu,before='History')
+        pf.gui.app_menu = appMenu.create_app_menu(filemenu,before='History')
     except:
         print "No applications available"
         raise

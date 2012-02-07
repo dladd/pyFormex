@@ -71,17 +71,6 @@ def detect(appdir):
     return apps
 
 
-def create_app_menu(parent=None,before=None): 	 
-    from gui import menu
-    loadmenu = menu.Menu('&Run Applications',parent=parent,before=before)
-    loadactions = menu.ActionList(function=run,menu=loadmenu) 	 
-    for name in _available_apps:
-        descr = name.capitalize().replace('_',' ')
-        loadactions.add(name,icon=None,text=descr)
-        
-    return loadactions
-
-
 _available_apps = detect(os.path.dirname(__file__))
 
 # End

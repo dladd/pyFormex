@@ -25,6 +25,7 @@
 """Menu with pyFormex scripts."""
 
 import pyformex as pf
+import apps
 
 from PyQt4 import QtCore, QtGui
 
@@ -146,11 +147,11 @@ class AppMenu(QtGui.QMenu):
     when you created a new script file.
     """
     
-    def __init__(self,title,dir=None,apps=None,recursive=None,max=0,autoplay=False,toplevel=True):
+    def __init__(self,title,dir=None,files=None,recursive=None,max=0,autoplay=False,toplevel=True):
         """Create a menu with pyFormex apps to play."""
         QtGui.QMenu.__init__(self,title)
         self.dir = dir
-        self.apps = apps
+        self.files = files
         if self.dir is None and self.files is None:
             raise ValueError,"At least one of 'dir' or 'files' must be set."
         if recursive is None:
@@ -184,51 +185,21 @@ class AppMenu(QtGui.QMenu):
             m = AppMenu(d,os.path.join(self.dir,d),autoplay=self.autoplay,recursive=self.recursive)
             self.addMenu(m)
             self.menus.append(m)
-            
-
-    def getFiles(self):
-        """Get a list of apps in self.dir"""
-        files = os.listdir(self.dir)
-        filtr = lambda s: s[0]!='.' and s[0]!='_'
-        files = filter(filtr,files)
-        if self.ext:
-            filtr = lambda s: s.endswith(self.ext)
-            files = filter(filtr,files)
-            n = len(self.ext)
-            files = [ f[:-n] for f in files ]
-
-        files = self.filterFiles(files)
-        ## filtr = lambda s:utils.is_pyFormex(self.fileName(s))
-        ## files = filter(filtr,files)
-
-        ## if self.max > 0 and len(files) > self.max:
-        ##     files = files[:self.max]
-
-        files.sort()
-        return files
-
- 
-    def filterFiles(self,files):
-        """Filter a list of apps"""
-        filtr = lambda s:utils.is_pyFormex(self.fileName(s))
-        files = filter(filtr,files)
-
-        if self.max > 0 and len(files) > self.max:
-            files = files[:self.max]
-
-        return files
       
 
     def loadFiles(self,files=None):
         """Load the app files in this menu"""
         if files is None:
-            files = self.getFiles()
+            files = apps.detect(self.dir)
 
-        self.files = self.filterFiles(files)
+        if self.max > 0 and len(files) > self.max:
+            files = files[:self.max]
+
+        self.files = files
         
-        if pf.options.debug:
-            print("Found Apps in %s" % self.dir)
-            print(self.files)
+        #if pf.options.debug:
+        print("Found Apps in %s" % self.dir)
+        print(self.files)
         self.actions = [ self.addAction(f) for f in self.files ]           
         self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
         
@@ -289,19 +260,7 @@ class AppMenu(QtGui.QMenu):
         """Run the selected app."""
         app = str(action.text())
         if app in self.files:
-            self.runApp(app)
-    
-
-    def runApp(self,filename):
-        """Run the specified app."""
-        self.current = filename
-        selected = self.fileName(filename)
-        pf.debug("Playing app %s" % selected)
-        pf.GUI.setcurfile(selected)
-        if self.autoplay:
-            pf.debug("Drawing Options: %s" % pf.canvas.options)
-            draw.reset()
-            draw.play()
+            script.runApp(app)
 
 
     def runNext(self):
@@ -314,7 +273,7 @@ class AppMenu(QtGui.QMenu):
             return
         pf.debug("This is app %s out of %s" % (i,len(self.files)))
         if i < len(self.files):
-            self.runApp(self.files[i])
+            script.runApp(self.files[i])
 
 
     def runAllNext(self):
@@ -391,6 +350,7 @@ class AppMenu(QtGui.QMenu):
 
         By default, only legal pyFormex scripts can be added.
         """
+        print "HAHA"
         if strict and not utils.is_pyFormex(filename):
             return
         files = self.files
@@ -453,60 +413,72 @@ class AppMenu(QtGui.QMenu):
                 self.reload()
 
 
-############### The pyFormex Script menu ############################
+############### The pyFormex App menu ############################
 
 from prefMenu import setDirs
 
-def createScriptMenu(parent=None,before=None):
-    """Create the menu(s) with pyFormex scripts
+def createMenu(parent=None,before=None):
+    """Create the menu(s) with pyFormex apps
 
     This creates a menu with all examples distributed with pyFormex.
     By default, this menu is put in the top menu bar with menu label 'Examples'.
 
-    The user can add his own script directories through the configuration
+    The user can add his own app directories through the configuration
     settings. In that case the 'Examples' menu and menus for all the
-    configured script paths will be gathered in a top level popup menu labeled
-    'Scripts'.
+    configured app paths will be gathered in a top level popup menu labeled
+    'Apps'.
 
     The menu will be placed in the top menu bar before the specified item.
-    If a menu item named 'Examples' or 'Scripts' already exists, it is
+    If a menu item named 'Examples' or 'Apps' already exists, it is
     replaced.
     """
     from odict import ODict
-    scriptmenu = menu.Menu('&Scripts',parent=parent,before=before)
-    scriptmenu.menuitems = ODict()
+    appmenu = menu.Menu('&Apps',parent=parent,before=before)
+    appmenu.menuitems = ODict()
     # Create a copy to leave the cfg unchanged!
-    scriptdirs = [] + pf.cfg['scriptdirs']
+    appdirs = [] + pf.cfg['appdirs']
     # Fill in missing default locations : this enables the user
     # to keep the pyFormex installed examples in his config
-    knownscriptdirs = { 'examples': pf.cfg['examplesdir'] }
-    for i,item in enumerate(scriptdirs):
-        if type(item[0]) is str and not item[1] and item[0].lower() in knownscriptdirs:
-            scriptdirs[i] = (item[0].capitalize(),knownscriptdirs[item[0].lower()])
+    knownappdirs = {
+        'apps': pf.cfg['appdir'],
+        'examples': pf.cfg['examplesdir'],
+        }
+    for i,item in enumerate(appdirs):
+        if type(item[0]) is str and not item[1] and item[0].lower() in knownappdirs:
+            appdirs[i] = (item[0].capitalize(),knownappdirs[item[0].lower()])
 
-    for txt,dirname in scriptdirs:
-        pf.debug("Loading script dir %s" % dirname)
+    for txt,dirname in appdirs:
+        pf.debug("Loading app dir %s" % dirname,pf.DEBUG.MENU)
         if os.path.exists(dirname):
-            m = ScriptMenu(txt,dir=dirname,autoplay=True)
-            scriptmenu.insert_menu(m)
+            m = AppMenu(txt,dir=dirname,autoplay=True)
+            appmenu.insert_menu(m)
             txt = utils.strNorm(txt)
-            scriptmenu.menuitems[txt] = m
+            appmenu.menuitems[txt] = m
 
-    scriptmenu.insertItems([
+    appmenu.insertItems([
         ('---',None),
-        (_('&Configure Script Paths'),setDirs,{'data':'scriptdirs'}),
-        (_('&Reload Script Menu'),reloadScriptMenu),
+        (_('&Configure App Paths'),setDirs,{'data':'appdirs'}),
+        (_('&Reload App Menu'),reloadMenu),
         ])
     
-    return scriptmenu
+    return appmenu
 
 
-def reloadScriptMenu():
-    menu = pf.GUI.menu.item('scripts')
+def reloadMenu():
+    menu = pf.GUI.menu.item('apps')
     if menu is not None:
-        before = pf.GUI.menu.nextitem('scripts')
-        pf.GUI.menu.removeItem('scripts')
-        newmenu = createScriptMenu(pf.GUI.menu,before)
+        before = pf.GUI.menu.nextitem('apps')
+        pf.GUI.menu.removeItem('apps')
+        newmenu = createMenu(pf.GUI.menu,before)
  
+
+def create_app_menu(parent=None,before=None): 	 
+    loadmenu = menu.Menu('&Run Applications',parent=parent,before=before)
+    loadactions = menu.ActionList(function=apps.run,menu=loadmenu) 	 
+    for name in apps._available_apps:
+        descr = name.capitalize().replace('_',' ')
+        loadactions.add(name,icon=None,text=descr)
+        
+    return loadactions
     
 # End

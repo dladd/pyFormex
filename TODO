@@ -50,6 +50,7 @@ Each task can have the following keys:
 Release 0.9
 -----------
 
+
 **Add Layers to the rendering engine**
   :sta: IDEA
 
@@ -148,12 +149,14 @@ Release 0.9.1
 
 **Finish the tutorial and user guide**
 
-**Set up procedures to follow up submitted bugs/questions**
+**Add DEBUG LEVEL to all debug statements**
 
+**Set up procedures to follow up submitted bugs/questions**
+ 
 **Create Debian packages**
   :dev: bverheg
-  :sta: IN PROGRESS (see Debian bug 653594)
-      
+  :sta: DONE
+     
 Release 1.0
 -----------
 

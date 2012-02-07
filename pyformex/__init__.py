@@ -86,8 +86,8 @@ class DebugLevels(object):
     """
     ALL = -1
     NONE = 0
-    INFO, WARNING, OPTION, CONFIG, SCRIPT, GUI, DRAW, LIB = \
-       1,       2,      4,      8,     16,  32,   64, 128
+    INFO, WARNING, OPTION, CONFIG, SCRIPT, GUI, MENU, DRAW, LIB = \
+       1,       2,      4,      8,     16,  32,   64, 128,  256
 
 DEBUG = DebugLevels
 
