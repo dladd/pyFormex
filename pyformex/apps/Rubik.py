@@ -1,0 +1,1 @@
+../examples/Rubik.py
