@@ -29,47 +29,51 @@ topics = ['image']
 techniques = ['color','filename']
 
 """
-
+from gui.draw import *
 from gui.imagearray import *
 
-clear()
-smooth()
-lights(False)
-view('front')
+def run():
+    clear()
+    smooth()
+    lights(False)
+    view('front')
 
-fn = os.path.join(getcfg('datadir'),'world.jpg')
-fn = askFilename(cur=fn,filter=utils.fileDescription('img'),)
-if not fn:
-    exit()
+    fn = os.path.join(getcfg('datadir'),'world.jpg')
+    fn = askFilename(cur=fn,filter=utils.fileDescription('img'),)
+    if not fn:
+        exit()
 
-im = QtGui.QImage(fn)
-if im.isNull():
-    warning("Could not load image '%s'" % fn)
-    exit()
+    im = QtGui.QImage(fn)
+    if im.isNull():
+        warning("Could not load image '%s'" % fn)
+        exit()
 
-nx,ny = im.width(),im.height()
-#nx,ny = 200,200
+    nx,ny = im.width(),im.height()
+    #nx,ny = 200,200
 
-# Create the colors
-color,colormap = image2glcolor(im.scaled(nx,ny))
-print color.shape,colormap
+    # Create the colors
+    color,colormap = image2glcolor(im.scaled(nx,ny))
+    print color.shape,colormap
 
 
-part = ask("How shall I show the image?",["Plane","Half Sphere","Full Sphere"])
+    part = ask("How shall I show the image?",["Plane","Half Sphere","Full Sphere"])
 
-# Create a 2D grid of nx*ny elements
-F = Formex('4:0123').replic2(nx,ny).centered().translate(2,1.)
+    # Create a 2D grid of nx*ny elements
+    F = Formex('4:0123').replic2(nx,ny).centered().translate(2,1.)
 
-#color = [ 'yellow' ]*(nx-2) + ['orange','red','orange']
+    #color = [ 'yellow' ]*(nx-2) + ['orange','red','orange']
 
-if part == "Plane":
-    G = F
-else:
-    if part == "Half Sphere":
-        sx = 180.
+    if part == "Plane":
+        G = F
     else:
-        sx = 360.
-    G = F.spherical(scale=[sx/nx,180./ny,2.*max(nx,ny)]).rollAxes(-1)
-draw(G,color=color,colormap=colormap)
-drawText('Created with pyFormex',10,10)
+        if part == "Half Sphere":
+            sx = 180.
+        else:
+            sx = 360.
+        G = F.spherical(scale=[sx/nx,180./ny,2.*max(nx,ny)]).rollAxes(-1)
+    draw(G,color=color,colormap=colormap)
+    drawText('Created with pyFormex',10,10)
+
+if __name__ == 'draw':
+    run()
 # End

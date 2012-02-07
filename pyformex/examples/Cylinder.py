@@ -37,19 +37,23 @@ This example illustrates the use of simple.sector() and simple.cylinder()
 to create a parametric cylindrical surface.
 
 """
+from gui.draw import *
 import simple
 from plugins.trisurface import TriSurface
 
-n=12
-h=5.
-A = simple.sector(1.,360.,1,n,diag='u')
-B = simple.cylinder(2.,h,n,4,diag='u').reverse()
-C = A.reverse()+B+A.trl(2,h)
-S = TriSurface(C)
-export({'surface':S})
+def run():
+    n=12
+    h=5.
+    A = simple.sector(1.,360.,1,n,diag='u')
+    B = simple.cylinder(2.,h,n,4,diag='u').reverse()
+    C = A.reverse()+B+A.trl(2,h)
+    S = TriSurface(C)
+    export({'surface':S})
 
-smoothwire()
-view('iso')
-draw(S,color=red)
+    smoothwire()
+    view('iso')
+    draw(S,color=red)
 
+if __name__ == 'draw':
+    run()
 # End

@@ -31,13 +31,10 @@ techniques = ['draw']
 This script creates an image of how coordinates are structures in a Formex.
 It was intended mainly for the manual.
 """
-clear()
-reset()
+from gui.draw import *
 
 def tmbbox(a):
     return [[0.0,0.0,0.0],[1.0,1.0,1.0]]
-
-marks.TextMark.bbox = tmbbox
 
 
 def drawAxis(len,dir,text):
@@ -57,11 +54,21 @@ def drawFrame(P):
     frame = (h + v).trl(P)
     draw(frame,linewidth=1.0,bbox=None)
 
-drawAxis(30,0,'axis 2: coordinates (x,y,z): length = 3')
-drawAxis(30,-90,'axis 1: points: length = self.nplex()')
-F = drawAxis(50,30,'axis 0: elements: length = self.nelems()').divide(8)
+def run():
+    clear()
+    reset()
 
-for i in range(1,5,2):
-    drawFrame(F[i][1])
+    marks.TextMark.bbox = tmbbox
 
-zoomAll()
+    drawAxis(30,0,'axis 2: coordinates (x,y,z): length = 3')
+    drawAxis(30,-90,'axis 1: points: length = self.nplex()')
+    F = drawAxis(50,30,'axis 0: elements: length = self.nelems()').divide(8)
+
+    for i in range(1,5,2):
+        drawFrame(F[i][1])
+
+    zoomAll()
+
+if __name__ == 'draw':
+    run()
+# End

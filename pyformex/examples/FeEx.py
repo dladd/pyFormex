@@ -28,6 +28,7 @@ level = 'advanced'
 topics = ['FEA']
 techniques = ['menu', 'dialog', 'persistence', 'color'] 
 """
+from gui.draw import *
 from pyformex import GUI,PF
 from gui import menu
 from gui.widgets import simpleInputItem as I
@@ -1119,12 +1120,13 @@ def reload_menu():
 ####################################################################
 ######### What to do when the script is executed ###################
 
-if __name__ == "draw":
-
+def run():
     geometry_menu.show_menu()
     resetData()
     reset()
     reload_menu()
     
+if __name__ == 'draw':
+    run()
 # End
 

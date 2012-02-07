@@ -67,95 +67,98 @@ Exercises
 1. Make this script also work for the 1D case. 
 
 """
+from gui.draw import *
 def atExit():
     #print "THIS IS THE EXIT FUNC"
     pf.GUI.setBusy(False)
     
 
+def run():
+    pf.GUI.setBusy()
+    #draw.logfile = open('pyformex.log','w')
 
-pf.GUI.setBusy()
-#draw.logfile = open('pyformex.log','w')
-    
-clear()
-smoothwire()
-transparent()
-
-
-n = 3,2,5
-a = Formex(origin())
-
-res = ask("Choose the model:",["None","2D","3D","Help"])
-if res == "None":
-    exit()
-if res == "Help":
-    showDescription()
-    exit()
-
-ndim = int(res[0])
+    clear()
+    smoothwire()
+    transparent()
 
 
-if ndim == 2:
-    view('front')
-else:
-    view('iso')
-    
-for i in range(ndim):
-    a = a.extrude(n[i],1.,i)
-    
-draw(a)
-drawNumbers(a)
+    n = 3,2,5
+    a = Formex(origin())
 
-clear()
-m = a.toMesh().setProp(1)
-export({'mesh':m})
-draw(m)
-drawNumbers(m)
-pause("%s elements" % m.nelems())
+    res = ask("Choose the model:",["None","2D","3D","Help"])
+    if res == "None":
+        exit()
+    if res == "Help":
+        showDescription()
+        exit()
+
+    ndim = int(res[0])
 
 
-flat()
-e = Mesh(m.coords,m.getLowerEntities(1)).setProp(2)
-clear()
-draw(e)
-drawNumbers(e)
-pause("%s edges" % e.nelems())
+    if ndim == 2:
+        view('front')
+    else:
+        view('iso')
 
-e = Mesh(m.coords,m.getEdges()).setProp(2)
-clear()
-draw(e)
-drawNumbers(e)
-pause("%s unique edges" % e.nelems())
+    for i in range(ndim):
+        a = a.extrude(n[i],1.,i)
 
-smoothwire()
-e = Mesh(m.coords,m.getLowerEntities(2)).setProp(3)
-clear()
-draw(e)
-drawNumbers(e)
-pause("%s faces" % e.nelems())
+    draw(a)
+    drawNumbers(a)
 
-e = Mesh(m.coords,m.getFaces()).setProp(3)
-clear()
-draw(e)
-drawNumbers(e)
-pause("%s unique faces" % e.nelems())
+    clear()
+    m = a.toMesh().setProp(1)
+    export({'mesh':m})
+    draw(m)
+    drawNumbers(m)
+    pause("%s elements" % m.nelems())
 
-e = Mesh(m.coords,m.getBorder()).setProp(4)
-export({'border':e})
-clear()
-draw(e)
-drawNumbers(e)
-pause("%s border elements" % e.nelems())
 
-clear()
-m = m.setProp(arange(m.nelems()))
-draw(m)
-drawNumbers(m)
-pause("mesh with properties")
+    flat()
+    e = Mesh(m.coords,m.getLowerEntities(1)).setProp(2)
+    clear()
+    draw(e)
+    drawNumbers(e)
+    pause("%s edges" % e.nelems())
 
-e = m.getBorderMesh()
-clear()
-draw(e)
-drawNumbers(e)
-message("border elements inherit the properties")
+    e = Mesh(m.coords,m.getEdges()).setProp(2)
+    clear()
+    draw(e)
+    drawNumbers(e)
+    pause("%s unique edges" % e.nelems())
 
+    smoothwire()
+    e = Mesh(m.coords,m.getLowerEntities(2)).setProp(3)
+    clear()
+    draw(e)
+    drawNumbers(e)
+    pause("%s faces" % e.nelems())
+
+    e = Mesh(m.coords,m.getFaces()).setProp(3)
+    clear()
+    draw(e)
+    drawNumbers(e)
+    pause("%s unique faces" % e.nelems())
+
+    e = Mesh(m.coords,m.getBorder()).setProp(4)
+    export({'border':e})
+    clear()
+    draw(e)
+    drawNumbers(e)
+    pause("%s border elements" % e.nelems())
+
+    clear()
+    m = m.setProp(arange(m.nelems()))
+    draw(m)
+    drawNumbers(m)
+    pause("mesh with properties")
+
+    e = m.getBorderMesh()
+    clear()
+    draw(e)
+    drawNumbers(e)
+    message("border elements inherit the properties")
+
+if __name__ == 'draw':
+    run()
 # End

@@ -35,6 +35,7 @@ pyFormex code.
 Later I added some nice utilities to make it worthwile as a programming example.
 It would be nice now to add a GUI to create and position the shapes.
 """
+from gui.draw import *
    
 
 def circle(n=60):
@@ -91,8 +92,7 @@ class Shape(Geometry):
         self.F = self.F.trl(direction,step)
 
 
-if __name__ == 'draw':
-
+def run():
     clear()
     smooth()
 
@@ -118,4 +118,6 @@ if __name__ == 'draw':
         
     sun.hide()
     
+if __name__ == 'draw':
+    run()
 # End

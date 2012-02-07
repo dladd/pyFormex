@@ -30,40 +30,45 @@ topics = ['mesh']
 techniques = ['extrude']
 
 """
-clear()
+from gui.draw import *
 
-nx,ny,nz = 5,3,2
-degree = 2           # create quadratic extrusions, change to 1 for linear
-noise = 0.0          # set nonzero to add some noise to the coordinates 
+def run():
+    clear()
 
-smoothwire()
-view('iso')
-delay(0)
+    nx,ny,nz = 5,3,2
+    degree = 2           # create quadratic extrusions, change to 1 for linear
+    noise = 0.0          # set nonzero to add some noise to the coordinates 
 
-a = Formex([0.,0.,0.]).toMesh()   # a point at the origin
-print a.eltype
-draw(a,color='black')
+    smoothwire()
+    view('iso')
+    delay(0)
 
-delay(2)
+    a = Formex([0.,0.,0.]).toMesh()   # a point at the origin
+    print a.eltype
+    draw(a,color='black')
 
-b = a.extrude(nx,1.,0,degree=degree)  # point extruded to quadratic line 
-print b.eltype
-draw(b.coords,wait=False)
-draw(b,color='red')
+    delay(2)
 
-c = b.extrude(ny,1.,1,degree=degree)  # line extruded to quadratic surface
-print c.eltype
-draw(c.coords,wait=False)
-draw(c,color='blue')
+    b = a.extrude(nx,1.,0,degree=degree)  # point extruded to quadratic line 
+    print b.eltype
+    draw(b.coords,wait=False)
+    draw(b,color='red')
 
-d = c.extrude(nz,-1.,2,degree=degree)  # surface extruded to quadratic volume
-print d.eltype
-draw(d.coords,wait=False)
-draw(d,color='yellow')
+    c = b.extrude(ny,1.,1,degree=degree)  # line extruded to quadratic surface
+    print c.eltype
+    draw(c.coords,wait=False)
+    draw(c,color='blue')
 
-if noise:
-    e = d.addNoise(noise)
-    draw(e.coords,wait=False,clear=True)
-    draw(e,color=cyan)
+    d = c.extrude(nz,-1.,2,degree=degree)  # surface extruded to quadratic volume
+    print d.eltype
+    draw(d.coords,wait=False)
+    draw(d,color='yellow')
+
+    if noise:
+        e = d.addNoise(noise)
+        draw(e.coords,wait=False,clear=True)
+        draw(e,color=cyan)
     
+if __name__ == 'draw':
+    run()
 # End

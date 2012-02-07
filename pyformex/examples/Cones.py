@@ -28,6 +28,7 @@ level = 'normal'
 topics = ['geometry']
 techniques = ['connect','dialog']
 """
+from gui.draw import *
 
 import simple
 from gui import widgets
@@ -115,29 +116,32 @@ nr=2    # number of elements along height
 nt=12   # number of elements along circumference
 diag=''
 
-items = [
-    widgets.simpleInputItem(n,globals()[n])
-    for n in ['r0','r1','h','t', 'nr','nt']
-    ] + [
-    widgets.simpleInputItem('diag',diag,itemtype='radio',choices=['','u','d'])
-    ]
-dialog = widgets.InputDialog(items)
+def run():
+    items = [
+        widgets.simpleInputItem(n,globals()[n])
+        for n in ['r0','r1','h','t', 'nr','nt']
+        ] + [
+        widgets.simpleInputItem('diag',diag,itemtype='radio',choices=['','u','d'])
+        ]
+    dialog = widgets.InputDialog(items)
 
 
-while not dialog.result() == widgets.TIMEOUT:
-    res = dialog.getResult()
-    if not res:
-        break
-    
-    globals().update(res)
-    F = cone(r0,r1,h,t,nr,nt,diag)
-    G = cone1(r0,r1,h,t,nr,nt,diag).swapAxes(1,2).trl(0,2*max(r0,r1))
-    G.setProp(1)
-    H = F+G
-    clear()
-    draw(H)
-    exit()
+    while not dialog.result() == widgets.TIMEOUT:
+        res = dialog.getResult()
+        if not res:
+            break
+
+        globals().update(res)
+        F = cone(r0,r1,h,t,nr,nt,diag)
+        G = cone1(r0,r1,h,t,nr,nt,diag).swapAxes(1,2).trl(0,2*max(r0,r1))
+        G.setProp(1)
+        H = F+G
+        clear()
+        draw(H)
+        exit()
     
 #exit()
 
+if __name__ == 'draw':
+    run()
 # End

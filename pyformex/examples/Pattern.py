@@ -29,12 +29,11 @@ topics = ['geometry']
 techniques = ['color','pattern']
 
 """
-
+from gui.draw import *
 import simple
 
 
-if __name__ == "draw":
-
+def run():
     reset()
     setDrawOptions(dict(view='front',linewidth=5,fgcolor='red'))
     grid = actors.GridActor(nx=(4,4,0),ox=(-2.0,-2.0,0.0),dx=(1.0,1.0,1.0),planes=False,linewidth=1)
@@ -50,4 +49,6 @@ if __name__ == "draw":
         FA = FB
         pause()
 
+if __name__ == 'draw':
+    run()
 # End

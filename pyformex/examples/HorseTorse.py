@@ -30,6 +30,7 @@ techniques = ['animation', 'color']
 
 Torsing a horse is like horsing a torse.
 """
+from gui.draw import *
 from plugins.trisurface import TriSurface
 
 def drawSurf(F,surface=False,**kargs):
@@ -38,39 +39,46 @@ def drawSurf(F,surface=False,**kargs):
         F = TriSurface(F)
     return draw(F,**kargs)
 
-reset()
-smooth()
-lights(True)
 
-surf=True
-F = Formex.read(getcfg('datadir')+'/horse.pgf')
-F = F.translate(-F.center())
-xmin,xmax = F.bbox()
+def run():
+    reset()
+    smooth()
+    lights(True)
 
-F = F.scale(1./(xmax[0]-xmin[0]))
-FA = drawSurf(F,surf)
+    surf=True
+    F = Formex.read(getcfg('datadir')+'/horse.pgf')
+    F = F.translate(-F.center())
+    xmin,xmax = F.bbox()
 
-angle = 360.
-n = 120
-da = angle*Deg/n
+    F = F.scale(1./(xmax[0]-xmin[0]))
+    FA = drawSurf(F,surf)
 
-F.setProp(1)
-for i in range(n+1):
-    a = i*da
-    torse = lambda x,y,z: [x,cos(a*x)*y-sin(a*x)*z,cos(a*x)*z+sin(a*x)*y]
-    G = F.map(torse)
-    GA = drawSurf(G,surf)
-    undraw(FA)
-    FA = GA
+    angle = 360.
+    n = 120
+    da = angle*Deg/n
+
+    F.setProp(1)
+    for i in range(n+1):
+        a = i*da
+        torse = lambda x,y,z: [x,cos(a*x)*y-sin(a*x)*z,cos(a*x)*z+sin(a*x)*y]
+        G = F.map(torse)
+        GA = drawSurf(G,surf)
+        undraw(FA)
+        FA = GA
 
 
-elong = 2.0
-nx = 50
-dx = elong/nx
+    elong = 2.0
+    nx = 50
+    dx = elong/nx
 
-for i in range(nx+1):
-    s = 1.0+i*dx
-    H = G.scale([s,1.,1.])
-    GA = drawSurf(H,surf,bbox=None)
-    undraw(FA)
-    FA = GA
+    for i in range(nx+1):
+        s = 1.0+i*dx
+        H = G.scale([s,1.,1.])
+        GA = drawSurf(H,surf,bbox=None)
+        undraw(FA)
+        FA = GA
+
+if __name__ == 'draw':
+    run()
+# End
+

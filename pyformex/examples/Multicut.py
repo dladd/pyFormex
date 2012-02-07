@@ -36,13 +36,18 @@ This example shows how to cut a hole in a surface.
 It uses the cutWithPlane function with a series of cutting planes.
 
 """
-clear()
+from gui.draw import *
 
-from simple import sphere
-S = sphere(8).scale(3.)
-T = S.cutWithPlane([[2.,0.,0.],[0.,1.,0.],[-2.,0.,0.],[0.,-1.,0.]],
-                   [[-1.,0.,0.],[0.,-1.,0.],[1.,0.,0.],[0.,+1.,0.]],
-                   side = '-')
-draw(T)
+def run():
+    clear()
 
+    from simple import sphere
+    S = sphere(8).scale(3.)
+    T = S.cutWithPlane([[2.,0.,0.],[0.,1.,0.],[-2.,0.,0.],[0.,-1.,0.]],
+                       [[-1.,0.,0.],[0.,-1.,0.],[1.,0.,0.],[0.,+1.,0.]],
+                       side = '-')
+    draw(T)
+
+if __name__ == 'draw':
+    run()
 # End

@@ -30,14 +30,11 @@ techniques = ['transform']
 
 See also the Sweep example for a more sophisticated Spirals application
 """
-
+from gui.draw import *
 from plugins import curve
 
 m = 100 # number of cells along spiral
 a = 1. # number of 360 degree turns
-
-linewidth(2)
-clear()
 
 F = Formex(origin()) # base pattern, here a point
 F = F.replic(m,1.,0)
@@ -73,18 +70,24 @@ S = spiral(F.coords,[0,1,2],rf)#.rosette(nwires,360./nwires)
 
 PL = curve.PolyLine(S[:,0,:])
 
-clear()
-draw(PL,color=red)
-draw(PL.coords,color=red)
-
-
-if ack("Spread point evenly?"):
-    at = PL.atLength(PL.nparts)
-    X = PL.pointsAt(at)
-    PL = curve.PolyLine(X)
+def run():
     clear()
-    draw(PL,color=blue)
-    draw(PL.coords,color=blue)
 
+    linewidth(2)
+    clear()
+    draw(PL,color=red)
+    draw(PL.coords,color=red)
+
+
+    if ack("Spread point evenly?"):
+        at = PL.atLength(PL.nparts)
+        X = PL.pointsAt(at)
+        PL = curve.PolyLine(X)
+        clear()
+        draw(PL,color=blue)
+        draw(PL.coords,color=blue)
+
+if __name__ == 'draw':
+    run()
 # End
 

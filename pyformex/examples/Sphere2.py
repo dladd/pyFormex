@@ -29,27 +29,32 @@ topics = ['geometry','surface','sphere']
 techniques = ['color']
 
 """
-
+from gui.draw import *
 from simple import sphere2,sphere3
 
-reset()
+def run():
+    reset()
 
-nx = 4
-ny = 4
-m = 1.6
-ns = 6
+    nx = 4
+    ny = 4
+    m = 1.6
+    ns = 6
 
-smooth()
-setView('front')
-for i in range(ns):
-    b = sphere2(nx,ny,bot=-90,top=90).translate(0,-1.0)
-    s = sphere3(nx,ny,bot=-90,top=90)
-    s = s.translate(0,1.0)
-    s.setProp(3)
-    clear()
-    bb = bbox([b,s])
-    draw(b,bbox=bb,wait=False)
-    draw(s,bbox=bb)#,color='random')
-    nx = int(m*nx)
-    ny = int(m*ny)
+    smooth()
+    setView('front')
+    for i in range(ns):
+        b = sphere2(nx,ny,bot=-90,top=90).translate(0,-1.0)
+        s = sphere3(nx,ny,bot=-90,top=90)
+        s = s.translate(0,1.0)
+        s.setProp(3)
+        clear()
+        bb = bbox([b,s])
+        draw(b,bbox=bb,wait=False)
+        draw(s,bbox=bb)#,color='random')
+        nx = int(m*nx)
+        ny = int(m*ny)
+
+if __name__ == 'draw':
+    run()
+# End
 

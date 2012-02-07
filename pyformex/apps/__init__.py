@@ -68,6 +68,7 @@ def detect(appdir):
     files = utils.listTree(appdir,listdirs=False,excludedirs=['.*'],includefiles=['.*\.py$'])
     apps = [ os.path.basename(f) for f in files ]
     apps = [ os.path.splitext(f)[0] for f in apps if f[0] not in '._' ]
+    apps.sort()
     return apps
 
 

@@ -30,30 +30,35 @@ topics = ['formex']
 techniques = ['extrude']
 
 """
-clear()
-smooth()
-M = Formex('4:0123').replic2(60,30).toMesh()#.setProp(5)
-draw(M,color=yellow)
-#drawNumbers(M)
-exit()
+from gui.draw import *
 
-smoothwire()
-view('iso')
-delay(1)
+def run():
+    clear()
+    smooth()
+    M = Formex('4:0123').replic2(60,30).toMesh()#.setProp(5)
+    draw(M,color=yellow)
+    #drawNumbers(M)
+    exit()
 
-a = Formex([0.,0.,0.])
-draw(a,color='black')
+    smoothwire()
+    view('iso')
+    delay(1)
 
-
-b = a.extrude(8,1.,1)
-draw(b,color='red')
-
-
-c = b.extrude(8,1.,0)
-draw(c,color='blue')
+    a = Formex([0.,0.,0.])
+    draw(a,color='black')
 
 
-d = c.extrude(7,-1.,2)
-draw(d,color='yellow')
+    b = a.extrude(8,1.,1)
+    draw(b,color='red')
 
+
+    c = b.extrude(8,1.,0)
+    draw(c,color='blue')
+
+
+    d = c.extrude(7,-1.,2)
+    draw(d,color='yellow')
+
+if __name__ == 'draw':
+    run()
 # End

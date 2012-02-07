@@ -30,6 +30,7 @@ topics = ['geometry','curve']
 techniques = ['connect','color','solve']
 
 """
+from gui.draw import *
 
 def build_matrix(atoms,vars):
     """Build a matrix of functions of coords.
@@ -82,29 +83,30 @@ def drawNumberedPoints(x,color):
     draw(x,color=color)
     drawNumbers(x,color=color)
     
+def run():
+    n = 100
+    t = arange(n+1)/float(n)
 
-n = 100
-t = arange(n+1)/float(n)
+    clear()
 
-clear()
+    for d in arange(4) * 0.2:
+        #clear()
 
-for d in arange(4) * 0.2:
-    #clear()
+        x = Coords([ [0.,0.], [1./3.,d], [2./3.,4*d**2], [1.,0.] ])
 
-    x = Coords([ [0.,0.], [1./3.,d], [2./3.,4*d**2], [1.,0.] ])
+        drawNumberedPoints(x,red)
 
-    drawNumberedPoints(x,red)
+        H = Formex(x.reshape(2,2,3))
+        draw(H,color=red)
 
-    H = Formex(x.reshape(2,2,3))
-    draw(H,color=red)
+        curve = Bezier(x)
+        F = Formex(curve.at(t))
+        #draw(F)
 
-    curve = Bezier(x)
-    F = Formex(curve.at(t))
-    #draw(F)
-
-    G = connect([F,F],bias=[0,1])
-    draw(G)
+        G = connect([F,F],bias=[0,1])
+        draw(G)
     
-    #zoomAll()
 
+if __name__ == 'draw':
+    run()
 # End

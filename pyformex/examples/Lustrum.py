@@ -29,18 +29,23 @@ topics = ['curve','drawing','illustration']
 techniques = ['color','persistence','lima','import']
 
 """
-reset()
-from pyformex.examples.Lima import *
-from project import Project
-linewidth(2)
-fgcolor(blue)
-grow('Plant1',ngen=7,clearing=False,text=False)
-data = readGeomFile(os.path.join(pf.cfg['datadir'],'blippo.pgf'))
-curve = data['blippo_000']
-bb = curve.coords.bbox()
-ctr = bb.center()
-siz = bb.sizes()
-curve.coords = curve.coords.trl(0,-ctr[0]).scale(50./siz[0])
-draw(curve,color=pyformex_pink,linewidth=5)
+from gui.draw import *
 
+def run():
+    reset()
+    from pyformex.examples.Lima import *
+    from project import Project
+    linewidth(2)
+    fgcolor(blue)
+    grow('Plant1',ngen=7,clearing=False,text=False)
+    data = readGeomFile(os.path.join(pf.cfg['datadir'],'blippo.pgf'))
+    curve = data['blippo_000']
+    bb = curve.coords.bbox()
+    ctr = bb.center()
+    siz = bb.sizes()
+    curve.coords = curve.coords.trl(0,-ctr[0]).scale(50./siz[0])
+    draw(curve,color=pyformex_pink,linewidth=5)
+
+if __name__ == 'draw':
+    run()
 # End

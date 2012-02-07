@@ -29,73 +29,78 @@ topics = ['geometry','surface']
 techniques = ['dialog', 'persistence', 'color']
 
 """
-reset()
+from gui.draw import *
 
-basechoices = ['Triangles','Quadrilaterals']
-renderchoices = pf.canvas.rendermodes[:5]
-res = askItems([
-    _I('baseGeom',itemtype='radio',choices=basechoices,text='Type of surface element'),
-    _I('nbumps',3,text='Number of bumps'),
-    _I('rendermode',choices=renderchoices,text='Render mode'),
-    _I('transparent',False,text='Transparent'),
-    _I('bottom',False,text='Add a bottom plate'),
-    _I('shrink',False,text='Shrink elements'),
-    _I('export',False,text='Export to .stl'),
-    ])
-if not res:
-    exit()
+def run():
+    reset()
 
-globals().update(res)
+    basechoices = ['Triangles','Quadrilaterals']
+    renderchoices = pf.canvas.rendermodes[:5]
+    res = askItems([
+        _I('baseGeom',itemtype='radio',choices=basechoices,text='Type of surface element'),
+        _I('nbumps',3,text='Number of bumps'),
+        _I('rendermode',choices=renderchoices,text='Render mode'),
+        _I('transparent',False,text='Transparent'),
+        _I('bottom',False,text='Add a bottom plate'),
+        _I('shrink',False,text='Shrink elements'),
+        _I('export',False,text='Export to .stl'),
+        ])
+    if not res:
+        exit()
 
-n = 10*nbumps
+    globals().update(res)
 
-if baseGeom == 'Triangles':
-    # The base consists of two triangles
-    e = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],1).replic2(n,n,1,1)
-else:
-    # The base is one quadrilateral
-    e = Formex([[[0,0,0],[1,0,0],[1,1,0],[0,1,0]]],1).replic2(n,n,1,1)
+    n = 10*nbumps
 
-# These are lines forming quadrilaterals
-#e = Formex([[[0,0,0],[1,0,0]]]).rosad(.5,.5).rinid(n,n,1,1)
+    if baseGeom == 'Triangles':
+        # The base consists of two triangles
+        e = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],1).replic2(n,n,1,1)
+    else:
+        # The base is one quadrilateral
+        e = Formex([[[0,0,0],[1,0,0],[1,1,0],[0,1,0]]],1).replic2(n,n,1,1)
 
-# Novation (Spots)
-s = nbumps+1
-r = n/s
-h = 12
-a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
+    # These are lines forming quadrilaterals
+    #e = Formex([[[0,0,0],[1,0,0]]]).rosad(.5,.5).rinid(n,n,1,1)
 
-if bottom:
-    # create a bottom
-    b = e.reverse()
-    #b.setProp(2)
-    
-# create the bumps
-for p in a:
-    e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
-if shrink:
-    e = e.shrink(0.8)
+    # Novation (Spots)
+    s = nbumps+1
+    r = n/s
+    h = 12
+    a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
 
-renderMode(rendermode)
-if transparent:
-    pf.canvas.alphablend = True
-if bottom:
-    draw(b,color=yellow,alpha=1.0)
+    if bottom:
+        # create a bottom
+        b = e.reverse()
+        #b.setProp(2)
 
-draw(e,alpha=0.8)
+    # create the bumps
+    for p in a:
+        e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
+    if shrink:
+        e = e.shrink(0.8)
 
-if export and checkWorkdir():
-    from plugins import trisurface
-    f = open('novation.stl','w')
-    F = e # + b
-    # Create triangles
-    G = F.selectNodes([0,1,2])
-    # If polygones, add more triangles
-    for i in range(3,F.nplex()):
-        G += F.selectNodes([0,i-1,i])
-    clear()
-    draw(G)
-    surface.write_stla(f,G.coords)
-    f.close()
+    renderMode(rendermode)
+    if transparent:
+        pf.canvas.alphablend = True
+    if bottom:
+        draw(b,color=yellow,alpha=1.0)
 
+    draw(e,alpha=0.8)
+
+    if export and checkWorkdir():
+        from plugins import trisurface
+        f = open('novation.stl','w')
+        F = e # + b
+        # Create triangles
+        G = F.selectNodes([0,1,2])
+        # If polygones, add more triangles
+        for i in range(3,F.nplex()):
+            G += F.selectNodes([0,i-1,i])
+        clear()
+        draw(G)
+        surface.write_stla(f,G.coords)
+        f.close()
+
+if __name__ == 'draw':
+    run()
 # End

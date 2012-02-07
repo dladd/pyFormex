@@ -30,6 +30,7 @@ level = 'normal'
 topics = ['geometry','mesh','drawing']
 techniques = ['widgets','dialog','random','color']
 """
+from gui.draw import *
 
 from numpy.random import rand
 from gui.widgets import simpleInputItem as I
@@ -136,10 +137,13 @@ def timeOut():
     show()
     close()
 
-# Create the non-modal dialog widget and show it
-dialog = widgets.InputDialog(items,caption='Drawing parameters',actions = [('Close',close),('Show',show)],default='Show')
-dialog.timeout = timeOut
-dialog.show()
-scriptLock(__file__)
+def run():
+    # Create the non-modal dialog widget and show it
+    dialog = widgets.InputDialog(items,caption='Drawing parameters',actions = [('Close',close),('Show',show)],default='Show')
+    dialog.timeout = timeOut
+    dialog.show()
+    scriptLock(__file__)
         
+if __name__ == 'draw':
+    run()
 # End

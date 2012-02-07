@@ -29,9 +29,12 @@ topics = ['geometry']
 techniques = ['color']
 
 """
+from gui.draw import *
 
-def demo_interpolate():
+def run():
     clear()
+    wireframe()
+
     a = Formex([[[0,0,0],[1,0,0]],[[1,0,0],[2,0,0]]])
     b = Formex([[[0,1,0],[1,1,0]],[[1,1,0],[2,1,0]]])
     message("Two lines")
@@ -63,7 +66,6 @@ def demo_interpolate():
     message("Divide the set of lines")
     draw(f)
 
-if __name__ == "draw":
-    wireframe()
-    demo_interpolate()
-    
+if __name__ == 'draw':
+    run()
+# End

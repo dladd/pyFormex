@@ -30,50 +30,55 @@ topics = ['geometry','surface']
 techniques = ['dialog', 'color']
 
 """
-
+from gui.draw import *
 import simple
 
-reset()
-smooth()
-r=3.
-h=15.
-n=64
+def run():
+    reset()
+    smooth()
+    r=3.
+    h=15.
+    n=64
 
-F = simple.sector(r,360.,n,n,h=h,diag=None)
-#F.coords = F.coords.flare(h/4,r/2,dir=[2,0],end=1,exp=5.)
-F.setProp(0)
-draw(F,view='bottom')
-setDrawOptions({'bbox':None})
-zoomAll()
-zoom(3)
+    F = simple.sector(r,360.,n,n,h=h,diag=None)
+    #F.coords = F.coords.flare(h/4,r/2,dir=[2,0],end=1,exp=5.)
+    F.setProp(0)
+    draw(F,view='bottom')
+    setDrawOptions({'bbox':None})
+    zoomAll()
+    zoom(3)
 
-print map(str,range(4))
-ans = ask('How many balls do you want?',['0','1','2','3'])
+    print map(str,range(4))
+    ans = ask('How many balls do you want?',['0','1','2','3'])
 
-try:
-    nb = int(ans)
-except:
-    nb = 3
-    
-if nb > 0:
-    B = simple.sphere3(n,n,r=0.9*r,bot=-90,top=90)
-    B1 = B.translate([0.,0.,0.95*h])
-    B1.setProp(1)
-    draw(B1)
+    try:
+        nb = int(ans)
+    except:
+        nb = 3
 
-#sleep(10)
+    if nb > 0:
+        B = simple.sphere3(n,n,r=0.9*r,bot=-90,top=90)
+        B1 = B.translate([0.,0.,0.95*h])
+        B1.setProp(1)
+        draw(B1)
 
-if nb > 1:
-    B2 = B.translate([0.2*r,0.,1.15*h])
-    B2.setProp(2)
-    draw(B2)
+    #sleep(10)
 
-if nb > 2:
-    B3 = B.translate([-0.2*r,0.1*r,1.25*h])
-    B3.setProp(6)
-    draw(B3)
+    if nb > 1:
+        B2 = B.translate([0.2*r,0.,1.15*h])
+        B2.setProp(2)
+        draw(B2)
 
-zoomAll()
-zoom(3)
+    if nb > 2:
+        B3 = B.translate([-0.2*r,0.1*r,1.25*h])
+        B3.setProp(6)
+        draw(B3)
 
-focus(B1)
+    zoomAll()
+    zoom(3)
+
+    focus(B1)
+
+if __name__ == 'draw':
+    run()
+# End

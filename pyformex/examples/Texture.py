@@ -32,9 +32,6 @@ def run():
 
     bgcolor(color=white,image=imagefile)
 
-
 if __name__ == 'draw':
-    # if executed as a script
     run()
-
 # End

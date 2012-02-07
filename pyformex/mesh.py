@@ -1075,7 +1075,7 @@ Size: %s
         for step in strategy:
             steptype,stepdata = step
 
-            if steptype == 'm':
+            if steptype == 'a':
                 mesh = mesh.addMeanNodes(stepdata,totype)
                 
             elif steptype == 's':
@@ -1134,7 +1134,7 @@ Size: %s
         Returns: a Mesh where each element is replaced by a number of
           smaller elements of the same type.
 
-        ..note:: This is currently only implemented for Meshes of type 'tri3'
+        .. note:: This is currently only implemented for Meshes of type 'tri3'
           and 'quad4' and for the derived class 'TriSurface'.
         """
         elname = self.eltype.name()
@@ -1561,6 +1561,10 @@ Size: %s
     def concatenate(clas,meshes,**kargs):
         """Concatenate a list of meshes of the same plexitude and eltype
 
+        All Meshes in the list should have the same plexitude.
+        Meshes with plexitude are ignored though, to allow empty
+        Meshes to be added in.
+        
         Merging of the nodes can be tuned by specifying extra arguments
         that will be passed to :meth:`Coords:fuse`.
 
@@ -1568,6 +1572,7 @@ Size: %s
 
           Mesh.concatenate([mesh0,mesh1,mesh2])
         """
+        meshes = [ m for m in meshes if m.nplex() > 0 ]
         nplex = set([ m.nplex() for m in meshes ])
         if len(nplex) > 1:
             raise ValueError,"Cannot concatenate meshes with different plexitude: %s" % str(nplex)

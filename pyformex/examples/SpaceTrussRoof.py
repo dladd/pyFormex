@@ -29,8 +29,8 @@ topics = ['geometry']
 techniques = ['dialog', 'animation', 'color', 'import', 'connect', 'interpolate']
 
 """
+from gui.draw import *
 import simple
-from gui.widgets import simpleInputItem as I
 
 dx = 180 # Modular size (cm)
 ht = 150 # Deck height
@@ -55,41 +55,47 @@ col = (Formex([[[0,0,-colht],[0,0,0]]]).replic2(ncx,2,m,ny) + Formex([[[0,m,-col
 col.setProp(2)
 
 F = top+bot+dia+col
-clear()
-linewidth(1)
-draw(F)
 
-F = F.rotate(-90,0) # put the structure upright
-clear()
-draw(F)
-
-createView('myview1',(30.,0.,0.))
-view('myview1',True)
-
-for i in range(19):
-    createView('myview2',(i*10.,20.,0.))
-    view('myview2',True)
-
-# fly tru
-if ack("Do you want to fly through the structure?"):
-    totaltime = 10
-    nsteps = 50
-    # make sure bottom iz at y=0 and structure is centered in (x,z)
-    F = F.centered()
-    F = F.translate(1,-F.bbox()[0,1])
+def run():
     clear()
     linewidth(1)
     draw(F)
-    bb = F.bbox()
-    # create a bottom plate
-    B = simple.rectangle(1,1).swapAxes(1,2).centered().scale(F.sizes()[0]*1.5)
-    smooth()
-    draw(B)
-    # Fly at reasonable height
-    bb[0,1] = bb[1,1] = 170.
-    ends = interpolate(Formex([[bb[0]]]),Formex([[bb[1]]]),[-0.5,0.6])
-    path = connect([ends,ends],bias=[0,1]).divide(nsteps)
-    linewidth(2)
-    draw(path)
-    steptime = float(totaltime)/nsteps
-    flyAlong(path,sleeptime=steptime)
+
+    F = F.rotate(-90,0) # put the structure upright
+    clear()
+    draw(F)
+
+    createView('myview1',(30.,0.,0.))
+    view('myview1',True)
+
+    for i in range(19):
+        createView('myview2',(i*10.,20.,0.))
+        view('myview2',True)
+
+    # fly tru
+    if ack("Do you want to fly through the structure?"):
+        totaltime = 10
+        nsteps = 50
+        # make sure bottom iz at y=0 and structure is centered in (x,z)
+        F = F.centered()
+        F = F.translate(1,-F.bbox()[0,1])
+        clear()
+        linewidth(1)
+        draw(F)
+        bb = F.bbox()
+        # create a bottom plate
+        B = simple.rectangle(1,1).swapAxes(1,2).centered().scale(F.sizes()[0]*1.5)
+        smooth()
+        draw(B)
+        # Fly at reasonable height
+        bb[0,1] = bb[1,1] = 170.
+        ends = interpolate(Formex([[bb[0]]]),Formex([[bb[1]]]),[-0.5,0.6])
+        path = connect([ends,ends],bias=[0,1]).divide(nsteps)
+        linewidth(2)
+        draw(path)
+        steptime = float(totaltime)/nsteps
+        flyAlong(path,sleeptime=steptime)
+
+if __name__ == 'draw':
+    run()
+# End

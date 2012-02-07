@@ -29,33 +29,37 @@ topics = []
 techniques = ['color','text']
 
 """
+from gui.draw import *
 
-n = 40
-T = ['Python','NumPy','OpenGL','QT4','pyFormex']
-font = 'times'
-ftmin,ftmax = 12,36
+def run():
+    n = 40
+    T = ['Python','NumPy','OpenGL','QT4','pyFormex']
+    font = 'times'
+    ftmin,ftmax = 12,36
 
-r = random.random((n,7))
-w,h = pf.canvas.width(), pf.canvas.height()
-a = r[:,:2] * array([w,h]).astype(int)
-size = (ftmin + r[:,2] * (ftmax-ftmin)).astype(int)
-colors = r[:,3:6]
-t = (r[:,6] * len(T)).astype(int)
-clear()
+    r = random.random((n,7))
+    w,h = pf.canvas.width(), pf.canvas.height()
+    a = r[:,:2] * array([w,h]).astype(int)
+    size = (ftmin + r[:,2] * (ftmax-ftmin)).astype(int)
+    colors = r[:,3:6]
+    t = (r[:,6] * len(T)).astype(int)
+    clear()
 
-bgcolor(white)
-lights(False)
-TA = None
+    bgcolor(white)
+    lights(False)
+    TA = None
 
-for i in range(n):
-    # fgcolor(red)
-    TB = drawText(T[t[i]],a[i][0],a[i][1],font=font,size=size[i],color=list(colors[i]))
-    sleep(0.2)
-    breakpt()
-    if i < n/2:
-        undecorate(TA)
-    TA = TB
-    #drawTextQt(T[t[i]],a[i][0],a[i][1])
-    #pf.canvas.update()
+    for i in range(n):
+        # fgcolor(red)
+        TB = drawText(T[t[i]],a[i][0],a[i][1],font=font,size=size[i],color=list(colors[i]))
+        sleep(0.2)
+        breakpt()
+        if i < n/2:
+            undecorate(TA)
+        TA = TB
+        #drawTextQt(T[t[i]],a[i][0],a[i][1])
+        #pf.canvas.update()
 
+if __name__ == 'draw':
+    run()
 # End

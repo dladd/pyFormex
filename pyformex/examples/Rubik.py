@@ -73,8 +73,7 @@ for the displayed cube by pressing the **Permutations** button.
 This number is not stored, it is calculated each time. It's a nice example
 of how easily Python can handle huge numbers.
 """
-
-from gui.widgets import simpleInputItem as I
+from gui.draw import *
 from gui.viewport import *
 from numpy.random import rand
 
@@ -249,9 +248,9 @@ def timeOut():
 dia = widgets.InputDialog(
     caption='Cube',
     items=[
-        I('n', 3,  text='Number of elements on a row', itemtype='slider', min=2, max=10, ticks=1),
-        I('steps', 10, text='Animation steps', itemtype='slider', min=0, max=50, ticks=5),
-        I('t', 0.05, text='Time between steps', min=0),  
+        _I('n', 3,  text='Number of elements on a row', itemtype='slider', min=2, max=10, ticks=1),
+        _I('steps', 10, text='Animation steps', itemtype='slider', min=0, max=50, ticks=5),
+        _I('t', 0.05, text='Time between steps', min=0),  
    ],
     actions=[
         ('New',new),
@@ -261,7 +260,7 @@ dia = widgets.InputDialog(
         ('Close',close),
     ])
 
-if __name__ == "draw":
+def run():
     transparent(False)
     clear()
     renderMode('flatwire')
@@ -278,4 +277,6 @@ if __name__ == "draw":
     # Block other scripts 
     scriptLock(__file__)
 
+if __name__ == 'draw':
+    run()
 # End

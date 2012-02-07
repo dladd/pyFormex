@@ -57,12 +57,14 @@ consisting of quadrilaterals). The number of elements along the
 splines can be chosen. The number of elements across the splines is
 currently unused.
 """
+from gui.draw import *
 
 """Definition of surfaces in pyFormex.
 
 This module defines classes and functions specialized for handling
 two-dimensional geometry in pyFormex. 
 """
+from gui.draw import *
 
 # I wrote this software in my free time, for my joy, not as a commissioned task.
 # Any copyright claims made by my employer should therefore be considered void.
@@ -281,97 +283,97 @@ def area(C,nroll=0):
 
 ###############################################################
 
-clear()
-smoothwire()
-
-from gui.widgets import simpleInputItem as I
-
-res = askItems([
-    I('base',itemtype='vradio',choices=[
-        'Circles and Ellipses',
-        'Power Curves',
-        'Kinked Artery',
-        ]),
-    I('ncurves',value=12,text='Number of spline curves'),
-    I('nu',value=36,text='Number of cells along splines'),
-    I('refine',False),
-    I('nv',value=12,text='Number of cells across splines'),
-    I('align',False),
-    I('aligndir',1),
-    I('alignmax',True),
-    ])
-
-if not res:
-    exit()
-
-globals().update(res)
-
-if base == 'Circles and Ellipses':
-    CL = createCircles(n=ncurves)
-    nroll = 0
-    reverse = False
-elif base == 'Power Curves':
-    CL = createPowerCurves(nu,nv)
-    nroll = 0
-    reverse = False
-else:
-    CL = readSplines()
-    nroll = -1
-    reverse = True
-
-ncurves = len(CL)
-print "Created %s BezierSpline curves" % ncurves
-CL = removeInvalid(CL)
-
-if reverse:
-    areas = [ area(Ci,nroll) for Ci in CL ]
-    print areas
-    for i,a in enumerate(areas):
-        if a < 0.0:
-            print "Reversing curve %s" % i
-            CL[i] = CL[i].reverse()
-
-if align:
-    #view('left')
-    for Ci in CL:
-        #clear()
-        alignCurvePoints(Ci,aligndir,alignmax)
-        draw(Ci.pointsOn()[0],color=green)
-        #zoomAll()
-        #pause()
-        #exit()
-
-draw(CL)
-export({'splines':CL})
-print "Number of points in the curves:",[ Ci.coords.shape[0] for Ci in CL]
-
-PL = [Ci.approx(1) for Ci in CL]
-
-createPL = False
-if createPL:
-    export({'polylines':PL})
-    draw(PL,color=red)
-    print "Number of points in the PolyLines:",[ Ci.coords.shape[0] for Ci in PL]
-
-
-S = SplineSurface(CL,nu)
-M = gridToMesh(S.grid,closed = S.uclosed)
-draw(M,color=yellow,bkcolor='steelblue')
-export({'quadsurface':M})
-
-if refine:
+def run()
     clear()
-    print "Refining to %s" % nv
-    S = SplineSurface(S.vCurves(),nv)
-    N = gridToMesh(S.grid,closed = S.uclosed)
-    draw(N,color=magenta,bkcolor='olive')
-    export({'quadsurface-1':N})
+    smoothwire()
 
-zoomAll()
+    from gui.widgets import simpleInputItem as I
+
+    res = askItems([
+        I('base',itemtype='vradio',choices=[
+            'Circles and Ellipses',
+            'Power Curves',
+            'Kinked Artery',
+            ]),
+        I('ncurves',value=12,text='Number of spline curves'),
+        I('nu',value=36,text='Number of cells along splines'),
+        I('refine',False),
+        I('nv',value=12,text='Number of cells across splines'),
+        I('align',False),
+        I('aligndir',1),
+        I('alignmax',True),
+        ])
+
+    if not res:
+        exit()
+
+    globals().update(res)
+
+    if base == 'Circles and Ellipses':
+        CL = createCircles(n=ncurves)
+        nroll = 0
+        reverse = False
+    elif base == 'Power Curves':
+        CL = createPowerCurves(nu,nv)
+        nroll = 0
+        reverse = False
+    else:
+        CL = readSplines()
+        nroll = -1
+        reverse = True
+
+    ncurves = len(CL)
+    print "Created %s BezierSpline curves" % ncurves
+    CL = removeInvalid(CL)
+
+    if reverse:
+        areas = [ area(Ci,nroll) for Ci in CL ]
+        print areas
+        for i,a in enumerate(areas):
+            if a < 0.0:
+                print "Reversing curve %s" % i
+                CL[i] = CL[i].reverse()
+
+    if align:
+        #view('left')
+        for Ci in CL:
+            #clear()
+            alignCurvePoints(Ci,aligndir,alignmax)
+            draw(Ci.pointsOn()[0],color=green)
+            #zoomAll()
+            #pause()
+            #exit()
+
+    draw(CL)
+    export({'splines':CL})
+    print "Number of points in the curves:",[ Ci.coords.shape[0] for Ci in CL]
+
+    PL = [Ci.approx(1) for Ci in CL]
+
+    createPL = False
+    if createPL:
+        export({'polylines':PL})
+        draw(PL,color=red)
+        print "Number of points in the PolyLines:",[ Ci.coords.shape[0] for Ci in PL]
 
 
+    S = SplineSurface(CL,nu)
+    M = gridToMesh(S.grid,closed = S.uclosed)
+    draw(M,color=yellow,bkcolor='steelblue')
+    export({'quadsurface':M})
 
+    if refine:
+        clear()
+        print "Refining to %s" % nv
+        S = SplineSurface(S.vCurves(),nv)
+        N = gridToMesh(S.grid,closed = S.uclosed)
+        draw(N,color=magenta,bkcolor='olive')
+        export({'quadsurface-1':N})
+
+    zoomAll()
 
 ##############################################################################
 
+if __name__ == 'draw':
+    run()
 # End

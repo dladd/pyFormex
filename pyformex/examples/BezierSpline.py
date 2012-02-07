@@ -41,57 +41,60 @@ The image shows open (left) and closed (right) BezierSpline curves of
 degrees 1(red), 2(magenta) and 3(blue).
 
 """
-from gui.widgets import simpleInputItem as I
+from gui.draw import *
 from plugins.curve import BezierSpline
 
-clear()
-linewidth(2)
+def run():
+    clear()
+    linewidth(2)
 
-# Predefined set of points
-pts = Coords([
-    [1.,0.,0.],
-    [1.,1.,0.],
-    [0.,1.,0.],
-    [-1.,1.,0.],
-    [-1.,0.,0.],
-    [-1.,-1.,0.],
-    [0.,-1.,0.],
-    [1.,-1.,0.],
-    [1.,0.,0.],
-    ])
+    # Predefined set of points
+    pts = Coords([
+        [1.,0.,0.],
+        [1.,1.,0.],
+        [0.,1.,0.],
+        [-1.,1.,0.],
+        [-1.,0.,0.],
+        [-1.,-1.,0.],
+        [0.,-1.,0.],
+        [1.,-1.,0.],
+        [1.,0.,0.],
+        ])
 
 
-# Ask the user how many points he wants to use
-res = askItems([I('npts',5,text='How many points to use (2..%s)' % len(pts))])
-if not res:
-    exit()
+    # Ask the user how many points he wants to use
+    res = askItems([_I('npts',5,text='How many points to use (2..%s)' % len(pts))])
+    if not res:
+        exit()
 
-# Keep only the requested number of points
-npts = res['npts']
-pts = pts[:npts]
+    # Keep only the requested number of points
+    npts = res['npts']
+    pts = pts[:npts]
 
-# Show open and closed Bezier Splines, for degrees 1,2,3
-degrees = [1,2,3]
-colors = [red,green,blue]
-collection = {}
-for closed in [False,True]:
-    draw(pts)
-    drawNumbers(pts)
-    for d,c in zip(degrees,colors):
-        print "DEGREE %s, %s" % (d,closed)
-        B = BezierSpline(coords=pts,closed=closed,degree=d)
-        collection["BezierSpline-degree:%s-closed:%s" % (d,closed)] = B
-        draw(B,color=c)
+    # Show open and closed Bezier Splines, for degrees 1,2,3
+    degrees = [1,2,3]
+    colors = [red,green,blue]
+    collection = {}
+    for closed in [False,True]:
+        draw(pts)
+        drawNumbers(pts)
+        for d,c in zip(degrees,colors):
+            print "DEGREE %s, %s" % (d,closed)
+            B = BezierSpline(coords=pts,closed=closed,degree=d)
+            collection["BezierSpline-degree:%s-closed:%s" % (d,closed)] = B
+            draw(B,color=c)
 
-        t = arange(2*B.nparts)*0.5
-        ipts = B.pointsAt(t)
-        draw(ipts,color=c,marksize=10)
-        idir = B.directionsAt(t)
-        drawVectors(ipts,0.2*idir)
-    # Translate the points to the right
-    pts = pts.trl(0,2.5)#[:-1]
+            t = arange(2*B.nparts)*0.5
+            ipts = B.pointsAt(t)
+            draw(ipts,color=c,marksize=10)
+            idir = B.directionsAt(t)
+            drawVectors(ipts,0.2*idir)
+        # Translate the points to the right
+        pts = pts.trl(0,2.5)#[:-1]
 
-zoomAll()
-export(collection)
+    zoomAll()
+    export(collection)
         
+if __name__ == 'draw':
+    run()
 # End

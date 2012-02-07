@@ -29,14 +29,8 @@ topics = ['geometry']
 techniques = ['color','axes']
 
 """
-
+from gui.draw import *
 from plugins import inertia
-
-reset()
-wireframe()
-view('front')
-
-
 
 def unitAxes():
     """Create a set of three axes."""
@@ -47,9 +41,6 @@ def unitAxes():
     Hy.setProp(5)
     Hz.setProp(6)
     return Formex.concatenate([Hx,Hy,Hz])    
-
-
-Axes = unitAxes()
 
 def showPrincipal1(F):
     """Show the principal axes."""
@@ -70,22 +61,31 @@ def showPrincipal1(F):
     return C,I,Iprin,Iaxes
 
 
-#F = Formex('l:1').replic(2,2,1).replic(2,2,2).scale(2)
-nx,ny,nz = 2,3,4
-dx,dy,dz = 4,3,2
-F = Formex([[[0,0,0]]]).replic(nx,dx,0).replic(ny,dy,1).replic(nz,dz,2)
+def run():
+    reset()
+    wireframe()
+    view('front')
 
-Fr = F
-C,I,Ip,Ia = showPrincipal1(Fr)
+    Axes = unitAxes()
 
-Fr = F.rotate(30,0).rotate(45,1).rotate(60,2)
-C,I,Ip,Ia = showPrincipal1(Fr)
+    #F = Formex('l:1').replic(2,2,1).replic(2,2,2).scale(2)
+    nx,ny,nz = 2,3,4
+    dx,dy,dz = 4,3,2
+    F = Formex([[[0,0,0]]]).replic(nx,dx,0).replic(ny,dy,1).replic(nz,dz,2)
+
+    Fr = F
+    C,I,Ip,Ia = showPrincipal1(Fr)
+
+    Fr = F.rotate(30,0).rotate(45,1).rotate(60,2)
+    C,I,Ip,Ia = showPrincipal1(Fr)
 
 
-sleep(2)
-Fo = Formex([[C]])
-Fc = connect([Fo,Fr],loop=True)
-draw(Fc)
+    sleep(2)
+    Fo = Formex([[C]])
+    Fc = connect([Fo,Fr],loop=True)
+    draw(Fc)
 
-
+if __name__ == 'draw':
+    run()
+# End
 

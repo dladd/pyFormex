@@ -564,19 +564,94 @@ Hex27 = Element(
 ######################################################################
 ########## element type conversions ##################################
 
+_conversion_doc_ = """Element type conversion
+
+Element type conversion in pyFormex is a powerful feature to transform
+Mesh type objects. While mostly used to change the element type, there
+are also conversion types that refine the Mesh.
+
+Available conversion methods are defined in an attribute `conversion`
+of the input element type. This attribute should be a dictionary, where
+the keys are the name of the conversion method and the values describe
+what steps need be taken to achieve this conversion. The method name
+should be the name of the target element, optionally followed by a suffix
+to discriminate between different methods yielding the same target element type.
+The suffix should always start with a '-'. The part starting at the '-' will
+be stripped of to set the final target element name.
+
+E.g., a 'line3' element type is a quadratic line element through three points.
+There are two available methods to convert it to 'line2' (straight line
+segments betwee two points), named named 'line2', resp. 'line2-2'.
+The first will transform a 'line3' element in a single 'line2' between
+the two endpoints (i.e. the chord of the quadratic element);
+the second will replace each 'line3' with two straight segments: from
+first to central node, and from central node to end node (i.e. the tangents).
+
+The values in the dictionary are a list of execution steps to be performed
+in the conversion. Each step is a tuple of a single character defining the
+type of the step, and the data needed by this type of step. The steps are
+executed one by one to go from the source element type to the target.
+
+Currently, the following step types are defined:
+
+==============  =============================================
+   Type         Data
+==============  =============================================
+'s' (select)    connectivity list of selected nodes
+'a' (average)   list of tuples of nodes to be averaged
+'v' (via)       string with name of intermediate element type
+'f' (function)  a proper conversion function
+'r' (random)    list of conversion method names
+==============  =============================================
+
+The operation of these methods is as follows:
+
+:'s' (select): This is the most common conversion type. It selects a set of
+  nodes of the input element, and creates one or more new elements with these
+  nodes. The data field is a list of tuples defining for each created element
+  which node numbers from the source element should be included. This method
+  will usually decrease the plexitude of the elements.
+
+:'a' (average): Creates new nodes the position of which is computed as
+  an average of existing nodes. The data field is a list of tuples with
+  the numbers of the nodes that should be averaged for each new node. The
+  resulting new nodes are added in order at the end of the existing nodes.
+  If this order is not the proper local node numbering, an 's' step should
+  follow to put the (old and new) nodes in the proper order.
+  This method will usually increase the plexitude of the elements.
+
+:'v' (via): The conversion is made via an intermediate element type. The source
+  Mesh is first converted to this intermediate type, and the result is then
+  transformed to the target type.
+
+:r' (random): Chooses a random method between a list of alternatives. The data
+  field is a list of conversion method names defined for the same element
+  (and thus inside the same dictionary). While this could be considered
+  an amusement (e.g. used in the Carpetry example), there are serious
+  application for this, e.g. when transforming a Mesh of squares or rectangles
+  into a Mesh of triangles, by adding one diagonal in each element.
+  Results with such a Mesh may however be different dependent on the choice
+  of diagonal. The converted Mesh has directional preferences, not present
+  in the original. The Quad4 to Tri3 conversion therefore has the choice to
+  use either 'up' or 'down' diagonals. But a better choice is often the
+  'random' method, which will put the diagonals in a random direction, thus
+  reducing the effect.
+
+"""
+
 Line3.conversions = {
-    'line2'  : [ ('s', [ (0,2) ]), ],
+    'line2'   : [ ('s', [ (0,2) ]), ],
     'line2-2' : [ ('s', [ (0,1), (1,2) ]), ],
     }
 Tri3.conversions =  {
     'tri3-4' : [ ('v', 'tri6'), ],
-    'tri6'   : [ ('m', [ (0,1), (1,2), (2,0) ]), ],
+    'tri6'   : [ ('a', [ (0,1), (1,2), (2,0) ]), ],
     'quad4'  : [ ('v', 'tri6'), ],
     }
 Tri6.conversions = {
     'tri3'   : [ ('s', [ (0,1,2) ]), ],
     'tri3-4' : [ ('s', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]), ],
-    'quad4'  : [ ('m', [ (0,1,2), ]),
+    'quad4'  : [ ('a', [ (0,1,2), ]),
                  ('s', [ (0,3,6,5),(1,4,6,3),(2,5,6,4) ]),
                  ],
     }
@@ -585,10 +660,10 @@ Quad4.conversions = {
     'tri3-r' : [ ('r', ['tri3-u','tri3-d']), ],
     'tri3-u' : [ ('s', [ (0,1,2), (2,3,0) ]), ],
     'tri3-d' : [ ('s', [ (0,1,3), (2,3,1) ]), ],
-    'tri3-x' : [ ('m', [ (0,1,2,3) ]),
+    'tri3-x' : [ ('a', [ (0,1,2,3) ]),
                  ('s', [ (0,1,4),(1,2,4),(2,3,4),(3,0,4) ]),
                  ],
-    'quad8'  : [ ('m', [ (0,1), (1,2), (2,3), (3,0) ])],
+    'quad8'  : [ ('a', [ (0,1), (1,2), (2,3), (3,0) ])],
     'quad4-4': [ ('v', 'quad9'), ],
     'quad9'  : [ ('v', 'quad8'), ],
     }
@@ -598,7 +673,7 @@ Quad8.conversions = {
     'tri3-h' : [ ('s', [ (0,4,7),(1,5,4),(2,6,5),(3,7,6),(4,5,7),(6,7,5) ]), ],
     'quad4'  : [ ('s', [ (0,1,2,3) ]), ],
     'quad4-4': [ ('v', 'quad9'), ],
-    'quad9'  : [ ('m', [ (4,5,6,7) ]), ],
+    'quad9'  : [ ('a', [ (4,5,6,7) ]), ],
     }
 Quad9.conversions = {
     'quad8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
@@ -611,21 +686,21 @@ Quad9.conversions = {
                          (2,6,8),(6,3,8),(3,7,8),(7,0,8) ]), ],
     }
 Tet4.conversions = {
-    'tet10' : [ ('m', [ (0,1), (0,2), (0,3), (1,2), (2, 3), (1, 3)]), ],
+    'tet10' : [ ('a', [ (0,1), (0,2), (0,3), (1,2), (2, 3), (1, 3)]), ],
     'tet14'  : [ ('v', 'tet10'), ],
     'tet15'  : [ ('v', 'tet14'), ],
     'hex8'  : [ ('v', 'tet15'), ],
     }
 Tet10.conversions = {
     'tet4' :  [ ('s', [ (0,1,2,3,) ]), ],
-    'tet14'  : [ ('m', [ (0,1, 2), (0, 2, 3), (0, 3, 1), (1, 2, 3), ]), ],
+    'tet14'  : [ ('a', [ (0,1, 2), (0, 2, 3), (0, 3, 1), (1, 2, 3), ]), ],
     'tet15'  : [ ('v', 'tet14'), ],
     'hex8'  : [ ('v', 'tet15'), ],
     }
 Tet14.conversions = {
     'tet10' :  [ ('s', [ (0,1,2,3,4, 5, 6, 7, 8, 9) ]), ],
     'tet4' : [ ('v', 'tet10'), ],
-    'tet15'  : [ ('m', [ (0,1, 2, 3), ]), ],
+    'tet15'  : [ ('a', [ (0,1, 2, 3), ]), ],
     'hex8'  : [ ('v', 'tet15'), ],
     }
 Tet15.conversions = {
@@ -643,7 +718,7 @@ Hex8.conversions = {
     'tet4'  : [ ('s', [ (0,1,2,5),(2,3,0,7),(5,7,6,2),(7,5,4,0),(0,5,2,7) ]), ],
     'tet4-6': [ ('v', 'wedge6') ],
     'hex8-8': [ ('v', 'hex20'), ],
-    'hex20' : [ ('m', [ (0,1), (1,2), (2,3), (3,0),
+    'hex20' : [ ('a', [ (0,1), (1,2), (2,3), (3,0),
                         (4,5), (5,6), (6,7), (7,4),
                         (0,4), (1,5), (2,6), (3,7), ]), ],
     }
@@ -656,11 +731,11 @@ Hex20.conversions = {
 Hex27.conversions = {}
 
 Hex16.conversions = {
-    'hex20'  : [ ('m',[ (0,8), (1,9), (2,10), (3,11) ]),
+    'hex20'  : [ ('a',[ (0,8), (1,9), (2,10), (3,11) ]),
                  ('s',[(0, 1, 2, 3, 8, 9, 10, 11, 4, 5, 6, 7, 12, 13, 14, 15, 16, 17, 18, 19)])],
     }
 Quad6.conversions = {
-    'quad8'  : [ ('m',[ (0,3), (1,2)]),
+    'quad8'  : [ ('a',[ (0,3), (1,2)]),
     ('s',[(0, 1, 2, 3, 4, 7, 5, 6)])],
     }
 

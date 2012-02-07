@@ -30,6 +30,7 @@ topics = ['geometry']
 techniques = ['color']
 
 """
+from gui.draw import *
 
 resetAll()
 setDrawOptions({'clear':True})
@@ -48,8 +49,6 @@ a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
 
 for p in a:
     F = F.bump(2,p, lambda x:exp(-0.75*x),[0,1])
-
-draw(F)
 
 
 # Define a plane
@@ -89,23 +88,29 @@ txt = [ 'First node has x between 1.5 and 3.5',
         '3 nodes close to line through [0.0,0.0,0.0] and [1.0,1.0,1.0]',
         ]
 
-color = getcfg('canvas/colormap')[1:] # omit the black
-while len(color) < len(sel):
-    color.extend(color)
-color[0:0] = ['black'] # restore the black
-prop = zeros(F.nelems())
-i = 1
-for s,t in zip(sel,txt):
-    prop[s] = i
-    F.setProp(prop)
-    message('%s (%s): %s' % (color[i],sum(s),t))
+
+def run():
     draw(F)
-    i += 1
 
-message('Clip Formex to last selection')
-draw(F.clip(s),view=None)
+    color = getcfg('canvas/colormap')[1:] # omit the black
+    while len(color) < len(sel):
+        color.extend(color)
+    color[0:0] = ['black'] # restore the black
+    prop = zeros(F.nelems())
+    i = 1
+    for s,t in zip(sel,txt):
+        prop[s] = i
+        F.setProp(prop)
+        message('%s (%s): %s' % (color[i],sum(s),t))
+        draw(F)
+        i += 1
 
-message('Clip complement')
-draw(F.cclip(s))
+    message('Clip Formex to last selection')
+    draw(F.clip(s),view=None)
 
+    message('Clip complement')
+    draw(F.cclip(s))
+
+if __name__ == 'draw':
+    run()
 # End

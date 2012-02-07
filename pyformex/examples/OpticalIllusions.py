@@ -31,10 +31,9 @@ techniques = ['dialog', 'draw', 'persistence','random']
 acknowledgements = ['Tomas Praet']
 
 """
-
+from gui.draw import *
 from simple import *
 from gui import widgets
-from gui.widgets import simpleInputItem as I
 from odict import ODict
 
 ################# Illusion definitions #####################
@@ -530,8 +529,8 @@ def openDialog():
     """Create and display the dialog"""
     global dialog,explanation
     data_items = [
-        I('Illusion',Illusion,choices=method.keys()),
-        I('Explain',Explain,text='Show explanation'),
+        _I('Illusion',Illusion,choices=method.keys()),
+        _I('Explain',Explain,text='Show explanation'),
         ]
 
     dialog = widgets.InputDialog(
@@ -547,7 +546,7 @@ def openDialog():
     dialog.show()
     
 
-if __name__ == "draw":
+def run():
     Illusion = None
     Explain = False
     try:
@@ -561,4 +560,6 @@ if __name__ == "draw":
     # Block other scripts 
     scriptLock(__file__)
     
+if __name__ == 'draw':
+    run()
 # End

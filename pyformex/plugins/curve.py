@@ -472,7 +472,8 @@ class PolyLine(Curve):
             return d,w
         else:
             return d
-    
+       
+        
 
     def lengths(self):
         """Return the length of the parts of the curve."""

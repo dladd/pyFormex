@@ -28,6 +28,7 @@ level = 'beginner'
 topics = ['geometry']
 techniques = ['function','import','dialog','viewport']
 """
+from gui.draw import *
 import simple
 from examples.Cube import cube_tri
 from geomtools import *
@@ -44,38 +45,41 @@ def drawCircles(F,func,color=red):
     draw(c,color=color)
     draw_circles(zip(r,c,n),color=color)
     
-    
-layout(2)
-wireframe()
 
-# draw in viewport 0
-viewport(0)
-view('front')
-clear()
-rtri = Formex('3:016932').scale([1.5,1,0])
-F = rtri + rtri.shear(0,1,-0.5).trl(0,-4.0) + rtri.shear(0,1,0.75).trl(0,3.0)
-draw(F)
+def run():
+    layout(2)
+    wireframe()
 
-drawCircles(F,triangleCircumCircle,color=red)
-zoomAll()   
-drawCircles(F,triangleInCircle,color=blue)
-drawCircles(F,triangleBoundingCircle,color=black)
-zoomAll()   
+    # draw in viewport 0
+    viewport(0)
+    view('front')
+    clear()
+    rtri = Formex('3:016932').scale([1.5,1,0])
+    F = rtri + rtri.shear(0,1,-0.5).trl(0,-4.0) + rtri.shear(0,1,0.75).trl(0,3.0)
+    draw(F)
+
+    drawCircles(F,triangleCircumCircle,color=red)
+    zoomAll()   
+    drawCircles(F,triangleInCircle,color=blue)
+    drawCircles(F,triangleBoundingCircle,color=black)
+    zoomAll()   
 
 
-# draw in viewport 1
-viewport(1)
-view('iso')
-clear()
-F,c = cube_tri()
-draw(F)
-drawCircles(F,triangleInCircle)
-zoomAll()   
+    # draw in viewport 1
+    viewport(1)
+    view('iso')
+    clear()
+    F,c = cube_tri()
+    draw(F)
+    drawCircles(F,triangleInCircle)
+    zoomAll()   
 
-if not ack("Keep both viewports ?"):
-    print "Removing a viewport"
-    # remove last viewport
-    removeViewport()
+    if not ack("Keep both viewports ?"):
+        print "Removing a viewport"
+        # remove last viewport
+        removeViewport()
 
+if __name__ == 'draw':
+    run()
 # End
 

@@ -178,7 +178,6 @@ def run():
         else:
             grow(**res)
 
-
-if __name__ == "draw":
+if __name__ == 'draw':
     run()
 # End

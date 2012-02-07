@@ -30,6 +30,7 @@ topics = ['geometry']
 techniques = ['programming','widgets','globals']
 
 """
+from gui.draw import *
 
 def torus(m,n,surface=True):
     """Create a torus with m cells along big circle and n cells along small."""
@@ -59,16 +60,20 @@ def nice():
     drawTorus(72,36)
 
 
-m = 20
-n = 10
-while not dialogTimedOut():
-    res = askItems([('m',m,'slider',{'text':'Number of elements along large circle','min':3,'max':72}),
-                    ('n',n,'slider',{'text':'Number of elements along small circle','min':3,'max':36})
-                    ])
-    if not res:
-        break
-    
-    globals().update(res)
-    drawTorus(m,n)
+def run():
+    m = 20
+    n = 10
+    while not dialogTimedOut():
+        res = askItems([('m',m,'slider',{'text':'Number of elements along large circle','min':3,'max':72}),
+                        ('n',n,'slider',{'text':'Number of elements along small circle','min':3,'max':36})
+                        ])
+        if not res:
+            break
 
+        globals().update(res)
+        drawTorus(m,n)
+
+
+if __name__ == 'draw':
+    run()
 # End

@@ -30,6 +30,7 @@ topics = ['surface']
 techniques = ['color','widgets']
 
 """
+from gui.draw import *
 from plugins.trisurface import TriSurface
 
 def askSlices(bb):
@@ -50,42 +51,47 @@ def askSlices(bb):
     else:
         return None
 
-reset()
-smooth()
-lights(True)
-transparent(False)
-setView('horse',[20,20,0])
-S = TriSurface.read(getcfg('datadir')+'/horse.off')
-bb = S.bbox()
 
-t = -0.3
-bb[0] = (1.0-t)*bb[0] + t*bb[1]
-draw(S,bbox=bb,view='front')
+def run():
+    reset()
+    smooth()
+    lights(True)
+    transparent(False)
+    setView('horse',[20,20,0])
+    S = TriSurface.read(getcfg('datadir')+'/horse.off')
+    bb = S.bbox()
 
-try:
-    P,n,t = askSlices(S.bbox())
-except:
-    exit()
+    t = -0.3
+    bb[0] = (1.0-t)*bb[0] + t*bb[1]
+    draw(S,bbox=bb,view='front')
 
-a = t/len(P)
+    try:
+        P,n,t = askSlices(S.bbox())
+    except:
+        exit()
 
-F = S.toFormex()
-G = []
-old = seterr(all='ignore')
-setDrawOptions({'bbox':None})
-for i,p in enumerate(P):
-    F1,F = F.cutWithPlane(p,-n)
-    if F1.nelems() > 0:
-        F1.setProp(i)
-    G = [ g.rot(a,around=p) for g in G ] 
-    G.append(F1)
-    clear()
-    draw([F,G])
+    a = t/len(P)
 
-seterr(**old)
+    F = S.toFormex()
+    G = []
+    old = seterr(all='ignore')
+    setDrawOptions({'bbox':None})
+    for i,p in enumerate(P):
+        F1,F = F.cutWithPlane(p,-n)
+        if F1.nelems() > 0:
+            F1.setProp(i)
+        G = [ g.rot(a,around=p) for g in G ] 
+        G.append(F1)
+        clear()
+        draw([F,G])
 
-x = pf.canvas.width()/2
-y = pf.canvas.height() - 40
-drawText("No animals got hurt during the making of this movie!",x,y,size=18,gravity='C')
+    seterr(**old)
 
+    x = pf.canvas.width()/2
+    y = pf.canvas.height() - 40
+    drawText("No animals got hurt during the making of this movie!",x,y,size=18,gravity='C')
+
+
+if __name__ == 'draw':
+    run()
 # End

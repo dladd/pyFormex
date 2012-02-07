@@ -32,9 +32,8 @@ topics = ['geometry','section2d']
 techniques = []
 
 """
-
+from gui.draw import *
 from plugins.section2d import *
-from mesh import Mesh
 import simple,connectivity,mydict
 
 
@@ -76,30 +75,31 @@ def close_loop_example():
     drawNumbers(M)
     return M.toFormex()
 
+def run():
+    clear()
+    flat()
+    reset()
+    examples = { 'Square'    : square_example,
+                 'Rectangle' : rectangle_example,
+                 'Circle'    : circle_example,
+                 'CloseLoop' : close_loop_example,
+                 }
 
-clear()
-flat()
-reset()
-examples = { 'Square'    : square_example,
-             'Rectangle' : rectangle_example,
-             'Circle'    : circle_example,
-             'CloseLoop' : close_loop_example,
-             }
+    res = askItems([
+        _I('example',text='Select an example',choices=examples.keys()),
+        ])
+    if res:
+        F = examples[res['example']]()
+        if F is None:
+            exit()
+        draw(F)
+        S = sectionChar(F)
+        S.update(extendedSectionChar(S))
+        print mydict.CDict(S)
+        G = Formex([[[S['xG'],S['yG']]]])
+        draw(G,bbox='last')
+        showaxes([S['xG'],S['yG'],0.],S['alpha'],F.dsize(),'red')
 
-from gui.widgets import simpleInputItem as I
-res = askItems([
-    I('example',text='Select an example',choices=examples.keys()),
-    ])
-if res:
-    F = examples[res['example']]()
-    if F is None:
-        exit()
-    draw(F)
-    S = sectionChar(F)
-    S.update(extendedSectionChar(S))
-    print mydict.CDict(S)
-    G = Formex([[[S['xG'],S['yG']]]])
-    draw(G,bbox='last')
-    showaxes([S['xG'],S['yG'],0.],S['alpha'],F.dsize(),'red')
-
+if __name__ == 'draw':
+    run()
 # End

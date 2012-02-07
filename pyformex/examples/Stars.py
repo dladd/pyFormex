@@ -29,6 +29,7 @@ topics = ['geometry']
 techniques = ['color']
 
 """
+from gui.draw import *
 nstars = 200 # number of stars
 minpoints = 5 # minimum number of points in the stars
 maxpoints = 15# maximum number of points in the stars
@@ -54,16 +55,19 @@ def star(n,noise=0.,prop=0):
     P = Formex(concatenate([f,f[:1]]))
     return connect([P,P],bias=[0,1]).setProp(prop)
 
-# create random number of points, rotation and translation
-npts = random.randint(minpoints-1,maxpoints,(nstars,))
-rot = random.random((nstars,3))
-ang = random.random((nstars,)) * maxrot
-trl = random.random((nstars,3)) * displ
-# create the stars
-Stars = Formex.concatenate([ star(n,noise,i).rotate(a,r).translate(t) for i,n,a,r,t in zip(range(nstars),npts,ang,rot,trl) ])
-# draw them with random colors
-colors = random.random((nstars,3))
-clear()
-draw(Stars,colormap=colors)
+def run():
+    # create random number of points, rotation and translation
+    npts = random.randint(minpoints-1,maxpoints,(nstars,))
+    rot = random.random((nstars,3))
+    ang = random.random((nstars,)) * maxrot
+    trl = random.random((nstars,3)) * displ
+    # create the stars
+    Stars = Formex.concatenate([ star(n,noise,i).rotate(a,r).translate(t) for i,n,a,r,t in zip(range(nstars),npts,ang,rot,trl) ])
+    # draw them with random colors
+    colors = random.random((nstars,3))
+    clear()
+    draw(Stars,colormap=colors)
 
+if __name__ == 'draw':
+    run()
 # End

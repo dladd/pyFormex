@@ -30,22 +30,20 @@ topics = ['geometry']
 techniques = ['dialog', 'color', 'persistence']
 
 """
+from gui.draw import *
+
+def run():
+    smooth()
+
+    Shape = { 'triangle':'3:016',
+              'quad':'4:0123',
+              }
+    color2 = array([red,green,blue]) # 3 base colors
+    F = Formex(Shape['triangle']).replic2(8,4)
+    color3 = resize(color2,F.shape())
+    draw(F,color=color3)
 
 
-smooth()
-
-Shape = { 'triangle':'3:016',
-          'quad':'4:0123',
-          }
-color2 = array([red,green,blue]) # 3 base colors
-F = Formex(Shape['triangle']).replic2(8,4)
-color3 = resize(color2,F.shape())
-draw(F,color=color3)
-
-
-
-#for a in [ 'ambient', 'specular', 'emission', 'shininess' ]:
-#    v = getattr(pf.canvas,a)
-#    print "  %s: %s" % (a,v)
-
+if __name__ == 'draw':
+    run()
 # End

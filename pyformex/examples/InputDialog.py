@@ -32,6 +32,7 @@ topics = []
 techniques = ['dialog']
 
 """
+from gui.draw import *
 
 
 # BV
@@ -129,8 +130,7 @@ def timeOut():
     close()
 
 
-if __name__ == 'draw':
-
+def run():
     # Update the data items from saved values
     try:
         saved_data = named('InputDialog_data')
@@ -150,5 +150,7 @@ if __name__ == 'draw':
     # Block other scripts 
     scriptLock(__file__)
 
+if __name__ == 'draw':
+    run()
 # End
 

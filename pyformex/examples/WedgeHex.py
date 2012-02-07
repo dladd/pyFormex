@@ -29,33 +29,36 @@ level = 'normal'
 topics = ['mesh']
 techniques = ['revolve','degenerate'] 
 """
-
+from gui.draw import *
 import simple
 
-clear()
-smoothwire()
+def run():
+    clear()
+    smoothwire()
 
-# create a 2D xy mesh
-nx,ny = 6,2
-G = simple.rectangle(1,1,1.,1.).replic2(nx,ny)
-M = G.toMesh()
-draw(M, color='red')
-view('iso')
+    # create a 2D xy mesh
+    nx,ny = 6,2
+    G = simple.rectangle(1,1,1.,1.).replic2(nx,ny)
+    M = G.toMesh()
+    draw(M, color='red')
+    view('iso')
 
-# create a 3D axial-symmetric mesh by REVOLVING
-n,a = 8,45.
-R = M.revolve(n,angle=a,axis=1,around=[1.,0.,0.])
-sleep(2)
-draw(R,color='yellow')
+    # create a 3D axial-symmetric mesh by REVOLVING
+    n,a = 8,45.
+    R = M.revolve(n,angle=a,axis=1,around=[1.,0.,0.])
+    sleep(2)
+    draw(R,color='yellow')
 
-# reduce the degenerate elements to WEDGE6
-clear()
-print R
-ML = R.fuse().splitDegenerate()
-print "AFTER SPLITTING: %s MESHES" % len(ML)
-for m in ML:
-    print m
-ML = [ Mi.setProp(i) for i,Mi in enumerate(ML) ]
-draw(ML)
+    # reduce the degenerate elements to WEDGE6
+    clear()
+    print R
+    ML = R.fuse().splitDegenerate()
+    print "AFTER SPLITTING: %s MESHES" % len(ML)
+    for m in ML:
+        print m
+    ML = [ Mi.setProp(i) for i,Mi in enumerate(ML) ]
+    draw(ML)
 
+if __name__ == 'draw':
+    run()
 # End

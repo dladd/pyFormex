@@ -29,6 +29,7 @@ topics = ['image']
 techniques = ['color']
 
 """
+from gui.draw import *
 from gui.widgets import ImageView,simpleInputItem as I
 from gui.imagearray import *
 
@@ -62,7 +63,7 @@ def loadImage(fn):
     return w,h
 
 
-if __name__ == 'draw':  # allows loading this file as a module
+def run():
     flat()
     lights(False)
     transparent(False)
@@ -135,4 +136,6 @@ if __name__ == 'draw':  # allows loading this file as a module
     drawTransform('spherical')
     zoomAll()
 
+if __name__ == 'draw':
+    run()
 # End

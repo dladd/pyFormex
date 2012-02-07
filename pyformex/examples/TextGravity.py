@@ -31,35 +31,39 @@ topics = []
 techniques = ['text']
 
 """
+from gui.draw import *
 
-clear()
-lights(False)
-x = pf.canvas.width()//2
-y = pf.canvas.height()//2
-x,y = 600,300
-print x,y
+def run():
+    clear()
+    lights(False)
+    x = pf.canvas.width()//2
+    y = pf.canvas.height()//2
+    x,y = 600,300
+    print x,y
 
-from gui.decors import Grid
+    from gui.decors import Grid
 
-d = 50
+    d = 50
 
-G = Grid(x-50,y-50,x+50,y+50,2,2)
-decorate(G)
+    G = Grid(x-50,y-50,x+50,y+50,2,2)
+    decorate(G)
 
-delay(2)
-for g in [ 'NW','N','NE','W','C','E','SW','S','SE']:
-    T = drawText("XXX  %s  XXX"%g,x,y,gravity=g)
-    wait()
-    undecorate(T)
+    delay(2)
+    for g in [ 'NW','N','NE','W','C','E','SW','S','SE']:
+        T = drawText("XXX  %s  XXX"%g,x,y,gravity=g)
+        wait()
+        undecorate(T)
 
 
-delay(1)
-from gui.gluttext import GLUTFONTS
-for f in GLUTFONTS.keys():
-    S = drawText(f,20,20,font='hv18')
-    T = drawText('X',x,y,font=f,gravity='C')
-    wait()
-    undecorate(S)
-    undecorate(T)
+    delay(1)
+    from gui.gluttext import GLUTFONTS
+    for f in GLUTFONTS.keys():
+        S = drawText(f,20,20,font='hv18')
+        T = drawText('X',x,y,font=f,gravity='C')
+        wait()
+        undecorate(S)
+        undecorate(T)
     
+if __name__ == 'draw':
+    run()
 # End

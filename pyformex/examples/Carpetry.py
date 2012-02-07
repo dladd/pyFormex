@@ -37,6 +37,7 @@ This example illustrates the use of the Mesh conversion techniques and the
 creation of colored value plots on surfaces.
 
 """
+from gui.draw import *
 from plugins import trisurface,surface_menu
 from elements import *
 
@@ -50,113 +51,116 @@ def drawMesh(M):
     draw(M)
     drawText("%s %s elements" % (M.nelems(),M.eltype),20,20,size=20)
 
-# make sure this is a good aspect ratio if you want a movie
-nx,ny = 4,3
+def run():
+    # make sure this is a good aspect ratio if you want a movie
+    nx,ny = 4,3
 
-saved_autozoomfactor = pf.cfg['gui/autozoomfactor']
+    saved_autozoomfactor = pf.cfg['gui/autozoomfactor']
 
-pf.GUI.setBusy()
-pf.cfg['gui/autozoomfactor'] = 2.0
+    pf.GUI.setBusy()
+    pf.cfg['gui/autozoomfactor'] = 2.0
 
-clear()
-view('front')
-smoothwire()
-transparent()
+    clear()
+    view('front')
+    smoothwire()
+    transparent()
 
-M = Formex(origin()).extrude(nx,1.,0).extrude(ny,1.,1).toMesh().setProp(1)
+    M = Formex(origin()).extrude(nx,1.,0).extrude(ny,1.,1).toMesh().setProp(1)
 
-V = surface_menu.SelectableStatsValues
-possible_keys = [ k for k in V.keys() if not V[k][1] ][:-1]
-nkeys = len(possible_keys)
+    V = surface_menu.SelectableStatsValues
+    possible_keys = [ k for k in V.keys() if not V[k][1] ][:-1]
+    nkeys = len(possible_keys)
 
-maxconv = 10
-minconv = 5
-minelems = 10000
-maxelems = 50000
+    maxconv = 10
+    minconv = 5
+    minelems = 10000
+    maxelems = 50000
 
-save = False
+    save = False
 
-def carpet(M):
-    conversions = []
-    nconv = random.randint(minconv,maxconv)
+    def carpet(M):
+        conversions = []
+        nconv = random.randint(minconv,maxconv)
 
-    while (len(conversions) < nconv and M.nelems() < maxelems) or M.nelems() < minelems:
-        possible_conversions = M.eltype.conversions.keys()
-        i = random.randint(len(possible_conversions))
-        conv = possible_conversions[i]
-        conversions.append(conv)
-        #clear()
-        #draw(M)
-        #print "%s -> %s" % (M.eltype,conv)
-        M = M.convert(conv)
-        #print "type %s, plex %s" % (M.eltype,M.nplex())
+        while (len(conversions) < nconv and M.nelems() < maxelems) or M.nelems() < minelems:
+            possible_conversions = M.eltype.conversions.keys()
+            i = random.randint(len(possible_conversions))
+            conv = possible_conversions[i]
+            conversions.append(conv)
+            #clear()
+            #draw(M)
+            #print "%s -> %s" % (M.eltype,conv)
+            M = M.convert(conv)
+            #print "type %s, plex %s" % (M.eltype,M.nplex())
 
-    if M.eltype != Tri3:
-        M = M.convert('tri3')
-        conversions.append('tri3')
+        if M.eltype != Tri3:
+            M = M.convert('tri3')
+            conversions.append('tri3')
 
-    print "%s patches" % M.nelems()
-    print "conversions: %s" % conversions
+        print "%s patches" % M.nelems()
+        print "conversions: %s" % conversions
 
-    # Coloring
-    key = possible_keys[random.randint(nkeys)]
-    print "colored by %s" % key
-    func = V[key][0]
-    S = trisurface.TriSurface(M)
-    val = func(S)
-    export({'surface':S})
-    surface_menu.selection.set(['surface'])
-    surface_menu.showSurfaceValue(S,str(conversions),val,False)
-    pf.canvas.removeDecorations()
-    
+        # Coloring
+        key = possible_keys[random.randint(nkeys)]
+        print "colored by %s" % key
+        func = V[key][0]
+        S = trisurface.TriSurface(M)
+        val = func(S)
+        export({'surface':S})
+        surface_menu.selection.set(['surface'])
+        surface_menu.showSurfaceValue(S,str(conversions),val,False)
+        pf.canvas.removeDecorations()
 
-clear()
-flatwire()
-lights(True)
-transparent(False)
 
-if pf.interactive:
-    canvasSize(nx*200,ny*200)
-    #canvasSize(720,576)
-    print "running interactively"
-    n = 1#ask("How many?",['0','1000','100','10','1'])
-    n = int(n)
-    save = False#ack("Save images?")
-    if save:
-        image.save(filename='Carpetry-000.jpg',window=False,multi=True,hotkey=False,autosave=False,border=False,rootcrop=False,format=None,quality=95,verbose=False)
+    clear()
+    flatwire()
+    lights(True)
+    transparent(False)
 
-    A = None
-    for i in range(n):
-        carpet(M)
-        B = pf.canvas.actors[-1:]
-        if A:
-            undraw(A)
-        A = B
+    if pf.interactive:
+        canvasSize(nx*200,ny*200)
+        #canvasSize(720,576)
+        print "running interactively"
+        n = 1#ask("How many?",['0','1000','100','10','1'])
+        n = int(n)
+        save = False#ack("Save images?")
         if save:
-            image.saveNext()
+            image.save(filename='Carpetry-000.jpg',window=False,multi=True,hotkey=False,autosave=False,border=False,rootcrop=False,format=None,quality=95,verbose=False)
 
-else:
-    import sys
-    print sys.argv
-    print argv
-    canvasSize(nx*200,ny*200)
-    print "just saving image"
-    from gui import image,guimain
-    carpet(M)
-    image.save('testje2.png')
-    #exit(all=True)
-    guimain.quitGUI()
+        A = None
+        for i in range(n):
+            carpet(M)
+            B = pf.canvas.actors[-1:]
+            if A:
+                undraw(A)
+            A = B
+            if save:
+                image.saveNext()
+
+    else:
+        import sys
+        print sys.argv
+        print argv
+        canvasSize(nx*200,ny*200)
+        print "just saving image"
+        from gui import image,guimain
+        carpet(M)
+        image.save('testje2.png')
+        #exit(all=True)
+        guimain.quitGUI()
 
 
-## print "ATEXIT"
-## from PyQt4 import QtGui
-## print "current:%s" % pf.GUI.viewports.current.size()
-## print "max:%s" % pf.GUI.viewports.current.maximumSize()
-## pf.GUI.viewports.current.setMaximumSize(1000,2000)
-## pf.GUI.central.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)
-## pf.GUI.central.resize(pf.GUI.central.size().width()+0,pf.GUI.central.size().height()+0)
-## pf.GUI.viewports.activate()
-## pf.GUI.resize(pf.GUI.size().width()+0,pf.GUI.size().height()+0)
-## pf.GUI.update()
+    ## print "ATEXIT"
+    ## from PyQt4 import QtGui
+    ## print "current:%s" % pf.GUI.viewports.current.size()
+    ## print "max:%s" % pf.GUI.viewports.current.maximumSize()
+    ## pf.GUI.viewports.current.setMaximumSize(1000,2000)
+    ## pf.GUI.central.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)
+    ## pf.GUI.central.resize(pf.GUI.central.size().width()+0,pf.GUI.central.size().height()+0)
+    ## pf.GUI.viewports.activate()
+    ## pf.GUI.resize(pf.GUI.size().width()+0,pf.GUI.size().height()+0)
+    ## pf.GUI.update()
 
+if __name__ == 'draw':
+    run()
 # End

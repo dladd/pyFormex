@@ -32,6 +32,7 @@ topics = ['FEA']
 techniques = ['dialog', 'color']
 
 """
+from gui.draw import *
 
 from gui.colorscale import *
 from gui.gluttext import GLUTFONTS
@@ -140,9 +141,7 @@ def timeOut():
     wait()
     close()
 
-
-if __name__ == 'draw':
-
+def run():
     # Update the data items from saved values
     try:
         saved_data = named('ColorScale_data')
@@ -163,5 +162,7 @@ if __name__ == 'draw':
     # Block other scripts 
     scriptLock(__file__)
 
+if __name__ == 'draw':
+    run()
 # End
 

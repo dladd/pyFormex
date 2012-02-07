@@ -29,6 +29,7 @@ level = 'advanced'
 topics = ['geometry', 'FEA', 'domes', 'surface']
 techniques = ['menu', 'dialog', 'persistence', 'color'] 
 """
+from gui.draw import *
 
 import simple,utils
 from connectivity import Connectivity
@@ -940,7 +941,7 @@ def reload_menu():
 ####################################################################
 ######### What to do when the script is executed ###################
 
-if __name__ == "draw":
+def run():
 
     # The sole intent of running this script is to create a top level
     # menu 'Hesperia'. The typical action then might be 'show_menu()'.
@@ -950,5 +951,7 @@ if __name__ == "draw":
     
     reload_menu()
 
+if __name__ == 'draw':
+    run()
 # End
 

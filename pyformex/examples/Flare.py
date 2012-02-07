@@ -26,8 +26,9 @@
 
 level = 'beginner'
 topics = ['geometry']
-techniques = ['dialog','transform','function']
+techniques = ['color','dialog','transform','function']
 """
+from gui.draw import *
 
 def addFlares(F,dir=[0,2]):
     """Adds flares at both ends of the structure.
@@ -40,42 +41,45 @@ def addFlares(F,dir=[0,2]):
     F = F.flare(m/4.,1.5,dir,1,2.)
     return F
 
-# Some named colors (they should exist in /etc/X11/rgb.txt)
-color_choice = ['red','blue','orange','indianred','gold','pink','orchid','steelblue','turquoise','aquamarine','aquamarine1','aquamarine2','aquamarine3','aquamarine4','navy blue','royal blue']
+def run():
+    # Some named colors (they should exist in /etc/X11/rgb.txt)
+    color_choice = ['red','blue','orange','indianred','gold','pink','orchid','steelblue','turquoise','aquamarine','aquamarine1','aquamarine2','aquamarine3','aquamarine4','navy blue','royal blue']
 
-# Ask data from the user
-data = [
-    {'name':'m','value':36,'text':'number of cells in longest grid direction'},
-    {'name':'n','value':12,'text':'number of cells in shortes grid direction'},
-    {'name':'f0','value':True,'text':'add flares on rectangle'},
-    {'name':'f1','value':False,'text':'add flares on cylinder'},
-    {'name':'f2','value':False,'text':'add flares on torus'},
-    {'name':'geom','value':'cylinder','itemtype':'radio','choices':['rectangle','cylinder','torus'],'text':'geometry'},
-    {'name':'color0','value':'red','choices':color_choice},
-    {'name':'color1','value':'blue','choices':color_choice},
-    ]
-res = askItems(data)
-if not res:
-    exit()
+    # Ask data from the user
+    data = [
+        {'name':'m','value':36,'text':'number of cells in longest grid direction'},
+        {'name':'n','value':12,'text':'number of cells in shortes grid direction'},
+        {'name':'f0','value':True,'text':'add flares on rectangle'},
+        {'name':'f1','value':False,'text':'add flares on cylinder'},
+        {'name':'f2','value':False,'text':'add flares on torus'},
+        {'name':'geom','value':'cylinder','itemtype':'radio','choices':['rectangle','cylinder','torus'],'text':'geometry'},
+        {'name':'color0','value':'red','choices':color_choice},
+        {'name':'color1','value':'blue','choices':color_choice},
+        ]
+    res = askItems(data)
+    if not res:
+        exit()
 
-# Add the returned data to the global variables
-globals().update(res)
-F = Formex('3:012934',[0,1]).replic2(m,n,1,1)
-if f0:
-    F = addFlares(F)
+    # Add the returned data to the global variables
+    globals().update(res)
+    F = Formex('3:012934',[0,1]).replic2(m,n,1,1)
+    if f0:
+        F = addFlares(F)
 
-if geom != 'rectangle':
-    F = F.translate(2,1).cylindrical([2,1,0],[1.,360./n,1.])
-    if f1:
-        F = addFlares(F,dir=[2,0])
-    if geom == 'torus':
-        F = F.translate(0,5).cylindrical([0,2,1],[1.,360./m,1.])
-        if f2:
-            F = addFlares(F)
+    if geom != 'rectangle':
+        F = F.translate(2,1).cylindrical([2,1,0],[1.,360./n,1.])
+        if f1:
+            F = addFlares(F,dir=[2,0])
+        if geom == 'torus':
+            F = F.translate(0,5).cylindrical([0,2,1],[1.,360./m,1.])
+            if f2:
+                F = addFlares(F)
 
-# Draw the structure
-clear()
-view('iso')
-draw(F,colormap=[color0,color1])
+    # Draw the structure
+    clear()
+    view('iso')
+    draw(F,colormap=[color0,color1])
 
+if __name__ == 'draw':
+    run()
 # End

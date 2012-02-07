@@ -38,9 +38,10 @@ SurfaceProjection
 This example illustrates the use of intersectSurfaceWithLines and Coords.projectOnSurface.
 
 """
+from gui.draw import *
 from plugins.trisurface import TriSurface
 import elements
-from gui.widgets import ImageView,simpleInputItem as I
+from gui.widgets import ImageView
 from gui.imagearray import *
 
 
@@ -98,126 +99,129 @@ def intersectSurfaceWithSegments2(s1, segm, atol=1.e-5, max1xperline=True):
     else:return px, ilx, itx
 
 
-clear()
-smooth()
-lights(True)
-transparent(False)
-view('iso')
+def run():
+    clear()
+    smooth()
+    lights(True)
+    transparent(False)
+    view('iso')
 
-image = None
-scaled_image = None
+    image = None
+    scaled_image = None
 
-# read the teapot surface
-T = TriSurface.read(getcfg('datadir')+'/teapot.off')
-xmin,xmax = T.bbox()
-T= T.trl(-T.center()).scale(4./(xmax[0]-xmin[0])).setProp(2)
-draw(T)
+    # read the teapot surface
+    T = TriSurface.read(getcfg('datadir')+'/teapot.off')
+    xmin,xmax = T.bbox()
+    T= T.trl(-T.center()).scale(4./(xmax[0]-xmin[0])).setProp(2)
+    draw(T)
 
-# default image file
-filename = getcfg('datadir')+'/benedict_6.jpg'
-viewer = ImageView(filename)
+    # default image file
+    filename = getcfg('datadir')+'/benedict_6.jpg'
+    viewer = ImageView(filename)
 
-px,py = 5,5 #control points for projection of patches
-kx,ky = 60,50 #number of cells in each patch
-scale = 0.8
-method='projection'
+    px,py = 5,5 #control points for projection of patches
+    kx,ky = 60,50 #number of cells in each patch
+    scale = 0.8
+    method='projection'
 
-res = askItems([
-    I('filename',filename,text='Image file',itemtype='button',func=selectImage),
-#    viewer,   # uncomment this line to add the image previewer
-    I('px',px,text='Number of patches in x-direction'),
-    I('py',py,text='Number of patches in y-direction'),
-    I('kx',kx,text='Width of a patch in pixels'), 
-    I('ky',ky,text='Height of a patch in pixels'),
-    I('scale',scale,text='Scale factor'),
-    I('method',method,choices=['projection','intersection']),
-    ])
+    res = askItems([
+        _I('filename',filename,text='Image file',itemtype='button',func=selectImage),
+    #    viewer,   # uncomment this line to add the image previewer
+        _I('px',px,text='Number of patches in x-direction'),
+        _I('py',py,text='Number of patches in y-direction'),
+        _I('kx',kx,text='Width of a patch in pixels'), 
+        _I('ky',ky,text='Height of a patch in pixels'),
+        _I('scale',scale,text='Scale factor'),
+        _I('method',method,choices=['projection','intersection']),
+        ])
 
-if not res:
-    exit()
-
-globals().update(res)
-
-nx,ny = px*kx,py*ky # pixels
-print 'The image is reconstructed with %d x %d pixels'%(nx, ny)
-
-F = Formex('4:0123').replic2(nx,ny).centered()
-if image is None:
-    print "Loading image"
-    wpic, hpic=loadImage(filename)
-
-if image is None:
-    exit()
-
-# Create the colors
-color,colortable = image2glcolor(image.scaled(nx,ny))
-# Reorder by patch
-pcolor = color.reshape((py,ky,px,kx,3)).swapaxes(1,2).reshape(-1,kx*ky,3)
-#print pcolor.shape
-
-mH = makeGrid(px,py,'Quad8')
-
-try:
-    hpic, wpic
-    ratioYX = float(hpic)/wpic
-    mH = mH.scale(ratioYX,1) # Keep original aspect ratio
-except: pass
-
-mH0 = mH.scale(scale).translate([-0.5,-0.1,2.])
-
-dg0 = draw(mH0,mode='wireframe')
-zoomAll()
-zoom(0.5)
-pause('Create %s x %s patches > STEP' % (px,py))
-
-# Create the transforms
-base = makeGrid(1,1,'Quad8').coords[0]
-patch = makeGrid(kx,ky,'Quad4').toMesh()
-d0 = drawImage(mH0,base,patch)
-
-if method == 'projection':
-    print type(T)
-    pts = mH0.coords.projectOnSurface(T,[0.,0.,1.])
-    print mH0.shape
-    print pts.shape
-    dg1=d1 = None
-
-
-else:
-    mH1 = mH.rotate(-30.,0).scale(0.5).translate([0.,-.7,-2.])
-    dg1 = draw(mH1,mode='wireframe')
-    d1 = drawImage(mH1,base,patch)
-
-    x = connect([mH0.points(), mH1.points()])
-    dx = draw(x)
-    pause('Creating intersection with surface > STEP')
-    pts, il, it, mil=intersectSurfaceWithSegments2(T, x, max1xperline=True)
-
-    if len(x) != len(pts):
-        print "Some of the lines do not intersect the surface:"
-        print " %d lines, %d intersections %d missing" % (len(x),len(pts),len(mil))
+    if not res:
         exit()
-    
-dp=draw(pts, marksize=6, color='white')
-print pts.shape
-mH2 = Formex(pts.reshape(-1,8,3))
 
-if method == 'projection':
-    x = connect([mH0.points(),mH2.points()])
-    dx = draw(x)
+    globals().update(res)
 
-pause('Create projection mapping using the grid points > STEP')
-d2 = drawImage(mH2.trl([0.,0.,0.01]),base,patch)
-# small translation to make sure the image is above the surface, not cutting it
+    nx,ny = px*kx,py*ky # pixels
+    print 'The image is reconstructed with %d x %d pixels'%(nx, ny)
 
-pause('Finally show the finished image > STEP')
-undraw(dp)
-undraw(dx)
-undraw(d0)
-undraw(d1)
-undraw(dg0)
-undraw(dg1)
-view('front')
-zoomAll()
+    F = Formex('4:0123').replic2(nx,ny).centered()
+    if image is None:
+        print "Loading image"
+        wpic, hpic=loadImage(filename)
 
+    if image is None:
+        exit()
+
+    # Create the colors
+    color,colortable = image2glcolor(image.scaled(nx,ny))
+    # Reorder by patch
+    pcolor = color.reshape((py,ky,px,kx,3)).swapaxes(1,2).reshape(-1,kx*ky,3)
+    #print pcolor.shape
+
+    mH = makeGrid(px,py,'Quad8')
+
+    try:
+        hpic, wpic
+        ratioYX = float(hpic)/wpic
+        mH = mH.scale(ratioYX,1) # Keep original aspect ratio
+    except: pass
+
+    mH0 = mH.scale(scale).translate([-0.5,-0.1,2.])
+
+    dg0 = draw(mH0,mode='wireframe')
+    zoomAll()
+    zoom(0.5)
+    pause('Create %s x %s patches > STEP' % (px,py))
+
+    # Create the transforms
+    base = makeGrid(1,1,'Quad8').coords[0]
+    patch = makeGrid(kx,ky,'Quad4').toMesh()
+    d0 = drawImage(mH0,base,patch)
+
+    if method == 'projection':
+        print type(T)
+        pts = mH0.coords.projectOnSurface(T,[0.,0.,1.])
+        print mH0.shape
+        print pts.shape
+        dg1=d1 = None
+
+
+    else:
+        mH1 = mH.rotate(-30.,0).scale(0.5).translate([0.,-.7,-2.])
+        dg1 = draw(mH1,mode='wireframe')
+        d1 = drawImage(mH1,base,patch)
+
+        x = connect([mH0.points(), mH1.points()])
+        dx = draw(x)
+        pause('Creating intersection with surface > STEP')
+        pts, il, it, mil=intersectSurfaceWithSegments2(T, x, max1xperline=True)
+
+        if len(x) != len(pts):
+            print "Some of the lines do not intersect the surface:"
+            print " %d lines, %d intersections %d missing" % (len(x),len(pts),len(mil))
+            exit()
+
+    dp=draw(pts, marksize=6, color='white')
+    print pts.shape
+    mH2 = Formex(pts.reshape(-1,8,3))
+
+    if method == 'projection':
+        x = connect([mH0.points(),mH2.points()])
+        dx = draw(x)
+
+    pause('Create projection mapping using the grid points > STEP')
+    d2 = drawImage(mH2.trl([0.,0.,0.01]),base,patch)
+    # small translation to make sure the image is above the surface, not cutting it
+
+    pause('Finally show the finished image > STEP')
+    undraw(dp)
+    undraw(dx)
+    undraw(d0)
+    undraw(d1)
+    undraw(dg0)
+    undraw(dg1)
+    view('front')
+    zoomAll()
+
+if __name__ == 'draw':
+    run()
 # End

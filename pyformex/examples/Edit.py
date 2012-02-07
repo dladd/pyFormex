@@ -28,20 +28,12 @@ level = 'advanced'
 topics = ['editing']
 techniques = ['persistence','interactive']
 """
-clear()
+from gui.draw import *
+
 alfabet = {
     'A': 'l:22144/61',
     'C': 'l:/13221',
    }
-
- 
-def plotChar(char):
-    try:
-        draw(Formex(alfabet[char]))
-    except:
-        raise ValueError,"Can not plot character %s" % char
-
-
 
 data = dict(
     a = 1,
@@ -50,34 +42,45 @@ data = dict(
     d = 'red',
     f = Formex('l:121212')
     )
-export(data)
-globals().update(data)
-#draw(f)
 
-plotChar('A')
-plotChar('C')
+def plotChar(char):
+    try:
+        draw(Formex(alfabet[char]))
+    except:
+        raise ValueError,"Can not plot character %s" % char
 
+def run():
+    clear()
+    export(data)
+    globals().update(data)
+    #draw(f)
 
-right = array([1.,0.,0.])
-print right
-left = -right
-print left
-from plugins.curve import *
-clear()
-x = Formex('3:065').coords.reshape(-1,3)
-C =  BezierSpline(x)
-print C.pointsOn()
-draw(C.pointsOn())
-draw(C,color=red)
-C =  BezierSpline(x.trl(0,1.),deriv=[left,right])
-print C.pointsOn()
-draw(C.pointsOn())
-draw(C,color=blue)
-exit()
-x = Coords([[0,0],[0,2],[0,2],[1,1.5],[0,1],[0,1],[1,0.5],[0,0]])
-C = BezierSpline(x)
-draw(C.pointsOn())
-draw(C,color=red)
+    plotChar('A')
+    plotChar('C')
 
 
+    right = array([1.,0.,0.])
+    print right
+    left = -right
+    print left
+    from plugins.curve import *
+    clear()
+    x = Formex('3:065').coords.reshape(-1,3)
+    C =  BezierSpline(x)
+    print C.pointsOn()
+    draw(C.pointsOn())
+    draw(C,color=red)
+    C =  BezierSpline(x.trl(0,1.),deriv=[left,right])
+    print C.pointsOn()
+    draw(C.pointsOn())
+    draw(C,color=blue)
+    exit()
+    x = Coords([[0,0],[0,2],[0,2],[1,1.5],[0,1],[0,1],[1,0.5],[0,0]])
+    C = BezierSpline(x)
+    draw(C.pointsOn())
+    draw(C,color=red)
+
+
+if __name__ == 'draw':
+    run()
 # End

@@ -29,26 +29,32 @@ topics = ['geometry','domes']
 techniques = ['color']
 
 """
+from gui.draw import *
 
-clear()
-wireframe()
-nx=16   # number of modules in circumferential direction
-ny=8    # number of modules in meridional direction
-rd=100  # radius of the sphere cap
-base=50 # slope of the dome at its base (= half angle of the sphere cap)
-top=5   # slope of the dome at its top opening (0 = no opening) 
-a = ny*float(top)/(base-top)
-e1 = Formex('l:54',[1,3]) # diagonals and meridionals
-e2 = Formex('l:1',0)      # horizontals
-f1 = e1.replic2(nx,ny,1,1)
-f2 = e2.replic2(nx,ny+1,1,1)
-g = (f1+f2).translate([0,a,1]).spherical(scale=[360./nx,base/(ny+a),rd],colat=True)
-draw(e1+e2)
+def run():
+    clear()
+    wireframe()
+    nx=16   # number of modules in circumferential direction
+    ny=8    # number of modules in meridional direction
+    rd=100  # radius of the sphere cap
+    base=50 # slope of the dome at its base (= half angle of the sphere cap)
+    top=5   # slope of the dome at its top opening (0 = no opening) 
+    a = ny*float(top)/(base-top)
+    e1 = Formex('l:54',[1,3]) # diagonals and meridionals
+    e2 = Formex('l:1',0)      # horizontals
+    f1 = e1.replic2(nx,ny,1,1)
+    f2 = e2.replic2(nx,ny+1,1,1)
+    g = (f1+f2).translate([0,a,1]).spherical(scale=[360./nx,base/(ny+a),rd],colat=True)
+    draw(e1+e2)
 
-draw(f1+f2)
+    draw(f1+f2)
 
-clear()
-draw(g)
-h = g.withProp([0,3]) # only horizontals and meridionals
-clear()
-draw(g+h.translate([2*rd,0,0]))
+    clear()
+    draw(g)
+    h = g.withProp([0,3]) # only horizontals and meridionals
+    clear()
+    draw(g+h.translate([2*rd,0,0]))
+
+if __name__ == 'draw':
+    run()
+# End

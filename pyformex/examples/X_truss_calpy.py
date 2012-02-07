@@ -28,6 +28,7 @@ level = 'advanced'
 topics = ['FEA']
 techniques = ['color','persistence'] 
 """
+from gui.draw import *
 
 ############################
 # Load the needed calpy modules    
@@ -187,4 +188,6 @@ if ack("Show the output file?"):
     showFile(outfilename)
 
 
+if __name__ == 'draw':
+    run()
 # End

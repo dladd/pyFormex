@@ -31,6 +31,7 @@ techniques = ['viewport', 'color', 'symmetry']
 A demonstration of propagating property numbers.
 Also shows the use of multiple viewports.
 """
+from gui.draw import *
 
 def vp(i):
     viewport(i)
@@ -38,8 +39,7 @@ def vp(i):
     lights(False)
     clear()
     
-if __name__ == "draw":
-
+def run():
     layout(4)
     F0 = Formex('3:012934',[1,3])
     F1 = F0.replic2(2,2)
@@ -54,4 +54,6 @@ if __name__ == "draw":
         #sleep(2)
     
     
+if __name__ == 'draw':
+    run()
 # End

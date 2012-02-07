@@ -32,6 +32,7 @@ techniques = ['position']
 Position an object A thus that its three points X are aligned with the
 three points X of object B.
 """
+from gui.draw import *
 
 def drawObjectWithName(obj,name):
     """Draw an object and show its name at the center"""
@@ -44,32 +45,35 @@ def drawPointsNumbered(pts,color,prefix):
     drawNumbers(Coords(pts),leader=prefix)
 
 
-clear()
-smoothwire()
+def run():
+    clear()
+    smoothwire()
 
-# The object to reposition
-A = Formex('4:0123',1).replic2(6,3)
-# The object to define the position
-B = Formex('3:016',2).replic2(4,4,taper=-1).trl(0,7.)
+    # The object to reposition
+    A = Formex('4:0123',1).replic2(6,3)
+    # The object to define the position
+    B = Formex('3:016',2).replic2(4,4,taper=-1).trl(0,7.)
 
-drawObjectWithName(A,'Object A')
-drawObjectWithName(B,'Object B')
+    drawObjectWithName(A,'Object A')
+    drawObjectWithName(B,'Object B')
 
-#define matching points
+    #define matching points
 
-X = A[0,[0,3,1]]
-drawPointsNumbered(X,red,'X')
+    X = A[0,[0,3,1]]
+    drawPointsNumbered(X,red,'X')
 
-Y = B[3,[1,2,0]]
-Y[2] = Y[0].trl([0.,1.,1.])
-drawPointsNumbered(Y,green,'Y')
-zoomAll()
+    Y = B[3,[1,2,0]]
+    Y[2] = Y[0].trl([0.,1.,1.])
+    drawPointsNumbered(Y,green,'Y')
+    zoomAll()
 
-pause()
+    pause()
 
-# Reposition A so that X are aligned with Y
-C = A.position(X,Y)
-draw(C,color=blue)
-zoomAll()
+    # Reposition A so that X are aligned with Y
+    C = A.position(X,Y)
+    draw(C,color=blue)
+    zoomAll()
 
+if __name__ == 'draw':
+    run()
 # End

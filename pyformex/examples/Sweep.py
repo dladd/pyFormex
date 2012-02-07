@@ -28,6 +28,7 @@ level = 'normal'
 topics = ['geometry','curve','mesh']
 techniques = ['sweep',]
 """
+from gui.draw import *
 from plugins import curve
 from odict import ODict
 
@@ -228,5 +229,7 @@ if __name__ == 'draw':
     dialog.show()
     scriptLock(__file__)
 
+if __name__ == 'draw':
+    run()
 # End
 

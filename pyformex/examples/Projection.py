@@ -30,24 +30,27 @@ topics = ['geometry','surface']
 techniques = ['projection']
 
 """
-
+from gui.draw import *
 import simple
 
-reset()
-smoothwire()
-transparent()
-lights(True)
+def run():
+    reset()
+    smoothwire()
+    transparent()
+    lights(True)
 
-nx,ny = 20,10
+    nx,ny = 20,10
 
-F = simple.rectangle(nx,ny)
-F = F.trl(-F.center()+[0.,0.,nx/2])
-draw(F)
+    F = simple.rectangle(nx,ny)
+    F = F.trl(-F.center()+[0.,0.,nx/2])
+    draw(F)
 
-G = F.projectOnSphere(ny)
-draw(G,color=red)
+    G = F.projectOnSphere(ny)
+    draw(G,color=red)
 
-H = F.rotate(30).projectOnCylinder(ny)
+    H = F.rotate(30).projectOnCylinder(ny)
 draw(H,color=blue)
 
-#End
+if __name__ == 'draw':
+    run()
+# End

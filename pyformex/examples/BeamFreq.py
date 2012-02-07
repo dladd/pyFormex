@@ -39,6 +39,7 @@ ftp://bumps.ugent.be/pub/calix/
 Make sure you have version 1.5-a8 or higher.
 
 """
+from gui.draw import *
 from plugins.curve import *
 import simple
 
@@ -103,6 +104,7 @@ start
 use program 'frame.cal'
 endtext
 """
+from gui.draw import *
 # params
 s += " %s %s %s %s\n" % (nnod+1,nel,nmat,iout)
 # nodes
@@ -144,50 +146,47 @@ user printf '(5g13.4)' DISPL $17
 file close $17
 stop
 """
+from gui.draw import *
    
-#print s
+def compute():
+   fil = open('temp.dta','w')
+   fil.write(s)
+   fil.close()
 
-fil = open('temp.dta','w')
-fil.write(s)
-fil.close()
 
+   if verbose:
+      # show calix input data
+      showFile('temp.dta')
 
-if verbose:
-   # show calix input data
-   showFile('temp.dta')
+   # run calix
+   cmd = "calix temp.dta temp.res"
+   if os.path.exists('test.out'):
+      os.remove('test.out')
 
-# run calix
-cmd = "calix temp.dta temp.res"
-if os.path.exists('test.out'):
-   os.remove('test.out')
- 
-sta,out = utils.runCommand(cmd)
+   sta,out = utils.runCommand(cmd)
 
-if verbose:
-   # show calix output
-   showText(out)
-   showFile('temp.res')
-   showFile('test.out')
+   if verbose:
+      # show calix output
+      showText(out)
+      showFile('temp.res')
+      showFile('test.out')
 
-# read results from eigenvalue analysis
-fil = open('test.out','r')
-nnod,ndof = fromfile(fil,sep=' ',count=2,dtype=int)
-eig = fromfile(fil,sep=' ',count=4*ndof).reshape(ndof,4)
+   # read results from eigenvalue analysis
+   fil = open('test.out','r')
+   nnod,ndof = fromfile(fil,sep=' ',count=2,dtype=int)
+   eig = fromfile(fil,sep=' ',count=4*ndof).reshape(ndof,4)
 
-nshow = min(nshow,ndof)
-freq = eig[:nshow,2]
-basefreq = freq[0]
-print "Frequencies: %s" % freq
-print "Multipliers: %s" % (freq/freq[0])
+   nshow = min(nshow,ndof)
+   freq = eig[:nshow,2]
+   basefreq = freq[0]
+   print "Frequencies: %s" % freq
+   print "Multipliers: %s" % (freq/freq[0])
 
-a = fromfile(fil,sep=' ',).reshape(-1,nnod,6)
-#print a.shape
-# remove the extra node
-a = a[:,:-1,:]
-#print a.shape
-
-layout(nshow,ncols=4)
-hscale = 0.5
+   a = fromfile(fil,sep=' ',).reshape(-1,nnod,6)
+   #print a.shape
+   # remove the extra node
+   a = a[:,:-1,:]
+   return a
 
 def drawDeformed(M,u,r):
    xd = M.coords.copy()
@@ -196,24 +195,32 @@ def drawDeformed(M,u,r):
    draw(c,color=red)
    draw(c.pointsOn())
 
-for i in range(nshow):
-   viewport(i)
-   clear()
-   transparent(False)
-   lights(False)
-   linewidth(2)
-   draw(M)
-   ai = a[i]
-   u = ai[:,0]
-   imax = argmax(abs(u))
-   r = ai[:,5]
-   sc = hscale / u[imax]
-   u *= sc
-   r *= sc
-   #print u,r
-   drawDeformed(M,u,r)
-   fi = freq[i]
-   mi = fi/freq[0]
-   drawText('%s Hz = %.2f f0' % (fi,mi),20,20,size=20) 
+def showResults(hscale)
+   for i in range(nshow):
+      viewport(i)
+      clear()
+      transparent(False)
+      lights(False)
+      linewidth(2)
+      draw(M)
+      ai = a[i]
+      u = ai[:,0]
+      imax = argmax(abs(u))
+      r = ai[:,5]
+      sc = hscale / u[imax]
+      u *= sc
+      r *= sc
+      #print u,r
+      drawDeformed(M,u,r)
+      fi = freq[i]
+      mi = fi/freq[0]
+      drawText('%s Hz = %.2f f0' % (fi,mi),20,20,size=20) 
 
+def run():
+   compute()
+   layout(nshow,ncols=4)
+   showResults(hscale = 0.5)
+
+if __name__ == 'draw':
+    run()
 # End

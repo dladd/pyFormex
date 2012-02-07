@@ -34,17 +34,11 @@ techniques = ['nurbs','connect','border']
 Nurbs
 =====
 """
-
+from gui.draw import *
 import simple
 from plugins.curve import *
 from plugins.nurbs import *
     
-
-
-clear()
-linewidth(2)
-flat()
-
 
 def drawThePoints(N,n,color=None):
     umin = N.knots[N.degree]
@@ -200,14 +194,18 @@ dialog = Dialog(
     default = 'Show',
     )
 
-if pf.PF.has_key('_Nurbs_data_'):
-    dialog.updateData(pf.PF['_Nurbs_data_'])
 
-dialog.timeout = timeOut
-dialog.show()
+def run():
+    if pf.PF.has_key('_Nurbs_data_'):
+        dialog.updateData(pf.PF['_Nurbs_data_'])
 
-# Block other scripts 
-scriptLock(__file__)
+    dialog.timeout = timeOut
+    dialog.show()
+
+    # Block other scripts 
+    scriptLock(__file__)
        
 
+if __name__ == 'draw':
+    run()
 # End

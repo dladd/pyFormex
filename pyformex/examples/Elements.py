@@ -30,6 +30,7 @@ topics = ['geometry','mesh']
 techniques = ['dialog','elements']
 
 """
+from gui.draw import *
 
 from elements import *
 from mesh import Mesh
@@ -91,8 +92,7 @@ def showElement(eltype,options):
         
          
         
-if __name__ == "draw":
-
+def run():
     ElemList = []
     for ndim in [0,1,2,3]:
         ElemList += elementTypes(ndim)
@@ -134,4 +134,6 @@ if __name__ == "draw":
         showElement(el,res)
 
     
+if __name__ == 'draw':
+    run()
 # End

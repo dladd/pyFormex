@@ -29,38 +29,41 @@ topics = ['surface']
 techniques = ['color']
 
 """
-
+from gui.draw import *
 from gui.actors import *
 
-smooth()
-lights(False)
+def run():
+    smooth()
+    lights(False)
 
-Rendermode = [ 'smooth','flat' ]
-Lights = [ False, True ]
-Shapes = [ '3:016', '4:0123', ]
+    Rendermode = [ 'smooth','flat' ]
+    Lights = [ False, True ]
+    Shapes = [ '3:016', '4:0123', ]
 
-color0 = None  # no color: current fgcolor
-color1 = red   # single color
-color2 = array([red,green,blue]) # 3 colors: will be repeated
+    color0 = None  # no color: current fgcolor
+    color1 = red   # single color
+    color2 = array([red,green,blue]) # 3 colors: will be repeated
 
-delay(5)
-i=0
-for shape in Shapes:
-    F = Formex(shape).replic2(8,4)
-    color3 = resize(color2,F.shape()) # full color
-    for mode in Rendermode:
-        renderMode(mode)
-        for c in [ color0,color1,color2,color3]:
-            clear()
-            FA = GeomActor(F,color=c)
-            drawActor(FA)
-	    print c
-            zoomAll()
-            for light in Lights:
-                lights(light)
-                print i,light
-                i += 1
-                wait()
+    delay(5)
+    i=0
+    for shape in Shapes:
+        F = Formex(shape).replic2(8,4)
+        color3 = resize(color2,F.shape()) # full color
+        for mode in Rendermode:
+            renderMode(mode)
+            for c in [ color0,color1,color2,color3]:
+                clear()
+                FA = GeomActor(F,color=c)
+                drawActor(FA)
+                print c
+                zoomAll()
+                for light in Lights:
+                    lights(light)
+                    print i,light
+                    i += 1
+                    wait()
 
 
+if __name__ == 'draw':
+    run()
 # End

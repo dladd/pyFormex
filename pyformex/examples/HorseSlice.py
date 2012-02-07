@@ -29,33 +29,38 @@ topics = ['geometry','surface','mesh']
 techniques = ['intersection']
 
 """
+from gui.draw import *
 from plugins.trisurface import TriSurface
-from mesh import Mesh
 
-reset()
-smooth()
-lights(True)
+def run():
+    reset()
+    smooth()
+    lights(True)
 
-S = TriSurface.read(getcfg('datadir')+'/horse.off')
-SA = draw(S)
+    S = TriSurface.read(getcfg('datadir')+'/horse.off')
+    SA = draw(S)
 
-res = askItems([
-    ('direction',[1.,0.,0.]),
-    ('number of sections',20),
-    ('color','red'),
-    ('ontop',False),
-    ]) 
-if not res:
-    exit()
+    res = askItems([
+        ('direction',[1.,0.,0.]),
+        ('number of sections',20),
+        ('color','red'),
+        ('ontop',False),
+        ]) 
+    if not res:
+        exit()
 
-d = res['direction']
-n = res['number of sections']
-c = res['color']
+    d = res['direction']
+    n = res['number of sections']
+    c = res['color']
 
-slices = S.slice(dir=d,nplanes=n)
-linewidth(2)
-draw(slices,color=c,view=None,bbox='last',nolight=True,ontop=res['ontop'])
+    slices = S.slice(dir=d,nplanes=n)
+    linewidth(2)
+    draw(slices,color=c,view=None,bbox='last',nolight=True,ontop=res['ontop'])
 
 
-#undraw(SA)
-zoomAll()
+    #undraw(SA)
+    zoomAll()
+
+if __name__ == 'draw':
+    run()
+# End

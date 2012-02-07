@@ -31,34 +31,39 @@ level = 'normal'
 topics = ['Mesh','Geometry',Sphere']
 techniques = ['subdivide','project','animation']
 """
+from gui.draw import *
 
-clear()
+def run():
+    clear()
 
-from arraytools import golden_ratio as phi
-s = sqrt(1.+phi*phi)
-a = sqrt(3.)/6.*(3.+sqrt(5.))
+    from arraytools import golden_ratio as phi
+    s = sqrt(1.+phi*phi)
+    a = sqrt(3.)/6.*(3.+sqrt(5.))
 
-I = Mesh(eltype='icosa').getBorderMesh()
-M = I.subdivide(10)
-S = M.projectOnSphere()
+    I = Mesh(eltype='icosa').getBorderMesh()
+    M = I.subdivide(10)
+    S = M.projectOnSphere()
 
-delay(0)
-draw(S,color='red')
+    delay(0)
+    draw(S,color='red')
 
-a0 = 1./a
-a1 = 1./s - a0
-A = draw(I.scale(a0),color='yellow')
-zoomAll()
-n = 100
-delay(0.05)
-for i in arange(n+1)/float(n):
-    B = draw(I.scale(a0+i*a1),color='yellow',bbox='last')
+    a0 = 1./a
+    a1 = 1./s - a0
+    A = draw(I.scale(a0),color='yellow')
+    zoomAll()
+    n = 100
+    delay(0.05)
+    for i in arange(n+1)/float(n):
+        B = draw(I.scale(a0+i*a1),color='yellow',bbox='last')
+        undraw(A)
+        A = B
+
+    delay(2)
+    wait()
+    draw(I.scale(1./phi),color='yellow')
     undraw(A)
-    A = B
+    delay(0)
 
-delay(2)
-wait()
-draw(I.scale(1./phi),color='yellow')
-undraw(A)
-delay(0)
+if __name__ == 'draw':
+    run()
 # End

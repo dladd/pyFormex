@@ -29,7 +29,7 @@ topics = ['geometry']
 techniques = ['dialog']
 
 """
-
+from gui.draw import *
 import gui.actors
 
 
@@ -53,24 +53,28 @@ def base(type,m,n=None):
     else:
         raise ValueError,"Unknown type '%s'" % str(type)
 
-# This is the old input format, but relies on auto-conversion 
-res = askItems([('nx',4),('ny',3),('nz',2),('Grid type','','select',{'choices':['Box','Plane']}),('alpha',0.3)])
+def run():
+    # This is the old input format, but relies on auto-conversion 
+    res = askItems([('nx',4),('ny',3),('nz',2),('Grid type','','select',{'choices':['Box','Plane']}),('alpha',0.3)])
 
-if not res:
-    exit()
-    
-nx = (res['nx'],res['ny'],res['nz'])
-gridtype = res['Grid type']
-alpha = res['alpha']
+    if not res:
+        exit()
 
-if gridtype == 'Box':
-    GA = actors.GridActor(nx=nx,linewidth=0.2,alpha=alpha)
-else:
-    GA = actors.CoordPlaneActor(nx=nx,linewidth=0.2,alpha=alpha)
+    nx = (res['nx'],res['ny'],res['nz'])
+    gridtype = res['Grid type']
+    alpha = res['alpha']
 
-smooth()
-pf.canvas.addActor(GA)
-pf.canvas.setBbox(GA.bbox())
-zoomAll()
-pf.canvas.update()
+    if gridtype == 'Box':
+        GA = actors.GridActor(nx=nx,linewidth=0.2,alpha=alpha)
+    else:
+        GA = actors.CoordPlaneActor(nx=nx,linewidth=0.2,alpha=alpha)
 
+    smooth()
+    pf.canvas.addActor(GA)
+    pf.canvas.setBbox(GA.bbox())
+    zoomAll()
+    pf.canvas.update()
+
+if __name__ == 'draw':
+    run()
+# End

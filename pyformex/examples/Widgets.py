@@ -23,24 +23,37 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-print error("This is a simulated error, to demonstrate how an error message would be shown to the user.\nJust click OK and the error will go away.")
+"""Clock
 
-print warning("""
-<h1>This is a warning.</h1>
-A warning draws attention of the user on special conditions.<br/>
-Remark that we can use plain text or html.
-""")
+level = 'beginner'
+topics = ['dialog']
+techniques = []
 
-print showInfo("""..
+"""
+from gui.draw import *
 
-A text in ReST
-==============
+def run()
+    print error("This is a simulated error, to demonstrate how an error message would be shown to the user.\nJust click OK and the error will go away.")
 
-- The lowest level of message box is the *info* level.
-  It just displays information for the user.
-- ReST text is automatically detected if it starts with '..'.
+    print warning("""
+    <h1>This is a warning.</h1>
+    A warning draws attention of the user on special conditions.<br/>
+    Remark that we can use plain text or html.
+    """)
 
-""")
+    print showInfo("""..
 
-print ask("Answer this question with yes or no",['Yes','No']) 
+    A text in ReST
+    ==============
+
+    - The lowest level of message box is the *info* level.
+      It just displays information for the user.
+    - ReST text is automatically detected if it starts with '..'.
+
+    """)
+
+    print ask("Answer this question with yes or no",['Yes','No']) 
+
+if __name__ == 'draw':
+    run()
 # End

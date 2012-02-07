@@ -30,6 +30,7 @@ level = 'normal'
 topics = ['geometry','curve']
 techniques = ['widgets','persistence','import','spline']
 """
+from gui.draw import *
 
 from plugins.curve import *
 from plugins.nurbs import *
@@ -191,21 +192,24 @@ def timeOut():
     close()
     
 
-dialog = widgets.InputDialog(
-    data_items,
-    caption='Curve parameters',
-    actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
-    default='Show')
+def run():
+    dialog = widgets.InputDialog(
+        data_items,
+        caption='Curve parameters',
+        actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
+        default='Show')
 
-if pf.PF.has_key('_Curves_data_'):
-    #print pf.PF['_Curves_data_']
-    dialog.updateData(pf.PF['_Curves_data_'])
+    if pf.PF.has_key('_Curves_data_'):
+        #print pf.PF['_Curves_data_']
+        dialog.updateData(pf.PF['_Curves_data_'])
 
-dialog.timeout = timeOut
-dialog.show()
-# Block other scripts 
-scriptLock(__file__)
+    dialog.timeout = timeOut
+    dialog.show()
+    # Block other scripts 
+    scriptLock(__file__)
 
 
 
+if __name__ == 'draw':
+    run()
 # End
