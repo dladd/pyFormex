@@ -62,20 +62,20 @@ BEGIN { IGNORECASE=1; mode=0; start_part("DEFAULT_PART"); }
 /^\*\*/ { next; }
 
 # start a node block: record the number of the first node
-/^\*node/ { 
+/^\*[Nn]ode/ { 
     start_mode(1)
     getline; gsub(",",""); header = "# nodes "outfile " offset "$1
 }
 
 # start an element block
-/^\*element,/ { 
+/^\*[Ee]lement,/ { 
     start_mode(2) 
     getline; header = "# elems "outfile " nplex "NF-1
 
 }
 
 # start an elset block
-/^\*Elset, elset=.*, generate/ { 
+/^\*[Ee]lset, elset=.*, generate/ { 
     start_mode(3)
     sub(".*elset=","");sub(",.*",""); setname=$0;
     getline;
