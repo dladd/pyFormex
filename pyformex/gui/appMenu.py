@@ -34,61 +34,7 @@ import menu
 import os,random
 from gettext import gettext as _
     
-catname = 'scripts.cat'
-
-def extractKeyword(s):
-    """Extract a ``keyword = value`` pair from a string.
-
-    If the input string `s` is of the form ``keyword = value``
-    a tuple (keyword,value) is returned, else None.
-    """
-    i = s.find('=')
-    if i >= 0:
-        try:
-            key = s[:i].strip()
-            if len(key) > 0:
-                return key, eval(s[i+1:].strip())
-        except:
-            pf.debug("Error processing keywords %s" % s.strip('\n'))
-            pass
-    return None
-
-    
-def scriptKeywords(fn,keyw=None):
-    """Read the script keywords from a script file.
-
-    - `fn`: the full path name of a pyFormex script file.
-    - `keyw`: an optional list of keywords.
-    
-    Script keywords are written in the form::
-
-       key = value
-       
-    in the docstring of the script.
-    The docstring is the first non-indented multiline string of the file.
-    A multiline string is a string delimited by triple double-quotes.
-    Matching lines are placed in a dictionary which becomes the return value.
-    
-    If a list of keywords is given, the return dictionary will only contain
-    the matching values.
-    """
-    fil = open(fn,'r')
-    keys = {}
-    ok = False
-    for line in fil:
-        if not ok and line.startswith('"""'):
-            ok = True
-            line = line[3:]
-        if ok:
-            i = line.find('"""')
-            if i >= 0:
-                line = line[:i]
-            pair = extractKeyword(line)
-            if pair:
-                keys.update((pair,))
-            if i >= 0:
-                return keys
-    return keys
+catname = 'apps.cat'
 
 
 def sortSets(d):
@@ -115,38 +61,37 @@ def getDocString(scriptfile):
             return s[i+2:j]
     return ''
 
+
 def getDescription(doc):
     txt = doc.partition('.. Description')
-    #print txt[1]
-    #print len(txt[1])
     return ' '.join(txt[1:])
     
 
 
-class ScriptMenu(QtGui.QMenu):
-    """A menu of pyFormex scripts in a directory or list.
+class AppMenu(QtGui.QMenu):
+    """A menu of pyFormex applications in a directory or list.
 
-    This class creates a menu of pyFormex scripts collected from a directory
-    or specified in a list. It is e.g. used in the pyFormex GUI to create
-    the examples menu, and for the scripts history. The pyFormex scripts
-    can then be executed from the menu. The user may use this class to add
-    his own scripts into the pyFormex GUI.
+    This class creates a menu of pyFormex applications collected from a
+    directory or specified as a list of modules.
+    It is used in the pyFormex GUI to create
+    the examples menu, and for the apps history. The pyFormex apps
+    can then be run from the menu or from the button toolbar.
+    The user may use this class to add his own apps into the pyFormex GUI.
 
-    Only files that are recognized by :func:`utils.is_pyFormex()` as being
-    pyFormex scripts will be added to the menu. 
+    Apps are simply Python modules that have a 'run' function.
+    Only these modules will be added to the menu. 
 
     The constructor takes the following arguments:
 
     - `title`: the top level label for the menu
-    - `files`: a list of file names of pyFormex scripts. If no `dir` nor `ext`
-      arguments are given, these should be the full path names to the script
-      files. If omitted, all files in the directory `dir` whose name is ending
-      with `ext` *and do not start with either '.' or '_'*, will be selected.
-    - `dir`: an optional directory path. If given, it will be prepended to
+    - `apps`: a list of which have a 'run' function. If omitted, a
+      list of apps will be constructed from the directory path `dir`.
+      Python files in the directory `dir` whose name does not start with
+      either '.' or '_'*, will be selected.
+    - `dir`: an optional directory path. If specified, all Python files in
+      `dir` that do not start with either '.' or '_'*, will be loaded and
+      the corresponding modules will be added to prepended to
       each file name in `files` and `recursive` will be True by default.
-    - `ext`: an extension to be added to each filename. If `dir` was specified,
-      the default extension is '.py'. If no `dir` was specified, the default
-      extension is an empty string.
     - `recursive`: if True, a cascading menu of all pyFormex scripts in the
       directory and below will be constructed.
     - `max`: if specified, the list of files will be truncated to this number
@@ -156,9 +101,9 @@ class ScriptMenu(QtGui.QMenu):
     The defaults were thus chosen to be convenient for the two most frequent
     uses of this class::
 
-      ScriptMenu('My Scripts',dir="/path/to/my/sciptsdir")
+      AppMenu('My Apps',dir="/path/to/my/appsdir")
 
-    creates a menu will all pyFormex scripts in the specified path and its
+    creates a menu will all pyFormex apps in the specified path and its
     subdirectories.
 
     ::
@@ -201,19 +146,13 @@ class ScriptMenu(QtGui.QMenu):
     when you created a new script file.
     """
     
-    def __init__(self,title,dir=None,files=None,ext=None,recursive=None,max=0,autoplay=False,toplevel=True):
-        """Create a menu with pyFormex scripts to play."""
+    def __init__(self,title,dir=None,apps=None,recursive=None,max=0,autoplay=False,toplevel=True):
+        """Create a menu with pyFormex apps to play."""
         QtGui.QMenu.__init__(self,title)
         self.dir = dir
-        self.files = files
+        self.apps = apps
         if self.dir is None and self.files is None:
             raise ValueError,"At least one of 'dir' or 'files' must be set."
-        if ext is None:
-            if self.dir is None:
-                ext = ''
-            else:
-                ext = '.py'
-        self.ext = ext
         if recursive is None:
             recursive = True
         self.recursive = recursive and self.dir is not None
@@ -224,9 +163,9 @@ class ScriptMenu(QtGui.QMenu):
         self.load()
         
 
-    def fileName(self,scriptname):
-        """Return the full pathname for a scriptname."""
-        fn = scriptname + self.ext
+    def fileName(self,appname):
+        """Return the full pathname for an appname."""
+        fn = appname + self.ext
         if self.dir:
             return os.path.join(self.dir,fn)
         else:
@@ -242,13 +181,13 @@ class ScriptMenu(QtGui.QMenu):
         dirs = filter(filtr,dirs)
         dirs.sort()
         for d in dirs:
-            m = ScriptMenu(d,os.path.join(self.dir,d),autoplay=self.autoplay,recursive=self.recursive)
+            m = AppMenu(d,os.path.join(self.dir,d),autoplay=self.autoplay,recursive=self.recursive)
             self.addMenu(m)
             self.menus.append(m)
             
 
     def getFiles(self):
-        """Get a list of scripts in self.dir"""
+        """Get a list of apps in self.dir"""
         files = os.listdir(self.dir)
         filtr = lambda s: s[0]!='.' and s[0]!='_'
         files = filter(filtr,files)
@@ -270,7 +209,7 @@ class ScriptMenu(QtGui.QMenu):
 
  
     def filterFiles(self,files):
-        """Filter a list of scripts"""
+        """Filter a list of apps"""
         filtr = lambda s:utils.is_pyFormex(self.fileName(s))
         files = filter(filtr,files)
 
@@ -281,24 +220,24 @@ class ScriptMenu(QtGui.QMenu):
       
 
     def loadFiles(self,files=None):
-        """Load the script files in this menu"""
+        """Load the app files in this menu"""
         if files is None:
             files = self.getFiles()
 
         self.files = self.filterFiles(files)
         
         if pf.options.debug:
-            print("Found Scripts in %s" % self.dir)
+            print("Found Apps in %s" % self.dir)
             print(self.files)
         self.actions = [ self.addAction(f) for f in self.files ]           
         self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
         
         if self.dir:
             self.addSeparator()
-            self.addAction('Run next script',self.runNext)
-            self.addAction('Run all following scripts',self.runAllNext)
-            self.addAction('Run all scripts',self.runAll)
-            self.addAction('Run a random script',self.runRandom)
+            self.addAction('Run next app',self.runNext)
+            self.addAction('Run all following apps',self.runAllNext)
+            self.addAction('Run all apps',self.runAll)
+            self.addAction('Run a random app',self.runRandom)
             self.addAction('Run all in random order',self.runAllRandom)
         self.current = ""
 
@@ -312,10 +251,10 @@ class ScriptMenu(QtGui.QMenu):
                     files = col[k]
                 else:
                     files = []
-                mk = ScriptMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
+                mk = AppMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
                 for i in cat[k]:
                     ki = '%s/%s' % (k,i)
-                    mi = ScriptMenu(i.capitalize(),dir=self.dir,files=col.get(ki,[]),recursive=False,toplevel=False,autoplay=self.autoplay)
+                    mi = AppMenu(i.capitalize(),dir=self.dir,files=col.get(ki,[]),recursive=False,toplevel=False,autoplay=self.autoplay)
                     mk.addMenu(mi)
                     mk.menus.append(mi)
                 self.addMenu(mk)
@@ -340,24 +279,24 @@ class ScriptMenu(QtGui.QMenu):
                 self.loadFiles(self.files)
 
             if self.toplevel:
-                self.addAction('Classify scripts',self._classify)
+                self.addAction('Classify apps',self._classify)
                 self.addAction('Remove catalog',self._unclassify)
-                self.addAction('Reload scripts',self.reload)
+                self.addAction('Reload apps',self.reload)
 
 
 
     def run(self,action):
-        """Run the selected script."""
-        script = str(action.text())
-        if script in self.files:
-            self.runScript(script)
+        """Run the selected app."""
+        app = str(action.text())
+        if app in self.files:
+            self.runApp(app)
     
 
-    def runScript(self,filename):
-        """Run the specified script."""
+    def runApp(self,filename):
+        """Run the specified app."""
         self.current = filename
         selected = self.fileName(filename)
-        pf.debug("Playing script %s" % selected)
+        pf.debug("Playing app %s" % selected)
         pf.GUI.setcurfile(selected)
         if self.autoplay:
             pf.debug("Drawing Options: %s" % pf.canvas.options)
@@ -366,44 +305,44 @@ class ScriptMenu(QtGui.QMenu):
 
 
     def runNext(self):
-        """Run the next script."""
+        """Run the next app."""
         try:
             i = self.files.index(self.current) + 1
         except ValueError:
             i = 0
-            print("You should first run a script from the menu, to define the next")
+            print("You should first run a app from the menu, to define the next")
             return
-        pf.debug("This is script %s out of %s" % (i,len(self.files)))
+        pf.debug("This is app %s out of %s" % (i,len(self.files)))
         if i < len(self.files):
-            self.runScript(self.files[i])
+            self.runApp(self.files[i])
 
 
     def runAllNext(self):
-        """Run the current and all following scripts."""
+        """Run the current and all following apps."""
         try:
             i = self.files.index(self.current)
         except ValueError:
             i = 0
-            print("You should first run a script from the menu, to define the following")
+            print("You should first run a app from the menu, to define the following")
             return
-        pf.debug("Running scripts %s-%s" % (i,len(self.files)))
+        pf.debug("Running apps %s-%s" % (i,len(self.files)))
         self.runAllFiles(self.files[i:])
         pf.debug("Exiting runAllNext")
         
 
     def runAll(self):
-        """Run all scripts."""
-        pf.debug("Playing all scripts in order")
+        """Run all apps."""
+        pf.debug("Playing all apps in order")
         self.runAllFiles(self.files)
-        pf.debug("Finished playing all scripts")
+        pf.debug("Finished playing all apps")
 
 
-    ### THIS should be moved to a playAll function in draw/script module
+    ### THIS should be moved to a playAll function in draw/app module
     ### Currently, it is only intended for testing the examples
     ### THus we can permit to add some adhoc solutions, like resetting
-    ### the layout at each new script
+    ### the layout at each new app
     def runAllFiles(self,files,randomize=False,pause=0.):
-        """Run all the scripts in given list."""
+        """Run all the apps in given list."""
         pf.GUI.actions['Stop'].setEnabled(True)
         if randomize:
             random.shuffle(files)
@@ -512,6 +451,7 @@ class ScriptMenu(QtGui.QMenu):
             if os.path.exists(f):
                 os.remove(f)
                 self.reload()
+
 
 ############### The pyFormex Script menu ############################
 

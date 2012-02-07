@@ -291,7 +291,7 @@ class Gui(QtGui.QMainWindow):
         if not (app.endswith('.py') or app.endswith('.pye')):
             import apps
             app = app.replace('apps.','')
-            app = apps.load(app,autorun=False)
+            app = apps.load(app)
         self.setcurfile(app)
         self.setcurdir()
         if pf.options.redirect:
@@ -1122,7 +1122,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # Applications
     try:
         import apps
-        pf.apps = apps.available_apps()
+        pf.apps = apps._available_apps
         print "Applications: "+ ', '.join(pf.apps)
         appmenu = pf.GUI.menu.item('file')
         pf.gui.app_menu = apps.create_app_menu(filemenu,before='History')

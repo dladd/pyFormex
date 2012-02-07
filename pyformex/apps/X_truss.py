@@ -29,9 +29,7 @@ topics = ['geometry']
 techniques = ['color']
 
 """
-
-# This is needed if we want to import this module in another script
-from formex import *
+from gui.draw import *
 
 class X_truss(object):
     """An X-shaped truss girder.
@@ -130,9 +128,8 @@ class X_truss(object):
         return self.bot+self.top+self.vert+self.dia1+self.dia2
 
 
-if __name__ == 'draw':
-    # This is executed when the example is launched from the GUI
-
+def run():
+    """This is the application main function."""
     wireframe()
     reset()
     def example(diag=True,vert=True):
@@ -152,4 +149,8 @@ if __name__ == 'draw':
         for vert in [True,False]:
             example(diag,vert)
     
+if __name__ == 'draw':
+    # if executed as script
+    run()
+
 # End

@@ -17,19 +17,35 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""Script Template
+"""pyFormex Script/App Template
 
-This is a template file to show the general layout of a pyFormex script.
+This is a template file to show the general layout of a pyFormex
+script or app.
+
 In the current version, a pyFormex script should obey the following rules:
 
 - file name extension is '.py'
 - first (comment) line contains 'pyformex'
 
+A pyFormex app can be a '.py' of '.pyc' file, and should define a function
+'run()' to be executed by pyFormex. Also, the app should import anythin that
+it needs.
+
+This template is a common structure that allows the file to be used both as
+a script or as an app.
+
 The script starts by preference with a docstring (like this),
 composed of a short first line, then a blank line and
 one or more lines explaining the intention of the script.
 """
+from gui.draw import *
 
-print "This is the pyFormex template script"
+def run():
+    print "This is the pyFormex template script/app"
+
+# The following is to make it work as a script
+if __name__ == 'draw':
+    run()
+
 
 # End

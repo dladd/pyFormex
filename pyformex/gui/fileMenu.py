@@ -145,7 +145,7 @@ def setProject(proj):
             f.write(proj._autoscript_)
             f.close()
             openScript(fn)
-            editScript(fn)
+            editApp(fn)
 
     if hasattr(proj,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % proj.autofile):
         processArgs([proj.autofile])
@@ -336,20 +336,51 @@ def createScript(fn=None):
     return openScript(fn,exist=False,create=True)
 
     
-def editScript(fn=None):
-    """Load the current file in the editor.
+def editApp(appname=None):
+    """Edit an application source file.
 
-    This only works if the editor was set in the configuration.
-    The author uses 'emacsclient' to load the files in a running copy
-    of Emacs.
-    If a filename is specified, that file is loaded instead.
+    If no appname is specified, the current application is used.
+
+    This loads the application module, gets its file name, and if
+    it is a source file or the the corresponding source file exists,
+    that file is loaded into the editor.
     """
-    if pf.cfg['editor']:
-        if fn is None:
-            fn = pf.cfg['curfile']
-        pid = utils.spawn('%s %s' % (pf.cfg['editor'],fn))
+    if appname is None:
+        appname = pf.cfg['curfile']
+
+    if appname.endswith('.py') or appname.endswith('.pye'):
+        # this is a script, not an app
+        fn = appname
+
     else:
-        draw.warning('No known editor was found or configured')
+        import apps
+        app = apps.load(appname)
+        if not app:
+            return
+        fn = app.__file__
+        if fn.endswith('.pyc'):
+            fn = fn[:-1]
+        if not os.path.exists(fn):
+            draw.warning("The file '%s' does not exist" % fn)
+            return
+            
+    draw.editFile(fn)
+
+
+def rerun():
+    appname = pf.cfg['curfile']
+
+    if appname.endswith('.py') or appname.endswith('.pye'):
+        # this is a script, not an app
+        pass
+    else:
+        import apps
+        app = apps.load(appname,refresh=True)
+
+    draw.play()
+        
+   
+    
 
 ##################### other functions ##########################
 
@@ -434,11 +465,13 @@ MenuData = [
     (_('&Convert Project File'),convertProjectFile),
     (_('&Uncompress Project File'),uncompressProjectFile),
     ('---',None),
+    (_('&Change workdir'),draw.askDirname),
     (_('&Create new script'),createScript),
     (_('&Open existing script'),openScript),
-    (_('&Play script'),play),
-    (_('&Edit script'),editScript),
-    (_('&Change workdir'),draw.askDirname),
+    (_('&Edit current script/app'),editApp),
+    (_('&Run current script/app'),play),
+    (_('&Reload and run current app'),rerun),
+    ## (_('&Unload all but current app'),),
     (_('---1'),None),
     (_('&Save Image'),saveImage),
     (_('Start &MultiSave'),startMultiSave),

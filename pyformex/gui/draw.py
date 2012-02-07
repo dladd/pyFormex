@@ -197,6 +197,32 @@ ask for help on the pyFormex `Support tracker <%s>`_.
         showText(des,modal=False)
 
 
+def editFile(fn,exist=False):
+    """Load a file into the editor.
+
+    Parameters:
+
+    - `fn`: filename. The corresponding file is loaded into the editor.
+    - `exist`: bool. If True, only existing filenames will be accepted.
+    
+    Loading a file in the editor is done by executing an external command with
+    the filename as argument. The command to be used can be set in the
+    configuration. If none is set, pyFormex will try to lok at the `EDITOR`
+    and `VISUAL` environment settings.
+
+    The main author of pyFormex uses 'emacsclient' as editor command,
+    to load the files in a running copy of Emacs.
+    """
+    print "Edit File: %s" % fn
+    if pf.cfg['editor']:
+        if exist and not os.path.exists(fn):
+            return
+        pid = utils.spawn('%s %s' % (pf.cfg['editor'],fn))
+        print pid
+    else:
+        warning('No known editor was found or configured')
+
+
 # widget and result status of the widget in askItems() function
 _dialog_widget = None
 _dialog_result = None

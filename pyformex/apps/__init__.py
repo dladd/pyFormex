@@ -28,14 +28,20 @@ This module contains the functions to detect and load the pyFormex
 applications.
 """
 
+
 import pyformex as pf
 import utils
 
 import os
 
 
-def load(appname,refresh=False,autorun=True):
-    """Load and run the named app"""
+def load(appname,refresh=False):
+    """Load the named app
+
+    If refresh is True, the module will be reloaded if it was already loaded
+    before.
+    On succes, returns the loaded module
+    """
     import sys
     name = 'apps.'+appname
     try:
@@ -44,16 +50,21 @@ def load(appname,refresh=False,autorun=True):
         if pf.GUI:
             pf.GUI.setcurfile(app)
         if refresh:
-            reload(module)
-        if autorun and hasattr(app,'run'):
-            app.run()
+            reload(app)
         return app
     except:
         raise
+
+
+def run(appname,args=[]):
+    """Load and run the named app"""
+    app = load(appname)
+    if app and hasattr(app,'run'):
+        app._args_ = args
+        return app.run()
     
 
-def available_apps():
-    appdir = os.path.dirname(__file__)
+def detect(appdir):
     files = utils.listTree(appdir,listdirs=False,excludedirs=['.*'],includefiles=['.*\.py$'])
     apps = [ os.path.basename(f) for f in files ]
     apps = [ os.path.splitext(f)[0] for f in apps if f[0] not in '._' ]
@@ -63,7 +74,7 @@ def available_apps():
 def create_app_menu(parent=None,before=None): 	 
     from gui import menu
     loadmenu = menu.Menu('&Run Applications',parent=parent,before=before)
-    loadactions = menu.ActionList(function=load,menu=loadmenu) 	 
+    loadactions = menu.ActionList(function=run,menu=loadmenu) 	 
     for name in _available_apps:
         descr = name.capitalize().replace('_',' ')
         loadactions.add(name,icon=None,text=descr)
@@ -71,8 +82,6 @@ def create_app_menu(parent=None,before=None):
     return loadactions
 
 
-# Initialize this module
-
-_available_apps = available_apps()
+_available_apps = detect(os.path.dirname(__file__))
 
 # End

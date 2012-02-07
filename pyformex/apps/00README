@@ -1,0 +1,8 @@
+This directory holds the examples distributed with pyFormex.
+All examples should follow these rules:
+
+- Name starts with an upper case letter
+- Catalog keywords in the docstring must be set.
+- Data files (if used) should have names starting with a lower case letter.
+- Interactive examples should allow timeout.
+

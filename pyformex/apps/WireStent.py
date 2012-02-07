@@ -28,9 +28,7 @@ level = 'normal'
 topics = ['geometry']
 techniques = ['dialog', 'persistence', 'color']
 """
-
-# needed if we import this from another script
-from formex import *
+from gui.draw import *
 
 class DoubleHelixStent(object):
     """Constructs a double helix wire stent.
@@ -116,10 +114,8 @@ class DoubleHelixStent(object):
         return wireaxes
 
 
-if __name__ == "draw":
-
-    # show an example
-
+def run():
+    """Ask the user for data and show the corresponding Wire Stent."""
     wireframe()
     reset()
 
@@ -152,4 +148,7 @@ if __name__ == "draw":
             draw(w,color=c)
 
 
+if __name__ == "draw":
+    run()
+    
 #End

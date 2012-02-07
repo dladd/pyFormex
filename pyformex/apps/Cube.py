@@ -29,9 +29,8 @@ topics = ['geometry','surface']
 techniques = ['color','elements','reverse']
 
 """
-
+from gui.draw import *
 from elements import Hex8
-from formex import *
 
 # This could be obtained from a Mesh conversion
 def cube_tri(color=None):
@@ -83,8 +82,7 @@ def showCube(base,color):
 #    zoomAll()
     
         
-if __name__ == "draw":
-
+def run():
     from gui import widgets
 
     clear()
@@ -126,5 +124,9 @@ if __name__ == "draw":
         # Break from endless loop if an input timeout is active !
         if widgets.input_timeout >= 0:
             break
+
+        
+if __name__ == "draw":
+    run()
     
 # End

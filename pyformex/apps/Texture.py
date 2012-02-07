@@ -34,7 +34,7 @@ def run():
 
 
 if __name__ == 'draw':
-    # This app is executed as a script
+    # if executed as a script
     run()
 
 # End

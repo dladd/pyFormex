@@ -59,6 +59,7 @@ scripttemplate = os.path.join(pyformexdir,'template.py')
 # scriptdirs is a list of (title,dir) tuples
 # for 'examples', the directory will be filled in automagically
 scriptdirs = [ ('Examples','') ]
+appdirs = [ ('Apps','') ]
 
 # extra paths to append tot sys.path
 syspath = []
@@ -211,8 +212,6 @@ readme = os.path.join(pyformexdir,"doc","README")
 notes = os.path.join(pyformexdir,"doc","ReleaseNotes")
 license = os.path.join(pyformexdir,"doc","COPYING")
 style = os.path.join(pyformexdir,"doc","STYLE")
-devtodo = os.path.join(pyformexdir,"..","TODO")
-devhowto = os.path.join(pyformexdir,"..","HOWTO-dev.rst")
 website = "http://pyformex.org"
 webdoc = website+"/doc"
 projpage = "http://savannah.nongnu.org/projects/pyformex/"
@@ -221,8 +220,6 @@ bugs = "http://savannah.nongnu.org/bugs/?func=additem&group=pyformex"
 links = [('pyFormex','pyformex.org'),('pyFormex-dev',projpage),('Python','www.python.org'),('IBiTech-bioMMeda','www.biommeda.ugent.be'),('stent-boys@bioMMeda','www.stent-ibitech.ugent.be'),('FEops','www.feops.com'),]
 docs = [('&Local documentation',localdoc),('&Reference Manual',refman),('Tutorial',tutorial),('&Module Index',modindex),('&Index',index),('&Running pyFormex',running),('&Online documentation',webdoc),]
 docs2 = [('&Readme',readme),('&ReleaseNotes',notes),('&License',license)]
-
-developer = [('Developer HOWTO',devhowto),('pyFormex TODO list',devtodo),('Numpy documentation guidelines','http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines'),('re-structured text (reST)','http://docutils.sourceforge.net/rst.html')]
 
              
 [keys]

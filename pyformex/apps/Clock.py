@@ -30,9 +30,7 @@ topics = []
 techniques = []
 
 """
-
-from formex import *  # Needed if we want to use this example as a module
-from gui.draw import *  # Needed if we want to use this example as a module
+from gui.draw import *
 import simple
 from datetime import datetime
 from PyQt4 import QtCore
@@ -109,7 +107,7 @@ class AnalogClock(object):
             self.timer.stop()
 
             
-if __name__ == "draw":
+def run():
     reset()
     C = AnalogClock()
     C.draw()
@@ -120,3 +118,9 @@ if __name__ == "draw":
         C.run()
         sleep(res['runtime'])
         C.stop()
+
+
+if __name__ == "draw":
+    run()
+
+# End

@@ -47,7 +47,7 @@ def help(page=None):
     """
     if not page:
         page = pf.cfg['help/manual']
-    if page.startswith('http:'):
+    if page.startswith('http'):
         browser = pf.cfg['browser']
     else:
         browser = pf.cfg['viewer']
@@ -200,7 +200,6 @@ def createMenuData():
     DocsMenuData = [(k,help,{'data':v}) for k,v in pf.cfg['help/docs']] 
     Docs2MenuData = [(k,draw.showFile,{'data':v}) for k,v in pf.cfg['help/docs2']]
     LinksMenuData = [(k,showURL,{'data':v}) for k,v in pf.cfg['help/links']]
-    DevLinksMenuData = [(k,showFileOrURL,{'data':v}) for k,v in pf.cfg['help/developer']]
 
     try:
         MenuData = DocsMenuData + [
@@ -212,15 +211,33 @@ def createMenuData():
             (_('&OpenGL Format'),opengl), 
             (_('&Fortune Cookie'),cookie),
             (_('&Favourite Links'),LinksMenuData),
-            (_('&Developers'),developers), 
+            (_('&People'),developers), 
             (_('&About'),about), 
-            ('---',None),
-            (_('&Developer Guidelines'),DevLinksMenuData),
             ]
     except:
         MenuData = []
 
     if pf.svnversion:
+        pyformexdir = pf.cfg['pyformexdir']
+        devtodo = os.path.join(pyformexdir,"..","TODO")
+        devhowto = os.path.join(pyformexdir,"..","HOWTO-dev.rst")
+        devapp = os.path.join(pyformexdir,"..","scripts-apps.rst")
+        #print pf.refcfg.help['developer']
+        developer = [
+            ('Developer HOWTO',devhowto),
+            ('Scripts versus Apps',devapp),
+            ('pyFormex TODO list',devtodo),
+           ('Numpy documentation guidelines','http://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt'),
+            ('re-structured text (reST)','http://docutils.sourceforge.net/rst.html')
+            ]
+        
+    
+        DevLinksMenuData = [(k,showFileOrURL,{'data':v}) for k,v in developer]
+        MenuData += [
+            ('---',None),
+            (_('&Developer Guidelines'),DevLinksMenuData),
+            ]
+        
         def install_dxfparser():
             extdir = os.path.join(pf.cfg['pyformexdir'],'external','dxfparser')
             sta,out = utils.runCommand("cd %s; make && gksu make install" % extdir)

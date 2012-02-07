@@ -117,10 +117,15 @@ def settings():
     def autoSettings(keylist):
         return [_I(k,pf.cfg[k]) for k in keylist]
 
+    def changeDirs(dircfg):
+        """dircfg is a config variable that is a list of dirs"""
+        setDirs(dircfg)
+        dia.updateData({dircfg:pf.cfg[dircfg]})
+
     def changeScriptDirs():
-        setScriptDirs()
-        pf.debug("SCRIPTDIRS NOW " % pf.cfg['scriptdirs'])
-        dia.updateData({'scriptdirs':pf.cfg['scriptdirs']})
+        changeDirs('scriptdirs')
+    def changeAppDirs():
+        changeDirs('appdirs')
 
 
     mouse_settings = autoSettings(['gui/rotfactor','gui/panfactor','gui/zoomfactor','gui/autozoomfactor','gui/dynazoom','gui/wheelzoom'])
@@ -128,7 +133,7 @@ def settings():
     plugin_items = [ _I('_plugins/'+name,name in pf.cfg['gui/plugins'],text=text) for name,text in plugins.pluginMenus() ]
     #print plugin_items
 
-    appearence = [
+    appearance = [
         _I('gui/style',pf.GUI.currentStyle(),choices=pf.GUI.getStyles()),
         _I('gui/font',pf.app.font().toString(),'font'),
         ]
@@ -167,10 +172,11 @@ def settings():
                 _I('help/docs'),
                 _I('autorun',text='Startup script',tooltip='This script will automatically be run at pyFormex startup'),
                 _I('scriptdirs',text='Script Paths',tooltip='pyFormex will look for scripts in these directories',buttons=[('Edit',changeScriptDirs)]),
+                _I('appdirs',text='Applicationt Paths',tooltip='pyFormex will look for applications in these directories',buttons=[('Edit',changeAppDirs)]),
                 ],
              ),
             _T('GUI',[
-                _G('Appearence',appearence),
+                _G('Appearance',appearance),
                 _G('Components',toolbars+[
                     _I('gui/coordsbox',pf.cfg['gui/coordsbox']),
                     _I('gui/showfocus',pf.cfg['gui/showfocus']),
@@ -469,12 +475,15 @@ def setRendering():
     dia.show()
 
 
-def setScriptDirs():
-    dia = createScriptDirsDialog()
+def setDirs(dircfg):
+    """dircfg is a config variable that is a list of directories."""
+    dia = createDirsDialog(dircfg)
     dia.exec_()
 
     
-def createScriptDirsDialog():
+def createDirsDialog(dircfg):
+    """dircfg is a config variable that is a list of directories."""
+    
     _dia=None
     _table=None
 
@@ -482,14 +491,14 @@ def createScriptDirsDialog():
         ww = widgets.FileSelection(pf.cfg['workdir'],'*',exist=True,dir=True)
         fn = ww.getFilename()
         if fn:
-            scr = pf.cfg['scriptdirs']
+            scr = pf.cfg[dirtype]
             _table.model().insertRows()
             scr[-1] = ['New',fn]
         _table.update()
 
     def editRow():
         row = _table.currentIndex().row()
-        scr = pf.cfg['scriptdirs']
+        scr = pf.cfg[dircfg]
         item = scr[row]
         res = draw.askItems([('Label',item[0]),('Path',item[1])])
         if res:
@@ -503,7 +512,7 @@ def createScriptDirsDialog():
 
     def moveUp():
         row = _table.currentIndex().row()
-        scr = pf.cfg['scriptdirs']
+        scr = pf.cfg[dircfg]
         if row > 0:
             a,b = scr[row-1:row+1]
             scr[row-1] = b
@@ -515,16 +524,24 @@ def createScriptDirsDialog():
 
     def saveTable():
         #print pf.cfg['scriptdirs']
-        pf.prefcfg['scriptdirs'] = pf.cfg['scriptdirs']
+        pf.prefcfg[dircfg] = pf.cfg[dircfg]
 
     #global _dia,_table
     from scriptMenu import reloadScriptMenu
-    scr = pf.cfg['scriptdirs']
+    scr = pf.cfg[dircfg]
     _table = widgets.Table(scr,chead=['Label','Path'])
+    actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Save',saveTable),('OK',)],
+    if dircfg == 'scriptdirs':
+        title='Script paths'
+        from scriptMenu import reloadScriptMenu
+        actions[4:4] = [('Reload',reloadScriptMenu)]
+    else:
+        title='Application paths'
+        
     _dia = widgets.GenericDialog(
         widgets=[_table],
-        title='Script paths',
-        actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadScriptMenu),('Save',saveTable),('OK',)],
+        title=title,
+        actions=actions,
         )
     
     return _dia

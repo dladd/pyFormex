@@ -248,7 +248,7 @@ def apply_config_changes(cfg):
         'input/timeout','filterwarnings',
         'render/ambient','render/diffuse','render/specular','render/emission',
         'render/material','canvas/propcolors','Save changes','canvas/bgmode',
-        'canvas/bgcolor2'
+        'canvas/bgcolor2',
         ]:
         if key in cfg.keys():
             print("DELETING CONFIG VARIABLE %s" % key)
@@ -552,12 +552,6 @@ def run(argv=[]):
         ## m = re.match(".*//(?P<user>[^@]*)@svn\.savanna\.nongnu\.org.*",s)
         ## pf.svnuser = m.group('user')
         ## print pf.svnuser
-
-        # Add in subversion specific config
-        devhowto = os.path.join(pyformexdir,'..','HOWTO-dev.rst')
-        builddoc = os.path.join(pyformexdir,"doc","build-local-docs.rst")
-        pf.refcfg.help['developer'][0:0] = [('Developer HOWTO',devhowto),('&Build local documentation',builddoc)]
-        #print pf.refcfg.help['developer']
     
 
 

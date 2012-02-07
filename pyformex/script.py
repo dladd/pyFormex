@@ -464,15 +464,16 @@ def playFile(fn,argv=[]):
     return res
 
 
-def runApplication(app,argv=[]):
+def runApp(appname,argv=[]):
     import apps
     from timer import Timer
     t = Timer()
-    message("Running application %s" % app)
+    app = apps.load(appname)
+    message("Running application '%s' from %s" % (appname,app.__file__))
     pf.debug("  Passing arguments: %s" % argv)
-    apps.load(app)
+    apps.run(appname,argv)
     pf.debug("  Arguments left after execution: %s" % argv)
-    message("Finished %s in %s seconds" % (app,t.seconds()))
+    message("Finished %s in %s seconds" % (appname,t.seconds()))
 
 
 def play(app=None,argv=[],step=False):
@@ -494,7 +495,7 @@ def play(app=None,argv=[],step=False):
         stepmode = step
         return playFile(app,argv)
 
-    runApplication(app,argv)
+    runApp(app,argv)
 
 
 def exit(all=False):

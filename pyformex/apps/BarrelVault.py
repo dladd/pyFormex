@@ -54,7 +54,7 @@ def run():
         dict(name='l',value=30.,text='barrel length'),
         ])
     if not res:
-        exit()
+        return
 
     globals().update(res)
 
@@ -68,5 +68,6 @@ def run():
     barrel = (d+h+e).rotate(90,1).translate(0,r).scale([1.,a/(2*n),l/(2*m)]).cylindrical()
 
     draw(barrel)
+
 
 # End
