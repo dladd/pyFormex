@@ -517,12 +517,15 @@ class Gui(QtGui.QMainWindow):
             name = app.__name__.replace('apps.','')
             self.canPlay = hasattr(app,'run')
             self.curfile.label.setText('App:')
+            if 'ReRun' in self.actions:
+                self.actions['ReRun'].setEnabled(self.canPlay)
             pf.prefcfg['curfile'] = name
         else:
             name = os.path.basename(app)
             self.canPlay = utils.is_pyFormex(app) or app.endswith('.pye')
             self.curfile.label.setText('Script:')
-            self.actions['Step'].setEnabled(self.canPlay)
+            if 'Step' in self.actions:
+                self.actions['Step'].setEnabled(self.canPlay)
             pf.prefcfg['curfile'] = app
 
         self.curfile.setText(name)

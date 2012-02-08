@@ -54,9 +54,7 @@ def run():
     # Replicate the structure in x-direction
     a4 = a3.replicate(k,dir=0,step=m)
     draw(a4,'bottom',color='blue')
-    exit()
-    clear()
-    draw(a4,'bottom')
+    return
 
 if __name__ == 'draw':
     run()

@@ -34,18 +34,21 @@ from PyQt4 import QtCore, QtGui
 import widgets
 import draw
 import utils
+import fileMenu
  
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""
     action = {}
     buttons = [ ( "Play", "next", draw.play, False ),
-                ( "Step", "nextstop", draw.step, False ),
+#                ( "Step", "nextstop", draw.step, False ),
                 ( "Continue", "ff", draw.fforward, False ),
-#                ( "Stop", "stop", draw.stopatbreakpt, False ),
-#                ( "Stop", "stop", draw.exit, False ),
                 ( "Stop", "stop", draw.raiseExit, False ),
                 ]
+    if pf.cfg['gui/stepbutton']:
+        buttons[1:1] = [( "Step", "nextstop", draw.step, False )]
+    if pf.cfg['gui/rerunbutton']:
+        buttons[1:1] = [( "ReRun", "rerun", draw.replay, False )]
     for b in buttons:
         icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon(b[1])))
         a = toolbar.addAction(icon,b[0],b[2])

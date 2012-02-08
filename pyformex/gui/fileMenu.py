@@ -30,7 +30,7 @@ import widgets
 import utils
 import project
 import draw
-from script import processArgs,play
+#from script import processArgs,play,replay
 import image
 import plugins
 
@@ -148,7 +148,7 @@ def setProject(proj):
             editApp(fn)
 
     if hasattr(proj,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % proj.autofile):
-        processArgs([proj.autofile])
+        draw.processArgs([proj.autofile])
 
     pf.message("Exported symbols: %s" % pf.PF.keys())
 
@@ -365,19 +365,6 @@ def editApp(appname=None):
             return
             
     draw.editFile(fn)
-
-
-def rerun():
-    appname = pf.cfg['curfile']
-
-    if appname.endswith('.py') or appname.endswith('.pye'):
-        # this is a script, not an app
-        pass
-    else:
-        import apps
-        app = apps.load(appname,refresh=True)
-
-    draw.play()
         
    
     
@@ -469,8 +456,8 @@ MenuData = [
     (_('&Create new script'),createScript),
     (_('&Open existing script'),openScript),
     (_('&Edit current script/app'),editApp),
-    (_('&Run current script/app'),play),
-    (_('&Reload and run current app'),rerun),
+    (_('&Run current script/app'),draw.play),
+    (_('&Reload and run current app'),draw.replay),
     ## (_('&Unload all but current app'),),
     (_('---1'),None),
     (_('&Save Image'),saveImage),

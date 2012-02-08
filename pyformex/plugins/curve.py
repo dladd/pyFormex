@@ -1338,18 +1338,18 @@ class Arc3(Curve):
 
 
 class Arc(Curve):
-    """A class representing a circular arc."""
+    """A class representing a circular arc.
 
+    The arc can be specified by 3 points (begin, center, end)
+    or by center, radius and two angles. In the latter case, the arc
+    lies in a plane parallel to the x,y plane.
+    If specified by 3 colinear points, the plane of the circle will be
+    parallel to the x,y plane if the points are in such plane, else the
+    plane will be parallel to the z-axis.
+    """
+    
     def __init__(self,coords=None,center=None,radius=None,angles=None,angle_spec=Deg):
-        """Create a circular arc.
-
-        The arc can be specified by 3 points (begin, center, end)
-        or by center, radius and two angles. In the latter case, the arc
-        lies in a plane parallel to the x,y plane.
-        If specified by 3 colinear points, the plane of the circle will be
-        parallel to the x,y plane if the points are in such plane, else the
-        plane will be parallel to the z-axis.
-        """
+        """Create a circular arc."""
         # Internally, we store the coords 
         Curve.__init__(self)
         self.nparts = 1
@@ -1361,7 +1361,7 @@ class Arc(Curve):
 
             self.center = self.coords[1]
             v = self.coords-self.center
-            self.radius = length(v[1])
+            self.radius = length(self.coords[0]-self.coords[1])
             try:
                 self.normal = unitVector(cross(v[0],v[2]))
             except:
@@ -1370,7 +1370,13 @@ class Arc(Curve):
             self.angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self.center) for x in self.coords[[0,2]] ]
 
         else:
-            #try:
+            if center is None:
+                center = [0.,0.,0.]
+            if radius is None:
+                radius = 1.0
+            if angles is None:
+                angles = (0.,360.)
+            try:
                 self.center = center
                 self.radius = radius
                 self.normal = [0.,0.,1.]
@@ -1381,14 +1387,34 @@ class Arc(Curve):
                     self.angles[1] -= 2*pi
                 begin,end = self.sub_points(array([0.0,1.0]),0)
                 self.coords = Coords([begin,self.center,end])
-            #except:
-            #    raise ValueError,"Invalid data for Arc"
+            except:
+                print "Invalid data for Arc"
+                raise
                
-            
-        #print("New ARC")
-        #print(" Center %s, Radius %s, Normal %s" % (self.center,self.radius,self.normal))
-        #print(" Angles=%s" % (self.angles))
-        #print(" Start=%s; End=%s" % (self.coords[1],self.coords[2]))
+
+
+    def _set_coords(self,coords):
+        """Replace the current coords with new ones.
+
+        Returns a Mesh or subclass exactly like the current except
+        for the position of the coordinates.
+        """
+        if isinstance(coords,Coords) and coords.shape == self.coords.shape:
+            return self.__class__(coords)
+        else:
+            raise ValueError,"Invalid reinitialization of %s coords" % self.__class__
+
+
+    def __str__(self):
+        return """ARC
+  Center %s, Radius %s, Normal %s
+  Angles=%s
+  Pt0=%s; Pt1=%s; Pt2=%s
+"""  % ( self.center,self.radius,self.normal,
+         self.angles,
+         self.coords[0],self.coords[1],self.coords[2]
+       )
+
 
     def sub_points(self,t,j):
         a = t*(self.angles[-1]-self.angles[0])
@@ -1397,7 +1423,7 @@ class Arc(Curve):
         return X
 
 
-    def approx(self,chordal=0.01,ndiv=None):
+    def approx(self,chordal=0.001,ndiv=None):
         """Return a PolyLine approximation of the Arc.
 
         Approximates the Arc by a sequence of inscribed straight line

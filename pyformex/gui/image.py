@@ -419,14 +419,44 @@ def saveNext():
         save(name,window,False,hotkey,autosave,border,rootcrop,format,quality,size,False)
 
 
-def saveIcon(fn,size=32):
+def changeBackgroundColorXPM(fn,color):
+    """Changes the background color of an .xpm image.
+
+    This changes the background color of an .xpm image to the given value.
+    fn is the filename of an .xpm image.
+    color is a string with the new background color, e.g. in web format
+    ('#FFF' or '#FFFFFF' is white). A special value 'None' may be used
+    to set a transparent background.
+    The current background color is selected from the lower left pixel.
+    """
+    t = open(fn).readlines()
+    c = ''
+    for l in t[::-1]:
+        if l.startswith('"'):
+            c = l[1]
+            print "Found '%s' as background character" % c
+            break
+    if not c:
+        print "Can not change background color of '%s' " % fn
+        return
+    for i,l in enumerate(t):
+        if l.startswith('"%s c ' % c):
+            t[i] = '"%s c None",\n' % c
+            break
+    #print t
+    f = open(fn,'w')
+    f.writelines(t)
+    f.close()
+    
+
+def saveIcon(fn,size=32,transparent=True):
     """Save the current rendering as an icon."""
-    savew,saveh = pf.canvas.width(),pf.canvas.height()
-    pf.canvas.resize(size,size)
+    
     if not fn.endswith('.xpm'):
         fn += '.xpm'
-    save(fn)
-    pf.canvas.resize(savew,saveh)
+    save_canvas(pf.canvas,fn,fmt='xpm',size=(size,size))
+    if transparent:
+        changeBackgroundColorXPM(fn,'None')
 
 
 def autoSaveOn():

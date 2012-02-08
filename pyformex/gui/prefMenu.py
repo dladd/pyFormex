@@ -178,6 +178,8 @@ def settings():
             _T('GUI',[
                 _G('Appearance',appearance),
                 _G('Components',toolbars+[
+                    _I('gui/rerunbutton',pf.cfg['gui/rerunbutton']),
+                    _I('gui/stepbutton',pf.cfg['gui/stepbutton']),
                     _I('gui/coordsbox',pf.cfg['gui/coordsbox']),
                     _I('gui/showfocus',pf.cfg['gui/showfocus']),
                     _I('gui/timeoutbutton',pf.cfg['gui/timeoutbutton']),

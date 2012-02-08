@@ -464,11 +464,11 @@ def playFile(fn,argv=[]):
     return res
 
 
-def runApp(appname,argv=[]):
+def runApp(appname,argv=[],reload=False):
     import apps
     from timer import Timer
     t = Timer()
-    app = apps.load(appname)
+    app = apps.load(appname,refresh=reload)
     message("Running application '%s' from %s" % (appname,app.__file__))
     pf.debug("  Passing arguments: %s" % argv)
     apps.run(appname,argv)
@@ -476,7 +476,7 @@ def runApp(appname,argv=[]):
     message("Finished %s in %s seconds" % (appname,t.seconds()))
 
 
-def play(app=None,argv=[],step=False):
+def play(app=None,argv=[],step=False,reload=False):
     """Run the current pyFormex application or script file.
     
     This function does nothing if no appname/filename is passed or no current
@@ -497,6 +497,21 @@ def play(app=None,argv=[],step=False):
 
     runApp(app,argv)
 
+
+def replay():
+    """Replay the current app."""
+    appname = pf.cfg['curfile']
+
+    if appname.endswith('.py') or appname.endswith('.pye'):
+        # this is a script, not an app
+        pass
+    else:
+        import apps
+        app = apps.load(appname,refresh=True)
+
+    play()
+
+  
 
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
