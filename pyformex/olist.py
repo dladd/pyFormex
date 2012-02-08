@@ -88,7 +88,22 @@ def select(a,b):
     Returns a list with the items of a for which the index is in b.
     """
     return [ a[i] for i in b ]
-        
+
+
+def toFront(l,i):
+    """Add or move i to the front of list l
+
+    l is a list.
+    If i is in the list, it is moved to the front of the list.
+    Else i is added at the front of the list.
+
+    This changes the list inplace and does not return a value.
+    """
+    if i in l:
+        l.remove(i)
+    l[0:0] = [ i ]
+    
+    
 
 
 def collectOnLength(items,return_indices=False):

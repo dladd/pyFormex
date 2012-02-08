@@ -288,12 +288,6 @@ class Gui(QtGui.QMainWindow):
         self.move(*pos)
         self.board.resize(*bdsize)
 
-        app = pf.cfg['curfile']
-        if not (app.endswith('.py') or app.endswith('.pye')):
-            import apps
-            app = app.replace('apps.','')
-            app = apps.load(app)
-        self.setcurfile(app)
         self.setcurdir()
         if pf.options.redirect:
             sys.stderr = self.board
@@ -598,12 +592,14 @@ class Gui(QtGui.QMainWindow):
 
     def writeSettings(self):
         """Store the GUI settings"""
+        pf.debug('Store current settings',pf.DEBUG.CONFIG)
         # FIX QT4 BUG
         # Make sure QT4 has position right
         self.move(*self.XPos())
 
         # store the history and main window size/pos
         pf.prefcfg['gui/history'] = pf.GUI.history.files
+        pf.prefcfg['gui/apphistory'] = pf.GUI.apphistory.files
 
         pf.prefcfg.update({'size':Size(pf.GUI),
                            'pos':Pos(pf.GUI),
@@ -613,7 +609,7 @@ class Gui(QtGui.QMainWindow):
 
     def cleanup(self):
         """Cleanup the GUI (restore default state)."""
-        pf.debug('GUI cleanup')
+        pf.debug('GUI cleanup',pf.DEBUG.GUI)
         self.drawlock.release()
         pf.canvas.cancel_selection()
         pf.canvas.cancel_draw()
@@ -1108,7 +1104,6 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         filemenu = pf.GUI.menu.item('file')
         before = filemenu.item('---1')
         filemenu.insertMenu(before,pf.GUI.history)
-    
 
     # Scripts menu
     pf.GUI.scriptmenu = scriptMenu.createScriptMenu(pf.GUI.menu,before='help')
@@ -1141,6 +1136,14 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         
     # Last minute menu modifications can go here
         
+
+    # show current application/file
+    app = pf.cfg['curfile']
+    if not (app.endswith('.py') or app.endswith('.pye')):
+        import apps
+        app = app.replace('apps.','')
+        app = apps.load(app)
+    pf.GUI.setcurfile(app)
 
 
     # cleanup

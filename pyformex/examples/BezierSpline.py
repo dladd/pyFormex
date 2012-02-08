@@ -44,32 +44,34 @@ degrees 1(red), 2(magenta) and 3(blue).
 from gui.draw import *
 from plugins.curve import BezierSpline
 
+
+# Predefined set of points
+_pts = Coords([
+    [1.,0.,0.],
+    [1.,1.,0.],
+    [0.,1.,0.],
+    [-1.,1.,0.],
+    [-1.,0.,0.],
+    [-1.,-1.,0.],
+    [0.,-1.,0.],
+    [1.,-1.,0.],
+    [1.,0.,0.],
+    ])
+
+
 def run():
+    resetAll()
     clear()
     linewidth(2)
 
-    # Predefined set of points
-    pts = Coords([
-        [1.,0.,0.],
-        [1.,1.,0.],
-        [0.,1.,0.],
-        [-1.,1.,0.],
-        [-1.,0.,0.],
-        [-1.,-1.,0.],
-        [0.,-1.,0.],
-        [1.,-1.,0.],
-        [1.,0.,0.],
-        ])
-
-
     # Ask the user how many points he wants to use
-    res = askItems([_I('npts',5,text='How many points to use (2..%s)' % len(pts))])
+    res = askItems([_I('npts',5,text='How many points to use (2..%s)' % len(_pts))])
     if not res:
         exit()
 
     # Keep only the requested number of points
     npts = res['npts']
-    pts = pts[:npts]
+    pts = _pts[:npts]
 
     # Show open and closed Bezier Splines, for degrees 1,2,3
     degrees = [1,2,3]
@@ -94,6 +96,7 @@ def run():
 
     zoomAll()
     export(collection)
+
         
 if __name__ == 'draw':
     run()

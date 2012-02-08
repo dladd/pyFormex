@@ -29,7 +29,7 @@ import apps
 
 from PyQt4 import QtCore, QtGui
 
-import utils
+import utils,olist
 import script,draw
 import menu
 import os,random
@@ -196,10 +196,9 @@ class AppMenu(QtGui.QMenu):
             files = files[:self.max]
 
         self.files = files
-        
-        #if pf.options.debug:
-        print("Found Apps in %s" % self.dir)
-        print(self.files)
+
+        pf.debug("Found Apps in %s\n%s" % (self.dir,self.files),pf.DEBUG.INFO)
+            
         self.actions = [ self.addAction(f) for f in self.files ]           
         self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
         
@@ -345,22 +344,24 @@ class AppMenu(QtGui.QMenu):
             self.load()
 
 
-    def add(self,filename,strict=True):
+    def add(self,name,strict=True):
         """Add a new filename to the front of the menu.
 
         By default, only legal pyFormex scripts can be added.
         """
-        print "HAHA"
-        if strict and not utils.is_pyFormex(filename):
-            return
+        print "HAHA %s" % name
+        if strict:
+            app = apps.load(name)
+            if app is None:
+                print "%s is NO MODULE!" % name
+                return
+            
         files = self.files
-        if filename in files:
-            files.remove(filename)
-        files[0:0] = [ filename ]
+        olist.toFront(files,name)
         if self.max > 0 and len(files) > self.max:
             files = files[:self.max]
         while len(self.actions) < len(files):
-            self.actions.append(self.addAction(filename))
+            self.actions.append(self.addAction(name))
         for a,f in zip(self.actions,self.files):
             a.setText(f)
 
@@ -454,12 +455,26 @@ def createMenu(parent=None,before=None):
             appmenu.insert_menu(m)
             txt = utils.strNorm(txt)
             appmenu.menuitems[txt] = m
+    
 
+    if pf.cfg.get('gui/history_in_main_menu',False):
+        before = pf.GUI.menu.item('help')
+        pf.GUI.menu.insertMenu(before,pf.GUI.history)
+    else:
+        filemenu = pf.GUI.menu.item('file')
+        before = filemenu.item('---1')
+        filemenu.insertMenu(before,pf.GUI.history)
+ 
+    hist = AppMenu('Last Run',files=pf.cfg['gui/apphistory'],max=pf.cfg['gui/history_max'])
+    
     appmenu.insertItems([
         ('---',None),
         (_('&Configure App Paths'),setDirs,{'data':'appdirs'}),
         (_('&Reload App Menu'),reloadMenu),
         ])
+
+    appmenu.insertMenu(appmenu.item('---'),hist)
+    pf.GUI.apphistory = hist
     
     return appmenu
 

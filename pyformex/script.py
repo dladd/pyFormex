@@ -455,6 +455,7 @@ def playFile(fn,argv=[]):
     """
     from timer import Timer
     t = Timer()
+    pf.GUI.history.add(fn)
     message("Running script (%s)" % fn)
     pf.debug("  Executing with arguments: %s" % argv)
     pye = fn.endswith('.pye')
@@ -469,6 +470,7 @@ def runApp(appname,argv=[],reload=False):
     from timer import Timer
     t = Timer()
     app = apps.load(appname,refresh=reload)
+    pf.GUI.apphistory.add(appname)
     message("Running application '%s' from %s" % (appname,app.__file__))
     pf.debug("  Passing arguments: %s" % argv)
     apps.run(appname,argv)
@@ -490,7 +492,6 @@ def play(app=None,argv=[],step=False,reload=False):
             app = pf.cfg['curfile']
         else:
             return
-    pf.GUI.history.add(app)
     if app.endswith('.py') or app.endswith('.pye'):
         stepmode = step
         return playFile(app,argv)

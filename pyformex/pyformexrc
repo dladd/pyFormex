@@ -90,6 +90,7 @@ filters = [('.*return_index.*','numpy')]
 #imagesfromeps = True
 fortune = False  # show a fortune cookie on startup
 history = []
+apphistory = []
 history_max = 20
 
 splash = os.path.join(icondir,'pyformex-splash.png')

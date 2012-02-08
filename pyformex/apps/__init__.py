@@ -61,7 +61,13 @@ def run(appname,args=[]):
     app = load(appname)
     if app and hasattr(app,'run'):
         app._args_ = args
-        return app.run()
+        try:
+            res = app.run()
+        finally:
+            if hasattr(app,'atExit'):
+                app.atExit()
+        return res
+
     
 
 def detect(appdir):
