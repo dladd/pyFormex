@@ -35,6 +35,11 @@ Nurbs
 =====
 This example is under development.
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['geometry', 'surface']
+_techniques = ['nurbs']
+
 from gui.draw import *
 from plugins.nurbs import *
 

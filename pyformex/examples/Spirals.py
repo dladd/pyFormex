@@ -30,6 +30,11 @@ techniques = ['transform']
 
 See also the Sweep example for a more sophisticated Spirals application
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','curve']
+_techniques = ['transform']
+
 from gui.draw import *
 from plugins import curve
 

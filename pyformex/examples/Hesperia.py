@@ -29,6 +29,11 @@ level = 'advanced'
 topics = ['geometry', 'FEA', 'domes', 'surface']
 techniques = ['menu', 'dialog', 'persistence', 'color'] 
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['geometry', 'FEA', 'domes', 'surface']
+_techniques = ['menu', 'dialog', 'persistence', 'color'] 
+
 from gui.draw import *
 
 import simple,utils

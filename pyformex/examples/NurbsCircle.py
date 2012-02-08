@@ -57,6 +57,15 @@ Notice that the curve with weigths equal to sqrt(2)/2 exactly represents a
 circle.
 
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['geometry', 'curve']
+_techniques = ['nurbs','border']
+_  :blue: weight = sqrt(2) 
+_  :cyan: weight = sqrt(2)/2
+_  :magenta: weight = 0.25
+_  :white: weight = 0.
+
 from gui.draw import *
 
 import simple

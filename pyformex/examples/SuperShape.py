@@ -28,6 +28,11 @@ level = 'advanced'
 topic = ['geometry']
 techniques = ['dialog','persistence']
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topic = ['geometry']
+_techniques = ['dialog','persistence']
+
 from gui.draw import *
 from simple import rectangle
 from utils import NameSequence

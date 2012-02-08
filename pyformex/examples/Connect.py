@@ -30,6 +30,11 @@ topics = ['formex','surface']
 techniques = ['connect','color']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['formex','surface']
+_techniques = ['connect','color']
+
 from gui.draw import *
 import simple
 

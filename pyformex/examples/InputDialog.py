@@ -32,6 +32,11 @@ topics = []
 techniques = ['dialog']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = []
+_techniques = ['dialog']
+
 from gui.draw import *
 
 

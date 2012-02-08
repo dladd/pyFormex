@@ -897,7 +897,7 @@ def startGUI(args):
     # NOT acknowledged and neither are they removed!!
 
 
-    pf.debug("Setting application attributes")
+    pf.debug("Setting application attributes",pf.DEBUG.INFO)
     pf.app.setOrganizationName("pyformex.org")
     pf.app.setOrganizationDomain("pyformex.org")
     pf.app.setApplicationName("pyFormex")
@@ -1107,10 +1107,11 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     # Scripts menu
     pf.GUI.scriptmenu = scriptMenu.createScriptMenu(pf.GUI.menu,before='help')
-   
 
     # App menu
     pf.GUI.appmenu = appMenu.createMenu(pf.GUI.menu,before='help')
+        
+   
 
     # Create databases
     createDatabases()
@@ -1122,21 +1123,6 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # Load configured plugins, ignore if not found
     plugins.loadConfiguredPlugins()
 
-    ## Now have their top menu
-    ## # Applications 
-    ## try:
-    ##     import apps
-    ##     pf.apps = apps._available_apps
-    ##     print "Applications: "+ ', '.join(pf.apps)
-    ##     appmenu = pf.GUI.menu.item('file')
-    ##     pf.gui.app_menu = appMenu.create_app_menu(filemenu,before='History')
-    ## except:
-    ##     print "No applications available"
-    ##     raise
-        
-    # Last minute menu modifications can go here
-        
-
     # show current application/file
     app = pf.cfg['curfile']
     if not (app.endswith('.py') or app.endswith('.pye')):
@@ -1145,6 +1131,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         app = apps.load(app)
     pf.GUI.setcurfile(app)
 
+    # Last minute menu modifications can go here
 
     # cleanup
     pf.GUI.setBusy(False)         # HERE
@@ -1155,6 +1142,9 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         splash.finish(pf.GUI)
 
     pf.GUI.setBusy(False)        # OR HERE
+
+    
+
 
     pf.debug("Showing the GUI")
     pf.GUI.show()

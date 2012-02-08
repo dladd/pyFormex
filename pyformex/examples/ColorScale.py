@@ -32,6 +32,11 @@ topics = ['FEA']
 techniques = ['dialog', 'color']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['FEA']
+_techniques = ['dialog', 'color']
+
 from gui.draw import *
 
 from gui.colorscale import *

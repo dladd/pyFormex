@@ -37,6 +37,11 @@ RotoTranslation
 This example illustrates the use of transformCS() to return to an original
 reference system after a number of affine transformations.
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['geometry']
+_techniques = ['transform']
+
 from gui.draw import *
 import simple
 

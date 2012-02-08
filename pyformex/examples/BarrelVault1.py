@@ -29,6 +29,11 @@ topics = ['frame']
 techniques = ['dialog']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['frame']
+_techniques = ['dialog']
+
 from gui.draw import *
 
 def run():

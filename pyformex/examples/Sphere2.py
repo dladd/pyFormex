@@ -29,6 +29,11 @@ topics = ['geometry','surface','sphere']
 techniques = ['color']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','surface','sphere']
+_techniques = ['color']
+
 from gui.draw import *
 from simple import sphere2,sphere3
 

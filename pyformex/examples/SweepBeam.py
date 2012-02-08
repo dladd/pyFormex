@@ -30,6 +30,11 @@ topics = ['geometry','surface']
 techniques = ['color']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','surface']
+_techniques = ['color']
+
 from gui.draw import *
 from plugins import curve
 #from mesh import Mesh

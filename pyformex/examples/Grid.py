@@ -29,6 +29,11 @@ topics = ['geometry']
 techniques = ['dialog']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry']
+_techniques = ['dialog']
+
 from gui.draw import *
 import gui.actors
 

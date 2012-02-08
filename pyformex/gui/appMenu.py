@@ -37,38 +37,7 @@ from gettext import gettext as _
     
 catname = 'apps.cat'
 
-
-def sortSets(d):
-    """Turn the set values in d into sorted lists.
-
-    - `d`: a Python dictionary
-
-    All the values in the dictionary are checked. Those that are of type
-    `set` are converted to a sorted list.
-    """
-    for k in d:
-        if type(d[k]) == set:
-            d[k] = list(d[k])
-            d[k].sort()
-
-
-def getDocString(scriptfile):
-    fil = open(scriptfile,'r')
-    s = fil.read()
-    i = s.find('"""')
-    if i >= 0:
-        j = s.find('"""',i+1)
-        if j >= i+2:
-            return s[i+2:j]
-    return ''
-
-
-def getDescription(doc):
-    txt = doc.partition('.. Description')
-    return ' '.join(txt[1:])
-    
-
-
+ 
 class AppMenu(QtGui.QMenu):
     """A menu of pyFormex applications in a directory or list.
 
@@ -162,15 +131,6 @@ class AppMenu(QtGui.QMenu):
         self.autoplay = autoplay
         self.menus = []
         self.load()
-        
-
-    def fileName(self,appname):
-        """Return the full pathname for an appname."""
-        fn = appname + self.ext
-        if self.dir:
-            return os.path.join(self.dir,fn)
-        else:
-            return fn
 
 
     def loadSubmenus(self,dirs=[]):
@@ -349,7 +309,6 @@ class AppMenu(QtGui.QMenu):
 
         By default, only legal pyFormex scripts can be added.
         """
-        print "HAHA %s" % name
         if strict:
             app = apps.load(name)
             if app is None:
@@ -366,41 +325,13 @@ class AppMenu(QtGui.QMenu):
             a.setText(f)
 
 
-    def classify(self):
-        """Classify the files in submenus according to keywords."""
-        kat = ['level','topics','techniques','all']
-        cat = dict([ (k,set()) for k in kat])
-        cat['level'] = [ 'beginner', 'normal', 'advanced' ]
-        col = {'all':set()}
-        for f in self.filterFiles(self.getFiles()):
-            col['all'].update([f])
-            fn = self.fileName(f)
-            d = scriptKeywords(fn)
-            for k,v in d.items():
-                if not k in kat:
-                    pf.debug("Skipping unknown keyword %s in script %s" % (k,fn))
-                    continue
-                if k == 'level':
-                    v = [v]
-                else:
-                    cat[k].update(v)
-                for i in v:
-                    ki = '%s/%s' % (k,i)
-                    if not ki in col.keys():
-                        col[ki] = set()
-                    col[ki].update([f])
-
-        sortSets(cat)
-        sortSets(col)
-            
-        return kat,cat,col
-
 
     def _classify(self):
         """Classify, symlink and reload the scripts"""
         if self.dir:
             f = os.path.join(self.dir,catname)
-            s = "kat = %r\ncat = %r\ncol = %r\n" % self.classify()
+            kat,cat,col = apps.classify(self.dir)
+            s = "kat = %r\ncat = %r\ncol = %r\n" % (kat,cat,col)
             open(f,'w').writelines(s)
             self.reload()
 
@@ -455,7 +386,6 @@ def createMenu(parent=None,before=None):
             appmenu.insert_menu(m)
             txt = utils.strNorm(txt)
             appmenu.menuitems[txt] = m
-    
 
     if pf.cfg.get('gui/history_in_main_menu',False):
         before = pf.GUI.menu.item('help')
@@ -495,5 +425,28 @@ def create_app_menu(parent=None,before=None):
         loadactions.add(name,icon=None,text=descr)
         
     return loadactions
+
+
+def extractKeyword(s):
+    """Extract a ``keyword = value`` pair from a string.
+
+    If the input string `s` is of the form ``keyword = value``
+    a tuple (keyword,value) is returned, else None.
+    """
+    i = s.find('=')
+    if i >= 0:
+        try:
+            key = s[:i].strip()
+            if len(key) > 0:
+                return key, eval(s[i+1:].strip())
+        except:
+            pf.debug("Error processing keywords %s" % s.strip('\n'))
+            pass
+    return None
+
+
+def getDescription(doc):
+    txt = doc.partition('.. Description')
+    return ' '.join(txt[1:])
     
 # End

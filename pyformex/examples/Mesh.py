@@ -67,6 +67,11 @@ Exercises
 1. Make this script also work for the 1D case. 
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry', 'mesh']
+_techniques = ['extrude','border','pause']
+
 from gui.draw import *
 def atExit():
     #print "THIS IS THE EXIT FUNC"

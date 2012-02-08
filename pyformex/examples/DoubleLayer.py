@@ -29,6 +29,11 @@ topics = ['structure']
 techniques = ['color']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['structure']
+_techniques = ['color']
+
 from gui.draw import *
 
 from plugins import formian

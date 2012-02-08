@@ -28,6 +28,11 @@ level = 'advanced'
 topics = ['editing']
 techniques = ['persistence','interactive']
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['editing']
+_techniques = ['persistence','interactive']
+
 from gui.draw import *
 
 alfabet = {

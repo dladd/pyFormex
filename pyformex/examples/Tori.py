@@ -30,6 +30,11 @@ topics = ['geometry']
 techniques = ['programming','widgets','globals']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry']
+_techniques = ['programming','widgets','globals']
+
 from gui.draw import *
 
 def torus(m,n,surface=True):

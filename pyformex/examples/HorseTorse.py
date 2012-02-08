@@ -30,6 +30,11 @@ techniques = ['animation', 'color']
 
 Torsing a horse is like horsing a torse.
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['geometry','surface']
+_techniques = ['animation', 'color']
+
 from gui.draw import *
 from plugins.trisurface import TriSurface
 

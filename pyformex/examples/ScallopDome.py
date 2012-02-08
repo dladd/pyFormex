@@ -29,6 +29,11 @@ topics = ['geometry','domes']
 techniques = ['dialog', 'color']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','domes']
+_techniques = ['dialog', 'color']
+
 from gui.draw import *
 #pf.canvas.settings['colormap'][2] = [1.,0.3,0.]
 

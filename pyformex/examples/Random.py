@@ -30,6 +30,11 @@ techniques = ['color']
 
 Creates random points, bars, triangles, quads, ...
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['surface']
+_techniques = ['color']
+
 from gui.draw import *
 
 def run():

@@ -30,6 +30,11 @@ topics = ['geometry']
 techniques = ['dialog', 'color', 'persistence']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry']
+_techniques = ['dialog', 'color', 'persistence']
+
 from gui.draw import *
 
 def run():

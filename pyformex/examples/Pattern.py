@@ -29,6 +29,11 @@ topics = ['geometry']
 techniques = ['color','pattern']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry']
+_techniques = ['color','pattern']
+
 from gui.draw import *
 import simple
 

@@ -29,6 +29,11 @@ topics = ['geometry','surface','mesh']
 techniques = ['intersection']
 
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['geometry','surface','mesh']
+_techniques = ['intersection']
+
 from gui.draw import *
 from plugins.trisurface import TriSurface
 

@@ -73,6 +73,12 @@ for the displayed cube by pressing the **Permutations** button.
 This number is not stored, it is calculated each time. It's a nice example
 of how easily Python can handle huge numbers.
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['illustration','game']
+_techniques = ['color','dialog','draw','persistence','random']
+_createdby = ['tpraet']
+
 from gui.draw import *
 from gui.viewport import *
 from numpy.random import rand

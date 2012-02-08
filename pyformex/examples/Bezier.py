@@ -30,6 +30,11 @@ topics = ['geometry','curve']
 techniques = ['connect','color','solve']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry','curve']
+_techniques = ['connect','color','solve']
+
 from gui.draw import *
 
 def build_matrix(atoms,vars):

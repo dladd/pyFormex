@@ -36,6 +36,11 @@ This example shows how to cut a hole in a surface.
 It uses the cutWithPlane function with a series of cutting planes.
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['surface']
+_techniques = ['cut']
+
 from gui.draw import *
 
 def run():

@@ -41,6 +41,11 @@ The image shows open (left) and closed (right) BezierSpline curves of
 degrees 1(red), 2(magenta) and 3(blue).
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry', 'curve']
+_techniques = ['spline','dialog']
+
 from gui.draw import *
 from plugins.curve import BezierSpline
 

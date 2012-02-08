@@ -32,6 +32,11 @@ techniques = ['position']
 Position an object A thus that its three points X are aligned with the
 three points X of object B.
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry']
+_techniques = ['position']
+
 from gui.draw import *
 
 def drawObjectWithName(obj,name):

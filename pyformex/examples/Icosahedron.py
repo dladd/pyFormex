@@ -31,6 +31,11 @@ level = 'normal'
 topics = ['Mesh','Geometry',Sphere']
 techniques = ['subdivide','project','animation']
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['Mesh','Geometry',Sphere']
+_techniques = ['subdivide','project','animation']
+
 from gui.draw import *
 
 def run():

@@ -34,6 +34,11 @@ techniques = ['nurbs','connect','border']
 Nurbs
 =====
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['geometry', 'curve']
+_techniques = ['nurbs','connect','border']
+
 from gui.draw import *
 import simple
 from plugins.curve import *

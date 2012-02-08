@@ -40,12 +40,17 @@ script. An application requires a little different syntax though:
   the application is loaded.
 - If the application defines a 'run' method, it can be executed from the GUI.
 """
+_status = 'checked'
+_level = 'beginner'
+_topics = ['frame']
+_techniques = ['dialog']
+
 from gui.draw import *
 
 def run():
     reset()
     wireframe()
-
+    
     res = askItems([
         dict(name='m',value=10,text='number of modules in axial direction'),
         dict(name='n',value=8,text='number of modules in tangential direction'),
@@ -70,4 +75,6 @@ def run():
     draw(barrel)
 
 
+if __name__ == 'draw':
+    run()
 # End

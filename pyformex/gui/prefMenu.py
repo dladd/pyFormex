@@ -532,7 +532,7 @@ def createDirsDialog(dircfg):
     from scriptMenu import reloadScriptMenu
     scr = pf.cfg[dircfg]
     _table = widgets.Table(scr,chead=['Label','Path'])
-    actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Save',saveTable),('OK',)],
+    actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Save',saveTable),('OK',)]
     if dircfg == 'scriptdirs':
         title='Script paths'
         from scriptMenu import reloadScriptMenu

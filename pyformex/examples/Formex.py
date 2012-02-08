@@ -31,6 +31,11 @@ techniques = ['draw']
 This script creates an image of how coordinates are structures in a Formex.
 It was intended mainly for the manual.
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['illustration']
+_techniques = ['draw']
+
 from gui.draw import *
 
 def tmbbox(a):

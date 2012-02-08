@@ -29,8 +29,14 @@ topics = ['structure','domes']
 techniques = ['color']
 
 """
+_status = 'checked'
+_level = 'beginner'
+_topics = ['structure','domes']
+_techniques = ['color']
+
 from gui.draw import *
 
+def run():
     wireframe()
 
     u = 3.     # modular length
@@ -93,8 +99,6 @@ from gui.draw import *
     clear()
     dome4.setProp(1)
     draw(dome2+dome4)
-
-
 
     clear()
     d=1.1*r

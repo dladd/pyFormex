@@ -29,6 +29,11 @@ level = 'advanced'
 topics = ['FEA']
 techniques = ['persistence', 'dialog', 'color'] 
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['FEA']
+_techniques = ['persistence', 'dialog', 'color'] 
+
 from gui.draw import *
 
 from plugins.fe import *

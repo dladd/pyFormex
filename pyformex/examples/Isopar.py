@@ -29,6 +29,11 @@ topics = ['geometry']
 techniques = ['dialog', 'color','isopar']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry']
+_techniques = ['dialog', 'color','isopar']
+
 from gui.draw import *
 
 from plugins import isopar

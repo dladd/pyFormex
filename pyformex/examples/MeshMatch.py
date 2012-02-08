@@ -29,6 +29,11 @@ topics = ['mesh']
 techniques = ['draw','replicate','match']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['mesh']
+_techniques = ['draw','replicate','match']
+
 from gui.draw import *
 
 def run():

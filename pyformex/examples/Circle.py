@@ -30,6 +30,11 @@ topics = ['geometry']
 techniques = ['connect','dialog', 'animation']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry']
+_techniques = ['connect','dialog', 'animation']
+
 from gui.draw import *
 
 from simple import circle

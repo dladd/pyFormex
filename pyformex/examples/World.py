@@ -29,6 +29,11 @@ topics = ['image']
 techniques = ['color','filename']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['image']
+_techniques = ['color','filename']
+
 from gui.draw import *
 from gui.imagearray import *
 

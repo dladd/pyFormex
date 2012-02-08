@@ -30,6 +30,11 @@ topics = ['formex']
 techniques = ['extrude']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['formex']
+_techniques = ['extrude']
+
 from gui.draw import *
 
 def run():

@@ -29,6 +29,11 @@ topics = ['image']
 techniques = ['color']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['image']
+_techniques = ['color']
+
 from gui.draw import *
 from gui.widgets import ImageView,simpleInputItem as I
 from gui.imagearray import *

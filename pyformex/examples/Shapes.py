@@ -35,6 +35,8 @@ pyFormex code.
 Later I added some nice utilities to make it worthwile as a programming example.
 It would be nice now to add a GUI to create and position the shapes.
 """
+_status = 'unchecked'
+
 from gui.draw import *
    
 

@@ -29,6 +29,11 @@ topics = ['geometry']
 techniques = ['color']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry']
+_techniques = ['color']
+
 from gui.draw import *
 
 L = 12000 # Nominal length of the bridge

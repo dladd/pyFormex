@@ -39,6 +39,11 @@ The data are given in the Gauss integration points (GP) and are
 computed in the nodes, but the same technique can be used if data
 are given in other points or need to be calculated in other points.
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = [ 'mesh','postprocess']
+_techniques = ['calpy','color']
+
 from gui.draw import *
 
 # First, we need to import calpy. If you do not have calpy,

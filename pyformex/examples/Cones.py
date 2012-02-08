@@ -28,6 +28,11 @@ level = 'normal'
 topics = ['geometry']
 techniques = ['connect','dialog']
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry']
+_techniques = ['connect','dialog']
+
 from gui.draw import *
 
 import simple

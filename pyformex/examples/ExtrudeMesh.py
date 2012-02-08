@@ -30,6 +30,11 @@ topics = ['mesh']
 techniques = ['extrude']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['mesh']
+_techniques = ['extrude']
+
 from gui.draw import *
 
 def run():

@@ -38,6 +38,11 @@ SurfaceProjection
 This example illustrates the use of intersectSurfaceWithLines and Coords.projectOnSurface.
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['surface']
+_techniques = ['transform','projection','dialog','image']
+
 from gui.draw import *
 from plugins.trisurface import TriSurface
 import elements

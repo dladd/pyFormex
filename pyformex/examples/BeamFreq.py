@@ -39,6 +39,11 @@ ftp://bumps.ugent.be/pub/calix/
 Make sure you have version 1.5-a8 or higher.
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['FEA','curve','drawing']
+_techniques = ['external','viewport',]
+
 from gui.draw import *
 from plugins.curve import *
 import simple
@@ -104,6 +109,19 @@ start
 use program 'frame.cal'
 endtext
 """
+_status = 'unchecked'
+_n = 16
+_nshow = 4
+_bcons = ['cantilever','simply supported']
+_verbose = False
+_res = askItems([
+_F = simple.line([0.,0.,0.],[0.,1.,0.],n)
+_M = F.toMesh()
+_nnod = M.ncoords()
+_nel = M.nelems()
+_nmat = 1
+_iout = 1
+
 from gui.draw import *
 # params
 s += " %s %s %s %s\n" % (nnod+1,nel,nmat,iout)
@@ -146,6 +164,20 @@ user printf '(5g13.4)' DISPL $17
 file close $17
 stop
 """
+_status = 'unchecked'
+_n = 16
+_nshow = 4
+_bcons = ['cantilever','simply supported']
+_verbose = False
+_res = askItems([
+_F = simple.line([0.,0.,0.],[0.,1.,0.],n)
+_M = F.toMesh()
+_nnod = M.ncoords()
+_nel = M.nelems()
+_nmat = 1
+_iout = 1
+_fmt = "%5s"*(M.nplex()+3) + '\n'
+
 from gui.draw import *
    
 def compute():

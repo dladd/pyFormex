@@ -37,6 +37,11 @@ This example illustrates the use of the Mesh conversion techniques and the
 creation of colored value plots on surfaces.
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['mesh','illustration','surface']
+_techniques = ['color','random']
+
 from gui.draw import *
 from plugins import trisurface,surface_menu
 from elements import *

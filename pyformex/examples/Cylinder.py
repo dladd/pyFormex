@@ -37,6 +37,11 @@ This example illustrates the use of simple.sector() and simple.cylinder()
 to create a parametric cylindrical surface.
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry', 'surface', 'cylinder']
+_techniques = ['import']
+
 from gui.draw import *
 import simple
 from plugins.trisurface import TriSurface

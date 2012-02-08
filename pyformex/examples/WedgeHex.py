@@ -29,6 +29,11 @@ level = 'normal'
 topics = ['mesh']
 techniques = ['revolve','degenerate'] 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['mesh']
+_techniques = ['revolve','degenerate'] 
+
 from gui.draw import *
 import simple
 

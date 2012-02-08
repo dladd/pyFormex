@@ -28,6 +28,11 @@ level = 'normal'
 topics = ['geometry']
 techniques = ['dialog', 'persistence', 'color']
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry']
+_techniques = ['dialog', 'persistence', 'color']
+
 from gui.draw import *
 
 class DoubleHelixStent(object):

@@ -30,6 +30,11 @@ topics = ['geometry','mesh']
 techniques = ['dialog','elements']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','mesh']
+_techniques = ['dialog','elements']
+
 from gui.draw import *
 
 from elements import *

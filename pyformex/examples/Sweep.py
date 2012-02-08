@@ -28,6 +28,11 @@ level = 'normal'
 topics = ['geometry','curve','mesh']
 techniques = ['sweep',]
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','curve','mesh']
+_techniques = ['sweep',]
+
 from gui.draw import *
 from plugins import curve
 from odict import ODict

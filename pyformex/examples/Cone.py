@@ -30,6 +30,11 @@ topics = ['geometry','surface']
 techniques = ['dialog', 'color']
 
 """
+_status = 'checked'
+_level = 'beginner'
+_topics = ['geometry','surface']
+_techniques = ['dialog', 'color']
+
 from gui.draw import *
 import simple
 
@@ -61,8 +66,6 @@ def run():
         B1 = B.translate([0.,0.,0.95*h])
         B1.setProp(1)
         draw(B1)
-
-    #sleep(10)
 
     if nb > 1:
         B2 = B.translate([0.2*r,0.,1.15*h])

@@ -155,6 +155,12 @@ In favor of *app*:
 | Scripts and plugins are two         | Apps and plugins (menus or not) are   |
 | different things.                   | both just normal Python modules.      |
 +-------------------------------------+---------------------------------------+
+| Exit requires special function      | Exit with the normal return statement |
++-------------------------------------+---------------------------------------+
+| Canvas settings are global to all   | Canvas settings **could** be made     |
+| scripts                             | local to applications                 |
++-------------------------------------+---------------------------------------+
+
 
 
 In favor of *script*:

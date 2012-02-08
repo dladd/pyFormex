@@ -31,6 +31,11 @@ techniques = ['color']
 This is basically the same example as Torus.py, but it shows all steps.
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry']
+_techniques = ['color']
+
 from gui.draw import *
 
 def run():

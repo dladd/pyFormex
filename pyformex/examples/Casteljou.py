@@ -37,6 +37,11 @@ This example illustrates the deCasteljou algorithm for constructing a point
 on a  Bezier curve. It also draws Bezier points computed from Bernstein
 polynomials, as in example BezierCurve.
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry', 'curve']
+_techniques = ['nurbs']
+
 from gui.draw import *
 
 from plugins.curve import *

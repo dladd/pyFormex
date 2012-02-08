@@ -28,6 +28,11 @@ level = 'beginner'
 topics = ['geometry']
 techniques = ['function','import','dialog','viewport']
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry']
+_techniques = ['function','import','dialog','viewport']
+
 from gui.draw import *
 import simple
 from examples.Cube import cube_tri

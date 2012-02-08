@@ -30,6 +30,11 @@ techniques = ['viewport', 'color']
 
 Demonstrate multiple viewports.
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['surface']
+_techniques = ['viewport', 'color']
+
 from gui.draw import *
 def atExit():
     print "EXITING"

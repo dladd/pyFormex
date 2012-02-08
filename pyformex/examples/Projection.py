@@ -30,6 +30,11 @@ topics = ['geometry','surface']
 techniques = ['projection']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','surface']
+_techniques = ['projection']
+
 from gui.draw import *
 import simple
 

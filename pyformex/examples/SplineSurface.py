@@ -57,6 +57,11 @@ consisting of quadrilaterals). The number of elements along the
 splines can be chosen. The number of elements across the splines is
 currently unused.
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['geometry','surface']
+_techniques = ['spline']
+
 from gui.draw import *
 
 """Definition of surfaces in pyFormex.
@@ -64,6 +69,8 @@ from gui.draw import *
 This module defines classes and functions specialized for handling
 two-dimensional geometry in pyFormex. 
 """
+_status = 'unchecked'
+
 from gui.draw import *
 
 # I wrote this software in my free time, for my joy, not as a commissioned task.

@@ -29,6 +29,11 @@ topics = ['geometry']
 techniques = ['color','axes']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry']
+_techniques = ['color','axes']
+
 from gui.draw import *
 from plugins import inertia
 

@@ -30,6 +30,11 @@ topics = ['dialog']
 techniques = []
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['dialog']
+_techniques = []
+
 from gui.draw import *
 
 def run()

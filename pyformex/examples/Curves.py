@@ -30,6 +30,11 @@ level = 'normal'
 topics = ['geometry','curve']
 techniques = ['widgets','persistence','import','spline']
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','curve']
+_techniques = ['widgets','persistence','import','spline']
+
 from gui.draw import *
 
 from plugins.curve import *

@@ -29,6 +29,11 @@ topics = ['curve','drawing','illustration']
 techniques = ['color','persistence','lima','import']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['curve','drawing','illustration']
+_techniques = ['color','persistence','lima','import']
+
 from gui.draw import *
 
 def run():

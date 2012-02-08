@@ -29,6 +29,11 @@ topics = ['structure']
 techniques = ['color','bump']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['structure']
+_techniques = ['color','bump']
+
 from gui.draw import *
 
 def run():

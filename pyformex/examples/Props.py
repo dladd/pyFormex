@@ -31,6 +31,11 @@ techniques = ['viewport', 'color', 'symmetry']
 A demonstration of propagating property numbers.
 Also shows the use of multiple viewports.
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry']
+_techniques = ['viewport', 'color', 'symmetry']
+
 from gui.draw import *
 
 def vp(i):

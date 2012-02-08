@@ -29,6 +29,11 @@ topics = ['geometry','domes']
 techniques = ['color']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','domes']
+_techniques = ['color']
+
 from gui.draw import *
 
 def run():

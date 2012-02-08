@@ -32,6 +32,11 @@ topics = ['geometry','section2d']
 techniques = []
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','section2d']
+_techniques = []
+
 from gui.draw import *
 from plugins.section2d import *
 import simple,connectivity,mydict

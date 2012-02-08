@@ -29,6 +29,11 @@ topics = []
 techniques = ['color','text']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = []
+_techniques = ['color','text']
+
 from gui.draw import *
 
 def run():

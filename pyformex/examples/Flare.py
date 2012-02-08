@@ -28,6 +28,11 @@ level = 'beginner'
 topics = ['geometry']
 techniques = ['color','dialog','transform','function']
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['geometry']
+_techniques = ['color','dialog','transform','function']
+
 from gui.draw import *
 
 def addFlares(F,dir=[0,2]):

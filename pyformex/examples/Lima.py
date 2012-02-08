@@ -29,6 +29,11 @@ topics = ['illustration']
 techniques = ['dialog','lima']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['illustration']
+_techniques = ['dialog','lima']
+
 from gui.draw import *
 from plugins import lima,turtle
 

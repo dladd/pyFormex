@@ -9,6 +9,11 @@ topics = ['Image','Geometry']
 techniques = ['texture']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['Image','Geometry']
+_techniques = ['texture']
+
 from gui.draw import *
 from gui.imagearray import image2numpy
 

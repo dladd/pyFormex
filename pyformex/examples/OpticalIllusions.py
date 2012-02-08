@@ -31,6 +31,12 @@ techniques = ['dialog', 'draw', 'persistence','random']
 acknowledgements = ['Tomas Praet']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['illustration','geometry']
+_techniques = ['dialog', 'draw', 'persistence','random']
+_acknowledgements = ['Tomas Praet']
+
 from gui.draw import *
 from simple import *
 from gui import widgets

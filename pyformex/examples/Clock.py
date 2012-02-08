@@ -30,6 +30,11 @@ topics = []
 techniques = []
 
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = []
+_techniques = []
+
 from gui.draw import *
 import simple
 from datetime import datetime

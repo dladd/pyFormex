@@ -29,6 +29,11 @@ topics = ['geometry','surface']
 techniques = ['color','elements','reverse']
 
 """
+_status = 'unchecked'
+_level = 'normal'
+_topics = ['geometry','surface']
+_techniques = ['color','elements','reverse']
+
 from gui.draw import *
 from elements import Hex8
 

@@ -29,6 +29,11 @@ topics = ['surface']
 techniques = ['color']
 
 """
+_status = 'unchecked'
+_level = 'beginner'
+_topics = ['surface']
+_techniques = ['color']
+
 from gui.draw import *
 from gui.actors import *
 

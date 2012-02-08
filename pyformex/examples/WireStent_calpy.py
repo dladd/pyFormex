@@ -28,6 +28,11 @@ level = 'advanced'
 topics = ['FEA']
 techniques = ['color'] 
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['FEA']
+_techniques = ['color'] 
+
 from gui.draw import *
 
 ############################

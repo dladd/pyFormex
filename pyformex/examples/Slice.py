@@ -30,6 +30,11 @@ topics = ['surface']
 techniques = ['color','widgets']
 
 """
+_status = 'unchecked'
+_level = 'advanced'
+_topics = ['surface']
+_techniques = ['color','widgets']
+
 from gui.draw import *
 from plugins.trisurface import TriSurface
 
