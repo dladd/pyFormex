@@ -29,7 +29,7 @@ topics = ['frame']
 techniques = ['dialog']
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['frame']
 _techniques = ['dialog']

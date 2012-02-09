@@ -143,9 +143,9 @@ def run():
         H = F+G
         clear()
         draw(H)
-        exit()
+        return
     
-#exit()
+#return
 
 if __name__ == 'draw':
     run()

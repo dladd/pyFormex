@@ -81,7 +81,7 @@ def analysis(stent):
     # Create output file
     if not checkWorkdir():
         print "Could not open a file for writing. I have to stop here"
-        exit()
+        return
 
     outfilename = 'WireStent_calpy.out'
     outfile = open(outfilename,'w')

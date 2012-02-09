@@ -141,7 +141,7 @@ def run():
         ])
 
     if not res:
-        exit()
+        return
 
     globals().update(res)
 
@@ -154,7 +154,7 @@ def run():
         wpic, hpic=loadImage(filename)
 
     if image is None:
-        exit()
+        return
 
     # Create the colors
     color,colortable = image2glcolor(image.scaled(nx,ny))
@@ -203,7 +203,7 @@ def run():
         if len(x) != len(pts):
             print "Some of the lines do not intersect the surface:"
             print " %d lines, %d intersections %d missing" % (len(x),len(pts),len(mil))
-            exit()
+            return
 
     dp=draw(pts, marksize=6, color='white')
     print pts.shape

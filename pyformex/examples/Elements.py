@@ -123,7 +123,7 @@ def run():
             I('Force dimensionality',itemtype='bool'),
             ])
     if not res:
-        exit()
+        return
 
     #print "RESULT",res
     pf.PF['Elements_data'] = res

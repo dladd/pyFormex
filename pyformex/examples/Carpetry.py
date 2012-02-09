@@ -151,7 +151,7 @@ def run():
         from gui import image,guimain
         carpet(M)
         image.save('testje2.png')
-        #exit(all=True)
+        #return(all=True)
         guimain.quitGUI()
 
 

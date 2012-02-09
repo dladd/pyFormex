@@ -30,7 +30,6 @@ import widgets
 import utils
 import project
 import draw
-#from script import processArgs,play,replay
 import image
 import plugins
 

@@ -340,7 +340,7 @@ def run():
             draw(Ci.pointsOn()[0],color=green)
             #zoomAll()
             #pause()
-            #exit()
+            #return
 
     draw(CL)
     export({'splines':CL})

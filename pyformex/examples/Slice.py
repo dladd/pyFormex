@@ -73,7 +73,7 @@ def run():
     try:
         P,n,t = askSlices(S.bbox())
     except:
-        exit()
+        return
 
     a = t/len(P)
 

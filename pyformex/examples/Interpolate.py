@@ -62,7 +62,7 @@ def run():
     message("Interpolate again with swapped order")
     draw(d)
     drawNumbers(d)
-    exit()
+    return
 
     sleep(2)
     f = c.divide(v)

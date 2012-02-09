@@ -43,7 +43,7 @@ def run():
     M = Formex('4:0123').replic2(60,30).toMesh()#.setProp(5)
     draw(M,color=yellow)
     #drawNumbers(M)
-    exit()
+    return
 
     smoothwire()
     view('iso')

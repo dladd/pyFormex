@@ -63,7 +63,7 @@ def run():
     res = askItems([('nx',4),('ny',3),('nz',2),('Grid type','','select',{'choices':['Box','Plane']}),('alpha',0.3)])
 
     if not res:
-        exit()
+        return
 
     nx = (res['nx'],res['ny'],res['nz'])
     gridtype = res['Grid type']

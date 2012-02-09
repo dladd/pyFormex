@@ -30,7 +30,7 @@ topics = ['geometry','curve']
 techniques = ['connect','color','solve']
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry','curve']
 _techniques = ['connect','color','solve']
@@ -82,35 +82,25 @@ class Bezier(object):
         return dot(aa,self.pts)
 
 
-
 def drawNumberedPoints(x,color):
     x = Formex(x)
     draw(x,color=color)
     drawNumbers(x,color=color)
     
 def run():
+    resetAll()
     n = 100
     t = arange(n+1)/float(n)
 
-    clear()
-
     for d in arange(4) * 0.2:
-        #clear()
-
         x = Coords([ [0.,0.], [1./3.,d], [2./3.,4*d**2], [1.,0.] ])
-
         drawNumberedPoints(x,red)
-
         H = Formex(x.reshape(2,2,3))
         draw(H,color=red)
-
         curve = Bezier(x)
         F = Formex(curve.at(t))
-        #draw(F)
-
         G = connect([F,F],bias=[0,1])
-        draw(G)
-    
+        draw(G)   
 
 if __name__ == 'draw':
     run()

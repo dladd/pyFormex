@@ -46,12 +46,12 @@ def run():
     fn = os.path.join(getcfg('datadir'),'world.jpg')
     fn = askFilename(cur=fn,filter=utils.fileDescription('img'),)
     if not fn:
-        exit()
+        return
 
     im = QtGui.QImage(fn)
     if im.isNull():
         warning("Could not load image '%s'" % fn)
-        exit()
+        return
 
     nx,ny = im.width(),im.height()
     #nx,ny = 200,200

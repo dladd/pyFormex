@@ -113,11 +113,11 @@ camerabar = 'top'     # add camera toolbar to top toolbar space
 modebar = 'top'       # add rendemode toolbar to top toolbar space
 viewbar = 'top'       # add views toolbar to top toolbar space
 
+rerunbutton = True   # add rerun button to toolbar
+stepbutton = True    # add step button to toolbar
 normalsbutton = True  # add normals button to toolbar
 lightbutton = True    # add light button to toolbar
 shrinkbutton = False  # add shrink button to toolbar
-rerunbutton = False   # add rerun button to toolbar
-stepbutton = False    # add step button to toolbar
 timeoutbutton = False # add timeout button to toolbar
 timeoutvalue = 2      # timeout after this number of seconds
 coordsbox = False     # add coords display widget to toolbar

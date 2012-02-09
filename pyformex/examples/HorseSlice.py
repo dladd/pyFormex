@@ -52,7 +52,7 @@ def run():
         ('ontop',False),
         ]) 
     if not res:
-        exit()
+        return
 
     d = res['direction']
     n = res['number of sections']

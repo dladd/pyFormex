@@ -83,7 +83,7 @@ def run():
         ('draw_randompoints',True),
         ])
     if not res:
-        exit()
+        return
 
     globals().update(res)
 
@@ -112,7 +112,7 @@ def run():
         colors = 0.5*random.rand(*S.coords.shape)
         draw(S,color=colors[...,:3])
 
-    #exit()
+    #return
 
     ###########################
     ####   ISOPARAMETRIC CURVES

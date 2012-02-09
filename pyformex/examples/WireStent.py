@@ -134,12 +134,12 @@ def run():
         ])
 
     if not res:
-        exit()
+        return
 
     globals().update(res)
     if (n % 2) != 0:
         warning('Number of wires must be even!')
-        exit()
+        return
     
     H = DoubleHelixStent(D,L,d,n,b)
     clear()

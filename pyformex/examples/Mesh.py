@@ -92,10 +92,10 @@ def run():
 
     res = ask("Choose the model:",["None","2D","3D","Help"])
     if res == "None":
-        exit()
+        return
     if res == "Help":
         showDescription()
-        exit()
+        return
 
     ndim = int(res[0])
 

@@ -45,7 +45,7 @@ def run():
 
     ttype = ask("Select type of transformation",['Cancel','1D','2D','3D'])
     if not ttype or ttype ==  'Cancel':
-        exit()
+        return
 
     tdim = int(ttype[0])
 
@@ -88,7 +88,7 @@ def run():
     n = 8
     stype = ask("Select type of structure",['Cancel','1D','2D','3D'])
     if stype == 'Cancel':
-        exit()
+        return
 
     sdim = int(stype[0])
     if sdim == 1:

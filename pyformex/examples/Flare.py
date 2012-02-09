@@ -63,7 +63,7 @@ def run():
         ]
     res = askItems(data)
     if not res:
-        exit()
+        return
 
     # Add the returned data to the global variables
     globals().update(res)

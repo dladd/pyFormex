@@ -51,7 +51,7 @@ def run():
         _I('export',False,text='Export to .stl'),
         ])
     if not res:
-        exit()
+        return
 
     globals().update(res)
 

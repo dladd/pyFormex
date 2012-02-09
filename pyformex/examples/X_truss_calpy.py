@@ -49,7 +49,7 @@ from calpy.truss3d import *
 
 def run():
     if not checkWorkdir():
-        exit()
+        return
 
     import time
 

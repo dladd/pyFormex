@@ -148,7 +148,7 @@ def run():
     model = Model(M.coords,M.elems)
 
     if not checkWorkdir():
-        exit()
+        return
 
     AbqData(model,P,[step],eprop=F.prop,out=[out],res=res).write('SpaceTruss')
 

@@ -44,7 +44,7 @@ def run():
     f=0.8
     res = askItems([('m',m),('n',n),('f',f)])
     if not res:
-        exit()
+        return
 
     m = res['m']
     n = res['n']

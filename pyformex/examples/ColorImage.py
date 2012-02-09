@@ -99,7 +99,7 @@ def run():
         ])
 
     if not res:
-        exit()
+        return
 
     globals().update(res)
 
@@ -108,7 +108,7 @@ def run():
         loadImage(filename)
 
     if image is None:
-        exit()
+        return
 
     # Create the colors
     color,colortable = image2glcolor(image.scaled(nx,ny))

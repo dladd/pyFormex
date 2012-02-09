@@ -505,7 +505,6 @@ class Gui(QtGui.QMainWindow):
         app is either an imported application module, an application
         module name or a script file.
         """
-        print "SETCURFILE"
         from types import ModuleType
         is_app = type(app) is ModuleType
         if is_app:

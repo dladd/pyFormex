@@ -125,7 +125,7 @@ def run():
            r = float(res['r'])
            show(scallop(n,f,c,r),None)
            if not ack("Want to try another one?"):
-               exit()
+               return
 
 if __name__ == 'draw':
     run()

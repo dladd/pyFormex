@@ -96,7 +96,7 @@ def run():
     if res:
         F = examples[res['example']]()
         if F is None:
-            exit()
+            return
         draw(F)
         S = sectionChar(F)
         S.update(extendedSectionChar(S))

@@ -24,22 +24,31 @@
 ##
 """Lustrum
 
-level = 'normal'
-topics = ['curve','drawing','illustration']
-techniques = ['color','persistence','lima','import']
+This example contains a script that was created to commemmorate the 5 years
+existence of the pyFormex project. It was actually included first as an
+easter egg, running when the pyFormex GUI started up. Afterwards it was
+included as an example.
 
+It uses one of the rulesets of the Lima example to grow a plant, with
+different color for each generation. The superimposed '5' is read from
+a pyFormex Geometry file, distributed with pyFormex in the 'data' directory.
+
+To create this file we use a Python interface to the ftgl library, allowing
+the transformation of a character '5' from a 'blippo' font to be converted
+to an OpenGL model. This functionality is currently not included in pyFormex,
+but we are working on an equivalent using the 'fontforge' library.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['curve','drawing','illustration']
 _techniques = ['color','persistence','lima','import']
 
 from gui.draw import *
+from pyformex.apps.Lima import *
 
 def run():
-    reset()
-    from pyformex.examples.Lima import *
-    from project import Project
+    resetAll()
+    flat()
     linewidth(2)
     fgcolor(blue)
     grow('Plant1',ngen=7,clearing=False,text=False)

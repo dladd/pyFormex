@@ -1270,7 +1270,42 @@ def wait(relock=True):
     if relock:
         pf.GUI.drawlock.lock()
         
+
+# Functions corresponding with control buttons
+
+def play(step=False):
+    """Start the current script or if already running, continue it.
     
+    """
+    if len(scriptlock) > 0:
+        # An application is running
+        if pf.GUI.drawlock.locked:
+            pf.GUI.drawlock.release()
+
+    else:
+        # Start current application
+        run(step=step)
+
+
+def replay():
+    """Replay the current app.
+
+    This works pretty much like the play() function, but will
+    reload the current application prior to running it.
+    This function is especially interesting during development
+    of an application.
+    """
+    appname = pf.cfg['curfile']
+
+    if utils.is_script(appname):
+        # this is a script, not an app
+        pass
+    else:
+        import apps
+        app = apps.load(appname,refresh=True)
+
+    play()
+
 
 def fforward():
     """Releases the drawing lock mechanism indefinely.
@@ -1282,23 +1317,32 @@ def fforward():
 
 
 def step():
-    """Perform one step of a script.
+    """Start the current script in step mode.
 
-    A step is a set of instructions until the next draw operation.
-    If a script is running, this just releases the draw lock.
-    Else, it starts the script in step mode.
+    The use of step mode is strongly discouraged. Please use other
+    techniques (like the 'drawwait' time setting or inserting
+    wait or pause commands, or using a debugger.
+
+    This function starts the current script in step mode. If a script
+    is already running, it continues the script with the next step.
+    This is equivalent with the behavior of the play function.
     """
-    if pf.GUI.drawlock.locked:
-        pf.GUI.drawlock.release()
-    else:
-        if ack("""
-STEP MODE is currently only possible with specially designed,
-very well behaving scripts. If you're not sure what you are
-doing, you should cancel the operation now.
+    if len(scriptlock) > 0:
+        play()
+        
+    elif ack("""..
+        
+STEP MODE
+=========
+Step mode is *deprecated*.
+It will only work with specially designed scripts,
+very well behaving scripts.
+Unless you are a specialist who knows well how to use it,
+you should cancel the operation now.
 
 Are you REALLY SURE you want to run this script in step mode?
 """):
-            play(step=True)
+        run(step=True)
  
 
 #

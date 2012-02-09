@@ -46,7 +46,7 @@ def run():
         ('n',1,{'text':'number of turns'}),
         ])
     if not res:
-        exit()
+        return
 
     globals().update(res)
 

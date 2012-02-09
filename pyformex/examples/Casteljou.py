@@ -73,7 +73,7 @@ def run():
         ],enablers=[('pat','custom','custom')])
 
     if not res:
-        exit()
+        return
 
     globals().update(res)
     if pat == 'custom':

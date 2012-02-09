@@ -217,7 +217,7 @@ dialog_default = 'Show'
 
 
 def timeOut():
-    play()
+    show()
     close()
     
         

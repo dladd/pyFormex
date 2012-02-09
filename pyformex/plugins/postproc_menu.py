@@ -706,7 +706,7 @@ I strongly recommend you to cancel the operation now.
             return
 
         # import the results DB
-        play(fn)
+        playFile(fn)
 
         ### check whether the import succeeded
         name = FeResult._name_

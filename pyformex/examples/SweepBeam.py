@@ -73,7 +73,7 @@ def run():
 
     clear()
     draw(Section,color=red)
-    #exit()
+    #return
 
     #pause()
 
@@ -105,7 +105,7 @@ def run():
         Beam = Section.revolve(el,axis=1,angle=240.,around=[-l,0.,0.],loop=True)
 
     else:
-        exit()
+        return
 
     print "Computing: %s seconds" % t.seconds()
     #print Beam.prop

@@ -182,7 +182,7 @@ def run():
 
     if outfilename is None:
         error("No writeable path: I can not execute the simulation.\nCopy the script to a writeable path and try running from there.")
-        exit()
+        return
 
     outfile = open(outfilename,'w')
     message("Output is written to file '%s'" % os.path.realpath(outfilename))

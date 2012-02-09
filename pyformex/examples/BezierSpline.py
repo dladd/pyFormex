@@ -72,7 +72,7 @@ def run():
     # Ask the user how many points he wants to use
     res = askItems([_I('npts',5,text='How many points to use (2..%s)' % len(_pts))])
     if not res:
-        exit()
+        return
 
     # Keep only the requested number of points
     npts = res['npts']

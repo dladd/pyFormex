@@ -269,6 +269,34 @@ def executeScript(scr,glob):
     """Execute a Python script in specified globals."""
     exec scr in glob
 
+
+def _gui_start_script():
+    pf.debug('GUI SCRIPT MODE %s'% (stepmode),pf.DEBUG.SCRIPT)
+    pf.GUI.drawlock.allow()
+    pf.canvas.update()
+    pf.GUI.actions['Play'].setEnabled(False)
+    if 'ReRun' in pf.GUI.actions:
+        pf.GUI.actions['ReRun'].setEnabled(False)
+    if 'Step' in pf.GUI.actions:
+        pf.GUI.actions['Step'].setEnabled(True)
+    pf.GUI.actions['Continue'].setEnabled(True)
+    pf.GUI.actions['Stop'].setEnabled(True)
+    pf.app.processEvents()
+
+
+def _gui_stop_script():
+    global stepmode
+    stepmode = False
+    pf.GUI.drawlock.release()
+    pf.GUI.actions['Play'].setEnabled(True)
+    if 'ReRun' in pf.GUI.actions:
+        pf.GUI.actions['ReRun'].setEnabled(True)
+    if 'Step' in pf.GUI.actions:
+        pf.GUI.actions['Step'].setEnabled(False)
+    pf.GUI.actions['Continue'].setEnabled(False)
+    pf.GUI.actions['Stop'].setEnabled(False)
+    pf.app.processEvents()
+    
  
 def playScript(scr,name=None,filename=None,argv=[],pye=False):
     """Play a pyformex script scr. scr should be a valid Python text.
@@ -284,6 +312,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
+    global stepmode,exportNames,starttime
     global exitrequested
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
@@ -301,14 +330,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     exitrequested = False
 
     if pf.GUI:
-        global stepmode,exportNames,starttime
-        pf.debug('GUI SCRIPT MODE %s'% (stepmode),pf.DEBUG.SCRIPT)
-        pf.GUI.drawlock.allow()
-        pf.canvas.update()
-        pf.GUI.actions['Play'].setEnabled(False)
-        pf.GUI.actions['Continue'].setEnabled(True)
-        pf.GUI.actions['Stop'].setEnabled(True)
-        pf.app.processEvents()
+        _gui_start_script()
     
     # Get the globals
     g = Globals()
@@ -373,13 +395,8 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
         #elapsed = time.clock() - starttime
         #pf.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if pf.GUI:
-            stepmode = False
-            pf.GUI.drawlock.release() # release the lock
-            pf.GUI.actions['Play'].setEnabled(True)
-            #pf.GUI.actions['Step'].setEnabled(False)
-            pf.GUI.actions['Continue'].setEnabled(False)
-            pf.GUI.actions['Stop'].setEnabled(False)
-
+            _gui_stop_script()
+            
     if exitall:
         pf.debug("Calling quit() from playscript")
         quit()
@@ -478,6 +495,8 @@ def runApp(appname,argv=[],reload=False):
         return
     
     scriptLock('__auto__')
+    if pf.GUI:
+        _gui_start_script()
     pf.GUI.apphistory.add(appname)
     message("Running application '%s' from %s" % (appname,app.__file__))
     pf.debug("  Passing arguments: %s" % argv)
@@ -492,12 +511,14 @@ def runApp(appname,argv=[],reload=False):
             exportNames = listAll(clas=Geometry,dic=g)
             pf.PF.update([(k,g[k]) for k in exportNames])
         scriptRelease('__auto__') # release the lock
+        if pf.GUI:
+            _gui_stop_script()
 
     pf.debug("  Arguments left after execution: %s" % argv)
     message("Finished %s in %s seconds" % (appname,t.seconds()))
 
 
-def play(appname=None,argv=[],step=False,reload=False):
+def run(appname=None,argv=[],step=False,reload=False):
     """Run the current pyFormex application or script file.
     
     This function does nothing if no appname/filename is passed or no current
@@ -520,21 +541,6 @@ def play(appname=None,argv=[],step=False,reload=False):
         return playFile(appname,argv)
 
     runApp(appname,argv)
-
-
-def replay():
-    """Replay the current app."""
-    appname = pf.cfg['curfile']
-
-    if utils.is_script(appname):
-        # this is a script, not an app
-        pass
-    else:
-        import apps
-        app = apps.load(appname,refresh=True)
-
-    play()
-
   
 
 def exit(all=False):
