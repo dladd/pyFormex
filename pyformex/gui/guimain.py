@@ -505,6 +505,7 @@ class Gui(QtGui.QMainWindow):
         app is either an imported application module, an application
         module name or a script file.
         """
+        print "SETCURFILE"
         from types import ModuleType
         is_app = type(app) is ModuleType
         if is_app:
@@ -1125,7 +1126,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     # show current application/file
     app = pf.cfg['curfile']
-    if not (app.endswith('.py') or app.endswith('.pye')):
+    if not utils.is_script(app):
         import apps
         app = app.replace('apps.','')
         app = apps.load(app)

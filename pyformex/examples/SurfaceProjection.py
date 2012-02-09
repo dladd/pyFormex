@@ -175,7 +175,7 @@ def run():
     dg0 = draw(mH0,mode='wireframe')
     zoomAll()
     zoom(0.5)
-    pause('Create %s x %s patches > STEP' % (px,py))
+    pause(msg='Create %s x %s patches > STEP' % (px,py))
 
     # Create the transforms
     base = makeGrid(1,1,'Quad8').coords[0]
@@ -197,7 +197,7 @@ def run():
 
         x = connect([mH0.points(), mH1.points()])
         dx = draw(x)
-        pause('Creating intersection with surface > STEP')
+        pause(msg='Creating intersection with surface > STEP')
         pts, il, it, mil=intersectSurfaceWithSegments2(T, x, max1xperline=True)
 
         if len(x) != len(pts):
@@ -213,11 +213,11 @@ def run():
         x = connect([mH0.points(),mH2.points()])
         dx = draw(x)
 
-    pause('Create projection mapping using the grid points > STEP')
+    pause(msg='Create projection mapping using the grid points > STEP')
     d2 = drawImage(mH2.trl([0.,0.,0.01]),base,patch)
     # small translation to make sure the image is above the surface, not cutting it
 
-    pause('Finally show the finished image > STEP')
+    pause(msg='Finally show the finished image > STEP')
     undraw(dp)
     undraw(dx)
     undraw(d0)

@@ -246,13 +246,6 @@ def procInfo(title):
     print('parent process: %s' % os.getppid())
     print('process id: %s' % os.getpid())
 
-def strNorm(s):
-    """Normalize a string.
-
-    Text normalization removes all '&' characters and converts it to lower case.
-    """
-    return str(s).replace('&','').lower()
-
 
 def _congratulations(name,version,typ='module',fatal=False,quiet=True):
     """Report a detected module/program."""
@@ -385,7 +378,17 @@ def setSaneLocale(localestring=''):
     locale.setlocale(locale.LC_ALL,localestring)
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
+##########################################################################
+## Text conversion  tools ##
+############################
+ 
+def strNorm(s):
+    """Normalize a string.
 
+    Text normalization removes all '&' characters and converts it to lower case.
+    """
+    return str(s).replace('&','').lower()
+   
 ###################### ReST conversion ###################
 
 try:
@@ -396,6 +399,48 @@ except ImportError:
     def rst2html(text,writer='html'):
         return text
     
+
+def forceReST(s):
+    """Convert a text string to have it recognized as reStructuredText.
+
+    Returns the string s with two lines prepended: a line with '..'
+    and a blank line. The text display functions will then recognize the
+    string as being reStructuredText. Since the '..' starts a comment in
+    reStructuredText, it will not be displayed.
+    """
+    return "..\n\n" + s
+
+
+def underlineHeader(s,char='"'):
+    """Underline the first line of a text.
+
+    Adds a new line of text below the first line of s. The new line
+    has the same length as the first, but all characters are equal to
+    the specified char.
+    """
+    i = s.find('\n')
+    return s[:i] + '\n' + char*i + s[i:]
+
+
+def showDoc(obj=None,rst=True):
+    """Show the docstring of an object.
+
+    Parameters:
+    
+    - `obj`: any object (module, class, method, function) that has a
+      __doc__ attribute. If None is specified, the docstring of the current
+      application is shown.
+    - `rst`: bool. If False, the doctring is shown in plain text as is.
+      The default is to treat the docstring as reStructuredText. For the
+      purpose of a nice formatting, the docstring is changed as follows:
+      Below the first line, a line is added with the same length as the first,
+      but all '=' characters, marking the fist line as a header inFurthermore
+      a line will be changed
+    a bit to allow a nice display.
+ two
+      line are prepended, one line containing '..', the other one empty.This will allow the recognition as reStructuredText.
+    If `rst=False
+    """
 
 ###################### dos to unix conversion ###################
 
@@ -413,10 +458,10 @@ def unix2dos(infile,outfile=None):
         cmd = "sed -i 's|$|\\r|' %s > %s" % (infile,outfile)
     return runCommand(cmd)
 
-        
 
-
-###################### image and file formats ###################
+##########################################################################
+## File names and formats ##
+############################
 
 def all_image_extensions():
     """Return a list with all known image extensions."""
@@ -563,6 +608,11 @@ def countLines(fn):
         return 0
 
 
+##########################################################################
+## Running external commands ##
+###############################
+
+
 def runCommand(cmd,RaiseError=True,quiet=False):
     """Run a command and raise error if exited with error.
 
@@ -631,8 +681,13 @@ def userName():
         return os.environ['LOGNAME']
     except:
         return 'NOBODY'
+
+
+def is_script(appname):
+    """Checks whether an application name is rather a script name"""
+    return appname.endswith('.py') or appname.endswith('.pye')
     
-      
+    
 def is_pyFormex(filename):
     """Checks whether a file is a pyFormex script.
 

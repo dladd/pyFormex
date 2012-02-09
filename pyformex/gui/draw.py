@@ -167,8 +167,49 @@ def showFile(filename,mono=False,**kargs):
         return
     showText(f.read(),mono=mono,**kargs)
     f.close()
+
+
+def showRest(text,underline=True,modal=False):
+    """Show a reStructuredText.
+
+    By default, an underlining of the first line of the text will be added
+    to make reStructuredText format it as a header.
+    """
+    if underline:
+        text = utils.underlineHeader(text)
+    text = utils.forceReST(text)
+    showText(text,modal=modal)
     
-  
+
+def showDoc(obj=None,rst=True):
+    """Show the docstring of an object.
+
+    Parameters:
+    
+    - `obj`: any object (module, class, method, function) that has a
+      __doc__ attribute. If None is specified, the docstring of the current
+      application is shown.
+    - `rst`: bool. If True (default) the docstring is treated as being
+      reStructuredText and will be nicely formatted accordingly.
+      If False, the docstring is shown as plain text.
+    """
+    if obj is None:
+        if not pf.GUI.canPlay:
+            return
+        obj = pf.prefcfg['curfile']
+        if utils.is_script(obj):
+            print "obj is a script"
+            showDescription(obj)
+            return
+        else:
+            import apps
+            obj = apps.load(obj)
+
+    showRest(obj.__doc__)
+
+
+# DEV: to be removed in 0.9.1
+@utils.deprecation("`showDescription` is deprecated: use `showDoc` to display the complete docstring.")
 def showDescription(filename=None):
     """Show the Description part of the docstring of a pyFormex script.
 
@@ -1259,23 +1300,30 @@ Are you REALLY SURE you want to run this script in step mode?
 """):
             play(step=True)
  
-    
 
-def pause(msg="Use the Step or Continue button to proceed",timeout=None):
+#
+# IDEA: The pause() could display a progress bar showing how much time
+# is left in the pause,
+# maybe also with buttons to repeat, pause indefinitely, ...
+#
+def pause(timeout=None,msg=None):
     """Pause the execution until an external event occurs or timeout.
 
     When the pause statement is executed, execution of the pyformex script
     is suspended until some external event forces it to proceed again.
-    Clicking the STEP or CONTINUE button will produce such an event.
+    Clicking the PLAY or CONTINUE button will produce such an event.
     """
     from gui.drawlock import repeat
 
     def _continue_():
         return pf.GUI.drawlock.locked
 
-    pf.debug("PAUSE ACTIVATED!")
+    if msg is None and timeout is None:
+        msg = "Use the Play or Continue button to proceed"
+        
+    pf.debug("Pause (%s): %s" % (timeout,msg),pf.DEBUG.SCRIPT)
     if msg:
-        pf.message(msg)
+        print(msg)
 
     pf.GUI.drawlock.release()
     if pf.GUI.drawlock.allowed:
@@ -1283,7 +1331,6 @@ def pause(msg="Use the Step or Continue button to proceed",timeout=None):
     if timeout is None:
         timeout = widgets.input_timeout
     repeat(_continue_,timeout)
-   
 
 
 ################### EXPERIMENTAL STUFF: AVOID! ###############

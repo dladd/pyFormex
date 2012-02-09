@@ -348,7 +348,7 @@ def editApp(appname=None):
     if appname is None:
         appname = pf.cfg['curfile']
 
-    if appname.endswith('.py') or appname.endswith('.pye'):
+    if utils.is_script(appname):
         # this is a script, not an app
         fn = appname
 

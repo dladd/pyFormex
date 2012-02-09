@@ -123,7 +123,6 @@ def repeat(func,duration=-1,maxcount=-1,*args,**kargs):
     
     def timeOut():
         global _repeat_timed_out
-        #print "REPEAT TIMED OUT"
         _repeat_timed_out = True
         
     if duration >= 0:

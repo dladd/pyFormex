@@ -25,12 +25,14 @@
 
 """Projection
 
-level = 'normal'
-topics = ['geometry','surface']
-techniques = ['projection']
+Projects a rectangule grid on a sphere and on a cylinder.
+The result shows:
 
+:black: the original rectangle
+:red: the projection on a sphere
+:blue: the projection on a cylinder
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','surface']
 _techniques = ['projection']
@@ -54,7 +56,7 @@ def run():
     draw(G,color=red)
 
     H = F.rotate(30).projectOnCylinder(ny)
-draw(H,color=blue)
+    draw(H,color=blue)
 
 if __name__ == 'draw':
     run()

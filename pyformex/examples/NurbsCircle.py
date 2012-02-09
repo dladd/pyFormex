@@ -25,16 +25,7 @@
 
 """NurbsCircle
 
-level = 'advanced'
-topics = ['geometry', 'curve']
-techniques = ['nurbs','border']
-
-.. Description
-
-Nurbs Circle
-============
-
-The image shows a number of Nurbs curves that were generated
+Draws a number of Nurbs curves that were generated
 from the same set of 8 control points (shown in black, numbered 0..7)
 placed on the circumference of a square with side length 2.
 
@@ -44,30 +35,29 @@ The following curves are closed (and blended) Nurbs curves of different degree:
   :red: degree 2: quadratic
   :green: degree 3: cubic
 
-The next four curves are unclosed, unblended Nurbs of degree 2, with non-unity weight factors for the corner points. Allthough these curves are not blended, they still have continuous derivatives (except for the one with weight 0.) because of the appropriate position of the control points. 
+The next four curves are unclosed, unblended Nurbs of degree 2, with non-unity
+weight factors for the corner points. Allthough these curves are not blended,
+they still have continuous derivatives (except for the one with weight 0.)
+because of the appropriate position of the control points. 
 
   :blue: weight = sqrt(2) 
   :cyan: weight = sqrt(2)/2
   :magenta: weight = 0.25
   :white: weight = 0.
   
-Finally, The dotted yellow curve is created with simple.circle and shows 180 line segments approximately on the circumference of a circle with unit radius.
+Finally, The dotted yellow curve is created with simple.circle and shows 180
+line segments approximately on the circumference of a circle with unit radius.
 
 Notice that the curve with weigths equal to sqrt(2)/2 exactly represents a
 circle.
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['geometry', 'curve']
 _techniques = ['nurbs','border']
-_  :blue: weight = sqrt(2) 
-_  :cyan: weight = sqrt(2)/2
-_  :magenta: weight = 0.25
-_  :white: weight = 0.
 
 from gui.draw import *
-
 import simple
 from plugins.nurbs import *
 
@@ -88,7 +78,7 @@ def run():
     drawNumbers(F)
     zoomAll()
     setDrawOptions(bbox=None)
-    showDescription()
+    showDoc()
 
     pts = F.coords.reshape(-1,3)
 

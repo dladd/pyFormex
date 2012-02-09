@@ -24,14 +24,6 @@
 ##
 """SplineSurface
 
-level = 'advanced'
-topics = ['geometry','surface']
-techniques = ['spline']
-
-.. Description
-
-SplineSurface
--------------
 This example illustrates some advanced geometrical modeling tools using
 spline curves and surfaces.
 
@@ -57,24 +49,23 @@ consisting of quadrilaterals). The number of elements along the
 splines can be chosen. The number of elements across the splines is
 currently unused.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = ['geometry','surface']
 _techniques = ['spline']
 
 from gui.draw import *
 
+
+##
+## What follows here may become a 'NurbsSurface' plugin
+##
+
 """Definition of surfaces in pyFormex.
 
 This module defines classes and functions specialized for handling
 two-dimensional geometry in pyFormex. 
 """
-_status = 'unchecked'
-
-from gui.draw import *
-
-# I wrote this software in my free time, for my joy, not as a commissioned task.
-# Any copyright claims made by my employer should therefore be considered void.
 
 import numpy as np
 from geometry import Geometry
@@ -290,7 +281,7 @@ def area(C,nroll=0):
 
 ###############################################################
 
-def run()
+def run():
     clear()
     smoothwire()
 
@@ -302,7 +293,7 @@ def run()
             'Power Curves',
             'Kinked Artery',
             ]),
-        I('ncurves',value=12,text='Number of spline curves'),
+        I('ncurve',value=12,text='Number of spline curves'),
         I('nu',value=36,text='Number of cells along splines'),
         I('refine',False),
         I('nv',value=12,text='Number of cells across splines'),
@@ -312,12 +303,12 @@ def run()
         ])
 
     if not res:
-        exit()
+        return
 
     globals().update(res)
 
     if base == 'Circles and Ellipses':
-        CL = createCircles(n=ncurves)
+        CL = createCircles(n=ncurve)
         nroll = 0
         reverse = False
     elif base == 'Power Curves':

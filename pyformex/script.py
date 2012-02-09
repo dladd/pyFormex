@@ -470,15 +470,34 @@ def runApp(appname,argv=[],reload=False):
     from timer import Timer
     t = Timer()
     app = apps.load(appname,refresh=reload)
+    if pf.GUI:
+        pf.GUI.setcurfile(app)
+       
+    if len(scriptlock) > 0:
+        pf.message("!!Not executing because a script lock has been set: %s" % scriptlock)
+        return
+    
+    scriptLock('__auto__')
     pf.GUI.apphistory.add(appname)
     message("Running application '%s' from %s" % (appname,app.__file__))
     pf.debug("  Passing arguments: %s" % argv)
-    apps.run(appname,argv)
+    app._args_ = argv
+    try:
+        res = app.run()
+    finally:
+        if hasattr(app,'atExit'):
+            app.atExit()
+        if pf.cfg['autoglobals']:
+            g = app.__dict__
+            exportNames = listAll(clas=Geometry,dic=g)
+            pf.PF.update([(k,g[k]) for k in exportNames])
+        scriptRelease('__auto__') # release the lock
+
     pf.debug("  Arguments left after execution: %s" % argv)
     message("Finished %s in %s seconds" % (appname,t.seconds()))
 
 
-def play(app=None,argv=[],step=False,reload=False):
+def play(appname=None,argv=[],step=False,reload=False):
     """Run the current pyFormex application or script file.
     
     This function does nothing if no appname/filename is passed or no current
@@ -487,23 +506,27 @@ def play(app=None,argv=[],step=False,reload=False):
     the script is executed in step mode.
     """
     global stepmode
-    if app is None:
+    if appname is None:
         if pf.GUI.canPlay:
-            app = pf.cfg['curfile']
+            appname = pf.cfg['curfile']
         else:
             return
-    if app.endswith('.py') or app.endswith('.pye'):
+    else:
+        if pf.GUI:
+            pf.GUI.setcurfile(app)
+       
+    if utils.is_script(appname):
         stepmode = step
-        return playFile(app,argv)
+        return playFile(appname,argv)
 
-    runApp(app,argv)
+    runApp(appname,argv)
 
 
 def replay():
     """Replay the current app."""
     appname = pf.cfg['curfile']
 
-    if appname.endswith('.py') or appname.endswith('.pye'):
+    if utils.is_script(appname):
         # this is a script, not an app
         pass
     else:

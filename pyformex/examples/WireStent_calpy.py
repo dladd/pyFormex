@@ -45,14 +45,17 @@ from calpy.beam3d import *
 ############################
 
 
-############################################
-# Create geometry
-from pyformex.examples.WireStent import DoubleHelixStent
+#########################################
+## Using pyFormex as geometric modeler ##
+#########################################
 import datetime
 
 
-def run():
-    # create a Doublehelix stent
+def geometry():
+    from apps.WireStent import DoubleHelixStent
+    global wire_diameter
+    
+    # create a Doublehelix stent with fixed geometry
     stent_diameter = 10.
     stent_length = 150.
     wire_diameter = 0.2
@@ -62,18 +65,18 @@ def run():
     # during testing
     stent_length = 10.
     stent = DoubleHelixStent(stent_diameter,stent_length,
-                             wire_diameter,number_wires,pitch_angle,nb=1).getFormex()
-
-    if pf.options.gui:
-        # draw it
-        reset()
-        clear()
-        draw(stent,view='iso')
+                             wire_diameter,number_wires,pitch_angle,nb=1
+                             ).getFormex()
+    return stent
 
 
+############################################
+## Using pyFormex for mechanical analysis ##
+############################################
 
-    ############################################
-    # Perform Analysis
+def analysis(stent):
+    """Perform a stent analysis."""
+    global outfilename
 
     # Create output file
     if not checkWorkdir():
@@ -191,65 +194,89 @@ def run():
     sys.stdout = stdout_saved
     outfile.close()
 
+    return coords,elements,displ,frc
 
 
-    ################################
-    #Using pyFormex as postprocessor
-    ################################
+
+#####################################
+## Using pyFormex as postprocessor ##
+#####################################
+
+def postproc(coords,elements,displ,frc):
+    """Display the results of the analysis."""
+
+    from gui.colorscale import ColorScale,ColorLegend
+    import gui.decors
+
+    # Creating a formex for displaying results is fairly easy
+    elems = elements[:,:2]-1
+    results = Formex(coords[elems])
+    clear()
+    draw(results,color='black')
+
+    # Now try to give the formex some meaningful colors.
+    # The frc array returns element forces and has shape
+    #  (nelems,nforcevalues,nloadcases)
+    # In this case there is only one resultant force per element (the
+    # normal force), and only load case; we still need to select the
+    # scalar element result values from the array into a onedimensional
+    # vector val. 
+    val = frc[:,0,0]
+    # create a colorscale
+    CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
+    cval = array(map(CS.color,val))
+    #aprint(cval,header=['Red','Green','Blue'])
+    clear()
+    draw(results,color=cval)
+
+    bgcolor('lightgreen')
+    linewidth(3)
+    x = pf.canvas.width()//2
+    TA = drawText('Normal force in the members',x,100,font='tr32')
+    CL = ColorLegend(CS,100)
+    CLA = decors.ColorLegend(CL,10,10,30,200) 
+    decorate(CLA)
+    pause(timeout=3)
+
+    # and a deformed plot on multiple scales
+    dscales = arange(1,6) * 1.0
+    loadcase = 0
+    for dscale in dscales:
+        dcoords = coords + dscale * displ[:,0:3,loadcase]
+        clear()
+        decorate(CLA)
+        decorate(TA)
+        linewidth(1)
+        draw(results,color='darkgreen',wait=False)
+        linewidth(3)
+        deformed = Formex(dcoords[elems])
+        draw(deformed,color=cval)
+        drawText('Deformed geometry (scale %.2f)' % dscale,x,70)
+
+
+
+
+def run():
+    """Perform all steps.
+
+    This function can also be run without GUI.
+    """
+
+    stent = geometry()
 
     if pf.options.gui:
-
-        from gui.colorscale import *
-        import gui.decors
-
-        # Creating a formex for displaying results is fairly easy
-        elems = elements[:,:2]-1
-        results = Formex(coords[elems])
+        reset()
         clear()
-        draw(results,color='black')
+        draw(stent,view='iso')
 
-        # Now try to give the formex some meaningful colors.
-        # The frc array returns element forces and has shape
-        #  (nelems,nforcevalues,nloadcases)
-        # In this case there is only one resultant force per element (the
-        # normal force), and only load case; we still need to select the
-        # scalar element result values from the array into a onedimensional
-        # vector val. 
-        val = frc[:,0,0]
-        # create a colorscale
-        CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
-        cval = array(map(CS.color,val))
-        #aprint(cval,header=['Red','Green','Blue'])
-        clear()
-        draw(results,color=cval)
+    results = analysis(stent)
 
-        bgcolor('lightgreen')
-        linewidth(3)
-        x = pf.canvas.width()//2
-        TA = drawText('Normal force in the members',x,100,font='tr32')
-        CL = ColorLegend(CS,100)
-        CLA = decors.ColorLegend(CL,10,10,30,200) 
-        decorate(CLA)
-        sleep(1)
+    if pf.options.gui:
+         postproc(*results)
+    
+         if ack("Show the analysis output file?"):
+             showFile(outfilename)
 
-        # and a deformed plot on multiple scales
-        dscales = arange(1,6) * 1.0
-        loadcase = 0
-        for dscale in dscales:
-            dcoords = coords + dscale * displ[:,0:3,loadcase]
-            clear()
-            decorate(CLA)
-            decorate(TA)
-            linewidth(1)
-            draw(results,color='darkgreen',wait=False)
-            linewidth(3)
-            deformed = Formex(dcoords[elems])
-            draw(deformed,color=cval)
-            drawText('Deformed geometry (scale %.2f)' % dscale,x,70)
-
-
-        if ack("Show the output file?"):
-            showFile(outfilename)
 
 if __name__ == 'draw':
     run()

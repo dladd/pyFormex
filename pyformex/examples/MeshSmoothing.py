@@ -25,41 +25,35 @@
 
 """MeshSmoothing
 
-level = 'normal'
-topics = ['geometry', 'mesh','illustration']
-techniques = ['dialog','smooth]
+This example illustrates the use of the mesh smoothing algorithm.
 
-.. Description
-
-MeshSmoothing
-==============
-This example illustrates the use of the mesh smoothing algrithm.
-
-The smoothing is applied to a hexahedral, tetrahedral, quadrilateral, and triangular mesh.
+The smoothing is applied to a hexahedral, tetrahedral, quadrilateral,
+and triangular mesh.
 """
 _status = 'unchecked'
 _level = 'normal'
 _topics = ['geometry', 'mesh','illustration']
-_techniques = ['dialog','smooth]
+_techniques = ['dialog','smooth']
 
 from gui.draw import *
 from simple import cuboid
-from mesh import *
+#from mesh import *
 
 def run():
     clear()
-    n = 12        #   Number of elements in each direction
-    tol = 4       #   Amount of noise added to the coordinates
+    n = 12      #   Number of elements in each direction
+    tol = 4     #   Amount of noise added to the coordinates
     iter = 10   #   Number of smoothing iterations 
 
     res = askItems(items=[
         _I('n', n, text='Number of elements', itemtype='slider', min=2, max=24),
-       _I('tol', tol, text='Noise', itemtype='slider', min=0, max=10),
-      _I('iter', iter, text='Smoothing iterations', itemtype='slider', min=1, max=20),  
+        _I('tol', tol, text='Noise', itemtype='slider', min=0, max=10),
+        _I('iter', iter, text='Smoothing iterations', itemtype='slider', min=1, max=20),  
     ])
 
     if not res:
-        exit()
+        return
+    
     globals().update(res)
 
     tol /= 10.

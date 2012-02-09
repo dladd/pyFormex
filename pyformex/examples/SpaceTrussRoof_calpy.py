@@ -35,6 +35,7 @@ _techniques = ['dialog', 'animation', 'persistence', 'color']
 
 from gui.draw import *
 from plugins.properties import *
+import time
 
 ############################
 # Load the needed calpy modules    
@@ -47,12 +48,12 @@ from calpy.truss3d import *
 
 ############################
 
-if not checkWorkdir():
-    exit()
-
-import time
 
 def run():
+
+    if not checkWorkdir():
+        return
+        
     ####
     #Data
     ###################
@@ -201,7 +202,7 @@ def run():
     if pf.options.gui:
 
         from plugins.postproc import niceNumber,frameScale
-        from gui.colorscale import *
+        import gui.colorscale as cs
         import gui.decors
 
 
@@ -220,14 +221,14 @@ def run():
             # vector val. 
             val = frc[:,0,0]
             # create a colorscale
-            CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
+            CS = cs.ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
             cval = array(map(CS.color,val))
             #aprint(cval,header=['Red','Green','Blue'])
             clear()
             linewidth(3)
             draw(mesh,color=cval)
             drawText('Normal force in the truss members',300,50,size=24)
-            CL = ColorLegend(CS,100)
+            CL = cs.ColorLegend(CS,100)
             CLA = decors.ColorLegend(CL,10,10,30,200,size=24)
             decorate(CLA)
 
@@ -255,7 +256,7 @@ def run():
                     if TA:
                         pf.canvas.removeDecoration(TA)
                     TA,FA = T,F
-                    sleep(sleeptime)
+                    pause(sleeptime)
 
         def getOptimscale():
             """Determine an optimal scale for displaying the deformation"""

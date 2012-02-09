@@ -41,7 +41,7 @@ def atExit():
     layout(1)
     reset()
 
-def run()
+def run():
     nsl = 0
     F = Formex.read(getcfg('datadir')+'/horse.pgf')
 
@@ -49,28 +49,28 @@ def run()
     FA = draw(F,view='front')
     drawText('Viewport 0',20,20,size=20)
 
-    pause('NEXT: Create Viewport 1')
+    pause(msg='NEXT: Create Viewport 1')
     layout(2)
     drawText('Viewport 1',20,20,size=20)
     pf.GUI.viewports.updateAll()
 
-    pause('NEXT: Create Viewport 2')
+    pause(msg='NEXT: Create Viewport 2')
     layout(3)
     draw(F,color='green')
 
-    pause('NEXT: Link Viewport 2 to Viewport 0')
+    pause(msg='NEXT: Link Viewport 2 to Viewport 0')
 
     linkViewport(2,0)
     pf.GUI.viewports.updateAll()
 
-    pause('NEXT: Create 4 Viewports all linked to Viewport 0')
+    pause(msg='NEXT: Create 4 Viewports all linked to Viewport 0')
 
     layout(4,2)
     viewport(0)
     for i in range(1,4):
         linkViewport(i,0)
 
-    pause('NEXT: Change background colors in the viewports')
+    pause(msg='NEXT: Change background colors in the viewports')
 
     colors=['indianred','olive','coral','yellow']
 
@@ -79,7 +79,7 @@ def run()
         view(v)
         bgcolor(colors[i])
 
-    pause('NEXT: Cut the horse in viewport 3, notice results visible in all')
+    pause(msg='NEXT: Cut the horse in viewport 3, notice results visible in all')
 
     viewport(3)
     G = F.cutWithPlane([0.,0.,0.],[-1.,0.,0.],side='+')
@@ -87,7 +87,7 @@ def run()
     draw(G) # this draws in the 4 viewports !
     pf.GUI.viewports.updateAll()
 
-    pause('NEXT: DONE')
+    pause(msg='NEXT: DONE')
 
 
 if __name__ == 'draw':

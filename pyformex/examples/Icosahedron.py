@@ -27,13 +27,18 @@
 
 Draws an icosahedron and its projection on a sphere.
 
-level = 'normal'
-topics = ['Mesh','Geometry',Sphere']
-techniques = ['subdivide','project','animation']
+First, an Icosahedron is constructed. Its facets are subdivided
+into a number of smaller triangles and are then projected onto
+a sphere inscribed inside the Icosahedron.
+
+The result is shown constant in red color. The orginal Icosahedron
+is repeatedly shown while it is shrinking, until it completely
+disappears inside the red sphere. Finally, an intermediate configuration
+is shown.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
-_topics = ['Mesh','Geometry',Sphere']
+_topics = ['Mesh','Geometry','Sphere']
 _techniques = ['subdivide','project','animation']
 
 from gui.draw import *

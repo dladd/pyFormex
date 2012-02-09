@@ -45,26 +45,11 @@ def load(appname,refresh=False):
     try:
         __import__(name)
         app = sys.modules[name]
-        if pf.GUI:
-            pf.GUI.setcurfile(app)
         if refresh:
             reload(app)
         return app
     except:
         raise
-
-
-def run(appname,args=[]):
-    """Load and run the named app"""
-    app = load(appname)
-    if app and hasattr(app,'run'):
-        app._args_ = args
-        try:
-            res = app.run()
-        finally:
-            if hasattr(app,'atExit'):
-                app.atExit()
-        return res
 
 
 def classify(appdir):
@@ -129,5 +114,6 @@ def sortSets(d):
 
 
 _available_apps = detect(os.path.dirname(__file__))
+
 
 # End

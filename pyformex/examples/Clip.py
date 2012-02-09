@@ -25,20 +25,13 @@
 
 """Clip
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
 _techniques = ['color']
 
 from gui.draw import *
-
-resetAll()
-setDrawOptions({'clear':True})
 
 n = 16
 
@@ -59,17 +52,17 @@ for p in a:
 # Define a plane
 plane_p = [3.2,3.0,0.0]
 plane_n = [2.0,1.0,0.0]
-#number of nodes above/below the plane
+#compute number of nodes above/below the plane
 dist = F.distanceFromPlane(plane_p,plane_n)
-above = sum(dist>0.0,-1)
-below = sum(dist<0.0,-1) 
+above = (dist>0.0).sum(-1)
+below = (dist<0.0).sum(-1) 
 
 # Define a line by a point and direction
 line_p = [0.0,0.0,0.0]
 line_n = [1.,1.,1./3]
 d = F.distanceFromLine(line_p,line_n)
-#number of nodes close to line 
-close = sum(d < 2.2,-1)
+# compute number of nodes closer that 2.2 to line 
+close = (d < 2.2).sum(-1)
 
 
 
@@ -95,6 +88,9 @@ txt = [ 'First node has x between 1.5 and 3.5',
 
 
 def run():
+    resetAll()
+    setDrawOptions({'clear':True})
+    delay(1)
     draw(F)
 
     color = getcfg('canvas/colormap')[1:] # omit the black

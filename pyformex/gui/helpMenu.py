@@ -204,7 +204,7 @@ def createMenuData():
     try:
         MenuData = DocsMenuData + [
             (_('&Search text in source'),searchText),
-            (_('&About current script'),draw.showDescription),
+            (_('&Current Application'),draw.showDoc),
             ('---',None),
             ] + Docs2MenuData + [
             (_('&Detected Software'),detected), 

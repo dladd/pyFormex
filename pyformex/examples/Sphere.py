@@ -24,14 +24,10 @@
 ##
 """Sphere
 
-level = 'normal'
-topics = ['geometry','surface',sphere']
-techniques = ['dialog', 'color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
-_topics = ['geometry','surface',sphere']
+_topics = ['geometry','surface','sphere']
 _techniques = ['dialog', 'color']
 
 from gui.draw import *
@@ -65,6 +61,7 @@ def run():
     # Second, a surface model
 
     clear()
+    flat()
     base = Formex( [[[0,0,0],[1,0,0],[1,1,0]],
                     [[1,1,0],[0,1,0],[0,0,0]]],
                    [1,3] )
