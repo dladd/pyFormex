@@ -28,9 +28,8 @@ This module contains the functions to detect and load the pyFormex
 applications.
 """
 
-import pyformex as pf
 import utils
-import os
+import os,sys
 
 
 def load(appname,refresh=False):
@@ -40,7 +39,6 @@ def load(appname,refresh=False):
     before.
     On succes, returns the loaded module
     """
-    import sys
     name = 'apps.'+appname
     try:
         __import__(name)
@@ -50,6 +48,34 @@ def load(appname,refresh=False):
         return app
     except:
         raise
+
+
+def unload(appname):
+    """Try to unload an application"""
+    name = 'apps.'+appname
+    if name in sys.modules:
+        app = sys.modules[name]
+        refcnt = sys.getrefcount(app)
+        if refcnt == 4:
+            print "Unloading %s" % name
+            ## k = globals().keys()
+            ## k.sort()
+            ## print k
+            del globals()[appname]
+            del sys.modules[name]
+            ## refcnt = sys.getrefcount(app)
+            ## print refcnt
+            del app
+        else:
+            print "Can not unload %s" % name
+    else:
+        print "Module %s is not loaded" % name
+
+
+def listLoaded():
+    loaded = [ m for m in sys.modules.keys() if m.startswith('apps.') ]
+    loaded.sort()
+    return loaded
 
 
 def classify(appdir):

@@ -28,7 +28,7 @@ This modules implements specialized classes and functions for building
 the pyFormex GUI menu system.
 """
 
-import pyformex
+import pyformex as pf
 from pyformex.gui import *
 from PyQt4 import QtGui,QtCore # For Sphinx
 import odict
@@ -75,7 +75,7 @@ class BaseMenu(object):
     def __init__(self,title='AMenu',parent=None,before=None,items=None):
         """Create a menu."""
         self._title = title
-        pyformex.debug("Creating menu %s" % title)
+        pf.debug("Creating menu %s" % title)
         self.parent = parent
         self.separators = odict.ODict()
         self._actions_ = []
@@ -284,7 +284,7 @@ class Menu(BaseMenu,QtGui.QMenu):
 
         If parent==None, the menu is a standalone popup menu.
         If parent is given, the menu will be inserted in the parent menu.
-        If parent==pyformex.GUI, the menu is inserted in the main menu bar.
+        If parent==pf.GUI, the menu is inserted in the main menu bar.
         If a parent is given, and tearoff==True, the menu can be teared-off.
         
         If insert == True, the menu will be inserted in the main menubar
@@ -314,7 +314,7 @@ class Menu(BaseMenu,QtGui.QMenu):
         if not self.done:
             if not self.insert:
                 self.show()
-            pyformex.app.processEvents()
+            pf.app.processEvents()
 
 
     def remove(self):
@@ -449,12 +449,12 @@ save = NotImplemented
 saveAs = NotImplemented
 
 ## def editor():
-##     if pyformex.GUI.editor:
+##     if pf.GUI.editor:
 ##         print("Close editor")
-##         pyformex.GUI.closeEditor()
+##         pf.GUI.closeEditor()
 ##     else:
 ##         print("Open editor")
-##         pyformex.GUI.showEditor()
+##         pf.GUI.showEditor()
 
  
 def resetGUI():
@@ -466,42 +466,42 @@ def resetGUI():
     to their default operating mode. 
     """
     ## resetPick()
-    pyformex.GUI.resetCursor()
-    pyformex.GUI.actions['Play'].setEnabled(True)
-    pyformex.GUI.actions['Step'].setEnabled(True)
-    pyformex.GUI.actions['Continue'].setEnabled(False)
-    pyformex.GUI.actions['Stop'].setEnabled(False)
+    pf.GUI.resetCursor()
+    pf.GUI.actions['Play'].setEnabled(True)
+    pf.GUI.actions['Step'].setEnabled(True)
+    pf.GUI.actions['Continue'].setEnabled(False)
+    pf.GUI.actions['Stop'].setEnabled(False)
 
 
 def resetWarnings():
     """Reset the warning filters to the default."""
-    del pyformex.prefcfg['warnings/filters']
+    del pf.prefcfg['warnings/filters']
     print("This will only become effective in your future sessions!")
-    print "FILTERS:",pyformex.prefcfg['warnings/filters']
+    print "FILTERS:",pf.prefcfg['warnings/filters']
 
             
 # The menu actions can be simply function names instead of strings, if the
 # functions have already been defined here.
 
 def printwindow():
-    pyformex.app.syncX()
-    r = pyformex.GUI.frameGeometry()
+    pf.app.syncX()
+    r = pf.GUI.frameGeometry()
     print("Qt4 geom(w,h,x,y): %s,%s,%s,%s" % (r.width(),r.height(),r.x(),r.y()))
-    print("According to xwininfo, (x,y) is %s,%s" % pyformex.GUI.XPos())
+    print("According to xwininfo, (x,y) is %s,%s" % pf.GUI.XPos())
 
 
 _geometry=None
 
 def saveGeometry():
     global _geometry
-    _geometry = pyformex.GUI.saveGeometry()
+    _geometry = pf.GUI.saveGeometry()
 
 def restoreGeometry():
-    pyformex.GUI.restoreGeometry(_geometry)
+    pf.GUI.restoreGeometry(_geometry)
 
 
 def moveCorrect():
-    pyformex.GUI.move(*pyformex.GUI.XPos())
+    pf.GUI.move(*pf.GUI.XPos())
 
 def closeLogFile():
     if draw.logfile:
@@ -518,9 +518,14 @@ def openLogFile():
 def saveBoard():
     fn = draw.askFilename(filter=['*.txt','*'],multi=False,exist=False)
     if fn:
-        pyformex.GUI.board.save(fn)
+        pf.GUI.board.save(fn)
     
 
+def unloadCurrentApp():
+    appname = pf.cfg['curfile']
+    import apps
+    apps.unload(appname)
+    
 
 def createMenuData():
     """Returns the default pyFormex GUI menu data."""
@@ -532,6 +537,7 @@ def createMenuData():
         (_('&Reset GUI'),resetGUI),
         (_('&Reset Warning Filters'),resetWarnings),
         (_('&Force Finish Script'),script.force_finish),
+        (_('&Unload Current App'),unloadCurrentApp),
         ## (_('&Execute single statement'),command),
         (_('&Save Message Board'),saveBoard),
         (_('&Open Log File'),openLogFile),
@@ -541,6 +547,8 @@ def createMenuData():
         (_('&PrintGlobals'),script.printglobals),
         (_('&PrintConfig'),script.printconfig),
         (_('&Print Detected Software'),script.printdetected),
+        (_('&Print Loaded Apps'),script.printLoadedApps),
+        (_('&Print Used Memory'),script.printVMem),
         (_('&PrintBbox'),draw.printbbox),
         (_('&Print Viewport Settings'),draw.printviewportsettings),
         (_('&Print Window Geometry'),printwindow),
@@ -558,11 +566,11 @@ def createMenuData():
         ]
     
     # Insert configurable menus
-    if pyformex.cfg.get('gui/prefsmenu','True'):
+    if pf.cfg.get('gui/prefsmenu','True'):
         MenuData[1:1] = prefMenu.MenuData
-    if pyformex.cfg.get('gui/viewportmenu','True'):
+    if pf.cfg.get('gui/viewportmenu','True'):
         MenuData[2:2] = viewportMenu.MenuData
-    if pyformex.cfg.get('gui/cameramenu','True'):
+    if pf.cfg.get('gui/cameramenu','True'):
         MenuData[3:3] = [(_('&Camera'),cameraMenu.MenuData)]
 
     return MenuData

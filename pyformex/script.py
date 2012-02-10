@@ -488,6 +488,7 @@ def runApp(appname,argv=[],reload=False):
 
     pf.debug("  Arguments left after execution: %s" % argv)
     message("Finished %s in %s seconds" % (appname,t.seconds()))
+    pf.debug("Memory: %s" % vmSize(),pf.DEBUG.MEM)
 
 
 def run(appname=None,argv=[],step=False,reload=False):
@@ -605,6 +606,23 @@ def printconfig():
 
 def printdetected():
     print(utils.reportDetected())
+
+
+def printLoadedApps():
+    import apps,sys
+    loaded = apps.listLoaded()
+    refcnt = [ sys.getrefcount(sys.modules[k]) for k in loaded ]
+    print ', '.join([ "%s (%s)" % (k,r) for k,r in zip(loaded,refcnt)])
+
+
+def vmSize():
+    import os
+    return os.popen('ps h o vsize %s'%os.getpid()).read().strip()
+
+
+def printVMem(msg='MEMORY'):
+    print '%s: VmSize=%skB'%(msg,vmSize())
+
 
 ### Utilities
 

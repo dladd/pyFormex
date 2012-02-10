@@ -400,6 +400,8 @@ def createMenu(parent=None,before=None):
     appmenu.insertItems([
         ('---',None),
         (_('&Configure App Paths'),setDirs,{'data':'appdirs'}),
+        (_('&List loaded Apps'),script.printLoadedApps),
+        (_('&Unload Current App'),menu.unloadCurrentApp),
         (_('&Reload App Menu'),reloadMenu),
         ])
 
@@ -425,28 +427,5 @@ def create_app_menu(parent=None,before=None):
         loadactions.add(name,icon=None,text=descr)
         
     return loadactions
-
-
-def extractKeyword(s):
-    """Extract a ``keyword = value`` pair from a string.
-
-    If the input string `s` is of the form ``keyword = value``
-    a tuple (keyword,value) is returned, else None.
-    """
-    i = s.find('=')
-    if i >= 0:
-        try:
-            key = s[:i].strip()
-            if len(key) > 0:
-                return key, eval(s[i+1:].strip())
-        except:
-            pf.debug("Error processing keywords %s" % s.strip('\n'))
-            pass
-    return None
-
-
-def getDescription(doc):
-    txt = doc.partition('.. Description')
-    return ' '.join(txt[1:])
     
 # End

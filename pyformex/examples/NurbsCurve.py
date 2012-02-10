@@ -114,11 +114,6 @@ def drawNurbs(points,pointtype,degree,strategy,closed,blended,weighted=False,Cle
     #drawThePoints(N,11,color=black)
 
 
-clear()
-setDrawOptions({'bbox':None})
-linewidth(2)
-flat()
-
 dialog = None
 
 
@@ -190,17 +185,24 @@ input_enablers = [
     ('pointtype','Control','weighted'),
 #    ('closed',False,'blended'),
     ]
-  
-dialog = Dialog(
-    data_items,
-    enablers = input_enablers,
-    caption = 'Nurbs parameters',
-    actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
-    default = 'Show',
-    )
 
 
 def run():
+    global dialog
+    clear()
+    setDrawOptions({'bbox':None})
+    linewidth(2)
+    flat()
+
+    ## Closing this dialog should release the scriptlock
+    dialog = Dialog(
+        data_items,
+        enablers = input_enablers,
+        caption = 'Nurbs parameters',
+        actions = [('Close',close),('Clear',clear),('Show All',showAll),('Show',show)],
+        default = 'Show',
+        )
+    
     if pf.PF.has_key('_Nurbs_data_'):
         dialog.updateData(pf.PF['_Nurbs_data_'])
 
