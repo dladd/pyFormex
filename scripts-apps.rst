@@ -160,7 +160,9 @@ In favor of *app*:
 | Canvas settings are global to all   | Canvas settings **could** be made     |
 | scripts                             | local to applications                 |
 +-------------------------------------+---------------------------------------+
-
+| Data persistence requires export to | Data persistence between invokations  |
+| the pyFormex GUI dict PF            | is automatic (for module globals)     | 
++-------------------------------------+---------------------------------------+
 
 
 In favor of *script*:
@@ -179,6 +181,20 @@ In favor of *script*:
 | Can be located anywhere.            | Have to be under sys.path (can be     |
 |                                     | configured and expanded).             |
 +-------------------------------------+---------------------------------------+
+| Can easily execute a small piece of | We may have to keep a basic script    |
+| Python code, not even in a file, eg | exec functionality next to the app    |
+| ToolsMenu: Execute pyFormex command | framework                             |
++-------------------------------------+---------------------------------------+
+
+
+Problems
+--------
+
+Here you can add any observations made concerning the execution of apps or
+scripts.and especially differences between the two or functionality that you
+would like to see changed.
+
+
 
 
 .. End

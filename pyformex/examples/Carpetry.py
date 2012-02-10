@@ -25,19 +25,10 @@
 
 """Carpetry
 
-level = 'normal'
-topics = ['mesh','illustration','surface']
-techniques = ['color','random']
-
-.. Description
-
-Carpetry
---------
 This example illustrates the use of the Mesh conversion techniques and the
 creation of colored value plots on surfaces.
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['mesh','illustration','surface']
 _techniques = ['color','random']
@@ -59,7 +50,7 @@ def drawMesh(M):
 def run():
     # make sure this is a good aspect ratio if you want a movie
     nx,ny = 4,3
-
+    global saved_autozoomfactor
     saved_autozoomfactor = pf.cfg['gui/autozoomfactor']
 
     pf.GUI.setBusy()
@@ -76,10 +67,10 @@ def run():
     possible_keys = [ k for k in V.keys() if not V[k][1] ][:-1]
     nkeys = len(possible_keys)
 
-    maxconv = 10
-    minconv = 5
+    maxconv = 6
+    minconv = 4
     minelems = 10000
-    maxelems = 50000
+    maxelems = 30000
 
     save = False
 
@@ -154,17 +145,6 @@ def run():
         #return(all=True)
         guimain.quitGUI()
 
-
-    ## print "ATEXIT"
-    ## from PyQt4 import QtGui
-    ## print "current:%s" % pf.GUI.viewports.current.size()
-    ## print "max:%s" % pf.GUI.viewports.current.maximumSize()
-    ## pf.GUI.viewports.current.setMaximumSize(1000,2000)
-    ## pf.GUI.central.setSizePolicy(QtGui.QSizePolicy.Maximum,QtGui.QSizePolicy.Maximum)
-    ## pf.GUI.central.resize(pf.GUI.central.size().width()+0,pf.GUI.central.size().height()+0)
-    ## pf.GUI.viewports.activate()
-    ## pf.GUI.resize(pf.GUI.size().width()+0,pf.GUI.size().height()+0)
-    ## pf.GUI.update()
 
 if __name__ == 'draw':
     run()

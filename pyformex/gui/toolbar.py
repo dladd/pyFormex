@@ -35,20 +35,23 @@ import widgets
 import draw
 import utils
 import fileMenu
- 
+
+
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""
     action = {}
-    buttons = [ ( "Play", "next", draw.play, False ),
-#                ( "Step", "nextstop", draw.step, False ),
-                ( "Continue", "ff", draw.fforward, False ),
-                ( "Stop", "stop", draw.raiseExit, False ),
-                ]
-    if pf.cfg['gui/stepbutton']:
-        buttons[1:1] = [( "Step", "nextstop", draw.step, False )]
-    if pf.cfg['gui/rerunbutton']:
-        buttons[1:1] = [( "ReRun", "rerun", draw.replay, True )]
+    avail_buttons = [
+        ( "Play", "next", draw.play, False ),
+        ( "ReRun", "rerun", draw.replay, False ),
+        ( "Step", "nextstop", draw.step, False ),
+        ( "Continue", "ff", draw.fforward, False ),
+        ( "Stop", "stop", draw.raiseExit, False ),
+        ( "Edit", "pencil", fileMenu.editApp, False ),
+        ]
+    # Filter configured buttons
+    show_buttons = pf.cfg['gui/actionbuttons']
+    buttons = [ b for b in avail_buttons if b[0].lower() in show_buttons ]
     for b in buttons:
         icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon(b[1])))
         a = toolbar.addAction(icon,b[0],b[2])

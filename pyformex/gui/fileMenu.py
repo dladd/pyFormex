@@ -364,8 +364,6 @@ def editApp(appname=None):
             return
             
     draw.editFile(fn)
-        
-   
     
 
 ##################### other functions ##########################

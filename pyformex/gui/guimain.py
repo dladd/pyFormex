@@ -511,20 +511,16 @@ class Gui(QtGui.QMainWindow):
             name = app.__name__.replace('apps.','')
             self.canPlay = hasattr(app,'run')
             self.curfile.label.setText('App:')
-            if 'ReRun' in self.actions:
-                self.actions['ReRun'].setEnabled(self.canPlay)
             pf.prefcfg['curfile'] = name
         else:
             name = os.path.basename(app)
             self.canPlay = utils.is_pyFormex(app) or app.endswith('.pye')
             self.curfile.label.setText('Script:')
-            if 'Step' in self.actions:
-                self.actions['Step'].setEnabled(self.canPlay)
             pf.prefcfg['curfile'] = app
 
         self.curfile.setText(name)
-        self.actions['Play'].setEnabled(self.canPlay)
-        self.actions['Stop'].setEnabled(self.canPlay)
+        self.enableButtons(self.actions,['Play','Edit'],self.canPlay)
+        self.enableButtons(self.actions,['ReRun'],self.canPlay and is_app)
         icon = 'ok' if self.canPlay else 'notok'
         self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(pf.cfg['icondir'],icon)+pf.cfg['gui/icontype'])),0)
 
@@ -729,6 +725,52 @@ class Gui(QtGui.QMainWindow):
         """
         for w in self.findDialog(name):
             w.close()
+
+
+    # This should go to a toolbar class
+    def enableButtons(self,toolbar,buttons,enable):
+        """Enable or disable a button in a toolbar.
+
+        toolbar is a toolbar dict.
+        buttons is a list of button names.
+        For each button in the list:
+
+        - If it exists in toolbar, en/disables the button.
+        - Else does nothing
+        """
+        for b in buttons:
+            if b in toolbar:
+                toolbar[b].setEnabled(enable)
+
+
+    def startScript(self):
+        """Change the GUI when a script starts running.
+
+        This method enables/disables the parts of the GUI that should or
+        should not be available while a script is running
+        It is called by the application executor.
+        """
+        self.drawlock.allow()
+        pf.canvas.update()
+        self.enableButtons(self.actions,['Play','ReRun'],False)
+        self.enableButtons(self.actions,['Step','Continue','Stop'],True)
+        pf.app.processEvents()
+
+
+    def stopScript(self):
+        """Change the GUI when a script starts running.
+
+        This method enables/disables the parts of the GUI that should or
+        should not be available when no script is being executed.
+        It is called by the application executor when an application stops.
+        """
+        ## STEPMODE SHOULD BE REMOVED
+        global stepmode
+        stepmode = False
+        self.drawlock.release()
+        self.enableButtons(self.actions,['Play','ReRun'],True)
+        self.enableButtons(self.actions,['Step','Continue','Stop'],False)
+        pf.app.processEvents()
 
 
 def xwininfo(windowid=None,name=None):
@@ -1126,9 +1168,12 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     # show current application/file
     app = pf.cfg['curfile']
     if not utils.is_script(app):
-        import apps
-        app = app.replace('apps.','')
-        app = apps.load(app)
+        try:  # Avoid an error on startup !
+            import apps
+            app = app.replace('apps.','')
+            app = apps.load(app)
+        except:
+            app = ''
     pf.GUI.setcurfile(app)
 
     # Last minute menu modifications can go here

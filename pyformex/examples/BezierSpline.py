@@ -25,15 +25,6 @@
 
 """BezierSpline
 
-level = 'normal'
-topics = ['geometry', 'curve']
-techniques = ['spline','dialog']
-
-.. Description
-
-Bezier Spline
-=============
-
 This example shows a collection of Bezier Spline curves through a number of
 points. The points used are the corners and midside points of a unit square.
 The user is asked for a number of points to use.
@@ -41,7 +32,7 @@ The image shows open (left) and closed (right) BezierSpline curves of
 degrees 1(red), 2(magenta) and 3(blue).
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry', 'curve']
 _techniques = ['spline','dialog']
@@ -63,14 +54,17 @@ _pts = Coords([
     [1.,0.,0.],
     ])
 
+# Number of points to actually use
+npts = 5
 
 def run():
+    global npts # makes this value persistent
     resetAll()
     clear()
     linewidth(2)
 
     # Ask the user how many points he wants to use
-    res = askItems([_I('npts',5,text='How many points to use (2..%s)' % len(_pts))])
+    res = askItems([_I('npts',npts,text='How many points to use (2..%s)' % len(_pts))])
     if not res:
         return
 

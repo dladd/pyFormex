@@ -23,37 +23,31 @@
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
-"""Casteljou
+"""Nurbs
 
-This example illustrates the deCasteljou algorithm for constructing a point
-on a  Bezier curve.
+This example shows the Nurbs curves of degree 1..MAX for a given set of
+control points.
 
-User input:
+The control points are constructed from an input string using the 'pattern'
+function. The number of predefined pattern strings are provided, but the
+user can also input a custom value.
 
-:pattern: a string defining a set of points (see 'pattern' function).
-  It can be selected from a number of predefined values, or be set as
-  a custom value.
-:custom: a custom string to be used instead of one of the predefined values.
-:value: a parametric value between 0.0 and 1.0.
+If there are N control points, the maximum Nurbs degree is N-1. However,
+due to OpenGL limitations, the maximum Nurbs degree that can be shown
+directly is 7. Higher order curves are approximated by a PolyLine.
 
-The pattern string defines a set of N points, where N is the length of the
-string. These N points define a Bezier Spline of degree N-1.
-
-The application first draws a PolyLine through the N points. Then it draws
-the subsequent steps of deCasteljou's algorithm to construct the point of
-the Bezier Spline for the given parametric value.
-
-Finally it also draws a whole set of points on the Bezier Spline. These points
-are computed from Bernstein polynomials, just like in example BezierCurve.
+For the last (highest degree) Nurbs curve, also a set of 100 points along
+the curve are shown.
 """
 _status = 'checked'
 _level = 'normal'
 _topics = ['geometry', 'curve']
-_techniques = ['pattern','delay']
+_techniques = ['nurbs']
 
 from gui.draw import *
-from plugins.curve import PolyLine
-import plugins.nurbs as nb
+from plugins.nurbs import NurbsCurve
+
+resetAll()
 
 # Some strings defining line patterns
 predefined = [
@@ -69,16 +63,15 @@ predefined = [
     'custom']
 
 # Default values
-pattern = None    # The chosen pattern
-custom = ''       # The custom pattern
-value = 0.5   # Parametric value of the point to construct
+pattern = None
+custom = ''
+
 
 def run():
     
     res = askItems([
         dict(name='pattern',value=pattern,choices=predefined),
         dict(name='custom',value=custom),
-        dict(name='value',value=value),
         ],enablers=[('pattern','custom','custom')])
 
     if not res:
@@ -92,34 +85,35 @@ def run():
 
     if not pat.startswith('l:'):
         pat = 'l:' + pat
+    C = Formex(pat).toCurve()
 
     clear()
     linewidth(2)
     flat()
-    delay(0)
 
-    # Construct and show a polyline through the points
-    C = Formex(pat).toCurve()
-    draw(C,bbox='auto',view='front')
     draw(C.coords)
     drawNumbers(C.coords)
-    
     setDrawOptions({'bbox':None})
 
-    # Compute and show the deCasteljou construction
-    Q = nurbs.deCasteljou(C.coords,value)
-    delay(1)
-    wait()
-    for q in Q[1:-1]:
-        draw(PolyLine(q),color=red)
-    draw(Q[-1],marksize=10)
+    cmap = colormap() * 2
+    print cmap
+    n = min(len(C.coords),cmap)
+    dmax = 7 # maximum Nurbs degree we can draw in OpenGL
+    for d in range(1,n):
+        print d
+        c = cmap[ (d-1) % len(cmap) ] # wrap around if color map is too short
+        N = NurbsCurve(C.coords,degree=d)
+        if d <= dmax:
+            draw(N,color=c)
+            draw(N.knotPoints(),color=c,marksize=10)
+        else:
+            draw(N.approx(),color=c)
+            draw(N.knotPoints(),color=c,marksize=5)
 
-    # Compute and show many points on the Bezier
-    delay(0)
     n = 100
     u = arange(n+1)*1.0/n
-    P = nurbs.pointsOnBezierCurve(C.coords,u)
-    draw(Coords(P))
+    x = N.pointsAt(u)
+    draw(x)
     
 if __name__ == 'draw':
     run()

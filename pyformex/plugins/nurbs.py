@@ -271,6 +271,8 @@ class NurbsCurve(Geometry4):
     the degree is not set larger than 3.
 
     """
+
+    N_approx = 100
 #    
 #    order (2,3,4,...) = degree+1 = min. number of control points
 #    ncontrol >= order
@@ -443,7 +445,28 @@ class NurbsCurve(Geometry4):
         X = nurbs.curveDecompose(self.coords,self.knots)
         return NurbsCurve(X,degree=self.degree,blended=False)
 
+
+    def approx(self,ndiv=None,ntot=None):
+        """Return a PolyLine approximation of the Nurbs curve
+
+        If no `ntot` is given, the curve is approximated by a PolyLine
+        through equidistant `ndiv+1` point in parameter space. These points
+        may be far from equidistant in Cartesian space.
         
+        If `ntot` is given, a second approximation is computed with `ntot`
+        straight segments of nearly equal length. The lengths are computed
+        based on the first approximation with `ndiv` segments.
+        """
+        from curve import PolyLine
+        if ndiv is None:
+            ndiv = self.N_approx
+        u = arange(ndiv+1)*1.0/ndiv
+        PL = PolyLine(self.pointsAt(u))
+        if ntot is not None:
+            u = PL.atLength(ntot)
+            PL = PolyLine(PL.pointsAt(u))
+        return PL#.setProp(self.prop)
+
 
     def actor(self,**kargs):
         """Graphical representation"""

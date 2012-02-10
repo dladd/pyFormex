@@ -113,8 +113,9 @@ camerabar = 'top'     # add camera toolbar to top toolbar space
 modebar = 'top'       # add rendemode toolbar to top toolbar space
 viewbar = 'top'       # add views toolbar to top toolbar space
 
-rerunbutton = True   # add rerun button to toolbar
-stepbutton = True    # add step button to toolbar
+# Default action buttons for current app
+actionbuttons = [ 'play', 'rerun', 'step', 'continue', 'stop', 'edit' ]
+
 normalsbutton = True  # add normals button to toolbar
 lightbutton = True    # add light button to toolbar
 shrinkbutton = False  # add shrink button to toolbar

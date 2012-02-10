@@ -268,34 +268,6 @@ def scriptRelease(id):
 def executeScript(scr,glob):
     """Execute a Python script in specified globals."""
     exec scr in glob
-
-
-def _gui_start_script():
-    pf.debug('GUI SCRIPT MODE %s'% (stepmode),pf.DEBUG.SCRIPT)
-    pf.GUI.drawlock.allow()
-    pf.canvas.update()
-    pf.GUI.actions['Play'].setEnabled(False)
-    if 'ReRun' in pf.GUI.actions:
-        pf.GUI.actions['ReRun'].setEnabled(False)
-    if 'Step' in pf.GUI.actions:
-        pf.GUI.actions['Step'].setEnabled(True)
-    pf.GUI.actions['Continue'].setEnabled(True)
-    pf.GUI.actions['Stop'].setEnabled(True)
-    pf.app.processEvents()
-
-
-def _gui_stop_script():
-    global stepmode
-    stepmode = False
-    pf.GUI.drawlock.release()
-    pf.GUI.actions['Play'].setEnabled(True)
-    if 'ReRun' in pf.GUI.actions:
-        pf.GUI.actions['ReRun'].setEnabled(True)
-    if 'Step' in pf.GUI.actions:
-        pf.GUI.actions['Step'].setEnabled(False)
-    pf.GUI.actions['Continue'].setEnabled(False)
-    pf.GUI.actions['Stop'].setEnabled(False)
-    pf.app.processEvents()
     
  
 def playScript(scr,name=None,filename=None,argv=[],pye=False):
@@ -330,7 +302,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     exitrequested = False
 
     if pf.GUI:
-        _gui_start_script()
+        pf.GUI.startScript()
     
     # Get the globals
     g = Globals()
@@ -395,7 +367,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
         #elapsed = time.clock() - starttime
         #pf.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if pf.GUI:
-            _gui_stop_script()
+            pf.GUI.stopScript()
             
     if exitall:
         pf.debug("Calling quit() from playscript")
@@ -496,7 +468,7 @@ def runApp(appname,argv=[],reload=False):
     
     scriptLock('__auto__')
     if pf.GUI:
-        _gui_start_script()
+        pf.GUI.startScript()
     pf.GUI.apphistory.add(appname)
     message("Running application '%s' from %s" % (appname,app.__file__))
     pf.debug("  Passing arguments: %s" % argv)
@@ -512,7 +484,7 @@ def runApp(appname,argv=[],reload=False):
             pf.PF.update([(k,g[k]) for k in exportNames])
         scriptRelease('__auto__') # release the lock
         if pf.GUI:
-            _gui_stop_script()
+            pf.GUI.stopScript()
 
     pf.debug("  Arguments left after execution: %s" % argv)
     message("Finished %s in %s seconds" % (appname,t.seconds()))
