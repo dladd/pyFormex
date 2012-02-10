@@ -816,6 +816,8 @@ class BezierSpline(Curve):
             # Oncurve points are specified separately
             coords = Coords(coords)
             ncoords = nparts = coords.shape[0]
+            if ncoords < 2:
+                raise ValueError,"Need at least two points to define a curve"
             if not closed:
                 nparts -= 1
 
@@ -825,20 +827,25 @@ class BezierSpline(Curve):
                     control = coords[:nparts]
                 
                 elif degree == 2:
-                    if closed:
-                        P0 = 0.5 * (roll(coords,1,axis=0) + roll(coords,-1,axis=0))
-                        P1 = 2*coords - P0
-                        Q0 = 0.5*(roll(coords,1,axis=0) + P1)
-                        Q1 = 0.5*(roll(coords,-1,axis=0) + P1)
-                        Q = 0.5*(roll(Q0,-1,axis=0)+Q1)
-                        control = Q
+                    if ncoords < 3:
+                        control = 0.5*(coords[:1] + coords[-1:])
+                        if closed:
+                            control =  Coords.concatenate([control,control])
                     else:
-                        P0 = 0.5 * (coords[:-2] + coords[2:])
-                        P1 = 2*coords[1:-1] - P0
-                        Q0 = 0.5*(coords[:-2] + P1)
-                        Q1 = 0.5*(coords[2:] + P1)
-                        Q = 0.5*(Q0[1:]+Q1[:-1])
-                        control = Coords.concatenate([Q0[:1],Q,Q1[-1:]],axis=0)
+                        if closed:
+                            P0 = 0.5 * (roll(coords,1,axis=0) + roll(coords,-1,axis=0))
+                            P1 = 2*coords - P0
+                            Q0 = 0.5*(roll(coords,1,axis=0) + P1)
+                            Q1 = 0.5*(roll(coords,-1,axis=0) + P1)
+                            Q = 0.5*(roll(Q0,-1,axis=0)+Q1)
+                            control = Q
+                        else:
+                            P0 = 0.5 * (coords[:-2] + coords[2:])
+                            P1 = 2*coords[1:-1] - P0
+                            Q0 = 0.5*(coords[:-2] + P1)
+                            Q1 = 0.5*(coords[2:] + P1)
+                            Q = 0.5*(Q0[1:]+Q1[:-1])
+                            control = Coords.concatenate([Q0[:1],Q,Q1[-1:]],axis=0)
 
                 elif degree == 3:
                     P = PolyLine(coords,closed=closed)
@@ -866,8 +873,6 @@ class BezierSpline(Curve):
                         p2 = roll(p2,-1,axis=0)
                     else:
                         # Fix the first and last derivs if they were autoset
-                        #print undefined
-                        #print deriv
                         if undefined[0]:
                             if endzerocurv[0]:
                                 # option curvature 0:
@@ -882,7 +887,6 @@ class BezierSpline(Curve):
                             else:
                                 # option max. continuity
                                 deriv[-1] = 2.*deriv[-1] - deriv[-2]
-                        #print deriv
                         
                         p1 = coords[:-1] + deriv[:-1]*curl*ampl
                         p2 = coords[1:] - deriv[1:]*curl*ampl
@@ -896,12 +900,10 @@ class BezierSpline(Curve):
                 try:
                     control = asarray(control).reshape(nparts,degree-1,3)
                     control = Coords(control)
-                    #print "COORDS",coords
-                    #print "CONTROL",control
                 except:
                     print("coords array has shape %s" % str(coords.shape))
                     print("control array has shape %s" % str(control.shape))
-                    raise ValueError,"Invalid control points for BezierSpline"
+                    raise ValueError,"Invalid control points for BezierSpline of degree %s" % degree
 
                 # Join the coords and controls in a single array
                 control = Coords.concatenate([coords[:nparts,newaxis,:],control],axis=1).reshape(-1,3)

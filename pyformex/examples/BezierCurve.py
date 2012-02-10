@@ -43,6 +43,7 @@ _techniques = []
 
 from gui.draw import *
 
+
 from plugins.curve import *
 from plugins.nurbs import *
 
@@ -78,6 +79,8 @@ def run():
     u = arange(n+1)*1.0/n
     P = pointsOnBezierCurve(C.coords,u)
     draw(P)
+
+
 
 if __name__ == 'draw':
     run()

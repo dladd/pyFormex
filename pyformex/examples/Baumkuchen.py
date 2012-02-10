@@ -29,7 +29,7 @@ topics = ['structure']
 techniques = ['color','bump']
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['structure']
 _techniques = ['color','bump']
