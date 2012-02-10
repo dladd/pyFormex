@@ -38,6 +38,8 @@ from gui.draw import *
 from gui.widgets import ImageView,simpleInputItem as I
 from gui.imagearray import *
 
+resetAll()
+
 def selectImage(fn):
     fn = askImageFile(fn)
     if fn:
@@ -69,6 +71,7 @@ def loadImage(fn):
 
 
 def run():
+    global image, scaled_image
     flat()
     lights(False)
     transparent(False)
@@ -131,15 +134,17 @@ def run():
         draw(G,color=color,colormap=colortable)
         drawText('Created with pyFormex',20,20,size=24)
 
-
-    layout(2)
-    viewport(0)
-    drawTransform('cylindrical')
+    drawTransform(transform)
     zoomAll()
+    
+    ## layout(2)
+    ## viewport(0)
+    ## drawTransform('cylindrical')
+    ## zoomAll()
 
-    viewport(1)
-    drawTransform('spherical')
-    zoomAll()
+    ## viewport(1)
+    ## drawTransform('spherical')
+    ## zoomAll()
 
 if __name__ == 'draw':
     run()

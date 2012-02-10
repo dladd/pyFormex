@@ -111,10 +111,10 @@ examplesmenu = True  # add examples menu
 
 camerabar = 'top'     # add camera toolbar to top toolbar space
 modebar = 'top'       # add rendemode toolbar to top toolbar space
-viewbar = 'top'       # add views toolbar to top toolbar space
+viewbar = 'left'      # add views toolbar to left toolbar space
 
 # Default action buttons for current app
-actionbuttons = [ 'play', 'rerun', 'step', 'continue', 'stop', 'edit' ]
+actionbuttons = [ 'play', 'rerun', 'step', 'continue', 'stop', 'edit', 'info' ]
 
 normalsbutton = True  # add normals button to toolbar
 lightbutton = True    # add light button to toolbar

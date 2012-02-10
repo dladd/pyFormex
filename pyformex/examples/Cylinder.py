@@ -25,26 +25,18 @@
 
 """Cylinder
 
-level = 'beginner'
-topics = ['geometry', 'surface', 'cylinder']
-techniques = ['import']
-
-.. Description
-
-Cylinder
---------
 This example illustrates the use of simple.sector() and simple.cylinder()
 to create a parametric cylindrical surface.
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry', 'surface', 'cylinder']
 _techniques = ['import']
 
 from gui.draw import *
 import simple
-from plugins.trisurface import TriSurface
+#from plugins.trisurface import TriSurface
 
 def run():
     n=12
@@ -55,9 +47,10 @@ def run():
     S = TriSurface(C)
     export({'surface':S})
 
+    clear()
     smoothwire()
     view('iso')
-    draw(S,color=red)
+    draw(S,color=red,bkcolor=black)
 
 if __name__ == 'draw':
     run()

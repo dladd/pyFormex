@@ -32,7 +32,7 @@ topics = ['Image','Geometry']
 techniques = ['texture']
 
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['Image','Geometry']
 _techniques = ['texture']

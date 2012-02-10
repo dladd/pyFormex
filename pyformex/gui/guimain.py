@@ -519,7 +519,7 @@ class Gui(QtGui.QMainWindow):
             pf.prefcfg['curfile'] = app
 
         self.curfile.setText(name)
-        self.enableButtons(self.actions,['Play','Edit'],self.canPlay)
+        self.enableButtons(self.actions,['Play','Edit','Info'],self.canPlay)
         self.enableButtons(self.actions,['ReRun'],self.canPlay and is_app)
         icon = 'ok' if self.canPlay else 'notok'
         self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(pf.cfg['icondir'],icon)+pf.cfg['gui/icontype'])),0)

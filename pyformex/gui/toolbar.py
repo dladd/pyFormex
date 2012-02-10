@@ -48,6 +48,7 @@ def addActionButtons(toolbar):
         ( "Continue", "ff", draw.fforward, False ),
         ( "Stop", "stop", draw.raiseExit, False ),
         ( "Edit", "pencil", fileMenu.editApp, False ),
+        ( "Info", "info", draw.showDoc, False ),
         ]
     # Filter configured buttons
     show_buttons = pf.cfg['gui/actionbuttons']

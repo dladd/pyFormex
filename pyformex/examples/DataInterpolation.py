@@ -25,21 +25,22 @@
 #
 """DataInterpolation
 
-level = 'advanced'
-topics = [ 'mesh','postprocess']
-techniques = ['calpy','color']
+This example demonstrates how to use the external 'calpy' module
+to interpolate data on a Mesh.
 
-.. Description
+The Mesh is a 4 by 3 grid of 'Quad8' elements. Random data, shown as colors,
+are generated for all the Gauss integration points (GP) of the elements.
+These data are then inter-/extrapolated to yield nodal data for all elements.
+Finally, nodal data are averaged to yield single sets of data at the nodes.
 
-DataInterpolation
------------------
+The same technique can be used if the data are given at other points
+than the GP or need to be interpolated at other points.
 
-This example demonstrates how to use calpy to interpolate data on a Mesh.
-The data are given in the Gauss integration points (GP) and are
-computed in the nodes, but the same technique can be used if data
-are given in other points or need to be calculated in other points.
+The application shows two viewports. In the left viewport element per
+element interpolation is shown. The right viewport shows the result of the
+nodal averaging.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'advanced'
 _topics = [ 'mesh','postprocess']
 _techniques = ['calpy','color']
@@ -57,7 +58,7 @@ def run():
     # Now, let's create a grid of 'quad8' elements
     # size of the grid
     nx,ny = 4,3
-    # plreturnude
+    # plexitude
     nplex = 8
     clear()
     flatwire()
@@ -87,14 +88,16 @@ def run():
 
     viewport(0)
     clear()
-    flatwire()
+    smoothwire()
+    lights(False)
     draw(M,color=endata)
     drawNumbers(M.coords)
     drawText("Per element interpolation",20,20,font='9x15')
 
     viewport(1)
     clear()
-    flatwire()
+    smoothwire()
+    lights(False)
     draw(M,color=colors)
     drawNumbers(M.coords)
     drawText("Averaged nodal values",20,20,font='9x15')

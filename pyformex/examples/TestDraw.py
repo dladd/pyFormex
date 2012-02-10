@@ -45,11 +45,11 @@ setDrawOptions({'clear':True, 'bbox':'auto'})
 linewidth(2) # The linewidth option is not working nyet
 
 geom_mode = [ 'Formex','Mesh' ]
-plreturnude = [ 1,2,3,4,5,6,8 ]
+plexitude = [ 1,2,3,4,5,6,8 ]
 element_type = [ 'auto', 'tet4', 'wedge6', 'hex8' ]
 color_mode = [ 'none', 'single', 'element', 'vertex' ]
 
-# The points used for a single element of plreturnude 1..8
+# The points used for a single element of plexitude 1..8
 Points = {
     1: [[0.,0.,0.]],
     2: [[0.,0.,0.],[1.,0.,0.]],
@@ -69,7 +69,7 @@ def select_geom(geom,nplex,eltype):
         nplex = int(eltype[-1])
     except:
         if not nplex in Points.keys():
-            nplex = max([i for i in plreturnude if i in Points.keys()])
+            nplex = max([i for i in plexitude if i in Points.keys()])
         eltype = None
     if eltype is None:
         x = Points[nplex]
@@ -101,7 +101,7 @@ color = 'element'
 pos = None
 items = [
     I('geom',geom,'radio',choices=geom_mode,text='Geometry Model'),
-    I('nplex',nplex,'select',choices=plreturnude,text='Plexitude'),
+    I('nplex',nplex,'select',choices=plexitude,text='Plexitude'),
     I('eltype',eltype,'select',choices=element_type,text='Element Type'),
     I('color',color,'select',choices=color_mode,text='Color Mode'),
     ]

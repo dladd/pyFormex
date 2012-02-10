@@ -25,12 +25,13 @@
 
 """Extrude
 
-level = 'beginner'
-topics = ['formex']
-techniques = ['extrude']
-
+This example shows the repeated extrusion of a Geometry.
+First a point is created (black). It is extruded in the x-direction
+to yield a line (red). The line is extruded in y-direction, resulting in
+a rectangle (blue). Finally, an extrusion in the z-direction gives a
+cuboid (yellow).
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['formex']
 _techniques = ['extrude']
@@ -39,11 +40,6 @@ from gui.draw import *
 
 def run():
     clear()
-    smooth()
-    M = Formex('4:0123').replic2(60,30).toMesh()#.setProp(5)
-    draw(M,color=yellow)
-    #drawNumbers(M)
-    return
 
     smoothwire()
     view('iso')
@@ -53,11 +49,11 @@ def run():
     draw(a,color='black')
 
 
-    b = a.extrude(8,1.,1)
+    b = a.extrude(8,1.,0)
     draw(b,color='red')
 
 
-    c = b.extrude(8,1.,0)
+    c = b.extrude(8,1.,1)
     draw(c,color='blue')
 
 
