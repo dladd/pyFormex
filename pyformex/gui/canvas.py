@@ -1073,7 +1073,16 @@ class Canvas(object):
         if dist <= 0.0:
             dist = 1.0
         self.camera.setDist(dist)
-        self.camera.setClip(0.01*dist,100.*dist)
+        ## print "vsize,dist = %s, %s" % (vsize,dist)
+        ## near,far = 0.01*dist,100.*dist
+        ## print "near,far = %s, %s" % (near,far)
+        ## near,far = 0.1*dist,10.*dist
+        ## print "near,far = %s, %s" % (near,far)
+        near,far = dist-1.5*vsize,dist+1.5*vsize
+        #print "near,far = %s, %s" % (near,far)
+        near = max(0.0001*vsize,near)
+        #print "near,far = %s, %s" % (near,far)
+        self.camera.setClip(near,far)
         self.camera.resetArea()
 
 

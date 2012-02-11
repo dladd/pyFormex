@@ -106,6 +106,17 @@ This means that for most scripts, it will suffice to add the line::
   from gui.draw import *
 
 and to put your outermost code inside a function ``run``. 
+Then all calls to::
+
+  exit()
+
+should be replaced with::
+
+  return
+
+Finally, make sure that all global variables you assign to in the ``run`` 
+method are declared global. Many examples e.g. use a global variable
+``dialog``.
 
 Note that a *script* can be structured as an *app* and still be used as
 a *script*. Some of the examples in pyFormex are already structured that way.
@@ -194,7 +205,20 @@ Here you can add any observations made concerning the execution of apps or
 scripts.and especially differences between the two or functionality that you
 would like to see changed.
 
+Problems with known solution
+............................
 
+- Apps creating a dialog often us a global variable 'dialog' to store and
+  access the dialog from different functions. Make sure that all functions
+  that assign the dialog variable declare it to be global. 
+  This needs to fixed mostly in the 'Run' functions, which contains the code
+  previously not inside a function.
+
+Unsolved problems
+.................
+
+- Apps creating a permanent (non-blocking, modeless) dialog can currently
+  not be rerun (reload and run). 
 
 
 .. End

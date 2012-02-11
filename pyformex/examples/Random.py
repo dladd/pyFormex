@@ -24,30 +24,47 @@
 ##
 """Random
 
-level = 'beginner'
-topics = ['surface']
-techniques = ['color']
+This example shows how to create random coordinates and property numbers,
+and how to connect points to create lines, triangles and quads.
 
-Creates random points, bars, triangles, quads, ...
+The application first creates 30 random property numbers from 0 to 7 and
+30x3 coordinates, and collects them in a Formex P of plexitude 1. When drawn,
+30 colored points are shown.
+
+Then the Formex of points is used in a connect operation with itself
+(repeated), to construct Formices of plexitude 1,2,3,4 (i.e. points, lines,
+triangles, quads). The subsequent versions of P in the Formex list [P]*n
+(which is equal to [P,P,...] with P repeated n times) are used
+with an increasing bias (0,1,...). This means that to construct the 2-plex
+Formex, point 0 is connected to point 1, point 1 to point 2, etc., while for
+the 3-plex Formex the elements are formed from point (0,1,2), (1,2,3), and
+so on. Because the loop parameter is set True, the list of points is wrapped
+around when its end is reached, and the number of multiplex elements is thus
+always equal to the number of points.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
-_topics = ['surface']
-_techniques = ['color']
+_topics = ['formex']
+_techniques = ['color','random','connect']
 
 from gui.draw import *
 
 def run():
-    reset()
-    setDrawOptions(dict(clear=True))
+    resetAll()
+    flat()
+    delay(2)
+    setDrawOptions({'clear':True})
     npoints = 30
-    p = arange(120)
+    p = random.randint(0,7,(npoints,))
     P = Formex(random.random((npoints,1,3)),p)
-    draw(P,alpha=0.5)
-    for n in range(2,5):
-        F = connect([P for i in range(n)],bias=[i*(n-1) for i in range(n)],loop=True)
+    draw(P)
+    smooth()
+    for n in range(1,5):
+        F = connect([P] * n,
+                    bias=[i*(n-1) for i in range(n)],
+                    loop=True)
         F.setProp(p)
-        draw(F,alpha=0.5)
+        draw(F)
 
 if __name__ == 'draw':
     run()

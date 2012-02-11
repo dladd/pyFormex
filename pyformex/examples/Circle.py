@@ -27,7 +27,7 @@
 
 level = 'normal'
 topics = ['geometry']
-techniques = ['connect','dialog', 'animation']
+techniques = ['circle', 'connect','dialog', 'animation']
 
 """
 _status = 'unchecked'
@@ -41,7 +41,9 @@ from simple import circle
 from geomtools import rotationAngle
 
 def run():
-    # Test
+    resetAll()
+    delay(1)
+    
     linewidth(1)
     for i in [3,4,5,6,8,12,20,60,180]:
         #print "%s points" % i
@@ -109,6 +111,7 @@ def run():
         if res['Fly Through']:
             flyAlong(curve,sleeptime=0.1)
             clear()
+            flat()
             draw(line)
             draw(curve)
             draw(F)

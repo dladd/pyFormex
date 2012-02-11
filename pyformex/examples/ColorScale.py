@@ -25,7 +25,7 @@
 
 """ColorScale
 
-Examples showing the use of the 'colorscale' plugin
+Example showing the use of the 'colorscale' plugin.
 
 level = 'normal'
 topics = ['FEA']
@@ -38,7 +38,6 @@ _topics = ['FEA']
 _techniques = ['dialog', 'color']
 
 from gui.draw import *
-
 from gui.colorscale import *
 from gui.gluttext import GLUTFONTS
 
@@ -71,7 +70,7 @@ input_data = [
         _I('autosize',True,text='Autosize'),
         _I('size',(100,600),text='Size'),
         _I('autopos',True,text='Autoposition'),
-        _I('position',[400,50],text='Position'),
+        _I('position',[100,50],text='Position'),
         ]),
     ]
 
@@ -127,7 +126,7 @@ def drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,ng
 
 def close():
     global dialog
-    pf.PF['ColorScale_data'] = dialog.results
+    ## pf.PF['ColorScale_data'] = dialog.results
     if dialog:
         dialog.close()
         dialog = None
@@ -146,16 +145,27 @@ def timeOut():
     wait()
     close()
 
+
+def atUnload():
+    print "Unloading? Wait, I want to close the dialog first"
+    close()
+
 def run():
-    # Update the data items from saved values
-    try:
-        saved_data = named('ColorScale_data')
-        widgets.updateDialogItems(input_data,saved_data)
-    except:
-        pass
+    global dialog
+
+    # This is another way to avoid multiple executions.
+    if dialog:
+        return
+    
+    ## # Update the data items from saved values
+    ## try:
+    ##     saved_data = named('ColorScale_data')
+    ##     widgets.updateDialogItems(input_data,saved_data)
+    ## except:
+    ##     pass
 
     # Create the modeless dialog widget
-    dialog = widgets.InputDialog(input_data,enablers=input_enablers,caption='ColorScale Dialog',actions = [('Close',close),('Show',show)],default='Show')
+    dialog = InputDialog(input_data,enablers=input_enablers,caption='ColorScale Dialog',actions = [('Close',close),('Show',show)],default='Show')
 
     # Examples style requires a timeout action
     dialog.timeout = timeOut

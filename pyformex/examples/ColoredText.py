@@ -24,30 +24,45 @@
 ##
 """ColoredText
 
-level = 'beginner'
-topics = []
-techniques = ['color','text']
+This example illustrates the drawing of text on the 2D OpenGL canvas.
+It also shows how to generate random values and how to remove 2D decorations
+from the canvas.
 
+The application starts with the generation of (n,8) random numbers between
+0.0 and 1.0, and where n is the number of text strings that will be displayed.
+The 8 random numbers for each case are use as follows:
+
+- 0, 1: the relative position on the canvas viewport,
+- 2: the relative font size, ranging from 12 to 48,
+- 3, 4, 5: the color (resp. red, green and blue components),
+- 6: the text to be shown, selected from a list of predefined texts,
+- 7: the font to be used, also selected from a list of fonts.
+
+The texts are shown one by one, with a small pause between.
+During the display of the first half of the set of texts,
+the previous text is removed after each new one is shown.
+During the second half, all texts remain on the canvas.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = []
-_techniques = ['color','text']
+_techniques = ['color','text', 'random', 'animation']
 
 from gui.draw import *
 
 def run():
     n = 40
     T = ['Python','NumPy','OpenGL','QT4','pyFormex']
-    font = 'times'
-    ftmin,ftmax = 12,36
+    fonts = ['times','helvetica','fixed']
+    ftmin,ftmax = 12,48
 
-    r = random.random((n,7))
+    r = random.random((n,8))
     w,h = pf.canvas.width(), pf.canvas.height()
     a = r[:,:2] * array([w,h]).astype(int)
     size = (ftmin + r[:,2] * (ftmax-ftmin)).astype(int)
     colors = r[:,3:6]
     t = (r[:,6] * len(T)).astype(int)
+    f = (r[:,7] * len(fonts) - 0.5).astype(int).clip(0,len(fonts)-1)
     clear()
 
     bgcolor(white)
@@ -55,15 +70,12 @@ def run():
     TA = None
 
     for i in range(n):
-        # fgcolor(red)
-        TB = drawText(T[t[i]],a[i][0],a[i][1],font=font,size=size[i],color=list(colors[i]))
-        sleep(0.2)
+        TB = drawText(T[t[i]],a[i][0],a[i][1],font=fonts[f[i]],size=size[i],color=list(colors[i]))
+        pause(0.5)
         breakpt()
         if i < n/2:
             undecorate(TA)
         TA = TB
-        #drawTextQt(T[t[i]],a[i][0],a[i][1])
-        #pf.canvas.update()
 
 if __name__ == 'draw':
     run()

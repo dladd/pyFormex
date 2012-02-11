@@ -24,39 +24,57 @@
 ##
 """Props
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['viewport', 'color', 'symmetry']
+This example demonstrates the propagation of property numbers through
+the pyFormex geometrical transformations.
+It also shows how multiple viewports can be used to show different objects
+at the same time.
 
-A demonstration of propagating property numbers.
-Also shows the use of multiple viewports.
+Property numbers can be assigned to most Geometry objects in pyFormex.
+They define a single integer number for each basic element in the object.
+The property numbers can be used for whatever the user sees fit, but are
+commonly used to display different elements in another color.
+
+When a pyFormex transformation generates new elements out of old ones, each
+new element will get the same property number as its parent, thus making it
+possible to track from what original element a resulting one originated, or to
+pass data to child elements.
+
+This process is illustrated in this example.
+
+- First, a Formex is constructed consisting of two triangles,
+  and given the property numbers 1, resp. 3, which are displayed by default
+  in the colors red, resp. blue (F0).
+
+- The structure is then replicated 3 times in x-direction and twice in
+  y-direction (F1). Remark how the colors get inherited.
+
+- Next, a reflection of F1 in the y-direction is added to F1 to yield F2.
+
+- Finally F3 is obtained by rotating F2 over 180 degrees around the z-axis
+  (and adding it to F2).
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
 _techniques = ['viewport', 'color', 'symmetry']
 
 from gui.draw import *
-
-def vp(i):
-    viewport(i)
-    smooth()
-    lights(False)
-    clear()
     
 def run():
     layout(4)
     F0 = Formex('3:012934',[1,3])
-    F1 = F0.replic2(2,2)
+    F1 = F0.replic2(3,2)
     F2 = F1 + F1.reflect(1)
     F3 = F2 + F2.rotate(180.,1)
     
     for i,F in enumerate([F0,F1,F2,F3]):
+        viewport(i)
+        flat()
+        clear()
         vp(i)
         draw(F)
-        #drawText("F%s"%i,10,10,size=18)
+        drawText("F%s"%i,10,20,size=18)
         pf.canvas.update()
-        #sleep(2)
     
     
 if __name__ == 'draw':

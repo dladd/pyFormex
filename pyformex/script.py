@@ -455,16 +455,18 @@ def playFile(fn,argv=[]):
 
 
 def runApp(appname,argv=[],reload=False):
+    if len(scriptlock) > 0:
+        pf.message("!!Not executing because a script lock has been set: %s" % scriptlock)
+        return
+    
     import apps
     from timer import Timer
     t = Timer()
     app = apps.load(appname,refresh=reload)
     if pf.GUI:
         pf.GUI.setcurfile(app)
+    message("Loaded application %s in %s seconds" % (appname,t.seconds()))
        
-    if len(scriptlock) > 0:
-        pf.message("!!Not executing because a script lock has been set: %s" % scriptlock)
-        return
     
     scriptLock('__auto__')
     if pf.GUI:
