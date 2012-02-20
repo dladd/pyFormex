@@ -307,6 +307,16 @@ class Gui(QtGui.QMainWindow):
         ## for m in self.materials:
         ##     print self.materials[m]
 
+        # Modeless child dialogs
+        self.doc_dialog = None
+    
+
+    def close_doc_dialog(self):
+        """Close the doc_dialog if it is open."""
+        if pf.GUI.doc_dialog is not None:
+            pf.GUI.doc_dialog.close()
+            pf.GUI.doc_dialog = None
+
 
     def saveView(self,name=None,addtogui=True):
         """Save the current view and optionally create a button for it.

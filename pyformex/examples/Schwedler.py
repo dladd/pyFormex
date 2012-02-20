@@ -24,21 +24,26 @@
 ##
 """Schwedler Dome
 
-level = 'normal'
-topics = ['geometry','domes']
-techniques = ['color']
+A Schwedler Dome is a dome-shaped frame structure in which the main
+structural elements are organized along the longitude and latitude
+circles of a sphere. Furthermore the construction usually has diagonal
+stiffeners.
 
+The example defines a function to create a Schwedler dome with hardwired
+parameters.
+This function is called creating a dome with diagonals (g).
+The 'withProp method' is then used to create a copy without the diagonals (h).
+Both are drawn at the same time, juxtaposed by the align function.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','domes']
-_techniques = ['color']
+_techniques = ['color','align','withprop']
 
 from gui.draw import *
 
-def run():
-    clear()
-    wireframe()
+
+def schwedler():
     nx=16   # number of modules in circumferential direction
     ny=8    # number of modules in meridional direction
     rd=100  # radius of the sphere cap
@@ -50,15 +55,15 @@ def run():
     f1 = e1.replic2(nx,ny,1,1)
     f2 = e2.replic2(nx,ny+1,1,1)
     g = (f1+f2).translate([0,a,1]).spherical(scale=[360./nx,base/(ny+a),rd],colat=True)
-    draw(e1+e2)
+    return g
 
-    draw(f1+f2)
 
+def run():
     clear()
-    draw(g)
+    wireframe()
+    g = schwedler()
     h = g.withProp([0,3]) # only horizontals and meridionals
-    clear()
-    draw(g+h.translate([2*rd,0,0]))
+    draw(align([g,h],'|0-'))
 
 if __name__ == 'draw':
     run()

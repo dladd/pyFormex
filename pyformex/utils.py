@@ -400,15 +400,20 @@ except ImportError:
         return text
     
 
-def forceReST(s):
+def forceReST(text,underline=False):
     """Convert a text string to have it recognized as reStructuredText.
 
-    Returns the string s with two lines prepended: a line with '..'
+    Returns the text with two lines prepended: a line with '..'
     and a blank line. The text display functions will then recognize the
     string as being reStructuredText. Since the '..' starts a comment in
     reStructuredText, it will not be displayed.
+
+    Furthermore, if `underline` is set True, the first line of the text
+    will be underlined to make it appear as a header.
     """
-    return "..\n\n" + s
+    if underline:
+        text = underlineHeader(text)
+    return "..\n\n" + text
 
 
 def underlineHeader(s,char='"'):

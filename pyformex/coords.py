@@ -220,6 +220,7 @@ class Coords(ndarray):
           self[...,0]
         """
         return self[...,0]
+    
     def y(self):
         """Return the Y-coordinates of all points.
 
@@ -231,6 +232,7 @@ class Coords(ndarray):
           self[...,1]
         """
         return self[...,1]
+    
     def z(self):
         """Return the Z-coordinates of all points.
 
@@ -244,7 +246,7 @@ class Coords(ndarray):
         return self[...,2]
 
 
-    # Size
+    # Size, Bounds
     
     def bbox(self):
         """Return the bounding box of a set of points.
@@ -260,17 +262,56 @@ class Coords(ndarray):
 
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).bbox()
+          >>> X = Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]])
+          >>> print X.bbox()
           [[ 0.  0.  0.]
            [ 3.  3.  0.]]
         """
         if self.size > 0:
             s = self.points()
-            bbox = row_stack([ s.min(axis=0), s.max(axis=0) ])
+            bb = row_stack([ s.min(axis=0), s.max(axis=0) ])
         else:
             o = origin()
-            bbox = [o,o]
-        return Coords(bbox)
+            bb = [o,o]
+        return Coords(bb)
+    
+
+    # THIS COULD BE MADE AN OPTION OF THE bbox METHOD
+    def apt(self,align):
+        """Return an alignment point of a Coords.
+
+        Align point are points whose coordinates are either the minimal
+        value, the maximal value or the middle value for the Coords.
+        Combining the three values with the three dimensions, a Coords
+        has in 27 (3**3) alignment points. The corner points of the
+        bounding box are a subset of these.
+
+        The 27 points are addressed by an alignment string of three
+        characters, one for each direction. Each character should be
+        one of the following
+
+        - '-': use the minimal value for that coordinate,
+        - '+': use the minimal value for that coordinate,
+        - '0': use the middle value for that coordinate.
+
+        Any other character will set the corresponding coordinate to zero.
+
+        A string '000' is equivalent with center(). The values '---' and
+        '+++' give the points of the bounding box.
+        
+        Example:
+
+          >>> X = Coords([[[0.,0.,0.],[1.,1.,1.]]])
+          >>> print X.apt('-0+')
+          [ 0.   0.5  1. ]
+        """
+        bb = self.bbox()
+        al = { '-': bb[0], '+': bb[1], '0': 0.5*(bb[0]+bb[1]) }
+        pt = zeros(3)
+        for i,c in enumerate(align):
+            if c in al:
+                pt[i] = al[c][i]
+        return Coords(pt)
 
 
     def center(self):
@@ -281,7 +322,8 @@ class Coords(ndarray):
         
         Example:
 
-          >>> print Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]]).center()
+          >>> X = Coords([[[0.,0.,0.],[3.,0.,0.],[0.,3.,0.]]])
+          >>> print X.center()
           [ 1.5  1.5  0. ]
 
         See also: :meth:`centroid`
@@ -744,12 +786,13 @@ class Coords(ndarray):
         """
         return self.trl(-self.center())
 
-
-    def align(self,alignment='---'):
-        """Align the Coords along the global axes.
+    
+    def align(self,alignment='---',point=[0.,0.,0.]):
+        """Align a Coords on a given point.
 
         Alignment involves a translation such that the bounding box
-        of the Coords object becomes aligned on the origin of the global axes.
+        of the Coords object becomes aligned with a given point.
+        By default this is the origin of the global axes.
         The requested alignment is determined by a string of three characters,
         one for each of the coordinate axes. The character determines how
         the structure is aligned in the corresponding direction:
@@ -765,12 +808,15 @@ class Coords(ndarray):
         A string '000' will center the object around the origin, just like
         the (slightly faster) :meth:`centered` method, which is .
         """
-        trl = zeros(3)
+        trl = asarray(point).reshape(3)
         bb = self.bbox()
-        al = { '-': bb[0], '+': bb[1], '0': 0.5*(bb[0]+bb[1]) }
+        al = { '-': bb[0],
+               '+': bb[1],
+               '0': 0.5*(bb[0]+bb[1])
+               }
         for i,c in enumerate(alignment):
             if c in al:
-                trl[i] = -al[c][i]
+                trl[i] -= al[c][i]
         return self.translate(trl)
     
 
@@ -1920,6 +1966,37 @@ def xpattern(s,nplex=1):
         return x.reshape(-1,nplex,3)
     except:
         raise ValueError,"Could not reshape points list to plexitude %s" % nplex
+
+
+# IDEA: Add an offset
+def align(L,align):
+    """Align a list of geometrical objects.
+
+    L is a list of geometrical objects (Coords or Geometry or subclasses
+    thereof) and thus having an appropriate 'align' method.
+    align is a string of three characters, one for each coordinate direction,
+    defining how the subsequent objects have to be aligned in that direction:
+
+    - '-' : align on the minimal coordinate value
+    - '+' : align on the maximal coordinate value
+    - '0' : align on the middle coordinate value
+    - '|' : align the minimum value on the maximal value of the previous
+
+    E.g., the string '|--' will juxtapose the objects in the x-direction,
+    while aligning the on their minimal coordinates in the y- and z- direction.
+    """
+    r = L[:1]
+    al = am =''
+    for i in range(3):
+        if align[i] == '|':
+            al += '-'
+            am += '+'
+        else:
+            al += align[i]
+            am += align[i]
+    for o in L[1:]:
+        r.append(o.align(al,r[-1].apt(am)))
+    return r
 
 
 def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,enddir=None,scalex=None,scaley=None):

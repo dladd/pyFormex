@@ -41,32 +41,34 @@ def run():
     smooth()
     lights(False)
 
-    Rendermode = [ 'smooth','flat' ]
+    Rendermode = [ 'wireframe','flat','smooth' ]
     Lights = [ False, True ]
-    Shapes = [ '3:016', '4:0123', ]
+    Shapes = [ '3:012', '4:0123', ]
 
     color0 = None  # no color: current fgcolor
-    color1 = red   # single color
-    color2 = array([red,green,blue]) # 3 colors: will be repeated
+    color1 = 'red'   # single color
+    color2 = ['red','green','blue'] # 3 colors: will be repeated
 
-    delay(5)
+    delay(0)
     i=0
     for shape in Shapes:
-        F = Formex(shape).replic2(8,4)
+        F = Formex(shape).replic2(4,2)
         color3 = resize(color2,F.shape()) # full color
-        for mode in Rendermode:
-            renderMode(mode)
-            for c in [ color0,color1,color2,color3]:
+        print F.shape(),color3
+        print GLColor(color3)
+        #continue
+        for c in [ color0,color1,color2,color3]:
+            for mode in Rendermode:
                 clear()
+                renderMode(mode)
                 FA = GeomActor(F,color=c)
                 drawActor(FA)
-                print c
-                zoomAll()
+                #zoomAll()
                 for light in Lights:
                     lights(light)
-                    print i,light
+                    print "%s: color %s, mode %s, lights %s" % (i,str(c),mode,light)
                     i += 1
-                    wait()
+                    pause(2)
 
 
 if __name__ == 'draw':

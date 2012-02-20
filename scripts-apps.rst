@@ -172,7 +172,7 @@ In favor of *app*:
 | scripts                             | local to applications                 |
 +-------------------------------------+---------------------------------------+
 | Data persistence requires export to | Data persistence between invokations  |
-| the pyFormex GUI dict PF            | is automatic (for module globals)     | 
+| the pyFormex GUI dict PF and reload | is automatic (for module globals)     | 
 +-------------------------------------+---------------------------------------+
 
 

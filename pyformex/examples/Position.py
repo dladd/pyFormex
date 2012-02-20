@@ -25,14 +25,10 @@
 
 """Position
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['position']
-
 Position an object A thus that its three points X are aligned with the
 three points X of object B.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
 _techniques = ['position']

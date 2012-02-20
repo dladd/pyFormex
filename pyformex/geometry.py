@@ -183,6 +183,8 @@ class Geometry(object):
         return self.coords.z()
     def bbox(self):
         return self.coords.bbox()
+    def apt(self,*args,**kargs):
+        return self.coords.apt(*args,**kargs)
     def center(self):
         return self.coords.center()
     def centroid(self):

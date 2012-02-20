@@ -91,7 +91,7 @@ def showCameraTool():
         _I('aspect',text='Aspect ratio',tooltip='The ratio of the vertical over the horizontal lens opening angles.'),
 #        _I('area',text='Visible area',tooltip='Relative part of the camera area that is visible in the viewport.'),
         _I('near',text='Near clipping plane',itemtype='fslider',func=setNear,tooltip='Distance of the near clipping plane to the camera.'),
-        _I('far',text='Far clipping plane',itemtype='fslider',func=setFar,tooltip='Distance of the far clipping plane to the camera.'),
+        _I('far',100,text='Far clipping plane',itemtype='fslider',func=setFar,tooltip='Distance of the far clipping plane to the camera.'),
         ],actions = [('Close',close),
 #                     ('Apply',apply),
                      ],

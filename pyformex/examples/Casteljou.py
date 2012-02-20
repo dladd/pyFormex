@@ -53,7 +53,7 @@ _techniques = ['pattern','delay']
 
 from gui.draw import *
 from plugins.curve import PolyLine
-import plugins.nurbs as nb
+from plugins import nurbs
 
 # Some strings defining line patterns
 predefined = [

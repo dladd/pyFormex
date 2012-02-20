@@ -125,32 +125,49 @@ def ack(question,**kargs):
     return ask(question,['No','Yes'],**kargs) == 'Yes'
 
 
-def showText(text,type=None,actions=[('OK',None)],modal=True,mono=False):
-    """Display a text and wait for user response.
+def showText(text,itemtype='text',actions=[('OK',None)],modal=True,mono=False):
+    """Display a text in a dialog window.
 
-    This opens a TextBox widget and displays the text in the widget.
-    Scrollbars will be added if the text is too large to display at once.
+    Creates a dialog window displaying some text. The dialog can be modal
+    (blocking user input to the main window) or modeless. 
+    Scrollbars aree added if the text is too large to display at once.
+    By default, the dialog has a single button to close the dialog.
 
-    The text can be plain text format. Some rich text formats will be 
-    recognized and rendered appropriately. See widgets.TextBox.
+    Parameters:
 
-    `mono=True` forces the use of a monospaced font.
+    - `text`: a multiline text to be displayed. It can be plain text or html
+      or reStructuredText (starts with '..').
+    - `itemtype`: an InputItem type that can be used for text display. This
+      should be either 'text' of 'info'. 
+    - `actions`: a list of action button definitions.
+    - `modal`: bool: if True, a modal dialog is constructed. Else, the dialog
+      is modeless.
+    - `mono`: if True, a monospace font will be used. This is only useful for
+      plain text, e.g. to show the output of an external command.
+
+    Returns:
+
+    :modal dialog: the result of the dialog after closing.
+      The result is a dictionary with a single key: 'text' having the
+      displayed text as a value. If an itemtype 'text' was used, this may
+      be a changed text.
+    : modeless dialog: the open dialog window itself. 
     """
-    ## w = widgets.TextBox(text,type,actions,modal=modal,mono=mono)
     if mono:
         font = "DejaVu Sans Mono"
     else:
         font = None
     w = Dialog(
-        items=[_I('text',text,itemtype='text',text='',font=font,size=(-1,-1))],
+        items=[_I('text',text,itemtype=itemtype,text='',font=font,size=(-1,-1))],
         modal=modal,
-        actions=[('Ok',)]
+        actions=actions,
+        caption='pyFormex Text Display',
         )
     if modal:
         return w.getResult()
     else:
         w.show()
-        return w.results
+        return w
 
 
 def showFile(filename,mono=False,**kargs):
@@ -167,21 +184,9 @@ def showFile(filename,mono=False,**kargs):
         return
     showText(f.read(),mono=mono,**kargs)
     f.close()
+   
 
-
-def showRest(text,underline=True,modal=False):
-    """Show a reStructuredText.
-
-    By default, an underlining of the first line of the text will be added
-    to make reStructuredText format it as a header.
-    """
-    if underline:
-        text = utils.underlineHeader(text)
-    text = utils.forceReST(text)
-    showText(text,modal=modal)
-    
-
-def showDoc(obj=None,rst=True):
+def showDoc(obj=None,rst=True,modal=False):
     """Show the docstring of an object.
 
     Parameters:
@@ -205,12 +210,25 @@ def showDoc(obj=None,rst=True):
             import apps
             obj = apps.load(obj)
 
-    showRest(obj.__doc__)
+    text = utils.forceReST(obj.__doc__,underline=True)
+    
+    if pf.GUI.doc_dialog is None:
+        if modal:
+            actions=[('OK',None)]
+        else:
+            actions = [('Close',pf.GUI.close_doc_dialog)]
+        pf.GUI.doc_dialog = showText(text,actions=actions,modal=modal)
+    else:
+        pf.GUI.doc_dialog.updateData({'text':text})
+        #pf.GUI.doc_dialog.show()
+        pf.GUI.doc_dialog.raise_()
+        pf.GUI.doc_dialog.update()
+        pf.app.processEvents()
 
 
 # DEV: to be removed in 0.9.1
 @utils.deprecation("`showDescription` is deprecated: use `showDoc` to display the complete docstring.")
-def showDescription(filename=None):
+def showDescription(filename=None,modal=False):
     """Show the Description part of the docstring of a pyFormex script.
 
     If no file name is specified, the current script is used.
@@ -549,7 +567,7 @@ def draw(F,
 
         
     if color is None, it is drawn with the color specified on creation.
-    if color == 'prop' and a colormap was installed, props define color.
+    if color is 'prop' and a colormap was installed, props define color.
     else, color should be an array of RGB values, either with shape
     (3,) for a single color, or (nelems,3) for differently colored
     elements 
@@ -635,18 +653,18 @@ def draw(F,
         # loop over the objects
         for F in FL:
 
-            #print "DRAW %s" % type(F)
-            # Create the colors
-            if color == 'prop':
-                try:
-                    Fcolor = F.prop
-                except:
-                    Fcolor = colors.black
-            elif color == 'random':
-                # create random colors
-                Fcolor = numpy.random.rand(F.nelems(),3)
+            # Treat special case colors
+            if type(color) is str:
+                if color == 'prop':
+                    try:
+                        Fcolor = F.prop
+                    except:
+                        Fcolor = colors.black
+                elif color == 'random':
+                    # create random colors
+                    Fcolor = numpy.random.rand(F.nelems(),3)
             else:
-                Fcolor = color
+                Fcolor = asarray(color)
 
             # Create the actor
             actor = F.actor(color=Fcolor,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)

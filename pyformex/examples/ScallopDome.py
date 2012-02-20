@@ -24,21 +24,16 @@
 ##
 """Scallop Dome
 
-level = 'normal'
-topics = ['geometry','domes']
-techniques = ['dialog', 'color']
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','domes']
 _techniques = ['dialog', 'color']
 
 from gui.draw import *
-#pf.canvas.settings['colormap'][2] = [1.,0.3,0.]
 
 def run():
-    # This example is fully annotated with comments in the statusbar
+    # This example is fully annotated with comments in the message board
     # First we define a function to display a Formex and then wait for the user
     # to click the Step button
     def show(F,view='front',clearscr=True):
