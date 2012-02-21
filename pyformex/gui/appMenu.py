@@ -349,6 +349,45 @@ class AppMenu(QtGui.QMenu):
 
 from prefMenu import setDirs
 
+
+def checkAppdir(d):
+    """Check that a directory d can be used as a pyFormex application path.
+
+    If the path does not exist, it is created.
+    If no __init__.py exists, it is created.
+    If __init__.py exists, it is not checked.
+
+    If successful, returns the path, else None
+    """
+    if not os.path.exists(d):
+        try:
+            os.makedirs(d)
+        except:
+            return None
+
+    if not os.path.isdir(d):
+        return None
+
+    initfile = os.path.join(d,'__init__.py')
+    if os.path.exists(initfile):
+        return os.path.dirname(initfile)
+        
+    try:
+        f = open(initfile,'w')
+        f.write("""# $Id$
+\"\"\"pyFormex application directory.
+
+Do not remove this file. It is used by pyFormex to flag the parent
+directory as a pyFormex application path. 
+\"\"\"
+# End
+""")
+        f.close()
+        return os.path.dirname(initfile)
+    except:
+        return None
+
+ 
 def createMenu(parent=None,before=None):
     """Create the menu(s) with pyFormex apps
 
@@ -364,6 +403,7 @@ def createMenu(parent=None,before=None):
     If a menu item named 'Examples' or 'Apps' already exists, it is
     replaced.
     """
+    import sys
     from odict import ODict
     appmenu = menu.Menu('&Apps',parent=parent,before=before)
     appmenu.menuitems = ODict()
@@ -378,7 +418,18 @@ def createMenu(parent=None,before=None):
     for i,item in enumerate(appdirs):
         if type(item[0]) is str and not item[1] and item[0].lower() in knownappdirs:
             appdirs[i] = (item[0].capitalize(),knownappdirs[item[0].lower()])
-
+    # Check that the paths are legal appdirs
+    #print "INitial appdirs",appdirs
+    appdirs = [ a for a in appdirs if checkAppdir(a[1]) is not None ]
+    #print appdirs
+    # Add the paths to sys.path
+    adddirs = [ os.path.dirname(a[1]) for a in appdirs ]
+    adddirs = set(adddirs)
+    #print "appdir parents",adddirs
+    adddirs = [ a for a in adddirs if not a in sys.path ]
+    #print "appdir parents to add",adddirs
+    sys.path[1:1] = adddirs
+    # Go ahead and load the apps
     for txt,dirname in appdirs:
         pf.debug("Loading app dir %s" % dirname,pf.DEBUG.MENU)
         if os.path.exists(dirname):

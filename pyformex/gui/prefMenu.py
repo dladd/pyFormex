@@ -304,87 +304,6 @@ def createLightDialogItems(light=0,enabled=True):
     return items
 
 
-## def showLighting():
-##     print "ACCORDING TO CANVAS:"
-##     print pf.canvas.lights
-##     print "ACCORDING TO CFG:"
-##     print pf.cfg['render']
-
-
-## def setLighting():
-##     nlights = pf.cfg['render/nlights']
-##     mat_items = [
-##         {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':0,'max':100,'scale':0.01,'func':set_mat_value } for a in [ 'ambient', 'diffuse', 'specular', 'emission'] ] + [
-##         {'name':a,'text':a,'value':getattr(pf.canvas,a),'itemtype':'slider','min':1,'max':64,'scale':1.,'func':set_mat_value } for a in ['shininess'] ]
-
-##     enabled = [ pf.cfg['render/light%s'%light] is not None and pf.cfg['render/light%s'%light].get('enabled',False) for light in range(nlights) ]
-##     pf.debug("ENABLED LIGHTS")
-
-##     choices = pf.canvas.light_model.keys()
-##     # DO NOT ALLOW THE LIGHT MODEL TO BE CHANGED
-##     choices = [ 'ambient and diffuse' ]
-##     items = [
-##         {'name':'lightmodel','value':pf.canvas.lightmodel,'choices':choices,'tooltip':"""The light model defines which light components are set by the color setting functions. The default light model is 'ambient and diffuse'. The other modes are experimentally. Use them only if you know what you are doing."""},
-##         _G('material',mat_items),
-## #        _I('nlights',4,text='Number of lights'),
-##         ] + [
-##         _T('light%s'%light, createLightDialogItems(light,True)) for light in range(nlights)
-##         ]
-
-##     enablers = [
-##         ('lightmodel','','material/ambient','material/diffuse'),
-##         ]
-
-##     dia = None
-    
-##     def close():
-##         dia.close()
-        
-##     def accept(save=False):
-##         dia.acceptData()
-##         #print "RESULTS",dia.results
-##         res = {}
-##         res['material'] = utils.subDict(dia.results,'material/')
-##         for i in range(8):
-##             key = 'light%s'%i
-##             res[key] = utils.subDict(dia.results,key+'/')
-##         rest = [ k for k in dia.results.keys() if not (k.startswith('material') or  k.startswith('light')) ]
-##         rest = dict((k,dia.results[k]) for k in rest)
-##         res.update(rest)
-##         res = utils.prefixDict(res,'render/')
-##         res['_save_'] = save
-##         updateSettings(res)
-
-##     def acceptAndSave():
-##         accept(save=True)
-
-##     def addLight():
-##         accept(save=False)
-##         dia.close()
-        
-##     def createDialog():  
-##         dia = widgets.InputDialog(
-##             caption='pyFormex Settings',
-##             enablers = enablers,
-##             #store=pf.cfg,
-##             items=items,
-##             prefix='render/',
-##             autoprefix=True,
-##             actions=[
-##                 ('Close',close),
-##                 ('Accept and Save',acceptAndSave),
-##                 ('Apply',accept),
-##                 ]
-##             )
-##         return dia
-
-##     dia = createDialog()
-##     dia.show()
-##     #if res:
-##     #    updateSettings({tgt:res})
-##     #    pf.canvas.resetLights()
-
-
 def setRendering():
     import canvas
 
@@ -482,6 +401,7 @@ def setDirs(dircfg):
     """dircfg is a config variable that is a list of directories."""
     dia = createDirsDialog(dircfg)
     dia.exec_()
+    
 
     
 def createDirsDialog(dircfg):
@@ -494,7 +414,7 @@ def createDirsDialog(dircfg):
         ww = widgets.FileSelection(pf.cfg['workdir'],'*',exist=True,dir=True)
         fn = ww.getFilename()
         if fn:
-            scr = pf.cfg[dirtype]
+            scr = pf.cfg[dircfg]
             _table.model().insertRows()
             scr[-1] = ['New',fn]
         _table.update()
@@ -596,6 +516,9 @@ def updateBackground():
     #pf.canvas.setBgColor(pf.cfg['canvas/bgcolor'],pf.cfg['canvas/bgcolor2'],pf.cfg['canvas/bgmode'])
     pf.canvas.update()
 
+def updateAppdirs():
+    pf.GUI.updateAppdirs()
+
     
 # This sets the functions that should be called when a setting has changed
 _activate_settings = {
@@ -610,6 +533,7 @@ _activate_settings = {
     'canvas/bgmode':updateBackground,
     'canvas/bgcolor':updateBackground,
     'canvas/bgcolor2':updateBackground,
+    'appdirs':updateAppdirs,
     }
    
 

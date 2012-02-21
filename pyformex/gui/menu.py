@@ -75,7 +75,7 @@ class BaseMenu(object):
     def __init__(self,title='AMenu',parent=None,before=None,items=None):
         """Create a menu."""
         self._title = title
-        pf.debug("Creating menu %s" % title)
+        pf.debug("Creating menu %s" % title,pf.DEBUG.MENU)
         self.parent = parent
         self.separators = odict.ODict()
         self._actions_ = []

@@ -359,11 +359,11 @@ def run(argv=[]):
            ),
         MO("--debug",
            action="store", dest="debug", default='',
-           help="display debugging info to sys.stdout",
+           help="Display debugging information to sys.stdout. The value is a comma-separated list of (case-insensitive) strings corresponding with the attributes of the DebugLevels class. The individual values are OR-ed together to produce a final debug value. The special value 'all' can be used to switch on all debug info.",
            ),
         MO("--debuglevel",
            action="store", dest="debuglevel", type="int", default=0,
-           help="display debugging info to sys.stdout. The value is an int with the bits of the requested debug levels set. A value of -1 switches on all debug info. If this option is used, it overrides the --debug option.",
+           help="Display debugging info to sys.stdout. The value is an int with the bits of the requested debug levels set. A value of -1 switches on all debug info. If this option is used, it overrides the --debug option.",
            ),
         MO("--newviewports",
            action="store_true", dest="newviewports", default=False,
@@ -424,7 +424,6 @@ def run(argv=[]):
 
     ########## Process special options which will not start pyFormex #######
 
-
     if pf.options.listfiles:
         print '\n'.join(utils.pyformexFiles(relative=True))
         return
@@ -467,6 +466,10 @@ def run(argv=[]):
     if pf.options.whereami or pf.options.detect :
         return
 
+    # Set debug level
+    if pf.options.debug and not pf.options.debuglevel:
+        pf.options.debuglevel = pf.debugLevel(pf.options.debug.split(','))
+
     ########### Read the config files  ####################
 
     # These values should not be changed
@@ -494,20 +497,20 @@ def run(argv=[]):
    
     # Read all but the last as reference
     for f in filter(os.path.exists,sysprefs + userprefs[:-1]):
-        pf.debug("Reading config file %s" % f)
+        pf.debug("Reading config file %s" % f,pf.DEBUG.CONFIG)
         pf.cfg.read(f)
      
     pf.refcfg = pf.cfg
-    pf.debug("="*60)
-    pf.debug("RefConfig: %s" % pf.refcfg)
+    pf.debug("="*60,pf.DEBUG.CONFIG)
+    pf.debug("RefConfig: %s" % pf.refcfg,pf.DEBUG.CONFIG)
 
     # Use the last as place to save preferences
     pf.prefcfg = Config(default=refLookup)
     if os.path.exists(pf.preffile):
-        pf.debug("Reading config file %s" % pf.preffile)
+        pf.debug("Reading config file %s" % pf.preffile,pf.DEBUG.CONFIG)
         pf.prefcfg.read(pf.preffile)
-    pf.debug("="*60)
-    pf.debug("Config: %s" % pf.prefcfg)
+    pf.debug("="*60,pf.DEBUG.CONFIG)
+    pf.debug("Config: %s" % pf.prefcfg,pf.DEBUG.CONFIG)
 
     # Fix incompatible changes in configuration
     apply_config_changes(pf.prefcfg)
@@ -593,7 +596,7 @@ pyFormex Warning
     # Importing the gui should be done after the config is set !!
     if pf.options.gui:
         from gui import guimain
-        pf.debug("GUI version")
+        pf.debug("GUI version",pf.DEBUG.INFO)
         res = guimain.startGUI(args)
         if res != 0:
             print("Could not start the pyFormex GUI: %s" % res)
@@ -608,12 +611,10 @@ pyFormex Warning
     if startup_messages:
         print(startup_messages)
 
-    if pf.options.debug: # Avoid computing the report if not printed
-        pf.debug(utils.reportDetected())
+    if pf.options.debuglevel & pf.DEBUG.INFO:
+        # NOTE: inside an if to avoid computing the report when not printed
+        pf.debug(utils.reportDetected(),pf.DEBUG.INFO)
  
-    #print(pf.cfg.keys())
-    #print(pf.refcfg.keys())
-      
     #
     # Qt4 may have changed the locale.
     # Since a LC_NUMERIC setting other than C may cause lots of troubles
@@ -640,7 +641,7 @@ pyFormex Warning
     # remaining args are interpreted as scripts and their parameters
     res = 0
     if args:
-        pf.debug("Remaining args: %s" % args)
+        pf.debug("Remaining args: %s" % args,pf.DEBUG.INFO)
         from script import processArgs
         res = processArgs(args)
         
@@ -651,7 +652,7 @@ pyFormex Warning
                 return res # EXIT
                 
     else:
-        pf.debug("stdin is a tty: %s" % sys.stdin.isatty())
+        pf.debug("stdin is a tty: %s" % sys.stdin.isatty(),pf.DEBUG.INFO)
         # Play script from stdin
         # Can we check for interactive session: stdin connected to terminal?
         #from script import playScript

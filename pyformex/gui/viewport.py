@@ -122,9 +122,9 @@ def setOpenGLFormat():
        --alpha : enable the alpha buffer 
     """
     global opengl_format
-    pf.debug("Get OpenGL Format")
+    pf.debug("Get OpenGL Format",pf.DEBUG.OPENGL)
     fmt = QtOpenGL.QGLFormat.defaultFormat()
-    pf.debug("Got OpenGL Format")
+    pf.debug("Got OpenGL Format",pf.DEBUG.OPENGL)
     ## print fmt
     ## print "hallo"
     ## print "OpenGL: %s" % fmt.hasOpenGL(),
@@ -141,18 +141,18 @@ def setOpenGLFormat():
     ## print "Overlay: %s" % fmt.hasOverlay(),
     ## print "Plane: %s" % fmt.plane(),
     ## print "Multisample Buffers: %s" % fmt.sampleBuffers(),
-    pf.debug(OpenGLFormat(fmt))
+    pf.debug(OpenGLFormat(fmt),pf.DEBUG.OPENGL)
     if pf.options.dri is not None:
         fmt.setDirectRendering(pf.options.dri)
 ##     if pf.options.alpha:
 ##         fmt.setAlpha(True)
-    pf.debug("Set OpenGL Format")
-    pf.debug(OpenGLFormat(fmt))
+    pf.debug("Set OpenGL Format",pf.DEBUG.OPENGL)
+    pf.debug(OpenGLFormat(fmt),pf.DEBUG.OPENGL)
     QtOpenGL.QGLFormat.setDefaultFormat(fmt)
     #QtOpenGL.QGLFormat.setOverlayFormat(fmt)
     #fmt.setDirectRendering(False)
     opengl_format = fmt
-    pf.debug(OpenGLFormat(fmt))
+    pf.debug(OpenGLFormat(fmt),pf.DEBUG.OPENGL)
     return fmt
 
 def getOpenGLContext():
@@ -229,25 +229,25 @@ class CanvasMouseHandler(object):
 
     """
     def setMouse(self,button,func,mod=NONE):
-        pf.debug(button,mod)
+        pf.debug(button,mod,pf.DEBUG.MOUSE)
         self.mousefncsaved[mod][button].append(self.mousefnc[mod][button])
         self.mousefnc[mod][button] = func
         self.setCursorShapeFromFunc(func)
-        pf.debug("MOUSE %s" % func)
-        pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
+        pf.debug("MOUSE %s" % func,pf.DEBUG.MOUSE)
+        pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button],pf.DEBUG.MOUSE)
 
 
     def resetMouse(self,button,mod=NONE):
-        pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
+        pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button],pf.DEBUG.MOUSE)
         try:
             func = self.mousefncsaved[mod][button].pop()
         except:
-            pf.debug("AAAAAHHH, COULD NOT POP")
+            pf.debug("AAAAAHHH, COULD NOT POP",pf.DEBUG.MOUSE)
             func = None
         self.mousefnc[mod][button] = func
         self.setCursorShapeFromFunc(func)
-        pf.debug("RESETMOUSE %s" % func)
-        pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
+        pf.debug("RESETMOUSE %s" % func,pf.DEBUG.MOUSE)
+        pf.debug("MOUSE SAVED %s" % self.mousefncsaved[mod][button],pf.DEBUG.MOUSE)
             
 
     def getMouseFunc(self):
@@ -360,7 +360,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 
     def setMouse(self,button,func,mod=NONE):
-        pf.debug("setMouse %s %s %s" % (button,mod,func))
+        pf.debug("setMouse %s %s %s" % (button,mod,func),pf.DEBUG.MOUSE)
         self.mousefncsaved[mod][button].append(self.mousefnc[mod][button])
         self.mousefnc[mod][button] = func
         if button == LEFT and mod == NONE:
@@ -369,7 +369,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 
     def resetMouse(self,button,mod=NONE):
-        pf.debug("resetMouse %s %s" % (button,mod))
+        pf.debug("resetMouse %s %s" % (button,mod),pf.DEBUG.MOUSE)
         try:
             func = self.mousefncsaved[mod][button].pop()
         except:
@@ -457,8 +457,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         If selection mode was already started, mode is disregarded and
         this can be used to change the filter method.
         """
-        #pf.debug("START SELECTION")
-        #pf.debug("Mode is %s" % self.selection_mode)
+        pf.debug("START SELECTION",pf.DEBUG.GUI)
+        pf.debug("Mode is %s" % self.selection_mode,pf.DEBUG.GUI)
         if self.selection_mode is None:
             self.setMouse(LEFT,self.mouse_pick)
             self.setMouse(LEFT,self.mouse_pick,SHIFT)
@@ -477,23 +477,23 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.selection_front = None
         self.selection.clear()
         self.selection.setType(self.selection_mode)
-        #pf.debug("START SELECTION DONE")
+        pf.debug("START SELECTION DONE",pf.DEBUG.GUI)
 
 
     def wait_selection(self):
         """Wait for the user to interactively make a selection."""
-        #pf.debug("WAIT SELECTION")
+        pf.debug("WAIT SELECTION",pf.DEBUG.GUI)
         self.selection_timer = QtCore.QThread
         self.selection_busy = True
         while self.selection_busy:
             self.selection_timer.msleep(20)
             pf.app.processEvents()
-        #pf.debug("WAIT SELECTION DONE")
+        pf.debug("WAIT SELECTION DONE",pf.DEBUG.GUI)
 
 
     def finish_selection(self):
         """End an interactive picking mode."""
-        #pf.debug("FINISH SELECTION")
+        pf.debug("FINISH SELECTION",pf.DEBUG.GUI)
         self.resetMouse(LEFT)
         self.resetMouse(LEFT,SHIFT)
         self.resetMouse(LEFT,CTRL)
@@ -502,7 +502,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.disconnect(self,DONE,self.accept_selection)
         self.disconnect(self,CANCEL,self.cancel_selection)
         self.selection_mode = None
-        #pf.debug("FINISH SELECTION DONE")
+        pf.debug("FINISH SELECTION DONE",pf.DEBUG.GUI)
 
 
     def accept_selection(self,clear=False):
@@ -734,7 +734,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def start_drawing(self,mode):
         """Start an interactive line drawing mode."""
-        pf.debug("START DRAWING MODE")
+        pf.debug("START DRAWING MODE",pf.DEBUG.GUI)
         self.setMouse(LEFT,self.mouse_draw_line)
         self.setMouse(RIGHT,self.emit_done)
         self.setMouse(RIGHT,self.emit_cancel,SHIFT)
@@ -755,7 +755,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def finish_drawing(self):
         """End an interactive drawing mode."""
-        pf.debug("END DRAWING MODE")
+        pf.debug("END DRAWING MODE",pf.DEBUG.GUI)
         #self.setCursorShape('default')
         self.resetMouse(LEFT)
         self.resetMouse(RIGHT)
@@ -769,7 +769,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         If clear == True, the current drawing is cleared.
         """
-        pf.debug("CANCEL DRAWING MODE")
+        pf.debug("CANCEL DRAWING MODE",pf.DEBUG.GUI)
         self.drawing_accepted = True
         if clear:
             self.drawing = empty((0,2,2),dtype=int)
@@ -842,7 +842,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def	paintGL(self):
         if not self.mode2D:
-            #pf.debugt("CANVAS DISPLAY")
             self.display()
 
     def getSize(self):
@@ -884,7 +883,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             x0 = self.state        # initial vector
             d = length(x0)
             if d > h/8:
-                # pf.debug(d)
                 x1 = [x-w/2, y-h/2]     # new vector
                 a0 = math.atan2(x0[0],x0[1])
                 a1 = math.atan2(x1[0],x1[1])

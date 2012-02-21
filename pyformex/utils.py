@@ -33,7 +33,7 @@ from distutils.version import LooseVersion as SaneVersion
 
 ### execute a system command ###
 def system(cmd):
-    pf.debug("COMMAND: %s" % cmd)
+    pf.debug("Command: %s" % cmd,pf.DEBUG.INFO)
     import subprocess
     P = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE) # or .STDOUT to redirect 
     sta = P.wait() # wait for the process to finish
@@ -643,7 +643,7 @@ def spawn(cmd):
     """Spawn a child process."""
     cmd = cmd.split()
     pid = os.spawnvp(os.P_NOWAIT,cmd[0],cmd)
-    pf.debug("Spawned child process %s for command '%s'" % (pid,cmd))
+    pf.debug("Spawned child process %s for command '%s'" % (pid,cmd),pf.DEBUG.INFO)
     return pid
 
 
@@ -653,7 +653,7 @@ def killProcesses(pids,signal):
         try:
             os.kill(pid,signal)
         except:
-            pf.debug("Error in killing of process '%s'" % pid)
+            pf.debug("Error in killing of process '%s'" % pid,pf.DEBUG.INFO)
             
 
 

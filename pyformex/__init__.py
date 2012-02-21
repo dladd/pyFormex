@@ -86,11 +86,24 @@ class DebugLevels(object):
     """
     ALL = -1
     NONE = 0
-    INFO, WARNING, OPTION, CONFIG, MEM, SCRIPT, GUI, MENU, DRAW, LIB = \
-       1,       2,      4,      8,  16,    32,   64, 128,  256,  512
+    INFO, WARNING, OPTION, CONFIG, MEM, SCRIPT, GUI, MENU, DRAW, \
+          CANVAS, OPENGL, LIB, MOUSE, APPS = \
+          1,    2,      4,      8,  16,    32,   64, 128,  256, \
+          512,    1024,   2048, 4096, 8192
 
 DEBUG = DebugLevels
 
+
+def debugLevel(sl):
+    lev = 0
+    for l in sl:
+        try:
+            lev |= getattr(DEBUG,l.upper())
+        except:
+            pass
+    return lev
+
+        
 def debug(s,level=DEBUG.ALL):
     """Print a debug message"""
     try: # to make sure that debug() can be used before options are set

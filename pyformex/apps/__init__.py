@@ -137,7 +137,7 @@ def sortSets(d):
         if type(d[k]) == set:
             d[k] = list(d[k])
             d[k].sort()
-
+       
 
 _available_apps = detect(os.path.dirname(__file__))
 

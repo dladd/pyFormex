@@ -82,8 +82,8 @@ def MinSize(*args):
 
 def printpos(w,t=None):
     print("%s %s x %s" % (t,w.x(),w.y()))
-def printsize(w,t=None):
-    print("%s %s x %s" % (t,w.width(),w.height()))
+def sizeReport(w,t=None):
+    return "%s %s x %s" % (t,w.width(),w.height())
 
 ################# Message Board ###############
 
@@ -293,10 +293,11 @@ class Gui(QtGui.QMainWindow):
             sys.stderr = self.board
             sys.stdout = self.board
 
-        if pf.options.debug:
-            printsize(self,'DEBUG: Main:')
-            printsize(self.central,'DEBUG: Canvas:')
-            printsize(self.board,'DEBUG: Board:')
+        if pf.options.debuglevel:
+            s = sizeReport(self,'DEBUG: Main:') + \
+                sizeReport(self.central,'DEBUG: Canvas:') + \
+                sizeReport(self.board,'DEBUG: Board:')
+            pf.debug(s,pf.DEBUG.GUI)
 
         # Drawing lock
         self.drawwait = pf.cfg['draw/wait']
@@ -371,9 +372,14 @@ class Gui(QtGui.QMainWindow):
         self.viewports.current.update()
  
 
+    def updateAppdirs(self):
+        appMenu.reloadMenu()
+        
+
     def updateToolBars(self):
         for t in ['camerabar','modebar','viewbar']:
             self.updateToolBar(t)
+
 
     def updateToolBar(self,shortname,fullname=None):
         """Add a toolbar or change its position.
@@ -572,7 +578,7 @@ class Gui(QtGui.QMainWindow):
         Finally, the event is removed.
         """
         key = e.key()
-        pf.debug('Key %s pressed' % key)
+        pf.debug('Key %s pressed' % key,pf.DEBUG.GUI)
         self.emit(signals.WAKEUP,())
         signal = signals.keypress_signal.get(key,None)
         if signal:
@@ -628,9 +634,9 @@ class Gui(QtGui.QMainWindow):
 ##         if draw.ack("Do you really want to quit?"):
 ##             print("YES:EXIT")
         self.cleanup()
-        pf.debug("Executing registered exit functions")
+        pf.debug("Executing registered exit functions",pf.DEBUG.GUI)
         for f in self.on_exit:
-            pf.debug(f)
+            pf.debug(f,pf.DEBUG.GUI)
             f()
         self.writeSettings()
         event.accept()
@@ -914,7 +920,7 @@ does not seem to work, use the KILL(9) signal.
 
 def quitGUI():
     """Quit the GUI"""
-    pf.debug("Quit GUI")
+    pf.debug("Quit GUI",pf.DEBUG.GUI)
     sys.stderr = sys.__stderr__
     sys.stdout = sys.__stdout__
     #print "QUIT"
@@ -939,11 +945,11 @@ def startGUI(args):
     QtCore.QLocale.setDefault(QtCore.QLocale.c())
     #
     #pf.options.debug = -1
-    pf.debug("Arguments passed to the QApplication: %s" % args)
+    pf.debug("Arguments passed to the QApplication: %s" % args,pf.DEBUG.INFO)
     pf.app = QtGui.QApplication(args)
     #
-    pf.debug("Arguments left after constructing the QApplication: %s" % args)
-    pf.debug("Arguments left after constructing the QApplication: %s" % pf.app.arguments().join('\n'))
+    pf.debug("Arguments left after constructing the QApplication: %s" % args,pf.DEBUG.INFO)
+    pf.debug("Arguments left after constructing the QApplication: %s" % pf.app.arguments().join('\n'),pf.DEBUG.INFO)
     #pf.options.debug = 0
     # As far as I have been testing this, the args passed to the Qt application are
     # NOT acknowledged and neither are they removed!!
@@ -962,18 +968,18 @@ def startGUI(args):
     #QtCore.QObject.connect(pf.app,QtCore.SIGNAL("aboutToQuit()"),quitGUI)
 
     # Check if we have DRI
-    pf.debug("Setting OpenGL format")
+    pf.debug("Setting OpenGL format",pf.DEBUG.OPENGL)
     viewport.setOpenGLFormat()
     dri = viewport.opengl_format.directRendering()
 
 
     # Check for existing pyFormex processes
-    pf.debug("Checking for running pyFormex")
+    pf.debug("Checking for running pyFormex",pf.DEBUG.INFO)
     if pf.X11:
         windowname,running = findOldProcesses()
     else:
         windowname,running = "UNKOWN",[]
-    pf.debug("%s,%s" % (windowname,running))
+    pf.debug("%s,%s" % (windowname,running),pf.DEBUG.INFO)
     
     
     while len(running) > 0:
@@ -1038,10 +1044,10 @@ You should seriously consider to bail out now!!!
 
         
     # Load the splash image
-    pf.debug("Loading the splash image")
+    pf.debug("Loading the splash image",pf.DEBUG.GUI)
     splash = None
     if os.path.exists(pf.cfg['gui/splash']):
-        pf.debug('Loading splash %s' % pf.cfg['gui/splash'])
+        pf.debug('Loading splash %s' % pf.cfg['gui/splash'],pf.DEBUG.GUI)
         splashimage = QtGui.QPixmap(pf.cfg['gui/splash'])
         splash = QtGui.QSplashScreen(splashimage)
         splash.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
@@ -1051,7 +1057,7 @@ You should seriously consider to bail out now!!!
 
     # create GUI, show it, run it
 
-    pf.debug("Creating the GUI")
+    pf.debug("Creating the GUI",pf.DEBUG.GUI)
     desktop = pf.app.desktop()
     pf.maxsize = Size(desktop.availableGeometry())
     size = pf.cfg.get('gui/size',(800,600))
@@ -1142,7 +1148,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     pf.GUI.toggleInputBox(False)
     pf.GUI.addCoordsTracker()
     pf.GUI.toggleCoordsTracker(pf.cfg.get('gui/coordsbox',False))
-    pf.debug("Using window name %s" % pf.GUI.windowTitle())
+    pf.debug("Using window name %s" % pf.GUI.windowTitle(),pf.DEBUG.GUI)
     
     # Create additional menus (put them in a list to save)
     
@@ -1201,7 +1207,7 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     
 
 
-    pf.debug("Showing the GUI")
+    pf.debug("Showing the GUI",pf.DEBUG.GUI)
     pf.GUI.show()
     pf.GUI.update()
 
@@ -1243,7 +1249,7 @@ def runGUI():
     """Go into interactive mode"""
     
     egg = pf.cfg.get('gui/easter_egg',None)
-    pf.debug('EGG: %s' % str(egg))
+    pf.debug('EGG: %s' % str(egg),pf.DEBUG.INFO)
     if egg:
         pf.debug('EGG')
         if type(egg) is str:
@@ -1257,13 +1263,13 @@ def runGUI():
     if os.path.isdir(pf.cfg['workdir']):
         # Make the workdir the current dir
         os.chdir(pf.cfg['workdir'])
-        pf.debug("Setting workdir to %s" % pf.cfg['workdir'])
+        pf.debug("Setting workdir to %s" % pf.cfg['workdir'],pf.DEBUG.INFO)
     else:
         # Save the current dir as workdir
         prefMenu.updateSettings({'workdir':os.getcwd(),'Save changes':True})
 
     pf.interactive = True
-    pf.debug("Start main loop")
+    pf.debug("Start main loop",pf.DEBUG.INFO)
 
     #utils.procInfo('runGUI')
     #from multiprocessing import Process
@@ -1271,7 +1277,7 @@ def runGUI():
     #p.start()
     #res = p.join()
     res = pf.app.exec_()
-    pf.debug("Exit main loop with value %s" % res)
+    pf.debug("Exit main loop with value %s" % res,pf.DEBUG.INFO)
     return res
 
 
