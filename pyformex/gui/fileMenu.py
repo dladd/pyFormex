@@ -327,7 +327,7 @@ def openScript(fn=None,exist=True,create=False):
         pf.GUI.setcurfile(fn)
         pf.GUI.history.add(fn)
         if create:
-            editScript(fn)
+            draw.editFile(fn)
     return fn
 
       
