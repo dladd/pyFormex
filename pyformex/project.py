@@ -42,10 +42,10 @@ module_relocations = {
 
 def find_global(module,name):
     """Override the import path of some classes"""
-    pf.debug("I want to import %s from %s" % (name,module))
+    pf.debug("I want to import %s from %s" % (name,module),pf.DEBUG.MISC)
     if module in module_relocations:
         module = module_relocations[module]
-        pf.debug("  I will try module %s instead" % module)
+        pf.debug("  I will try module %s instead" % module,pf.DEBUG.MISC)
     __import__(module)
     mod = sys.modules[module]
     clas = getattr(mod, name)

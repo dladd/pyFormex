@@ -87,9 +87,9 @@ class DebugLevels(object):
     ALL = -1
     NONE = 0
     INFO, WARNING, OPTION, CONFIG, MEM, SCRIPT, GUI, MENU, DRAW, \
-          CANVAS, OPENGL, LIB, MOUSE, APPS = \
+          CANVAS, OPENGL, LIB, MOUSE, APPS, MISC = \
           1,    2,      4,      8,  16,    32,   64, 128,  256, \
-          512,    1024,   2048, 4096, 8192
+          512,    1024,   2048, 4096, 8192, 16384
 
 DEBUG = DebugLevels
 
@@ -114,9 +114,9 @@ def debug(s,level=DEBUG.ALL):
         print("DEBUG(%s): %s" % (level,str(s)))
 
 
-def debugt(s):
+def debugt(s,level):
     """Print a debug message with timer"""
-    debug(s,time.time())
+    debug("%s: %s" % (time.time(),s))
 
 
 

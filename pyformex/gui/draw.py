@@ -66,7 +66,7 @@ def closeGui():
     Calling this function from a script closes the GUI and terminates
     pyFormex.
     """
-    pf.debug("Closing the GUI: currently, this will also terminate pyformex.")
+    pf.debug("Closing the GUI: currently, this will also terminate pyformex.",pf.DEBUG.GUI)
     pf.GUI.close()
 
 
@@ -640,7 +640,7 @@ def draw(F,
         clear_canvas()
 
     if view is not None and view != 'last':
-        pf.debug("SETTING VIEW to %s" % view)
+        pf.debug("SETTING VIEW to %s" % view,pf.DEBUG.DRAW)
         setView(view)
 
     pf.GUI.setBusy()
@@ -1606,7 +1606,6 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
             upv = elem[2] - center
         else:
             upv = upvector
-        #pf.debug("Eye: %s; Center: %s; Upvector: %s" % (eye,center,upv))
         pf.canvas.camera.lookAt(eye,center,upv)
         wait()
         pf.canvas.display()
@@ -1701,7 +1700,7 @@ def highlightElements(K):
     """
     pf.canvas.removeHighlights()
     for i in K.keys():
-        pf.debug("Actor %s: Selection %s" % (i,K[i]))
+        pf.debug("Actor %s: Selection %s" % (i,K[i]),pf.DEBUG.CANVAS)
         actor = pf.canvas.actors[i]
         FA = actors.GeomActor(actor.select(K[i]),color=pf.canvas.settings.slcolor,linewidth=3)
         pf.canvas.addHighlight(FA)
@@ -1717,7 +1716,7 @@ def highlightEdges(K):
     """
     pf.canvas.removeHighlights()
     for i in K.keys():
-        pf.debug("Actor %s: Selection %s" % (i,K[i]))
+        pf.debug("Actor %s: Selection %s" % (i,K[i]),pf.DEBUG.CANVAS)
         actor = pf.canvas.actors[i]
         FA = actors.GeomActor(Formex(actor.coords[actor.object.getEdges()[K[i]]]),color=pf.canvas.settings.slcolor,linewidth=3)
         pf.canvas.addHighlight(FA)
@@ -1732,7 +1731,7 @@ def highlightPoints(K):
     """
     pf.canvas.removeHighlights()
     for i in K.keys():
-        pf.debug("Actor %s: Selection %s" % (i,K[i]))
+        pf.debug("Actor %s: Selection %s" % (i,K[i]),pf.DEBUG.CANVAS)
         actor = pf.canvas.actors[i]
         FA = actors.GeomActor(Formex(actor.vertices()[K[i]]),color=pf.canvas.settings.slcolor,marksize=10)
         pf.canvas.addHighlight(FA)
@@ -1748,7 +1747,7 @@ def highlightPartitions(K):
     """
     pf.canvas.removeHighlights()
     for i in K.keys():
-        pf.debug("Actor %s: Partitions %s" % (i,K[i][0]))
+        pf.debug("Actor %s: Partitions %s" % (i,K[i][0]),pf.DEBUG.CANVAS)
         actor = pf.canvas.actors[i]
         for j in K[i][0].keys():           
             FA = actors.GeomActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))

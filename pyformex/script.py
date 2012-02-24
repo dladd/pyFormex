@@ -155,11 +155,7 @@ def named(name):
     """Returns the global object named name."""
     if pf.PF.has_key(name):
         dic = pf.PF
-#    elif pf._PF_.has_key(name):
-#        pf.debug("Found %s in pyformex._PF_" % name)
-#        dic = pf._PF_
     else:
-#        raise NameError,"Name %s is in neither pyformex.PF nor pyformex._PF_" % name
         raise NameError,"Name %s is not in pyformex.PF" % name
     return dic[name]
 
@@ -357,20 +353,18 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             try:
                 atExit()
             except:
-                pf.debug('Error while calling script exit function')
+                pf.debug('Error while calling script exit function',pf.DEBUG.SCRIPT)
                 
         if pf.cfg['autoglobals']:
             exportNames.extend(listAll(clas=Geometry,dic=g))
         pf.PF.update([(k,g[k]) for k in exportNames])
 
         scriptRelease('__auto__') # release the lock
-        #elapsed = time.clock() - starttime
-        #pf.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if pf.GUI:
             pf.GUI.stopScript()
             
     if exitall:
-        pf.debug("Calling quit() from playscript")
+        pf.debug("Calling quit() from playscript",pf.DEBUG.SCRIPT)
         quit()
 
 
@@ -416,9 +410,7 @@ def breakpt(msg=None):
 
 
 def raiseExit():
-    #print "EEEEEEEEEEEEXXXXXXXXXXXXXXXXIIIIIIIIIIIIIIIITTTTTTTTTTTTTTTTTTT"
-    pf.debug("RAISED EXIT")
-    #print scriptlock
+    pf.debug("RAISED EXIT",pf.DEBUG.SCRIPT)
     if pf.GUI:
         pf.GUI.drawlock.release()   
     raise _Exit,"EXIT REQUESTED FROM SCRIPT"
@@ -446,10 +438,10 @@ def playFile(fn,argv=[]):
     t = Timer()
     pf.GUI.history.add(fn)
     message("Running script (%s)" % fn)
-    pf.debug("  Executing with arguments: %s" % argv)
+    pf.debug("  Executing with arguments: %s" % argv,pf.DEBUG.SCRIPT)
     pye = fn.endswith('.pye')
     res = playScript(file(fn,'r'),fn,fn,argv,pye)
-    pf.debug("  Arguments left after execution: %s" % argv)
+    pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
     message("Finished script %s in %s seconds" % (fn,t.seconds()))
     return res
 
@@ -473,7 +465,7 @@ def runApp(appname,argv=[],reload=False):
         pf.GUI.startScript()
     pf.GUI.apphistory.add(appname)
     message("Running application '%s' from %s" % (appname,app.__file__))
-    pf.debug("  Passing arguments: %s" % argv)
+    pf.debug("  Passing arguments: %s" % argv,pf.DEBUG.SCRIPT)
     app._args_ = argv
     try:
         res = app.run()
@@ -488,7 +480,7 @@ def runApp(appname,argv=[],reload=False):
         if pf.GUI:
             pf.GUI.stopScript()
 
-    pf.debug("  Arguments left after execution: %s" % argv)
+    pf.debug("  Arguments left after execution: %s" % argv,pf.DEBUG.SCRIPT)
     message("Finished %s in %s seconds" % (appname,t.seconds()))
     pf.debug("Memory: %s" % vmSize(),pf.DEBUG.MEM)
 
@@ -534,7 +526,7 @@ def quit():
     directly, but results from an exit(True) call.
     """
     if pf.app and pf.app_started: # quit the QT app 
-        pf.debug("draw.exit called while no script running")
+        pf.debug("draw.exit called while no script running",pf.DEBUG.SCRIPT)
         pf.app.quit() # closes the GUI and exits pyformex
     else: # the QT app didn't even start
         sys.exit(0) # use Python to exit pyformex
@@ -571,15 +563,15 @@ def setPrefs(res,save=False):
     If save is True, the changes will be stored to the user's
     configuration file.
     """
-    pf.debug("Accepted settings:",res)
+    pf.debug("Accepted settings:\n%s"%res,pf.DEBUG.CONFIG)
     for k in res:
         pf.cfg[k] = res[k]
         if save and pf.prefcfg[k] != pf.cfg[k]:
             pf.prefcfg[k] = pf.cfg[k]
 
-    pf.debug("New settings:",pf.cfg)
+    pf.debug("New settings:\n%s"%pf.cfg,pf.DEBUG.CONFIG)
     if save:
-        pf.debug("New preferences:",pf.prefcfg)
+        pf.debug("New preferences:\n%s"%pf.prefcfg,pf.DEBUG.CONFIG)
 
 
 ########################## print information ################################
@@ -661,7 +653,7 @@ def runtime():
 def startGui(args=[]):
     """Start the gui"""
     if pf.GUI is None:
-        pf.debug("Starting the pyFormex GUI")
+        pf.debug("Starting the pyFormex GUI",pf.DEBUG.GUI)
         from gui import guimain
         if guimain.startGUI(args) == 0:
             guimain.runGUI()

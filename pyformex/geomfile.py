@@ -377,7 +377,7 @@ class GeometryFile(object):
             except:
                 continue  # not a legal header: skip
 
-            debug("READING OBJECT OF TYPE %s" % objtype) 
+            debug("Reading object of type %s" % objtype,pf.DEBUG.INFO) 
 
             # OK, we have a legal header, try to read data
             if objtype == 'Formex':

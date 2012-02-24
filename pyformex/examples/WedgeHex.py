@@ -25,11 +25,17 @@
 
 """WedgeHex
 
-level = 'normal'
-topics = ['mesh']
-techniques = ['revolve','degenerate'] 
+This example illustrates the creation of geometry by a revolution around
+an axis and the automatic reduction of the resulting degenerate elements
+to lower plexitude.
+
+First a 2D rectangular quad mesh is created. It is then revolved around an axis
+cutting the rectangle. The result is a fan shaped volume of hexahedrons,
+of which some elements are degenerate (those touching the axis). The
+splitDegenerate method is then used to split the mesh in nondegenerat meshes
+of Wedge6 (magenta) and Hex8 (cyan) type.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['mesh']
 _techniques = ['revolve','degenerate'] 
@@ -37,31 +43,33 @@ _techniques = ['revolve','degenerate']
 from gui.draw import *
 import simple
 
+delay(1)
+
 def run():
     clear()
     smoothwire()
+    view('iso')
 
     # create a 2D xy mesh
     nx,ny = 6,2
     G = simple.rectangle(1,1,1.,1.).replic2(nx,ny)
     M = G.toMesh()
     draw(M, color='red')
-    view('iso')
 
     # create a 3D axial-symmetric mesh by REVOLVING
     n,a = 8,45.
     R = M.revolve(n,angle=a,axis=1,around=[1.,0.,0.])
-    sleep(2)
     draw(R,color='yellow')
 
     # reduce the degenerate elements to WEDGE6
     clear()
-    print R
     ML = R.fuse().splitDegenerate()
-    print "AFTER SPLITTING: %s MESHES" % len(ML)
+    # keep only the non-empty meshes
+    ML = [ m for m in ML if m.nelems() > 0 ]
+    print "After splitting: %s meshes:" % len(ML)
     for m in ML:
-        print m
-    ML = [ Mi.setProp(i) for i,Mi in enumerate(ML) ]
+        print "  %s elements of type %s" % (m.nelems(),m.eltype)
+    ML = [ Mi.setProp(i+4) for i,Mi in enumerate(ML) ]
     draw(ML)
 
 if __name__ == 'draw':

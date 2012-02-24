@@ -1154,6 +1154,7 @@ Size: %s
             M = M.fuse()
         return M
 
+
     def reduceDegenerate(self,eltype=None):
         """Reduce degenerate elements to lower plexitude elements.
 

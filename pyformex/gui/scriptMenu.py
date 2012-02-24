@@ -49,7 +49,7 @@ def extractKeyword(s):
             if len(key) > 0:
                 return key, eval(s[i+1:].strip())
         except:
-            pf.debug("Error processing keywords %s" % s.strip('\n'))
+            pf.debug("Error processing keywords %s" % s.strip('\n'),pf.DEBUG.MISC)
             pass
     return None
 
@@ -287,9 +287,7 @@ class ScriptMenu(QtGui.QMenu):
 
         self.files = self.filterFiles(files)
         
-        if pf.options.debug:
-            print("Found Scripts in %s" % self.dir)
-            print(self.files)
+        pf.debug("Found Scripts in %s\n  %s" % (self.dir,self.files),pf.DEBUG.SCRIPT)
         self.actions = [ self.addAction(f) for f in self.files ]           
         self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
         
@@ -357,10 +355,10 @@ class ScriptMenu(QtGui.QMenu):
         """Run the specified script."""
         self.current = filename
         selected = self.fileName(filename)
-        pf.debug("Playing script %s" % selected)
+        pf.debug("Playing script %s" % selected,pf.DEBUG.SCRIPT)
         pf.GUI.setcurfile(selected)
         if self.autoplay:
-            pf.debug("Drawing Options: %s" % pf.canvas.options)
+            pf.debug("Drawing Options: %s" % pf.canvas.options,pf.DEBUG.CANVAS)
             draw.reset()
             draw.play()
 
@@ -373,7 +371,7 @@ class ScriptMenu(QtGui.QMenu):
             i = 0
             print("You should first run a script from the menu, to define the next")
             return
-        pf.debug("This is script %s out of %s" % (i,len(self.files)))
+        pf.debug("This is script %s out of %s" % (i,len(self.files)),pf.DEBUG.SCRIPT)
         if i < len(self.files):
             self.runScript(self.files[i])
 
@@ -386,16 +384,16 @@ class ScriptMenu(QtGui.QMenu):
             i = 0
             print("You should first run a script from the menu, to define the following")
             return
-        pf.debug("Running scripts %s-%s" % (i,len(self.files)))
+        pf.debug("Running scripts %s-%s" % (i,len(self.files)),pf.DEBUG.SCRIPT)
         self.runAllFiles(self.files[i:])
-        pf.debug("Exiting runAllNext")
+        pf.debug("Exiting runAllNext",pf.DEBUG.SCRIPT)
         
 
     def runAll(self):
         """Run all scripts."""
-        pf.debug("Playing all scripts in order")
+        pf.debug("Playing all scripts in order",pf.DEBUG.SCRIPT)
         self.runAllFiles(self.files)
-        pf.debug("Finished playing all scripts")
+        pf.debug("Finished playing all scripts",pf.DEBUG.SCRIPT)
 
 
     ### THIS should be moved to a playAll function in draw/script module
@@ -428,9 +426,9 @@ class ScriptMenu(QtGui.QMenu):
 
     def runAllRandom(self):
         """Run all scripts in a random order."""
-        pf.debug("Playing all scripts in random order")
+        pf.debug("Playing all scripts in random order",pf.DEBUG.SCRIPT)
         self.runAllFiles(self.files,randomize=True)
-        pf.debug("Finished playing all scripts")
+        pf.debug("Finished playing all scripts",pf.DEBUG.SCRIPT)
                        
 
     def reload(self):
@@ -439,7 +437,7 @@ class ScriptMenu(QtGui.QMenu):
         This is only available if a directory path was specified and
         no files.
         """
-        pf.debug("RELOADING THIS MENU")
+        pf.debug("Reloading this menu",pf.DEBUG.SCRIPT)
         if self.dir:
             self.clear()
             self.menus = []
@@ -478,7 +476,7 @@ class ScriptMenu(QtGui.QMenu):
             d = scriptKeywords(fn)
             for k,v in d.items():
                 if not k in kat:
-                    pf.debug("Skipping unknown keyword %s in script %s" % (k,fn))
+                    pf.debug("Skipping unknown keyword %s in script %s" % (k,fn),pf.DEBUG.SCRIPT)
                     continue
                 if k == 'level':
                     v = [v]
@@ -545,7 +543,7 @@ def createScriptMenu(parent=None,before=None):
             scriptdirs[i] = (item[0].capitalize(),knownscriptdirs[item[0].lower()])
 
     for txt,dirname in scriptdirs:
-        pf.debug("Loading script dir %s" % dirname)
+        pf.debug("Loading script dir %s" % dirname,pf.DEBUG.SCRIPT)
         if os.path.exists(dirname):
             m = ScriptMenu(txt,dir=dirname,autoplay=True)
             scriptmenu.insert_menu(m)

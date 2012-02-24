@@ -85,7 +85,7 @@ def showCube(base,color):
     draw(cube,color=color)
     export({'cube':cube})
 #    zoomAll()
-    
+
         
 def run():
     from gui import widgets
@@ -98,20 +98,17 @@ def run():
     baseshape = ['Quad','Triangle']
     colormode = ['None','Single','Face','Full']
 
-    all = False
-    base = 'Quad'
-    color = 'Full'
     while True:
         res = askItems([
-            _I('All',all),
-            _I('Base',base,choices=baseshape),
-            _I('Color',color,choices=colormode),
+            _I('All',False),
+            _I('Base','Quad',choices=baseshape),
+            _I('Color','Full',choices=colormode),
             ],caption="Make a selection or check 'All'")
         if not res:
             break;
 
-        all = res['All']
-        if all:
+        showall = res['All']
+        if showall:
             bases = baseshape
             colors = colormode
         else:
