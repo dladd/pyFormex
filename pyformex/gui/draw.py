@@ -654,6 +654,7 @@ def draw(F,
         for F in FL:
 
             # Treat special case colors
+            #print "COLOR IN",color
             if type(color) is str:
                 if color == 'prop':
                     try:
@@ -663,9 +664,12 @@ def draw(F,
                 elif color == 'random':
                     # create random colors
                     Fcolor = numpy.random.rand(F.nelems(),3)
+                else:
+                    Fcolor = color
             else:
                 Fcolor = asarray(color)
 
+            #print "COLOR OUT",Fcolor
             # Create the actor
             actor = F.actor(color=Fcolor,colormap=colormap,bkcolor=bkcolor,bkcolormap=bkcolormap,alpha=alpha,mode=mode,linewidth=linewidth,linestipple=linestipple,marksize=marksize,nolight=nolight,ontop=ontop,**kargs)
             

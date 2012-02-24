@@ -130,6 +130,11 @@ class AppMenu(QtGui.QMenu):
         self.max = max
         self.autoplay = autoplay
         self.menus = []
+        if self.dir:
+            self.pkg = os.path.basename(self.dir)
+            self.path = os.path.dirname(self.dir)
+        else:
+            self.pkg = self.path = None
         self.load()
 
 
