@@ -245,11 +245,8 @@ def scaledJacobian(self, scaled=True):
     acre = self.coords[self.elems][:, iacre]
     vacre = acre[:, :,:,1]-acre[:, :,:,0]
     cvacre = concatenate(vacre, axis=1)
-    if self.eltype.name()=='tet4': #Tet4 has Jacobian equal on every corner, but differnt scaled J
-        vacre = concatenate(vacre[:, :, 0], axis=1).reshape(-1, 2, 3)
-        J = vectorTripleProduct(*vacre).repeat(nc).reshape(ne, 4)
-    else: 
-        J = vectorTripleProduct(*cvacre).reshape(ne, nc)
+
+    J = vectorTripleProduct(*cvacre).reshape(ne, nc)
     if not scaled: 
         return J
     else:
