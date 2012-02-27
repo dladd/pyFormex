@@ -1248,7 +1248,7 @@ def createSphere():
 def check():
     S = selection.check(single=True)
     if S:
-        pf.message(S.check(verbose=True))
+        pf.message(S.check())
 
 
 def split():
