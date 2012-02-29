@@ -35,7 +35,7 @@ from coords import *
 from formex import Formex
 from mesh import Mesh
 from odict import ODict
-from pyformex import message,debug,warning
+from pyformex import message,debug,warning,DEBUG
 
 
 import os
@@ -377,7 +377,7 @@ class GeometryFile(object):
             except:
                 continue  # not a legal header: skip
 
-            debug("Reading object of type %s" % objtype,pf.DEBUG.INFO) 
+            debug("Reading object of type %s" % objtype,DEBUG.INFO) 
 
             # OK, we have a legal header, try to read data
             if objtype == 'Formex':
