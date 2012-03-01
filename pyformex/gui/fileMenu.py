@@ -279,9 +279,8 @@ def askCloseProject():
 
 def convertProjectFile():
     proj = openProject(pf.PF.filename,access=['c'],default='c',exist=True)
-    print "got proj"
     if proj is not None:
-        print "will now convert"
+        pf.debug("Converting project file %s" % proj.filename,pf.DEBUG.INFO)
         proj.convert(proj.filename.replace('.pyf','_converted.pyf'))
 
 

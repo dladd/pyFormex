@@ -24,17 +24,19 @@
 ##
 """Stars
 
-level = 'beginner'
-topics = ['geometry']
-techniques = ['color']
-
+This example illustrates the use of random values. It generates a collection
+of stars with random number of points (between 5 and 15). A random noise is
+applied on the geometry and the stars are place with random position and
+orientation in a confined space. Finally, the stars are drawn with random
+RGB colors.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['geometry']
-_techniques = ['color']
+_techniques = ['color','random']
 
 from gui.draw import *
+
 nstars = 200 # number of stars
 minpoints = 5 # minimum number of points in the stars
 maxpoints = 15# maximum number of points in the stars
@@ -71,6 +73,7 @@ def run():
     # draw them with random colors
     colors = random.random((nstars,3))
     clear()
+    flat()
     draw(Stars,colormap=colors)
 
 if __name__ == 'draw':

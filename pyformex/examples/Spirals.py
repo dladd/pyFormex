@@ -24,16 +24,15 @@
 ##
 """Spirals
 
-level = 'normal'
-topics = ['geometry','curve']
-techniques = ['transform']
+This exampoe shjows how to create a spiral curve and how to spread points
+evenly along a curve.
 
-See also the Sweep example for a more sophisticated Spirals application
+See also the Sweep example for a more sophisticated application of spirals.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','curve']
-_techniques = ['transform']
+_techniques = ['transform','spiral']
 
 from gui.draw import *
 from plugins import curve
@@ -45,7 +44,6 @@ F = Formex(origin()) # base pattern, here a point
 F = F.replic(m,1.,0)
 s = a*2*pi/m
 F = F.scale(s)
-draw(F)
 
 def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:1):
     """Perform a spiral transformation on a coordinate array"""
@@ -76,10 +74,9 @@ S = spiral(F.coords,[0,1,2],rf)#.rosette(nwires,360./nwires)
 PL = curve.PolyLine(S[:,0,:])
 
 def run():
-    clear()
-
     linewidth(2)
     clear()
+    flat()
     draw(PL,color=red)
     draw(PL.coords,color=red)
 
@@ -87,10 +84,10 @@ def run():
     if ack("Spread point evenly?"):
         at = PL.atLength(PL.nparts)
         X = PL.pointsAt(at)
-        PL = curve.PolyLine(X)
+        PL2 = curve.PolyLine(X)
         clear()
-        draw(PL,color=blue)
-        draw(PL.coords,color=blue)
+        draw(PL2,color=blue)
+        draw(PL2.coords,color=blue)
 
 if __name__ == 'draw':
     run()

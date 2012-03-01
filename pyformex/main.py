@@ -592,6 +592,15 @@ pyFormex Warning
     from project import Project
     pf.PF = Project()
 
+    utils.setSaneLocale()
+
+    # Set application paths
+    pf.debug("Loading AppDirs",pf.DEBUG.INFO)
+    import apps
+    pf.appdirs = apps.addAppDirs()
+    for p in pf.appdirs:
+        pf.debug(str(p),pf.DEBUG.CONFIG)
+
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if pf.options.gui:
@@ -627,7 +636,6 @@ pyFormex Warning
     #print("NOW LOAIDNG LIBS")
     #import lib
     #lib.init_libs(pf.options.uselib,pf.options.gui)
-
 
     # Prepend the autorun scripts
     ar = pf.cfg.get('autorun','')

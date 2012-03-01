@@ -28,8 +28,95 @@ This module contains the functions to detect and load the pyFormex
 applications.
 """
 
+import pyformex as pf
 import utils
 import os,sys
+
+
+class AppDir(object):
+    """Application directory
+
+    An AppDir is a directory containing pyFormex applications. 
+    """
+    known_dirs = {
+        'apps': pf.cfg['appdir'],
+        'examples': pf.cfg['examplesdir'],
+        }
+
+    def __init__(self,path,name=None,create=True):
+        if not path:
+            try:
+                path = AppDir.known_dirs[name.lower()]
+            except:
+                raise ValueError,"Expected a path to initialize AppDir"
+
+        self.path = checkAppdir(path)
+        if self.path is None:
+            raise ValueError,"Invalid application path %s" % path
+        
+        self.pkg = os.path.basename(self.path)
+        if name is None:
+            self.name = self.pkg.capitalize()
+        else:
+            self.name = name
+        pf.debug("Created %s" % self,pf.DEBUG.CONFIG)
+
+    def __repr__(self):
+        return "AppDir %s at %s (%s)" % (self.name,self.path,self.pkg)
+
+
+def addAppDirs():
+    """Add the application directories to the sys.path"""
+    # Create a copy to leave the cfg unchanged!
+    appdirs = [ AppDir(*i) for i in pf.cfg['appdirs'] ]
+
+    # TODO: MOVE TO AppDir
+    # Add the paths to sys.path 
+    adddirs = [ os.path.dirname(a.path) for a in appdirs ]
+    adddirs = set(adddirs)
+    #print "appdir parents",adddirs
+    adddirs = [ a for a in adddirs if not a in sys.path ]
+    #print "appdir parents to add",adddirs
+    sys.path[1:1] = adddirs
+    return appdirs
+
+
+def checkAppdir(d):
+    """Check that a directory d can be used as a pyFormex application path.
+
+    If the path does not exist, it is created.
+    If no __init__.py exists, it is created.
+    If __init__.py exists, it is not checked.
+
+    If successful, returns the path, else None
+    """
+    if not os.path.exists(d):
+        try:
+            os.makedirs(d)
+        except:
+            return None
+
+    if not os.path.isdir(d):
+        return None
+
+    initfile = os.path.join(d,'__init__.py')
+    if os.path.exists(initfile):
+        return os.path.dirname(initfile)
+        
+    try:
+        f = open(initfile,'w')
+        f.write("""# $Id$
+\"\"\"pyFormex application directory.
+
+Do not remove this file. It is used by pyFormex to flag the parent
+directory as a pyFormex application path. 
+\"\"\"
+# End
+""")
+        f.close()
+        return os.path.dirname(initfile)
+    except:
+        return None
 
 
 def load(appname,refresh=False):
@@ -39,10 +126,10 @@ def load(appname,refresh=False):
     before.
     On succes, returns the loaded module
     """
-    name = 'apps.'+appname
+    pf.debug("Loading %s" % appname,pf.DEBUG.APPS)
     try:
-        __import__(name)
-        app = sys.modules[name]
+        __import__(appname)
+        app = sys.modules[appname]
         if refresh:
             reload(app)
         return app
@@ -57,7 +144,7 @@ def unload(appname):
         app = sys.modules[name]
         refcnt = sys.getrefcount(app)
         if refcnt == 4:
-            print "Unloading %s" % name
+            pf.debug("Unloading %s" % name,pf.DEBUG.APPS)
             ## k = globals().keys()
             ## k.sort()
             ## print k

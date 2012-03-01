@@ -132,9 +132,8 @@ class AppMenu(QtGui.QMenu):
         self.menus = []
         if self.dir:
             self.pkg = os.path.basename(self.dir)
-            self.path = os.path.dirname(self.dir)
         else:
-            self.pkg = self.path = None
+            self.pkg = None
         self.load()
 
 
@@ -220,11 +219,19 @@ class AppMenu(QtGui.QMenu):
 
 
 
+    def fullAppName(self,app):
+        if self.pkg:
+            return "%s.%s" % (self.pkg,app)
+        else:
+            return app
+
+
     def run(self,action):
         """Run the selected app."""
         app = str(action.text())
         if app in self.files:
-            script.runApp(app)
+            appname = self.fullAppName(app)
+            script.runApp(appname)
 
 
     def runNext(self):
@@ -315,9 +322,10 @@ class AppMenu(QtGui.QMenu):
         By default, only legal pyFormex scripts can be added.
         """
         if strict:
-            app = apps.load(name)
+            appname = self.fullAppName(name)
+            app = apps.load(appname)
             if app is None:
-                print "%s is NO MODULE!" % name
+                print "%s is NO MODULE!" % appname
                 return
             
         files = self.files
@@ -328,7 +336,6 @@ class AppMenu(QtGui.QMenu):
             self.actions.append(self.addAction(name))
         for a,f in zip(self.actions,self.files):
             a.setText(f)
-
 
 
     def _classify(self):
@@ -354,44 +361,6 @@ class AppMenu(QtGui.QMenu):
 
 from prefMenu import setDirs
 
-
-def checkAppdir(d):
-    """Check that a directory d can be used as a pyFormex application path.
-
-    If the path does not exist, it is created.
-    If no __init__.py exists, it is created.
-    If __init__.py exists, it is not checked.
-
-    If successful, returns the path, else None
-    """
-    if not os.path.exists(d):
-        try:
-            os.makedirs(d)
-        except:
-            return None
-
-    if not os.path.isdir(d):
-        return None
-
-    initfile = os.path.join(d,'__init__.py')
-    if os.path.exists(initfile):
-        return os.path.dirname(initfile)
-        
-    try:
-        f = open(initfile,'w')
-        f.write("""# $Id$
-\"\"\"pyFormex application directory.
-
-Do not remove this file. It is used by pyFormex to flag the parent
-directory as a pyFormex application path. 
-\"\"\"
-# End
-""")
-        f.close()
-        return os.path.dirname(initfile)
-    except:
-        return None
-
  
 def createMenu(parent=None,before=None):
     """Create the menu(s) with pyFormex apps
@@ -412,36 +381,14 @@ def createMenu(parent=None,before=None):
     from odict import ODict
     appmenu = menu.Menu('&Apps',parent=parent,before=before)
     appmenu.menuitems = ODict()
-    # Create a copy to leave the cfg unchanged!
-    appdirs = [] + pf.cfg['appdirs']
-    # Fill in missing default locations : this enables the user
-    # to keep the pyFormex installed examples in his config
-    knownappdirs = {
-        'apps': pf.cfg['appdir'],
-        'examples': pf.cfg['examplesdir'],
-        }
-    for i,item in enumerate(appdirs):
-        if type(item[0]) is str and not item[1] and item[0].lower() in knownappdirs:
-            appdirs[i] = (item[0].capitalize(),knownappdirs[item[0].lower()])
-    # Check that the paths are legal appdirs
-    #print "INitial appdirs",appdirs
-    appdirs = [ a for a in appdirs if checkAppdir(a[1]) is not None ]
-    #print appdirs
-    # Add the paths to sys.path
-    adddirs = [ os.path.dirname(a[1]) for a in appdirs ]
-    adddirs = set(adddirs)
-    #print "appdir parents",adddirs
-    adddirs = [ a for a in adddirs if not a in sys.path ]
-    #print "appdir parents to add",adddirs
-    sys.path[1:1] = adddirs
+
+    
     # Go ahead and load the apps
-    for txt,dirname in appdirs:
-        pf.debug("Loading app dir %s" % dirname,pf.DEBUG.MENU)
-        if os.path.exists(dirname):
-            m = AppMenu(txt,dir=dirname,autoplay=True)
-            appmenu.insert_menu(m)
-            txt = utils.strNorm(txt)
-            appmenu.menuitems[txt] = m
+    for d in pf.appdirs:
+        pf.debug("Loading %s" % d,pf.DEBUG.MENU)
+        m = AppMenu(d.name,dir=d.path,autoplay=True)
+        appmenu.insert_menu(m)
+        appmenu.menuitems[utils.strNorm(d.name)] = m
 
     if pf.cfg.get('gui/history_in_main_menu',False):
         before = pf.GUI.menu.item('help')

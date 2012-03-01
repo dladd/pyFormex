@@ -524,7 +524,9 @@ class Gui(QtGui.QMainWindow):
         from types import ModuleType
         is_app = type(app) is ModuleType
         if is_app:
-            name = app.__name__.replace('apps.','')
+            name = app.__name__
+            # MAYBE LATER REINSTATE THIS
+            # name = name.replace('apps.','')
             self.canPlay = hasattr(app,'run')
             self.curfile.label.setText('App:')
             pf.prefcfg['curfile'] = name
@@ -1183,10 +1185,12 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
 
     # show current application/file
     app = pf.cfg['curfile']
+
     if not utils.is_script(app):
         try:  # Avoid an error on startup !
             import apps
-            app = app.replace('apps.','')
+            # MAYBE LATER REINSTATE THIS
+            #app = app.replace('apps.','')
             app = apps.load(app)
         except:
             app = ''
@@ -1203,9 +1207,6 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
         splash.finish(pf.GUI)
 
     pf.GUI.setBusy(False)        # OR HERE
-
-    
-
 
     pf.debug("Showing the GUI",pf.DEBUG.GUI)
     pf.GUI.show()

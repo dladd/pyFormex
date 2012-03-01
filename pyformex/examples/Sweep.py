@@ -22,16 +22,15 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""Spirals
+"""Sweep
 
-level = 'normal'
-topics = ['geometry','curve','mesh']
-techniques = ['sweep',]
+This example illustrates the creation of spiral curves and the sweeping
+of a plane cross section along thay curve.
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'normal'
 _topics = ['geometry','curve','mesh']
-_techniques = ['sweep',]
+_techniques = ['sweep','spiral']
 
 from gui.draw import *
 from plugins import curve
@@ -226,9 +225,9 @@ def createDialog():
     dialog.timeout = timeOut
 
 
-if __name__ == 'draw':
-
+def run():
     # Show the dialog and let the user have fun
+    linewidth(2)
     clear()
     createDialog()
     dialog.show()
