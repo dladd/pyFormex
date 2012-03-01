@@ -2474,7 +2474,7 @@ class Table(QtGui.QTableView):
     - `label`: currently unused (intended to display an optional label
       in the upper left corner if both `chead` and `rhead` are specified.
     """
-    def __init__(self,data,chead=None,rhead=None,label=None,edit=True,parent=None):
+    def __init__(self,data,chead=None,rhead=None,label=None,edit=True,parent=None,autowidth=True):
         """Initialize the Table widget."""
         QtGui.QTableView.__init__(self,parent)
         if isinstance(data,ndarray):
@@ -2484,8 +2484,23 @@ class Table(QtGui.QTableView):
         self.setModel(self.tm)
         self.horizontalHeader().setVisible(chead is not None)
         self.verticalHeader().setVisible(rhead is not None)
-        self.resizeColumnsToContents()
+        self.autowidth = autowidth
+        if self.autowidth:
+            self.resizeColumnsToContents()
         self.setCornerButtonEnabled
+
+    def update(self):
+        """update the table.
+
+        This method should be called to update the widget when the data of
+        the table have changed. If autowidth is True, this will also
+        adjust the column widths.
+        """
+        QtGui.QTableView.update(self)
+        if self.autowidth:
+            self.resizeColumnsToContents()
+         
+       
                         
 
 class Tabs(QtGui.QTabWidget):
@@ -2515,8 +2530,9 @@ class TableDialog(GenericDialog):
         - chead is an optional list of ncol column headers.
         - rhead is an optional list of nrow row headers.
         """
+        self.table = Table(data,chead=chead,rhead=rhead)
         GenericDialog.__init__(self,
-                               [Table(data,chead=chead,rhead=rhead,parent=self)],
+                               [self.table],
                                title=title, parent=parent,
                                actions=actions,default=default)
 
@@ -2923,28 +2939,29 @@ class ImageView(QtGui.QLabel):
         
 ############################# Deprecated Features ###########################
 
-class OldTableDialog(GenericDialog):
-    """_A dialog widget to show two-dimensional arrays of items."""
-    def __init__(self,items,caption=None,parent=None,tab=False):
-        """_Create the Table dialog.
+# removed in 0.9
+## class OldTableDialog(GenericDialog):
+##     """_A dialog widget to show two-dimensional arrays of items."""
+##     def __init__(self,items,caption=None,parent=None,tab=False):
+##         """_Create the Table dialog.
         
-        If tab = False, a dialog with one table is created and items
-        should be a list [table_header,table_data].
-        If tab = True, a dialog with multiple pages is created and items
-        should be a list of pages [page_header,table_header,table_data].
-        """
-        warnings.warn('warn_old_table_dialog')
+##         If tab = False, a dialog with one table is created and items
+##         should be a list [table_header,table_data].
+##         If tab = True, a dialog with multiple pages is created and items
+##         should be a list of pages [page_header,table_header,table_data].
+##         """
+##         warnings.warn('warn_old_table_dialog')
         
-        GenericDialog.__init__(self,[],title=caption,parent=parent)
-        if tab:
-            contents = Tabs(
-                [ (item[0], Table(data=item[2],chead=item[1],parent=None))
-                  for item in items ], parent=parent)
-        else:
-            contents = Table(data=items[1],chead=items[0],parent=None)
+##         GenericDialog.__init__(self,[],title=caption,parent=parent)
+##         if tab:
+##             contents = Tabs(
+##                 [ (item[0], Table(data=item[2],chead=item[1],parent=None))
+##                   for item in items ], parent=parent)
+##         else:
+##             contents = Table(data=items[1],chead=items[0],parent=None)
 
-        self.add(contents)
-        self.show()
+##         self.add(contents)
+##         self.show()
 
 
 

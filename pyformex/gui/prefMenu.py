@@ -448,15 +448,14 @@ def createDirsDialog(dircfg):
             scr[row-1] = b
             scr[row] = a
         _table.setFocus() # For some unkown reason, this seems needed to
-                           # immediately update the widget
+                          # immediately update the widget
         _table.update()
         pf.app.processEvents()
 
     def saveTable():
         pf.prefcfg[dircfg] = pf.cfg[dircfg]
-        print "SAVED: %s" % pf.cfg[dircfg]
 
-    scr = pf.cfg[dircfg]
+
     if dircfg == 'scriptdirs':
         title='Script paths'
         import scriptMenu
@@ -465,14 +464,21 @@ def createDirsDialog(dircfg):
         title='Application paths'
         import appMenu
         reloadMenu = appMenu.reloadMenu
-    _table = widgets.Table(scr,chead=['Label','Path'])
-    actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadMenu),('Save',saveTable),('OK',)]
-        
-    _dia = widgets.GenericDialog(
-        widgets=[_table],
-        title=title,
-        actions=actions,
-        )
+
+    _dia = widgets.TableDialog(
+        data = pf.cfg[dircfg],
+        chead = ['Label','Path'],
+        actions = [
+            ('New',insertRow),
+            ('Edit',editRow),
+            ('Delete',removeRow),
+            ('Move Up',moveUp),
+            ('Reload',reloadMenu),
+            ('Save',saveTable),
+            ('OK',),
+            ],
+        title=title)
+    _table = _dia.table
     
     return _dia
         

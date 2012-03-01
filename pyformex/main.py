@@ -243,7 +243,6 @@ def apply_config_changes(cfg):
                 elif i[0] == '' or os.path.isdir(i[0]):
                     scriptdirs.append((i[1],i[0]))
             cfg[d] = scriptdirs
-            print "NEW %s %s" % (d,cfg[d])
 
     # Rename settings
     for old,new in [
