@@ -405,7 +405,14 @@ def setDirs(dircfg):
 
     
 def createDirsDialog(dircfg):
-    """dircfg is a config variable that is a list of directories."""
+    """Create a Dialog to set a list of paths.
+
+    dircfg is a config variable that is a list of tuples (path,text)
+    where path is a valid directory pathname and text is a short name
+    to display in the menus.
+
+    Examples of dircfg are 'scriptsdirs' and 'appdirs'.
+    """
     
     _dia=None
     _table=None
@@ -446,20 +453,20 @@ def createDirsDialog(dircfg):
         pf.app.processEvents()
 
     def saveTable():
-        #print pf.cfg['scriptdirs']
         pf.prefcfg[dircfg] = pf.cfg[dircfg]
+        print "SAVED: %s" % pf.cfg[dircfg]
 
-    #global _dia,_table
-    from scriptMenu import reloadScriptMenu
     scr = pf.cfg[dircfg]
-    _table = widgets.Table(scr,chead=['Label','Path'])
-    actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Save',saveTable),('OK',)]
     if dircfg == 'scriptdirs':
         title='Script paths'
-        from scriptMenu import reloadScriptMenu
-        actions[4:4] = [('Reload',reloadScriptMenu)]
+        import scriptMenu
+        reloadMenu = scriptMenu.reloadMenu
     else:
         title='Application paths'
+        import appMenu
+        reloadMenu = appMenu.reloadMenu
+    _table = widgets.Table(scr,chead=['Label','Path'])
+    actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadMenu),('Save',saveTable),('OK',)]
         
     _dia = widgets.GenericDialog(
         widgets=[_table],

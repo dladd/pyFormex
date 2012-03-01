@@ -24,19 +24,10 @@
 ##
 """Multicut
 
-level = 'beginner'
-topics = ['surface']
-techniques = ['cut']
-
-.. Description
-
-Multicut
---------
 This example shows how to cut a hole in a surface.
 It uses the cutWithPlane function with a series of cutting planes.
-
 """
-_status = 'unchecked'
+_status = 'checked'
 _level = 'beginner'
 _topics = ['surface']
 _techniques = ['cut']
@@ -45,6 +36,7 @@ from gui.draw import *
 
 def run():
     clear()
+    smooth()
 
     from simple import sphere
     S = sphere(8).scale(3.)

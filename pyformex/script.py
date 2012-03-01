@@ -426,7 +426,7 @@ def stopatbreakpt():
     exitrequested = True
 
 
-def playFile(fn,argv=[]):
+def runScript(fn,argv=[]):
     """Play a formex script from file fn.
 
     fn is the name of a file holding a pyFormex script.
@@ -455,10 +455,12 @@ def runApp(appname,argv=[],reload=False):
     from timer import Timer
     t = Timer()
     app = apps.load(appname,refresh=reload)
-    if pf.GUI:
-        pf.GUI.setcurfile(app)
+    if app is None:
+        message("Could not load application %s" % appname)
+        pf.warning("Could not load application %s" % appname)
+        return
+    
     message("Loaded application %s in %s seconds" % (appname,t.seconds()))
-       
     
     scriptLock('__auto__')
     if pf.GUI:
@@ -468,7 +470,13 @@ def runApp(appname,argv=[],reload=False):
     pf.debug("  Passing arguments: %s" % argv,pf.DEBUG.SCRIPT)
     app._args_ = argv
     try:
-        res = app.run()
+        try:
+            res = app.run()
+        except _Exit:
+            print "EXIT FROM APP"
+            pass
+        except:
+            raise
     finally:
         if hasattr(app,'atExit'):
             app.atExit()
@@ -489,25 +497,24 @@ def run(appname=None,argv=[],step=False,reload=False):
     """Run the current pyFormex application or script file.
     
     This function does nothing if no appname/filename is passed or no current
-    scriptfile was set.
+    script/app was set.
     If arguments are given, they are passed to the script. If `step` is True,
     the script is executed in step mode.
     """
     global stepmode
     if appname is None:
-        if pf.GUI.canPlay:
-            appname = pf.cfg['curfile']
-        else:
-            return
-    else:
-        if pf.GUI:
-            pf.GUI.setcurfile(app)
+        appname = pf.cfg['curfile']
+    if not appname:
+        return
+    
+    if pf.GUI:
+        pf.GUI.setcurfile(appname)
        
     if utils.is_script(appname):
         stepmode = step
-        return playFile(appname,argv)
-
-    runApp(appname,argv)
+        return runScript(appname,argv)
+    else:
+        return runApp(appname,argv)
   
 
 def exit(all=False):
@@ -547,7 +554,7 @@ def processArgs(args):
         elif not os.path.exists(fn) or not utils.is_pyFormex(fn):
             pf.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
             continue
-        res = playFile(fn,args)
+        res = runScript(fn,args)
         if res and pf.GUI:
             pf.message("Error during execution of script %s" % fn)
         

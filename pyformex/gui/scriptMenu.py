@@ -345,22 +345,29 @@ class ScriptMenu(QtGui.QMenu):
 
 
     def run(self,action):
-        """Run the selected script."""
+        """Run the selected script.
+
+        This function is executed when the menu item is selected.
+        """
         script = str(action.text())
         if script in self.files:
-            self.runScript(script)
+            self.runScript(script,play=self.autoplay)
     
 
-    def runScript(self,filename):
-        """Run the specified script."""
+    def runScript(self,filename,play=True):
+        """Set/Run the specified script.
+
+        Set the specified scripts as the current script,
+        and run it if play==True.
+        """
         self.current = filename
         selected = self.fileName(filename)
-        pf.debug("Playing script %s" % selected,pf.DEBUG.SCRIPT)
         pf.GUI.setcurfile(selected)
-        if self.autoplay:
+        if play:
+            pf.debug("Playing script %s" % selected,pf.DEBUG.SCRIPT)
             pf.debug("Drawing Options: %s" % pf.canvas.options,pf.DEBUG.CANVAS)
             draw.reset()
-            draw.play()
+            draw.run()
 
 
     def runNext(self):
@@ -515,6 +522,7 @@ class ScriptMenu(QtGui.QMenu):
 
 from prefMenu import setDirs
 
+
 def createScriptMenu(parent=None,before=None):
     """Create the menu(s) with pyFormex scripts
 
@@ -553,18 +561,18 @@ def createScriptMenu(parent=None,before=None):
     scriptmenu.insertItems([
         ('---',None),
         (_('&Configure Script Paths'),setDirs,{'data':'scriptdirs'}),
-        (_('&Reload Script Menu'),reloadScriptMenu),
+        (_('&Reload Script Menu'),reloadMenu,{'data':'scripts'}),
         ])
     
     return scriptmenu
 
-
-def reloadScriptMenu():
-    menu = pf.GUI.menu.item('scripts')
+# WE CAN NOT USE THE appMenu.reloadMenu, because createMenu is another function
+def reloadMenu(name='scripts'):
+    """Reload the named menu."""
+    menu = pf.GUI.menu.item(name)
     if menu is not None:
-        before = pf.GUI.menu.nextitem('scripts')
-        pf.GUI.menu.removeItem('scripts')
-        newmenu = createScriptMenu(pf.GUI.menu,before)
- 
+        before = pf.GUI.menu.nextitem(name)
+        pf.GUI.menu.removeItem(name)
+        newmenu = createMenu(pf.GUI.menu,before)
     
 # End

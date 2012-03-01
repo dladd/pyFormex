@@ -61,7 +61,7 @@ curfile = ''
 # scriptdirs is a list of (title,dir) tuples
 # for 'examples', the directory will be filled in automagically
 scriptdirs = [ ('Examples','') ]
-appdirs = [ ('','Apps') ]
+appdirs = [ ('Apps','') ]
 
 # extra paths to append tot sys.path
 syspath = []

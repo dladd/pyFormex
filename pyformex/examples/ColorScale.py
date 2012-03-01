@@ -150,6 +150,7 @@ def atUnload():
     print "Unloading? Wait, I want to close the dialog first"
     close()
 
+dialog = None
 def run():
     global dialog
 
@@ -165,7 +166,7 @@ def run():
     ##     pass
 
     # Create the modeless dialog widget
-    dialog = InputDialog(input_data,enablers=input_enablers,caption='ColorScale Dialog',actions = [('Close',close),('Show',show)],default='Show')
+    dialog = Dialog(input_data,enablers=input_enablers,caption='ColorScale Dialog',actions = [('Close',close),('Show',show)],default='Show')
 
     # Examples style requires a timeout action
     dialog.timeout = timeOut

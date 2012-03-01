@@ -526,7 +526,10 @@ def unloadCurrentApp():
     import apps
     apps.unload(appname)
     
-
+def printSysPath():
+    import sys
+    print sys.path
+    
 def createMenuData():
     """Returns the default pyFormex GUI menu data."""
 
@@ -542,12 +545,12 @@ def createMenuData():
         (_('&Save Message Board'),saveBoard),
         (_('&Open Log File'),openLogFile),
         (_('&Close Log File'),closeLogFile),
-        (_('&ListFormices'),script.printall),
         (_('&PrintGlobalNames'),script.printglobalnames),
         (_('&PrintGlobals'),script.printglobals),
         (_('&PrintConfig'),script.printconfig),
         (_('&Print Detected Software'),script.printdetected),
         (_('&Print Loaded Apps'),script.printLoadedApps),
+        (_('&Print sys.path'),printSysPath),
         (_('&Print Used Memory'),script.printVMem),
         (_('&PrintBbox'),draw.printbbox),
         (_('&Print Viewport Settings'),draw.printviewportsettings),

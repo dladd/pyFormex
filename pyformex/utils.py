@@ -691,8 +691,12 @@ def userName():
 def is_script(appname):
     """Checks whether an application name is rather a script name"""
     return appname.endswith('.py') or appname.endswith('.pye')
+
     
-    
+def is_app(appname):
+    return not is_script(appname)
+
+
 def is_pyFormex(filename):
     """Checks whether a file is a pyFormex script.
 

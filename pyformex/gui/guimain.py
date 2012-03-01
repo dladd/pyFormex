@@ -515,27 +515,27 @@ class Gui(QtGui.QMainWindow):
         self.curproj.setText(project)
 
 
-    def setcurfile(self,app):
-        """Set the current script or application.
+    def setcurfile(self,appname):
+        """Set the current application or script.
 
-        app is either an imported application module, an application
-        module name or a script file.
+        appname is either an application module name or a script file.
         """
-        from types import ModuleType
-        is_app = type(app) is ModuleType
+        is_app = not utils.is_script(appname)
         if is_app:
-            name = app.__name__
-            # MAYBE LATER REINSTATE THIS
-            # name = name.replace('apps.','')
+            # application
+            import apps
+            app = apps.load(appname)
             self.canPlay = hasattr(app,'run')
-            self.curfile.label.setText('App:')
-            pf.prefcfg['curfile'] = name
+            name = appname
+            label = 'App:'
         else:
-            name = os.path.basename(app)
-            self.canPlay = utils.is_pyFormex(app) or app.endswith('.pye')
-            self.curfile.label.setText('Script:')
-            pf.prefcfg['curfile'] = app
+            # script file
+            self.canPlay = utils.is_pyFormex(appname) or appname.endswith('.pye')
+            name = os.path.basename(appname)
+            label = 'Script:'
 
+        pf.prefcfg['curfile'] = appname
+        self.curfile.label.setText(label)
         self.curfile.setText(name)
         self.enableButtons(self.actions,['Play','Edit','Info'],self.canPlay)
         self.enableButtons(self.actions,['ReRun'],self.canPlay and is_app)
@@ -1184,17 +1184,8 @@ pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software, and you are w
     plugins.loadConfiguredPlugins()
 
     # show current application/file
-    app = pf.cfg['curfile']
-
-    if not utils.is_script(app):
-        try:  # Avoid an error on startup !
-            import apps
-            # MAYBE LATER REINSTATE THIS
-            #app = app.replace('apps.','')
-            app = apps.load(app)
-        except:
-            app = ''
-    pf.GUI.setcurfile(app)
+    appname = pf.cfg['curfile']
+    pf.GUI.setcurfile(appname)
 
     # Last minute menu modifications can go here
 

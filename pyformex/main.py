@@ -234,6 +234,17 @@ def apply_config_changes(cfg):
         except:
             pass
 
+    for d in [ 'scriptdirs', 'appdirs' ]:
+        if d in cfg:
+            scriptdirs = []
+            for i in cfg[d]:
+                if i[1] == '' or os.path.isdir(i[1]):
+                    scriptdirs.append(tuple(i))
+                elif i[0] == '' or os.path.isdir(i[0]):
+                    scriptdirs.append((i[1],i[0]))
+            cfg[d] = scriptdirs
+            print "NEW %s %s" % (d,cfg[d])
+
     # Rename settings
     for old,new in [
         ('history','gui/history'),
@@ -597,9 +608,7 @@ pyFormex Warning
     # Set application paths
     pf.debug("Loading AppDirs",pf.DEBUG.INFO)
     import apps
-    pf.appdirs = apps.addAppDirs()
-    for p in pf.appdirs:
-        pf.debug(str(p),pf.DEBUG.CONFIG)
+    apps.setAppDirs()
 
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!

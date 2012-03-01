@@ -32,11 +32,19 @@ import pyformex as pf
 import utils
 import os,sys
 
+class Life:
+     def __init__(self, name='unknown'):
+         print 'Hello', name
+         self.name = name
+     def __del__(self):
+         print 'Goodbye', self.name
+
 
 class AppDir(object):
     """Application directory
 
-    An AppDir is a directory containing pyFormex applications. 
+    An AppDir is a directory containing pyFormex applications.
+    When creatig an AppDir, its path is added to sys.path
     """
     known_dirs = {
         'apps': pf.cfg['appdir'],
@@ -53,6 +61,12 @@ class AppDir(object):
         self.path = checkAppdir(path)
         if self.path is None:
             raise ValueError,"Invalid application path %s" % path
+
+        # Add the parent path to sys.path if it is not there
+        parent = os.path.dirname(self.path)
+        self.added = parent not in sys.path
+        if self.added:
+            sys.path.insert(1,parent)
         
         self.pkg = os.path.basename(self.path)
         if name is None:
@@ -65,16 +79,29 @@ class AppDir(object):
         return "AppDir %s at %s (%s)" % (self.name,self.path,self.pkg)
 
 
-def addAppDirs():
-    """Add the application directories to the sys.path"""
-    # Create a copy to leave the cfg unchanged!
-    appdirs = [ AppDir(*i) for i in pf.cfg['appdirs'] ]
+def setAppDirs():
+    """Set the configured application directories"""
+    # If this is a reset, first remove sys.path components
+    try:
+        for p in pf.appdirs:
+            if p.added:
+                parent = os.path.dirname(p.path)
+                sys.path.remove(parent)
+        print 'SYSPATH IS NOW:',sys.path
+    except:
+        pass
 
-    # TODO: MOVE TO AppDir
-    # Add the paths to sys.path 
-    adddirs = [ os.path.dirname(a.path) for a in appdirs ]
-    adddirs = set(adddirs)
-    #print "appdir parents",adddirs
+    pf.appdirs = [ AppDir(i[1],i[0]) for i in pf.cfg['appdirs'] ]
+    for p in pf.appdirs:
+        pf.debug(str(p),pf.DEBUG.CONFIG)
+
+
+def addAppDir(d):
+    """Add the application directory d to the sys.path
+
+    d should be a valid path, chacked with checkAppdir
+    """
+    
     adddirs = [ a for a in adddirs if not a in sys.path ]
     #print "appdir parents to add",adddirs
     sys.path[1:1] = adddirs
@@ -134,7 +161,7 @@ def load(appname,refresh=False):
             reload(app)
         return app
     except:
-        raise
+        return None
 
 
 def unload(appname):

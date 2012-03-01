@@ -231,7 +231,7 @@ class AppMenu(QtGui.QMenu):
         app = str(action.text())
         if app in self.files:
             appname = self.fullAppName(app)
-            script.runApp(appname)
+            script.run(appname)
 
 
     def runNext(self):
@@ -244,7 +244,7 @@ class AppMenu(QtGui.QMenu):
             return
         pf.debug("This is app %s out of %s" % (i,len(self.files)))
         if i < len(self.files):
-            script.runApp(self.files[i])
+            script.run(self.files[i])
 
 
     def runAllNext(self):
@@ -319,7 +319,7 @@ class AppMenu(QtGui.QMenu):
     def add(self,name,strict=True):
         """Add a new filename to the front of the menu.
 
-        By default, only legal pyFormex scripts can be added.
+        By default, only legal pyFormex apps can be added.
         """
         if strict:
             appname = self.fullAppName(name)
@@ -405,7 +405,7 @@ def createMenu(parent=None,before=None):
         (_('&Configure App Paths'),setDirs,{'data':'appdirs'}),
         (_('&List loaded Apps'),script.printLoadedApps),
         (_('&Unload Current App'),menu.unloadCurrentApp),
-        (_('&Reload App Menu'),reloadMenu),
+        (_('&Reload App Menu'),reloadMenu,{'data':'apps'}),
         ])
 
     appmenu.insertMenu(appmenu.item('---'),hist)
@@ -414,11 +414,15 @@ def createMenu(parent=None,before=None):
     return appmenu
 
 
-def reloadMenu():
-    menu = pf.GUI.menu.item('apps')
+def reloadMenu(name='apps'):
+    """Reload the named menu."""
+    menu = pf.GUI.menu.item(name)
     if menu is not None:
-        before = pf.GUI.menu.nextitem('apps')
-        pf.GUI.menu.removeItem('apps')
+        before = pf.GUI.menu.nextitem(name)
+        pf.GUI.menu.removeItem(name)
+        # reset pf.appdirs, we may have configuration changes
+        import apps
+        apps.setAppDirs()
         newmenu = createMenu(pf.GUI.menu,before)
  
 
