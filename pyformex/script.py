@@ -456,8 +456,19 @@ def runApp(appname,argv=[],reload=False):
     t = Timer()
     app = apps.load(appname,refresh=reload)
     if app is None:
-        message("Could not load application %s" % appname)
-        pf.warning("Could not load application %s" % appname)
+        errmsg = "An  error occurred while loading application %s" % appname
+        if pf.GUI:
+            from gui import draw
+            fn = apps.findAppFile(appname)
+            if os.path.exists(fn):
+                errmsg += "\n\nDo you want to load the source file in the editor?"
+                if draw.ack(errmsg):
+                    draw.editFile(fn)
+            else:
+                draw.error(errmsg)
+        else:
+            error(errmsg)
+               
         return
     
     message("Loaded application %s in %s seconds" % (appname,t.seconds()))

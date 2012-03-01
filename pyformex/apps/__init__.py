@@ -164,6 +164,23 @@ def load(appname,refresh=False):
         return None
 
 
+def findmodule(mod):
+    """Find the path a module would be loaded from"""
+    import sys, imp, os
+    path = sys.path
+    for i in mod.split('.'):
+        path = [imp.find_module(i,path)[1],]
+    path = path[0] if os.path.isdir(path[0]) else os.path.dirname(path[0])
+    return path
+
+
+def findAppFile(appname):
+    """Find the source file of an applicaication"""
+    path = findmodule(appname)
+    fn = os.path.join(path,appname.split('.')[-1]+'.py')
+    return fn
+
+    
 def unload(appname):
     """Try to unload an application"""
     name = 'apps.'+appname
