@@ -513,31 +513,44 @@ by trying the command <tt class="docutils literal"><span class="pre">svn</span> 
 you should install Subversion first. Debian and Ubuntu users can just
 do <tt class="docutils literal"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">subversion</span></tt>.</p>
 <p>Now you can anonymously check out the latest pyFormex version
-from the <a class="reference external" href="http://savannah.nongnu.org/svn/?group=pyformex">Source code</a> repository at the <a class="reference external" href="http://savannah.nongnu.org/projects/pyformex/">Project page</a>. You can do this
-with the command</p>
-<div class="highlight-python"><pre>svn co svn://svn.savannah.nongnu.org/pyformex/trunk/pyformex MYDIR</pre>
+from the <a class="reference external" href="http://savannah.nongnu.org/svn/?group=pyformex">Source code</a> repository at the <a class="reference external" href="http://savannah.nongnu.org/projects/pyformex/">Project page</a>.
+If you are not a pyFormex developer, the suggested commands for this checkout
+are:</p>
+<div class="highlight-python"><pre>svn co svn://svn.savannah.nongnu.org/pyformex/trunk --depth files MYDIR
+svn update --depth infinity MYDIR/pyformex</pre>
 </div>
-<p>in which you replace <tt class="docutils literal"><span class="pre">MYDIR</span></tt> with the path name of a directory
-where you have write permission.
-Most users choose <tt class="docutils literal"><span class="pre">~/pyformex</span></tt> as the checkout directory, but this is not
+<p>In these commands you should replace <tt class="docutils literal"><span class="pre">MYDIR</span></tt> with the path name of a
+directory where you have write permission. Many users choose
+<tt class="docutils literal"><span class="pre">~/pyformex</span></tt> as the checkout directory, but this is not
 required. You can even check out different versions under
 different path names. If you leave out the <tt class="docutils literal"><span class="pre">MYDIR</span></tt> from the above command,
-a new directory <tt class="docutils literal"><span class="pre">pyformex</span></tt> will be created in the current path.</p>
+a new directory <tt class="docutils literal"><span class="pre">trunk</span></tt> will be created in the current path.</p>
+<p>Instead of the above two commands, you could also use the following single
+command to check out the whole trunk, but that would download a lot of extra
+files which are only useful for pyFormex developers, not for normal users</p>
+<div class="highlight-python"><pre>svn co svn://svn.savannah.nongnu.org/pyformex/trunk MYDIR</pre>
+</div>
 <p>Now change into the created <tt class="docutils literal"><span class="pre">MYDIR</span></tt> directory and execute
-the command <tt class="docutils literal"><span class="pre">./pyformex</span></tt>. The latest pyFormex version should
-startup. The acceleration library will however not be available yet.
-To create the library, goto to the <tt class="docutils literal"><span class="pre">lib</span></tt> subdirectory and execute
-the command <tt class="docutils literal"><span class="pre">./configure;make</span></tt>.</p>
-<p>You can make the <tt class="docutils literal"><span class="pre">pyformex</span></tt> command in your checked out tree
+the command <tt class="docutils literal"><span class="pre">pyformex/pyformex</span></tt>. This will first compile the pyFormex
+acclearation library and then startup the pyFormex GUI right from your
+svn sources. The next time you run the command, the library will not be
+recompiled, unless some updates have been made to the files that make the
+already compiled versions out of date.</p>
+<p>You can make the <tt class="docutils literal"><span class="pre">pyformex/pyformex</span></tt> command
 executable from anywhere by creating a symlink under one of the
-directories in you <tt class="docutils literal"><span class="pre">PATH</span></tt> setting. An example command to achieve
-this: <tt class="docutils literal"><span class="pre">ln</span> <span class="pre">-sfn</span> <span class="pre">MYDIR/pyformex/pyformex</span> <span class="pre">/home/user/bin</span></tt></p>
-<p>You can update this pyFormex installation at any time to the latest
-version by issuing the command <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">update</span></tt> in your <tt class="docutils literal"><span class="pre">MYDIR/pyformex</span></tt>
+directories in your <tt class="docutils literal"><span class="pre">PATH</span></tt> environment variable.
+Many GNU/Linux distributions add <tt class="docutils literal"><span class="pre">/home/USER/bin</span></tt> to the user&#8217;s path.
+Thus the following command is suitable in most cases:</p>
+<div class="highlight-python"><pre>ln -sfn MYDIR/pyformex/pyformex /home/USER/bin</pre>
+</div>
+<p>You can update your pyFormex installation at any time to the latest
+version by issuing the command <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">update</span></tt> in your <tt class="docutils literal"><span class="pre">MYDIR</span></tt>
 directory. You can even roll back to any older revision of
 pyFormex. Just remember that after updating your sources, the compiled
-library could be out of sync with your new sources. Rebuild the
-library just like specified above.</p>
+libraries could be out of sync with your new sources. Normally pyFormex
+will rebuild the libraries the next time you start it.
+If you ever want to rebuild the libraries without starting the <tt class="docutils literal"><span class="pre">pyformex</span></tt>
+program, you can use the command <tt class="docutils literal"><span class="pre">make</span> <span class="pre">lib</span></tt> from inside <tt class="docutils literal"><span class="pre">MYDIR</span></tt>.</p>
 </div>
 <div class="section" id="bumpix-live-gnu-linux-system">
 <span id="sec-bumpix-live-linux"></span><h2>BuMPix Live GNU/Linux system<a class="headerlink" href="#bumpix-live-gnu-linux-system" title="Permalink to this headline">¶</a></h2>
@@ -627,7 +640,7 @@ successful or not.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

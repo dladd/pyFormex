@@ -207,13 +207,37 @@ The remaining arguments are passed to the InputDialog getResult method.</p>
 
 <dl class="function">
 <dt id="draw.showText">
-<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text, type=None, actions=[('OK', None)], modal=True, mono=False</em><big>)</big><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
-<dd><p>Display a text and wait for user response.</p>
-<p>This opens a TextBox widget and displays the text in the widget.
-Scrollbars will be added if the text is too large to display at once.</p>
-<p>The text can be plain text format. Some rich text formats will be 
-recognized and rendered appropriately. See widgets.TextBox.</p>
-<p><cite>mono=True</cite> forces the use of a monospaced font.</p>
+<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text, itemtype='text', actions=[('OK', None)], modal=True, mono=False</em><big>)</big><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a text in a dialog window.</p>
+<p>Creates a dialog window displaying some text. The dialog can be modal
+(blocking user input to the main window) or modeless. 
+Scrollbars aree added if the text is too large to display at once.
+By default, the dialog has a single button to close the dialog.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>text</cite>: a multiline text to be displayed. It can be plain text or html
+or reStructuredText (starts with &#8216;..&#8217;).</li>
+<li><cite>itemtype</cite>: an InputItem type that can be used for text display. This
+should be either &#8216;text&#8217; of &#8216;info&#8217;.</li>
+<li><cite>actions</cite>: a list of action button definitions.</li>
+<li><cite>modal</cite>: bool: if True, a modal dialog is constructed. Else, the dialog
+is modeless.</li>
+<li><cite>mono</cite>: if True, a monospace font will be used. This is only useful for
+plain text, e.g. to show the output of an external command.</li>
+</ul>
+<p>Returns:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Modal dialog:</th><td class="field-body">the result of the dialog after closing.
+The result is a dictionary with a single key: &#8216;text&#8217; having the
+displayed text as a value. If an itemtype &#8216;text&#8217; was used, this may
+be a changed text.</td>
+</tr>
+</tbody>
+</table>
+<p>: modeless dialog: the open dialog window itself.</p>
 </dd></dl>
 
 <dl class="function">
@@ -227,12 +251,35 @@ Other arguments may also be passed to ShowText.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="draw.showDescription">
-<tt class="descclassname">draw.</tt><tt class="descname">showDescription</tt><big>(</big><em>filename=None</em><big>)</big><a class="headerlink" href="#draw.showDescription" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show the Description part of the docstring of a pyFormex script.</p>
-<p>If no file name is specified, the current script is used.
-If the script&#8217;s docstring has no Description part, a default text is
-shown.</p>
+<dt id="draw.showDoc">
+<tt class="descclassname">draw.</tt><tt class="descname">showDoc</tt><big>(</big><em>obj=None</em>, <em>rst=True</em>, <em>modal=False</em><big>)</big><a class="headerlink" href="#draw.showDoc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the docstring of an object.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>obj</cite>: any object (module, class, method, function) that has a
+__doc__ attribute. If None is specified, the docstring of the current
+application is shown.</li>
+<li><cite>rst</cite>: bool. If True (default) the docstring is treated as being
+reStructuredText and will be nicely formatted accordingly.
+If False, the docstring is shown as plain text.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.editFile">
+<tt class="descclassname">draw.</tt><tt class="descname">editFile</tt><big>(</big><em>fn</em>, <em>exist=False</em><big>)</big><a class="headerlink" href="#draw.editFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a file into the editor.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>fn</cite>: filename. The corresponding file is loaded into the editor.</li>
+<li><cite>exist</cite>: bool. If True, only existing filenames will be accepted.</li>
+</ul>
+<p>Loading a file in the editor is done by executing an external command with
+the filename as argument. The command to be used can be set in the
+configuration. If none is set, pyFormex will try to lok at the <cite>EDITOR</cite>
+and <cite>VISUAL</cite> environment settings.</p>
+<p>The main author of pyFormex uses &#8216;emacsclient&#8217; as editor command,
+to load the files in a running copy of Emacs.</p>
 </dd></dl>
 
 <dl class="function">
@@ -417,7 +464,7 @@ unchanged.</p>
 <p>color,colormap,linewidth,alpha,marksize are passed to the
 creation of the 3D actor.</p>
 <p>if color is None, it is drawn with the color specified on creation.
-if color == &#8216;prop&#8217; and a colormap was installed, props define color.
+if color is &#8216;prop&#8217; and a colormap was installed, props define color.
 else, color should be an array of RGB values, either with shape
 (3,) for a single color, or (nelems,3) for differently colored
 elements</p>
@@ -647,11 +694,18 @@ followed by setView(name).</p>
 
 <dl class="function">
 <dt id="draw.bgcolor">
-<tt class="descclassname">draw.</tt><tt class="descname">bgcolor</tt><big>(</big><em>color</em>, <em>color2=None</em>, <em>mode='h'</em><big>)</big><a class="headerlink" href="#draw.bgcolor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change the background color (and redraw).</p>
-<p>If one color is given, the background is a solid color.
-If two colors are given, the background color will get a vertical
-gradient with color on top and color2 at the bottom.</p>
+<tt class="descclassname">draw.</tt><tt class="descname">bgcolor</tt><big>(</big><em>color=None</em>, <em>image=None</em><big>)</big><a class="headerlink" href="#draw.bgcolor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the background color and image.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>color</cite>: a single color or a list of 4 colors. A single color sets a
+solid background color. A list of four colors specifies a gradient.
+These 4 colors are those of the Bottom Left, Bottom Right, Top Right
+and Top Left corners respectively.</li>
+<li><cite>image</cite>: the name of an image file. If specified, the image will be
+overlayed on the background colors. Specify a solid white background
+color to sea the image unaltered.</li>
+</ul>
 </dd></dl>
 
 <dl class="function">
@@ -753,6 +807,22 @@ screen.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="draw.play">
+<tt class="descclassname">draw.</tt><tt class="descname">play</tt><big>(</big><em>step=False</em><big>)</big><a class="headerlink" href="#draw.play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the current script or if already running, continue it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.replay">
+<tt class="descclassname">draw.</tt><tt class="descname">replay</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.replay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replay the current app.</p>
+<p>This works pretty much like the play() function, but will
+reload the current application prior to running it.
+This function is especially interesting during development
+of an application.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="draw.fforward">
 <tt class="descclassname">draw.</tt><tt class="descname">fforward</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.fforward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Releases the drawing lock mechanism indefinely.</p>
@@ -763,19 +833,22 @@ be set again and your script will execute till the end.</p>
 <dl class="function">
 <dt id="draw.step">
 <tt class="descclassname">draw.</tt><tt class="descname">step</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform one step of a script.</p>
-<p>A step is a set of instructions until the next draw operation.
-If a script is running, this just releases the draw lock.
-Else, it starts the script in step mode.</p>
+<dd><p>Start the current script in step mode.</p>
+<p>The use of step mode is strongly discouraged. Please use other
+techniques (like the &#8216;drawwait&#8217; time setting or inserting
+wait or pause commands, or using a debugger.</p>
+<p>This function starts the current script in step mode. If a script
+is already running, it continues the script with the next step.
+This is equivalent with the behavior of the play function.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="draw.pause">
-<tt class="descclassname">draw.</tt><tt class="descname">pause</tt><big>(</big><em>msg='Use the Step or Continue button to proceed'</em>, <em>timeout=None</em><big>)</big><a class="headerlink" href="#draw.pause" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pause</tt><big>(</big><em>timeout=None</em>, <em>msg=None</em><big>)</big><a class="headerlink" href="#draw.pause" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pause the execution until an external event occurs or timeout.</p>
 <p>When the pause statement is executed, execution of the pyformex script
 is suspended until some external event forces it to proceed again.
-Clicking the STEP or CONTINUE button will produce such an event.</p>
+Clicking the PLAY or CONTINUE button will produce such an event.</p>
 </dd></dl>
 
 <dl class="function">
@@ -1001,7 +1074,7 @@ might also be set by the user.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

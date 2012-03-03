@@ -156,10 +156,9 @@ draw instruction.</li>
 </ul>
 <p>Currently the following mode settings are defined:</p>
 <ul class="simple">
-<li>bgmode: the viewport background mode. Should be one of
-&#8216;solid&#8217;, &#8216;vertical gradient&#8217;, &#8216;horizontal gradient&#8217;</li>
-<li>bgcolor: the viewport background color (left/top color for graded modes)</li>
-<li>bgcolor2: right/bottom color for a grade background</li>
+<li>bgcolor: the viewport background color: a single color or a list of
+colors (max. 4 are used).</li>
+<li>bgimage: background image filename</li>
 <li>slcolor: the highlight color</li>
 <li>rendermode: the rendering mode</li>
 <li>shading: True is smooth, False is flat</li>
@@ -234,10 +233,11 @@ default value if get found a KeyError.</p>
 <dt id="canvas.Canvas">
 <em class="property">class </em><tt class="descclassname">canvas.</tt><tt class="descname">Canvas</tt><big>(</big><em>settings={}</em><big>)</big><a class="headerlink" href="#canvas.Canvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>A canvas for OpenGL rendering.</p>
-<p>The Canvas is a class holding all global data of an OpenGL scene rendering. This includes
-colors, line types, rendering mode. It also keeps lists of all the actors and decorations
-in the scene. It always has a Camera object holding import viewing parameters. And finally
-it stores the lighting information.</p>
+<p>The Canvas is a class holding all global data of an OpenGL scene rendering.
+This includes colors, line types, rendering mode.
+It also keeps lists of the actors and decorations in the scene.
+The canvas has a Camera object holding important viewing parameters.
+Finally, it stores the lighting information.</p>
 <p>It does not however contain the viewport size and position.</p>
 <dl class="method">
 <dt id="canvas.Canvas.do_lighting">
@@ -308,12 +308,18 @@ and everything is redrawn with the new mode.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="canvas.Canvas.setBgColor">
-<tt class="descname">setBgColor</tt><big>(</big><em>color1</em>, <em>color2=None</em>, <em>mode='solid'</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setBgColor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the background color.</p>
-<p>If one color is specified, a solid background is set.
-If two colors are specified, a graded background is set
-and an object is created to display the background.</p>
+<dt id="canvas.Canvas.setBackground">
+<tt class="descname">setBackground</tt><big>(</big><em>color=None</em>, <em>image=None</em><big>)</big><a class="headerlink" href="#canvas.Canvas.setBackground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color(s) and image.</p>
+<p>Change the background settings according to the specified parameters
+and set the canvas background accordingly. Only (and all) the specified
+parameters get a new value.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>color</cite>: either a single color, a list of two colors or a list of
+four colors.</li>
+<li><cite>image</cite>: an image to be set.</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -657,7 +663,7 @@ None to leave it unchanged.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

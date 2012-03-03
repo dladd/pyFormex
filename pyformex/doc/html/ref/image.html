@@ -282,8 +282,20 @@ or not.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="image.changeBackgroundColorXPM">
+<tt class="descclassname">image.</tt><tt class="descname">changeBackgroundColorXPM</tt><big>(</big><em>fn</em>, <em>color</em><big>)</big><a class="headerlink" href="#image.changeBackgroundColorXPM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the background color of an .xpm image.</p>
+<p>This changes the background color of an .xpm image to the given value.
+fn is the filename of an .xpm image.
+color is a string with the new background color, e.g. in web format
+(&#8216;#FFF&#8217; or &#8216;#FFFFFF&#8217; is white). A special value &#8216;None&#8217; may be used
+to set a transparent background.
+The current background color is selected from the lower left pixel.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="image.saveIcon">
-<tt class="descclassname">image.</tt><tt class="descname">saveIcon</tt><big>(</big><em>fn</em>, <em>size=32</em><big>)</big><a class="headerlink" href="#image.saveIcon" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">image.</tt><tt class="descname">saveIcon</tt><big>(</big><em>fn</em>, <em>size=32</em>, <em>transparent=True</em><big>)</big><a class="headerlink" href="#image.saveIcon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the current rendering as an icon.</p>
 </dd></dl>
 
@@ -338,7 +350,7 @@ or not.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

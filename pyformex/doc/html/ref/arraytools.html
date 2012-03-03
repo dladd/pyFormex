@@ -248,9 +248,10 @@ This returns an angle in the range ]-180,180].</p>
 By default, the value is above abs(f). Setting below=True returns a
 value above.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">niceNumber</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span> <span class="mf">0.0837</span><span class="p">,</span> <span class="mf">0.837</span><span class="p">,</span> <span class="mf">8.37</span><span class="p">,</span> <span class="mf">83.7</span><span class="p">,</span> <span class="mf">93.7</span><span class="p">]</span> <span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">0.0837</span><span class="p">,</span> <span class="mf">0.837</span><span class="p">,</span> <span class="mf">8.37</span><span class="p">,</span> <span class="mf">83.7</span><span class="p">,</span> <span class="mf">93.7</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">niceNumber</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">numbers</span> <span class="p">]</span>
 <span class="go">[&#39;0.09&#39;, &#39;0.9&#39;, &#39;9.0&#39;, &#39;90.0&#39;, &#39;100.0&#39;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">niceNumber</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">below</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="p">[</span> <span class="mf">0.0837</span><span class="p">,</span> <span class="mf">0.837</span><span class="p">,</span> <span class="mf">8.37</span><span class="p">,</span> <span class="mf">83.7</span><span class="p">,</span> <span class="mf">93.7</span><span class="p">]</span> <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">niceNumber</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">below</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">numbers</span> <span class="p">]</span>
 <span class="go">[&#39;0.08&#39;, &#39;0.8&#39;, &#39;8.0&#39;, &#39;80.0&#39;, &#39;90.0&#39;]</span>
 </pre></div>
 </div>
@@ -311,7 +312,7 @@ A and B should be broadcast compatible.</p>
 <dd><p>Return thr <cite>n</cite>-norm of the vector <cite>v</cite>.</p>
 <p>Default is the quadratic norm (vector length).
 <cite>n == 1</cite> returns the sum.
-<tt class="docutils literal"><span class="pre">n</span> <span class="pre">&lt;=</span> <span class="pre">0</span></tt> returns the max absolute value.</p>
+<tt class="docutils literal"><span class="pre">n&lt;=0</span></tt> returns the max absolute value.</p>
 </dd></dl>
 
 <dl class="function">
@@ -347,7 +348,7 @@ solves the system of linear equations A[:,:,j].x[:,i,j] = b[:,i,j].</p>
 <p>For ndof in [1,2,3], all solutions are by default computed directly and
 simultaneously. If <tt class="docutils literal"><span class="pre">direct=False</span></tt> is specified, a general linear
 equation solver is called for each system of equations. This is also the
-method used if <tt class="docutils literal"><span class="pre">ndof</span> <span class="pre">&gt;</span> <span class="pre">4</span></tt>.</p>
+method used if <tt class="docutils literal"><span class="pre">ndof&gt;4</span></tt>.</p>
 </dd></dl>
 
 <dl class="function">
@@ -431,8 +432,8 @@ points x thus that:</p>
 </ul>
 <p>The rotation is to be applied first and should be around the first
 point x0. The full transformation of a Coords object is thus obtained
-by</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">coords</span> <span class="o">-</span> <span class="n">x0</span><span class="p">)</span> <span class="o">*</span> <span class="n">rot</span> <span class="o">+</span> <span class="n">trl</span> <span class="o">+</span> <span class="n">x0</span>  <span class="o">=</span> <span class="n">coords</span> <span class="o">*</span> <span class="n">rot</span> <span class="o">+</span> <span class="p">(</span><span class="n">trl</span><span class="o">+</span><span class="n">x0</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">rot</span><span class="p">)</span>
+by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">coords</span><span class="o">-</span><span class="n">x0</span><span class="p">)</span><span class="o">*</span><span class="n">rot</span><span class="o">+</span><span class="n">trl</span><span class="o">+</span><span class="n">x0</span><span class="o">=</span><span class="n">coords</span><span class="o">*</span><span class="n">rot</span><span class="o">+</span><span class="p">(</span><span class="n">trl</span><span class="o">+</span><span class="n">x0</span><span class="o">-</span><span class="n">x0</span><span class="o">*</span><span class="n">rot</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -472,21 +473,20 @@ The returned matrix should be used in postmultiplication to the Coords.</p>
 the new elements all get the value <cite>fill</cite>.</p>
 <p>Parameters:</p>
 <ul class="simple">
-<li><cite>a</cite>: array</li>
+<li><cite>a</cite>: array.</li>
 <li><cite>add</cite>: int
-The value to add to the axis length. If &lt;= 0, the unchanged array
+The value to add to the axis length. If&lt;=0, the unchanged array
 is returned.</li>
 <li><cite>axis</cite>: int
 The axis to change, default -1 (last).</li>
 <li><cite>fill</cite>: int or float
 The value to set the new elements to.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>An array with same dimension and type as <cite>a</cite>, but with a length along
-<cite>axis</cite> equal to <tt class="docutils literal"><span class="pre">a.shape[axis]</span> <span class="pre">+</span> <span class="pre">add</span></tt>. The new elements all have the
-value <cite>fill</cite>.</dd>
-</dl>
+<p>Returns:</p>
+<blockquote>
+<div>An array with same dimension and type as <cite>a</cite>, but with a length along
+<cite>axis</cite> equal to <tt class="docutils literal"><span class="pre">a.shape[axis]+add</span></tt>. The new elements all have the
+value <cite>fill</cite>.</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">growAxis</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],</span><span class="mi">2</span><span class="p">)</span>
 <span class="go">array([[1, 2, 3, 0, 0],</span>
@@ -519,11 +519,10 @@ resulting in the corresponding renumbering scheme being generated:</p>
 </ul>
 </li>
 </ul>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>An array with the same elements of self, where only the order
-along the specified axis has been changed.</dd>
-</dl>
+<p>Returns:</p>
+<blockquote>
+<div>An array with the same elements of self, where only the order
+along the specified axis has been changed.</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">reorderAxis</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="go">array([[3, 1, 2],</span>
@@ -542,8 +541,14 @@ along the specified axis has been changed.</dd>
 <span class="go">       [1, 2, 3]])</span>
 </pre></div>
 </div>
-<p>Remark: if the axis is known in advance, it may be more efficient to use
-an indexing operation, like <tt class="docutils literal"><span class="pre">a[:,::-1,:]</span></tt></p>
+<p>Note that if the axis is known in advance, it may be more efficient to use
+an indexing operation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">A</span><span class="p">[:,::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">[[3 2 1]</span>
+<span class="go"> [6 5 4]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -633,7 +638,7 @@ The sep parameter can be specified as in tofile.</p>
 <dd><p>Solve a cubiq equation using a direct method.</p>
 <p>a,b,c,d are the (floating point) coefficients of a third degree
 polynomial equation:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span>  <span class="o">+</span>  <span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>  <span class="o">+</span>  <span class="n">c</span> <span class="o">*</span> <span class="n">x</span>  <span class="o">+</span>  <span class="n">d</span>   <span class="o">=</span>   <span class="mi">0</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">c</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="n">d</span><span class="o">=</span><span class="mi">0</span>
 </pre></div>
 </div>
 <p>This function computes the three roots (real and complex) of this equation
@@ -644,8 +649,8 @@ float values and kind is an integer specifying the kind of roots.</p>
 <p>Depending on the value of <cite>kind</cite>, the roots are defined as follows:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="6%" />
-<col width="94%" />
+<col width="9%" />
+<col width="91%" />
 </colgroup>
 <thead valign="bottom">
 <tr><th class="head">kind</th>
@@ -668,7 +673,7 @@ float values and kind is an integer specifying the kind of roots.</p>
 <tr><td>4</td>
 <td>one real root r1 and two complex conjugate roots with real
 part r2 and imaginary part r3; the complex roots are thus:
-r2+i*r3 en r2-i*r3, where i = sqrt(-1).</td>
+r2+i*r3 en r2-i*r3, where i=sqrt(-1).</td>
 </tr>
 </tbody>
 </table>
@@ -691,60 +696,46 @@ occurrence in the flattened array.
 The unique elements and the inverse index are always the same as those
 returned by numpy&#8217;s unique.</p>
 <p>Parameters:</p>
-<ul>
-<li><dl class="first docutils">
-<dt><cite>ar1</cite> <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
-<dd><p class="first last">This array will be flattened if it is not already 1-D.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><cite>return_index</cite> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd><p class="first last">If True, also return the indices against <cite>ar1</cite> that result in the
-unique array.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><cite>return_inverse</cite> <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
-<dd><p class="first last">If True, also return the indices against the unique array that
-result in <cite>ar1</cite>.</p>
-</dd>
-</dl>
-</li>
+<ul class="simple">
+<li><cite>ar1</cite>: array_like
+This array will be flattened if it is not already 1-D.</li>
+<li><cite>return_index</cite>: bool, optional
+If True, also return the indices against <cite>ar1</cite> that result in the
+unique array.</li>
+<li><cite>return_inverse</cite>: bool, optional
+If True, also return the indices against the unique array that
+result in <cite>ar1</cite>.</li>
 </ul>
 <p>Returns:</p>
-<ul>
-<li><dl class="first docutils">
-<dt><cite>unique</cite> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
-<dd><p class="first last">The unique values.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><cite>unique_indices</cite> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray, optional</span></dt>
-<dd><p class="first last">The indices of the unique values. Only provided if <cite>return_index</cite> is
-True.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><cite>unique_inverse</cite> <span class="classifier-delimiter">:</span> <span class="classifier">ndarray, optional</span></dt>
-<dd><p class="first last">The indices to reconstruct the original array. Only provided if
-<cite>return_inverse</cite> is True.</p>
-</dd>
-</dl>
-</li>
+<ul class="simple">
+<li><cite>unique</cite>: ndarray
+The unique values.</li>
+<li><cite>unique_indices</cite>: ndarray, optional
+The indices of the unique values. Only provided if <cite>return_index</cite> is
+True.</li>
+<li><cite>unique_inverse</cite>: ndarray, optional
+The indices to reconstruct the original array. Only provided if
+<cite>return_inverse</cite> is True.</li>
 </ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([ 7,  0,  1, 10,  3,  4,  5,  6]), array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">uniqueOrdered</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">(array([1, 2, 3, 4, 5, 6, 7, 8]), array([7, 0, 1, 2, 3, 4, 5, 6]), array([1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 6, 7]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniq</span><span class="p">,</span><span class="n">ind</span><span class="p">,</span><span class="n">inv</span> <span class="o">=</span> <span class="n">unique</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">uniq</span>
+<span class="go">[1 2 3 4 5 6 7 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">ind</span>
+<span class="go">[ 7  0  1 10  3  4  5  6]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">inv</span>
+<span class="go">[1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 6 7]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniq</span><span class="p">,</span><span class="n">ind</span><span class="p">,</span><span class="n">inv</span> <span class="o">=</span> <span class="n">uniqueOrdered</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="bp">True</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">uniq</span>
+<span class="go">[1 2 3 4 5 6 7 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">ind</span>
+<span class="go">[7 0 1 2 3 4 5 6]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">inv</span>
+<span class="go">[1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 6 7]</span>
 </pre></div>
 </div>
-<p>Notice the difference in the 4-th entry of the second array.</p>
+<p>Notice the difference in the fourth element of the <cite>ind</cite> array.</p>
 </dd></dl>
 
 <dl class="function">
@@ -763,15 +754,15 @@ position <cite>0..nval</cite>.</p>
 <li><cite>index</cite>: array_like, 1-D, integer
 An array with non-negative integer values</li>
 </ul>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A 1-D integer array with length equal to <cite>nval</cite>, where <cite>nval</cite>
+<p>Returns:</p>
+<blockquote>
+<div>A 1-D integer array with length equal to <cite>nval</cite>, where <cite>nval</cite>
 is the number of different values in <cite>index</cite>, and holding the original
-values corresponding to the new value <cite>0..nval</cite>.</dd>
-<dt>Remark:</dt>
-<dd>Use <a class="reference internal" href="#arraytools.inverseUniqueIndex" title="arraytools.inverseUniqueIndex"><tt class="xref py py-func docutils literal"><span class="pre">inverseUniqueIndex()</span></tt></a> to find the inverse mapping
-needed to replace the values in the index by the new ones.</dd>
-</dl>
+values corresponding to the new value <cite>0..nval</cite>.</div></blockquote>
+<p>Remark:</p>
+<blockquote>
+<div>Use <a class="reference internal" href="#arraytools.inverseUniqueIndex" title="arraytools.inverseUniqueIndex"><tt class="xref py py-func docutils literal"><span class="pre">inverseUniqueIndex()</span></tt></a> to find the inverse mapping
+needed to replace the values in the index by the new ones.</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">renumberIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 <span class="go">array([0, 5, 2, 6])</span>
@@ -794,16 +785,16 @@ get a value -1 in the inverse index.</p>
 <li><cite>index</cite>: array_like, 1-D, integer
 An array with non-negative values, wihch all have to be unique.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A 1-D integer array with length <cite>max+1</cite>, with the positions in
+<p>Returns:</p>
+<blockquote>
+<div>A 1-D integer array with length <cite>max+1</cite>, with the positions in
 <cite>index</cite> of the values <cite>0..max</cite>, or -1 if the value does not occur in
-<cite>index</cite>.</dd>
-<dt>Remark:</dt>
-<dd>The inverse index translates the unique index numbers in a
+<cite>index</cite>.</div></blockquote>
+<p>Remark:</p>
+<blockquote>
+<div>The inverse index translates the unique index numbers in a
 sequential index, so that
-<tt class="docutils literal"><span class="pre">inverseUniqueIndex(index)[index]</span> <span class="pre">==</span> <span class="pre">arange(1+index.max())</span></tt>.</dd>
-</dl>
+<tt class="docutils literal"><span class="pre">inverseUniqueIndex(index)[index]</span> <span class="pre">==</span> <span class="pre">arange(1+index.max())</span></tt>.</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseUniqueIndex</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
 <span class="go">array([ 0, -1,  2, -1, -1,  1,  3])</span>
@@ -823,11 +814,10 @@ column, then on the second to resolve ties, etc..</p>
 <ul class="simple">
 <li><cite>a</cite>: array_like, 2-D</li>
 </ul>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A 1-D integer array specifying the order in which the rows have to
-be taken to obtain an array sorted by columns.</dd>
-</dl>
+<p>Returns:</p>
+<blockquote>
+<div>A 1-D integer array specifying the order in which the rows have to
+be taken to obtain an array sorted by columns.</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sortByColumns</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 <span class="go">array([0, 3, 1, 4, 2])</span>
@@ -874,8 +864,10 @@ numbers of <cite>uniq</cite> corresponding to each of the rows of <cite>a</cite>
 <li><cite>values</cite>: a list of float values</li>
 <li><cite>target</cite>: a float value</li>
 </ul>
-<p>Returns: the position of the item in <cite>values</cite> that is
-nearest to <cite>target</cite>.</p>
+<p>Returns:</p>
+<blockquote>
+<div>The position of the item in <cite>values</cite> that is
+nearest to <cite>target</cite>.</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">argNearestValue</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.9</span><span class="p">],</span><span class="mf">0.7</span><span class="p">)</span>
 <span class="go">1</span>
@@ -889,8 +881,10 @@ nearest to <cite>target</cite>.</p>
 <dd><p>Return the item nearest to target.</p>
 <p><tt class="docutils literal"><span class="pre">values</span></tt>: a list of float values</p>
 <p><tt class="docutils literal"><span class="pre">target</span></tt>: a single value</p>
-<p>Return value: the item in <tt class="docutils literal"><span class="pre">values</span></tt> values that is
-nearest to <tt class="docutils literal"><span class="pre">target</span></tt>.</p>
+<p>Returns:</p>
+<blockquote>
+<div>The item in <tt class="docutils literal"><span class="pre">values</span></tt> values that is
+nearest to <tt class="docutils literal"><span class="pre">target</span></tt>.</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -909,22 +903,21 @@ is a suitable argument.</li>
 single element of index occurs at. The default will usually do well,
 because the procedure will automatically enlarge it when needed.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd><p class="first">An (mr,mc) shaped integer array where:</p>
+<p>Returns:</p>
+<blockquote>
+<div><p>An (mr,mc) shaped integer array where:</p>
 <ul class="simple">
 <li><cite>mr</cite> will be equal to the highest positive value in index, +1.</li>
 <li><cite>mc</cite> will be equal to the highest row-multiplicity of any number
 in <cite>index</cite>.</li>
 </ul>
-<p class="last">Row <cite>i</cite> of the inverse index contains all the row numbers of <cite>index</cite>
+<p>Row <cite>i</cite> of the inverse index contains all the row numbers of <cite>index</cite>
 that contain the number <cite>i</cite>. Because the number of rows containing
 the number <cite>i</cite> is usually not a constant, the resulting array will have
 a number of columns <cite>mc</cite> corresponding to the highest row-occurrence of
 any single number. Shorter rows are padded with -1 values to flag
 non-existing entries.</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">inverseIndex</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
 <span class="go">array([[ 0,  1,  3],</span>
@@ -948,11 +941,13 @@ will be flattened.</li>
 <li><cite>values</cite>: an index array with all non-negative values. If not 1-D, it
 will be flattened.</li>
 </ul>
-<p>Returns: an index array with the same size as <cite>values</cite>.
+<p>Returns:</p>
+<blockquote>
+<div>An index array with the same size as <cite>values</cite>.
 For each number in <cite>values</cite>, the index contains the position of that value
 in the flattened <cite>target</cite>, or -1 if that number does not occur in <cite>target</cite>.
 If an element from <cite>values</cite> occurs more than once in <cite>target</cite>, it is
-currently undefined which of those positions is returned.</p>
+currently undefined which of those positions is returned.</div></blockquote>
 <p>Remark that after <tt class="docutils literal"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">matchIndex(target,values)</span></tt> the equality
 <tt class="docutils literal"><span class="pre">values[m]</span> <span class="pre">==</span> <span class="pre">target</span></tt> holds in all the non-negative positions of <cite>m</cite>.</p>
 <p>Example:</p>
@@ -1106,8 +1101,16 @@ the elements fitting in the respective bins,</li>
 returns the bin edges.</li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">histogram2</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-<span class="go">(array([2, 2, 2, 1]), [array([0, 6]), array([1, 4]), array([2, 5]), array([3])], array([1, 2, 3, 4, 5]))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">hist</span><span class="p">,</span><span class="n">ind</span><span class="p">,</span><span class="n">xbins</span> <span class="o">=</span> <span class="n">histogram2</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">hist</span>
+<span class="go">[2 2 2 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">:</span> <span class="k">print</span> <span class="n">i</span>
+<span class="go">[0 6]</span>
+<span class="go">[1 4]</span>
+<span class="go">[2 5]</span>
+<span class="go">[3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">xbins</span>
+<span class="go">[1 2 3 4 5]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1122,9 +1125,11 @@ returns the bin edges.</li>
 <li><cite>size</cite> : int: size of the moving view</li>
 </ul>
 <p>Returns:</p>
-<p>An array that is a view of the original array with an extra first
+<blockquote>
+<div><p>An array that is a view of the original array with an extra first
 axis of length w.</p>
 <p>Using swapaxes(0,axis) moving views over any axis can be created.</p>
+</div></blockquote>
 <p>Examples:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">=</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span>
@@ -1170,7 +1175,8 @@ be prepended this number of times</li>
 be appended this number of times</li>
 </ul>
 <p>Returns:</p>
-<p>An array with the moving average over n data sets along the first axis of a.
+<blockquote>
+<div>An array with the moving average over n data sets along the first axis of a.
 The array has the same shape as a, except possibly for the length of the
 first axis.
 If neither m0 nor m1 are set, the first axis will have a length of
@@ -1179,7 +1185,7 @@ If both m0 and m1 are give, the first axis will have a length of
 a.shape[0] - (n-1) + m0 + m1. 
 If either m0 or m1 are set and the other not, the missing value m0 or m1
 will be computed thus that the return array has a first axis with length
-a.shape[0].</p>
+a.shape[0].</div></blockquote>
 <p>Examples:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">=</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">movingAverage</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
@@ -1233,7 +1239,7 @@ a.shape[0].</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

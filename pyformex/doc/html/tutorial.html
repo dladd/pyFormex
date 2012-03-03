@@ -270,7 +270,23 @@ a pyFormex script template like the one below.</p>
 32
 33
 34
-35</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#        *** pyformex ***</span>
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">#        *** pyformex ***</span>
 <span class="c">##</span>
 <span class="c">##  Copyright (C) 2011 John Doe (j.doe@somewhere.org) </span>
 <span class="c">##  Distributed under the GNU General Public License version 3 or later.</span>
@@ -289,20 +305,36 @@ a pyFormex script template like the one below.</p>
 <span class="c">##  along with this program.  If not, see http://www.gnu.org/licenses/.</span>
 <span class="c">##</span>
 
-<span class="sd">&quot;&quot;&quot;Script Template</span>
+<span class="sd">&quot;&quot;&quot;pyFormex Script/App Template</span>
 
-<span class="sd">This is a template file to show the general layout of a pyFormex script.</span>
+<span class="sd">This is a template file to show the general layout of a pyFormex</span>
+<span class="sd">script or app.</span>
+
 <span class="sd">In the current version, a pyFormex script should obey the following rules:</span>
 
 <span class="sd">- file name extension is &#39;.py&#39;</span>
 <span class="sd">- first (comment) line contains &#39;pyformex&#39;</span>
 
+<span class="sd">A pyFormex app can be a &#39;.py&#39; of &#39;.pyc&#39; file, and should define a function</span>
+<span class="sd">&#39;run()&#39; to be executed by pyFormex. Also, the app should import anythin that</span>
+<span class="sd">it needs.</span>
+
+<span class="sd">This template is a common structure that allows the file to be used both as</span>
+<span class="sd">a script or as an app.</span>
+
 <span class="sd">The script starts by preference with a docstring (like this),</span>
 <span class="sd">composed of a short first line, then a blank line and</span>
 <span class="sd">one or more lines explaining the intention of the script.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">gui.draw</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="k">print</span> <span class="s">&quot;This is the pyFormex template script&quot;</span>
+<span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="k">print</span> <span class="s">&quot;This is the pyFormex template script/app&quot;</span>
+
+<span class="c"># The following is to make it work as a script</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;draw&#39;</span><span class="p">:</span>
+    <span class="n">run</span><span class="p">()</span>
+
 
 <span class="c"># End</span>
 </pre></div>
@@ -1448,7 +1480,7 @@ arrays are the same, within a small tolerance.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 20, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

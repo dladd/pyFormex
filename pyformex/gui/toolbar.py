@@ -34,12 +34,12 @@ from PyQt4 import QtCore, QtGui
 import widgets
 import draw
 import utils
-import fileMenu
 
 
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""
+    import fileMenu
     action = {}
     avail_buttons = [
         ( "Play", "next", draw.play, False ),

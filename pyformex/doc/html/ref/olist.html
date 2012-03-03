@@ -33,7 +33,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>54. olist — Some convenient shortcuts for common list operations. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>53. olist — Some convenient shortcuts for common list operations. &mdash; pyFormex v0.8.7-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -51,8 +51,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="55. mydict —" href="mydict.html" />
-    <link rel="prev" title="53. plot2d — plot2d.py" href="plot2d.html" />
+    <link rel="next" title="54. mydict —" href="mydict.html" />
+    <link rel="prev" title="52. plot2d — plot2d.py" href="plot2d.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,10 +75,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="mydict.html" title="55. mydict —"
+          <a href="mydict.html" title="54. mydict —"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="plot2d.html" title="53. plot2d — plot2d.py"
+          <a href="plot2d.html" title="52. plot2d — plot2d.py"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="plot2d.html"
-                        title="previous chapter">53. <tt class="docutils literal docutils literal"><span class="pre">plot2d</span></tt> &#8212; plot2d.py</a></p>
+                        title="previous chapter">52. <tt class="docutils literal docutils literal"><span class="pre">plot2d</span></tt> &#8212; plot2d.py</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="mydict.html"
-                        title="next chapter">55. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mydict</span></tt> &#8212;</a></p>
+                        title="next chapter">54. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mydict</span></tt> &#8212;</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-olist">
-<span id="olist-some-convenient-shortcuts-for-common-list-operations"></span><span id="sec-ref-olist"></span><h1>54. <a class="reference internal" href="#module-olist" title="olist: Some convenient shortcuts for common list operations."><tt class="xref py py-mod docutils literal"><span class="pre">olist</span></tt></a> &#8212; Some convenient shortcuts for common list operations.<a class="headerlink" href="#module-olist" title="Permalink to this headline">¶</a></h1>
+<span id="olist-some-convenient-shortcuts-for-common-list-operations"></span><span id="sec-ref-olist"></span><h1>53. <a class="reference internal" href="#module-olist" title="olist: Some convenient shortcuts for common list operations."><tt class="xref py py-mod docutils literal"><span class="pre">olist</span></tt></a> &#8212; Some convenient shortcuts for common list operations.<a class="headerlink" href="#module-olist" title="Permalink to this headline">¶</a></h1>
 <p>While most of these functions look (and work) like set operations, their
 result differs from using Python builtin Sets in that they preserve the
 order of the items in the lists.</p>
@@ -202,6 +202,16 @@ If recurse=True, flattening recurses through all sublists.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="olist.toFront">
+<tt class="descclassname">olist.</tt><tt class="descname">toFront</tt><big>(</big><em>l</em>, <em>i</em><big>)</big><a class="headerlink" href="#olist.toFront" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add or move i to the front of list l</p>
+<p>l is a list.
+If i is in the list, it is moved to the front of the list.
+Else i is added at the front of the list.</p>
+<p>This changes the list inplace and does not return a value.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="olist.collectOnLength">
 <tt class="descclassname">olist.</tt><tt class="descname">collectOnLength</tt><big>(</big><em>items</em>, <em>return_indices=False</em><big>)</big><a class="headerlink" href="#olist.collectOnLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collect items of a list in separate bins according to the item length.</p>
@@ -231,10 +241,10 @@ keys, holding the original indices of the items in the lists.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="mydict.html" title="55. mydict —"
+          <a href="mydict.html" title="54. mydict —"
              >next</a> |</li>
         <li class="right" >
-          <a href="plot2d.html" title="53. plot2d — plot2d.py"
+          <a href="plot2d.html" title="52. plot2d — plot2d.py"
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -244,7 +254,7 @@ keys, holding the original indices of the items in the lists.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

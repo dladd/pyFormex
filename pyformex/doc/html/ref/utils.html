@@ -253,13 +253,6 @@ value is returned.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="utils.strNorm">
-<tt class="descclassname">utils.</tt><tt class="descname">strNorm</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#utils.strNorm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize a string.</p>
-<p>Text normalization removes all &#8216;&amp;&#8217; characters and converts it to lower case.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="utils.prefixFiles">
 <tt class="descclassname">utils.</tt><tt class="descname">prefixFiles</tt><big>(</big><em>prefix</em>, <em>files</em><big>)</big><a class="headerlink" href="#utils.prefixFiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prepend a prefix to a list of filenames.</p>
@@ -337,6 +330,62 @@ LC_NUMERIC setting different from the standard.</p>
 <p>Because we do not want to help you shoot yourself in the foot, this
 function always sets <tt class="docutils literal"><span class="pre">LC_NUMERIC</span></tt> back to a sane value and we
 call this function when pyFormex is starting up.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.strNorm">
+<tt class="descclassname">utils.</tt><tt class="descname">strNorm</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#utils.strNorm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize a string.</p>
+<p>Text normalization removes all &#8216;&amp;&#8217; characters and converts it to lower case.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.forceReST">
+<tt class="descclassname">utils.</tt><tt class="descname">forceReST</tt><big>(</big><em>text</em>, <em>underline=False</em><big>)</big><a class="headerlink" href="#utils.forceReST" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a text string to have it recognized as reStructuredText.</p>
+<p>Returns the text with two lines prepended: a line with &#8216;..&#8217;
+and a blank line. The text display functions will then recognize the
+string as being reStructuredText. Since the &#8216;..&#8217; starts a comment in
+reStructuredText, it will not be displayed.</p>
+<p>Furthermore, if <cite>underline</cite> is set True, the first line of the text
+will be underlined to make it appear as a header.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.underlineHeader">
+<tt class="descclassname">utils.</tt><tt class="descname">underlineHeader</tt><big>(</big><em>s</em>, <em>char='&quot;'</em><big>)</big><a class="headerlink" href="#utils.underlineHeader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Underline the first line of a text.</p>
+<p>Adds a new line of text below the first line of s. The new line
+has the same length as the first, but all characters are equal to
+the specified char.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.showDoc">
+<tt class="descclassname">utils.</tt><tt class="descname">showDoc</tt><big>(</big><em>obj=None</em>, <em>rst=True</em><big>)</big><a class="headerlink" href="#utils.showDoc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the docstring of an object.</p>
+<blockquote>
+<div><p>Parameters:</p>
+<ul class="simple">
+<li><cite>obj</cite>: any object (module, class, method, function) that has a
+__doc__ attribute. If None is specified, the docstring of the current
+application is shown.</li>
+<li><cite>rst</cite>: bool. If False, the doctring is shown in plain text as is.
+The default is to treat the docstring as reStructuredText. For the
+purpose of a nice formatting, the docstring is changed as follows:
+Below the first line, a line is added with the same length as the first,
+but all &#8216;=&#8217; characters, marking the fist line as a header inFurthermore
+a line will be changed</li>
+</ul>
+<p>a bit to allow a nice display.</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>two</dt>
+<dd><blockquote class="first">
+<div>line are prepended, one line containing &#8216;..&#8217;, the other one empty.This will allow the recognition as reStructuredText.</div></blockquote>
+<p class="last">If <a href="#id1"><span class="problematic" id="id2">`</span></a>rst=False</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -478,15 +527,19 @@ the bash tilde expansion, such as strings in the configuration file.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="utils.is_script">
+<tt class="descclassname">utils.</tt><tt class="descname">is_script</tt><big>(</big><em>appname</em><big>)</big><a class="headerlink" href="#utils.is_script" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether an application name is rather a script name</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="utils.is_pyFormex">
 <tt class="descclassname">utils.</tt><tt class="descname">is_pyFormex</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#utils.is_pyFormex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether a file is a pyFormex script.</p>
-<p>A script is considered to be a pyFormex script if its first line
-starts with &#8216;#!&#8217; and contains the substring &#8216;pyformex&#8217;
-A file is considered to be a pyFormex script if its name ends in &#8216;.py&#8217;
+<p>A file is considered to be a pyFormex script if its name ends in &#8216;.py&#8217;
 and the first line of the file contains the substring &#8216;pyformex&#8217;.
 Typically, a pyFormex script starts with a line:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/pyformex</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># *** pyformex ***</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -630,7 +683,7 @@ is returned.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

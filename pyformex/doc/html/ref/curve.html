@@ -33,7 +33,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>30. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>29. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.7-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -51,8 +51,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="31. mesh_ext — Extended functionality of the Mesh class." href="mesh_ext.html" />
-    <link rel="prev" title="29. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" />
+    <link rel="next" title="30. mesh_ext — Extended functionality of the Mesh class." href="mesh_ext.html" />
+    <link rel="prev" title="28. toolbar — Toolbars for the pyFormex GUI." href="toolbar.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,10 +75,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="mesh_ext.html" title="31. mesh_ext — Extended functionality of the Mesh class."
+          <a href="mesh_ext.html" title="30. mesh_ext — Extended functionality of the Mesh class."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="29. toolbar — Toolbars for the pyFormex GUI."
+          <a href="toolbar.html" title="28. toolbar — Toolbars for the pyFormex GUI."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="toolbar.html"
-                        title="previous chapter">29. <tt class="docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
+                        title="previous chapter">28. <tt class="docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for the pyFormex GUI.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="mesh_ext.html"
-                        title="next chapter">31. <tt class="docutils literal"><span class="pre">mesh_ext</span></tt> &#8212; Extended functionality of the Mesh class.</a></p>
+                        title="next chapter">30. <tt class="docutils literal"><span class="pre">mesh_ext</span></tt> &#8212; Extended functionality of the Mesh class.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-curve">
-<span id="curve-definition-of-curves-in-pyformex"></span><span id="sec-ref-curve"></span><h1>30. <a class="reference internal" href="#module-curve" title="curve: Definition of curves in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">curve</span></tt></a> &#8212; Definition of curves in pyFormex.<a class="headerlink" href="#module-curve" title="Permalink to this headline">¶</a></h1>
+<span id="curve-definition-of-curves-in-pyformex"></span><span id="sec-ref-curve"></span><h1>29. <a class="reference internal" href="#module-curve" title="curve: Definition of curves in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">curve</span></tt></a> &#8212; Definition of curves in pyFormex.<a class="headerlink" href="#module-curve" title="Permalink to this headline">¶</a></h1>
 <p>This module defines classes and functions specialized for handling
 one-dimensional geometry in pyFormex. These may be straight lines, polylines,
 higher order curves and collections thereof. In general, the curves are 3D,
@@ -3679,6 +3679,12 @@ If fil is a string, the file is closed prior to returning.</p>
 <dt id="curve.Arc">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc</tt><big>(</big><em>coords=None</em>, <em>center=None</em>, <em>radius=None</em>, <em>angles=None</em>, <em>angle_spec=0.017453292519943295</em><big>)</big><a class="headerlink" href="#curve.Arc" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing a circular arc.</p>
+<p>The arc can be specified by 3 points (begin, center, end)
+or by center, radius and two angles. In the latter case, the arc
+lies in a plane parallel to the x,y plane.
+If specified by 3 colinear points, the plane of the circle will be
+parallel to the x,y plane if the points are in such plane, else the
+plane will be parallel to the z-axis.</p>
 <dl class="method">
 <dt id="curve.Arc.endPoints">
 <tt class="descname">endPoints</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Arc.endPoints" title="Permalink to this definition">¶</a></dt>
@@ -4041,7 +4047,7 @@ If fil is a string, the file is closed prior to returning.</p>
 
 <dl class="method">
 <dt id="curve.Arc.approx">
-<tt class="descname">approx</tt><big>(</big><em>chordal=0.01</em>, <em>ndiv=None</em><big>)</big><a class="headerlink" href="#curve.Arc.approx" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">approx</tt><big>(</big><em>chordal=0.001</em>, <em>ndiv=None</em><big>)</big><a class="headerlink" href="#curve.Arc.approx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a PolyLine approximation of the Arc.</p>
 <p>Approximates the Arc by a sequence of inscribed straight line
 segments.</p>
@@ -4478,10 +4484,10 @@ with curl 0.375058 through 8 points.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="mesh_ext.html" title="31. mesh_ext — Extended functionality of the Mesh class."
+          <a href="mesh_ext.html" title="30. mesh_ext — Extended functionality of the Mesh class."
              >next</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="29. toolbar — Toolbars for the pyFormex GUI."
+          <a href="toolbar.html" title="28. toolbar — Toolbars for the pyFormex GUI."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -4491,7 +4497,7 @@ with curl 0.375058 through 8 points.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

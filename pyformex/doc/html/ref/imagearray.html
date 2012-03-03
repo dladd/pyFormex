@@ -51,7 +51,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="26. imagecolor — Using bitmap images as colors." href="imagecolor.html" />
+    <link rel="next" title="26. imageViewer — A general image viewer" href="imageViewer.html" />
     <link rel="prev" title="24. image — Saving OpenGL renderings to image files." href="image.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
@@ -75,7 +75,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="imagecolor.html" title="26. imagecolor — Using bitmap images as colors."
+          <a href="imageViewer.html" title="26. imageViewer — A general image viewer"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="image.html" title="24. image — Saving OpenGL renderings to image files."
@@ -102,8 +102,8 @@
   <p class="topless"><a href="image.html"
                         title="previous chapter">24. <tt class="docutils literal docutils literal docutils literal"><span class="pre">image</span></tt> &#8212; Saving OpenGL renderings to image files.</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="imagecolor.html"
-                        title="next chapter">26. <tt class="docutils literal docutils literal"><span class="pre">imagecolor</span></tt> &#8212; Using bitmap images as colors.</a></p>
+  <p class="topless"><a href="imageViewer.html"
+                        title="next chapter">26. <tt class="docutils literal docutils literal"><span class="pre">imageViewer</span></tt> &#8212; A general image viewer</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -141,9 +141,49 @@
 <span id="imagearray-convert-bitmap-images-into-numpy-arrays"></span><span id="sec-ref-imagearray"></span><h1>25. <a class="reference internal" href="#module-imagearray" title="imagearray: Convert bitmap images into numpy arrays."><tt class="xref py py-mod docutils literal"><span class="pre">imagearray</span></tt></a> &#8212; Convert bitmap images into numpy arrays.<a class="headerlink" href="#module-imagearray" title="Permalink to this headline">¶</a></h1>
 <p>This module contains functions to convert bitmap images into numpy
 arrays and vice versa.</p>
-<p>Most of this code was borrowed from the PyQwt mailing list</p>
+<p>This code was based on ideas found on the PyQwt mailing list.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">imagearray</span></tt></p>
 <p><tt class="docutils literal"><span class="pre">Functions</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">imagearray</span></tt></p>
+<dl class="function">
+<dt id="imagearray.image2numpy">
+<tt class="descclassname">imagearray.</tt><tt class="descname">image2numpy</tt><big>(</big><em>image</em>, <em>order='RGBA'</em>, <em>expand=False</em>, <em>flip=True</em><big>)</big><a class="headerlink" href="#imagearray.image2numpy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform an image to a Numpy array.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li>image: a QImage or any data that can be converted to a QImage,
+e.g. the name of an image file.</li>
+<li>order: string with a permutation of the characters &#8216;RGBA&#8217;, defining
+the order in which the colors are returned. Default is RGBA, so that
+result[...,0] gives the red component. Note however that QImage stores
+in ARGB order.</li>
+<li>expand: boolean: if True, an indexed image format will be converted
+to a full color array.</li>
+<li>flip: boolean: if True, the image scanlines are flipped upside down.
+This is practical because image files are usually stored in top down
+order, while OpenGL uses an upwards positive direction, requiring a
+flip to show the image upright.</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li><p class="first">if expand is False: a tuple (colors,colortable) where the meaning of
+colors and colortable depends on the format of the QImage:</p>
+<ul>
+<li><p class="first">for Indexed8 format, colors is an array of integer indices into
+the colortable, which is a single list if colors (i.e. a
+float array with shape (ncolors,3 or 4).</p>
+<p>!!!Beware! This currently does not work! All images are returned in
+full color mode!</p>
+</li>
+<li><p class="first">for RGB32, ARGB32 and ARGB32_Premultiplied formats, colors returns
+the real colors and colortable is None</p>
+</li>
+</ul>
+</li>
+<li><p class="first">if expand is True, always returns a single array with the full colors</p>
+</li>
+</ul>
+</dd></dl>
+
 <dl class="function">
 <dt id="imagearray.gray2qimage">
 <tt class="descclassname">imagearray.</tt><tt class="descname">gray2qimage</tt><big>(</big><em>gray</em><big>)</big><a class="headerlink" href="#imagearray.gray2qimage" title="Permalink to this definition">¶</a></dt>
@@ -156,6 +196,18 @@ colormap.  The first dimension represents the vertical image axis.</p>
 <tt class="descclassname">imagearray.</tt><tt class="descname">rgb2qimage</tt><big>(</big><em>rgb</em><big>)</big><a class="headerlink" href="#imagearray.rgb2qimage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the 3D numpy array <cite>rgb</cite> into a 32-bit QImage.  <cite>rgb</cite> must
 have three dimensions with the vertical, horizontal and RGB image axes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="imagearray.image2glcolor">
+<tt class="descclassname">imagearray.</tt><tt class="descname">image2glcolor</tt><big>(</big><em>im</em><big>)</big><a class="headerlink" href="#imagearray.image2glcolor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a bitmap image to corresponding OpenGL colors.</p>
+<p>im is a QImage or any data from which a QImage can be initialized.
+The image RGB colors are converted to OpenGL colors.
+The return value is a (w,h,3) shaped array of values in the range
+0.0 to 1.0.
+By default the image is flipped upside-down because the vertical
+OpenGL axis points upwards, while bitmap images are stored downwards.</p>
 </dd></dl>
 
 </div>
@@ -176,7 +228,7 @@ have three dimensions with the vertical, horizontal and RGB image axes.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="imagecolor.html" title="26. imagecolor — Using bitmap images as colors."
+          <a href="imageViewer.html" title="26. imageViewer — A general image viewer"
              >next</a> |</li>
         <li class="right" >
           <a href="image.html" title="24. image — Saving OpenGL renderings to image files."
@@ -189,7 +241,7 @@ have three dimensions with the vertical, horizontal and RGB image axes.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

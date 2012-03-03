@@ -797,16 +797,18 @@ class Coords(ndarray):
         one for each of the coordinate axes. The character determines how
         the structure is aligned in the corresponding direction:
 
-        - '-': aligned on the minimal value of the bounding box,
-        - '+': aligned on the maximal value of the bounding box,
-        - '0': aligned on the middle value of the bounding box.
+        - ``-``: aligned on the minimal value of the bounding box,
+        - ``+``: aligned on the maximal value of the bounding box,
+        - ``0``: aligned on the middle value of the bounding box.
         
         Any other value will make the alignment in that direction unchanged.
 
-        The default alignment string '---' results in a translation which puts
-        all the points in the octant with all positive coordinate values.
-        A string '000' will center the object around the origin, just like
-        the (slightly faster) :meth:`centered` method, which is .
+        The default alignment string ``'---'`` results in a translation which
+        puts all the points in the octant with all positive coordinate values.
+        A string ``'000'`` will center the object around the origin, just like
+        the (slightly faster) :meth:`centered` method.
+
+        See also the :func:`coords.align` function.
         """
         trl = asarray(point).reshape(3)
         bb = self.bbox()
@@ -1968,22 +1970,23 @@ def xpattern(s,nplex=1):
         raise ValueError,"Could not reshape points list to plexitude %s" % nplex
 
 
+
 # IDEA: Add an offset
 def align(L,align):
     """Align a list of geometrical objects.
 
     L is a list of geometrical objects (Coords or Geometry or subclasses
-    thereof) and thus having an appropriate 'align' method.
+    thereof) and thus having an appropriate ``align`` method.
     align is a string of three characters, one for each coordinate direction,
     defining how the subsequent objects have to be aligned in that direction:
 
-    - '-' : align on the minimal coordinate value
-    - '+' : align on the maximal coordinate value
-    - '0' : align on the middle coordinate value
-    - '|' : align the minimum value on the maximal value of the previous
+    - ``-`` : align on the minimal coordinate value
+    - ``+`` : align on the maximal coordinate value
+    - ``0`` : align on the middle coordinate value
+    - ``|`` : align the minimum value on the maximal value of the previous item
 
-    E.g., the string '|--' will juxtapose the objects in the x-direction,
-    while aligning the on their minimal coordinates in the y- and z- direction.
+    E.g., the string ``'|--'`` will juxtapose the objects in the x-direction,
+    while aligning them on their minimal coordinates in the y- and z- direction.
     """
     r = L[:1]
     al = am =''

@@ -526,7 +526,7 @@ to skip the element reversal.</li>
 <tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a report on the Mesh shape and size.</p>
 <p>The report contains the number of nodes, number of elements,
-plexitude, bbox and size.</p>
+plexitude, element type, bbox and size.</p>
 </dd></dl>
 
 <dl class="method">
@@ -738,6 +738,9 @@ default in future.</p>
 <dt id="mesh.Mesh.convertRandom">
 <tt class="descname">convertRandom</tt><big>(</big><em>choices</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convertRandom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert choosing randomly between choices</p>
+<p>Returns a Mesh obtained by converting the current Mesh by a
+randomly selected method from the available conversion type
+for the current element type.</p>
 </dd></dl>
 
 <dl class="method">
@@ -767,9 +770,12 @@ element of the original Mesh.</p>
 <dl class="docutils">
 <dt>Returns: a Mesh where each element is replaced by a number of</dt>
 <dd>smaller elements of the same type.</dd>
-<dt>..note:: This is currently only implemented for Meshes of type &#8216;tri3&#8217;</dt>
-<dd>and &#8216;quad4&#8217;.</dd>
 </dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is currently only implemented for Meshes of type &#8216;tri3&#8217;
+and &#8216;quad4&#8217; and for the derived class &#8216;TriSurface&#8217;.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -962,7 +968,7 @@ the geometry .</p>
 <dl class="method">
 <dt id="mesh.Mesh.smooth">
 <tt class="descname">smooth</tt><big>(</big><em>iterations=1</em>, <em>lamb=0.5</em>, <em>k=0.1</em>, <em>edg=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.smooth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a smoothened mesh.</p>
+<dd><p>Return a smoothed mesh.</p>
 <p>Smoothing algorithm based on lowpass filters.</p>
 <p>If edg is True, the algorithm tries to smooth the
 outer border of the mesh seperately to reduce mesh shrinkage.</p>
@@ -975,6 +981,9 @@ but will result in less smoothing per iteration.</p>
 <dt id="mesh.Mesh.concatenate">
 <em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>meshes</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#mesh.Mesh.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate a list of meshes of the same plexitude and eltype</p>
+<p>All Meshes in the list should have the same plexitude.
+Meshes with plexitude are ignored though, to allow empty
+Meshes to be added in.</p>
 <p>Merging of the nodes can be tuned by specifying extra arguments
 that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
 <p>This is a class method, and should be invoked as follows:</p>
@@ -1381,7 +1390,7 @@ not fuse them.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

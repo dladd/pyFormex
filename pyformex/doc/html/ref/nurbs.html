@@ -33,7 +33,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>34. nurbs — Using NURBS in pyFormex. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>33. nurbs — Using NURBS in pyFormex. &mdash; pyFormex v0.8.7-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -51,8 +51,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="35. isopar — Isoparametric transformations" href="isopar.html" />
-    <link rel="prev" title="33. geomtools — Basic geometrical operations." href="geomtools.html" />
+    <link rel="next" title="34. isopar — Isoparametric transformations" href="isopar.html" />
+    <link rel="prev" title="32. geomtools — Basic geometrical operations." href="geomtools.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,10 +75,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="isopar.html" title="35. isopar — Isoparametric transformations"
+          <a href="isopar.html" title="34. isopar — Isoparametric transformations"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="geomtools.html" title="33. geomtools — Basic geometrical operations."
+          <a href="geomtools.html" title="32. geomtools — Basic geometrical operations."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="geomtools.html"
-                        title="previous chapter">33. <tt class="docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
+                        title="previous chapter">32. <tt class="docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="isopar.html"
-                        title="next chapter">35. <tt class="docutils literal docutils literal"><span class="pre">isopar</span></tt> &#8212; Isoparametric transformations</a></p>
+                        title="next chapter">34. <tt class="docutils literal docutils literal"><span class="pre">isopar</span></tt> &#8212; Isoparametric transformations</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-nurbs">
-<span id="nurbs-using-nurbs-in-pyformex"></span><span id="sec-ref-nurbs"></span><h1>34. <a class="reference internal" href="#module-nurbs" title="nurbs: Using NURBS in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">nurbs</span></tt></a> &#8212; Using NURBS in pyFormex.<a class="headerlink" href="#module-nurbs" title="Permalink to this headline">¶</a></h1>
+<span id="nurbs-using-nurbs-in-pyformex"></span><span id="sec-ref-nurbs"></span><h1>33. <a class="reference internal" href="#module-nurbs" title="nurbs: Using NURBS in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">nurbs</span></tt></a> &#8212; Using NURBS in pyFormex.<a class="headerlink" href="#module-nurbs" title="Permalink to this headline">¶</a></h1>
 <p>The <a class="reference internal" href="#module-nurbs" title="nurbs: Using NURBS in pyFormex."><tt class="xref py py-mod docutils literal"><span class="pre">nurbs</span></tt></a> module defines functions and classes to manipulate
 NURBS curves and surface in pyFormex.</p>
 <p><tt class="docutils literal"><span class="pre">Classes</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">module</span> <span class="pre">nurbs</span></tt></p>
@@ -348,6 +348,18 @@ points adapted.</p>
 <tt class="descname">decompose</tt><big>(</big><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.decompose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decomposes a curve in subsequent Bezier curves.</p>
 <p>Returns an equivalent unblended Nurbs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nurbs.NurbsCurve.approx">
+<tt class="descname">approx</tt><big>(</big><em>ndiv=None</em>, <em>ntot=None</em><big>)</big><a class="headerlink" href="#nurbs.NurbsCurve.approx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PolyLine approximation of the Nurbs curve</p>
+<p>If no <cite>ntot</cite> is given, the curve is approximated by a PolyLine
+through equidistant <cite>ndiv+1</cite> point in parameter space. These points
+may be far from equidistant in Cartesian space.</p>
+<p>If <cite>ntot</cite> is given, a second approximation is computed with <cite>ntot</cite>
+straight segments of nearly equal length. The lengths are computed
+based on the first approximation with <cite>ndiv</cite> segments.</p>
 </dd></dl>
 
 <dl class="method">
@@ -568,10 +580,10 @@ if d3 is give, also returns the torsion of the curve.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="isopar.html" title="35. isopar — Isoparametric transformations"
+          <a href="isopar.html" title="34. isopar — Isoparametric transformations"
              >next</a> |</li>
         <li class="right" >
-          <a href="geomtools.html" title="33. geomtools — Basic geometrical operations."
+          <a href="geomtools.html" title="32. geomtools — Basic geometrical operations."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -581,7 +593,7 @@ if d3 is give, also returns the torsion of the curve.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

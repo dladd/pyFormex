@@ -258,10 +258,12 @@ methods:
 <tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.nplex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of points per element.</p>
 <p>Examples:</p>
-<p>1: unconnected points,
-2: straight line elements,
-3: triangles or quadratic line elements,
-4: tetraeders or quadrilaterals or cubic line elements.</p>
+<ol class="arabic simple">
+<li>unconnected points,</li>
+<li>straight line elements,</li>
+<li>triangles or quadratic line elements,</li>
+<li>tetraeders or quadrilaterals or cubic line elements.</li>
+</ol>
 </dd></dl>
 
 <dl class="method">
@@ -335,12 +337,12 @@ the coordinates of the unique nodes of the Formex. The second is
 an integer array with the node numbers connected by each element.
 The elements come in the same order as they are in the Formex, but
 the order of the nodes is unspecified.
-By the way, the reverse operation of <tt class="docutils literal"><span class="pre">coords,elems</span> <span class="pre">=</span> <span class="pre">fuse(F)</span></tt>
-is accomplished by <tt class="docutils literal"><span class="pre">F</span> <span class="pre">=</span> <span class="pre">Formex(coords[elems])</span></tt></p>
+By the way, the reverse operation of <tt class="docutils literal"><span class="pre">coords,elems=fuse(F)</span></tt>
+is accomplished by <tt class="docutils literal"><span class="pre">F=Formex(coords[elems])</span></tt></p>
 <p>There is a (very small) probability that two very close nodes are
 not equivalenced  by this procedure. Use it multiple times with
 different parameters to check.
-You can also set the rtol /atol parameters to influence the
+You can also set the rtol/atol parameters to influence the
 equivalence checking of two points.
 The default settting for atol is rtol * self.dsize()</p>
 </dd></dl>
@@ -437,21 +439,25 @@ they wil be repeated. If you give more, they will be ignored.</p>
 <tt class="descname">append</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#formex.Formex.append" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append the members of Formex F to this one.</p>
 <p>This function changes the original one! Use __add__ if you want to
-get a copy with the sum. 
-&gt;&gt;&gt; F = Formex([[[1.0,1.0,1.0]]])
-&gt;&gt;&gt; G = F.append(F)
-&gt;&gt;&gt; print(F)
-{[1.0,1.0,1.0], [1.0,1.0,1.0]}</p>
+get a copy with the sum.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+<span class="go">{[1.0,1.0,1.0], [1.0,1.0,1.0]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="formex.Formex.concatenate">
 <em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>Flist</em><big>)</big><a class="headerlink" href="#formex.Formex.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate all formices in Flist.</p>
-<p>This is a class method, not an instance method!
-&gt;&gt;&gt; F = Formex([[[1,2,3]]],1)
-&gt;&gt;&gt; print(Formex.concatenate([F,F,F]))
-{[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}</p>
+<p>This is a class method, not an instance method!</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]]],</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">Formex</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">F</span><span class="p">,</span><span class="n">F</span><span class="p">,</span><span class="n">F</span><span class="p">]))</span>
+<span class="go">{[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}</span>
+</pre></div>
+</div>
 <p>Formex.concatenate([F,G,H]) is functionally equivalent with F+G+H.
 The latter is simpler to write for a list with a few elements.
 If the list becomes large, or the number of items in the list
@@ -581,7 +587,7 @@ True) the elements having nodal coordinates in the required range.
 Use where(result) to get a list of element numbers passing the test.
 Or directly use clip() or cclip() to create the clipped Formex.</p>
 <p>The test plane can be defined in two ways, depending on the value of dir.
-If dir == 0, 1 or 2, it specifies a global axis and min and max are
+If dir==0, 1 or 2, it specifies a global axis and min and max are
 the minimum and maximum values for the coordinates along that axis.
 Default is the 0 (or x) direction.</p>
 <p>Else, dir should be compaitble with a (3,) shaped array and specifies
@@ -1007,7 +1013,10 @@ Formex will be of plexitude 1 (points). For a plex-3 Formex
 <dt id="formex.Formex.cutWithPlane">
 <tt class="descname">cutWithPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="headerlink" href="#formex.Formex.cutWithPlane" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cut a Formex with the plane(s) (p,n).</p>
-<p>..warning :: This method currently only works for plexitude 2 or 3!</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This method currently only works for plexitude 2 or 3!</p>
+</div>
 <ul class="simple">
 <li><cite>p</cite>,`n`: a point and normal vector defining the cutting plane.
 In case of plexitude 3, p and n can be sequences of points and vector,
@@ -1064,19 +1073,19 @@ Valid Formex file formats are described in the manual.</p>
 <p>This uses the <tt class="xref py py-meth docutils literal"><span class="pre">Coords.fromstring()</span></tt> method to read coordinates
 from a string and restructures them into a Formex of the specified
 plexitude.</p>
-<dl class="docutils">
-<dt>fil: a string containing a single sequence of float numbers separated</dt>
-<dd>by whitespace and a possible separator string.</dd>
-<dt>sep: the separator used between the coordinates. If not a space,</dt>
-<dd>all extra whitespace is ignored.</dd>
-<dt>ndim: number of coordinates per point. Should be 1, 2 or 3 (default).</dt>
-<dd>If 1, resp. 2, the coordinate string only holds x, resp. x,y
-values.</dd>
-<dt>count: total number of coordinates to read. This should be a multiple</dt>
-<dd>of 3. The default is to read all the coordinates in the string.
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>fil</cite>: a string containing a single sequence of float numbers separated
+by whitespace and a possible separator string.</li>
+<li><cite>sep</cite>: the separator used between the coordinates. If not a space,
+all extra whitespace is ignored.</li>
+<li><cite>ndim</cite>: number of coordinates per point. Should be 1, 2 or 3 (default).
+If 1, resp. 2, the coordinate string only holds x, resp. x,y values.</li>
+<li><cite>count</cite>: total number of coordinates to read. This should be a multiple
+of 3. The default is to read all the coordinates in the string.
 <tt class="docutils literal"><span class="pre">count</span></tt> can be used to force an error condition if the string
-does not contain the expected number of values.</dd>
-</dl>
+does not contain the expected number of values.</li>
+</ul>
 <p>The return value is a <tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt> object.</p>
 </dd></dl>
 
@@ -1216,32 +1225,32 @@ n is the normal vector to a plane or a list of normal vectors.
 Both p and n have shape (3) or (npoints,3).</p>
 <p>The return value is:</p>
 <ul class="simple">
-<li>with side = &#8216;+&#8217; or &#8216;-&#8216; or &#8216;positive&#8217;or &#8216;negative&#8217; :
+<li>with side=&#8217;+&#8217; or &#8216;-&#8216; or &#8216;positive&#8217;or &#8216;negative&#8217; :
 a Formex of the same plexitude with all elements
 located completely at the positive/negative side of the plane(s) (p,n)
 retained, all elements lying completely at the negative/positive side
 removed and the elements intersecting the plane(s) replaced by new
 elements filling up the parts at the positive/negative side.</li>
-<li>with side = &#8216;&#8217;: two Formices of the same plexitude, one representing
+<li>with side=&#8217;&#8216;: two Formices of the same plexitude, one representing
 the positive side and one representing the negative side.</li>
 </ul>
 <p>Let <img class="math" src="../_images/math/1c2bf95e3a347dc8b88814e23e3609308823d8da.png" alt="dist"/> be the signed distance of the vertices to a plane.
 The elements located completely at the positive or negative side of
-a plane have three vertices for which <img class="math" src="../_images/math/2c3354b1a3c611400aef7c077658d58ede9551fd.png" alt="|dist| &gt; atol"/>.
+a plane have three vertices for which <img class="math" src="../_images/math/fb7c0c71afd4978ee9eafe6a746339963cd4fa3f.png" alt="|dist|&gt;atol"/>.
 The elements intersecting a plane can have one or more vertices for which
-<img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>.
+<img class="math" src="../_images/math/809bd9510e9ce3c791a6dc6d549b907000fee69d.png" alt="|dist|&lt;atol"/>.
 These vertices are projected on the plane so that their distance is zero.</p>
 <p>If the Formex has a property set, the new elements will get the property
 numbers defined in newprops. This is a list of 7 property numbers flagging
 elements with following properties:</p>
 <ol class="arabic simple" start="0">
-<li>no vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, triangle after cut</li>
-<li>no vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, triangle 1 from quad after cut</li>
-<li>no vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, triangle 2 from quad after cut</li>
-<li>one vertex with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, two vertices at pos. or neg. side</li>
-<li>one vertex with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, one vertex at pos. side, one at neg.</li>
-<li>two vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/>, one vertex at pos. or neg. side</li>
-<li>three vertices with <img class="math" src="../_images/math/3eac10714f0043efad0ae267d2b126f6e8af9313.png" alt="|dist| &lt; atol"/></li>
+<li>no vertices with <img class="math" src="../_images/math/809bd9510e9ce3c791a6dc6d549b907000fee69d.png" alt="|dist|&lt;atol"/>, triangle after cut</li>
+<li>no vertices with <img class="math" src="../_images/math/809bd9510e9ce3c791a6dc6d549b907000fee69d.png" alt="|dist|&lt;atol"/>, triangle 1 from quad after cut</li>
+<li>no vertices with <img class="math" src="../_images/math/809bd9510e9ce3c791a6dc6d549b907000fee69d.png" alt="|dist|&lt;atol"/>, triangle 2 from quad after cut</li>
+<li>one vertex with <img class="math" src="../_images/math/809bd9510e9ce3c791a6dc6d549b907000fee69d.png" alt="|dist|&lt;atol"/>, two vertices at pos. or neg. side</li>
+<li>one vertex with <img class="math" src="../_images/math/809bd9510e9ce3c791a6dc6d549b907000fee69d.png" alt="|dist|&lt;atol"/>, one vertex at pos. side, one at neg.</li>
+<li>two vertices with <img class="math" src="../_images/math/809bd9510e9ce3c791a6dc6d549b907000fee69d.png" alt="|dist|&lt;atol"/>, one vertex at pos. or neg. side</li>
+<li>three vertices with <img class="math" src="../_images/math/809bd9510e9ce3c791a6dc6d549b907000fee69d.png" alt="|dist|&lt;atol"/></li>
 </ol>
 </dd></dl>
 
@@ -1329,7 +1338,7 @@ interpolations.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

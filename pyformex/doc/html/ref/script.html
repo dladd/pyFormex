@@ -289,8 +289,8 @@ the script that starts with &#8216;draw&#8217;. Also (in this case), each line
 </dd></dl>
 
 <dl class="function">
-<dt id="script.playFile">
-<tt class="descclassname">script.</tt><tt class="descname">playFile</tt><big>(</big><em>fn</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#script.playFile" title="Permalink to this definition">¶</a></dt>
+<dt id="script.runScript">
+<tt class="descclassname">script.</tt><tt class="descname">runScript</tt><big>(</big><em>fn</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#script.runScript" title="Permalink to this definition">¶</a></dt>
 <dd><p>Play a formex script from file fn.</p>
 <p>fn is the name of a file holding a pyFormex script.
 A list of arguments can be passed. They will be available under the name
@@ -299,11 +299,11 @@ is returned to the caller.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="script.play">
-<tt class="descclassname">script.</tt><tt class="descname">play</tt><big>(</big><em>fn=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>step=False</em><big>)</big><a class="headerlink" href="#script.play" title="Permalink to this definition">¶</a></dt>
-<dd><p>Play the pyFormex script with filename <cite>fn</cite> or the current script file.</p>
-<p>This function does nothing if no filename is passed or no current
-scriptfile was set.
+<dt id="script.run">
+<tt class="descclassname">script.</tt><tt class="descname">run</tt><big>(</big><em>appname=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>step=False</em>, <em>reload=False</em><big>)</big><a class="headerlink" href="#script.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the current pyFormex application or script file.</p>
+<p>This function does nothing if no appname/filename is passed or no current
+script/app was set.
 If arguments are given, they are passed to the script. If <cite>step</cite> is True,
 the script is executed in step mode.</p>
 </dd></dl>
@@ -409,7 +409,7 @@ raise an error if the requirement fails.</p>
 
 <dl class="function">
 <dt id="script.grepSource">
-<tt class="descclassname">script.</tt><tt class="descname">grepSource</tt><big>(</big><em>pattern</em>, <em>options=''</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#script.grepSource" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">script.</tt><tt class="descname">grepSource</tt><big>(</big><em>pattern</em>, <em>options=''</em>, <em>relative=True</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#script.grepSource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds pattern in the pyFormex source .py files.</p>
 <p>Uses the <cite>grep</cite> program to find all occurrences of some specified
 pattern text in the pyFormex source .py files (including the examples).
@@ -487,7 +487,7 @@ Else, default names will be provided.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

@@ -271,9 +271,38 @@ that volume.</p>
 <div>A Coords object with shape(2,3): the first point contains the
 minimal coordinates, the second has the maximal ones.</div></blockquote>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span>
 <span class="go">[[ 0.  0.  0.]</span>
 <span class="go"> [ 3.  3.  0.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.apt">
+<tt class="descname">apt</tt><big>(</big><em>align</em><big>)</big><a class="headerlink" href="#coords.Coords.apt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an alignment point of a Coords.</p>
+<p>Align point are points whose coordinates are either the minimal
+value, the maximal value or the middle value for the Coords.
+Combining the three values with the three dimensions, a Coords
+has in 27 (3**3) alignment points. The corner points of the
+bounding box are a subset of these.</p>
+<p>The 27 points are addressed by an alignment string of three
+characters, one for each direction. Each character should be
+one of the following</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: use the minimal value for that coordinate,</li>
+<li>&#8216;+&#8217;: use the minimal value for that coordinate,</li>
+<li>&#8216;0&#8217;: use the middle value for that coordinate.</li>
+</ul>
+<p>Any other character will set the corresponding coordinate to zero.</p>
+<p>A string &#8216;000&#8217; is equivalent with center(). The values &#8216;&#8212;&#8217; and
+&#8216;+++&#8217; give the points of the bounding box.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">apt</span><span class="p">(</span><span class="s">&#39;-0+&#39;</span><span class="p">)</span>
+<span class="go">[ 0.   0.5  1. ]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -285,7 +314,8 @@ minimal coordinates, the second has the maximal ones.</div></blockquote>
 <p>The center of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> is the center of its bbox().
 The return value is a (3,) shaped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
 <span class="go">[ 1.5  1.5  0. ]</span>
 </pre></div>
 </div>
@@ -308,14 +338,15 @@ generally be equal to 1.0.
 If wts=None, then all points are assumed to have a weight equal to
 one divided by the length of the specified axis.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
 <span class="go">[[ 2.  0.  0.]</span>
 <span class="go"> [ 3.  0.  0.]</span>
 <span class="go"> [ 4.  0.  0.]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">[[ 1.  0.  0.]</span>
 <span class="go"> [ 5.  0.  0.]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">wts</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.25</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">wts</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.25</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">[[ 0.75  0.    0.  ]</span>
 <span class="go"> [ 4.75  0.    0.  ]]</span>
 </pre></div>
@@ -394,7 +425,8 @@ the distance of each point to the plane through p and having normal n.
 Distance values are positive if the point is on the side of the
 plane indicated by the positive normal.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPlane</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">distanceFromPlane</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="go">[[ 0.  3.  0.]]</span>
 </pre></div>
 </div>
@@ -411,7 +443,8 @@ n is a vector specifying the direction of the line through p.</p>
 each point to the line through p with direction n.
 All distance values are positive or zero.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromLine</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">distanceFromLine</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="go">[[ 0.  0.  3.]]</span>
 </pre></div>
 </div>
@@ -424,9 +457,10 @@ All distance values are positive or zero.</p>
 <p>p is a single point specified by 3 coordinates.</p>
 <p>The return value is a [...] shaped array with the distance of
 each point to point p.
-All distance values are positive or zero.
-Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPoint</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+All distance values are positive or zero.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">distanceFromPoint</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="go">[[ 0.  3.  3.]]</span>
 </pre></div>
 </div>
@@ -483,22 +517,22 @@ direction may be used as well.</p>
 <li><cite>dir</cite>: either a global axis number (0, 1 or 2) or a direction vector
 consisting of 3 floats. It specifies the direction in which the
 distances are measured. Default is the 0 (or x) direction.</li>
-<li><cite>min</cite>,`max`: position of the minimum and maximum clipping planes.
+<li><cite>min</cite>, <cite>max</cite>: position of the minimum and maximum clipping planes.
 If <cite>dir</cite> was specified as an integer (0,1,2), this is a single float
 value corresponding with the coordinate in that axis direction.
 Else, it is a point in the clipping plane with normal direction <cite>dir</cite>.
 One of the two clipping planes may be left unspecified.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns: a 1D integer array with same length as the number of points.</dt>
-<dd>For each point the value is 1 (True) if the point is above the
+<p>Returns:</p>
+<blockquote>
+<div>A 1D integer array with same length as the number of points.
+For each point the value is 1 (True) if the point is above the
 minimum clipping plane and below the maximum clipping plane,
 or 0 (False) otherwise.
 An unspecified clipping plane corresponds with an infinitely low or
 high value. The return value can directly be used as an index to
 obtain a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the points satisfying the test (or not).
-See the examples below.</dd>
-</dl>
+See the examples below.</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">2.</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
@@ -599,23 +633,25 @@ This is equivalent with:</p>
 
 <dl class="method">
 <dt id="coords.Coords.align">
-<tt class="descname">align</tt><big>(</big><em>alignment='---'</em><big>)</big><a class="headerlink" href="#coords.Coords.align" title="Permalink to this definition">¶</a></dt>
-<dd><p>Align the Coords along the global axes.</p>
+<tt class="descname">align</tt><big>(</big><em>alignment='---', point=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#coords.Coords.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align a Coords on a given point.</p>
 <p>Alignment involves a translation such that the bounding box
-of the Coords object becomes aligned on the origin of the global axes.
+of the Coords object becomes aligned with a given point.
+By default this is the origin of the global axes.
 The requested alignment is determined by a string of three characters,
 one for each of the coordinate axes. The character determines how
 the structure is aligned in the corresponding direction:</p>
 <ul class="simple">
-<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
-<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
-<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+<li><tt class="docutils literal"><span class="pre">-</span></tt>: aligned on the minimal value of the bounding box,</li>
+<li><tt class="docutils literal"><span class="pre">+</span></tt>: aligned on the maximal value of the bounding box,</li>
+<li><tt class="docutils literal"><span class="pre">0</span></tt>: aligned on the middle value of the bounding box.</li>
 </ul>
 <p>Any other value will make the alignment in that direction unchanged.</p>
-<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
-all the points in the octant with all positive coordinate values.
-A string &#8216;000&#8217; will center the object around the origin, just like
-the (slightly faster) <a class="reference internal" href="#coords.Coords.centered" title="coords.Coords.centered"><tt class="xref py py-meth docutils literal"><span class="pre">centered()</span></tt></a> method, which is .</p>
+<p>The default alignment string <tt class="docutils literal"><span class="pre">'---'</span></tt> results in a translation which
+puts all the points in the octant with all positive coordinate values.
+A string <tt class="docutils literal"><span class="pre">'000'</span></tt> will center the object around the origin, just like
+the (slightly faster) <a class="reference internal" href="#coords.Coords.centered" title="coords.Coords.centered"><tt class="xref py py-meth docutils literal"><span class="pre">centered()</span></tt></a> method.</p>
+<p>See also the <a class="reference internal" href="#coords.align" title="coords.align"><tt class="xref py py-func docutils literal"><span class="pre">coords.align()</span></tt></a> function.</p>
 </dd></dl>
 
 <dl class="method">
@@ -794,7 +830,7 @@ and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f<
 <dl class="method">
 <dt id="coords.Coords.map">
 <tt class="descname">map</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#coords.Coords.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> mapped by a 3-D function.</p>
+<dd><p>Map a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> by a 3-D function.</p>
 <p>This is one of the versatile mapping functions.
 func is a numerical function which takes three arguments and produces
 a list of three output values. The coordinates [x,y,z] will be
@@ -813,7 +849,7 @@ This method is one of several mapping methods. See also map1 and mapd.</p>
 <dl class="method">
 <dt id="coords.Coords.map1">
 <tt class="descname">map1</tt><big>(</big><em>dir</em>, <em>func</em>, <em>x=None</em><big>)</big><a class="headerlink" href="#coords.Coords.map1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> where coordinate i is mapped by a 1-D function.</p>
+<dd><p>Map one coordinate by a 1-D function of one coordinate.</p>
 <p><cite>func</cite> is a numerical function which takes one argument and produces
 one result. The coordinate dir will be replaced by func(coord[x]).
 If no x is specified, x is taken equal to dir. 
@@ -826,7 +862,7 @@ This method is one of several mapping methods. See also map and mapd.</p>
 <dl class="method">
 <dt id="coords.Coords.mapd">
 <tt class="descname">mapd</tt><big>(</big><em>dir</em>, <em>func</em>, <em>point</em>, <em>dist=None</em><big>)</big><a class="headerlink" href="#coords.Coords.mapd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maps one coordinate by a function of the distance to a point.</p>
+<dd><p>Map one coordinate by a function of the distance to a point.</p>
 <p><cite>func</cite> a numerical function which takes one argument and produces
 one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
 where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
@@ -838,8 +874,9 @@ a limited set of axes to calculate a 2-D or 1-D distance.
 This method is one of several mapping methods. See also
 <tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#coords.Coords.map1" title="coords.Coords.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
 <p>Example:</p>
-<blockquote>
-<div>E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">E</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
 <p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
 </dd></dl>
 
@@ -887,17 +924,23 @@ use one of the global axes.</li>
 <li><cite>P</cite>: a point on the plane, by default the global origin.
 If an int, the plane is the coordinate plane perpendicular to the</li>
 </ul>
-<dl class="docutils">
-<dt>..note:: For planes parallel to a coordinate plane, it is far more</dt>
-<dd>efficient to specify the normal by an axis number than by a
-three component vector.</dd>
-<dt>..note:: This method will also work if any or both of P and n have</dt>
-<dd>a shape (ncoords,3), where ncoords is the total number of points
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For planes parallel to a coordinate plane, it is far more
+efficient to specify the normal by an axis number than by a
+three component vector.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method will also work if any or both of P and n have
+a shape (ncoords,3), where ncoords is the total number of points
 in the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>. This allows to project each point on an
-individual plane.</dd>
-</dl>
-<p>Returns: a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with same shape as original, with all the
-points projected on the specified plane(s).</p>
+individual plane.</p>
+</div>
+<p>Returns:</p>
+<blockquote>
+<div>a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with same shape as original, with all the
+points projected on the specified plane(s).</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -972,7 +1015,7 @@ instances. If initialCS is None, the global (x,y,z) axes are used.</p>
 <dd><p>Add random noise to a Coords.</p>
 <p>A random amount is added to eacho individual coordinate in the Coords.
 The difference of any coordinate from its original value will
-not be maximally <tt class="docutils literal"><span class="pre">asize</span> <span class="pre">+</span> <span class="pre">rsize</span> <span class="pre">*</span> <span class="pre">self.sizes().max()</span></tt>. The default
+not be maximally <tt class="docutils literal"><span class="pre">asize+rsize*self.sizes().max()</span></tt>. The default
 is to set it to 0.1 times the geometrical size of the structure.</p>
 </dd></dl>
 
@@ -1121,11 +1164,12 @@ is specified, a list with (div+1) values for <cite>div</cite> is created
 by dividing the interval [0..1] into <cite>div</cite> equal distances.</li>
 </ul>
 <p>Returns:</p>
-<p>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with an extra (first) axis, containing the
+<blockquote>
+<div>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with an extra (first) axis, containing the
 concatenation of the interpolations of <cite>self</cite> and <cite>X</cite> at all
 values in <cite>div</cite>.
 Its shape is (n,) + self.shape, where n is the number of values
-in <cite>div</cite>.</p>
+in <cite>div</cite>.</div></blockquote>
 <p>An interpolation of F and G at value v is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> H where
 each coordinate Hijk is obtained from:  Fijk = Fijk + v * (Gijk-Fijk).
 Thus, X.interpolate(Y,[0.,0.5,1.0]) will contain all points of
@@ -1206,7 +1250,7 @@ original Coords.</p>
 <ul class="simple">
 <li><cite>coords</cite>: a (...,2,3) shaped array of bound vectors defined by their
 initial and terminal points.</li>
-<li><cite>origins</cite>,`vectors`: (...,3) shaped arrays defining the initial
+<li><cite>origins</cite>, <cite>vectors</cite>: (...,3) shaped arrays defining the initial
 points and vectors from initial to terminal points.</li>
 </ul>
 <p>The default constructs a unit vector along the global x-axis.</p>
@@ -1308,9 +1352,38 @@ that volume.</p>
 <div>A Coords object with shape(2,3): the first point contains the
 minimal coordinates, the second has the maximal ones.</div></blockquote>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span>
 <span class="go">[[ 0.  0.  0.]</span>
 <span class="go"> [ 3.  3.  0.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.BoundVectors.apt">
+<tt class="descname">apt</tt><big>(</big><em>align</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.apt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an alignment point of a Coords.</p>
+<p>Align point are points whose coordinates are either the minimal
+value, the maximal value or the middle value for the Coords.
+Combining the three values with the three dimensions, a Coords
+has in 27 (3**3) alignment points. The corner points of the
+bounding box are a subset of these.</p>
+<p>The 27 points are addressed by an alignment string of three
+characters, one for each direction. Each character should be
+one of the following</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: use the minimal value for that coordinate,</li>
+<li>&#8216;+&#8217;: use the minimal value for that coordinate,</li>
+<li>&#8216;0&#8217;: use the middle value for that coordinate.</li>
+</ul>
+<p>Any other character will set the corresponding coordinate to zero.</p>
+<p>A string &#8216;000&#8217; is equivalent with center(). The values &#8216;&#8212;&#8217; and
+&#8216;+++&#8217; give the points of the bounding box.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">apt</span><span class="p">(</span><span class="s">&#39;-0+&#39;</span><span class="p">)</span>
+<span class="go">[ 0.   0.5  1. ]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1322,7 +1395,8 @@ minimal coordinates, the second has the maximal ones.</div></blockquote>
 <p>The center of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> is the center of its bbox().
 The return value is a (3,) shaped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
 <span class="go">[ 1.5  1.5  0. ]</span>
 </pre></div>
 </div>
@@ -1345,14 +1419,15 @@ generally be equal to 1.0.
 If wts=None, then all points are assumed to have a weight equal to
 one divided by the length of the specified axis.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
 <span class="go">[[ 2.  0.  0.]</span>
 <span class="go"> [ 3.  0.  0.]</span>
 <span class="go"> [ 4.  0.  0.]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">[[ 1.  0.  0.]</span>
 <span class="go"> [ 5.  0.  0.]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">wts</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.25</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">wts</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.25</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">[[ 0.75  0.    0.  ]</span>
 <span class="go"> [ 4.75  0.    0.  ]]</span>
 </pre></div>
@@ -1431,7 +1506,8 @@ the distance of each point to the plane through p and having normal n.
 Distance values are positive if the point is on the side of the
 plane indicated by the positive normal.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPlane</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">distanceFromPlane</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="go">[[ 0.  3.  0.]]</span>
 </pre></div>
 </div>
@@ -1448,7 +1524,8 @@ n is a vector specifying the direction of the line through p.</p>
 each point to the line through p with direction n.
 All distance values are positive or zero.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromLine</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">distanceFromLine</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="go">[[ 0.  0.  3.]]</span>
 </pre></div>
 </div>
@@ -1461,9 +1538,10 @@ All distance values are positive or zero.</p>
 <p>p is a single point specified by 3 coordinates.</p>
 <p>The return value is a [...] shaped array with the distance of
 each point to point p.
-All distance values are positive or zero.
-Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPoint</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+All distance values are positive or zero.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">distanceFromPoint</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="go">[[ 0.  3.  3.]]</span>
 </pre></div>
 </div>
@@ -1520,22 +1598,22 @@ direction may be used as well.</p>
 <li><cite>dir</cite>: either a global axis number (0, 1 or 2) or a direction vector
 consisting of 3 floats. It specifies the direction in which the
 distances are measured. Default is the 0 (or x) direction.</li>
-<li><cite>min</cite>,`max`: position of the minimum and maximum clipping planes.
+<li><cite>min</cite>, <cite>max</cite>: position of the minimum and maximum clipping planes.
 If <cite>dir</cite> was specified as an integer (0,1,2), this is a single float
 value corresponding with the coordinate in that axis direction.
 Else, it is a point in the clipping plane with normal direction <cite>dir</cite>.
 One of the two clipping planes may be left unspecified.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns: a 1D integer array with same length as the number of points.</dt>
-<dd>For each point the value is 1 (True) if the point is above the
+<p>Returns:</p>
+<blockquote>
+<div>A 1D integer array with same length as the number of points.
+For each point the value is 1 (True) if the point is above the
 minimum clipping plane and below the maximum clipping plane,
 or 0 (False) otherwise.
 An unspecified clipping plane corresponds with an infinitely low or
 high value. The return value can directly be used as an index to
 obtain a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the points satisfying the test (or not).
-See the examples below.</dd>
-</dl>
+See the examples below.</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">2.</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
@@ -1670,23 +1748,25 @@ This is equivalent with:</p>
 
 <dl class="method">
 <dt id="coords.BoundVectors.align">
-<tt class="descname">align</tt><big>(</big><em>alignment='---'</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.align" title="Permalink to this definition">¶</a></dt>
-<dd><p>Align the Coords along the global axes.</p>
+<tt class="descname">align</tt><big>(</big><em>alignment='---', point=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align a Coords on a given point.</p>
 <p>Alignment involves a translation such that the bounding box
-of the Coords object becomes aligned on the origin of the global axes.
+of the Coords object becomes aligned with a given point.
+By default this is the origin of the global axes.
 The requested alignment is determined by a string of three characters,
 one for each of the coordinate axes. The character determines how
 the structure is aligned in the corresponding direction:</p>
 <ul class="simple">
-<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
-<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
-<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+<li><tt class="docutils literal"><span class="pre">-</span></tt>: aligned on the minimal value of the bounding box,</li>
+<li><tt class="docutils literal"><span class="pre">+</span></tt>: aligned on the maximal value of the bounding box,</li>
+<li><tt class="docutils literal"><span class="pre">0</span></tt>: aligned on the middle value of the bounding box.</li>
 </ul>
 <p>Any other value will make the alignment in that direction unchanged.</p>
-<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
-all the points in the octant with all positive coordinate values.
-A string &#8216;000&#8217; will center the object around the origin, just like
-the (slightly faster) <a class="reference internal" href="#coords.BoundVectors.centered" title="coords.BoundVectors.centered"><tt class="xref py py-meth docutils literal"><span class="pre">centered()</span></tt></a> method, which is .</p>
+<p>The default alignment string <tt class="docutils literal"><span class="pre">'---'</span></tt> results in a translation which
+puts all the points in the octant with all positive coordinate values.
+A string <tt class="docutils literal"><span class="pre">'000'</span></tt> will center the object around the origin, just like
+the (slightly faster) <a class="reference internal" href="#coords.BoundVectors.centered" title="coords.BoundVectors.centered"><tt class="xref py py-meth docutils literal"><span class="pre">centered()</span></tt></a> method.</p>
+<p>See also the <a class="reference internal" href="#coords.align" title="coords.align"><tt class="xref py py-func docutils literal"><span class="pre">coords.align()</span></tt></a> function.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1880,7 +1960,7 @@ and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f<
 <dl class="method">
 <dt id="coords.BoundVectors.map">
 <tt class="descname">map</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> mapped by a 3-D function.</p>
+<dd><p>Map a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> by a 3-D function.</p>
 <p>This is one of the versatile mapping functions.
 func is a numerical function which takes three arguments and produces
 a list of three output values. The coordinates [x,y,z] will be
@@ -1899,7 +1979,7 @@ This method is one of several mapping methods. See also map1 and mapd.</p>
 <dl class="method">
 <dt id="coords.BoundVectors.map1">
 <tt class="descname">map1</tt><big>(</big><em>dir</em>, <em>func</em>, <em>x=None</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.map1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> where coordinate i is mapped by a 1-D function.</p>
+<dd><p>Map one coordinate by a 1-D function of one coordinate.</p>
 <p><cite>func</cite> is a numerical function which takes one argument and produces
 one result. The coordinate dir will be replaced by func(coord[x]).
 If no x is specified, x is taken equal to dir. 
@@ -1912,7 +1992,7 @@ This method is one of several mapping methods. See also map and mapd.</p>
 <dl class="method">
 <dt id="coords.BoundVectors.mapd">
 <tt class="descname">mapd</tt><big>(</big><em>dir</em>, <em>func</em>, <em>point</em>, <em>dist=None</em><big>)</big><a class="headerlink" href="#coords.BoundVectors.mapd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maps one coordinate by a function of the distance to a point.</p>
+<dd><p>Map one coordinate by a function of the distance to a point.</p>
 <p><cite>func</cite> a numerical function which takes one argument and produces
 one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
 where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
@@ -1924,8 +2004,9 @@ a limited set of axes to calculate a 2-D or 1-D distance.
 This method is one of several mapping methods. See also
 <tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#coords.BoundVectors.map1" title="coords.BoundVectors.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
 <p>Example:</p>
-<blockquote>
-<div>E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">E</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
 <p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
 </dd></dl>
 
@@ -1973,17 +2054,23 @@ use one of the global axes.</li>
 <li><cite>P</cite>: a point on the plane, by default the global origin.
 If an int, the plane is the coordinate plane perpendicular to the</li>
 </ul>
-<dl class="docutils">
-<dt>..note:: For planes parallel to a coordinate plane, it is far more</dt>
-<dd>efficient to specify the normal by an axis number than by a
-three component vector.</dd>
-<dt>..note:: This method will also work if any or both of P and n have</dt>
-<dd>a shape (ncoords,3), where ncoords is the total number of points
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For planes parallel to a coordinate plane, it is far more
+efficient to specify the normal by an axis number than by a
+three component vector.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method will also work if any or both of P and n have
+a shape (ncoords,3), where ncoords is the total number of points
 in the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>. This allows to project each point on an
-individual plane.</dd>
-</dl>
-<p>Returns: a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with same shape as original, with all the
-points projected on the specified plane(s).</p>
+individual plane.</p>
+</div>
+<p>Returns:</p>
+<blockquote>
+<div>a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with same shape as original, with all the
+points projected on the specified plane(s).</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -2058,7 +2145,7 @@ instances. If initialCS is None, the global (x,y,z) axes are used.</p>
 <dd><p>Add random noise to a Coords.</p>
 <p>A random amount is added to eacho individual coordinate in the Coords.
 The difference of any coordinate from its original value will
-not be maximally <tt class="docutils literal"><span class="pre">asize</span> <span class="pre">+</span> <span class="pre">rsize</span> <span class="pre">*</span> <span class="pre">self.sizes().max()</span></tt>. The default
+not be maximally <tt class="docutils literal"><span class="pre">asize+rsize*self.sizes().max()</span></tt>. The default
 is to set it to 0.1 times the geometrical size of the structure.</p>
 </dd></dl>
 
@@ -2220,11 +2307,12 @@ is specified, a list with (div+1) values for <cite>div</cite> is created
 by dividing the interval [0..1] into <cite>div</cite> equal distances.</li>
 </ul>
 <p>Returns:</p>
-<p>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with an extra (first) axis, containing the
+<blockquote>
+<div>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with an extra (first) axis, containing the
 concatenation of the interpolations of <cite>self</cite> and <cite>X</cite> at all
 values in <cite>div</cite>.
 Its shape is (n,) + self.shape, where n is the number of values
-in <cite>div</cite>.</p>
+in <cite>div</cite>.</div></blockquote>
 <p>An interpolation of F and G at value v is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> H where
 each coordinate Hijk is obtained from:  Fijk = Fijk + v * (Gijk-Fijk).
 Thus, X.interpolate(Y,[0.,0.5,1.0]) will contain all points of
@@ -2244,11 +2332,11 @@ three endpoints of the unit vectors along the axes at the origin, and
 the origin itself as fourth point.</p>
 <p>The constructor takes a (4,3) array as input. The default constructs
 the standard global Cartesian axes system:</p>
-<blockquote>
-<div>1.  0.  0.
+<div class="highlight-python"><pre>1.  0.  0.
 0.  1.  0.
 0.  0.  1.
-0.  0.  0.</div></blockquote>
+0.  0.  0.</pre>
+</div>
 <dl class="method">
 <dt id="coords.CoordinateSystem.origin">
 <tt class="descname">origin</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.origin" title="Permalink to this definition">¶</a></dt>
@@ -2341,9 +2429,38 @@ that volume.</p>
 <div>A Coords object with shape(2,3): the first point contains the
 minimal coordinates, the second has the maximal ones.</div></blockquote>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">bbox</span><span class="p">()</span>
 <span class="go">[[ 0.  0.  0.]</span>
 <span class="go"> [ 3.  3.  0.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.CoordinateSystem.apt">
+<tt class="descname">apt</tt><big>(</big><em>align</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.apt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an alignment point of a Coords.</p>
+<p>Align point are points whose coordinates are either the minimal
+value, the maximal value or the middle value for the Coords.
+Combining the three values with the three dimensions, a Coords
+has in 27 (3**3) alignment points. The corner points of the
+bounding box are a subset of these.</p>
+<p>The 27 points are addressed by an alignment string of three
+characters, one for each direction. Each character should be
+one of the following</p>
+<ul class="simple">
+<li>&#8216;-&#8216;: use the minimal value for that coordinate,</li>
+<li>&#8216;+&#8217;: use the minimal value for that coordinate,</li>
+<li>&#8216;0&#8217;: use the middle value for that coordinate.</li>
+</ul>
+<p>Any other character will set the corresponding coordinate to zero.</p>
+<p>A string &#8216;000&#8217; is equivalent with center(). The values &#8216;&#8212;&#8217; and
+&#8216;+++&#8217; give the points of the bounding box.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">apt</span><span class="p">(</span><span class="s">&#39;-0+&#39;</span><span class="p">)</span>
+<span class="go">[ 0.   0.5  1. ]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2355,7 +2472,8 @@ minimal coordinates, the second has the maximal ones.</div></blockquote>
 <p>The center of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> is the center of its bbox().
 The return value is a (3,) shaped <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
 <span class="go">[ 1.5  1.5  0. ]</span>
 </pre></div>
 </div>
@@ -2378,14 +2496,15 @@ generally be equal to 1.0.
 If wts=None, then all points are assumed to have a weight equal to
 one divided by the length of the specified axis.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
 <span class="go">[[ 2.  0.  0.]</span>
 <span class="go"> [ 3.  0.  0.]</span>
 <span class="go"> [ 4.  0.  0.]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">[[ 1.  0.  0.]</span>
 <span class="go"> [ 5.  0.  0.]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]],</span>                  <span class="p">[[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">wts</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.25</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">wts</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.25</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="go">[[ 0.75  0.    0.  ]</span>
 <span class="go"> [ 4.75  0.    0.  ]]</span>
 </pre></div>
@@ -2464,7 +2583,8 @@ the distance of each point to the plane through p and having normal n.
 Distance values are positive if the point is on the side of the
 plane indicated by the positive normal.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPlane</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">distanceFromPlane</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="go">[[ 0.  3.  0.]]</span>
 </pre></div>
 </div>
@@ -2481,7 +2601,8 @@ n is a vector specifying the direction of the line through p.</p>
 each point to the line through p with direction n.
 All distance values are positive or zero.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromLine</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">distanceFromLine</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="go">[[ 0.  0.  3.]]</span>
 </pre></div>
 </div>
@@ -2494,9 +2615,10 @@ All distance values are positive or zero.</p>
 <p>p is a single point specified by 3 coordinates.</p>
 <p>The return value is a [...] shaped array with the distance of
 each point to point p.
-All distance values are positive or zero.
-Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span><span class="o">.</span><span class="n">distanceFromPoint</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+All distance values are positive or zero.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">0.</span><span class="p">]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">X</span><span class="o">.</span><span class="n">distanceFromPoint</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 <span class="go">[[ 0.  3.  3.]]</span>
 </pre></div>
 </div>
@@ -2553,22 +2675,22 @@ direction may be used as well.</p>
 <li><cite>dir</cite>: either a global axis number (0, 1 or 2) or a direction vector
 consisting of 3 floats. It specifies the direction in which the
 distances are measured. Default is the 0 (or x) direction.</li>
-<li><cite>min</cite>,`max`: position of the minimum and maximum clipping planes.
+<li><cite>min</cite>, <cite>max</cite>: position of the minimum and maximum clipping planes.
 If <cite>dir</cite> was specified as an integer (0,1,2), this is a single float
 value corresponding with the coordinate in that axis direction.
 Else, it is a point in the clipping plane with normal direction <cite>dir</cite>.
 One of the two clipping planes may be left unspecified.</li>
 </ul>
-<dl class="docutils">
-<dt>Returns: a 1D integer array with same length as the number of points.</dt>
-<dd>For each point the value is 1 (True) if the point is above the
+<p>Returns:</p>
+<blockquote>
+<div>A 1D integer array with same length as the number of points.
+For each point the value is 1 (True) if the point is above the
 minimum clipping plane and below the maximum clipping plane,
 or 0 (False) otherwise.
 An unspecified clipping plane corresponds with an infinitely low or
 high value. The return value can directly be used as an index to
 obtain a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the points satisfying the test (or not).
-See the examples below.</dd>
-</dl>
+See the examples below.</div></blockquote>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Coords</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">2.</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">x</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
@@ -2703,23 +2825,25 @@ This is equivalent with:</p>
 
 <dl class="method">
 <dt id="coords.CoordinateSystem.align">
-<tt class="descname">align</tt><big>(</big><em>alignment='---'</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.align" title="Permalink to this definition">¶</a></dt>
-<dd><p>Align the Coords along the global axes.</p>
+<tt class="descname">align</tt><big>(</big><em>alignment='---', point=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align a Coords on a given point.</p>
 <p>Alignment involves a translation such that the bounding box
-of the Coords object becomes aligned on the origin of the global axes.
+of the Coords object becomes aligned with a given point.
+By default this is the origin of the global axes.
 The requested alignment is determined by a string of three characters,
 one for each of the coordinate axes. The character determines how
 the structure is aligned in the corresponding direction:</p>
 <ul class="simple">
-<li>&#8216;-&#8216;: aligned on the minimal value of the bounding box,</li>
-<li>&#8216;+&#8217;: aligned on the maximal value of the bounding box,</li>
-<li>&#8216;0&#8217;: aligned on the middle value of the bounding box.</li>
+<li><tt class="docutils literal"><span class="pre">-</span></tt>: aligned on the minimal value of the bounding box,</li>
+<li><tt class="docutils literal"><span class="pre">+</span></tt>: aligned on the maximal value of the bounding box,</li>
+<li><tt class="docutils literal"><span class="pre">0</span></tt>: aligned on the middle value of the bounding box.</li>
 </ul>
 <p>Any other value will make the alignment in that direction unchanged.</p>
-<p>The default alignment string &#8216;&#8212;&#8217; results in a translation which puts
-all the points in the octant with all positive coordinate values.
-A string &#8216;000&#8217; will center the object around the origin, just like
-the (slightly faster) <a class="reference internal" href="#coords.CoordinateSystem.centered" title="coords.CoordinateSystem.centered"><tt class="xref py py-meth docutils literal"><span class="pre">centered()</span></tt></a> method, which is .</p>
+<p>The default alignment string <tt class="docutils literal"><span class="pre">'---'</span></tt> results in a translation which
+puts all the points in the octant with all positive coordinate values.
+A string <tt class="docutils literal"><span class="pre">'000'</span></tt> will center the object around the origin, just like
+the (slightly faster) <a class="reference internal" href="#coords.CoordinateSystem.centered" title="coords.CoordinateSystem.centered"><tt class="xref py py-meth docutils literal"><span class="pre">centered()</span></tt></a> method.</p>
+<p>See also the <a class="reference internal" href="#coords.align" title="coords.align"><tt class="xref py py-func docutils literal"><span class="pre">coords.align()</span></tt></a> function.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2913,7 +3037,7 @@ and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f<
 <dl class="method">
 <dt id="coords.CoordinateSystem.map">
 <tt class="descname">map</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> mapped by a 3-D function.</p>
+<dd><p>Map a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> by a 3-D function.</p>
 <p>This is one of the versatile mapping functions.
 func is a numerical function which takes three arguments and produces
 a list of three output values. The coordinates [x,y,z] will be
@@ -2932,7 +3056,7 @@ This method is one of several mapping methods. See also map1 and mapd.</p>
 <dl class="method">
 <dt id="coords.CoordinateSystem.map1">
 <tt class="descname">map1</tt><big>(</big><em>dir</em>, <em>func</em>, <em>x=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.map1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> where coordinate i is mapped by a 1-D function.</p>
+<dd><p>Map one coordinate by a 1-D function of one coordinate.</p>
 <p><cite>func</cite> is a numerical function which takes one argument and produces
 one result. The coordinate dir will be replaced by func(coord[x]).
 If no x is specified, x is taken equal to dir. 
@@ -2945,7 +3069,7 @@ This method is one of several mapping methods. See also map and mapd.</p>
 <dl class="method">
 <dt id="coords.CoordinateSystem.mapd">
 <tt class="descname">mapd</tt><big>(</big><em>dir</em>, <em>func</em>, <em>point</em>, <em>dist=None</em><big>)</big><a class="headerlink" href="#coords.CoordinateSystem.mapd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maps one coordinate by a function of the distance to a point.</p>
+<dd><p>Map one coordinate by a function of the distance to a point.</p>
 <p><cite>func</cite> a numerical function which takes one argument and produces
 one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
 where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
@@ -2957,8 +3081,9 @@ a limited set of axes to calculate a 2-D or 1-D distance.
 This method is one of several mapping methods. See also
 <tt class="xref py py-meth docutils literal"><span class="pre">map3()</span></tt> and <a class="reference internal" href="#coords.CoordinateSystem.map1" title="coords.CoordinateSystem.map1"><tt class="xref py py-meth docutils literal"><span class="pre">map1()</span></tt></a>.</p>
 <p>Example:</p>
-<blockquote>
-<div>E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="n">E</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
 <p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
 </dd></dl>
 
@@ -3006,17 +3131,23 @@ use one of the global axes.</li>
 <li><cite>P</cite>: a point on the plane, by default the global origin.
 If an int, the plane is the coordinate plane perpendicular to the</li>
 </ul>
-<dl class="docutils">
-<dt>..note:: For planes parallel to a coordinate plane, it is far more</dt>
-<dd>efficient to specify the normal by an axis number than by a
-three component vector.</dd>
-<dt>..note:: This method will also work if any or both of P and n have</dt>
-<dd>a shape (ncoords,3), where ncoords is the total number of points
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For planes parallel to a coordinate plane, it is far more
+efficient to specify the normal by an axis number than by a
+three component vector.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method will also work if any or both of P and n have
+a shape (ncoords,3), where ncoords is the total number of points
 in the <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a>. This allows to project each point on an
-individual plane.</dd>
-</dl>
-<p>Returns: a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with same shape as original, with all the
-points projected on the specified plane(s).</p>
+individual plane.</p>
+</div>
+<p>Returns:</p>
+<blockquote>
+<div>a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with same shape as original, with all the
+points projected on the specified plane(s).</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -3091,7 +3222,7 @@ instances. If initialCS is None, the global (x,y,z) axes are used.</p>
 <dd><p>Add random noise to a Coords.</p>
 <p>A random amount is added to eacho individual coordinate in the Coords.
 The difference of any coordinate from its original value will
-not be maximally <tt class="docutils literal"><span class="pre">asize</span> <span class="pre">+</span> <span class="pre">rsize</span> <span class="pre">*</span> <span class="pre">self.sizes().max()</span></tt>. The default
+not be maximally <tt class="docutils literal"><span class="pre">asize+rsize*self.sizes().max()</span></tt>. The default
 is to set it to 0.1 times the geometrical size of the structure.</p>
 </dd></dl>
 
@@ -3253,11 +3384,12 @@ is specified, a list with (div+1) values for <cite>div</cite> is created
 by dividing the interval [0..1] into <cite>div</cite> equal distances.</li>
 </ul>
 <p>Returns:</p>
-<p>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with an extra (first) axis, containing the
+<blockquote>
+<div>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with an extra (first) axis, containing the
 concatenation of the interpolations of <cite>self</cite> and <cite>X</cite> at all
 values in <cite>div</cite>.
 Its shape is (n,) + self.shape, where n is the number of values
-in <cite>div</cite>.</p>
+in <cite>div</cite>.</div></blockquote>
 <p>An interpolation of F and G at value v is a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> H where
 each coordinate Hijk is obtained from:  Fijk = Fijk + v * (Gijk-Fijk).
 Thus, X.interpolate(Y,[0.,0.5,1.0]) will contain all points of
@@ -3303,15 +3435,14 @@ bounding box.</dd>
 <dt id="coords.origin">
 <tt class="descclassname">coords.</tt><tt class="descname">origin</tt><big>(</big><big>)</big><a class="headerlink" href="#coords.origin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a single point with coordinates [0.,0.,0.].</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object with shape(3,) holding three zero coordinates.</dd>
-</dl>
+<p>Returns:</p>
+<blockquote>
+<div>A <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object with shape(3,) holding three zero coordinates.</div></blockquote>
 </dd></dl>
 
 <dl class="function">
 <dt id="coords.pattern">
-<tt class="descclassname">coords.</tt><tt class="descname">pattern</tt><big>(</big><em>s</em>, <em>connect=True</em><big>)</big><a class="headerlink" href="#coords.pattern" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">coords.</tt><tt class="descname">pattern</tt><big>(</big><em>s</em>, <em>aslist=False</em><big>)</big><a class="headerlink" href="#coords.pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a series of points lying on a regular grid.</p>
 <p>This function creates a series of points that lie on a regular grid
 with unit step. These points are created from a string input, interpreting
@@ -3347,10 +3478,22 @@ G    D    H          7    4    8         g    d    h</pre>
 <p>The special character &#8216;/&#8217; can be put before any character to make the
 move without inserting the new point. You need to start
 the string with a &#8216;0&#8217; or &#8216;9&#8217; to include the origin in the output.</p>
-<p>Returns a list with the generated points as integers.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>s</cite>: string: with the characters generating subsequent points.</li>
+<li><cite>aslist</cite>: bool: if True, the points are returned as lists of
+integer coordinates instead of a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> object.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns a <a class="reference internal" href="#coords.Coords" title="coords.Coords"><tt class="xref py py-class docutils literal"><span class="pre">Coords</span></tt></a> with the generated points (default) or a list</dt>
+<dd>of tuples with 3 integer coordinates (if <cite>aslist</cite> is True).</dd>
+</dl>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span><span class="p">(</span><span class="s">&#39;0123&#39;</span><span class="p">)</span>
-<span class="go">[(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)]</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">pattern</span><span class="p">(</span><span class="s">&#39;0123&#39;</span><span class="p">)</span>
+<span class="go">[[ 0.  0.  0.]</span>
+<span class="go"> [ 1.  0.  0.]</span>
+<span class="go"> [ 1.  1.  0.]</span>
+<span class="go"> [ 0.  1.  0.]]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -3365,6 +3508,24 @@ Then the resulting list of points is transformed in a 2D table of points
 where each row has the length <cite>nplex</cite>.</p>
 <p>If the number of points produced by <cite>s</cite> is not a multiple of <cite>nplex</cite>,
 an error is raised.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="coords.align">
+<tt class="descclassname">coords.</tt><tt class="descname">align</tt><big>(</big><em>L</em>, <em>align</em><big>)</big><a class="headerlink" href="#coords.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align a list of geometrical objects.</p>
+<p>L is a list of geometrical objects (Coords or Geometry or subclasses
+thereof) and thus having an appropriate <tt class="docutils literal"><span class="pre">align</span></tt> method.
+align is a string of three characters, one for each coordinate direction,
+defining how the subsequent objects have to be aligned in that direction:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">-</span></tt> : align on the minimal coordinate value</li>
+<li><tt class="docutils literal"><span class="pre">+</span></tt> : align on the maximal coordinate value</li>
+<li><tt class="docutils literal"><span class="pre">0</span></tt> : align on the middle coordinate value</li>
+<li><tt class="docutils literal"><span class="pre">|</span></tt> : align the minimum value on the maximal value of the previous item</li>
+</ul>
+<p>E.g., the string <tt class="docutils literal"><span class="pre">'|--'</span></tt> will juxtapose the objects in the x-direction,
+while aligning the on their minimal coordinates in the y- and z- direction.</p>
 </dd></dl>
 
 <dl class="function">
@@ -3421,7 +3582,7 @@ the curve.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

@@ -33,7 +33,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>32. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.7-a1 documentation</title>
+    <title>31. trisurface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.7-a1 documentation</title>
 
     <link rel="stylesheet" href="../_static/pyformex.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -51,8 +51,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pyFormex v0.8.7-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="33. geomtools — Basic geometrical operations." href="geomtools.html" />
-    <link rel="prev" title="31. mesh_ext — Extended functionality of the Mesh class." href="mesh_ext.html" />
+    <link rel="next" title="32. geomtools — Basic geometrical operations." href="geomtools.html" />
+    <link rel="prev" title="30. mesh_ext — Extended functionality of the Mesh class." href="mesh_ext.html" />
 <link rel="icon" type="image/png" href="_static/pyformex_fav.png" />
 
   </head>
@@ -75,10 +75,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="geomtools.html" title="33. geomtools — Basic geometrical operations."
+          <a href="geomtools.html" title="32. geomtools — Basic geometrical operations."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="mesh_ext.html" title="31. mesh_ext — Extended functionality of the Mesh class."
+          <a href="mesh_ext.html" title="30. mesh_ext — Extended functionality of the Mesh class."
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
@@ -100,10 +100,10 @@
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="mesh_ext.html"
-                        title="previous chapter">31. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mesh_ext</span></tt> &#8212; Extended functionality of the Mesh class.</a></p>
+                        title="previous chapter">30. <tt class="docutils literal docutils literal docutils literal"><span class="pre">mesh_ext</span></tt> &#8212; Extended functionality of the Mesh class.</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="geomtools.html"
-                        title="next chapter">33. <tt class="docutils literal docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
+                        title="next chapter">32. <tt class="docutils literal docutils literal docutils literal"><span class="pre">geomtools</span></tt> &#8212; Basic geometrical operations.</a></p>
   
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
@@ -138,7 +138,7 @@
           <div class="body">
             
   <div class="section" id="module-trisurface">
-<span id="trisurface-operations-on-triangulated-surfaces"></span><span id="sec-ref-trisurface"></span><h1>32. <a class="reference internal" href="#module-trisurface" title="trisurface: Operations on triangulated surfaces."><tt class="xref py py-mod docutils literal"><span class="pre">trisurface</span></tt></a> &#8212; Operations on triangulated surfaces.<a class="headerlink" href="#module-trisurface" title="Permalink to this headline">¶</a></h1>
+<span id="trisurface-operations-on-triangulated-surfaces"></span><span id="sec-ref-trisurface"></span><h1>31. <a class="reference internal" href="#module-trisurface" title="trisurface: Operations on triangulated surfaces."><tt class="xref py py-mod docutils literal"><span class="pre">trisurface</span></tt></a> &#8212; Operations on triangulated surfaces.<a class="headerlink" href="#module-trisurface" title="Permalink to this headline">¶</a></h1>
 <p>A triangulated surface is a surface consisting solely of triangles.
 Any surface in space, no matter how complex, can be approximated with
 a triangulated surface.</p>
@@ -516,6 +516,29 @@ firstprop.</p>
 order of the number of triangles in the part. Setting the sort
 argument to &#8216;area&#8217; will sort the parts according to decreasing
 area. Any other value will return the parts unsorted.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.cutWithPlane1">
+<tt class="descname">cutWithPlane1</tt><big>(</big><em>p</em>, <em>n</em>, <em>side=''</em>, <em>return_intersection=False</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.cutWithPlane1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cut a surface with a plane.</p>
+<p>Cuts the surface with a plane defined by a point p and normal n.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>p</cite>: float, shape (3,): a point in the cutting plane</li>
+<li><cite>n</cite>: float, shape (3,): the normal vector to the plane</li>
+<li><cite>side</cite>: &#8216;&#8217;, &#8216;+&#8217; or &#8216;-&#8216;: selector of the returned parts. Default
+is to return a tuple of two surfaces, with the parts at the positive,
+resp. negative side of the plane as defined by the normal vector.
+If a &#8216;+&#8217; or &#8216;-&#8216; is specified, only the corresponding part is returned.</li>
+</ul>
+<dl class="docutils">
+<dt>Returns: a tuple of two TriSurfaces, or a single TriSurface,</dt>
+<dd>depending on the value of <cite>side</cite>. The returned surfaces will have
+their normals fixed wherever possible. Property values will be set
+containing the triangle number of the original surface from which
+the elements resulted.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1021,6 +1044,12 @@ firstprop.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="trisurface.TriSurface.largestByConnection">
+<tt class="descname">largestByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.largestByConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the largest connected part of the Mesh.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trisurface.TriSurface.setType">
 <tt class="descname">setType</tt><big>(</big><em>eltype=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the eltype from a character string.</p>
@@ -1033,30 +1062,12 @@ normally set the element type at creation time.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="trisurface.TriSurface.largestByConnection">
-<tt class="descname">largestByConnection</tt><big>(</big><big>)</big><a class="headerlink" href="#trisurface.TriSurface.largestByConnection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the largest connected part of the Mesh.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="trisurface.TriSurface.rings">
 <tt class="descname">rings</tt><big>(</big><em>sources</em>, <em>nrings</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.rings" title="Permalink to this definition">¶</a></dt>
 <dd><p>It finds the rings of elems connected to sources by node.</p>
 <p>Sources is a list of elem indices.
 A list of rings is returned, from zero (equal to sources) to step.
 If step is -1, all rings are returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="trisurface.TriSurface.setProp">
-<tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setProp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create or destroy the property array for the Mesh.</p>
-<p>A property array is a rank-1 integer array with dimension equal
-to the number of elements in the Mesh.
-You can specify a single value or a list/array of integer values.
-If the number of passed values is less than the number of elements,
-they wil be repeated. If you give more, they will be ignored.</p>
-<p>If a value None is given, the properties are removed from the Mesh.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1069,6 +1080,18 @@ may appear by error during geometrical trnasformations
 (e.g. reflect, sweep, extrude, revolve).
 This function fixes those elements.
 Currently it only works with linear tet and hex.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trisurface.TriSurface.setProp">
+<tt class="descname">setProp</tt><big>(</big><em>prop=None</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.setProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create or destroy the property array for the Mesh.</p>
+<p>A property array is a rank-1 integer array with dimension equal
+to the number of elements in the Mesh.
+You can specify a single value or a list/array of integer values.
+If the number of passed values is less than the number of elements,
+they wil be repeated. If you give more, they will be ignored.</p>
+<p>If a value None is given, the properties are removed from the Mesh.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1596,14 +1619,15 @@ default in future.</p>
 <dt id="trisurface.TriSurface.convertRandom">
 <tt class="descname">convertRandom</tt><big>(</big><em>choices</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.convertRandom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert choosing randomly between choices</p>
+<p>Returns a Mesh obtained by converting the current Mesh by a
+randomly selected method from the available conversion type
+for the current element type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trisurface.TriSurface.subdivide">
-<tt class="descname">subdivide</tt><big>(</big><em>ndiv</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.subdivide" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">subdivide</tt><big>(</big><em>*ndiv</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.subdivide" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subdivide the elements of a Mesh.</p>
-<p>Returns a Mesh where each element is replaced by a number of
-smaller elements.</p>
 <p>Parameters:</p>
 <ul>
 <li><p class="first"><cite>ndiv</cite>: specifies the number (and place) of divisions (seeds)
@@ -1613,13 +1637,26 @@ on the element type of the Mesh. Currently implemented:</p>
 <dt>tri3: ndiv is a single int value specifying the number of</dt>
 <dd><p class="first last">divisions (of equal size) for each edge.</p>
 </dd>
-<dt>quad4: ndiv is a tuple (nx,ny) specifying the number of divisions</dt>
-<dd><p class="first last">along the first, resp. second parametric direction of the element</p>
+<dt>quad4: ndiv is a sequence of two int values nx,ny, specifying</dt>
+<dd><p class="first last">the number of divisions along the first, resp. second
+parametric direction of the element</p>
 </dd>
 </dl>
 </li>
+<li><p class="first"><cite>fuse</cite>: bool, if True (default), the resulting Mesh is completely
+fused. If False, the Mesh is only fused over each individual
+element of the original Mesh.</p>
+</li>
 </ul>
-<p>..note:: This is currently only implemented for Meshes of type &#8216;tri3&#8217;.</p>
+<dl class="docutils">
+<dt>Returns: a Mesh where each element is replaced by a number of</dt>
+<dd>smaller elements of the same type.</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is currently only implemented for Meshes of type &#8216;tri3&#8217;
+and &#8216;quad4&#8217; and for the derived class &#8216;TriSurface&#8217;.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1813,6 +1850,9 @@ the geometry .</p>
 <dt id="trisurface.TriSurface.concatenate">
 <em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>meshes</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#trisurface.TriSurface.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate a list of meshes of the same plexitude and eltype</p>
+<p>All Meshes in the list should have the same plexitude.
+Meshes with plexitude are ignored though, to allow empty
+Meshes to be added in.</p>
 <p>Merging of the nodes can be tuned by specifying extra arguments
 that will be passed to <tt class="xref py py-meth docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
 <p>This is a class method, and should be invoked as follows:</p>
@@ -2013,11 +2053,12 @@ new point and has a better chance of avoiding intersecting triangles
 on irregular 3D borders.</p>
 <p>The resulting surface can be checked for intersecting triangles by the
 <tt class="xref py py-meth docutils literal"><span class="pre">check()</span></tt> method.</p>
-<dl class="docutils">
-<dt>..note :: Because the &#8216;border&#8217; does not create any new points, the</dt>
-<dd>returned surface will use the same point coordinate array as the input
-object.</dd>
-</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Because the &#8216;border&#8217; does not create any new points, the
+returned surface will use the same point coordinate array as the input
+object.</p>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -2136,10 +2177,10 @@ Each face of the cube is represented by two triangles.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="geomtools.html" title="33. geomtools — Basic geometrical operations."
+          <a href="geomtools.html" title="32. geomtools — Basic geometrical operations."
              >next</a> |</li>
         <li class="right" >
-          <a href="mesh_ext.html" title="31. mesh_ext — Extended functionality of the Mesh class."
+          <a href="mesh_ext.html" title="30. mesh_ext — Extended functionality of the Mesh class."
              >previous</a> |</li>
         <li><a href="../index.html">pyFormex v0.8.7-a1 documentation</a> &gt;</li>
           <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
@@ -2149,7 +2190,7 @@ Each face of the cube is represented by two triangles.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

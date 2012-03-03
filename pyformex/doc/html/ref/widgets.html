@@ -1439,7 +1439,7 @@ the data readonly.</li>
 
 <dl class="class">
 <dt id="widgets.Table">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>label=None</em>, <em>edit=True</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#widgets.Table" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>label=None</em>, <em>edit=True</em>, <em>parent=None</em>, <em>autowidth=True</em><big>)</big><a class="headerlink" href="#widgets.Table" title="Permalink to this definition">¶</a></dt>
 <dd><p>A widget to show/edit a two-dimensional array of items.</p>
 <ul class="simple">
 <li><cite>data</cite>: a 2-D array of items, with <cite>nrow</cite> rows and <cite>ncol</cite> columns. If
@@ -1452,6 +1452,15 @@ TableModel doesn&#8217;t.</li>
 <li><cite>label</cite>: currently unused (intended to display an optional label
 in the upper left corner if both <cite>chead</cite> and <cite>rhead</cite> are specified.</li>
 </ul>
+<dl class="method">
+<dt id="widgets.Table.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.Table.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>update the table.</p>
+<p>This method should be called to update the widget when the data of
+the table have changed. If autowidth is True, this will also
+adjust the column widths.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1845,7 +1854,7 @@ is given, it is set to the LAST button.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

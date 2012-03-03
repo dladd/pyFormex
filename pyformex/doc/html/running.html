@@ -203,8 +203,12 @@ Options
                         --config option.
 --redirect              Redirect standard output to the message board (ignored
                         with --nogui)
---debug                 display debugging info to sys.stdout
---debuglevel=DEBUG      display debugging info to sys.stdout
+--debug=DEBUG           display debugging info to sys.stdout
+--debuglevel=DEBUGLEVEL
+                        display debugging info to sys.stdout. The value is an
+                        int with the bits of the requested debug levels set. A
+                        value of -1 switches on all debug info. If this option
+                        is used, it overrides the --debug option.
 --newviewports          Use the new multiple viewport canvas implementation.
                         This is an experimental feature only intended for
                         developers.
@@ -272,7 +276,7 @@ argument should again be a script.</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>

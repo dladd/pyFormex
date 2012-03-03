@@ -636,12 +636,18 @@ and everything is redrawn with the new mode.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="viewport.QtCanvas.setBgColor">
-<tt class="descname">setBgColor</tt><big>(</big><em>color1</em>, <em>color2=None</em>, <em>mode='solid'</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setBgColor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the background color.</p>
-<p>If one color is specified, a solid background is set.
-If two colors are specified, a graded background is set
-and an object is created to display the background.</p>
+<dt id="viewport.QtCanvas.setBackground">
+<tt class="descname">setBackground</tt><big>(</big><em>color=None</em>, <em>image=None</em><big>)</big><a class="headerlink" href="#viewport.QtCanvas.setBackground" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color(s) and image.</p>
+<p>Change the background settings according to the specified parameters
+and set the canvas background accordingly. Only (and all) the specified
+parameters get a new value.</p>
+<p>Parameters:</p>
+<ul class="simple">
+<li><cite>color</cite>: either a single color, a list of two colors or a list of
+four colors.</li>
+<li><cite>image</cite>: an image to be set.</li>
+</ul>
 </dd></dl>
 
 <dl class="method">
@@ -1127,7 +1133,7 @@ The default OpenGL format can be changed by command line options:</p>
     <span class="left">
         &copy; Copyright 2004-2011, Benedict Verhegghe.
     </span>
-      Last updated on Jan 21, 2012.
+      Last updated on Mar 03, 2012.
     <span class="right">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </span>
